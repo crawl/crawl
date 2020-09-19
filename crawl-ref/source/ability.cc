@@ -3965,38 +3965,37 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         } else if (essence_item.sub_type == POT_RUBEDO){
 
+            if (!mons->has_ench(ENCH_NIGREDO)
+                && !mons->has_ench(ENCH_ALBEDO)
+                && !mons->has_ench(ENCH_CITRINITAS)
+                && !mons->has_ench(ENCH_VIRIDITAS))
+            {
+                mpr("You can only diffuse an infused target with other essence.");
+                return spret::abort;
+            }
+
+            int other = 0;
             for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             {
                 monster *diffuse = monster_at(*ri);
-                if (!diffuse || !you.can_see(*diffuse))
+                if (!diffuse || mons == diffuse || !you.can_see(*diffuse))
                 {
-                    mpr("You see nothing there you can diffuse.");
-                    return spret::abort;
+                    continue;
                 }
         
-                if (!mons->has_ench(ENCH_NIGREDO)
-                    && !mons->has_ench(ENCH_ALBEDO)
-                    && !mons->has_ench(ENCH_CITRINITAS)
-                    && !mons->has_ench(ENCH_VIRIDITAS))
-                {
-                    mpr("You can only diffuse an infused target with other essence.");
-                    return spret::abort;
-                }
-                
-                int other = 0;
-                if (mons->has_ench(ENCH_NIGREDO)){
+                if (mons->has_ench(ENCH_NIGREDO) && !diffuse->has_ench(ENCH_NIGREDO)){
                     
                     const int duration_nigredo = 10 + you.piety/20;
                     diffuse->add_ench(mon_enchant(ENCH_NIGREDO, 0, &you, duration_nigredo * BASELINE_DELAY));
                     other++;
                     
-                } if (mons->has_ench(ENCH_ALBEDO)){
+                } if (mons->has_ench(ENCH_ALBEDO) && !diffuse->has_ench(ENCH_ALBEDO)){
                     
                     const int duration_albedo = 6 + you.piety/40;
                     diffuse->add_ench(mon_enchant(ENCH_ALBEDO, 0, &you, duration_albedo * BASELINE_DELAY));
                     other++;
                     
-                } if (mons->has_ench(ENCH_CITRINITAS)){
+                } if (mons->has_ench(ENCH_CITRINITAS) && !diffuse->has_ench(ENCH_CITRINITAS)){
                     
                     const int duration_citrinitas = min(10 + you.piety/10 + random2(10), 50);
                     if (diffuse->friendly())
@@ -4005,7 +4004,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
                         other++;
                     }
                     
-                } if (mons->has_ench(ENCH_VIRIDITAS)){
+                } if (mons->has_ench(ENCH_VIRIDITAS) && !diffuse->has_ench(ENCH_VIRIDITAS)){
                     
                     const int duration_viriditas = min(2 + you.piety/50, 10);
                     if (!diffuse->friendly())
@@ -4014,10 +4013,18 @@ static spret _do_ability(const ability_def& abil, bool fail)
                         other++;
                     }
                     
-                } if (other >= 1){
-                    flash_view(UA_PLAYER, RED);
-                    simple_monster_message(*mons, " diffuse its other infusions!");
-                }
+                } 
+            }
+            if (other >= 1) {
+                flash_view(UA_PLAYER, RED);
+#ifndef USE_TILE_LOCAL
+                scaled_delay(1000);
+#endif
+                simple_monster_message(*mons, " diffuse its other infusions!");
+            }
+            else {
+                mpr("There is no one in sight to diffuse.");
+                return spret::abort;
             }
         }
         
@@ -4058,6 +4065,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
             break;
         }
         flash_view(UA_PLAYER, DARKGRAY);
+#ifndef USE_TILE_LOCAL
+        scaled_delay(1000);
+#endif
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
@@ -4095,6 +4105,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
             break;
         }
         flash_view(UA_PLAYER, WHITE);
+#ifndef USE_TILE_LOCAL
+        scaled_delay(1000);
+#endif
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
@@ -4132,6 +4145,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
             break;
         }
         flash_view(UA_PLAYER, YELLOW);
+#ifndef USE_TILE_LOCAL
+        scaled_delay(1000);
+#endif
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
@@ -4169,6 +4185,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
             break;
         }    
         flash_view(UA_PLAYER, LIGHTGREEN);
+#ifndef USE_TILE_LOCAL
+        scaled_delay(1000);
+#endif
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
@@ -4206,6 +4225,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
             break;
         }    
         flash_view(UA_PLAYER, RED);
+#ifndef USE_TILE_LOCAL
+        scaled_delay(1000);
+#endif
         dec_inv_item_quantity(pot_idx, 1);
         break;
     }
