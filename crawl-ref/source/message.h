@@ -61,6 +61,15 @@ void mpr_comma_separated_list(const string &prefix,
 void msgwin_set_temporary(bool temp);
 // Clear the last set of temporary messages from both
 // message window and history.
+class msgwin_temporary_mode
+{
+public:
+    msgwin_temporary_mode();
+    ~msgwin_temporary_mode();
+private:
+    bool previous;
+};
+
 void msgwin_clear_temporary();
 
 void msgwin_prompt(string prompt);

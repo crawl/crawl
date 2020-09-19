@@ -1465,6 +1465,19 @@ void msgwin_set_temporary(bool temp)
     }
 }
 
+msgwin_temporary_mode::msgwin_temporary_mode()
+    : previous(_temporary)
+{
+    msgwin_set_temporary(true);
+}
+
+msgwin_temporary_mode::~msgwin_temporary_mode()
+{
+    // RAII behaviour: embedding instances of this class within each other
+    // will only reset the mode once they are all cleared.
+    msgwin_set_temporary(previous);
+}
+
 void msgwin_clear_temporary()
 {
     buffer.roll_back();

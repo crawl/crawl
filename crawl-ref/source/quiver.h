@@ -55,6 +55,7 @@ namespace quiver
         virtual bool is_enabled() const { return false; };
         virtual bool is_valid() const { return true; };
         virtual bool is_targeted() const { return false; };
+        virtual bool allow_autotarget() const { return is_targeted(); }
 
         virtual void find_target() const { };
 
@@ -75,7 +76,7 @@ namespace quiver
             trigger(target);
         };
 
-        virtual void trigger(dist &t) { t = target; };
+        virtual void trigger(dist &t) { target = t; };
 
         virtual void save(CrawlHashTable &save_target) const;
 
@@ -110,13 +111,18 @@ namespace quiver
         bool spell_is_quivered(spell_type s) const;
         bool item_is_quivered(int item_slot) const;
 
+        shared_ptr<action> next(int dir = 0);
+
         bool set(const shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
-        shared_ptr<action> next(int dir = 0);
         bool cycle(int dir = 0);
         bool clear();
         void on_actions_changed();
+
+        void target();
+        shared_ptr<action> do_target();
+        string fire_key_hints();
 
     private:
         shared_ptr<action> current;

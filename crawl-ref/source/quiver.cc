@@ -13,7 +13,10 @@
 #include "evoke.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-use.h"
 #include "items.h"
+#include "macro.h"
+#include "message.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
@@ -98,6 +101,101 @@ namespace quiver
         return o[i % o.size()];
     }
 
+    shared_ptr<action> action_cycler::do_target()
+    {
+        // this would be better as an action method, but it's tricky without
+        // moving untargeted_fire somewhere else
+        // should this reset()?
+
+        shared_ptr<action> a = get_ptr();
+        if (!a || !a->is_valid())
+            return nullptr;
+
+        a->target.target = coord_def(-1,-1);
+        a->target.find_target = false;
+        a->target.fire_context = this;
+        a->target.interactive = true;
+
+        if (a->is_targeted())
+        {
+            // TODO: check behavior when confused
+            // TODO: should `action` itself trigger a targeter for this case?
+            // force manual targeting: (an alternative: use dist.target as an input)
+            a->trigger(a->target);
+        }
+        else
+        {
+            untargeted_fire(a);
+            if (!a->target.isCancel)
+                a->trigger();
+        }
+        // TODO: does this cause dbl "ok then"s in some places?
+        if (a->target.isCancel && a->target.cmd_result == CMD_NO_CMD)
+            canned_msg(MSG_OK);
+
+        // we return a; if it has become invalid (e.g. by running out of ammo),
+        // it will no longer be accessible via get().
+        return a;
+    }
+
+    string action_cycler::fire_key_hints()
+    {
+        const bool no_other_items = get() == *next();
+        string key_hint = no_other_items
+                            ? ", <w>%</w> - select action"
+                            : ", <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle";
+        insert_commands(key_hint,
+                        { CMD_TARGET_SELECT_ACTION,
+                          CMD_TARGET_CYCLE_QUIVER_BACKWARD,
+                          CMD_TARGET_CYCLE_QUIVER_FORWARD });
+        return key_hint;
+    }
+
+    static bool _autoswitch_active()
+    {
+        return Options.auto_switch
+                && (you.equip[EQ_WEAPON] == letter_to_index('a')
+                    || you.equip[EQ_WEAPON] == letter_to_index('b'));
+    }
+
+    static bool _autoswitch_ammo_check(const item_def &ammo)
+    {
+        if (!ammo.defined())
+            return false;
+        const item_def &w1 = you.inv[letter_to_index('a')];
+        const item_def &w2 = you.inv[letter_to_index('b')];
+        return w1.defined() && _item_matches(ammo, (fire_type) 0xffff, &w1, false)
+            || w2.defined() && _item_matches(ammo, (fire_type) 0xffff, &w2, false);
+    }
+
+
+    static bool _autoswitch_to_ranged(item_def &ammo)
+    {
+        // TODO: switching away from ranged weapons with autoswitch on is a bit
+        // wonky
+        if (!_autoswitch_active())
+            return false;
+
+        // validated above
+        const int item_slot = you.equip[EQ_WEAPON] == letter_to_index('a')
+                                ? letter_to_index('b') : letter_to_index('a');
+
+        const item_def& launcher = you.inv[item_slot];
+        if (!_autoswitch_ammo_check(ammo))
+            return false;
+        if (!ammo.launched_by(launcher))
+            return false;
+
+        if (!wield_weapon(true, item_slot))
+            return false;
+
+        you.turn_is_over = true;
+        // This just does the wield. The old implementation worked by
+        // additionally firing immediately, but it seems better to do it step
+        // by step to me. Will players dislike this?
+        return true;
+    }
+
     // Get a sorted list of items to show in the fire interface.
     //
     // If ignore_inscription_etc, ignore =f and Options.fire_items_start.
@@ -121,10 +219,6 @@ namespace quiver
 
             const auto l = is_launched(&you, launcher, item);
 
-            // Don't do anything if this item is not really fit for throwing.
-            if (l == launch_retval::FUMBLED)
-                continue;
-
             // don't swap to throwing when you run out of launcher ammo. (The
             // converse case should be ruled out by _item_matches below.)
             // TODO: (a) is this the right thing to do, and (b) should it be
@@ -147,8 +241,13 @@ namespace quiver
                  i_flags++)
             {
                 if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
-                                  launcher, manual))
+                                  launcher, manual)
+                    || (launcher && _autoswitch_active()
+                            && (launcher->link == letter_to_index('a')
+                                || launcher->link == letter_to_index('b'))
+                            && _autoswitch_ammo_check(item)))
                 {
+                    // this approach to sorting is pretty wtf
                     order.push_back((i_flags<<16) | (i_inv & 0xffff));
                     break;
                 }
@@ -181,17 +280,26 @@ namespace quiver
 
         bool is_enabled() const override
         {
+            if (!is_valid())
+                return false;
+
             if (fire_warn_if_impossible(true))
                 return false;
+
+            // only applicable right now if auto_switch is enabled
+            const item_def *weapon = you.weapon();
+            const item_def& ammo = you.inv[ammo_slot];
+            if (!_item_matches(ammo, (fire_type) 0xffff, weapon, false))
+                return false;
+
 
             // disable if there's a no-fire inscription on ammo
             // maybe this should just be skipped altogether for this case?
             // or prompt on trigger..
-            return check_warning_inscriptions(you.inv[ammo_slot], OPER_FIRE)
-                    && (!you.weapon()
-                        || is_launched(&you, you.weapon(), you.inv[ammo_slot])
-                                                    != launch_retval::LAUNCHED
-                        || check_warning_inscriptions(*you.weapon(), OPER_FIRE));
+            return check_warning_inscriptions(ammo, OPER_FIRE)
+                && (!weapon
+                    || is_launched(&you, weapon, ammo) != launch_retval::LAUNCHED
+                    || check_warning_inscriptions(*weapon, OPER_FIRE));
         }
 
         bool is_valid() const override
@@ -203,10 +311,19 @@ namespace quiver
             const item_def& ammo = you.inv[ammo_slot];
             if (!ammo.defined())
                 return false;
-            const item_def *weapon = you.weapon();
 
-            return _item_matches(ammo, (fire_type) 0xffff, // TODO: ...
-                                 weapon, false);
+            if (_autoswitch_active())
+            {
+                // valid but potentially disabled. It seems like there could be
+                // better ways of doing this given generalized quivers?
+                return _autoswitch_ammo_check(ammo);
+            }
+            else
+            {
+                const item_def *weapon = you.weapon();
+                return _item_matches(ammo, (fire_type) 0xffff, // TODO: ...
+                                     weapon, false);
+            }
         }
 
         bool is_targeted() const override
@@ -221,13 +338,17 @@ namespace quiver
                 return;
             if (!is_enabled())
             {
-                // for messaging (TODO refactor; message about inscriptions?)
-                fire_warn_if_impossible();
+                // try autoswitching in case that's why it's disabled
+                if (!_autoswitch_to_ranged(you.inv[ammo_slot]))
+                    fire_warn_if_impossible(); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
 
             bolt beam;
             throw_it(beam, ammo_slot, &target);
+
+            // TODO: eliminate this?
+            you.m_quiver_history.on_item_fired(you.inv[ammo_slot], true);
 
             t = target; // copy back, in case they are different
         }
@@ -259,6 +380,7 @@ namespace quiver
             }
             qdesc.cprintf("%c) ", hud_letter);
 
+            // TODO: I don't actually know what this prefix stuff is
             const string prefix = item_prefix(quiver);
 
             const int prefcol =
@@ -319,7 +441,7 @@ namespace quiver
 
     // for spells that are targeted, but should skip the lua target selection
     // pass for one reason or another
-    static bool _spell_skips_initial_autotarget(spell_type s)
+    static bool _spell_autotarget_incompatible(spell_type s)
     {
         switch (s)
         {
@@ -360,14 +482,15 @@ namespace quiver
             return is_valid_spell(spell) && you.has_spell(spell);
         }
 
-        // as a practical matter, this determines whether the initial lua
-        // target finder is used on shift-tab. It's also used in a somewhat
-        // incorrect way right now to determine fire behavior (TODO).
         bool is_targeted() const override
         {
             // TODO: what spells does this miss?
-            return !!(get_spell_flags(spell) & spflag::targeting_mask)
-                    && !_spell_skips_initial_autotarget(spell);
+            return !!(get_spell_flags(spell) & spflag::targeting_mask);
+        }
+
+        bool allow_autotarget() const override
+        {
+            return is_targeted() && !_spell_autotarget_incompatible(spell);
         }
 
         void trigger(dist &t) override
@@ -385,25 +508,26 @@ namespace quiver
             {
                 target.target = coord_def(-1,-1);
                 target.find_target = false; // default, but here for clarity's sake
+                target.interactive = true;
             }
-            else if (_spell_skips_initial_autotarget(spell))
+            else if (_spell_autotarget_incompatible(spell))
             {
                 target.target = coord_def(-1,-1);
                 target.find_target = true;
             }
 
-            // TODO: would it be feasible to allow dropping to manual targeting
-            // if the only autotarget solution found would hit the player?
-            // currently applies to something like firestorm, where direction
-            // chooser autotargeting doesn't work very well (maybe on purpose)
-            cast_a_spell(true, spell, &target);
-            if (target.find_target && !target.isValid)
+            // don't do the range check check if doing manual firing. (It's
+            // a bit hacky to condition this on whether there's a fire context...)
+            const bool do_range_check = !target.fire_context;
+
+            cast_a_spell(do_range_check, spell, &target);
+            if (target.find_target && !target.isValid && !target.fire_context)
             {
                 // It would be entirely possible to force manual targeting for
                 // this case; I think it's not what players would expect so I'm
                 // not doing it for now.
                 // TODO: more consistency with autofight.lua messaging?
-                mpr("Can't find an automatic target! Use z or Z to cast.");
+                mpr("Can't find an automatic target! Use Z to cast.");
             }
             t = target; // copy back, in case they are different
         }
@@ -729,10 +853,9 @@ namespace quiver
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
             const int item_slot = get().get_item();
-            if (item_slot >= 0)
+            if (item_slot >= 0 && you.inv[item_slot].defined())
             {
                 const item_def item = you.inv[item_slot];
-                ASSERT(item.defined());
 
                 quiver::launcher t = quiver::AMMO_THROW;
                 const item_def *weapon = you.weapon();
@@ -1003,6 +1126,72 @@ namespace quiver
         }
     };
 
+    void action_cycler::target()
+    {
+        // This is a somewhat indirect interface that allows cycling between
+        // arbitrary code paths that call a direction chooser. Because the
+        // setup for direction choosers is so varied and complicated, we can't
+        // implement the cycling internal to a direction chooser interface
+        // (at least without a major refactor), so this UI takes the strategy
+        // of rebuilding the direction chooser each time, but making it look
+        // seamless from a user perspective. Each call to `do_target` leads to
+        // the specific custom targeting code path for a particular action,
+        // which then builds the direction chooser. The three CMD_TARGET...
+        // commands below are not handled in a direction chooser, but rather
+        // passed back via the `dist`. In addition, the `dist` object will
+        // pass down a pointer to this that the direction chooser will use for
+        // some custom prompt stuff. Obviously, it would better if this
+        // message passing happened more directly, and in the long run perhaps
+        // it would be possible to gradually refactor the various code paths
+        // involved to support that, but for now that project is too
+        // impractical, because each code path (except throwing) is called from
+        // many places.
+        shared_ptr<action> initial = get_ptr();
+        clear_messages(); // this kind of looks better as a force clear, but
+                          // for consistency with direct targeting commands,
+                          // I will leave it as non-force
+        msgwin_temporary_mode tmp;
+
+        command_type what_happened = CMD_NO_CMD;
+        do
+        {
+            flush_prev_message();
+            msgwin_clear_temporary();
+            auto a = do_target();
+            what_happened = a ? static_cast<command_type>(a->target.cmd_result)
+                              : CMD_NO_CMD;
+
+            switch (what_happened)
+            {
+            case CMD_TARGET_CYCLE_QUIVER_FORWARD:
+                cycle();
+                break;
+            case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
+                cycle(-1);
+                break;
+            case CMD_TARGET_SELECT_ACTION:
+                choose(*this, false);
+                break;
+            default:
+                what_happened = CMD_NO_CMD; // shouldn't happen
+                // fallthrough
+            case CMD_FIRE:
+            case CMD_NO_CMD:
+                break;
+            }
+            if (!crawl_state.is_replaying_keys())
+                flush_input_buffer(FLUSH_BEFORE_COMMAND);
+            // right now this resets targeting on cycle; would it be better to
+            // save it?
+        } while (what_happened != CMD_NO_CMD && what_happened != CMD_FIRE);
+
+        // Restore the quiver on cancel -- backwards compatible behavior.
+        // Is it really the best behavior?
+        if (what_happened == CMD_NO_CMD && initial && initial->is_valid())
+            set(initial);
+    }
+
+    // should be action_cycler method?
     void choose(action_cycler &cur_quiver, bool allow_empty)
     {
         // TODO: icons in tiles, dividers or subtitles for each category?

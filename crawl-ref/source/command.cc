@@ -396,7 +396,7 @@ static const char *targeting_help_wiz =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
-    "<w>(</w>: place a mimic\n"
+    "<w>Ctrl-(</w>: place a mimic\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
 ;
@@ -416,10 +416,10 @@ static const char *targeting_help_2 =
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
-    "<h>Firing or throwing a missile:\n"
-    "<w>(</w> : cycle to next suitable missile.\n"
-    "<w>)</w> : cycle to previous suitable missile.\n"
-    "<w>i</w> : choose from Inventory.\n"
+    "<h>Firing, throwing, spellcasting:\n"
+    "<w>(</w> : cycle to next suitable fire action\n"
+    "<w>)</w> : cycle to previous suitable fire action.\n"
+    "<w>Q</w> : choose fire action.\n"
 ;
 
 struct help_file

@@ -168,7 +168,8 @@ static void _wizard_make_friendly(monster* m)
 
 dist::dist()
     : isValid(false), isTarget(false), isEndpoint(false), isCancel(false),
-      choseRay(false), target(), delta(), ray(), find_target(false)
+      choseRay(false), interactive(false), target(), delta(), ray(),
+       find_target(false), fire_context(nullptr), cmd_result(CMD_NO_CMD)
 {
 }
 
@@ -259,6 +260,8 @@ string direction_chooser::build_targeting_hint_string() const
 
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
+    // TODO: currently 'f' works for non-actor targets (features, apport) but
+    // shows nothing here
     const actor*   f_target = targeted_actor();
     const monster* p_target = _get_current_target();
 
@@ -283,6 +286,7 @@ void direction_chooser::print_top_prompt() const
 
 void direction_chooser::print_key_hints() const
 {
+    // TODO: build this as a vector and insert ,s and \ns in a smarter way
     string prompt = "Press: ? - help";
 
     if (just_looking)
@@ -295,20 +299,33 @@ void direction_chooser::print_key_hints() const
     }
     else
     {
-        const string hint_string = build_targeting_hint_string();
-        switch (restricts)
+        if (moves.fire_context)
+            prompt += moves.fire_context->fire_key_hints() + "\n";
+        string direction_hint = "";
+        if (behaviour && behaviour->untargeted())
+            direction_hint = "Dir - look around";
+        else
         {
-        case DIR_NONE:
-            prompt += ", Shift-Dir - straight line";
-            prompt += hint_string;
-            break;
-        case DIR_TARGET:
-        case DIR_SHADOW_STEP:
-        case DIR_LEAP:
-            prompt += ", Dir - move target cursor";
-            prompt += hint_string;
-            break;
+            switch (restricts)
+            {
+            case DIR_NONE:
+                direction_hint = "Shift-Dir - straight line";
+                break;
+            case DIR_TARGET:
+            case DIR_SHADOW_STEP:
+            case DIR_LEAP:
+                direction_hint = "Dir - move target";
+                break;
+            }
         }
+
+        if (direction_hint.size())
+        {
+            if (prompt[prompt.size() - 1] != '\n')
+                prompt += ", ";
+            prompt += direction_hint;
+        }
+        prompt += build_targeting_hint_string();
     }
 
     // Display the prompt.
@@ -419,7 +436,10 @@ targeting_behaviour direction_chooser::stock_behaviour;
 
 void direction(dist &moves, const direction_chooser_args& args)
 {
-    moves.interactive = !(in_bounds(moves.target) || moves.find_target);
+    // TODO this might break pre-chosen delta targeting, if that ever happens
+    moves.interactive = moves.interactive
+                        || !(in_bounds(moves.target) || moves.find_target);
+
     if (moves.interactive)
         direction_chooser(moves, args).choose_direction();
     else
@@ -937,7 +957,7 @@ bool direction_chooser::move_is_ok() const
             {
                 // avoid printing this message when autotargeting -- it doesn't
                 // make much sense
-                if (!moves.find_target)
+                if (moves.interactive)
                     mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
             }
@@ -1334,7 +1354,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     {
         // if find_target is set, some form of autotargeting is in play and we
         // leave any messaging to the caller.
-        if (!moves.find_target)
+        if (moves.interactive)
         {
             mprf(MSGCH_EXAMINE_FILTER, "%s",
                                 hitfunc ? hitfunc->why_not.c_str()
@@ -1403,6 +1423,7 @@ bool direction_chooser::handle_signals()
     {
         moves.isValid  = false;
         moves.isCancel = true;
+        moves.cmd_result = CMD_NO_CMD;
 
         mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
         return true;
@@ -2075,6 +2096,22 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_DESCRIBE: describe_target(); break;
     case CMD_TARGET_HELP:     show_help();       break;
 
+    case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
+    case CMD_TARGET_CYCLE_QUIVER_FORWARD:
+    case CMD_TARGET_SELECT_ACTION:
+        if (moves.fire_context)
+        {
+            // because of the somewhat convoluted way in which action selection
+            // is handled, this can only be handled if the direction chooser
+            // has been called via a quiver::action. Otherwise, we ignore these
+            // commands.
+            moves.isValid = false;
+            moves.isCancel = true;
+            moves.cmd_result = static_cast<int>(command);
+            loop_done = true;
+        }
+        break; // otherwise, ignore
+
     default:
         // Some blocks of keys with similar handling.
         handle_movement_key(command, &loop_done);
@@ -2259,7 +2296,8 @@ bool direction_chooser::noninteractive()
 
     update_validity();
     finalize_moves();
-    return moves.isValid;
+    moves.cmd_result = moves.isValid && !moves.isCancel ? CMD_FIRE : CMD_NO_CMD;
+    return moves.cmd_result == CMD_FIRE;
 }
 
 bool direction_chooser::choose_direction()
@@ -2297,7 +2335,8 @@ bool direction_chooser::choose_direction()
         need_viewport_redraw = true;
 
     clear_messages();
-    msgwin_set_temporary(true);
+    msgwin_temporary_mode tmp;
+
     unwind_bool save_more(crawl_state.show_more_prompt, false);
     show_initial_prompt();
     need_text_redraw = false;
@@ -2317,8 +2356,9 @@ bool direction_chooser::choose_direction()
         ui::pump_events();
     ui::pop_layout();
 
-    msgwin_set_temporary(false);
     finalize_moves();
+    if (moves.isValid && !moves.isCancel)
+        moves.cmd_result = CMD_FIRE;
     return moves.isValid;
 }
 

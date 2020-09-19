@@ -69,61 +69,6 @@ bool item_is_quivered(const item_def &item)
     return in_inventory(item) && item.link == you.quiver_action.get().get_item();
 }
 
-// TODO: how to handle custom targeters for different actions??
-class fire_target_behaviour : public targeting_behaviour
-{
-public:
-    fire_target_behaviour()
-        : chosen_ammo(false),
-          action(you.quiver_action),
-          selected_from_inventory(false),
-          need_redraw(false)
-    {
-        set_prompt();
-    }
-
-    // targeting_behaviour API
-    virtual command_type get_command(int key) override;
-    virtual bool should_redraw() const override { return need_redraw; }
-    virtual void clear_redraw()        override { need_redraw = false; }
-    virtual void update_top_prompt(string* p_top_prompt) override;
-    virtual vector<string> get_monster_desc(const monster_info& mi) override;
-
-    bool untargeted() override;
-
-public:
-    const item_def* active_item();
-    // FIXME: these should be privatized and given accessors.
-    bool chosen_ammo;
-    quiver::action_cycler action;
-
-private:
-    void set_prompt();
-    void cycle_fire_item(bool forward);
-    void pick_fire_item_from_inventory();
-    void display_help();
-
-    string prompt;
-    string internal_prompt;
-    bool selected_from_inventory;
-    bool need_redraw;
-};
-
-void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
-{
-    *p_top_prompt = internal_prompt;
-}
-
-
-const item_def* fire_target_behaviour::active_item()
-{
-    const int slot = action.get().get_item();
-    if (slot == -1)
-        return nullptr;
-    else
-        return &you.inv[slot];
-}
-
 static bool _slot_is_pprojable(int slot)
 {
     if (slot < 0 || slot >= ENDOFPACK)
@@ -136,9 +81,77 @@ static bool _slot_is_pprojable(int slot)
     return l == launch_retval::LAUNCHED || l == launch_retval::THROWN;
 }
 
+// TODO: how to handle custom targeters for different actions??
+class fire_target_behaviour : public targeting_behaviour
+{
+public:
+    fire_target_behaviour(shared_ptr<quiver::action> a)
+        : action(a),
+          need_redraw(false)
+    {
+        // ensure not null
+        if (!action)
+            action = make_shared<quiver::action>();
+        set_prompt();
+        if (!action->is_targeted())
+            needs_path = MB_FALSE; // should untargeted() imply no path?
+        else if (is_pproj_active())
+            needs_path = frombool(!_slot_is_pprojable(action->get_item()));
+    }
+
+    // targeting_behaviour API
+    virtual bool should_redraw() const override { return need_redraw; }
+    virtual void clear_redraw()        override { need_redraw = false; }
+    virtual void update_top_prompt(string* p_top_prompt) override;
+    virtual vector<string> get_monster_desc(const monster_info& mi) override;
+
+    bool untargeted() override;
+
+public:
+    const item_def* active_item();
+
+private:
+    void display_help();
+    void set_prompt();
+
+    shared_ptr<quiver::action> action;
+    string prompt;
+    string internal_prompt;
+    bool need_redraw;
+};
+
+// maybe should be a method of action
+void untargeted_fire(shared_ptr<quiver::action> a)
+{
+    ASSERT(a);
+    // this function handles a default "just looking" targeter for untargeted
+    // spells/actions that don't have something custom
+    fire_target_behaviour beh(a);
+
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.behaviour = &beh;
+
+    direction(a->target, args);
+}
+
+void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
+{
+    *p_top_prompt = internal_prompt;
+}
+
+const item_def* fire_target_behaviour::active_item()
+{
+    const int slot = action->get_item();
+    if (slot == -1)
+        return nullptr;
+    else
+        return &you.inv[slot];
+}
+
 bool fire_target_behaviour::untargeted()
 {
-    return !action.get().is_targeted();
+    return !action->is_targeted();
 }
 
 void fire_target_behaviour::set_prompt()
@@ -146,29 +159,20 @@ void fire_target_behaviour::set_prompt()
     string old_prompt = internal_prompt; // Keep for comparison at the end.
     internal_prompt.clear();
 
-    // Figure out if we have anything else to cycle to.
-    const bool no_other_items = action.get() == *action.next();
-
     ostringstream msg;
 
-    // TODO: might be nice to use colors here, but there's a wonky interaction
-    // with the direction targeter's colors that would need to be fixed
-    string quiver_desc = action.get().quiver_description().tostring();
 
-    if (untargeted())
-        msg << "Non-targeted " << lowercase_first(quiver_desc);
+    if (*action == quiver::action())
+        internal_prompt = "No action selected";
     else
-        msg << quiver_desc;
+    {
+        // TODO: might be nice to use colors here, but there's a wonky interaction
+        // with the direction targeter's colors that would need to be fixed
+        internal_prompt = action->quiver_description().tostring();
 
-    // And a key hint.
-    string key_hint = no_other_items
-                        ? " (<w>%</w> - select action)"
-                        : " (<w>%</w> - select action. <w>%</w>/<w>%</w> - cycle)";
-    insert_commands(key_hint,
-                    { CMD_QUIVER_ITEM,
-                      CMD_CYCLE_QUIVER_BACKWARD,
-                      CMD_CYCLE_QUIVER_FORWARD });
-    msg << key_hint;
+        if (untargeted())
+            internal_prompt = string("Non-targeted ") + lowercase_first(internal_prompt);
+    }
 
     // Write it out.
     internal_prompt += msg.str();
@@ -177,46 +181,6 @@ void fire_target_behaviour::set_prompt()
     // screen or something else which demands a redraw.
     if (internal_prompt != old_prompt)
         need_redraw = true;
-
-    // TODO: this could be done elsewhere
-    if (is_pproj_active())
-        needs_path = frombool(!_slot_is_pprojable(action.get().get_item()));
-    else
-        needs_path = frombool(action.get().is_targeted());
-    // could implement switching to just_looking for this case instead?
-}
-
-// Cycle to the next (forward == true) or previous (forward == false)
-// fire item.
-void fire_target_behaviour::cycle_fire_item(bool forward)
-{
-    const bool changed = action.cycle(forward ? 1 : -1);
-    const int next = action.get().get_item();
-    if (changed && next != -1)
-    {
-        selected_from_inventory = false;
-        chosen_ammo = true;
-    }
-    set_prompt();
-}
-
-void fire_target_behaviour::pick_fire_item_from_inventory()
-{
-    need_redraw = true;
-    string err;
-    const int selected = _fire_prompt_for_item();
-    if (selected >= 0 && _fire_validate_item(selected, err))
-    {
-        action.set_from_slot(selected);
-        selected_from_inventory = true;
-        chosen_ammo = true;
-    }
-    else if (!err.empty())
-    {
-        mpr(err);
-        more();
-    }
-    set_prompt();
 }
 
 void fire_target_behaviour::display_help()
@@ -226,35 +190,6 @@ void fire_target_behaviour::display_help()
     update_screen();
     need_redraw = true;
     set_prompt();
-}
-
-command_type fire_target_behaviour::get_command(int key)
-{
-    if (key == CMD_TARGET_CANCEL)
-        chosen_ammo = false;
-    else if (!(-key > CMD_NO_CMD && -key < CMD_MIN_SYNTHETIC)
-                    || context_for_command((command_type) -key) == KMC_DEFAULT)
-    {
-        // that check is really hacky, but if we don't do it mouse targeting
-        // produces all sorts of errors in the call below because the context
-        // isn't right; really we are in a targeting context now, and the use of
-        // KMC_DEFAULT below is also a hack. This whole context system could use
-        // some serious refactoring if commands are really supposed to work in
-        // multiple contexts.
-        switch (key_to_command(key, KMC_DEFAULT))
-        {
-        case CMD_CYCLE_QUIVER_BACKWARD: cycle_fire_item(true);  return CMD_NO_CMD;
-        case CMD_CYCLE_QUIVER_FORWARD: cycle_fire_item(false); return CMD_NO_CMD;
-        case CMD_QUIVER_ITEM:
-            quiver::choose(action, false);
-            set_prompt();
-            return CMD_NO_CMD;
-        case CMD_DISPLAY_COMMANDS: display_help(); return CMD_NO_CMD;
-        default: break;
-        }
-    }
-
-    return targeting_behaviour::get_command(key);
 }
 
 vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
@@ -326,76 +261,6 @@ static int _get_dart_chance(const int hd)
     return chance / 100;
 }
 
-/**
- *  Validate any item selected to be fired, and choose a target to fire at.
- *
- *  @param slot         The slot the item to be fired is in, or -1 if
- *                      an item has not yet been chosen.
- *  @param target       An empty variable of the dist class to store the
- *                      target information in.
- *  @param teleport     Does the player have portal projectile active?
- *  @param fired_normally  True if the projectile was fired through the f
- *                      command, false if fired through the F command.
- *                      If true, if the player changes their mind about which
- *                      item to fire, update the quivered item accordingly.
- *  @return             Whether the item validation and target selection
- *                      was successful.
- */
-static shared_ptr<quiver::action> _fire_choose_item_and_target(int item_slot,
-                                         dist& target,
-                                         bool teleport = false,
-                                         bool fired_normally = true)
-{
-    fire_target_behaviour beh;
-
-    if (item_slot != -1)
-    {
-        string warn;
-        if (!_fire_validate_item(item_slot, warn))
-        {
-            mpr(warn);
-            return make_shared<quiver::action>();
-        }
-        // Force item to be the prechosen one.
-        beh.action.set_from_slot(item_slot);
-    }
-
-    direction_chooser_args args;
-    args.mode = TARG_HOSTILE;
-    args.behaviour = &beh;
-
-    direction(target, args);
-
-    if (!beh.action.get().is_valid())
-    {
-        canned_msg(MSG_OK);
-        return make_shared<quiver::action>();
-    }
-    if (!target.isValid)
-    {
-        if (target.isCancel)
-            canned_msg(MSG_OK);
-        return make_shared<quiver::action>();
-    }
-    if (teleport && cell_is_solid(target.target))
-    {
-        const char *feat = feat_type_name(env.grid(target.target));
-        mprf("There is %s there.", article_a(feat).c_str());
-        return make_shared<quiver::action>();
-    }
-
-    if (fired_normally)
-    {
-        // TODO: is this the most useful behavior?
-        you.quiver_action.set(beh.action);
-        if (beh.action.get().get_item() >= 0)
-            you.m_quiver_history.on_item_fired(*beh.active_item(), beh.chosen_ammo);
-        you.redraw_quiver = true;
-    }
-
-    return beh.action.get_ptr();
-}
-
 // Bring up an inventory screen and have user choose an item.
 // Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
@@ -403,6 +268,11 @@ static int _fire_prompt_for_item()
 {
     if (inv_count() < 1)
         return -1;
+
+    // should this sound happen for `f` too? Not sure what the intent is
+#ifdef USE_SOUND
+    parse_sound(FIRE_PROMPT_SOUND);
+#endif
 
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    menu_type::invlist,
@@ -476,64 +346,6 @@ bool fire_warn_if_impossible(bool silent)
     return false;
 }
 
-static bool _autoswitch_to_ranged()
-{
-    int item_slot;
-    if (you.equip[EQ_WEAPON] == letter_to_index('a'))
-        item_slot = letter_to_index('b');
-    else if (you.equip[EQ_WEAPON] == letter_to_index('b'))
-        item_slot = letter_to_index('a');
-    else
-        return false;
-
-    const item_def& launcher = you.inv[item_slot];
-    if (!is_range_weapon(launcher))
-        return false;
-    if (none_of(you.inv.begin(), you.inv.end(), [&launcher](const item_def& it)
-                { return it.launched_by(launcher);}))
-    {
-        return false;
-    }
-
-    if (!wield_weapon(true, item_slot))
-        return false;
-
-    you.turn_is_over = true;
-    //XXX Hacky. Should use a delay instead.
-    macro_buf_add(command_to_key(CMD_FIRE));
-    return true;
-}
-
-shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport)
-{
-    // TODO: this call is probably wrong here
-    if (fire_warn_if_impossible())
-    {
-        flush_input_buffer(FLUSH_ON_FAILURE);
-        return make_shared<quiver::action>();
-    }
-
-    // TODO: double check this quiver logic
-    if (Options.auto_switch && you.quiver_action.get().get_item() == -1
-       && _autoswitch_to_ranged())
-    {
-        return make_shared<quiver::action>();
-    }
-
-    // TODO: maybe move some of this logic into ammo_action itself?
-    auto a = _fire_choose_item_and_target(item, target, teleport);
-    if (!a || !a->is_valid())
-        return make_shared<quiver::action>();
-
-    string warn;
-    if (a->get_item() >= 0 && !_fire_validate_item(a->get_item(), warn))
-    {
-        mpr(warn);
-        return make_shared<quiver::action>();
-    }
-    return a;
-}
-
 // Portal Projectile requires MP per shot.
 bool is_pproj_active()
 {
@@ -541,26 +353,14 @@ bool is_pproj_active()
            && enough_mp(1, true, false);
 }
 
-// If item == -1, prompt the user.
-// If item passed, it will be put into the quiver.
-void fire_thing(int item, dist target)
-{
-#ifdef USE_SOUND
-    parse_sound(FIRE_PROMPT_SOUND);
-#endif
-
-    auto a = get_ammo_to_shoot(item, target, is_pproj_active());
-    if (!a)
-        return;
-
-    // TODO: pass back target?
-    a->trigger(target);
-}
-
 // Basically does what throwing used to do: throw an item without changing
 // the quiver.
-void throw_item_no_quiver()
+void throw_item_no_quiver(dist *target)
 {
+    dist targ_local;
+    if (!target)
+        target = &targ_local;
+
     if (fire_warn_if_impossible())
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -573,29 +373,51 @@ void throw_item_no_quiver()
         return;
     }
 
+    // first find an action
     string warn;
-    // TODO: non-item actions
-    int slot = _fire_prompt_for_item();
+    auto a = quiver::slot_to_action(_fire_prompt_for_item());
 
-    if (slot == -1)
+    // handles slot == -1
+    if (!a || !a->is_valid())
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    if (!_fire_validate_item(slot, warn))
+    if (a->get_item() >= 0 && !_fire_validate_item(a->get_item(), warn))
     {
         mpr(warn);
         return;
     }
 
-    dist target;
-    auto a = _fire_choose_item_and_target(slot, target, is_pproj_active(), false);
+    // then find a target
+    fire_target_behaviour beh(a);
 
-    if (!a || !a->is_valid())
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.behaviour = &beh;
+
+    direction(*target, args);
+
+    if (!target->isValid || target->isCancel)
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
-    a->trigger(target);
+    // should this be somewhere else?
+    if (is_pproj_active()
+        && in_bounds(target->target)
+        && cell_is_solid(target->target))
+    {
+        const char *feat = feat_type_name(grd(target->target));
+        mprf("There is %s there.", article_a(feat).c_str());
+        return;
+    }
+
+    // can't I just use the targeting from throw_it?
+    target->interactive = false;
+    a->trigger(*target);
 }
 
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
@@ -756,35 +578,35 @@ static void _throw_noise(actor* act, const item_def &ammo)
 // true if dummy_target is hit.
 bool throw_it(bolt &pbolt, int throw_2, dist *target)
 {
-    dist thr;
+    dist targ_local;
+    if (!target)
+        target = &targ_local;
+
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     const bool teleport = is_pproj_active();
 
     if (you.confused())
     {
-        thr.target = you.pos();
-        thr.target.x += random2(13) - 6;
-        thr.target.y += random2(13) - 6;
-        thr.isValid = true;
+        target->target = you.pos();
+        target->target.x += random2(13) - 6;
+        target->target.y += random2(13) - 6;
+        target->isValid = true;
+        target->cmd_result = CMD_FIRE;
     }
-    else if (target)
-        thr = *target;
-    else if (pbolt.target.zero())
+    else
     {
+        // maybe move out of here?
+        fire_target_behaviour beh(quiver::slot_to_action(throw_2));
         direction_chooser_args args;
+        args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
-        direction(thr, args);
-
-        if (!thr.isValid)
-        {
-            if (thr.isCancel)
-                canned_msg(MSG_OK);
-
-            return false;
-        }
+        direction(*target, args);
     }
-    pbolt.set_target(thr);
+    if (!target->isValid)
+        return false;
+
+    pbolt.set_target(*target);
 
     item_def& thrown = you.inv[throw_2];
     ASSERT(thrown.defined());
@@ -822,13 +644,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
-            monster *m = monster_at(thr.target);
+            monster *m = monster_at(target->target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, thr.target);
+                cancelled = stop_attack_prompt(m, false, target->target);
 
             if (!cancelled && (pbolt.is_explosion || pbolt.special_explosion))
             {
-                for (adjacent_iterator ai(thr.target); ai; ++ai)
+                for (adjacent_iterator ai(target->target); ai; ++ai)
                 {
                     if (cancelled)
                         break;
@@ -892,7 +714,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     if (!teleport)
-        pbolt.set_target(thr);
+        pbolt.set_target(*target);
 
     const int bow_brand = (projected == launch_retval::LAUNCHED)
                           ? get_weapon_brand(*you.weapon())
@@ -1024,7 +846,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_DART)
     {
-        dithmenos_shadow_throw(thr, item);
+        dithmenos_shadow_throw(*target, item);
     }
 
     return hit;
