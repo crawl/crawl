@@ -96,7 +96,7 @@ namespace quiver
     shared_ptr<action> find_ammo_action();
     shared_ptr<action> find_action_from_launcher(const item_def *item);
 
-    shared_ptr<action> slot_to_action(int slot);
+    shared_ptr<action> slot_to_action(int slot, bool force=false);
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
