@@ -742,7 +742,7 @@ bool spell_direction(dist &spelld, bolt &pbolt, direction_chooser_args *args)
     if (!spelld.isValid)
     {
         // Check for user cancel in interactive direction choosing.
-        if (spelld.isCancel && spelld.interactive)
+        if (spelld.isCancel && spelld.interactive && !spelld.fire_context)
             canned_msg(MSG_OK);
         return false;
     }

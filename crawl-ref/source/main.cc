@@ -1691,6 +1691,22 @@ static void _do_list_gold()
         shopping_list.display();
 }
 
+static bool _check_recklessness(command_type prev_cmd)
+{
+    if (Options.autofight_warning > 0
+        && !is_processing_macro()
+        && you.real_time_delta
+                        <= chrono::milliseconds(Options.autofight_warning)
+        && (prev_cmd == CMD_AUTOFIGHT
+            || prev_cmd == CMD_AUTOFIGHT_NOMOVE
+            || prev_cmd == CMD_AUTOFIRE))
+    {
+        mprf(MSGCH_DANGER, "You should not fight recklessly!");
+        return true;
+    }
+    return false;
+}
+
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
@@ -1755,33 +1771,25 @@ void process_command(command_type cmd, command_type prev_cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIRE:
-        if (you.quiver_action.get().is_valid() && !you.quiver_action.get().is_targeted())
+        if (you.quiver_action.get().is_valid() &&
+                                !you.quiver_action.get().allow_autotarget())
         {
-            // TODO: recklessness warning?
-            you.quiver_action.get().trigger();
+            if (!_check_recklessness(prev_cmd))
+                you.quiver_action.get().trigger();
             break;
         }
         // intentional fallthrough
     case CMD_AUTOFIGHT:
     case CMD_AUTOFIGHT_NOMOVE:
-    {
-        const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
-                                  : cmd == CMD_AUTOFIRE  ? "fire_closest"
-                                                         : "hit_closest_nomove";
-        if (Options.autofight_warning > 0
-            && !is_processing_macro()
-            && you.real_time_delta
-               <= chrono::milliseconds(Options.autofight_warning)
-            && (prev_cmd == CMD_AUTOFIGHT
-                || prev_cmd == CMD_AUTOFIGHT_NOMOVE
-                || prev_cmd == CMD_AUTOFIRE))
+        if (!_check_recklessness(prev_cmd))
         {
-            mprf(MSGCH_DANGER, "You should not fight recklessly!");
+            const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
+                                      : cmd == CMD_AUTOFIRE  ? "fire_closest"
+                                                             : "hit_closest_nomove";
+            if (!clua.callfn(fnname, 0, 0))
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
-        else if (!clua.callfn(fnname, 0, 0))
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
-    }
 #endif
     case CMD_REST:           _do_rest(); break;
 
@@ -1862,7 +1870,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // Action commands.
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
     case CMD_DISPLAY_SPELLS:       inspect_spells();         break;
-    case CMD_FIRE:                 fire_thing();             break;
+    case CMD_FIRE:                 you.quiver_action.target(); break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_QUAFF:                drink();                  break;

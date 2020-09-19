@@ -1337,7 +1337,7 @@ void init_keybindings()
 
         // Only one command per key, but it's okay to have several
         // keys map to the same command.
-        ASSERT(!key_map.count(data.key));
+        ASSERTM(!key_map.count(data.key), "bad mapping for key '%c'", data.key);
 
         key_map[data.key] = data.cmd;
         cmd_map[data.cmd] = data.key;

@@ -3427,12 +3427,8 @@ void tile_item_use_secondary(int idx)
 {
     const item_def item = you.inv[idx];
 
-    if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
-    {
-        if (check_warning_inscriptions(item, OPER_FIRE))
-            fire_thing(idx); // fire weapons
-    }
-    else if (you.equip[EQ_WEAPON] == idx)
+    // TODO: add quiver stuff here?
+    if (you.equip[EQ_WEAPON] == idx)
         wield_weapon(true, SLOT_BARE_HANDS);
     else if (item_is_wieldable(item))
     {
@@ -3499,7 +3495,7 @@ void tile_item_use(int idx)
 
         case OBJ_MISSILES:
             if (check_warning_inscriptions(item, OPER_FIRE))
-                fire_thing(idx);
+                quiver::slot_to_action(idx)->trigger(); // TODO: anything more interesting?
             return;
 
         case OBJ_ARMOUR:
