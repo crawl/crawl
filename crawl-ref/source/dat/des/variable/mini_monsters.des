@@ -6466,24 +6466,23 @@ ENDMAP
 # Golem armour
 #
 NAME:   unrand_golem_armour
-DEPTH:  D:$, Depths, Vaults
+DEPTH:  D:9-14
 TAGS:   no_monster_gen no_item_gen transparent
-WEIGHT: 3, 1 (Vaults)
-MONS:   patrolling crystal guardian
+MONS:   crystal guardian
 KMONS:  G = patrolling iron golem
-KITEM:  " = Golem armour no_pickup
-KITEM:  ' = Golem gauntlets no_pickup
-KITEM:  ~ = Golem greaves no_pickup
-KITEM:  - = Golem helmet no_pickup
+KITEM:  a = Golem armour no_pickup
+KITEM:  b = Golem gauntlets no_pickup
+KITEM:  c = Golem greaves no_pickup
+KITEM:  d = Golem helmet no_pickup
 KFEAT:  o = runed_door
+KFEAT:  X = clear_stone_wall
+FTILE:  " = floor_crystal_squares
 MAP
-.......@.......
-.vvvvoo+oovvvv.
-.o.....1.....o.
-.o..."'G~-...o.
-.o.....1.....o.
-.vvvvoo+oovvvv.
-.......@.......
+.vXXXoXXXv.
+.X...b...X.
+.o..aGd..o.
+.X...c...X.
+.vXXXoXXXv.
 ENDMAP
 
 # Robustness
