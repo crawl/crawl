@@ -465,6 +465,13 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
+flask of healing mist
+
+A set of flask and valve-attached diffuser. When you open the valve, an alchemical
+healing mist is emitted from the inside of the flask, fills the surrounding area.
+This mist provides you with only a slight amount of healing, but quickly recovers
+the dwellers of the dungeon and the creatures from the spell or device.
+%%%%
 fustibalus
 
 A length of wood with a reinforced sling at one end, able to fire projectiles
