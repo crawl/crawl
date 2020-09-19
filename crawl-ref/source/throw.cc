@@ -375,7 +375,7 @@ void throw_item_no_quiver(dist *target)
 
     // first find an action
     string warn;
-    auto a = quiver::slot_to_action(_fire_prompt_for_item());
+    auto a = quiver::slot_to_action(_fire_prompt_for_item(), true);
 
     // handles slot == -1
     if (!a || !a->is_valid())
@@ -596,8 +596,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
     else
     {
-        // maybe move out of here?
-        fire_target_behaviour beh(quiver::slot_to_action(throw_2));
+        // maybe move out of here? It's sort of silly to reconstruct this
+        // given that there is always an action that triggers the function
+        // now
+        fire_target_behaviour beh(quiver::slot_to_action(throw_2, true));
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;

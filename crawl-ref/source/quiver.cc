@@ -278,7 +278,15 @@ namespace quiver
             return ammo_slot == static_cast<const ammo_action&>(other).ammo_slot;
         }
 
-        bool is_enabled() const override
+        virtual bool launcher_check() const
+        {
+            if (ammo_slot < 0)
+                return false;
+            return _item_matches(you.inv[ammo_slot], (fire_type) 0xffff,
+                you.weapon(), false);
+        }
+
+        virtual bool is_enabled() const override
         {
             if (!is_valid())
                 return false;
@@ -286,12 +294,11 @@ namespace quiver
             if (fire_warn_if_impossible(true))
                 return false;
 
-            // only applicable right now if auto_switch is enabled
-            const item_def *weapon = you.weapon();
-            const item_def& ammo = you.inv[ammo_slot];
-            if (!_item_matches(ammo, (fire_type) 0xffff, weapon, false))
+            if (!launcher_check())
                 return false;
 
+            const item_def *weapon = you.weapon();
+            const item_def& ammo = you.inv[ammo_slot];
 
             // disable if there's a no-fire inscription on ammo
             // maybe this should just be skipped altogether for this case?
@@ -302,7 +309,7 @@ namespace quiver
                     || check_warning_inscriptions(*weapon, OPER_FIRE));
         }
 
-        bool is_valid() const override
+        virtual bool is_valid() const override
         {
             if (you.species == SP_FELID)
                 return false;
@@ -373,7 +380,7 @@ namespace quiver
                                                                     quiver);
             switch (projected)
             {
-                case launch_retval::FUMBLED:  qdesc.cprintf("Toss: ");  break;
+                case launch_retval::FUMBLED:  qdesc.cprintf("Toss (no damage): ");  break;
                 case launch_retval::LAUNCHED: qdesc.cprintf("Fire: ");  break;
                 case launch_retval::THROWN:   qdesc.cprintf("Throw: "); break;
                 case launch_retval::BUGGY:    qdesc.cprintf("Bug: ");   break;
@@ -421,7 +428,7 @@ namespace quiver
             return result;
         }
 
-    private:
+    protected:
         int ammo_slot;
     };
 
@@ -438,6 +445,41 @@ namespace quiver
             return false;
         }
     }
+
+
+    // for fumble throwing / tossing
+    struct fumble_action : public ammo_action
+    {
+        fumble_action(int slot=-1) : ammo_action(slot)
+        {
+        }
+
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool launcher_check() const override
+        {
+            return true;
+        }
+
+        bool is_valid() const override
+        {
+            if (you.species == SP_FELID)
+                return false;
+            if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
+                return false;
+            const item_def& ammo = you.inv[ammo_slot];
+            if (!ammo.defined())
+                return false;
+
+            // slightly weird looking, but this ensures that only tossing
+            // is allowed with this class. (I guess in principle it could be
+            // doable to let this class toss anything, but I'm not going to
+            // do that.)
+            if (ammo_action::is_valid())
+                return false;
+            return true;
+        }
+    };
 
     // for spells that are targeted, but should skip the lua target selection
     // pass for one reason or another
@@ -708,6 +750,12 @@ namespace quiver
         save_target["param"] = ammo_slot;
     }
 
+    void fumble_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "fumble_action";
+        save_target["param"] = ammo_slot;
+    }
+
     void spell_action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "spell_action";
@@ -733,16 +781,17 @@ namespace quiver
             return make_shared<action>();
 
         const string &type = source["type"].get_string();
+        const int param = source["param"].get_int();
 
+        // is there something more elegant than this?
         if (type == "ammo_action")
-            return make_shared<ammo_action>(source["param"].get_int());
+            return make_shared<ammo_action>(param);
         else if (type == "spell_action")
-        {
-            return make_shared<spell_action>(
-                        static_cast<spell_type>(source["param"].get_int()));
-        }
+            return make_shared<spell_action>(static_cast<spell_type>(param));
         else if (type == "wand_action")
-            return make_shared<wand_action>(source["param"].get_int());
+            return make_shared<wand_action>(param);
+        else if (type == "fumble_action")
+            return make_shared<fumble_action>(param);
         else
             return make_shared<action>();
     }
@@ -976,7 +1025,7 @@ namespace quiver
         if (!result || !result->is_valid())
             result = _get_next_action_type(get_ptr(), dir);
 
-        // no valid actions
+        // no valid actions, return an empty-quiver action
         if (!result)
             return make_shared<action>();
 
@@ -1001,10 +1050,10 @@ namespace quiver
         you.redraw_quiver = true;
     }
 
-    shared_ptr<action> slot_to_action(int slot)
+    shared_ptr<action> slot_to_action(int slot, bool force)
     {
         if (slot < 0 || slot >= ENDOFPACK)
-            return make_shared<action>();
+            return nullptr;
 
         // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
@@ -1020,7 +1069,10 @@ namespace quiver
             return make_shared<wand_action>(slot);
 
         // use ammo as the fallback -- may well end up invalid
-        return make_shared<ammo_action>(slot);
+        auto a = make_shared<ammo_action>(slot);
+        if (force && (!a || !a->is_valid()))
+            return make_shared<fumble_action>(slot);
+        return a;
     }
 
     bool action_cycler::set_from_slot(int slot)
@@ -1084,7 +1136,7 @@ namespace quiver
 
             // TODO: in failure it would be better to set the more with an
             // error instead of exiting the menu
-            return !set_to_quiver(slot_to_action(slot));
+            return !set_to_quiver(slot_to_action(slot, true));
         }
 
         bool process_key(int key) override
@@ -1151,13 +1203,22 @@ namespace quiver
                           // for consistency with direct targeting commands,
                           // I will leave it as non-force
         msgwin_temporary_mode tmp;
+        bool force_restore_initial;
 
         command_type what_happened = CMD_NO_CMD;
         do
         {
             flush_prev_message();
             msgwin_clear_temporary();
+            force_restore_initial = false;
             auto a = do_target();
+
+            // the point of this: if you cycle to or select some item, fire it,
+            // and it becomes invalid (e.g. by using up ammo), this will try to
+            // restore the initial quiver value rather than ending up with the
+            // next in fire order item after the selected action
+            if (!a || !a->is_valid())
+                force_restore_initial = true;
             what_happened = a ? static_cast<command_type>(a->target.cmd_result)
                               : CMD_NO_CMD;
 
@@ -1187,8 +1248,11 @@ namespace quiver
 
         // Restore the quiver on cancel -- backwards compatible behavior.
         // Is it really the best behavior?
-        if (what_happened == CMD_NO_CMD && initial && initial->is_valid())
+        if ((what_happened == CMD_NO_CMD || force_restore_initial)
+            && initial && initial->is_valid())
+        {
             set(initial);
+        }
     }
 
     // should be action_cycler method?
