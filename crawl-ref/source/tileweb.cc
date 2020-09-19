@@ -1052,9 +1052,12 @@ void TilesFramework::_send_player(bool force_full)
                 (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
     _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
                 "quiver_available");
-    if(you.weapon()){
-	//TODO more optimizing
-        int weapon_plus = you.weapon()->plus;
+    if(you.weapon() &&
+        (you.weapon()->base_type == OBJ_WEAPONS
+        || you.weapon()->base_type == OBJ_RODS)
+        ){
+        //TODO more optimizing
+        int weapon_plus = you.weapon()->base_type == OBJ_WEAPONS ? you.weapon()->plus : you.weapon()->special;
         if (you.duration[DUR_CORROSION])
             weapon_plus -= 4 * you.props["corrosion_amount"].get_int();
         if(you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0)
@@ -1064,8 +1067,10 @@ void TilesFramework::_send_player(bool force_full)
         _update_int(force_full, c.weapon_plus, weapon_plus == you.weapon()->plus ? -100 :  weapon_plus, "weapon_plus");
     }
     
-    if(you.second_weapon()){
-        int second_weapon_plus = you.second_weapon()->plus;
+    if(you.second_weapon() &&
+        (you.second_weapon()->base_type == OBJ_WEAPONS
+            || you.second_weapon()->base_type == OBJ_RODS)){
+        int second_weapon_plus = you.second_weapon()->base_type == OBJ_WEAPONS ? you.second_weapon()->plus : you.second_weapon()->special;
         if (you.duration[DUR_CORROSION])
             second_weapon_plus -= 4 * you.props["corrosion_amount"].get_int();
         if(you.props[ELEMENTAL_ENCHANT_KEY].get_int() > 0)
