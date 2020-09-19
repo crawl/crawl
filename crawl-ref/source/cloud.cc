@@ -307,7 +307,6 @@ static const cloud_data clouds[] = {
       GREEN,                                    // colour
       { TILE_CLOUD_HEAL, CTVARY_DUR },          // tile
       BEAM_NONE, {},                            // beam_effect
-      true,                                     // opacity
     },
     // CLOUD_SILVER,
     { "purity", nullptr,                  // terse, verbose name

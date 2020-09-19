@@ -5852,7 +5852,7 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        return random_choose(OBJ_WANDS, OBJ_RODS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;

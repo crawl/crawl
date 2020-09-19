@@ -694,7 +694,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         // The player never needs more than one.
         {MISC_LIGHTNING_ROD,
             (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
-    {MISC_DISC_OF_STORMS,
+        {MISC_DISC_OF_STORMS,
             (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 17)},
         {MISC_LAMP_OF_FIRE,
             (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
@@ -702,6 +702,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
         {MISC_FAN_OF_GALES,
             (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
+        {MISC_HEALING_MIST,
+            (you.seen_misc[MISC_HEALING_MIST] ?       0 : 17)},
     };
 
     const int * const choice = random_choose_weighted(choices);

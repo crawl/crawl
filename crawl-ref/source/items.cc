@@ -4078,6 +4078,8 @@ colour_t item_def::miscellany_colour() const
             return BROWN;
         case MISC_PIPE:
             return RED;
+        case MISC_HEALING_MIST:
+            return LIGHTGREEN;
         default:
             return LIGHTGREEN;
     }

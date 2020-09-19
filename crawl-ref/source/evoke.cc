@@ -48,6 +48,7 @@
 #include "mon-clone.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mutant-beast.h"
 #include "nearby-danger.h"
 #include "output.h"
@@ -1971,8 +1972,6 @@ static bool _rod_spell(item_def& irod, bool check_range)
     return true;
 }
 
-
-
 /**
  * Find the cell at range 3 closest to the center of mass of monsters in range,
  * or a random range 3 cell if there are none.
@@ -2477,6 +2476,34 @@ bool evoke_item(int slot)
 
             case spret::success:
                 break;
+            }
+            break;
+
+        case MISC_HEALING_MIST:
+            if (!evoker_charges(item.sub_type))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            else
+            {
+                if (you.confused())
+                {
+                    canned_msg(MSG_TOO_CONFUSED);
+                    return false;
+                }
+
+                const int surge = pakellas_surge_devices();
+                surge_power(you.spec_evoke() + surge);
+                const int power =
+                    player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
+
+                big_cloud(CLOUD_HEAL, &you, you.pos(), power, 10 + random2(8), -1);
+                noisy(10, you.pos());
+
+                mpr("As open the valve, healing mist is spouting out from your flask!");
+                expend_xp_evoker(item.sub_type);
+                practise_evoking(3);
             }
             break;
 
