@@ -613,6 +613,8 @@ public:
     {
         if (you.has_usable_claws(true))
             return "Stone claws";
+        if (you.has_usable_sickle_hands(true))
+            return "Stone sickles";
         if (you.has_usable_tentacles(true))
             return "Stone tentacles";
         if (you.species == SP_HYDRA)

@@ -473,7 +473,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete",
 #endif
-    "silver", "venom", "protect", "drain", "speed", "buggy-vorpal",
+    "silver", "venom", "protect", "drain", "speed", "vorpal",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -498,7 +498,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "orc slaying",
 #endif
-    "silver", "venom", "protection", "draining", "speed", "buggy-vorpal",
+    "silver", "venom", "protection", "draining", "speed", "vorpal",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
