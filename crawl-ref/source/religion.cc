@@ -1364,6 +1364,7 @@ static int _pakellas_high_misc()
         MISC_PHIAL_OF_FLOODS,
         MISC_LIGHTNING_ROD,
         MISC_DISC_OF_STORMS,
+        MISC_HEALING_MIST,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {

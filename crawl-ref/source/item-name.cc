@@ -1117,6 +1117,7 @@ static string misc_type_name(const item_def* item)
 #endif
     case MISC_BAG:                       return "bag";
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
+    case MISC_HEALING_MIST:              return "flask of healing mist";
     case MISC_MERCENARY:
         if (item->props.exists(MERCENARY_UNIT_KEY)) {
             return mons_class_name((monster_type)item->props[MERCENARY_UNIT_KEY].get_int());

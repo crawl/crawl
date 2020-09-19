@@ -570,9 +570,6 @@ spret player_blinkbolt()
     
     blinkbolt.fire();
 
-    crawl_state.cancel_cmd_again();
-    crawl_state.cancel_cmd_repeat();
-
     return spret::success;
 }
 

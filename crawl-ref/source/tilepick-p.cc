@@ -76,7 +76,7 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 #if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:           return !hand2 ? TILEP_HAND1_STONE : TILEP_HAND1_BOTTLE_REV;
 #endif
-	case MISC_DISC_OF_STORMS:	      return TILEP_HAND1_DISC;
+	    case MISC_DISC_OF_STORMS:	          return TILEP_HAND1_DISC;
         case MISC_LIGHTNING_ROD:              return 0;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return !hand2 ? TILEP_HAND1_CRYSTAL : TILEP_HAND1_BOTTLE_REV;
@@ -87,6 +87,7 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
 #endif
         case MISC_HORN_OF_GERYON:             return !hand2 ? TILEP_HAND1_HORN : TILEP_HAND1_BOTTLE_REV;
         case MISC_BOX_OF_BEASTS:              return !hand2 ? TILEP_HAND1_BOX : TILEP_HAND1_BOTTLE_REV;
+        case MISC_HEALING_MIST:               return !hand2 ? TILEP_HAND1_BOTTLE : TILEP_HAND1_BOTTLE_REV;
 
 #if TAG_MAJOR_VERSION == 34
         case MISC_DECK_OF_ESCAPE:

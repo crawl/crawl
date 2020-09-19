@@ -1026,6 +1026,8 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_disc MISC_DISC_OF_STORMS
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
+misc_healing_mist MISC_HEALING_MIST
+misc_healing_mist_inert MISC_HEALING_MIST_INERT
 misc_tremorstones MISC_TIN_OF_TREMORSTONES
 %rim 1
 # Remove when TAG_MAJOR_VERSION > 34
