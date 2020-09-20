@@ -494,7 +494,7 @@ cc..cc..ccc..cc..cc
 ENDMAP
 
 NAME:   trove_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite uniq_trove
+TAGS:   transparent trowel_portal unrand overwrite_floor_cell uniq_trove
 DEPTH:  *, !Trove
 veto {{ return you.is_level_on_stack("Trove") }}
 : trove.portal(_G)

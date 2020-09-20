@@ -55,7 +55,7 @@ O
 ENDMAP
 
 NAME:   gauntlet_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
+TAGS:   transparent trowel_portal unrand allow_dup overwrite_floor_cell
 DEPTH:  *, !Gauntlet
 veto {{ return you.is_level_on_stack("Gauntlet") }}
 : gauntlet_portal(_G)

@@ -129,7 +129,7 @@ end
 default-depth: D:7-14, Orc, !Orc:$
 
 NAME:   bailey_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
+TAGS:   transparent trowel_portal unrand allow_dup overwrite_floor_cell
 DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)

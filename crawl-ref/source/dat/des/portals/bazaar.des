@@ -135,7 +135,7 @@ O
 ENDMAP
 
 NAME:   bzr_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
+TAGS:   transparent trowel_portal unrand allow_dup overwrite_floor_cell
 DEPTH:  *, !Bazaar
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G, false, true)
