@@ -82,9 +82,9 @@ namespace quiver
 
         virtual int get_item() const { return -1; };
         virtual shared_ptr<action> find_replacement() const { return nullptr; }
-        virtual shared_ptr<action> find_next(int dir=1, bool loop=false) const;
+        virtual shared_ptr<action> find_next(int dir=1, bool allow_disabled=true, bool loop=false) const;
 
-        virtual vector<shared_ptr<action>> get_fire_order() const
+        virtual vector<shared_ptr<action>> get_fire_order(bool=true) const // valid c++11 syntax!
         {
             return { };
         }
@@ -111,12 +111,12 @@ namespace quiver
         bool spell_is_quivered(spell_type s) const;
         bool item_is_quivered(int item_slot) const;
 
-        shared_ptr<action> next(int dir = 0);
+        shared_ptr<action> next(int dir = 0, bool allow_disabled=true);
 
         bool set(const shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
-        bool cycle(int dir = 0);
+        bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
         void on_actions_changed();
 
