@@ -1260,7 +1260,7 @@ int speed_to_duration(int speed)
 static int& _zot_clock_for(branch_type br)
 {
     CrawlHashTable &branch_clock = you.props["ZOT_CLOCK"];
-    const string branch_name = branches[br].abbrevname;
+    const string branch_name = is_hell_branch(br) ? "Hells" : branches[br].abbrevname;
     // When entering a new branch, start with an empty clock.
     // (You'll get the usual time when you finish entering.)
     if (!branch_clock.exists(branch_name))
