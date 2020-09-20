@@ -15,8 +15,8 @@
 - 새로운 종족 와이트 추가. 언데드로 일으켜 세워진 고대의 전사들이며 근접 공격에 음에너지를 불어넣고 자신의 무기를 저주와 함께 반영구적으로 강화할 수 있다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/wight)
   - Added wight(playable). they are an ancient warriors animated as undead. they can use negative energy to infuse their melee attacks, and enchant weapon by cursing them in price for memory.  
   
-- 새로운 종족 스파크본 추가. 데미지를 입었을때 일정 확률로 블링크 볼트가 강제 시전되는 전기로 이루어진 종족. 전기면역을 가지고 있으나 물에 들어가면 방전되며 마나가 0이 된다.
-  - Added Sparkborn(playable). A species of electric race in which a blink bolt is forced to be tried on a certain probability when damage is worn. they has an electric immunity, but when they enters the water, they discharges and the mana becomes zero.
+- 새로운 종족 스파크본 추가. 데미지를 입었을때 일정 확률로 블링크 볼트가 강제 시전되는 전기로 이루어진 종족. 전기면역을 가지고 있으나 물에 들어가면 방전되며 -cast상태가 된다.
+  - Added Sparkborn(playable). A species of electric race in which a blink bolt is forced to be tried on a certain probability when damage is worn. they has an electric immunity, but when they enters the water, they discharges and get into -cast state.
  
 - 새로운 직업 웨폰마스터 추가. 양손 무기를 들고 시작하며 무기 스킬에 집중된 전사 직업
   - Added Weapon Master(background), warrior background that begins with a double-handed weapon and focuses on weapons skills.    
@@ -26,12 +26,21 @@
  
 - 8레벨 부여술 마법, 밀폐 방어막 추가. 사용자의 최대 체력의 절반만큼의 보호막을 만든다. 고통이나 flay를 제외한 모든 데미지를 대신 받는 대신에, 파괴되면 사용자에게 짧은 스턴을 준다.
   - Added Hermetic Barrier, level 8 charm spell. Create a shield as much as half the player's maximum HP. absorb all damage except torment or flay. Instead, if destroyed, a short stun is applied to the user.
+  
+- 6레벨 소환/부여 주문, 활기찬 덩어리 추가. 범위 안의 플레이어 제외 아군 몹에게 턴당 10의 체력을 회복시켜주는 아우라 오브 힐링을 시전함
+  - Added Summon Lively Mass, level 6 summon/charm spell. cast aura of healing, which restores 10 per turn to allies monster except players in range.
 
-- 새로운 책. 용맹의 고서. 살육의 노래, 불꽃 강타, 가속, 불꽃의 고리, 밀폐 방어막
-  - new spell bock, Tome of Valor. Song of Slaying, Flame Strike, Haste, Ring of Flame, Hermetic Barrier
+- 새로운 마법책. 용맹의 고서. 수록된 주문: 살육의 노래, 불꽃 강타, 가속, 불꽃의 고리, 밀폐 방어막
+  - new spellbook, Tome of Valor. Song of Slaying, Flame Strike, Haste, Ring of Flame, Hermetic Barrier
+
+- 새로운 마법책. 아랫것들을 돕는 방법. 수록된 주문: 수호자 골렘 소환, 두건 악귀 소환, 활기찬 덩어리 소환, 투명화, 가속.
+  - new spellbook, How To Aid your minions. summon guadian golem, summon hooded malice, summon lively mass, invisibility, haste
 
 - 아군을 리콜할 수 있는 Pipe 발동 아이템 추가
-  - Added Pipe activation item that can recall allies
+  - Added Pipe evokable item that can recall allies
+  
+- 플레이어를 중심으로 5\*5 범위에 잠시동안 지속되는 치유 구름을 생성하는 치유 안개의 플라스크 발동 아이템 추가. 치유 구름은 플레이어보다 몬스터에 큰 영향을 끼친다.
+  - Added Flask of Healing Mist evokable item that create a healing cloud that lasts for a short time in the range of 5\*5 centered on the player. healing clouds affect monsters more than players.
  
 - 용병을 고용할 수 있는 선술집 상점 추가. 
   - Added a Tavern shop where you can hire mercenaries.
@@ -56,9 +65,15 @@
   - 리콜능력대신 새로운 아이템인 Pipe를 들고 시작함 Start with a new item, Pipe, instead of the recall ability
   - 마녀 용병에 픽다트 스태프를 허용함 Allows the fixedart staff to witch mercenaries
 
-- 트로그의 마법책 불태우기 롤백
-  -Rollback Trog burning spellbooks
+- 아티피셔의 로드 오브 스트라이킹을 드는 선택지를 추가함
+  - Adds a choice that picks up the rod of strike of an artificer
 
+- 트로그의 마법책 불태우기 롤백
+  - Rollback Trog burning spellbooks
+ 
+- 위대한 뱀이 추출, 증산 마법책을 선물
+  - The Great Wyrm gifts Spellbook of Fulsome Distillation, Evaporate
+  
 - 베오그의 아이템 선물의 제한이 제거됨. 대신 저항공유 권능이 사라짐
   - beogh do not restrict number of gifts to orcish follower and make not sharing resistance anymore.
 
@@ -72,7 +87,7 @@
   - add donald speak for new gods
   
 - 미니 볼트 추가 및 복구 add and rollback mini vault
-  - ukdong_guarded_unrand_jaws, gammafunk_pakellas_cloud_experiment, gammafunk_pakellas_statue_experiment, gammafunk_pakellas_spire_experiment, gammafunk_pakellas_its_alive
+  - ukdong_guarded_unrand_jaws, unrand_golem_armour, UK_legion_uncontrolledarena, , gammafunk_pakellas_cloud_experiment, gammafunk_pakellas_statue_experiment, gammafunk_pakellas_spire_experiment, gammafunk_pakellas_its_alive
   
 ### Removed
 ### 0.26 Featrue
