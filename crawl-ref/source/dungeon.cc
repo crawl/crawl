@@ -5678,7 +5678,16 @@ static int _make_delicious_corpse()
 
 static int _make_mercenary()
 {
-    return items(true, OBJ_MISCELLANY, MISC_MERCENARY, ISPEC_GOOD_ITEM);
+    pair<object_class_type, int> create_obj = random_choose_weighted(
+        85, make_pair<object_class_type, int>(OBJ_MISCELLANY, MISC_MERCENARY),
+        5, make_pair<object_class_type, int>(OBJ_MISCELLANY, MISC_PIPE),
+        5, make_pair<object_class_type, int>(OBJ_MISCELLANY, MISC_HEALING_MIST),
+        2, make_pair<object_class_type, int>(OBJ_BOOKS, BOOK_AID),
+        1, make_pair<object_class_type, int>(OBJ_WANDS, WAND_HASTING),
+        1, make_pair<object_class_type, int>(OBJ_WANDS, WAND_HEAL_WOUNDS),
+        1, make_pair<object_class_type, int>(OBJ_WANDS, WAND_TELEPORTATION));
+
+    return items(true, create_obj.first, create_obj.second, ISPEC_GOOD_ITEM);
 }
 
 /**

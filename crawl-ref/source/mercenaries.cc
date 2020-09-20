@@ -119,7 +119,11 @@ void try_to_spawn_mercenary(int merc_type)
 
 bool is_caravan_companion(monster mon)
 {
-    monster_type mon_type = mon.type;
+    return is_caravan_companion_for_type(mon.type);
+}
+
+bool is_caravan_companion_for_type(monster_type mon_type)
+{
     return (mon_type == MONS_MERC_FIGHTER
                || mon_type == MONS_MERC_KNIGHT
                || mon_type == MONS_MERC_DEATH_KNIGHT
