@@ -1993,12 +1993,7 @@ static int _get_nearest_level_depth(uint8_t branch)
 
     // Hell needs special treatment, because we can't walk up
     // Hell and its branches to the main dungeon.
-    if (branch == BRANCH_DEPTHS
-        && (player_in_branch(BRANCH_VESTIBULE)
-            || player_in_branch(BRANCH_COCYTUS)
-            || player_in_branch(BRANCH_TARTARUS)
-            || player_in_branch(BRANCH_DIS)
-            || player_in_branch(BRANCH_GEHENNA)))
+    if (branch == BRANCH_DEPTHS && is_hell_branch(you.where_are_you))
     {
         // BUG: hell gates in the Lair
         return brentry[BRANCH_VESTIBULE].depth;
