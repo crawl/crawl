@@ -74,9 +74,9 @@ namespace quiver
                         "<darkgrey>Nothing quivered</darkgrey>");
     }
 
-    shared_ptr<action> action::find_next(int dir, bool loop) const
+    shared_ptr<action> action::find_next(int dir, bool allow_disabled, bool loop) const
     {
-        auto o = get_fire_order();
+        auto o = get_fire_order(allow_disabled);
         if (o.size() == 0)
             return nullptr; // or same type?
 
@@ -91,6 +91,9 @@ namespace quiver
             if (*o[i] == *this)
                 break;
 
+        // the current action is not in the fire order at all; perhaps it is
+        // disabled, or skipped for action-specific reasons. Just start at
+        // the beginning.
         if (i == static_cast<int>(o.size()))
             return o[0];
 
@@ -116,13 +119,9 @@ namespace quiver
         a->target.fire_context = this;
         a->target.interactive = true;
 
+        // TODO: check behavior when confused
         if (a->is_targeted())
-        {
-            // TODO: check behavior when confused
-            // TODO: should `action` itself trigger a targeter for this case?
-            // force manual targeting: (an alternative: use dist.target as an input)
             a->trigger(a->target);
-        }
         else
         {
             untargeted_fire(a);
@@ -412,7 +411,7 @@ namespace quiver
             return find_action_from_launcher(you.weapon());
         }
 
-        vector<shared_ptr<action>> get_fire_order() const override
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
         {
             vector<int> fire_order;
             _get_item_fire_order(fire_order, false, you.weapon(), true);
@@ -422,7 +421,7 @@ namespace quiver
             for (auto i : fire_order)
             {
                 auto a = make_shared<ammo_action>(i);
-                if (a->is_valid())
+                if (a->is_valid() && (allow_disabled || a->is_enabled()))
                     result.push_back(move(a));
             }
             return result;
@@ -455,6 +454,8 @@ namespace quiver
         }
 
         void save(CrawlHashTable &save_target) const override; // defined below
+
+        // uses ammo_action fire order
 
         bool launcher_check() const override
         {
@@ -612,7 +613,7 @@ namespace quiver
             return qdesc;
         }
 
-        vector<shared_ptr<action>> get_fire_order() const override
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
         {
             // goes by letter order
             vector<shared_ptr<action>> result;
@@ -620,7 +621,12 @@ namespace quiver
             {
                 const char letter = index_to_letter(i);
                 const spell_type s = get_spell_by_letter(letter);
-                if (is_valid_spell(s)
+                auto a = make_shared<spell_action>(s);
+                if (a->is_valid()
+                    && (allow_disabled || a->is_enabled())
+                    // some extra stuff for fire order in particular: don't
+                    // cycle to spells that are dangerous to past or forbidden.
+                    // These can still be force-quivered.
                     && fail_severity(s) < Options.fail_severity_to_quiver
                     && spell_highlight_by_utility(s, COL_UNKNOWN) != COL_FORBIDDEN)
                 {
@@ -717,20 +723,21 @@ namespace quiver
             return wand_slot;
         }
 
-        vector<shared_ptr<action>> get_fire_order() const override
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
         {
             // go by pack order
             vector<shared_ptr<action>> result;
             for (int slot = 0; slot < ENDOFPACK; slot++)
             {
                 auto w = make_shared<wand_action>(slot);
-                if (!w->is_valid())
-                    continue;
-                // skip digging, it seems kind of non-useful? Can still be
-                // force-quivered from inv
-                if (you.inv[slot].sub_type == WAND_DIGGING)
-                    continue;
-                result.push_back(move(w));
+                if (w->is_valid()
+                    && (allow_disabled || w->is_enabled())
+                    // skip digging for fire cycling, it seems kind of
+                    // non-useful? Can still be force-quivered from inv
+                    && you.inv[slot].sub_type != WAND_DIGGING)
+                {
+                    result.push_back(move(w));
+                }
             }
             return result;
         }
@@ -954,7 +961,7 @@ namespace quiver
                               && get().get_item() == item_slot;
     }
 
-    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir)
+    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir, bool allow_disabled)
     {
         // this all seems a bit messy
 
@@ -1006,7 +1013,7 @@ namespace quiver
         // back to the current action type if nothing else works.
         for (auto result : action_types)
         {
-            auto n = result->find_next(dir, false);
+            auto n = result->find_next(dir, allow_disabled, false);
             if (n && n->is_valid())
                 return n;
         }
@@ -1017,13 +1024,13 @@ namespace quiver
     }
 
     // not_null guaranteed
-    shared_ptr<action> action_cycler::next(int dir)
+    shared_ptr<action> action_cycler::next(int dir, bool allow_disabled)
     {
         // first try the next action of the same type
-        shared_ptr<action> result = get().find_next(dir, false);
+        shared_ptr<action> result = get().find_next(dir, allow_disabled, false);
         // then, try to find a different action type
         if (!result || !result->is_valid())
-            result = _get_next_action_type(get_ptr(), dir);
+            result = _get_next_action_type(get_ptr(), dir, allow_disabled);
 
         // no valid actions, return an empty-quiver action
         if (!result)
@@ -1032,9 +1039,9 @@ namespace quiver
         return result;
     }
 
-    bool action_cycler::cycle(int dir)
+    bool action_cycler::cycle(int dir, bool allow_disabled)
     {
-        return set(next(dir));
+        return set(next(dir, allow_disabled));
     }
 
     void action_cycler::on_actions_changed()
@@ -1225,12 +1232,14 @@ namespace quiver
             switch (what_happened)
             {
             case CMD_TARGET_CYCLE_QUIVER_FORWARD:
-                cycle();
+                cycle(1, false);
                 break;
             case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
-                cycle(-1);
+                cycle(-1, false);
                 break;
             case CMD_TARGET_SELECT_ACTION:
+                // choosing a disabled action here may exit the prompt
+                // depending on the spell, it's a bit inconsistent.
                 choose(*this, false);
                 break;
             default:
