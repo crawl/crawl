@@ -75,6 +75,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
                     $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
                                                   + "%");
                 }
+                $("#stats_hp_bar_agraphede").css("width", "0%");
                 if (full_bar + poison_bar + change_bar > 10000)
                     change_bar = 10000 - poison_bar - full_bar;
             }
