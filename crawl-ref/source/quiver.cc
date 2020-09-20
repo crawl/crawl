@@ -431,21 +431,6 @@ namespace quiver
         int ammo_slot;
     };
 
-    static bool _spell_needs_manual_targeting(spell_type s)
-    {
-        switch (s)
-        {
-        case SPELL_FULMINANT_PRISM:
-        case SPELL_GRAVITAS: // will autotarget to a monster if allowed, should we allow?
-        case SPELL_PASSWALL: // targeted, but doesn't make sense with autotarget
-        case SPELL_GOLUBRIAS_PASSAGE: // targeted, but doesn't make sense with autotarget
-            return true;
-        default:
-            return false;
-        }
-    }
-
-
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
@@ -482,6 +467,20 @@ namespace quiver
         }
     };
 
+    static bool _spell_needs_manual_targeting(spell_type s)
+    {
+        switch (s)
+        {
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_GRAVITAS: // will autotarget to a monster if allowed, should we allow?
+        case SPELL_PASSWALL: // targeted, but doesn't make sense with autotarget
+        case SPELL_GOLUBRIAS_PASSAGE: // targeted, but doesn't make sense with autotarget
+            return true;
+        default:
+            return false;
+        }
+    }
+
     // for spells that are targeted, but should skip the lua target selection
     // pass for one reason or another
     static bool _spell_autotarget_incompatible(spell_type s)
@@ -515,6 +514,12 @@ namespace quiver
             return spell == static_cast<const spell_action&>(other).spell;
         }
 
+        bool is_dynamic_targeted() const
+        {
+            // TODO: what spells does this miss?
+            return !!(get_spell_flags(spell) & spflag::targeting_mask);
+        }
+
         bool is_enabled() const override
         {
             return can_cast_spells(true) && !spell_is_useless(spell, true, false);
@@ -527,13 +532,13 @@ namespace quiver
 
         bool is_targeted() const override
         {
-            // TODO: what spells does this miss?
-            return !!(get_spell_flags(spell) & spflag::targeting_mask);
+            return is_dynamic_targeted() || spell_has_targeter(spell);
         }
 
         bool allow_autotarget() const override
         {
-            return is_targeted() && !_spell_autotarget_incompatible(spell);
+            return is_dynamic_targeted()
+                                && !_spell_autotarget_incompatible(spell);
         }
 
         void trigger(dist &t) override
@@ -558,6 +563,10 @@ namespace quiver
                 target.target = coord_def(-1,-1);
                 target.find_target = true;
             }
+            else if (!is_dynamic_targeted())
+                target.target = you.pos(); // hax -- never trigger static targeters
+                                           // will need to be fixed if `z` ever
+                                           // calls here
 
             // don't do the range check check if doing manual firing. (It's
             // a bit hacky to condition this on whether there's a fire context...)

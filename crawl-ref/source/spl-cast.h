@@ -108,11 +108,13 @@ void do_cast_spell_cmd(bool force);
 int hex_success_chance(const int mr, int powc, int scale,
                        bool round_up = false);
 class targeter;
+unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
+bool spell_has_targeter(spell_type spell);
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc);
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                   const item_def* const evoked_item = nullptr,
-                  dist *_target = nullptr);
+                  dist *_target = nullptr, bool range_checked=true);
 
 extern const char *fail_severity_adjs[];
 

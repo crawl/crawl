@@ -17,6 +17,7 @@
 #include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
+#include "religion.h"
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
@@ -1663,4 +1664,106 @@ bool targeter_overgrow::set_aim(coord_def a)
     }
 
     return affected_positions.size();
+}
+
+targeter_absolute_zero::targeter_absolute_zero(int range)
+{
+    monster *mon = find_abszero_target(range);
+    if (mon)
+        target_location = mon->pos();
+    else
+        target_location = coord_def(-1, -1);
+}
+
+aff_type targeter_absolute_zero::is_affected(coord_def loc)
+{
+    if (in_bounds(target_location) && target_location == loc)
+        return AFF_YES;
+    else
+        return AFF_NO;
+}
+
+targeter_multiposition::targeter_multiposition(const actor *a,
+                                    vector<coord_def> seeds, bool _hit_friends)
+    : targeter(), hit_friends(_hit_friends)
+{
+    agent = a;
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+void targeter_multiposition::add_position(const coord_def &loc)
+{
+    if (cell_is_solid(loc)
+        && (!can_affect_walls() || agent == &you && you_worship(GOD_FEDHAS)))
+    {
+        return;
+    }
+
+    actor *act = actor_at(loc);
+    if (agent == &you && act == &you)
+        return; // any exceptions to this?
+
+    // Friendly creature, don't mark this square. This logic is only implemented
+    // for players, because this class is currently only used for ui
+    if (!hit_friends && act
+        && (act == agent
+            || (agent == &you && act->is_monster() // not yet implemented for monster agents
+                && act->as_monster()->wont_attack())))
+    {
+        return;
+    }
+
+    affected_positions.emplace(loc);
+}
+
+aff_type targeter_multiposition::is_affected(coord_def loc)
+{
+    // is this better with maybe or yes?
+    return affected_positions.count(loc) > 0 ? AFF_MAYBE : AFF_NO;
+}
+
+targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
+    : targeter_multiposition(a, seeds, false)
+{
+    for (auto &c : seeds)
+    {
+        if (affected_positions.count(c)) // did the parent constructor like this pos?
+            for (adjacent_iterator ai(c); ai; ++ai)
+                add_position(*ai);
+    }
+}
+
+// note: starburst is not in spell_to_zap
+targeter_starburst_beam::targeter_starburst_beam(const actor *a, int range, int pow, const coord_def &offset)
+    : targeter_beam(a, range, ZAP_BOLT_OF_FIRE, pow, 0, 0)
+{
+    set_aim(a->pos() + offset);
+}
+
+targeter_starburst::targeter_starburst(const actor *a, int range, int pow)
+    : targeter()
+{
+    agent = a ? a : &you;
+    // XX code duplication with cast_starburst
+    const vector<coord_def> offsets = { coord_def(range, 0),
+                                        coord_def(range, range),
+                                        coord_def(0, range),
+                                        coord_def(-range, range),
+                                        coord_def(-range, 0),
+                                        coord_def(-range, -range),
+                                        coord_def(0, -range),
+                                        coord_def(range, -range) };
+
+    // extremely brute force...
+    for (auto &o : offsets)
+        beams.push_back(targeter_starburst_beam(agent, range, pow, o));
+}
+
+aff_type targeter_starburst::is_affected(coord_def loc)
+{
+    for (auto &t : beams)
+        if (auto r = t.is_affected(loc))
+            return r;
+    return AFF_NO;
 }

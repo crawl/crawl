@@ -302,7 +302,7 @@ void direction_chooser::print_key_hints() const
         if (moves.fire_context)
             prompt += moves.fire_context->fire_key_hints() + "\n";
         string direction_hint = "";
-        if (behaviour && behaviour->untargeted())
+        if (!behaviour->targeted())
             direction_hint = "Dir - look around";
         else
         {
@@ -325,7 +325,8 @@ void direction_chooser::print_key_hints() const
                 prompt += ", ";
             prompt += direction_hint;
         }
-        prompt += build_targeting_hint_string();
+        if (behaviour->targeted())
+            prompt += build_targeting_hint_string();
     }
 
     // Display the prompt.
@@ -917,7 +918,7 @@ monster_view_annotator::~monster_view_annotator()
 
 bool direction_chooser::move_is_ok() const
 {
-    if (unrestricted || behaviour->untargeted())
+    if (unrestricted || !behaviour->targeted())
         return true;
     if (!moves.isCancel && moves.isTarget)
     {
@@ -1206,16 +1207,20 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
     // Use the new API if implemented.
     if (hitfunc)
     {
-        if (!hitfunc->set_aim(target()))
+        if (behaviour->targeted() && !hitfunc->set_aim(target()))
             return;
         const los_type los = hitfunc->can_affect_unseen()
                                             ? LOS_NONE : LOS_DEFAULT;
         for (radius_iterator ri(you.pos(), los); ri; ++ri)
-            if (aff_type aff = hitfunc->is_affected(*ri))
+        {
+            aff_type aff = hitfunc->is_affected(*ri);
+            if (aff
+                && (!feat_is_solid(grd(*ri)) || hitfunc->can_affect_walls()))
             {
                 auto& cell = vbuf(grid2view(*ri) - 1);
                 _draw_ray_cell(cell, *ri, *ri == target(), aff);
             }
+        }
 
         return;
     }
@@ -1265,6 +1270,8 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
+    if (!behaviour->targeted())
+        return true;
     if (hitfunc)
         return hitfunc->valid_aim(p);
     return range < 0 || grid_distance(p, you.pos()) <= range;
@@ -1538,7 +1545,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     }
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
-         target_prefix ? target_prefix : behaviour->untargeted() ? "Look" : "Aim",
+         target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
          text.c_str());
 
     // If there's a cloud here, it's been described.

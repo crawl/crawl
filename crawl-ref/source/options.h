@@ -254,6 +254,7 @@ public:
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
     bool        simple_targeting; // disable smart spell targeting
+    bool        always_use_static_targeters; // whether to use static targeters even in `z`
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
