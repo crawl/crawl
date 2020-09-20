@@ -52,7 +52,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             if (agraphede_cost > 0)
             {
                 var poison_survival = player["poison_survival"];
-                var cost_bar = Math.round(10000 * (agraphede_cost + value - poison_survival) / max);
+                var cost_bar = Math.round(10000 * (agraphede_cost - value + poison_survival) / max);
                 $("#stats_hp_bar_agraphede").css("width", (cost_bar / 100)
                                               + "%");
                                               
@@ -60,9 +60,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
                                                 / max);
                 $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
                                                   + "%");
-                full_bar = Math.round(10000 * poison_survival / max);
+                full_bar = Math.round(10000 * (value - agraphede_cost) / max);
 
-                if (full_bar + poison_bar + cost_bar + change_bar > 10000)
+                if (full_bar + cost_bar + poison_bar + change_bar > 10000)
                     change_bar = 10000 - poison_bar - cost_bar - full_bar;
             }
             else {
@@ -79,7 +79,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 if (full_bar + poison_bar + change_bar > 10000)
                     change_bar = 10000 - poison_bar - full_bar;
             }
-
         }
         else if (full_bar + change_bar > 10000)
         {
