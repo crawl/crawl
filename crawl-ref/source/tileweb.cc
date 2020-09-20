@@ -945,6 +945,14 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
 
+    if (you.religion == GOD_AGRAPHEDE) {
+        _update_int(force_full, c.agraphede_cost, get_player_poisoning(),
+            "agraphede_cost");
+    }
+    else {
+        _update_int(force_full, c.agraphede_cost, 0, "agraphede_cost");
+    }
+
     if (you.species == SP_LAVA_ORC)
         _update_int(force_full, c.heat, temperature(), "heat");
 
