@@ -2467,6 +2467,14 @@ bool evoke_item(int slot)
             }
             break;
 
+        case MISC_PIPE:
+        {
+            string msg = "Press <white>%</white> to evoke recall.";
+            insert_commands(msg, { CMD_USE_ABILITY });
+            mpr(msg);
+        }
+            return false;
+
         case MISC_BAG:
             switch (_open_bag(slot))
             {
