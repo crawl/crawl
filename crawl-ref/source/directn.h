@@ -50,7 +50,7 @@ public:
     // Update the prompt shown at top.
     virtual void update_top_prompt(string*) {}
 
-    virtual bool untargeted() { return false; }
+    virtual bool targeted() { return true; }
 
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);

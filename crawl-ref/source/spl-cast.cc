@@ -11,11 +11,13 @@
 #include <sstream>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
 #include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "describe.h"
 #include "directn.h"
@@ -29,6 +31,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::shadow_spells
 #include "hints.h"
+#include "items.h"
 #include "item-prop.h"
 #include "item-use.h"
 #include "libutil.h"
@@ -892,7 +895,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     dec_mp(cost, true);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
-                                          nullptr, _target);
+                                          nullptr, _target, check_range);
     if (cast_result == spret::abort)
     {
         crawl_state.zero_turns_taken();
@@ -1159,8 +1162,56 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
-                                              int range)
+// this is a crude approximation intended for UI-oriented targeters. Some day
+// it might be nice if the targeter code were actually unified with how
+// enemies are chosen for these various spells...
+// note that this is substantially filtered when used by targeter_multiposition
+static vector<coord_def> _simple_find_all_actors(actor *a)
+{
+    vector<coord_def> result;
+    if (!a)
+        return result;
+
+    for (actor_near_iterator ai(a->pos(), LOS_NO_TRANS); ai; ++ai)
+        result.push_back((*ai)->pos());
+
+    return result;
+}
+
+static bool _simple_corpse_check(const coord_def &c, bool allow_skeleton)
+{
+    for (stack_iterator si(c, true); si; ++si)
+    {
+        if ((si->is_type(OBJ_CORPSES, CORPSE_BODY)
+                || allow_skeleton && si->is_type(OBJ_CORPSES, CORPSE_SKELETON))
+            && mons_class_can_be_zombified(si->mon_type))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+static vector<coord_def> _simple_find_corpses(actor *a, bool allow_skeleton, bool find_all)
+{
+    vector<coord_def> result;
+    if (!a)
+        return result;
+
+    for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
+        if (_simple_corpse_check(*ri, allow_skeleton))
+        {
+            result.push_back(*ri);
+            if (!find_all)
+                break;
+        }
+
+    return result;
+}
+
+
+// TODO: refactor into target.cc, move custom classes out of target.h
+unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 {
     switch (spell)
     {
@@ -1213,6 +1264,85 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_passwall>(range);
     case SPELL_DIG:
         return make_unique<targeter_dig>(range);
+
+    // untargeted spells -- everything beyond here is a static targeter
+    case SPELL_HAILSTORM:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range);
+    case SPELL_STARBURST:
+        return make_unique<targeter_starburst>(&you, range, pow);
+    case SPELL_CORPSE_ROT: // depends on # of corpses, but no easy way to show that?
+    case SPELL_IRRADIATE:
+    case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
+                          // all potentially affected monsters?
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
+    case SPELL_DAZZLING_FLASH:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
+    case SPELL_ABSOLUTE_ZERO:
+        return make_unique<targeter_absolute_zero>(range);
+    // TODO: ramparts
+
+    // at player's position only (but not a selfench):
+    case SPELL_CONJURE_FLAME:
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
+
+    // LOS radius:
+    case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS);
+    case SPELL_TORNADO:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
+    case SPELL_SHATTER:
+        return make_unique<targeter_shatter>(&you); // special version that affects walls
+    case SPELL_INTOXICATE: // for these, we just mark the monsters
+    case SPELL_CAUSE_FEAR:
+    case SPELL_DRAIN_LIFE: // pseudo-spell. TODO: ignore undead for this one
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), false);
+    case SPELL_DISCORD:
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), true);
+    case SPELL_IGNITION: // multi-fireball targeter? sort of annoying to implement
+        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
+
+    // Summons. Most summons have a simple range 2 radius, see find_newmons_square
+    case SPELL_SUMMON_SMALL_MAMMAL:
+    case SPELL_CALL_CANINE_FAMILIAR:
+    case SPELL_SUMMON_ICE_BEAST:
+    case SPELL_MONSTROUS_MENAGERIE:
+    case SPELL_SUMMON_HYDRA:
+    case SPELL_SUMMON_MANA_VIPER:
+    case SPELL_CONJURE_BALL_LIGHTNING:
+    case SPELL_SUMMON_GUARDIAN_GOLEM:
+    case SPELL_CALL_IMP:
+    case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_GREATER_DEMON:
+    case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SPELLFORGED_SERVITOR:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2);
+    case SPELL_FOXFIRE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1);
+    case SPELL_BATTLESPHERE:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 3);
+    // TODO: these two actually have pretty wtf positioning that uses compass
+    // directions, so this targeter is not entirely accurate.
+    case SPELL_MALIGN_GATEWAY:
+    case SPELL_SUMMON_FOREST:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
+
+    case SPELL_ANIMATE_SKELETON:
+        // this spell seems (?) to pick the first corpse by radius_iterator, so
+        // just show that one. If this spell were to do something better, e.g.
+        // randomization, this would need to take a different approach
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you, true, false), true);
+    case SPELL_TWISTED_RESURRECTION:
+    case SPELL_ANIMATE_DEAD:
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you, false, true), true);
+    case SPELL_SIMULACRUM:
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0); // check for corpses?
+    case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
+        return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
+
     default:
         break;
     }
@@ -1223,7 +1353,23 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
                                           pow, 0, 0);
     }
 
+    // selfench is used mainly for monster AI, so it is a bit over-applied in
+    // the spell data
+    if (get_spell_flags(spell) & spflag::selfench
+        && !spell_typematch(spell, spschool::summoning) // all summoning spells are selfench
+        && !spell_typematch(spell, spschool::translocation) // blink, passage
+        && spell != SPELL_VAMPIRIC_DRAINING
+        && spell != SPELL_PHANTOM_MIRROR) // ??
+    {
+        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
+    }
+
     return nullptr;
+}
+
+bool spell_has_targeter(spell_type spell)
+{
+    return bool(find_spell_targeter(spell, 1, 1));
 }
 
 // Returns the nth triangular number.
@@ -1374,6 +1520,23 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
     return descs;
 }
 
+class spell_targeting_behaviour : public targeting_behaviour
+{
+public:
+    spell_targeting_behaviour(spell_type _spell)
+        : targeting_behaviour(false), spell(_spell)
+    {
+    }
+
+    bool targeted() override
+    {
+        return !!(get_spell_flags(spell) & spflag::targeting_mask);
+    }
+
+private:
+    spell_type spell;
+};
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1394,7 +1557,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
                        const item_def* const evoked_item,
-                       dist *target)
+                       dist *target, bool range_checked)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!evoked_item || evoked_item->base_type == OBJ_WANDS);
@@ -1422,11 +1585,16 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     const int range = calc_spell_range(spell, powc, allow_fail);
     beam.range = range;
 
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
+    const bool is_targeted = !!(flags & spflag::targeting_mask);
+
     // XXX: This handles only some of the cases where spells need
     // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
-    if (flags & spflag::targeting_mask)
+    // TODO: what's the status of the above comment in 2020+?
+    if (is_targeted
+        || hitfunc && (!range_checked || Options.always_use_static_targeters))
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -1446,8 +1614,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 // shift-direction makes no sense for it, but
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
-
-        unique_ptr<targeter> hitfunc = _spell_targeter(spell, powc, range);
 
         // Add success chance to targeted spells checking monster MR
         const bool mr_check = testbits(flags, spflag::MR_check)
@@ -1472,13 +1638,15 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             }
         }
 
-
-        string title = make_stringf("Aiming: <w>%s</w>", spell_title(spell));
+        string title = make_stringf("%s: <w>%s</w>",
+                    is_targeted ? "Aiming" : "Casting", spell_title(spell));
         if (allow_fail)
         {
             title += make_stringf(" <lightgrey>(%s)</lightgrey>",
                 _spell_failure_rate_description(spell).c_str());
         }
+
+        spell_targeting_behaviour beh(spell);
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
@@ -1488,6 +1656,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         args.needs_path = needs_path;
         args.target_prefix = prompt;
         args.top_prompt = title;
+        args.behaviour = &beh;
         if (hitfunc && hitfunc->can_affect_walls())
         {
             args.show_floor_desc = true;

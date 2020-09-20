@@ -1740,18 +1740,14 @@ static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square
         noisy(spell_effect_noise(SPELL_IGNITION),square);
 }
 
-spret cast_ignition(const actor *agent, int pow, bool fail)
+vector<coord_def> get_ignition_blast_sources(const actor *agent)
 {
-    ASSERT(agent->is_player());
-
-    fail_check();
-
-    //targeter_radius hitfunc(agent, LOS_NO_TRANS);
-
     // Ignition affects squares that had hostile monsters on them at the time
     // of casting. This way nothing bad happens when monsters die halfway
     // through the spell.
     vector<coord_def> blast_sources;
+    if (!agent)
+        return blast_sources;
 
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
          ai; ++ai)
@@ -1764,6 +1760,21 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
             blast_sources.push_back(ai->position);
         }
     }
+    return blast_sources;
+}
+
+spret cast_ignition(const actor *agent, int pow, bool fail)
+{
+    ASSERT(agent->is_player());
+
+    fail_check();
+
+    //targeter_radius hitfunc(agent, LOS_NO_TRANS);
+
+    // Ignition affects squares that had hostile monsters on them at the time
+    // of casting. This way nothing bad happens when monsters die halfway
+    // through the spell.
+    vector<coord_def> blast_sources = get_ignition_blast_sources(agent);
 
     if (blast_sources.empty())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2556,7 +2567,7 @@ void forest_damage(const actor *mon)
 spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 {
     int range = spell_range(SPELL_DAZZLING_FLASH, pow);
-    targeter_radius hitfunc(&you, LOS_SOLID_SEE, range);
+    auto hitfunc = find_spell_targeter(SPELL_DAZZLING_FLASH, pow, range);
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         // No fedhas checks needed, plants can't be dazzled
@@ -2586,7 +2597,7 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 
     // [eb] the simulationist in me wants to use LOS_DEFAULT
     // and let this blind through glass
-    if (stop_attack_prompt(hitfunc, "dazzle", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "dazzle", vulnerable))
         return spret::abort;
 
     fail_check();
@@ -3123,7 +3134,8 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
 
 spret cast_hailstorm(int pow, bool fail, bool tracer)
 {
-    targeter_radius hitfunc(&you, LOS_NO_TRANS, 3, 0, 2);
+    // used only for vulnerability check, not for the actual targeting
+    auto hitfunc = find_spell_targeter(SPELL_HAILSTORM, pow, 3);
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
       // actor guaranteed to be monster from usage,
@@ -3156,7 +3168,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(hitfunc, "hailstorm", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "hailstorm", vulnerable))
         return spret::abort;
 
     fail_check();
@@ -3216,14 +3228,15 @@ struct dist_sorter
 spret cast_imb(int pow, bool fail)
 {
     int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
-    targeter_radius hitfunc(&you, LOS_SOLID_SEE, range);
+    auto hitfunc = find_spell_targeter(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow, range);
+    //targeter_radius hitfunc(&you, LOS_SOLID_SEE, range);
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
                  && mons_is_conjured(act->as_monster()->type));
     };
 
-    if (stop_attack_prompt(hitfunc, "blast", vulnerable))
+    if (stop_attack_prompt(*hitfunc, "blast", vulnerable))
         return spret::abort;
 
     fail_check();
@@ -3372,7 +3385,7 @@ spret cast_frozen_ramparts(int pow, bool fail)
 }
 
 //returns the closest target to the player
-static monster* _closest_target_in_range(int radius)
+monster* find_abszero_target(int radius)
 {
     for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
     {
@@ -3392,7 +3405,7 @@ static monster* _closest_target_in_range(int radius)
 
 spret cast_absolute_zero(int pow, bool fail, bool tracer)
 {
-    monster* const mon = _closest_target_in_range(
+    monster* const mon = find_abszero_target(
             spell_range(SPELL_ABSOLUTE_ZERO, pow));
 
     if (tracer)

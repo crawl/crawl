@@ -1021,6 +1021,11 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
+always_use_static_targeters = false
+        If set to true, shows static targeters when casting via `z`. When false,
+        they are visible only via `Z` and via the fire interface. Targeters are
+        never shown when firing via AUTOFIRE and other autoattack commands.
+
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
         or a wand of paralysis.) Values: (yes | no | prompt).

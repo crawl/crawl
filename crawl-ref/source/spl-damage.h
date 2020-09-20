@@ -70,6 +70,7 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim,
 
 spret cast_random_bolt(int pow, bolt& beam, bool fail = false);
 
+vector<coord_def> get_ignition_blast_sources(const actor *agent);
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);
@@ -84,4 +85,5 @@ void actor_apply_toxic_bog(actor *act);
 
 spret cast_frozen_ramparts(int pow, bool fail);
 
+monster* find_abszero_target(int radius);
 spret cast_absolute_zero(int pow, bool fail, bool tracer = false);
