@@ -1,0 +1,176 @@
+###############################################################################
+#
+# The Forge of Golems (youredoomed)
+#
+###############################################################################
+
+{{
+function golemforge_portal(e)
+  local timeout_turns = crawl.random_range(600, 800)
+
+  local messager =
+    timed_msg {
+      initmsg = { "You hear a sound of hammering.",
+                  "There is an entrance to the golemforge on this level. "
+                  .. "Hurry and find it before the portal melts!" },
+      finalmsg = "A sound of hammering is finaly fades away.",
+      verb = 'hammering',
+      noisemaker = 'artificial gateway',
+      ranges = {
+        { 5000, 'faint ' },  { 4000, '' },
+        { 2500, 'steady ' }, { 1500, 'quick ' },
+        { 0, 'loud ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The gateway is sealed and disappears.",
+        entity = 'gateway',
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_golem_gone",
+        msg = messager })
+  e.tags("uniq_golemforge chance_golemforge")
+  e.chance(500)
+  e.kfeat("O = enter_golem")
+  e.colour("X = lightblue")
+  e.kfeat("X = x")
+  e.rtile("X = dngn_crystal_lightblue")
+  e.colour(".1234 = lightblue")
+  e.ftile(".12345O+^ = floor_crystal_squares")
+end
+
+
+function golemforge_appearance(e)
+  e.kfeat("< = exit_golem")
+  e.kprop("w = no_tele_into")
+  e.set_feature_name("crystal_wall", "wall of crystal")
+end
+
+
+-- Monster set functions. '9' for gargoyle.
+
+function golem_list_gargoyle(e)
+   gargoyle_type = "gargoyle w:3 / war gargoyle w:3 / " ..
+               "molten gargoyle w:1"
+end
+
+}}
+
+# Entries ##########################################
+default-depth: Elf, Depths:1-4
+
+NAME:   portal_golemforge_entry_pillars_three
+TAGS:   transparent
+DEPTH:  Elf, Depths:1-4
+: golemforge_portal(_G)
+MAP
+   ...
+....X...
+.X...XX.
+..XXOXX..
+ .XX...X.
+ ...X....
+   ...
+ENDMAP
+
+NAME:   portal_golemforge_entry_pillars_four
+TAGS:   transparent
+DEPTH:  Elf, Depths:1-4
+WEIGHT: 6
+: golemforge_portal(_G)
+MAP
+   ...
+  .X.X.
+ .X.X.X.
+.X.X.X.X.
+..X.O.X..
+.X.X.X.X.
+ .X.X.X.
+  .X.X.
+   ...
+ENDMAP
+
+NAME:     portal_golemforge_entry_ugly_swarm
+TAGS:     no_monster_gen no_item_gen transparent
+DEPTH:    Elf, Depths:1-4
+WEIGHT:   2
+SHUFFLE:  ABC
+SUBST:    A = X, B = X., C = ., : = 1.
+NSUBST:   2 = 1:12 / 3 = 1. / *:.
+NSUBST:   1 = 7:1 / 1:1. / *:.
+: golemforge_portal(_G)
+MAP
+    '''''''
+   '''''''''
+  '''.....'''
+ '''.A:B:C.'''
+'''.:..:..:.'''
+''.C..111..A.''
+''.:.12221.:.''
+''.B:12O21:B.''
+''.:.12221.:.''
+''.A..111..C.''
+'''.:..:..:.'''
+ '''.C:B:A.'''
+  '''.....'''
+   '''''''''
+    '''''''
+ENDMAP
+
+# The destination Depths:1-4s ############
+
+default-depth: Golemforge
+
+NAME:   golemforge_statue_garden_chambered
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   crystal guardian / iron golem / electric golem w:1
+KMONS:  ! = lightning spire
+KMONS:  I = iron golem
+: golem_list_gargoyle(_G)
+: mons(gargoyle_type)
+KITEM: i randbook disc:necromancy slevels:16 / \
+       randbook disc:conjuration slevels:16 / \
+       randbook disc:summoning slevels:16 / \
+       any weapon good_item randart / \
+       any armour good_item randart / \
+       any randart jewellery
+: golemforge_appearance(_G)
+MAP
+ccccccccccc
+c|*iiiii*|c
+c*.IIIII.*c
+c%.......%c
+c.........c
+c.........c
+cc.......cc
+ccc.....ccc
+ccccc.ccccc
+ccc.....ccc
+cc.......cc
+c!.......!c
+cI........c
+c........Ic
+cI........c
+c........Ic
+ccccc.ccccc
+x%*.....*%x
+x%.......%x
+x*.......*x
+x!.......!x
+x....I....x
+xx.......xx
+xxx.....xxx
+xxxxx.xxxxx
+xxx.....xxx
+xx.......xx
+x....A....x
+x.........x
+x.........x
+x....<....x
+x.........x
+xxxxxxxxxxx
+ENDMAP

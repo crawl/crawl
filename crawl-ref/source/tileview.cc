@@ -288,6 +288,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.wall = TILE_WALL_DESOLATION;
         return;
 
+    case BRANCH_GOLEM:
+        flv.wall  = TILE_WALL_PERMAROCK_CLEAR;
+        flv.floor = TILE_FLOOR_VAULT;
+        return;
+
     case NUM_BRANCHES:
     case GLOBAL_BRANCH_INFO:
         break;
