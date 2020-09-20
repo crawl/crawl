@@ -687,6 +687,11 @@ An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water elementals
 that dwell within it.
 %%%%
+pipe
+
+An item that can bring mercenaries or summons to its place. if you hold it in
+your inventory, you get the recall ability.
+%%%%
 plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate

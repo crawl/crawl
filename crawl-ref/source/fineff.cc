@@ -28,6 +28,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -705,4 +706,10 @@ void fire_final_effects()
         env.final_effects.pop_back();
         eff->fire();
     }
+}
+
+void sparkborn_blinkbolt_fineff::fire()
+{
+    flash_view_delay(UA_PLAYER, LIGHTBLUE, 100);
+    cast_player_blinkbolt();
 }

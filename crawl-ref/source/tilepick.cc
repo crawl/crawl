@@ -2686,6 +2686,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_BAG:
         return TILE_MISC_BAG;
 
+    case MISC_PIPE:
+        return TILE_MISC_PIPE;
+
     case MISC_HEALING_MIST:
         return evoker_charges(item.sub_type) ? TILE_MISC_HEALING_MIST
                                              : TILE_MISC_HEALING_MIST_INERT;

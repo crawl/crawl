@@ -2145,6 +2145,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_KNOW_TYPE);
         set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     maybe_identify_base_type(item);

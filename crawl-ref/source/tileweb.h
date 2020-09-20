@@ -83,6 +83,8 @@ struct player_info
     uint8_t unarmed_attack_colour;
     bool quiver_available;
     bool has_hydra_multi_attack;
+    int weapon_plus;
+    int second_weapon_plus;
 };
 
 class TilesFramework

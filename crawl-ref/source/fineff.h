@@ -421,4 +421,21 @@ protected:
     int pow;
 };
 
+class sparkborn_blinkbolt_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect&) const override { return true; }
+    void fire() override;
+
+    static void schedule(coord_def pos)
+    {
+        final_effect::schedule(new sparkborn_blinkbolt_fineff(pos));
+    }
+protected:
+    sparkborn_blinkbolt_fineff(coord_def pos)
+        : final_effect(0, 0, pos)
+    {
+    }
+};
+
 void fire_final_effects();

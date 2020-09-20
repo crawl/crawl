@@ -2182,6 +2182,19 @@ void melee_attack::set_attack_verb(int damage)
             else
                 attack_verb = "eviscerate";
         }
+        else if (you.damage_type() == DVORP_SLICING)
+        {
+            const FormAttackVerbs slicing_verbs = get_form(transformation::blade_hands)->uc_attack_verbs;
+            if (damage < HIT_WEAK)
+                attack_verb = slicing_verbs.weak;
+            else if (damage < HIT_MED)
+                attack_verb = slicing_verbs.medium;
+            else if (damage < HIT_STRONG)
+                attack_verb = slicing_verbs.strong;
+            else
+                attack_verb = slicing_verbs.devastating;
+            break;
+        }
         else if (you.damage_type() == DVORP_BITING)
         {
             if (damage < HIT_WEAK)

@@ -4055,14 +4055,25 @@ static void _mons_in_cloud(monster& mons)
     actor_apply_cloud(&mons);
 }
 
-static void _heated_area(monster& mons)
+static bool _heated_area_immune(monster& mons)
 {
     if (!heated(mons.pos()))
-        return;
+        return true;
     if (mons.is_fiery())
-        return;
+        return true;
     // HACK: Currently this prevents even auras not caused by lava orcs...
     if (you_worship(GOD_BEOGH) && mons.friendly() && mons.god == GOD_BEOGH)
+        return true;
+    if (have_passive(passive_t::shoot_through_plants)
+        && fedhas_protects(mons))
+        return true;
+    return false;
+}
+
+
+static void _heated_area(monster& mons)
+{
+    if(_heated_area_immune(mons))
         return;
     const int base_damage = random2(11);
     // Timescale, like with clouds:

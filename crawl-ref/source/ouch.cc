@@ -735,8 +735,7 @@ static void _maybe_blink(int dam)
     if (x_chance_in_y(1, blink_chance) && dam > 1
         && you.attribute[ATTR_BLINKBOLT] == 1)
     {
-        flash_view_delay(UA_PLAYER, LIGHTBLUE, 100);
-        cast_player_blinkbolt();
+        sparkborn_blinkbolt_fineff::schedule(you.pos());
     }
 }
 
