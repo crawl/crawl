@@ -1266,6 +1266,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_dig>(range);
 
     // untargeted spells -- everything beyond here is a static targeter
+    // TODO ignite poison
     case SPELL_HAILSTORM:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, range, 0, 2);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
@@ -1284,7 +1285,18 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
 
-    // at player's position only (but not a selfench):
+    // at player's position only but not a selfench; most transmut spells go here:
+    case SPELL_SPIDER_FORM:
+    case SPELL_BLADE_HANDS:
+    case SPELL_STATUE_FORM:
+    case SPELL_ICE_FORM:
+    case SPELL_DRAGON_FORM:
+    case SPELL_HYDRA_FORM:
+    case SPELL_NECROMUTATION:
+    case SPELL_BEASTLY_APPENDAGE:
+    case SPELL_WEREBLOOD:
+    case SPELL_SUBLIMATION_OF_BLOOD:
+    case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
