@@ -334,7 +334,7 @@ namespace quiver
 
         bool is_targeted() const override
         {
-            return true;
+            return !you.confused();
         }
 
         void trigger(dist &t) override
@@ -377,13 +377,16 @@ namespace quiver
             qdesc.textcolour(Options.status_caption_colour);
             const launch_retval projected = is_launched(&you, you.weapon(),
                                                                     quiver);
+            string verb = you.confused() ? "confused " : "";
             switch (projected)
             {
-                case launch_retval::FUMBLED:  qdesc.cprintf("Toss (no damage): ");  break;
-                case launch_retval::LAUNCHED: qdesc.cprintf("Fire: ");  break;
-                case launch_retval::THROWN:   qdesc.cprintf("Throw: "); break;
-                case launch_retval::BUGGY:    qdesc.cprintf("Bug: ");   break;
+                case launch_retval::FUMBLED:  verb += "toss (no damage)";  break;
+                case launch_retval::LAUNCHED: verb += "fire";  break;
+                case launch_retval::THROWN:   verb += "throw"; break;
+                case launch_retval::BUGGY:    verb += "bug";   break;
             }
+            qdesc.cprintf("%s: ", uppercase_first(verb).c_str());
+
             qdesc.cprintf("%c) ", hud_letter);
 
             // TODO: I don't actually know what this prefix stuff is
@@ -398,6 +401,7 @@ namespace quiver
             else
                 qdesc.textcolour(LIGHTGREY);
             qdesc += quiver.name(DESC_PLAIN, true);
+
             return qdesc;
         }
 

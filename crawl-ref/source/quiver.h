@@ -28,7 +28,7 @@ namespace quiver
         NUM_LAUNCHERS
     };
 
-    struct action
+    struct action : public enable_shared_from_this<action>
     {
         action() : target(), error() { };
         virtual ~action() = default;
