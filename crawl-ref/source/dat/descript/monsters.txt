@@ -635,6 +635,10 @@ angel
 A divine warrior of the Shining One. It is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light.
 %%%%
+animated armour
+
+A set animated armour, armed with artifacts; including itself.
+%%%%
 apis
 
 A placid, sacred bull of Elyvilon.
@@ -1885,6 +1889,10 @@ A creature from the heavenly realms. It consists of a wheel within a wheel, and
 both of these are covered in eyes; strange flames of holy fire flicker all over
 it.
 %%%%
+orange crystal golem
+
+A sturdy golem, made of translucent orange crystal that affect your mind.
+%%%%
 orange crystal statue
 
 An intricately carved idol of some nameless godling, hewn of translucent orange
@@ -2007,6 +2015,10 @@ abilities the adventurer had in life. It is condemned to haunt this particular
 level of the dungeons, lashing out violently at the next adventurer to cross
 its path.
 %%%%
+plutonium golem
+
+A glowing golem, made of mystery material. It seems extremely dangerous.
+%%%%
 polar bear
 
 A bear covered in glistening white fur, habituated to cold conditions. Like all
@@ -2091,6 +2103,11 @@ victims from afar.
 red draconian
 
 A muscular red-scaled humanoid with a reptilian tail and small wings.
+%%%%
+repair machine
+
+A machine that uses evocational energy as a power source. It is able to emit
+its energy as a form of restorative aura.
 %%%%
 hornet
 

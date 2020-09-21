@@ -3261,14 +3261,22 @@ static void _corrupting_pulse(monster *mons)
     if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
     {
         targeter_radius hitfunc(mons, LOS_SOLID);
-        flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
+        if (mons->type != MONS_WRETCHED_STAR) //plutonium golem
+            flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
+        else
+            flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
         if (!is_sanctuary(you.pos())
             && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
         {
             int num_mutations = one_chance_in(4) ? 2 : 1;
             for (int i = 0; i < num_mutations; ++i)
-                temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
+            {
+                if (mons->type != MONS_WRETCHED_STAR) //plutonium golem
+                    temp_mutate(RANDOM_CORRUPT_MUTATION, "plutonium golem");
+                else
+                    temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
+            }
         }
     }
 

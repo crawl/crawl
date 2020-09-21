@@ -457,6 +457,11 @@ machine_golem_3 MONS_MACHINE_GOLEM_3
 barricade MONS_BARRICADE
 barricade_spike MONS_BARRICADE_SPIKE
 pavise MONS_PAVISE
+%sdir mon/vault
+golemforge_armour_golem MONS_GOLEMFORGE_ARMOUR_GOLEM
+golemforge_crystal_golem MONS_GOLEMFORGE_CRYSTAL_GOLEM
+golemforge_plutonium_golem MONS_GOLEMFORGE_PLUTONIUM_GOLEM
+golemforge_repair_machine MONS_GOLEMFORGE_REPAIR_MACHINE
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique

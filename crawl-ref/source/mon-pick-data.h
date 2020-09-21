@@ -1007,11 +1007,9 @@ static const pop_entry pop_wizlab[] =
 
 static const pop_entry pop_golemforge[] =
 { // Forge of Golems
-  {  1,  1, 1200, FLAT, MONS_GARGOYLE },
-  {  1,  1,   50, FLAT, MONS_IRON_GOLEM },
-  {  1,  1,   50, FLAT, MONS_MOLTEN_GARGOYLE },
-  {  1,  1,   50, FLAT, MONS_CRYSTAL_GUARDIAN },
-  {  1,  1,   50, FLAT, MONS_ELECTRIC_GOLEM },
+  {  1,  1,   89, FLAT, MONS_ELECTRIC_GOLEM },
+  {  1,  1,  515, FLAT, MONS_CRYSTAL_GUARDIAN },
+  {  1,  1,  515, FLAT, MONS_IRON_GOLEM },
   { 0,0,0,FLAT,MONS_0 }
 };
 
