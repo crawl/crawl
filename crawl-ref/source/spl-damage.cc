@@ -3339,6 +3339,21 @@ void actor_apply_toxic_bog(actor * act)
     }
 }
 
+vector<coord_def> find_ramparts_walls(const coord_def &center)
+{
+    vector<coord_def> wall_locs;
+    for (radius_iterator ri(center,
+            spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
+                                                        LOS_NO_TRANS, true);
+        ri; ++ri)
+    {
+        const auto feat = env.grid(*ri);
+        if (feat_is_wall(feat))
+            wall_locs.push_back(*ri);
+    }
+    return wall_locs;
+}
+
 /**
  * Cast Frozen Ramparts
  *
@@ -3350,15 +3365,7 @@ void actor_apply_toxic_bog(actor * act)
 */
 spret cast_frozen_ramparts(int pow, bool fail)
 {
-    vector<coord_def> wall_locs;
-    for (radius_iterator ri(you.pos(),
-                spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
-                LOS_NO_TRANS, true); ri; ++ri)
-    {
-        const auto feat = env.grid(*ri);
-        if (feat_is_wall(feat))
-            wall_locs.push_back(*ri);
-    }
+    vector<coord_def> wall_locs = find_ramparts_walls(you.pos());
 
     if (wall_locs.empty())
     {

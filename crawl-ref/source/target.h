@@ -355,7 +355,7 @@ class targeter_shatter : public targeter_radius
 {
 public:
     targeter_shatter(const actor *act) : targeter_radius(act, LOS_ARENA) { }
-    bool can_affect_walls() override { return true; };
+    bool can_affect_walls() override { return true; }
 };
 
 // A fixed targeter for absolute 0 that finds the closest monster using the
@@ -391,6 +391,16 @@ class targeter_multifireball : public targeter_multiposition
 {
 public:
     targeter_multifireball(const actor *a, vector<coord_def> seeds);
+};
+
+// this is implemented a bit like multifireball, but with some tweaks
+class targeter_ramparts : public targeter_multiposition
+{
+public:
+    targeter_ramparts(const actor *a);
+
+    aff_type is_affected(coord_def loc) override;
+    bool can_affect_walls() override { return true; }
 };
 
 // a class for fixed beams at some offset from the player

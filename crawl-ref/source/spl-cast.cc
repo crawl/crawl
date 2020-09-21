@@ -1281,7 +1281,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
     case SPELL_ABSOLUTE_ZERO:
         return make_unique<targeter_absolute_zero>(range);
-    // TODO: ramparts
+    case SPELL_FROZEN_RAMPARTS:
+        return make_unique<targeter_ramparts>(&you);
 
     // at player's position only (but not a selfench):
     case SPELL_CONJURE_FLAME:
