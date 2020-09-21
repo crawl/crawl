@@ -1694,12 +1694,6 @@ targeter_multiposition::targeter_multiposition(const actor *a,
 
 void targeter_multiposition::add_position(const coord_def &loc)
 {
-    if (cell_is_solid(loc)
-        && (!can_affect_walls() || agent == &you && you_worship(GOD_FEDHAS)))
-    {
-        return;
-    }
-
     actor *act = actor_at(loc);
     if (agent == &you && act == &you)
         return; // any exceptions to this?
@@ -1719,6 +1713,9 @@ void targeter_multiposition::add_position(const coord_def &loc)
 
 aff_type targeter_multiposition::is_affected(coord_def loc)
 {
+    if (cell_is_solid(loc) && !can_affect_walls())
+        return AFF_NO;
+
     // is this better with maybe or yes?
     return affected_positions.count(loc) > 0 ? AFF_MAYBE : AFF_NO;
 }
@@ -1732,6 +1729,31 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
             for (adjacent_iterator ai(c); ai; ++ai)
                 add_position(*ai);
     }
+}
+
+targeter_ramparts::targeter_ramparts(const actor *a)
+    : targeter_multiposition(a, { }, false)
+{
+    auto seeds = find_ramparts_walls(a->pos());
+    for (auto &c : seeds)
+    {
+        add_position(c);
+        for (adjacent_iterator ai(c); ai; ++ai)
+            if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
+                add_position(*ai);
+    }
+}
+
+
+aff_type targeter_ramparts::is_affected(coord_def loc)
+{
+    if (!affected_positions.count(loc)
+        || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))
+    {
+        return AFF_NO;
+    }
+
+    return cell_is_solid(loc) ? AFF_YES : AFF_MAYBE;
 }
 
 // note: starburst is not in spell_to_zap
