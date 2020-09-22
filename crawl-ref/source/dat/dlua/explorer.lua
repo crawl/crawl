@@ -44,7 +44,8 @@ explorer.portal_order = {
     "Bazaar",
     -- Trove is not pregenerated, so should be ignored here
     "WizLab",
-    "Desolation"
+    "Desolation",
+    "Golemforge"
 }
 
 

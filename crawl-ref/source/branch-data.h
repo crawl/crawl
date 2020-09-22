@@ -362,4 +362,12 @@ const Branch branches[NUM_BRANCHES] =
       BLACK, BLACK,
       '!', {}, branch_noise::normal },
 #endif
+
+    { BRANCH_GOLEM, NUM_BRANCHES, -1, -1, 1, 20,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_GOLEM, DNGN_EXIT_GOLEM, DNGN_EXIT_THROUGH_ABYSS,
+      "Golemforge", "the Forge of Golems", "Golemforge",
+      "You enter the forge of golems!",
+      LIGHTBLUE, BLACK,
+      '@', {}, branch_noise::normal },
 };
