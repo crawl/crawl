@@ -44,14 +44,14 @@ function golemforge_portal(e)
 end
 
 function golemforge_appearance(e)
-  e.kprop("xxLrom = no_tele_into")
+  e.kprop("aABbCcD+xXLrm = no_tele_into")
   e.kfeat("< = exit_golem")
   e.kfeat("X = permarock_wall")
   e.kfeat("x = crystal_wall")
   e.rtile("x = dngn_crystal_lightblue")
   e.colour("X = blue")
   e.colour(".x = lightblue")
-  e.ftile(".12aABbCcDO+xX = floor_crystal_squares")
+  e.ftile(".aABbCcDO+xX = floor_crystal_squares")
 end
 
 }}
@@ -80,10 +80,10 @@ ENDMAP
 default-depth: Golemforge
 
 NAME:   golemforge_statue_garden_chambered
-TAGS:   no_item_gen no_pool_fixup
+TAGS:   no_item_gen no_mons_gen no_pool_fixup
 ORIENT: encompass
-MONS:  crystal guardian
-MONS:  iron golem
+KMONS: y =crystal guardian
+KMONS: i = iron golem
 KMONS: G = iron golem col:lightred name:orange_crystal_golem n_rpl n_des n_spe \
             tile:mons_golemforge_crystal_golem \
             spells:brain_feed.24.natural;draining_gaze.24.natural
@@ -91,7 +91,7 @@ KMONS: P = iron golem col:green name:plutonium_golem n_rpl n_des n_spe \
             tile:mons_golemforge_plutonium_golem spells:corrupting_pulse.30.natural
 KMONS: S = lightning spire hd:12 col:lightgreen name:repair_machine n_rpl n_des n_spe \
             tile:mons_golemforge_repair_machine \
-            spells:aura_of_healing.70.natural;warning_cry.30.natural
+            spells:aura_of_healing.70.magical;warning_cry.30.magical
 KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
             ; triple sword randart | double blade randart | great mace randart | eveningstar randart |\
             bardiche randart | demon trident randart | executioner's axe randart | broad axe randart |\
@@ -101,9 +101,10 @@ KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
             fire dragon scales randart | ice dragon scales randart | storm dragon scales randart |\
             pearl dragon scales randart | swamp dragon scales randart | steam dragon scales randart |\
             acid dragon scales randart | shadow dragon scales randart | quicksilver dragon scales randart
-FTILE:  GPSmAaBbCcD = floor_crystal_squares
-COLOUR: GPSmAaBbCcD = lightblue
-KFEAT:  L = lava
+SHUFFLE:  GP
+FTILE:  iyGPSmAaBbCcD = floor_crystal_squares
+COLOUR: iyGPSmAaBbCcD = lightblue
+KFEAT:  Lm = lava
 KFEAT:  A = stone_arch
 KITEM: a = randbook disc:necromancy slevels:16 / randbook disc:conjuration slevels:16 / \
         randbook disc:summoning slevels:16 / randbook disc:charms slevels:16 / \
@@ -143,70 +144,73 @@ KITEM: D = any randart jewellery no_pickup
 : set_feature_name("crystal_wall", "wall of crystal")
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXX
-XXXXXXxxxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXXxxx.........xxxXXXXXXXXX
-XXXXXXx<A.............xxxXXXXXXXXXXXXXXXXXXXxxx.............xxxXXXXXXX
+XXXXXXxxxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXxxxx.........xxxXXXXXXXXX
+XXXXXXxA.............xxxxXXXXXXXXXXXXXXXXXXxxx.............xxxxXXXXXXX
 XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx........P........xxxXXXXX
-XXxxx.....................xxxXXXXXXXXXXXxxx.....................xxxXXX
-XXx...................S.....xXXXXXXXXXXXx.....S.............S.....xXXX
-XXx.........................xxxxxxxxxxxxx.........................xXXX
+XXxxx.................i...xxxXXXXXXXXXXXxxx...i.............i...xxxXXX
+XXx..................ySy....xxxxxxxxxxxxx....ySy...........ySy....xXXX
+XXx...................i.......................i.............i.....xXXX
 XXx...........LLL...................................LLL...........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
-XXx..........LLmLL.................................LLmLL..........xXXX
+XXx..........LLmLL................S................LLmLL..........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx...........LLL...................................LLL...........xXXX
-XXx..............................L.L..............................xXXX
-XXx.....S.............S.....xxxxxx+xxxxxx.....S.............S.....xXXX
-XXxxx.....................xxxXXXXxmxXXXXxxx.....................xxxXXX
-XXXXxxx.................xxxXXXXXXxmxXXXXXXxxx........P........xxxXXXXX
+XXx.....i.............i..........L.L..........i.............i.....xXXX
+XXx....ySy...........ySy....xxxxxx+xxxxxx....ySy...........ySy....xXXX
+XXxxx...i.............i...xxxXXXXxmxXXXXxxx...i.............i...xxxXXX
+XXXXxxx.................xxxXXXXXXxmxXXXXXXxxx........G........xxxXXXXX
 XXXXXXxxx.............xxxXXXXXXXXxmxXXXXXXXXxxx.............xxxXXXXXXX
 XXXXXXXXxxx.........xxxXXXXXXXXXXxmxXXXXXXXXXXxxx.........xxxXXXXXXXXX
-XXXXXXXXXXxx.......xxxXXXXXXXXXXXxLxXXXXXXXXXXXxxx.......xxXXXXXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXXXXXXxLxXXXXXXXXXXXXXx.......xxXXXXXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXXXXXXLLLXXXXXXXXXXXXXx.......xxXXXXXXXXXXX
-XXXXXXXxxxx........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx........xxxxxXXXXXXX
-XXXXXXxx...........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx............xxXXXXXX
-XXXXXXx............xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.............xXXXXXX
-XXXXXXx..S.........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx..........S..xXXXXXX
-XXXXXXx............xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.............xXXXXXX
-XXXXXXxx...........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx............xxXXXXXX
-XXXXXXXxxxx........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........xxxxxXXXXXXX
-XXXXXXXXXXxx.......xxxxxxXXXXXXXXXXXXXXXXXXXXxxxxx.......xxXXXXXXXXXXX
-XXXXXXXXXXXx...........xxXXXXXXXXXXXXXXXXXXXxx...........xXXXXXXXXXXXX
-XXXXXXXXXXXx............xXXXXXXXXXXXXXXXXXXXx............xXXXXXXXXXXXX
-XXXXXXXXXXXx.........S..xXXXXXXXXXXXXXXXXXXXx..S.........xXXXXXXXXXXXX
-XXXXXXXXXXXx............xXXXXXXXXXXXXXXXXXXXx............xXXXXXXXXXXXX
-XXXXXXXXXXXx...........xxXXXXXXXXXXXXXXXXXXXxx...........xXXXXXXXXXXXX
-XXXXXXXXXXxx.......xxxxxxXXXXXXXXXXXXXXXXXXXXxxxxx.......xxXXXXXXXXXXX
-XXXXXXXxxxx........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........xxxxxXXXXXXX
-XXXXXXxx...........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx............xxXXXXXX
-XXXXXXx............xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.............xXXXXXX
-XXXXXXx..S.........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx..........S..xXXXXXX
-XXXXXXx............xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx.............xXXXXXX
-XXXXXXxx...........xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx............xxXXXXXX
-XXXXXXXxxxx........xXXXXXXXXXXXXxxxxxXXXXXXXXXXXXx........xxxxxXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXXXXXxLLLXXXXXXXXXXXXXx.......xxXXXXXXXXXXX
-XXXXXXXXXXXx.......xXXXXXXXXXXXXxxLxxXXXXXXXXXXXXx.......xXXXXXXXXXXXX
-XXXXXXXXXxxx.......xxxXXXXXXXXXXXxLxXXXXXXXXXXXxxx.......xxXXXXXXXXXXX
+XXXXXXXXXXxx.......xxxXXXXXXXXXxxxLxxxXXXXXXXXXxxx.......xxXXXXXXXXXXX
+XXXXXXXXXXxx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx.......xxXXXXXXXXXXX
+XXXXXXXXXXxx.......xXXXXXXXXxxxLLxxxLLxxXXXXXXXXXx.......xxXXXXXXXXXXX
+XXXXXXXxxxx.......ixXXXXXxxxxxLLxxXxxLLxxxxxXXXXXxi.......xxxxxXXXXXXX
+XXXXXXxx..........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL..........xxxXXXXXX
+XXXXXXx.y..........+mmmmLLLLLLLxXXXXXxLLLLLLLmmmm+...........y.xXXXXXX
+XXXXXXx..S........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL.........S..xXXXXXX
+XXXXXXx.y.........ixXXXXXXXXxxLLxxXxxLLxxxxxXXXXXxi..........y.xXXXXXX
+XXXXXXxx...........xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx...........xxxXXXXXX
+XXXXXXXxxx.........xxXXXXXXXXXxxLLLLLxxXXXXXXXXXxx..........xxxXXXXXXX
+XXXXXXXXXxx.........xxxxXXXXXXXxxxLxxxXXXXXXXxxxx.........xxxXXXXXXXXX
+XXXXXXXXXXxx...........xxXXXXXXxxmmmxxXXXXXXxx...........xxXXXXXXXXXXX
+XXXXXXXXXXXx..........y.xXXXXXXxLmmmLxXXXXXXx.y..........xXXXXXXXXXXXX
+XXXXXXXXXXXx..y......S..xXXXXXXxxmmmxxXXXXXXx..S......y..xXXXXXXXXXXXX
+XXXXXXXXXXXx..........y.xXXXXXXxxxLxxxXXXXXXx.y..........xXXXXXXXXXXXX
+XXXXXXXXXXxx...........xxXXXXXXxxxLxxxXXXXXXxx...........xxXXXXXXXXXXX
+XXXXXXXXXxx.........xxxxXXXXXXXxxxLxxxXXXXXXXxxxx.........xxxXXXXXXXXX
+XXXXXXXxxx.........xxXXXXXXXXXxxLLLLLxxXXXXXXXXXxx..........xxXXXXXXXX
+XXXXXXxx...........xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx...........xxxXXXXXX
+XXXXXXx.y.........ixXXXXXxxxxxLLxxXxxLLxxxxxXXXXXxi..........y.xXXXXXX
+XXXXXXx..S........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL.........S..xXXXXXX
+XXXXXXx.y..........+mmmmLLLLLLLxXXXXXxLLLLLLLmmmm+...........y.xXXXXXX
+XXXXXXxx..........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL..........xxxXXXXXX
+XXXXXXXxxxx.......ixXXXXXXXXxxLLxxXxxLLxxXXXXXXXXxi......xxxxxXXXXXXXX
+XXXXXXXXXXxx.......xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx......xxXXXXXXXXXXXX
+XXXXXXXXXXXx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXX......xXXXXXXXXXXXXX
+XXXXXXXXXxxx.......xxxxxxXXXXXXxxxLxxxXXXXXXXxxxxx......xxXXXXXXXXXXXX
 XXXXXXXXxxx.........xxxXXXXXXXXXXxmxXXXXXXXXXXxxx.........xxxXXXXXXXXX
 XXXXXXxxx.............xxxXXXXXXXXxmxXXXXXXXXxxx.............xxxXXXXXXX
 XXXXxxx........G........xxxXXXXXXxmxXXXXXXxxx........P........xxxXXXXX
-XXxxx.....................xxxXXXXxmxXXXXxxx.....................xxxXXX
+XXxxx..y.i...........i.y..xxxXXXXxmxXXXXxxx..y.i...........i.y..xxxXXX
 XXx.....S.............S.....xxxxxx+xxxxxx.....S.............S.....xXXX
-XXx..............................L.L..............................xXXX
+XXx....i.y...........y.i........iL.Li........i.y...........y.i....xXXX
 XXx...........LLL...................................LLL...........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
-XXx..........LLmLL.................................LLmLL..........xXXX
+XXx..........LLmLL................S................LLmLL..........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
-XXx...........LLL...................................LLL...........xXXX
-XXx.....S.............S.....xxxxxxxxxxxxx.........................xXXX
-XXx.........................xXXXXXXXXXXXx.....S...................xXXX
-XXxxx..........G..........xxxXXXXXXXXXXXxxx..........G.......<..xxxXXX
-XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx.................xxxXXXXX
-XXXXXXxxx.............xxxXXXXXXXXXXXXXXXXXXXxxx.............xxxXXXXXXX
-XXXXXXXXxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXXxxx.........xxxXXXXXXXXX
-XXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXx....y.i....LLL....i.y.....................y.i....LLL...........xXXX
+XXx.....S.............S.......................S...................xXXX
+XXx....i.y...........y.i....xxxxxxxxxxxxx....i.y..................xXXX
+XXxxx..........P..........xxxXXXXXXXXXXXxxx..........G..........xxxXXX
+XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx.................x+xXXXXX
+XXXXXXxxx.............xxxXXXXXXXXXXXXXXXXXXXxxx.............xxx.xXXXXX
+XXXXXXXXxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXXxxx.........xxxXxCxXXXXX
+XXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXxBxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxDxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxcxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxCxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx<DacBbDaCBaDcbBaBbcxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
