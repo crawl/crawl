@@ -1518,7 +1518,8 @@ class spell_targeting_behaviour : public targeting_behaviour
 {
 public:
     spell_targeting_behaviour(spell_type _spell)
-        : targeting_behaviour(false), spell(_spell)
+        : targeting_behaviour(false), spell(_spell),
+          err(spell_uselessness_reason(spell, true, false))
     {
     }
 
@@ -1527,8 +1528,16 @@ public:
         return !!(get_spell_flags(spell) & spflag::targeting_mask);
     }
 
+    string get_error() override
+    {
+        return err;
+    }
+
+    // TODO: provide useful errors for specific targets via get_monster_desc?
+
 private:
     spell_type spell;
+    string err;
 };
 
 /**
@@ -1632,8 +1641,12 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             }
         }
 
-        string title = make_stringf("%s: <w>%s</w>",
-                    is_targeted ? "Aiming" : "Casting", spell_title(spell));
+        // TODO: show uselessness reason somehow?
+        const bool useless = spell_is_useless(spell, true, false);
+        const char *spell_title_color = useless ? "darkgrey" : "w";
+        string title = make_stringf("%s: <%s>%s</%s>",
+                    is_targeted ? "Aiming" : "Casting",
+                    spell_title_color, spell_title(spell), spell_title_color);
         if (allow_fail)
         {
             title += make_stringf(" <lightgrey>(%s)</lightgrey>",
@@ -1651,6 +1664,13 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         args.target_prefix = prompt;
         args.top_prompt = title;
         args.behaviour = &beh;
+
+        // if the spell is useless and we have somehow gotten this far, it's
+        // a forced cast. Setting this prevents the direction chooser from
+        // looking for selecting a default target (which doesn't factor in
+        // the spell's capabilities).
+        if (useless)
+            args.default_place = you.pos();
         if (hitfunc && hitfunc->can_affect_walls())
         {
             args.show_floor_desc = true;

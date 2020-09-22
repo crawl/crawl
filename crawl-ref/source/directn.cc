@@ -1447,6 +1447,9 @@ void direction_chooser::show_initial_prompt()
         return;
     behaviour->update_top_prompt(&top_prompt);
     describe_cell();
+    const string err = behaviour ? behaviour->get_error() : "";
+    if (!err.empty())
+        mprf(MSGCH_PROMPT, "%s", err.c_str()); // can this push the prompt one line too tall?
 }
 
 void direction_chooser::print_target_description(bool &did_cloud) const

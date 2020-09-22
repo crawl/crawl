@@ -1085,7 +1085,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you don't have enough magic.";
         }
         if (!prevent && spell_no_hostile_in_range(spell))
-            return "you can't see any valid targets.";
+            return "you can't see any targets that would be affected.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
@@ -1345,7 +1345,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
-    case SPELL_LRD:
+    case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
+                    // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     // This can always potentially hit out-of-LOS, although this is conditional
