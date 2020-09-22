@@ -2200,12 +2200,14 @@ public:
                 m_dc.need_cursor_redraw = true;
             }
 
-            string top_prompt;
+            string top_prompt = m_dc.top_prompt;
             m_dc.behaviour->update_top_prompt(&top_prompt);
 
             if (m_dc.top_prompt != top_prompt)
+            {
                 _expose();
-            m_dc.top_prompt = top_prompt;
+                m_dc.top_prompt = top_prompt;
+            }
 
             process_command(command);
 
