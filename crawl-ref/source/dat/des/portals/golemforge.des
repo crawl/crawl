@@ -111,9 +111,9 @@ KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
             fire dragon scales randart | ice dragon scales randart | storm dragon scales randart |\
             pearl dragon scales randart | swamp dragon scales randart | steam dragon scales randart |\
             acid dragon scales randart | shadow dragon scales randart | quicksilver dragon scales randart
-SHUFFLE:  GP
-FTILE:  iyGPSmAaBbCcD = floor_crystal_squares
-COLOUR: iyGPSmAaBbCcD = lightblue
+SHUFFLE:  GPF
+FTILE:  iyGPFSmAaBbCcD = floor_crystal_squares
+COLOUR: iyGPFSmAaBbCcD = lightblue
 KFEAT:  Lm = lava
 KFEAT:  A = stone_arch
 KITEM: a = randbook disc:necromancy slevels:16 / randbook disc:conjuration slevels:16 / \
@@ -197,7 +197,7 @@ XXXXXXx.y..........+mmmmLLLLLLLxXXXXXxLLLLLLLmmmm+...........y.xXXXXXX
 XXXXXXxx..........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL..........xxxXXXXXX
 XXXXXXXxxxx.......ixXXXXXXXXxxLLxxXxxLLxxXXXXXXXXxi......xxxxxXXXXXXXX
 XXXXXXXXXXxx.......xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx......xxXXXXXXXXXXXX
-XXXXXXXXXXXx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXX......xXXXXXXXXXXXXX
+XXXXXXXXXXXx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx......xXXXXXXXXXXXXX
 XXXXXXXXXxxx.......xxxxxxXXXXXXxxxLxxxXXXXXXXxxxxx......xxXXXXXXXXXXXX
 XXXXXXXXxxx.........xxxXXXXXXXXXXxmxXXXXXXXXXXxxx.........xxxXXXXXXXXX
 XXXXXXxxx.............xxxXXXXXXXXxmxXXXXXXXXxxx.............xxxXXXXXXX
