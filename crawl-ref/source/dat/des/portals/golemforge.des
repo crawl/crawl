@@ -93,10 +93,17 @@ KMONS: S = lightning spire hd:12 col:lightgreen name:repair_machine n_rpl n_des 
             tile:mons_golemforge_repair_machine \
             spells:aura_of_healing.70.magical;warning_cry.30.magical
 KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
-            ; triple sword randart | double blade randart | great mace randart | eveningstar randart |\
-            bardiche randart | demon trident randart | executioner's axe randart | broad axe randart |\
-            lajatang randart | quick blade randart | longbow randart | triple crossbow randart |\
-            fustibalus randart .\
+            ; double sword randart . buckler randart |\
+            broad axe randart . shield randart |\
+            eveningstar randart . large shield randart |\
+            demon trident randart . javelin ego:silver q:4 |\
+            lajatang randart . throwing net q:1 |\
+            quick blade randart . dart ego:curare q:20 |\
+            longbow randart. arrow q:40 |\
+            triple crossbow randart . bolt q:40 |\
+            fustibalus randart . sling bullet q:40 |\
+            triple sword randart | bardiche randart |\
+            executioner's axe randart | great mace randart .\
             crystal plate armour randart | robe randart |\
             fire dragon scales randart | ice dragon scales randart | storm dragon scales randart |\
             pearl dragon scales randart | swamp dragon scales randart | steam dragon scales randart |\
