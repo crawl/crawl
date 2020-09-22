@@ -461,6 +461,7 @@ pavise MONS_PAVISE
 golemforge_armour_golem MONS_GOLEMFORGE_ARMOUR_GOLEM
 golemforge_crystal_golem MONS_GOLEMFORGE_CRYSTAL_GOLEM
 golemforge_plutonium_golem MONS_GOLEMFORGE_PLUTONIUM_GOLEM
+golemforge_lava_golem MONS_GOLEMFORGE_LAVA_GOLEM
 golemforge_repair_machine MONS_GOLEMFORGE_REPAIR_MACHINE
 
 ## Statues and statue-like things (also '8')

@@ -89,6 +89,9 @@ KMONS: G = iron golem col:lightred name:orange_crystal_golem n_rpl n_des n_spe \
             spells:brain_feed.24.natural;draining_gaze.24.natural
 KMONS: P = iron golem col:green name:plutonium_golem n_rpl n_des n_spe \
             tile:mons_golemforge_plutonium_golem spells:corrupting_pulse.30.natural
+KMONS: F = iron golem perm_ench:inner_flame col:red name:lava_golem n_rpl n_des n_spe \
+            tile:mons_golemforge_lava_golem \
+            spells:bolt_of_magma.24.natural;sticky_flame.100.natural.instant
 KMONS: S = lightning spire hd:12 col:lightgreen name:repair_machine n_rpl n_des n_spe \
             tile:mons_golemforge_repair_machine \
             spells:aura_of_healing.70.magical;warning_cry.30.magical
@@ -160,7 +163,7 @@ XXx..................ySy....xxxxxxxxxxxxx....ySy...........ySy....xXXX
 XXx...................i.......................i.............i.....xXXX
 XXx...........LLL...................................LLL...........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
-XXx..........LLmLL................S................LLmLL..........xXXX
+XXx..........LLmLL................S................LLmLL....F.....xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx...........LLL...................................LLL...........xXXX
 XXx.....i.............i..........L.L..........i.............i.....xXXX
@@ -204,7 +207,7 @@ XXx.....S.............S.....xxxxxx+xxxxxx.....S.............S.....xXXX
 XXx....i.y...........y.i........iL.Li........i.y...........y.i....xXXX
 XXx...........LLL...................................LLL...........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
-XXx..........LLmLL................S................LLmLL..........xXXX
+XXx....F.....LLmLL................S................LLmLL.....F....xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx....y.i....LLL....i.y.....................y.i....LLL...........xXXX
 XXx.....S.............S.......................S...................xXXX
