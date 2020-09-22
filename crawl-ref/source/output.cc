@@ -297,6 +297,7 @@ static const auto HUD_VALUE_COLOUR = LIGHTGREY;
 // colour_bar
 // ----------------------------------------------------------------------
 
+
 class colour_bar
 {
     typedef unsigned short colour_t;
@@ -402,6 +403,93 @@ public:
         textcolour(LIGHTGREY);
         textbackground(BLACK);
     }
+
+    void draw_more(int ox, int oy, int val, int max_val, bool temp = false, int sub_val = 0, int more_sub_val = 0)
+    {
+        ASSERT(val <= max_val);
+        if (max_val <= 0)
+        {
+            m_old_disp = -1;
+            return;
+        }
+        const colour_t temp_colour = temperature_colour(temperature());
+        const int width = (horiz_bar_width != -1) ?
+            horiz_bar_width :
+            crawl_view.hudsz.x - (ox - 1);
+        const int sub_disp = (width * val / max_val);
+        const int more_sub_disp = width * max(0, val - sub_val) / max_val;
+        int disp = width * max(0, val - sub_val - more_sub_val) / max_val;
+        const int old_disp = (m_old_disp < 0) ? sub_disp : m_old_disp;
+        m_old_disp = sub_disp;
+
+        // Always show at least one sliver of the sub-bar, if it exists
+        if (sub_val)
+            disp = max(0, min(sub_disp - 1, disp));
+
+        CGOTOXY(ox, oy, GOTO_STAT);
+
+        textcolour(BLACK);
+        for (int cx = 0; cx < width; cx++)
+        {
+#ifdef USE_TILE_LOCAL
+            // Maybe this should use textbackground too?
+            textcolour(BLACK + m_empty * 16);
+
+            if (cx < disp)
+                textcolour(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
+            else if(cx < more_sub_disp)
+                textcolour(BLACK + MAGENTA * 16);
+            else if (cx < sub_disp)
+                textcolour(BLACK + YELLOW * 16);
+            else if (old_disp >= sub_disp && cx < old_disp)
+                textcolour(BLACK + m_change_neg * 16);
+            putwch(' ');
+#else
+            if (cx < disp && cx < old_disp)
+            {
+                textcolour((temp) ? temp_colour : m_default);
+                putwch('=');
+            }
+            else if (cx < disp)
+            {
+                textcolour(m_change_pos);
+                putwch('=');
+            }
+            else if (cx < more_sub_disp)
+            {
+                textcolour(MAGENTA);
+                putwch('=');
+            }
+            else if (cx < sub_disp)
+            {
+                textcolour(YELLOW);
+                putwch('=');
+            }
+            else if (cx < old_disp)
+            {
+                textcolour(m_change_neg);
+                putwch('-');
+            }
+            else
+            {
+                textcolour(m_empty);
+                putwch('-');
+            }
+#endif
+
+            // If some change colour was rendered, redraw in a few
+            // turns to clear it out.
+            if (old_disp != disp)
+                m_request_redraw_after = you.num_turns + 4;
+            else
+                m_request_redraw_after = 0;
+        }
+
+        textcolour(LIGHTGREY);
+        textbackground(BLACK);
+    }
+
+
 
     void vdraw(int ox, int oy, int val, int max_val)
     {
@@ -895,6 +983,11 @@ static void _print_stats_hp(int x, int y)
         {
             EP_Bar.draw(19, y, you.hp, you.hp_max);
         }
+        else if (you.religion == GOD_AGRAPHEDE)
+        {
+            int poison_survivals = you.hp - max(0, poison_survival());
+            HP_Bar.draw_more(19, y, you.hp, you.hp_max, false, poison_survivals, max(0, get_player_poisoning() - poison_survivals));
+        }
         else
         {
             HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
@@ -904,6 +997,11 @@ static void _print_stats_hp(int x, int y)
     if (you.species == SP_DJINNI)
     {
         EP_Bar.draw(19, y, you.hp, you.hp_max);
+    }
+    else if(you.religion == GOD_AGRAPHEDE)
+    {
+        int poison_survivals = you.hp - max(0, poison_survival());
+        HP_Bar.draw_more(19, y, you.hp, you.hp_max, false, poison_survivals, max(0, get_player_poisoning() - poison_survivals));
     }
     else
     {
