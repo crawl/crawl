@@ -264,6 +264,7 @@ static branch_type single_portals[] =
 #if TAG_MAJOR_VERSION == 34
     BRANCH_LABYRINTH,
 #endif
+    BRANCH_GOLEM,
 };
 
 static void _sdump_visits(dump_params &par)

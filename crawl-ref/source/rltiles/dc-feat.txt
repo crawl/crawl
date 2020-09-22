@@ -436,6 +436,8 @@ zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 desolation_portal DNGN_PORTAL_DESOLATION
 desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
+golemforge_portal DNGN_PORTAL_GOLEM
+golemforge_portal_closed DNGN_PORTAL_GOLEM_GONE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 

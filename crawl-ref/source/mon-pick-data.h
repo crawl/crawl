@@ -1005,6 +1005,14 @@ static const pop_entry pop_wizlab[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_golemforge[] =
+{ // Forge of Golems
+  {  1,  1,   89, FLAT, MONS_ELECTRIC_GOLEM },
+  {  1,  1,  515, FLAT, MONS_CRYSTAL_GUARDIAN },
+  {  1,  1,  515, FLAT, MONS_IRON_GOLEM },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_depths[] =
 { // Depths (OOD cap: 14)
   { -2,  4,  100, SEMI, MONS_BOGGART },
@@ -1134,6 +1142,7 @@ static const population_list population[] =
 #if TAG_MAJOR_VERSION == 34
     POP(gauntlet),
 #endif
+    POP(golemforge),
 };
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
 
@@ -1251,6 +1260,7 @@ static const population_list population_zombie[] =
 #if TAG_MAJOR_VERSION == 34
     POP(gauntlet),
 #endif
+    POP(golemforge),
 };
 COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
 
@@ -1367,6 +1377,7 @@ static const population_list population_water[] =
 #if TAG_MAJOR_VERSION == 34
     POP(water_generic), // Gauntlet
 #endif
+    POP(water_generic), // Forge of Golems
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1479,5 +1490,6 @@ static const population_list population_lava[] =
 #if TAG_MAJOR_VERSION == 34
     POP(lava_generic), // Gauntlet
 #endif
+    POP(golemforge), // Forge of Golems
 };
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
