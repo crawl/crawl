@@ -119,7 +119,7 @@ KITEM: a = randbook disc:necromancy slevels:16 / randbook disc:conjuration sleve
         randbook disc:transmutation slevels:16 / randbook disc:fire slevels:16 / \
         randbook disc:air slevels:16 / randbook disc:earth slevels:16 / \
         randbook disc:ice slevels:16 / randbook disc:poison slevels:16
-KITEM: B = triple sword good_item randart no_pickup / double blade good_item randart no_pickup / \
+KITEM: B = triple sword good_item randart no_pickup / double sword good_item randart no_pickup / \
         great mace good_item randart no_pickup / eveningstar good_item randart no_pickup / \
         bardiche good_item randart no_pickup / demon trident good_item randart no_pickup / \
         executioner's axe good_item randart no_pickup / broad axe good_item randart no_pickup / \
