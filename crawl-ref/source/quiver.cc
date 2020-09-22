@@ -114,12 +114,12 @@ namespace quiver
         if (!a || !a->is_valid())
             return nullptr;
 
+        a->reset();
         a->target.target = coord_def(-1,-1);
         a->target.find_target = false;
         a->target.fire_context = this;
         a->target.interactive = true;
 
-        // TODO: check behavior when confused
         if (a->is_targeted())
             a->trigger(a->target);
         else
@@ -569,6 +569,7 @@ namespace quiver
             }
             else if (!is_dynamic_targeted())
                 target.target = you.pos(); // hax -- never trigger static targeters
+                                           // unless interactive is set.
                                            // will need to be fixed if `z` ever
                                            // calls here
 
@@ -1239,6 +1240,7 @@ namespace quiver
             // next in fire order item after the selected action
             if (!a || !a->is_valid())
                 force_restore_initial = true;
+
             what_happened = a ? static_cast<command_type>(a->target.cmd_result)
                               : CMD_NO_CMD;
 

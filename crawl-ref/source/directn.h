@@ -52,6 +52,8 @@ public:
 
     virtual bool targeted() { return true; }
 
+    virtual string get_error() { return ""; }
+
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
 private:

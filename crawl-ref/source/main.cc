@@ -1771,8 +1771,12 @@ void process_command(command_type cmd, command_type prev_cmd)
 
 #ifdef CLUA_BINDINGS
     case CMD_AUTOFIRE:
-        if (you.quiver_action.get().is_valid() &&
-                                !you.quiver_action.get().allow_autotarget())
+        if (!you.quiver_action.get().is_valid())
+            mpr("Nothing quivered!"); // shouldn't actually be possible...
+
+        // disabled quiver actions are triggered here for messaging purposes
+        if (!you.quiver_action.get().allow_autotarget()
+                                    || !you.quiver_action.get().is_enabled())
         {
             if (!_check_recklessness(prev_cmd))
                 you.quiver_action.get().trigger();
