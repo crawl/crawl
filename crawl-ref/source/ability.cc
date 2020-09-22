@@ -4444,13 +4444,19 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
         ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
-
-        int thing_created = items(true, OBJ_POTIONS, POT_POISON, 1, 0, you.religion);
-        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
-        {
+        bool least_one = false;
+        for (int num = random_range(3, 5); num > 0; num--) {
+            int thing_created = items(true, OBJ_POTIONS, POT_POISON, 1, 0, you.religion);
+            if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
+            {
+                break;
+            }
+            least_one = true;
+            set_ident_type(mitm[thing_created], true);
+        }
+        if (least_one == false){
             return spret::abort;
         }
-        set_ident_type(mitm[thing_created], true);
         simple_god_message(" says: Use this gift wisely!");
         dec_inv_item_quantity(pot_idx, 1);
         break;
