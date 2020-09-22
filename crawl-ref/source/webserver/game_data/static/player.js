@@ -47,17 +47,38 @@ function ($, comm, enums, map_knowledge, messages, options) {
         if (name == "hp")
         {
             $("#stats_hp_bar_poison").css("width", 0);
-            var poison_survival = player["poison_survival"]
-            if (poison_survival < value)
+            
+            var agraphede_cost = player["agraphede_cost"];
+            if (agraphede_cost > 0)
             {
-                var poison_bar = Math.round(10000 * (value - poison_survival)
-                                            / max);
-                full_bar = Math.round(10000 * poison_survival / max);
-                $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
+                var poison_survival = player["poison_survival"];
+                var cost_bar = Math.round(10000 * (agraphede_cost - value + poison_survival) / max);
+                $("#stats_hp_bar_agraphede").css("width", (cost_bar / 100)
                                               + "%");
+                                              
+                var poison_bar = Math.round(10000 * (value - poison_survival)
+                                                / max);
+                $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
+                                                  + "%");
+                full_bar = Math.round(10000 * (value - agraphede_cost) / max);
+
+                if (full_bar + cost_bar + poison_bar + change_bar > 10000)
+                    change_bar = 10000 - poison_bar - cost_bar - full_bar;
             }
-            if (full_bar + poison_bar + change_bar > 10000)
-                change_bar = 10000 - poison_bar - full_bar;
+            else {
+                var poison_survival = player["poison_survival"];
+                if (poison_survival < value)
+                {
+                    var poison_bar = Math.round(10000 * (value - poison_survival)
+                                                / max);
+                    full_bar = Math.round(10000 * poison_survival / max);
+                    $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
+                                                  + "%");
+                }
+                $("#stats_hp_bar_agraphede").css("width", "0%");
+                if (full_bar + poison_bar + change_bar > 10000)
+                    change_bar = 10000 - poison_bar - full_bar;
+            }
         }
         else if (full_bar + change_bar > 10000)
         {
@@ -70,7 +91,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_" + name + "_bar_" + (increase ? "decrease" : "increase"))
             .css("width", 0);
     }
-	
+    
     function update_bar_heat()
     {
         player.heat_max = 15; // Value of TEMP_MAX
@@ -368,7 +389,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
     {
         $("#stats_titleline").text(player.name + " " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
-		
+        
         var do_contam = false;
         var do_temperature = false;
 
@@ -432,7 +453,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_hpline > .stats_caption").text(
             (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
         }
-			
+            
         if (player.species == "Lava Orc")
         {
             do_temperature = true;
