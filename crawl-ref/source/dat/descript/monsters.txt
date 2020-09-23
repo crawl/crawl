@@ -1653,6 +1653,10 @@ A hideous conglomeration of mangled body parts, possessed and altered in ways
 that challenge sanity. Each varies in speed and durability by the nature of
 whatever unfortunates were used to make it.
 %%%%
+lava golem
+
+A a golem in shape that just walked out of the furnace.
+%%%%
 lava orc
 
 A tall, muscular humanoid strongly in tune with the elemental forces of fire
