@@ -1048,6 +1048,20 @@ endless_salt1
 endless_salt2
 endless_salt3
 
+## The 'lava' of the level for golemforge.
+golemforge_furnace0 DNGN_GOLEMFORGE_FURNACE
+golemforge_furnace1
+golemforge_furnace2
+golemforge_furnace3
+golemforge_furnace4
+golemforge_furnace5
+golemforge_furnace6
+golemforge_furnace7
+golemforge_furnace8
+golemforge_furnace9
+golemforge_furnace10
+golemforge_furnace11
+
 %sdir dngn/floor
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn

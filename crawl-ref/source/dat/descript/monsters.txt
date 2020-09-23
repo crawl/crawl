@@ -686,6 +686,12 @@ barricade
 
 obstacles blocking the way.
 %%%%
+barrier golem
+
+An animated figure made completely of electricity, providing enormous
+protective energy to itself and nearby allies. It works as a high-leveled
+security procedure, to takedown intruder who is too greedy to survive.
+%%%%
 basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.

@@ -44,14 +44,55 @@ function golemforge_portal(e)
 end
 
 function golemforge_appearance(e)
-  e.kprop("aABbCcD+xXLrm = no_tele_into")
+  e.kprop("aABbCcD+xXLrmh = no_tele_into")
   e.kfeat("< = exit_golem")
   e.kfeat("X = permarock_wall")
   e.kfeat("x = crystal_wall")
-  e.rtile("x = dngn_crystal_lightblue")
+  e.rtile("x_ = dngn_crystal_lightblue")
   e.colour("X = blue")
-  e.colour(".x = lightblue")
+  e.colour(".x_ = lightblue")
   e.ftile(".aABbCcDO+xX = floor_crystal_squares")
+end
+
+function callback.golemforge_prevent_spamming(data, triggerable,
+                                         triggerer, marker, ev)
+
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if dgn.persist.golemforge_check_spamming == true then
+    return
+  end
+
+  dgn.persist.golemforge_check_spamming = true
+
+  local x, y = marker:pos()
+
+  for p in iter.slave_iterator("feat_remove", 1) do
+    dgn.terrain_changed(p.x, p.y, "floor_crystal_squares", false)
+  end
+
+  local nguard = 0
+  local guardarray = {}
+  local wander = mons.behaviour("wander")
+  for p in iter.slave_iterator("guard_place", 1) do
+    local guard = dgn.create_monster(p.x, p.y, "generate_awake electric golem \
+            hd:16 hp:1500 perm_ench:flight \
+            col:yellow name:barrier_golem n_rpl n_des n_spe \
+            tile:mons_golemforge_barrier_golem \
+            spells:mass_barrier.33.magical;blinkbolt.33.magical;lightning_bolt.33.magical")
+    if guard then
+      nguard = nguard + 1
+      guardarray[nguard] = guard
+    end
+  end
+  view.update_monsters()
+  for i = 1, nguard do
+    local guard = guardarray[i]
+    guard.beh = wander
+  end
+  crawl.mpr("You hear the walls rumbling! You feel something dangerous...", "warning")
 end
 
 }}
@@ -80,9 +121,9 @@ ENDMAP
 default-depth: Golemforge
 
 NAME:   golemforge_statue_garden_chambered
-TAGS:   no_item_gen no_mons_gen no_pool_fixup
+TAGS:   no_item_gen no_mons_gen no_trap_gen
 ORIENT: encompass
-KMONS: y =crystal guardian
+KMONS: y = crystal guardian
 KMONS: i = iron golem
 KMONS: G = iron golem col:lightred name:orange_crystal_golem n_rpl n_des n_spe \
             tile:mons_golemforge_crystal_golem \
@@ -95,6 +136,7 @@ KMONS: F = iron golem perm_ench:inner_flame col:red name:lava_golem n_rpl n_des 
 KMONS: S = lightning spire hd:12 col:lightgreen name:repair_machine n_rpl n_des n_spe \
             tile:mons_golemforge_repair_machine \
             spells:aura_of_healing.70.magical;warning_cry.30.magical
+
 KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
             ; double sword randart . buckler randart |\
             broad axe randart . shield randart |\
@@ -112,10 +154,23 @@ KMONS: m = animated armour tile:mons_golemforge_armour_golem spells:none \
             pearl dragon scales randart | swamp dragon scales randart | steam dragon scales randart |\
             acid dragon scales randart | shadow dragon scales randart | quicksilver dragon scales randart
 SHUFFLE:  GPF
-FTILE:  iyGPFSmAaBbCcD = floor_crystal_squares
-COLOUR: iyGPFSmAaBbCcD = lightblue
+FTILE:  iyGPFSmAaBbCcDt = floor_crystal_squares
+COLOUR: iyGPFSmAaBbCcDt = lightblue
 KFEAT:  Lm = lava
+TILE:  Lm = dngn_golemforge_furnace
 KFEAT:  A = stone_arch
+KFEAT:  h = abandoned_shop
+KFEAT:  t = clear_permarock_wall
+COLOUR: t = yellow
+{{
+dgn.persist.golemforge_check_spamming = false
+local tm = TriggerableFunction:new{func="callback.golemforge_prevent_spamming",
+                                   repeated = true}
+tm:add_triggerer(DgnTriggerer:new { type="turn", delay_min=100000, delay_max=120000})
+lua_marker('t', tm)
+lua_marker('_', props_marker {guard_place = 1})
+lua_marker('t', props_marker {feat_remove = 1})
+}}
 KITEM: a = randbook disc:necromancy slevels:16 / randbook disc:conjuration slevels:16 / \
         randbook disc:summoning slevels:16 / randbook disc:charms slevels:16 / \
         randbook disc:hexes slevels:16 / randbook disc:translocation slevels:16 / \
@@ -152,57 +207,59 @@ KITEM: c = pair of gloves good_item randart no_pickup / \
 KITEM: D = any randart jewellery no_pickup
 : golemforge_appearance(_G)
 : set_feature_name("crystal_wall", "wall of crystal")
+: set_feature_name("lava", "arcane furnace")
+: set_feature_name("clear_permarock_wall", "strange container")
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXX
-XXXXXXxxxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXxxxx.........xxxXXXXXXXXX
-XXXXXXxA.............xxxxXXXXXXXXXXXXXXXXXXxxx.............xxxxXXXXXXX
-XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx........P........xxxXXXXX
-XXxxx.................i...xxxXXXXXXXXXXXxxx...i.............i...xxxXXX
-XXx..................ySy....xxxxxxxxxxxxx....ySy...........ySy....xXXX
-XXx...................i.......................i.............i.....xXXX
-XXx...........LLL...................................LLL...........xXXX
+XXXXXXXXXXXXxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXX
+XXXXXXxxxxxxxx......xxxXXXXXXXXXXXXXXXXXXXXXXxxxx.........xxxXXXXXXXXX
+XXXXXXxA...xx........xxxxXXXXXXXXXXXXXXXXXXxxx.............xxxxXXXXXXX
+XXXXXxx.................xxxXXXXXXXXXXXXXXXxxx........P........xxxXXXXX
+XXXXXXxxx.............i...xxxXXXXxxxXXXXxxx...i.............i...xxxXXX
+XXXXXXxxx............ySy....xxxxxxtxxxxxx....ySy...........ySy....xXXX
+XXXxxxx...............i..........._...........i.............i.....xXXX
+XXxxx.........LLL...................................LLL...........xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx..........LLmLL................S................LLmLL....F.....xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx...........LLL...................................LLL...........xXXX
-XXx.....i.............i..........L.L..........i.............i.....xXXX
+XXx.....i.............i.........iL.Li.........i.............i.....xXXX
 XXx....ySy...........ySy....xxxxxx+xxxxxx....ySy...........ySy....xXXX
-XXxxx...i.............i...xxxXXXXxmxXXXXxxx...i.............i...xxxXXX
-XXXXxxx.................xxxXXXXXXxmxXXXXXXxxx........G........xxxXXXXX
-XXXXXXxxx.............xxxXXXXXXXXxmxXXXXXXXXxxx.............xxxXXXXXXX
-XXXXXXXXxxx.........xxxXXXXXXXXXXxmxXXXXXXXXXXxxx.........xxxXXXXXXXXX
+XXxxx...i.............i...xxxXXXXxLxXXXXxxx...i.............i...xxxXXX
+XXXXxxx.................xxxXXXXXXxLxXXXXXXxxx........G........xxxXXXXX
+XXXXXXxxx.............xxxXXXXXXXXxLxXXXXXXXXxxx.............xxxXXXXXXX
+XXXXXXXXxxx.........xxxXXXXXXXXXXxLxXXXXXXXXXXxxx.........xxxXXXXXXXXX
 XXXXXXXXXXxx.......xxxXXXXXXXXXxxxLxxxXXXXXXXXXxxx.......xxXXXXXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx.......xxXXXXXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXxxxLLxxxLLxxXXXXXXXXXx.......xxXXXXXXXXXXX
-XXXXXXXxxxx.......ixXXXXXxxxxxLLxxXxxLLxxxxxXXXXXxi.......xxxxxXXXXXXX
-XXXXXXxx..........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL..........xxxXXXXXX
-XXXXXXx.y..........+mmmmLLLLLLLxXXXXXxLLLLLLLmmmm+...........y.xXXXXXX
-XXXXXXx..S........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL.........S..xXXXXXX
-XXXXXXx.y.........ixXXXXXXXXxxLLxxXxxLLxxxxxXXXXXxi..........y.xXXXXXX
-XXXXXXxx...........xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx...........xxxXXXXXX
+XXXXXXXXXXxt_......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx......_txXXXXXXXXXXX
+XXXXXXXXXXxx.......xXXXXXXXXxxxLLx+xLLxxXXXXXXXXXx.......xxXXXXXXXXXXX
+XXXXXXXxxxx.......ixXXXXXxxxxxLLxxLxxLLxxxxxXXXXXxi.......xxxxxXXXXXXX
+XXXXXXxx..........LxxxxxxxxxxLLxxLmLxxLLxxxxxxxxxxL..........xxxXXXXXX
+XXXXXXx.y..........+LLLLLLLLLLL+LmmmL+LLLLLLLLLLL+...........y.xXXXXXX
+XXXXXXx..S........LxxxxxxxxxxLLxxLmLxxLLxxxxxxxxxxL.........S..xXXXXXX
+XXXXXXx.y.........ixXXXXXXXXxxLLxx+xxLLxxxxxXXXXXxi..........y.xXXXXXX
+XXXXXXxx...........xXXXXXXXXXxxLLxLxLLxxXXXXXXXXXx...........xxxXXXXXX
 XXXXXXXxxx.........xxXXXXXXXXXxxLLLLLxxXXXXXXXXXxx..........xxxXXXXXXX
 XXXXXXXXXxx.........xxxxXXXXXXXxxxLxxxXXXXXXXxxxx.........xxxXXXXXXXXX
-XXXXXXXXXXxx...........xxXXXXXXxxmmmxxXXXXXXxx...........xxXXXXXXXXXXX
-XXXXXXXXXXXx..........y.xXXXXXXxLmmmLxXXXXXXx.y..........xXXXXXXXXXXXX
-XXXXXXXXXXXx..y......S..xXXXXXXxxmmmxxXXXXXXx..S......y..xXXXXXXXXXXXX
-XXXXXXXXXXXx..........y.xXXXXXXxxxLxxxXXXXXXx.y..........xXXXXXXXXXXXX
-XXXXXXXXXXxx...........xxXXXXXXxxxLxxxXXXXXXxx...........xxXXXXXXXXXXX
+XXXXXXXXXXxx...........xxXXXXXXxxLLLxxXXXXXXxx...........xxXXXXXXXXXXX
+XXXXXXXXXXxx..........y.xXXXXXXxLmmmLxXXXXXXx.y..........xxXXXXXXXXXXX
+XXXXXXXXXXxt..y......S..xXXXXXXxLmmmLxXXXXXXx..S......y..txXXXXXXXXXXX
+XXXXXXXXXXxx..........y.xXXXXXXxLmmmLxXXXXXXx.y..........xxXXXXXXXXXXX
+XXXXXXXXXXxx...........xxXXXXXXxxLLLxxXXXXXXxx...........xxXXXXXXXXXXX
 XXXXXXXXXxx.........xxxxXXXXXXXxxxLxxxXXXXXXXxxxx.........xxxXXXXXXXXX
 XXXXXXXxxx.........xxXXXXXXXXXxxLLLLLxxXXXXXXXXXxx..........xxXXXXXXXX
-XXXXXXxx...........xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx...........xxxXXXXXX
-XXXXXXx.y.........ixXXXXXxxxxxLLxxXxxLLxxxxxXXXXXxi..........y.xXXXXXX
-XXXXXXx..S........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL.........S..xXXXXXX
-XXXXXXx.y..........+mmmmLLLLLLLxXXXXXxLLLLLLLmmmm+...........y.xXXXXXX
-XXXXXXxx..........LxxxxxxxxxxLLxxXXXxxLLxxxxxxxxxxL..........xxxXXXXXX
-XXXXXXXxxxx.......ixXXXXXXXXxxLLxxXxxLLxxXXXXXXXXxi......xxxxxXXXXXXXX
-XXXXXXXXXXxx.......xXXXXXXXXXxxLLxxxLLxxXXXXXXXXXx......xxXXXXXXXXXXXX
-XXXXXXXXXXXx.......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx......xXXXXXXXXXXXXX
-XXXXXXXXXxxx.......xxxxxxXXXXXXxxxLxxxXXXXXXXxxxxx......xxXXXXXXXXXXXX
-XXXXXXXXxxx.........xxxXXXXXXXXXXxmxXXXXXXXXXXxxx.........xxxXXXXXXXXX
-XXXXXXxxx.............xxxXXXXXXXXxmxXXXXXXXXxxx.............xxxXXXXXXX
-XXXXxxx........G........xxxXXXXXXxmxXXXXXXxxx........P........xxxXXXXX
-XXxxx..y.i...........i.y..xxxXXXXxmxXXXXxxx..y.i...........i.y..xxxXXX
+XXXXXXxx...........xXXXXXXXXXxxLLx+xLLxxXXXXXXXXXx...........xxxXXXXXX
+XXXXXXx.y.........ixXXXXXxxxxxLLxxLxxLLxxxxxXXXXXxi..........y.xXXXXXX
+XXXXXXx..S........LxxxxxxxxxxLLxxLmLxxLLxxxxxxxxxxL.........S..xXXXXXX
+XXXXXXx.y..........+LLLLLLLLLLL+LmmmL+LLLLLLLLLLL+...........y.xXXXXXX
+XXXXXXxx..........LxxxxxxxxxxLLxxLmLxxLLxxxxxxxxxxL..........xxxXXXXXX
+XXXXXXXxxxx.......ixXXXXXXXXxxLLxx+xxLLxxXXXXXXXXxi.......xxxxXXXXXXXX
+XXXXXXXXXXxx.......xXXXXXXXXXxxLLxLxLLxxXXXXXXXXXx.......xxXXXXXXXXXXX
+XXXXXXXXXXxt_......xXXXXXXXXXXxxLLLLLxxXXXXXXXXXXx......_txXXXXXXXXXXX
+XXXXXXXXXxxx.......xxxxxxXXXXXXxxxLxxxXXXXXXXxxxxx.......xxXXXXXXXXXXX
+XXXXXXXXxxx.........xxxXXXXXXXXXXxLxXXXXXXXXXXxxx.........xxxXXXXXXXXX
+XXXXXXxxx.............xxxXXXXXXXXxLxXXXXXXXXxxx.............xxxXXXXXXX
+XXXXxxx........G........xxxXXXXXXxLxXXXXXXxxx........P........xxxXXXXX
+XXxxx..y.i...........i.y..xxxXXXXxLxXXXXxxx..y.i...........i.y..xxxXXX
 XXx.....S.............S.....xxxxxx+xxxxxx.....S.............S.....xXXX
 XXx....i.y...........y.i........iL.Li........i.y...........y.i....xXXX
 XXx...........LLL...................................LLL...........xXXX
@@ -210,11 +267,11 @@ XXx..........LLLLL.................................LLLLL..........xXXX
 XXx....F.....LLmLL................S................LLmLL.....F....xXXX
 XXx..........LLLLL.................................LLLLL..........xXXX
 XXx....y.i....LLL....i.y.....................y.i....LLL...........xXXX
-XXx.....S.............S.......................S...................xXXX
-XXx....i.y...........y.i....xxxxxxxxxxxxx....i.y..................xXXX
-XXxxx..........P..........xxxXXXXXXXXXXXxxx..........G..........xxxXXX
-XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx.................x+xXXXXX
-XXXXXXxxx.............xxxXXXXXXXXXXXXXXXXXXXxxx.............xxx.xXXXXX
+XXx.....S.............S..........._...........S...............xx..xXXX
+XXxt...i.y...........y.i....xxxxxxtxxxxxx....i.y............x..xx.xXXX
+XXxxx..........P..........xxxXXXXxxxXXXXxxx..........G......xx..xxxXXX
+XXXXxxx.................xxxXXXXXXXXXXXXXXXxxx................xxhxXXXXX
+XXXXXXxxx.............xxxXXXXXXXXXXXXXXXXXXXxxx.............xxx+xXXXXX
 XXXXXXXXxxx.........xxxXXXXXXXXXXXXXXXXXXXXXXXxxx.........xxxXxCxXXXXX
 XXXXXXXXXxxxxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxXXxBxXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxDxXXXXX

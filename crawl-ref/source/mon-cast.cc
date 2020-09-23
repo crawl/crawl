@@ -2034,6 +2034,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
     case SPELL_SPORULATE:
+    case SPELL_BARRIER:
+    case SPELL_MASS_BARRIER:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -7236,6 +7238,91 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_BARRIER:
+    {
+        if (!mons->has_ench(ENCH_BARRIER)
+             && !mons->props.exists("barrier_cooldown"))
+        {
+           const int dur = BASELINE_DELAY * 2 * mons->skill(SK_CHARMS);
+           const int left = mons->max_hit_points/2;
+           mprf("%s forms a protective barrier!", mons->name(DESC_THE).c_str());
+
+           if (mons->has_ench(ENCH_STICKY_FLAME))
+           {
+               mons->del_ench(ENCH_STICKY_FLAME);
+               if (you.can_see(*mons))
+                   mprf("%s barrier erases sticky flame.", mons->name(DESC_ITS).c_str());
+           }
+
+           mons->add_ench(mon_enchant(ENCH_BARRIER, 0, mons, dur));
+           mons->barrier_left = left;
+        }
+        else return;
+    }    
+
+    case SPELL_MASS_BARRIER:
+    {
+        if (!mons->has_ench(ENCH_BARRIER) && !mons->props.exists("barrier_cooldown"))
+        {
+            if (you.can_see(*mons))
+                mprf("%s unleashes protective energy!", mons->name(DESC_THE).c_str());
+
+            for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+            {
+                if (mons_aligned(mons, *mi)
+                    && !mi->has_ench(ENCH_CHARM) && !mi->has_ench(ENCH_HEXED)
+                    && grid_distance(mons->pos(), mi->pos()) <= 2)
+                {
+                    int affected = 0;
+                    const int dur = (10 + random2(mons->spell_hd())) * BASELINE_DELAY;
+                    const int left = mi->max_hit_points/2;
+                    mon_enchant barrier = mon_enchant(ENCH_BARRIER, 0, mons, dur);
+
+                    if (!mi->has_barrier() && mi->props.exists("barrier_cooldown"))
+                        mi->props["barrier_cooldown"].get_int() = 0;
+	        
+                    if (mi->has_barrier())
+                    {
+                        if (you.can_see(**mi))
+                            mprf("%s barrier is strengthen!",
+                                mi->name(DESC_ITS).c_str());                    
+                        mi->add_ench(barrier);
+                        mi->barrier_left += left;
+                        affected++;
+                    }
+                    else
+                    {
+                        if (mi->has_ench(ENCH_STICKY_FLAME))
+                        {
+                            mi->del_ench(ENCH_STICKY_FLAME);
+                            if (you.can_see(**mi))
+                                mprf("%s barrier erases sticky flame.",
+                                    mi->name(DESC_ITS).c_str());
+                        }
+                        mi->add_ench(barrier);
+                        mi->barrier_left = left;
+                        affected++;
+                    }
+
+                    if (affected <= 5){
+                    // just for visual
+                    bolt beam;
+                    beam.source = mons->pos();
+                    beam.target = mi->pos();
+                    beam.glyph  = 0;
+                    beam.colour = ETC_HOLY;
+                    beam.range  = LOS_RADIUS;
+                    beam.aimed_at_spot = true;
+                    beam.flavour = BEAM_VISUAL;
+                    beam.draw_delay = 3;
+                    beam.fire();
+                    viewwindow(); }
+                }
+            }
+        }
+        else return;
+    }
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -8717,6 +8804,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 #endif
     case SPELL_DEATHS_DOOR:
         return mon->has_ench(ENCH_DEATHS_DOOR);
+    case SPELL_BARRIER:
+        return mon->has_ench(ENCH_BARRIER) || mon->props.exists("barrier_cooldown");
     case SPELL_NO_SPELL:
         return true;
 

@@ -269,3 +269,11 @@ of the cult's legendary treasure yet remain.
 
 # important note: the Twins were religion '2', as TSO is '1'. Not 'S'.
 %%%%
+Forge of Golems
+
+The Desolation was once ruled by the divines Sheza and Sargol. After the dread
+twins were cast down, the good gods reduced their former realm to salt, that
+such a terrible cult would never rise again. Amidst the ruins, only the last
+cultists of the dead gods, their heretical constructs, and the guardians
+of the cult's legendary treasure yet remain.
+%%%%
