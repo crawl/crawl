@@ -152,8 +152,8 @@ Then follow [the above compilation steps](#compiling).
     ```
 
 3. If you want to build a macOS application, add `mac-app-tiles` to your make
-   command, eg: `make -j4 mac-app-tiles TILES=y`. This will create an application in
-   `mac-app-zips/` of the source directory.
+   command, eg: `make -j $(sysctl -n hw.ncpu) mac-app-tiles TILES=y`. This will 
+   create an application in `mac-app-zips/` of the source directory.
 
 Then follow [the above compilation steps](#compiling).
 
