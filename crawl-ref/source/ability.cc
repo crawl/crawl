@@ -734,6 +734,8 @@ static const ability_def Ability_List[] =
     { ABIL_WYRM_CITRINITAS, "Citrinitas", 0, 0, 500, 2, {}, abflag::potion },
     { ABIL_WYRM_VIRIDITAS, "Viriditas", 0, 0, 500, 4, {}, abflag::potion },
     { ABIL_WYRM_RUBEDO, "Rubedo", 0, 0, 500, 6, {}, abflag::potion },
+    { ABIL_WYRM_FULSOME_DISTILLATION, "Fulsome Distillation", 1, 0, 0, 0, {}, abflag::none },
+    { ABIL_WYRM_EVAPORATE, "Evaporate", 2, 0, 50, 0, {}, abflag::none },
 
     // Imus Thea
     { ABIL_IMUS_PRISMATIC_PRISM, "Prismatic Prism",
@@ -4232,6 +4234,28 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_WYRM_FULSOME_DISTILLATION:
+    {
+        fail_check();
+        if (your_spells(SPELL_FULSOME_DISTILLATION,
+            you.piety,
+            false, nullptr) == spret::abort)
+        {
+            return spret::abort;
+        }
+        break;
+    }
+    case ABIL_WYRM_EVAPORATE:
+    {
+        fail_check();
+        if (your_spells(SPELL_EVAPORATE,
+            you.piety, 6),
+            false, nullptr) == spret::abort)
+        {
+            return spret::abort;
+        }
+        break;
+    }
     case ABIL_IMUS_PRISMATIC_PRISM:
         fail_check();
         if (your_spells(SPELL_PRISMATIC_PRISM,
