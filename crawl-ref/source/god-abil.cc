@@ -5889,3 +5889,17 @@ void wu_jian_heavenly_storm()
     you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
     invalidate_agrid(true);
 }
+
+void okawaru_remove_heroism()
+{
+    mprf(MSGCH_DURATION, "You feel like a meek peon again.");
+    you.duration[DUR_HEROISM] = 0;
+    you.redraw_evasion      = true;
+    you.redraw_armour_class = true;
+}
+
+void okawaru_remove_finesse()
+{
+    mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
+    you.duration[DUR_FINESSE] = 0;
+}
