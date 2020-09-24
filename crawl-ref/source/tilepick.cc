@@ -3883,6 +3883,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_WYRM_VIRIDITAS;
     case ABIL_WYRM_RUBEDO:
         return TILEG_ABILITY_WYRM_RUBEDO;
+    case ABIL_WYRM_FULSOME_DISTILLATION:
+        return TILEG_ABILITY_WYRM_FULSOME_DISTILLATION;
+    case ABIL_WYRM_EVAPORATE:
+        return TILEG_ABILITY_WYRM_EVAPORATE;
     // Imus Thea
     case ABIL_IMUS_PRISMATIC_PRISM:
         return TILEG_ABILITY_IMUS_PRISMATIC_PRISM;
