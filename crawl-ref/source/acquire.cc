@@ -1774,7 +1774,7 @@ void AcquireMenu::update_help()
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s\n"
+        "%s  [%s] %s  [<w>R</w>] reroll\n"
         "[Esc/R-Click] exit",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
         "[<w>!</w>] acquire|<w>examine</w> items",
@@ -1826,6 +1826,44 @@ static void _create_acquirement_item(item_def& item, bool collector)
     you.props.erase(collector ? COLLECTOR_ITEMS_KEY : ACQUIRE_ITEMS_KEY);
 }
 
+static void _set_acquirement_items(bool make_artefact)
+{
+    vector<object_class_type> rand_classes;
+
+    if (you.species != SP_FELID && you.species != SP_CRUSTACEAN && you.species != SP_HYDRA)
+    {
+        rand_classes.emplace_back(OBJ_WEAPONS);
+        rand_classes.emplace_back(OBJ_ARMOUR);
+
+        // don't exist (un)random artefact
+        if (!make_artefact) {
+            rand_classes.emplace_back(OBJ_RODS);
+            rand_classes.emplace_back(OBJ_STAVES);
+        }
+    }
+    else if (you.species == SP_CRUSTACEAN) {
+        //SP_CRUSTACEAN
+        rand_classes.emplace_back(OBJ_WEAPONS);
+    }
+    else if (you.species == SP_HYDRA) {
+        //SP_CRUSTACEAN
+        rand_classes.emplace_back(OBJ_ARMOUR);
+    }
+
+    rand_classes.emplace_back(OBJ_JEWELLERY);
+
+    if (!make_artefact) {
+        rand_classes.emplace_back(OBJ_BOOKS);
+        rand_classes.emplace_back(OBJ_MISSILES);
+
+        _make_acquirement_items(rand_classes);
+    }
+    else
+        _make_artefact_acquirement_items(rand_classes);
+    // artefact book is very powerful. furthermore no funny
+}
+
+
 bool AcquireMenu::acquire_selected()
 {
     vector<MenuEntry*> selected = selected_entries();
@@ -1871,6 +1909,17 @@ bool AcquireMenu::process_key(int keyin)
         update_help();
         update_more();
         return true;
+    case 'R':
+    {
+        clear();
+        _set_acquirement_items(true);
+        acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
+        init_entries();
+        update_menu(true);
+        update_help();
+        update_more();
+        return true;
+    }
     default:
         break;
     }
@@ -1945,43 +1994,6 @@ static item_def _acquirement_artefact_def(object_class_type item_type, bool rand
     return item;
 }
 
-static void _set_acquirement_items(bool make_artefact)
-{
-    vector<object_class_type> rand_classes;
-
-    if (you.species != SP_FELID && you.species != SP_CRUSTACEAN && you.species != SP_HYDRA)
-    {
-        rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_ARMOUR);
-
-        // don't exist (un)random artefact
-        if (!make_artefact) {
-            rand_classes.emplace_back(OBJ_RODS);
-            rand_classes.emplace_back(OBJ_STAVES);
-        }
-    }
-    else if (you.species == SP_CRUSTACEAN) {
-        //SP_CRUSTACEAN
-        rand_classes.emplace_back(OBJ_WEAPONS);
-    }
-    else if (you.species == SP_HYDRA) {
-        //SP_CRUSTACEAN
-        rand_classes.emplace_back(OBJ_ARMOUR);
-    }
-
-    rand_classes.emplace_back(OBJ_JEWELLERY);
-
-    if (!make_artefact) {
-        rand_classes.emplace_back(OBJ_BOOKS);
-        rand_classes.emplace_back(OBJ_MISSILES);
-
-        _make_acquirement_items(rand_classes);
-    }
-    else
-        _make_artefact_acquirement_items(rand_classes);
-    // artefact book is very powerful. furthermore no funny
-}
-
 static void _make_acquirement_items(vector<object_class_type>& rand_classes)
 {
     const int num_wanted = min(3, (int)rand_classes.size());
@@ -2023,7 +2035,24 @@ static void _make_artefact_acquirement_items(vector<object_class_type>& rand_cla
     shuffle_array(rand_classes);
 
     CrawlVector& acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
-    acq_items.empty();
+
+    for (item_def& item : acq_items) {
+        if (item.flags & ISFLAG_UNRANDART) {
+            if (item.unrand_idx == UNRAND_OCTOPUS_KING_RING) {
+                for (int which = 0; which < 8; which++)
+                {
+                    if (item.sub_type == octoring_types[which])
+                    {
+                        you.octopus_king_rings &= ~(1 << which);
+                    }
+                }
+            }
+            set_unique_item_status(item, UNIQ_NOT_EXISTS);
+        }
+    }
+
+    acq_items.clear();
+
 
     // Generate item defs until we have enough, skipping any random classes
     // that fail to generate an item.

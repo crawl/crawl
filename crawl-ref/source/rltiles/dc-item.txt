@@ -665,7 +665,7 @@ i-amnesia SCR_AMNESIA
 i-curse-jewellery SCR_CURSE_JEWELLERY
 %back scroll-cyan
 i-acquirement SCR_COLLECTION
-i-acquirement SCR_WISH SCR_ID_LAST
+i-wish SCR_WISH SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY

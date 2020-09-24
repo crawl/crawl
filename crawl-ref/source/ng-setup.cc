@@ -352,7 +352,23 @@ void give_items_skills(const newgame_def& ng)
                 you.skills[SK_UNARMED_COMBAT]++;
         }
     }
+    else if (you.char_class == JOB_COLLECTOR) {
+        if (ng.job_specific == 1) {
+            newgame_make_item(OBJ_SCROLLS, SCR_COLLECTION);
+            you.mutation[MUT_EXPERIMENTAL] = you.innate_mutation[MUT_EXPERIMENTAL] = 1;
+        }
+        else {
+            newgame_make_item(OBJ_SCROLLS, SCR_WISH);
+        }
+    }
+    else if (you.char_class == JOB_MELTED_KNIGHT) {
+        if (ng.job_specific == 1) {
+            you.mutation[MUT_EXPERIMENTAL] = you.innate_mutation[MUT_EXPERIMENTAL] = 1;
+        }
+    }
 
+
+    
 
     give_job_skills(you.char_class);
 
