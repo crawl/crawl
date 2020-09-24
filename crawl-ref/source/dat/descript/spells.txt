@@ -1031,6 +1031,11 @@ Mara Summon spell
 Weaves illusions of the caster. Such illusions have the same physical prowess
 as the original, and can cast the same spells.
 %%%%
+Mass Barrier spell
+
+Forms a hermetic barrier to caster and nearby allies. The durablity of barrier
+is depending on the caster's maximumim health point.
+%%%%
 Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.
