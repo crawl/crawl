@@ -4249,7 +4249,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     {
         fail_check();
         if (your_spells(SPELL_EVAPORATE,
-            you.piety, 6),
+            you.piety,
             false, nullptr) == spret::abort)
         {
             return spret::abort;
