@@ -190,6 +190,7 @@ enum enchant_type
     ENCH_HEALING_AURA, // emanating a healing aura
     ENCH_HOLD_POSITION,
     ENCH_LEGION_BLESSING,
+    ENCH_BARRIER,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

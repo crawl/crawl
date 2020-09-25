@@ -95,6 +95,7 @@ public:
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
         int countdown;         ///< Actions till singularity dies.
+        int barrier_left;      ///< Barrier left.
     };
     int           colour;
     mid_t         summoner;
@@ -569,6 +570,7 @@ public:
     bool is_mercenery_companion() const;
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
+    bool has_barrier() const;
 
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);

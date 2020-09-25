@@ -2843,6 +2843,9 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
 void monster::expose_to_element(beam_type flavour, int strength,
                                 bool slow_cold_blood)
 {
+    if (has_barrier())
+        return;
+
     switch (flavour)
     {
     case BEAM_COLD:
@@ -4159,7 +4162,7 @@ int monster::res_acid(bool calc_unid) const
  */
 int monster::res_magic(bool calc_unid) const
 {
-    if (mons_immune_magic(*this))
+    if (mons_immune_magic(*this) || has_barrier())
         return MAG_IMMUNE;
 
     const int type_mr = (get_monster_data(type))->resist_magic;
@@ -4524,6 +4527,33 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             amount -= shave;
             if (amount <= 0)
                 return 0;
+        }
+
+        if (amount != INSTANT_DEATH && has_barrier()
+             && flavour != BEAM_SHARED_PAIN
+             && flavour != BEAM_STICKY_FLAME
+             && flavour != BEAM_TORMENT_DAMAGE
+             && kill_type != KILLED_BY_POISON )
+        {                
+            if (barrier_left <= amount)
+            {
+                barrier_left = 0;
+                if (you.can_see(*this))
+                    mprf("%s barrier is broken!", name(DESC_ITS).c_str());
+                add_ench(mon_enchant(ENCH_PARALYSIS, 0, 0,
+                     (3 + random2(3)) * BASELINE_DELAY));
+
+                add_ench(mon_enchant(ENCH_BARRIER, 0, 0,
+                     (5 + random2(5)) * BASELINE_DELAY));
+                return 0;
+            }
+            else
+            {
+                barrier_left -= amount;
+                if (you.can_see(*this))
+                    mprf("%s barrier absorbs damage.", name(DESC_ITS).c_str());
+                return 0;
+            }
         }
 
         if (amount != INSTANT_DEATH)
@@ -6777,6 +6807,7 @@ bool monster::cloud_immune(bool calc_unid, bool items) const
     return type == MONS_CLOUD_MAGE
            || type == MONS_ASCLEPIA
            || type == MONS_ASCLEPIA_II
+           || has_barrier()
            || actor::cloud_immune(calc_unid, items);
 }
 
@@ -6808,6 +6839,11 @@ bool monster::is_mercenery_companion() const
 bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER;
+}
+
+bool monster::has_barrier() const
+{
+    return has_ench(ENCH_BARRIER) && barrier_left > 0;
 }
 
 // HD for spellcasting purposes.

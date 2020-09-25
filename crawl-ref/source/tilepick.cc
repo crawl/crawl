@@ -2005,9 +2005,11 @@ tileidx_t tileidx_monster(const monster_info& mons)
     if (mons.is(MB_POSSESSABLE))
         ch |= TILE_FLAG_POSSESSABLE;
     if (mons.is(MB_HOLD_POSITION))
-        ch |= TILE_FLAG_HOLD_POSITION;
+        ch |= TILE_FLAG_PINNED;//ch |= TILE_FLAG_HOLD_POSITION;
     if (mons.is(MB_DEATHS_DOOR))
         ch |= TILE_FLAG_DEATHS_DOOR;
+    if (mons.is(MB_BARRIER))
+        ch |= TILE_FLAG_BARRIER;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;

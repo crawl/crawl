@@ -3201,6 +3201,11 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
                                               DESC_A, false));
     }
 
+    if (mi.is(MB_BARRIER))
+        descs.emplace_back("protected by barrier");
+    else if (mi.is(MB_BARRIER_BROKEN))
+        descs.emplace_back("barrier broken");
+
     return descs;
 }
 
@@ -3328,6 +3333,17 @@ static string _get_monster_desc(const monster_info& mi)
                 + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                       DESC_A)
                 + "\n";
+    }
+
+    if (mi.is(MB_BARRIER))
+    {
+        text += pronoun + " " + conjugate_verb("are", mi.pronoun_plurality())
+                + " protected from magic and cloud by damage-absorbing barrier.\n";
+    }
+    else if (mi.is(MB_BARRIER_BROKEN))
+    {
+        text += string(mi.pronoun(PRONOUN_POSSESSIVE))
+                + " barrier is broken, disabled for a while.\n";
     }
 
     text += _mon_enchantments_string(mi);

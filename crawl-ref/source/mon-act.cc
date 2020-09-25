@@ -1622,6 +1622,13 @@ static void _pre_monster_move(monster& mons)
         }
     }
 
+    if (mons.props.exists("barrier_cooldown"))
+    {
+        mons.props["barrier_cooldown"].get_int()--;
+        if (mons.props["barrier_cooldown"].get_int() <= 0)
+            mons.props.erase("barrier_cooldown");
+    }
+
     if (mons.has_ench(ENCH_HEXED))
     {
         const actor* const agent =

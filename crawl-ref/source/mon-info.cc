@@ -118,12 +118,12 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
-    { ENCH_VILE_CLUTCH, MB_VILE_CLUTCH},
-    { ENCH_NIGREDO,         MB_NIGREDO},
-    { ENCH_ALBEDO,          MB_ALBEDO},
-    { ENCH_CITRINITAS,      MB_CITRINITAS},
-    { ENCH_VIRIDITAS,       MB_VIRIDITAS},
-    { ENCH_HOLD_POSITION, MB_HOLD_POSITION},
+    { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
+    { ENCH_NIGREDO,         MB_NIGREDO },
+    { ENCH_ALBEDO,          MB_ALBEDO },
+    { ENCH_CITRINITAS,      MB_CITRINITAS },
+    { ENCH_VIRIDITAS,       MB_VIRIDITAS },
+    { ENCH_HOLD_POSITION,   MB_HOLD_POSITION },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -187,6 +187,15 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CIGOTUVIS_PLAGUE:
         if (mons.has_ench(ENCH_CIGOTUVIS_PLAGUE))
             return MB_CIGOTUVIS_PLAGUE;
+
+    case ENCH_BARRIER:
+    {
+        if (mons.has_barrier())
+            return MB_BARRIER;
+        else
+            return MB_BARRIER_BROKEN;
+    }
+
     default:
         return NUM_MB_FLAGS;
     }
@@ -437,7 +446,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     props.clear();
     // Change this in sync with monster::cloud_immune()
-    if (type == MONS_CLOUD_MAGE)
+    if (type == MONS_CLOUD_MAGE
+        || type == MONS_ASCLEPIA
+        || type == MONS_ASCLEPIA_II)
         props[CLOUD_IMMUNE_MB_KEY] = true;
 
     // At least enough to keep from crashing. TODO: allow specifying these?
@@ -593,7 +604,7 @@ monster_info::monster_info(const monster* m, int milev)
     menergy = mons_energy(*m);
 
     // Not an MB_ because it's rare.
-    if (m->cloud_immune(false))
+    if (m->cloud_immune(false) || m->has_barrier())
         props[CLOUD_IMMUNE_MB_KEY] = true;
 
     if (m->airborne())
