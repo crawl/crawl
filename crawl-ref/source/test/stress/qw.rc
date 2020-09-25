@@ -642,9 +642,6 @@ function armour_value(it, cur, it2)
         value = value + 150
       end
     end
-    if name:find("hide") and not name:find("salamander hide") then
-      value = value + 100*it.ac - 50
-    end
   end
   return value+val1,value+val2
 end
