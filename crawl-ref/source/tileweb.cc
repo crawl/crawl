@@ -950,7 +950,7 @@ void TilesFramework::_send_player(bool force_full)
             "agraphede_cost");
     }
     else {
-        _update_int(force_full, c.agraphede_cost, 0, "agraphede_cost");
+        _update_int(force_full, c.agraphede_cost, -1, "agraphede_cost");
     }
 
     if (you.species == SP_LAVA_ORC)
