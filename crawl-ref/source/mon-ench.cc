@@ -1895,6 +1895,22 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_BARRIER:
+        if (decay_enchantment(en))
+        {
+            if (props.exists(BARRIER_LEFT) && props[BARRIER_LEFT].get_int() > 0)
+            {
+                props[BARRIER_LEFT] = 0;
+                simple_monster_message(*this, "'s barrier fades away.");
+            }
+
+            if (props.exists("barrier_cooldown"))
+                props["barrier_cooldown"].get_int() += 10 + random2(10);
+            else
+                props["barrier_cooldown"].get_int() = 10 + random2(10);
+        }
+        break;
+
     default:
         break;
     }
@@ -2111,6 +2127,7 @@ static const char *enchant_names[] =
     "natural_abjuration", "stoneskin",
     "nigredo", "albedo", "citrinitas", "virditas",
     "aura_of_healing", "hold_position", "LEGION_BLESSING",
+    "barrier",
     "buggy",
 };
 
@@ -2266,6 +2283,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
     case ENCH_DEATHS_DOOR:
+    case ENCH_BARRIER:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

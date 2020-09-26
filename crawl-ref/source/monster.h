@@ -35,7 +35,9 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAP_KEY "map"
 
- #define MERCENARY_FLAG "mercenary"
+#define MERCENARY_FLAG "mercenary"
+
+#define BARRIER_LEFT "barrier_left"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -569,6 +571,7 @@ public:
     bool is_mercenery_companion() const;
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
+    bool has_barrier() const;
 
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);

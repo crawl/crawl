@@ -1011,6 +1011,19 @@ A ruined idol
 A monument to the glory of a dead god. The statue has been methodically
 defaced; not a single distinguishing feature remains.
 %%%%
+# Forge of Golems
+An arcane furnace
+
+A furnace in which various metal boils, managed by its creations. It is
+heated enough to work forever as a source of enormous golems and artifects
+in the dungeon.
+%%%%
+# Forge of Golems
+A strange container
+
+A transparent container with complex mechanism, glowing with strange light.
+It seems empty, but you can feel something is inside it...
+%%%%
 ########################################################################
 ### Sprint
 ########################################################################

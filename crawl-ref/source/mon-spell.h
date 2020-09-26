@@ -2492,6 +2492,18 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_BARRIER,
+      {
+       { SPELL_BARRIER, 66, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_MASS_BARRIER,
+      {
+       { SPELL_MASS_BARRIER, 66, MON_SPELL_MAGICAL },
+      }
+    },
+
     // A monster that doesn't show up anywhere, for Arena testing.
     {  MST_TEST_SPAWNER,
       {

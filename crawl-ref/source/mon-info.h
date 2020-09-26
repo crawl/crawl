@@ -184,6 +184,8 @@ enum monster_info_flags
     MB_VIRIDITAS,
     MB_HEALING_AURA,
     MB_HOLD_POSITION,
+    MB_BARRIER,
+    MB_BARRIER_BROKEN,
     NUM_MB_FLAGS
 };
 

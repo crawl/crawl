@@ -243,6 +243,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SONG_OF_SLAYING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_REGENERATION,
+    SPELL_BARRIER,
 },
 #endif
 
