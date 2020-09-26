@@ -4535,9 +4535,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
              && flavour != BEAM_TORMENT_DAMAGE
              && kill_type != KILLED_BY_POISON )
         {                
-            if (barrier_left <= amount)
+            if (props[BARRIER_LEFT].get_int() <= amount)
             {
-                barrier_left = 0;
+                props[BARRIER_LEFT] = 0;
                 if (you.can_see(*this))
                     mprf("%s barrier is broken!", name(DESC_ITS).c_str());
                 add_ench(mon_enchant(ENCH_PARALYSIS, 0, 0,
@@ -4549,7 +4549,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             }
             else
             {
-                barrier_left -= amount;
+                props[BARRIER_LEFT].get_int() -= amount;
                 if (you.can_see(*this))
                     mprf("%s barrier absorbs damage.", name(DESC_ITS).c_str());
                 return 0;
@@ -6843,7 +6843,7 @@ bool monster::is_jumpy() const
 
 bool monster::has_barrier() const
 {
-    return has_ench(ENCH_BARRIER) && barrier_left > 0;
+    return has_ench(ENCH_BARRIER) && props.exists(BARRIER_LEFT) && props[BARRIER_LEFT].get_int() > 0;
 }
 
 // HD for spellcasting purposes.

@@ -35,7 +35,9 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAP_KEY "map"
 
- #define MERCENARY_FLAG "mercenary"
+#define MERCENARY_FLAG "mercenary"
+
+#define BARRIER_LEFT "barrier_left"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -95,7 +97,6 @@ public:
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
         int countdown;         ///< Actions till singularity dies.
-        int barrier_left;      ///< Barrier left.
     };
     int           colour;
     mid_t         summoner;
