@@ -695,7 +695,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_ARCHMAGI:          return "Archmagi";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "obsolete";
-        case SPARM_PRESERVATION:      return "obsolete";
+        case SPARM_PRESERVATION:      return "rCorr";
 #endif
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
