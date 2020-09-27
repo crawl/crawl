@@ -1898,9 +1898,9 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BARRIER:
         if (decay_enchantment(en))
         {
-            if (barrier_left > 0)
+            if (props.exists(BARRIER_LEFT) && props[BARRIER_LEFT].get_int() > 0)
             {
-                barrier_left = 0;
+                props[BARRIER_LEFT] = 0;
                 simple_monster_message(*this, "'s barrier fades away.");
             }
 

@@ -6474,15 +6474,16 @@ KITEM:  a = Golem armour no_pickup
 KITEM:  b = Golem gauntlets no_pickup
 KITEM:  c = Golem greaves no_pickup
 KITEM:  d = Golem helmet no_pickup
-KFEAT:  o = runed_door
 KFEAT:  X = clear_stone_wall
-FTILE:  " = floor_crystal_squares
+FTILE:  Gabcd1" = floor_crystal_squares
 MAP
-.vXXXoXXXv.
-.X...b...X.
-.o..aGd..o.
-.X...c...X.
-.vXXXoXXXv.
+...........
+.vXXX=XXXv.
+.XG""b""GX.
+.=""a1d""=.
+.XG""c""GX.
+.vXXX=XXXv.
+...........
 ENDMAP
 
 # Robustness

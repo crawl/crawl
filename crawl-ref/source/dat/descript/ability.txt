@@ -1092,6 +1092,20 @@ electricity, poison, and acid. The result of evaporation is not specified.
 Also it can be used for Infuse Essence ability; Infused target will diffuse
 other infusions and make all targets in your line of sight infused by the same 
 essence.
+%%%%
+Evaporate ability
+
+This ability heats a potion to the point that it explodes when thrown. The
+resultant steam is then transmuted into a large cloud, the type of which varies
+from potion to potion. Of course, the volatile potion must be thrown
+immediately for the spell to work.
+%%%%
+Fulsome Distillation ability
+
+This ability extracts the vile and poisonous essences from a corpse. You probably
+don't want to drink the results. The type of potion produced corresponds
+roughly to the effects of eating said corpse.
+%%%%
 # Imus Thea
 Prismatic Prism ability
 

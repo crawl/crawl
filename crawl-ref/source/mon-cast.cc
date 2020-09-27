@@ -7255,7 +7255,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
            }
 
            mons->add_ench(mon_enchant(ENCH_BARRIER, 0, mons, dur));
-           mons->barrier_left = left;
+           mons->props[BARRIER_LEFT] = left;
         }
         else return;
     }    
@@ -7287,7 +7287,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                             mprf("%s barrier is strengthen!",
                                 mi->name(DESC_ITS).c_str());                    
                         mi->add_ench(barrier);
-                        mi->barrier_left += left;
+                        mi->props[BARRIER_LEFT].get_int() += left;
                         affected++;
                     }
                     else
@@ -7300,7 +7300,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                                     mi->name(DESC_ITS).c_str());
                         }
                         mi->add_ench(barrier);
-                        mi->barrier_left = left;
+                        mi->props[BARRIER_LEFT] = left;
                         affected++;
                     }
 

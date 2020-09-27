@@ -425,6 +425,10 @@ const vector<god_power> god_powers[NUM_GODS] =
           "infuse a target in your sight with alchemical essence" },
       { 1, ABIL_WYRM_NIGREDO,
           "transmute essence of Nigredo"},
+      { 1, ABIL_WYRM_FULSOME_DISTILLATION,
+          "cast fulsome distillation" },
+      { 2, ABIL_WYRM_EVAPORATE,
+          "cast evaporate" },
       { 2, ABIL_WYRM_ALBEDO,
           "transmute essence of Albedo"},
       { 3, ABIL_WYRM_CITRINITAS,
@@ -433,7 +437,7 @@ const vector<god_power> god_powers[NUM_GODS] =
           "transmute essence of Viriditas"},
       { 5, ABIL_WYRM_RUBEDO,
           "transmute essence of Rubedo"},
-      },
+    },
 
     // Imus Thea
     { { 0, "You are unable to wear heavy armour and all kinds of shield." },
@@ -2287,7 +2291,7 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_WYRM:
-            success = _gift_wyrm_gift(forced);
+            //success = _gift_wyrm_gift(forced);
             break;
 
         case GOD_LEGION_FROM_BEYOND:

@@ -18,6 +18,7 @@
 #include "initfile.h"
 #include "item-name.h" // make_name
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -2480,7 +2481,7 @@ static bool _choose_god(newgame_def& ng, newgame_def& ng_choice)
 
 static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
 {
-    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN
+    if (ng.job != JOB_MELTED_KNIGHT && ng.job != JOB_ICE_ELEMENTALIST && ng.job != JOB_CARAVAN && ng.job != JOB_COLLECTOR
         && !(ng.job == JOB_ARTIFICER && (ng.species != SP_FELID && ng.species != SP_HYDRA)))
         return true;
 
@@ -2568,6 +2569,28 @@ static bool _choose_job_specific(newgame_def& ng, newgame_def& ng_choice)
         choices.emplace_back(1, "rod of striking"
 #ifdef USE_TILE
             , tileidx_spell(SPELL_ROD_STRIKING)
+#endif
+        );
+    }
+    else if (ng.job == JOB_COLLECTOR) {
+        item_def item_wish;
+        item_wish.base_type = OBJ_SCROLLS;
+        item_wish.sub_type = SCR_WISH;
+        item_wish.quantity = 1;
+        item_wish.flags |= ISFLAG_KNOW_TYPE;
+        choices.emplace_back(0, "scroll of wish"
+#ifdef USE_TILE
+            , tileidx_item(item_wish)
+#endif
+        );
+        item_def item_collection;
+        item_collection.base_type = OBJ_SCROLLS;
+        item_collection.sub_type = SCR_COLLECTION;
+        item_collection.quantity = 1;
+        item_collection.flags |= ISFLAG_KNOW_TYPE;
+        choices.emplace_back(1, "scroll of collection (Experimental)"
+#ifdef USE_TILE
+            , tileidx_item(item_collection)
 #endif
         );
     }

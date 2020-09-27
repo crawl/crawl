@@ -441,7 +441,8 @@ static void _evolve(int /*time_delta*/)
 
 static void _agraphede_poison_passaive(int /*time_delta*/)
 {
-    if (have_passive(passive_t::agraphede_posion_passive))
+    if (have_passive(passive_t::agraphede_posion_passive) &&
+        one_chance_in(5))
     {
         if (!you.duration[DUR_POISONING]
             && you.hp > you.hp_max / 2) {
@@ -501,7 +502,7 @@ static struct timed_effect timed_effects[] =
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
-    { _agraphede_poison_passaive,    100,   300, false },
+    { _agraphede_poison_passaive,    200,   300, false },
 };
 
 // Do various time related actions...

@@ -1982,6 +1982,13 @@ static const mutation_def mut_data[] =
   {"", "", ""},
   {"", "", ""},
 },
+{ MUT_EXPERIMENTAL, 0, 1, mutflag::good, false,
+  "experimental",
+
+  {"This starting is experimental.", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
