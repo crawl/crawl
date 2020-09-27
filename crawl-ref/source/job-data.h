@@ -26,7 +26,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ABYSSAL_KNIGHT, {
     "AK", "Abyssal Knight",
-    4, 4, 4,
+    4, 4, 0,
     { SP_HILL_ORC, SP_PALENTONGA, SP_TROLL, SP_MERFOLK, SP_BASE_DRACONIAN,
       SP_DEMONSPAWN, },
     { "leather armour" },
@@ -37,7 +37,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_AIR_ELEMENTALIST, {
     "AE", "Air Elementalist",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA, SP_VINE_STALKER, },
     { "robe", "book of Air" },
     WCHOICE_NONE,
@@ -47,7 +47,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ARCANE_MARKSMAN, {
     "AM", "Arcane Marksman",
-    2, 5, 5,
+    2, 5, 1,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, },
     { "robe", "book of Debilitation" },
     WCHOICE_RANGED,
@@ -57,7 +57,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
-    4, 3, 5,
+    4, 3, 1,
     { SP_DEEP_DWARF, SP_HALFLING, SP_KOBOLD, SP_SPRIGGAN, SP_BASE_DRACONIAN,
       SP_DEMONSPAWN, },
     { "club", "leather armour", "wand of flame charges:15",
@@ -69,7 +69,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_BERSERKER, {
     "Be", "Berserker",
-    9, -1, 4,
+    9, -1, 0,
     { SP_HILL_ORC, SP_HALFLING, SP_OGRE, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE,
       SP_PALENTONGA, },
     { "animal skin" },
@@ -79,7 +79,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_BRIGAND, {
     "Br", "Brigand",
-    3, 3, 6,
+    3, 3, 2,
     { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
       SP_VINE_STALKER, },
     { "dagger plus:2", "robe", "cloak", "dart ego:poisoned q:8",
@@ -91,7 +91,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_CHAOS_KNIGHT, {
     "CK", "Chaos Knight",
-    4, 4, 4,
+    4, 4, 0,
     { SP_HILL_ORC, SP_TROLL, SP_GNOLL, SP_MERFOLK, SP_MINOTAUR,
       SP_BASE_DRACONIAN, SP_DEMONSPAWN, },
     { "leather armour plus:2" },
@@ -102,7 +102,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_CONJURER, {
     "Cj", "Conjurer",
-    -1, 10, 3,
+    -1, 10, -1,
     { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, },
     { "robe", "book of Conjurations" },
     WCHOICE_NONE,
@@ -112,7 +112,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_EARTH_ELEMENTALIST, {
     "EE", "Earth Elementalist",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_DEEP_DWARF, SP_SPRIGGAN, SP_GARGOYLE, SP_DEMIGOD,
       SP_GHOUL, SP_OCTOPODE, },
     { "book of Geomancy", "stone q:30", "robe", },
@@ -123,7 +123,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ENCHANTER, {
     "En", "Enchanter",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
     { "dagger plus:1", "robe", "book of Maledictions" },
     WCHOICE_NONE,
@@ -133,7 +133,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_FIGHTER, {
     "Fi", "Fighter",
-    8, 0, 4,
+    8, 0, 0,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_TROLL, SP_MINOTAUR, SP_GARGOYLE,
       SP_PALENTONGA, },
     { "scale mail", "kite shield", "potion of might" },
@@ -144,7 +144,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_FIRE_ELEMENTALIST, {
     "FE", "Fire Elementalist",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE, },
     { "robe", "book of Flames" },
     WCHOICE_NONE,
@@ -154,7 +154,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
-    6, 0, 6,
+    6, 0, 2,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE,
       SP_GNOLL, },
     { "leather armour", "helmet", "throwing net q:3" },
@@ -165,7 +165,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_HUNTER, {
     "Hu", "Hunter",
-    4, 3, 5,
+    4, 3, 1,
     { SP_HILL_ORC, SP_HALFLING, SP_KOBOLD, SP_OGRE, SP_TROLL, },
     { "short sword", "leather armour" },
     WCHOICE_RANGED,
@@ -175,7 +175,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ICE_ELEMENTALIST, {
     "IE", "Ice Elementalist",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
       SP_GARGOYLE, },
     { "robe", "book of Frost" },
@@ -186,7 +186,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_DELVER, {
     "De", "Delver",
-    4, 2, 6,
+    4, 2, 2,
     { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, },
     { "leather armour", "scroll of fog", "scroll of magic mapping",
       "scroll of fear", "potion of haste", "wand of digging charges:3" },
@@ -196,7 +196,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_MONK, {
     "Mo", "Monk",
-    3, 2, 7,
+    3, 2, 3,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_TROLL, SP_PALENTONGA, SP_MERFOLK,
       SP_GARGOYLE, SP_DEMONSPAWN, },
     { "robe" },
@@ -207,7 +207,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_NECROMANCER, {
     "Ne", "Necromancer",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_DEEP_DWARF, SP_HILL_ORC, SP_DEMONSPAWN, SP_MUMMY,
       SP_VAMPIRE, },
     { "robe", "book of Necromancy" },
@@ -218,7 +218,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_SUMMONER, {
     "Su", "Summoner",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_HILL_ORC, SP_VINE_STALKER, SP_MERFOLK, SP_TENGU,
       SP_VAMPIRE, },
     { "robe", "book of Callings" },
@@ -229,7 +229,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_TRANSMUTER, {
     "Tm", "Transmuter",
-    2, 5, 5,
+    2, 5, 1,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
       SP_TROLL, },
     { "robe", "book of Changes" },
@@ -240,7 +240,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_VENOM_MAGE, {
     "VM", "Venom Mage",
-    0, 7, 5,
+    0, 7, 1,
     { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_FELID,
       SP_DEMONSPAWN, },
     { "robe", "Young Poisoner's Handbook" },
@@ -251,7 +251,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_WANDERER, {
     "Wn", "Wanderer",
-    0, 0, 0, // Randomised
+    0, 0, -4, // Randomised
     { SP_HILL_ORC, SP_SPRIGGAN, SP_GNOLL, SP_MERFOLK, SP_BASE_DRACONIAN,
       SP_HUMAN, SP_DEMONSPAWN, },
     { }, // Randomised
@@ -261,7 +261,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_WARPER, {
     "Wr", "Warper",
-    3, 5, 4,
+    3, 5, 0,
     { SP_FELID, SP_HALFLING, SP_DEEP_DWARF, SP_SPRIGGAN, SP_PALENTONGA,
       SP_BASE_DRACONIAN, },
     { "leather armour", "book of Spatial Translocations", "scroll of blinking",
@@ -274,7 +274,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_WIZARD, {
     "Wz", "Hedge Wizard",
-    2, 6, 4,
+    2, 6, 0,
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
       SP_MUMMY, },
     { "dagger", "robe", "hat", "book of Minor Magic" },

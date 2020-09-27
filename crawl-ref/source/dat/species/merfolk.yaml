@@ -38,7 +38,7 @@ aptitudes:
 can_swim: true
 str: 8
 int: 7
-dex: 9
+dex: 13
 levelup_stat_frequency: 5
 fake_mutations:
   - long: You revert to your normal form in water.

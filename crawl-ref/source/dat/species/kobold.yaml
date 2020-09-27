@@ -27,7 +27,7 @@ aptitudes:
 size: small
 str: 5
 int: 9
-dex: 10
+dex: 14
 levelup_stat_frequency: 5
 mutations:
   1:

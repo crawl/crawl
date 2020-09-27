@@ -39,7 +39,7 @@ aptitudes:
 undead_type: US_UNDEAD
 str: 11
 int: 7
-dex: 7
+dex: 11
 levelup_stat_frequency: 5
 mutations:
   1:

@@ -41,7 +41,7 @@ aptitudes:
   evocations: -1
 str: 11
 int: 12
-dex: 11
+dex: 15
 # No natural stat gain (double chosen instead)
 levelup_stats: []
 levelup_stat_frequency: 28

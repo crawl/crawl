@@ -20,7 +20,7 @@ aptitudes:
 can_swim: true
 str: 7
 int: 10
-dex: 7
+dex: 11
 levelup_stat_frequency: 5
 species_flags:
   - hairless

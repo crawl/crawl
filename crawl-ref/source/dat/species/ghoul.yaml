@@ -42,7 +42,7 @@ aptitudes:
 undead_type: US_HUNGRY_DEAD
 str: 11
 int: 3
-dex: 4
+dex: 8
 levelup_stat_frequency: 5
 levelup_stats:
   - str

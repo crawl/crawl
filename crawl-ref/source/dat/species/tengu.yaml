@@ -36,7 +36,7 @@ aptitudes:
   invocations: -1
 str: 8
 int: 8
-dex: 9
+dex: 13
 levelup_stat_frequency: 4
 mutations:
   1:

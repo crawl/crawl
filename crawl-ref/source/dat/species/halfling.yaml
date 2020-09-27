@@ -32,7 +32,7 @@ aptitudes:
 size: small
 str: 9
 int: 6
-dex: 9
+dex: 13
 levelup_stat_frequency: 5
 levelup_stats:
   - dex

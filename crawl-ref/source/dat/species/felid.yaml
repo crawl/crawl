@@ -38,7 +38,7 @@ aptitudes:
 size: little
 str: 4
 int: 9
-dex: 11
+dex: 15
 levelup_stat_frequency: 5
 levelup_stats:
   - int

@@ -40,7 +40,7 @@ aptitudes:
   evocations: 8
 str: 10
 int: 10
-dex: 10
+dex: 14
 levelup_stat_frequency: 4
 mutations:
   1:

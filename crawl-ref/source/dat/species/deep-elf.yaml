@@ -41,7 +41,7 @@ aptitudes:
   evocations: 1
 str: 5
 int: 12
-dex: 10
+dex: 14
 levelup_stat_frequency: 4
 levelup_stats:
   - int

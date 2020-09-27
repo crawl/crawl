@@ -28,7 +28,7 @@ aptitudes:
 can_swim: true
 str: 10
 int: 8
-dex: 6
+dex: 10
 levelup_stat_frequency: 4
 mutations:
   1:
