@@ -2769,9 +2769,6 @@ void handle_monsters(bool with_noise)
         if (mon->has_action_energy())
             monster_queue.emplace(mon, mon->speed_increment);
 
-        if (mon->type == MONS_RIN || mon->type == MONS_SPIRIT_FOX)
-            mon->rin_shapeshift();
-            
         // If the player got banished, discard pending monster actions.
         if (you.banished)
         {
@@ -2783,7 +2780,6 @@ void handle_monsters(bool with_noise)
             break;
         }
     }
-
     _display_just_seen();
 
     // Process noises now (before clearing the sleep flag).
