@@ -583,6 +583,7 @@ public:
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
 
+    void rin_shapeshift();
 private:
     int hit_dice;
 
@@ -629,4 +630,5 @@ private:
                               int &nvalid) const;
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
+
 };

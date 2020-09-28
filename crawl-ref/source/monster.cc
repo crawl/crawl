@@ -6346,38 +6346,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         add_ench(ENCH_RING_OF_THUNDER);
     }
-
-    else if (type == MONS_RIN && hit_points < max_hit_points / 2
-                                     && hit_points - damage > 0)
-    {
-        int old_hp                = hit_points;
-        auto old_flags            = flags;
-        mon_enchant_list old_ench = enchantments;
-        FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
-        int8_t old_ench_countdown = ench_countdown;
-        string old_name = mname;
-
-        monster_drop_things(this, mons_aligned(oppressor, &you));
-
-        type = MONS_SPIRIT_FOX;
-        define_monster(*this);
-        hit_points = min(old_hp, hit_points);
-        flags          = old_flags;
-        enchantments   = old_ench;
-        ench_cache     = old_ench_cache;
-        ench_countdown = old_ench_countdown;
-
-        if (observable())
-        {
-            mprf(MSGCH_WARN,
-                "%s  suddenly bounce up and do backflips. Her shape shifts into the shape of fox!",
-                name(DESC_THE).c_str());
-        }
-        if (caught())
-            check_net_will_hold_monster(this);
-        if (this->is_constricted())
-            this->stop_being_constricted();
-    }
 }
 
 reach_type monster::reach_range() const
@@ -6944,4 +6912,53 @@ bool monster::angered_by_attacks() const
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
+}
+
+void monster::rin_shapeshift()
+{  
+    monster_type swap_type = (type == MONS_RIN) ? MONS_SPIRIT_FOX : MONS_RIN;
+    bool human_exists = false;
+    bool swap_flag = false;
+
+    for (monster_near_iterator mi(pos()); mi; ++mi)
+    {
+        if (mi->type == MONS_HUMAN && mi->attitude <= attitude)
+        {
+            human_exists = true;
+            break;
+        }
+    }
+
+    swap_flag = (type == MONS_RIN) ? !human_exists : human_exists;
+    if (swap_flag)
+    {
+        int old_hp                = hit_points;
+        auto old_flags            = flags;
+        mon_enchant_list old_ench = enchantments;
+        FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
+        int8_t old_ench_countdown = ench_countdown;
+        string old_name = mname;
+
+        type = swap_type;
+        define_monster(*this);
+        hit_points = min(old_hp, hit_points);
+        flags          = old_flags;
+        enchantments   = old_ench;
+        ench_cache     = old_ench_cache;
+        ench_countdown = old_ench_countdown;
+
+        if (observable())
+        {
+            mprf(MSGCH_WARN,
+                "%s suddenly bounce up and do backflips. Her shape shifts into the shape of %s!",
+                old_name.c_str(), swap_type == MONS_SPIRIT_FOX ? "fox" : "human");
+        }
+        if (caught())
+            check_net_will_hold_monster(this);
+        if (this->is_constricted())
+            this->stop_being_constricted();
+        
+        return; 
+    }
+
 }

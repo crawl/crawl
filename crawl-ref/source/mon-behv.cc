@@ -1558,3 +1558,5 @@ bool summon_can_attack(const monster* mons, const actor* targ)
 {
     return summon_can_attack(mons, targ->pos());
 }
+
+

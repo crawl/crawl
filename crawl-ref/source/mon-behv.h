@@ -59,3 +59,5 @@ bool summon_can_attack(const monster* mons, const actor* targ);
 void shake_off_monsters(const actor* target);
 
 void set_nearest_monster_foe(monster* mon, bool near_player = false);
+
+void rin_shapeshift();
