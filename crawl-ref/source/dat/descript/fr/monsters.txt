@@ -579,11 +579,6 @@ Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
 permanent, et ses cornes saillissent de façon obscène de ses plaques
 écailleuses.
 %%%%
-crocodile
-
-Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
-pointues.
-%%%%
 curse skull
 
 Un crâne carbonisé flottant dans les airs et se tournant lentement. Des
@@ -1075,11 +1070,6 @@ hill giant
 Bien qu'étant une des plus petite espèce de géant, ce géant des collines est
 encore bien assez grand pour être dangereux.
 %%%%
-hippogriff
-
-Une grande créature avec le postérieur d'un cheval et les ailes, la tête et les
-serres d'un aigle.
-%%%%
 hobgoblin
 
 Un gobelin encore plus gros et plus moche, avec un tempérament plus difficile.
@@ -1553,10 +1543,6 @@ polar bear
 Un gros ours très fort et couvert d'un pelage d'un blanc brillant, habitué aux
 conditions climatiques basses. Comme tout les ursidés, l'ours polaire deviendra
 enragé s'il est grièvement blessé ou apeuré.
-%%%%
-porcupine
-
-Un rongeur vicieux vêtu de piquants pointus et ayant une morsure douloureuse.
 %%%%
 profane servitor
 

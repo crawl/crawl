@@ -54,7 +54,6 @@ rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
-porcupine CORPSE_PORCUPINE
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -69,10 +68,9 @@ orb_spider CORPSE_ORB_SPIDER
 %sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
-## Turtles and crocodiles ('t')
+## Turtles and crabs ('t')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -262,7 +260,6 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 ## Hybrids ('H')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-hippogriff CORPSE_HIPPOGRIFF
 manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY

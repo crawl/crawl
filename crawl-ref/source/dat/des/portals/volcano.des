@@ -1405,7 +1405,7 @@ WEIGHT:  10
 MONS:    patrolling fire dragon
 MONS:    salamander
 MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
-         crocodile / fire bat
+         komodo dragon / fire bat
 MONS:    patrolling fire bat band
 KMONS:   p = plant
 NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3

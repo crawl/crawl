@@ -114,7 +114,7 @@ NAME:   minmay_swamp_entry_reptiles
 TAGS:   swamp_entry transparent
 WEIGHT: 5
 MONS:   swamp drake / komodo dragon / hydra / swamp dragon
-MONS:   crocodile / iguana
+MONS:   water moccasin / iguana
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -210,7 +210,7 @@ ENDMAP
 NAME:   palyth_hydra_swamp_entry
 TAGS:   swamp_entry no_monster_gen no_pool_fixup
 MONS:   hydra
-MONS:   iguana / komodo dragon / crocodile / tyrant leech
+MONS:   iguana / komodo dragon / cane toad / tyrant leech
 KMONS:  s = swamp worm / nothing w:70
 KFEAT:  s = w / W
 NSUBST: - = 2:1 / 2:2 / .
@@ -1359,7 +1359,7 @@ ENDMAP
 NAME: nicolae_swamp_necromancer_hut
 SUBST: q = tW., r = W., W = zWW
 MONS: necromancer
-KMONS: z = crocodile zombie / swamp drake zombie / swamp worm zombie / \
+KMONS: z = swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / hornet zombie / alligator zombie / \
         hydra zombie / tyrant leech zombie / hydra zombie / \

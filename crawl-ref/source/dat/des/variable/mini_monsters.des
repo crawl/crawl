@@ -4393,7 +4393,7 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, leopard gecko, iguana, crocodile, basilisk, plant
+MONS:    frilled lizard, leopard gecko, iguana, komodo dragon, basilisk, plant
 SUBST:   6 = 61, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 433221
@@ -7088,7 +7088,6 @@ TAGS:   transparent
 WEIGHT: 3
 DEPTH:  D:4-8
 ITEM:   any manual
-MONS:   hippogriff
 NSUBST: 0 = 0 / ...0
 SUBST:  0 = 0009
 SUBST:  x : xxxxccvb
@@ -7099,7 +7098,7 @@ MAP
 .x.xxxdx.
 .xx...xx.
 .x0xxxx..
-.xx00.1.
+.xx00.0.
 .x0xxx.
 .xx00..
 .x0xxx.
