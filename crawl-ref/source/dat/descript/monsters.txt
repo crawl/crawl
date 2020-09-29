@@ -870,6 +870,12 @@ An intricate animated statue made of heavily ensorcelled, tough crystal. It is
 immune to most forms of magic, and is magically charged to toss great bolts of
 fire and cold that are reflected by any surface.
 %%%%
+crystal sniper
+
+A magical construct woven with magic of conjurations and bonded with a artificial
+elemental intelligence, created from the arcane furnace of the Forge. The magic it
+is forged with gives it a deadly spell to fire extremely sharpen crystal spear. 
+%%%%
 curse skull
 
 A charred skull floating in the air and rotating slowly. Mystic symbols are
@@ -2027,7 +2033,8 @@ its path.
 %%%%
 plutonium golem
 
-A glowing golem, made of mystery material. It seems extremely dangerous.
+A glowing golem, made of mystery material. It seems extremely dangerous to
+genetic systems.
 %%%%
 polar bear
 

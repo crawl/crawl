@@ -464,6 +464,7 @@ golemforge_plutonium_golem MONS_GOLEMFORGE_PLUTONIUM_GOLEM
 golemforge_lava_golem MONS_GOLEMFORGE_LAVA_GOLEM
 golemforge_barrier_golem MONS_GOLEMFORGE_BARRIER_GOLEM
 golemforge_repair_machine MONS_GOLEMFORGE_REPAIR_MACHINE
+golemforge_crystal_sniper MONS_GOLEMFORGE_CRYSTAL_SNIPER
 
 ## Statues and statue-like things (also '8')
 %sdir mon/unique
