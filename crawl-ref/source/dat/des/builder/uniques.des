@@ -371,7 +371,7 @@ DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
 
 NAME:   uniq_rin
 DEPTH:  Depths:3-, Vaults:2-, Crypt
-: place_unique(_G, "Rin band")
+: place_unique(_G, "Rin the nine-tailed band")
 
 NAME:   uniq_sojobo
 DEPTH:  Depths, Vaults:2-, Crypt, Tomb
