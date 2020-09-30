@@ -2569,7 +2569,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_TIN_OF_TREMORSTONES;
 
     case MISC_CONDENSER_VANE:
-        return TILE_MISC_CONDENSER_VANE;
+            return evoker_charges(item.sub_type) ? TILE_MISC_CONDENSER_VANE
+                                                 : TILE_MISC_CONDENSER_VANE_INERT;
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:
