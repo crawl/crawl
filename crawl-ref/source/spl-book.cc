@@ -1065,7 +1065,7 @@ bool learn_spell(spell_type specspell, bool wizard)
         did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
     }
 
-    you.quiver_action.on_actions_changed();
+    quiver::on_actions_changed();
 
     return true;
 }

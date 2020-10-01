@@ -13,6 +13,9 @@ class reader;
 class writer;
 class preserve_quiver_slots;
 
+#define QUIVER_MAIN_SAVE_KEY "current_quiver_action"
+#define QUIVER_LAUNCHER_SAVE_KEY "current_launcher_action"
+
 namespace quiver
 {
     enum launcher
@@ -67,7 +70,7 @@ namespace quiver
             return is_enabled() ? LIGHTGREY : DARKGREY;
         };
 
-        virtual formatted_string quiver_description() const;
+        virtual formatted_string quiver_description(bool short_desc=false) const;
 
         // basically noops for this class, but keep `target` clean
         virtual void trigger()
@@ -103,22 +106,24 @@ namespace quiver
     {
         action_cycler();
 
-        void save() const;
-        void load();
+        void save(const string key) const;
+        void load(const string key);
 
         action &get() const;
         shared_ptr<action> get_ptr() { return current; }
+        virtual bool is_empty() const { return *current == action(); }
         bool spell_is_quivered(spell_type s) const;
         bool item_is_quivered(int item_slot) const;
 
         shared_ptr<action> next(int dir = 0, bool allow_disabled=true);
 
-        bool set(const shared_ptr<action> n);
+        virtual bool set(const shared_ptr<action> n);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
         void on_actions_changed();
+        virtual void set_needs_redraw();
 
         void target();
         shared_ptr<action> do_target();
@@ -128,32 +133,42 @@ namespace quiver
         shared_ptr<action> current;
     };
 
+    struct launcher_action_cycler : public action_cycler
+    {
+        // some things about this class are not implemented to be launcher
+        // specific because they aren't used, e.g. cycling
+        launcher_action_cycler() : action_cycler() { }
+
+        using action_cycler::set; // unhide the other signature
+        bool set(const shared_ptr<action> n) override;
+        bool is_empty() const override;
+        void set_needs_redraw() override;
+    };
+
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
+    void on_actions_changed();
+    void on_weapon_changed();
 
     // TODO: perhaps this should be rolled into action_cycler?
-    class history
+    class ammo_history
     {
     public:
-        history();
+        ammo_history();
 
         // Queries from engine -- don't affect state
-        int get_last_ammo() const;
         int get_last_ammo(const item_def *launcher) const;
         int get_last_ammo(quiver::launcher type) const;
 
         // Callbacks from engine
         // TODO: weird to have these on this object given the action refactor
         void set_quiver(const item_def &item, quiver::launcher ammo_type);
-        void empty_quiver(quiver::launcher ammo_type);
         void on_item_fired(const item_def &item, bool explicitly_chosen = false);
-        void on_weapon_changed();
 
         // save/load
         void save(writer&) const;
         void load(reader&);
 
      private:
-        quiver::launcher m_last_used_type;
         item_def m_last_used_of_type[quiver::NUM_LAUNCHERS];
     };
 }

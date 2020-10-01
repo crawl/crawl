@@ -323,9 +323,10 @@ public:
 
     LevelXPInfo global_xp_info;
 
-    quiver::history m_quiver_history;
+    quiver::ammo_history m_quiver_history;
 
     quiver::action_cycler quiver_action;
+    quiver::launcher_action_cycler launcher_action;
 
     // monsters mesmerising player; should be protected, but needs to be saved
     // and restored.

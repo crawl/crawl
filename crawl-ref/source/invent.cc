@@ -2175,11 +2175,15 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     case OBJ_WANDS:
         return true;
 
+    // TODO: move these out of evoke
     case OBJ_WEAPONS:
         if ((!wielded || !unskilled) && !msg)
             return false;
 
-        if (unskilled && weapon_reach(item) > REACH_NONE && item_type_known(item))
+        // XX code duplication with evoke_check
+        if (unskilled
+            && (weapon_reach(item) > REACH_NONE && item_type_known(item)
+                || you.weapon() && fires_ammo_type(*you.weapon()) != MI_NONE))
         {
             if (!wielded)
             {

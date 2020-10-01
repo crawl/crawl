@@ -5034,8 +5034,9 @@ player::player()
     global_info = PlaceInfo();
     global_info.assert_validity();
 
-    m_quiver_history = quiver::history();
+    m_quiver_history = quiver::ammo_history();
     quiver_action = quiver::action_cycler();
+    launcher_action = quiver::launcher_action_cycler();
 
     props.clear();
 

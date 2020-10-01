@@ -448,7 +448,7 @@ static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 {
     you.wield_change = true;
-    you.m_quiver_history.on_weapon_changed();
+    quiver::on_weapon_changed();
     int special = 0;
 
     const bool artefact     = is_artefact(item);
@@ -658,7 +658,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                                    bool meld)
 {
     you.wield_change = true;
-    you.m_quiver_history.on_weapon_changed();
+    quiver::on_weapon_changed();
 
     // Fragile artefacts may be destroyed, so make a copy
     item_def item = real_item;
