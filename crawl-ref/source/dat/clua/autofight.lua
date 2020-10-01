@@ -83,7 +83,7 @@ local function have_ranged()
 end
 
 local function have_quiver_action(no_move)
-  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid()
+  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid(1)
 end
 
 local function is_safe_square(dx, dy)
@@ -289,11 +289,13 @@ local function get_target(no_move)
 end
 
 local function attack_fire(x,y)
-  crawl.do_targeted_command("CMD_FIRE", x, y)
-end
-
-local function attack_fire_stop(x,y)
-  crawl.do_targeted_command("CMD_FIRE", x, y, true)
+  if AUTOFIGHT_FORCE_FIRE or not have_ranged() then
+    -- fire from quiver
+    crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_STOP)
+  else
+    -- fire a wielded launcher
+    crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, AUTOFIGHT_STOP)
+  end
 end
 
 local function attack_reach(x,y)
@@ -361,11 +363,7 @@ function attack(allow_movement)
       crawl.mpr("No target in view!")
     end
   elseif info.attack_type == 3 then
-    if AUTOFIGHT_FIRE_STOP then
-      attack_fire_stop(x,y)
-    else
-      attack_fire(x,y)
-    end
+    attack_fire(x,y)
   elseif info.attack_type == 2 then
     attack_melee(x,y)
   elseif info.attack_type == 1 then

@@ -1055,7 +1055,10 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
-    // no longer used?
+    _update_int(force_full, c.launcher_item,
+                you.launcher_action.is_empty()
+                ? (int8_t) -1
+                : (int8_t) you.launcher_action.get().get_item(), "launcher_item");
     _update_int(force_full, c.quiver_item,
                 (int8_t) you.quiver_action.get().get_item(), "quiver_item");
 

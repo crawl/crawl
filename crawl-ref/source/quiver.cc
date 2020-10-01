@@ -67,11 +67,11 @@ namespace quiver
         target = dist();
     };
 
-    formatted_string action::quiver_description() const
+    formatted_string action::quiver_description(bool short_desc) const
     {
-        // TODO: or unavailable?
         return formatted_string::parse_string(
-                        "<darkgrey>Nothing quivered</darkgrey>");
+                        short_desc ? "<darkgrey>Empty</darkgrey>"
+                                   : "<darkgrey>Nothing quivered</darkgrey>");
     }
 
     shared_ptr<action> action::find_next(int dir, bool allow_disabled, bool loop) const
@@ -265,6 +265,8 @@ namespace quiver
      */
     struct ammo_action : public action
     {
+        // it could be simpler to have a distinct type for launcher ammo and
+        // throwing ammo
         ammo_action(int slot=-1) : action(), ammo_slot(slot)
         {
         }
@@ -359,14 +361,13 @@ namespace quiver
             t = target; // copy back, in case they are different
         }
 
-        virtual formatted_string quiver_description() const override
+        virtual formatted_string quiver_description(bool short_desc) const override
         {
             ASSERT_RANGE(ammo_slot, -1, ENDOFPACK);
+            // or error?
             if (!is_valid())
-            {
-                return formatted_string::parse_string(
-                    "<darkgrey>Nothing quivered</darkgrey>");
-            }
+                return action::quiver_description(short_desc);
+
             formatted_string qdesc;
 
             char hud_letter = '-';
@@ -377,17 +378,21 @@ namespace quiver
             qdesc.textcolour(Options.status_caption_colour);
             const launch_retval projected = is_launched(&you, you.weapon(),
                                                                     quiver);
-            string verb = you.confused() ? "confused " : "";
-            switch (projected)
+            if (!short_desc)
             {
-                case launch_retval::FUMBLED:  verb += "toss (no damage)";  break;
-                case launch_retval::LAUNCHED: verb += "fire";  break;
-                case launch_retval::THROWN:   verb += "throw"; break;
-                case launch_retval::BUGGY:    verb += "bug";   break;
+                string verb = you.confused() ? "confused " : "";
+                switch (projected)
+                {
+                    case launch_retval::FUMBLED:  verb += "toss (no damage)";  break;
+                    case launch_retval::LAUNCHED: verb += "fire";  break;
+                    case launch_retval::THROWN:   verb += "throw"; break;
+                    case launch_retval::BUGGY:    verb += "bug";   break;
+                }
+                qdesc.cprintf("%s: ", uppercase_first(verb).c_str());
             }
-            qdesc.cprintf("%s: ", uppercase_first(verb).c_str());
 
-            qdesc.cprintf("%c) ", hud_letter);
+            if (!short_desc)
+                qdesc.cprintf("%c) ", hud_letter);
 
             // TODO: I don't actually know what this prefix stuff is
             const string prefix = item_prefix(quiver);
@@ -400,7 +405,14 @@ namespace quiver
                 qdesc.textcolour(prefcol);
             else
                 qdesc.textcolour(LIGHTGREY);
-            qdesc += quiver.name(DESC_PLAIN, true);
+
+            if (short_desc && quiver.sub_type == MI_SLING_BULLET)
+            {
+                qdesc.cprintf("%d bullet%s", quiver.quantity,
+                                quiver.quantity > 1 ? "s" : "");
+            }
+            else
+                qdesc += quiver.name(DESC_PLAIN, true);
 
             return qdesc;
         }
@@ -599,13 +611,11 @@ namespace quiver
             return col;
         }
 
-        formatted_string quiver_description() const override
+        formatted_string quiver_description(bool short_desc) const override
         {
             if (!is_valid())
-            {
-                return formatted_string::parse_string(
-                    "<darkgrey>Nothing quivered</darkgrey>");
-            }
+                return action::quiver_description(short_desc);
+
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
@@ -710,14 +720,11 @@ namespace quiver
             t = target; // copy back, in case they are different
         }
 
-        virtual formatted_string quiver_description() const override
+        virtual formatted_string quiver_description(bool short_desc) const override
         {
             ASSERT_RANGE(wand_slot, -1, ENDOFPACK);
             if (!is_valid())
-            {
-                return formatted_string::parse_string(
-                                    "<darkgrey>Nothing quivered</darkgrey>");
-            }
+                return action::quiver_description(short_desc);
             formatted_string qdesc;
 
             char hud_letter = '-';
@@ -823,14 +830,37 @@ namespace quiver
         if (you.species == SP_FELID)
         {
             auto result = make_shared<ammo_action>(-1);
-            result->error = "You can't grasp things well enough to throw them.";
+            result->error = "You can't grasp things well enough to shoot them.";
             return result;
         }
 
-        int slot = you.m_quiver_history.get_last_ammo(item);
+        int slot = -1;
 
-        // if no ammo of this type has been quivered, try looking at the fire
-        // order.
+        const int cur_launcher_item = you.launcher_action.get().get_item();
+        const int cur_quiver_item = you.quiver_action.get().get_item();
+
+        if (cur_launcher_item >= 0 && you.inv[cur_launcher_item].defined()
+            && _item_matches(you.inv[cur_launcher_item], FIRE_LAUNCHER, item, false))
+        {
+            // prefer to keep the current ammo if not changing weapon types
+            slot = cur_launcher_item;
+        }
+        else if (cur_quiver_item >= 0 && you.inv[cur_quiver_item].defined()
+            && _item_matches(you.inv[cur_quiver_item], FIRE_LAUNCHER, item, false))
+        {
+            // if the right item type is currently present in the main quiver,
+            // use that
+            slot = cur_quiver_item;
+        }
+        else
+        {
+            // otherwise, find the last fired ammo for this launcher. (This is
+            // an awful lot of effort to choose correctly between stones and
+            // bullets...)
+            slot = you.m_quiver_history.get_last_ammo(item);
+        }
+
+        // Finally, try looking at the fire order.
         if (slot == -1)
         {
             vector<int> order;
@@ -872,40 +902,28 @@ namespace quiver
         return result;
     }
 
-    // TODO: is there a need for this function any more? It was originally used
-    // on unmarshalling, but now everything that needs logic like this is just
-    // calling find_action_from_launcher directly.
-    shared_ptr<action> find_ammo_action()
-    {
-        // felids should never have an ammo history, so error setting will be
-        // handled in find_action_from_launcher
-        const int slot = you.m_quiver_history.get_last_ammo();
-        if (slot < 0)
-            return find_action_from_launcher(you.weapon());
-        else
-            return make_shared<ammo_action>(slot);
-    }
-
     action_cycler::action_cycler() : current(make_shared<action>()) { };
 
-    void action_cycler::save() const
+    void action_cycler::save(const string key) const
     {
-        auto &target = you.props["current_quiver_action"].get_table();
+        auto &target = you.props[key].get_table();
         get().save(target);
     }
 
-    void action_cycler::load()
+    void action_cycler::load(const string key)
     {
-        if (!you.props.exists("current_quiver_action"))
+        if (!you.props.exists(key))
         {
             // some light save compat: if there is no prop, attempt to fill
-            // in the quiver from the quiver history. Can this be simplified
-            // further?
-            set(find_ammo_action());
-            save();
+            // in the quiver from whatever is wielded -- will select launcher
+            // ammo if applicable, or throwing.
+            set(find_action_from_launcher(you.weapon()));
+            if (!get().is_valid())
+                cycle();
+            save(key);
         }
 
-        auto &target = you.props["current_quiver_action"].get_table();
+        auto &target = you.props[key].get_table();
         set(_load_action(target));
         // in case this is invalid, cycle. TODO: is this the right thing to do?
         on_actions_changed();
@@ -933,13 +951,48 @@ namespace quiver
                     t = quiver::_get_weapon_ammo_type(weapon);
 
                 you.m_quiver_history.set_quiver(you.inv[item_slot], t);
-
-#ifdef USE_SOUND
-                parse_sound(CHANGE_QUIVER_SOUND);
-#endif
             }
+#ifdef USE_SOUND
+            parse_sound(CHANGE_QUIVER_SOUND);
+#endif
         }
+        set_needs_redraw();
         return diff;
+    }
+
+    static bool _is_currently_launched_ammo(int slot)
+    {
+        const item_def *weapon = you.weapon();
+        return weapon && slot >= 0 && you.inv[slot].defined()
+                                        && you.inv[slot].launched_by(*weapon);
+    }
+
+    // only reacts to ammo launched by the current weapon, or empty quiver
+    // note that the action may still be valid on its own terms when this
+    // returns true...
+    bool launcher_action_cycler::is_empty() const
+    {
+        if (action_cycler::is_empty())
+            return true;
+        return !_is_currently_launched_ammo(get().get_item());
+    }
+
+    bool launcher_action_cycler::set(const shared_ptr<action> new_act)
+    {
+        if (_is_currently_launched_ammo(new_act->get_item())
+            || *new_act == action())
+        {
+            return action_cycler::set(new_act);
+        }
+        else
+            set_needs_redraw();
+        return false;
+    }
+
+    void launcher_action_cycler::set_needs_redraw()
+    {
+        action_cycler::set_needs_redraw();
+        you.wield_change = true;
     }
 
     bool action_cycler::set(const action_cycler &other)
@@ -948,6 +1001,7 @@ namespace quiver
         // don't use regular set: avoid all the side effects when importing
         // from another action cycler. (Used in targeting.)
         current = other.current;
+        set_needs_redraw();
         return diff;
     }
 
@@ -1068,6 +1122,12 @@ namespace quiver
             else
                 cycle();
         }
+        set_needs_redraw();
+    }
+
+    void action_cycler::set_needs_redraw()
+    {
+        // TODO: abstract from `you`
         you.redraw_quiver = true;
     }
 
@@ -1126,9 +1186,15 @@ namespace quiver
         bool set_to_quiver(shared_ptr<quiver::action> s)
         {
             if (s && s->is_valid()
-                && (allow_empty || s != make_shared<quiver::action>()))
+                && (allow_empty || *s != quiver::action()))
             {
                 cur_quiver.set(s);
+                // a bit hacky:
+                if (&cur_quiver == &you.quiver_action)
+                {
+                    dprf("setting launcher");
+                    you.launcher_action.set(s);
+                }
                 return true;
             }
             return false;
@@ -1165,7 +1231,7 @@ namespace quiver
             // TODO: some kind of view action option?
             if (allow_empty && key == '-')
             {
-                cur_quiver.clear();
+                set_to_quiver(make_shared<quiver::action>());
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
@@ -1322,51 +1388,32 @@ namespace quiver
     // or refactored to use actions.
     // TODO: auto switch to last action when swapping away from a launcher --
     // right now it goes to an ammo only in that case.
-    history::history()
-        : m_last_used_type(quiver::AMMO_THROW)
+    ammo_history::ammo_history()
     {
         COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == quiver::NUM_LAUNCHERS);
     }
 
-    /**
-     * Try to find a `default` ammo item to fire, based on whatever was last
-     * used.
-     */
-    int history::get_last_ammo() const
-    {
-        return get_last_ammo(m_last_used_type);
-    }
-
-    int history::get_last_ammo(const item_def *launcher) const
+    int ammo_history::get_last_ammo(const item_def *launcher) const
     {
         return get_last_ammo(quiver::_get_weapon_ammo_type(launcher));
     }
 
-    int history::get_last_ammo(quiver::launcher type) const
+    int ammo_history::get_last_ammo(quiver::launcher type) const
     {
         const int slot = _get_pack_slot(m_last_used_of_type[type]);
         ASSERT(slot < ENDOFPACK && (slot == -1 || you.inv[slot].defined()));
         return slot;
     }
 
-    void history::set_quiver(const item_def &item, quiver::launcher ammo_type)
+    void ammo_history::set_quiver(const item_def &item, quiver::launcher ammo_type)
     {
         m_last_used_of_type[ammo_type] = item;
         m_last_used_of_type[ammo_type].quantity = 1;
-        m_last_used_type  = ammo_type;
-        you.redraw_quiver = true;
-    }
-
-    void history::empty_quiver(quiver::launcher ammo_type)
-    {
-        m_last_used_of_type[ammo_type] = item_def();
-        m_last_used_of_type[ammo_type].quantity = 0;
-        m_last_used_type  = ammo_type;
         you.redraw_quiver = true;
     }
 
     // Notification that item was fired
-    void history::on_item_fired(const item_def& item, bool explicitly_chosen)
+    void ammo_history::on_item_fired(const item_def& item, bool explicitly_chosen)
     {
         if (!explicitly_chosen)
         {
@@ -1385,7 +1432,6 @@ namespace quiver
             const quiver::launcher t = quiver::_get_weapon_ammo_type(weapon);
             m_last_used_of_type[t] = item;
             m_last_used_of_type[t].quantity = 1;    // 0 makes it invalid :(
-            m_last_used_type = t;
         }
         else
         {
@@ -1401,19 +1447,9 @@ namespace quiver
 
             m_last_used_of_type[quiver::AMMO_THROW] = item;
             m_last_used_of_type[quiver::AMMO_THROW].quantity = 1;
-            m_last_used_type = quiver::AMMO_THROW;
         }
 
         you.redraw_quiver = true;
-    }
-
-    // Called when the player has switched weapons
-    void history::on_weapon_changed()
-    {
-        // Only switch actions if launcher type really changed
-        const item_def* weapon = you.weapon();
-        if (m_last_used_type != quiver::_get_weapon_ammo_type(weapon))
-            you.quiver_action.set(quiver::find_action_from_launcher(weapon));
     }
 
     // ----------------------------------------------------------------------
@@ -1422,21 +1458,21 @@ namespace quiver
 
     // this save/load code is extremely legacy
     static const short QUIVER_COOKIE = short(0xb015);
-    void history::save(writer& outf) const
+    void ammo_history::save(writer& outf) const
     {
         // TODO: action-based marshalling/unmarshalling. But we will still need
         // the history here, probably.
         marshallShort(outf, QUIVER_COOKIE);
 
         marshallItem(outf, item_def()); // was: m_last_weapon
-        marshallInt(outf, m_last_used_type);
+        marshallInt(outf, 0); // was: m_last_used_type
         marshallInt(outf, ARRAYSZ(m_last_used_of_type));
 
         for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
             marshallItem(outf, m_last_used_of_type[i]);
     }
 
-    void history::load(reader& inf)
+    void ammo_history::load(reader& inf)
     {
         // warning: this is called in the unmarshalling sequence before the
         // inventory is actually in place
@@ -1445,8 +1481,7 @@ namespace quiver
 
         auto dummy = item_def();
         unmarshallItem(inf, dummy); // was: m_last_weapon
-        m_last_used_type = (quiver::launcher)unmarshallInt(inf);
-        ASSERT_RANGE(m_last_used_type, quiver::AMMO_THROW, quiver::NUM_LAUNCHERS);
+        unmarshallInt(inf); // was: m_last_used_type;
 
         const unsigned int count = unmarshallInt(inf);
         ASSERT(count <= ARRAYSZ(m_last_used_of_type));
@@ -1455,6 +1490,30 @@ namespace quiver
             unmarshallItem(inf, m_last_used_of_type[i]);
     }
 
+    void on_actions_changed()
+    {
+        you.quiver_action.on_actions_changed();
+        you.launcher_action.on_actions_changed();
+    }
+
+    // Called when the player has switched weapons
+    void on_weapon_changed()
+    {
+        const item_def* weapon = you.weapon();
+        you.launcher_action.set(quiver::find_action_from_launcher(weapon));
+        if (!you.quiver_action.get().is_valid()
+            && you.launcher_action.get().is_valid())
+        {
+            // if changing weapons has invalidated the main quiver, and we
+            // did find valid ammo, set that to the main quiver
+            you.quiver_action.set(you.launcher_action.get_ptr());
+        }
+        // TODO: if wielding a sling and launching stones, you switch to
+        // a different launcher type, stones remain quivered as a throwable.
+        // Seems like it would be better if the main quiver changed. (But this
+        // is too niche to bother with now...)
+
+    }
 }
 
 

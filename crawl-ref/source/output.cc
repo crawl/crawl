@@ -945,7 +945,28 @@ static void _print_stats_wp(int y)
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour());
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(text, max_name_width).c_str());
+    if (you.weapon() && fires_ammo_type(*you.weapon()) != MI_NONE
+        && you.launcher_action.get() != you.quiver_action.get())
+    {
+        formatted_string lammo;
+        if (you.launcher_action.is_empty()
+            || !you.launcher_action.get().is_valid())
+        {
+            lammo = quiver::action().quiver_description(true);
+        }
+        else
+            lammo = you.launcher_action.get().quiver_description(true);
+
+        const int trimmed_size = max_name_width - lammo.tostring().size() - 3;
+        CPRINTF("%s ", chop_string(text, trimmed_size).c_str());
+        textcolour(LIGHTGREY);
+        CPRINTF("(");
+        lammo.display();
+        textcolour(LIGHTGREY);
+        CPRINTF(")");
+    }
+    else
+        CPRINTF("%s", chop_string(text, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
 

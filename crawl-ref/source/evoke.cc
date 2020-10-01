@@ -1218,12 +1218,25 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
+    // TODO: move these cases out of evocation...
     // is slot a wielded reaching weapon, or if no slot, is the player wielding
     // a reaching weapon?
-    const bool reaching = (slot != -1 && slot == you.equip[EQ_WEAPON]
-                            || slot == -1 && you.equip[EQ_WEAPON] >= 0)
-                          && !you.melded[EQ_WEAPON]
+    const bool wielded = you.weapon()
+                         && (slot != -1 && slot == you.equip[EQ_WEAPON]
+                                || slot == -1 && you.equip[EQ_WEAPON] >= 0);
+    const bool reaching = wielded
                           && weapon_reach(*you.weapon()) > REACH_NONE;
+
+    // ammo checks are done below, this is the precondition for messaging
+    // about ranged failures
+    const bool ranged = wielded && fires_ammo_type(*you.weapon()) != MI_NONE;
+
+    if ((reaching || ranged) && you.melded[EQ_WEAPON])
+    {
+        if (!quiet)
+            canned_msg(MSG_PRESENT_FORM);
+        return false;
+    }
 
     if (you.berserk() && !reaching)
     {
@@ -1231,12 +1244,25 @@ bool evoke_check(int slot, bool quiet)
             canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-    if (you.confused()) // attack is ok under confusion, but not reaching
+    if (you.confused() && !ranged) // attack is ok under confusion, but not reaching
     {
         if (!quiet)
             canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
+    if (ranged && (you.launcher_action.is_empty()
+                    || !you.launcher_action.get().is_valid()))
+    {
+        if (!quiet)
+        {
+            // XX messaging should be unified with actual launching code
+            mprf("You do not have any ammo quivered for %s",
+                                    you.weapon()->name(DESC_YOUR).c_str());
+        }
+        return false;
+    }
+    if (reaching || ranged)
+        return true;
 
     // is this supposed to be allowed under confusion?
     if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
@@ -1350,6 +1376,17 @@ bool evoke_item(int slot, dist *preselect)
                 did_work = true;
             else
                 return false;
+        }
+        else if (!you.launcher_action.is_empty()
+                                    && you.launcher_action.get().is_valid())
+        {
+            // better handling for no ammo?
+            dist tmp;
+            if (!preselect)
+                preselect = &tmp;
+            // weapon check is handled by the validity check above
+            you.launcher_action.get().trigger(*preselect);
+            return true;
         }
         else
             unevokable = true;
