@@ -239,7 +239,7 @@ end
 # Entries ##########################################
 default-depth: Elf, Depths:1-4
 
-NAME:   portal_golemforge_entry
+NAME:   portal_golemforge_entry_1
 TAGS:   transparent
 DEPTH:  Elf, Depths:1-4
 : golemforge_portal(_G)
@@ -254,6 +254,77 @@ MAP
   xxx.xxx
     x.x
      .
+ENDMAP
+
+NAME:   portal_golemforge_entry_2
+TAGS:   no_mons_gen
+DEPTH:  Elf, Depths:1-4
+KFEAT:  h = abandoned_shop
+FTILE:  h = floor_crystal_squares
+COLOUR: h = lightblue
+: golemforge_portal(_G)
+: set_feature_name("crystal_wall", "wall of crystal")
+MAP
+   ......
+...xxxxx.
+.xxx.h.x.
+.+..hOhx.
+.xxx.h.x.
+...xxxxx.
+   ......
+ENDMAP
+
+NAME:   portal_golemforge_entry_3
+TAGS:   no_mons_gen
+DEPTH:  Elf
+KMONS:  y = crystal guardian
+KMONS:  e = deep elf sorcerer col:lightblue name:deep_elf_golemsmith n_rpl n_des n_spe \
+        tile:mons_deep_elf \
+        spells:hermetic_barrier.66.wizard.emergency;blink.20.wizard;bolt_of_cold.40.wizard ;\
+        robe . any wand good_item
+FTILE:  ye = floor_crystal_squares
+COLOUR: ye = lightblue
+KFEAT:  L = lava
+TILE:   L = dngn_golemforge_furnace
+: golemforge_portal(_G)
+: set_feature_name("crystal_wall", "wall of crystal")
+: set_feature_name("lava", "arcane furnace")
+MAP
+xxxxxxxxx
+xLLLOLLLx
+xLx...xLx
+xL..e..Lx
+xL.y.y.Lx
+xL.....Lx
+xLx...xLx
+xLL...LLx
+xxx@@@xxx
+ENDMAP
+
+NAME:   portal_golemforge_entry_4
+TAGS:   no_mons_gen
+DEPTH:  Depths:1-4
+KMONS:  i = iron golem
+KMONS:  s = statue hd:12 spells:mass_barrier.12.magical \
+            tile:mons_statue_mage col:lightblue name:barrier n_adj
+FTILE:  is = floor_crystal_squares
+COLOUR: is = lightblue
+KFEAT:  L = lava
+TILE:   L = dngn_golemforge_furnace
+: golemforge_portal(_G)
+: set_feature_name("crystal_wall", "wall of crystal")
+: set_feature_name("lava", "arcane furnace")
+MAP 
+xxxxxxxxxxxxxxx
+xLLLx.....xLLLx
+xxxxL..O..Lxxxx
+   xxL.s.Lxx
+  xx.......xx
+  xx.i.i.i.xx
+   xx.....xx
+    xx...xx
+     xx+xx
+       @
 ENDMAP
 
 # The destination #################################

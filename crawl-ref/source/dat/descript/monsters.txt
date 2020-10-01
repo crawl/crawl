@@ -972,6 +972,10 @@ A deep elf commanding the primal forces of the universe. It is renowned for its
 ability to dig out and pin down even the most elusive foes with powerful,
 unavoidable magic.
 %%%%
+deep elf golemsmith
+
+A deep elf who is learned about evocation, especially golem-supervising.
+%%%%
 deep elf high priest
 
 An exalted servant of the ancient dark god of the deep elves, basking in
