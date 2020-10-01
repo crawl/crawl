@@ -166,7 +166,7 @@ bool get_item_by_exact_name(item_def &item, const char* name);
 
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
-bool merge_items_into_inv(item_def& it, int quant_got, int& inv_slot, bool quiet);
+bool merge_items_into_inv(item_def& it, int quant_got, int& inv_slot, int& free_slot, bool quiet);
 
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);

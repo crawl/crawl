@@ -1710,7 +1710,7 @@ bool put_bag_item(int bag_slot, int item_dropped, int quant_drop, bool fail_mess
 }
 
 
-static bool _get_item(int bag_slot, int item_taken, int quant_taken, bool message)
+static bool _get_item(int& bag_slot, int item_taken, int quant_taken, bool message)
 {
     item_def& bag = you.inv[bag_slot];
     ASSERT(bag.defined());
@@ -1723,12 +1723,26 @@ static bool _get_item(int bag_slot, int item_taken, int quant_taken, bool messag
     if (quant_taken < 0 || quant_taken > item.quantity)
         quant_taken = item.quantity;
 
-    int inv_slot;
-    if (merge_items_into_inv(item, quant_taken, inv_slot, false)) {
-        item.quantity -= quant_taken;
-        if (item.quantity == 0) {
-            item.base_type = OBJ_UNASSIGNED;
-            item.props.clear();
+    int inv_slot, free_slot;
+    if (merge_items_into_inv(item, quant_taken, inv_slot, free_slot, false)) {
+        if (inv_slot == bag_slot) {
+            //Swap detected
+            bag_slot = free_slot;
+            item_def& newBag = you.inv[bag_slot];
+            CrawlVector& newBagVector = newBag.props[BAG_PROPS_KEY].get_vector();
+            item_def& swap_item = newBagVector[item_taken].get_item();
+            swap_item.quantity -= quant_taken;
+            if (swap_item.quantity == 0) {
+                swap_item.base_type = OBJ_UNASSIGNED;
+                swap_item.props.clear();
+            }
+        }
+        else {
+            item.quantity -= quant_taken;
+            if (item.quantity == 0) {
+                item.base_type = OBJ_UNASSIGNED;
+                item.props.clear();
+            }
         }
     }
     else {

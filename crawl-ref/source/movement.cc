@@ -1112,9 +1112,9 @@ void move_player_action(coord_def move)
             if (item_ != NON_ITEM) {
                 item_def& shield = mitm[item_];
                 mitm[item_].flags &= ~ISFLAG_SUMMONED;
-                int inv_slot;
+                int inv_slot, free_slot;
                 if ((!you.weapon() || is_shield_incompatible(*you.weapon(), &shield) == false) &&
-                    merge_items_into_inv(shield, 1, inv_slot, true)) {
+                    merge_items_into_inv(shield, 1, inv_slot, free_slot, true)) {
                     dec_mitm_item_quantity(item_, 1);
                     if (you.shield() == nullptr) {
                         equip_item(EQ_SHIELD, inv_slot, false);
