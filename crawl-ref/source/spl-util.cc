@@ -36,6 +36,7 @@
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
 #include "target.h"
@@ -1247,6 +1248,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_PASSWALL:
+        // the full check would need a real spellpower here, so we just check
+        // a drastically simplified version of it
+        if (temp && !passwall_simplified_check(you))
+            return "you aren't next to any passable walls.";
         if (temp && you.is_stationary())
             return "you can't move.";
         break;
