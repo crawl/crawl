@@ -1509,6 +1509,23 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_POISON_ERINYA:
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+        if (hurted < original)
+        {
+            if (doFlavouredEffects)
+            {
+                simple_monster_message(*mons, " partially resists.");
+
+                if (one_chance_in(2)) {
+                    poison_monster(mons, pbolt.agent(), 1, true);
+                }
+            }
+        }
+        else if (doFlavouredEffects)
+            poison_monster(mons, pbolt.agent(), 1, true);
+
+        break;
+
     case BEAM_ROD_POISON:
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)

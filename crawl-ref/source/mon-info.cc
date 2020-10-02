@@ -119,6 +119,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_WHIRLWIND_PINNED, MB_PINNED },
     { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
+    { ENCH_ERINGYAS_ROOTSPIKE, MB_ERINGYAS_ROOTSPIKE },
     { ENCH_NIGREDO,         MB_NIGREDO },
     { ENCH_ALBEDO,          MB_ALBEDO },
     { ENCH_CITRINITAS,      MB_CITRINITAS },
@@ -1633,6 +1634,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("infused by restorative essence of Viriditas");
     if (is(MB_HOLD_POSITION))
         v.emplace_back("holding position");
+    if (is(MB_ERINGYAS_ROOTSPIKE))
+        v.emplace_back("constricted by eringyas rootspike");
     return v;
 }
 

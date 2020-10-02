@@ -329,6 +329,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+    case ENCH_ERINGYAS_ROOTSPIKE:
     {
         actor *source_actor = actor_by_mid(ench.source, true);
         const string noun = ench.ench == ENCH_VILE_CLUTCH ? "Zombie hands" :
@@ -1030,6 +1031,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
+    case ENCH_ERINGYAS_ROOTSPIKE:
     {
         const string noun = me.ench == ENCH_VILE_CLUTCH ? "zombie hands"
                                                         : "roots";
@@ -1460,6 +1462,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_RING_OF_THUNDER:
     case ENCH_WHIRLWIND_PINNED:
     case ENCH_VILE_CLUTCH:
+    case ENCH_ERINGYAS_ROOTSPIKE:
     case ENCH_GRASPING_ROOTS:
     case ENCH_HOLD_POSITION:
     case ENCH_DEATHS_DOOR:
@@ -2127,7 +2130,7 @@ static const char *enchant_names[] =
     "natural_abjuration", "stoneskin",
     "nigredo", "albedo", "citrinitas", "virditas",
     "aura_of_healing", "hold_position", "LEGION_BLESSING",
-    "barrier",
+    "barrier", "eringyas rootspike",
     "buggy",
 };
 

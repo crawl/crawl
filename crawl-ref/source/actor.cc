@@ -490,7 +490,8 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
     bool roots = constrictee->is_player() && you.duration[DUR_GRASPING_ROOTS]
         || mons && mons->has_ench(ENCH_GRASPING_ROOTS);
     bool vile_clutch = mons && mons->has_ench(ENCH_VILE_CLUTCH);
-
+    bool rootspike = mons && mons->has_ench(ENCH_ERINGYAS_ROOTSPIKE);
+    
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
@@ -498,7 +499,12 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
         const string verb = intentional ? "release" : "lose";
         bool force_plural = false;
 
-        if (vile_clutch)
+        if (rootspike)
+        {
+            attacker_desc = "The eringyas rootspike";
+            force_plural = true;
+        }
+        else if (vile_clutch)
         {
             attacker_desc = "The zombie hands";
             force_plural = true;
@@ -519,7 +525,9 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
              constrictee->name(DESC_THE).c_str());
     }
 
-    if (vile_clutch)
+    if(rootspike)
+        mons->del_ench(ENCH_ERINGYAS_ROOTSPIKE);
+    else if (vile_clutch)
         mons->del_ench(ENCH_VILE_CLUTCH);
     else if (roots)
     {
@@ -729,6 +737,7 @@ bool actor::is_directly_constricted() const
     return is_constricted()
         && (is_player() && !you.duration[DUR_GRASPING_ROOTS]
             || is_monster()
+               && !as_monster()->has_ench(ENCH_ERINGYAS_ROOTSPIKE)
                && !as_monster()->has_ench(ENCH_VILE_CLUTCH)
                && !as_monster()->has_ench(ENCH_GRASPING_ROOTS));
 }
@@ -784,6 +793,8 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     const bool direct = defender.is_directly_constricted();
     const bool vile_clutch = !direct && defender.as_monster()
         && defender.as_monster()->has_ench(ENCH_VILE_CLUTCH);
+    const bool rootspike = !direct && defender.as_monster()
+        && defender.as_monster()->has_ench(ENCH_ERINGYAS_ROOTSPIKE);
     int damage = constriction_damage(direct);
 
     DIAG_ONLY(const int basedam = damage);
@@ -798,12 +809,33 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
-                           "", false);
+    if (rootspike)
+    {
+        int hurted = resist_adjust_damage(defender.as_monster(), BEAM_POISON_ERINYA, damage);
+        if (hurted > 0) {
+            if (hurted < damage) {
+                if (!one_chance_in(3)) {
+                    poison_monster(defender.as_monster(), this);
+                }
+            }
+            else {
+                if (one_chance_in(3)) {
+                    poison_monster(defender.as_monster(), this);
+                }
+            }
+        }
+        damage = defender.hurt(this, hurted, BEAM_MISSILE, KILLED_BY_MONSTER, "",
+            "", false);
+    }
+    else {
+        damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
+            "", false);
+    }
+
     DIAG_ONLY(const int infdam = damage);
 
     string exclamations;
-    if (damage <= 0 && is_player()
+   if (damage <= 0 && is_player()
         && you.can_see(defender))
     {
         exclamations = ", but do no damage.";
@@ -815,7 +847,11 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     {
         string attacker_desc;
         bool force_plural = false;
-        if (vile_clutch)
+        if (rootspike) {
+            attacker_desc = "The eringyas rootspike";
+            force_plural = true;
+        }
+        else if (vile_clutch)
         {
             attacker_desc = "The zombie hands";
             force_plural = true;

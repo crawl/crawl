@@ -186,6 +186,7 @@ enum monster_info_flags
     MB_HOLD_POSITION,
     MB_BARRIER,
     MB_BARRIER_BROKEN,
+    MB_ERINGYAS_ROOTSPIKE,
     NUM_MB_FLAGS
 };
 
