@@ -1684,8 +1684,8 @@ aff_type targeter_absolute_zero::is_affected(coord_def loc)
 }
 
 targeter_multiposition::targeter_multiposition(const actor *a,
-                                    vector<coord_def> seeds, bool _hit_friends)
-    : targeter(), hit_friends(_hit_friends)
+            vector<coord_def> seeds, bool _hit_friends, aff_type _positive)
+    : targeter(), hit_friends(_hit_friends), positive(_positive)
 {
     agent = a;
     for (auto &c : seeds)
@@ -1717,7 +1717,7 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
         return AFF_NO;
 
     // is this better with maybe or yes?
-    return affected_positions.count(loc) > 0 ? AFF_MAYBE : AFF_NO;
+    return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)

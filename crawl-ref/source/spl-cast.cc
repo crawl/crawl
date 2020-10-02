@@ -1178,37 +1178,45 @@ static vector<coord_def> _simple_find_all_actors(actor *a)
     return result;
 }
 
-static bool _simple_corpse_check(const coord_def &c, bool allow_skeleton)
+// a light wrapper on the code used for casting animate skeleton
+static vector<coord_def> _find_animatable_skeletons(actor *a)
 {
-    for (stack_iterator si(c, true); si; ++si)
-    {
-        if ((si->is_type(OBJ_CORPSES, CORPSE_BODY)
-                || allow_skeleton && si->is_type(OBJ_CORPSES, CORPSE_SKELETON))
-            && mons_class_can_be_zombified(si->mon_type))
-        {
-            return true;
-        }
-    }
-    return false;
+    vector<coord_def> result;
+    coord_def s = find_animatable_skeleton(a->pos());
+    if (in_bounds(s))
+        result.push_back(s);
+    return result;
 }
 
-static vector<coord_def> _simple_find_corpses(actor *a, bool allow_skeleton, bool find_all)
+static bool _simple_corpse_check(const coord_def &c)
+{
+    int motions; // ???
+    return animate_remains(c, CORPSE_BODY, BEH_FRIENDLY, 1, MHITYOU, &you, "",
+                        GOD_NO_GOD, false, true, true, nullptr, &motions) > 0;
+}
+
+// XX unify with animate dead code for finding corpses
+static vector<coord_def> _simple_find_corpses(actor *a)
 {
     vector<coord_def> result;
     if (!a)
         return result;
 
     for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
-        if (_simple_corpse_check(*ri, allow_skeleton))
-        {
+        if (_simple_corpse_check(*ri))
             result.push_back(*ri);
-            if (!find_all)
-                break;
-        }
 
     return result;
 }
 
+// wrapper around the simulacrum corpse check
+static vector<coord_def> _find_simulacrable_corpses(const coord_def &c)
+{
+    vector<coord_def> result;
+    if (find_simulacrable_corpse(c) >= 0)
+        result.push_back(c);
+    return result;
+}
 
 // TODO: refactor into target.cc, move custom classes out of target.h
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
@@ -1313,8 +1321,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DRAIN_LIFE: // pseudo-spell. TODO: ignore undead for this one
         return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), false);
     case SPELL_DISCORD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), true);
-    case SPELL_IGNITION: // multi-fireball targeter? sort of annoying to implement
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), true, AFF_MAYBE);
+    case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
 
     // Summons. Most summons have a simple range 2 radius, see find_newmons_square
@@ -1347,12 +1355,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // this spell seems (?) to pick the first corpse by radius_iterator, so
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you, true, false), true);
+        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), true, AFF_YES);
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you, false, true), true);
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), true, AFF_YES);
     case SPELL_SIMULACRUM:
-        return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0); // check for corpses?
+        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), true, AFF_YES);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
 
@@ -1669,7 +1677,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         // a forced cast. Setting this prevents the direction chooser from
         // looking for selecting a default target (which doesn't factor in
         // the spell's capabilities).
-        if (useless)
+        // Also ensure we don't look for a target for static targeters. It might
+        // be better to move to an affected position if any?
+        if (useless || !is_targeted)
             args.default_place = you.pos();
         if (hitfunc && hitfunc->can_affect_walls())
         {
