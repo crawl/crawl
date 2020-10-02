@@ -880,7 +880,7 @@ static int _get_posion_enhance()
     return enhance_;
 }
 
-static bool _pay_posion_cost(ability_type ability)
+static bool _pay_poison_cost(ability_type ability)
 {
     int cost = _get_poison_cost(ability);
 
@@ -4456,7 +4456,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         spret success = create_web_trap(fail);
         if(success != spret::abort)
-            _pay_posion_cost(abil.ability);
+            _pay_poison_cost(abil.ability);
         return success;
     }
     case ABIL_AGRAPHEDE_CONVERT_POISON:
@@ -4491,7 +4491,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         spret success = poison_brand_weapon(0, fail);
         mprf("ABIL_AGRAPHEDE_ENCHANT_POISON");
         if (success != spret::abort)
-            _pay_posion_cost(abil.ability);
+            _pay_poison_cost(abil.ability);
         return success;
     }
     case ABIL_AGRAPHEDE_TRAP:
@@ -4526,7 +4526,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         else
             canned_msg(MSG_NOTHING_HAPPENS);
-        _pay_posion_cost(abil.ability);
+        _pay_poison_cost(abil.ability);
 
         return spret::success;
     }
@@ -4553,7 +4553,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             zap_type ztype = ZAP_AGR_VENOM_BOLT;
             zapping(ztype, power, beam);
         }
-        _pay_posion_cost(abil.ability);
+        _pay_poison_cost(abil.ability);
         return spret::success;
     }
     case ABIL_AGRAPHEDE_SUMMON_SPIDER:
@@ -4595,7 +4595,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         sack_of_spiders(power, 2 + random2(2) + 2 * poison_enhance, beam.target);
 
-        _pay_posion_cost(abil.ability);
+        _pay_poison_cost(abil.ability);
         return spret::success;
     }
     case ABIL_CONVERT_TO_BEOGH:

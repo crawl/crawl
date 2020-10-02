@@ -435,8 +435,10 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW resist abjuration."},
         { 0, passive_t::legion_istant_order,
               "You can give orders to minions just by thinking, with a speed of thought."},
+        { 2, passive_t::legion_mana,
+               "GOD NOW leave magical essence." },
         { 3, passive_t::bless_followers_legion,
-               "GOD NOW inspired by killing, based on summoning skill." },
+               "GOD NOW inspired by killing." },
     },
 
     // Agraphede
