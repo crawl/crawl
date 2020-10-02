@@ -3985,6 +3985,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.get_mutation_level(MUT_NO_LOVE)
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
 
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            return you.species == SP_DJINNI
+                  || you.get_mutation_level(MUT_NO_ARTIFICE);
+
         default:
             return you.get_mutation_level(MUT_NO_ARTIFICE);
         }

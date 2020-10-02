@@ -1761,8 +1761,8 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
         quant_got = it.quantity;
 
     // attempt to put the item into your inventory.
-    int inv_slot;
-    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
+    int inv_slot, free_slot;
+    if (merge_items_into_inv(it, quant_got, inv_slot, free_slot, quiet))
     {
         put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
@@ -2113,13 +2113,14 @@ item_def *auto_assign_item_slot(item_def& item)
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
+  * @param freeslot[out]  freslot for new item before swap
  * @param quiet           Suppresses pickup messages.
  * @return                The inventory slot the item was placed in.
  */
-static int _place_item_in_free_slot(item_def &it, int quant_got,
+static int _place_item_in_free_slot(item_def &it, int quant_got, int &freeslot,
                                     bool quiet)
 {
-    int freeslot = find_free_slot(it);
+    freeslot = find_free_slot(it);
     ASSERT_RANGE(freeslot, 0, ENDOFPACK);
     ASSERT(!you.inv[freeslot].defined());
 
@@ -2197,12 +2198,13 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
  * @param quant_got       The quantity of this item to place.
  * @param inv_slot[out]   The inventory slot the item was placed in. -1 if
  * not placed.
+ * @param free_slot[out]   FreeSlot when swap
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
 bool merge_items_into_inv(item_def &it, int quant_got,
-                                  int &inv_slot, bool quiet)
+                                  int &inv_slot, int& free_slot, bool quiet)
 {
     inv_slot = -1;
 
@@ -2263,7 +2265,7 @@ bool merge_items_into_inv(item_def &it, int quant_got,
     if (inv_count() >= ENDOFPACK)
         return false;
 
-    inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
+    inv_slot = _place_item_in_free_slot(it, quant_got, free_slot, quiet);
     return true;
 }
 

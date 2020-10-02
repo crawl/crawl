@@ -974,7 +974,7 @@ unavoidable magic.
 %%%%
 deep elf golemsmith
 
-A deep elf who is learned about evocation, especially golem-supervising.
+A deep elf who has the great ability in making and maintaining golem.
 %%%%
 deep elf high priest
 

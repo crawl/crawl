@@ -697,6 +697,13 @@ static void _generate_missile_item(item_def& item, int force_type,
             item.quantity += random2(12);
 
     }
+
+
+    if (item.sub_type == MI_ARROW
+        || item.sub_type == MI_BOLT
+        || item.sub_type == MI_SLING_BULLET) {
+        item.quantity *= 3;
+    }
 }
 
 static bool _armour_disallows_randart(int sub_type)

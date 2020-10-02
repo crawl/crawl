@@ -3373,6 +3373,11 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
     pbeam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
     mons->hurt(&you, damage, BEAM_POISON_ERINYA);
 
+    if (you.can_constrict(mons, false)) {
+        const int dur = (4 + random2avg(div_rand_round(splpow, 10), 2))
+            * BASELINE_DELAY;
+        mons->add_ench(mon_enchant(ENCH_ERINGYAS_ROOTSPIKE, 0, &you, dur));
+    }
 
     return spret::success;
 }

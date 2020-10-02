@@ -2874,7 +2874,7 @@ static bool _drink_fountain()
         mpr("You drink the sparkling water.");
 
         fountain_effect =
-            random_choose_weighted(467, NUM_POTIONS,
+            random_choose_weighted(467, POT_WATER,
                 48, POT_DEGENERATION,
                 40, POT_UNSTABLE_MUTATION,
                 40, POT_CURING,
