@@ -1250,29 +1250,29 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_PASSWALL:
         // the full check would need a real spellpower here, so we just check
         // a drastically simplified version of it
-        if (temp && !passwall_simplified_check(you))
-            return "you aren't next to any passable walls.";
         if (temp && you.is_stationary())
             return "you can't move.";
+        if (temp && !passwall_simplified_check(you))
+            return "you aren't next to any passable walls.";
         break;
 
     case SPELL_ANIMATE_DEAD:
-        if (!animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "", GOD_NO_GOD, false))
-            return "There is nothing nearby to animate!";
+        if (temp && !animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "", GOD_NO_GOD, false))
+            return "there is nothing nearby to animate!";
         break;
 
     case SPELL_ANIMATE_SKELETON:
-        if (!in_bounds(find_animatable_skeleton(you.pos())))
-            return "There is nothing nearby to animate!";
+        if (temp && !in_bounds(find_animatable_skeleton(you.pos())))
+            return "there is nothing nearby to animate!";
         break;
     case SPELL_SIMULACRUM:
-        if (find_simulacrable_corpse(you.pos()) < 0)
-            return "There is nothing here to animate!";
+        if (temp && find_simulacrable_corpse(you.pos()) < 0)
+            return "there is nothing here to animate!";
         break;
 
     case SPELL_CORPSE_ROT:
-        if (corpse_rot(&you, false) == spret::abort)
-            return "There is nothing fresh enough to decay nearby.";
+        if (temp && corpse_rot(&you, false) == spret::abort)
+            return "there is nothing fresh enough to decay nearby.";
         // fallthrough
     case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
@@ -1314,7 +1314,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SANDBLAST:
-        if (sandblast_find_ammo().first == 0)
+        if (temp && sandblast_find_ammo().first == 0)
             return "you don't have any stones to cast with.";
         break;
 
