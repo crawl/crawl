@@ -385,8 +385,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // The Memoirs of the virtuoso
-    SPELL_POISON_GLAND,
+    SPELL_NOXIOUS_BOG,
     SPELL_ERINGYAS_ROOTSPIKE,
+    SPELL_POISON_ARROW,
     SPELL_OLGREBS_LAST_MERCY,
 },
     

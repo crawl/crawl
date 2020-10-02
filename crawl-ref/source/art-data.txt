@@ -1468,6 +1468,20 @@ STEALTH: -1
 INSCRIP: parts
 BOOL:    poison, elec
 
+ENUM:    VIPERS_PANG
+NAME:    viper's Pang
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+FB_BRAND: SPWPN_VENOM
+PLUS:    +8
+COLOUR:  ETC_POISON
+TILE:    spwpn_vipers_pang
+TILE_EQ: vipers_pang
+BRAND:   SPWPN_VENOM
+INSCRIP: virulence
+EV:      5
+MAGIC:   1
+VALUE:   600
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

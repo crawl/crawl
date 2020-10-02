@@ -29,6 +29,7 @@
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "god-conduct.h"    // did_god_conduct
 #include "god-passive.h"    // passive_t::want_curses
+#include "message.h"       // For viper's pang simple_monster_message
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
@@ -1785,5 +1786,29 @@ static void _GOLEM_ARMOUR_world_reacts(item_def *item)
     {
         set_artefact_name(*item, new_name);
         you.wield_change = true;
+    }
+}
+
+////////////////////////////////////////////////////
+
+
+static void _VIPERS_PANG_melee_effects(item_def*, actor*,
+    actor* defender, bool, int)
+{
+    if (defender->is_monster()) {
+        monster* mon = defender->as_monster();
+        if (mon->has_ench(ENCH_POISON_VULN)) {
+            int prev_deg = mon->get_ench(ENCH_POISON_VULN).degree;
+            if (mon->add_ench(mon_enchant(ENCH_POISON_VULN, prev_deg + 1, &you,
+                random_range(20, 30) * BASELINE_DELAY))) {
+                simple_monster_message(*mon, " grows more vulnerable to poison.");
+            }
+        }
+        else {
+            if (mon->add_ench(mon_enchant(ENCH_POISON_VULN, 0, &you,
+                random_range(20, 30) * BASELINE_DELAY))) {
+                simple_monster_message(*mon, " is vulnerable to poison.");
+            }
+        }
     }
 }

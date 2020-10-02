@@ -755,3 +755,8 @@ heavy armour protects the wearer from poison and electricity.
 It has an indescribable power within, but this armour alone cannot unleash
 the potential of the armour. It can be re-assembled to activate a giant 
 golem exoskeleton, if the wearer has all other parts of the armour.
+%%%%
+viper's Pang
+
+A quickblade with a deadly poison that reduces the poison resistance of
+the opponent.
