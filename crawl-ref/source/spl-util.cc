@@ -32,6 +32,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
@@ -1265,6 +1266,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
+        if (corpse_rot(&you, false) == spret::abort)
+            return "There is nothing fresh enough to decay nearby.";
+        // fallthrough
     case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
