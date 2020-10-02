@@ -9,6 +9,7 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "god-companions.h"
@@ -230,6 +231,14 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     default:
         return false;
     }
+}
+
+bool passwall_simplified_check(const actor &act)
+{
+    for (adjacent_iterator ai(act.pos(), true); ai; ++ai)
+        if (_feat_is_passwallable(grd(*ai)))
+            return true;
+    return false;
 }
 
 passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_range)
