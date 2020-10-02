@@ -223,6 +223,11 @@ cloud_silver0 CLOUD_SILVER
 cloud_silver1
 cloud_silver2
 
+cloud_mana0 CLOUD_MANA
+cloud_mana1
+cloud_mana2
+cloud_mana3
+
 #########MISC
 poisonous_roots POISONOUS_ROOTS
 

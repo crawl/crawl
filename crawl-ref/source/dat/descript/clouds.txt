@@ -179,3 +179,9 @@ purity cloud
 
 A cloud of purifying silver. The silver-glowing energy within is quivering with the 
 wrath of Zin against heretics, unclean beings, unholies and chaotic creatures.
+%%%%
+magical essence cloud
+
+The remnant of some minions of the Legion from beyond. You and your minions can
+absorb this to replenish your magic. The amount of this replenishment is depending
+on your summoning skill.
