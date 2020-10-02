@@ -376,7 +376,8 @@ private:
 class targeter_multiposition : public targeter
 {
 public:
-    targeter_multiposition(const actor *a, vector<coord_def> seeds, bool _hit_friends=false);
+    targeter_multiposition(const actor *a, vector<coord_def> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
 
     void add_position(const coord_def &c);
     bool valid_aim(coord_def) override { return true; }
@@ -385,6 +386,7 @@ public:
 protected:
     bool hit_friends;
     set<coord_def> affected_positions;
+    aff_type positive;
 };
 
 class targeter_multifireball : public targeter_multiposition

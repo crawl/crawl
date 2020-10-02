@@ -1092,6 +1092,23 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
 
+    // other Ru spells not affected by the school check; handle these separately
+    // since they may have other constraints
+    switch (spell)
+    {
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_DEATH_CHANNEL:
+    case SPELL_SIMULACRUM:
+    case SPELL_INFESTATION:
+    case SPELL_TUKIMAS_DANCE:
+        if (you.get_mutation_level(MUT_NO_LOVE))
+            return "you cannot coerce anything to obey you.";
+        break;
+    default:
+        break;
+    }
+
     switch (spell)
     {
     case SPELL_BLINK:
@@ -1234,13 +1251,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_DEAD:
+        if (!animate_dead(&you, 1, BEH_FRIENDLY, MHITYOU, &you, "", GOD_NO_GOD, false))
+            return "There is nothing nearby to animate!";
+        break;
+
     case SPELL_ANIMATE_SKELETON:
-    case SPELL_DEATH_CHANNEL:
+        if (!in_bounds(find_animatable_skeleton(you.pos())))
+            return "There is nothing nearby to animate!";
+        break;
     case SPELL_SIMULACRUM:
-    case SPELL_INFESTATION:
-    case SPELL_TUKIMAS_DANCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to obey you.";
+        if (find_simulacrable_corpse(you.pos()) < 0)
+            return "There is nothing here to animate!";
         break;
 
     case SPELL_CORPSE_ROT:

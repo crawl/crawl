@@ -1667,11 +1667,9 @@ int animate_dead(actor *caster, int pow, beh_type beha,
     return number_raised;
 }
 
-spret cast_animate_skeleton(int pow, god_type god, bool fail)
+coord_def find_animatable_skeleton(coord_def c)
 {
-    fail_check();
-    bool found = false;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri, true); si; ++si)
         {
@@ -1679,45 +1677,46 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
                 && mons_class_can_be_zombified(si->mon_type)
                 && mons_skeleton(si->mon_type))
             {
-                found = true;
-                break;
+                return *ri;
             }
         }
     }
-    if (!found)
-    {
-        mpr("There is nothing nearby to animate!");
+    return coord_def(-1,-1);
+}
+
+spret cast_animate_skeleton(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    coord_def skel_loc = find_animatable_skeleton(you.pos());
+    if (!in_bounds(skel_loc))
         return spret::abort;
-    }
 
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (stack_iterator si(skel_loc, true); si; ++si)
     {
-        for (stack_iterator si(*ri, true); si; ++si)
+        if (si->base_type == OBJ_CORPSES
+            && mons_class_can_be_zombified(si->mon_type)
+            && mons_skeleton(si->mon_type))
         {
-            if (si->base_type == OBJ_CORPSES
-                && mons_class_can_be_zombified(si->mon_type)
-                && mons_skeleton(si->mon_type))
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
-                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-                {
-                    butcher_corpse(*si);
-                    mpr("Before your eyes, flesh is ripped from the corpse!");
-                    request_autopickup();
-                    // Only convert the top one.
-                }
+                butcher_corpse(*si);
+                mpr("Before your eyes, flesh is ripped from the corpse!");
+                request_autopickup();
+                // Only convert the top one.
+            }
 
-                const int animate_skel_result =
-                    animate_remains(*ri, CORPSE_SKELETON, BEH_FRIENDLY,
-                                    pow, MHITYOU, &you, "", god);
+            const int animate_skel_result =
+                animate_remains(skel_loc, CORPSE_SKELETON, BEH_FRIENDLY,
+                                pow, MHITYOU, &you, "", god);
 
-                if (animate_skel_result != -1)
-                {
-                    if (animate_skel_result == 0)
-                        mpr("...but the skeleton had no space to rise!");
-                    return spret::success;
-                }
+            if (animate_skel_result != -1)
+            {
+                if (animate_skel_result == 0)
+                    mpr("...but the skeleton had no space to rise!");
+                return spret::success;
             }
         }
     }
@@ -1729,12 +1728,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
-    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god, false))
-    {
-        mpr("There is nothing nearby to animate!");
-        return spret::abort;
-    }
-
     fail_check();
     canned_msg(MSG_CALL_DEAD);
 
@@ -1742,6 +1735,21 @@ spret cast_animate_dead(int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
+
+// returns an item index, or -1 on failure
+int find_simulacrable_corpse(coord_def c)
+{
+    int co = -1;
+    for (stack_iterator si(c, true); si; ++si)
+    {
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+            && mons_class_can_be_zombified(si->mon_type))
+        {
+            co = si->index();
+        }
+    }
+    return co;
 }
 
 /**
@@ -1755,23 +1763,10 @@ spret cast_animate_dead(int pow, god_type god, bool fail)
  */
 spret cast_simulacrum(int pow, god_type god, bool fail)
 {
-    bool found = false;
-    int co = -1;
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_class_can_be_zombified(si->mon_type))
-        {
-            found = true;
-            co = si->index();
-        }
-    }
+    int co = find_simulacrable_corpse(you.pos());
 
-    if (!found)
-    {
-        mpr("There is nothing here that can be animated!");
+    if (co < 0)
         return spret::abort;
-    }
 
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);

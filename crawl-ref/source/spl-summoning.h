@@ -80,12 +80,14 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     bool quiet = false, bool apply_lovelessness = true,
                     monster** mon = nullptr, int* motions = nullptr);
 
+coord_def find_animatable_skeleton(coord_def c);
 spret cast_animate_skeleton(int pow, god_type god, bool fail);
 spret cast_animate_dead(int pow, god_type god, bool fail);
 int animate_dead(actor *caster, int pow, beh_type beha,
                  unsigned short hitting, actor *as = nullptr, string nas = "",
                  god_type god = GOD_NO_GOD, bool actual = true);
 
+int find_simulacrable_corpse(coord_def c);
 spret cast_simulacrum(int pow, god_type god, bool fail);
 
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
