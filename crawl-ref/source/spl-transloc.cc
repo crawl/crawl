@@ -506,7 +506,8 @@ spret player_blinkbolt()
     coord_def start = you.pos();
     int blink_power = 8 + (3*(you.experience_level/9)) + random2(2*(you.experience_level/3));
 
-    targeter_smite tgt(&you, 3);
+    targeter_beam tgt(&you, 3, ZAP_BOLT_OF_MAGMA, 0, 0, 0);
+
     tgt.obeys_mesmerise = true;
     if (!_find_cblink_target(destination, true, "blinkbolt", &tgt))
     {
