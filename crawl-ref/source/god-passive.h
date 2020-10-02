@@ -278,6 +278,9 @@ enum class passive_t
 	/// Able to use "t" without turn_is_over().
 	legion_istant_order,
 
+	/// When minions disappears, leaves magical essence.
+	legion_mana,
+
     /// Poison resistance disappears
     agraphede_anti_poison_resist,
     /// Converts the received damage to a certain percentage poison.

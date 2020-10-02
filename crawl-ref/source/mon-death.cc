@@ -1682,6 +1682,21 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
 }
 
+static void _monster_die_legion(const monster* mons, bool silent)
+{
+    if (cell_is_solid(mons->pos()))
+        return;
+
+    if (cloud_at(mons->pos()))
+        delete_cloud(mons->pos());
+
+    place_cloud(CLOUD_MANA, mons->pos(), 5 + random2(5), mons);
+
+    if (!silent) // Lightblue
+        mprf(MSGCH_DURATION, "%s leaves magical essence.",
+             mons->name(DESC_THE).c_str());
+}
+
 static string _killer_type_name(killer_type killer)
 {
     switch (killer)
@@ -2858,8 +2873,14 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!wizard && !submerged && !was_banished)
     {
-        _monster_die_cloud(&mons, !fake_abjure && !timeout && !mons_reset,
-                           silent, summoned);
+        if (have_passive(passive_t::legion_mana) && mons.friendly()
+            && mons.is_summoned() && !mons.is_perm_summoned()
+            && random2(mons.get_experience_level())
+                + (you.skill(SK_SUMMONINGS)/9) >= 10)
+             _monster_die_legion(&mons, silent);
+
+        else _monster_die_cloud(&mons, !fake_abjure && !timeout
+                                 && !mons_reset, silent, summoned);
     }
 
     item_def* corpse = nullptr;

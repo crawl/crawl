@@ -309,11 +309,18 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                            // beam_effect
     },
     // CLOUD_SILVER,
-    { "purity", nullptr,                  // terse, verbose name
+    { "purity", nullptr,                        // terse, verbose name
       WHITE,                                    // colour
-      { TILE_CLOUD_SILVER },                    // tile
+      { TILE_CLOUD_SILVER, CTVARY_RANDOM },     // tile
       BEAM_NONE,                                // beam_effect
       { 1, 1 },                                 // base, random damage
+      true,                                     // opacity
+    },
+    // CLOUD_MANA,
+    { "magical essence",  nullptr,              // terse, verbose name
+      LIGHTBLUE,                                // colour
+      { TILE_CLOUD_MANA, CTVARY_RANDOM },       // tile
+      BEAM_NONE, {},                            // beam & damage
       true,                                     // opacity
     },
 };
@@ -799,7 +806,8 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     if (env.level_state & LSTATE_STILL_WINDS
         && cl_type != CLOUD_TORNADO
-        && cl_type != CLOUD_INK)
+        && cl_type != CLOUD_INK
+        && cl_type != CLOUD_MANA)
     {
         return;
     }
@@ -1467,7 +1475,7 @@ int actor_apply_cloud(actor *act)
     monster *mons = !player? act->as_monster() : nullptr;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
-    if(cloud.type == CLOUD_HEAL)
+    if (cloud.type == CLOUD_HEAL)
     { //special case. because this cloud is harmless
         if (player)
         {
@@ -1481,6 +1489,26 @@ int actor_apply_cloud(actor *act)
             // Useful to healing mobs
             mons->heal(1 + (mons->max_hit_points / 10));
         }
+    }
+
+    if (cloud.type == CLOUD_MANA
+        && !you.duration[DUR_OVERHEAT]
+        && have_passive(passive_t::legion_mana))
+    {
+        if (player)
+        {
+            mprf(MSGCH_DURATION, "You absorbs magical essence.");
+            delete_cloud(you.pos());
+        }
+        else
+        {
+            mprf(MSGCH_DURATION, "Your minion absorbs magical essence.");
+            delete_cloud(mons->pos());
+        }
+
+        const int essence = 1 + random2(you.skill(SK_SUMMONINGS)/3);
+        inc_mp(essence);
+        return 0;
     }
 
     if (actor_cloud_immune(*act, cloud))
