@@ -76,17 +76,19 @@ user becomes unable to cast spells.
 %%%%
 Choose Blossom ability
 
-This choice makes you more life beings. You gain regeneration and you can get 
-mutations, and some of the god's restrictions are disappeared. Also, your 
-aptitude will be better suited to the warrior-mage. invocation skills is better 
-because you are becoming more religious.
+This choice blooms your body into a near-life being. Then, your body regenerates
+quickly and be able to mutate. Also, your artificial essence will be attuned by
+your life; makes you learn physical skills faster, and connects fighting skill and
+spellcasting skill. As a result of this 'blossom', you will be respected as a life
+in a religious meaning.
 %%%%
 Choose Adaption ability
 
-This choice makes you more artifact-like. You gain magical regeneration and 
-clarity, and some necromancy becomes unusable. Also, your aptitude will be 
-better suited to the pure mage. As it becomes less religious, invocation skills 
-are also reduced.
+This choice allows you to dominate your whole body with your artificial essence.
+Your magic regenerates faster, and your thought is no longer shaken. This 'adaption'
+makes you learn spellcasting skill faster. As a result, your body becomes completely
+artificial; some of transforms and necromantic effects becomes unusable, transmutation
+and invocation skill will be reduced. 
 %%%%
 Deploy Shield ability
 

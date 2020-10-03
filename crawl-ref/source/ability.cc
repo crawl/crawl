@@ -2239,8 +2239,8 @@ static spret _homunculus_blossom_or_adaption(species_type _speice)
     ASSERT(_speice == SP_ADAPTION_HOMUNCULUS || _speice == SP_BLOSSOM_HOMUNCULUS);
 
     string prompt = _speice == SP_ADAPTION_HOMUNCULUS ?
-                    "This choice makes you an artificial being, and your aptitude becomes more like a pure mage. Really choose this?" :
-                    "This choice makes you a near-life being, and your aptitude becomes more like a warrior-mage. Really choose this?";
+                    "This choice makes you an artificial lifeform with enhanced spellcasting, magic regeneration, and clarity of mind. Really choose this?" :
+                    "This choice makes you a near-life being with connected aptitude of fighting and spellcasting, health regeneration, and makes you are able to mutation. Really choose this?";
     if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -2262,8 +2262,8 @@ static spret _homunculus_blossom_or_adaption(species_type _speice)
 #endif
     mprf(MSGCH_INTRINSIC_GAIN,
         _speice == SP_BLOSSOM_HOMUNCULUS ?
-        "You bloom as near-life beings" :
-        "You have adapted to your body for survival in the dungeon");
+        "You bloom as near-life beings." :
+        "You have adapted to your body for survival in the dungeon.");
 
     //perma_mutate(MUT_REGENERATION, 1, "blossom");
 
@@ -2286,6 +2286,12 @@ static spret _homunculus_blossom_or_adaption(species_type _speice)
         check_skill_level_change(sk);
     }
     
+    if (_speice == SP_BLOSSOM_HOMUNCULUS)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You starts to crosstrain fighting and spellcasting.");
+        mprf(MSGCH_INTRINSIC_GAIN, "Your body is now able to mutate.");
+    }
+
     give_level_mutations(you.species, 1);
 
     check_training_targets();
