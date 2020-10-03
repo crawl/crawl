@@ -1499,15 +1499,16 @@ int actor_apply_cloud(actor *act)
         {
             mprf(MSGCH_DURATION, "You absorbs magical essence.");
             delete_cloud(you.pos());
+            const int essence = 1 + random2(you.skill(SK_SUMMONINGS)/3);
+            inc_mp(essence);
         }
-        else
+        else if (mons->friendly)
         {
             mprf(MSGCH_DURATION, "Your minion absorbs magical essence.");
             delete_cloud(mons->pos());
+            const int essence = 1 + random2(you.skill(SK_SUMMONINGS)/3);
+            inc_mp(essence);
         }
-
-        const int essence = 1 + random2(you.skill(SK_SUMMONINGS)/3);
-        inc_mp(essence);
         return 0;
     }
 
