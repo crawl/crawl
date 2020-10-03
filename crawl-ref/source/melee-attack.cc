@@ -461,6 +461,11 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    if (attacker->is_player() && you.duration[DUR_ENCHANT_POISON])
+    {
+        poison_monster(defender->as_monster(), &you);
+    }
+
     if (attacker->is_player() &&
         (you.species == SP_HOMUNCULUS ||
             you.species == SP_ADAPTION_HOMUNCULUS ||

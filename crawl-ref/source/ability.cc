@@ -4498,12 +4498,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
     case ABIL_AGRAPHEDE_ENCHANT_POISON:
     {
-        fail_check(); 
-        spret success = poison_brand_weapon(0, fail);
-        mprf("ABIL_AGRAPHEDE_ENCHANT_POISON");
-        if (success != spret::abort)
-            _pay_poison_cost(abil.ability);
-        return success;
+        fail_check();
+        int power = 11 + you.skill(SK_INVOCATIONS, 7); //0 ~ 200
+        you.increase_duration(DUR_ENCHANT_POISON, 8 + roll_dice(2, power), 100);
+        //spret success = poison_brand_weapon(0, fail);
+        _pay_poison_cost(abil.ability);
+        return spret::success;
     }
     case ABIL_AGRAPHEDE_TRAP:
     {

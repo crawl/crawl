@@ -364,6 +364,11 @@ bool ranged_attack::handle_phase_hit()
             return false;
     }
 
+    if (using_weapon() && attacker->is_player() && you.duration[DUR_ENCHANT_POISON])
+    {
+        poison_monster(defender->as_monster(), &you);
+    }
+
     // XXX: unify this with melee_attack's code
     if (attacker->is_player() && defender->is_monster()
         && should_alert_defender)
