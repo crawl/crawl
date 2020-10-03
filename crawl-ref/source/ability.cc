@@ -2408,7 +2408,11 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         item_def *wpn = you.weapon();
         const int base_dam = property(*you.weapon(), PWPN_DAMAGE);
+        const bool two_handed = you.hands_reqd(*wpn) == HANDS_TWO;
         int enchant = max(3, base_dam/3);
+
+        if (two_handed)
+            enchant *= 2;
 
         string prompt = "Do you wish to have " + wpn->name(DESC_YOUR)
                            + " cursed and enchanted?";
