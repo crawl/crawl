@@ -1015,6 +1015,10 @@ void monster_web_cleanup(const monster &mons, bool quiet)
     trap_def *trap = trap_at(mons.pos());
     if (trap && trap->type == TRAP_WEB)
     {
+        if (trap->ammo_qty > 1)
+        {
+            trap->ammo_qty--;
+        }
         if (trap->ammo_qty == 1)
         {
             // temp web from e.g. jumpspider/spidersack

@@ -4464,7 +4464,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_AGRAPHEDE_WEB:
     {
         fail_check();
-        spret success = create_web_trap(fail);
+        int power = 11 + you.skill(SK_INVOCATIONS, 7); //0 ~ 200
+        spret success = create_web_trap(power, fail);
         if(success != spret::abort)
             _pay_poison_cost(abil.ability);
         return success;
