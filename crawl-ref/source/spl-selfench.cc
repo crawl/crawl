@@ -374,7 +374,7 @@ void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool
     case spschool::fire:
         if (verbose)
         {
-            mprf("%s resonated with the elements of fire", weapon.name(DESC_YOUR).c_str());
+            mprf("%s resonated with the elements of fire.", weapon.name(DESC_YOUR).c_str());
         }
         you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_FIRE_MAGIC] / 3;
         set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FLAMING);
@@ -382,7 +382,7 @@ void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool
     case spschool::ice:
         if (verbose)
         {
-            mprf("%s resonated with the elements of ice", weapon.name(DESC_YOUR).c_str());
+            mprf("%s resonated with the elements of ice.", weapon.name(DESC_YOUR).c_str());
         }
         you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_ICE_MAGIC] / 3;
         set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_FREEZING);
@@ -390,7 +390,7 @@ void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool
     case spschool::air:
         if (verbose)
         {
-            mprf("%s resonated with the elements of air", weapon.name(DESC_YOUR).c_str());
+            mprf("%s resonated with the elements of air.", weapon.name(DESC_YOUR).c_str());
         }
         you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_AIR_MAGIC] / 3;
         set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
@@ -398,7 +398,7 @@ void enchant_elemental_weapon(item_def& weapon, spschools_type disciplines, bool
     case spschool::earth:
         if (verbose)
         {
-            mprf("%s resonated with the elements of earth", weapon.name(DESC_YOUR).c_str());
+            mprf("%s resonated with the elements of earth.", weapon.name(DESC_YOUR).c_str());
         }
         you.props[ELEMENTAL_ENCHANT_KEY] = you.skills[SK_EARTH_MAGIC] / 3;
         set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_VORPAL);
