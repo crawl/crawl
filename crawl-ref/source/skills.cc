@@ -525,6 +525,11 @@ static bool _player_is_gnoll()
     return you.species == SP_GNOLL;
 }
 
+static bool _player_is_homunculus()
+{
+    return you.species == SP_BLOSSOM_HOMUNCULUS;
+}
+
 static void _check_stop_train()
 {
     // Gnolls can't stop training skills.
@@ -2047,6 +2052,20 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
         return { SK_THROWING };
     case SK_THROWING:
         return { SK_SLINGS };
+
+    case SK_FIGHTING:
+    {
+        if (_player_is_homunculus())
+            return { SK_SPELLCASTING };
+        else return {};
+    }
+    case SK_SPELLCASTING:
+    {
+        if (_player_is_homunculus())
+            return { SK_FIGHTING };
+        else return {};
+    }
+
     default:
         return {};
     }
