@@ -363,10 +363,6 @@ dagger
 
 A double-edged fighting knife with a sharp point.
 %%%%
-dagger
-
-A double-edged fighting knife with a sharp point.
-%%%%
 dart
 
 A thin piece of metal, typically coated in some harmful substance. When
