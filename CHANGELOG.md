@@ -41,6 +41,9 @@
 - 새로운 마법책. 아랫것들을 돕는 방법. 수록된 주문: 수호자 골렘 소환, 두건 악귀 소환, 활기찬 덩어리 소환, 투명화, 가속.
   - new spellbook, How To Aid your minions. summon guadian golem, summon hooded malice, summon lively mass, invisibility, haste
 
+- 새로운 한손창, 수정창 추가. 트라이던트와 악마창의 중간급 성능을 지님
+  - Added new one-handed spear. crystal spear. medium spec between the trident and the demon-trident
+
 - 아군을 리콜할 수 있는 Pipe 발동 아이템 추가
   - Added Pipe evokable item that can recall allies
   
