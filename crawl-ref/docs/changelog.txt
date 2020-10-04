@@ -1,3 +1,118 @@
+Stone Soup kimchi-1.2.1 (20201004)
+--------------------------------
+
+Highlights
+----------
+* New gods: Legion from beyond, Agraphede
+* New Speices: Wight, Sparkborn
+* New Backgrounds: Weapon Master
+* Rework Caravan, Collector
+* Added spells, shop, evokables for mercenarie play
+
+Added
+----------
+* New god: Agraphede, God of Poison.
+  - Agraphede consumes poison of body when using power
+  - 0*: Lose all poison resistance. No other method 
+        (equipment, mutation, species) can gain poison resistance
+  - 1*: convert a percentage of incoming damage to poison
+        (from 10% to 50% depending on piety)
+  - 1*: Create web: web can be installed in the surrounding 3 spaces
+  - 2*: Get a regen while you are poisoned
+        up to regen 3 level depending on piety
+  - 2*: Convert curing potion: turn a curing potion into a poison potion
+  - 3*: Enchant poison: Enchant weapon to poison
+  - 3*: Steal poison resistance from living enemies in sight
+  - 4*: Ball of web: create explosive ball of webs around you
+  - 5*: Hornet Sting: sting a deadly wasp sting with slow, para, confuse
+  - 5*: Agraphede supports poison spells
+  - 5*: Steal poison resistance from undead, demon enemies in sight
+  - 6*: Summon spider: create explosive ball of webs around you
+* New god: Legion from beyond, God of Summonnig.
+  - 0*: The Legion gives abjuration resist to friendly minions
+  - 0*: do not consume turns when giving commands to allies with t-command
+  - 1*: Poitioning: orders one of your minions to hold position
+  - 2*: When a friendly minions dies, it sometimes leaves a magical essence 
+        cloud that restores mana.
+  - 3*: When friendly minions kills an enemy, has chance of getting a 
+        permanent buff.
+  - 5*: Immortal legion: cast death door on a friendly minions
+* Added Wight(playable). they are an ancient warriors animated as undead
+  they can use negative energy to infuse their melee attacks, and enchant 
+  weapon by cursing them in price for memory.  
+* Added Sparkborn(playable). A species of electric race in which a blink bolt
+  is forced to be tried on a certain probability when damage is worn. they 
+  has an electric immunity, but when they enters the water, they discharges
+  and get into -cast state.
+* Added Weapon Master(background), warrior background that begins with
+ a double-handed weapon and focuses on weapons skills.    
+* Added Summon Hooded Malice, level 6 summ/necro spell. Uses a Malign 
+  Offering that inflicts negative energy damage to the target and restores 
+  health to living allies in the field of view as much as part of the damage
+  dealt. This can restore the player's health.
+* Added Hermetic Barrier, level 5 charm spell. Create a shield as much as half
+  the player's maximum HP. absorb all damage except torment or flay. Instead,
+  if destroyed, a short stun is applied to the user.
+* Added Summon Lively Mass, level 6 summon/charm spell. cast aura of
+  healing, which restores 10 per turn to allies monster except players in range.
+* New spellbook, Tome of Valor. Song of Slaying, Flame Strike, Haste, Ring of 
+  Flame, Hermetic Barrier
+* New spellbook, How To Aid your minions. summon guadian golem,
+  summon hooded malice, summon lively mass, invisibility, haste
+* Added new one-handed spear. crystal spear. 
+  medium spec between the trident and the demon-trident
+* Added Pipe evokable item that can recall allies
+* Added Flask of Healing Mist evokable item that create a healing cloud that
+  lasts for a short time in the range of 5\*5 centered on the player. healing 
+  clouds affect monsters more than players.
+* Added a Tavern shop where you can hire mercenaries.
+* A New fixedart: +8 viper's pang {venom, virulence MR+ EV+5}. It is a quick
+  blade-based artifact and each time hit an enemy, poison resistance is
+  reduced.
+* New Orc Unique: Lichbane, the Unchained Undead. A Ancient champion
+  named monster that comes out with an undead Hunter.
+* New Orc Unique: the Fallen. A Profane Servitor named monster that comes
+  out with spectral cloud and life drain
+* New Orc Unique: Rin, the nine-tailed. Appears at Depths:3-, Vaults:2-, Crypt.
+  Unique that uses various conjuration spells, appears with a group of humans,
+  and returns to a sprit fox when humans disappear.
+* Added New mini portal, Golem Forge. a late game portal with iron Golem,
+  Crystal Guardians, and various golems.
+
+Changed
+----------
+* Added clarity to mummy
+* Hydra receives evasion bonus when the number of heads is less than 6
+* Angel rework
+  - Angels are no longer punished by evil gods before level 15.
+  - From level 15, the powers of good god are strengthened.
+* Buff for blossom homunculus. now has crosstraining between fighting
+  and spellcasting
+* Caravan rework
+  - Give Item to Mercenary ability no longer costs.
+  - Remove rehire ability
+  - Start with a new item, Pipe, instead of the recall ability
+  - Allows the fixedart staff to witch mercenaries 
+* Adds a choice that picks up the rod of strike of an artificer
+* Collector rework
+  - Collector now has 2 starting options, collection scroll and wish scroll
+  - Collection scroll is an old option and a reroll has been added.
+  - Wish scroll can be typed to get fixdart. instead, cannot use it until gain
+    religion.
+  - Buff to start by choosing a weapon
+* Rollback Trog burning spellbooks
+* The Great Wyrm gifts Spellbook of Fulsome Distillation, Evaporate
+* Beogh do not restrict number of gifts to orcish follower and make not
+  sharing resistance anymore.
+* Added new one-handed spear. crystal spear. medium spec between
+  the trident and the demon-trident
+* Projectiles (arrows, bolts, sling bullets) now appear tripled
+* Give full XP from banishment
+* Golem Armours are able to use undead  
+* Added donald speak for new gods
+* Added and rollback mini vault
+* Remove poison gland spell
+
 Stone Soup kimchi-1.1.1 (20200821)
 --------------------------------
 
