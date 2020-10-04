@@ -319,10 +319,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_SHORT_SWORD,      40 },
         { WPN_MACE,             40 },
         { WPN_WHIP,             30 },
-        { WPN_TRIDENT,          20 },
+        { WPN_TRIDENT,          18 },
         { WPN_FALCHION,         20 },
-        { WPN_WAR_AXE,          14 },
-        { WPN_MORNINGSTAR,      6 },
+        { WPN_WAR_AXE,          12 },
+        { WPN_MORNINGSTAR,      5 },
+        { WPN_CRYSTAL_SPEAR,    5 },
         { NUM_WEAPONS,          105 } }; // 80% chance of weapon
     static const weapon_list DE_KNIGHT_WEAPONS = // total 83 (?)
     {   { WPN_LONG_SWORD,       22 },
@@ -351,11 +352,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_GLAIVE,           10 },
         { WPN_MACE,             10 },
         { WPN_DIRE_FLAIL,       10 },
-        { WPN_TRIDENT,          10 },
+        { WPN_TRIDENT,          9 },
         { WPN_WAR_AXE,          9 },
         { WPN_FLAIL,            9 },
         { WPN_BROAD_AXE,        1 },
-        { WPN_MORNINGSTAR,      1 }, };
+        { WPN_MORNINGSTAR,      1 },
+        { WPN_CRYSTAL_SPEAR,    1 }, };
     static const weapon_list ORC_KNIGHT_WEAPONS =
     {   { WPN_GREAT_SWORD,      4 },
         { WPN_LONG_SWORD,       4 },
@@ -441,10 +443,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_EVENINGSTAR,      2 },
         { WPN_DIRE_FLAIL,       10 },
         { WPN_DEMON_WHIP,       20 },
-        { WPN_TRIDENT,          10 },
+        { WPN_TRIDENT,          15 },
         { WPN_HALBERD,          10 },
         { WPN_GLAIVE,           10 },
-        { WPN_DEMON_TRIDENT,    20 } };
+        { WPN_CRYSTAL_SPEAR,    5 },
+        { WPN_DEMON_TRIDENT,    20 }, };
     static const weapon_list GARGOYLE_WEAPONS =
     {   { WPN_MACE,             15 },
         { WPN_FLAIL,            10 },
@@ -637,7 +640,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_LOUISE,
             { { { WPN_MORNINGSTAR, 1 },
                 { WPN_EVENINGSTAR, 1 },
-                { WPN_TRIDENT, 1 },
+                { WPN_CRYSTAL_SPEAR, 1 },
                 { WPN_DEMON_TRIDENT, 1 },
         }, {}, {}, 1 } },
         { MONS_JORY,
@@ -657,7 +660,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
         { MONS_RED_DEVIL,
-            { { { WPN_TRIDENT,          4 },
+            { { { WPN_TRIDENT,          3 },
+                { WPN_CRYSTAL_SPEAR,    1 },
                 { WPN_DEMON_TRIDENT,    1 },
         } } },
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
@@ -674,7 +678,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { SPWPN_FREEZING, 1 } }
         } },
         { MONS_MERFOLK_IMPALER,
-            { { { WPN_TRIDENT,          20 },
+            { { { WPN_TRIDENT,          15 },
+                { WPN_CRYSTAL_SPEAR,    5 },
                 { WPN_DEMON_TRIDENT,    3 },
         } } },
         { MONS_MERFOLK_AQUAMANCER, { { { WPN_RAPIER, 1 } }, {}, {}, 2 } },
@@ -1005,10 +1010,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         // salamanders only have secondary weapons; melee or bow, not both
         { MONS_SALAMANDER, {
-            { { WPN_HALBERD,                    5 },
-              { WPN_TRIDENT,                    5 },
+            { { WPN_HALBERD,                    4 },
+              { WPN_TRIDENT,                    3 },
               { WPN_SPEAR,                      3 },
               { WPN_GLAIVE,                     2 },
+              { WPN_CRYSTAL_SPEAR,              2 },
               { WPN_SHORTBOW,                   5 }, },
             { 4, 0, 4 },
         } },
@@ -1132,6 +1138,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose_weighted(10, WPN_SPEAR,
                                                     10, WPN_TRIDENT,
+                                                    10, WPN_CRYSTAL_SPEAR,
                                                     5, WPN_HALBERD,
                                                     5, WPN_GLAIVE);
         }

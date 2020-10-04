@@ -576,6 +576,7 @@ enum weapon_type
 
     WPN_SPEAR,
     WPN_TRIDENT,
+    WPN_CRYSTAL_SPEAR,
     WPN_HALBERD,
     WPN_GLAIVE,
     WPN_BARDICHE,
