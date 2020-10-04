@@ -467,6 +467,23 @@ who carries it into the sunlight; many undead creatures seek it in the hope that
 it will restore them to life. But then, some people will believe anything. Good
 luck!
 
+Zot
+========================================
+
+No one knows who or what Zot is: demon, god, wizard, something else entirely?
+But adventurers seeking the Orb will, in turn, be hunted by Zot, and if it
+finds them, their existence will end.
+
+Zot is very slow moving, and can only sense adventurers once they've spent an
+inordinately long time in one area of the dungeon. Even once this happens,
+adventurers will have plenty of warning to either descend to new depths in the
+area (diffusing Zot's attention once more) or to leave the area entirely.
+
+The Abyss is beyond Zot's comprehension, and adventurers there are safe from
+it (albeit subject to many other hazards). The Hells, along with their
+Vestibule, are a single area as far as Zot is concerned. Adventurers who hold
+the Orb of Zot are forever immune to Zot's power.
+
 Seeded play
 ========================================
 
