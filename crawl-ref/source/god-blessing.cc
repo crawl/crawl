@@ -66,7 +66,9 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
                                                  WPN_BATTLEAXE;
 
         case WPN_SPEAR:       return WPN_TRIDENT;
-        case WPN_TRIDENT:     return has_shield ? WPN_TRIDENT : WPN_HALBERD;
+        case WPN_TRIDENT:     return !highlevel  ? WPN_TRIDENT   :
+                                     has_shield  ? WPN_CRYSTAL_SPEAR :
+                                                   WPN_HALBERD;
         case WPN_HALBERD:     return WPN_GLAIVE;
         case WPN_GLAIVE:      return highlevel ? WPN_BARDICHE : WPN_GLAIVE;
 

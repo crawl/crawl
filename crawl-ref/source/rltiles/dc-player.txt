@@ -731,6 +731,9 @@ d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork FORK2
 trishula TRISHULA
+crystal_spear1 CRYSTAL_SPEAR_NORMAL
+crystal_spear2
+crystal_spear3
 lajatang1 LAJATANG
 lajatang2
 lajatang3

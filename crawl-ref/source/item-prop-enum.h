@@ -638,6 +638,7 @@ enum weapon_type
 
     WPN_CUTLASS,
 #endif
+    WPN_CRYSTAL_SPEAR,
 
     NUM_WEAPONS,
 

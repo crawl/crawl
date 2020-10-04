@@ -630,10 +630,10 @@ static bool _can_use_melee(monster* mons, item_def& gift)
         || gift.sub_type == WPN_DIRE_FLAIL || gift.sub_type == WPN_FALCHION
         || gift.sub_type == WPN_DEMON_BLADE || gift.sub_type == WPN_HAND_AXE
         || gift.sub_type == WPN_TRIDENT || gift.sub_type == WPN_DEMON_TRIDENT
-        || gift.sub_type == WPN_TRISHULA || gift.sub_type == WPN_QUARTERSTAFF
-        || gift.sub_type == WPN_MACE || gift.sub_type == WPN_FLAIL
-        || gift.sub_type == WPN_LONG_SWORD || gift.sub_type == WPN_SCIMITAR
-        || gift.sub_type == WPN_LAJATANG);
+        || gift.sub_type == WPN_CRYSTAL_SPEAR || gift.sub_type == WPN_TRISHULA
+        || gift.sub_type == WPN_QUARTERSTAFF || gift.sub_type == WPN_MACE
+        || gift.sub_type == WPN_FLAIL || gift.sub_type == WPN_LONG_SWORD
+        || gift.sub_type == WPN_SCIMITAR || gift.sub_type == WPN_LAJATANG);
 
     bool melee_tier2 = (melee_tier1
         || gift.sub_type == WPN_MORNINGSTAR
@@ -806,7 +806,8 @@ static bool _caravan_gift_items_to(monster* mons, int item_slot)
             }
 
             if (mons->type == MONS_MERC_SKALD
-                && (gift.sub_type == WPN_SCYTHE
+                && (gift.sub_type == WPN_CRYSTAL_SPEAR
+                   || gift.sub_type == WPN_SCYTHE
                    || gift.sub_type == WPN_GLAIVE
                    || gift.sub_type == WPN_BARDICHE))
             {
