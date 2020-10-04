@@ -343,6 +343,17 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
     { SPWPN_HOLY_WRATH,  1 },
 };
 
+/// brand weights for crystal spear.
+static const vector<brand_weight_tuple> CRYSTAL_BRANDS = {
+    { SPWPN_NORMAL,          15 },
+    { SPWPN_PROTECTION,      25 },
+    { SPWPN_VORPAL,          25 },
+    { SPWPN_FLAMING,         10 },
+    { SPWPN_FREEZING,        10 },
+    { SPWPN_ELECTROCUTION,   10 },
+    { SPWPN_DISTORTION,       5 },
+};
+
 /// brand weights for most ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
     { SPWPN_NORMAL,   58 },
@@ -560,6 +571,9 @@ static const weapon_def Weapon_prop[] =
     { WPN_TRIDENT,           "trident",             9,  1, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 6, 10, 35, POLEARM_BRANDS },
+    { WPN_CRYSTAL_SPEAR,     "crystal spear",      14, -2, 15,
+        SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
+        DAMV_PIERCING, 4, 10, 70, CRYSTAL_BRANDS },
     { WPN_HALBERD,           "halberd",            13, -3, 15,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 5, 10, 40, POLEARM_BRANDS },

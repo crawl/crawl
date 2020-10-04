@@ -135,6 +135,9 @@ demon_trident WPN_DEMON_TRIDENT
 demon_trident2
 demon_trident3
 trishula WPN_TRISHULA
+crystal_spear WPN_CRYSTAL_SPEAR
+crystal_spear2
+crystal_spear3
 
 ##Staves
 staff WPN_STAFF

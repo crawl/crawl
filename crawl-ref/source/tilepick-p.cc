@@ -248,6 +248,9 @@ tileidx_t tilep_equ_weapon(const item_def &item, bool hand2)
     case WPN_TRISHULA:
         tile = !hand2 ? TILEP_HAND1_TRISHULA : TILEP_HAND1_TRISHULA_REV;
         break;
+    case WPN_CRYSTAL_SPEAR:
+        tile = !hand2 ? TILEP_HAND1_CRYSTAL_SPEAR_NORMAL : TILEP_HAND1_CRYSTAL_SPEAR_NORMAL_REV;
+        break;
 
     // Ranged
     case WPN_HUNTING_SLING:

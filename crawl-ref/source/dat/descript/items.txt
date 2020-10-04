@@ -355,6 +355,14 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
+crystal spear
+
+A heavy, sharp one-handed spear, made of a whole carved magical crystal.
+%%%%
+dagger
+
+A double-edged fighting knife with a sharp point.
+%%%%
 dagger
 
 A double-edged fighting knife with a sharp point.

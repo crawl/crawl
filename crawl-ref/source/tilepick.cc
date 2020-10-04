@@ -2226,6 +2226,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_TRIPLE_CROSSBOW:       return TILE_WPN_TRIPLE_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
+    case WPN_CRYSTAL_SPEAR:         return TILE_WPN_CRYSTAL_SPEAR;
     case WPN_HALBERD:               return TILE_WPN_HALBERD;
     case WPN_SCYTHE:                return TILE_WPN_SCYTHE;
     case WPN_GLAIVE:                return TILE_WPN_GLAIVE;
