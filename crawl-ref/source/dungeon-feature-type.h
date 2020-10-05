@@ -247,7 +247,6 @@ enum dungeon_feature_type
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
     DNGN_ENTER_DESOLATION,
-    DNGN_ENTER_GOLEM,
 
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
@@ -265,7 +264,6 @@ enum dungeon_feature_type
     DNGN_EXIT_LABYRINTH,
 #endif
     DNGN_EXIT_DESOLATION,
-    DNGN_EXIT_GOLEM,
 #if TAG_MAJOR_VERSION == 34
 
     DNGN_ALTAR_GOZAG,
@@ -297,6 +295,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_AGRAPHEDE,
 #endif
     DNGN_TEMPORAL_FLOOR,
+    DNGN_ENTER_GOLEM,
+    DNGN_EXIT_GOLEM,
 
     NUM_FEATURES
 };
