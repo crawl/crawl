@@ -66,7 +66,7 @@ Added
   lasts for a short time in the range of 5\*5 centered on the player. healing 
   clouds affect monsters more than players.
 * Added a Tavern shop where you can hire mercenaries.
-* A New fixedart: +8 viper's pang {venom, virulence MR+ EV+5}. It is a quick
+* A New fixedart: +8 viper's fang {venom, virulence MR+ EV+5}. It is a quick
   blade-based artifact and each time hit an enemy, poison resistance is
   reduced.
 * New Orc Unique: Lichbane, the Unchained Undead. A Ancient champion

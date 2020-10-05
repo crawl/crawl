@@ -1792,7 +1792,7 @@ static void _GOLEM_ARMOUR_world_reacts(item_def *item)
 ////////////////////////////////////////////////////
 
 
-static void _VIPERS_PANG_melee_effects(item_def*, actor*,
+static void _VIPERS_FANG_melee_effects(item_def*, actor*,
     actor* defender, bool, int)
 {
     if (defender->is_monster()) {

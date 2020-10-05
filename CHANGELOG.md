@@ -54,7 +54,7 @@
   - Added a Tavern shop where you can hire mercenaries.
   
 - 새로운 픽다트: +8 독사의 이빨 {venom, virulence MR+ EV+5}. 퀵블레이드 기반의 아티팩트이며 맞은 적의 독저항을 1단계씩 내린다.
-  - A New fixedart: +8 viper's pang {venom, virulence MR+ EV+5}. It is a quick blade-based artifact and each time hit an enemy, poison resistance is reduced.
+  - A New fixedart: +8 viper's fang {venom, virulence MR+ EV+5}. It is a quick blade-based artifact and each time hit an enemy, poison resistance is reduced.
   
 - 새로운 네임드. 리치베인, 속박을 끊어낸 언데드. 픽다트 언데드헌터를 확정으로 들고 나오는 고대의 영웅 네임드
   - New Orc Unique: Lichbane, the Unchained Undead. A Ancient champion named monster that comes out with an undead Hunter.

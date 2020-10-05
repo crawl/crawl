@@ -1468,14 +1468,14 @@ TILE_EQ:  amulet_of_woe
 SLAY:     27000
 BOOL:     nogen, no_upgrade
 
-ENUM:    VIPERS_PANG
-NAME:    viper's Pang
+ENUM:    VIPERS_FANG
+NAME:    viper's Fang
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
 FB_BRAND: SPWPN_VENOM
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    spwpn_vipers_pang
-TILE_EQ: vipers_pang
+TILE:    spwpn_vipers_fang
+TILE_EQ: vipers_fang
 BRAND:   SPWPN_VENOM
 INSCRIP: virulence
 EV:      5
