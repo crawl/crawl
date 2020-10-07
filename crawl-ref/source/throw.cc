@@ -93,6 +93,7 @@ public:
         if (!action)
             action = make_shared<quiver::action>();
         set_prompt();
+        need_redraw = false; // XX simplify
         if (!action->is_targeted())
             needs_path = MB_FALSE; // should !targeted() imply no path?
         else if (is_pproj_active())
@@ -106,6 +107,14 @@ public:
     virtual vector<string> get_monster_desc(const monster_info& mi) override;
 
     bool targeted() override;
+
+    string get_error() override
+    {
+        if (you.confused())
+            return "You are confused cannot control your aim.";
+        else
+            return targeting_behaviour::get_error();
+    }
 
 public:
     const item_def* active_item();
