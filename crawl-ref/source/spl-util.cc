@@ -1040,6 +1040,49 @@ bool spell_is_form(spell_type spell)
 }
 
 /**
+ * Casting-specific checks that are involved when casting any spell. Includes
+ * MP (which does use the spell level if provided), confusion state, banned
+ * schools.
+ *
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana)
+ * @return           Whether casting is useless
+ */
+bool casting_is_useless(spell_type spell, bool temp)
+{
+    return !casting_uselessness_reason(spell, temp).empty();
+}
+
+/**
+ * Casting-specific checks that are involved when casting any spell. Includes
+ * MP (which does use the spell level if provided), confusion state, banned
+ * schools.
+ *
+ * @param spell      The spell in question.
+ * @param temp       Include checks for volatile or temporary states
+ *                   (status effects, mana)
+ # @return           A reason why casting is useless, or "" if it isn't.
+ */
+string casting_uselessness_reason(spell_type spell, bool temp)
+{
+    if (temp)
+    {
+        if (you.duration[DUR_CONF] > 0)
+            return "you're too confused to cast spells.";
+
+        if (!enough_mp(spell_mana(spell), true, false))
+            return "you don't have enough magic to cast that spell.";
+    }
+
+    // Check for banned schools (Currently just Ru sacrifices)
+    if (cannot_use_schools(get_spell_disciplines(spell)))
+        return "you cannot use spells of this school.";
+
+    return "";
+}
+
+/**
  * This function attempts to determine if a given spell is useless to the
  * player.
  *
@@ -1048,14 +1091,16 @@ bool spell_is_form(spell_type spell)
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ * @param skip_casting_checks true if the spell is evoked or from an innate or
+ *                   divine ability, or if casting checks are carried out
+ *                   already.
  *                   false if it is a spell being cast normally.
  * @return           Whether the given spell has no chance of being useful.
  */
 bool spell_is_useless(spell_type spell, bool temp, bool prevent,
-                      bool fake_spell)
+                      bool skip_casting_checks)
 {
-    return !spell_uselessness_reason(spell, temp, prevent, fake_spell).empty();
+    return !spell_uselessness_reason(spell, temp, prevent, skip_casting_checks).empty();
 }
 
 /**
@@ -1067,7 +1112,9 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent,
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ * @param skip_casting_checks true if the spell is evoked or from an innate or
+ *                   divine ability, or if casting checks are carried out
+ *                   already.
  *                   false if it is a spell being cast normally.
  * @return           The reason a spell is useless to the player, if it is;
  *                   "" otherwise. The string should be a full clause, but
@@ -1075,24 +1122,17 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent,
  *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool fake_spell)
+                                bool skip_casting_checks)
 {
-    if (temp)
+    if (!skip_casting_checks)
     {
-        if (!fake_spell && you.duration[DUR_CONF] > 0)
-            return "you're too confused.";
-        if (!enough_mp(spell_mana(spell), true, false)
-            && !fake_spell)
-        {
-            return "you don't have enough magic.";
-        }
-        if (!prevent && spell_no_hostile_in_range(spell))
-            return "you can't see any targets that would be affected.";
+        string c_check = casting_uselessness_reason(spell, temp);
+        if (!c_check.empty())
+            return c_check;
     }
 
-    // Check for banned schools (Currently just Ru sacrifices)
-    if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
-        return "you cannot use spells of this school.";
+    if (!prevent && temp && spell_no_hostile_in_range(spell))
+        return "you can't see any targets that would be affected.";
 
     // other Ru spells not affected by the school check; handle these separately
     // since they may have other constraints
