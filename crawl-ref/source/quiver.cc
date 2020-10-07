@@ -24,6 +24,7 @@
 #include "spl-damage.h"
 #include "stringutil.h"
 #include "tags.h"
+#include "target.h"
 #include "throw.h"
 
 static int _get_pack_slot(const item_def&);
@@ -501,6 +502,16 @@ namespace quiver
     // pass for one reason or another
     static bool _spell_autotarget_incompatible(spell_type s)
     {
+        // XX perhaps all spells should just use direction chooser target
+        // selection? This is how automagic.lua handled it.
+        auto h = find_spell_targeter(s, 100, LOS_RADIUS); // dummy values
+        // use smarter direction chooser target selection for spells that have
+        // explosition or cloud patterning, like fireball. This allows them
+        // to autoselect targets at the edge of their range, which autofire
+        // wouldn't handle.
+        if (!Options.simple_targeting && h && h->can_affect_outside_range())
+            return true;
+
         switch (s)
         {
         case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
