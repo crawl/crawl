@@ -3532,7 +3532,7 @@ static string _describe_demonspawn_base(int species)
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
     case MONS_TORTUROUS_DEMONSPAWN:
-        return "It menaces with bony spines.";
+        return "It oozes dark energies.";
     }
     return "";
 }
