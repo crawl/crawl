@@ -3,9 +3,28 @@
 -- One-key fighting.
 --
 -- To use this, please bind a key to the following commands:
--- ===hit_closest         (Tab by default)
--- ===hit_closest_nomove  (Shift-Tab by default)
--- ===toggle_autothrow    (not bound by default)
+-- ===hit_closest         (Tab by default)         With autofight_throw = false:
+--                                                   Attack with primary weapon,
+--                                                   moving towards enemy if
+--                                                   needed. If the primary
+--                                                   weapon is ranged, it will
+--                                                   fire. Default.
+--                                                 With autofight_throw = true:
+--                                                   Attack with primary weapon
+--                                                   if within range. Otherwise,
+--                                                   fire quiver action if
+--                                                   possible. If the primary
+--                                                   weapon is melee, this will
+--                                                   fall back on movement on
+--                                                   disabled quiver action.
+-- ===fire_closest        (Shift-tab by default)   Fire the quiver action; never
+--                                                 moves
+-- ===hit_closest_nomove  (not bound by default)   Attack with primary weapon
+--                                                 if within range, fire the
+--                                                 quiver action if not; never
+--                                                 moves
+-- ===toggle_autothrow    (not bound by default)   Switch between the two
+--                                                 behaviors of hit_closest
 --
 -- This uses the very incomplete client monster and view bindings, and
 -- is currently very primitive. Improvements welcome!
@@ -83,7 +102,7 @@ local function have_ranged()
 end
 
 local function have_quiver_action(no_move)
-  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid(1)
+  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid(1) and you.quiver_enabled(1)
 end
 
 local function is_safe_square(dx, dy)
