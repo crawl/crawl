@@ -265,6 +265,7 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
+bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
