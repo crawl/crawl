@@ -3302,6 +3302,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ROLL, "Roll",
+    spschool::earth,
+    spflag::monster,
+    5,
+    0,
+    -1, -1,
+    5, 0,
+    TILEG_ERROR
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

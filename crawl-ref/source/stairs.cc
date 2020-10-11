@@ -794,9 +794,9 @@ void floor_transition(dungeon_feature_type how,
         if (bezotted())
         {
             if (was_bezotted)
-                mpr("Zot already knows this place too well. Flee this branch!");
+                mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
-                mpr("Zot's attention fixes on you again. Flee this branch!");
+                mpr("Zot's attention fixes on you again. Descend or flee this branch!");
         }
         else if (was_bezotted)
         {

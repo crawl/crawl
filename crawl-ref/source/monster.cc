@@ -5731,6 +5731,9 @@ int monster::action_energy(energy_use_type et) const
     if (has_ench(ENCH_SWIFT))
         move_cost -= 3;
 
+    if (has_ench(ENCH_ROLLING))
+        move_cost -= 10;
+
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
 

@@ -3635,6 +3635,9 @@ static bool _monster_move(monster* mons)
             place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
 
+        if (mons->has_ench(ENCH_ROLLING))
+            place_cloud(CLOUD_DUST, mons->pos(), 2, mons);
+
         if (mons->type == MONS_FOXFIRE)
             check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
 

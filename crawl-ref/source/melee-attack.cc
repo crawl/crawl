@@ -670,6 +670,13 @@ bool melee_attack::handle_phase_end()
         mons_do_tendril_disarm();
     }
 
+    if (attacker->alive()
+        && attacker->is_monster()
+        && attacker->as_monster()->has_ench(ENCH_ROLLING))
+    {
+        attacker->as_monster()->del_ench(ENCH_ROLLING);
+    }
+
     return attack::handle_phase_end();
 }
 

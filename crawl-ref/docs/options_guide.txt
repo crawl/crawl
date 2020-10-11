@@ -73,7 +73,7 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status
+                cloud_status, always_show_zot
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1585,6 +1585,10 @@ cloud_status = true
         Whether to show the "Cloud" status light; defaults to true, except if
         playing with tiles, where you can see the cloud on top of you, where it
         defaults to false.
+
+always_show_zot = false
+        Whether to show the "Zot" status light at all times, even when you've
+        got plenty of time left.
 
 3-i     Colours (messages and menus)
 -----------------

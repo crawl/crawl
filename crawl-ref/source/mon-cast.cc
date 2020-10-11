@@ -1841,6 +1841,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
     case SPELL_SPORULATE:
+    case SPELL_ROLL:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6554,6 +6555,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_ROLL:
+        mons->add_ench(ENCH_ROLLING);
+        simple_monster_message(*mons,
+                " curls into a ball and begins rolling!");
+        return;
+
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -7383,6 +7390,10 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::bad();
 
 
+    // Don't use abilities while rolling.
+    if (mon->has_ench(ENCH_ROLLING))
+        return ai_action::impossible();
+
     // Don't try to cast spells at players who are stepped from time.
     if (foe && foe->is_player() && you.duration[DUR_TIME_STEP])
         return ai_action::impossible();
@@ -7824,6 +7835,10 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CHAOS_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
 
+    case SPELL_ROLL:
+        // Don't start rolling if adjacent to your foe.
+        return ai_action::good_or_bad(!mon->get_foe()
+                || !adjacent(mon->pos(), mon->get_foe()->pos()));
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:

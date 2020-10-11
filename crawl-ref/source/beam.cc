@@ -4330,6 +4330,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         {
             if (actor *victim = actor_at(*ai))
             {
+                if (victim == agent())
+                    continue;
+
                 if (you.see_cell(*ai))
                 {
                     mprf("The acid splashes onto %s!",

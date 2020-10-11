@@ -127,7 +127,6 @@ void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
 
-int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
@@ -179,3 +178,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ);
 spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
+
+void okawaru_remove_heroism();
+void okawaru_remove_finesse();

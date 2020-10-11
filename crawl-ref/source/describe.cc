@@ -2183,11 +2183,12 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_WANDS:
+        if (item_type_known(item))
         {
             spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
             description << "\n\nNoise when evoked: " << spell_noise_string(spell);
-            break;
         }
+        break;
 
     case OBJ_SCROLLS:
     case OBJ_ORBS:
@@ -3531,7 +3532,7 @@ static string _describe_demonspawn_base(int species)
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
     case MONS_TORTUROUS_DEMONSPAWN:
-        return "It menaces with bony spines.";
+        return "It oozes dark energies.";
     }
     return "";
 }

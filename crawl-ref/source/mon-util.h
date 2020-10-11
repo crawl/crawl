@@ -274,6 +274,8 @@ int mons_demon_tier(monster_type mc);
 bool mons_class_wields_two_weapons(monster_type mc);
 bool mons_wields_two_weapons(const monster& m);
 bool mons_self_destructs(const monster& m);
+bool mons_blows_up(const monster& m);
+bool mons_destroyed_on_impact(const monster& m);
 
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
@@ -307,7 +309,6 @@ bool mons_class_fast_regen(monster_type mc);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
-bool mons_class_is_hybrid(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);

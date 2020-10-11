@@ -19,7 +19,7 @@ assert(you_x == stair.x and you_y == stair.y,
        "Could not move player " .. dgn.point(you_x, you_y) ..
          " to stair " .. stair)
 
-local monster = test.find_monsters("hippogriff")[1]
+local monster = test.find_monsters("wyvern")[1]
 
 local function monster_pos()
   local p = dgn.point(monster.x, monster.y)

@@ -1860,16 +1860,14 @@ NSUBST: R = R / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 9 then
-MONS:   water moccasin / ice beast / bullfrog / black bear / hippogriff \
-        / crocodile
+MONS:   water moccasin / ice beast / bullfrog / black bear
 MONS:   yak / wyvern / killer bee band
 MONS:   soldier ant / komodo dragon / redback / basilisk / hydra / hornet \
         / manticore / acid dragon / catoblepas
 SUBST:  D = DE, d = *, e = *%, f = %$, ghij= -
 NSUBST: - = 1 / 2=2 / 3=2. / 3. / 4... / .
 :     elseif you.depth() < 12 then
-MONS:   killer bee band / yak / soldier ant / hippogriff / crocodile / wyvern \
-        / komodo dragon
+MONS:   killer bee band / yak / soldier ant / wyvern / komodo dragon
 MONS:   hydra / redback / basilisk / hornet / manticore / acid dragon
 MONS:   catoblepas / fire dragon / wolf spider / ice dragon
 SUBST:  D = DE, e = *, f = *%, g = %$--, hij= -
@@ -1897,7 +1895,7 @@ MONS:   warg
 SUBST:  D = DEFH, f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = 1 / 1. / 4=2 / 5=2. / .
 : elseif you.in_branch("Shoals") then
-MONS:   hippogriff / snapping turtle / manticore
+MONS:   snapping turtle / manticore
 MONS:   harpy / sea snake
 MONS:   alligator snapping turtle
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -

@@ -758,6 +758,6 @@ the target were completely helpless.
 Zot status
 
 You have spent too much time in one branch, allowing the malevolent entity Zot to
-notice you. You will be repeatedly drained as Zot brings its full attention to bear,
-after which it will kill you instantly. Travel to new floors first!
+notice you. If you spend the indicated number of turns in the branch without
+descending to a new floor, Zot will find and consume you.
 %%%%

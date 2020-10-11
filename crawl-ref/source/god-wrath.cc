@@ -1852,7 +1852,7 @@ static const pop_entry pop_qazlal_wrath[] =
 
   {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
   {  2, 10, 50, FLAT, MONS_BASILISK },
-  {  4, 14, 30, FLAT, MONS_CATOBLEPAS },
+  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
 
   { 0,0,0,FLAT,MONS_0 }

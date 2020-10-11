@@ -39,7 +39,9 @@ enum monster_type                      // menv[].type
     MONS_LABORATORY_RAT,
 #endif
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
+#if TAG_MAJOR_VERSION == 34
     MONS_PORCUPINE,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_PALENTONGA,
 #endif
@@ -73,7 +75,9 @@ enum monster_type                      // menv[].type
     MONS_BABY_ALLIGATOR,
 #endif
     MONS_ALLIGATOR,
+#if TAG_MAJOR_VERSION == 34
     MONS_CROCODILE,
+#endif
     MONS_HYDRA,
 #if TAG_MAJOR_VERSION == 34
     MONS_SHEEP,
@@ -88,8 +92,8 @@ enum monster_type                      // menv[].type
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
     MONS_MANTICORE,
-    MONS_HIPPOGRIFF,
 #if TAG_MAJOR_VERSION == 34
+    MONS_HIPPOGRIFF,
     MONS_GRIFFON,
 #endif
 #if TAG_MAJOR_VERSION > 34
@@ -209,8 +213,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BEETLE,
     MONS_BORING_BEETLE,
-    MONS_BOULDER_BEETLE,
 #endif
+    MONS_BOULDER_BEETLE,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEATH_SCARAB,
 #endif

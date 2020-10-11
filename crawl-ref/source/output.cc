@@ -1023,12 +1023,6 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
-// Prints
-// pray, holy, teleport, regen, fly/lev, invis, silence,
-//   conf. touch, sage
-// confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
-//   fast, slow, breath
-//
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
 // using the '@' command. Things like confusion and sticky flame
@@ -1050,7 +1044,7 @@ static void _get_status_lights(vector<status_light>& out)
     const unsigned int important_statuses[] =
     {
         STATUS_ORB,
-        STATUS_BEZOTTED,
+        STATUS_ZOT,
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         STATUS_ALIVE_STATE,
         DUR_PARALYSIS,
