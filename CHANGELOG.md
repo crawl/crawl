@@ -6,7 +6,12 @@
 
 ## [Unreleased]
 ### Added
+- 아티팩트 +6 레후딥의 수정창 {return, throwable Int+3} 복구. 베이스 무기가 수정창으로 바뀌었고, 근접이나 투척으로 둘다 사용할 수 있다. (베이스 데미지 14)
+  - Rollback artefact, the +6 Lehudib's crystal spear {return, throwable Int+3}. The base weapon has been changed to a crystal spear, and can be used both by melee weapon and projectile. (base damage 14)
+
 ### Changed
+
+
 ### Removed
 
 ## [kimchi-1.2] - ~2020-10-04
