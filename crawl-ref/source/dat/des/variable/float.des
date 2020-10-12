@@ -4745,6 +4745,50 @@ MAP
 '''''''''''''''
 ENDMAP
 
+NAME:   gammafunk_boulding_lane
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:8-, Lair, Spider
+ORIENT: float
+ITEM:   pair of boots ego:rampaging ident:all
+ITEM:   pair of boots ego:rampaging good_item ident:all
+ITEM:   pair of boots ego:rampaging randart ident:all
+MONS:   boulder beetle, torpor snail
+: if you.in_branch("D") then
+:     if you.depth() < 11 then
+SUBST:  * = ., D = G
+NSUBST: 1 = 1 / .
+:     elseif you.depth() < 14 then
+SUBST:  d = e, D = G
+NSUBST: 1 = 1 / 1., * = * / .
+:     else
+SUBST:  d = ef, D = 2
+NSUBST: 1 = 2=1 / 1., * = * / *. / .
+:     end
+: elseif you.in_branch("Lair") then
+:     if you.depth() < 4 then
+SUBST:  d = de, D = G
+NSUBST: 1 = 1 / 1. / ., * = *. / .
+:     else
+SUBST:  d = e, D = 2G
+NSUBST: 1 = 1 / 1., * = * / .
+:     end
+: else
+SUBST: d = f, D = 2
+: end
+MARKER: P = lua:transp_loc("boulding_lane_entry")
+MARKER: Q = lua:transp_dest_loc("boulding_lane_entry")
+MARKER: R = lua:transp_loc("boulding_lane_exit")
+MARKER: S = lua:transp_dest_loc("boulding_lane_exit")
+MAP
+.cccccccccc
+...n*1..cGc
+...ndnnn.cccc
+@SPnR1...QlDn@
+...n.nnn.cccc
+...n*1..cGc
+.ccccccccc
+ENDMAP
+
 
 ###############################################################################
 #
