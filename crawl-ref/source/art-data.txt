@@ -655,13 +655,14 @@ BOOL:     tilerim, nogen
 # A play on the spell of the same name. Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
-OBJ:      OBJ_WEAPONS/WPN_SPEAR
+OBJ:      OBJ_WEAPONS/WPN_CRYSTAL_SPEAR
 PLUS:     +6
-COLOUR:   GREEN
+INSCRIP:  throwable
+COLOUR:   WHITE
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BOOL:     nogen
+BRAND:    SPWPN_RETURNING
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass

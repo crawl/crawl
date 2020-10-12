@@ -3103,7 +3103,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     switch (col)
     {
     case WHITE:
-        if (bolt.name == "crystal spear")
+        if (bolt.name == "crystal spear" || (bolt.item && is_unrandom_artefact(*bolt.item, UNRAND_CRYSTAL_SPEAR)))
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;

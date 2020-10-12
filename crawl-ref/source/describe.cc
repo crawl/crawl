@@ -1329,6 +1329,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It warps and distorts space around it. "
                 "Unwielding it can cause banishment or high damage.";
             break;
+        case SPWPN_RETURNING:
+            description += "A skilled user can throw it in such a way "
+                "that it will return to its owner.";
+            break;
         case SPWPN_PENETRATION:
             description += "Ammo fired by it will pass through the "
                 "targets it hits, potentially hitting all targets in "
@@ -1562,6 +1566,10 @@ static string _describe_ammo(const item_def &item)
         const int target_skill = _item_training_target(item);
         const bool could_set_target = _could_set_training_target(item, true);
 
+        if (item.base_type == OBJ_WEAPONS) {
+            description += "It can be used as a throwing weapon as well as a melee weapon.\n";
+        }
+
         description += make_stringf(
             "\nBase damage: %d  Base attack delay: %.1f"
             "\nThis projectile's minimum attack delay (%.1f) "
@@ -1582,7 +1590,10 @@ static string _describe_ammo(const item_def &item)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
-    if (ammo_always_destroyed(item))
+    if (item.base_type == OBJ_WEAPONS) {
+       //no descrition
+    }
+    else if (ammo_always_destroyed(item))
         description += "\n\nIt will always be destroyed on impact.";
     else if (!ammo_never_destroyed(item))
         description += "\n\nIt may be destroyed on impact.";
@@ -2097,6 +2108,9 @@ string get_item_description(const item_def &item, bool verbose,
             need_extra_line = false;
         else
             description << desc;
+        if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR)) {
+            description << _describe_ammo(item);
+        }
         break;
 
     case OBJ_ARMOUR:

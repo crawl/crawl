@@ -684,6 +684,7 @@ static const missile_def Missile_prop[] =
     { MI_BOOMERANG,     "boomerang",     6, 20, 5,  true  },
 };
 
+
 struct food_def
 {
     int         id;
@@ -2104,7 +2105,9 @@ const char *ammo_name(const weapon_type bow)
 // Returns true if item has an associated launcher.
 bool has_launcher(const item_def &ammo)
 {
-    ASSERT(ammo.base_type == OBJ_MISSILES);
+    if(ammo.base_type != OBJ_MISSILES) {
+        return false;
+    }
     return ammo.sub_type != MI_LARGE_ROCK
 #if TAG_MAJOR_VERSION == 34
            && ammo.sub_type != MI_DART
@@ -2117,6 +2120,8 @@ bool has_launcher(const item_def &ammo)
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
+    if (is_unrandom_artefact(wpn, UNRAND_CRYSTAL_SPEAR))
+        return true;
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
@@ -2141,6 +2146,9 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile)
 {
+    if(is_unrandom_artefact(missile, UNRAND_CRYSTAL_SPEAR))
+        return launch_retval::THROWN;
+
     if (missile.base_type != OBJ_MISSILES)
         return launch_retval::FUMBLED;
 
@@ -2679,7 +2687,9 @@ int property(const item_def &item, int prop_type)
 
     case OBJ_MISSILES:
         if (prop_type == PWPN_DAMAGE)
+        {
             return Missile_prop[ Missile_index[item.sub_type] ].dam;
+        }
         break;
 
     case OBJ_STAVES:

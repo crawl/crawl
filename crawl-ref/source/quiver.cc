@@ -13,6 +13,8 @@
 
 #include <algorithm>
 
+#include "artefact.h"
+#include "art-enum.h"
 #include "env.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -506,6 +508,9 @@ static bool _item_matches(const item_def &item, fire_type types,
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;
+
+    if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR))
+        return true;
 
     if (item.base_type != OBJ_MISSILES)
         return false;

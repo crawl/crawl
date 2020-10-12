@@ -8,6 +8,7 @@
 #include "ranged-attack.h"
 
 #include "areas.h"
+#include "art-enum.h"
 #include "chardump.h"
 #include "coord.h"
 #include "english.h"
@@ -69,6 +70,8 @@ int ranged_attack::calc_to_hit(bool random)
 {
     orig_to_hit = attack::calc_to_hit(random);
 
+    if (projectile && is_unrandom_artefact(*projectile, UNRAND_CRYSTAL_SPEAR))
+        orig_to_hit += projectile->plus;
     if (orig_to_hit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
@@ -451,6 +454,27 @@ bool ranged_attack::ignores_shield(bool verbose)
         return true;
     }
     return false;
+}
+
+// Slaying and weapon enchantment. Apply this for slaying even if not
+// using a weapon to attack.
+int ranged_attack::player_apply_slaying_bonuses(int damage, bool aux)
+{
+    int damage_plus = 0;
+    if (!aux && using_weapon())
+        damage_plus = get_weapon_plus();
+    if (you.duration[DUR_CORROSION])
+        damage_plus -= 4 * you.props["corrosion_amount"].get_int();
+    if (projectile && is_unrandom_artefact(*projectile, UNRAND_CRYSTAL_SPEAR))
+        damage_plus += projectile->plus;
+
+    damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
+                                 || (weapon && is_range_weapon(*weapon)
+                                            && using_weapon()));
+
+    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
+                                 : (-random2(1 - damage_plus));
+    return damage;
 }
 
 bool ranged_attack::apply_damage_brand(const char *what)

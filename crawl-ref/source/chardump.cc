@@ -1261,6 +1261,15 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     {
         if (auxtype == OBJ_MISSILES)
             return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
+        else if (subtype >= UNRAND_START)
+        {
+            // Paranoia: an artefact may lose its specialness.
+            const char *tn = get_unrand_entry(subtype)->type_name;
+            if (tn)
+                return uppercase_first(tn);
+            subtype = get_unrand_entry(subtype)->sub_type;
+            return uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
+        }
         else
             return "Other";
     }
