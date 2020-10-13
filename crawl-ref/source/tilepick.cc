@@ -3582,6 +3582,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_GOLEM_FORM;
     case ABIL_BURIALIZE:
         return TILEG_ABILITY_BURIALIZE;
+    case ABIL_MELIAI_SMITE:
+        return TILEG_ABILITY_BEOGH_SMITE;
 
     // Divine abilities
     // Zin
