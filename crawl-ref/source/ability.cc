@@ -363,6 +363,9 @@ static const ability_def Ability_List[] =
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
 
+    { ABIL_MELIAI_SMITE, "Evoke Smite", 0, 0, 100, 0, {fail_basis::xl, 30, 1},
+        abflag::starve_ok | abflag::skill_drain },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -2451,6 +2454,17 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_MELIAI_SMITE:
+        fail_check();
+        if (your_spells(SPELL_SMITING,
+                        you.experience_level * 3,
+                        false, nullptr) == spret::abort)
+        {
+            return spret::abort;
+        }
+        drain_player(10, false, true);
+        break;
+
     case ABIL_CARAVAN_GIFT_ITEM:
     {
         if (!has_mercenaries())
@@ -2819,6 +2833,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
             }
         }
         break;
+
 
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
@@ -4464,7 +4479,8 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_AGRAPHEDE_WEB:
     {
         fail_check();
-        spret success = create_web_trap(fail);
+        int power = 11 + you.skill(SK_INVOCATIONS, 7); //0 ~ 200
+        spret success = create_web_trap(power, fail);
         if(success != spret::abort)
             _pay_poison_cost(abil.ability);
         return success;
@@ -4497,12 +4513,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
     case ABIL_AGRAPHEDE_ENCHANT_POISON:
     {
-        fail_check(); 
-        spret success = poison_brand_weapon(0, fail);
-        mprf("ABIL_AGRAPHEDE_ENCHANT_POISON");
-        if (success != spret::abort)
-            _pay_poison_cost(abil.ability);
-        return success;
+        fail_check();
+        int power = 11 + you.skill(SK_INVOCATIONS, 7); //0 ~ 200
+        you.increase_duration(DUR_ENCHANT_POISON, 8 + roll_dice(2, power), 100);
+        //spret success = poison_brand_weapon(0, fail);
+        _pay_poison_cost(abil.ability);
+        return spret::success;
     }
     case ABIL_AGRAPHEDE_TRAP:
     {
@@ -4960,6 +4976,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_CURSE_WEAPON))
         _add_talent(talents, ABIL_BURIALIZE, check_confused);
+
+    if (you.species == SP_MELIAI)
+        _add_talent(talents, ABIL_MELIAI_SMITE, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

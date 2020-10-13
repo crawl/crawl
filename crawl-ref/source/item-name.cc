@@ -479,7 +479,7 @@ static const char *weapon_brands_terse[] =
 #endif
     "vamp", "pain", "antimagic", "distort",
 #if TAG_MAJOR_VERSION == 34
-    "obsolete", "obsolete",
+    "obsolete", "return",
 #endif
     "chaos",
 #if TAG_MAJOR_VERSION == 34

@@ -18,6 +18,8 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "attack.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -1133,8 +1135,13 @@ void bolt::do_fire()
     if (item && !is_tracer && (flavour == BEAM_MISSILE
                                || flavour == BEAM_VISUAL))
     {
-        const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
+        if (is_unrandom_artefact(*item, UNRAND_CRYSTAL_SPEAR)) {
+
+        } 
+        else {
+            const coord_def diff = target - source;
+            tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
+        }
     }
 #endif
 

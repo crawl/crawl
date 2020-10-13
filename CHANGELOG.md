@@ -6,6 +6,16 @@
 
 ## [Unreleased]
 ### Added
+- 아티팩트 +6 레후딥의 수정창 {return, throwable Int+3} 복구. 베이스 무기가 수정창으로 바뀌었고, 근접이나 투척으로 둘다 사용할 수 있다. (베이스 데미지 14)
+  - Rollback artefact, the +6 Lehudib's crystal spear {return, throwable Int+3}. The base weapon has been changed to a crystal spear, and can be used both by melee weapon and projectile. (base damage 14)
+
+### Changed
+
+
+### Removed
+
+## [kimchi-1.2] - ~2020-10-04
+### Added
 - 새로운 소환의 신 너머의 군단 추가. [상세설명](https://github.com/kimjoy2002/crawl/wiki/legion_from_beyond)
   - New god: Legion from beyond, God of Summonnig.
   
@@ -24,8 +34,8 @@
 - 6레벨 소환/강령 마법, 두건 악귀 소환 추가. 대상에게 음에너지 피해를 주고 준 피해의 일부만큼 시야 안의 살아있는 아군에게 체력회복시키는 악의의 공물(Malign Offering)을 사용한다. 이것은 플레이어의 체력을 회복시킬 수 있다.
   - Added Summon Hooded Malice, level 6 summ/necro spell. Uses a Malign Offering that inflicts negative energy damage to the target and restores health to living allies in the field of view as much as part of the damage dealt. This can restore the player's health.
  
-- 8레벨 부여술 마법, 밀폐 방어막 추가. 사용자의 최대 체력의 절반만큼의 보호막을 만든다. 고통이나 flay를 제외한 모든 데미지를 대신 받는 대신에, 파괴되면 사용자에게 짧은 스턴을 준다.
-  - Added Hermetic Barrier, level 8 charm spell. Create a shield as much as half the player's maximum HP. absorb all damage except torment or flay. Instead, if destroyed, a short stun is applied to the user.
+- 5레벨 부여술 마법, 밀폐 방어막 추가. 사용자의 최대 체력의 절반만큼의 보호막을 만든다. 고통이나 flay를 제외한 모든 데미지를 대신 받는 대신에, 파괴되면 사용자에게 짧은 스턴을 준다.
+  - Added Hermetic Barrier, level 5 charm spell. Create a shield as much as half the player's maximum HP. absorb all damage except torment or flay. Instead, if destroyed, a short stun is applied to the user.
   
 - 6레벨 소환/부여 주문, 활기찬 덩어리 추가. 범위 안의 플레이어 제외 아군 몹에게 턴당 10의 체력을 회복시켜주는 아우라 오브 힐링을 시전함
   - Added Summon Lively Mass, level 6 summon/charm spell. cast aura of healing, which restores 10 per turn to allies monster except players in range.
@@ -36,6 +46,9 @@
 - 새로운 마법책. 아랫것들을 돕는 방법. 수록된 주문: 수호자 골렘 소환, 두건 악귀 소환, 활기찬 덩어리 소환, 투명화, 가속.
   - new spellbook, How To Aid your minions. summon guadian golem, summon hooded malice, summon lively mass, invisibility, haste
 
+- 새로운 한손창, 수정창 추가. 트라이던트와 악마창의 중간급 성능을 지님
+  - Added new one-handed spear. crystal spear. medium spec between the trident and the demon-trident
+
 - 아군을 리콜할 수 있는 Pipe 발동 아이템 추가
   - Added Pipe evokable item that can recall allies
   
@@ -45,13 +58,25 @@
 - 용병을 고용할 수 있는 선술집 상점 추가. 
   - Added a Tavern shop where you can hire mercenaries.
   
+- 새로운 픽다트: +8 독사의 이빨 {venom, virulence MR+ EV+5}. 퀵블레이드 기반의 아티팩트이며 맞은 적의 독저항을 1단계씩 내린다.
+  - A New fixedart: +8 viper's fang {venom, virulence MR+ EV+5}. It is a quick blade-based artifact and each time hit an enemy, poison resistance is reduced.
+  
 - 새로운 네임드. 리치베인, 속박을 끊어낸 언데드. 픽다트 언데드헌터를 확정으로 들고 나오는 고대의 영웅 네임드
   - New Orc Unique: Lichbane, the Unchained Undead. A Ancient champion named monster that comes out with an undead Hunter.
   
 - 새로운 네임드. 추락한 자. 영체구름과 생명력흡수를 사용하는 타락 천사 네임드
   - New Orc Unique: the Fallen. A Profane Servitor named monster that comes out with spectral cloud and life drain
+  
+- 새로운 네임드. 린, 구미호. 뎁스 3층~, 볼트 2층~, 크립트에서 등장. 각종 파괴술을 사용하며 인간 무리와 같이 등장하며 인간들이 사라지면 스피릿폭스의 모습으로 돌아가는 네임드.
+  - New Orc Unique: Rin, the nine-tailed. Appears at Depths:3-, Vaults:2-, Crypt. Unique that uses various conjuration spells, appears with a group of humans, and returns to a sprit fox when humans disappear.
+ 
+- 새로운 미니포탈 골렘제련소 추가. 강철골렘, 수정수호자들과 다양한 골렘들이 나오는 후반 포탈.
+  - Added New mini portal, Golem Forge. a late game portal with iron Golem, Crystal Guardians, and various golems.
 
 ### Changed
+- 머미는 이제 명석함을 지님
+  - Added clarity to mummy
+
 - 히드라가 6개미만의 낮은 머리수일때 회피 보정을 받음
   - Hydra receives evasion bonus when the number of heads is less than 6
 
@@ -59,14 +84,23 @@
   - 천사는 이제 15레벨 이전에 악신들의 징벌을 받지 않는다. Angels are no longer punished by evil gods before level 15.
   - 15레벨부터 선신의 권능들이 강화된다. [상세설명](https://github.com/kimjoy2002/crawl/wiki/angel) From level 15, the powers of good god are strengthened.
   
+- 개화 호문쿨루스 버프. 이제 전투기술과 스펠캐스팅간의 크로스트레이닝을 지님
+  - Buff for blossom homunculus. now has crosstraining between fighting and spellcasting
+  
 - 캐러밴 리워크 Caravan rework
   - 장비 선물 능력에 비용이 사라짐 Give Item to Mercenary ability no longer costs.
   - 용병재고용 능력이 사라짐 remove rehire ability
   - 리콜능력대신 새로운 아이템인 Pipe를 들고 시작함 Start with a new item, Pipe, instead of the recall ability
-  - 마녀 용병에 픽다트 스태프를 허용함 Allows the fixedart staff to witch mercenaries
+  - 마녀 용병에 픽다트 스태프를 허용함 Allows the fixedart staff to witch mercenaries 
 
 - 아티피셔의 로드 오브 스트라이킹을 드는 선택지를 추가함
   - Adds a choice that picks up the rod of strike of an artificer
+  
+- 수집가 리워크 Collector rework
+  - 수집가는 이제 2가지 시작 옵션을 지님. 콜렉션스크롤과 위시스크롤. Collector now has 2 starting options, collection scroll and wish scroll
+  - 콜렉션스크롤은 기존의 옵션이며 리롤버튼이 추가됨 Collection scroll is an old option and a reroll has been added.
+  - 위시스크롤은 직접 픽다트를 타이핑해서 얻을 수 있음. 대신 신앙을 얻기전까진 사용할 수 없음 wish scroll can be typed to get fixdart. instead, cannot use it until gain religion.
+  - 무기를 선택하여 시작하도록 버프 buff to start by choosing a weapon
 
 - 트로그의 마법책 불태우기 롤백
   - Rollback Trog burning spellbooks
@@ -76,6 +110,9 @@
   
 - 베오그의 아이템 선물의 제한이 제거됨. 대신 저항공유 권능이 사라짐
   - beogh do not restrict number of gifts to orcish follower and make not sharing resistance anymore.
+
+- 투사체(화살, 볼트, 슬링탄환)들이 이제 3배로 등장함
+  - Projectiles (arrows, bolts, sling bullets) now appear tripled
 
 - 추방이 경험치를 100% 주도록 변경
   - Give full XP from banishment
@@ -87,10 +124,12 @@
   - add donald speak for new gods
   
 - 미니 볼트 추가 및 복구 add and rollback mini vault
-  - ukdong_guarded_unrand_jaws, unrand_golem_armour, UK_legion_uncontrolledarena, , gammafunk_pakellas_cloud_experiment, gammafunk_pakellas_statue_experiment, gammafunk_pakellas_spire_experiment, gammafunk_pakellas_its_alive
+  - ukdong_guarded_unrand_jaws, unrand_golem_armour, UK_legion_uncontrolledarena, gammafunk_pakellas_cloud_experiment, gammafunk_pakellas_statue_experiment, gammafunk_pakellas_spire_experiment, gammafunk_pakellas_its_alive... etc
   
 ### Removed
-### 0.26 Featrue
+
+- 독선 마법 제거
+ - remove poison gland spell
 
 ## [kimchi-1.1] - ~2020-08-21
 ### Added
@@ -438,6 +477,7 @@
 - 헤일스톰추가 Added Hailstorm
 - 냉기술사의 기본책은 이제 예전버전과 최신버전을 고를 수 있음 Ice elementalist chooses old or new spell set.
   
-[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.1.1...HEAD  
+[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.2.0...HEAD  
+[kimchi-1.2]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.2.0
 [kimchi-1.1]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.1.1
 [kimchi-1.0]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.0.1

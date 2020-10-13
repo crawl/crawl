@@ -6942,7 +6942,7 @@ void monster::rin_shapeshift()
         mon_enchant_list old_ench = enchantments;
         FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
         int8_t old_ench_countdown = ench_countdown;
-        string old_name = mname;
+        string old_name = name(DESC_THE);
 
         type = swap_type;
         define_monster(*this);

@@ -3103,7 +3103,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     switch (col)
     {
     case WHITE:
-        if (bolt.name == "crystal spear")
+        if (bolt.name == "crystal spear" || (bolt.item && is_unrandom_artefact(*bolt.item, UNRAND_CRYSTAL_SPEAR)))
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
             return TILE_BOLT_FROST;
@@ -3582,6 +3582,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_GOLEM_FORM;
     case ABIL_BURIALIZE:
         return TILEG_ABILITY_BURIALIZE;
+    case ABIL_MELIAI_SMITE:
+        return TILEG_ABILITY_BEOGH_SMITE;
 
     // Divine abilities
     // Zin

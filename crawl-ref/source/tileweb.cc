@@ -1078,7 +1078,7 @@ void TilesFramework::_send_player(bool force_full)
     }
     
     if(you.second_weapon()){
-        if (you.weapon()->base_type == OBJ_WEAPONS) {
+        if (you.second_weapon()->base_type == OBJ_WEAPONS) {
             int second_weapon_plus = you.second_weapon()->plus;
             if (you.duration[DUR_CORROSION])
                 second_weapon_plus -= 4 * you.props["corrosion_amount"].get_int();

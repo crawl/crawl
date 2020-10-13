@@ -99,6 +99,12 @@ The projectiles shot by foes who are not adjacent to the shield are blocked.
 The durability of the shield depends on your Shield skill and the enchant 
 value of it.
 %%%%
+Evoke Smite ability
+
+Smites any targeted enemy within sight, with no direct line of fire required.
+The strength of the smiting is increased by Experience level.
+This ability causing drain yourself.
+%%%%
 Exsanguinate ability
 
 Removes all of your blood, transitioning to a bloodless state.

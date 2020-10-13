@@ -50,6 +50,8 @@ fake_mutations:
   - long: "You are vulnerable to poison."
     short: poison vulnerability
   - long: "You have no legs."
+  - long: "You can use the power of Primitive religion to smite enemies."
+    short: can smiting
 recommended_jobs:
   - JOB_ASSASSIN
   - JOB_GLADIATOR

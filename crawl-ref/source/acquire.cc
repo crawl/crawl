@@ -1770,17 +1770,18 @@ static string _hyphenated_letters(int how_many, char first)
 void AcquireMenu::update_help()
 {
     string top_line = string(80, ' ') + '\n';
-
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "%s  [%s] %s  [<w>R</w>] reroll\n"
+        "%s  [%s] %s %s\n"
         "[Esc/R-Click] exit",
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
         "[<w>!</w>] acquire|<w>examine</w> items",
         _hyphenated_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
-        : "examine item")));
+        : "examine item",
+        collector? "[<w>R</w>] reroll":""
+    )));
 }
 
 static void _create_acquirement_item(item_def& item, bool collector)
@@ -1911,14 +1912,16 @@ bool AcquireMenu::process_key(int keyin)
         return true;
     case 'R':
     {
-        clear();
-        _set_acquirement_items(true);
-        acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
-        init_entries();
-        update_menu(true);
-        update_help();
-        update_more();
-        return true;
+        if (collector) {
+            clear();
+            _set_acquirement_items(true);
+            acq_items = you.props[COLLECTOR_ITEMS_KEY].get_vector();
+            init_entries();
+            update_menu(true);
+            update_help();
+            update_more();
+            return true;
+        }
     }
     default:
         break;

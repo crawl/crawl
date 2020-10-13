@@ -2625,6 +2625,7 @@ const set<spell_type> removed_spells =
     SPELL_CURE_POISON,
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DELAYED_FIREBALL,
+    SPELL_POISON_GLAND
 #endif
 };
 

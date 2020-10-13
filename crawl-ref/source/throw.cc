@@ -685,8 +685,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         }
     }
 
-    returning = item.base_type == OBJ_MISSILES
-                && item.sub_type == MI_BOOMERANG;
+    returning = (item.base_type == OBJ_MISSILES
+                && item.sub_type == MI_BOOMERANG)
+                || is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR);
 
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
@@ -958,7 +959,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     }
     case launch_retval::THROWN:
         practise_throwing((missile_type)wepType);
-        count_action(CACT_THROW, wepType, OBJ_MISSILES);
+        if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR)) {
+            count_action(CACT_THROW, item.unrand_idx);
+        }
+        else {
+            count_action(CACT_THROW, wepType, OBJ_MISSILES);
+        }
         break;
     case launch_retval::FUMBLED:
         break;
@@ -987,6 +993,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.loudness = item.base_type == OBJ_MISSILES
                    ? ammo_type_damage(item.sub_type) / 3
                    : 0; // Maybe not accurate, but reflects the damage.
+
+    if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR)) {
+        pbolt.loudness = 3;
+    }
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.

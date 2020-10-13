@@ -245,6 +245,7 @@ enum tag_minor_version
     TAG_MINOR_PIPE,                // Add pipe item
     TAG_MINOR_VALOR,               // Add highst charm book
     TAG_MINOR_AID,                 // Add BOOK_AID
+    TAG_MINOR_GOLEM_BUG,            // Add GOLEM_BUG
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

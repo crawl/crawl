@@ -856,7 +856,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         dam = max(0, do_shave_damage(dam));
     }
 
-    if (have_passive(passive_t::agraphede_poison_shield)
+    if (have_passive(passive_t::agraphede_poison_entomoplatelet)
         && death_type != KILLED_BY_POISON
         && you_worship(GOD_AGRAPHEDE)
         && dam != INSTANT_DEATH

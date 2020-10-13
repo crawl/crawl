@@ -655,13 +655,14 @@ BOOL:     tilerim, nogen
 # A play on the spell of the same name. Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
-OBJ:      OBJ_WEAPONS/WPN_SPEAR
+OBJ:      OBJ_WEAPONS/WPN_CRYSTAL_SPEAR
 PLUS:     +6
-COLOUR:   GREEN
+INSCRIP:  throwable
+COLOUR:   WHITE
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BOOL:     nogen
+BRAND:    SPWPN_RETURNING
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
@@ -1129,15 +1130,6 @@ TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
 BOOL:     nogen, no_upgrade
 
-ENUM:     AMULET_OF_WOE
-NAME:     Amulet of Woe
-OBJ:      OBJ_JEWELLERY/AMU_NOTHING
-COLOUR:   ETC_BLOOD
-TILE:     urand_amulet_of_woe
-TILE_EQ:  amulet_of_woe
-SLAY:     27000
-BOOL:     nogen, no_upgrade
-
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
 PLUS:     +4
@@ -1467,6 +1459,29 @@ TILE_EQ: golem_helmet
 STEALTH: -1
 INSCRIP: parts
 BOOL:    poison, elec
+
+ENUM:     AMULET_OF_WOE
+NAME:     Amulet of Woe
+OBJ:      OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:   ETC_BLOOD
+TILE:     urand_amulet_of_woe
+TILE_EQ:  amulet_of_woe
+SLAY:     27000
+BOOL:     nogen, no_upgrade
+
+ENUM:    VIPERS_FANG
+NAME:    viper's Fang
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+FB_BRAND: SPWPN_VENOM
+PLUS:    +8
+COLOUR:  ETC_POISON
+TILE:    spwpn_vipers_fang
+TILE_EQ: vipers_fang
+BRAND:   SPWPN_VENOM
+INSCRIP: virulence
+EV:      5
+MAGIC:   1
+VALUE:   600
 
 # This entry must always be last.
 ENUM:   DUMMY2

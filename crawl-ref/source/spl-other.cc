@@ -948,6 +948,7 @@ static bool _find_web_target(coord_def& target, targeter* hitfunc = nullptr)
         // query for location {dlb}:
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE;
         args.needs_path = false;
         args.top_prompt = "Create where?";
         args.hitfunc = hitfunc;
@@ -974,14 +975,6 @@ static bool _find_web_target(coord_def& target, targeter* hitfunc = nullptr)
             continue;
         }
 
-        monster* target_mons = monster_at(beam.target);
-        if (target_mons && you.can_see(*target_mons))
-        {
-            mprf("You can't place the web onto %s!",
-                target_mons->name(DESC_THE).c_str());
-            continue;
-        }
-
         if (!you.see_cell_no_trans(beam.target))
         {
             clear_messages();
@@ -997,7 +990,7 @@ static bool _find_web_target(coord_def& target, targeter* hitfunc = nullptr)
     }
 }
 
-spret create_web_trap(bool fail)
+spret create_web_trap(int power, bool fail)
 {
     static const set<dungeon_feature_type> safe_tiles =
     {
@@ -1022,13 +1015,48 @@ spret create_web_trap(bool fail)
 
     if (!safe_tiles.count(grd(target)) || feat_is_trap(grd(target)))
     {
-
         mpr("You cannot place the web here.");
         return spret::abort;
     }
 
-    place_specific_trap(target, TRAP_WEB);
-    trap_at(target)->reveal();
+    //power 11 ~ 200
+    int web_hp = 1 + random2(2 + power/40); //min 1~2, max 1~7
+    int wep_hit = 10 + power / 10; //11 ~ 30
+    monster* m = monster_at(target);
+    if (m && you.can_see(*m))
+    {
+        if (m->is_web_immune())
+        {
+            if (m)
+            {
+                if (m->is_insubstantial())
+                    simple_monster_message(*m, " passes through a web.");
+                else if (mons_genus(m->type) == MONS_JELLY)
+                    simple_monster_message(*m, " oozes through a web.");
+            }
+        }
+        else if (random2(m->evasion()) > wep_hit) {
+            simple_monster_message(*m, " evades a web.");
+        }
+        else {
+            if (m->visible_to(&you))
+                simple_monster_message(*m, " is caught in a web!");
+            else
+                mpr("A web moves frantically as something is caught in it!");
+
+            // If somehow already caught, make it worse.
+            m->add_ench(ENCH_HELD);
+
+            // Don't try to escape the web in the same turn
+            m->props[NEWLY_TRAPPED_KEY] = true;
+            web_hp--;
+        }
+    }
+
+    if (web_hp > 0) {
+        place_specific_trap(target, TRAP_WEB, web_hp);
+        trap_at(target)->reveal();
+    }
 
     return spret::success;
 }

@@ -284,7 +284,7 @@ enum class passive_t
     /// Poison resistance disappears
     agraphede_anti_poison_resist,
     /// Converts the received damage to a certain percentage poison.
-    agraphede_poison_shield,
+    agraphede_poison_entomoplatelet,
     /// Get Regen while poisoned
     agraphede_poison_regen,
     /// Deprived of poison resistance of enemies in sight

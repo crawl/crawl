@@ -1036,6 +1036,22 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
         x = DNGN_ENTER_GAUNTLET;
 #endif
 
+    if (minor_version == TAG_MINOR_AID) {
+        //fixed force
+        if (x == DNGN_EXIT_ZIGGURAT) {
+            x = DNGN_ENTER_GOLEM;
+        }
+        else if (x == DNGN_ALTAR_QAZLAL) {
+            x = DNGN_EXIT_GOLEM;
+        }
+        else if (x > DNGN_ALTAR_QAZLAL) {
+            x = static_cast<dungeon_feature_type>(x - 2);
+        }
+        else if (x > DNGN_EXIT_ZIGGURAT) {
+            x = static_cast<dungeon_feature_type>(x - 1);
+        }
+    }
+
     return x;
 }
 
