@@ -81,43 +81,75 @@
 #include "unicode.h"
 #include "view.h"
 
+/// \brief Ability masks
+/// \details Bitmasks for the cost of an ability
 enum class abflag
 {
-    none                = 0x00000000,
-    breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    delay               = 0x00000002, // ability has its own delay
-    pain                = 0x00000004, // ability must hurt player (ie torment)
-    piety               = 0x00000008, // ability has its own piety cost
-    exhaustion          = 0x00000010, // fails if you.exhausted
-    instant             = 0x00000020, // doesn't take time to use
-    conf_ok             = 0x00000040, // can use even if confused
-    variable_mp         = 0x00000080, // costs a variable amount of MP
-    remove_curse_scroll = 0x00000100, // Uses ?rc
-    skill_drain         = 0x00000200, // drains skill levels
-    gold                = 0x00000400, // costs gold
-    sacrifice           = 0x00000800, // sacrifice (Ru)
-    hostile             = 0x00001000, // failure summons a hostile (Makhleb)
-    berserk_ok          = 0x00002000, // can use even if berserk
-    card                = 0x00004000, // deck drawing (Nemelex)
+    none                = 0x00000000, ///< Clears all ability bit flags
+    breath              = 0x00000001, ///< The ability uses
+                                      ///      \ref DUR_BREATH_WEAPON
+    delay               = 0x00000002, ///< It has its own delay
+    pain                = 0x00000004, ///< It must hurt the player (ie torment)
+    piety               = 0x00000008, ///< It has its own piety cost
+    exhaustion          = 0x00000010, ///< It fails if you.exhausted
+    instant             = 0x00000020, ///< It doesn't take time to use
+    conf_ok             = 0x00000040, ///< Can use it even if confused
+    variable_mp         = 0x00000080, ///< It costs a variable amount of MP
+    remove_curse_scroll = 0x00000100, ///< It uses remove curse scroll (?rc)
+    skill_drain         = 0x00000200, ///< It drains skill levels
+    gold                = 0x00000400, ///< It costs gold
+    sacrifice           = 0x00000800, ///< It is a sacrifice (Ru)
+    hostile             = 0x00001000, ///< Failure summons a hostile (Makhleb)
+    berserk_ok          = 0x00002000, ///< Can use it even if berserk
+    card                = 0x00004000, ///< It draws from a deck (Nemelex)
 };
+/// \brief   Ability flags
+/// \details Bit flags for the properties of an ability. See \ref abflag
 DEF_BITFIELD(ability_flags, abflag);
 
+/// \brief Generator of random ability costs
+/// \details Each cost is the average of n random integers, rounded down.
+/// Each integer is drawn from the uniform distribution on the interval
+/// [base, base + add). If n is high, the costs are likely close to the
+/// average, which is base + 0.5 * add.
+/// \pre Assumes base >= 0, add >= 0, and rolls >= 1
 struct generic_cost
 {
-    int base, add, rolls;
+    int base,  ///< base is the minimal possible cost.
+        add,   ///< (base + add - 1) is the maximal possible cost.
+        rolls; ///< Number of integers to draw for each ability cost
 
+    /// \brief Converts an integer to a generator of random costs
+    /// \details If num > 0, each cost is drawn from the uniform
+    /// distribution on the interval [num, num * 3 / 2). If num is 0, the
+    /// costs are always 0.
+    /// \pre Assumes num >= 0
     generic_cost(int num)
         : base(num), add(num == 0 ? 0 : (num + 1) / 2 + 1), rolls(1)
     {
     }
+
+    /// Construct from \ref base, \ref add, and \ref roll
     generic_cost(int num, int _add, int _rolls = 1)
         : base(num), add(_add), rolls(_rolls)
     {
     }
+    /// \brief Create a generator of constant cost
+    /// \details The generator would always yield the same fixed cost.
+    /// \param fixed The fixed cost.
     static generic_cost fixed(int fixed)
     {
         return generic_cost(fixed, 0, 1);
     }
+    /// \brief Create a generator of random costs ranging from low to high
+    /// \details Each cost is the average of _roll random integers, rounded
+    /// down. Each integer is drawn from the uniform distribution on the
+    /// interval [low, high]. If n is high, the costs are likely close to the
+    /// average, which is 0.5 * (low + high).
+    /// \param low    The lowest possible cost
+    /// \param high   The highest possible cost
+    /// \param _rolls Number of integer to draw for each cost
+    /// \pre Assumes high >= low >= 0, and _rolls >= 1
     static generic_cost range(int low, int high, int _rolls = 1)
     {
         return generic_cost(low, high - low + 1, _rolls);
@@ -125,15 +157,32 @@ struct generic_cost
 
     int cost() const PURE;
 
+    /// Can we get a variety of costs?
     operator bool () const { return base > 0 || add > 0; }
 };
 
+/// \brief Relative or absolute HP cost of an ability
+/// \details A class for relative or absolute hp cost of an ability. Also a
+/// name space for helper functions for specifying hp cost in the \ref
+/// Ability_List.
+/// \warning HP cost in the \ref Ability_List should not be negative integer.
 struct scaling_cost
 {
-    int value;
+    int value; ///< Stores \ref permille
 
+    /// Converts integer hp costs in the the \ref Ability_List
+    /// \param permille
+    /// - If positive, permille is the relative hp cost of the ability. The
+    ///   unit is per million of max_hp. Each use of the ability would cost
+    ///   max_hp * value / 1000, rounded up.
+    /// - If negative, -permille is the absolute hp cost of the ability.
+    ///   Each use of the ability would cost -value hp.
     scaling_cost(int permille) : value(permille) {}
 
+    /// \brief Specifies an absolute hp cost in the \ref Ability_List
+    /// \details The ability always cost an amount of hp equal to the
+    ///     fixed parameter, regardless of the max hp.
+    /// \param fixed The absolute hp cost
     static scaling_cost fixed(int fixed)
     {
         return scaling_cost(-fixed);
@@ -141,15 +190,16 @@ struct scaling_cost
 
     int cost(int max) const;
 
+    /// Is the hp cost 0?
     operator bool () const { return value != 0; }
 };
 
 /// What affects the failure chance of the ability?
 enum class fail_basis
 {
-    xl,
-    evo,
-    invo,
+    xl,   ///< Experience level (XL)
+    evo,  ///< Evocation skill level
+    invo, ///< Invocation skill level
 };
 
 /**
@@ -262,12 +312,30 @@ static spret _do_ability(const ability_def& abil, bool fail);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
-// The description screen was way out of date with the actual costs.
-// This table puts all the information in one place... -- bwr
-//
-// The four numerical fields are: MP, HP, food, and piety.
-// Note:  piety_cost = val + random2((val + 1) / 2 + 1);
-//        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
+/// \brief Ability List
+/// \details The three numerical fields are MP, HP, and piety.
+/// - MP:
+///     - 0 means the abilty doesn't cost MP.
+///     - Integer value X means the ability costs X MP.
+/// - HP:
+///     - 0 means the abilty doesn't cost HP.
+///     - Integer value means per-mil of max HP (i.e. 20 = 2% of max HP,
+///       rounded up).
+///     - \ref scaling_cost::fixed(Y) means the ability costs Y HP.
+///     - Don't use a negative integer. See \ref scaling_cost
+/// - Piety:
+///     - 0 means the abilty doesn't cost Piety.
+///     - Positve integer X means the piety cost is a random integer, drawn
+///       from a uniform distribution on the interval [X, (X + 1) * 3 / 2).
+///       The exact formula is: piety_cost = X + random2((X + 1) / 2 + 1).
+///       See \ref random2.
+///     - \ref generic_cost::range (low, high) means the piety cost is a
+///       random integer, drawn from a uniform distribution on the
+///       interval [low, high]. Assumes high > low >= 0.
+///     - \ref generic_cost::fixed(Y) means the ability always costs Y mp.
+///
+/// \note The description screen was way out of date with the actual costs.
+///       This table puts all the information in one place... -- bwr
 static const ability_def Ability_List[] =
 {
     // NON_ABILITY should always come first
@@ -916,6 +984,12 @@ static const string _detailed_cost_description(ability_type ability)
     return ret.str();
 }
 
+/// \brief Suppress or replace an ability if the player can't use it now
+/// \param ability The ability
+/// \return
+/// - Return the same ability if the ability is usable now.
+/// - Return ABIL_NON_ABILITY if the ability is unusable now.
+/// - Another ability if the ability should be replaced.
 ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
@@ -3844,11 +3918,21 @@ int abil_skill_weight(ability_type ability)
 ////////////////////////////////////////////////////////////////////////
 // generic_cost
 
+/// \brief Randomly choose a cost
+/// \details The cost is the average of \ref rolls random integers, rounded
+/// down. Each integer is drawn from the uniform distribution on the interval
+/// [base, base + add). If \ref rolls is high, the costs are likely close to
+/// the average, which is base + 0.5 * add.
 int generic_cost::cost() const
 {
     return base + (add > 0 ? random2avg(add, rolls) : 0);
 }
 
+/// \brief Calculate the absolute hp cost
+/// \details
+/// - If value >= 0, the absolute hp cost is max * value / 1000, rounded up.
+/// - If value < 0, the absolute hp cost is -value.
+/// \param max The maximal hp
 int scaling_cost::cost(int max) const
 {
     return (value < 0) ? (-value) : ((value * max + 500) / 1000);
