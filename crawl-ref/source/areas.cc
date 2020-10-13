@@ -28,6 +28,7 @@
 #include "traps.h"
 #include "travel.h"
 
+/// Bitmasks for area properties
 enum class areaprop
 {
     sanctuary_1   = (1 << 0),
@@ -36,14 +37,16 @@ enum class areaprop
     halo          = (1 << 3),
     liquid        = (1 << 4),
     actual_liquid = (1 << 5),
-    orb           = (1 << 6),
+    orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
-    quad          = (1 << 8),
+    quad          = (1 << 8), ///< Multiplies damage you do by 4
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
 };
+/// Bit field for the area properties
 DEF_BITFIELD(areaprops, areaprop);
 
+/// Center of an area effect
 struct area_centre
 {
     area_centre_type type;
@@ -55,10 +58,15 @@ struct area_centre
 
 typedef FixedArray<areaprops, GXM, GYM> propgrid_t;
 
+/// The area center cache. Contains centers of all area effects.
 static vector<area_centre> _agrid_centres;
 
-static propgrid_t _agrid;
+static propgrid_t _agrid; ///< The area grid cache
+/// \brief Is the area grid cache up-to-date?
+/// \details If false, each check for area effects that affect a coordinate
+/// would trigger an update of the area grid cache.
 static bool _agrid_valid = false;
+/// \brief If true, the level has no area effect
 static bool no_areas = false;
 
 static void _set_agrid_flag(const coord_def& p, areaprop f)
@@ -71,6 +79,18 @@ static bool _check_agrid_flag(const coord_def& p, areaprop f)
     return bool(_agrid(p) & f);
 }
 
+/// \brief Invalidate the area effect cache
+/// \details After calling this function, next check (of a coordinate for
+/// area effects) may trigger a re-calculation (of the caches by checking the
+/// player and all monsters for area effects). If \p recheck_new is true,
+/// next check will always trigger the re-calculation. Otherwise, next check
+/// will trigger the re-calculation only if the cache believes the level has
+/// existing area effects.
+/// \param recheck_new
+/// - If true, next check will always trigger a re-calculation. Use this if we
+///   have just created a new area effect.
+/// - If false, next check will trigger a re-calculation only if the level
+///   has existing area effects.
 void invalidate_agrid(bool recheck_new)
 {
     _agrid_valid = false;
@@ -91,6 +111,11 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     }
 }
 
+/// \brief Add some of the actor's area effects to the grid and center caches
+/// \param actor The actor
+/// \details Adds an actor's silence, halo, liquidation, and umbra effect to
+/// the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
+/// Also updates the \ref no_areas flag if the actor causes those effects.
 static void _actor_areas(actor *a)
 {
     int r;
@@ -156,8 +181,8 @@ static void _update_agrid()
         return;
     }
 
-    _agrid.init(areaprops());
-    _agrid_centres.clear();
+    _agrid.init(areaprops());  // Set all cells of _agrid to 0
+    _agrid_centres.clear();  // Clear the vector of centers of area effects
 
     no_areas = true;
 
@@ -507,6 +532,7 @@ int monster::silence_radius() const
     return _shrinking_aoe_range(moddur);
 }
 
+/// Check if a coordinate is silenced
 bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
