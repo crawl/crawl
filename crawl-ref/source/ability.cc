@@ -363,8 +363,8 @@ static const ability_def Ability_List[] =
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
 
-    { ABIL_MELIAI_SMITE, "Evoke Smite", 0, 0, 100, 0, {fail_basis::xl, 30, 1},
-        abflag::starve_ok | abflag::skill_drain },
+    { ABIL_MELIAI_SMITE, "Invoke Smite", 0, 0, 100, 0, {fail_basis::xl, 30, 1},
+        abflag::skill_drain },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
