@@ -942,12 +942,14 @@ static coord_def _dgn_find_nearest_square(
     function<bool (const coord_def &)> acceptable,
     function<bool (const coord_def &)> traversable = nullptr)
 {
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
 
     vector<coord_def> points[2];
     int iter = 0;
     points[iter].push_back(pos);
 
+    // TODO: Deduplicate this BFS code (see commit for other two instances).
     while (!points[iter].empty())
     {
         // Iterate each layer of BFS in random order to avoid bias.
@@ -957,22 +959,18 @@ static coord_def _dgn_find_nearest_square(
             if (p != pos && acceptable(p))
                 return p;
 
-            travel_point_distance[p.x][p.y] = 1;
-            for (int yi = -1; yi <= 1; ++yi)
-                for (int xi = -1; xi <= 1; ++xi)
-                {
-                    if (!xi && !yi)
-                        continue;
+            visited[p.x][p.y] = true;
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                const coord_def np = p + coord_def(ai->x, ai->y);
+                if (!in_bounds(np) || visited[np.x][np.y])
+                    continue;
 
-                    const coord_def np = p + coord_def(xi, yi);
-                    if (!in_bounds(np) || travel_point_distance[np.x][np.y])
-                        continue;
+                if (traversable && !traversable(np))
+                    continue;
 
-                    if (traversable && !traversable(np))
-                        continue;
-
-                    points[!iter].push_back(np);
-                }
+                points[!iter].push_back(np);
+            }
         }
 
         points[iter].clear();

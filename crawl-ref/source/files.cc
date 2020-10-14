@@ -1225,7 +1225,9 @@ static void _grab_followers()
         }
     }
 
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
+
     vector<coord_def> places[2] = { { you.pos() }, {} };
     int place_set = 0;
     while (!places[place_set].empty())
@@ -1234,10 +1236,10 @@ static void _grab_followers()
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if (travel_point_distance[ai->x][ai->y])
+                if (visited[ai->x][ai->y])
                     continue;
 
-                travel_point_distance[ai->x][ai->y] = 1;
+                visited[ai->x][ai->y] = true;
                 if (_grab_follower_at(*ai, can_follow))
                     places[!place_set].push_back(*ai);
             }
