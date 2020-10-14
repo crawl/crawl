@@ -103,7 +103,11 @@ Invoke Smite ability
 
 Smites any targeted enemy within sight, with no direct line of fire required.
 The strength of the smiting is increased by Experience level.
-This ability causing drain yourself.
+This ability causing drain yourself. {{
+    if you.god() == "Trog" then
+        return "As a worshipper of Trog, you can invoke smite while berserk."
+    end
+}}
 %%%%
 Exsanguinate ability
 

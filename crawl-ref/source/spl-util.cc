@@ -1149,7 +1149,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can't see any valid targets.";
     }
 
-    if (you_worship(GOD_TROG))
+    if (you_worship(GOD_TROG) && spell != SPELL_SMITING)
     {
         return "you don't and can't cast any spell.";
     }
@@ -1157,6 +1157,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     // Check for banned schools (Currently just Ru sacrifices)
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
+
+    if (you.species == SP_MELIAI)
+    {
+        if (spell == SPELL_LEDAS_LIQUEFACTION)
+           return "you can't cast this while perpetually flying.";
+    }
 
     if (you.species == SP_DJINNI)
     {
