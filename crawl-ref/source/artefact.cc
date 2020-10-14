@@ -1014,6 +1014,13 @@ void artefact_known_properties(const item_def &item,
     }
 }
 
+/// \brief Look up all artefact properties of an artefact
+/// \param item The artefact
+/// \param[out] proprt Vector of values of all artefact properties.
+/// \p proprt[prop] is same as \ref artefact_property (\p item, prop).
+/// \note Checks if \p item is an artefact and if the artefact is unrandom or
+/// has artefact properties. Failing these checks would lead to run time error.
+/// \see \ref artefact_property
 void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt)
 {
@@ -1040,6 +1047,17 @@ void artefact_properties(const item_def &item,
     }
 }
 
+/// \brief Look up an artefact property of an artefact
+/// \param item The artefact
+/// \param prop The property
+/// \return Value of the property. The type of the value is specified in
+/// artp_data[\p prop].value_types, which can be a bool, positive integer,
+/// brand, or integer. The interpretation of the value depends on the
+/// property and can be found in art-data.txt. See \ref artp_data and
+/// \ref artp_value_type.
+/// \note Checks if \p item is an artefact and if the artefact have the
+/// property. Failing these checks would lead to run time error.
+/// \see \ref artefact_properties, a function to get all artefact properties.
 int artefact_property(const item_def &item, artefact_prop_type prop)
 {
     ASSERT(is_artefact(item));
