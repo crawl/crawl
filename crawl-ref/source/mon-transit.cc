@@ -406,8 +406,10 @@ void handle_followers(const coord_def &from,
     vector<coord_def> places[2];
     int place_set = 0;
 
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
+
     places[place_set].push_back(from);
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
         for (const coord_def p : places[place_set])
@@ -415,11 +417,11 @@ void handle_followers(const coord_def &from,
             for (adjacent_iterator ai(p); ai; ++ai)
             {
                 if ((*ai - from).rdist() > radius
-                    || travel_point_distance[ai->x][ai->y])
+                    || visited[ai->x][ai->y])
                 {
                     continue;
                 }
-                travel_point_distance[ai->x][ai->y] = 1;
+                visited[ai->x][ai->y] = true;
 
                 bool real_follower = false;
                 if (handler(*ai, from, real_follower))

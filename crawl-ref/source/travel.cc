@@ -116,7 +116,7 @@ static string trans_travel_dest;
 travel_distance_grid_t travel_point_distance;
 
 // Apply slime wall checks when checking if squares are travelsafe.
-bool g_Slime_Wall_Check = true;
+static bool g_Slime_Wall_Check = true;
 
 static uint8_t curr_waypoints[GXM][GYM];
 
