@@ -303,22 +303,9 @@ windowmanager-sdl.o \
 glwrapper-ogl.o \
 fontwrapper-ft.o
 
-TEST_OBJECTS = \
-catch2-tests/test_branch.o \
-catch2-tests/test_describe.o \
-catch2-tests/test_english.o \
-catch2-tests/test_files.o \
-catch2-tests/test_items.o \
-catch2-tests/test_mon-util.o \
-catch2-tests/test_ng-init-branches.o \
-catch2-tests/test_player.o \
-catch2-tests/test_player_fixture.o \
-catch2-tests/test_randbook.o \
-catch2-tests/test_species.o \
-catch2-tests/test_tags.o \
-catch2-tests/test_ui.o \
-catch2-tests/test_viewmap.o \
-catch2-tests/test_spl-util.o
+TEST_OBJECTS = $(patsubst %.cc,%.o, \
+    $(filter-out catch2-tests/test_main.cc, \
+    $(wildcard catch2-tests/*.cc)))
 
 WEBTILES_OBJECTS = \
 tileweb.o \
