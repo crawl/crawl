@@ -359,7 +359,6 @@ static const ability_def Ability_List[] =
     { ABIL_CARAVAN_GIFT_ITEM, "Give Item to Mercenary",
         0, 0, 0, 0, {}, abflag::starve_ok },
 
-
     { ABIL_BURIALIZE, "Burialize Weapon", 0, 0, 0, 0, {},
         abflag::starve_ok | abflag::skill_drain },
 
@@ -1572,6 +1571,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
     if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
+        if (you.species == SP_MELIAI && you_worship(GOD_TROG)
+              && abil.ability == ABIL_MELIAI_SMITE)
+            return true;
+
         if (!quiet)
             canned_msg(MSG_TOO_BERSERK);
         return false;
