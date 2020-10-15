@@ -5217,12 +5217,13 @@ bool monster::invisible() const
 
 bool monster::visible_to(const actor *looker) const
 {
-    bool blind = looker->is_monster()
-                 && looker->as_monster()->has_ench(ENCH_BLIND);
+    const bool blind = looker->is_monster()
+                       && looker->as_monster()->has_ench(ENCH_BLIND);
+    const bool physically_vis = !blind && (!invisible()
+                                           || looker->can_see_invisible());
+    const bool seen_by_att = looker->is_player() && (friendly() || pacified());
 
-    bool vis = looker->is_player() && friendly()
-               || (!blind && (!invisible() || looker->can_see_invisible()));
-
+    const bool vis = seen_by_att || physically_vis;
     return vis && (this == looker || !submerged());
 }
 
