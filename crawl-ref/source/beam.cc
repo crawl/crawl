@@ -2426,6 +2426,11 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return true;
     }
 
+    if(agent()->is_player() && will_have_passive(passive_t::imus_bounce_wall)
+        && you.duration[DUR_SPECTRUM] == 0) {
+        return true;
+    }
+
     if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
         && feat == DNGN_CRYSTAL_WALL)
     {

@@ -818,6 +818,10 @@ static const duration_def duration_data[] =
       "poison weapon", "poison weapon",
       "Your attack is poisoned.", D_NO_FLAGS,
       {{ "Your attack has returned to normal." }} },
+    { DUR_SPECTRUM, 
+      BLUE, "Spectrum", "spectrum", "spectrum", "", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your Spectrum fades away." },
+        { "Your Spectrum starts fading." }}, 6},
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},

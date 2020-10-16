@@ -1278,12 +1278,13 @@ aff_type targeter_thunderbolt::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targeter_spray::targeter_spray(const actor* act, int range, zap_type /*zap*/)
+targeter_spray::targeter_spray(const actor* act, int range, zap_type /*zap*/, int spray)
 {
     ASSERT(act);
     agent = act;
     origin = aim = act->pos();
     _range = range;
+    max_spray = spray;
 }
 
 bool targeter_spray::valid_aim(coord_def a)
@@ -1307,7 +1308,7 @@ bool targeter_spray::set_aim(coord_def a)
     if (a == origin)
         return false;
 
-    beams = get_spray_rays(agent, aim, _range, 3);
+    beams = get_spray_rays(agent, aim, _range, max_spray, max_spray);
 
     paths_taken.clear();
     for (const bolt &beam : beams)

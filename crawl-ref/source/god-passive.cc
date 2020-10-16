@@ -427,7 +427,9 @@ static const vector<god_passive> god_passives[] =
     },
 
     // Imus Thea
-    { },
+    {
+        { 2, passive_t::imus_bounce_wall, "reflect any projectile on the wall." },
+    },
 
     // Legion from beyond
     {

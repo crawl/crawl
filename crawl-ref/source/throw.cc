@@ -12,6 +12,7 @@
 
 #include "art-enum.h"
 #include "artefact.h"
+#include "beam.h"
 #include "chardump.h"
 #include "command.h"
 #include "coordit.h"
@@ -373,18 +374,30 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         beh.m_slot = slot;
     }
 
+    unique_ptr<targeter> hitfunc = nullptr;
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.needs_path = !teleport;
     args.behaviour = &beh;
 
-    direction(target, args);
+    if(you.duration[DUR_SPECTRUM] > 0) {
+        hitfunc = make_unique<targeter_spray>(&you, LOS_RADIUS, ZAP_DAZZLING_SPRAY, 5);
+        args.hitfunc = hitfunc.get();
+        args.range = LOS_RADIUS;
+    }
+    else if(will_have_passive(passive_t::imus_bounce_wall)) {
+        hitfunc = make_unique<targeter_beam>(&you, LOS_RADIUS, ZAP_MAGIC_DART, 0, 0, 0);
+        args.hitfunc = hitfunc.get();
+        args.range = LOS_RADIUS;
+    }
 
+    direction(target, args);
     if (!beh.active_item())
     {
         canned_msg(MSG_OK);
         return false;
     }
+
     if (!target.isValid)
     {
         if (target.isCancel)
@@ -1023,9 +1036,29 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if (crawl_state.game_is_hints())
             Hints.hints_throw_counter++;
 
-        // Dropping item copy, since the launched item might be different.
-        pbolt.drop_item = !returning;
-        pbolt.fire();
+        if(you.duration[DUR_SPECTRUM] > 0) {
+            int range = pbolt.range;
+
+            targeter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY, 5);
+            hitfunc.set_aim(pbolt.target);
+            
+            bool first = true;
+            for (bolt &beam : hitfunc.beams)
+            {
+                _setup_missile_beam(&you, beam, item, ammo_name, returning);
+                if(first && !returning) {
+                    beam.drop_item = true;
+                    first = false;
+                }
+                beam.fire();
+            }
+
+        } else {
+            // Dropping item copy, since the launched item might be different.
+            pbolt.drop_item = !returning;
+            pbolt.fire();
+        }
+
 
         hit = !pbolt.hit_verb.empty();
 

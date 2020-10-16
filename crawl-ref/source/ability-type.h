@@ -311,6 +311,7 @@ enum ability_type
     // Imus Thea
     ABIL_IMUS_PRISMATIC_PRISM = 1300,
     ABIL_IMUS_FRAGMENTATION,
+    ABIL_IMUS_SPECTRUM,
 
     // Legion from beyond
     ABIL_LEGION_POSITIONING = 1310,

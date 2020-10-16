@@ -742,6 +742,8 @@ static const ability_def Ability_List[] =
     // Imus Thea
     { ABIL_IMUS_PRISMATIC_PRISM, "Prismatic Prism",
       4, 0, 0, 3, {fail_basis::invo, 40, 5, 20}, abflag::none },
+    { ABIL_IMUS_SPECTRUM, "Spectrum",
+      4, 0, 0, 4, {fail_basis::invo, 50, 5, 20}, abflag::none },
     { ABIL_IMUS_FRAGMENTATION, "Fragmentation",
       6, 0, 0, 6, {fail_basis::invo, 60, 5, 20}, abflag::none },
 
@@ -4293,6 +4295,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
             return spret::abort;
         }
         break;
+
+    case ABIL_IMUS_SPECTRUM:
+    {
+        fail_check();
+        int power = 11 + you.skill(SK_INVOCATIONS, 7); //0 ~ 200
+        you.increase_duration(DUR_SPECTRUM, 8 + roll_dice(2, power), 100);
+        return spret::success;
+    }
 
     case ABIL_IMUS_FRAGMENTATION:
     {

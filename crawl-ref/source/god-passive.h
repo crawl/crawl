@@ -293,6 +293,8 @@ enum class passive_t
     agraphede_create_worm,
     // alway poison passive
     agraphede_posion_passive,
+    // all projectile bounce on wall
+    imus_bounce_wall,
 };
 
 enum ru_interference
