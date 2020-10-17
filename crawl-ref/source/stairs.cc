@@ -992,6 +992,17 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         ASSERT(!at_branch_bottom());
         level_id lev = level_id::current();
         lev.depth++;
+        if (is_hell_subbranch(lev.branch))
+        {
+            int max_depth = brdepth[lev.branch];
+
+            // stairs of hell drop you 1/2/3 levels with equal chance.
+            // 33.3% for 1, 2, 3 from D:3, less before
+            lev.depth += random2(2);
+
+            if (lev.depth > max_depth)
+                lev.depth = max_depth;
+        }
         return lev;
     }
 
