@@ -289,7 +289,7 @@ void wizard_blink()
     // Allow wizard blink to send player into walls, in case the
     // user wants to alter that grid to something else.
     if (cell_is_solid(beam.target))
-        grd(beam.target) = DNGN_FLOOR;
+        env.grid(beam.target) = DNGN_FLOOR;
 
     move_player_to_grid(beam.target, false);
 }
@@ -368,7 +368,7 @@ spret frog_hop(bool fail)
 
 static bool _check_charge_through(coord_def pos)
 {
-    if (!you.can_pass_through_feat(grd(pos)))
+    if (!you.can_pass_through_feat(env.grid(pos)))
     {
         clear_messages();
         mprf("You can't roll into that!");
@@ -707,7 +707,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
     if (cell_is_solid(cell))
         return true;
 
-    return is_feat_dangerous(grd(cell), true) && !wizard_tele;
+    return is_feat_dangerous(env.grid(cell), true) && !wizard_tele;
 }
 
 static void _handle_teleport_update(bool large_change, const coord_def old_pos)
@@ -733,8 +733,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
     {
-        const dungeon_feature_type new_grid = grd(you.pos());
-        const dungeon_feature_type old_grid = grd(old_pos);
+        const dungeon_feature_type new_grid = env.grid(you.pos());
+        const dungeon_feature_type old_grid = env.grid(old_pos);
         if (feat_is_water(old_grid) && !feat_is_water(new_grid)
             || !feat_is_water(old_grid) && feat_is_water(new_grid))
         {
@@ -1084,7 +1084,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // less than dist.
     while (location_on_path < dist)
     {
-        if (!feat_eliminates_items(grd(new_spot)))
+        if (!feat_eliminates_items(env.grid(new_spot)))
             break;
         location_on_path++;
         if (location_on_path == dist)
@@ -1134,7 +1134,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_where)
-            || grd(randomized_where) != DNGN_FLOOR
+            || env.grid(randomized_where) != DNGN_FLOOR
             || monster_at(randomized_where)
             || !you.see_cell(randomized_where)
             || you.trans_wall_blocking(randomized_where)
@@ -1149,7 +1149,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_here)
-            || grd(randomized_here) != DNGN_FLOOR
+            || env.grid(randomized_here) != DNGN_FLOOR
             || monster_at(randomized_here)
             || !you.see_cell(randomized_here)
             || you.trans_wall_blocking(randomized_here)
@@ -1264,7 +1264,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         ray.advance();
         const coord_def newpos = ray.pos();
 
-        if (!victim->can_pass_through_feat(grd(newpos)))
+        if (!victim->can_pass_through_feat(env.grid(newpos)))
         {
             victim->collide(newpos, agent, pow);
             break;
@@ -1333,7 +1333,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
     mprf("Gravity reorients around %s.",
          mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(grd(where)) ? feature_description(grd(where),
+         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
                                                          NUM_TRAPS, "",
                                                          DESC_THE)
                                                          .c_str()

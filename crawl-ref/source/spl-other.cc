@@ -249,7 +249,7 @@ passwall_path::passwall_path(const actor &act, const coord_def& dir, int max_ran
         path.emplace_back(pos);
         if (in_bounds(pos))
         {
-            if (!_feat_is_passwallable(grd(pos)))
+            if (!_feat_is_passwallable(env.grid(pos)))
             {
                 if (!dest_found)
                 {
@@ -352,9 +352,9 @@ bool passwall_path::check_moveto() const
     // assumes is_valid()
 
     string terrain_msg;
-    if (grd(actual_dest) == DNGN_DEEP_WATER)
+    if (env.grid(actual_dest) == DNGN_DEEP_WATER)
         terrain_msg = "You sense a deep body of water on the other side of the rock.";
-    else if (grd(actual_dest) == DNGN_LAVA)
+    else if (env.grid(actual_dest) == DNGN_LAVA)
         terrain_msg = "You sense an intense heat on the other side of the rock.";
 
     // Pre-confirm exclusions in unseen squares as well as the actual dest

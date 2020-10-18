@@ -154,8 +154,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         const coord_def first_middle(x_first_middle, y_first_middle);
         const coord_def second_middle(x_second_middle, y_second_middle);
 
-        if (!feat_is_reachable_past(grd(first_middle))
-            && !feat_is_reachable_past(grd(second_middle)))
+        if (!feat_is_reachable_past(env.grid(first_middle))
+            && !feat_is_reachable_past(env.grid(second_middle)))
         {
             canned_msg(MSG_SOMETHING_IN_WAY);
             return false;
@@ -163,8 +163,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
         // Choose one of the two middle squares (which might be the same).
         const coord_def middle =
-            !feat_is_reachable_past(grd(first_middle)) ? second_middle :
-            !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+            !feat_is_reachable_past(env.grid(first_middle)) ? second_middle :
+            !feat_is_reachable_past(env.grid(second_middle)) ? first_middle :
         random_choose(first_middle, second_middle);
 
         bool success = true;
@@ -618,7 +618,7 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(grd(you.pos())))
+    if (feat_is_critical(env.grid(you.pos())))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;

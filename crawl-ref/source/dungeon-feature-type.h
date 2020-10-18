@@ -228,7 +228,7 @@ enum dungeon_feature_type
 #endif
     DNGN_DRY_FOUNTAIN,
 
-    // Not meant to ever appear in grd().
+    // Not meant to ever appear in env.grid().
     DNGN_EXPLORE_HORIZON, // dummy for redefinition
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRAVEL_TRAIL, // dummy for redefinition

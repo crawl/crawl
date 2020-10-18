@@ -64,8 +64,8 @@ void dgn_build_basic_level()
 
     if (!begin.origin() && !end.origin())
     {
-        grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
-        grd(end)   = DNGN_STONE_STAIRS_UP_I;
+        env.grid(begin) = DNGN_STONE_STAIRS_DOWN_I;
+        env.grid(end)   = DNGN_STONE_STAIRS_UP_I;
         upstairs.push_back(begin);
     }
 
@@ -76,8 +76,8 @@ void dgn_build_basic_level()
 
     if (!begin.origin() && !end.origin())
     {
-        grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
-        grd(end)   = DNGN_STONE_STAIRS_UP_II;
+        env.grid(begin) = DNGN_STONE_STAIRS_DOWN_II;
+        env.grid(end)   = DNGN_STONE_STAIRS_UP_II;
         upstairs.push_back(begin);
     }
 
@@ -88,8 +88,8 @@ void dgn_build_basic_level()
 
     if (!begin.origin() && !end.origin())
     {
-        grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
-        grd(end)   = DNGN_STONE_STAIRS_UP_III;
+        env.grid(begin) = DNGN_STONE_STAIRS_DOWN_III;
+        env.grid(end)   = DNGN_STONE_STAIRS_UP_III;
         upstairs.push_back(begin);
     }
 
@@ -127,10 +127,10 @@ void dgn_build_basic_level()
 void dgn_build_bigger_room_level()
 {
     for (rectangle_iterator ri(10); ri; ++ri)
-        if (grd(*ri) == DNGN_ROCK_WALL
+        if (env.grid(*ri) == DNGN_ROCK_WALL
             && !map_masked(*ri, MMT_VAULT))
         {
-            grd(*ri) = DNGN_FLOOR;
+            env.grid(*ri) = DNGN_FLOOR;
         }
 
     dungeon_feature_type pool_type = DNGN_DEEP_WATER;
@@ -268,7 +268,7 @@ static int _trail_random_dir(int pos, int bound, int margin)
 
 static bool _viable_trail_start_location(const coord_def &c)
 {
-    if (grd(c) != DNGN_ROCK_WALL && grd(c) != DNGN_FLOOR
+    if (env.grid(c) != DNGN_ROCK_WALL && env.grid(c) != DNGN_FLOOR
         || map_masked(c, MMT_VAULT))
     {
         return false;
@@ -276,7 +276,7 @@ static bool _viable_trail_start_location(const coord_def &c)
     for (orth_adjacent_iterator ai(c); ai; ++ai)
     {
         if (in_bounds(*ai)
-            && grd(*ai) == DNGN_ROCK_WALL
+            && env.grid(*ai) == DNGN_ROCK_WALL
             && !map_masked(*ai, MMT_VAULT))
         {
             return true;
@@ -349,7 +349,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                 break;
 
             // See if we stop due to intersection with another corridor/room.
-            if (grd(pos + dir * 2) == DNGN_FLOOR
+            if (env.grid(pos + dir * 2) == DNGN_FLOOR
                 && !one_chance_in(intersect_chance))
             {
                 break;
@@ -357,11 +357,11 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
             pos += dir;
 
-            if (grd(pos) == DNGN_ROCK_WALL)
-                grd(pos) = DNGN_FLOOR;
+            if (env.grid(pos) == DNGN_ROCK_WALL)
+                env.grid(pos) = DNGN_FLOOR;
         }
 
-        if (finish == no_corr - 1 && grd(pos) != DNGN_FLOOR)
+        if (finish == no_corr - 1 && env.grid(pos) != DNGN_FLOOR)
             finish -= 2;
 
         finish++;
@@ -467,13 +467,13 @@ static bool _octa_room(dgn_region& region, int oblique_max,
                 continue;
 
             if (_is_wall(x, y))
-                grd[x][y] = type_floor;
+                env.grid[x][y] = type_floor;
 
-            if (grd[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
-                grd[x][y] = DNGN_SHALLOW_WATER;
+            if (env.grid[x][y] == DNGN_FLOOR && type_floor == DNGN_SHALLOW_WATER)
+                env.grid[x][y] = DNGN_SHALLOW_WATER;
 
-            if (grd[x][y] == DNGN_CLOSED_DOOR && !feat_is_solid(type_floor))
-                grd[x][y] = DNGN_FLOOR;       // ick
+            if (env.grid[x][y] == DNGN_CLOSED_DOOR && !feat_is_solid(type_floor))
+                env.grid[x][y] = DNGN_FLOOR;       // ick
         }
 
         if (x > br.x - oblique_max)
@@ -508,23 +508,23 @@ static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                            dungeon_feature_type floor2)
 {
     for (rectangle_iterator ri(region.pos, region.end()); ri; ++ri)
-        if (grd(*ri) == target && !map_masked(*ri, MMT_VAULT))
-            grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
+        if (env.grid(*ri) == target && !map_masked(*ri, MMT_VAULT))
+            env.grid(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }
 
 static int _box_room_door_spot(int x, int y)
 {
     // If there is a door near us embedded in rock, we have to be a door too.
-    if (grd[x-1][y] == DNGN_CLOSED_DOOR
+    if (env.grid[x-1][y] == DNGN_CLOSED_DOOR
             && _is_wall(x-1,y-1) && _is_wall(x-1,y+1)
-        || grd[x+1][y] == DNGN_CLOSED_DOOR
+        || env.grid[x+1][y] == DNGN_CLOSED_DOOR
             && _is_wall(x+1,y-1) && _is_wall(x+1,y+1)
-        || grd[x][y-1] == DNGN_CLOSED_DOOR
+        || env.grid[x][y-1] == DNGN_CLOSED_DOOR
             && _is_wall(x-1,y-1) && _is_wall(x+1,y-1)
-        || grd[x][y+1] == DNGN_CLOSED_DOOR
+        || env.grid[x][y+1] == DNGN_CLOSED_DOOR
             && _is_wall(x-1,y+1) && _is_wall(x+1,y+1))
     {
-        grd[x][y] = DNGN_CLOSED_DOOR;
+        env.grid[x][y] = DNGN_CLOSED_DOOR;
         return 2;
     }
 
@@ -599,12 +599,12 @@ static int _box_room_doors(int bx1, int bx2, int by1, int by2, int new_doors)
         {
             if (spot == j++)
             {
-                grd[i][by1] = DNGN_CLOSED_DOOR;
+                env.grid[i][by1] = DNGN_CLOSED_DOOR;
                 break;
             }
             if (spot == j++)
             {
-                grd[i][by2] = DNGN_CLOSED_DOOR;
+                env.grid[i][by2] = DNGN_CLOSED_DOOR;
                 break;
             }
         }
@@ -613,12 +613,12 @@ static int _box_room_doors(int bx1, int bx2, int by1, int by2, int new_doors)
         {
             if (spot == j++)
             {
-                grd[bx1][i] = DNGN_CLOSED_DOOR;
+                env.grid[bx1][i] = DNGN_CLOSED_DOOR;
                 break;
             }
             if (spot == j++)
             {
-                grd[bx2][i] = DNGN_CLOSED_DOOR;
+                env.grid[bx2][i] = DNGN_CLOSED_DOOR;
                 break;
             }
         }
@@ -670,7 +670,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
 static bool _is_wall(int x, int y)
 {
-    return feat_is_wall(grd[x][y]);
+    return feat_is_wall(env.grid[x][y]);
 }
 
 static void _big_room(int level_number)
@@ -858,8 +858,8 @@ static void _diamond_rooms(int level_number)
 
 static int _good_door_spot(int x, int y)
 {
-    return (!feat_is_solid(grd[x][y]) || feat_is_closed_door(grd[x][y]))
-            && !feat_is_critical(grd[x][y]);
+    return (!feat_is_solid(env.grid[x][y]) || feat_is_closed_door(env.grid[x][y]))
+            && !feat_is_critical(env.grid[x][y]);
 }
 
 // Returns TRUE if a room was made successfully.
@@ -898,8 +898,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     for (rx = sx; rx <= ex; rx++)
         for (ry = sy; ry <= ey; ry++)
         {
-            if (!feat_has_dry_floor(grd[rx][ry]))
-                grd[rx][ry] = DNGN_FLOOR;
+            if (!feat_has_dry_floor(env.grid[rx][ry]))
+                env.grid[rx][ry] = DNGN_FLOOR;
         }
 
     // Put some doors on the sides (but not in corners),
@@ -907,21 +907,21 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     for (ry = sy + 1; ry < ey; ry++)
     {
         // left side
-        if (grd[sx-1][ry] == DNGN_FLOOR
-            && feat_is_solid(grd[sx-1][ry-1])
-            && feat_is_solid(grd[sx-1][ry+1]))
+        if (env.grid[sx-1][ry] == DNGN_FLOOR
+            && feat_is_solid(env.grid[sx-1][ry-1])
+            && feat_is_solid(env.grid[sx-1][ry+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
-                grd[sx-1][ry] = DNGN_CLOSED_DOOR;
+                env.grid[sx-1][ry] = DNGN_CLOSED_DOOR;
         }
 
         // right side
-        if (grd[ex+1][ry] == DNGN_FLOOR
-            && feat_is_solid(grd[ex+1][ry-1])
-            && feat_is_solid(grd[ex+1][ry+1]))
+        if (env.grid[ex+1][ry] == DNGN_FLOOR
+            && feat_is_solid(env.grid[ex+1][ry-1])
+            && feat_is_solid(env.grid[ex+1][ry+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
-                grd[ex+1][ry] = DNGN_CLOSED_DOOR;
+                env.grid[ex+1][ry] = DNGN_CLOSED_DOOR;
         }
     }
 
@@ -929,21 +929,21 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     for (rx = sx + 1; rx < ex; rx++)
     {
         // top
-        if (grd[rx][sy-1] == DNGN_FLOOR
-            && feat_is_solid(grd[rx-1][sy-1])
-            && feat_is_solid(grd[rx+1][sy-1]))
+        if (env.grid[rx][sy-1] == DNGN_FLOOR
+            && feat_is_solid(env.grid[rx-1][sy-1])
+            && feat_is_solid(env.grid[rx+1][sy-1]))
         {
             if (x_chance_in_y(doorlevel, 10))
-                grd[rx][sy-1] = DNGN_CLOSED_DOOR;
+                env.grid[rx][sy-1] = DNGN_CLOSED_DOOR;
         }
 
         // bottom
-        if (grd[rx][ey+1] == DNGN_FLOOR
-            && feat_is_solid(grd[rx-1][ey+1])
-            && feat_is_solid(grd[rx+1][ey+1]))
+        if (env.grid[rx][ey+1] == DNGN_FLOOR
+            && feat_is_solid(env.grid[rx-1][ey+1])
+            && feat_is_solid(env.grid[rx+1][ey+1]))
         {
             if (x_chance_in_y(doorlevel, 10))
-                grd[rx][ey+1] = DNGN_CLOSED_DOOR;
+                env.grid[rx][ey+1] = DNGN_CLOSED_DOOR;
         }
     }
 
@@ -1011,8 +1011,8 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
     {
         for (i = pool_x1 + 1; i < pool_x2 - 1; i++)
         {
-            if (i >= left_edge && i <= right_edge && grd[i][j] == DNGN_FLOOR)
-                grd[i][j] = pool_type;
+            if (i >= left_edge && i <= right_edge && env.grid[i][j] == DNGN_FLOOR)
+                env.grid[i][j] = pool_type;
         }
 
         if (j - pool_y1 < (pool_y2 - pool_y1) / 2 || one_chance_in(4))
@@ -1080,7 +1080,7 @@ static bool _may_overwrite_pos(coord_def c)
     if (map_masked(c, MMT_VAULT))
         return false;
 
-    const dungeon_feature_type grid = grd(c);
+    const dungeon_feature_type grid = env.grid(c);
 
     // Don't overwrite any stairs or branch entrances.
     if (feat_is_stair(grid)
@@ -1133,10 +1133,10 @@ static void _build_river(dungeon_feature_type river_type) //mv
                     if (width == 2 && river_type == DNGN_DEEP_WATER
                         && coinflip())
                     {
-                        grd[i][j] = DNGN_SHALLOW_WATER;
+                        env.grid[i][j] = DNGN_SHALLOW_WATER;
                     }
                     else
-                        grd[i][j] = river_type;
+                        env.grid[i][j] = river_type;
 
                     // Override existing markers.
                     env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);
@@ -1189,7 +1189,7 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
                 // on lava and deep water grids. -- bwr
                 if (!one_chance_in(200) && _may_overwrite_pos(coord_def(i, j)))
                 {
-                    grd[i][j] = lake_type;
+                    env.grid[i][j] = lake_type;
 
                     // Override markers. (No underwater portals, please.)
                     env.markers.remove_markers_at(coord_def(i, j), MAT_ANY);

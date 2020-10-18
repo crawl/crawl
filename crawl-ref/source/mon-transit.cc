@@ -336,7 +336,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
     if (within_level && !mons_class_can_use_transporter(mons.type)
-        || !within_level && !mons_can_use_stairs(mons, grd(from)))
+        || !within_level && !mons_can_use_stairs(mons, env.grid(from)))
     {
         if (_is_religious_follower(mons))
             return true;

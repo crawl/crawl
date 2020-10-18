@@ -99,12 +99,12 @@ static coord_def _place_feature_near(const coord_def &centre,
         if (not_seen && cell_see_cell_nocache(cp, centre))
             continue;
 
-        if (grd(cp) == candidate)
+        if (env.grid(cp) == candidate)
         {
             dprf(DIAG_ABYSS, "Placing %s at (%d,%d)",
                  dungeon_feature_name(replacement),
                  cp.x, cp.y);
-            grd(cp) = replacement;
+            env.grid(cp) = replacement;
             return cp;
         }
     }
@@ -145,7 +145,7 @@ static void _write_abyssal_features()
                 {
                     if (abyssal_features[index] != DNGN_UNSEEN)
                     {
-                        grd(p) = abyssal_features[index];
+                        env.grid(p) = abyssal_features[index];
                         env.level_map_mask(p) = MMT_VAULT;
                         if (cell_is_solid(p))
                             delete_cloud(p);
@@ -156,7 +156,7 @@ static void _write_abyssal_features()
                 else
                 {
                     //Entombing the player is lame.
-                    grd(p) = DNGN_FLOOR;
+                    env.grid(p) = DNGN_FLOOR;
                 }
             }
 
@@ -185,13 +185,13 @@ static void _abyss_fixup_vault(const vault_placement *vp)
     for (vault_place_iterator vi(*vp); vi; ++vi)
     {
         const coord_def p(*vi);
-        const dungeon_feature_type feat(grd(p));
+        const dungeon_feature_type feat(env.grid(p));
         if (feat_is_stair(feat)
             && feat != DNGN_EXIT_ABYSS
             && feat != DNGN_ABYSSAL_STAIR
             && !feat_is_portal_entrance(feat))
         {
-            grd(p) = DNGN_FLOOR;
+            env.grid(p) = DNGN_FLOOR;
         }
 
         tile_init_flavour(p);
@@ -275,7 +275,7 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     {
         const coord_def p(*ri);
         if (abyss_genlevel_mask(p)
-            && grd(p) == DNGN_FLOOR && igrd(p) == NON_ITEM
+            && env.grid(p) == DNGN_FLOOR && igrd(p) == NON_ITEM
             && one_chance_in(++places_found))
         {
             chosen_spot = p;
@@ -301,7 +301,7 @@ static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
                                         coord_def p)
 {
     return abyss_genlevel_mask(p)
-           && grd(p) == DNGN_FLOOR
+           && env.grid(p) == DNGN_FLOOR
            && igrd(p) == NON_ITEM
            && !map_masked(p, MMT_VAULT);
 }
@@ -445,7 +445,7 @@ void push_features_to_abyss()
 
             p += you.pos();
 
-            dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
+            dungeon_feature_type feature = map_bounds(p) ? env.grid(p) : DNGN_UNSEEN;
             feature = sanitize_feature(feature);
             abyssal_features.push_back(feature);
         }
@@ -495,7 +495,7 @@ static bool _abyss_check_place_feat(coord_def p,
         else if (!abyss_genlevel_mask(p))
             return false;
         else
-            grd(p) = which_feat;
+            env.grid(p) = which_feat;
 
         if (feats_wanted)
             --*feats_wanted;
@@ -541,7 +541,7 @@ private:
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-            if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
+            if (env.grid(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
                 return true;
 
         return false;
@@ -665,11 +665,11 @@ static void _push_items()
         if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
             continue;
 
-        if (!_pushy_feature(grd(item.pos)))
+        if (!_pushy_feature(env.grid(item.pos)))
             continue;
 
         for (distance_iterator di(item.pos); di; ++di)
-            if (!_pushy_feature(grd(*di)))
+            if (!_pushy_feature(env.grid(*di)))
             {
                 int j = i;
                 move_item_to_grid(&j, *di, true);
@@ -700,7 +700,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     if (map_masked(p, MMT_VAULT))
         env.level_map_mask(p) &= ~MMT_VAULT;
 
-    grd(p) = DNGN_UNSEEN;
+    env.grid(p) = DNGN_UNSEEN;
 
     // Nuke items.
     if (igrd(p) != NON_ITEM)
@@ -802,7 +802,7 @@ static void _abyss_update_transporter(const coord_def &pos,
                                       const coord_def &target_centre,
                                       const map_bitmask &shift_area)
 {
-    if (grd(pos) != DNGN_TRANSPORTER)
+    if (env.grid(pos) != DNGN_TRANSPORTER)
         return;
 
     // Get the marker, since we will need to modify it.
@@ -1206,7 +1206,7 @@ static void _update_abyss_terrain(const coord_def &p,
     if (!in_bounds(rp))
         return;
 
-    const dungeon_feature_type currfeat = grd(rp);
+    const dungeon_feature_type currfeat = env.grid(rp);
 
     // Don't decay vaults.
     if (map_masked(rp, MMT_VAULT))
@@ -1255,7 +1255,7 @@ static void _update_abyss_terrain(const coord_def &p,
     // the selected grid should have been there, do nothing.
     if (feat != currfeat)
     {
-        grd(rp) = feat;
+        env.grid(rp) = feat;
         if (feat == DNGN_FLOOR && in_los_bounds_g(rp))
         {
             cloud_type cloud = _cloud_from_feat(currfeat);
@@ -1284,7 +1284,7 @@ static void _destroy_all_terrain(bool vaults)
 
 static void _ensure_player_habitable(bool dig_instead)
 {
-    dungeon_feature_type feat = grd(you.pos());
+    dungeon_feature_type feat = env.grid(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
     {
         bool shoved = you.shove();
@@ -1292,7 +1292,7 @@ static void _ensure_player_habitable(bool dig_instead)
         {
             // legal only if we just placed a vault
             ASSERT(dig_instead);
-            grd(you.pos()) = DNGN_FLOOR;
+            env.grid(you.pos()) = DNGN_FLOOR;
         }
     }
 }
@@ -1369,7 +1369,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
     _ensure_player_habitable(false);
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        ASSERT_RANGE(grd(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
+        ASSERT_RANGE(env.grid(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
@@ -1600,7 +1600,7 @@ static void _abyss_generate_new_area()
 // Check if there is a path between the abyss centre and an exit location.
 static bool _abyss_has_path(const coord_def &to)
 {
-    ASSERT(grd(to) == DNGN_EXIT_ABYSS);
+    ASSERT(env.grid(to) == DNGN_EXIT_ABYSS);
 
     monster_pathfind pf;
     return pf.init_pathfind(ABYSS_CENTRE, to);
@@ -1627,11 +1627,11 @@ retry:
     map_bitmask abyss_genlevel_mask(true);
     _abyss_apply_terrain(abyss_genlevel_mask);
 
-    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    env.grid(you.pos()) = _veto_dangerous_terrain(env.grid(you.pos()));
     _place_displaced_monsters();
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        ASSERT(grd(*ri) > DNGN_UNSEEN);
+        ASSERT(env.grid(*ri) > DNGN_UNSEEN);
     check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is
@@ -1640,7 +1640,7 @@ retry:
     // altar near-by.
     if (player_in_starting_abyss())
     {
-        grd(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
+        env.grid(ABYSS_CENTRE) = DNGN_ALTAR_LUGONU;
         const coord_def eloc = _place_feature_near(ABYSS_CENTRE, LOS_RADIUS + 2,
                                                    DNGN_FLOOR, DNGN_EXIT_ABYSS,
                                                    50, true);
@@ -1651,7 +1651,7 @@ retry:
     }
     else
     {
-        grd(ABYSS_CENTRE) = DNGN_FLOOR;
+        env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
         if (one_chance_in(5))
         {
             _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
@@ -1732,7 +1732,7 @@ void abyss_teleport()
         " the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
-    grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    env.grid(you.pos()) = _veto_dangerous_terrain(env.grid(you.pos()));
 
     stop_delay(true);
     forget_map(false);
@@ -1793,7 +1793,7 @@ static void _initialise_level_corrupt_seeds(int power)
         while (tries-- > 0)
         {
             where = dgn_random_point_from(you.pos(), aux_seed_radius, 2);
-            if (grd(where) == DNGN_FLOOR && !env.markers.find(where, MAT_ANY))
+            if (env.grid(where) == DNGN_FLOOR && !env.markers.find(where, MAT_ANY))
                 break;
             where.reset();
         }
@@ -1832,7 +1832,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
 
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
-        if (!monster_habitable_grid(mons, grd(p)))
+        if (!monster_habitable_grid(mons, env.grid(p)))
             continue;
         mgen_data mg(mons, BEH_NEUTRAL, p);
         mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
@@ -1881,7 +1881,7 @@ static bool _is_grid_corruptible(const coord_def &c)
     if (c == you.pos())
         return false;
 
-    const dungeon_feature_type feat = grd(c);
+    const dungeon_feature_type feat = env.grid(c);
 
     // Stairs and portals cannot be corrupted.
     if (feat_stair_direction(feat) != CMD_NO_CMD)
@@ -1924,7 +1924,7 @@ static bool _is_crowded_square(const coord_def &c)
                 continue;
 
             const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n) || !feat_is_traversable(grd(n)))
+            if (!in_bounds(n) || !feat_is_traversable(env.grid(n)))
                 continue;
 
             if (++neighbours > 4)
@@ -1938,7 +1938,7 @@ static bool _is_crowded_square(const coord_def &c)
 static bool _is_sealed_square(const coord_def &c)
 {
     for (adjacent_iterator ai(c); ai; ++ai)
-        if (!feat_is_opaque(grd(*ai)))
+        if (!feat_is_opaque(env.grid(*ai)))
             return false;
 
     return true;
@@ -1946,7 +1946,7 @@ static bool _is_sealed_square(const coord_def &c)
 
 static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
 {
-    dungeon_feature_type feat = grd(c);
+    dungeon_feature_type feat = env.grid(c);
     int floor = cenv.pick_floor_colour();
 
     if (feat == DNGN_ROCK_WALL || feat == DNGN_METAL_WALL
@@ -2012,7 +2012,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     // features.
     bool preserve_features = true;
     dungeon_feature_type feat = DNGN_UNSEEN;
-    if (feat_altar_god(grd(c)) != GOD_NO_GOD)
+    if (feat_altar_god(env.grid(c)) != GOD_NO_GOD)
     {
         preserve_features = false;
         if (!one_chance_in(3))
@@ -2023,19 +2023,19 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 
     if (feat_is_trap(feat)
         || feat == DNGN_UNSEEN
-        || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
+        || (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
             && coinflip()))
     {
         feat = DNGN_FLOOR;
     }
 
-    if (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
+    if (feat_is_traversable(env.grid(c)) && !feat_is_traversable(feat)
         && _is_crowded_square(c))
     {
         return;
     }
 
-    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat)
+    if (!feat_is_traversable(env.grid(c)) && feat_is_traversable(feat)
         && _is_sealed_square(c))
     {
         return;
@@ -2171,7 +2171,7 @@ void abyss_maybe_spawn_xp_exit()
         || !you.props.exists(ABYSS_STAIR_XP_KEY)
         || you.props[ABYSS_STAIR_XP_KEY].get_int() > 0
         || !in_bounds(you.pos())
-        || feat_is_critical(grd(you.pos())))
+        || feat_is_critical(env.grid(you.pos())))
     {
         return;
     }
@@ -2181,7 +2181,7 @@ void abyss_maybe_spawn_xp_exit()
                         && you.props[ABYSS_SPAWNED_XP_EXIT_KEY].get_bool();
 
     destroy_wall(you.pos()); // fires listeners etc even if it wasn't a wall
-    grd(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
+    env.grid(you.pos()) = stairs ? DNGN_ABYSSAL_STAIR : DNGN_EXIT_ABYSS;
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
     update_screen();

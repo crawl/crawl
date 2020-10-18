@@ -728,7 +728,7 @@ static void _start_running(int dir, int mode)
     const coord_def next_pos = you.pos() + Compass[dir];
 
     if (!have_passive(passive_t::slime_wall_immune)
-        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
+        && (dir == RDIR_REST || you.is_habitable_feat(env.grid(next_pos)))
         && count_adjacent_slime_walls(next_pos))
     {
         mprf(MSGCH_WARN, "You're about to run into a slime covered wall!");
@@ -1491,7 +1491,7 @@ static void _take_stairs(bool down)
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!crawl_state.arena_suspended);
 
-    const dungeon_feature_type ygrd = grd(you.pos());
+    const dungeon_feature_type ygrd = env.grid(you.pos());
 
     const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT);
 
@@ -2096,7 +2096,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
-        if (feat_is_altar(grd(you.pos())))
+        if (feat_is_altar(env.grid(you.pos())))
         {
             string msg = "Press <w>%</w> or <w>%</w> to pray at altars.";
             insert_commands(msg, { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
@@ -2455,7 +2455,7 @@ static void _swing_at_target(coord_def move)
     }
 
     // Don't waste a turn if feature is solid.
-    if (feat_is_solid(grd(target)) && !you.confused())
+    if (feat_is_solid(env.grid(target)) && !you.confused())
         return;
     else
     {

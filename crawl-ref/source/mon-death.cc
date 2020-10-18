@@ -480,7 +480,7 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
     // Don't display this message if the scales were dropped over
     // lava/deep water, because then they are hardly intact.
-    if (you.see_cell(pos) && !silent && !feat_eliminates_items(grd(pos)))
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
         // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
@@ -544,7 +544,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
 
     // Don't attempt to place corpses within walls, either.
-    if (feat_is_solid(grd(mons.pos())) && !force)
+    if (feat_is_solid(env.grid(mons.pos())) && !force)
         return nullptr;
 
     // If we were told not to leave a corpse, don't.
@@ -561,7 +561,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     {
         _gold_pile(corpse, mons_species(mons.type));
         // If gold would be destroyed, give it directly to the player instead.
-        if (feat_eliminates_items(grd(mons.pos())))
+        if (feat_eliminates_items(env.grid(mons.pos())))
         {
             get_gold(corpse, corpse.quantity, false);
             destroy_item(corpse, true);
@@ -2173,8 +2173,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
 
                     if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
-                        && (feat_has_solid_floor(grd(you.pos()))
-                            || feat_is_watery(grd(you.pos()))
+                        && (feat_has_solid_floor(env.grid(you.pos()))
+                            || feat_is_watery(env.grid(you.pos()))
                                && species_likes_water(you.species)))
                     {
                         int thing_created = items(true, OBJ_POTIONS,
@@ -2812,7 +2812,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     if (!mons->ground_level())
         return;
 
-    dungeon_feature_type grid = grd(mons->pos());
+    dungeon_feature_type grid = env.grid(mons->pos());
     if (grid != DNGN_LAVA && grid != DNGN_DEEP_WATER
         || monster_habitable_grid(mons, grid))
     {
@@ -2822,7 +2822,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
-    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || grd(oldpos) != grid))
+    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || env.grid(oldpos) != grid))
     {
          mprf("%s falls into the %s!",
              mons->name(DESC_THE).c_str(),
@@ -3326,7 +3326,7 @@ void mons_felid_revive(monster* mons)
         revive_place.x = random2(GXM);
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
-            || grd(revive_place) != DNGN_FLOOR
+            || env.grid(revive_place) != DNGN_FLOOR
             || cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO

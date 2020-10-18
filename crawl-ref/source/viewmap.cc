@@ -64,7 +64,7 @@ static unsigned _get_travel_colour(const coord_def& p)
         return Options.tc_excluded;
 
     const unsigned no_travel_col
-        = feat_is_traversable(grd(p)) ? Options.tc_forbidden
+        = feat_is_traversable(env.grid(p)) ? Options.tc_forbidden
                                       : Options.tc_dangerous;
 
     const short dist = travel_point_distance[p.x][p.y];
@@ -183,14 +183,14 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        return grd(where) == DNGN_EXIT_ABYSS
-               || grd(where) == DNGN_EXIT_PANDEMONIUM
-               || grd(where) == DNGN_ENTER_HELL && player_in_hell();
+        return env.grid(where) == DNGN_EXIT_ABYSS
+               || env.grid(where) == DNGN_EXIT_PANDEMONIUM
+               || env.grid(where) == DNGN_ENTER_HELL && player_in_hell();
     }
     else if (glyph == '>')
     {
-        return grd(where) == DNGN_TRANSIT_PANDEMONIUM
-               || grd(where) == DNGN_TRANSPORTER;
+        return env.grid(where) == DNGN_TRANSIT_PANDEMONIUM
+               || env.grid(where) == DNGN_TRANSPORTER;
     }
 
     return false;

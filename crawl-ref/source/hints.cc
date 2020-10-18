@@ -991,7 +991,7 @@ void hints_first_item(const item_def &item)
 
 static string _describe_portal(const coord_def &gc)
 {
-    const dungeon_feature_type feat = grd(gc);
+    const dungeon_feature_type feat = env.grid(gc);
     string text;
 
     // For the sake of completeness, though it's very unlikely that a
@@ -1562,7 +1562,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
             string altar = "An altar to ";
-            altar += god_name(feat_altar_god(grd(gc)));
+            altar += god_name(feat_altar_god(env.grid(gc)));
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
@@ -3374,7 +3374,7 @@ bool hints_pos_interesting(int x, int y)
 {
     return cloud_at(coord_def(x, y))
            || _water_is_disturbed(x, y)
-           || _hints_feat_interesting(grd[x][y]);
+           || _hints_feat_interesting(env.grid[x][y]);
 }
 
 static bool _hints_feat_interesting(dungeon_feature_type feat)
@@ -3403,7 +3403,7 @@ string hints_describe_pos(int x, int y)
 
 static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 {
-    const dungeon_feature_type feat = grd[x][y];
+    const dungeon_feature_type feat = env.grid[x][y];
     const coord_def            where(x, y);
 
     if (!ostr.str().empty())
@@ -3676,7 +3676,7 @@ static bool _water_is_disturbed(int x, int y)
     const coord_def c(x,y);
     const monster* mon = monster_at(c);
 
-    if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
+    if (!mon || env.grid(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return false;
 
     return !mon->visible_to(&you) && !mon->airborne();
@@ -3819,9 +3819,9 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
 void hints_observe_cell(const coord_def& gc)
 {
-    if (feat_is_escape_hatch(grd(gc)))
+    if (feat_is_escape_hatch(env.grid(gc)))
         learned_something_new(HINT_SEEN_ESCAPE_HATCH, gc);
-    else if (feat_is_branch_entrance(grd(gc)))
+    else if (feat_is_branch_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_BRANCH, gc);
     else if (is_feature('>', gc))
         learned_something_new(HINT_SEEN_STAIRS, gc);
@@ -3829,13 +3829,13 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (feat_is_runed(grd(gc)))
+    else if (feat_is_runed(env.grid(gc)))
         learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
-    else if (feat_is_door(grd(gc)))
+    else if (feat_is_door(env.grid(gc)))
         learned_something_new(HINT_SEEN_DOOR, gc);
-    else if (grd(gc) == DNGN_ENTER_SHOP)
+    else if (env.grid(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
-    else if (feat_is_portal_entrance(grd(gc)))
+    else if (feat_is_portal_entrance(env.grid(gc)))
         learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);

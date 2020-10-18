@@ -158,7 +158,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Determine if the monster is happy on current tile.
-    return monster_habitable_grid(new_mclass, grd(mons->pos()));
+    return monster_habitable_grid(new_mclass, env.grid(mons->pos()));
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
@@ -355,7 +355,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
     if (mons->has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(mons, grd(mons->pos())))
+        && !monster_can_submerge(mons, env.grid(mons->pos())))
     {
         mons->del_ench(ENCH_SUBMERGED);
     }
@@ -569,14 +569,14 @@ void slimify_monster(monster* mon)
             target = MONS_AZURE_JELLY;
     }
 
-    if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
+    if (feat_is_water(env.grid(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
     if (mon->holiness() & MH_UNDEAD)
         target = MONS_DEATH_OOZE;
 
     // Bail out if jellies can't live here.
-    if (!monster_habitable_grid(target, grd(mon->pos())))
+    if (!monster_habitable_grid(target, env.grid(mon->pos())))
     {
         simple_monster_message(*mon, " quivers momentarily.");
         return;

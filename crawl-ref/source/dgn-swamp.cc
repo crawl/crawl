@@ -51,10 +51,10 @@ static void _swamp_apply_features(int margin)
             if (c.x < margin || c.y < margin || c.x >= GXM - margin
                 || c.y >= GYM - margin)
             {
-                grd(c) = DNGN_TREE;
+                env.grid(c) = DNGN_TREE;
             }
             else
-                grd(c) = _swamp_feature_for_height(dgn_height_at(c));
+                env.grid(c) = _swamp_feature_for_height(dgn_height_at(c));
         }
     }
 }

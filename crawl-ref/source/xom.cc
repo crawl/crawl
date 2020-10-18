@@ -438,13 +438,13 @@ static int _exploration_estimate(bool seen_only = false)
         }
 
         bool open = true;
-        if (cell_is_solid(pos) && !feat_is_closed_door(grd(pos)))
+        if (cell_is_solid(pos) && !feat_is_closed_door(env.grid(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || feat_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(env.grid(*ai))
+                                        || feat_is_closed_door(env.grid(*ai))))
                 {
                     open = true;
                     break;
@@ -935,7 +935,7 @@ static monster_type _xom_random_demon(int sever)
 static bool _player_is_dead()
 {
     return you.hp <= 0
-        || is_feat_dangerous(grd(you.pos()))
+        || is_feat_dangerous(env.grid(you.pos()))
         || you.did_escape_death();
 }
 
@@ -1489,7 +1489,7 @@ static vector<coord_def> _xom_scenery_candidates()
         if (!you.see_cell(*ri))
             continue;
 
-        dungeon_feature_type feat = grd(*ri);
+        dungeon_feature_type feat = env.grid(*ri);
         if (feat_is_fountain(feat))
             candidates.push_back(*ri);
         else if (feat_is_closed_door(feat))
@@ -1556,9 +1556,9 @@ static void _xom_place_altars()
     {
         if ((random_near_space(&you, you.pos(), place, false)
              || random_near_space(&you, you.pos(), place, true))
-            && grd(place) == DNGN_FLOOR)
+            && env.grid(place) == DNGN_FLOOR)
         {
-            grd(place) = DNGN_ALTAR_XOM;
+            env.grid(place) = DNGN_ALTAR_XOM;
             success = true;
         }
     }
@@ -1611,7 +1611,7 @@ static void _xom_change_scenery(int /*sever*/)
     int doors_close     = 0;
     for (coord_def pos : candidates)
     {
-        switch (grd(pos))
+        switch (env.grid(pos))
         {
         case DNGN_CLOSED_DOOR:
         case DNGN_CLOSED_CLEAR_DOOR:
@@ -1634,7 +1634,7 @@ static void _xom_change_scenery(int /*sever*/)
             if (x_chance_in_y(fountains_blood, 3))
                 continue;
 
-            grd(pos) = DNGN_FOUNTAIN_BLOOD;
+            env.grid(pos) = DNGN_FOUNTAIN_BLOOD;
             set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_blood++;
@@ -1859,7 +1859,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     FixedBitVector<NUM_FEATURES> in_view;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-        in_view.set(grd(*ri));
+        in_view.set(env.grid(*ri));
 
     if (in_view[DNGN_LAVA])
         messages.emplace_back("The lava spits out sparks!");
@@ -1917,7 +1917,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
                               "the other side.");
     }
 
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = env.grid(you.pos());
 
     if (!feat_is_solid(feat) && feat_stair_direction(feat) == CMD_NO_CMD
         && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
@@ -2203,7 +2203,7 @@ static bool _valid_floor_grid(coord_def pos)
     if (!in_bounds(pos))
         return false;
 
-    return grd(pos) == DNGN_FLOOR;
+    return env.grid(pos) == DNGN_FLOOR;
 }
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under)
@@ -2211,7 +2211,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     if (!allow_under)
         ASSERT(stair_pos != you.pos());
 
-    dungeon_feature_type feat = grd(stair_pos);
+    dungeon_feature_type feat = env.grid(stair_pos);
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
     coord_def begin, towards;
@@ -2232,7 +2232,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             {
                 int adj_count = 0;
                 for (adjacent_iterator ai(stair_pos); ai; ++ai)
-                    if (grd(*ai) == DNGN_FLOOR
+                    if (env.grid(*ai) == DNGN_FLOOR
                         && (tries || _valid_floor_grid(*ai + *ai - stair_pos))
                         && one_chance_in(++adj_count))
                     {
@@ -2316,7 +2316,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
         ray.regress();
 
-    while (!you.see_cell(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
+    while (!you.see_cell(ray.pos()) || env.grid(ray.pos()) != DNGN_FLOOR)
     {
         ray.regress();
         if (!in_bounds(ray.pos()) || ray.pos() == you.pos()
@@ -2373,7 +2373,7 @@ static vector<coord_def> _nearby_stairs()
         if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
             continue;
 
-        dungeon_feature_type feat = grd(*ri);
+        dungeon_feature_type feat = env.grid(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
@@ -2394,7 +2394,7 @@ static void _xom_repel_stairs(bool unclimbable)
 
     bool real_stairs = false;
     for (auto loc : stairs_avail)
-        if (feat_is_staircase(grd(loc)))
+        if (feat_is_staircase(env.grid(loc)))
             real_stairs = true;
 
     // Don't mention staircases if there aren't any nearby.
@@ -2404,7 +2404,7 @@ static void _xom_repel_stairs(bool unclimbable)
         string feat_name;
         if (!real_stairs)
         {
-            if (feat_is_escape_hatch(grd(stairs_avail[0])))
+            if (feat_is_escape_hatch(env.grid(stairs_avail[0])))
                 feat_name = "escape hatch";
             else
                 feat_name = "gate";
@@ -2733,7 +2733,7 @@ static void _handle_accidental_death(const int orig_hp,
 
     string speech_type = XOM_SPEECH("accidental homicide");
 
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = env.grid(you.pos());
 
     switch (you.escaped_death_cause)
     {
@@ -3004,8 +3004,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         && !you.duration[DUR_REPEL_STAIRS_CLIMB])
     {
         if (one_chance_in(5)
-            || feat_stair_direction(grd(you.pos())) != CMD_NO_CMD
-                && grd(you.pos()) != DNGN_ENTER_SHOP)
+            || feat_stair_direction(env.grid(you.pos())) != CMD_NO_CMD
+                && env.grid(you.pos()) != DNGN_ENTER_SHOP)
         {
             return XOM_BAD_CLIMB_STAIRS;
         }
@@ -3065,7 +3065,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         // escape death from deep water or lava.
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
-        if (is_feat_dangerous(grd(you.pos())))
+        if (is_feat_dangerous(env.grid(you.pos())))
             mprf(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
         else
             mprf(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");

@@ -234,7 +234,7 @@ bool try_pathfind(monster* mon)
 static bool _is_level_exit(const coord_def& pos)
 {
     // All types of stairs.
-    if (feat_is_stair(grd(pos)))
+    if (feat_is_stair(env.grid(pos)))
         return true;
 
     // Teleportation and shaft traps.
@@ -277,17 +277,17 @@ static int _merfolk_avatar_water_score(coord_def p, bool& deep)
 
     for (adjacent_iterator ai(p); ai; ++ai)
     {
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
         {
             score++;
             near_floor = true;
         }
-        else if (grd(*ai) == DNGN_DEEP_WATER)
+        else if (env.grid(*ai) == DNGN_DEEP_WATER)
         {
             score++;
             deep = true;
         }
-        else if (feat_has_solid_floor(grd(*ai)))
+        else if (feat_has_solid_floor(env.grid(*ai)))
             near_floor = true;
     }
 
@@ -300,7 +300,7 @@ static int _merfolk_avatar_water_score(coord_def p, bool& deep)
         score += 6;
 
     // Slightly prefer standing in deep water, if possible
-    if (grd(p) == DNGN_DEEP_WATER)
+    if (env.grid(p) == DNGN_DEEP_WATER)
         score++;
 
     return score;
@@ -324,7 +324,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
     // If our current location is good enough, don't bother moving towards
     // some other spot which might be somewhat better
     if (_merfolk_avatar_water_score(mon->pos(), deep) >= 12 && deep
-        && grd(mon->pos()) == DNGN_DEEP_WATER)
+        && env.grid(mon->pos()) == DNGN_DEEP_WATER)
     {
         mon->firing_pos = mon->pos();
         return true;
@@ -353,7 +353,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
         int best_num = 0;
         for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
         {
-            if (!feat_is_water(grd(*ri)))
+            if (!feat_is_water(env.grid(*ri)))
                 continue;
 
             const int dist = grid_distance(mon->pos(), *ri);
@@ -591,7 +591,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     for (radius_iterator ri(mon->patrol_point, you.current_vision, C_SQUARE, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
+        if (!in_bounds(*ri) || !mon->can_pass_through_feat(env.grid(*ri)))
             continue;
 
         // Don't bother moving to squares (currently) occupied by a
@@ -1021,7 +1021,7 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
 {
     ASSERT(map_bounds(p));
 
-    if (!monster_habitable_grid(mon, grd(p)))
+    if (!monster_habitable_grid(mon, env.grid(p)))
         return false;
 
     // Stupid monsters don't pathfind around shallow water

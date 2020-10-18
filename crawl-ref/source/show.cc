@@ -110,7 +110,7 @@ static void _update_feat_at(const coord_def &gp)
     if (!you.see_cell(gp))
         return;
 
-    dungeon_feature_type feat = grd(gp);
+    dungeon_feature_type feat = env.grid(gp);
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;
     if (feat_is_trap(feat))
@@ -320,7 +320,7 @@ static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
     if (mons_at && mons_at != mons)
         return false;
 
-    if (monster_habitable_grid(mons, grd(where)))
+    if (monster_habitable_grid(mons, env.grid(where)))
         return true;
 
     return false;
@@ -457,7 +457,7 @@ static void _update_monster(monster* mons)
 
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
-    if (grd(gp) == DNGN_SHALLOW_WATER
+    if (env.grid(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
             && !cloud_at(gp)
         || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)

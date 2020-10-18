@@ -296,7 +296,7 @@ static void _place_dragon()
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai))
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, env.grid(*ai))
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -391,7 +391,7 @@ void doom_howl(int time)
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(howlcalled, grd(*ai))
+            if (monster_habitable_grid(howlcalled, env.grid(*ai))
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -1115,7 +1115,7 @@ coord_def find_gateway_location(actor* caster)
         for (int t = 0; t < 11; t++)
         {
             test = caster->pos() + (delta * (2+t));
-            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
+            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(env.grid(test))
                 || actor_at(test)
                 || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell_no_trans(test))
@@ -1231,7 +1231,7 @@ static bool _water_adjacent(coord_def p)
 {
     for (orth_adjacent_iterator ai(p); ai; ++ai)
     {
-        if (feat_is_water(grd(*ai)))
+        if (feat_is_water(env.grid(*ai)))
             return true;
     }
 
@@ -1275,9 +1275,9 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         for (distance_iterator di(caster->pos(), false, true,
                                   LOS_DEFAULT_RANGE); di; ++di)
         {
-            if ((feat_is_wall(grd(*di)) && !feat_is_permarock(grd(*di))
+            if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
                  && x_chance_in_y(pow, 150))
-                || (grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+                || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
                     && !actor_at(*di) && !plant_forbidden_at(*di, true)))
             {
                 temp_change_terrain(*di, DNGN_TREE, duration,
@@ -1294,7 +1294,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
             for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
             {
-                if (grd(*di) == DNGN_FLOOR
+                if (env.grid(*di) == DNGN_FLOOR
                     && (di.radius() == 0 || _water_adjacent(*di))
                     && x_chance_in_y(4, di.radius() + 3))
                 {
@@ -1587,7 +1587,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (is_sanctuary(a))
         return 0;
 
-    if (grd(a) == DNGN_DEEP_WATER)
+    if (env.grid(a) == DNGN_DEEP_WATER)
         return 0; // trapped in davy jones' locker...
 
     int number_found = 0;
@@ -3075,7 +3075,7 @@ bool fedhas_wall_of_briars()
 
 static void _overgrow_wall(const coord_def &pos)
 {
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
     const string what = feature_description(feat, NUM_TRAPS, "", DESC_THE);
 
     if (monster_at(pos))
@@ -3145,7 +3145,7 @@ spret fedhas_grow_ballistomycete(bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, grd(beam.target)))
+    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(beam.target)))
     {
         mpr("You can't grow a ballistomycete there.");
         return spret::abort;
@@ -3202,7 +3202,7 @@ spret fedhas_grow_oklob(bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_OKLOB_PLANT, grd(beam.target)))
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(beam.target)))
     {
         mpr("You can't grow an oklob plant there.");
         return spret::abort;

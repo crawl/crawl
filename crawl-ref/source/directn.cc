@@ -385,7 +385,7 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
 // These should match tests in show.cc's _update_monster
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    return grd(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
+    return env.grid(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
            && !mon->submerged() && !cloud_at(mon->pos());
 }
 
@@ -775,10 +775,10 @@ static void _get_nearby_features(vector<coord_def> &list_features,
             {
                 for (const text_pattern &pattern : filters)
                 {
-                    if (pattern.matches(feature_description(grd(*ri)))
-                        || feat_stair_direction(grd(*ri)) != CMD_NO_CMD
+                    if (pattern.matches(feature_description(env.grid(*ri)))
+                        || feat_stair_direction(env.grid(*ri)) != CMD_NO_CMD
                            && pattern.matches("stair")
-                        || feat_is_trap(grd(*ri))
+                        || feat_is_trap(env.grid(*ri))
                            && pattern.matches("trap"))
                     {
                         list_features.push_back(*ri);
@@ -1414,7 +1414,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
 
 string direction_chooser::target_interesting_terrain_description() const
 {
-    const dungeon_feature_type feature = grd(target());
+    const dungeon_feature_type feature = env.grid(target());
 
     // Only features which can make you lose the item are interesting.
     // FIXME: extract the naming logic from here and use
@@ -1564,7 +1564,7 @@ void direction_chooser::print_items_description() const
 
 void direction_chooser::print_floor_description(bool boring_too) const
 {
-    const dungeon_feature_type feat = grd(target());
+    const dungeon_feature_type feat = env.grid(target());
     if (!boring_too && feat == DNGN_FLOOR)
         return;
 
@@ -3024,7 +3024,7 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
 
 string raw_feature_description(const coord_def &where)
 {
-    dungeon_feature_type feat = grd(where);
+    dungeon_feature_type feat = env.grid(where);
 
     int mapi = env.level_map_ids(where);
     if (mapi != INVALID_MAP_INDEX)
@@ -3169,7 +3169,7 @@ string feature_description_at(const coord_def& where, bool covering,
         string desc = "";
         if (env.forest_awoken_until)
             desc += "awoken ";
-        desc += grid == grd(where) ? raw_feature_description(where)
+        desc += grid == env.grid(where) ? raw_feature_description(where)
                                    : _base_feature_desc(grid, trap);
         if (is_temp_terrain(where))
             desc += " (summoned)";
@@ -3182,7 +3182,7 @@ string feature_description_at(const coord_def& where, bool covering,
             dtype = DESC_THE;
         // fallthrough
     default:
-        const string featdesc = grid == grd(where)
+        const string featdesc = grid == env.grid(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
         return thing_do_grammar(dtype, featdesc + covering_description);
@@ -3253,7 +3253,7 @@ static string _stair_destination_description(const coord_def &pos)
         const stair_info *si = linf->get_stair(pos);
         if (si)
             return " " + si->describe();
-        else if (feat_is_stair(grd(pos)))
+        else if (feat_is_stair(env.grid(pos)))
             return " (unknown stair)";
     }
     return "";
@@ -3701,7 +3701,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     string height_desc;
     if (env.heightmap)
         height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
-    const dungeon_feature_type feat = grd(where);
+    const dungeon_feature_type feat = env.grid(where);
 
     string vault;
     const int map_index = env.level_map_ids(where);
@@ -3814,7 +3814,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     }
     else
     {
-        dungeon_feature_type feat = grd(where);
+        dungeon_feature_type feat = env.grid(where);
 
         if (_interesting_feature(feat))
         {

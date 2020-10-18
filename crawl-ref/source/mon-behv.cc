@@ -1421,7 +1421,7 @@ void shake_off_monsters(const actor* target)
 // types, this should be expanded along with it.
 static void _mons_indicate_level_exit(const monster* mon)
 {
-    const dungeon_feature_type feat = grd(mon->pos());
+    const dungeon_feature_type feat = env.grid(mon->pos());
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
     if (feat_is_gate(feat))
@@ -1472,7 +1472,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
     if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
         return true;
 
-    if (grd(targ->pos()) != DNGN_SHALLOW_WATER)
+    if (env.grid(targ->pos()) != DNGN_SHALLOW_WATER)
         return false;
 
     const item_def *weapon = mons->weapon();

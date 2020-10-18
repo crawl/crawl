@@ -231,7 +231,7 @@ static void initialize_crawl()
 
     dgn_reset_level();
     for (rectangle_iterator ri(0); ri; ++ri)
-        grd(*ri) = DNGN_FLOOR;
+        env.grid(*ri) = DNGN_FLOOR;
 
     los_changed();
     you.hp = you.hp_max = PLAYER_MAXHP;

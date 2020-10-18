@@ -444,7 +444,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
+        if (feat_is_door(env.grid(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;

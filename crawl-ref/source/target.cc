@@ -29,7 +29,7 @@
 static string _wallmsg(coord_def c)
 {
     ASSERT(map_bounds(c)); // there'd be an information leak
-    const char *wall = feat_type_name(grd(c));
+    const char *wall = feat_type_name(env.grid(c));
     return "There is " + article_a(wall) + " there.";
 }
 
@@ -142,7 +142,7 @@ bool targeter_charge::valid_aim(coord_def a)
                 return notify_fail(bad);
             return true;
         }
-        else if (is_feat_dangerous(grd(ray.pos())))
+        else if (is_feat_dangerous(env.grid(ray.pos())))
         {
             return notify_fail("There's "
                                + feature_description_at(ray.pos())
@@ -174,7 +174,7 @@ bool targeter_charge::set_aim(coord_def a)
 
         if (!can_charge_through_mons(ray.pos()))
             break;
-        if (is_feat_dangerous(grd(ray.pos())))
+        if (is_feat_dangerous(env.grid(ray.pos())))
             return false;
     }
     return true;
@@ -804,7 +804,7 @@ aff_type targeter_reach::is_affected(coord_def loc)
         return AFF_YES;
 
     if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
-        && feat_is_reachable_past(grd(loc)))
+        && feat_is_reachable_past(env.grid(loc)))
     {
         return AFF_TRACER;
     }
@@ -1605,7 +1605,7 @@ bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
     if (env.markers.property_at(p, MAT_ANY, "veto_destroy") == "veto")
         return false;
 
-    const dungeon_feature_type feat = grd(p);
+    const dungeon_feature_type feat = env.grid(p);
     if (feat_is_open_door(feat))
     {
         const monster* const mons = monster_at(p);

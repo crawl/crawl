@@ -166,7 +166,7 @@ monster_type random_monster_at_grid(const coord_def& p, bool species)
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = _grid2habitat(grd(p));
+    const habitat_type ht = _grid2habitat(env.grid(p));
     const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
                                                      : monsters_by_habitat[ht];
 
@@ -1087,11 +1087,11 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 static void _destroy_mimic_feature(const coord_def &pos)
 {
 #if TAG_MAJOR_VERSION == 34
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 #endif
 
     unnotice_feature(level_pos(level_id::current(), pos));
-    grd(pos) = DNGN_FLOOR;
+    env.grid(pos) = DNGN_FLOOR;
     env.level_map_mask(pos) &= ~MMT_MIMIC;
     set_terrain_changed(pos);
     remove_markers_and_listeners_at(pos);
@@ -1110,7 +1110,7 @@ void discover_mimic(const coord_def& pos)
     if (!item && !feature_mimic)
         return;
 
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
@@ -4188,7 +4188,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
         return false;
 
     // Includes sealed doors.
-    if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
+    if (feat_is_closed_door(env.grid(p)) && _mons_can_pass_door(&mon, p))
         return true;
 
     if (!mon.is_habitable(p))
@@ -4476,7 +4476,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     if (you.see_cell(mons.pos()))
     {
-        dungeon_feature_type feat = grd(mons.pos());
+        dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)

@@ -332,8 +332,8 @@ static void _jiyva_effects(int /*time_delta*/)
             {
                 newpos = random_in_bounds();
             }
-            while (grd(newpos) != DNGN_FLOOR
-                       && grd(newpos) != DNGN_SHALLOW_WATER
+            while (env.grid(newpos) != DNGN_FLOOR
+                       && env.grid(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
@@ -573,7 +573,7 @@ static void _catchup_monster_move(monster* mon, int moves)
             break;
 
         const coord_def next(pos + inc);
-        const dungeon_feature_type feat = grd(next);
+        const dungeon_feature_type feat = env.grid(next);
         if (feat_is_solid(feat)
             || monster_at(next)
             || !monster_habitable_grid(mon, feat))
@@ -1115,7 +1115,7 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration -= duration;
 
         if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-            && !feat_is_sealed(grd(marker->pos)))
+            && !feat_is_sealed(env.grid(marker->pos)))
         {
             // TODO: could this be done inside `revert_terrain_change`? The
             // two things to test are corrupting sealed doors, and destroying
@@ -1170,7 +1170,7 @@ void setup_environment_effects()
             if (!in_bounds(x, y))
                 continue;
 
-            const int grid = grd[x][y];
+            const int grid = env.grid[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
                         && player_in_branch(BRANCH_SWAMP)))
@@ -1185,7 +1185,7 @@ void setup_environment_effects()
 
 static void apply_environment_effect(const coord_def &c)
 {
-    const dungeon_feature_type grid = grd(c);
+    const dungeon_feature_type grid = env.grid(c);
     // Don't apply if if the feature doesn't want it.
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;

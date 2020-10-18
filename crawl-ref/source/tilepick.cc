@@ -692,7 +692,7 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
         // Find an adjacent tree to pretend we're connected to.
         for (adjacent_iterator ai(t_pos); ai; ++ai)
         {
-            if (feat_is_tree(grd(*ai)))
+            if (feat_is_tree(env.grid(*ai)))
             {
                 h_pos = *ai;
                 no_head_connect = false;

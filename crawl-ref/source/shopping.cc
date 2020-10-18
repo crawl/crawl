@@ -1390,14 +1390,14 @@ void destroy_shop_at(coord_def p)
     if (shop_at(p))
     {
         env.shop.erase(p);
-        grd(p) = DNGN_ABANDONED_SHOP;
+        env.grid(p) = DNGN_ABANDONED_SHOP;
         unnotice_feature(level_pos(level_id::current(), p));
     }
 }
 
 shop_struct *shop_at(const coord_def& where)
 {
-    if (grd(where) != DNGN_ENTER_SHOP)
+    if (env.grid(where) != DNGN_ENTER_SHOP)
         return nullptr;
 
     auto it = env.shop.find(where);
