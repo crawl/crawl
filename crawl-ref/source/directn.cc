@@ -1344,7 +1344,7 @@ bool direction_chooser::pickup_item()
     unsigned short it = env.igrid(target());
     if (it != NON_ITEM)
     {
-        item = &mitm[it];
+        item = &env.item[it];
         // Check if it appears to be the same item.
         if (!item->is_valid()
             || ii->base_type != item->base_type
@@ -2284,8 +2284,8 @@ string get_terse_square_desc(const coord_def &gc)
             desc = monster_at(gc)->full_name(DESC_PLAIN);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
-        if (mitm[you.visible_igrd(gc)].defined())
-            desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
+        if (env.item[you.visible_igrd(gc)].defined())
+            desc = env.item[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
         desc = feature_description_at(gc, false, DESC_PLAIN);
@@ -3676,10 +3676,10 @@ static bool _print_item_desc(const coord_def where)
     if (targ_item == NON_ITEM)
         return false;
 
-    string name = menu_colour_item_name(mitm[targ_item], DESC_A);
+    string name = menu_colour_item_name(env.item[targ_item], DESC_A);
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
-    if (mitm[ targ_item ].link != NON_ITEM)
+    if (env.item[ targ_item ].link != NON_ITEM)
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
 
     return true;

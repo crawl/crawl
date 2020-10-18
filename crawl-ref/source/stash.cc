@@ -277,7 +277,7 @@ void Stash::update()
     // let's update them
 
     // There's something on this square. Take a squint at it.
-    item_def *pitem = &mitm[you.visible_igrd(pos)];
+    item_def *pitem = &env.item[you.visible_igrd(pos)];
     hints_first_item(*pitem);
 
     // Now, grab all items on that square and fill our vector

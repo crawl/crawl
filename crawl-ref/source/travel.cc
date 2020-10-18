@@ -589,7 +589,7 @@ static inline void _check_interesting_square(const coord_def pos,
     if ((ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
         && you.visible_igrd(pos) != NON_ITEM)
     {
-        ed.found_item(pos, mitm[ you.visible_igrd(pos) ]);
+        ed.found_item(pos, env.item[ you.visible_igrd(pos) ]);
     }
 
     ed.found_feature(pos, grd(pos));

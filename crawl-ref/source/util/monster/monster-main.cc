@@ -796,7 +796,7 @@ int main(int argc, char* argv[])
         // iterations as well.
         for (int obj : mp->inv)
             if (obj != NON_ITEM)
-                set_unique_item_status(mitm[obj], UNIQ_NOT_EXISTS);
+                set_unique_item_status(env.item[obj], UNIQ_NOT_EXISTS);
         // Destroy the monster.
         mp->reset();
         you.unique_creatures.set(spec_type, false);

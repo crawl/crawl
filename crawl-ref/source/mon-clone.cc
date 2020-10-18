@@ -320,14 +320,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(mitm[old_index], false, true);
+            mons->unequip(env.item[old_index], false, true);
             mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 
         mons->inv[ii.slot()] = new_index;
-        mitm[new_index] = mitm[old_index];
-        mitm[new_index].set_holding_monster(*mons);
+        env.item[new_index] = env.item[old_index];
+        env.item[new_index].set_holding_monster(*mons);
     }
 
     bool _obvious;

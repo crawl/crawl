@@ -78,9 +78,9 @@ void lua_push_floor_items(lua_State *ls, int link)
 {
     lua_newtable(ls);
     int index = 0;
-    for (; link != NON_ITEM; link = mitm[link].link)
+    for (; link != NON_ITEM; link = env.item[link].link)
     {
-        clua_push_item(ls, &mitm[link]);
+        clua_push_item(ls, &env.item[link]);
         lua_rawseti(ls, -2, ++index);
     }
 }

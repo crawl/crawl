@@ -267,7 +267,7 @@ static void _mark_net_trapping(const coord_def& where)
     {
         net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            _maybe_split_nets(mitm[net], where);
+            _maybe_split_nets(env.item[net], where);
     }
 }
 
@@ -993,13 +993,13 @@ void free_self_from_net()
         return;
     }
 
-    int hold = mitm[net].net_durability;
+    int hold = env.item[net].net_durability;
     dprf("net.net_durability: %d", hold);
 
     const int damage = 1 + random2(4);
 
     hold -= damage;
-    mitm[net].net_durability = hold;
+    env.item[net].net_durability = hold;
 
     if (hold < NET_MIN_DURABILITY)
     {
@@ -1054,7 +1054,7 @@ void mons_clear_trapping_net(monster* mon)
 
 void free_stationary_net(int item_index)
 {
-    item_def &item = mitm[item_index];
+    item_def &item = env.item[item_index];
     if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
         const coord_def pos = item.pos;

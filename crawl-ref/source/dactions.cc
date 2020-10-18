@@ -298,7 +298,7 @@ static void _apply_daction(daction_type act)
         }
         break;
     case DACT_ROT_CORPSES:
-        for (auto &item : mitm)
+        for (auto &item : env.item)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 item.freshness = 1; // thoroughly rotten
         break;

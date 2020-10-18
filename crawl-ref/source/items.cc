@@ -83,15 +83,15 @@
 #include "xom.h"
 
 /**
- * Return an item's location (floor or inventory) and the corresponding mitm
+ * Return an item's location (floor or inventory) and the corresponding env.item
  * int or inv slot referring to it.
  *
- * @param item_def An item in either mitm (the floor or monster inventory)
+ * @param item_def An item in either env.item (the floor or monster inventory)
  *                 or you.inv.
  *
  * @return A pair containing bool and int. The bool is true for items in
  *         inventory, false for others. The int is the item's index in either
- *         you.inv or mitm.
+ *         you.inv or env.item.
  */
 
 pair<bool, int> item_int(item_def &item)
@@ -103,18 +103,18 @@ pair<bool, int> item_int(item_def &item)
 
 
 /**
- * Return an item_def& requested by an item's inv slot or mitm index.
+ * Return an item_def& requested by an item's inv slot or env.item index.
  *
  * @param inv Is the item in inventory?
  * @param number The index of the item, either in you.inv (if inv == true)
- *               or in mitm (if inv == false).
+ *               or in env.item (if inv == false).
  *
  * @return The item.
  */
 
 item_def& item_from_int(bool inv, int number)
 {
-    return inv ? you.inv[number] : mitm[number];
+    return inv ? you.inv[number] : env.item[number];
 }
 
 static int _autopickup_subtype(const item_def &item);
@@ -146,9 +146,9 @@ void fix_item_coordinates()
 
             while (i != NON_ITEM)
             {
-                mitm[i].pos.x = x;
-                mitm[i].pos.y = y;
-                i = mitm[i].link;
+                env.item[i].pos.x = x;
+                env.item[i].pos.y = y;
+                i = env.item[i].link;
             }
         }
 }
@@ -166,24 +166,24 @@ void link_items()
     {
         // Don't mess with monster held items, since the index of the holding
         // monster is stored in the link field.
-        if (mitm[i].held_by_monster())
+        if (env.item[i].held_by_monster())
             continue;
 
-        if (!mitm[i].defined())
+        if (!env.item[i].defined())
         {
             // Item is not assigned. Ignore.
-            mitm[i].link = NON_ITEM;
+            env.item[i].link = NON_ITEM;
             continue;
         }
 
-        bool move_below = item_is_stationary(mitm[i])
-            && !item_is_stationary_net(mitm[i]);
+        bool move_below = item_is_stationary(env.item[i])
+            && !item_is_stationary_net(env.item[i]);
         int movable_ind = -1;
         // Stationary item, find index at location
         if (move_below)
         {
 
-            for (stack_iterator si(mitm[i].pos); si; ++si)
+            for (stack_iterator si(env.item[i].pos); si; ++si)
             {
                 if (!item_is_stationary(*si) || item_is_stationary_net(*si))
                     movable_ind = si->index();
@@ -192,14 +192,14 @@ void link_items()
         // Link to top
         if (!move_below || movable_ind == -1)
         {
-            mitm[i].link = igrd(mitm[i].pos);
-            igrd(mitm[i].pos) = i;
+            env.item[i].link = igrd(env.item[i].pos);
+            igrd(env.item[i].pos) = i;
         }
         // Link below movable items.
         else
         {
-            mitm[i].link = mitm[movable_ind].link;
-            mitm[movable_ind].link = i;
+            env.item[i].link = env.item[movable_ind].link;
+            env.item[movable_ind].link = i;
         }
     }
 }
@@ -207,10 +207,10 @@ void link_items()
 static bool _item_ok_to_clean(int item)
 {
     // Never clean food, zigfigs, Orbs, or runes.
-    if (mitm[item].base_type == OBJ_MISCELLANY
-            && mitm[item].sub_type == MISC_ZIGGURAT
-        || item_is_orb(mitm[item])
-        || mitm[item].base_type == OBJ_RUNES)
+    if (env.item[item].base_type == OBJ_MISCELLANY
+            && env.item[item].sub_type == MISC_ZIGGURAT
+        || item_is_orb(env.item[item])
+        || env.item[item].base_type == OBJ_RUNES)
     {
         return false;
     }
@@ -221,16 +221,16 @@ static bool _item_ok_to_clean(int item)
 static bool _item_preferred_to_clean(int item)
 {
     // Preferably clean "normal" weapons and ammo
-    if (mitm[item].base_type == OBJ_WEAPONS
-        && mitm[item].plus <= 0
-        && !is_artefact(mitm[item]))
+    if (env.item[item].base_type == OBJ_WEAPONS
+        && env.item[item].plus <= 0
+        && !is_artefact(env.item[item]))
     {
         return true;
     }
 
-    if (mitm[item].base_type == OBJ_MISSILES
-        && mitm[item].plus <= 0 && !mitm[item].net_placed // XXX: plus...?
-        && !is_artefact(mitm[item]))
+    if (env.item[item].base_type == OBJ_MISSILES
+        && env.item[item].plus <= 0 && !env.item[item].net_placed // XXX: plus...?
+        && !is_artefact(env.item[item]))
     {
         return true;
     }
@@ -304,7 +304,7 @@ stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
     cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
     if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
+        next_link = env.item[cur_link].link;
     else
         next_link = NON_ITEM;
 }
@@ -313,7 +313,7 @@ stack_iterator::stack_iterator(int start_link)
 {
     cur_link = start_link;
     if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
+        next_link = env.item[cur_link].link;
     else
         next_link = NON_ITEM;
 }
@@ -326,13 +326,13 @@ stack_iterator::operator bool() const
 item_def& stack_iterator::operator*() const
 {
     ASSERT(cur_link != NON_ITEM);
-    return mitm[cur_link];
+    return env.item[cur_link];
 }
 
 item_def* stack_iterator::operator->() const
 {
     ASSERT(cur_link != NON_ITEM);
-    return &mitm[cur_link];
+    return &env.item[cur_link];
 }
 
 int stack_iterator::index() const
@@ -344,7 +344,7 @@ const stack_iterator& stack_iterator::operator ++ ()
 {
     cur_link = next_link;
     if (cur_link != NON_ITEM)
-        next_link = mitm[cur_link].link;
+        next_link = env.item[cur_link].link;
     return *this;
 }
 
@@ -371,13 +371,13 @@ mon_inv_iterator::operator bool() const
 item_def& mon_inv_iterator::operator*() const
 {
     ASSERT(mon.inv[type] != NON_ITEM);
-    return mitm[mon.inv[type]];
+    return env.item[mon.inv[type]];
 }
 
 item_def* mon_inv_iterator::operator->() const
 {
     ASSERT(mon.inv[type] != NON_ITEM);
-    return &mitm[mon.inv[type]];
+    return &env.item[mon.inv[type]];
 }
 
 mon_inv_iterator& mon_inv_iterator::operator ++ ()
@@ -451,7 +451,7 @@ bool dec_inv_item_quantity(int obj, int amount)
 // Returns true if stack of items no longer exists.
 bool dec_mitm_item_quantity(int obj, int amount)
 {
-    item_def &item = mitm[obj];
+    item_def &item = env.item[obj];
     if (amount > item.quantity)
         amount = item.quantity; // can't use min due to type mismatch
 
@@ -481,7 +481,7 @@ void inc_inv_item_quantity(int obj, int amount)
 
 void inc_mitm_item_quantity(int obj, int amount)
 {
-    mitm[obj].quantity += amount;
+    env.item[obj].quantity += amount;
 }
 
 void init_item(int item)
@@ -489,10 +489,10 @@ void init_item(int item)
     if (item == NON_ITEM)
         return;
 
-    mitm[item].clear();
+    env.item[item].clear();
 }
 
-// Returns an unused mitm slot, or NON_ITEM if none available.
+// Returns an unused env.item slot, or NON_ITEM if none available.
 // The reserve is the number of item slots to not check.
 // Items may be culled if a reserve <= 10 is specified.
 int get_mitm_slot(int reserve)
@@ -505,7 +505,7 @@ int get_mitm_slot(int reserve)
     int item = NON_ITEM;
 
     for (item = 0; item < (MAX_ITEMS - reserve); item++)
-        if (!mitm[item].defined())
+        if (!env.item[item].defined())
             break;
 
     if (item >= MAX_ITEMS - reserve)
@@ -536,10 +536,10 @@ void unlink_item(int dest)
 {
     // Don't destroy non-items, may be called after an item has been
     // reduced to zero quantity however.
-    if (dest == NON_ITEM || !mitm[dest].defined())
+    if (dest == NON_ITEM || !env.item[dest].defined())
         return;
 
-    monster* mons = mitm[dest].holding_monster();
+    monster* mons = env.item[dest].holding_monster();
 
     if (mons != nullptr)
     {
@@ -557,16 +557,16 @@ void unlink_item(int dest)
         }
         mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
                           "it isn't in the monster's inventory.",
-             mitm[dest].name(DESC_PLAIN, false, true).c_str(),
+             env.item[dest].name(DESC_PLAIN, false, true).c_str(),
              mons->name(DESC_PLAIN, true).c_str());
         // Don't return so the debugging code can take a look at it.
     }
     // Unlinking a newly created item, or a a temporary one, or an item in
     // the player's inventory.
-    else if (mitm[dest].pos.origin() || mitm[dest].pos == ITEM_IN_INVENTORY)
+    else if (env.item[dest].pos.origin() || env.item[dest].pos == ITEM_IN_INVENTORY)
     {
-        mitm[dest].pos.reset();
-        mitm[dest].link = NON_ITEM;
+        env.item[dest].pos.reset();
+        env.item[dest].link = NON_ITEM;
         return;
     }
     else
@@ -577,31 +577,31 @@ void unlink_item(int dest)
         // the item should be linked.
 
 #if TAG_MAJOR_VERSION == 34
-        if (mitm[dest].pos.x != 0 || mitm[dest].pos.y < 5)
+        if (env.item[dest].pos.x != 0 || env.item[dest].pos.y < 5)
 #endif
-        ASSERT_IN_BOUNDS(mitm[dest].pos);
+        ASSERT_IN_BOUNDS(env.item[dest].pos);
 
         // First check the top:
-        if (igrd(mitm[dest].pos) == dest)
+        if (igrd(env.item[dest].pos) == dest)
         {
             // link igrd to the second item
-            igrd(mitm[dest].pos) = mitm[dest].link;
+            igrd(env.item[dest].pos) = env.item[dest].link;
 
-            mitm[dest].pos.reset();
-            mitm[dest].link = NON_ITEM;
+            env.item[dest].pos.reset();
+            env.item[dest].link = NON_ITEM;
             return;
         }
 
         // Okay, item is buried, find item that's on top of it.
-        for (stack_iterator si(mitm[dest].pos); si; ++si)
+        for (stack_iterator si(env.item[dest].pos); si; ++si)
         {
             // Find item linking to dest item.
             if (si->defined() && si->link == dest)
             {
                 // unlink dest
-                si->link = mitm[dest].link;
-                mitm[dest].pos.reset();
-                mitm[dest].link = NON_ITEM;
+                si->link = env.item[dest].link;
+                env.item[dest].pos.reset();
+                env.item[dest].link = NON_ITEM;
                 return;
             }
         }
@@ -610,25 +610,25 @@ void unlink_item(int dest)
 #ifdef DEBUG
     // Okay, the sane ways are gone... let's warn the player:
     mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
-         mitm[dest].name(DESC_PLAIN).c_str(),
-         mitm[dest].pos.x, mitm[dest].pos.y);
+         env.item[dest].name(DESC_PLAIN).c_str(),
+         env.item[dest].pos.x, env.item[dest].pos.y);
 
     // Okay, first we scan all items to see if we have something
     // linked to this item. We're not going to return if we find
     // such a case... instead, since things are already out of
     // alignment, let's assume there might be multiple links as well.
     bool linked = false;
-    int  old_link = mitm[dest].link; // used to try linking the first
+    int  old_link = env.item[dest].link; // used to try linking the first
 
     // Clean the relevant parts of the object.
-    mitm[dest].base_type = OBJ_UNASSIGNED;
-    mitm[dest].quantity  = 0;
-    mitm[dest].link      = NON_ITEM;
-    mitm[dest].pos.reset();
-    mitm[dest].props.clear();
+    env.item[dest].base_type = OBJ_UNASSIGNED;
+    env.item[dest].quantity  = 0;
+    env.item[dest].link      = NON_ITEM;
+    env.item[dest].pos.reset();
+    env.item[dest].props.clear();
 
     // Look through all items for links to this item.
-    for (auto &item : mitm)
+    for (auto &item : env.item)
     {
         if (item.defined() && item.link == dest)
         {
@@ -684,11 +684,11 @@ void destroy_item(int dest, bool never_created)
     // Don't destroy non-items, but this function may be called upon
     // to remove items reduced to zero quantity, so we allow "invalid"
     // objects in.
-    if (dest == NON_ITEM || !mitm[dest].defined())
+    if (dest == NON_ITEM || !env.item[dest].defined())
         return;
 
     unlink_item(dest);
-    destroy_item(mitm[dest], never_created);
+    destroy_item(env.item[dest], never_created);
 }
 
 static void _handle_gone_item(const item_def &item)
@@ -748,7 +748,7 @@ int count_movable_items(int obj)
  * Fill the given vector with the items on the given location link.
  *
  * @param[out] items A vector to hold the item_defs of the item.
- * @param[in] obj The location link; an index in mitm.
+ * @param[in] obj The location link; an index in env.item.
  * @param exclude_stationary If true, don't include stationary items.
 */
 vector<const item_def*> item_list_on_square(int obj)
@@ -1013,16 +1013,16 @@ void pickup_menu(int item_link)
         short next;
         for (int j = item_link; j != NON_ITEM; j = next)
         {
-            next = mitm[j].link;
-            if (&mitm[j] == sel.item)
+            next = env.item[j].link;
+            if (&env.item[j] == sel.item)
             {
                 if (j == item_link)
                     item_link = next;
 
                 int num_to_take = sel.quantity;
-                const bool take_all = (num_to_take == mitm[j].quantity);
-                iflags_t oldflags = mitm[j].flags;
-                clear_item_pickup_flags(mitm[j]);
+                const bool take_all = (num_to_take == env.item[j].quantity);
+                iflags_t oldflags = env.item[j].flags;
+                clear_item_pickup_flags(env.item[j]);
 
                 // If we cleared any flags on the items, but the pickup was
                 // partial, reset the flags for the items that remain on the
@@ -1031,8 +1031,8 @@ void pickup_menu(int item_link)
                 {
                     n_tried_pickup++;
                     pickup_warning = "You can't carry that many items.";
-                    if (mitm[j].defined())
-                        mitm[j].flags = oldflags;
+                    if (env.item[j].defined())
+                        env.item[j].flags = oldflags;
                 }
                 else
                 {
@@ -1040,8 +1040,8 @@ void pickup_menu(int item_link)
                     // If we deliberately chose to take only part of a
                     // pile, we consider the rest to have been
                     // "dropped."
-                    if (!take_all && mitm[j].defined())
-                        mitm[j].flags |= ISFLAG_DROPPED;
+                    if (!take_all && env.item[j].defined())
+                        env.item[j].flags |= ISFLAG_DROPPED;
                 }
             }
         }
@@ -1319,8 +1319,8 @@ bool pickup_single_item(int link, int qty)
 {
     ASSERT(link != NON_ITEM);
 
-    item_def* item = &mitm[link];
-    if (item_is_stationary(mitm[link]))
+    item_def* item = &env.item[link];
+    if (item_is_stationary(env.item[link]))
     {
         mpr("You can't pick that up.");
         return false;
@@ -1379,7 +1379,7 @@ bool player_on_single_stack()
     if (o == NON_ITEM)
         return false;
     else
-        return mitm[o].link == NON_ITEM && mitm[o].quantity > 1;
+        return env.item[o].link == NON_ITEM && env.item[o].quantity > 1;
 }
 
 /**
@@ -1410,9 +1410,9 @@ void pickup(bool partial_quantity)
     else if (num_items == 1) // just one movable item?
     {
         // Get the link to the movable item in the pile.
-        while (item_is_stationary(mitm[o]))
-            o = mitm[o].link;
-        pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
+        while (item_is_stationary(env.item[o]))
+            o = env.item[o].link;
+        pickup_single_item(o, partial_quantity ? 0 : env.item[o].quantity);
     }
     else if (Options.pickup_menu_limit
              && num_items > (Options.pickup_menu_limit > 0
@@ -1433,9 +1433,9 @@ void pickup(bool partial_quantity)
         while (o != NON_ITEM)
         {
             // Must save this because pickup can destroy the item.
-            next = mitm[o].link;
+            next = env.item[o].link;
 
-            if (item_is_stationary(mitm[o]))
+            if (item_is_stationary(env.item[o]))
             {
                 o = next;
                 continue;
@@ -1447,7 +1447,7 @@ void pickup(bool partial_quantity)
                 string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
-                     menu_colour_item_name(mitm[o], DESC_A).c_str());
+                     menu_colour_item_name(env.item[o], DESC_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_YESNO);
                 keyin = getch_ck();
@@ -1468,15 +1468,15 @@ void pickup(bool partial_quantity)
 
             if (keyin == 'y' || keyin == 'a')
             {
-                int num_to_take = mitm[o].quantity;
-                const iflags_t old_flags(mitm[o].flags);
-                clear_item_pickup_flags(mitm[o]);
+                int num_to_take = env.item[o].quantity;
+                const iflags_t old_flags(env.item[o].flags);
+                clear_item_pickup_flags(env.item[o]);
 
                 // attempt to actually pick up the object.
                 if (!move_item_to_inv(o, num_to_take))
                 {
                     pickup_warning = "You can't carry that many items.";
-                    mitm[o].flags = old_flags;
+                    env.item[o].flags = old_flags;
                 }
             }
 
@@ -1751,8 +1751,8 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 
 
 // Currently only used for moving shop items into inventory, since they are
-// not in mitm. This doesn't work with partial pickup, because that requires
-// an mitm slot...
+// not in env.item. This doesn't work with partial pickup, because that requires
+// an env.item slot...
 bool move_item_to_inv(item_def& item)
 {
     bool junk;
@@ -1762,7 +1762,7 @@ bool move_item_to_inv(item_def& item)
 /**
  * Move the given item and quantity to the player's inventory.
  *
- * @param obj The item index in mitm.
+ * @param obj The item index in env.item.
  * @param quant_got The quantity of this item to move.
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
@@ -1771,7 +1771,7 @@ bool move_item_to_inv(item_def& item)
 */
 bool move_item_to_inv(int obj, int quant_got, bool quiet)
 {
-    item_def &it = mitm[obj];
+    item_def &it = env.item[obj];
     const coord_def old_item_pos = it.pos;
 
     bool actually_went_in = false;
@@ -2157,9 +2157,9 @@ void mark_items_non_pickup_at(const coord_def &pos)
     int item = igrd(pos);
     while (item != NON_ITEM)
     {
-        mitm[item].flags |= ISFLAG_DROPPED;
-        mitm[item].flags &= ~ISFLAG_THROWN;
-        item = mitm[item].link;
+        env.item[item].flags |= ISFLAG_DROPPED;
+        env.item[item].flags &= ~ISFLAG_THROWN;
+        item = env.item[item].link;
     }
 }
 
@@ -2174,9 +2174,9 @@ static void _gozag_move_gold_to_top(const coord_def p)
     if (have_passive(passive_t::detect_gold))
     {
         for (int gold = igrd(p); gold != NON_ITEM;
-             gold = mitm[gold].link)
+             gold = env.item[gold].link)
         {
-            if (mitm[gold].base_type == OBJ_GOLD)
+            if (env.item[gold].base_type == OBJ_GOLD)
             {
                 unlink_item(gold);
                 move_item_to_grid(&gold, p, true);
@@ -2186,7 +2186,7 @@ static void _gozag_move_gold_to_top(const coord_def p)
     }
 }
 
-// Moves mitm[obj] to p... will modify the value of obj to
+// Moves env.item[obj] to p... will modify the value of obj to
 // be the index of the final object (possibly different).
 //
 // Done this way in the hopes that it will be obvious from
@@ -2201,10 +2201,10 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     int& ob(*obj);
 
     // Must be a valid reference to a valid object.
-    if (ob == NON_ITEM || !mitm[ob].defined())
+    if (ob == NON_ITEM || !env.item[ob].defined())
         return false;
 
-    item_def& item(mitm[ob]);
+    item_def& item(env.item[ob]);
     bool move_below = item_is_stationary(item) && !item_is_stationary_net(item);
 
     if (!silenced(p) && !silent)
@@ -2269,8 +2269,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     // below the lowest non-stationary, non-net item.
     if (move_below && movable_ind >= 0)
     {
-        item.link = mitm[movable_ind].link;
-        mitm[movable_ind].link = item.index();
+        item.link = env.item[movable_ind].link;
+        env.item[movable_ind].link = item.index();
     }
     // Movable item or no movable items in pile, link item to top of list.
     else
@@ -2370,7 +2370,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
     int new_item_idx = get_mitm_slot(10);
     if (new_item_idx == NON_ITEM)
         return false;
-    item_def& new_item = mitm[new_item_idx];
+    item_def& new_item = env.item[new_item_idx];
 
     // Copy item.
     new_item = item;
@@ -2433,7 +2433,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
 const item_def* top_item_at(const coord_def& where)
 {
     const int link = you.visible_igrd(where);
-    return (link == NON_ITEM) ? nullptr : &mitm[link];
+    return (link == NON_ITEM) ? nullptr : &env.item[link];
 }
 
 bool multiple_items_at(const coord_def& where)
@@ -3135,8 +3135,8 @@ static void _do_autopickup()
     string pickup_warning;
     while (o != NON_ITEM)
     {
-        const int next = mitm[o].link;
-        item_def& mi = mitm[o];
+        const int next = env.item[o].link;
+        item_def& mi = env.item[o];
 
         if (item_needs_autopickup(mi))
         {
@@ -3221,8 +3221,8 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
 int item_on_floor(const item_def &item, const coord_def& where)
 {
     // Check if the item is on the floor and reachable.
-    for (int link = igrd(where); link != NON_ITEM; link = mitm[link].link)
-        if (&mitm[link] == &item)
+    for (int link = igrd(where); link != NON_ITEM; link = env.item[link].link)
+        if (&env.item[link] == &item)
             return link;
 
     return NON_ITEM;
@@ -3308,7 +3308,7 @@ bool item_def::launched_by(const item_def &launcher) const
 
 int item_def::index() const
 {
-    return this - mitm.buffer();
+    return this - env.item.buffer();
 }
 
 int item_def::armour_rating() const
@@ -4386,16 +4386,16 @@ void move_items(const coord_def r, const coord_def p)
 
     while (it != NON_ITEM)
     {
-        mitm[it].pos.x = p.x;
-        mitm[it].pos.y = p.y;
-        if (mitm[it].link == NON_ITEM)
+        env.item[it].pos.x = p.x;
+        env.item[it].pos.y = p.y;
+        if (env.item[it].link == NON_ITEM)
         {
             // Link to the stack on the target grid p,
             // or NON_ITEM, if empty.
-            mitm[it].link = igrd(p);
+            env.item[it].link = igrd(p);
             break;
         }
-        it = mitm[it].link;
+        it = env.item[it].link;
     }
 
     // Move entire stack over to p.

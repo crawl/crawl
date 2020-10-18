@@ -59,7 +59,7 @@ struct item_def
     /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
-    /// For floor items, index in the mitm array of the next item in the
+    /// For floor items, index in the env.item array of the next item in the
     /// pile. NON_ITEM for the last item in a pile. For items in player
     /// inventory, instead the index into you.inv. For items in monster
     /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
@@ -99,11 +99,11 @@ public:
     }
 
     /**
-     * Find the index of an item in the mitm array. Results are undefined
+     * Find the index of an item in the env.item array. Results are undefined
      * if this item is not in the array!
      *
-     * @pre The item is actually in the mitm array.
-     * @return  The index of this item in the mitm array, between
+     * @pre The item is actually in the env.item array.
+     * @return  The index of this item in the env.item array, between
      *          0 and MAX_ITEMS-1.
      */
     int  index() const;

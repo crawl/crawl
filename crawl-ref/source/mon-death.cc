@@ -435,7 +435,7 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
     if (o == NON_ITEM)
         return;
-    item_def& item = mitm[o];
+    item_def& item = env.item[o];
 
     do_uncurse_item(item);
 
@@ -501,7 +501,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
 }
 
 /**
- * Create this monster's corpse in mitm at its position.
+ * Create this monster's corpse in env.item at its position.
  *
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
@@ -556,7 +556,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
-    item_def& corpse(mitm[o]);
+    item_def& corpse(env.item[o]);
     if (goldify)
     {
         _gold_pile(corpse, mons_species(mons.type));
@@ -587,7 +587,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
-    return &mitm[o];
+    return &env.item[o];
 }
 
 static void _hints_inspect_kill()
@@ -1961,7 +1961,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // XXX: This can probably become mons.is_summoned(): there's no
         // feasible way for a dancing weapon to "drop" it's weapon and somehow
         // gain a summoned one, or vice versa.
-        bool summoned_it = mitm[w_idx].flags & ISFLAG_SUMMONED;
+        bool summoned_it = env.item[w_idx].flags & ISFLAG_SUMMONED;
 
         if (!silent && !hard_reset && !was_banished)
         {
@@ -1981,8 +1981,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (was_banished && !summoned_it && !hard_reset
             && mons.has_ench(ENCH_ABJ))
         {
-            if (is_unrandom_artefact(mitm[w_idx]))
-                set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
+            if (is_unrandom_artefact(env.item[w_idx]))
+                set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
 
             destroy_item(w_idx);
         }
@@ -2183,8 +2183,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                         if (thing_created != NON_ITEM)
                         {
                             move_item_to_grid(&thing_created, you.pos(), true);
-                            mitm[thing_created].quantity = 1;
-                            mitm[thing_created].flags |= ISFLAG_KNOW_TYPE;
+                            env.item[thing_created].quantity = 1;
+                            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
                             // not a conventional gift, but use the same
                             // messaging
                             simple_god_message(" grants you a gift!");
@@ -2596,7 +2596,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else
     {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
-        // don't clutter up mitm[].
+        // don't clutter up env.item[].
         mons.destroy_inventory();
     }
 

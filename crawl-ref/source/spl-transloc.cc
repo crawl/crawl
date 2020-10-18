@@ -1010,7 +1010,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
         return spret::abort;
     }
 
-    item_def& item = mitm[item_idx];
+    item_def& item = env.item[item_idx];
 
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))

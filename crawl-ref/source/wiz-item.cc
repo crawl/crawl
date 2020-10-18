@@ -62,7 +62,7 @@ static void _make_all_books()
         if (thing == NON_ITEM)
             continue;
 
-        item_def book(mitm[thing]);
+        item_def book(env.item[thing]);
 
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
@@ -127,7 +127,7 @@ void wizard_create_spec_object()
         mpr("Could not allocate item.");
         return;
     }
-    item_def& item(mitm[thing_created]);
+    item_def& item(env.item[thing_created]);
 
     // turn item into appropriate kind:
     if (class_wanted == OBJ_ORBS)
@@ -232,7 +232,7 @@ void wizard_create_spec_object()
         // orig_monnum is used in corpses for things like the Animate
         // Dead spell, so leave it alone.
         if (class_wanted != OBJ_CORPSES)
-            origin_acquired(mitm[thing_created], AQ_WIZMODE);
+            origin_acquired(env.item[thing_created], AQ_WIZMODE);
         canned_msg(MSG_SOMETHING_APPEARS);
 
         // Tell the stash tracker.
@@ -567,7 +567,7 @@ void wizard_create_all_artefacts(bool override_unique)
             if (islot == NON_ITEM)
                 break;
 
-            item_def &tmp_item = mitm[islot];
+            item_def &tmp_item = env.item[islot];
             make_item_unrandart(tmp_item, index);
             tmp_item.quantity = 1;
         }
@@ -585,7 +585,7 @@ void wizard_create_all_artefacts(bool override_unique)
                 continue;
             }
         }
-        item_def &item = mitm[islot];
+        item_def &item = env.item[islot];
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         if (!is_artefact(item))
@@ -612,7 +612,7 @@ void wizard_create_all_artefacts(bool override_unique)
     int islot = get_mitm_slot();
     if (islot != NON_ITEM)
     {
-        item_def& item = mitm[islot];
+        item_def& item = env.item[islot];
         item.clear();
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
@@ -787,7 +787,7 @@ void wizard_unidentify_pack()
 void wizard_list_items()
 {
     mpr("Item stacks (by location and top item):");
-    for (const auto &item : mitm)
+    for (const auto &item : env.item)
     {
         if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
         {
@@ -807,8 +807,8 @@ void wizard_list_items()
         if (item != NON_ITEM)
         {
             mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
-                 mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
-                 mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
+                 env.item[item].name(DESC_PLAIN, false, false, false).c_str(),
+                 env.item[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 }
@@ -872,7 +872,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         mpr("Too many items on level.");
         return;
     }
-    mitm[p].base_type = OBJ_UNASSIGNED;
+    env.item[p].base_type = OBJ_UNASSIGNED;
 
     clear_messages();
     mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
@@ -928,13 +928,13 @@ static void _debug_acquirement_stats(FILE *ostat)
         const int item_index = acquirement_create_item(type, AQ_WIZMODE, true,
                 you.pos());
 
-        if (item_index == NON_ITEM || !mitm[item_index].defined())
+        if (item_index == NON_ITEM || !env.item[item_index].defined())
         {
             mpr("Acquirement failed, stopping early.");
             break;
         }
 
-        item_def &item(mitm[item_index]);
+        item_def &item(env.item[item_index]);
 
         acq_calls++;
         total_quant += item.quantity;
@@ -1648,7 +1648,7 @@ void wizard_draw_card()
 void wizard_identify_all_items()
 {
     wizard_identify_pack();
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined())
             set_ident_flags(item, ISFLAG_IDENT_MASK);
     for (auto& entry : env.shop)
@@ -1667,7 +1667,7 @@ void wizard_identify_all_items()
 void wizard_unidentify_all_items()
 {
     wizard_unidentify_pack();
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined())
             _forget_item(item);
     for (auto& entry : env.shop)

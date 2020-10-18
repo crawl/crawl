@@ -316,7 +316,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
             fprintf(stderr, "invalid item index %d\n", idx);
             continue;
         }
-        const item_def &item(mitm[idx]);
+        const item_def &item(env.item[idx]);
 
         if (!item.defined())
         {

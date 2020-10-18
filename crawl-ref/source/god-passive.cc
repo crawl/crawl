@@ -1357,7 +1357,7 @@ monster* shadow_monster(bool equip)
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
             return nullptr;
-        item_def& new_item = mitm[wpn_index];
+        item_def& new_item = env.item[wpn_index];
         if (wpn->base_type == OBJ_STAVES)
         {
             new_item.base_type = OBJ_WEAPONS;
@@ -1389,7 +1389,7 @@ monster* shadow_monster(bool equip)
     mon->hit_points = you.hp;
     mon->set_hit_dice(min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? item_attack_skill(mitm[wpn_index])
+                                                 ? item_attack_skill(env.item[wpn_index])
                                                  : SK_UNARMED_COMBAT, 10, 20)
                                   + you.skill_rdiv(SK_FIGHTING, 10, 20))));
     mon->set_position(you.pos());
@@ -1469,7 +1469,7 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
     int ammo_index = get_mitm_slot(10);
     if (ammo_index != NON_ITEM)
     {
-        item_def& new_item = mitm[ammo_index];
+        item_def& new_item = env.item[ammo_index];
         new_item.base_type = item.base_type;
         new_item.sub_type  = item.sub_type;
         new_item.quantity  = 1;
@@ -1482,7 +1482,7 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
         bolt beem;
         beem.set_target(d);
         setup_monster_throw_beam(mon, beem);
-        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
+        beem.item = &env.item[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 

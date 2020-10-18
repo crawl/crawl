@@ -140,7 +140,7 @@ static bool _do_build_level()
 
     // Record floor items for objstat.
     if (crawl_state.obj_stat_gen)
-        for (auto &item : mitm)
+        for (auto &item : env.item)
             if (item.defined())
                 objstat_record_item(item);
 

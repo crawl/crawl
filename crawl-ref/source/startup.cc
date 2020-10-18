@@ -215,7 +215,7 @@ static void _zap_los_monsters()
         {
             int item = igrd(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined())
+            if (item != NON_ITEM && env.item[item].defined())
                 destroy_item(item);
         }
 

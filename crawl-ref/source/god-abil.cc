@@ -1961,9 +1961,9 @@ bool kiku_receive_corpses(int pow)
 */
 bool kiku_take_corpse()
 {
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
     {
-        item_def &item(mitm[i]);
+        item_def &item(env.item[i]);
 
         if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
             continue;
@@ -1991,7 +1991,7 @@ bool kiku_gift_necronomicon()
     {
         return false;
     }
-    set_ident_type(mitm[thing_created], true);
+    set_ident_type(env.item[thing_created], true);
     simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL

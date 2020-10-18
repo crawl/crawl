@@ -1366,14 +1366,14 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             // shouldn't.
             if (you.hp <= 0)
             {
-                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
+                set_ident_flags(env.item[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK);
             }
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
             if (mons->type != MONS_DANCING_WEAPON)
-                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
