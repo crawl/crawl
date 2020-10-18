@@ -121,7 +121,7 @@ void wizard_create_spec_monster_name()
     // ghost's stats, brand or level, among other things.
     if (mspec.type == MONS_PLAYER_GHOST)
     {
-        unsigned short idx = mgrd(place);
+        unsigned short idx = env.mgrid(place);
 
         if (idx >= MAX_MONSTERS || env.mons[idx].type != MONS_PLAYER_GHOST)
         {
@@ -407,7 +407,7 @@ void debug_stethoscope(int mon)
             return;
         }
 
-        i = mgrd(stethpos);
+        i = env.mgrid(stethpos);
     }
 
     monster& mons(env.mons[i]);
@@ -766,14 +766,14 @@ static void _move_monster(const coord_def& where, int idx1)
 
     monster* mon1 = &env.mons[idx1];
 
-    const int idx2 = mgrd(moves.target);
+    const int idx2 = env.mgrid(moves.target);
     monster* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
-    mgrd(moves.target) = idx1;
+    env.mgrid(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
-    mgrd(where) = idx2;
+    env.mgrid(where) = idx2;
 
     if (mon2 != nullptr)
     {
@@ -802,7 +802,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 
     already_moving = true;
 
-    int idx = mgrd(where);
+    int idx = env.mgrid(where);
 
     if (idx == NON_MONSTER)
     {

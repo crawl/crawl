@@ -5567,14 +5567,14 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
     const int index = mindex();
 
     // Clear old cell pointer.
-    if (in_bounds(pos()) && mgrd(pos()) == index)
-        mgrd(pos()) = NON_MONSTER;
+    if (in_bounds(pos()) && env.mgrid(pos()) == index)
+        env.mgrid(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
     moveto(newpos, clear_net);
 
     // Set new monster grid pointer to this monster.
-    mgrd(newpos) = index;
+    env.mgrid(newpos) = index;
 
     return true;
 }
@@ -5587,7 +5587,7 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
  *
  *  We also cannot use moveto, since that calls clear_invalid_constrictions,
  *  which may cause a more(), causing a render. While monsters are being
- *  swapped, their positions and the mgrd mismatch, so rendering would crash.
+ *  swapped, their positions and the env.mgrid mismatch, so rendering would crash.
  *
  *  @param other the monster to swap with
  *  @returns whether they ended up moving.
@@ -5612,10 +5612,10 @@ bool monster::swap_with(monster* other)
     mons_clear_trapping_net(this);
     mons_clear_trapping_net(other);
 
-    // Swap monster positions. Cannot render inside here, since mgrd and monster
+    // Swap monster positions. Cannot render inside here, since env.mgrid and monster
     // positions would mismatch.
-    mgrd(old_pos) = other->mindex();
-    mgrd(new_pos) = mindex();
+    env.mgrid(old_pos) = other->mindex();
+    env.mgrid(new_pos) = mindex();
     set_position(new_pos);
     other->set_position(old_pos);
 

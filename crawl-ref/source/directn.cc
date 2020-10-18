@@ -3776,7 +3776,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
 
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
-        debug_stethoscope(mgrd(where));
+        debug_stethoscope(env.mgrid(where));
 #endif
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {

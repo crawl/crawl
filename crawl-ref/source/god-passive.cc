@@ -1397,7 +1397,7 @@ monster* shadow_monster(bool equip)
     mon->inv[MSLOT_WEAPON]  = wpn_index;
     mon->inv[MSLOT_MISSILE] = NON_ITEM;
 
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     return mon;
 }

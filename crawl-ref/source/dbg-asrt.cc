@@ -393,7 +393,7 @@ static void _dump_player(FILE *file)
     if (in_bounds(you.pos()) && monster_at(you.pos()))
     {
         fprintf(file, "Standing on same square as: ");
-        const unsigned short midx = mgrd(you.pos());
+        const unsigned short midx = env.mgrid(you.pos());
 
         if (invalid_monster_index(midx))
             fprintf(file, "invalid monster index %d\n", (int) midx);

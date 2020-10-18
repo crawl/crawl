@@ -1062,9 +1062,9 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
             mon->foe = MHITNOT;
     }
     else
-        mon->foe = mgrd(spd.target);
+        mon->foe = env.mgrid(spd.target);
 
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     mons_cast(mon, beam, spell, MON_SPELL_NO_FLAGS);
 

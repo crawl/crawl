@@ -419,8 +419,8 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
             ASSERT(entry.second == act->pos());
 
             // Temporarily move to (0,0) to allow permutations.
-            if (mgrd(act->pos()) == act->mindex())
-                mgrd(act->pos()) = NON_MONSTER;
+            if (env.mgrid(act->pos()) == act->mindex())
+                env.mgrid(act->pos()) = NON_MONSTER;
             act->moveto(coord_def());
             if (act->is_player())
                 stop_delay(true);

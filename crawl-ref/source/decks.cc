@@ -1153,7 +1153,7 @@ static void _damaging_card(card_type card, int power,
         if (power_level == 1)
         {
             cast_iood(&you, power/6, &beam, 0, 0,
-                      mgrd(beam.target), false, false);
+                      env.mgrid(beam.target), false, false);
         }
         else
             cast_iood_burst(power/6, beam.target);
@@ -1544,7 +1544,7 @@ static void _illusion_card(int power)
     mon->attitude = ATT_FRIENDLY;
     mon->set_position(you.pos());
     mon->mid = MID_PLAYER;
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
     mon->reset();

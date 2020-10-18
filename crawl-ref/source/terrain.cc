@@ -1080,8 +1080,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
                 }
 
             }
-            mgrd(dst) = mgrd(src);
-            mgrd(src) = NON_MONSTER;
+            env.mgrid(dst) = env.mgrid(src);
+            env.mgrid(src) = NON_MONSTER;
         }
     }
 
@@ -1526,21 +1526,21 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     // Swap monsters.
     // Note that trapping nets, etc., move together
     // with the monster/player, so don't clear them.
-    const int m1 = mgrd(pos1);
-    const int m2 = mgrd(pos2);
+    const int m1 = env.mgrid(pos1);
+    const int m2 = env.mgrid(pos2);
 
-    mgrd(pos1) = m2;
-    mgrd(pos2) = m1;
+    env.mgrid(pos1) = m2;
+    env.mgrid(pos2) = m1;
 
     if (monster_at(pos1))
     {
-        env.mons[mgrd(pos1)].set_position(pos1);
-        env.mons[mgrd(pos1)].clear_invalid_constrictions();
+        env.mons[env.mgrid(pos1)].set_position(pos1);
+        env.mons[env.mgrid(pos1)].clear_invalid_constrictions();
     }
     if (monster_at(pos2))
     {
-        env.mons[mgrd(pos2)].set_position(pos2);
-        env.mons[mgrd(pos2)].clear_invalid_constrictions();
+        env.mons[env.mgrid(pos2)].set_position(pos2);
+        env.mons[env.mgrid(pos2)].clear_invalid_constrictions();
     }
 
     swap_clouds(pos1, pos2);

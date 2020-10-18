@@ -43,7 +43,7 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     fail_check();
 
     int mtarg = !beam ? MHITNOT :
-                beam->target == you.pos() ? int{MHITYOU} : mgrd(beam->target);
+                beam->target == you.pos() ? int{MHITYOU} : env.mgrid(beam->target);
 
     monster *mon = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (is_player) ? BEH_FRIENDLY :
