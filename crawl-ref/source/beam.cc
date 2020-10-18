@@ -664,7 +664,7 @@ void bolt::initialise_fire()
     // If the beam was reflected, assume it can "see" anything, since neither
     // the reflector nor the original source was particularly aiming for this
     // target. WARNING: if you change this logic, keep in mind that
-    // menv[YOU_FAULTLESS] cannot be safely queried for properties like
+    // env.mons[YOU_FAULTLESS] cannot be safely queried for properties like
     // can_see_invisible.
     if (reflections > 0)
         nightvision = can_see_invis = true;
@@ -4667,7 +4667,7 @@ void bolt::affect_monster(monster* mon)
         // if that didn't work, blanket fall back on YOU_FAULTLESS. This covers
         // a number of other weird penetration cases.
         if (!ag)
-            ag = &menv[YOU_FAULTLESS];
+            ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
         ranged_attack attk(ag, mon, item, use_target_as_pos, agent());
         attk.attack();
@@ -6267,7 +6267,7 @@ actor* bolt::agent(bool ignore_reflection) const
     if (reflections > 0 && !ignore_reflection)
     {
         if (reflector == MID_PLAYER || source_id == MID_PLAYER)
-            return &menv[YOU_FAULTLESS];
+            return &env.mons[YOU_FAULTLESS];
         nominal_source = reflector;
     }
 

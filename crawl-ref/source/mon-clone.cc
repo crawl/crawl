@@ -277,7 +277,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                     mon_attitude_type mon_att)
 {
-    // Is there an open slot in menv?
+    // Is there an open slot in env.mons?
     monster* mons = get_free_monster();
     coord_def pos(0, 0);
 

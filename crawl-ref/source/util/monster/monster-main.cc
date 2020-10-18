@@ -623,7 +623,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
 
             bool this_spec = false;
 
-            monster* mp = &menv[index];
+            monster* mp = &env.mons[index];
 
             if (mp)
             {
@@ -782,7 +782,7 @@ int main(int argc, char* argv[])
     spell_damage_map damages;
     for (int i = 0; i < ntrials; ++i)
     {
-        monster* mp = &menv[index];
+        monster* mp = &env.mons[index];
         const string mname = mp->name(DESC_PLAIN, true);
         exper += exper_value(*mp);
         mac += mp->armour_class();
@@ -815,7 +815,7 @@ int main(int argc, char* argv[])
     mac /= ntrials;
     mev /= ntrials;
 
-    monster& mon(menv[index]);
+    monster& mon(env.mons[index]);
 
     const string symbol(monster_symbol(mon));
 

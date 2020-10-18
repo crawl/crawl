@@ -2667,7 +2667,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
 
 int monster::mindex() const
 {
-    return this - menv.buffer();
+    return this - env.mons.buffer();
 }
 
 /**
@@ -5091,7 +5091,7 @@ actor *monster::get_foe() const
         return friendly() ? nullptr : &you;
 
     // Must be a monster!
-    monster* my_foe = &menv[foe];
+    monster* my_foe = &env.mons[foe];
     return my_foe->alive()? my_foe : nullptr;
 }
 

@@ -636,7 +636,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
 
-    const int mon_count = count_if(begin(menv), end(menv),
+    const int mon_count = count_if(begin(env.mons), end(env.mons),
                                    [] (const monster &mons) -> bool
                                    { return mons.type != MONS_NO_MONSTER; });
     // All monsters have been assigned? {dlb}

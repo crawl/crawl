@@ -133,7 +133,7 @@ void debug_item_scan()
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; ++j)
             {
-                monster& mons(menv[j]);
+                monster& mons(env.mons[j]);
                 for (mon_inv_iterator ii(mons); ii; ++ii)
                 {
                     if (ii->index() == i)
@@ -186,7 +186,7 @@ void debug_item_scan()
     // Quickly scan monsters for "program bug"s.
     for (i = 0; i < MAX_MONSTERS; ++i)
     {
-        const monster& mons = menv[i];
+        const monster& mons = env.mons[i];
 
         if (mons.type == MONS_NO_MONSTER)
             continue;
@@ -283,7 +283,7 @@ void debug_mons_scan()
                 continue;
             }
 
-            const monster* m = &menv[mons];
+            const monster* m = &env.mons[mons];
             const coord_def pos(x, y);
             if (m->pos() != pos)
             {
@@ -320,7 +320,7 @@ void debug_mons_scan()
     {
         is_floating[i] = false;
 
-        const monster* m = &menv[i];
+        const monster* m = &env.mons[i];
         if (!m->alive())
             continue;
 
@@ -355,7 +355,7 @@ void debug_mons_scan()
                 if (i == j)
                     continue;
 
-                const monster* m2 = &menv[j];
+                const monster* m2 = &env.mons[j];
 
                 if (m2->pos() != m->pos())
                     continue;
@@ -504,9 +504,9 @@ void debug_mons_scan()
     {
         unsigned short idx = entry.second;
         ASSERT(!invalid_monster_index(idx));
-        if (menv[idx].mid != entry.first)
+        if (env.mons[idx].mid != entry.first)
         {
-            monster &m(menv[idx]);
+            monster &m(env.mons[idx]);
             die("mid cache bogosity: mid %d points to %s mindex=%d mid=%d",
                 entry.first, m.name(DESC_PLAIN, true).c_str(), m.mindex(),
                 m.mid);
@@ -547,7 +547,7 @@ void debug_mons_scan()
 
     for (int idx : floating_mons)
     {
-        const monster* mon = &menv[idx];
+        const monster* mon = &env.mons[idx];
         vector<string> vaults = _in_vaults(mon->pos());
 
         string str = make_stringf("Floating monster %s (%d, %d)",
@@ -569,7 +569,7 @@ void debug_mons_scan()
     {
         const coord_def pos = bogus_pos[i];
         const int       idx = bogus_idx[i];
-        const monster* mon = &menv[idx];
+        const monster* mon = &env.mons[idx];
 
         string str = make_stringf("Bogus mgrd (%d, %d) pointing to %s", pos.x,
                                   pos.y, mon->name(DESC_PLAIN, true).c_str());

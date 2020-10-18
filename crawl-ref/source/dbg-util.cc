@@ -233,7 +233,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     else if (mon->foe == midx)
         fprintf(stderr, "self");
     else
-        fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
+        fprintf(stderr, "%s", debug_mon_str(&env.mons[mon->foe]).c_str());
 
     fprintf(stderr, "\n");
 
@@ -270,7 +270,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         else if (invalid_monster_index(target))
             fprintf(stderr, "invalid monster index %d", target);
         else
-            fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
+            fprintf(stderr, "%s", debug_mon_str(&env.mons[target]).c_str());
     }
     else
         fprintf(stderr, "<OoB>");
@@ -377,18 +377,18 @@ void debug_dump_mon(const monster* mon, bool recurse)
         return;
 
     if (!invalid_monster_index(mon->foe) && mon->foe != midx
-        && !invalid_monster_type(menv[mon->foe].type))
+        && !invalid_monster_type(env.mons[mon->foe].type))
     {
         fprintf(stderr, "Foe:\n");
-        debug_dump_mon(&menv[mon->foe], false);
+        debug_dump_mon(&env.mons[mon->foe], false);
     }
 
     if (!invalid_monster_index(target) && target != midx
         && target != mon->foe
-        && !invalid_monster_type(menv[target].type))
+        && !invalid_monster_type(env.mons[target].type))
     {
         fprintf(stderr, "Target:\n");
-        debug_dump_mon(&menv[target], false);
+        debug_dump_mon(&env.mons[target], false);
     }
 }
 

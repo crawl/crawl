@@ -399,7 +399,7 @@ static void _dump_player(FILE *file)
             fprintf(file, "invalid monster index %d\n", (int) midx);
         else
         {
-            const monster* mon = &menv[midx];
+            const monster* mon = &env.mons[midx];
             fprintf(file, "%s:\n", debug_mon_str(mon).c_str());
             debug_dump_mon(mon, true);
         }

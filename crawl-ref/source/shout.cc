@@ -528,7 +528,7 @@ static int _issue_orders_prompt()
         string previous;
         if (_can_target_prev())
         {
-            const monster* target = &menv[you.prev_targ];
+            const monster* target = &env.mons[you.prev_targ];
             if (target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }

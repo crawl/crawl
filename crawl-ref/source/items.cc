@@ -3327,7 +3327,7 @@ monster* item_def::holding_monster() const
     if (invalid_monster_index(midx))
         return nullptr;
 
-    return &menv[midx];
+    return &env.mons[midx];
 }
 
 void item_def::set_holding_monster(const monster& mon)
@@ -3336,7 +3336,7 @@ void item_def::set_holding_monster(const monster& mon)
     link = NON_ITEM + 1 + mon.mindex();
 }
 
-// Note: should not check menv, since it may be called by link_items() from
+// Note: should not check env.mons, since it may be called by link_items() from
 // tags.cc before monsters are unmarshalled.
 bool item_def::held_by_monster() const
 {
