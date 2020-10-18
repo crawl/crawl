@@ -1364,9 +1364,9 @@ static void _place_player(dungeon_feature_type stair_taken,
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
-        if (you.is_habitable_feat(grd(*di))
-            && !is_feat_dangerous(grd(*di), true)
-            && !feat_is_trap(grd(*di)))
+        if (you.is_habitable_feat(env.grid(*di))
+            && !is_feat_dangerous(env.grid(*di), true)
+            && !feat_is_trap(env.grid(*di)))
         {
             if (you.pos() != *di)
                 you.moveto(*di);
@@ -1838,9 +1838,9 @@ static void _rescue_player_from_wall()
                 backup_clear_pos = *di;
             // TODO: in principle this should use env.map_forgotten if it
             // exists, but I'm not sure that is worth the trouble.
-            if (feat_is_stair(grd(*di)) && env.map_seen(*di))
+            if (feat_is_stair(env.grid(*di)) && env.map_seen(*di))
             {
-                const command_type dir = feat_stair_direction(grd(*di));
+                const command_type dir = feat_stair_direction(env.grid(*di));
                 if (dir == CMD_GO_UPSTAIRS)
                     upstairs.push_back(*di);
                 else if (dir == CMD_GO_DOWNSTAIRS)
@@ -2151,7 +2151,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.duration[DUR_REPEL_STAIRS_MOVE]
             || you.duration[DUR_REPEL_STAIRS_CLIMB])
         {
-            dungeon_feature_type feat = grd(you.pos());
+            dungeon_feature_type feat = env.grid(you.pos());
             if (feat != DNGN_ENTER_SHOP
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)

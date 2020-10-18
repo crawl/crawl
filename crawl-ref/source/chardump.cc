@@ -1584,18 +1584,18 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('@', fp);
                 else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
-                else if (dist && grd[x][y] == DNGN_FLOOR
+                else if (dist && env.grid[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0
                          && travel_point_distance[x][y] < 10)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
-                else if (grd[x][y] >= NUM_FEATURES)
+                else if (env.grid[x][y] >= NUM_FEATURES)
                     fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
-                               get_feature_def(grd[x][y]).symbol())), fp);
+                               get_feature_def(env.grid[x][y]).symbol())), fp);
                 }
             }
             fputc('\n', fp);

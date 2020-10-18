@@ -221,7 +221,7 @@ string Form::transform_message(transformation previous_trans) const
         start = "You fly out of the water as y";
     else if (get_form(previous_trans)->player_can_fly()
              && player_can_swim()
-             && feat_is_water(grd(you.pos())))
+             && feat_is_water(env.grid(you.pos())))
         start = "As you dive into the water, y";
     else
         start = "Y";
@@ -1971,7 +1971,7 @@ void untransform(bool skip_move)
     if (!skip_move)
     {
         // Land the player if we stopped flying.
-        if (is_feat_dangerous(grd(you.pos())))
+        if (is_feat_dangerous(env.grid(you.pos())))
             enable_emergency_flight();
         else if (was_flying && !you.airborne())
             move_player_to_grid(you.pos(), false);

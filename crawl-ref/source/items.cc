@@ -1403,7 +1403,7 @@ void pickup(bool partial_quantity)
     if (o == NON_ITEM)
         mpr("There are no items here.");
     else if (you.form == transformation::ice_beast
-             && grd(you.pos()) == DNGN_DEEP_WATER)
+             && env.grid(you.pos()) == DNGN_DEEP_WATER)
     {
         mpr("You can't reach the bottom while floating on water.");
     }
@@ -2208,9 +2208,9 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     bool move_below = item_is_stationary(item) && !item_is_stationary_net(item);
 
     if (!silenced(p) && !silent)
-        feat_splash_noise(grd(p));
+        feat_splash_noise(env.grid(p));
 
-    if (feat_destroys_items(grd(p)))
+    if (feat_destroys_items(env.grid(p)))
     {
         item_was_destroyed(item);
         destroy_item(ob);
@@ -2329,9 +2329,9 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
         return false;
 
     if (!silenced(p) && !silent)
-        feat_splash_noise(grd(p));
+        feat_splash_noise(env.grid(p));
 
-    if (feat_destroys_items(grd(p)))
+    if (feat_destroys_items(env.grid(p)))
     {
         item_was_destroyed(item);
         return true;
@@ -2545,7 +2545,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
     if (!you.swimming())
-        feat_splash_noise(grd(you.pos()));
+        feat_splash_noise(env.grid(you.pos()));
 
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;

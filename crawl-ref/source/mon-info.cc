@@ -254,7 +254,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 
         // If there's an adjacent deep water tile, the segment
         // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
+        if (env.grid(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
             if (mon && you.can_see(*mon))
@@ -269,7 +269,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
             return true;
         }
 
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
         {
             const monster *mon = monster_at(*ai);
 

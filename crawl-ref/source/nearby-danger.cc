@@ -395,7 +395,7 @@ void bring_to_safety()
         pos.x = random2(GXM);
         pos.y = random2(GYM);
         if (!in_bounds(pos)
-            || grd(pos) != DNGN_FLOOR
+            || env.grid(pos) != DNGN_FLOOR
             || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
@@ -407,7 +407,7 @@ void bring_to_safety()
         }
 
         for (adjacent_iterator ai(pos); ai; ++ai)
-            if (grd(*ai) == DNGN_SLIMY_WALL)
+            if (env.grid(*ai) == DNGN_SLIMY_WALL)
             {
                 tries++;
                 continue;

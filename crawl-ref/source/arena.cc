@@ -321,8 +321,8 @@ namespace arena
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) grd: %s",
-                            loc.x, loc.y, dungeon_feature_name(grd(loc))));
+                            "Failed to create monster at (%d,%d) env.grid: %s",
+                            loc.x, loc.y, dungeon_feature_name(env.grid(loc))));
                 }
                 list_eq(mon);
                 to_respawn[mon->mindex()] = i;
@@ -360,7 +360,7 @@ namespace arena
 
         for (int x = 0; x < GXM; ++x)
             for (int y = 0; y < GYM; ++y)
-                grd[x][y] = DNGN_ROCK_WALL;
+                env.grid[x][y] = DNGN_ROCK_WALL;
 
         unwind_bool gen(crawl_state.generating_level, true);
 

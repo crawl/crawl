@@ -74,7 +74,7 @@ void trap_def::destroy(bool known)
     if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
-    grd(pos) = DNGN_FLOOR;
+    env.grid(pos) = DNGN_FLOOR;
     if (known)
     {
         env.map_knowledge(pos).set_feature(DNGN_FLOOR);
@@ -116,7 +116,7 @@ void trap_def::prepare_ammo(int charges)
 
 void trap_def::reveal()
 {
-    grd(pos) = feature();
+    env.grid(pos) = feature();
 }
 
 string trap_def::name(description_level_type desc) const
@@ -904,7 +904,7 @@ void destroy_trap(const coord_def& pos)
 
 trap_def* trap_at(const coord_def& pos)
 {
-    if (!feat_is_trap(grd(pos)))
+    if (!feat_is_trap(env.grid(pos)))
         return nullptr;
 
     auto it = env.trap.find(pos);
@@ -1574,7 +1574,7 @@ void place_webs(int num)
             ts.pos.x = random2(GXM);
             ts.pos.y = random2(GYM);
             if (in_bounds(ts.pos)
-                && grd(ts.pos) == DNGN_FLOOR
+                && env.grid(ts.pos) == DNGN_FLOOR
                 && !map_masked(ts.pos, MMT_NO_TRAP))
             {
                 // Calculate weight.
@@ -1632,11 +1632,11 @@ bool ensnare(actor *fly)
 
     // If we're over water, an open door, shop, portal, etc, the web will
     // fail to attach and you'll be released after a single turn.
-    if (grd(fly->pos()) == DNGN_FLOOR)
+    if (env.grid(fly->pos()) == DNGN_FLOOR)
     {
         place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
         if (you.see_cell(fly->pos()))
-            grd(fly->pos()) = DNGN_TRAP_WEB;
+            env.grid(fly->pos()) = DNGN_TRAP_WEB;
     }
 
     if (fly->is_player())

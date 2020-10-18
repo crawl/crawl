@@ -592,7 +592,7 @@ static inline void _check_interesting_square(const coord_def pos,
         ed.found_item(pos, env.item[ you.visible_igrd(pos) ]);
     }
 
-    ed.found_feature(pos, grd(pos));
+    ed.found_feature(pos, env.grid(pos));
 }
 
 static void _userdef_run_stoprunning_hook()
@@ -868,7 +868,7 @@ static command_type _get_non_move_command()
 
     // If we we're not at our running position and we're not travelled to a
     // transporter, simply stop running.
-    if (fell_short && grd(you.pos()) != DNGN_TRANSPORTER)
+    if (fell_short && env.grid(you.pos()) != DNGN_TRANSPORTER)
         return CMD_NO_CMD;
 
     // We're trying to take the same stairs again, abort.
@@ -880,7 +880,7 @@ static command_type _get_non_move_command()
     last_stair.id = level_id::current();
     last_stair.pos = you.pos();
 
-    return feat_stair_direction(grd(you.pos()));
+    return feat_stair_direction(env.grid(you.pos()));
 }
 
 // Top-level travel control (called from input() in main.cc).
@@ -929,7 +929,7 @@ command_type travel()
             return CMD_WAIT;
 
         // Exploring.
-        if (grd(you.pos()) == DNGN_ENTER_SHOP
+        if (env.grid(you.pos()) == DNGN_ENTER_SHOP
             && you.running == RMODE_EXPLORE_GREEDY)
         {
             LevelStashes *lev = StashTrack.find_current_level();
@@ -1695,7 +1695,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     // through the landing sites.
     if (runmode == RMODE_TRAVEL || runmode == RMODE_NOT_RUNNING)
     {
-        if (floodout && grd(c) == DNGN_TRANSPORTER)
+        if (floodout && env.grid(c) == DNGN_TRANSPORTER)
         {
             LevelInfo &li = travel_cache.get_level_info(level_id::current());
             transporter_info *ti = li.get_transporter(c);
@@ -1705,7 +1705,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
                     found_target = true;
             }
         }
-        else if (!floodout && grd(c) == DNGN_TRANSPORTER_LANDING)
+        else if (!floodout && env.grid(c) == DNGN_TRANSPORTER_LANDING)
         {
             LevelInfo &li = travel_cache.get_level_info(level_id::current());
             vector<transporter_info> transporters = li.get_transporters();
@@ -1767,8 +1767,8 @@ void find_travel_pos(const coord_def& youpos,
     // enter.
     if (need_move
         && (cell_is_runed(new_dest)
-            || grd(youpos) == DNGN_TRANSPORTER
-               && grd(new_dest) == DNGN_TRANSPORTER_LANDING
+            || env.grid(youpos) == DNGN_TRANSPORTER
+               && env.grid(new_dest) == DNGN_TRANSPORTER_LANDING
                && youpos.distance_from(new_dest) > 1))
     {
         *move_x = 0;
@@ -3199,7 +3199,7 @@ int level_id::absdepth() const
 
 level_id level_id::get_next_level_id(const coord_def &pos)
 {
-    int gridc = grd(pos);
+    int gridc = env.grid(pos);
     level_id id = current();
 
     if (gridc == branches[id.branch].exit_stairs)
@@ -3613,7 +3613,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
 
     // Fix up the grid for the placeholder stair.
     for (stair_info &stair : stairs)
-        stair.grid = grd(stair.position);
+        stair.grid = env.grid(stair.position);
 
     // First we kill any stairs in 'stairs' that aren't there in 's'.
     for (int i = ((int) stairs.size()) - 1; i >= 0; --i)
@@ -3653,7 +3653,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
         {
             stair_info si;
             si.position = pos;
-            si.grid     = grd(si.position);
+            si.grid     = env.grid(si.position);
             si.destination.id = level_id::get_next_level_id(pos);
             if (si.destination.id.branch == BRANCH_VESTIBULE
                 && id.branch == BRANCH_DEPTHS
@@ -3746,7 +3746,7 @@ void LevelInfo::get_transporters(vector<coord_def> &tr)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = env.grid(*ri);
 
         if (feat == DNGN_TRANSPORTER
             && (*ri == you.pos() || env.map_knowledge(*ri).known())
@@ -3761,7 +3761,7 @@ void LevelInfo::get_stairs(vector<coord_def> &st)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = env.grid(*ri);
 
         if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
@@ -3898,7 +3898,7 @@ void TravelCache::update_stone_stair(const coord_def &c)
     // Don't bother proceeding further if we already know where the stair goes.
     if (si && si->destination.is_valid())
         return;
-    const dungeon_feature_type feat1 = grd(c);
+    const dungeon_feature_type feat1 = env.grid(c);
     ASSERT(feat_is_stone_stair(feat1));
     // Compute the corresponding feature type on the other side of the stairs.
     const dungeon_feature_type feat2 = (dungeon_feature_type)
@@ -3919,7 +3919,7 @@ void TravelCache::update_stone_stair(const coord_def &c)
             {
                 stair_info si2;
                 si2.position = c;
-                si2.grid = grd(si2.position);
+                si2.grid = env.grid(si2.position);
                 li->stairs.push_back(si2);
             }
             li->update_stair(c,level_pos(li2->id,li2->stairs[i].position));
@@ -3933,7 +3933,7 @@ void TravelCache::update_stone_stair(const coord_def &c)
 
 void TravelCache::update_transporter(const coord_def &c)
 {
-    const dungeon_feature_type feat = grd(c);
+    const dungeon_feature_type feat = env.grid(c);
     ASSERT(feat == DNGN_TRANSPORTER);
 
     if (!env.map_knowledge(c).seen())
@@ -3953,7 +3953,7 @@ void TravelCache::update_transporter(const coord_def &c)
 
 bool TravelCache::know_transporter(const coord_def &c)
 {
-    if (grd(c) == DNGN_TRANSPORTER)
+    if (env.grid(c) == DNGN_TRANSPORTER)
         update_transporter(c);
     auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_transporter(c);
@@ -3961,7 +3961,7 @@ bool TravelCache::know_transporter(const coord_def &c)
 
 bool TravelCache::know_stair(const coord_def &c)
 {
-     if (feat_is_stone_stair(grd(c)))
+     if (feat_is_stone_stair(env.grid(c)))
          update_stone_stair(c);
     auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
@@ -4891,7 +4891,7 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
         int cmd = cmd_array[i];
         if (force)
         {
-            if (feat_is_open_door(grd(gc))
+            if (feat_is_open_door(env.grid(gc))
                 && !env.map_knowledge(gc).monsterinfo())
             {
                 cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;

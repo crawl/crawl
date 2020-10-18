@@ -249,16 +249,16 @@ bool wizard_create_feature(const coord_def& pos)
     env.tile_flv(pos).feat = 0;
     env.tile_flv(pos).special = 0;
     env.grid_colours(pos) = 0;
-    const dungeon_feature_type old_feat = grd(pos);
+    const dungeon_feature_type old_feat = env.grid(pos);
     dungeon_terrain_changed(pos, feat, false, false, false, true);
     // Update gate tiles, if existing.
     if (feat_is_door(old_feat) || feat_is_door(feat))
     {
         const coord_def left  = pos - coord_def(1, 0);
         const coord_def right = pos + coord_def(1, 0);
-        if (map_bounds(left) && feat_is_door(grd(left)))
+        if (map_bounds(left) && feat_is_door(env.grid(left)))
             tile_init_flavour(left);
-        if (map_bounds(right) && feat_is_door(grd(right)))
+        if (map_bounds(right) && feat_is_door(env.grid(right)))
             tile_init_flavour(right);
     }
     if (pos == you.pos() && cell_is_solid(pos))
@@ -374,7 +374,7 @@ bool debug_make_trap(const coord_def& pos)
 {
     char requested_trap[80];
     trap_type trap = TRAP_UNASSIGNED;
-    int gridch     = grd(pos);
+    int gridch     = env.grid(pos);
 
     if (gridch != DNGN_FLOOR)
     {
@@ -453,7 +453,7 @@ bool debug_make_trap(const coord_def& pos)
 
 bool debug_make_shop(const coord_def& pos)
 {
-    if (grd(pos) != DNGN_FLOOR)
+    if (env.grid(pos) != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
         return false;
@@ -640,7 +640,7 @@ void debug_place_map(bool primary)
 static void _debug_kill_traps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (feat_is_trap(grd(*ri)))
+        if (feat_is_trap(env.grid(*ri)))
             destroy_trap(*ri);
 }
 
@@ -680,9 +680,9 @@ static void _debug_destroy_doors()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            const dungeon_feature_type feat = grd[x][y];
+            const dungeon_feature_type feat = env.grid[x][y];
             if (feat_is_closed_door(feat))
-                grd[x][y] = DNGN_FLOOR;
+                env.grid[x][y] = DNGN_FLOOR;
         }
 }
 

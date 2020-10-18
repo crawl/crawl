@@ -251,7 +251,7 @@ mon_attitude_type monster::temp_attitude() const
 
 bool monster::swimming() const
 {
-    const dungeon_feature_type grid = grd(pos());
+    const dungeon_feature_type grid = env.grid(pos());
     return feat_is_watery(grid) && mons_primary_habitat(*this) == HT_WATER;
 }
 
@@ -265,7 +265,7 @@ bool monster::submerged() const
 
 bool monster::extra_balanced_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(p);
+    const dungeon_feature_type grid = env.grid(p);
     return (mons_genus(type) == MONS_DRACONIAN
             && draco_or_demonspawn_subspecies(*this) == MONS_GREY_DRACONIAN)
                 || grid == DNGN_SHALLOW_WATER
@@ -290,7 +290,7 @@ bool monster::extra_balanced() const
  */
 bool monster::floundering_at(const coord_def p) const
 {
-    const dungeon_feature_type grid = grd(p);
+    const dungeon_feature_type grid = env.grid(p);
     return (liquefied(p)
             || (feat_is_water(grid)
                 // Can't use monster_habitable_grid() because that'll return
@@ -2719,7 +2719,7 @@ bool monster::fumbles_attack()
         {
             mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
                  ? "becomes momentarily stuck in the liquid earth."
-                 : grd(pos()) == DNGN_TOXIC_BOG
+                 : env.grid(pos()) == DNGN_TOXIC_BOG
                  ? "becomes momentarily stuck in the toxic bog."
                  : "splashes around in the water.");
         }
@@ -4229,7 +4229,7 @@ bool monster::shift(coord_def p)
     for (adjacent_iterator ai(p); ai; ++ai)
     {
         // Don't drop on anything but vanilla floor right now.
-        if (grd(*ai) != DNGN_FLOOR)
+        if (env.grid(*ai) != DNGN_FLOOR)
             continue;
 
         if (actor_at(*ai))
@@ -4783,7 +4783,7 @@ bool monster::check_set_valid_home(const coord_def &place,
     if (actor_at(place))
         return false;
 
-    if (!monster_habitable_grid(this, grd(place)))
+    if (!monster_habitable_grid(this, env.grid(place)))
         return false;
 
     if (!is_trap_safe(place, true))
@@ -4798,7 +4798,7 @@ bool monster::check_set_valid_home(const coord_def &place,
 
 bool monster::is_location_safe(const coord_def &place)
 {
-    if (!monster_habitable_grid(this, grd(place)))
+    if (!monster_habitable_grid(this, env.grid(place)))
         return false;
 
     if (!is_trap_safe(place, true))
@@ -4861,7 +4861,7 @@ bool monster::find_home_near_place(const coord_def &c)
                 continue;
             dist(*ai - c) = last_dist = dist(p - c) + 1;
 
-            if (!monster_habitable_grid(this, grd(*ai)))
+            if (!monster_habitable_grid(this, env.grid(*ai)))
                 continue;
 
             q.push(*ai);
@@ -5478,7 +5478,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive()
         && (mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA)
-        && !monster_habitable_grid(this, grd(pos()))
+        && !monster_habitable_grid(this, env.grid(pos()))
         && !has_ench(ENCH_AQUATIC_LAND))
     {
         // Elemental wellsprings always have water beneath them
@@ -5493,19 +5493,19 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!monster_habitable_grid(this, grd(pos())))
+        if (!monster_habitable_grid(this, env.grid(pos())))
             simple_monster_message(*this, " flops around on dry land!");
-        else if (!monster_habitable_grid(this, grd(oldpos)))
+        else if (!monster_habitable_grid(this, env.grid(oldpos)))
         {
             if (you.can_see(*this))
             {
                 mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
-                                                   feat_type_name(grd(pos())));
+                                                   feat_type_name(env.grid(pos())));
             }
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead
-        // of by the monster moving move, in that case grd(oldpos) will
+        // of by the monster moving move, in that case env.grid(oldpos) will
         // be the current position that became watery.
         else
             del_ench(ENCH_AQUATIC_LAND);
@@ -5521,7 +5521,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive()
         && has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(this, grd(pos())))
+        && !monster_can_submerge(this, env.grid(pos())))
     {
         del_ench(ENCH_SUBMERGED);
     }
@@ -5603,8 +5603,8 @@ bool monster::swap_with(monster* other)
         return false;
     }
 
-    if (!monster_habitable_grid(this, grd(new_pos))
-        || !monster_habitable_grid(other, grd(old_pos)))
+    if (!monster_habitable_grid(this, env.grid(new_pos))
+        || !monster_habitable_grid(other, env.grid(old_pos)))
     {
         return false;
     }
@@ -5639,7 +5639,7 @@ bool monster::do_shaft()
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
     if (get_trap_type(pos()) != TRAP_SHAFT
-        && !feat_is_shaftable(grd(pos())))
+        && !feat_is_shaftable(env.grid(pos())))
     {
         return false;
     }
@@ -6086,7 +6086,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                     mprf("As %s mount dies, %s plunges down into %s!",
                          pronoun(PRONOUN_POSSESSIVE).c_str(),
                          name(DESC_THE).c_str(),
-                         grd(pos()) == DNGN_LAVA ?
+                         env.grid(pos()) == DNGN_LAVA ?
                              "lava and is incinerated" :
                              "deep water and drowns");
                 }
@@ -6401,13 +6401,13 @@ item_def* monster::disarm()
     item_def *mons_wpn = mslot_item(MSLOT_WEAPON);
 
     // is it ok to move the weapon into your tile (w/o destroying it?)
-    const bool your_tile_ok = !feat_eliminates_items(grd(you.pos()));
+    const bool your_tile_ok = !feat_eliminates_items(env.grid(you.pos()));
 
     // It's ok to drop the weapon into deep water if it comes out right away,
     // but if the monster is on lava we just have to abort.
-    const bool mon_tile_ok = !feat_destroys_items(grd(pos()))
+    const bool mon_tile_ok = !feat_destroys_items(env.grid(pos()))
                              && (your_tile_ok
-                                 || !feat_eliminates_items(grd(pos())));
+                                 || !feat_eliminates_items(env.grid(pos())));
 
     if (!mons_wpn
         || mons_wpn->cursed()

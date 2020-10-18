@@ -116,7 +116,7 @@ static bool _do_build_level()
             {
                 const coord_def pos(x, y);
 
-                objstat_record_feature(grd[x][y], map_masked(pos, MMT_VAULT));
+                objstat_record_feature(env.grid[x][y], map_masked(pos, MMT_VAULT));
 
                 monster *mons = monster_at(pos);
                 if (mons)
@@ -131,10 +131,10 @@ static bool _do_build_level()
                 }
             }
 
-            if (grd[x][y] == DNGN_RUNED_DOOR)
-                grd[x][y] = DNGN_CLOSED_DOOR;
-            else if (grd[x][y] == DNGN_RUNED_CLEAR_DOOR)
-                grd[x][y] = DNGN_CLOSED_CLEAR_DOOR;
+            if (env.grid[x][y] == DNGN_RUNED_DOOR)
+                env.grid[x][y] = DNGN_CLOSED_DOOR;
+            else if (env.grid[x][y] == DNGN_RUNED_CLEAR_DOOR)
+                env.grid[x][y] = DNGN_CLOSED_CLEAR_DOOR;
         }
 
 

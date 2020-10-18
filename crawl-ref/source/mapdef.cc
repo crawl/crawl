@@ -676,9 +676,9 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 else
                     offset = random2(tile_dngn_count(feat));
 
-                if (!has_floor && grd(gc) == DNGN_FLOOR)
+                if (!has_floor && env.grid(gc) == DNGN_FLOOR)
                     env.tile_flv(gc).floor = feat + offset;
-                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
+                else if (!has_rock && env.grid(gc) == DNGN_ROCK_WALL)
                     env.tile_flv(gc).wall = feat + offset;
                 else
                 {

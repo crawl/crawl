@@ -848,7 +848,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
+            if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;
                 none_vis = false;
@@ -882,7 +882,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // closed doors are solid, but we don't want a behaviour difference
         // between open and closed doors
-        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        proceed = !cell_is_solid(*ai) || feat_is_door(env.grid(*ai));
         if (!zin && monster_at(*ai))
             proceed = false;
 
@@ -896,7 +896,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
-                grd(*ai) = DNGN_FLOOR;
+                env.grid(*ai) = DNGN_FLOOR;
             }
 
             // Actually place the wall.

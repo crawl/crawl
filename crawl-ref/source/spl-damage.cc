@@ -81,7 +81,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
 
     if (cell_is_solid(beam.target))
     {
-        const char *feat = feat_type_name(grd(beam.target));
+        const char *feat = feat_type_name(env.grid(beam.target));
         mprf("You can't place the storm on %s.", article_a(feat).c_str());
         return spret::abort;
     }
@@ -962,7 +962,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     if (env.markers.property_at(where, MAT_ANY, "veto_destroy") == "veto")
         return 0;
 
-    const dungeon_feature_type grid = grd(where);
+    const dungeon_feature_type grid = env.grid(where);
 
     switch (grid)
     {
@@ -1378,7 +1378,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
-    if (grd(where) != DNGN_TOXIC_BOG)
+    if (env.grid(where) != DNGN_TOXIC_BOG)
         return false;
 
     if (tracer)
@@ -2006,7 +2006,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.damage = dice_def(0, 5 + pow / 5);
 
     monster* mon = monster_at(target);
-    const dungeon_feature_type grid = grd(target);
+    const dungeon_feature_type grid = env.grid(target);
 
     if (target == you.pos())
     {
@@ -2435,7 +2435,7 @@ actor* forest_near_enemy(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(env.grid(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
                 return foe;
     }
 
@@ -2446,7 +2446,7 @@ actor* forest_near_enemy(const actor *mon)
 void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_DEFAULT); ri; ++ri)
-        if (feat_is_tree(grd(*ri))
+        if (feat_is_tree(env.grid(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
             mprf(ch, "%s", msg.c_str());
@@ -2479,7 +2479,7 @@ void forest_damage(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
+            if (feat_is_tree(env.grid(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
                 int dmg = 0;
                 string msg;
@@ -3226,7 +3226,7 @@ spret cast_imb(int pow, bool fail)
 
 void actor_apply_toxic_bog(actor * act)
 {
-    if (grd(act->pos()) != DNGN_TOXIC_BOG)
+    if (env.grid(act->pos()) != DNGN_TOXIC_BOG)
         return;
 
     if (!act->ground_level())
@@ -3310,7 +3310,7 @@ spret cast_frozen_ramparts(int pow, bool fail)
                 spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
                 LOS_NO_TRANS, true); ri; ++ri)
     {
-        const auto feat = grd(*ri);
+        const auto feat = env.grid(*ri);
         if (feat_is_wall(feat))
             wall_locs.push_back(*ri);
     }

@@ -1311,7 +1311,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_STOP_FLYING)
     {
-        if (is_feat_dangerous(grd(you.pos()), false, true))
+        if (is_feat_dangerous(env.grid(you.pos()), false, true))
         {
             if (!quiet)
                 mpr("Stopping flight right now would be fatal!");
@@ -1667,7 +1667,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         // Is there a valid place to wall jump?
         bool has_targets = false;
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (feat_can_wall_jump_against(grd(*ai)))
+            if (feat_can_wall_jump_against(env.grid(*ai)))
             {
                 has_targets = true;
                 break;

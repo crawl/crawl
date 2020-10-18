@@ -365,7 +365,7 @@ static bool _may_overwrite_feature(const coord_def p,
     if (Vault_Placement_Mask && player_in_branch(BRANCH_ABYSS))
         return true;
 
-    const dungeon_feature_type grid = grd(p);
+    const dungeon_feature_type grid = env.grid(p);
 
     // Deep water grids may be overwritten if water_ok == true.
     if (grid == DNGN_DEEP_WATER)
@@ -447,7 +447,7 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
-        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
+        else if (env.grid(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
                                        || _is_transporter_place(cp))
         {
             // Don't place overwrite_floor_cell vaults on anything but floor or
@@ -473,7 +473,7 @@ static bool _map_safe_vault_place(const map_def &map,
         {
             for (adjacent_iterator ai(cp); ai; ++ai)
             {
-                if (map_bounds(*ai) && feat_is_stair(grd(*ai)))
+                if (map_bounds(*ai) && feat_is_stair(env.grid(*ai)))
                     return false;
             }
         }
@@ -520,8 +520,8 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
             if ((!check_place
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
-                && !feat_is_gate(grd(v1))
-                && !feat_is_branch_entrance(grd(v1)))
+                && !feat_is_gate(env.grid(v1))
+                && !feat_is_branch_entrance(env.grid(v1)))
             {
                 candidates.push_back(v1);
             }

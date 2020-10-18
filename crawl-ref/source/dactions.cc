@@ -293,8 +293,8 @@ static void _apply_daction(daction_type act)
     case DACT_REMOVE_JIYVA_ALTARS:
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_ALTAR_JIYVA)
-                grd(*ri) = DNGN_FLOOR;
+            if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
+                env.grid(*ri) = DNGN_FLOOR;
         }
         break;
     case DACT_ROT_CORPSES:
@@ -316,7 +316,7 @@ static void _apply_daction(daction_type act)
             if (feat->feat == DNGN_ABANDONED_SHOP)
             {
                 // TODO: clear shop data out?
-                grd(feat->pos) = DNGN_ABANDONED_SHOP;
+                env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
                 view_update_at(feat->pos);
                 env.markers.remove(feat);
             }

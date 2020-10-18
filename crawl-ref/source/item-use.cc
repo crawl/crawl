@@ -1600,7 +1600,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1);
 
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = env.grid(you.pos());
 
     if (grants_flight && removing_ends_flight
         && is_feat_dangerous(feat, false, true))
@@ -3118,7 +3118,7 @@ void read_scroll(item_def& scroll)
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
 
-        if (feat_eliminates_items(grd(you.pos())))
+        if (feat_eliminates_items(env.grid(you.pos())))
         {
             mpr("Anything you acquired here would fall and be lost!");
             cancel_scroll = true;

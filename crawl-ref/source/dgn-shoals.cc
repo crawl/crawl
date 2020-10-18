@@ -203,7 +203,7 @@ static void _shoals_apply_level()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
         if (!map_masked(*ri, MMT_VAULT))
-            grd(*ri) = _shoals_feature_at(*ri);
+            env.grid(*ri) = _shoals_feature_at(*ri);
 }
 
 static void _shoals_postbuild_apply_level()
@@ -212,11 +212,11 @@ static void _shoals_postbuild_apply_level()
     {
         if (!map_masked(*ri, MMT_VAULT))
         {
-            const dungeon_feature_type feat = grd(*ri);
+            const dungeon_feature_type feat = env.grid(*ri);
             if (feat_is_water(feat) || feat == DNGN_ROCK_WALL
                 || feat == DNGN_STONE_WALL || feat == DNGN_FLOOR)
             {
-                grd(*ri) = _shoals_feature_at(*ri);
+                env.grid(*ri) = _shoals_feature_at(*ri);
             }
         }
     }
@@ -229,7 +229,7 @@ static vector<coord_def> _shoals_water_depth_change_points()
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         coord_def c(*ri);
-        if (grd(c) == DNGN_DEEP_WATER
+        if (env.grid(c) == DNGN_DEEP_WATER
             && dgn_has_adjacent_feat(c, DNGN_SHALLOW_WATER))
         {
             points.push_back(c);
@@ -269,7 +269,7 @@ static void _shoals_deepen_water()
                 const coord_def adj(*ai);
                 if (!seen_points(adj)
                     && (adj - c).abs() == 1
-                    && grd(adj) == DNGN_DEEP_WATER)
+                    && env.grid(adj) == DNGN_DEEP_WATER)
                 {
                     npage.push_back(adj);
                     seen_points(adj) = true;
@@ -329,7 +329,7 @@ static int _shoals_contiguous_feature_flood(
             for (adjacent_iterator ai(p); ai && npoints < size_limit; ++ai)
             {
                 const coord_def adj(*ai);
-                if (in_bounds(adj) && !rmap(adj) && grd(adj) == feat
+                if (in_bounds(adj) && !rmap(adj) && env.grid(adj) == feat
                     && !map_masked(adj, MMT_VAULT))
                 {
                     rmap(adj) = nregion;
@@ -416,7 +416,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         coord_def c(*ri);
-        if (!region_map(c) && grd(c) == feat
+        if (!region_map(c) && env.grid(c) == feat
             && !map_masked(c, MMT_VAULT))
         {
             const int featcount =
@@ -472,7 +472,7 @@ static void _shoals_make_plant_near(coord_def c, int radius,
             && !monster_at(plant_place)
             && !map_masked(plant_place, MMT_VAULT))
         {
-            const dungeon_feature_type feat(grd(plant_place));
+            const dungeon_feature_type feat(env.grid(plant_place));
             if (_shoals_plantworthy_feat(feat)
                 && (feat == preferred_feat || coinflip())
                 && (!verboten || !(*verboten)(plant_place)))
@@ -591,7 +591,7 @@ static vector<coord_def> _shoals_windshadows(grid_bool &windy)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def p(*ri);
-        if (!windy(p) && grd(p) == DNGN_FLOOR
+        if (!windy(p) && env.grid(p) == DNGN_FLOOR
             && (dgn_has_adjacent_feat(p, DNGN_STONE_WALL)
                 || dgn_has_adjacent_feat(p, DNGN_ROCK_WALL)))
         {
@@ -687,7 +687,7 @@ void shoals_postprocess_level()
         if (is_tide_immune(c))
             continue;
 
-        const dungeon_feature_type feat(grd(c));
+        const dungeon_feature_type feat(env.grid(c));
         if (!_shoals_tide_susceptible_feat(feat) && !feat_is_solid(feat))
             continue;
 
@@ -843,13 +843,13 @@ static void _shoals_apply_tide_feature_at(
     coord_def c,
     dungeon_feature_type feat)
 {
-    const dungeon_feature_type current_feat = grd(c);
+    const dungeon_feature_type current_feat = env.grid(c);
 
     if (feat == current_feat)
         return;
 
     if (crawl_state.generating_level)
-        grd(c) = feat;
+        env.grid(c) = feat;
     else
         dungeon_terrain_changed(c, feat, false, true);
 }
@@ -880,7 +880,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide)
         newfeat = DNGN_FLOOR;
     if (feat_is_water(newfeat))
         newfeat = DNGN_SHALLOW_WATER;
-    const dungeon_feature_type oldfeat = grd(c);
+    const dungeon_feature_type oldfeat = env.grid(c);
 
 
     if (oldfeat == newfeat
@@ -936,14 +936,14 @@ static void _shoals_apply_tide(int tide)
 
         for (const coord_def c : cpage)
         {
-            const dungeon_feature_type herefeat(grd(c));
+            const dungeon_feature_type herefeat(env.grid(c));
             const bool was_wet = (_shoals_tide_passable_feat(herefeat)
                                   && !is_temp_terrain(c));
             seen_points(c) = true;
             if (_shoals_tide_susceptible_feat(herefeat))
                 _shoals_apply_tide_at(c, _shoals_tide_at(c, tide));
 
-            const bool is_wet(feat_is_water(grd(c)));
+            const bool is_wet(feat_is_water(env.grid(c)));
 
             // Only squares that were wet (before applying tide
             // effects!) can propagate the tide onwards. If the tide is
@@ -958,7 +958,7 @@ static void _shoals_apply_tide(int tide)
                         continue;
                     if (!seen_points(adj))
                     {
-                        const dungeon_feature_type feat = grd(adj);
+                        const dungeon_feature_type feat = env.grid(adj);
                         if (_shoals_tide_passable_feat(feat)
                             || _shoals_tide_susceptible_feat(feat))
                         {

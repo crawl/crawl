@@ -1035,7 +1035,7 @@ static void _stairs_card(int /*power*/)
     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 
-    if (feat_stair_direction(grd(you.pos())) == CMD_NO_CMD)
+    if (feat_stair_direction(env.grid(you.pos())) == CMD_NO_CMD)
         you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
     else
         you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
@@ -1044,7 +1044,7 @@ static void _stairs_card(int /*power*/)
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
     {
-        dungeon_feature_type feat = grd(*ri);
+        dungeon_feature_type feat = env.grid(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
@@ -1443,7 +1443,7 @@ static void _cloud_card(int power)
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
+            if (env.grid(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
                 const int cloud_power = 5 + random2avg(power_level * 6, 2);
                 place_cloud(cloudy, *ai, cloud_power, &you);

@@ -244,7 +244,7 @@ bool Stash::unmark_trapping_nets()
 
 void Stash::update()
 {
-    feat = grd(pos);
+    feat = env.grid(pos);
     trap = NUM_TRAPS;
 
     if (is_boring_feature(feat))
@@ -1078,7 +1078,7 @@ void StashTracker::update_visible_stashes()
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = env.grid(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)

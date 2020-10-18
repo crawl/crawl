@@ -741,9 +741,9 @@ void wizard_give_monster_item(monster* mon)
 
 static void _move_player(const coord_def& where)
 {
-    if (!you.can_pass_through_feat(grd(where)))
+    if (!you.can_pass_through_feat(env.grid(where)))
     {
-        grd(where) = DNGN_FLOOR;
+        env.grid(where) = DNGN_FLOOR;
         set_terrain_changed(where);
     }
     move_player_to_grid(where, false);

@@ -1369,7 +1369,7 @@ map_position_marker *get_position_marker_at(const coord_def &pos,
  **/
 coord_def get_transporter_dest(const coord_def &pos)
 {
-    ASSERT(grd(pos) == DNGN_TRANSPORTER);
+    ASSERT(env.grid(pos) == DNGN_TRANSPORTER);
 
     map_position_marker *marker
         = get_position_marker_at(pos, DNGN_TRANSPORTER);
