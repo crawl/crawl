@@ -448,8 +448,8 @@ static bool _mons_can_zap_dig(const monster* mons)
            && !mons->submerged()
            && mons_itemuse(*mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
-           && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
-           && mitm[mons->inv[MSLOT_WAND]].charges > 0;
+           && env.item[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
+           && env.item[mons->inv[MSLOT_WAND]].charges > 0;
 }
 
 static void _set_mons_move_dir(const monster* mons,
@@ -1228,13 +1228,13 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     const item_def *weapon = nullptr;
     const int mon_item = mons_usable_missile(mons, &launcher);
 
-    if (mon_item == NON_ITEM || !mitm[mon_item].defined())
+    if (mon_item == NON_ITEM || !env.item[mon_item].defined())
         return false;
 
     if (player_or_mon_in_sanct(*mons))
         return false;
 
-    item_def *missile = &mitm[mon_item];
+    item_def *missile = &env.item[mon_item];
 
     const actor *act = actor_at(beem.target);
     ASSERT(missile->base_type == OBJ_MISSILES);
@@ -2103,9 +2103,9 @@ void monster::struggle_against_net()
     if (speed != 0)
         damage = div_rand_round(damage * speed, 10);
 
-    mitm[net].net_durability -= damage;
+    env.item[net].net_durability -= damage;
 
-    if (mitm[net].net_durability < NET_MIN_DURABILITY)
+    if (env.item[net].net_durability < NET_MIN_DURABILITY)
     {
         if (you.see_cell(pos()))
         {

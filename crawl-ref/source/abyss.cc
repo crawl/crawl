@@ -288,7 +288,7 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
              chosen_spot.x, chosen_spot.y);
         int item_ind  = items(true, OBJ_RUNES, RUNE_ABYSSAL, 0);
         if (item_ind != NON_ITEM)
-            item_colour(mitm[item_ind]);
+            item_colour(env.item[item_ind]);
         move_item_to_grid(&item_ind, chosen_spot);
         return item_ind != NON_ITEM;
     }
@@ -661,7 +661,7 @@ static void _push_items()
 {
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        item_def& item(mitm[i]);
+        item_def& item(env.item[i]);
         if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
             continue;
 
@@ -1028,7 +1028,7 @@ void maybe_shift_abyss_around_player()
         you.pet_target = MHITNOT;
 
 #ifdef DEBUG_DIAGNOSTICS
-    int j = count_if(begin(mitm), end(mitm), mem_fn(&item_def::defined));
+    int j = count_if(begin(env.item), end(env.item), mem_fn(&item_def::defined));
 
     dprf(DIAG_ABYSS, "Number of items present: %d", j);
 

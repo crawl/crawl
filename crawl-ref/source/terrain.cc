@@ -1145,18 +1145,18 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
     while (item != NON_ITEM)
     {
         const int curr = item;
-        item = mitm[item].link;
+        item = env.item[item].link;
 
         if (!feat_is_solid(feat) && !feat_destroys_items(feat))
             continue;
 
         // Game-critical item.
-        if (preserve_items || mitm[curr].is_critical())
-            _dgn_shift_item(pos, mitm[curr]);
+        if (preserve_items || env.item[curr].is_critical())
+            _dgn_shift_item(pos, env.item[curr]);
         else
         {
             feat_splash_noise(feat);
-            item_was_destroyed(mitm[curr]);
+            item_was_destroyed(env.item[curr]);
             destroy_item(curr);
         }
     }

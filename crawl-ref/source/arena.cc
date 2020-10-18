@@ -293,7 +293,7 @@ namespace arena
 
         for (int iidx : items)
         {
-            item_def &item = mitm[iidx];
+            item_def &item = env.item[iidx];
             fprintf(file, "        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
@@ -1392,8 +1392,8 @@ int arena_cull_items()
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        // All items in mitm[] are valid when we're called.
-        const item_def &item(mitm[i]);
+        // All items in env.item[] are valid when we're called.
+        const item_def &item(env.item[i]);
 
         // We want floor items.
         if (!in_bounds(item.pos))
@@ -1412,7 +1412,7 @@ int arena_cull_items()
 
     for (int idx : items)
     {
-        const item_def &item(mitm[idx]);
+        const item_def &item(env.item[idx]);
 
         // If the drop time is 0 then this is probably thrown ammo.
         if (arena::item_drop_times[idx] == 0)

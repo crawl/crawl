@@ -1277,7 +1277,7 @@ void tag_read(reader &inf, tag_type tag_id)
         _tag_read_level_items(th);
         // We have to do this here because _tag_read_level_monsters()
         // might kill an elsewhere Ilsuiw follower, which ends up calling
-        // terrain.cc:_dgn_check_terrain_items, which checks mitm.
+        // terrain.cc:_dgn_check_terrain_items, which checks env.item.
         link_items();
         EAT_CANARY;
         _tag_read_level_monsters(th);
@@ -5425,10 +5425,10 @@ static void _tag_construct_level_items(writer &th)
     }
 
     // how many items?
-    const int ni = _last_used_index(mitm, MAX_ITEMS);
+    const int ni = _last_used_index(env.item, MAX_ITEMS);
     marshallShort(th, ni);
     for (int i = 0; i < ni; ++i)
-        marshallItem(th, mitm[i]);
+        marshallItem(th, env.item[i]);
 }
 
 static void marshall_mon_enchant(writer &th, const mon_enchant &me)
@@ -6298,20 +6298,20 @@ static void _tag_read_level_items(reader &th)
     const int item_count = unmarshallShort(th);
     ASSERT_RANGE(item_count, 0, MAX_ITEMS + 1);
     for (int i = 0; i < item_count; ++i)
-        unmarshallItem(th, mitm[i]);
+        unmarshallItem(th, env.item[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
-        mitm[i].clear();
+        env.item[i].clear();
 
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
     for (int i = 0; i < item_count; ++i)
     {
-        if (mitm[i].defined() && mitm[i].pos.origin())
+        if (env.item[i].defined() && env.item[i].pos.origin())
         {
-            debug_dump_item(mitm[i].name(DESC_PLAIN).c_str(), i, mitm[i],
+            debug_dump_item(env.item[i].name(DESC_PLAIN).c_str(), i, env.item[i],
                                         "Fixing up unlinked temporary item:");
-            mitm[i].clear();
+            env.item[i].clear();
         }
     }
 #endif

@@ -1761,7 +1761,7 @@ bool is_deck(const item_def &item)
 
 void reclaim_decks_on_level()
 {
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined() && is_deck(item))
             destroy_item(item.index());
 }

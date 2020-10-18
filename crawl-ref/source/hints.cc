@@ -1305,7 +1305,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             else
             {
                 text << "That <console>";
-                string glyph = glyph_to_tagstr(get_item_glyph(mitm[i]));
+                string glyph = glyph_to_tagstr(get_item_glyph(env.item[i]));
                 const string::size_type found = glyph.find("%");
                 if (found != string::npos)
                     glyph.replace(found, 1, "percent");
@@ -1313,7 +1313,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 text << "</console>is a corpse.";
 #ifdef USE_TILE
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
-                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_A), gc);
+                tiles.add_text_tag(TAG_TUTORIAL, env.item[i].name(DESC_A), gc);
 #endif
             }
         }
@@ -3841,7 +3841,7 @@ void hints_observe_cell(const coord_def& gc)
     const int it = you.visible_igrd(gc);
     if (it != NON_ITEM)
     {
-        const item_def& item(mitm[it]);
+        const item_def& item(env.item[it]);
 
         if (Options.feature_item_brand != CHATTR_NORMAL
             && (is_feature('>', gc) || is_feature('<', gc)))

@@ -729,10 +729,10 @@ static void _animate_weapon(int pow, actor* target)
         monster * const montarget = target->as_monster();
         const int primary_weap = montarget->inv[MSLOT_WEAPON];
         const mon_inv_type wp_slot = (primary_weap != NON_ITEM
-                                      && &mitm[primary_weap] == wpn) ?
+                                      && &env.item[primary_weap] == wpn) ?
                                          MSLOT_WEAPON : MSLOT_ALT_WEAPON;
         ASSERT(montarget->inv[wp_slot] != NON_ITEM);
-        ASSERT(&mitm[montarget->inv[wp_slot]] == wpn);
+        ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
 
         montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
         montarget->inv[wp_slot] = NON_ITEM;
@@ -1431,7 +1431,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (raised)
         *raised = 0;
 
-    const item_def& item = mitm[corps];
+    const item_def& item = env.item[corps];
 
     if (!_animatable_remains(item))
         return false;
@@ -1776,7 +1776,7 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    item_def& corpse = mitm[co];
+    item_def& corpse = env.item[co];
     // How many simulacra can this particular monster give at maximum.
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);

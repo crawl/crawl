@@ -3385,7 +3385,7 @@ void read_scroll(item_def& scroll)
 
 void tile_item_pickup(int idx, bool part)
 {
-    if (item_is_stationary(mitm[idx]))
+    if (item_is_stationary(env.item[idx]))
     {
         mpr("You can't pick that up.");
         return;

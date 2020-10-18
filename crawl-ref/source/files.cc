@@ -1276,7 +1276,7 @@ static void _do_lost_monsters()
 // followers won't be considered lost.
 static void _do_lost_items()
 {
-    for (const auto &item : mitm)
+    for (const auto &item : env.item)
         if (item.defined() && item.pos != ITEM_IN_INVENTORY)
             item_was_lost(item);
 }

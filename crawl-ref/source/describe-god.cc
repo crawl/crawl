@@ -598,7 +598,7 @@ static formatted_string _beogh_extra_description()
             {
                 desc.cprintf(" (");
 
-                item_def &gift = mitm[mons->inv[slot]];
+                item_def &gift = env.item[mons->inv[slot]];
                 desc += formatted_string::parse_string(
                                     menu_colour_item_name(gift,DESC_PLAIN));
                 desc.cprintf(")");

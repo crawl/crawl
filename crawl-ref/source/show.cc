@@ -237,7 +237,7 @@ void update_item_at(const coord_def &gp, bool detected, bool wizard)
         const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
         if (item_grid == NON_ITEM)
             return;
-        eitem = mitm[item_grid];
+        eitem = env.item[item_grid];
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (eitem.link > NON_ITEM)

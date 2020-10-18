@@ -54,7 +54,7 @@ void debug_item_scan()
 
         // Looking for infinite stacks (ie more links than items allowed)
         // and for items which have bad coordinates (can't find their stack)
-        for (int obj = igrd(*ri); obj != NON_ITEM; obj = mitm[obj].link)
+        for (int obj = igrd(*ri); obj != NON_ITEM; obj = env.item[obj].link)
         {
             if (obj < 0 || obj > MAX_ITEMS)
             {
@@ -74,16 +74,16 @@ void debug_item_scan()
             }
 
             // Check for invalid (zero quantity) items that are linked in.
-            if (!mitm[obj].defined())
+            if (!env.item[obj].defined())
             {
-                debug_dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                debug_dump_item(env.item[obj].name(DESC_PLAIN).c_str(), obj, env.item[obj],
                            "Linked invalid item at (%d,%d)!", ri->x, ri->y);
             }
 
             // Check that item knows what stack it's in.
-            if (mitm[obj].pos != *ri)
+            if (env.item[obj].pos != *ri)
             {
-                debug_dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                debug_dump_item(env.item[obj].name(DESC_PLAIN).c_str(), obj, env.item[obj],
                            "Item position incorrect at (%d,%d)!", ri->x, ri->y);
             }
 
@@ -102,32 +102,32 @@ void debug_item_scan()
     // Now scan all the items on the level:
     for (i = 0; i < MAX_ITEMS; ++i)
     {
-        if (!mitm[i].defined())
+        if (!env.item[i].defined())
             continue;
 
-        strlcpy(name, mitm[i].name(DESC_PLAIN).c_str(), sizeof(name));
+        strlcpy(name, env.item[i].name(DESC_PLAIN).c_str(), sizeof(name));
 
-        const monster* mon = mitm[i].holding_monster();
+        const monster* mon = env.item[i].holding_monster();
 
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
-        if (mitm[i].pos.origin())
-            debug_dump_item(name, i, mitm[i], "Unlinked temporary item:");
+        if (env.item[i].pos.origin())
+            debug_dump_item(name, i, env.item[i], "Unlinked temporary item:");
         else if (mon != nullptr && mon->type == MONS_NO_MONSTER)
-            debug_dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
-        else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
+            debug_dump_item(name, i, env.item[i], "Unlinked item held by dead monster:");
+        else if ((env.item[i].pos.x > 0 || env.item[i].pos.y > 0) && !visited[i])
         {
-            debug_dump_item(name, i, mitm[i], "Unlinked item:");
+            debug_dump_item(name, i, env.item[i], "Unlinked item:");
 
-            if (!in_bounds(mitm[i].pos))
+            if (!in_bounds(env.item[i].pos))
             {
                 mprf(MSGCH_ERROR, "Item position (%d, %d) is out of bounds",
-                     mitm[i].pos.x, mitm[i].pos.y);
+                     env.item[i].pos.x, env.item[i].pos.y);
             }
             else
             {
                 mprf("igrd(%d,%d) = %d",
-                     mitm[i].pos.x, mitm[i].pos.y, igrd(mitm[i].pos));
+                     env.item[i].pos.x, env.item[i].pos.y, igrd(env.item[i].pos));
             }
 
             // Let's check to see if it's an errant monster object:
@@ -163,24 +163,24 @@ void debug_item_scan()
             || strstr(name, "buggy") != nullptr
             || strstr(name, "buggi") != nullptr)
         {
-            debug_dump_item(name, i, mitm[i], "Bad item:");
+            debug_dump_item(name, i, env.item[i], "Bad item:");
         }
-        else if (abs(mitm[i].plus) > 30 &&
-                    (mitm[i].base_type == OBJ_WEAPONS
-                     || mitm[i].base_type == OBJ_ARMOUR))
+        else if (abs(env.item[i].plus) > 30 &&
+                    (env.item[i].base_type == OBJ_WEAPONS
+                     || env.item[i].base_type == OBJ_ARMOUR))
         {
-            debug_dump_item(name, i, mitm[i], "Bad plus:");
+            debug_dump_item(name, i, env.item[i], "Bad plus:");
         }
-        else if (!is_artefact(mitm[i])
-                 && (mitm[i].base_type == OBJ_WEAPONS
-                        && mitm[i].brand >= NUM_SPECIAL_WEAPONS
-                     || mitm[i].base_type == OBJ_ARMOUR
-                        && mitm[i].brand >= NUM_SPECIAL_ARMOURS))
+        else if (!is_artefact(env.item[i])
+                 && (env.item[i].base_type == OBJ_WEAPONS
+                        && env.item[i].brand >= NUM_SPECIAL_WEAPONS
+                     || env.item[i].base_type == OBJ_ARMOUR
+                        && env.item[i].brand >= NUM_SPECIAL_ARMOURS))
         {
-            debug_dump_item(name, i, mitm[i], "Bad special value:");
+            debug_dump_item(name, i, env.item[i], "Bad special value:");
         }
-        else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
-            debug_dump_item(name, i, mitm[i], "Summoned item on floor:");
+        else if (env.item[i].flags & ISFLAG_SUMMONED && in_bounds(env.item[i].pos))
+            debug_dump_item(name, i, env.item[i], "Summoned item on floor:");
     }
 
     // Quickly scan monsters for "program bug"s.
@@ -402,7 +402,7 @@ void debug_mons_scan()
                      pos.x, pos.y, idx, j);
                 continue;
             }
-            item_def &item(mitm[idx]);
+            item_def &item(env.item[idx]);
 
             if (!item.defined())
             {

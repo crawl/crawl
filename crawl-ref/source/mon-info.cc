@@ -549,7 +549,7 @@ monster_info::monster_info(const monster* m, int milev)
             && m->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             inv[MSLOT_WEAPON].reset(
-                new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+                new item_def(get_item_info(env.item[m->inv[MSLOT_WEAPON]])));
         }
         return;
     }
@@ -712,7 +712,7 @@ monster_info::monster_info(const monster* m, int milev)
         else
             ok = true;
         if (ok)
-            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
+            inv[i].reset(new item_def(get_item_info(env.item[m->inv[i]])));
     }
 
     fire_blocker = DNGN_UNSEEN;

@@ -1450,7 +1450,7 @@ static void _fixup_walls()
 // link_items() must be called after this function.
 void fixup_misplaced_items()
 {
-    for (auto &item : mitm)
+    for (auto &item : env.item)
     {
         if (!item.defined() || item.held_by_monster())
             continue;
@@ -3870,14 +3870,14 @@ static void _randomly_place_item(int item)
     if (!found)
     {
         dprf(DIAG_DNGN, "Builder failed to place %s",
-            mitm[item].name(DESC_PLAIN, false, true).c_str());
+            env.item[item].name(DESC_PLAIN, false, true).c_str());
         // Couldn't find a single good spot!
         destroy_item(item);
     }
     else
     {
         dprf(DIAG_DNGN, "Builder placing %s at %d,%d",
-            mitm[item].name(DESC_PLAIN, false, true).c_str(),
+            env.item[item].name(DESC_PLAIN, false, true).c_str(),
             itempos.x, itempos.y);
         move_item_to_grid(&item, itempos);
     }
@@ -4608,13 +4608,13 @@ int dgn_place_item(const item_spec &spec,
             return NON_ITEM;
         else
         {
-            item_def &item(mitm[item_made]);
+            item_def &item(env.item[item_made]);
             item.pos = where;
 
             if (_apply_item_props(item, spec, (useless_tries >= 10), false))
             {
                 dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
-                    mitm[item_made].name(DESC_INVENTORY, false, true).c_str(),
+                    env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
                     where.x, where.y);
                 env.level_map_mask(where) |= MMT_NO_TRAP;
                 return item_made;
@@ -4730,7 +4730,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
 
             if (!(item_made == NON_ITEM || item_made == -1))
             {
-                item_def &item(mitm[item_made]);
+                item_def &item(env.item[item_made]);
 
                 if (_apply_item_props(item, spec, (useless_tries >= 10), true))
                 {
@@ -5166,11 +5166,11 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         item_made = items(true, which_class, which_type, which_depth);
         if (item_made != NON_ITEM)
         {
-            mitm[item_made].pos = where;
+            env.item[item_made].pos = where;
             env.level_map_mask(where) |= MMT_NO_TRAP;
             dprf(DIAG_DNGN, "vault grid: placing %s at %d,%d",
-                mitm[item_made].name(DESC_PLAIN, false, true).c_str(),
-                mitm[item_made].pos.x, mitm[item_made].pos.y);
+                env.item[item_made].name(DESC_PLAIN, false, true).c_str(),
+                env.item[item_made].pos.x, env.item[item_made].pos.y);
         }
     }
 
@@ -5637,7 +5637,7 @@ static int _choose_shop_item_level(shop_type shop_type_, int level_number)
 /**
  * Is the given item valid for placement in the given shop?
  *
- * @param item_index    An index into mitm; may be NON_ITEM.
+ * @param item_index    An index into env.item; may be NON_ITEM.
  * @param shop_type_    The type of shop being generated.
  * @param spec          The specification for the shop.
  * @return              Whether the item is valid.
@@ -5648,7 +5648,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
     if (item_index == NON_ITEM)
         return false;
 
-    const item_def &item = mitm[item_index];
+    const item_def &item = env.item[item_index];
     ASSERT(item.defined());
 
     // Don't generate gold in shops! This used to be possible with
@@ -5670,7 +5670,7 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
 /**
  * Create an item and place it in a shop.
  *
- * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
+ * FIXME: I'm pretty sure this will go into an infinite loop if env.item is full.
  * items() uses get_mitm_slot with culling, so i think this is ok --wheals
  *
  * @param j                 The index of the item being created in the shop's
@@ -5689,7 +5689,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     const int level_number = shop_level ? shop_level : env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
 
-    int item_index; // index into mitm (global item array)
+    int item_index; // index into env.item (global item array)
                     // where the generated item will be stored
 
     // XXX: this scares the hell out of me. should it be a for (...1000)?
@@ -5726,9 +5726,9 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         if (item_index != NON_ITEM && shop_type_ == SHOP_BOOK)
         {
             // if this book type is already in the shop, maybe discard it
-            if (!one_chance_in(stocked[mitm[item_index].sub_type] + 1))
+            if (!one_chance_in(stocked[env.item[item_index].sub_type] + 1))
             {
-                mitm[item_index].clear();
+                env.item[item_index].clear();
                 item_index = NON_ITEM; // try again
             }
         }
@@ -5738,12 +5738,12 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
         // Reset object and try again.
         if (item_index != NON_ITEM)
-            mitm[item_index].clear();
+            env.item[item_index].clear();
     }
 
     ASSERT(item_index != NON_ITEM);
 
-    item_def item = mitm[item_index];
+    item_def item = env.item[item_index];
 
     // If this is a book, note it down in the stocked books array
     // (unless it's a randbook)

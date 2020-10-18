@@ -232,7 +232,7 @@ void follower::load_mons_items()
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         if (mons.inv[i] != NON_ITEM)
-            items[i] = mitm[ mons.inv[i] ];
+            items[i] = env.item[ mons.inv[i] ];
         else
             items[i].clear();
 }
@@ -289,7 +289,7 @@ void follower::restore_mons_items(monster& m)
             if (islot == NON_ITEM)
                 continue;
 
-            item_def &it = mitm[islot];
+            item_def &it = env.item[islot];
             it = items[i];
             it.set_holding_monster(m);
         }

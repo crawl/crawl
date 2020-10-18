@@ -511,7 +511,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
 
-enum special_ring_type // jewellery mitm[].special values
+enum special_ring_type // jewellery env.item[].special values
 {
     SPRING_RANDART = 200,
     SPRING_UNRANDART = 201,

@@ -49,7 +49,7 @@ static int dgn_item_from_index(lua_State *ls)
 {
     const int index = luaL_safe_checkint(ls, 1);
 
-    item_def *item = &mitm[index];
+    item_def *item = &env.item[index];
 
     if (item->defined())
         clua_push_item(ls, item);
