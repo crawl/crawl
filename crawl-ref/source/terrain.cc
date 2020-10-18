@@ -962,7 +962,7 @@ static coord_def _dgn_find_nearest_square(
             visited[p.x][p.y] = true;
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                const coord_def np = p + coord_def(ai->x, ai->y);
+                const coord_def np = coord_def(ai->x, ai->y);
                 if (!in_bounds(np) || visited[np.x][np.y])
                     continue;
 
