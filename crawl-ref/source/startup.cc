@@ -112,7 +112,7 @@ static void _initialize()
     init_anon();
 
     igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
+    env.mgrid.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
     env.pgrid.init(terrain_property_t{});
 

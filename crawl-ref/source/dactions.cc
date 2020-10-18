@@ -399,7 +399,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     // If the hog is in transit, then it is NOT stored in the normal
     // monster list (env.mons or env.mons for short). We cannot call move_to_pos
     // on such a hog, because move_to_pos will attempt to update the
-    // monster grid (env.mgrid or mgrd for short). Since the hog is not
+    // monster grid (env.mgrid or env.mgrid for short). Since the hog is not
     // stored in the monster list, this will corrupt the grid. The transit code
     // will update the grid properly once the transiting hog has been placed.
     if (!in_transit)

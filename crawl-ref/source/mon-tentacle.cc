@@ -895,7 +895,7 @@ void move_solo_tentacle(monster* tentacle)
     }
 
     // Why do I have to do this move? I don't get it.
-    // specifically, if tentacle isn't registered at its new position on mgrd
+    // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
     tentacle->move_to_pos(new_pos);
 
@@ -1091,7 +1091,7 @@ void move_child_tentacles(monster* mons)
 
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
-        // mgrd the search fails (sometimes), Don't know why. -cao
+        // env.mgrid the search fails (sometimes), Don't know why. -cao
         tentacle->move_to_pos(new_pos);
 
         if (pull_constrictee)
@@ -1124,7 +1124,7 @@ void move_child_tentacles(monster* mons)
         // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-            mgrd(tentacle->pos()) = tentacle->mindex();
+            env.mgrid(tentacle->pos()) = tentacle->mindex();
             monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
 
             continue;

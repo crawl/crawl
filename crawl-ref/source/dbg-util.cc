@@ -259,7 +259,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
     else if (in_bounds(mon->target))
     {
-        target = mgrd(mon->target);
+        target = env.mgrid(mon->target);
 
         if (target == NON_MONSTER)
             fprintf(stderr, "nothing");

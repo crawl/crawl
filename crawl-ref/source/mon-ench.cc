@@ -383,21 +383,21 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     int midx = mon->mindex();
 
     if (!monster_at(mon->pos()))
-        mgrd(mon->pos()) = midx;
+        env.mgrid(mon->pos()) = midx;
 
-    if (mon->pos() != you.pos() && midx == mgrd(mon->pos()))
+    if (mon->pos() != you.pos() && midx == env.mgrid(mon->pos()))
         return true;
 
-    if (midx != mgrd(mon->pos()))
+    if (midx != env.mgrid(mon->pos()))
     {
-        monster* other_mon = &env.mons[mgrd(mon->pos())];
+        monster* other_mon = &env.mons[env.mgrid(mon->pos())];
 
         if (other_mon->type == MONS_NO_MONSTER
             || other_mon->type == MONS_PROGRAM_BUG)
         {
-            mgrd(mon->pos()) = midx;
+            env.mgrid(mon->pos()) = midx;
 
-            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to %s monster, even "
+            mprf(MSGCH_ERROR, "env.mgrid(%d,%d) points to %s monster, even "
                  "though it contains submerged monster %s (see bug 2293518)",
                  mon->pos().x, mon->pos().y,
                  other_mon->type == MONS_NO_MONSTER ? "dead" : "buggy",
@@ -1238,13 +1238,13 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                         return do_resist;
                     }
 
-                    int swap_mon = mgrd(newpos);
+                    int swap_mon = env.mgrid(newpos);
                     // Pick the monster up.
-                    mgrd(newpos) = NON_MONSTER;
+                    env.mgrid(newpos) = NON_MONSTER;
                     mon->moveto(oldpos);
 
                     // Plunk it down.
-                    mgrd(mon->pos()) = swap_mon;
+                    env.mgrid(mon->pos()) = swap_mon;
 
                     mprf("You swap places with %s.",
                          mon->name(DESC_THE).c_str());

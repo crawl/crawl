@@ -282,22 +282,22 @@ static void _update_cloud(cloud_struct& cloud)
 static void _check_monster_pos(const monster* mons)
 {
     int s = mons->mindex();
-    ASSERT(mgrd(mons->pos()) == s);
+    ASSERT(env.mgrid(mons->pos()) == s);
 
     // [rob] The following in case asserts aren't enabled.
-    // [enne] - It's possible that mgrd and mons->x/y are out of
+    // [enne] - It's possible that env.mgrid and mons->x/y are out of
     // sync because they are updated separately. If we can see this
-    // monster, then make sure that the mgrd is set correctly.
-    if (mgrd(mons->pos()) != s)
+    // monster, then make sure that the env.mgrid is set correctly.
+    if (env.mgrid(mons->pos()) != s)
     {
         // If this mprf triggers for you, please note any special
         // circumstances so we can track down where this is coming
         // from.
         mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
-             "improperly placed. Updating mgrd.",
+             "improperly placed. Updating env.mgrid.",
              mons->name(DESC_PLAIN, true).c_str(), s,
              mons->pos().x, mons->pos().y);
-        mgrd(mons->pos()) = s;
+        env.mgrid(mons->pos()) = s;
     }
 }
 

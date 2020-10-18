@@ -1311,7 +1311,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     env.cloud.clear();
 
-    mgrd.init(NON_MONSTER);
+    env.mgrid.init(NON_MONSTER);
     igrd.init(NON_ITEM);
 
     // Reset all shops.
@@ -3262,7 +3262,7 @@ static void _place_traps()
             if (in_bounds(ts.pos)
                 && env.grid(ts.pos) == DNGN_FLOOR
                 && !map_masked(ts.pos, MMT_NO_TRAP)
-                && mgrd(ts.pos) == NON_MONSTER)
+                && env.mgrid(ts.pos) == NON_MONSTER)
             {
                 break;
             }
@@ -6007,10 +6007,10 @@ static void _add_plant_clumps(int rarity,
     {
         mgen_data mg;
         mg.flags = MG_FORCE_PLACE;
-        if (mgrd(*ri) != NON_MONSTER && !map_masked(*ri, MMT_VAULT))
+        if (env.mgrid(*ri) != NON_MONSTER && !map_masked(*ri, MMT_VAULT))
         {
             // clump plants around things that already exist
-            monster_type type = env.mons[mgrd(*ri)].type;
+            monster_type type = env.mons[env.mgrid(*ri)].type;
             if ((type == MONS_PLANT
                      || type == MONS_FUNGUS
                      || type == MONS_BUSH)

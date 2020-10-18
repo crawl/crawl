@@ -209,7 +209,7 @@ static void _announce_level_prob(bool warned)
     if (!warned && crawl_state.generating_level)
     {
         mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        mprf(MSGCH_ERROR, "mgrd problem occurred during level generation");
+        mprf(MSGCH_ERROR, "env.mgrid problem occurred during level generation");
 
         debug_dump_levgen();
     }
@@ -271,13 +271,13 @@ void debug_mons_scan()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            const int mons = mgrd[x][y];
+            const int mons = env.mgrid[x][y];
             if (mons == NON_MONSTER)
                 continue;
 
             if (invalid_monster_index(mons))
             {
-                mprf(MSGCH_ERROR, "mgrd at (%d, %d) has invalid monster "
+                mprf(MSGCH_ERROR, "env.mgrid at (%d, %d) has invalid monster "
                                   "index %d",
                      x, y, mons);
                 continue;
@@ -292,7 +292,7 @@ void debug_mons_scan()
 
                 _announce_level_prob(warned);
                 mprf(MSGCH_WARN,
-                     "Bogosity: mgrd at (%d,%d) points at %s, "
+                     "Bogosity: env.mgrid at (%d,%d) points at %s, "
                      "but monster is at (%d,%d)",
                      x, y, m->name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y);
@@ -304,7 +304,7 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 mprf_nocap(MSGCH_ERROR,
-                     "mgrd at (%d,%d) points at dead monster %s",
+                     "env.mgrid at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
             }
@@ -340,7 +340,7 @@ void debug_mons_scan()
                  m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
         }
-        else if (mgrd(pos) != i)
+        else if (env.mgrid(pos) != i)
         {
             floating_mons.push_back(i);
             is_floating[i] = true;
@@ -373,7 +373,7 @@ void debug_mons_scan()
                          pos.x, pos.y, full.c_str(), j);
                 }
             }
-        } // if (mgrd(m->pos()) != i)
+        } // if (env.mgrid(m->pos()) != i)
 
         if (feat_is_wall(env.grid(pos)))
         {
@@ -571,7 +571,7 @@ void debug_mons_scan()
         const int       idx = bogus_idx[i];
         const monster* mon = &env.mons[idx];
 
-        string str = make_stringf("Bogus mgrd (%d, %d) pointing to %s", pos.x,
+        string str = make_stringf("Bogus env.mgrid (%d, %d) pointing to %s", pos.x,
                                   pos.y, mon->name(DESC_PLAIN, true).c_str());
 
         vector<string> vaults = _in_vaults(pos);

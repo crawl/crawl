@@ -1282,7 +1282,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->destroy_inventory();
             env.mid_cache.erase(mon->mid);
             mon->reset();
-            mgrd(fpos) = NON_MONSTER;
+            env.mgrid(fpos) = NON_MONSTER;
             return 0;
         }
         else

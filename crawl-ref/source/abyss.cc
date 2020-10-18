@@ -1248,7 +1248,7 @@ static void _update_abyss_terrain(const coord_def &p,
     if (you.pos() == rp)
         feat = _veto_dangerous_terrain(feat);
     // Veto morph when there's a submerged monster (or a plant) below you.
-    if (you.pos() == rp && mgrd(rp) != NON_MONSTER)
+    if (you.pos() == rp && env.mgrid(rp) != NON_MONSTER)
         feat = currfeat;
 
     // If the selected grid is already there, *or* if we're morphing and
