@@ -272,7 +272,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             if (foe == MHITYOU)
                 target = you.pos();
             else if (foe != MHITNOT)
-                target = menv[source_actor->as_monster()->foe].pos();
+                target = env.mons[source_actor->as_monster()->foe].pos();
         }
 
         if (type == MONS_FLAYED_GHOST)
@@ -390,7 +390,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
     if (midx != mgrd(mon->pos()))
     {
-        monster* other_mon = &menv[mgrd(mon->pos())];
+        monster* other_mon = &env.mons[mgrd(mon->pos())];
 
         if (other_mon->type == MONS_NO_MONSTER
             || other_mon->type == MONS_PROGRAM_BUG)

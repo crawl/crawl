@@ -414,7 +414,7 @@ monster* monster_at(const coord_def &pos)
         return nullptr;
 
     ASSERT(mindex <= MAX_MONSTERS);
-    return &menv[mindex];
+    return &env.mons[mindex];
 }
 
 /// Are any of the bits set?
@@ -4847,26 +4847,26 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     if (!require_valid)
     {
         if (m == MID_ANON_FRIEND)
-            return &menv[ANON_FRIENDLY_MONSTER];
+            return &env.mons[ANON_FRIENDLY_MONSTER];
         if (m == MID_YOU_FAULTLESS)
-            return &menv[YOU_FAULTLESS];
+            return &env.mons[YOU_FAULTLESS];
     }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
-        return &menv[*mc];
+        return &env.mons[*mc];
     return 0;
 }
 
 void init_anon()
 {
-    monster &mon = menv[ANON_FRIENDLY_MONSTER];
+    monster &mon = env.mons[ANON_FRIENDLY_MONSTER];
     mon.reset();
     mon.type = MONS_PROGRAM_BUG;
     mon.mid = MID_ANON_FRIEND;
     mon.attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
 
-    monster &yf = menv[YOU_FAULTLESS];
+    monster &yf = env.mons[YOU_FAULTLESS];
     yf.reset();
     yf.type = MONS_PROGRAM_BUG;
     yf.mid = MID_YOU_FAULTLESS;
@@ -4885,7 +4885,7 @@ actor *find_agent(mid_t m, kill_category kc)
         // shouldn't happen, there ought to be a valid mid
         return &you;
     case KC_FRIENDLY:
-        return &menv[ANON_FRIENDLY_MONSTER];
+        return &env.mons[ANON_FRIENDLY_MONSTER];
     case KC_OTHER:
         // currently hostile dead/gone monsters are no different from env
         return 0;
@@ -5217,7 +5217,7 @@ vector<monster* > get_on_level_followers()
 // monsters, otherwise all of them
 int count_monsters(monster_type mtyp, bool friendly_only)
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [=] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.type == mtyp
@@ -5227,7 +5227,7 @@ int count_monsters(monster_type mtyp, bool friendly_only)
 
 int count_allies()
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.friendly();

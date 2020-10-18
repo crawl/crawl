@@ -243,7 +243,7 @@ static monster* _get_current_target()
     if (invalid_monster_index(you.prev_targ))
         return nullptr;
 
-    monster* mon = &menv[you.prev_targ];
+    monster* mon = &env.mons[you.prev_targ];
     ASSERT(mon);
     if (mon->alive() && you.can_see(*mon))
         return mon;

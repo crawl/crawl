@@ -991,7 +991,7 @@ static void _confuse_monster(monster* mons, int sever)
 
     const bool was_confused = mons->confused();
     if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-          &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
+          &env.mons[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
     {
         if (was_confused)
             simple_monster_message(*mons, " looks rather more confused.");

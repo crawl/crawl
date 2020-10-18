@@ -1083,7 +1083,7 @@ void timeout_tombs(int duration)
             _drop_tomb(cmark->pos, empty_tomb, zin);
 
             monster* mon_src =
-                !invalid_monster_index(cmark->source) ? &menv[cmark->source]
+                !invalid_monster_index(cmark->source) ? &env.mons[cmark->source]
                                                       : nullptr;
             // A monster's Tomb of Doroklohe spell.
             if (mon_src

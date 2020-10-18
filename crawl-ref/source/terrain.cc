@@ -1534,13 +1534,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     if (monster_at(pos1))
     {
-        menv[mgrd(pos1)].set_position(pos1);
-        menv[mgrd(pos1)].clear_invalid_constrictions();
+        env.mons[mgrd(pos1)].set_position(pos1);
+        env.mons[mgrd(pos1)].clear_invalid_constrictions();
     }
     if (monster_at(pos2))
     {
-        menv[mgrd(pos2)].set_position(pos2);
-        menv[mgrd(pos2)].clear_invalid_constrictions();
+        env.mons[mgrd(pos2)].set_position(pos2);
+        env.mons[mgrd(pos2)].clear_invalid_constrictions();
     }
 
     swap_clouds(pos1, pos2);

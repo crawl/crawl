@@ -6010,7 +6010,7 @@ static void _add_plant_clumps(int rarity,
         if (mgrd(*ri) != NON_MONSTER && !map_masked(*ri, MMT_VAULT))
         {
             // clump plants around things that already exist
-            monster_type type = menv[mgrd(*ri)].type;
+            monster_type type = env.mons[mgrd(*ri)].type;
             if ((type == MONS_PLANT
                      || type == MONS_FUNGUS
                      || type == MONS_BUSH)

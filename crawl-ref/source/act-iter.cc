@@ -29,7 +29,7 @@ actor* actor_near_iterator::operator*() const
     if (i == -1)
         return &you;
     else if (i < MAX_MONSTERS)
-        return &menv[i];
+        return &env.mons[i];
     else
         return nullptr;
 }
@@ -74,7 +74,7 @@ void actor_near_iterator::advance()
 monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
     : center(c), _los(los), viewer(nullptr), i(0)
 {
-    if (!valid(&menv[0]))
+    if (!valid(&env.mons[0]))
         advance();
     begin_point = i;
 }
@@ -82,7 +82,7 @@ monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
 monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
     : center(a->pos()), _los(los), viewer(a), i(0)
 {
-    if (!valid(&menv[0]))
+    if (!valid(&env.mons[0]))
         advance();
     begin_point = i;
 }
@@ -95,7 +95,7 @@ monster_near_iterator::operator bool() const
 monster* monster_near_iterator::operator*() const
 {
     if (i < MAX_MONSTERS)
-        return &menv[i];
+        return &env.mons[i];
     else
         return nullptr;
 }
@@ -164,7 +164,7 @@ void monster_near_iterator::advance()
 monster_iterator::monster_iterator()
     : i(0)
 {
-    while (i < MAX_MONSTERS && !menv[i].alive())
+    while (i < MAX_MONSTERS && !env.mons[i].alive())
         i++;
 }
 
@@ -176,7 +176,7 @@ monster_iterator::operator bool() const
 monster* monster_iterator::operator*() const
 {
     if (i < MAX_MONSTERS)
-        return &menv[i];
+        return &env.mons[i];
     else
         return nullptr;
 }
@@ -189,7 +189,7 @@ monster* monster_iterator::operator->() const
 monster_iterator& monster_iterator::operator++()
 {
     while (++i < MAX_MONSTERS)
-        if (menv[i].alive())
+        if (env.mons[i].alive())
             break;
     return *this;
 }

@@ -727,14 +727,14 @@ namespace arena
 
         for (int idx : a_spawners)
         {
-            menv[idx].speed_increment *= faction_b.active_members;
-            menv[idx].speed_increment /= faction_a.active_members;
+            env.mons[idx].speed_increment *= faction_b.active_members;
+            env.mons[idx].speed_increment /= faction_a.active_members;
         }
 
         for (int idx : b_spawners)
         {
-            menv[idx].speed_increment *= faction_a.active_members;
-            menv[idx].speed_increment /= faction_b.active_members;
+            env.mons[idx].speed_increment *= faction_a.active_members;
+            env.mons[idx].speed_increment /= faction_b.active_members;
         }
     }
 

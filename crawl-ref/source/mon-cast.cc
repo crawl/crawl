@@ -2562,7 +2562,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
         victim = you.pos();
     else if (targ->foe != MHITNOT)
     {
-        const monster* vmons = &menv[targ->foe];
+        const monster* vmons = &env.mons[targ->foe];
         if (!vmons->alive())
             return false;
         victim = vmons->pos();
@@ -6758,7 +6758,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
-             && menv[mons->foe].type == MONS_NO_MONSTER)
+             && env.mons[mons->foe].type == MONS_NO_MONSTER)
     {
         target = "DEAD FOE";
     }
