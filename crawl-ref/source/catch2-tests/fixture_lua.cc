@@ -18,6 +18,7 @@
 namespace details_fixture_lua
 {
     void _original_main(int argc, char* argv[]);
+
     void _init_lua_test();
 
 /// \brief Recreate the global lua interpreters and global game states
@@ -51,10 +52,8 @@ namespace details_fixture_lua
         auto& guards = get_init_guards_instance();
         if (guards[keybindings]) init_keybindings();
         // No public methods to reset the maps instantiated in color.h
-        if (guards[element_colours])
-        {
-            init_element_colours();  // Need this to read the maps with lua
-        }
+        // Need this to read the maps with lua
+        if (guards[element_colours]) init_element_colours();
 
         // System environment and basedir etc. required for dlua
         get_system_environment();
