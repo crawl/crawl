@@ -836,7 +836,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             }
 
             // don't try to shove the orb of zot into lava and/or crash
-            if (igrd(*ai) != NON_ITEM)
+            if (env.igrid(*ai) != NON_ITEM)
             {
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
@@ -889,7 +889,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         if (proceed)
         {
             // All items are moved aside for zin, tomb just skips the tile.
-            if (igrd(*ai) != NON_ITEM && zin)
+            if (env.igrid(*ai) != NON_ITEM && zin)
                 push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.

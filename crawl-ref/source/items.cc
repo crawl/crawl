@@ -142,7 +142,7 @@ void fix_item_coordinates()
     for (int x = 0; x < GXM; x++)
         for (int y = 0; y < GYM; y++)
         {
-            int i = igrd[x][y];
+            int i = env.igrid[x][y];
 
             while (i != NON_ITEM)
             {
@@ -153,11 +153,11 @@ void fix_item_coordinates()
         }
 }
 
-// This function uses the items coordinates to relink all the igrd lists.
+// This function uses the items coordinates to relink all the env.igrid lists.
 void link_items()
 {
-    // First, initialise igrd array.
-    igrd.init(NON_ITEM);
+    // First, initialise env.igrid array.
+    env.igrid.init(NON_ITEM);
 
     // Link all items on the grid, plus shop inventory,
     // but DON'T link the huge pile of monster items at (-2,-2).
@@ -192,8 +192,8 @@ void link_items()
         // Link to top
         if (!move_below || movable_ind == -1)
         {
-            env.item[i].link = igrd(env.item[i].pos);
-            igrd(env.item[i].pos) = i;
+            env.item[i].link = env.igrid(env.item[i].pos);
+            env.igrid(env.item[i].pos) = i;
         }
         // Link below movable items.
         else
@@ -302,7 +302,7 @@ static int _cull_items()
 /*---------------------------------------------------------------------*/
 stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
-    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
+    cur_link = accessible ? you.visible_igrd(pos) : env.igrid(pos);
     if (cur_link != NON_ITEM)
         next_link = env.item[cur_link].link;
     else
@@ -573,7 +573,7 @@ void unlink_item(int dest)
     {
         // Linked item on map:
         //
-        // Use the items (x,y) to access the list (igrd[x][y]) where
+        // Use the items (x,y) to access the list (env.igrid[x][y]) where
         // the item should be linked.
 
 #if TAG_MAJOR_VERSION == 34
@@ -582,10 +582,10 @@ void unlink_item(int dest)
         ASSERT_IN_BOUNDS(env.item[dest].pos);
 
         // First check the top:
-        if (igrd(env.item[dest].pos) == dest)
+        if (env.igrid(env.item[dest].pos) == dest)
         {
-            // link igrd to the second item
-            igrd(env.item[dest].pos) = env.item[dest].link;
+            // link env.igrid to the second item
+            env.igrid(env.item[dest].pos) = env.item[dest].link;
 
             env.item[dest].pos.reset();
             env.item[dest].link = NON_ITEM;
@@ -647,9 +647,9 @@ void unlink_item(int dest)
     for (int c = 2; c < (GXM - 1); c++)
         for (int cy = 2; cy < (GYM - 1); cy++)
         {
-            if (igrd[c][cy] == dest)
+            if (env.igrid[c][cy] == dest)
             {
-                igrd[c][cy] = old_link;
+                env.igrid[c][cy] = old_link;
 
                 if (!linked)
                 {
@@ -723,7 +723,7 @@ void lose_item_stack(const coord_def& where)
             si->clear();
         }
     }
-    igrd(where) = NON_ITEM;
+    env.igrid(where) = NON_ITEM;
 }
 
 /**
@@ -2154,7 +2154,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
 
 void mark_items_non_pickup_at(const coord_def &pos)
 {
-    int item = igrd(pos);
+    int item = env.igrid(pos);
     while (item != NON_ITEM)
     {
         env.item[item].flags |= ISFLAG_DROPPED;
@@ -2173,7 +2173,7 @@ static void _gozag_move_gold_to_top(const coord_def p)
 {
     if (have_passive(passive_t::detect_gold))
     {
-        for (int gold = igrd(p); gold != NON_ITEM;
+        for (int gold = env.igrid(p); gold != NON_ITEM;
              gold = env.item[gold].link)
         {
             if (env.item[gold].base_type == OBJ_GOLD)
@@ -2275,8 +2275,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     // Movable item or no movable items in pile, link item to top of list.
     else
     {
-        item.link = igrd(p);
-        igrd(p) = ob;
+        item.link = env.igrid(p);
+        env.igrid(p) = ob;
     }
 
     if (item_is_orb(item))
@@ -2299,7 +2299,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 {
-    if (igrd(from) == NON_ITEM)
+    if (env.igrid(from) == NON_ITEM)
         return;
 
     // Tell all items in stack what the new coordinate is.
@@ -2308,15 +2308,15 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
         si->pos = to;
 
         // Link last of the stack to the top of the old stack.
-        if (si->link == NON_ITEM && igrd(to) != NON_ITEM)
+        if (si->link == NON_ITEM && env.igrid(to) != NON_ITEM)
         {
-            si->link = igrd(to);
+            si->link = env.igrid(to);
             break;
         }
     }
 
-    igrd(to) = igrd(from);
-    igrd(from) = NON_ITEM;
+    env.igrid(to) = env.igrid(from);
+    env.igrid(from) = NON_ITEM;
 }
 
 // Returns false if no items could be dropped.
@@ -2417,7 +2417,7 @@ coord_def item_pos(const item_def &item)
  */
 bool move_top_item(const coord_def &pos, const coord_def &dest)
 {
-    int item = igrd(pos);
+    int item = env.igrid(pos);
     if (item == NON_ITEM)
         return false;
 
@@ -3221,7 +3221,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
 int item_on_floor(const item_def &item, const coord_def& where)
 {
     // Check if the item is on the floor and reachable.
-    for (int link = igrd(where); link != NON_ITEM; link = env.item[link].link)
+    for (int link = env.igrid(where); link != NON_ITEM; link = env.item[link].link)
         if (&env.item[link] == &item)
             return link;
 
@@ -4379,7 +4379,7 @@ void move_items(const coord_def r, const coord_def p)
     ASSERT_IN_BOUNDS(r);
     ASSERT_IN_BOUNDS(p);
 
-    int it = igrd(r);
+    int it = env.igrid(r);
 
     if (it == NON_ITEM)
         return;
@@ -4392,15 +4392,15 @@ void move_items(const coord_def r, const coord_def p)
         {
             // Link to the stack on the target grid p,
             // or NON_ITEM, if empty.
-            env.item[it].link = igrd(p);
+            env.item[it].link = env.igrid(p);
             break;
         }
         it = env.item[it].link;
     }
 
     // Move entire stack over to p.
-    igrd(p) = igrd(r);
-    igrd(r) = NON_ITEM;
+    env.igrid(p) = env.igrid(r);
+    env.igrid(r) = NON_ITEM;
 }
 
 // erase everything the player doesn't know

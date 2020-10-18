@@ -5261,7 +5261,7 @@ int player::visible_igrd(const coord_def &where) const
         return NON_ITEM;
     }
 
-    return igrd(where);
+    return env.igrid(where);
 }
 
 bool player::has_spell(spell_type spell) const
@@ -7939,7 +7939,7 @@ void player_close_door(coord_def doorpos)
             return;
         }
 
-        if (igrd(dc) != NON_ITEM)
+        if (env.igrid(dc) != NON_ITEM)
         {
             if (!has_push_spaces(dc, false, &door_vec))
             {
@@ -7955,7 +7955,7 @@ void player_close_door(coord_def doorpos)
             return;
         }
     }
-    const int you_old_top_item = igrd(you.pos());
+    const int you_old_top_item = env.igrid(you.pos());
 
     bool items_moved = false;
     for (const coord_def& dc : all_door)
@@ -8056,7 +8056,7 @@ void player_close_door(coord_def doorpos)
     update_exclusion_los(excludes);
 
     // item pushing may have moved items under the player
-    if (igrd(you.pos()) != you_old_top_item)
+    if (env.igrid(you.pos()) != you_old_top_item)
         item_check();
     you.turn_is_over = true;
 }

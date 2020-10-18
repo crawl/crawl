@@ -810,7 +810,7 @@ void fully_map_level()
 #ifdef USE_TILE
         tile_wizmap_terrain(*ri);
 #endif
-        if (igrd(*ri) != NON_ITEM)
+        if (env.igrid(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
     }

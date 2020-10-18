@@ -275,7 +275,7 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask)
     {
         const coord_def p(*ri);
         if (abyss_genlevel_mask(p)
-            && env.grid(p) == DNGN_FLOOR && igrd(p) == NON_ITEM
+            && env.grid(p) == DNGN_FLOOR && env.igrid(p) == NON_ITEM
             && one_chance_in(++places_found))
         {
             chosen_spot = p;
@@ -302,7 +302,7 @@ static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
 {
     return abyss_genlevel_mask(p)
            && env.grid(p) == DNGN_FLOOR
-           && igrd(p) == NON_ITEM
+           && env.igrid(p) == NON_ITEM
            && !map_masked(p, MMT_VAULT);
 }
 
@@ -703,7 +703,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     env.grid(p) = DNGN_UNSEEN;
 
     // Nuke items.
-    if (igrd(p) != NON_ITEM)
+    if (env.igrid(p) != NON_ITEM)
         dprf(DIAG_ABYSS, "Nuke item stack at (%d, %d)", p.x, p.y);
     lose_item_stack(p);
 
@@ -2047,11 +2047,11 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     // If we are trying to place a wall on top of a creature or item, try to
     // move it aside. If this fails, simply place floor instead.
     actor* act = actor_at(c);
-    if (feat_is_solid(feat) && (igrd(c) != NON_ITEM || act))
+    if (feat_is_solid(feat) && (env.igrid(c) != NON_ITEM || act))
     {
         push_items_from(c, nullptr);
         push_actor_from(c, nullptr, true);
-        if (actor_at(c) || igrd(c) != NON_ITEM)
+        if (actor_at(c) || env.igrid(c) != NON_ITEM)
             feat = DNGN_FLOOR;
     }
 
