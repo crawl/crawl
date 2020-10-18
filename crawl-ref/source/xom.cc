@@ -1506,7 +1506,7 @@ static vector<coord_def> _xom_scenery_candidates()
             }
         }
         else if (feat_is_open_door(feat) && !actor_at(*ri)
-                 && igrd(*ri) == NON_ITEM)
+                 && env.igrid(*ri) == NON_ITEM)
         {
             // Check whether this door is already included in a gate.
             if (find(begin(open_doors), end(open_doors), *ri)
@@ -1519,7 +1519,7 @@ static vector<coord_def> _xom_scenery_candidates()
                 bool is_blocked = false;
                 for (auto dc : all_door)
                 {
-                    if (actor_at(dc) || igrd(dc) != NON_ITEM)
+                    if (actor_at(dc) || env.igrid(dc) != NON_ITEM)
                     {
                         is_blocked = true;
                         break;

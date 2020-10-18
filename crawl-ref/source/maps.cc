@@ -464,7 +464,7 @@ static bool _map_safe_vault_place(const map_def &map,
             return false;
 
         // Don't overwrite monsters or items, either!
-        if (monster_at(cp) || igrd(cp) != NON_ITEM)
+        if (monster_at(cp) || env.igrid(cp) != NON_ITEM)
             return false;
 
         // If in Slime, don't let stairs end up next to minivaults,

@@ -1312,7 +1312,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.cloud.clear();
 
     env.mgrid.init(NON_MONSTER);
-    igrd.init(NON_ITEM);
+    env.igrid.init(NON_ITEM);
 
     // Reset all shops.
     env.shop.clear();

@@ -234,7 +234,7 @@ void update_item_at(const coord_def &gp, bool detected, bool wizard)
 
     if (you.see_cell(gp) || wizard)
     {
-        const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
+        const int item_grid = wizard ? env.igrid(gp) : you.visible_igrd(gp);
         if (item_grid == NON_ITEM)
             return;
         eitem = env.item[item_grid];

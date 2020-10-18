@@ -54,13 +54,13 @@ void debug_item_scan()
 
         // Looking for infinite stacks (ie more links than items allowed)
         // and for items which have bad coordinates (can't find their stack)
-        for (int obj = igrd(*ri); obj != NON_ITEM; obj = env.item[obj].link)
+        for (int obj = env.igrid(*ri); obj != NON_ITEM; obj = env.item[obj].link)
         {
             if (obj < 0 || obj > MAX_ITEMS)
             {
-                if (igrd(*ri) == obj)
+                if (env.igrid(*ri) == obj)
                 {
-                    mprf(MSGCH_ERROR, "Igrd has invalid item index %d "
+                    mprf(MSGCH_ERROR, "env.igrid has invalid item index %d "
                                       "at (%d, %d)",
                          obj, ri->x, ri->y);
                 }
@@ -126,8 +126,8 @@ void debug_item_scan()
             }
             else
             {
-                mprf("igrd(%d,%d) = %d",
-                     env.item[i].pos.x, env.item[i].pos.y, igrd(env.item[i].pos));
+                mprf("env.igrid(%d,%d) = %d",
+                     env.item[i].pos.x, env.item[i].pos.y, env.igrid(env.item[i].pos));
             }
 
             // Let's check to see if it's an errant monster object:

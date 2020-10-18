@@ -803,7 +803,7 @@ void wizard_list_items()
     const coord_def start(1,1), end(GXM-1, GYM-1);
     for (rectangle_iterator ri(start, end); ri; ++ri)
     {
-        int item = igrd(*ri);
+        int item = env.igrid(*ri);
         if (item != NON_ITEM)
         {
             mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,

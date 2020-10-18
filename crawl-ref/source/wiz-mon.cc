@@ -403,7 +403,7 @@ void debug_stethoscope(int mon)
 
         if (!monster_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos));
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", env.igrid(stethpos));
             return;
         }
 

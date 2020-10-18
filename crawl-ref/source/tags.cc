@@ -4601,7 +4601,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     marshallShort(th, item.link);
     if (item.pos.x >= 0 && item.pos.y >= 0)
-        marshallShort(th, igrd(item.pos));  //  unused
+        marshallShort(th, env.igrid(item.pos));  //  unused
     else
         marshallShort(th, -1); // unused
 
@@ -4697,7 +4697,7 @@ void unmarshallItem(reader &th, item_def &item)
         item.link = ITEM_IN_SHOP;
 #endif
 
-    unmarshallShort(th);  // igrd[item.x][item.y] -- unused
+    unmarshallShort(th);  // env.igrid[item.x][item.y] -- unused
 
     item.slot        = unmarshallByte(th);
 
