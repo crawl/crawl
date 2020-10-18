@@ -1487,7 +1487,13 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += you.wearing(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
         if (body_armour)
             rf += armour_type_prop(body_armour->sub_type, ARMF_RES_FIRE);
 
@@ -1561,7 +1567,13 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
         if (body_armour)
             res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
     }
@@ -1608,7 +1620,13 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += you.wearing(EQ_STAFF, STAFF_COLD, calc_unid);
 
         // body armour:
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
         if (body_armour)
             rc += armour_type_prop(body_armour->sub_type, ARMF_RES_COLD);
 
@@ -1685,7 +1703,13 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += you.wearing(EQ_STAFF, STAFF_AIR, calc_unid);
 
         // body armour:
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
         if (body_armour)
             re += armour_type_prop(body_armour->sub_type, ARMF_RES_ELEC);
 
@@ -1803,7 +1827,13 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
             // body armour:
-            const item_def* body_armour = you.slot_item(EQ_BODY_ARMOUR);
+            bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+            const item_def* body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
             if (body_armour)
                 rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
@@ -2064,7 +2094,13 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
         // pearl dragon counts
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
         if (body_armour)
             pl += armour_type_prop(body_armour->sub_type, ARMF_RES_NEG);
 
@@ -3508,9 +3544,15 @@ int player_stealth()
     if (you.confused())
         stealth /= 3;
 
-    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
+    bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
-
+    
     if (arm)
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
@@ -6954,7 +6996,13 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC_RESISTANCE, calc_unid);
 
     // body armour
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
     if (body_armour)
         rm += armour_type_prop(body_armour->sub_type, ARMF_RES_MAGIC) * MR_PIP;
 
