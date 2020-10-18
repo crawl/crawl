@@ -1149,7 +1149,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you can't see any valid targets.";
     }
 
-    if (you_worship(GOD_TROG) && spell != SPELL_SMITING)
+    if (you_worship(GOD_TROG) && (!fake_spell
+         || you.species == SP_MELIAI && spell != SPELL_SMITING))
     {
         return "you don't and can't cast any spell.";
     }
