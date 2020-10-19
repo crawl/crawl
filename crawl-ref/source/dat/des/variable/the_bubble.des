@@ -25,7 +25,7 @@ function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
            or you.in_branch("Snake")
            or you.in_branch("Spider") then
         e.nsubst(". = 6=0 / 7=0. / 3=9 / 5=9. / 2=8. / .")
-    elseif you.in_branch("Elf") then
+    elseif you.in_branch("Elf") or you.in_branch("Vaults") then
         e.nsubst(". = 6=0 / 8=0. / 3=9 / 5=9. / 8 / 8. / .")
     elseif you.in_branch("Crypt") then
         e.nsubst(". = 6=0 / 8=0. / 4=9 / 4=9. / 8 / 2=8. / .")
@@ -61,7 +61,10 @@ end
 
 NAME:   gammafunk_the_bubble
 TAGS:   no_monster_gen no_trap_gen
-DEPTH:  D:7-, Shoals, Snake, Swamp, Spider, Elf, Crypt, Depths, Zot, Pan
+# Allow placement in Vaults as a room.
+TAGS:   vaults_hard preserve_wall passable
+DEPTH:  Crypt, D:7-, Depths, Elf, Pan, Shoals, Snake, Spider, Swamp, Vaults
+DEPTH:  Zot
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   any jewellery good_item, any jewellery randart
@@ -81,7 +84,7 @@ NSUBST: ' = 2=d / eg / 3=|* / *% / %$.. / 2=$ / .
 : elseif you.in_branch("Shoals") or you.in_branch("Swamp")
 :        or you.in_branch("Snake") or you.in_branch("Spider") then
 NSUBST: ' = 2=d / eg / 3=|* / * / %$ / 2=$ / .
-: elseif you.in_branch("Elf") then
+: elseif you.in_branch("Elf") or you.in_branch("Vaults") then
 NSUBST: ' = 2=d / fh / 4=|* / *% / %$.. / 2=$ / .
 : elseif you.in_branch("Crypt") then
 NSUBST: ' = 2=d / fh / 4=|* / * / %$ / 2=$ / .
