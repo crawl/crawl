@@ -9145,13 +9145,17 @@ NAME:   gammafunk_sealed_arena
 TAGS:   no_monster_gen no_trap_gen
 # Allow placement in Vaults as a room.
 TAGS:   vaults_hard preserve_wall passable
-DEPTH:  Crypt, D:8-, Depths, Elf, Vaults, Zot
+DEPTH:  Crypt, D:8-, Depths, Elf, Shoals, Snake, Spider, Swamp, Vaults, Zot
 ORIENT: float
 ITEM:   any jewellery good_item
 ITEM:   cloak good_item / scarf good_item / helmet good_item / hat good_item \
         / pair of gloves good_item / pair of boots good_item
 KITEM:  R = |
+: if you.in_branch("Shoals") or you.in_branch("Spider") then
+MONS:   orange crystal statue
+: else
 MONS:   orange crystal statue / obsidian statue
+: end
 # In earlier Dungeon depths, one d item and remove 1/3 of the 9 spawns
 # on-average.  Elsewhere place one d item and one e item and don't reduce the 9
 # spawns.
@@ -9160,7 +9164,12 @@ SUBST: 1 = 1..., 9 = 99., " = d, ' = $
 : elseif you.in_branch("D") then
 SUBST: 1 = 1.
 : end
-SUBST:  " = $, h : b., i : b., b : bcvx
+SUBST:  " = $, h : b., i : b.
+: if you.in_branch("Spider") or you.in_branch("Swamp") then
+SUBST:  b : cx
+: else
+SUBST:  b : bcvx
+: end
 NSUBST: ' = d / e / $
 MARKER: P = lua:transp_loc("sealed_arena_entry")
 MARKER: Q = lua:transp_dest_loc("sealed_arena_entry")
@@ -9186,8 +9195,7 @@ NAME:    gammafunk_its_a_trap
 TAGS:    no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
 TAGS:    vaults_hard preserve_wall passable
-DEPTH:   Crypt, D:$, Depths, Elf, Shoals, Snake, Spider, Swamp, Pan, Vaults
-DEPTH:   Zot
+DEPTH:   Crypt, D:$, Depths, Elf, Snake, Spider, Pan, Vaults, Zot
 ORIENT:  float
 KMASK:   ^ = no_item_gen
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
@@ -9326,7 +9334,7 @@ NAME:    emtedronai_trogs_sanctum
 TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
 # Allow placement in Vaults as a room.
 TAGS:    vaults_hard preserve_wall passable
-DEPTH:   D:13-, Vaults, Depths
+DEPTH:   D:13-, Orc, Vaults, Depths
 ORIENT:  float
 KITEM:   _ = necklace of bloodlust no_pickup / wrath of trog no_pickup
 ITEM:    manual of armour w:30 / manual of fighting w:30 / \
@@ -9353,6 +9361,16 @@ KPROP:   .$*def123456 = bloody w:5 / nothing
 MONS:    patrolling ettin / patrolling iron troll
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
 MONS:    ogre mage / wizard / deep elf mage / boggart / necromancer
+: elseif you.in_branch("Orc") then
+MONS:    patrolling stone giant / patrolling ettin
+MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
+         / orc knight
+# The orcs mostly offer naughty elves to Trog's Sanctum, with a few naughty
+# orcs and ogres thrown in.
+MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf mage w:60 \
+         / deep elf sorcerer / deep elf demonologist / deep elf annihilator
+KMONS:   7 = deep elf elementalist
+SUBST:   5 = 7, " = m
 : elseif you.in_branch("Vaults") then
 MONS:    patrolling ettin / patrolling iron troll
 MONS:    two-headed ogre / cyclops / deep troll w:15 / stone giant
@@ -9370,7 +9388,7 @@ MONS:    generate_awake moth of wrath, deep troll earth mage
 KMONS:   6 = silent spectre
 : dgn.delayed_decay(_G, '\'`', 'human skeleton')
 KFEAT:   _ = altar_trog
-KFEAT:   - = iron_grate
+KFEAT:   -" = iron_grate
 FTILE:   ` = floor_rough_lightred
 MARKER:  ` = lua:fog_machine { \
                cloud_type = "flame", pow_min = 10, pow_max = 10, delay = 10, \
@@ -9397,11 +9415,11 @@ Evvvvvv...+.'.+...vvvvvvE
 Evvvvv....v.g.v....vvvvvE
 Evvv`-..v-vnvnv-v..-`vvvE
 Evvvvv..-4vv6vv4-..vvvvvE
-Evvv4-22v-vn=nv-v22-4vvvE
+Evvv4"22v-vn=nv-v22"4vvvE
 Evvv3v...$$e_f$$...v3vvvE
-Evvv3-....$*d*$....-3vvvE
+Evvv3"....$*d*$...."3vvvE
 Evvv3v..Y..***..Y..v3vvvE
-Evvv5-......1......-5vvvE
+Evvv5"......1......"5vvvE
 Evvvvv22.........22vvvvvE
 Evvvvv-v-vvnnnvv-v-vvvvvE
 Evvvvv4v`vvnnnvv`v4vvvvvE
