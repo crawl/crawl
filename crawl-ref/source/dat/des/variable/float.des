@@ -4734,8 +4734,8 @@ MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
 : dgn.delayed_decay(_G, 'F', 'human corpse')
 MAP
 '''''''"'''''''
-'xxxxxx@xxxxxx'
-'xxcccc.cxxxxx'
+'xxxxxx.xxxxxx'
+'xxcccc=cxxxxx'
 'xcc---ccxxxxx'
 'xc-DDDccxxxxx'
 'xcc--dEccxxxx'
@@ -4744,9 +4744,9 @@ MAP
 'xxxxxccHHH-cx'
 'xxxxxcc---ccx'
 'xxxxcc-ccccxx'
-'xxxxc===cxxxx'
+'xxxxc~~~cxxxx'
 'xxxxcJJJcxxxx'
-'xxxccm~mccxxx'
+'xxxccn+nccxxx'
 'xxxclLfLlcxxx'
 'xxxclNMNlcxxx'
 'xxxclllllcxxx'
