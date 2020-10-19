@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "json.h"
+
 #include "stash.h"
 
 void overview_clear();
@@ -46,3 +48,9 @@ class reader;
 void marshallUniqueAnnotations(writer& outf);
 void unmarshallUniqueAnnotations(reader& inf);
 bool connected_branch_can_exist(branch_type br);
+
+JsonNode *get_json_branches();
+JsonNode *get_json_altars();
+JsonNode *get_json_shops();
+JsonNode *get_json_portals();
+JsonNode *get_json_notes();

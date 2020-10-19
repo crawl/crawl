@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "json.h"
 #include "enum.h"
 
 class monster;
@@ -173,6 +174,7 @@ public:
     int total_kills() const;
 
     string kill_info() const;
+    JsonNode *json_kills() const;
 private:
     const char *category_name(kill_category kc) const;
 

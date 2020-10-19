@@ -1,0 +1,1075 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "header": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "client": {
+                    "type": "string",
+                    "enum": [
+                        "console",
+                        "tiles",
+                        "webtiles"
+                    ]
+                },
+                "seed": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "type",
+                "version",
+                "client"
+            ]
+        },
+        "stats": {
+            "type": "object",
+            "properties": {
+                "turns": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "species": {
+                    "type": "string"
+                },
+                "job": {
+                    "type": "string"
+                },
+                "health": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "magic": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "gold": {
+                    "type": "number"
+                },
+                "armorClass": {
+                    "type": "number"
+                },
+                "evasion": {
+                    "type": "number"
+                },
+                "shieldClass": {
+                    "type": "number"
+                },
+                "strength": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "intelligence": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "dexterity": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "experience": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "god": {
+                    "type": "object",
+                    "properties": {
+                        "god": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "spells": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "lives": {
+                    "type": "string"
+                },
+                "deaths": {
+                    "type": "string"
+                },
+                "resistances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/_statValue"
+                    }
+                },
+                "stealth": {
+                    "$ref": "#/definitions/_statValue"
+                },
+                "hpRegen": {
+                    "type": "number"
+                },
+                "mpRegen": {
+                    "type": "number"
+                },
+                "seeInvisible": {
+                    "type": "boolean"
+                },
+                "gourmand": {
+                    "type": "boolean"
+                },
+                "faith": {
+                    "type": "boolean"
+                },
+                "spirit": {
+                    "type": "boolean"
+                },
+                "reflect": {
+                    "type": "boolean"
+                },
+                "harm": {
+                    "type": "boolean"
+                },
+                "clarity": {
+                    "type": "boolean"
+                },
+                "randomRage": {
+                    "type": "boolean"
+                },
+                "noTeleportation": {
+                    "type": "boolean"
+                },
+                "randomTeleportation": {
+                    "type": "boolean"
+                },
+                "noCast": {
+                    "type": "boolean"
+                },
+                "equipment": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "slot": {
+                                "type": "string"
+                            },
+                            "position": {
+                                "type": "string"
+                            },
+                            "melded": {
+                                "type": "boolean"
+                            },
+                            "item": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+
+                        ]
+                    }
+                },
+                "status": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "mutations": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "hasOrb": {
+                    "type": "boolean"
+                },
+                "runes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "turns",
+                "time",
+                "name",
+                "title",
+                "species",
+                "job",
+                "health",
+                "magic",
+                "gold",
+                "armorClass",
+                "evasion",
+                "shieldClass",
+                "strength",
+                "intelligence",
+                "dexterity",
+                "experience",
+                "spells"
+            ]
+        },
+        "location": {
+            "$ref": "#/definitions/_location"
+        },
+        "religion": {
+            "type": "object",
+            "properties": {
+                "god": {
+                    "type": "string"
+                },
+                "favour": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "god",
+                "favour"
+            ]
+        },
+        "hunger": {
+            "type": "string"
+        },
+        "transform": {
+            "type": "string"
+        },
+        "visits": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "visits": {
+                        "type": "number"
+                    },
+                    "levels": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "visits",
+                    "levels"
+                ]
+            }
+        },
+        "gold": {
+            "type": "object",
+            "properties": {
+                "collected": {
+                    "type": "number"
+                },
+                "spent": {
+                    "type": "number"
+                },
+                "donated": {
+                    "type": "number"
+                },
+                "gozag": {
+                    "type": "number"
+                },
+                "misc": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "collected",
+                "spent",
+                "donated",
+                "misc"
+            ]
+        },
+        "completedZiggurats": {
+            "type" :"number"
+        },
+        "deepestZiggurat": {
+            "type" :"number"
+        },
+        "turnsByPlace": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "place": {
+                        "type": "string"
+                    },
+                    "total": {
+                        "type": "number"
+                    },
+                    "nonInterLevel": {
+                        "type": "number"
+                    },
+                    "interLevel": {
+                        "type": "number"
+                    },
+                    "resting": {
+                        "type": "number"
+                    },
+                    "exploring": {
+                        "type": "number"
+                    },
+                    "levelsSeen": {
+                        "type": "number"
+                    },
+                    "averageByLevel": {
+                        "type": "number"
+                    },
+                },
+                "required": [
+                    "place"
+                    "total"
+                    "nonInterLevel"
+                    "interLevel"
+                    "resting"
+                    "exploring"
+                    "levelsSeen"
+                    "averageByLevel"
+                ]
+            }
+        },
+        "notes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "turn": {
+                        "type": "number"
+                    },
+                    "location": {
+                        "$ref": "#/definitions/_location"
+                    },
+                    "value": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "turn",
+                    "location",
+                    "value"
+                ]
+            }
+        },
+        "inventory": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "class": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/_item"
+                        }
+                    }
+                },
+                "required": [
+                    "class",
+                    "items"
+                ]
+            }
+        },
+        "skills": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "real": {
+                        "type": "number"
+                    },
+                    "current": {
+                        "type": "number"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "max",
+                            "untrainable",
+                            "focused",
+                            "trained",
+                            "untrained"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "real",
+                    "current",
+                    "status"
+                ]
+            }
+        },
+        "spells": {
+            "type": "object",
+            "properties": {
+                "known": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/_spell"
+                    }
+                },
+                "library": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/_spell"
+                    }
+                }
+            },
+            "required": [
+                "known",
+                "library"
+            ]
+        },
+        "mutations": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "messages": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "channel": {
+                        "type": "string",
+                        "enum": [
+                            "plain",
+                            "friend_action",
+                            "prompt",
+                            "god",
+                            "duration",
+                            "danger",
+                            "warn",
+                            "food",
+                            "recovery",
+                            "sound",
+                            "talk",
+                            "talk_visual",
+                            "intrinsic_gain",
+                            "mutation",
+                            "monster_spell",
+                            "monster_enchant",
+                            "friend_spell",
+                            "friend_enchant",
+                            "monster_damage",
+                            "monster_target",
+                            "banishment",
+                            "rotten_meat",
+                            "equipment",
+                            "floor_items",
+                            "multiturn_action",
+                            "examine",
+                            "examine_filter",
+                            "diagnostics",
+                            "error",
+                            "tutorial",
+                            "orb",
+                            "timed_portal",
+                            "hell_effect",
+                            "monster_warning",
+                            "dgl_message",
+                            "none"
+                        ]
+                    },
+                    "content": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "channel",
+                    "content"
+                ]
+            }
+        },
+        "screenshot": {
+            "type": "string",
+        },
+        "killsByPlace": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "place": {
+                        "type": "string"
+                    },
+                    "killsPercent": {
+                        "type": "number"
+                    },
+                    "ownKillsPercent": {
+                        "type": "number"
+                    },
+                    "friendsKillsPercent": {
+                        "type": "number"
+                    },
+                    "otherKillsPercent": {
+                        "type": "number"
+                    },
+                    "xpGainedPercent": {
+                        "type": "number"
+                    },
+                    "xpGainedProportion": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "place",
+                    "killsPercent",
+                    "ownKillsPercent",
+                    "friendsKillsPercent",
+                    "otherKillsPercent",
+                    "xpGainedPercent",
+                    "xpGainedProportion",
+                ]
+            }
+        },
+        "kills": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string"
+                    },
+                    "kills": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "monster": {
+                                    "$ref": "#/definitions/_monster"
+                                },
+                                "count": {
+                                    "type": "number"
+                                },
+                                "locations": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/_location"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "count"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "category",
+                    "kills"
+                ]
+            }
+        },
+        "xpByLevel": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "$ref": "#/definitions/_location"
+                    },
+                    "nonVaultXP": {
+                        "type": "number"
+                    },
+                    "vaultXP": {
+                        "type": "number"
+                    },
+                    "vaultXPPercent": {
+                        "type": "number"
+                    },
+                    "nonVaultMonsterCount": {
+                        "type": "number"
+                    },
+                    "vaultMonsterCount": {
+                        "type": "number"
+                    },
+                    "vaultCountPercent": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "name",
+                    "nonVaultXP",
+                    "vaultXP",
+                    "vaultXPPercent",
+                    "nonVaultMonsterCount",
+                    "vaultMonsterCount",
+                    "vaultCountPercent"
+                ]
+            }
+        },
+        "overview": {
+            "type": "object",
+            "properties": {
+                "branches": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "visited": {
+                                "type": "number"
+                            },
+                            "depth": {
+                                "type": "number"
+                            },
+                            "location": {
+                                "$ref": "#/definitions/_location"
+                            },
+                            "locations": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/_location"
+                                },
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "visited",
+                            "depth"
+                        ]
+                    }
+                },
+                "altars": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "shops": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "$ref": "#/definitions/_location"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "type"
+                        ]
+                    }
+                },
+                "portals": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "destination": {
+                                "type": "string"
+                            },
+                            "location": {
+                                "$ref": "#/definitions/_location"
+                            },
+                            "note": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "destination",
+                            "location"
+                        ]
+                    }
+                },
+                "annotations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "location": {
+                                "$ref": "#/definitions/_location"
+                            },
+                            "value": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "location",
+                            "value"
+                        ]
+                    }
+                }
+            },
+            "related": [
+                "branches",
+                "altars",
+                "shops",
+                "portals",
+                "annotations"
+            ]
+        },
+        "hiscore": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string",
+                    "enum": [
+                        "wizard",
+                        "explore",
+                        "regular"
+                    ]
+                },
+                "points": {
+                    "type": "number"
+                },
+                "birth": {
+                    "type": "string"
+                },
+                "death": {
+                    "type": "string"
+                },
+                "deathDescription": {
+                    "type": "string"
+                },
+                "godRank": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/_location"
+                },
+                "turns": {
+                    "type": "number"
+                },
+                "time": {
+                    "type": "number"
+                },
+                "hasEscaped": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "mode",
+                "points",
+                "birth",
+                "death",
+                "deathDescription",
+                "location",
+                "turns",
+                "time",
+                "hasEscaped"
+            ]
+        },
+        "monsters": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/_monster"
+            }
+        },
+        "vaults": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "$ref": "#/definitions/_location"
+                    },
+                    "generated": {
+                        "type": "boolean"
+                    },
+                    "visited": {
+                        "type": "boolean"
+                    },
+                    "vaults": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "level",
+                    "vaults"
+                ]
+            }
+        },
+        "actionCounts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string"
+                    },
+                    "subcategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "subcategory": {
+                                    "type": "string"
+                                },
+                                "count": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "count": {
+                                                "type": "number"
+                                            },
+                                            "range": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "from": {
+                                                        "type": "number"
+                                                    },
+                                                    "to": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "from",
+                                                    "to"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "count",
+                                            "range"
+                                        ]
+                                    }
+                                },
+                                "total": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "subcategory",
+                                "count",
+                                "total"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "category",
+                    "subcategories"
+                ]
+            }
+        },
+        "skillGains": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "skill": {
+                        "type": "number"
+                    },
+                    "gains": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "xl": {
+                                    "type": "number"
+                                },
+                                "gain": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "xl",
+                                "gain"
+                            ]
+                        }
+                    },
+                    "final": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "skill",
+                    "gains",
+                    "final"
+                ]
+            }
+        },
+        "lua": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "header",
+        "stats",
+        "inventory",
+        "skills",
+        "overview",
+        "mutations",
+        "messages",
+        "screenshot",
+        "monsters",
+        "kills",
+        "notes",
+        "skillGains",
+        "actionCounts"
+    ],
+    "definitions": {
+        "_location": {
+            "type": "object",
+            "properties": {
+                "branch": {
+                    "type": "string"
+                },
+                "branchLong": {
+                    "type": "string"
+                },
+                "depth": {
+                    "type": "number"
+                },
+                "from": {
+                    "type": "number"
+                },
+                "to": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "branch"
+            ]
+        },
+        "_monster": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "tileName": {
+                    "type": "string"
+                },
+                "tileIndex": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "name"
+                "tile_name"
+                "tile_index"
+                "symbol"
+                "color"
+            ]
+        },
+        "_statValue": {
+            "type": "object",
+            "properties": {
+                "realMax": {
+                    "type": "number"
+                },
+                "value": {
+                    "type": "number"
+                },
+                "max": {
+                    "type": "number"
+                },
+                "next": {
+                    "type": "number"
+                },
+                "symbolValue": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "value"
+            ]
+        },
+        "_spell": {
+            "type": "object",
+            "properties": {
+                "position": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "power": {
+                    "type": "string"
+                },
+                "failure": {
+                    "type": "number"
+                },
+                "level": {
+                    "type": "number"
+                },
+                "hunger": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "power",
+                "level",
+                "hunger",
+                "type"
+            ]
+        },
+        "_item": {
+            "type": "object",
+            "properties": {
+                "pronoun": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "number"
+                },
+                "inscription": {
+                    "type": "string"
+                },
+                // TODO: enum?
+                "slot": {
+                    "type": "string"
+                },
+                "cursed": {
+                    "type": "boolean"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "position",
+                "count",
+                "inscription",
+                "slot",
+                "cursed"
+            ]
+        }
+    }
+}

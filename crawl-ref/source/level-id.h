@@ -6,6 +6,7 @@
 #pragma once
 
 #include "coord-def.h"
+#include "json.h"
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
@@ -41,6 +42,7 @@ public:
 #endif
 
     string describe(bool long_name = false, bool with_number = true) const;
+    JsonNode *to_json() const;
 
     void clear()
     {

@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "json.h"
+
 #include "branch.h"
 #include "describe.h"
 #include "env.h"
@@ -146,6 +148,25 @@ static string shoptype_to_string(shop_type s)
     case SHOP_DISTILLERY:      return "<w>!</w>";
     case SHOP_SCROLL:          return "<w>?</w>";
     default:                   return "<w>x</w>";
+    }
+}
+
+static string shoptype_to_raw_string(shop_type s)
+{
+    switch (s)
+    {
+    case SHOP_WEAPON:          return "(";
+    case SHOP_WEAPON_ANTIQUE:  return "(";
+    case SHOP_ARMOUR:          return "[";
+    case SHOP_ARMOUR_ANTIQUE:  return "[";
+    case SHOP_GENERAL:         return "*";
+    case SHOP_GENERAL_ANTIQUE: return "*";
+    case SHOP_JEWELLERY:       return "=";
+    case SHOP_EVOKABLES:       return "}";
+    case SHOP_BOOK:            return ":";
+    case SHOP_DISTILLERY:      return "!";
+    case SHOP_SCROLL:          return "?";
+    default:                   return "x";
     }
 }
 
@@ -295,6 +316,43 @@ static string _get_seen_branches(bool display)
     return disp;
 }
 
+static void _get_json_seen_branches(JsonNode *json_branches)
+{
+    for (branch_iterator it; it; ++it)
+    {
+        const branch_type branch = it->id;
+
+        if (branch == BRANCH_ZIGGURAT)
+            continue;
+
+        if (branch == root_branch
+            || stair_level.count(branch))
+        {
+            level_id lid(branch, 0);
+            lid = find_deepest_explored(lid);
+
+            JsonNode *json_branch(json_mkobject());
+            json_append_member(json_branch, "name", json_mkstring(it->shortname));
+            json_append_member(json_branch, "visited", json_mknumber(lid.depth));
+            json_append_member(json_branch, "depth", json_mknumber(brdepth[branch]));
+
+            JsonNode *locations(json_mkarray());
+
+            for (auto lvl : stair_level[branch]) {
+                JsonNode *location(json_mkobject());
+                json_append_member(location, "branch", json_mkstring(branches[lvl.branch].shortname));
+                json_append_member(location, "depth", json_mknumber(lvl.depth));
+
+                json_append_element(locations, location);
+            }
+
+            json_append_member(json_branch, "locations", locations);
+
+            json_append_element(json_branches, json_branch);
+        }
+    }
+}
+
 static string _get_unseen_branches()
 {
     int num_printed_branches = 0;
@@ -360,9 +418,65 @@ static string _get_unseen_branches()
     return disp;
 }
 
+static void _get_json_unseen_branches(JsonNode *json_branches)
+{
+    for (branch_iterator it; it; ++it)
+    {
+        if (it->id < BRANCH_FIRST_NON_DUNGEON)
+            continue;
+
+        const branch_type branch = it->id;
+        if (!connected_branch_can_exist(branch))
+            continue;
+
+        if (branch == BRANCH_VESTIBULE || !is_connected_branch(branch))
+            continue;
+
+        if (branch_is_unfinished(branch))
+            continue;
+
+        if (!stair_level.count(branch))
+        {
+            const branch_type parent = it->parent_branch;
+            // Root branches.
+            if (parent == NUM_BRANCHES)
+                continue;
+            level_id lid(parent, 0);
+            lid = find_deepest_explored(lid);
+            if (lid.depth >= it->mindepth)
+            {
+                JsonNode *json_branch(json_mkobject());
+
+                json_append_member(json_branch, "name", json_mkstring(it->abbrevname));
+                json_append_member(json_branch, "visited", json_mknumber(0));
+                json_append_member(json_branch, "depth", json_mknumber(brdepth[branch]));
+
+                JsonNode *location(json_mkobject());
+                json_append_member(location, "branch", json_mkstring(it->abbrevname));
+                json_append_member(location, "from", json_mknumber(it->mindepth));
+                json_append_member(location, "to", json_mknumber(it->maxdepth));
+
+                json_append_member(json_branch, "location", location);
+
+                json_append_element(json_branches, json_branch);
+            }
+        }
+    }
+}
+
 static string _get_branches(bool display)
 {
     return _get_seen_branches(display) + _get_unseen_branches();
+}
+
+JsonNode *get_json_branches()
+{
+    JsonNode *json_branches(json_mkarray());
+
+    _get_json_seen_branches(json_branches);
+    _get_json_unseen_branches(json_branches);
+
+    return json_branches;
 }
 
 // iterate through every god and display their altar's discovery state by colour
@@ -385,6 +499,38 @@ static string _get_altars(bool display)
     disp += _print_altars_for_gods(nontemple_god_list(), false, display);
 
     return disp;
+}
+
+static void _json_altars_for_gods(JsonNode *json_altars, const vector<god_type>& gods)
+{
+    for (const god_type god : gods)
+    {
+        // for each god, look through the notable altars list for a match
+        bool has_altar_been_seen = false;
+        for (const auto &entry : altars_present)
+        {
+            if (entry.second == god)
+            {
+                has_altar_been_seen = true;
+                break;
+            }
+        }
+
+        if (has_altar_been_seen) {
+            json_append_element(json_altars,
+                                json_mkstring(uppercase_first(god_name(god, false)).c_str()));
+        }
+    }
+}
+
+JsonNode *get_json_altars()
+{
+    JsonNode *json_altars(json_mkarray());
+
+    _json_altars_for_gods(json_altars, temple_god_list());
+    _json_altars_for_gods(json_altars, nontemple_god_list());
+
+    return json_altars;
 }
 
 // Loops through gods, printing their altar status by colour.
@@ -530,6 +676,23 @@ static string _get_shops(bool display)
     return disp;
 }
 
+JsonNode *get_json_shops()
+{
+    JsonNode *json_shops(json_mkarray());
+
+    for (const auto &entry : shops_present)
+    {
+        JsonNode *json_shop(json_mkobject());
+
+        json_append_member(json_shop, "location", entry.first.id.to_json());
+        json_append_member(json_shop, "type", json_mkstring(shoptype_to_raw_string(entry.second).c_str()));
+
+        json_append_element(json_shops, json_shop);
+    }
+
+    return json_shops;
+}
+
 // Loop through found portals and display them
 static string _get_portals()
 {
@@ -540,6 +703,34 @@ static string _get_portals()
     disp += _portals_description_string();
 
     return disp;
+}
+
+JsonNode *get_json_portals()
+{
+    JsonNode *json_portals(json_mkarray());
+
+    level_id last_id;
+    for (branch_iterator it; it; ++it)
+    {
+        last_id.depth = 10000;
+        for (const auto &entry : portals_present)
+        {
+            if (entry.second == it->id && last_id.depth == 10000) {
+                JsonNode *json_portal(json_mkobject());
+
+                json_append_member(json_portal, "destination",
+                                   json_mkstring(branches[entry.second].shortname));
+                json_append_member(json_portal, "location", entry.first.id.to_json());
+
+                if (portal_notes[entry.first].size() > 0)
+                    json_append_member(json_portal, "note", json_mkstring(portal_notes[entry.first].c_str()));
+
+                json_append_element(json_portals, json_portal);
+            }
+        }
+    }
+
+    return json_portals;
 }
 
 // Loop through each branch, printing stored notes.
@@ -561,6 +752,29 @@ static string _get_notes(bool display)
     if (display)
         return "\n<green>Annotations:</green> (press <white>!</white> to annotate current level)\n" + disp;
     return "\n<green>Annotations:</green>\n" + disp;
+}
+
+JsonNode *get_json_notes()
+{
+    JsonNode *json_notes(json_mkarray());
+
+    for (branch_iterator it; it; ++it)
+        for (int d = 1; d <= brdepth[it->id]; ++d)
+        {
+            level_id i(it->id, d);
+            if (!get_level_annotation(i).empty()) {
+                JsonNode *json_note(json_mkobject());
+
+                json_append_member(json_note, "location", i.to_json());
+
+                json_append_member(json_note, "value",
+                                   json_mkstring(get_level_annotation(i, false, false, false, WHITE).c_str()));
+
+                json_append_element(json_notes, json_note);
+            }
+        }
+
+    return json_notes;
 }
 
 template <typename Z, typename Key>

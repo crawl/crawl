@@ -14,6 +14,8 @@
 
 #include "hiscores.h"
 
+#include "json.h"
+
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
@@ -1784,6 +1786,60 @@ string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
     line += game_time(verbosity);
 
     return line;
+}
+
+JsonNode *scorefile_entry::hiscore_json() const
+{
+    JsonNode *hiscore(json_mkobject());
+
+    // Data available elsewhere in the morgue file (stats section) are not repeated here
+    if (wiz_mode)
+        json_append_member(hiscore, "mode", json_mkstring("wizard"));
+    else if (explore_mode)
+        json_append_member(hiscore, "mode", json_mkstring("explore"));
+    else
+        json_append_member(hiscore, "mode", json_mkstring("regular"));
+
+    json_append_member(hiscore, "points", json_mknumber(points));
+    json_append_member(hiscore, "birth", json_mkstring(_hiscore_date_string(birth_time).c_str()));
+
+    json_append_member(hiscore, "death", json_mkstring(_hiscore_date_string(death_time).c_str()));
+    json_append_member(hiscore, "deathDescription",
+                       json_mkstring(trimmed_string(death_description(scorefile_entry::DDV_ONELINE)).c_str()));
+    json_append_member(hiscore, "location", level_id(branch, dlvl).to_json());
+    json_append_member(hiscore, "turns", json_mknumber(num_turns));
+    json_append_member(hiscore, "time", json_mknumber(real_time));
+    json_append_member(hiscore, "hasEscaped", json_mkbool(death_type == KILLED_BY_WINNING));
+
+    if (race != SP_DEMIGOD && god != GOD_NO_GOD)
+    {
+        string rank;
+
+        if (god == GOD_XOM)
+        {
+            rank += make_stringf("a %sPlaything",
+                                (lvl >= 20) ? "Favourite " : "");
+        }
+        else
+        {
+            // Not exactly the same as the religion screen, but
+            // good enough to fill this slot for now.
+            rank += make_stringf("%s%s%s",
+                                 (piety >= piety_breakpoint(5)) ? "the Champion" :
+                                 (piety >= piety_breakpoint(4)) ? "a High Priest" :
+                                 (piety >= piety_breakpoint(3)) ? "an Elder" :
+                                 (piety >= piety_breakpoint(2)) ? "a Priest" :
+                                 (piety >= piety_breakpoint(1)) ? "a Believer" :
+                                 (piety >= piety_breakpoint(0)) ? "a Follower"
+                                                        : "an Initiate",
+                                 god_name(god).c_str(),
+                                 (penance > 0) ? " (penitent)" : "");
+        }
+
+        json_append_member(hiscore, "godRank", json_mkstring(rank.c_str()));
+    }
+
+    return hiscore;
 }
 
 string scorefile_entry::game_time(death_desc_verbosity verbosity) const

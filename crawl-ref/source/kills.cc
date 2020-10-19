@@ -9,6 +9,8 @@
 
 #include <algorithm>
 
+#include "json.h"
+
 #include "clua.h"
 #include "describe.h"
 #include "english.h"
@@ -18,6 +20,7 @@
 #include "l-libs.h"
 #include "mon-death.h"
 #include "mon-info.h"
+#include "output.h"
 #include "monster.h"
 #include "options.h"
 #include "stringutil.h"
@@ -109,6 +112,55 @@ int KillMaster::total_kills() const
         grandtotal += count;
     }
     return grandtotal;
+}
+
+JsonNode *KillMaster::json_kills() const
+{
+    JsonNode *json_kills(json_mkarray());
+
+    for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
+    {
+        if (categorized_kills[i].empty())
+            continue;
+
+        JsonNode *category(json_mkobject());
+        json_append_member(category, "category", json_mkstring(category_name((kill_category) i)));
+
+        vector<kill_exp> kills;
+        categorized_kills[i].get_kills(kills);
+
+        JsonNode *category_kills(json_mkarray());
+
+        for (const kill_exp kill : kills)
+        {
+            JsonNode *json_kill(json_mkobject());
+
+            json_append_member(json_kill, "monster",
+                               get_monster_json(monster_info{kill.monnum}, kill.nkills));
+
+            json_append_member(json_kill, "count", json_mknumber(kill.nkills));
+
+            if (Options.dump_kill_places != KDO_NO_PLACES
+                && (kill.places.size() == 1 || mons_is_unique(kill.monnum)
+                        || Options.dump_kill_places == KDO_ALL_PLACES))
+            {
+                JsonNode *locations(json_mkarray());
+
+                for (auto iter = kill.places.begin(); iter != kill.places.end(); ++iter)
+                    json_append_element(locations, iter->to_json());
+
+                json_append_member(json_kill, "locations", locations);
+            }
+
+            json_append_element(category_kills, json_kill);
+        }
+
+        json_append_member(category, "kills", category_kills);
+
+        json_append_element(json_kills, category);
+    }
+
+    return json_kills;
 }
 
 string KillMaster::kill_info() const

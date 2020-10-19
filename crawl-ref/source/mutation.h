@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include "json.h"
+
 #include "equipment-type.h"
 #include "mutation-type.h"
 
@@ -47,6 +49,7 @@ void display_mutations();
 int mut_check_conflict(mutation_type mut, bool innate_only = false);
 mutation_activity_type mutation_activity_level(mutation_type mut);
 string describe_mutations(bool center_title);
+JsonNode *get_json_mutations();
 int get_mutation_cap(mutation_type mut);
 void validate_mutations(bool debug_msg=false);
 

@@ -11,6 +11,9 @@
 #include <cstdlib>
 #include <sstream>
 
+#include "json.h"
+#include "json-wrapper.h"
+
 #include "ability.h"
 #include "art-enum.h"
 #include "areas.h"
@@ -33,6 +36,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -1612,6 +1616,50 @@ string mpr_monster_list(bool past)
     return msg;
 }
 
+JsonNode *get_monster_json(const monster_info& mi, int count)
+{
+    JsonNode *monster_json(json_mkobject());
+
+    json_append_member(monster_json, "name",
+                       json_mkstring(_get_monster_name(mi, count, true).c_str()));
+
+    tileidx_t monster_index = get_mon_base_tile(mi.base_type);
+    json_append_member(monster_json, "tileName", json_mkstring(tile_player_name(monster_index)));
+    json_append_member(monster_json, "tileIndex", json_mknumber(monster_index));
+    string symbol;
+    symbol.push_back(mons_char(mi.base_type));
+    json_append_member(monster_json, "symbol", json_mkstring(symbol.c_str()));
+    json_append_member(monster_json, "color", json_mknumber(mi.colour()));
+
+    return monster_json;
+}
+
+JsonNode *json_monster_list()
+{
+    JsonNode *monsters(json_mkarray());
+
+    // Get monsters via the monster_pane_info, sorted by difficulty.
+    vector<monster_info> mons;
+    get_monster_info(mons);
+
+    if (!mons.empty()) {
+        int count = 0;
+        for (unsigned int i = 0; i < mons.size(); ++i)
+        {
+            if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
+            {
+                json_append_element(monsters, get_monster_json(mons[i-1], count));
+                count = 0;
+            }
+            count++;
+        }
+
+        json_append_element(monsters, get_monster_json(mons[mons.size()-1], count));
+    }
+
+    return monsters;
+}
+
 #ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const vector<monster_info>& mons,
                                      int& start, bool zombified = false)
@@ -2466,86 +2514,6 @@ static vector<formatted_string> _get_overview_resistances(
     return cols.formatted_lines();
 }
 
-class overview_popup : public formatted_scroller
-{
-public:
-    overview_popup() {};
-    vector<char> equip_chars;
-private:
-    bool process_key(int ch) override
-    {
-        if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
-        {
-            item_def& item = you.inv[letter_to_index(ch)];
-            if (!describe_item(item))
-                return false;
-            return true;
-        }
-        return formatted_scroller::process_key(ch);
-    };
-};
-
-void print_overview_screen()
-{
-    // TODO: this should handle window resizes
-    constexpr int num_cols = 80;
-    bool calc_unid = false;
-    overview_popup overview;
-
-    overview.set_more();
-    overview.set_tag("resists");
-
-    overview.add_text(_overview_screen_title(num_cols));
-
-    for (const formatted_string &bline : _get_overview_stats())
-        overview.add_formatted_string(bline, true);
-    overview.add_text("\n");
-
-    {
-        vector<formatted_string> blines =
-            _get_overview_resistances(overview.equip_chars, calc_unid, num_cols);
-
-        for (unsigned int i = 0; i < blines.size(); ++i)
-            overview.add_text(blines[i].to_colour_string() + "\n");
-    }
-
-    overview.add_text("\n");
-    overview.add_text(_status_mut_rune_list(num_cols));
-    overview.show();
-}
-
-string dump_overview_screen(bool full_id)
-{
-    string text = formatted_string::parse_string(_overview_screen_title(80));
-    text += "\n";
-
-    for (const formatted_string &bline : _get_overview_stats())
-    {
-        text += bline;
-        text += "\n";
-    }
-    text += "\n";
-
-    vector<char> equip_chars;
-    for (const formatted_string &bline
-            : _get_overview_resistances(equip_chars, full_id, 640))
-    {
-        text += bline;
-        text += "\n";
-    }
-    text += "\n";
-
-    text += formatted_string::parse_string(_status_mut_rune_list(80));
-
-    string ability_list = formatted_string::parse_string(print_abilities());
-    linebreak_string(ability_list, 80);
-    text += ability_list;
-
-    text += "\n";
-
-    return text;
-}
-
 static string _annotate_form_based(string desc, bool suppressed)
 {
     if (suppressed)
@@ -2561,9 +2529,8 @@ static string _dragon_abil(string desc)
     return _annotate_form_based(desc, supp);
 }
 
-string mutation_overview()
+static vector<string> _get_mutations()
 {
-    string mtext;
     vector<string> mutations;
 
     const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
@@ -2663,6 +2630,437 @@ string mutation_overview()
 
     if (you.racial_ac(false))
         mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
+
+    return mutations;
+}
+
+class overview_popup : public formatted_scroller
+{
+public:
+    overview_popup() {};
+    vector<char> equip_chars;
+private:
+    bool process_key(int ch) override
+    {
+        if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
+        {
+            item_def& item = you.inv[letter_to_index(ch)];
+            if (!describe_item(item))
+                return false;
+            return true;
+        }
+        return formatted_scroller::process_key(ch);
+    };
+};
+
+void print_overview_screen()
+{
+    // TODO: this should handle window resizes
+    constexpr int num_cols = 80;
+    bool calc_unid = false;
+    overview_popup overview;
+
+    overview.set_more();
+    overview.set_tag("resists");
+
+    overview.add_text(_overview_screen_title(num_cols));
+
+    for (const formatted_string &bline : _get_overview_stats())
+        overview.add_formatted_string(bline, true);
+    overview.add_text("\n");
+
+    {
+        vector<formatted_string> blines =
+            _get_overview_resistances(overview.equip_chars, calc_unid, num_cols);
+
+        for (unsigned int i = 0; i < blines.size(); ++i)
+            overview.add_text(blines[i].to_colour_string() + "\n");
+    }
+
+    overview.add_text("\n");
+    overview.add_text(_status_mut_rune_list(num_cols));
+    overview.show();
+}
+
+string dump_overview_screen(bool full_id)
+{
+    string text = formatted_string::parse_string(_overview_screen_title(80));
+    text += "\n";
+
+    for (const formatted_string &bline : _get_overview_stats())
+    {
+        text += bline;
+        text += "\n";
+    }
+    text += "\n";
+
+    vector<char> equip_chars;
+    for (const formatted_string &bline
+            : _get_overview_resistances(equip_chars, full_id, 640))
+    {
+        text += bline;
+        text += "\n";
+    }
+    text += "\n";
+
+    text += formatted_string::parse_string(_status_mut_rune_list(80));
+
+    string ability_list = formatted_string::parse_string(print_abilities());
+    linebreak_string(ability_list, 80);
+    text += ability_list;
+
+    text += "\n";
+
+    return text;
+}
+
+JsonNode *json_dump_overview_screen(bool full_id)
+{
+    JsonNode *overview(json_mkobject());
+
+    json_append_member(overview, "turns", json_mknumber(you.num_turns));
+    json_append_member(overview, "time", json_mkstring(make_time_string(you.real_time(), true).c_str()));
+
+    json_append_member(overview, "name", json_mkstring(you.your_name.c_str()));
+    json_append_member(overview, "title", json_mkstring(player_title().c_str()));
+    json_append_member(overview, "species", json_mkstring(species_name(you.species).c_str()));
+    json_append_member(overview, "job", json_mkstring(get_job_name(you.char_class)));
+
+    // HP
+    JsonNode* health(json_mkobject());
+    json_append_member(health, "value", json_mknumber(you.hp));
+    json_append_member(health, "max", json_mknumber(you.hp_max));
+    json_append_member(health, "realMax", json_mknumber(get_real_hp(true, false)));
+    json_append_member(overview, "health", health);
+
+    // MP
+    JsonNode* magic(json_mkobject());
+    json_append_member(magic, "value", json_mknumber(you.magic_points));
+    json_append_member(magic, "max", json_mknumber(you.max_magic_points));
+    json_append_member(magic, "realMax", json_mknumber(get_real_mp(false)));
+    json_append_member(overview, "magic", magic);
+
+    // Gold
+    json_append_member(overview, "gold", json_mknumber(you.gold));
+
+    // AC
+    json_append_member(overview, "armorClass", json_mknumber(you.armour_class()));
+
+    // EV
+    json_append_member(overview, "evasion", json_mknumber(you.evasion()));
+
+    // SH
+    json_append_member(overview, "shieldClass", json_mknumber(player_displayed_shield_class()));
+
+    // Str
+    JsonNode* strength(json_mkobject());
+    json_append_member(strength, "value", json_mknumber(you.strength(false)));
+    json_append_member(strength, "max", json_mknumber(you.max_strength()));
+    json_append_member(overview, "strength", strength);
+
+    // Int
+    JsonNode* intelligence(json_mkobject());
+    json_append_member(intelligence, "value", json_mknumber(you.intel(false)));
+    json_append_member(intelligence, "max", json_mknumber(you.max_intel()));
+    json_append_member(overview, "intelligence", intelligence);
+
+    // Dex
+    JsonNode* dexterity(json_mkobject());
+    json_append_member(dexterity, "value", json_mknumber(you.dex(false)));
+    json_append_member(dexterity, "max", json_mknumber(you.max_dex()));
+    json_append_member(overview, "dexterity", dexterity);
+
+    // XL
+    JsonNode* experience(json_mkobject());
+    json_append_member(experience, "value", json_mknumber(you.experience_level));
+    if (you.experience_level < you.get_max_xl())
+        json_append_member(experience, "next", json_mknumber(get_exp_progress()));
+    json_append_member(overview, "experience", experience);
+
+    // God
+    if (!you_worship(GOD_NO_GOD)) {
+        JsonNode* god(json_mkobject());
+        json_append_member(god, "god", json_mkstring(god_name(you.religion).c_str()));
+        // TODO: if (you.wizard)
+        json_append_member(god, "rank", json_mkstring(_god_asterisks().c_str()));
+        json_append_member(overview, "god", god);
+    }
+
+    // Spells
+    JsonNode* spells(json_mkobject());
+    json_append_member(spells, "value", json_mknumber(player_spell_levels()));
+    json_append_member(spells, "max", json_mknumber(player_total_spell_levels()));
+    json_append_member(overview, "spells", spells);
+
+    if (you.species == SP_FELID)
+    {
+        json_append_member(overview, "lives", json_mknumber(you.lives));
+        json_append_member(overview, "deaths", json_mknumber(you.deaths));
+    }
+
+    // Resistances
+    JsonNode *resistances(json_mkarray());
+
+    const int rfire = player_res_fire(full_id);
+    JsonNode *json_rfire(json_mkobject());
+    json_append_member(json_rfire, "name", json_mkstring("rFire"));
+    json_append_member(json_rfire, "value", json_mknumber(rfire));
+    json_append_member(json_rfire, "symbolValue",
+                       json_mkstring(_itosym(rfire, 3).c_str()));
+    json_append_element(resistances, json_rfire);
+
+    const int rcold = player_res_cold(full_id);
+    JsonNode *json_rcold(json_mkobject());
+    json_append_member(json_rcold, "name", json_mkstring("rCold"));
+    json_append_member(json_rcold, "value", json_mknumber(rcold));
+    json_append_member(json_rcold, "symbolValue",
+                       json_mkstring(_itosym(rcold, 3).c_str()));
+    json_append_element(resistances, json_rcold);
+
+    const int rneg = player_prot_life(full_id);
+    JsonNode *json_rneg(json_mkobject());
+    json_append_member(json_rneg, "name", json_mkstring("rNeg"));
+    json_append_member(json_rneg, "value", json_mknumber(rneg));
+    json_append_member(json_rneg, "symbolValue",
+                       json_mkstring(_itosym(rneg, 3).c_str()));
+    json_append_element(resistances, json_rneg);
+
+    const int rpois = player_res_poison(full_id);
+    JsonNode *json_rpois(json_mkobject());
+    json_append_member(json_rpois, "name", json_mkstring("rPois"));
+    json_append_member(json_rpois, "value", json_mknumber(rpois));
+    if (rpois == 3)
+        json_append_member(json_rpois, "symbolValue", json_mkstring("∞"));
+    else
+        json_append_member(json_rpois, "symbolValue",
+                           json_mkstring(_itosym(rpois, 1).c_str()));
+    json_append_element(resistances, json_rpois);
+
+    const int relec = player_res_electricity(full_id);
+    JsonNode *json_relec(json_mkobject());
+    json_append_member(json_relec, "name", json_mkstring("rElec"));
+    json_append_member(json_relec, "value", json_mknumber(relec));
+    json_append_member(json_relec, "symbolValue",
+                       json_mkstring(_itosym(relec, 1).c_str()));
+    json_append_element(resistances, json_relec);
+
+    const int rcorr = you.res_corr(full_id);
+    JsonNode *json_rcorr(json_mkobject());
+    json_append_member(json_rcorr, "name", json_mkstring("rCorr"));
+    json_append_member(json_rcorr, "value", json_mknumber(rcorr));
+    json_append_member(json_rcorr, "symbolValue",
+                       json_mkstring(_itosym(rcorr, 1).c_str()));
+    json_append_element(resistances, json_rcorr);
+
+    const int rmuta = (you.rmut_from_item(full_id)
+                       || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
+
+    if (rmuta) {
+        JsonNode *json_rmuta(json_mkobject());
+        json_append_member(json_rmuta, "name", json_mkstring("rMut"));
+        json_append_member(json_rmuta, "value", json_mknumber(rmuta));
+        json_append_member(json_rmuta, "symbolValue",
+                           json_mkstring(_itosym(rmuta, 1).c_str()));
+        json_append_element(resistances, json_rmuta);
+    }
+
+    const int rmagi = player_res_magic(full_id);
+    JsonNode *json_rmagi(json_mkobject());
+    json_append_member(json_rmagi, "name", json_mkstring("MR"));
+    json_append_member(json_rmagi, "value", json_mknumber(rmagi));
+    json_append_member(json_rmagi, "symbolValue",
+                       json_mkstring(_itosym(rmagi, 5).c_str()));
+    json_append_element(resistances, json_rmagi);
+
+    json_append_member(overview, "resistances", resistances);
+
+    // Stealth
+    const int stealth_num = stealth_breakpoint(player_stealth());
+    JsonNode *json_stealth(json_mkobject());
+    json_append_member(json_stealth, "value", json_mknumber(stealth_num));
+    json_append_member(json_stealth, "symbolValue",
+                       json_mkstring(_itosym(stealth_num, 10).c_str()));
+    json_append_member(overview, "stealth", json_stealth);
+
+    // HP regen
+    json_append_member(overview, "hpRegen", json_mknumber(player_regen()));
+
+    // MP regen
+#if TAG_MAJOR_VERSION == 34
+    const bool etheric = player_equip_unrand(UNRAND_ETHERIC_CAGE);
+    const int mp_regen = player_mp_regen() //round up
+                         + (etheric ? 50 : 0); // on average
+    json_append_member(overview, "mpRegen", json_mknumber(mp_regen));
+#else
+    const int mp_regen = player_mp_regen(); // round up
+    json_append_member(overview, "mpRegen", json_mknumber(mp_regen));
+#endif
+
+    // SeeInvis
+    json_append_member(overview, "seeInvisible", json_mkbool(you.can_see_invisible(full_id)));
+
+    // Gourm
+    json_append_member(overview, "gourmand", json_mkbool(you.gourmand(full_id)));
+
+    // Faith
+    json_append_member(overview, "faith", json_mkbool(you.faith(full_id)));
+
+    // Spirit
+    json_append_member(overview, "spirit", json_mkbool(you.spirit_shield(full_id)));
+
+    // Reflect
+    const item_def *sh = you.shield();
+    const int reflect = you.reflection(full_id)
+                        || sh && shield_reflects(*sh);
+    json_append_member(overview, "reflect", json_mkbool(reflect));
+
+    // Harm
+    json_append_member(overview, "harm", json_mkbool(you.extra_harm(full_id)));
+
+    // Clarity
+    const int rclar = you.clarity(full_id);
+    json_append_member(overview, "clarity", json_mkbool(rclar));
+
+    // Rnd*Rage
+    const int stasis = you.stasis();
+    // TODO: what about different levels of anger/berserkitis?
+    const bool show_angry = (you.angry(full_id)
+                             || you.get_mutation_level(MUT_BERSERK))
+                            && !rclar && !stasis
+                            && !you.is_lifeless_undead();
+    json_append_member(overview, "randomRage", json_mkbool(show_angry));
+
+    // NoTele
+    const int no_tele = you.no_tele(full_id);
+    json_append_member(overview, "noTeleportation", json_mkbool(!stasis && no_tele));
+
+    // Rnd*Tele
+    const int rnd_tele = player_teleport(full_id);
+    json_append_member(overview, "randomTeleportation", json_mkbool(!stasis && !no_tele && rnd_tele));
+
+    // NoCast
+    json_append_member(overview, "noCast", json_mkbool(you.no_cast(full_id)));
+
+    // Equipment (needed because we give information like melded equipment or restricted slots)
+    JsonNode *equipment(json_mkarray()); // Array because slots can vary (octopode)
+    for (equipment_type eqslot : e_order)
+    {
+        if (you.species == SP_OCTOPODE
+            && eqslot != EQ_WEAPON
+            && !you_can_wear(eqslot))
+        {
+            continue;
+        }
+
+        if (you.species != SP_OCTOPODE
+            && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
+        {
+            continue;
+        }
+
+        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
+            continue;
+
+        JsonNode *equipment_slot(json_mkobject());
+        json_append_member(equipment_slot, "slot",
+                           json_mkstring(s_equip_slot_names[eqslot]));
+
+        if (you.slot_item(eqslot))
+        {
+            // The player has something equipped.
+            const item_def& item = *you.slot_item(eqslot);
+            const bool melded    = you.melded[eqslot];
+            const string prefix  = item_prefix(item);
+            const int item_idx   = you.equip[eqslot];
+            string equip_char;
+            equip_char          += index_to_letter(item_idx);
+
+            json_append_member(equipment_slot, "position", json_mkstring(equip_char.c_str()));
+            json_append_member(equipment_slot, "melded", json_mkbool(melded));
+            // Complete definition of the item in the `inventory` section so just take the name as-is
+            json_append_member(equipment_slot, "item", json_mkstring(item.name(DESC_PLAIN, true).c_str()));
+        }
+        else if (eqslot == EQ_WEAPON
+                 && you.skill(SK_UNARMED_COMBAT))
+        {
+            json_append_member(equipment_slot, "item", json_mkstring("Unarmed"));
+        }
+        else if (eqslot == EQ_WEAPON
+                 && you.form == transformation::blade_hands)
+        {
+            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const string str = string("  - Blade Hand") + (plural ? "s" : "");
+
+            json_append_member(equipment_slot, "item", json_mkstring(str.c_str()));
+        }
+        else if (eqslot == EQ_BOOTS
+                 && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+        {
+            json_append_member(equipment_slot, "item", json_mkstring("empty"));
+        }
+        else if (!you_can_wear(eqslot))
+            json_append_member(equipment_slot, "item", json_mkstring("unavailable"));
+        else if (!you_can_wear(eqslot, true))
+            json_append_member(equipment_slot, "item", json_mkstring("currently unavailable"));
+        else if (you_can_wear(eqslot) == MB_MAYBE)
+            json_append_member(equipment_slot, "item", json_mkstring("restricted"));
+        else
+            json_append_member(equipment_slot, "item", json_mkstring("empty"));
+
+        json_append_element(equipment, equipment_slot);
+    }
+
+    json_append_member(overview, "equipment", equipment);
+
+    // Status
+    JsonNode *status(json_mkarray());
+    status_info inf;
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
+    {
+        if (fill_status_info(i, inf) && !inf.short_text.empty())
+            json_append_element(status, json_mkstring(inf.short_text.c_str()));
+    }
+
+    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    if (move_cost != 10)
+    {
+        const char *help = (move_cost <   8) ? "very quick" :
+                           (move_cost <  10) ? "quick" :
+                           (move_cost <  13) ? "slow"
+                                             : "very slow";
+        json_append_element(status, json_mkstring(help));
+    }
+
+    json_append_member(overview, "status", status);
+
+    // Mutations
+    JsonNode *json_mutations(json_mkarray());
+
+    const vector<string> mutations = _get_mutations();
+    for (string mut : mutations)
+        json_append_element(json_mutations, json_mkstring(mut.c_str()));
+
+    json_append_member(overview, "mutations", json_mutations);
+
+    // Orb
+    json_append_member(overview, "hasOrb", json_mkbool(player_has_orb()));
+
+    // Runes
+    JsonNode *runes(json_mkarray());
+    for (int i = 0; i < NUM_RUNE_TYPES; i++) {
+        if (you.runes[i])
+            json_append_element(runes, json_mkstring(rune_type_name(i)));
+    }
+
+    json_append_member(overview, "runes", runes);
+
+    return overview;
+}
+
+string mutation_overview()
+{
+    string mtext;
+    const vector<string> mutations = _get_mutations();
 
     if (mutations.empty())
         mtext += "no striking features";

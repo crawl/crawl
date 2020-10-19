@@ -18,6 +18,9 @@
 #include <unistd.h>
 #endif
 
+#include "json.h"
+#include "json-wrapper.h"
+
 #include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
@@ -25,6 +28,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "english.h"
 #include "fight.h"
 #include "files.h"
 #include "god-prayer.h"
@@ -32,6 +36,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-name.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
@@ -91,8 +96,6 @@ static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool _write_dump(const string &fname, const dump_params &,
-                        bool print_dump_path = false);
 
 struct dump_section_handler
 {
@@ -157,6 +160,97 @@ static dump_section_handler dump_handlers[] =
 #endif
 };
 
+struct json_dump_params;
+
+static void _json_sdump_header(json_dump_params &);
+static void _json_sdump_stats(json_dump_params &);
+static void _json_sdump_location(json_dump_params &);
+static void _json_sdump_religion(json_dump_params &);
+static void _json_sdump_transform(json_dump_params &);
+static void _json_sdump_visits(json_dump_params &);
+static void _json_sdump_gold(json_dump_params &);
+static void _json_sdump_misc(json_dump_params &);
+static void _json_sdump_turns_by_place(json_dump_params &);
+static void _json_sdump_notes(json_dump_params &);
+static void _json_sdump_inventory(json_dump_params &);
+static void _json_sdump_skills(json_dump_params &);
+static void _json_sdump_spells(json_dump_params &);
+static void _json_sdump_mutations(json_dump_params &);
+static void _json_sdump_messages(json_dump_params &);
+static void _json_sdump_screenshot(json_dump_params &);
+static void _json_sdump_kills_by_place(json_dump_params &);
+static void _json_sdump_kills(json_dump_params &);
+static void _json_sdump_xp_by_level(json_dump_params &);
+static void _json_sdump_overview(json_dump_params &);
+static void _json_sdump_hiscore(json_dump_params &);
+static void _json_sdump_monster_list(json_dump_params &);
+static void _json_sdump_vault_list(json_dump_params &);
+static void _json_sdump_skill_gains(json_dump_params &);
+static void _json_sdump_action_counts(json_dump_params &);
+#ifdef CLUA_BINDINGS
+static void _json_sdump_lua(json_dump_params &);
+#endif
+
+static bool _write_dump(const string &fname, const dump_params &,
+                        const json_dump_params &,
+                        bool print_dump_path = false);
+
+struct json_dump_section_handler
+{
+    const char *name;
+    void (*handler)(json_dump_params &);
+};
+
+struct json_dump_params
+{
+    JsonNode *json;
+    string section;
+    bool full_id;
+    const scorefile_entry *se;
+
+    json_dump_params(const string &sec = "", bool id = false,
+                     const scorefile_entry *s = nullptr)
+        : section(sec), full_id(id), se(s) {
+        json = json_mkobject();
+    }
+};
+
+static json_dump_section_handler json_dump_handlers[] =
+{
+    { "header",         _json_sdump_header        },
+    { "stats",          _json_sdump_stats         },
+    { "location",       _json_sdump_location      },
+    { "religion",       _json_sdump_religion      },
+    { "transform",      _json_sdump_transform     },
+    { "visits",         _json_sdump_visits        },
+    { "gold",           _json_sdump_gold          },
+    { "misc",           _json_sdump_misc          },
+    { "turns_by_place", _json_sdump_turns_by_place},
+    { "notes",          _json_sdump_notes         },
+    { "inventory",      _json_sdump_inventory     },
+    { "skills",         _json_sdump_skills        },
+    { "spells",         _json_sdump_spells        },
+    { "mutations",      _json_sdump_mutations     },
+    { "messages",       _json_sdump_messages      },
+    { "screenshot",     _json_sdump_screenshot    },
+    { "kills_by_place", _json_sdump_kills_by_place},
+    { "kills",          _json_sdump_kills         },
+    { "xp_by_level",    _json_sdump_xp_by_level   },
+    { "overview",       _json_sdump_overview      },
+    { "hiscore",        _json_sdump_hiscore       },
+    { "monlist",        _json_sdump_monster_list  },
+    { "vaults",         _json_sdump_vault_list    },
+    { "spell_usage",    _json_sdump_action_counts }, // compat
+    { "action_counts",  _json_sdump_action_counts },
+    { "skill_gains",    _json_sdump_skill_gains   },
+
+#ifdef CLUA_BINDINGS
+    { nullptr,          _json_sdump_lua           }
+#else
+    { nullptr,          nullptr              }
+#endif
+};
+
 static void dump_section(dump_params &par)
 {
     for (int i = 0; ; ++i)
@@ -165,6 +259,19 @@ static void dump_section(dump_params &par)
         {
             if (dump_handlers[i].handler)
                 (*dump_handlers[i].handler)(par);
+            break;
+        }
+    }
+}
+
+static void json_dump_section(json_dump_params &jpar)
+{
+    for (int i = 0; ; ++i)
+    {
+        if (!json_dump_handlers[i].name || jpar.section == json_dump_handlers[i].name)
+        {
+            if (json_dump_handlers[i].handler)
+                (*json_dump_handlers[i].handler)(jpar);
             break;
         }
     }
@@ -185,10 +292,25 @@ static dump_params _get_dump(bool full_id = false,
     return par;
 }
 
+static json_dump_params _get_json_dump(bool full_id = false,
+                                const scorefile_entry *se = nullptr)
+{
+    json_dump_params jpar("", full_id, se);
+
+    for (const string &section : Options.dump_order)
+    {
+        jpar.section = section;
+        json_dump_section(jpar);
+    }
+
+    // Hopefully we get RVO so we don't have to copy the text.
+    return jpar;
+}
+
 bool dump_char(const string &fname, bool quiet, bool full_id,
                const scorefile_entry *se)
 {
-    return _write_dump(fname, _get_dump(full_id, se), quiet);
+    return _write_dump(fname, _get_dump(full_id, se), _get_json_dump(full_id, se), quiet);
 }
 
 string seed_description()
@@ -233,17 +355,79 @@ static void _sdump_header(dump_params &par)
     }
 }
 
+static void _json_sdump_header(json_dump_params &jpar)
+{
+    JsonNode *header(json_mkobject());
+
+    // Game type
+    string type = crawl_state.game_type_name();
+    if (type.empty())
+        type = CRAWL;
+    else
+        type += " DCSS";
+    json_append_member(header, "type", json_mkstring(type.c_str()));
+
+    // Version
+    json_append_member(header, "version", json_mkstring(Version::Long));
+
+    // Client
+    string client = "console";
+#ifdef USE_TILE_LOCAL
+    client = "tiles";
+#elif defined(USE_TILE_WEB)
+    if (::tiles.is_controlled_from_web())
+        client = "webtiles";
+    else
+        client = "console";
+#else
+    client = "console";
+#endif
+    json_append_member(header, "client", json_mkstring(client.c_str()));
+
+    // Seed
+    if (you.fully_seeded
+#ifdef DGAMELAUNCH
+        && (jpar.se // for online games, only show seed for a dead char
+            || you.wizard
+            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
+#endif
+        )
+    {
+        json_append_member(header, "seed", json_mknumber(crawl_state.seed));
+    }
+
+    json_append_member(jpar.json, "header", header);
+}
+
 static void _sdump_stats(dump_params &par)
 {
     par.text += dump_overview_screen(par.full_id);
     par.text += "\n\n";
 }
 
+static void _json_sdump_stats(json_dump_params &jpar)
+{
+    json_append_member(jpar.json, "stats", json_dump_overview_screen(jpar.full_id));
+}
+
 static void _sdump_transform(dump_params &par)
 {
     string &text(par.text);
     if (you.form != transformation::none)
-        text += get_form()->get_description(par.se) + "\n\n";}
+        text += get_form()->get_description(par.se) + "\n\n";
+}
+
+static void _json_sdump_transform(json_dump_params &jpar)
+{
+    if (you.form != transformation::none)
+    {
+        json_append_member(
+            jpar.json,
+            "transform",
+            json_mkstring(get_form()->get_description(jpar.se).c_str())
+        );
+    }
+}
 
 static branch_type single_portals[] =
 {
@@ -371,6 +555,40 @@ static void _sdump_visits(dump_params &par)
     text += "\n";
 }
 
+static void _json_sdump_visits(json_dump_params &jpar)
+{
+    JsonNode *visits(json_mkarray());
+
+    const vector<PlaceInfo> branches_visited = you.get_all_place_info(true, true);
+
+    PlaceInfo branches_total;
+    for (const PlaceInfo &place : branches_visited)
+    {
+        JsonNode *branch(json_mkobject());
+        json_append_member(branch, "name", json_mkstring(place.short_name().c_str()));
+        json_append_member(branch, "visits", json_mknumber(place.num_visits));
+        json_append_member(branch, "levels", json_mknumber(place.levels_seen));
+
+        json_append_element(visits, branch);
+    }
+
+    for (branch_type br : single_portals)
+    {
+        const PlaceInfo place = you.get_place_info(br);
+        if (!place.num_visits)
+            continue;
+
+        JsonNode *portal(json_mkobject());
+        json_append_member(portal, "name", json_mkstring(place.short_name().c_str()));
+        json_append_member(portal, "visits", json_mknumber(place.num_visits));
+        json_append_member(portal, "levels", json_mknumber(place.levels_seen));
+
+        json_append_element(visits, portal);
+    }
+
+    json_append_member(jpar.json, "visits", visits);
+}
+
 static void _sdump_gold(dump_params &par)
 {
     string &text(par.text);
@@ -421,6 +639,46 @@ static void _sdump_gold(dump_params &par)
         text += "\n";
 }
 
+static void _json_sdump_gold(json_dump_params &jpar)
+{
+    JsonNode *gold(json_mkobject());
+
+    json_append_member(
+        gold,
+        "collected",
+        json_mknumber(you.attribute[ATTR_GOLD_FOUND])
+    );
+
+    json_append_member(
+        gold,
+        "spent",
+        json_mknumber(you.attribute[ATTR_PURCHASES])
+    );
+
+    json_append_member(
+        gold,
+        "donated",
+        json_mknumber(you.attribute[ATTR_DONATIONS])
+    );
+
+    if (you.attribute[ATTR_GOZAG_GOLD_USED] > 0)
+    {
+        json_append_member(
+            gold,
+            "gozag",
+            json_mknumber(you.attribute[ATTR_GOZAG_GOLD_USED])
+        );
+    }
+
+    json_append_member(
+        gold,
+        "misc",
+        json_mknumber(you.attribute[ATTR_MISC_SPENDING])
+    );
+
+    json_append_member(jpar.json, "gold", gold);
+}
+
 static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
@@ -428,6 +686,18 @@ static void _sdump_misc(dump_params &par)
     _sdump_transform(par);
     _sdump_visits(par);
     _sdump_gold(par);
+}
+
+static void _json_sdump_misc(json_dump_params &jpar)
+{
+    _json_sdump_location(jpar);
+    _json_sdump_religion(jpar);
+    _json_sdump_transform(jpar);
+    _json_sdump_visits(jpar);
+    _json_sdump_gold(jpar);
+
+    json_append_member(jpar.json, "completedZiggurats", json_mknumber(you.zigs_completed));
+    json_append_member(jpar.json, "deepestZiggurat", json_mknumber(you.zig_max));
 }
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
@@ -463,6 +733,29 @@ static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
     return _denanify(out);
 }
 
+static JsonNode *_json_sdump_level_xp_info(LevelXPInfo xp_info)
+{
+    JsonNode *level_xp_info(json_mkobject());
+
+    json_append_member(level_xp_info, "location", xp_info.level.to_json());
+
+    float c, f;
+    unsigned int total_xp = xp_info.vault_xp + xp_info.non_vault_xp;
+    unsigned int total_count = xp_info.vault_count + xp_info.non_vault_count;
+
+    c = TO_PERCENT(xp_info.vault_xp, total_xp);
+    f = TO_PERCENT(xp_info.vault_count, total_count);
+
+    json_append_member(level_xp_info, "nonVaultXP", json_mknumber(xp_info.non_vault_xp));
+    json_append_member(level_xp_info, "vaultXP", json_mknumber(xp_info.vault_xp));
+    json_append_member(level_xp_info, "vaultXPPercent", json_mknumber(c));
+    json_append_member(level_xp_info, "nonVaultMonsterCount", json_mknumber(xp_info.non_vault_count));
+    json_append_member(level_xp_info, "vaultMonsterCount", json_mknumber(xp_info.vault_count));
+    json_append_member(level_xp_info, "vaultCountPercent", json_mknumber(f));
+
+    return level_xp_info;
+}
+
 static string _sdump_turns_place_info(const PlaceInfo place_info, string name = "")
 {
     string out;
@@ -488,6 +781,29 @@ static string _sdump_turns_place_info(const PlaceInfo place_info, string name = 
                      g);
 
     return _denanify(out);
+}
+
+static JsonNode *_json_sdump_turns_place_info(const PlaceInfo place_info)
+{
+    unsigned int non_interlevel =
+        place_info.elapsed_total / 10 - place_info.elapsed_interlevel / 10;
+
+    const float g = static_cast<float>(place_info.elapsed_total / 10)
+                            / static_cast<float>(place_info.levels_seen);
+
+    JsonNode *turns_place_info(json_mkobject());
+
+    json_append_member(turns_place_info, "place", json_mkstring(place_info.short_name().c_str()));
+
+    json_append_member(turns_place_info, "total", json_mknumber(place_info.elapsed_total / 10));
+    json_append_member(turns_place_info, "nonInterLevel", json_mknumber(non_interlevel));
+    json_append_member(turns_place_info, "interLevel", json_mknumber(place_info.elapsed_interlevel / 10));
+    json_append_member(turns_place_info, "resting", json_mknumber(place_info.elapsed_resting / 10));
+    json_append_member(turns_place_info, "exploring", json_mknumber(place_info.elapsed_explore / 10));
+    json_append_member(turns_place_info, "levelsSeen", json_mknumber(place_info.levels_seen));
+    json_append_member(turns_place_info, "averageByLevel", json_mknumber(g));
+
+    return turns_place_info;
 }
 
 static void _sdump_turns_by_place(dump_params &par)
@@ -539,6 +855,18 @@ static void _sdump_turns_by_place(dump_params &par)
     text += "\n";
 }
 
+
+static void _json_sdump_turns_by_place(json_dump_params &jpar)
+{
+    JsonNode *turns_by_place(json_mkarray());
+
+    const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
+    for (const PlaceInfo &pi : all_visited)
+        json_append_element(turns_by_place, _json_sdump_turns_place_info(pi));
+
+    json_append_member(jpar.json, "turnsByPlace", turns_by_place);
+}
+
 static void _sdump_xp_by_level(dump_params &par)
 {
     string &text(par.text);
@@ -573,6 +901,17 @@ static void _sdump_xp_by_level(dump_params &par)
     text += "\n";
 }
 
+static void _json_sdump_xp_by_level(json_dump_params &jpar)
+{
+    JsonNode *xp_by_level(json_mkarray());
+
+    vector<LevelXPInfo> all_info = you.get_all_xp_info(true);
+    for (const LevelXPInfo &mi : all_info)
+        json_append_element(xp_by_level, _json_sdump_level_xp_info(mi));
+
+    json_append_member(jpar.json, "xpByLevel", xp_by_level);
+}
+
 static void _sdump_newline(dump_params &par)
 {
     par.text += "\n";
@@ -596,6 +935,18 @@ static void _sdump_lua(dump_params &par)
     }
     else
         par.text += luatext;
+}
+
+static void _json_sdump_lua(json_dump_params &jpar)
+{
+    string luatext;
+    if (!clua.callfn(jpar.section.c_str(), ">s", &luatext)
+        && !clua.error.empty())
+    {
+        luatext = "Lua dump error: " + clua.error + "\n";
+    }
+
+    json_append_member(jpar.json, "lua", json_mkstring(luatext.c_str()));
 }
 #endif
 
@@ -631,10 +982,20 @@ static void _sdump_messages(dump_params &par)
     }
 }
 
+static void _json_sdump_messages(json_dump_params &jpar)
+{
+    json_append_member(jpar.json, "messages", get_json_last_messages(Options.dump_message_count));
+}
+
 static void _sdump_screenshot(dump_params &par)
 {
     par.text += screenshot();
     par.text += "\n\n";
+}
+
+static void _json_sdump_screenshot(json_dump_params &jpar)
+{
+    json_append_member(jpar.json, "screenshot", json_mkstring(screenshot().c_str()));
 }
 
 static void _sdump_screenshots(dump_params &par)
@@ -693,6 +1054,27 @@ static void _sdump_notes(dump_params &par)
     text += "\n";
 }
 
+static void _json_sdump_notes(json_dump_params &jpar)
+{
+    JsonNode *notes(json_mkarray());
+
+    for (const Note &note : note_list)
+    {
+        if (note.hidden())
+            continue;
+
+        JsonNode *jnote = json_mkobject();
+
+        json_append_member(jnote, "turn", json_mknumber(note.turn));
+        json_append_member(jnote, "location", note.place.to_json());
+        json_append_member(jnote, "value", json_mkstring(note.describe(false, false, true).c_str()));
+
+        json_append_element(notes, jnote);
+    }
+
+    json_append_member(jpar.json, "notes", notes);
+}
+
 static void _sdump_location(dump_params &par)
 {
     if (you.depth == 0 && player_in_branch(BRANCH_DUNGEON))
@@ -704,6 +1086,16 @@ static void _sdump_location(dump_params &par)
 
     par.text += ".";
     par.text += "\n";
+}
+
+static void _json_sdump_location(json_dump_params &jpar)
+{
+    JsonNode *location(json_mkobject());
+    json_append_member(location, "branch", json_mkstring(branches[you.where_are_you].shortname));
+    json_append_member(location, "branchLong", json_mkstring(branches[you.where_are_you].longname));
+    json_append_member(location, "depth", json_mknumber(you.depth));
+
+    json_append_member(jpar.json, "location", location);
 }
 
 static void _sdump_religion(dump_params &par)
@@ -745,7 +1137,42 @@ static void _sdump_religion(dump_params &par)
     }
 }
 
-static bool _dump_item_origin(const item_def &item)
+static void _json_sdump_religion(json_dump_params &jpar)
+{
+    if (!you_worship(GOD_NO_GOD))
+    {
+        JsonNode *religion(json_mkobject());
+
+        json_append_member(religion, "god", json_mkstring(god_name(you.religion).c_str()));
+
+        if (!you_worship(GOD_XOM))
+        {
+            if (!player_under_penance())
+            {
+                json_append_member(religion, "favour",
+                                   json_mkstring(god_prayer_reaction().c_str()));
+            }
+            else {
+                string verb = jpar.se ? "was" : "is";
+
+                string penance = uppercase_first(god_name(you.religion));
+                penance += " " + verb + " demanding penance.";
+
+                json_append_member(religion, "favour",
+                                   json_mkstring(penance.c_str()));
+            }
+        }
+        else
+        {
+            json_append_member(religion, "favour",
+                               json_mkstring(describe_xom_favour().c_str()));
+        }
+
+        json_append_member(jpar.json, "religion", religion);
+    }
+}
+
+static bool _should_dump_item_origin(const item_def &item)
 {
 #define fs(x) (flags & (x))
     const int flags = Options.dump_item_origins;
@@ -837,7 +1264,7 @@ static void _sdump_inventory(dump_params &par)
 
                 inv_count--;
 
-                if (origin_describable(item) && _dump_item_origin(item))
+                if (origin_describable(item) && _should_dump_item_origin(item))
                     text += "\n" "   (" + origin_desc(item) + ")";
 
                 if (is_dumpable_artefact(item))
@@ -850,6 +1277,81 @@ static void _sdump_inventory(dump_params &par)
     text += "\n\n";
 }
 
+static void _json_sdump_inventory(json_dump_params &jpar)
+{
+    JsonNode *inventory(json_mkarray());
+
+    int inv_class2[NUM_OBJECT_CLASSES] = { 0, };
+
+    for (const auto &item : you.inv)
+    {
+        if (item.defined())
+        {
+            // adds up number of each class in invent.
+            inv_class2[item.base_type]++;
+        }
+    }
+
+    for (int obj = 0; obj < NUM_OBJECT_CLASSES; obj++)
+    {
+        int i = inv_order[obj];
+
+        if (inv_class2[i] == 0)
+            continue;
+
+        JsonNode *json_inv_class(json_mkobject());
+        json_append_member(json_inv_class, "class", json_mkstring(item_class_name(i)));
+
+        JsonNode *items(json_mkarray());
+
+        for (const auto &item : you.inv)
+        {
+            if (!item.defined() || item.base_type != i)
+                continue;
+
+            string position;
+            position += index_to_letter(item.link);
+
+            string unqualified_name = item.unqualified_name(DESC_INVENTORY_EQUIP);
+            bool startvowel = is_vowel(unqualified_name[0]);
+
+            JsonNode *json_item(json_mkobject());
+            json_append_member(json_item, "colour", json_mknumber(item.get_colour()));
+            json_append_member(json_item, "pronoun",
+                               json_mkstring(item_pronoun(DESC_INVENTORY_EQUIP, item, startvowel).c_str()));
+            json_append_member(json_item, "name",
+                               json_mkstring(unqualified_name.c_str()));
+            json_append_member(json_item, "position",
+                               json_mkstring(position.c_str()));
+            json_append_member(json_item, "count",
+                               json_mknumber(item.quantity));
+            json_append_member(json_item, "inscription",
+                               json_mkstring(trimmed_string(item_inscription(item)).c_str()));
+            json_append_member(json_item, "slot",
+                               json_mkstring(item_slot(item).c_str()));
+            json_append_member(json_item, "cursed",
+                               json_mkbool(item.cursed()));
+
+            if (origin_describable(item) && _should_dump_item_origin(item))
+                json_append_member(json_item, "origin", json_mkstring(origin_desc(item).c_str()));
+
+            if (is_dumpable_artefact(item))
+            {
+                json_append_member(json_item, "description",
+                                   json_mkstring(trimmed_string(chardump_desc(item)).c_str()));
+            }
+
+            json_append_element(items, json_item);
+        }
+
+        json_append_member(json_inv_class, "items", items);
+
+        json_append_element(inventory, json_inv_class);
+    }
+
+    json_append_member(jpar.json, "inventory", inventory);
+}
+
 static void _sdump_skills(dump_params &par)
 {
     string &text(par.text);
@@ -859,6 +1361,37 @@ static void _sdump_skills(dump_params &par)
     dump_skills(text);
     text += "\n";
     text += "\n";
+}
+
+static void _json_sdump_skills(json_dump_params &jpar)
+{
+    JsonNode *skills(json_mkarray());
+
+    for (uint8_t i = 0; i < NUM_SKILLS; i++)
+    {
+        int real = you.skill((skill_type)i, 10, true);
+        int cur  = you.skill((skill_type)i, 10);
+
+        if (real > 0 || (!you.auto_training && you.train[i] > 0))
+        {
+            JsonNode *skill(json_mkobject());
+            json_append_member(skill, "name", json_mkstring(skill_name(static_cast<skill_type>(i))));
+            json_append_member(skill, "real", json_mknumber(real));
+            json_append_member(skill, "current", json_mknumber(cur));
+
+            string status = real == 270       ? "max" :
+                            !you.can_currently_train[i] ? "untrainable" :
+                            you.train[i] == 2 ? "focused" :
+                            you.train[i]      ? "trained" :
+                                                "untrained";
+
+            json_append_member(skill, "status", json_mkstring(status.c_str()));
+
+            json_append_element(skills, skill);
+        }
+    }
+
+    json_append_member(jpar.json, "skills", skills);
 }
 
 static string spell_type_shortname(spschool spell_class, bool slash)
@@ -1023,10 +1556,94 @@ static void _sdump_spells(dump_params &par)
     }
 }
 
+static void _json_sdump_spells(json_dump_params &jpar)
+{
+    JsonNode *spells(json_mkobject());
+
+    JsonNode *known(json_mkarray());
+    for (int j = 0; j < 52; j++)
+    {
+        const char letter = index_to_letter(j);
+        string sletter;
+        sletter += index_to_letter(j);
+        const spell_type spell  = get_spell_by_letter(letter);
+
+        if (spell != SPELL_NO_SPELL)
+        {
+            JsonNode *json_spell(json_mkobject());
+            json_append_member(json_spell, "position", json_mkstring(sletter.c_str()));
+            json_append_member(json_spell, "name", json_mkstring(spell_title(spell)));
+            json_append_member(json_spell, "power", json_mkstring(spell_power_string(spell).c_str()));
+            json_append_member(json_spell, "failure", json_mknumber(failure_rate_to_int(raw_spell_fail(spell))));
+            json_append_member(json_spell, "level", json_mknumber(spell_difficulty(spell)));
+
+            string type;
+            bool already = false;
+            for (const auto bit : spschools_type::range())
+            {
+                if (spell_typematch(spell, bit))
+                {
+                    type += spell_type_shortname(bit, already);
+                    already = true;
+                }
+            }
+            json_append_member(json_spell, "type", json_mkstring(type.c_str()));
+
+            json_append_element(known, json_spell);
+        }
+    }
+
+    JsonNode *library(json_mkarray());
+    auto const spell_list = get_sorted_spell_list(true, false);
+
+    for (const spell_type spell : spell_list)
+    {
+        const bool memorisable = you_can_memorise(spell);
+
+        JsonNode *json_spell(json_mkobject());
+        json_append_member(json_spell, "name", json_mkstring(spell_title(spell)));
+
+        if (memorisable)
+            json_append_member(json_spell, "power", json_mkstring(spell_power_string(spell).c_str()));
+        else
+            json_append_member(json_spell, "power", json_mkstring("Unusable"));
+
+        if (memorisable)
+            json_append_member(json_spell, "failure", json_mknumber(failure_rate_to_int(raw_spell_fail(spell))));
+
+        json_append_member(json_spell, "level", json_mknumber(spell_difficulty(spell)));
+
+        string type;
+        bool already = false;
+        for (const auto bit : spschools_type::range())
+        {
+            if (spell_typematch(spell, bit))
+            {
+                type += spell_type_shortname(bit, already);
+                already = true;
+            }
+        }
+        json_append_member(json_spell, "type", json_mkstring(type.c_str()));
+
+        json_append_element(library, json_spell);
+    }
+
+    json_append_member(spells, "known", known);
+    json_append_member(spells, "library", library);
+
+    json_append_member(jpar.json, "spells", spells);
+}
+
 static void _sdump_kills(dump_params &par)
 {
     par.text += you.kills.kill_info();
     par.text += "\n";
+}
+
+static void _json_sdump_kills(json_dump_params &jpar)
+{
+    // TODO: do we need the grouping done by kills.lua
+    json_append_member(jpar.json, "kills", you.kills.json_kills());
 }
 
 static string _sdump_kills_place_info(const PlaceInfo place_info, string name = "")
@@ -1070,6 +1687,47 @@ static string _sdump_kills_place_info(const PlaceInfo place_info, string name = 
     return _denanify(out);
 }
 
+static JsonNode *_json_sdump_kills_place_info(const PlaceInfo place_info, string name = "")
+{
+    JsonNode *place(json_mkobject());
+
+    json_append_member(place, "place", json_mkstring(place_info.short_name().c_str()));
+
+    if (name.empty())
+        name = place_info.short_name();
+
+    unsigned int global_total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        global_total_kills += you.global_info.mon_kill_num[i];
+
+    unsigned int total_kills = 0;
+    for (int i = 0; i < KC_NCATEGORIES; i++)
+        total_kills += place_info.mon_kill_num[i];
+
+    float a, b, c, d, e, f;
+
+    a = TO_PERCENT(total_kills, global_total_kills);
+    b = TO_PERCENT(place_info.mon_kill_num[KC_YOU],
+                   you.global_info.mon_kill_num[KC_YOU]);
+    c = TO_PERCENT(place_info.mon_kill_num[KC_FRIENDLY],
+                   you.global_info.mon_kill_num[KC_FRIENDLY]);
+    d = TO_PERCENT(place_info.mon_kill_num[KC_OTHER],
+                   you.global_info.mon_kill_num[KC_OTHER]);
+    e = TO_PERCENT(place_info.mon_kill_exp,
+                   you.global_info.mon_kill_exp);
+
+    f = float(place_info.mon_kill_exp) / place_info.levels_seen;
+
+    json_append_member(place, "killsPercent", json_mknumber(a));
+    json_append_member(place, "ownKillsPercent", json_mknumber(b));
+    json_append_member(place, "friendsKillsPercent", json_mknumber(c));
+    json_append_member(place, "otherKillsPercent", json_mknumber(d));
+    json_append_member(place, "xpGainedPercent", json_mknumber(e));
+    json_append_member(place, "xpGainedProportion", json_mknumber(f));
+
+    return place;
+}
+
 static void _sdump_kills_by_place(dump_params &par)
 {
     string &text(par.text);
@@ -1109,6 +1767,18 @@ static void _sdump_kills_by_place(dump_params &par)
         text += header + result + footer + "\n";
 }
 
+static void _json_sdump_kills_by_place(json_dump_params &jpar)
+{
+    JsonNode *kills_by_place(json_mkarray());
+
+    const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
+
+    for (const PlaceInfo &pi : all_visited)
+        json_append_element(kills_by_place, _json_sdump_kills_place_info(pi));
+
+    json_append_member(jpar.json, "killsByPlace", kills_by_place);
+}
+
 static void _sdump_overview(dump_params &par)
 {
     string overview =
@@ -1117,6 +1787,19 @@ static void _sdump_overview(dump_params &par)
     linebreak_string(overview, 80);
     par.text += overview;
     par.text += "\n\n";
+}
+
+static void _json_sdump_overview(json_dump_params &jpar)
+{
+    JsonNode *overview(json_mkobject());
+
+    json_append_member(overview, "branches", get_json_branches());
+    json_append_member(overview, "altars", get_json_altars());
+    json_append_member(overview, "shops", get_json_shops());
+    json_append_member(overview, "portals", get_json_portals());
+    json_append_member(overview, "annotations", get_json_notes());
+
+    json_append_member(jpar.json, "overview", overview);
 }
 
 static void _sdump_hiscore(dump_params &par)
@@ -1130,6 +1813,14 @@ static void _sdump_hiscore(dump_params &par)
     par.text += "\n\n";
 }
 
+static void _json_sdump_hiscore(json_dump_params &jpar)
+{
+    if (!jpar.se)
+        return;
+
+    json_append_member(jpar.json, "hiscore", jpar.se->hiscore_json());
+}
+
 static void _sdump_monster_list(dump_params &par)
 {
     string monlist = mpr_monster_list(par.se);
@@ -1137,6 +1828,11 @@ static void _sdump_monster_list(dump_params &par)
     while (!monlist.empty())
         par.text += wordwrap_line(monlist, 80) + "\n";
     par.text += "\n";
+}
+
+static void _json_sdump_monster_list(json_dump_params &jpar)
+{
+    json_append_member(jpar.json, "monsters", json_monster_list());
 }
 
 static void _sdump_vault_list(dump_params &par)
@@ -1150,6 +1846,18 @@ static void _sdump_vault_list(dump_params &par)
         par.text += "Levels and vault maps discovered:\n";
         par.text += dump_vault_maps();
         par.text += "\n";
+    }
+}
+
+static void _json_sdump_vault_list(json_dump_params &jpar)
+{
+    if (jpar.full_id || jpar.se
+#ifdef WIZARD
+        || you.wizard || you.suppress_wizard
+#endif
+     )
+    {
+        json_append_member(jpar.json, "vaults", json_dump_vault_maps());
     }
 }
 
@@ -1448,6 +2156,83 @@ static void _sdump_action_counts(dump_params &par)
     par.text += "\n";
 }
 
+static void _json_sdump_action_counts(json_dump_params &jpar)
+{
+    if (you.action_count.empty())
+        return;
+
+    JsonNode *json_action_counts(json_mkarray());
+
+    int max_lt = (min<int>(you.max_level, 27) - 1) / 3;
+
+    // Don't show both a total and 1..3 when there's only one tier.
+    if (max_lt)
+        max_lt++;
+
+    for (int cact = 0; cact < NUM_CACTIONS; cact++)
+    {
+        vector<pair<int, FixedVector<int, 28> > > action_vec;
+        for (const auto &entry : you.action_count)
+        {
+            if (entry.first.first != cact)
+                continue;
+            FixedVector<int, 28> v;
+            v[27] = 0;
+            for (int i = 0; i < 27; i++)
+            {
+                v[i] = entry.second[i];
+                v[27] += v[i];
+            }
+            action_vec.emplace_back(entry.first.second, v);
+        }
+        sort(action_vec.begin(), action_vec.end(), _sort_by_first);
+
+        if (action_vec.size() > 0)
+        {
+            JsonNode *json_action_cat(json_mkobject());
+            json_append_member(json_action_cat, "category",
+                               json_mkstring(_describe_action(caction_type(cact)).c_str()));
+
+            JsonNode *json_action_subcats(json_mkarray());
+            for (auto ac = action_vec.begin(); ac != action_vec.end(); ++ac)
+            {
+                JsonNode *json_action_subcat(json_mkobject());
+                json_append_member(json_action_subcat, "subcategory",
+                                   json_mkstring(_describe_action_subtype(caction_type(cact), ac->first).c_str()));
+
+                JsonNode *json_action_count(json_mkarray());
+                for (int lt = 0; lt < max_lt; lt++)
+                {
+                    JsonNode *json_count_range(json_mkobject());
+
+                    JsonNode *json_range(json_mkobject());
+                    json_append_member(json_range, "from", json_mknumber(lt * 3 + 1));
+                    json_append_member(json_range, "to", json_mknumber(lt * 3 + 3));
+                    json_append_member(json_count_range, "range", json_range);
+
+                    int ltotal = 0;
+                    for (int i = lt * 3; i < lt * 3 + 3; i++)
+                        ltotal += ac->second[i];
+
+                    json_append_member(json_count_range, "count", json_mknumber(ltotal));
+
+                    json_append_element(json_action_count, json_count_range);
+                }
+                json_append_member(json_action_subcat, "count", json_action_count);
+
+                json_append_member(json_action_subcat, "total", json_mknumber(ac->second[27]));
+
+                json_append_element(json_action_subcats, json_action_subcat);
+            }
+            json_append_member(json_action_cat, "subcategories", json_action_subcats);
+
+            json_append_element(json_action_counts, json_action_cat);
+        }
+    }
+
+    json_append_member(jpar.json, "actions", json_action_counts);
+}
+
 static void _sdump_skill_gains(dump_params &par)
 {
     typedef map<int, int> XlToSkillLevelMap;
@@ -1510,6 +2295,72 @@ static void _sdump_skill_gains(dump_params &par)
     par.text += "\n";
 }
 
+static void _json_sdump_skill_gains(json_dump_params &jpar)
+{
+    typedef map<int, int> XlToSkillLevelMap;
+    map<skill_type, XlToSkillLevelMap> skill_gains;
+    vector<skill_type> skill_order;
+    int xl = 0;
+    int max_xl = 0;
+    for (const Note &note : note_list)
+    {
+        if (note.type == NOTE_XP_LEVEL_CHANGE)
+            xl = note.first;
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        {
+            skill_type skill = static_cast<skill_type>(note.first);
+            int skill_level = note.second;
+            if (skill_gains.find(skill) == skill_gains.end())
+                skill_order.push_back(skill);
+            skill_gains[skill][xl] = skill_level;
+            max_xl = max(max_xl, xl);
+        }
+    }
+
+    if (skill_order.empty())
+        return;
+
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (you.skill(skill, 10, true) > 0
+            && skill_gains.find(skill) == skill_gains.end())
+        {
+            skill_order.push_back(skill);
+        }
+    }
+
+    JsonNode *json_skill_gains(json_mkarray());
+
+    for (skill_type skill : skill_order)
+    {
+        JsonNode *json_skill(json_mkobject());
+        json_append_member(json_skill, "skill", json_mkstring(skill_name(skill)));
+
+        JsonNode *json_gains(json_mkarray());
+        const XlToSkillLevelMap &gains = skill_gains[skill];
+        for (xl = 1; xl <= max_xl; xl++)
+        {
+            auto it = gains.find(xl);
+
+            if (it != gains.end()) {
+                JsonNode *json_gain(json_mkobject());
+                json_append_member(json_gain, "xl", json_mknumber(xl));
+                json_append_member(json_gain, "gain", json_mknumber(it->second));
+
+                json_append_element(json_gains, json_gain);
+            }
+        }
+
+        json_append_member(json_skill, "gains", json_gains);
+        json_append_member(json_skill, "final", json_mknumber(you.skill(skill, 10, true) * 0.1));
+
+        json_append_element(json_skill_gains, json_skill);
+    }
+
+    json_append_member(jpar.json, "skillGains", json_skill_gains);
+}
+
 static void _sdump_mutations(dump_params &par)
 {
     string &text(par.text);
@@ -1520,6 +2371,12 @@ static void _sdump_mutations(dump_params &par)
         text += (formatted_string::parse_string(describe_mutations(false)));
         text += "\n\n";
     }
+}
+
+static void _json_sdump_mutations(json_dump_params &jpar)
+{
+    if (you.how_mutated(true, false))
+        json_append_member(jpar.json, "mutations", get_json_mutations());
 }
 
 string morgue_directory()
@@ -1645,7 +2502,8 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
+static bool _write_dump(const string &fname, const dump_params &par,
+                        const json_dump_params &jpar, bool quiet)
 {
     bool succeeded = false;
 
@@ -1663,10 +2521,10 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     string map_file_name = file_name + ".map";
     dump_map(map_file_name.c_str());
 
-    file_name += ".txt";
-    FILE *handle = fopen_replace(file_name.c_str());
+    string txt_file_name = file_name + ".txt";
+    FILE *handle = fopen_replace(txt_file_name.c_str());
 
-    dprf("File name: %s", file_name.c_str());
+    dprf("File name: %s", txt_file_name.c_str());
 
     if (handle != nullptr)
     {
@@ -1677,11 +2535,38 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 #ifdef DGAMELAUNCH
             mpr("Char dumped successfully.");
 #else
-            mprf("Char dumped to '%s'.", file_name.c_str());
+            mprf("Char dumped to '%s'.", txt_file_name.c_str());
 #endif
     }
     else
-        mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
+        mprf(MSGCH_ERROR, "Error opening file '%s'", txt_file_name.c_str());
+
+    // Json dump
+    if (Options.dump_json)
+    {
+        string json_file_name = file_name + ".json";
+        FILE *json_handle = fopen_replace(json_file_name.c_str());
+
+        dprf("JSON file name: %s", json_file_name.c_str());
+
+        if (json_handle != nullptr)
+        {
+            JsonWrapper json(jpar.json);
+
+            fputs(OUTS(json.to_string().c_str()), json_handle);
+            fclose(json_handle);
+            // TODO: do we care if json failed?
+            succeeded = true;
+            if (!quiet)
+#ifdef DGAMELAUNCH
+                mpr("JSON Char dumped successfully.");
+#else
+                mprf("JSON Char dumped to '%s'.", json_file_name.c_str());
+#endif
+        }
+        else
+            mprf(MSGCH_ERROR, "Error opening file '%s'", json_file_name.c_str());
+    }
 
     return succeeded;
 }

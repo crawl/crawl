@@ -10,6 +10,8 @@
 #include <string>
 #include <sstream>
 
+#include "json.h"
+
 #include "canned-message-type.h"
 #include "enum.h"
 #include "player.h"
@@ -151,6 +153,7 @@ void replay_messages_during_startup();
 void set_more_autoclear(bool on);
 
 string get_last_messages(int mcount, bool full = false);
+JsonNode *get_json_last_messages(int mcount, bool full = false);
 void get_recent_messages(vector<string> &messages,
                          vector<msg_channel_type> &channels);
 bool recent_error_messages();

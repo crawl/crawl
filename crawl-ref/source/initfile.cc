@@ -220,6 +220,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
+        new BoolGameOption(SIMPLE_NAME(dump_json), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
