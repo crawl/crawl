@@ -272,7 +272,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             if (foe == MHITYOU)
                 target = you.pos();
             else if (foe != MHITNOT)
-                target = menv[source_actor->as_monster()->foe].pos();
+                target = env.mons[source_actor->as_monster()->foe].pos();
         }
 
         if (type == MONS_FLAYED_GHOST)
@@ -383,21 +383,21 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     int midx = mon->mindex();
 
     if (!monster_at(mon->pos()))
-        mgrd(mon->pos()) = midx;
+        env.mgrid(mon->pos()) = midx;
 
-    if (mon->pos() != you.pos() && midx == mgrd(mon->pos()))
+    if (mon->pos() != you.pos() && midx == env.mgrid(mon->pos()))
         return true;
 
-    if (midx != mgrd(mon->pos()))
+    if (midx != env.mgrid(mon->pos()))
     {
-        monster* other_mon = &menv[mgrd(mon->pos())];
+        monster* other_mon = &env.mons[env.mgrid(mon->pos())];
 
         if (other_mon->type == MONS_NO_MONSTER
             || other_mon->type == MONS_PROGRAM_BUG)
         {
-            mgrd(mon->pos()) = midx;
+            env.mgrid(mon->pos()) = midx;
 
-            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to %s monster, even "
+            mprf(MSGCH_ERROR, "env.mgrid(%d,%d) points to %s monster, even "
                  "though it contains submerged monster %s (see bug 2293518)",
                  mon->pos().x, mon->pos().y,
                  other_mon->type == MONS_NO_MONSTER ? "dead" : "buggy",
@@ -420,7 +420,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         if (!actor_at(*ai)
-            && monster_can_submerge(mon, grd(*ai))
+            && monster_can_submerge(mon, env.grid(*ai))
             && one_chance_in(++okay_squares))
         {
             target_square = *ai;
@@ -431,7 +431,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
     // No available adjacent squares from which the monster could also
     // have unsubmerged. Can it just stay submerged where it is?
-    if (monster_can_submerge(mon, grd(mon->pos())))
+    if (monster_can_submerge(mon, env.grid(mon->pos())))
         return false;
 
     // The terrain changed and the monster can't remain submerged.
@@ -439,7 +439,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
         if (!actor_at(*ai)
-            && monster_habitable_grid(mon, grd(*ai))
+            && monster_habitable_grid(mon, env.grid(*ai))
             && !trap_at(*ai))
         {
             if (one_chance_in(++okay_squares))
@@ -773,14 +773,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(*this))
         {
-            if (!quiet && feat_is_watery(grd(pos())))
+            if (!quiet && feat_is_watery(env.grid(pos())))
             {
                 mprf(MSGCH_WARN, "%s bursts forth from the water.",
                      name(DESC_A, true).c_str());
                 seen_monster(this);
             }
         }
-        else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
+        else if (you.see_cell(pos()) && feat_is_watery(env.grid(pos())))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity(activity_interrupt::force);
@@ -1197,8 +1197,8 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
         const coord_def newpos = tracer.path_taken[0];
 
         if (!in_bounds(newpos)
-            || is_feat_dangerous(grd(newpos))
-            || !you.can_pass_through_feat(grd(newpos))
+            || is_feat_dangerous(env.grid(newpos))
+            || !you.can_pass_through_feat(env.grid(newpos))
             || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
         {
             do_resist = true;
@@ -1238,13 +1238,13 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                         return do_resist;
                     }
 
-                    int swap_mon = mgrd(newpos);
+                    int swap_mon = env.mgrid(newpos);
                     // Pick the monster up.
-                    mgrd(newpos) = NON_MONSTER;
+                    env.mgrid(newpos) = NON_MONSTER;
                     mon->moveto(oldpos);
 
                     // Plunk it down.
-                    mgrd(mon->pos()) = swap_mon;
+                    env.mgrid(mon->pos()) = swap_mon;
 
                     mprf("You swap places with %s.",
                          mon->name(DESC_THE).c_str());
@@ -1307,7 +1307,7 @@ static void _merfolk_avatar_song(monster* mons)
     // Can only call up drowned souls if there's free deep water nearby
     vector<coord_def> deep_water;
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_SQUARE); ri; ++ri)
-        if (grd(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
+        if (env.grid(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
             deep_water.push_back(*ri);
 
     if (deep_water.size())
@@ -1460,7 +1460,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_AQUATIC_LAND:
         // Aquatic monsters lose hit points every turn they spend on dry land.
         ASSERT(mons_habitat(*this) == HT_WATER || mons_habitat(*this) == HT_LAVA);
-        if (monster_habitable_grid(this, grd(pos())))
+        if (monster_habitable_grid(this, env.grid(pos())))
         {
             del_ench(ENCH_AQUATIC_LAND);
             break;
@@ -1493,7 +1493,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             break;
 
         // Now we handle the others:
-        const dungeon_feature_type grid = grd(pos());
+        const dungeon_feature_type grid = env.grid(pos());
 
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
@@ -1525,7 +1525,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        if (feat_is_watery(grd(pos())) && ground_level())
+        if (feat_is_watery(env.grid(pos())) && ground_level())
         {
             if (you.can_see(*this))
             {

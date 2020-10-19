@@ -495,7 +495,7 @@ static bool _slime_merge(monster* thing)
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
         if (!actor_at(*ai)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, grd(*ai)))
+            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(*ai)))
         {
             return false;
         }
@@ -1145,7 +1145,7 @@ bool mon_special_ability(monster* mons)
         if (one_chance_in(5))
         {
             actor *foe = mons->get_foe();
-            if (foe && !feat_is_water(grd(foe->pos())))
+            if (foe && !feat_is_water(env.grid(foe->pos())))
             {
                 coord_def spot;
                 if (find_habitable_spot_near(foe->pos(), MONS_ELECTRIC_EEL, 3, false, spot)

@@ -244,7 +244,7 @@ bool Stash::unmark_trapping_nets()
 
 void Stash::update()
 {
-    feat = grd(pos);
+    feat = env.grid(pos);
     trap = NUM_TRAPS;
 
     if (is_boring_feature(feat))
@@ -277,7 +277,7 @@ void Stash::update()
     // let's update them
 
     // There's something on this square. Take a squint at it.
-    item_def *pitem = &mitm[you.visible_igrd(pos)];
+    item_def *pitem = &env.item[you.visible_igrd(pos)];
     hints_first_item(*pitem);
 
     // Now, grab all items on that square and fill our vector
@@ -1078,7 +1078,7 @@ void StashTracker::update_visible_stashes()
     for (radius_iterator ri(you.pos(),
                             you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
-        const dungeon_feature_type feat = grd(*ri);
+        const dungeon_feature_type feat = env.grid(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
             && (_grid_has_perceived_item(*ri)

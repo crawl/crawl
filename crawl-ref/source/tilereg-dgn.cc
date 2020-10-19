@@ -766,7 +766,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 if (o == NON_ITEM)
                 {
                     // if on stairs, travel them
-                    const dungeon_feature_type feat = grd(gc);
+                    const dungeon_feature_type feat = env.grid(gc);
                     switch (feat_stair_direction(feat))
                     {
                     case CMD_GO_DOWNSTAIRS:
@@ -794,7 +794,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 }
             }
 
-            const dungeon_feature_type feat = grd(gc);
+            const dungeon_feature_type feat = env.grid(gc);
             switch (feat_stair_direction(feat))
             {
             case CMD_GO_DOWNSTAIRS:
@@ -1089,7 +1089,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                 _add_tip(tip, "[L-Click] Travel");
             }
         }
-        else if (feat_is_closed_door(grd(gc)))
+        else if (feat_is_closed_door(env.grid(gc)))
         {
             if (!adjacent(gc, you.pos()) && i_feel_safe())
                 _add_tip(tip, "[L-Click] Travel");
@@ -1141,7 +1141,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         if (o == NON_ITEM)
         {
             // if on stairs, travel them
-            const dungeon_feature_type feat = grd(gc);
+            const dungeon_feature_type feat = env.grid(gc);
             if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
                 || feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
             {

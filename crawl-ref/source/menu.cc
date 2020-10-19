@@ -1471,7 +1471,7 @@ FeatureMenuEntry::FeatureMenuEntry(const string &str, const coord_def p,
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
     if (in_bounds(p))
-        feat = grd(p);
+        feat = env.grid(p);
     else
         feat = DNGN_UNSEEN;
     pos      = p;

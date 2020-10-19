@@ -466,7 +466,7 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
 {
-    const dungeon_feature_type door = grd(gc);
+    const dungeon_feature_type door = env.grid(gc);
 
     return door == feat
 #if TAG_MAJOR_VERSION == 34
@@ -528,27 +528,27 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     else
         env.tile_flv(gc).wall = pick_dngn_tile(env.tile_flv(gc).wall, rand2);
 
-    if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
+    if (feat_is_stone_stair(env.grid(gc)) && player_in_branch(BRANCH_SHOALS))
     {
-        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
         env.tile_flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
                                    : TILE_DNGN_SHOALS_STAIRS_DOWN;
     }
 
-    if (feat_is_escape_hatch(grd(gc)) && player_in_branch(BRANCH_TOMB))
+    if (feat_is_escape_hatch(env.grid(gc)) && player_in_branch(BRANCH_TOMB))
     {
-        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
         env.tile_flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
                                    : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
     }
 
-    if (feat_is_door(grd(gc)))
+    if (feat_is_door(env.grid(gc)))
     {
         // Check for gates.
-        bool door_left  = _same_door_at(grd(gc), coord_def(gc.x - 1, gc.y));
-        bool door_right = _same_door_at(grd(gc), coord_def(gc.x + 1, gc.y));
-        bool door_up    = _same_door_at(grd(gc), coord_def(gc.x, gc.y - 1));
-        bool door_down  = _same_door_at(grd(gc), coord_def(gc.x, gc.y + 1));
+        bool door_left  = _same_door_at(env.grid(gc), coord_def(gc.x - 1, gc.y));
+        bool door_right = _same_door_at(env.grid(gc), coord_def(gc.x + 1, gc.y));
+        bool door_up    = _same_door_at(env.grid(gc), coord_def(gc.x, gc.y - 1));
+        bool door_down  = _same_door_at(env.grid(gc), coord_def(gc.x, gc.y + 1));
 
         if (door_left || door_right || door_up || door_down)
         {
@@ -602,7 +602,7 @@ static bool _adjacent_target(dungeon_feature_type target, int x, int y)
     {
         if (!map_bounds(*ai))
             continue;
-        if (grd(*ai) == target)
+        if (env.grid(*ai) == target)
             return true;
     }
 
@@ -615,15 +615,15 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     {
         for (int y = 0; y < GYM; y++)
         {
-            if (!feat_has_dry_floor(grd[x][y]))
+            if (!feat_has_dry_floor(env.grid[x][y]))
                 continue;
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0 && feat_has_dry_floor(grd[x-1][y]));
-            bool r_flr = (x < GXM - 1 && feat_has_dry_floor(grd[x+1][y]));
-            bool u_flr = (y > 0 && feat_has_dry_floor(grd[x][y-1]));
-            bool d_flr = (y < GYM - 1 && feat_has_dry_floor(grd[x][y+1]));
+            bool l_flr = (x > 0 && feat_has_dry_floor(env.grid[x-1][y]));
+            bool r_flr = (x < GXM - 1 && feat_has_dry_floor(env.grid[x+1][y]));
+            bool u_flr = (y > 0 && feat_has_dry_floor(env.grid[x][y-1]));
+            bool d_flr = (y < GYM - 1 && feat_has_dry_floor(env.grid[x][y+1]));
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);

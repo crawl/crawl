@@ -703,7 +703,7 @@ void dec_penance(int val)
 static bool _need_water_walking()
 {
     return you.ground_level() && you.species != SP_MERFOLK
-           && grd(you.pos()) == DNGN_DEEP_WATER;
+           && env.grid(you.pos()) == DNGN_DEEP_WATER;
 }
 
 static void _grant_temporary_waterwalk()
@@ -1283,8 +1283,8 @@ static int _pakellas_high_misc()
 static bool _give_pakellas_gift()
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(grd(you.pos()))
-        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    if (!(feat_has_solid_floor(env.grid(you.pos()))
+        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
     {
         return false;
     }
@@ -1371,8 +1371,8 @@ static bool _give_pakellas_gift()
 static bool _give_trog_oka_gift(bool forced)
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(grd(you.pos()))
-        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    if (!(feat_has_solid_floor(env.grid(you.pos()))
+        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
     {
         return false;
     }
@@ -1503,7 +1503,7 @@ static bool _gift_sif_kiku_gift(bool forced)
     bool success = false;
     book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
-    if (!feat_has_solid_floor(grd(you.pos())))
+    if (!feat_has_solid_floor(env.grid(you.pos())))
         return false;
 
     // Kikubaaqudgha gives the lesser Necromancy books in a quick
@@ -1541,7 +1541,7 @@ static bool _gift_sif_kiku_gift(bool forced)
         // Replace a Kiku gift by a custom-random book.
         if (you_worship(GOD_KIKUBAAQUDGHA))
         {
-            make_book_kiku_gift(mitm[thing_created],
+            make_book_kiku_gift(env.item[thing_created],
                                 gift == BOOK_NECROMANCY);
         }
         if (thing_created == NON_ITEM)
@@ -2216,7 +2216,7 @@ void god_speaks(god_type god, const char *mesg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int orig_mon = mgrd(you.pos());
+    int orig_mon = env.mgrid(you.pos());
 
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
@@ -2230,7 +2230,7 @@ void god_speaks(god_type god, const char *mesg)
     mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
     fake_mon.reset();
-    mgrd(you.pos()) = orig_mon;
+    env.mgrid(you.pos()) = orig_mon;
 }
 
 void religion_turn_start()
@@ -3706,7 +3706,7 @@ void join_religion(god_type which_god)
 
 void god_pitch(god_type which_god)
 {
-    if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
+    if (which_god == GOD_BEOGH && env.grid(you.pos()) != DNGN_ALTAR_BEOGH)
         mpr("You bow before the missionary of Beogh.");
     else
     {

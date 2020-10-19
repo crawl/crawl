@@ -137,7 +137,7 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    const dungeon_feature_type grid = grd(pos());
+    const dungeon_feature_type grid = env.grid(pos());
     return species == SP_GREY_DRACONIAN
               || form == transformation::tree
               || grid == DNGN_SHALLOW_WATER
@@ -805,8 +805,8 @@ bool player::is_web_immune() const
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
-        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di))
-            && can_pass_through_feat(grd(*di)))
+        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(env.grid(*di))
+            && can_pass_through_feat(env.grid(*di)))
         {
             moveto(*di);
             if (*feat_name)

@@ -501,6 +501,7 @@ spectral_spear MONS_SPECTRAL_SPEAR
 # Unique humans, in alphabetical order
 donald MONS_DONALD
 edmund MONS_EDMUND
+edmund_weaponless MONS_EDMUND_WEAPONLESS
 erica MONS_ERICA
 erica_swordless MONS_ERICA_SWORDLESS
 eustachio MONS_EUSTACHIO

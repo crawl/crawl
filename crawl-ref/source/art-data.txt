@@ -940,7 +940,7 @@ STR:      -1
 INT:      -1
 DEX:      1
 LIFE:     1
-BOOL:     poison
+BOOL:     poison, evil
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD

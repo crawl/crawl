@@ -528,7 +528,7 @@ static int _issue_orders_prompt()
         string previous;
         if (_can_target_prev())
         {
-            const monster* target = &menv[you.prev_targ];
+            const monster* target = &env.mons[you.prev_targ];
             if (target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }
@@ -852,7 +852,7 @@ bool fake_noisy(int loudness, const coord_def& where)
 // Permarock walls are assumed to completely kill noise.
 static int _noise_attenuation_millis(const coord_def &pos)
 {
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 
     if (feat_is_permarock(feat))
         return NOISE_ATTENUATION_COMPLETE;
@@ -1259,7 +1259,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
             if (you.pos() == coord_def(x, y))
                 write_cell(outf, p, '@');
             else
-                write_cell(outf, p, get_feature_def(grd[x][y]).symbol());
+                write_cell(outf, p, get_feature_def(env.grid[x][y]).symbol());
         }
         fprintf(outf, "<br>\n");
     }

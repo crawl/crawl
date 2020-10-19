@@ -100,9 +100,9 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     ASSERT_IN_BOUNDS(orig);
     ASSERT_IN_BOUNDS(dest);
     ASSERT(orig != dest);
-    ASSERT(!is_notable_terrain(grd(dest)));
+    ASSERT(!is_notable_terrain(env.grid(dest)));
 
-    if (!is_notable_terrain(grd(orig)))
+    if (!is_notable_terrain(env.grid(orig)))
         return false;
 
     level_pos pos1(level_id::current(), orig);
@@ -592,7 +592,7 @@ static bool _unnotice_shop(const level_pos &pos)
 
 static bool _unnotice_stair(const level_pos &pos)
 {
-    const dungeon_feature_type feat = grd(pos.pos);
+    const dungeon_feature_type feat = env.grid(pos.pos);
     if (!feat_is_branch_entrance(feat))
         return false;
 
@@ -990,7 +990,7 @@ void annotate_level()
     level_id li  = level_id::current();
     level_id li2 = level_id::current();
 
-    if (feat_is_stair(grd(you.pos())))
+    if (feat_is_stair(env.grid(you.pos())))
     {
         li2 = level_id::get_next_level_id(you.pos());
 

@@ -1225,7 +1225,9 @@ static void _grab_followers()
         }
     }
 
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
+
     vector<coord_def> places[2] = { { you.pos() }, {} };
     int place_set = 0;
     while (!places[place_set].empty())
@@ -1234,10 +1236,10 @@ static void _grab_followers()
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if (travel_point_distance[ai->x][ai->y])
+                if (visited[ai->x][ai->y])
                     continue;
 
-                travel_point_distance[ai->x][ai->y] = 1;
+                visited[ai->x][ai->y] = true;
                 if (_grab_follower_at(*ai, can_follow))
                     places[!place_set].push_back(*ai);
             }
@@ -1274,7 +1276,7 @@ static void _do_lost_monsters()
 // followers won't be considered lost.
 static void _do_lost_items()
 {
-    for (const auto &item : mitm)
+    for (const auto &item : env.item)
         if (item.defined() && item.pos != ITEM_IN_INVENTORY)
             item_was_lost(item);
 }
@@ -1362,9 +1364,9 @@ static void _place_player(dungeon_feature_type stair_taken,
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
-        if (you.is_habitable_feat(grd(*di))
-            && !is_feat_dangerous(grd(*di), true)
-            && !feat_is_trap(grd(*di)))
+        if (you.is_habitable_feat(env.grid(*di))
+            && !is_feat_dangerous(env.grid(*di), true)
+            && !feat_is_trap(env.grid(*di)))
         {
             if (you.pos() != *di)
                 you.moveto(*di);
@@ -1836,9 +1838,9 @@ static void _rescue_player_from_wall()
                 backup_clear_pos = *di;
             // TODO: in principle this should use env.map_forgotten if it
             // exists, but I'm not sure that is worth the trouble.
-            if (feat_is_stair(grd(*di)) && env.map_seen(*di))
+            if (feat_is_stair(env.grid(*di)) && env.map_seen(*di))
             {
-                const command_type dir = feat_stair_direction(grd(*di));
+                const command_type dir = feat_stair_direction(env.grid(*di));
                 if (dir == CMD_GO_UPSTAIRS)
                     upstairs.push_back(*di);
                 else if (dir == CMD_GO_DOWNSTAIRS)
@@ -2149,7 +2151,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.duration[DUR_REPEL_STAIRS_MOVE]
             || you.duration[DUR_REPEL_STAIRS_CLIMB])
         {
-            dungeon_feature_type feat = grd(you.pos());
+            dungeon_feature_type feat = env.grid(you.pos());
             if (feat != DNGN_ENTER_SHOP
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
