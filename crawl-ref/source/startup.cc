@@ -111,8 +111,8 @@ static void _initialize()
     reset_all_monsters();
     init_anon();
 
-    igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
+    env.igrid.init(NON_ITEM);
+    env.mgrid.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
     env.pgrid.init(terrain_property_t{});
 
@@ -213,9 +213,9 @@ static void _zap_los_monsters()
     {
         if (items_also)
         {
-            int item = igrd(*ri);
+            int item = env.igrid(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined())
+            if (item != NON_ITEM && env.item[item].defined())
                 destroy_item(item);
         }
 

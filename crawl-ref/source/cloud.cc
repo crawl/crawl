@@ -405,7 +405,7 @@ static int _spread_cloud(const cloud_struct &cloud)
             continue;
         }
 
-        if (cloud.type == CLOUD_INK && !feat_is_watery(grd(*ai)))
+        if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(*ai)))
             continue;
 
         int newdecay = cloud.decay / 2 + 1;
@@ -447,7 +447,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
-        if (!feat_is_tree(grd(*ai)) || is_temp_terrain(*ai)
+        if (!feat_is_tree(env.grid(*ai)) || is_temp_terrain(*ai)
             || x_chance_in_y(19, 20))
         {
             continue;
@@ -479,7 +479,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
     {
         const coord_def p(*ai);
         if (in_bounds(p)
-            && feat_is_watery(grd(p))
+            && feat_is_watery(env.grid(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
             && one_chance_in(14))
@@ -544,7 +544,7 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     }
 
     // Ink cloud shouldn't appear outside of water.
-    if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+    if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(cloud.pos)))
         return cloud.decay;
 
     return dissipate;
@@ -621,7 +621,7 @@ void manage_clouds()
         if (cell_is_solid(cloud.pos))
         {
             die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
-                dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+                dungeon_feature_name(env.grid(cloud.pos)), cloud.pos.x, cloud.pos.y);
         }
 #endif
 
@@ -661,18 +661,18 @@ static void _maybe_leave_water(const coord_def pos)
         return;
     }
 
-    dungeon_feature_type feat = grd(pos);
+    dungeon_feature_type feat = env.grid(pos);
 
-    if (grd(pos) == DNGN_FLOOR)
+    if (env.grid(pos) == DNGN_FLOOR)
         feat = DNGN_SHALLOW_WATER;
-    else if (grd(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
+    else if (env.grid(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
              && one_chance_in(3) && !crawl_state.game_is_sprint())
     {
         // Don't drown the player!
         feat = DNGN_DEEP_WATER;
     }
 
-    if (grd(pos) != feat)
+    if (env.grid(pos) != feat)
     {
         if (you.pos() == pos && you.ground_level())
             mpr("The rain has left you waist-deep in water!");
@@ -786,7 +786,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
 
-    if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
+    if (cl_type == CLOUD_INK && !feat_is_watery(env.grid(ctarget)))
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS
@@ -1496,7 +1496,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
 
         // This position could become deep water, and they might drown.
-        if (grd(cloud.pos) == DNGN_SHALLOW_WATER
+        if (env.grid(cloud.pos) == DNGN_SHALLOW_WATER
             && mons_intel(*mons) > I_BRAINLESS)
         {
             return true;
@@ -1614,7 +1614,7 @@ coord_def random_walk(coord_def start, int dist)
         {
             const coord_def new_pos   = pos + Compass[j];
 
-            if (in_bounds(new_pos) && !feat_is_solid(grd(new_pos))
+            if (in_bounds(new_pos) && !feat_is_solid(env.grid(new_pos))
                 && one_chance_in(++okay_dirs))
             {
                 dir = j;

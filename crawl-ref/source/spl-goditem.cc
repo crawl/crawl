@@ -836,7 +836,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             }
 
             // don't try to shove the orb of zot into lava and/or crash
-            if (igrd(*ai) != NON_ITEM)
+            if (env.igrid(*ai) != NON_ITEM)
             {
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
@@ -848,7 +848,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
+            if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;
                 none_vis = false;
@@ -882,21 +882,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // closed doors are solid, but we don't want a behaviour difference
         // between open and closed doors
-        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        proceed = !cell_is_solid(*ai) || feat_is_door(env.grid(*ai));
         if (!zin && monster_at(*ai))
             proceed = false;
 
         if (proceed)
         {
             // All items are moved aside for zin, tomb just skips the tile.
-            if (igrd(*ai) != NON_ITEM && zin)
+            if (env.igrid(*ai) != NON_ITEM && zin)
                 push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
-                grd(*ai) = DNGN_FLOOR;
+                env.grid(*ai) = DNGN_FLOOR;
             }
 
             // Actually place the wall.

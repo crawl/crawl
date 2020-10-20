@@ -929,7 +929,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st)
 
 static void _describe_terrain(status_info& inf)
 {
-    switch (grd(you.pos()))
+    switch (env.grid(you.pos()))
     {
     case DNGN_SHALLOW_WATER:
         inf.light_colour = LIGHTBLUE;

@@ -98,14 +98,14 @@ static bool _diggable(map_lines *map, coord_def c)
 {
     if (map)
         return (*map)(c) == 'x';
-    return grd(c) == DNGN_ROCK_WALL && !map_masked(c, MMT_VAULT);
+    return env.grid(c) == DNGN_ROCK_WALL && !map_masked(c, MMT_VAULT);
 }
 
 static bool _dug(map_lines *map, coord_def c)
 {
     if (map)
         return strchr(traversable_glyphs, (*map)(c));
-    return grd(c) == DNGN_FLOOR;
+    return env.grid(c) == DNGN_FLOOR;
 }
 
 static void _digcell(map_lines *map, store_type& store, coord_def c)
@@ -116,7 +116,7 @@ static void _digcell(map_lines *map, store_type& store, coord_def c)
     if (map)
         (*map)(c) = '.';
     else
-        grd(c) = DNGN_FLOOR;
+        env.grid(c) = DNGN_FLOOR;
 
     int order[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     for (unsigned int d = 8; d > 0; d--)

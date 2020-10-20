@@ -39,7 +39,7 @@ void give_specific_item(monster* mon, int thing)
     if (thing == NON_ITEM || thing == -1)
         return;
 
-    item_def &mthing = mitm[thing];
+    item_def &mthing = env.item[thing];
     ASSERT(mthing.defined());
 
     dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
@@ -92,7 +92,7 @@ void give_specific_item(monster* mon, const item_def& tpl)
     if (thing == NON_ITEM)
         return;
 
-    mitm[thing] = tpl;
+    env.item[thing] = tpl;
     give_specific_item(mon, thing);
 }
 
@@ -116,7 +116,7 @@ static void _give_book(monster* mon, int level)
 
         // Maybe give Roxanne a random book containing Statue Form instead.
         if (coinflip())
-            make_book_roxanne_special(&mitm[thing_created]);
+            make_book_roxanne_special(&env.item[thing_created]);
 
         give_specific_item(mon, thing_created);
     }
@@ -148,7 +148,7 @@ static void _give_wand(monster* mon, int level)
     if (idx == NON_ITEM)
         return;
 
-    item_def& wand = mitm[idx];
+    item_def& wand = env.item[idx];
 
     const char* rejection_reason =
         (no_high_tier && is_high_tier_wand(wand.sub_type)) ? "high tier" :
@@ -181,7 +181,7 @@ static void _give_potion(monster* mon, int level)
         if (thing_created == NON_ITEM)
             return;
 
-        mitm[thing_created].flags = 0;
+        env.item[thing_created].flags = 0;
         give_specific_item(mon, thing_created);
     }
 }
@@ -1250,11 +1250,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // Copy temporary item into the item array if were forcing it, since
     // items() won't have done it for us.
     if (force_item)
-        mitm[thing_created] = item;
+        env.item[thing_created] = item;
     else
-        mitm[thing_created].flags |= item.flags;
+        env.item[thing_created].flags |= item.flags;
 
-    item_def &i = mitm[thing_created];
+    item_def &i = env.item[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
@@ -1270,12 +1270,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         set_ident_flags(i, ISFLAG_KNOW_CURSE); // despoiler
     }
 
-    if (!is_artefact(mitm[thing_created]) && !floor_tile.empty())
+    if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {
         ASSERT(!equip_tile.empty());
-        mitm[thing_created].props["item_tile_name"] = floor_tile;
-        mitm[thing_created].props["worn_tile_name"] = equip_tile;
-        bind_item_tile(mitm[thing_created]);
+        env.item[thing_created].props["item_tile_name"] = floor_tile;
+        env.item[thing_created].props["worn_tile_name"] = equip_tile;
+        bind_item_tile(env.item[thing_created]);
     }
 
     return thing_created;
@@ -1311,7 +1311,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     if (second_weapon)
         return;
 
-    const item_def &i = mitm[thing_created];
+    const item_def &i = env.item[thing_created];
 
     if ((i.base_type != OBJ_WEAPONS
                 && i.base_type != OBJ_STAVES
@@ -1354,11 +1354,11 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         {
             // Sanity check to avoid useless brands.
             const int bow_brand  = get_weapon_brand(*launcher);
-            const int ammo_brand = get_ammo_brand(mitm[thing_created]);
+            const int ammo_brand = get_ammo_brand(env.item[thing_created]);
             if (ammo_brand != SPMSL_NORMAL
                 && (bow_brand == SPWPN_FLAMING || bow_brand == SPWPN_FREEZING))
             {
-                mitm[thing_created].brand = SPMSL_NORMAL;
+                env.item[thing_created].brand = SPMSL_NORMAL;
             }
         }
 
@@ -1366,11 +1366,11 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         {
             case MONS_DEEP_ELF_MASTER_ARCHER:
                 // Master archers get double ammo - archery is their only attack
-                mitm[thing_created].quantity *= 2;
+                env.item[thing_created].quantity *= 2;
                 break;
 
             case MONS_JOSEPH:
-                mitm[thing_created].quantity += 2 + random2(7);
+                env.item[thing_created].quantity += 2 + random2(7);
                 break;
 
             default:
@@ -1513,7 +1513,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         if (thing_created != NON_ITEM)
         {
-            item_def& w(mitm[thing_created]);
+            item_def& w(env.item[thing_created]);
 
             if (brand != SPMSL_NORMAL)
                 set_item_ego_type(w, OBJ_MISSILES, brand);
@@ -1540,10 +1540,10 @@ static item_def* make_item_for_monster(
     if (thing_created == NON_ITEM)
         return 0;
 
-    mitm[thing_created].flags |= flags;
+    env.item[thing_created].flags |= flags;
 
     give_specific_item(mons, thing_created);
-    return &mitm[thing_created];
+    return &env.item[thing_created];
 }
 
 static void _give_shield(monster* mon, int level)
@@ -1717,7 +1717,7 @@ static void _give_shield(monster* mon, int level)
         if (thing_created == NON_ITEM)
             break;
 
-        mitm[thing_created] = shld;
+        env.item[thing_created] = shld;
         give_specific_item(mon, thing_created);
     }
         break;
@@ -2153,9 +2153,9 @@ int make_mons_armour(monster_type type, int level)
     // Copy temporary item into the item array if were forcing it, since
     // items() won't have done it for us.
     if (force_item)
-        mitm[thing_created] = item;
+        env.item[thing_created] = item;
 
-    item_def &i = mitm[thing_created];
+    item_def &i = env.item[thing_created];
 
     if (force_item)
         item_set_appearance(i);
@@ -2213,7 +2213,7 @@ void view_monster_equipment(monster* mon)
         if (mon->inv[i] == NON_ITEM)
             continue;
 
-        item_def &item = mitm[mon->inv[i]];
+        item_def &item = env.item[mon->inv[i]];
         item.flags |= ISFLAG_SEEN;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (item.base_type == OBJ_WANDS)

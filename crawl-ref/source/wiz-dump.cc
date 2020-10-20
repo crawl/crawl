@@ -545,7 +545,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         int mitm_slot = get_mitm_slot();
         if (mitm_slot != NON_ITEM)
         {
-            mitm[mitm_slot] = item;
+            env.item[mitm_slot] = item;
             move_item_to_grid(&mitm_slot, you.pos());
         }
     }

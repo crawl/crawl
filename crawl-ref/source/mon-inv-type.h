@@ -1,7 +1,7 @@
 #pragma once
 
 // Adding slots breaks saves. YHBW.
-enum mon_inv_type           // menv[].inv[]
+enum mon_inv_type           // env.mons[].inv[]
 {
     MSLOT_WEAPON,           // Primary weapon (melee)
     MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon

@@ -1,7 +1,7 @@
 #pragma once
 
 // NOTE: Changing this order will break saves! Appending does not.
-enum monster_type                      // menv[].type
+enum monster_type                      // env.mons[].type
 {
     MONS_PROGRAM_BUG,
         MONS_0 = MONS_PROGRAM_BUG,

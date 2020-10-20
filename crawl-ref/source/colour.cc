@@ -273,7 +273,7 @@ bool get_tornado_phase(const coord_def& loc)
 static int _etc_tornado(int, const coord_def& loc)
 {
     const bool phase = get_tornado_phase(loc);
-    switch (grd(loc))
+    switch (env.grid(loc))
     {
     case DNGN_LAVA:
         return phase ? LIGHTRED : RED;

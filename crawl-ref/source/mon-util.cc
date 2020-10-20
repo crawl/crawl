@@ -166,7 +166,7 @@ monster_type random_monster_at_grid(const coord_def& p, bool species)
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = _grid2habitat(grd(p));
+    const habitat_type ht = _grid2habitat(env.grid(p));
     const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
                                                      : monsters_by_habitat[ht];
 
@@ -409,12 +409,12 @@ monster* monster_at(const coord_def &pos)
     if (!in_bounds(pos))
         return nullptr;
 
-    const int mindex = mgrd(pos);
+    const int mindex = env.mgrid(pos);
     if (mindex == NON_MONSTER)
         return nullptr;
 
     ASSERT(mindex <= MAX_MONSTERS);
-    return &menv[mindex];
+    return &env.mons[mindex];
 }
 
 /// Are any of the bits set?
@@ -581,34 +581,34 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool /*calc_unid*/,
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[weap]))
+        if (weap != NON_ITEM && env.item[weap].base_type == OBJ_WEAPONS
+            && is_artefact(env.item[weap]))
         {
-            ret += artefact_property(mitm[weap], ra_prop);
+            ret += artefact_property(env.item[weap], ra_prop);
         }
 
-        if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]) && mons_wields_two_weapons(*this))
+        if (second != NON_ITEM && env.item[second].base_type == OBJ_WEAPONS
+            && is_artefact(env.item[second]) && mons_wields_two_weapons(*this))
         {
-            ret += artefact_property(mitm[second], ra_prop);
+            ret += artefact_property(env.item[second], ra_prop);
         }
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[armour]))
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[armour]))
         {
-            ret += artefact_property(mitm[armour], ra_prop);
+            ret += artefact_property(env.item[armour], ra_prop);
         }
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[shld]))
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[shld]))
         {
-            ret += artefact_property(mitm[shld], ra_prop);
+            ret += artefact_property(env.item[shld], ra_prop);
         }
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && is_artefact(mitm[jewellery]))
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(env.item[jewellery]))
         {
-            ret += artefact_property(mitm[jewellery], ra_prop);
+            ret += artefact_property(env.item[jewellery], ra_prop);
         }
     }
 
@@ -1087,11 +1087,11 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 static void _destroy_mimic_feature(const coord_def &pos)
 {
 #if TAG_MAJOR_VERSION == 34
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 #endif
 
     unnotice_feature(level_pos(level_id::current(), pos));
-    grd(pos) = DNGN_FLOOR;
+    env.grid(pos) = DNGN_FLOOR;
     env.level_map_mask(pos) &= ~MMT_MIMIC;
     set_terrain_changed(pos);
     remove_markers_and_listeners_at(pos);
@@ -1110,7 +1110,7 @@ void discover_mimic(const coord_def& pos)
     if (!item && !feature_mimic)
         return;
 
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
@@ -4188,7 +4188,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
         return false;
 
     // Includes sealed doors.
-    if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
+    if (feat_is_closed_door(env.grid(p)) && _mons_can_pass_door(&mon, p))
         return true;
 
     if (!mon.is_habitable(p))
@@ -4200,8 +4200,8 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
 void mons_remove_from_grid(const monster& mon)
 {
     const coord_def pos = mon.pos();
-    if (map_bounds(pos) && mgrd(pos) == mon.mindex())
-        mgrd(pos) = NON_MONSTER;
+    if (map_bounds(pos) && env.mgrid(pos) == mon.mindex())
+        env.mgrid(pos) = NON_MONSTER;
 }
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq)
@@ -4476,7 +4476,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     if (you.see_cell(mons.pos()))
     {
-        dungeon_feature_type feat = grd(mons.pos());
+        dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
@@ -4847,26 +4847,26 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     if (!require_valid)
     {
         if (m == MID_ANON_FRIEND)
-            return &menv[ANON_FRIENDLY_MONSTER];
+            return &env.mons[ANON_FRIENDLY_MONSTER];
         if (m == MID_YOU_FAULTLESS)
-            return &menv[YOU_FAULTLESS];
+            return &env.mons[YOU_FAULTLESS];
     }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
-        return &menv[*mc];
+        return &env.mons[*mc];
     return 0;
 }
 
 void init_anon()
 {
-    monster &mon = menv[ANON_FRIENDLY_MONSTER];
+    monster &mon = env.mons[ANON_FRIENDLY_MONSTER];
     mon.reset();
     mon.type = MONS_PROGRAM_BUG;
     mon.mid = MID_ANON_FRIEND;
     mon.attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
 
-    monster &yf = menv[YOU_FAULTLESS];
+    monster &yf = env.mons[YOU_FAULTLESS];
     yf.reset();
     yf.type = MONS_PROGRAM_BUG;
     yf.mid = MID_YOU_FAULTLESS;
@@ -4885,7 +4885,7 @@ actor *find_agent(mid_t m, kill_category kc)
         // shouldn't happen, there ought to be a valid mid
         return &you;
     case KC_FRIENDLY:
-        return &menv[ANON_FRIENDLY_MONSTER];
+        return &env.mons[ANON_FRIENDLY_MONSTER];
     case KC_OTHER:
         // currently hostile dead/gone monsters are no different from env
         return 0;
@@ -5217,7 +5217,7 @@ vector<monster* > get_on_level_followers()
 // monsters, otherwise all of them
 int count_monsters(monster_type mtyp, bool friendly_only)
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [=] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.type == mtyp
@@ -5227,7 +5227,7 @@ int count_monsters(monster_type mtyp, bool friendly_only)
 
 int count_allies()
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.friendly();

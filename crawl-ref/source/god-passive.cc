@@ -427,26 +427,36 @@ static const vector<god_passive> god_passives[] =
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
+static bool _god_gives_passive_if(god_type god, passive_t passive,
+                                  function<bool(const god_passive&)> condition)
+{
+    const auto &pasvec = god_passives[god];
+    return any_of(begin(pasvec), end(pasvec),
+                  [&] (const god_passive &p) -> bool
+                  { return p.pasv == passive && condition(p); });
+}
+
+bool god_gives_passive(god_type god, passive_t passive)
+{
+  return _god_gives_passive_if(god, passive,
+                               [] (god_passive /*p*/) { return true; });
+}
+
 bool have_passive(passive_t passive)
 {
-    const auto &pasvec = god_passives[you.religion];
-    return any_of(begin(pasvec), end(pasvec),
-                  [passive] (const god_passive &p) -> bool
-                  {
-                      return p.pasv == passive
-                          && piety_rank() >= p.rank
-                          && (!player_under_penance() || p.rank < 0);
-                  });
+    return _god_gives_passive_if(you.religion, passive,
+                                 [] (god_passive p)
+                                 {
+                                     return piety_rank() >= p.rank
+                                         && (!player_under_penance()
+                                             || p.rank < 0);
+                                 });
 }
 
 bool will_have_passive(passive_t passive)
 {
-    const auto &pasvec = god_passives[you.religion];
-    return any_of(begin(pasvec), end(pasvec),
-                  [passive] (const god_passive &p) -> bool
-                  {
-                      return p.pasv == passive;
-                  });
+  return _god_gives_passive_if(you.religion, passive,
+                               [] (god_passive/*p*/) { return true; });
 }
 
 // Returns a large number (10) if we will never get this passive.
@@ -510,7 +520,7 @@ void jiyva_eat_offlevel_items()
 
             const coord_def p = random_in_bounds();
 
-            if (igrd(p) == NON_ITEM || testbits(env.pgrid(p), FPROP_NO_JIYVA))
+            if (env.igrid(p) == NON_ITEM || testbits(env.pgrid(p), FPROP_NO_JIYVA))
                 continue;
 
             for (stack_iterator si(p); si; ++si)
@@ -870,7 +880,7 @@ static bool is_ash_portal(dungeon_feature_type feat)
 // Yay for rectangle_iterator and radius_iterator not sharing a base type
 static bool _check_portal(coord_def where)
 {
-    const dungeon_feature_type feat = grd(where);
+    const dungeon_feature_type feat = env.grid(where);
     if (feat != env.map_knowledge(where).feat() && is_ash_portal(feat))
     {
         env.map_knowledge(where).set_feature(feat);
@@ -1170,7 +1180,7 @@ void qazlal_storm_clouds()
         bool water = false;
         for (adjacent_iterator ai(candidates[i]); ai; ++ai)
         {
-            if (feat_is_watery(grd(*ai)))
+            if (feat_is_watery(env.grid(*ai)))
                 water = true;
         }
 
@@ -1347,7 +1357,7 @@ monster* shadow_monster(bool equip)
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
             return nullptr;
-        item_def& new_item = mitm[wpn_index];
+        item_def& new_item = env.item[wpn_index];
         if (wpn->base_type == OBJ_STAVES)
         {
             new_item.base_type = OBJ_WEAPONS;
@@ -1379,7 +1389,7 @@ monster* shadow_monster(bool equip)
     mon->hit_points = you.hp;
     mon->set_hit_dice(min(27, max(1,
                                   you.skill_rdiv(wpn_index != NON_ITEM
-                                                 ? item_attack_skill(mitm[wpn_index])
+                                                 ? item_attack_skill(env.item[wpn_index])
                                                  : SK_UNARMED_COMBAT, 10, 20)
                                   + you.skill_rdiv(SK_FIGHTING, 10, 20))));
     mon->set_position(you.pos());
@@ -1387,7 +1397,7 @@ monster* shadow_monster(bool equip)
     mon->inv[MSLOT_WEAPON]  = wpn_index;
     mon->inv[MSLOT_MISSILE] = NON_ITEM;
 
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     return mon;
 }
@@ -1459,7 +1469,7 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
     int ammo_index = get_mitm_slot(10);
     if (ammo_index != NON_ITEM)
     {
-        item_def& new_item = mitm[ammo_index];
+        item_def& new_item = env.item[ammo_index];
         new_item.base_type = item.base_type;
         new_item.sub_type  = item.sub_type;
         new_item.quantity  = 1;
@@ -1472,7 +1482,7 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
         bolt beem;
         beem.set_target(d);
         setup_monster_throw_beam(mon, beem);
-        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
+        beem.item = &env.item[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 

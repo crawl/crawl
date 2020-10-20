@@ -130,8 +130,8 @@ LUAFN(view_can_reach)
     }
     const coord_def first_middle(s.x/2,s.y/2);
     const coord_def second_middle(s.x - s.x/2, s.y - s.y/2);
-    if (!feat_is_reachable_past(grd(player2grid(first_middle)))
-        && !feat_is_reachable_past(grd(player2grid(second_middle))))
+    if (!feat_is_reachable_past(env.grid(player2grid(first_middle)))
+        && !feat_is_reachable_past(env.grid(player2grid(second_middle))))
     {
         PLUARET(boolean, false);
         return 1;

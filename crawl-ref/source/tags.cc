@@ -692,7 +692,7 @@ static void _fix_missing_constrictions()
 {
     for (int i = -1; i < MAX_MONSTERS; ++i)
     {
-        const actor* m = i < 0 ? (actor*)&you : (actor*)&menv[i];
+        const actor* m = i < 0 ? (actor*)&you : (actor*)&env.mons[i];
         if (!m->alive())
             continue;
         if (!m->constricted_by)
@@ -1085,9 +1085,9 @@ static void _ensure_entry(branch_type br)
         if (orig_terrain(*ri) == DNGN_STONE_STAIRS_UP_I)
         {
             for (distance_iterator di(*ri); di; ++di)
-                if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
+                if (in_bounds(*di) && env.grid(*di) == DNGN_FLOOR)
                 {
-                    grd(*di) = entry; // No need to update LOS, etc.
+                    env.grid(*di) = entry; // No need to update LOS, etc.
                     // Announce the repair even in non-debug builds.
                     mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
                          dungeon_feature_name(entry));
@@ -1117,7 +1117,7 @@ static void _add_missing_branches()
     {
         for (rectangle_iterator ri(0); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_STONE_ARCH)
+            if (env.grid(*ri) == DNGN_STONE_ARCH)
             {
                 map_marker *marker = env.markers.find(*ri, MAT_FEATURE);
                 if (marker)
@@ -1134,7 +1134,7 @@ static void _add_missing_branches()
                     case DNGN_ENTER_DIS:
                     case DNGN_ENTER_GEHENNA:
                     case DNGN_ENTER_TARTARUS:
-                        grd(*ri) = featm->feat;
+                        env.grid(*ri) = featm->feat;
                         dprf("opened %s", dungeon_feature_name(featm->feat));
                         env.markers.remove(marker);
                         break;
@@ -1203,9 +1203,9 @@ static void _shunt_monsters_out_of_walls()
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monster &m(menv[i]);
+        monster &m(env.mons[i]);
         if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos())
-            && (grd(m.pos()) != DNGN_MALIGN_GATEWAY
+            && (env.grid(m.pos()) != DNGN_MALIGN_GATEWAY
                 || mons_genus(m.type) != MONS_ELDRITCH_TENTACLE))
         {
             for (distance_iterator di(m.pos()); di; ++di)
@@ -1217,7 +1217,7 @@ static void _shunt_monsters_out_of_walls()
 #endif
                     mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
                          m.name(DESC_PLAIN, true).c_str(),
-                         dungeon_feature_name(grd(m.pos())),
+                         dungeon_feature_name(env.grid(m.pos())),
                          m.pos().x, m.pos().y);
                     env.mgrid(m.pos()) = NON_MONSTER;
                     m.position = *di;
@@ -1277,7 +1277,7 @@ void tag_read(reader &inf, tag_type tag_id)
         _tag_read_level_items(th);
         // We have to do this here because _tag_read_level_monsters()
         // might kill an elsewhere Ilsuiw follower, which ends up calling
-        // terrain.cc:_dgn_check_terrain_items, which checks mitm.
+        // terrain.cc:_dgn_check_terrain_items, which checks env.item.
         link_items();
         EAT_CANARY;
         _tag_read_level_monsters(th);
@@ -1305,7 +1305,7 @@ void tag_read(reader &inf, tag_type tag_id)
                          == "gammafunk_gauntlet_branching")
             {
                 auto exit = DNGN_EXIT_GAUNTLET;
-                grd(you.pos()) = exit;
+                env.grid(you.pos()) = exit;
                 // Announce the repair even in non-debug builds.
                 mprf(MSGCH_ERROR, "Placing emergency exit: %s.",
                      dungeon_feature_name(exit));
@@ -4499,7 +4499,7 @@ static void _tag_construct_level(writer &th)
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallByte(th, grd[count_x][count_y]);
+            marshallByte(th, env.grid[count_x][count_y]);
             marshallMapCell(th, env.map_knowledge[count_x][count_y]);
             marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
@@ -4601,7 +4601,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     marshallShort(th, item.link);
     if (item.pos.x >= 0 && item.pos.y >= 0)
-        marshallShort(th, igrd(item.pos));  //  unused
+        marshallShort(th, env.igrid(item.pos));  //  unused
     else
         marshallShort(th, -1); // unused
 
@@ -4697,7 +4697,7 @@ void unmarshallItem(reader &th, item_def &item)
         item.link = ITEM_IN_SHOP;
 #endif
 
-    unmarshallShort(th);  // igrd[item.x][item.y] -- unused
+    unmarshallShort(th);  // env.igrid[item.x][item.y] -- unused
 
     item.slot        = unmarshallByte(th);
 
@@ -5425,10 +5425,10 @@ static void _tag_construct_level_items(writer &th)
     }
 
     // how many items?
-    const int ni = _last_used_index(mitm, MAX_ITEMS);
+    const int ni = _last_used_index(env.item, MAX_ITEMS);
     marshallShort(th, ni);
     for (int i = 0; i < ni; ++i)
-        marshallItem(th, mitm[i]);
+        marshallItem(th, env.item[i]);
 }
 
 static void marshall_mon_enchant(writer &th, const mon_enchant &me)
@@ -5917,12 +5917,12 @@ static void _tag_construct_level_monsters(writer &th)
         marshallMonType(th, env.mons_alloc[i]);
 
     // how many monsters?
-    nm = _last_used_index(menv, MAX_MONSTERS);
+    nm = _last_used_index(env.mons, MAX_MONSTERS);
     marshallShort(th, nm);
 
     for (int i = 0; i < nm; i++)
     {
-        monster& m(menv[i]);
+        monster& m(env.mons[i]);
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (m.type != MONS_NO_MONSTER)
@@ -6020,12 +6020,12 @@ static void _tag_read_level(reader &th)
         for (int j = 0; j < gy; j++)
         {
             dungeon_feature_type feat = unmarshallFeatureType(th);
-            grd[i][j] = feat;
+            env.grid[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
 
 #if TAG_MAJOR_VERSION == 34
             // Save these for potential destination clean up.
-            if (grd[i][j] == DNGN_TRANSPORTER)
+            if (env.grid[i][j] == DNGN_TRANSPORTER)
                 transporters.push_back(coord_def(i, j));
 #endif
             unmarshallMapCell(th, env.map_knowledge[i][j]);
@@ -6040,7 +6040,7 @@ static void _tag_read_level(reader &th)
                 env.map_seen.set(i, j);
             env.pgrid[i][j].flags = unmarshallInt(th);
 
-            mgrd[i][j] = NON_MONSTER;
+            env.mgrid[i][j] = NON_MONSTER;
         }
 
 #if TAG_MAJOR_VERSION == 34
@@ -6133,12 +6133,12 @@ static void _tag_read_level(reader &th)
     {
         for (auto& tr : transporters)
         {
-            if (grd(tr) != DNGN_TRANSPORTER)
+            if (env.grid(tr) != DNGN_TRANSPORTER)
                 continue;
 
             const coord_def dest = get_transporter_dest(tr);
             if (dest != INVALID_COORD)
-                grd(dest) = DNGN_TRANSPORTER_LANDING;
+                env.grid(dest) = DNGN_TRANSPORTER_LANDING;
         }
     }
     if (th.getMinorVersion() < TAG_MINOR_VETO_DISINT)
@@ -6270,7 +6270,7 @@ static void _tag_read_level_items(reader &th)
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap.type >= TRAP_TELEPORT)
             trap.type = (trap_type)(trap.type - 1);
         if (th.getMinorVersion() < TAG_MINOR_REVEAL_TRAPS)
-            grd(trap.pos) = trap.feature();
+            env.grid(trap.pos) = trap.feature();
         if (th.getMinorVersion() >= TAG_MINOR_TRAPS_DETERM
             && th.getMinorVersion() != TAG_MINOR_0_11
             && th.getMinorVersion() < TAG_MINOR_REVEALED_TRAPS)
@@ -6288,8 +6288,8 @@ static void _tag_read_level_items(reader &th)
         for (int j = 0; j < GYM; j++)
         {
             coord_def pos(i, j);
-            if (feat_is_trap(grd(pos)) && !map_find(env.trap, pos))
-                grd(pos) = DNGN_FLOOR;
+            if (feat_is_trap(env.grid(pos)) && !map_find(env.trap, pos))
+                env.grid(pos) = DNGN_FLOOR;
         }
 
 #endif
@@ -6298,20 +6298,20 @@ static void _tag_read_level_items(reader &th)
     const int item_count = unmarshallShort(th);
     ASSERT_RANGE(item_count, 0, MAX_ITEMS + 1);
     for (int i = 0; i < item_count; ++i)
-        unmarshallItem(th, mitm[i]);
+        unmarshallItem(th, env.item[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
-        mitm[i].clear();
+        env.item[i].clear();
 
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
     for (int i = 0; i < item_count; ++i)
     {
-        if (mitm[i].defined() && mitm[i].pos.origin())
+        if (env.item[i].defined() && env.item[i].pos.origin())
         {
-            debug_dump_item(mitm[i].name(DESC_PLAIN).c_str(), i, mitm[i],
+            debug_dump_item(env.item[i].name(DESC_PLAIN).c_str(), i, env.item[i],
                                         "Fixing up unlinked temporary item:");
-            mitm[i].clear();
+            env.item[i].clear();
         }
     }
 #endif
@@ -6832,7 +6832,7 @@ static void _tag_read_level_monsters(reader &th)
 
     for (int i = 0; i < count; i++)
     {
-        monster& m = menv[i];
+        monster& m = env.mons[i];
         unmarshallMonster(th, m);
 
         // place monster
@@ -6897,16 +6897,16 @@ static void _tag_read_level_monsters(reader &th)
                  i, m.name(DESC_PLAIN, true).c_str(),
                  m.pos().x, m.pos().y);
         }
-        int midx = mgrd(m.pos());
+        int midx = env.mgrid(m.pos());
         if (midx != NON_MONSTER)
         {
             mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
                  m.pos().x, m.pos().y,
                  m.name(DESC_PLAIN, true).c_str(),
-                 menv[midx].name(DESC_PLAIN, true).c_str());
+                 env.mons[midx].name(DESC_PLAIN, true).c_str());
         }
 #endif
-        mgrd(m.pos()) = i;
+        env.mgrid(m.pos()) = i;
     }
 #if TAG_MAJOR_VERSION == 34
     // This relies on TAG_YOU (including lost monsters) being unmarshalled
@@ -6926,7 +6926,7 @@ static void _tag_read_level_monsters(reader &th)
                 if (invalid_monster_index(old_midx))
                     mi->props["inwards"].get_int() = MID_NOBODY;
                 else
-                    mi->props["inwards"].get_int() = menv[old_midx].mid;
+                    mi->props["inwards"].get_int() = env.mons[old_midx].mid;
             }
             if (mi->props.exists("outwards"))
             {
@@ -6934,10 +6934,10 @@ static void _tag_read_level_monsters(reader &th)
                 if (invalid_monster_index(old_midx))
                     mi->props["outwards"].get_int() = MID_NOBODY;
                 else
-                    mi->props["outwards"].get_int() = menv[old_midx].mid;
+                    mi->props["outwards"].get_int() = env.mons[old_midx].mid;
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
-                mi->tentacle_connect = menv[mi->tentacle_connect].mid;
+                mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;
         }
     }
 #endif

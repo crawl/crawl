@@ -243,9 +243,9 @@ int attack::calc_pre_roll_to_hit(bool random)
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+            && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
-            mhit += mitm[jewellery].plus;
+            mhit += env.item[jewellery].plus;
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
@@ -437,7 +437,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-            if (weap == NON_ITEM || is_range_weapon(mitm[weap]))
+            if (weap == NON_ITEM || is_range_weapon(env.item[weap]))
                 attk_type = AT_NONE;
             else
                 attk_type = AT_HIT;
@@ -1204,9 +1204,9 @@ int attack::calc_damage()
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM
-                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+                && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
             {
-                wpn_damage_plus += mitm[jewellery].plus;
+                wpn_damage_plus += env.item[jewellery].plus;
             }
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
