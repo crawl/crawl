@@ -19,6 +19,7 @@
 #include "command.h"
 #include "describe.h"
 #include "env.h"
+#include "tile-env.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "initfile.h"
@@ -579,9 +580,9 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
-                ch = env.tile_flv(c).floor;
+                ch = tile_env.flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
-                ch = env.tile_flv(c).wall;
+                ch = tile_env.flv(c).wall;
 
             tileset.emplace_back(ch);
         }

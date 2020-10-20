@@ -15,6 +15,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
 #include "maps.h"
@@ -246,8 +247,8 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat_is_trap(feat))
         return debug_make_trap(pos);
 
-    env.tile_flv(pos).feat = 0;
-    env.tile_flv(pos).special = 0;
+    tile_env.flv(pos).feat = 0;
+    tile_env.flv(pos).special = 0;
     env.grid_colours(pos) = 0;
     const dungeon_feature_type old_feat = env.grid(pos);
     dungeon_terrain_changed(pos, feat, false, false, false, true);

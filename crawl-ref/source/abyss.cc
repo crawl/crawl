@@ -24,6 +24,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
+#include "tile-env.h"
 #include "files.h"
 #include "god-companions.h" // hep stuff
 #include "god-passive.h" // passive_t::slow_abyss
@@ -724,9 +725,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     env.pgrid(p)        = terrain_property_t{};
     env.grid_colours(p) = 0;
 #ifdef USE_TILE
-    env.tile_bk_fg(p)   = 0;
-    env.tile_bk_bg(p)   = 0;
-    env.tile_bk_cloud(p)= 0;
+    tile_env.bk_fg(p)   = 0;
+    tile_env.bk_bg(p)   = 0;
+    tile_env.bk_cloud(p)= 0;
 #endif
     tile_clear_flavour(p);
     tile_init_flavour(p);
@@ -1965,13 +1966,13 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_WALL_ABYSS,
                                            cenv.rock_colour);
-        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_FLOOR)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_FLOOR_NERVES,
                                            floor);
-        env.tile_flv(c).floor = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(c).floor = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_STONE_WALL)
     {
@@ -1979,13 +1980,13 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         // in _is_grid_corruptible
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_STONE_WALL,
                                            cenv.rock_colour);
-        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_METAL_WALL)
     {
         tileidx_t idx = tile_dngn_coloured(TILE_DNGN_METAL_WALL,
                                            cenv.rock_colour);
-        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
     else if (feat == DNGN_TREE)
     {
@@ -1995,7 +1996,7 @@ static void _corrupt_square_flavor(const corrupt_env &cenv, const coord_def &c)
         if (idx == TILE_DNGN_TREE)
             idx = tile_dngn_coloured(TILE_DNGN_TREE, DARKGREY);
         env.grid_colours(c) = DARKGREY;
-        env.tile_flv(c).wall = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(c).wall = idx + random2(tile_dngn_count(idx));
     }
 }
 

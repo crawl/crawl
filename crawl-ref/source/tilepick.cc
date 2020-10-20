@@ -11,6 +11,7 @@
 #include "describe.h"
 #include "debug.h"
 #include "env.h"
+#include "tile-env.h"
 #include "files.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -523,7 +524,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
 {
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
-    tileidx_t override = env.tile_flv(gc).feat;
+    tileidx_t override = tile_env.flv(gc).feat;
     bool can_override = !feat_is_door(feat)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN
@@ -568,13 +569,13 @@ tileidx_t tileidx_feature(const coord_def &gc)
         }
         if (colour >= ETC_FIRST)
         {
-            tileidx_t idx = (feat == DNGN_FLOOR) ? env.tile_flv(gc).floor :
-                (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
+            tileidx_t idx = (feat == DNGN_FLOOR) ? tile_env.flv(gc).floor :
+                (feat == DNGN_ROCK_WALL) ? tile_env.flv(gc).wall
                 : tileidx_feature_base(feat);
 
 #ifdef USE_TILE
             if (feat == DNGN_STONE_WALL)
-                apply_variations(env.tile_flv(gc), &idx, gc);
+                apply_variations(tile_env.flv(gc), &idx, gc);
 #endif
 
             tileidx_t base = tile_dngn_basetile(idx);
@@ -933,9 +934,9 @@ tileidx_t tileidx_out_of_bounds(int branch)
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc)
 {
     // Player memory.
-    tileidx_t mem_fg = env.tile_bk_fg(gc);
-    tileidx_t mem_bg = env.tile_bk_bg(gc);
-    tileidx_t mem_cloud = env.tile_bk_cloud(gc);
+    tileidx_t mem_fg = tile_env.bk_fg(gc);
+    tileidx_t mem_bg = tile_env.bk_bg(gc);
+    tileidx_t mem_cloud = tile_env.bk_cloud(gc);
 
     // Detected info is just stored in map_knowledge and doesn't get
     // written to what the player remembers. We'll feather that in here.
@@ -1589,7 +1590,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case main_dir::west: flag = TILE_FLAG_TENTACLE_SE; break;
         default: die("invalid direction");
     }
-    env.tile_bg(next_showpos) |= flag;
+    tile_env.bg(next_showpos) |= flag;
 
     switch (type)
     {
@@ -1601,7 +1602,7 @@ static void _add_tentacle_overlay(const coord_def pos,
         case tentacle_type::spectral_kraken: flag = TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN; break;
         default: flag = TILE_FLAG_TENTACLE_KRAKEN;
     }
-    env.tile_bg(next_showpos) |= flag;
+    tile_env.bg(next_showpos) |= flag;
 }
 
 static void _handle_tentacle_overlay(const coord_def pos,

@@ -48,6 +48,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "end.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "player-save-info.h"
 #include "fineff.h"
@@ -1602,7 +1603,7 @@ bool generate_level(const level_id &l)
     env.turns_on_level = -1;
     tile_init_default_flavour();
     tile_clear_flavour();
-    env.tile_names.clear();
+    tile_env.names.clear();
     _clear_env_map();
 
     // finally -- everything is set up, call the builder.

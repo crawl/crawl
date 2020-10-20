@@ -26,6 +26,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "evoke.h"
 #include "exclude.h"
 #include "fight.h"
@@ -2439,7 +2440,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     {
                         env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
-                        env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+                        tile_env.bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
                     }
                 }

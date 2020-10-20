@@ -33,6 +33,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "evoke.h"
 #include "fight.h"
 #include "ghost.h"
@@ -2420,7 +2421,7 @@ void describe_feature_wide(const coord_def& pos)
         f.body = trimmed_string(inf.body.str());
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
-        apply_variations(env.tile_flv(pos), &tile, pos);
+        apply_variations(tile_env.flv(pos), &tile, pos);
         f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);
