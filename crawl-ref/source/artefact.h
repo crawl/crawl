@@ -134,12 +134,14 @@ void artefact_set_property(item_def           &item,
                            artefact_prop_type  prop,
                            int                 val);
 
+/// Type for the value of an artefact property
 enum artp_value_type
 {
-    ARTP_VAL_BOOL,
-    ARTP_VAL_POS,
-    ARTP_VAL_BRAND,
-    ARTP_VAL_ANY,
+    ARTP_VAL_BOOL,  ///< bool (e.g. +Fly)
+    ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
+    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
+                    ///      See \ref brand_type in item-prop-enum.h
+    ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };
 artp_value_type artp_potential_value_types(artefact_prop_type prop);
 
