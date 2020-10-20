@@ -338,7 +338,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_mlioglotl
-DEPTH:  D:14-, Depths:2-, Vaults:2-, Abyss:3-
+DEPTH:  Swamp, Depths:1-3, Vaults:1-4, Abyss:2-
 : place_unique(_G, "Mlioglotl")
 
 NAME:   uniq_nikola

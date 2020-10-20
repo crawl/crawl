@@ -348,7 +348,7 @@ Fires a penetrating bolt of acid.
 Corrupt Locale spell
 
 Tears apart reality within the dungeon in the immediate vicinity, allowing
-the denziens and horrors of the Abyss to permanently seep through.
+the denizens and horrors of the Abyss to temporarily be summoned through.
 %%%%
 Corrupting Pulse spell
 

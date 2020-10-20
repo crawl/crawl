@@ -478,7 +478,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](const monster &caster) {
             const actor* foe = caster.get_foe(); // XXX: check vis?
             ASSERT(foe);
-            if(player_in_branch(BRANCH_ABYSS))
+            if (player_in_branch(BRANCH_ABYSS))
             {
                 // since it would just be a cantrip albeit with fun msg
                 return ai_action::bad();
@@ -2220,7 +2220,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
     mprf("%s corrupts the dungeon around him!",
         mons.name(DESC_THE).c_str());
 
-    lugonu_corrupt_level_monster(15, mons);
+    lugonu_corrupt_level_monster(mons);
  }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)

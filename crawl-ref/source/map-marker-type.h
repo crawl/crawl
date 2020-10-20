@@ -6,8 +6,6 @@ enum map_marker_type
     MAT_FEATURE,              // Stock marker.
     MAT_LUA_MARKER,
     MAT_CORRUPTION_NEXUS,
-    MAT_CORRUPTION_NEXUS_MONS,  /* Separate marker to avoid timed_effects trying to run
-                                standard Lugonu corruption on markers created by Mlioglotl */
     MAT_WIZ_PROPS,
     MAT_TOMB,
     MAT_MALIGN,
