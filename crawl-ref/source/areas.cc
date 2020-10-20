@@ -39,7 +39,7 @@ enum class areaprop
     actual_liquid = (1 << 5),
     orb           = (1 << 6), ///< The glow of the Orb of Zot
     umbra         = (1 << 7),
-    quad          = (1 << 8), ///< Multiplies damage you do by 4
+    quad          = (1 << 8),
     disjunction   = (1 << 9),
     soul_aura     = (1 << 10),
 };
@@ -79,18 +79,11 @@ static bool _check_agrid_flag(const coord_def& p, areaprop f)
     return bool(_agrid(p) & f);
 }
 
-/// \brief Invalidate the area effect cache
-/// \details After calling this function, next check (of a coordinate for
-/// area effects) may trigger a re-calculation (of the caches by checking the
-/// player and all monsters for area effects). If \p recheck_new is true,
-/// next check will always trigger the re-calculation. Otherwise, next check
-/// will trigger the re-calculation only if the cache believes the level has
-/// existing area effects.
-/// \param recheck_new
-/// - If true, next check will always trigger a re-calculation. Use this if we
-///   have just created a new area effect.
-/// - If false, next check will trigger a re-calculation only if the level
-///   has existing area effects.
+/// \brief Invalidates the area effect cache
+/// \details Invalidates the area effect cache, causing the next request for
+/// area effects to re-calculate which locations are covered by halos, etc.
+/// If \p recheck_new is false, the cache will only be invalidated if the level
+/// had existing area effects.
 void invalidate_agrid(bool recheck_new)
 {
     _agrid_valid = false;
@@ -113,9 +106,9 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 
 /// \brief Add some of the actor's area effects to the grid and center caches
 /// \param actor The actor
-/// \details Adds an actor's silence, halo, liquidation, and umbra effect to
-/// the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
-/// Also updates the \ref no_areas flag if the actor causes those effects.
+/// \details Adds some but not all of an actor's area effects (e.g. silence)
+/// to the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
+/// Sets \ref no_areas to false if the actor generates those area effects.
 static void _actor_areas(actor *a)
 {
     int r;
@@ -181,8 +174,8 @@ static void _update_agrid()
         return;
     }
 
-    _agrid.init(areaprops());  // Set all cells of _agrid to 0
-    _agrid_centres.clear();  // Clear the vector of centers of area effects
+    _agrid.init(areaprops());
+    _agrid_centres.clear();
 
     no_areas = true;
 
