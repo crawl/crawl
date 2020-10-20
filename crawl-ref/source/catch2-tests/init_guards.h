@@ -10,10 +10,10 @@ namespace details_init_guards
 
 namespace init_guards
 {
-    ///\brief Initialization steps that should only be run once
+    /// \brief Initialization steps that should only be run once
     /// \note To add a new guarded initialization step, add a new entry in this
     /// enum and increase the SIZE by 1.
-    ///\see \ref init_guards::InitStep and details::InitGuards
+    /// \see \ref init_guards::InitStep and details::InitGuards
     enum InitStep : size_t
     {
         keybindings = 0,     ///< init_keybindings

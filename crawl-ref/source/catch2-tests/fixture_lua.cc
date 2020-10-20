@@ -29,7 +29,7 @@ namespace details_fixture_lua
     static void _recreate_global_game_states()
     {
         clua = CLua(true);
-        dlua = CLua(false);      // Lua interpreter for the dungeon builder.
+        dlua = CLua(false);  // Lua interpreter for the dungeon builder.
         env = crawl_environment();
         you = player();
         crawl_state = game_state();
@@ -105,8 +105,8 @@ namespace details_fixture_lua
         reset_all_monsters();
         init_anon();
 
-        igrd.init(NON_ITEM);
-        mgrd.init(NON_MONSTER);
+        env.igrid.init(NON_ITEM);
+        env.mgrid.init(NON_MONSTER);
         env.map_knowledge.init(map_cell());
         env.pgrid.init(terrain_property_t{});
 
@@ -131,7 +131,7 @@ namespace details_fixture_lua
         // don't run cio_init() since we don't have a screen (e.g. ncurses)
     }
 
-/// \brief Intialization for lua
+/// \brief Initializations for lua
 /// \details Adapted from _init_test_bindings() in ctest.cc
     void _init_lua_test()
     {
