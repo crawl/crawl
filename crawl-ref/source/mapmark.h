@@ -114,10 +114,10 @@ public:
     int duration;
 };
 
-class map_corruption_marker_mons : public map_marker
+class map_corruption_marker_monster : public map_marker
 {
 public:
-    map_corruption_marker_mons(const coord_def &pos = coord_def(0, 0),
+    map_corruption_marker_monster(const coord_def &pos = coord_def(0, 0),
                           int dur = 0);
 
     void write(writer &) const override;

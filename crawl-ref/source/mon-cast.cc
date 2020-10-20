@@ -475,8 +475,19 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             _monster_abjuration(caster, true);
         }, nullptr, MSPELL_LOGIC_NONE, 20, } },
     { SPELL_CORRUPT_LOCALE, {
-        _always_worthwhile
-    }
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe(); // XXX: check vis?
+            ASSERT(foe);
+            if(player_in_branch(BRANCH_ABYSS))
+            {
+                // since it would just be a cantrip albeit with fun msg
+                return ai_action::bad();
+            } else
+            {
+                return ai_action::good();
+            }
+        }
+    },
 
     },
 };
@@ -2197,20 +2208,19 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
  */
  static void _corrupt_locale(monster mons)
  {
-    //becomes a glorified cantrip if we're already in the abyss
+    // Becomes a glorified cantrip if we're already in the abyss.
+    // Note that this is flagged as a bad() idea for the ai.
     if (player_in_branch(BRANCH_ABYSS))
     {
         mprf("%s basks in the glorious corruption of his surroundings.",
-          mons.name(DESC_THE).c_str(),
-          silenced(mons.pos()) ? "silent" : "terrible");
+          mons.name(DESC_THE).c_str());
         return;
     }
 
     mprf("%s corrupts the dungeon around him!",
-        mons.name(DESC_THE).c_str(),
-        silenced(mons.pos()) ? "silent" : "terrible");
+        mons.name(DESC_THE).c_str());
 
-    lugonu_corrupt_level_mons(15, mons);
+    lugonu_corrupt_level_monster(15, mons);
  }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)

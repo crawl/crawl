@@ -1416,7 +1416,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_MIGHT, 8, MON_SPELL_NATURAL },
        { SPELL_CAUSE_FEAR, 10, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
-       { SPELL_BLINK, 5, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
        { SPELL_CORRUPT_LOCALE, 22, MON_SPELL_MAGICAL},
       }
     },

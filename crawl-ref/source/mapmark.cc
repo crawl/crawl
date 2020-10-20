@@ -497,38 +497,38 @@ string map_corruption_marker::debug_describe() const
 //////////////////////////////////////////////////////////////////////////
 // map_corruption_marker - separate version for Mlioglotl/monster flavour
 
-map_corruption_marker_mons::map_corruption_marker_mons(const coord_def &p,
+map_corruption_marker_monster::map_corruption_marker_monster(const coord_def &p,
                                              int dur)
     : map_marker(MAT_CORRUPTION_NEXUS_MONS, p), duration(dur)
 {
 }
 
-void map_corruption_marker_mons::write(writer &out) const
+void map_corruption_marker_monster::write(writer &out) const
 {
     map_marker::write(out);
     marshallShort(out, duration);
 }
 
-void map_corruption_marker_mons::read(reader &in)
+void map_corruption_marker_monster::read(reader &in)
 {
     map_marker::read(in);
     duration = unmarshallShort(in);
 }
 
-map_marker *map_corruption_marker_mons::read(reader &in, map_marker_type)
+map_marker *map_corruption_marker_monster::read(reader &in, map_marker_type)
 {
-    map_corruption_marker_mons *mc = new map_corruption_marker_mons();
+    map_corruption_marker_monster *mc = new map_corruption_marker_monster();
     mc->read(in);
     return mc;
 }
 
-map_marker *map_corruption_marker_mons::clone() const
+map_marker *map_corruption_marker_monster::clone() const
 {
-    map_corruption_marker_mons *mark = new map_corruption_marker_mons(pos, duration);
+    map_corruption_marker_monster *mark = new map_corruption_marker_monster(pos, duration);
     return mark;
 }
 
-string map_corruption_marker_mons::debug_describe() const
+string map_corruption_marker_monster::debug_describe() const
 {
     return make_stringf("Mlioglotl corrupt (%d)", duration);
 }
