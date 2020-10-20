@@ -1554,6 +1554,12 @@ bool unwield_item(bool showMsgs, equipment_type slot)
         return false;
 
     unequip_item(slot, showMsgs);
+    if(will_have_passive(passive_t::imus_bounce_wall)) {
+        const int missile = you.m_quiver.get_fire_item();
+        if(missile != -1 && (!you.inv[missile].defined() || !is_throwable(&you, you.inv[missile]))){
+            you.m_quiver.empty_quiver(AMMO_THROW);
+        }
+    }
 
     you.wield_change     = true;
     you.redraw_quiver    = true;

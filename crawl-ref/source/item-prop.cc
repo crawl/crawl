@@ -2117,11 +2117,21 @@ bool has_launcher(const item_def &ammo)
            && ammo.sub_type != MI_THROWING_NET;
 }
 
+
+bool is_imus_throwable(const item_def &wpn)
+{
+    return (will_have_passive(passive_t::imus_bounce_wall) && 
+         wpn.base_type == OBJ_WEAPONS &&
+         you.weapon() == &wpn);
+}
+
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
-    if (is_unrandom_artefact(wpn, UNRAND_CRYSTAL_SPEAR))
+    if (is_unrandom_artefact(wpn, UNRAND_CRYSTAL_SPEAR) ||
+        (actor->is_player() && is_imus_throwable(wpn)))
         return true;
+
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
@@ -2148,7 +2158,8 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 {
     if(is_unrandom_artefact(missile, UNRAND_CRYSTAL_SPEAR))
         return launch_retval::THROWN;
-
+    if(actor->is_player() && is_imus_throwable(missile))
+        return launch_retval::THROWN;
     if (missile.base_type != OBJ_MISSILES)
         return launch_retval::FUMBLED;
 

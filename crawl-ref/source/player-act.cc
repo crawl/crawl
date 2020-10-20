@@ -257,8 +257,8 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         // math.
         const int DELAY_SCALE = 20;
         const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
-
-        if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
+        if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN
+        && !is_imus_throwable(*projectile))
         {
             // Thrown weapons use 10 + projectile damage to determine base delay.
             const skill_type wpn_skill = SK_THROWING;
@@ -278,8 +278,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
             attk_delay = random_var(10) - div_rand_round(random_var(sk), 27 * 2);
         }
         else if (weap &&
-            (projectile ? projectile->launched_by(*weap)
-                : is_melee_weapon(*weap)))
+            ((projectile ? projectile->launched_by(*weap)
+                : is_melee_weapon(*weap)) ||
+               (projectile && is_imus_throwable(*projectile))))
         {
             const skill_type wpn_skill = item_attack_skill(*weap);
             // Cap skill contribution to mindelay skill, so that rounding

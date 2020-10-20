@@ -511,6 +511,9 @@ static bool _item_matches(const item_def &item, fire_type types,
 
     if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR))
         return true;
+        
+    if(is_imus_throwable(item))
+        return true;
 
     if (item.base_type != OBJ_MISSILES)
         return false;

@@ -1135,7 +1135,8 @@ void bolt::do_fire()
     if (item && !is_tracer && (flavour == BEAM_MISSILE
                                || flavour == BEAM_VISUAL))
     {
-        if (is_unrandom_artefact(*item, UNRAND_CRYSTAL_SPEAR)) {
+        if (is_unrandom_artefact(*item, UNRAND_CRYSTAL_SPEAR) || 
+        (item->base_type == OBJ_WEAPONS && name == "light")) {
 
         } 
         else {
