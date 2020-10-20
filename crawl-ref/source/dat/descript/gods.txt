@@ -78,11 +78,11 @@ bringing them into the ranks of the mythical heroes.
 Imus Thea
 
 As a god of illusory reality, Imus Thea rules a reflection, refraction, diffraction,
-and dispersion of presences and his powers cause the ramification of uncountably many
-illusory realms. As a result, his followers will reflect, bend and spray projectiles
-and the enemy's fire, even if magical beams of breath of dragons under his power. 
-they can blind enemies with prismatic prism, and call out their avatar from the 
-illusory beyond. However, they will be fragile as a mirror or lens. 
+and dispersion of presences and the powers ramify the world to uncountably many
+illusory realms. As a result, the followers will reflect, bend and spray projectiles
+and the enemy's fire, even if magical beams of breath of dragons. Followers can blind
+enemies by prismatic prism, and call out their avatar from the illusory beyond.
+However, they will be fragile as a mirror or lens. 
 %%%%
 Wu Jian
 
@@ -353,7 +353,7 @@ Imus Thea powers
 Followers of Imus Thea can reflect all kinds of upcoming projectiles, including
 magical beams. Imus Thea demands worshippers to behave like an optical instruments 
 distorting the reality and project more wider world, because those projections 
-expand illusory realms of his own wider. Followers' bodies become more fragile, 
+expand illusory realms more wider. Followers' bodies become more fragile, 
 and unable to wear heavy armours and any kinds of shields any longer. They also 
 lose accuracy when using two-handed weapons. Nevertheless, followers will be able 
 to conjure the prismatic prism blinding enemies, and diffract themselves to make 
