@@ -222,7 +222,6 @@ KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of remove curse q:3 ident:all
 KITEM:    d = wand of iceblast charges:10 ident:all /\
               wand of acid charges:10 ident:all, \
-              staff of energy not_cursed ident:all
 KITEM:    e = rapier plus:2 ego:electrocution ident:all not_cursed /\
            rapier plus:2 ego:draining ident:all not_cursed /\
            rapier plus:2 ego:venom ident:all not_cursed /\

@@ -444,8 +444,8 @@ static bool _has_hand_evokable()
     for (const auto &item : you.inv)
     {
         if (item.defined()
-            && item_is_evokable(item, true, true, false, false)
-            && !item_is_evokable(item, true, true, false, true))
+            && item_is_evokable(item, true, false, false)
+            && !item_is_evokable(item, true, false, true))
         {
             return true;
         }
@@ -711,7 +711,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return a->item->base_type != OBJ_WANDS
-           || !item_is_evokable(*(a->item), false, true);
+           || !item_is_evokable(*(a->item), false);
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1065,35 +1065,6 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-// Show the user an inventory menu with the stack of items
-// to be described
-void describe_items(const vector<const item_def*> &items, const char *title)
-{
-    if (items.empty())
-        return;
-
-    if (items.size() == 1)
-    {
-        describe_item_popup(*items[0]);
-        return;
-    }
-
-    InvMenu menu;
-    menu.set_type(menu_type::invlist);
-    menu.set_title(title);
-    menu.load_items(items);
-    menu.set_flags(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
-
-    menu.on_single_selection = [](const MenuEntry& me)
-    {
-        const InvEntry * inv = dynamic_cast<const InvEntry*>(&me);
-        return describe_item_popup(*inv->item);
-    };
-
-    menu.show();
-}
-
-
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
@@ -1138,7 +1109,7 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true, true);
+        return item_is_evokable(i, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -2137,12 +2108,10 @@ static bool _item_ally_only(const item_def &item)
  * @param item      The item to check
  * @param unskilled Do items that don't use Evocations skill (weapons of
  *                  reaching and tremorstones) count?
- * @param known     When set, return true for items of unknown type which
- *                  might be evokable.
  * @param msg       Whether we need to print a message.
  * @param equip     When false, ignore wield and meld requirements.
  */
-bool item_is_evokable(const item_def &item, bool unskilled, bool known,
+bool item_is_evokable(const item_def &item, bool unskilled,
                       bool msg, bool equip)
 {
     const string error = item_is_melded(item)
@@ -2218,23 +2187,6 @@ bool item_is_evokable(const item_def &item, bool unskilled, bool known,
             return true;
         }
 
-        if (msg)
-            mpr("That item cannot be evoked!");
-        return false;
-
-    case OBJ_STAVES:
-        if (known && !item_type_known(item)
-            || item.sub_type == STAFF_ENERGY
-               && item_type_known(item))
-        {
-            if (!wielded)
-            {
-                if (msg)
-                    mpr(error);
-                return false;
-            }
-            return true;
-        }
         if (msg)
             mpr("That item cannot be evoked!");
         return false;

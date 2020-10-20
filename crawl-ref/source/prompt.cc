@@ -48,7 +48,7 @@ bool yes_or_no(const char* fmt, ...)
 //      -- idea borrowed from Nethack
 bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_after,
            bool interrupt_delays, bool noprompt,
-           const explicit_keymap *map)
+           const explicit_keymap *map, bool allow_popup)
 {
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(activity_interrupt::force);
@@ -66,7 +66,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     bool use_popup = true;
 #else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
-    use_popup = use_popup && str;
+    use_popup = use_popup && str && allow_popup;
 #endif
 
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE, "", KMC_CONFIRM);

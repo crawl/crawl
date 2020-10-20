@@ -105,8 +105,8 @@ enum monster_info_flags
     MB_NO_REGEN,
 #if TAG_MAJOR_VERSION == 34
     MB_SUPPRESSED,
-    MB_ROLLING,
 #endif
+    MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
@@ -189,6 +189,8 @@ enum monster_info_flags
     MB_CLOUD_RING_DRAINING,
     MB_CLOUD_RING_ACID,
     MB_CLOUD_RING_MIASMA,
+    MB_WITHERING,
+    MB_CRUMBLING,
     NUM_MB_FLAGS
 };
 

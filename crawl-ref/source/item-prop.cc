@@ -759,6 +759,9 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELING },
     { OBJ_STAVES,    STAFF_POWER },
+    { OBJ_STAVES,    STAFF_ENERGY },
+    { OBJ_STAVES,    STAFF_SUMMONING },
+    { OBJ_STAVES,    STAFF_WIZARDRY },
     { OBJ_POTIONS,   POT_GAIN_STRENGTH },
     { OBJ_POTIONS,   POT_GAIN_DEXTERITY },
     { OBJ_POTIONS,   POT_GAIN_INTELLIGENCE },
@@ -1769,19 +1772,6 @@ bool is_blessed_weapon_type(int wpn_type)
            || wpn_type == WPN_TRISHULA;
 }
 
-/**
- * Is the weapon type provided magical (& can't be generated in a usual way)?
- * (I.e., magic staves.)
- *
- * @param wpn_type  The weapon_type under consideration.
- * @return          Whether it's a magic staff.
- */
-bool is_magic_weapon_type(int wpn_type)
-{
-    return wpn_type == WPN_STAFF;
-}
-
-
 bool is_melee_weapon(const item_def &weapon)
 {
     return is_weapon(weapon) && !is_range_weapon(weapon);
@@ -1931,21 +1921,7 @@ bool staff_uses_evocations(const item_def &item)
         return true;
     }
 
-    if (!item_type_known(item) || item.base_type != OBJ_STAVES)
-        return false;
-
-    switch (item.sub_type)
-    {
-    case STAFF_FIRE:
-    case STAFF_COLD:
-    case STAFF_POISON:
-    case STAFF_DEATH:
-    case STAFF_AIR:
-    case STAFF_EARTH:
-        return true;
-    default:
-        return false;
-    }
+    return item.base_type == OBJ_STAVES;
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
@@ -1959,7 +1935,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     // Jewellery with evokable abilities, wands and similar unwielded
     // evokers allow training.
-    if (item_is_evokable(item, false, false, false, true)
+    if (item_is_evokable(item, false, false, true)
         || item.base_type == OBJ_JEWELLERY
            && gives_ability(item)
         || is_unrandom_artefact(item, UNRAND_SALAMANDER))
@@ -1982,7 +1958,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (!you.could_wield(item, true, true))
         return !skills.empty();
 
-    if (item_is_evokable(item, false, false, false, false)
+    if (item_is_evokable(item, false, false, false)
         || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item)
         || item.base_type == OBJ_WEAPONS
@@ -2417,6 +2393,20 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
     return false;
 }
 
+bool get_armour_rampaging(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
+        return true;
+
+    if (check_artp && is_artefact(arm))
+        return artefact_property(arm, ARTP_RAMPAGING);
+
+    return false;
+}
+
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
@@ -2658,16 +2648,14 @@ bool gives_ability(const item_def &item)
             return true;
 
     // Unrands that grant an evokable ability.
-    if (is_unrandom_artefact(item, UNRAND_THIEF)
-        || is_unrandom_artefact(item, UNRAND_RCLOUDS))
-    {
+    if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
         return true;
-    }
 
     return false;
 }
 
-// Returns true if the item confers an intrinsic that is shown on the % screen.
+// Returns true if the item confers a resistance that is shown on the % screen,
+// for the purposes of giving information in hints mode.
 bool gives_resistance(const item_def &item)
 {
     if (!item_type_known(item))
@@ -2683,7 +2671,7 @@ bool gives_resistance(const item_def &item)
             if (item.sub_type == RING_PROTECTION_FROM_FIRE
                 || item.sub_type == RING_POISON_RESISTANCE
                 || item.sub_type == RING_PROTECTION_FROM_COLD
-                || item.sub_type == RING_SEE_INVISIBLE
+                || item.sub_type == RING_RESIST_CORROSION
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_PROTECTION_FROM_MAGIC
                 || item.sub_type == RING_FIRE
@@ -2691,11 +2679,6 @@ bool gives_resistance(const item_def &item)
             {
                 return true;
             }
-        }
-        else
-        {
-            if (item.sub_type != AMU_INACCURACY)
-                return true;
         }
         break;
     case OBJ_ARMOUR:
@@ -2705,15 +2688,22 @@ bool gives_resistance(const item_def &item)
             return false;
 
         const int ego = get_armour_ego_type(item);
-        if (ego >= SPARM_FIRE_RESISTANCE && ego <= SPARM_SEE_INVISIBLE
-            || ego == SPARM_RESISTANCE || ego == SPARM_POSITIVE_ENERGY)
+        if (ego == SPARM_FIRE_RESISTANCE
+            || ego == SPARM_COLD_RESISTANCE
+            || ego == SPARM_POISON_RESISTANCE
+            || ego == SPARM_MAGIC_RESISTANCE
+            || ego == SPARM_RESISTANCE
+            || ego == SPARM_PRESERVATION
+            || ego == SPARM_POSITIVE_ENERGY)
         {
             return true;
         }
         break;
     }
     case OBJ_STAVES:
-        if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
+        if (item.sub_type == STAFF_FIRE
+            || item.sub_type == STAFF_COLD
+            || item.sub_type == STAFF_POISON
             || item.sub_type == STAFF_AIR
             || item.sub_type == STAFF_DEATH)
         {
@@ -2728,13 +2718,20 @@ bool gives_resistance(const item_def &item)
         return false;
 
     // Check for randart resistances.
-    for (int rap = ARTP_FIRE; rap <= ARTP_BERSERK; rap++)
+    for (int rap = 0; rap <= ARTP_NUM_PROPERTIES; rap++)
     {
-        if (rap == ARTP_MAGIC_RESISTANCE || rap >= ARTP_INVISIBLE)
-            continue;
-
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap))
+            && (rap == ARTP_FIRE
+                || rap == ARTP_COLD
+                || rap == ARTP_ELECTRICITY
+                || rap == ARTP_POISON
+                || rap == ARTP_NEGATIVE_ENERGY
+                || rap == ARTP_MAGIC_RESISTANCE
+                || rap == ARTP_RCORR
+                || rap == ARTP_RMUT))
+        {
             return true;
+        }
     }
 
     return false;

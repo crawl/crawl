@@ -238,7 +238,7 @@ static int _calc_monster_experience(monster* victim, killer_type killer,
     if (!experience || !MON_KILL(killer) || invalid_monster_index(killer_index))
         return 0;
 
-    monster* mon = &menv[killer_index];
+    monster* mon = &env.mons[killer_index];
     if (!mon->alive() || !mons_gives_xp(*victim, *mon))
         return 0;
 
@@ -250,7 +250,7 @@ static void _give_monster_experience(int experience, int killer_index)
     if (experience <= 0 || invalid_monster_index(killer_index))
         return;
 
-    monster* mon = &menv[killer_index];
+    monster* mon = &env.mons[killer_index];
     if (!mon->alive())
         return;
 
@@ -435,7 +435,7 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
     if (o == NON_ITEM)
         return;
-    item_def& item = mitm[o];
+    item_def& item = env.item[o];
 
     do_uncurse_item(item);
 
@@ -480,7 +480,7 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
 
     // Don't display this message if the scales were dropped over
     // lava/deep water, because then they are hardly intact.
-    if (you.see_cell(pos) && !silent && !feat_eliminates_items(grd(pos)))
+    if (you.see_cell(pos) && !silent && !feat_eliminates_items(env.grid(pos)))
     {
         // XXX: tweak for uniques/named monsters, somehow?
         mprf("%s %s intact enough to wear.",
@@ -501,7 +501,7 @@ static void _maybe_drop_monster_hide(const item_def &corpse, bool silent)
 }
 
 /**
- * Create this monster's corpse in mitm at its position.
+ * Create this monster's corpse in env.item at its position.
  *
  * @param mons the monster to corpsify
  * @param silent whether to suppress all messages
@@ -544,7 +544,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
         return nullptr;
 
     // Don't attempt to place corpses within walls, either.
-    if (feat_is_solid(grd(mons.pos())) && !force)
+    if (feat_is_solid(env.grid(mons.pos())) && !force)
         return nullptr;
 
     // If we were told not to leave a corpse, don't.
@@ -556,12 +556,12 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
-    item_def& corpse(mitm[o]);
+    item_def& corpse(env.item[o]);
     if (goldify)
     {
         _gold_pile(corpse, mons_species(mons.type));
         // If gold would be destroyed, give it directly to the player instead.
-        if (feat_eliminates_items(grd(mons.pos())))
+        if (feat_eliminates_items(env.grid(mons.pos())))
         {
             get_gold(corpse, corpse.quantity, false);
             destroy_item(corpse, true);
@@ -587,7 +587,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
     if (o == NON_ITEM)
         return nullptr;
 
-    return &mitm[o];
+    return &env.item[o];
 }
 
 static void _hints_inspect_kill()
@@ -652,7 +652,7 @@ static bool _is_pet_kill(killer_type killer, int i)
     if (invalid_monster_index(i))
         return false;
 
-    const monster* m = &menv[i];
+    const monster* m = &env.mons[i];
     if (m->friendly()) // This includes enslaved monsters.
         return true;
 
@@ -672,9 +672,9 @@ int exp_rate(int killer)
     // so the player does not lose any exp from dealing damage with a spectral weapon summon
     // ditto hep ancestors (sigh)
     if (!invalid_monster_index(killer)
-        && (menv[killer].type == MONS_SPECTRAL_WEAPON
-            || mons_is_hepliaklqana_ancestor(menv[killer].type))
-        && menv[killer].summoner == MID_PLAYER)
+        && (env.mons[killer].type == MONS_SPECTRAL_WEAPON
+            || mons_is_hepliaklqana_ancestor(env.mons[killer].type))
+        && env.mons[killer].summoner == MID_PLAYER)
     {
         return 2;
     }
@@ -737,7 +737,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
-        monster* mon = &menv[i];
+        monster* mon = &env.mons[i];
         if (!mon->friendly())
             return false;
 
@@ -838,7 +838,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
 
     if (MON_KILL(killer) && !invalid_monster_index(killer_index))
     {
-        const monster* responsible_monster = &menv[killer_index];
+        const monster* responsible_monster = &env.mons[killer_index];
         if (is_follower(*responsible_monster) && !one_chance_in(3))
             return _beogh_forcibly_convert_orc(mons, killer);
     }
@@ -1079,6 +1079,8 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
+    if (origin.summoner)
+        beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
     // Don't credit the player for ally-summoned ball lightning explosions.
     if (origin.summoner && origin.summoner != MID_PLAYER)
         beam.thrower = KILL_MON;
@@ -1094,6 +1096,8 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.prism_charge;
+    if (origin.summoner)
+        beam.origin_spell = SPELL_FULMINANT_PRISM;
 }
 
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)
@@ -1141,32 +1145,37 @@ static bool _explode_monster(monster* mons, killer_type killer,
     const char* sanct_msg = nullptr;
     actor* agent = mons;
 
-    if (type == MONS_BALLISTOMYCETE_SPORE)
+    switch (type)
     {
+    case MONS_BALLISTOMYCETE_SPORE:
         setup_spore_explosion(beam, *mons);
         sanct_msg    = "By Zin's power, the ballistomycete spore's explosion is "
                        "contained.";
-    }
-    else if (type == MONS_BALL_LIGHTNING)
-    {
+        break;
+    case MONS_BALL_LIGHTNING:
         _setup_lightning_explosion(beam, *mons);
-        sanct_msg    = "By Zin's power, the ball lightning's explosion "
-                       "is contained.";
-    }
-    else if (type == MONS_LURKING_HORROR)
+        sanct_msg    = "By Zin's power, the ball lightning's explosion is "
+                       "contained.";
+        break;
+    case MONS_LURKING_HORROR:
         sanct_msg = "The lurking horror fades away harmlessly.";
-    else if (type == MONS_FULMINANT_PRISM)
-    {
+        break;
+    case MONS_FULMINANT_PRISM:
         _setup_prism_explosion(beam, *mons);
         sanct_msg = "By Zin's power, the prism's explosion is contained.";
-    }
-    else if (type == MONS_BENNU)
-    {
+        break;
+    case MONS_BENNU:
         _setup_bennu_explosion(beam, *mons);
         sanct_msg = "By Zin's power, the bennu's fires are quelled.";
-    }
-    else if (mons->has_ench(ENCH_INNER_FLAME))
-    {
+        break;
+    default:
+        if (!mons->has_ench(ENCH_INNER_FLAME))
+        {
+            msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
+                                            << static_cast<int>(type)
+                                            << endl;
+            return false;
+        }
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
         ASSERT(i_f.ench == ENCH_INNER_FLAME);
         agent = actor_by_mid(i_f.source);
@@ -1178,16 +1187,9 @@ static bool _explode_monster(monster* mons, killer_type killer,
         else if (agent)
             mons_add_blame(mons, "hexed by " + agent->name(DESC_A, true));
         mons->flags    |= MF_EXPLODE_KILL;
-        sanct_msg       = "By Zin's power, the fiery explosion "
-                          "is contained.";
+        sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "exploding inner flame";
-    }
-    else
-    {
-        msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
-                                        << static_cast<int>(type)
-                                        << endl;
-        return false;
+        break;
     }
 
     if (beam.aux_source.empty())
@@ -1240,10 +1242,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
     // Unless it's a phoenix, where this isn't much of a concern.
-    mgrd(mons->pos()) = NON_MONSTER;
+    env.mgrid(mons->pos()) = NON_MONSTER;
 
     // The explosion might cause a monster to be placed where the bomb
-    // used to be, so make sure that mgrd() doesn't get cleared a second
+    // used to be, so make sure that env.mgrid() doesn't get cleared a second
     // time (causing the new monster to become floating) when
     // mons->reset() is called.
     if (type == MONS_BALLISTOMYCETE_SPORE)
@@ -1684,6 +1686,25 @@ static void _special_corpse_messaging(monster &mons)
     simple_monster_message(mons, message.c_str());
 }
 
+static bool _monster_explodes(const monster &mons) {
+    // TODO: add a data structure or flag and unify with sanctuary contain
+    // messages, etc
+    if (mons.has_ench(ENCH_INNER_FLAME))
+        return true;
+    switch (mons.type)
+    {
+        case MONS_BALLISTOMYCETE_SPORE:
+        case MONS_BALL_LIGHTNING:
+        case MONS_LURKING_HORROR:
+        case MONS_BENNU:
+            return true;
+        case MONS_FULMINANT_PRISM:
+            return mons.prism_charge > 0;
+        default:
+            return false;
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -1815,9 +1836,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     // instead. Ditto Dithmenos shadow melee and shadow throw.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
-        && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
-             && menv[killer_index].summoner == MID_PLAYER)
-            || mons_is_player_shadow(menv[killer_index])))
+        && ((env.mons[killer_index].type == MONS_SPECTRAL_WEAPON
+             && env.mons[killer_index].summoner == MID_PLAYER)
+            || mons_is_player_shadow(env.mons[killer_index])))
     {
         killer_index = you.mindex();
     }
@@ -1866,12 +1887,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     bool did_death_message = false;
 
-    if (mons.type == MONS_BALLISTOMYCETE_SPORE
-        || mons.type == MONS_BALL_LIGHTNING
-        || mons.type == MONS_LURKING_HORROR
-        || (mons.type == MONS_FULMINANT_PRISM && mons.prism_charge > 0)
-        || mons.type == MONS_BENNU
-        || mons.has_ench(ENCH_INNER_FLAME))
+
+    if (_monster_explodes(mons))
     {
         did_death_message =
             _explode_monster(&mons, killer, pet_kill, wizard);
@@ -1944,7 +1961,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // XXX: This can probably become mons.is_summoned(): there's no
         // feasible way for a dancing weapon to "drop" it's weapon and somehow
         // gain a summoned one, or vice versa.
-        bool summoned_it = mitm[w_idx].flags & ISFLAG_SUMMONED;
+        bool summoned_it = env.item[w_idx].flags & ISFLAG_SUMMONED;
 
         if (!silent && !hard_reset && !was_banished)
         {
@@ -1964,8 +1981,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (was_banished && !summoned_it && !hard_reset
             && mons.has_ench(ENCH_ABJ))
         {
-            if (is_unrandom_artefact(mitm[w_idx]))
-                set_unique_item_status(mitm[w_idx], UNIQ_LOST_IN_ABYSS);
+            if (is_unrandom_artefact(env.item[w_idx]))
+                set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
 
             destroy_item(w_idx);
         }
@@ -2156,8 +2173,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
 
                     if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
-                        && (feat_has_solid_floor(grd(you.pos()))
-                            || feat_is_watery(grd(you.pos()))
+                        && (feat_has_solid_floor(env.grid(you.pos()))
+                            || feat_is_watery(env.grid(you.pos()))
                                && species_likes_water(you.species)))
                     {
                         int thing_created = items(true, OBJ_POTIONS,
@@ -2166,8 +2183,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                         if (thing_created != NON_ITEM)
                         {
                             move_item_to_grid(&thing_created, you.pos(), true);
-                            mitm[thing_created].quantity = 1;
-                            mitm[thing_created].flags |= ISFLAG_KNOW_TYPE;
+                            env.item[thing_created].quantity = 1;
+                            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
                             // not a conventional gift, but use the same
                             // messaging
                             simple_god_message(" grants you a gift!");
@@ -2228,7 +2245,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             monster* killer_mon = nullptr;
             if (!anon)
-                killer_mon = &menv[killer_index];
+                killer_mon = &env.mons[killer_index];
 
             if (!invalid_monster_index(killer_index)
                 && _god_will_bless_follower(&mons))
@@ -2289,6 +2306,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             // abjuration), because it uses the beam variables!  Or does it???
             // Pacified monsters leave the level when this happens.
 
+            // Monster goes to the Abyss.
+            mons.flags |= MF_BANISHED;
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
             if (mons.pacified() || !mons.needs_abyss_transit())
@@ -2300,8 +2319,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                 break;
             }
 
-            // Monster goes to the Abyss.
-            mons.flags |= MF_BANISHED;
             {
                 unwind_var<int> dt(mons.damage_total, 0);
                 unwind_var<int> df(mons.damage_friendly, 0);
@@ -2479,7 +2496,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // killer when running the fineff.)
         mummy_death_curse_fineff::schedule(
                 invalid_monster_index(killer_index)
-                                            ? nullptr : &menv[killer_index],
+                                            ? nullptr : &env.mons[killer_index],
                 mons.name(DESC_A),
                 killer,
                 mummy_curse_power(mons.type));
@@ -2579,7 +2596,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else
     {
         // Destroy the items belonging to MF_HARD_RESET monsters so they
-        // don't clutter up mitm[].
+        // don't clutter up env.item[].
         mons.destroy_inventory();
     }
 
@@ -2795,7 +2812,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     if (!mons->ground_level())
         return;
 
-    dungeon_feature_type grid = grd(mons->pos());
+    dungeon_feature_type grid = env.grid(mons->pos());
     if (grid != DNGN_LAVA && grid != DNGN_DEEP_WATER
         || monster_habitable_grid(mons, grid))
     {
@@ -2805,7 +2822,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
     // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
-    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || grd(oldpos) != grid))
+    if (you.see_cell(mons->pos()) && (oldpos == mons->pos() || env.grid(oldpos) != grid))
     {
          mprf("%s falls into the %s!",
              mons->name(DESC_THE).c_str(),
@@ -3309,7 +3326,7 @@ void mons_felid_revive(monster* mons)
         revive_place.x = random2(GXM);
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
-            || grd(revive_place) != DNGN_FLOOR
+            || env.grid(revive_place) != DNGN_FLOOR
             || cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO

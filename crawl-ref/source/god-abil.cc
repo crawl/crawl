@@ -1884,7 +1884,7 @@ bool kiku_receive_corpses(int pow)
     for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
                             LOS_NO_TRANS, true); ri; ++ri)
     {
-        if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
+        if (mons_class_can_pass(MONS_HUMAN, env.grid(*ri)))
             spaces_for_corpses++;
     }
     // floating over lava, heavy tomb abuse, etc
@@ -1899,7 +1899,7 @@ bool kiku_receive_corpses(int pow)
     for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
                             LOS_NO_TRANS); ri; ++ri)
     {
-        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
+        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, env.grid(*ri));
         bool square_is_player_square = (*ri == you.pos());
         bool square_gets_corpse =
             random2(100) < percent_chance_a_square_receives_extra_corpse
@@ -1961,9 +1961,9 @@ bool kiku_receive_corpses(int pow)
 */
 bool kiku_take_corpse()
 {
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
     {
-        item_def &item(mitm[i]);
+        item_def &item(env.item[i]);
 
         if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
             continue;
@@ -1991,7 +1991,7 @@ bool kiku_gift_necronomicon()
     {
         return false;
     }
-    set_ident_type(mitm[thing_created], true);
+    set_ident_type(env.item[thing_created], true);
     simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
@@ -2512,7 +2512,7 @@ bool dithmenos_shadow_step()
          apostrophise(victim->name(DESC_THE)).c_str());
     // Using 'stepped = true' here because it's Shadow *Step*.
     // This helps to evade splash upon landing on water.
-    moveto_location_effects(grd(old_pos), true, old_pos);
+    moveto_location_effects(env.grid(old_pos), true, old_pos);
 
     return true;
 }
@@ -2569,23 +2569,14 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
 
-int gozag_potion_price()
-{
-    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-        return 0;
-
-    return GOZAG_POTION_PETITION_AMOUNT;
-}
-
 bool gozag_setup_potion_petition(bool quiet)
 {
-    const int gold_min = gozag_potion_price();
-    if (you.gold < gold_min)
+    if (you.gold < GOZAG_POTION_PETITION_AMOUNT)
     {
         if (!quiet)
         {
             mprf("You need at least %d gold to purchase potions right now!",
-                 gold_min);
+                 GOZAG_POTION_PETITION_AMOUNT);
         }
         return false;
     }
@@ -2610,10 +2601,7 @@ bool gozag_potion_petition()
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
                 prices[i] = 0;
-                int multiplier = random_range(20, 30); // arbitrary
-
-                if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-                    multiplier = 0;
+                const int multiplier = random_range(20, 30); // arbitrary
 
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
                 you.props.erase(key);
@@ -2638,7 +2626,7 @@ bool gozag_potion_petition()
                 key = make_stringf(GOZAG_PRICE_KEY, i);
                 you.props[key].get_int() = prices[i];
 
-                if (prices[i] <= gozag_potion_price())
+                if (prices[i] <= GOZAG_POTION_PETITION_AMOUNT)
                     affordable_potions = true;
             }
         }
@@ -2693,9 +2681,6 @@ bool gozag_potion_petition()
 
     for (auto pot : *pots[keyin])
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
-
-    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
-        you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -2756,7 +2741,7 @@ bool gozag_setup_call_merchant(bool quiet)
             return false;
         }
     }
-    if (grd(you.pos()) != DNGN_FLOOR)
+    if (env.grid(you.pos()) != DNGN_FLOOR)
     {
         if (!quiet)
         {
@@ -2922,7 +2907,7 @@ static string _gozag_shop_spec(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    ASSERT(grd(you.pos()) == DNGN_FLOOR);
+    ASSERT(env.grid(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
 
@@ -3095,10 +3080,10 @@ bool gozag_check_bribe_branch(bool quiet)
     }
     branch_type branch = you.where_are_you;
     branch_type branch2 = NUM_BRANCHES;
-    if (feat_is_branch_entrance(grd(you.pos())))
+    if (feat_is_branch_entrance(env.grid(you.pos())))
     {
         for (branch_iterator it; it; ++it)
-            if (it->entry_stairs == grd(you.pos())
+            if (it->entry_stairs == env.grid(you.pos())
                 && gozag_branch_bribable(it->id))
             {
                 branch2 = it->id;
@@ -3133,10 +3118,10 @@ bool gozag_bribe_branch()
     ASSERT(you.gold >= bribe_amount);
     bool prompted = false;
     branch_type branch = gozag_fixup_branch(you.where_are_you);
-    if (feat_is_branch_entrance(grd(you.pos())))
+    if (feat_is_branch_entrance(env.grid(you.pos())))
     {
         for (branch_iterator it; it; ++it)
-            if (it->entry_stairs == grd(you.pos())
+            if (it->entry_stairs == env.grid(you.pos())
                 && gozag_branch_bribable(it->id))
             {
                 branch_type stair_branch = gozag_fixup_branch(it->id);
@@ -3230,7 +3215,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         if (cell_is_solid(beam.target))
         {
             mprf("There is %s there.",
-                 article_a(feat_type_name(grd(beam.target))).c_str());
+                 article_a(feat_type_name(env.grid(beam.target))).c_str());
             return spret::abort;
         }
 
@@ -3342,7 +3327,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (grd(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
@@ -3359,12 +3344,12 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
                 }
                 break;
             case BEAM_FRAG:
-                if (((grd(pos) == DNGN_ROCK_WALL
-                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
-                     || grd(pos) == DNGN_SLIMY_WALL)
+                if (((env.grid(pos) == DNGN_ROCK_WALL
+                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
+                     || env.grid(pos) == DNGN_SLIMY_WALL)
                      && x_chance_in_y(pow / 4, 100)
-                    || feat_is_door(grd(pos))
-                    || grd(pos) == DNGN_GRATE))
+                    || feat_is_door(env.grid(pos))
+                    || env.grid(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
                     destroy_wall(pos);
@@ -4780,13 +4765,13 @@ bool ru_power_leap()
             continue;
         }
 
-        if (grd(beam.target) == DNGN_OPEN_SEA)
+        if (env.grid(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
             mpr("You can't leap into the sea!");
             continue;
         }
-        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        else if (env.grid(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
             mpr("You can't leap into the sea of lava!");
@@ -5169,13 +5154,13 @@ bool uskayaw_line_pass()
             continue;
         }
 
-        if (grd(beam.target) == DNGN_OPEN_SEA)
+        if (env.grid(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
             mpr("You can't line pass into the sea!");
             continue;
         }
-        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        else if (env.grid(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
             mpr("You can't line pass into the sea of lava!");
@@ -5536,7 +5521,7 @@ spret hepliaklqana_transference(bool fail)
     if (uninhabitable && victim_visible)
     {
         mprf("%s can't be transferred into %s.",
-             victim->name(DESC_THE).c_str(), feat_type_name(grd(destination)));
+             victim->name(DESC_THE).c_str(), feat_type_name(env.grid(destination)));
         return spret::abort;
     }
 
@@ -5671,7 +5656,7 @@ void hepliaklqana_choose_identity()
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
-        || !feat_can_wall_jump_against(grd(target))
+        || !feat_can_wall_jump_against(env.grid(target))
         || you.is_stationary()
         || you.digging)
     {
@@ -5690,7 +5675,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
 
     if (!wu_jian_can_wall_jump_in_principle(target))
     {
-        if (!feat_can_wall_jump_against(grd(target)))
+        if (!feat_can_wall_jump_against(env.grid(target)))
         {
             error_ret = string("You cannot wall jump against ") +
                 feature_description_at(target, false, DESC_THE) + ".";
@@ -5722,7 +5707,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     }
 
     const actor* landing_actor = actor_at(wall_jump_landing_spot);
-    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+    if (feat_is_solid(env.grid(you.pos() + wall_jump_direction))
         || !in_bounds(wall_jump_landing_spot)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
@@ -5903,4 +5888,18 @@ void wu_jian_heavenly_storm()
     you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
     you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
     invalidate_agrid(true);
+}
+
+void okawaru_remove_heroism()
+{
+    mprf(MSGCH_DURATION, "You feel like a meek peon again.");
+    you.duration[DUR_HEROISM] = 0;
+    you.redraw_evasion      = true;
+    you.redraw_armour_class = true;
+}
+
+void okawaru_remove_finesse()
+{
+    mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
+    you.duration[DUR_FINESSE] = 0;
 }

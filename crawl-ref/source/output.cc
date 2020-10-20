@@ -1023,12 +1023,6 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
-// Prints
-// pray, holy, teleport, regen, fly/lev, invis, silence,
-//   conf. touch, sage
-// confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
-//   fast, slow, breath
-//
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
 // using the '@' command. Things like confusion and sticky flame
@@ -1050,7 +1044,7 @@ static void _get_status_lights(vector<status_light>& out)
     const unsigned int important_statuses[] =
     {
         STATUS_ORB,
-        STATUS_BEZOTTED,
+        STATUS_ZOT,
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         STATUS_ALIVE_STATE,
         DUR_PARALYSIS,
@@ -1842,15 +1836,8 @@ const char *equip_slot_to_name(int equip)
         return "Ring";
     }
 
-    if (equip == EQ_BOOTS
-        && (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_CENTAUR ||
-#endif
-            you.species == SP_NAGA))
-    {
+    if (equip == EQ_BOOTS && you.wear_barding())
         return "Barding";
-    }
 
     if (equip < EQ_FIRST_EQUIP || equip >= NUM_EQUIP)
         return "";
@@ -1990,15 +1977,8 @@ static void _print_overview_screen_equip(column_composer& cols,
             const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
-        else if (eqslot == EQ_BOOTS
-                 && (you.species == SP_NAGA
-#if TAG_MAJOR_VERSION == 34
-                     || you.species == SP_CENTAUR
-#endif
-                     ))
-        {
+        else if (eqslot == EQ_BOOTS && you.wear_barding())
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
-        }
         else if (!you_can_wear(eqslot))
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
         else if (!you_can_wear(eqslot, true))
@@ -2448,6 +2428,9 @@ static vector<formatted_string> _get_overview_resistances(
 
     const int harm = you.extra_harm(calc_unid);
     out += _resist_composer("Harm", cwidth, harm) + "\n";
+
+    const int rampage = you.rampaging(calc_unid);
+    out += _resist_composer("Rampage", cwidth, rampage) + "\n";
 
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis();

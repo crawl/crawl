@@ -382,7 +382,7 @@ TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
 KMONS:   1 = tyrant leech
-KMONS:   2 = earth elemental
+KMONS:   2 = boulder beetle
 KMONS:   3 = redback w:5 / orb spider w:5 / nothing
 KMONS:   4 = thrashing horror
 KITEM:   ' = stone no_pickup q:1 w:5 / nothing
@@ -1802,7 +1802,7 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings w:20 / grand grimoire w:5 / \
          randbook disc:summoning numspells:6
-ITEM:    staff of summoning
+ITEM:    manual of summonings
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    box of beasts
@@ -2319,12 +2319,13 @@ MAP
 ...........
 ENDMAP
 
-##### Demonic crawlers (s) and mosquitos.
+##### Demonic crawlers (s) and beetles.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling transparent
 DEPTH: D:13-, Elf, Spider
 MONS:  demonic crawler
-MONS:  vampire mosquito w:15 / demonic crawler w:5 / nothing
+MONS:  vampire mosquito / boulder beetle w:8 / demonic crawler w:2 / \
+       nothing
 MAP
 ..........
 .m.mmmmmm.
@@ -4392,7 +4393,7 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, leopard gecko, iguana, crocodile, basilisk, plant
+MONS:    frilled lizard, leopard gecko, iguana, komodo dragon, basilisk, plant
 SUBST:   6 = 61, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 433221
@@ -7087,7 +7088,6 @@ TAGS:   transparent
 WEIGHT: 3
 DEPTH:  D:4-8
 ITEM:   any manual
-MONS:   hippogriff
 NSUBST: 0 = 0 / ...0
 SUBST:  0 = 0009
 SUBST:  x : xxxxccvb
@@ -7098,7 +7098,7 @@ MAP
 .x.xxxdx.
 .xx...xx.
 .x0xxxx..
-.xx00.1.
+.xx00.0.
 .x0xxx.
 .xx00..
 .x0xxx.

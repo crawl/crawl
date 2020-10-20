@@ -576,7 +576,7 @@ static void _decrement_durations()
         || you.transform_uncancellable)
     {
         if (form_can_fly()
-            || form_likes_water() && feat_is_water(grd(you.pos())))
+            || form_likes_water() && feat_is_water(env.grid(you.pos())))
         {
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
@@ -997,7 +997,7 @@ void player_reacts()
         slime_wall_damage(&you, you.time_taken);
 
     // Icy shield and armour melt over lava.
-    if (grd(you.pos()) == DNGN_LAVA)
+    if (env.grid(you.pos()) == DNGN_LAVA)
         maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     _decrement_durations();

@@ -3,6 +3,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "files.h"
+#include "output.h"
 #include "player.h"
 #include "terrain.h"
 #include "tilesdl.h"
@@ -23,6 +24,7 @@ public:
     {
         if (!you.on_current_level)
             go_to(original);
+        print_stats_level();
     }
 
     // Not virtual!

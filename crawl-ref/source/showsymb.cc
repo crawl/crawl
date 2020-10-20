@@ -185,10 +185,8 @@ static int _get_mons_colour(const monster_info& mi)
     if (stype != mi.type && mi.type != MONS_SENSED)
         col = mons_class_colour(stype);
 
-#if TAG_MAJOR_VERSION == 34
     if (mi.is(MB_ROLLING))
         col = ETC_BONE;
-#endif
 
     if (mi.is(MB_BERSERK))
         col = RED;
@@ -216,7 +214,7 @@ static int _get_mons_colour(const monster_info& mi)
     else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
-            && feat_stair_direction(grd(mi.pos)) != CMD_NO_CMD)
+            && feat_stair_direction(env.grid(mi.pos)) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }

@@ -46,6 +46,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -522,7 +523,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
 
     enhanced += you.archmagi();
-    enhanced += player_equip_unrand(UNRAND_MAJIN);
     enhanced += you.duration[DUR_BRILLIANCE] > 0;
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
@@ -652,6 +652,36 @@ void do_cast_spell_cmd(bool force)
     if (!cast_a_spell(!force))
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
+
+static void _handle_wucad_mu(int cost)
+{
+    if (!player_equip_unrand(UNRAND_WUCAD_MU))
+        return;
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
+        return;
+
+    did_god_conduct(DID_WIZARDLY_ITEM, 10);
+
+    // The chance of backfiring goes down with evo skill and up with cost
+    if (one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    {
+        mpr(random_choose("Weird images run through your mind.",
+                          "Your head hurts.",
+                          "You feel a strange surge of energy.",
+                          "You feel uncomfortable."));
+        if (coinflip())
+            confuse_player(2 + random2(4));
+        else
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+    }
+    else
+    {
+        mpr("Magical energy flows into your mind!");
+        inc_mp(cost, true);
+    }
+}
+
 
 /**
  * Cast a spell.
@@ -874,6 +904,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
+        _handle_wucad_mu(cost);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
@@ -1031,9 +1062,9 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
             mon->foe = MHITNOT;
     }
     else
-        mon->foe = mgrd(spd.target);
+        mon->foe = env.mgrid(spd.target);
 
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     mons_cast(mon, beam, spell, MON_SPELL_NO_FLAGS);
 
@@ -1825,9 +1856,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Escape spells.
     case SPELL_BLINK:
         return cast_blink(fail);
-
-    case SPELL_CONTROLLED_BLINK:
-        return cast_controlled_blink(fail);
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(powc, fail);

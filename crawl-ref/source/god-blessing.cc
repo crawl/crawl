@@ -431,7 +431,7 @@ static string _beogh_bless_armour(monster* mon)
         return "";
     }
 
-    item_def& arm(mitm[slot]);
+    item_def& arm(env.item[slot]);
 
     const int old_subtype = arm.sub_type;
     // 50% chance of improving armour/shield type

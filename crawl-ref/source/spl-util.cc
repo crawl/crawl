@@ -1088,7 +1088,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     switch (spell)
     {
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
@@ -1248,12 +1247,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (orb_limits_translocation(temp))
-            return "the Orb prevents this spell from working.";
-        else if (temp && player_in_branch(BRANCH_GAUNTLET))
+        if (temp && player_in_branch(BRANCH_GAUNTLET))
         {
             return "a magic seal in the Gauntlet prevents this spell "
-                "from working.";
+                   "from working.";
         }
         break;
 
@@ -1604,6 +1601,7 @@ const set<spell_type> removed_spells =
     SPELL_CIGOTUVIS_DEGENERATION,
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_CONDENSATION_SHIELD,
+    SPELL_CONTROLLED_BLINK,
     SPELL_CONTROL_TELEPORT,
     SPELL_CONTROL_UNDEAD,
     SPELL_CONTROL_WINDS,

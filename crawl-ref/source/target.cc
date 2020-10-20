@@ -29,7 +29,7 @@
 static string _wallmsg(coord_def c)
 {
     ASSERT(map_bounds(c)); // there'd be an information leak
-    const char *wall = feat_type_name(grd(c));
+    const char *wall = feat_type_name(env.grid(c));
     return "There is " + article_a(wall) + " there.";
 }
 
@@ -87,7 +87,7 @@ string bad_charge_target(coord_def a)
     // Specifically, monsters you can see. (No guessing!)
     // You can't charge at plants you walk right through.
     if (!mons || !you.can_see(*mons) || fedhas_passthrough(mons))
-        return "You can't see anything there to charge at!";
+        return "You can't see anything there to charge at.";
 
     // You can't charge at friends. (Also, rude.)
     // You can't charge at firewood. It's firewood.
@@ -123,6 +123,8 @@ targeter_charge::targeter_charge(const actor *act, int r)
 
 bool targeter_charge::valid_aim(coord_def a)
 {
+    if (agent->pos() == a)
+        return notify_fail("You can't charge at yourself.");
     if (adjacent(agent->pos(), a))
         return notify_fail("You're already next to there.");
     if (grid_distance(agent->pos(), a) > range)
@@ -133,17 +135,28 @@ bool targeter_charge::valid_aim(coord_def a)
         return notify_fail("There's something in the way.");
     while (ray.advance())
     {
-        if (ray.pos() == a
-            || !can_charge_through_mons(ray.pos())
-            || is_feat_dangerous(grd(ray.pos())))
+        if (ray.pos() == a)
         {
             const string bad = bad_charge_target(ray.pos());
             if (bad != "")
                 return notify_fail(bad);
             return true;
         }
+        else if (is_feat_dangerous(env.grid(ray.pos())))
+        {
+            return notify_fail("There's "
+                               + feature_description_at(ray.pos())
+                               + " in the way.");
+        }
+        else if (!can_charge_through_mons(ray.pos()))
+        {
+            return notify_fail("There's "
+                               + monster_at(ray.pos())->name(DESC_A)
+                               + " in the way.");
+
+        }
     }
-    return notify_fail("There's something in the way.");
+    die("Ray never reached the end?");
 }
 
 bool targeter_charge::set_aim(coord_def a)
@@ -161,7 +174,7 @@ bool targeter_charge::set_aim(coord_def a)
 
         if (!can_charge_through_mons(ray.pos()))
             break;
-        if (is_feat_dangerous(grd(ray.pos())))
+        if (is_feat_dangerous(env.grid(ray.pos())))
             return false;
     }
     return true;
@@ -182,8 +195,8 @@ aff_type targeter_charge::is_affected(coord_def loc)
         return AFF_NO;
     if (_ok_charge_target(loc))
         return AFF_MAYBE; // the target of the attack
-    if (grid_distance(agent->pos(), loc) == range)
-        return AFF_NO; // out of range for movement and nothing seen
+    if (path_taken.size() >= 2 && loc == path_taken[path_taken.size() - 2])
+        return AFF_LANDING;
     return AFF_YES; // a movement space
 }
 
@@ -791,7 +804,7 @@ aff_type targeter_reach::is_affected(coord_def loc)
         return AFF_YES;
 
     if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
-        && feat_is_reachable_past(grd(loc)))
+        && feat_is_reachable_past(env.grid(loc)))
     {
         return AFF_TRACER;
     }
@@ -1592,7 +1605,7 @@ bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
     if (env.markers.property_at(p, MAT_ANY, "veto_destroy") == "veto")
         return false;
 
-    const dungeon_feature_type feat = grd(p);
+    const dungeon_feature_type feat = env.grid(p);
     if (feat_is_open_door(feat))
     {
         const monster* const mons = monster_at(p);

@@ -243,7 +243,7 @@ static monster* _get_current_target()
     if (invalid_monster_index(you.prev_targ))
         return nullptr;
 
-    monster* mon = &menv[you.prev_targ];
+    monster* mon = &env.mons[you.prev_targ];
     ASSERT(mon);
     if (mon->alive() && you.can_see(*mon))
         return mon;
@@ -385,7 +385,7 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
 // These should match tests in show.cc's _update_monster
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    return grd(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
+    return env.grid(mon->pos()) == DNGN_SHALLOW_WATER && !mon->airborne()
            && !mon->submerged() && !cloud_at(mon->pos());
 }
 
@@ -477,39 +477,57 @@ public:
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def> const &list_items,
                                      vector<coord_def> const &list_features,
-                                     string selectverb)
+                                     string selectverb,
+                                     bool examine_only = false,
+                                     string title = "")
 {
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
-    string title = "";
-    if (!list_mons.empty())
-        title  = "Monsters";
-    if (!list_items.empty())
-    {
-        if (!title.empty())
-            title += "/";
-        title += "Items";
-    }
-    if (!list_features.empty())
-    {
-        if (!title.empty())
-            title += "/";
-        title += "Features";
-    }
+    string title_secondary;
 
-    title = "Visible " + title;
-    string title1 = title + " (select to " + selectverb + ", '!' to examine):";
-    title += " (select to examine, '!' to " + selectverb + "):";
-
-    desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
-    desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
+    if (title.empty())
+    {
+        if (!list_mons.empty())
+            title  = "Monsters";
+        if (!list_items.empty())
+        {
+            if (!title.empty())
+                title += "/";
+            title += "Items";
+        }
+        if (!list_features.empty())
+        {
+            if (!title.empty())
+                title += "/";
+            title += "Features";
+        }
+        title = "Visible " + title;
+        if (examine_only)
+            title += " (select to examine)";
+        else
+        {
+            title_secondary = title + " (select to examine, '!' to "
+              + selectverb + "):";
+            title += " (select to " + selectverb + ", '!' to examine):";
+        }
+    }
 
     desc_menu.set_tag("pickup");
     // necessary for sorting of the item submenu
     desc_menu.set_type(menu_type::pickup);
-    desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
-    desc_menu.menu_action  = InvMenu::ACT_EXECUTE;
+    desc_menu.set_title(new MenuEntry(title, MEL_TITLE));
+    if (examine_only)
+    {
+        desc_menu.action_cycle = Menu::CYCLE_NONE;
+        desc_menu.menu_action = InvMenu::ACT_EXAMINE;
+    }
+    else
+    {
+        desc_menu.action_cycle = Menu::CYCLE_TOGGLE;
+        desc_menu.menu_action = InvMenu::ACT_EXECUTE;
+        desc_menu.set_title(new MenuEntry(title_secondary, MEL_TITLE), false);
+    }
 
     // Start with hotkey 'a' and count from there.
     menu_letter hotkey;
@@ -757,10 +775,10 @@ static void _get_nearby_features(vector<coord_def> &list_features,
             {
                 for (const text_pattern &pattern : filters)
                 {
-                    if (pattern.matches(feature_description(grd(*ri)))
-                        || feat_stair_direction(grd(*ri)) != CMD_NO_CMD
+                    if (pattern.matches(feature_description(env.grid(*ri)))
+                        || feat_stair_direction(env.grid(*ri)) != CMD_NO_CMD
                            && pattern.matches("stair")
-                        || feat_is_trap(grd(*ri))
+                        || feat_is_trap(env.grid(*ri))
                            && pattern.matches("trap"))
                     {
                         list_features.push_back(*ri);
@@ -896,7 +914,8 @@ bool direction_chooser::move_is_ok() const
                          && Options.allow_self_target
                                 != confirm_prompt_type::none)
                 {
-                    return yesno("Really target yourself?", false, 'n');
+                    return yesno("Really target yourself?", false, 'n',
+                                 true, true, false, nullptr, false);
                 }
             }
 
@@ -1325,7 +1344,7 @@ bool direction_chooser::pickup_item()
     unsigned short it = env.igrid(target());
     if (it != NON_ITEM)
     {
-        item = &mitm[it];
+        item = &env.item[it];
         // Check if it appears to be the same item.
         if (!item->is_valid()
             || ii->base_type != item->base_type
@@ -1395,7 +1414,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
 
 string direction_chooser::target_interesting_terrain_description() const
 {
-    const dungeon_feature_type feature = grd(target());
+    const dungeon_feature_type feature = env.grid(target());
 
     // Only features which can make you lose the item are interesting.
     // FIXME: extract the naming logic from here and use
@@ -1545,7 +1564,7 @@ void direction_chooser::print_items_description() const
 
 void direction_chooser::print_floor_description(bool boring_too) const
 {
-    const dungeon_feature_type feat = grd(target());
+    const dungeon_feature_type feat = env.grid(target());
     if (!boring_too && feat == DNGN_FLOOR)
         return;
 
@@ -2265,8 +2284,8 @@ string get_terse_square_desc(const coord_def &gc)
             desc = monster_at(gc)->full_name(DESC_PLAIN);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
-        if (mitm[you.visible_igrd(gc)].defined())
-            desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
+        if (env.item[you.visible_igrd(gc)].defined())
+            desc = env.item[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
         desc = feature_description_at(gc, false, DESC_PLAIN);
@@ -2282,10 +2301,9 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
+// Get description of the "top" thing in a square; for mouseover text.
 void get_square_desc(const coord_def &c, describe_info &inf)
 {
-    // NOTE: Keep this function in sync with full_describe_square.
-
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
     const cloud_type cloud = env.map_knowledge(c).cloud();
 
@@ -2322,29 +2340,55 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         inf.body << get_cloud_desc(cloud);
 }
 
+// Show a description of the only thing on a square, or a selection menu with
+// visible things on the square if there are many. For x-v and similar contexts.
+// Used for both in- and out-of-los cells.
 void full_describe_square(const coord_def &c, bool cleanup)
 {
-    // NOTE: Keep this function in sync with get_square_desc.
+    vector<monster_info> list_mons;
+    vector<item_def> list_items;
+    vector<coord_def> list_features;
+    int quantity = 0;
 
-    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
+    const monster_info *mi = env.map_knowledge(c).monsterinfo();
+    item_def *obj = env.map_knowledge(c).item();
+    const dungeon_feature_type feat = env.map_knowledge(c).feat();
+
+    if (mi)
     {
-        // First priority: monsters.
-        describe_monsters(*mi);
+        list_mons.emplace_back(*mi);
+        ++quantity;
     }
-    else if (const item_info *obj = env.map_knowledge(c).item())
+    if (obj)
     {
-        // Second priority: item(s).
-        if (!you.see_cell(c))
-            describe_item_popup(*obj);
+        list_items = item_list_in_stash(c);
+        quantity += list_items.size();
+    }
+    // I'm not sure if features should be included. But it seems reasonable to
+    // at least include what full_describe_view shows
+    if (feat_stair_direction(feat) != CMD_NO_CMD || feat_is_trap(feat))
+    {
+        list_features.push_back(c);
+        ++quantity;
+    }
+
+    if (quantity > 1)
+    {
+        _full_describe_menu(list_mons, list_items, list_features, "", true,
+                            you.see_cell(c) ? "What do you want to examine?"
+                                            : "What do you want to remember?");
+    }
+    else if (quantity == 1)
+    {
+        if (mi)
+            describe_monsters(*mi);
+        else if (list_items.size())
+            describe_item(*obj);
         else
-            describe_items(item_list_on_square(you.visible_igrd(c)),
-                           "Describe which item?");
+            describe_feature_wide(c);
     }
     else
-    {
-        // Third priority: features.
         describe_feature_wide(c);
-    }
 
     if (cleanup)
     {
@@ -2980,7 +3024,7 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
 
 string raw_feature_description(const coord_def &where)
 {
-    dungeon_feature_type feat = grd(where);
+    dungeon_feature_type feat = env.grid(where);
 
     int mapi = env.level_map_ids(where);
     if (mapi != INVALID_MAP_INDEX)
@@ -3125,7 +3169,7 @@ string feature_description_at(const coord_def& where, bool covering,
         string desc = "";
         if (env.forest_awoken_until)
             desc += "awoken ";
-        desc += grid == grd(where) ? raw_feature_description(where)
+        desc += grid == env.grid(where) ? raw_feature_description(where)
                                    : _base_feature_desc(grid, trap);
         if (is_temp_terrain(where))
             desc += " (summoned)";
@@ -3138,7 +3182,7 @@ string feature_description_at(const coord_def& where, bool covering,
             dtype = DESC_THE;
         // fallthrough
     default:
-        const string featdesc = grid == grd(where)
+        const string featdesc = grid == env.grid(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
         return thing_do_grammar(dtype, featdesc + covering_description);
@@ -3209,7 +3253,7 @@ static string _stair_destination_description(const coord_def &pos)
         const stair_info *si = linf->get_stair(pos);
         if (si)
             return " " + si->describe();
-        else if (feat_is_stair(grd(pos)))
+        else if (feat_is_stair(env.grid(pos)))
             return " (unknown stair)";
     }
     return "";
@@ -3632,10 +3676,10 @@ static bool _print_item_desc(const coord_def where)
     if (targ_item == NON_ITEM)
         return false;
 
-    string name = menu_colour_item_name(mitm[targ_item], DESC_A);
+    string name = menu_colour_item_name(env.item[targ_item], DESC_A);
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
-    if (mitm[ targ_item ].link != NON_ITEM)
+    if (env.item[ targ_item ].link != NON_ITEM)
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
 
     return true;
@@ -3657,7 +3701,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     string height_desc;
     if (env.heightmap)
         height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
-    const dungeon_feature_type feat = grd(where);
+    const dungeon_feature_type feat = env.grid(where);
 
     string vault;
     const int map_index = env.level_map_ids(where);
@@ -3732,7 +3776,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
 
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
-        debug_stethoscope(mgrd(where));
+        debug_stethoscope(env.mgrid(where));
 #endif
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
@@ -3770,7 +3814,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     }
     else
     {
-        dungeon_feature_type feat = grd(where);
+        dungeon_feature_type feat = env.grid(where);
 
         if (_interesting_feature(feat))
         {

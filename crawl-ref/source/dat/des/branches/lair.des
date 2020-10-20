@@ -26,7 +26,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         if you.absdepth() >= 14 then
             e.mons("wolf / black bear w:4 / yak w:2")
         else
-            e.mons("hippogriff / elephant w:4 / dream sheep w:2")
+            e.mons("wyvern / elephant w:4 / dream sheep w:2")
         end
     else
         if you.absdepth() >= 12 then
@@ -34,7 +34,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
             e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")
-            e.mons("porcupine")
+            e.mons("elephant")
         elseif you.absdepth() >= 5 then
             e.mons("gnoll / ogre w:1")
             e.mons("river rat")
@@ -94,9 +94,8 @@ function beast_lair_populate_mons_small(e)
     else
         local monster_list = {}
         if you.depth() < 4 then
-            monster_list = { "porcupine", "porcupine", "bullfrog", "wolf",
-                             "yak", "komodo dragon", "cane toad",
-                             "crocodile" }
+            monster_list = { "black bear", "water moccasin", "bullfrog",
+                             "wolf", "yak", "komodo dragon", "cane toad" }
         else
             monster_list = { "yak", "yak", "polar bear", "death yak",
                              "elephant", "cane toad", "komodo dragon",
@@ -164,8 +163,8 @@ ENDMAP
 NAME:    david_lair_generic
 TAGS:    lair_entry transparent
 ORIENT:  float
-MONS:    crocodile / basilisk
-MONS:    hippogriff, yak / death yak w:2, elephant
+MONS:    black bear / basilisk
+MONS:    wyvern, yak / death yak w:2, elephant
 KMONS:   P = plant / fungus
 SHUFFLE: 234, A1
 SUBST:   A = ., P = P.
@@ -207,8 +206,8 @@ NAME:    dpeg_lair_monsters
 TAGS:    ruin lair_entry transparent
 ORIENT:  float
 MONS:    yak, death yak
-MONS:    iguana w:20 / crocodile w:20 / komodo dragon / basilisk w:5
-MONS:    river rat / porcupine / hell rat / quokka / rat
+MONS:    iguana w:20 / black bear w:20 / komodo dragon / basilisk w:5
+MONS:    river rat / hell rat / quokka / rat
 MONS:    bullfrog w:40 / blink frog / cane toad
 SHUFFLE: 1345
 NSUBST:  1 = 2:11112 / * = 1..
@@ -261,8 +260,8 @@ ENDMAP
 NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
-MONS:   crocodile / basilisk w:4, yak, black bear / wolf
-MONS:   porcupine w:14 / iguana w:2 / scorpion w:2
+MONS:   wyvern / basilisk w:4, yak, black bear / wolf
+MONS:   water moccasin w:14 / iguana w:2 / scorpion w:2
 KMONS:  P = plant / bush w:2 / fungus w:2
 KFEAT:  O = enter_lair
 NSUBST: . = 1:1 / 2:2 / 2:4 / 2 = 12 / 1 = 4. / 12:P / * = .:450 t:20 P:40
@@ -338,7 +337,7 @@ NAME:    erik_lair_dragon
 TAGS:    lair_entry no_rotate
 ORIENT:  float
 MONS:    steam dragon / acid dragon / swamp drake
-MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
+MONS:    basilisk / wyvern / komodo dragon
 NSUBST:  2 = 3=2 / 3=2. / .
 SHUFFLE: %!*O
 SUBST:   z = .xc, ! = %
@@ -380,8 +379,8 @@ ENDMAP
 NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   porcupine w:50 / scorpion / bullfrog w:30 / \
-        black bear w:25 / crocodile w:15 / yak
+MONS:   water moccasin w:30 / scorpion / bullfrog w:30 / \
+        black bear w:25 / yak / komodo dragon w:5
 KMONS:  P = plant / fungus
 KFEAT:  O = enter_lair
 SUBST:  P = P:60 `
@@ -412,8 +411,8 @@ ENDMAP
 NAME:   grunt_lair_entry_orc_guard_hut
 TAGS:   lair_entry transparent
 ORIENT: float
-MONS:   porcupine w:50 / bullfrog w:30 / scorpion w:20 / \
-        black bear w:20 / crocodile / yak
+MONS:   bullfrog w:30 / scorpion w:20 / black bear w:20 / yak \
+        / komodo dragon w:5
 MONS:   patrolling orc warrior
 KMONS:  P = plant / fungus
 KFEAT:  O = enter_lair
@@ -1874,8 +1873,7 @@ NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
 DEPTH:   Lair:3-, !Lair:$
 MONS:    necromancer, elephant zombie
-MONS:    crocodile zombie / basilisk zombie / \
-         komodo dragon zombie w:4
+MONS:    basilisk zombie / komodo dragon zombie
 SHUFFLE: 23
 NSUBST:  2 = 1:2 / * = 2., 3 = 1:3 / * = 3.
 SUBST:   % = %%%%%$$$**|
@@ -2426,7 +2424,7 @@ NAME: cheibrodos_lair_overgrown_chateau
 TAGS: no_item_gen no_monster_gen
 DEPTH: Lair:2-, !Lair:$
 ORIENT: float
-MONS: water moccasin / porcupine, hornet, crocodile, bullfrog / cane toad
+MONS: water moccasin / black bear, hornet, yak, bullfrog / cane toad
 MONS: black mamba / komodo dragon / w:3 rime drake, hydra / lindwurm
 KMONS: PA = plant
 KFEAT: A = W
@@ -2603,7 +2601,7 @@ TAGS:   patrolling no_monster_gen no_pool_fixup
 PLACE:  Lair:$
 ORIENT: southeast
 MONS:   rime drake / swamp drake / acid dragon / steam dragon
-MONS:   basilisk / komodo dragon, iguana / crocodile
+MONS:   basilisk / komodo dragon, iguana
 MONS:   fire dragon, swamp dragon
 KMONS:  P = plant
 SUBST:  - = wwWW....%Ptt233, W = WWW., ? = 12**
@@ -2648,7 +2646,7 @@ WEIGHT:  14
 # duos of bovids / elephantae, fantasy hybrids), then bosses.
 MONS:    wolf / blink frog / yak / hell rat w:2
 MONS:    basilisk, rime drake, lindwurm
-MONS:    hippogriff, manticore, catoblepas
+MONS:    wyvern, manticore, catoblepas
 KMONS:   8 = water moccasin
 KMONS:   9 : cane toad w:90 / hornet
 KMONS:   0 : black mamba w:90 / wolf spider
@@ -3073,7 +3071,7 @@ PLACE:   Lair:$
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  float
 KMONS:   ~ = plant
-KMONS:   1 = water moccasin / crocodile / hornet / wyvern / cane toad
+KMONS:   1 = water moccasin / hornet / wyvern / cane toad
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / wind drake / harpy
 KMONS:   4 = dire elephant / hydra

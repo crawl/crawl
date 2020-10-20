@@ -64,7 +64,7 @@ static unsigned _get_travel_colour(const coord_def& p)
         return Options.tc_excluded;
 
     const unsigned no_travel_col
-        = feat_is_traversable(grd(p)) ? Options.tc_forbidden
+        = feat_is_traversable(env.grid(p)) ? Options.tc_forbidden
                                       : Options.tc_dangerous;
 
     const short dist = travel_point_distance[p.x][p.y];
@@ -183,14 +183,14 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        return grd(where) == DNGN_EXIT_ABYSS
-               || grd(where) == DNGN_EXIT_PANDEMONIUM
-               || grd(where) == DNGN_ENTER_HELL && player_in_hell();
+        return env.grid(where) == DNGN_EXIT_ABYSS
+               || env.grid(where) == DNGN_EXIT_PANDEMONIUM
+               || env.grid(where) == DNGN_ENTER_HELL && player_in_hell();
     }
     else if (glyph == '>')
     {
-        return grd(where) == DNGN_TRANSIT_PANDEMONIUM
-               || grd(where) == DNGN_TRANSPORTER;
+        return env.grid(where) == DNGN_TRANSIT_PANDEMONIUM
+               || env.grid(where) == DNGN_TRANSPORTER;
     }
 
     return false;
@@ -636,7 +636,7 @@ public:
         m_state.chose = false;
         m_state.on_level = true;
 
-        on_new_level();
+        goto_level();
     }
     ~UIMapView() {}
 
@@ -714,20 +714,18 @@ public:
         m_state = process_map_command(cmd, m_state);
         if (!m_state.map_alive)
             return;
-        if (map_bounds(m_state.lpos.pos))
-            m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
 
         if (m_state.lpos.id != level_id::current())
-        {
-            m_state.excursion->go_to(m_state.lpos.id);
-            on_new_level();
-        }
+            goto_level();
 
         m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
     }
 
-    void on_new_level()
+    void goto_level()
     {
+        if (m_state.lpos.id != level_id::current())
+            m_state.excursion->go_to(m_state.lpos.id);
+
         m_state.on_level = (level_id::current() == m_state.original);
 
         // Vector to track all state.features we can travel to, in

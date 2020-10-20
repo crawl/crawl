@@ -7,12 +7,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
     function DungeonCellRenderer()
     {
-        // see also, renderer_settings in game.js. In fact, do these values
-        // do anything?
-        var ratio = window.devicePixelRatio;
         this.set_cell_size(32, 32);
-        this.glyph_mode_font_size = 24 * ratio;
-        this.glyph_mode_font = "monospace";
     }
 
     var fg_term_colours, bg_term_colours;
@@ -101,14 +96,67 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
         glyph_mode_font_name: function ()
         {
-            var glyph_scale;
+            var glyph_scale = window.devicePixelRatio;
             if (this.ui_state == enums.ui.VIEW_MAP)
-                glyph_scale = options.get("tile_map_scale");
+                glyph_scale *= options.get("tile_map_scale");
             else
-                glyph_scale = options.get("tile_viewport_scale");
+                glyph_scale *= options.get("tile_viewport_scale");
 
             return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
                 + "px " + this.glyph_mode_font);
+        },
+
+        glyph_mode_update_font_metrics: function ()
+        {
+            this.ctx.font = this.glyph_mode_font_name();
+
+            // Glyph used here does not matter because fontBoundingBoxAscent
+            // and fontBoundingBoxDescent are specific to the font whereas all
+            // glyphs in a monospaced font will have the same width
+            var metrics = this.ctx.measureText('@');
+            this.glyph_mode_font_width = metrics.width;
+
+            // Currently, fontBoundingBoxAscent/Descent are still
+            // experimental for most web browsers and may be unavailable.
+            if (metrics.fontBoundingBoxAscent)
+            {
+                this.glyph_mode_baseline = metrics.fontBoundingBoxAscent;
+                this.glyph_mode_line_height = metrics.fontBoundingBoxAscent
+                                            + metrics.fontBoundingBoxDescent;
+            }
+            else
+            {   // Inspired by https://stackoverflow.com/q/1134586/
+                var body = document.body;
+                var ref_glyph = document.createElement("span");
+                var ref_block = document.createElement("div");
+                var div = document.createElement("div");
+
+                ref_glyph.innerHTML = '@';
+                ref_glyph.style.font = this.ctx.font;
+
+                ref_block.style.display = "inline-block";
+                ref_block.style.width = "1px";
+                ref_block.style.height = "0px";
+
+                div.style.visibility = "hidden";
+                div.appendChild(ref_glyph);
+                div.appendChild(ref_block);
+                body.appendChild(div);
+
+                try
+                {
+                    ref_block.style["vertical-align"] = "baseline";
+                    this.glyph_mode_baseline = ref_block.offsetTop
+                                                - ref_glyph.offsetTop;
+                    ref_block.style["vertical-align"] = "bottom";
+                    this.glyph_mode_line_height = ref_block.offsetTop
+                                                    - ref_glyph.offsetTop;
+                }
+                finally
+                {
+                    document.body.removeChild(div);
+                }
+            }
         },
 
         render_cursors: function(cx, cy, x, y)
@@ -472,8 +520,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
             this.ctx.fillStyle = fg_term_colours[col.fg];
             this.ctx.font = prefix + this.glyph_mode_font_name();
-            this.ctx.textAlign = "center";
-            this.ctx.textBaseline = "middle";
 
             this.ctx.save();
 
@@ -483,8 +529,18 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.rect(x, y, this.cell_width, this.cell_height);
                 this.ctx.clip();
 
-                this.ctx.fillText(map_cell.g,
-                                  x + this.cell_width/2, y + this.cell_height/2);
+                if (options.get("tile_display_mode") == "hybrid")
+                {
+                    this.ctx.textAlign = "center";
+                    this.ctx.textBaseline = "middle";
+                    this.ctx.fillText(map_cell.g, x + this.cell_width/2,
+                                        y + this.cell_height/2);
+                }
+                else
+                {
+                    this.ctx.fillText(map_cell.g, x,
+                                        y + this.glyph_mode_baseline);
+                }
             }
             finally
             {
@@ -946,11 +1002,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.BLIND, x, y, -status_shift, 0);
                 status_shift += 10;
             }
-            if (fg.DEATHS_DOOR)
-            {
-                this.draw_icon(icons.DEATHS_DOOR, x, y, -status_shift, 0);
-                status_shift += 10;
-            }
             if (fg.BOUND_SOUL)
             {
                 this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0);
@@ -965,6 +1016,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 this.draw_icon(icons.RECALL, x, y, -status_shift, 0);
                 status_shift += 9;
+            }
+            if (fg.SLOWLY_DYING)
+            {
+                this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0);
+                status_shift += 10;
             }
 
             // Anim. weap. and summoned might overlap, but that's okay

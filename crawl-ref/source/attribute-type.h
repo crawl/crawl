@@ -88,7 +88,9 @@ enum attribute_type
     ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
 #endif
     ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
+#if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
+#endif
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
 #if TAG_MAJOR_VERSION == 34
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.

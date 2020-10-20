@@ -154,8 +154,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         const coord_def first_middle(x_first_middle, y_first_middle);
         const coord_def second_middle(x_second_middle, y_second_middle);
 
-        if (!feat_is_reachable_past(grd(first_middle))
-            && !feat_is_reachable_past(grd(second_middle)))
+        if (!feat_is_reachable_past(env.grid(first_middle))
+            && !feat_is_reachable_past(env.grid(second_middle)))
         {
             canned_msg(MSG_SOMETHING_IN_WAY);
             return false;
@@ -163,8 +163,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
         // Choose one of the two middle squares (which might be the same).
         const coord_def middle =
-            !feat_is_reachable_past(grd(first_middle)) ? second_middle :
-            !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+            !feat_is_reachable_past(env.grid(first_middle)) ? second_middle :
+            !feat_is_reachable_past(env.grid(second_middle)) ? first_middle :
         random_choose(first_middle, second_middle);
 
         bool success = true;
@@ -618,7 +618,7 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(grd(you.pos())))
+    if (feat_is_critical(env.grid(you.pos())))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -998,7 +998,7 @@ static spret _phantom_mirror()
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
-    mprf("You reflect %s with the mirror, and the mirror shatters!",
+    mprf("You reflect %s with the mirror!",
          victim->name(DESC_THE).c_str());
 
     return spret::success;
@@ -1160,6 +1160,12 @@ random_pick_entry<cloud_type> condenser_clouds[] =
 
 static spret _condenser()
 {
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return spret::abort;
+    }
+
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");
@@ -1200,6 +1206,7 @@ static spret _condenser()
         && !yesno("You can't see anything. Try to condense clouds anyway?",
                   true, 'n'))
     {
+        canned_msg(MSG_OK);
         return spret::abort;
     }
 
@@ -1307,41 +1314,6 @@ bool evoke_item(int slot)
         }
         else
             unevokable = true;
-        break;
-
-    case OBJ_STAVES:
-        ASSERT(wielded);
-        if (item.sub_type != STAFF_ENERGY)
-        {
-            unevokable = true;
-            break;
-        }
-
-        if (you.confused())
-        {
-            canned_msg(MSG_TOO_CONFUSED);
-            return false;
-        }
-
-        if (you.magic_points >= you.max_magic_points)
-        {
-            canned_msg(MSG_FULL_MAGIC);
-            return false;
-        }
-        else if (x_chance_in_y(apply_enhancement(
-                                   you.skill(SK_EVOCATIONS, 100) + 1100,
-                                   you.spec_evoke()),
-                               4000))
-        {
-            mpr("You channel some magical energy.");
-            inc_mp(1 + random2(3));
-            did_work = true;
-            practise_evoking(1);
-            count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);
-
-            did_god_conduct(DID_WIZARDLY_ITEM, 10);
-            did_god_conduct(DID_CHANNEL, 1, true);
-        }
         break;
 
     case OBJ_MISCELLANY:

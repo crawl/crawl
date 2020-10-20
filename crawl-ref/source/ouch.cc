@@ -544,7 +544,8 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
 
     mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.flags |= MG_FORCE_BEH; // don't mention how much it hates you before it appears
-    if (monster *m = create_monster(mg)) {
+    if (monster *m = create_monster(mg))
+    {
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         mprf("%s scurries out from under your cloak.", m->name(DESC_A).c_str());
         check_lovelessness(*m);
@@ -665,6 +666,12 @@ static void _maybe_fog(int dam)
     {
         mpr("You emit a cloud of dark smoke.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
+    }
+    else if (player_equip_unrand(UNRAND_THIEF)
+             && dam > you.hp_max / 10 && coinflip())
+    {
+        mpr("With a swish of your cloak, you release a cloud of fog.");
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
     }
     else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {

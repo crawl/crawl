@@ -24,8 +24,8 @@
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stringutil.h"
-#include "timed-effects.h" // bezotted
 #include "throw.h"
+#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
 
@@ -163,6 +163,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st);
 static void _describe_terrain(status_info& inf);
 static void _describe_missiles(status_info& inf);
 static void _describe_invisible(status_info& inf);
+static void _describe_zot(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -211,6 +212,10 @@ bool fill_status_info(int status, status_info& inf)
         }
         if (you.in_liquid())
             inf.light_colour = DARKGREY;
+        break;
+
+    case STATUS_ZOT:
+        _describe_zot(inf);
         break;
 
     case STATUS_AIRBORNE:
@@ -686,15 +691,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_BEZOTTED:
-        if (bezotted()) {
-            inf.light_colour = MAGENTA;
-            inf.light_text = "Zot";
-            inf.short_text = "bezotted";
-            inf.long_text = "You are being drained by Zot!";
-        }
-        break;
-
     default:
         if (!found)
         {
@@ -708,6 +704,33 @@ bool fill_status_info(int status, status_info& inf)
             break;
     }
     return true;
+}
+
+static void _describe_zot(status_info& inf)
+{
+    const int lvl = bezotting_level();
+    if (lvl <= 0 && !Options.always_show_zot)
+        return;
+
+    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
+    inf.short_text = "bezotted";
+    inf.long_text = "Zot is approaching!";
+    switch (lvl)
+    {
+        case 0:
+            inf.light_colour = WHITE;
+            break;
+        case 1:
+            inf.light_colour = YELLOW;
+            break;
+        case 2:
+            inf.light_colour = RED;
+            break;
+        case 3:
+        default:
+            inf.light_colour = MAGENTA;
+            break;
+    }
 }
 
 static void _describe_glow(status_info& inf)
@@ -906,7 +929,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st)
 
 static void _describe_terrain(status_info& inf)
 {
-    switch (grd(you.pos()))
+    switch (env.grid(you.pos()))
     {
     case DNGN_SHALLOW_WATER:
         inf.light_colour = LIGHTBLUE;

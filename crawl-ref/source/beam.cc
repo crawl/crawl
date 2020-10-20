@@ -54,6 +54,7 @@
 #include "ranged-attack.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
@@ -663,7 +664,7 @@ void bolt::initialise_fire()
     // If the beam was reflected, assume it can "see" anything, since neither
     // the reflector nor the original source was particularly aiming for this
     // target. WARNING: if you change this logic, keep in mind that
-    // menv[YOU_FAULTLESS] cannot be safely queried for properties like
+    // env.mons[YOU_FAULTLESS] cannot be safely queried for properties like
     // can_see_invisible.
     if (reflections > 0)
         nightvision = can_see_invis = true;
@@ -828,7 +829,7 @@ void bolt::digging_wall_effect()
         return;
     }
 
-    const dungeon_feature_type feat = grd(pos());
+    const dungeon_feature_type feat = env.grid(pos());
     if (feat_is_diggable(feat))
     {
         destroy_wall(pos());
@@ -873,7 +874,7 @@ void bolt::digging_wall_effect()
 
 void bolt::burn_wall_effect()
 {
-    dungeon_feature_type feat = grd(pos());
+    dungeon_feature_type feat = env.grid(pos());
     // Fire only affects trees.
     if (!feat_is_tree(feat)
         || env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto"
@@ -934,7 +935,7 @@ void bolt::affect_wall()
             env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
 
         // XXX: should check env knowledge for feat_is_tree()
-        if (god_relevant && feat_is_tree(grd(pos())) && !vetoed
+        if (god_relevant && feat_is_tree(env.grid(pos())) && !vetoed
             && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
         {
             const string prompt =
@@ -1133,7 +1134,7 @@ void bolt::do_fire()
             break;
         }
 
-        const dungeon_feature_type feat = grd(pos());
+        const dungeon_feature_type feat = env.grid(pos());
 
         if (in_bounds(target)
             // Starburst beams are essentially untargeted; some might even hit
@@ -2082,7 +2083,7 @@ vector<coord_def> create_feat_splash(coord_def center,
 
     for (distance_iterator di(center, true, false, radius); di && number > 0; ++di)
     {
-        const dungeon_feature_type feat = grd(*di);
+        const dungeon_feature_type feat = env.grid(*di);
         if ((feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER)
             && cell_see_cell(center, *di, LOS_NO_TRANS))
         {
@@ -2502,7 +2503,7 @@ bool bolt::can_burn_trees() const
 
 bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
 {
-    dungeon_feature_type wall = grd(p);
+    dungeon_feature_type wall = env.grid(p);
 
     // digging might affect unseen squares, as far as the player knows
     if (map_knowledge && flavour == BEAM_DIGGING &&
@@ -2554,7 +2555,7 @@ void bolt::affect_place_clouds()
     }
 
     // No clouds here, free to make new ones.
-    const dungeon_feature_type feat = grd(p);
+    const dungeon_feature_type feat = env.grid(p);
 
     if (origin_spell == SPELL_POISONOUS_CLOUD)
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
@@ -2609,8 +2610,8 @@ void bolt::affect_place_explosion_clouds()
     const coord_def p = pos();
 
     // First check: fire/cold over water/lava.
-    if (grd(p) == DNGN_LAVA && flavour == BEAM_COLD
-        || feat_is_watery(grd(p)) && is_fiery())
+    if (env.grid(p) == DNGN_LAVA && flavour == BEAM_COLD
+        || feat_is_watery(env.grid(p)) && is_fiery())
     {
         place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
         return;
@@ -2631,7 +2632,7 @@ void bolt::affect_place_explosion_clouds()
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
         // XXX: affect other open spaces?
-        if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
+        if (env.grid(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
             const god_type god =
                 (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -4329,6 +4330,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         {
             if (actor *victim = actor_at(*ai))
             {
+                if (victim == agent())
+                    continue;
+
                 if (you.see_cell(*ai))
                 {
                     mprf("The acid splashes onto %s!",
@@ -4663,7 +4667,7 @@ void bolt::affect_monster(monster* mon)
         // if that didn't work, blanket fall back on YOU_FAULTLESS. This covers
         // a number of other weird penetration cases.
         if (!ag)
-            ag = &menv[YOU_FAULTLESS];
+            ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
         ranged_attack attk(ag, mon, item, use_target_as_pos, agent());
         attk.attack();
@@ -4844,6 +4848,10 @@ void bolt::affect_monster(monster* mon)
     {
         mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
     }
+
+    // Spell vampirism
+    if (agent() && agent()->is_player() && is_player_book_spell(origin_spell))
+        majin_bo_vampirism(*mon, min(final, mon->stat_hp()));
 
     // Apply flavoured specials.
     mons_adjust_flavoured(mon, *this, postac, true);
@@ -6017,7 +6025,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         return;
     }
 
-    const dungeon_feature_type dngn_feat = grd(loc);
+    const dungeon_feature_type dngn_feat = env.grid(loc);
 
     bool at_wall = false;
 
@@ -6259,7 +6267,7 @@ actor* bolt::agent(bool ignore_reflection) const
     if (reflections > 0 && !ignore_reflection)
     {
         if (reflector == MID_PLAYER || source_id == MID_PLAYER)
-            return &menv[YOU_FAULTLESS];
+            return &env.mons[YOU_FAULTLESS];
         nominal_source = reflector;
     }
 

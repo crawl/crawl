@@ -84,6 +84,7 @@
     Alcon
     Brandon Allbery
     Warwick Allison
+    aMcNicky
     AndSDev
     Austin Appleby
     araganzar

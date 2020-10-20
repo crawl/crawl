@@ -683,7 +683,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             // before.
             if (knowledge.seen())
             {
-                dungeon_feature_type newfeat = grd(pos);
+                dungeon_feature_type newfeat = env.grid(pos);
                 trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
                 knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }
@@ -701,7 +701,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!wizard_map && (knowledge.seen() || already_mapped))
             continue;
 
-        const dungeon_feature_type feat = grd(pos);
+        const dungeon_feature_type feat = env.grid(pos);
 
         bool open = true;
 
@@ -710,8 +710,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || feat_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(env.grid(*ai))
+                                        || feat_is_closed_door(env.grid(*ai))))
                 {
                     open = true;
                     break;
@@ -724,14 +724,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (wizard_map)
             {
                 knowledge.set_feature(feat, _feat_default_map_colour(feat),
-                    feat_is_trap(grd(pos)) ? get_trap_type(pos)
+                    feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
             else if (!knowledge.feat())
             {
                 auto base_feat = magic_map_base_feat(feat);
                 auto colour = _feat_default_map_colour(base_feat);
-                auto trap = feat_is_trap(grd(pos)) ? get_trap_type(pos)
+                auto trap = feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                                    : TRAP_UNASSIGNED;
                 knowledge.set_feature(base_feat, colour, trap);
             }
@@ -800,17 +800,17 @@ void fully_map_level()
     {
         bool ok = false;
         for (adjacent_iterator ai(*ri, false); ai; ++ai)
-            if (!feat_is_opaque(grd(*ai)))
+            if (!feat_is_opaque(env.grid(*ai)))
                 ok = true;
         if (!ok)
             continue;
-        env.map_knowledge(*ri).set_feature(grd(*ri), 0,
-            feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
+        env.map_knowledge(*ri).set_feature(env.grid(*ri), 0,
+            feat_is_trap(env.grid(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
         set_terrain_seen(*ri);
 #ifdef USE_TILE
         tile_wizmap_terrain(*ri);
 #endif
-        if (igrd(*ri) != NON_ITEM)
+        if (env.igrid(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
     }
@@ -1128,7 +1128,7 @@ static void _draw_player(screen_cell_t *cell,
     cell->colour = mons_class_colour(you.symbol);
     if (you.swimming())
     {
-        if (grd(gc) == DNGN_DEEP_WATER)
+        if (env.grid(gc) == DNGN_DEEP_WATER)
             cell->colour = BLUE;
         else
             cell->colour = CYAN;
@@ -1452,6 +1452,7 @@ struct tile_overlay
     tileidx_t tile;
 };
 static vector<tile_overlay> tile_overlays;
+static unsigned int tile_overlay_i;
 
 void view_add_tile_overlay(const coord_def &gc, tileidx_t tile)
 {
@@ -1466,6 +1467,7 @@ struct glyph_overlay
     cglyph_t glyph;
 };
 static vector<glyph_overlay> glyph_overlays;
+static unsigned int glyph_overlay_i;
 
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 {
@@ -1484,6 +1486,67 @@ void view_clear_overlays()
 }
 
 /**
+ * Comparison function for coord_defs that orders coords based on the ordering
+ * used by rectangle_iterator.
+ */
+static bool _coord_def_cmp(const coord_def& l, const coord_def& r)
+{
+    return l.y < r.y || (l.y == r.y && l.x < r.x);
+}
+
+static void _sort_overlays()
+{
+    /* Stable sort is needed so that we don't swap draw order within cells. */
+#ifdef USE_TILE
+    stable_sort(begin(tile_overlays), end(tile_overlays),
+                [](const tile_overlay &left, const tile_overlay &right) {
+                    return _coord_def_cmp(left.gc, right.gc);
+                });
+    tile_overlay_i = 0;
+#endif
+#ifndef USE_TILE_LOCAL
+    stable_sort(begin(glyph_overlays), end(glyph_overlays),
+                [](const glyph_overlay &left, const glyph_overlay &right) {
+                    return _coord_def_cmp(left.gc, right.gc);
+                });
+    glyph_overlay_i = 0;
+#endif
+}
+
+static void add_overlays(const coord_def& gc, screen_cell_t* cell)
+{
+#ifdef USE_TILE
+    while (tile_overlay_i < tile_overlays.size()
+           && _coord_def_cmp(tile_overlays[tile_overlay_i].gc, gc))
+    {
+        tile_overlay_i++;
+    }
+    while (tile_overlay_i < tile_overlays.size()
+           && tile_overlays[tile_overlay_i].gc == gc)
+    {
+        const auto &overlay = tile_overlays[tile_overlay_i];
+        cell->tile.dngn_overlay[cell->tile.num_dngn_overlay++] = overlay.tile;
+        tile_overlay_i++;
+    }
+#endif
+#ifndef USE_TILE_LOCAL
+    while (glyph_overlay_i < glyph_overlays.size()
+           && _coord_def_cmp(glyph_overlays[glyph_overlay_i].gc, gc))
+    {
+        glyph_overlay_i++;
+    }
+    while (glyph_overlay_i < glyph_overlays.size()
+           && glyph_overlays[glyph_overlay_i].gc == gc)
+    {
+        const auto &overlay = glyph_overlays[glyph_overlay_i];
+        cell->glyph = overlay.glyph.ch;
+        cell->colour = overlay.glyph.col;
+        glyph_overlay_i++;
+    }
+#endif
+}
+
+/**
  * Constructs the main dungeon view, rendering it into a new crawl_view_buffer.
  *
  * @param a[in] the animation to be showing, if any.
@@ -1496,6 +1559,8 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
     screen_cell_t *cell(vbuf);
 
     cursor_control cs(false);
+
+    _sort_overlays();
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
@@ -1566,7 +1631,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                                && map_bounds(gc)
                                && you.on_current_level
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
-                               && !feat_is_solid(grd(gc)));
+                               && !feat_is_solid(env.grid(gc)));
 
     // Alter colour if flashing the characters vision.
     if (flash_colour)
@@ -1652,20 +1717,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
 #endif
 
-#ifdef USE_TILE
-    for (const auto &overlay : tile_overlays)
-        if (overlay.gc == gc)
-            cell->tile.dngn_overlay[cell->tile.num_dngn_overlay++] = overlay.tile;
-#endif
-
-#ifndef USE_TILE_LOCAL
-    for (const auto &overlay : glyph_overlays)
-        if (overlay.gc == gc)
-        {
-            cell->glyph = overlay.glyph.ch;
-            cell->colour = overlay.glyph.col;
-        }
-#endif
+    add_overlays(gc, cell);
 }
 
 // Hide view layers. The player can toggle certain layers back on

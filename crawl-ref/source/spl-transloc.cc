@@ -289,7 +289,7 @@ void wizard_blink()
     // Allow wizard blink to send player into walls, in case the
     // user wants to alter that grid to something else.
     if (cell_is_solid(beam.target))
-        grd(beam.target) = DNGN_FLOOR;
+        env.grid(beam.target) = DNGN_FLOOR;
 
     move_player_to_grid(beam.target, false);
 }
@@ -368,7 +368,7 @@ spret frog_hop(bool fail)
 
 static bool _check_charge_through(coord_def pos)
 {
-    if (!you.can_pass_through_feat(grd(pos)))
+    if (!you.can_pass_through_feat(env.grid(pos)))
     {
         clear_messages();
         mprf("You can't roll into that!");
@@ -517,16 +517,14 @@ static void _charge_cloud_trail(const coord_def pos)
  */
 spret palentonga_charge(bool fail)
 {
-    const int charge_range = 4;
     const coord_def initial_pos = you.pos();
 
     if (cancel_barbed_move())
         return spret::abort;
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, charge_range);
-    tgt.obeys_mesmerise = true;
-    if (!_find_charge_target(target_path, charge_range, &tgt))
+    targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
+    if (!_find_charge_target(target_path, PALENTONGA_CHARGE_RANGE, &tgt))
         return spret::abort;
 
     fail_check();
@@ -600,30 +598,29 @@ spret palentonga_charge(bool fail)
 }
 
 /**
- * Attempt to blink the player to a nearby tile of their choosing.
+ * Attempt to blink the player to a nearby tile of their choosing. Doesn't
+ * handle you.no_tele().
  *
- * @param fail          Whether this came from a miscast spell (& should
- *                      therefore fail after selecting a target)
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
  *                      for e.g. ?blink with blurryvis)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
-spret controlled_blink(bool fail, bool safe_cancel)
+spret controlled_blink(bool safe_cancel)
 {
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return spret::abort;
+    }
+
     coord_def target;
     targeter_smite tgt(&you, LOS_RADIUS);
     tgt.obeys_mesmerise = true;
     if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
         return spret::abort;
-
-    fail_check();
-
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return spret::success; // of a sort
-    }
 
     if (!you.attempt_escape(2))
         return spret::success; // of a sort
@@ -638,8 +635,6 @@ spret controlled_blink(bool fail, bool safe_cancel)
 
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target, false);
-    // Controlling teleport contaminates the player. -- bwr
-    contaminate_player(750 + random2(500), true);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -663,45 +658,6 @@ spret cast_blink(bool fail)
     fail_check();
     uncontrolled_blink();
     return spret::success;
-}
-
-/**
- * Cast the player spell Controlled Blink.
- *
- * @param fail    Whether the player miscast the spell.
- * @param safe    Whether it's safe to abort (not e.g. unknown ?blink)
- * @return        Whether the spell was successfully cast, aborted, or miscast.
- */
-spret cast_controlled_blink(bool fail, bool safe)
-{
-    // don't prompt if it's useless
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return spret::abort;
-    }
-
-    if (crawl_state.is_repeating_cmd())
-    {
-        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return spret::abort;
-    }
-
-    if (orb_limits_translocation())
-    {
-        if (!yesno("Your blink will be uncontrolled - continue anyway?",
-                   false, 'n'))
-        {
-            return spret::abort;
-        }
-
-        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
-        return cast_blink(fail);
-    }
-
-    return controlled_blink(fail, safe);
 }
 
 void you_teleport()
@@ -751,7 +707,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
     if (cell_is_solid(cell))
         return true;
 
-    return is_feat_dangerous(grd(cell), true) && !wizard_tele;
+    return is_feat_dangerous(env.grid(cell), true) && !wizard_tele;
 }
 
 static void _handle_teleport_update(bool large_change, const coord_def old_pos)
@@ -777,8 +733,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
     {
-        const dungeon_feature_type new_grid = grd(you.pos());
-        const dungeon_feature_type old_grid = grd(old_pos);
+        const dungeon_feature_type new_grid = env.grid(you.pos());
+        const dungeon_feature_type old_grid = env.grid(old_pos);
         if (feat_is_water(old_grid) && !feat_is_water(new_grid)
             || !feat_is_water(old_grid) && feat_is_water(new_grid))
         {
@@ -1054,7 +1010,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
         return spret::abort;
     }
 
-    item_def& item = mitm[item_idx];
+    item_def& item = env.item[item_idx];
 
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))
@@ -1128,7 +1084,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // less than dist.
     while (location_on_path < dist)
     {
-        if (!feat_eliminates_items(grd(new_spot)))
+        if (!feat_eliminates_items(env.grid(new_spot)))
             break;
         location_on_path++;
         if (location_on_path == dist)
@@ -1155,12 +1111,6 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 
 spret cast_golubrias_passage(const coord_def& where, bool fail)
 {
-    if (orb_limits_translocation())
-    {
-        mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
-        return spret::abort;
-    }
-
     if (player_in_branch(BRANCH_GAUNTLET))
     {
         mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
@@ -1172,17 +1122,19 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
     int tries2 = 0;
+    // Less accurate when the orb is interfering.
+    const int range = orb_limits_translocation() ? 4 : 2;
     coord_def randomized_where = where;
     coord_def randomized_here = you.pos();
     do
     {
         tries++;
         randomized_where = where;
-        randomized_where.x += random_range(-2, 2);
-        randomized_where.y += random_range(-2, 2);
+        randomized_where.x += random_range(-range, range);
+        randomized_where.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_where)
-            || grd(randomized_where) != DNGN_FLOOR
+            || env.grid(randomized_where) != DNGN_FLOOR
             || monster_at(randomized_where)
             || !you.see_cell(randomized_where)
             || you.trans_wall_blocking(randomized_where)
@@ -1193,11 +1145,11 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
     {
         tries2++;
         randomized_here = you.pos();
-        randomized_here.x += random_range(-2, 2);
-        randomized_here.y += random_range(-2, 2);
+        randomized_here.x += random_range(-range, range);
+        randomized_here.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_here)
-            || grd(randomized_here) != DNGN_FLOOR
+            || env.grid(randomized_here) != DNGN_FLOOR
             || monster_at(randomized_here)
             || !you.see_cell(randomized_here)
             || you.trans_wall_blocking(randomized_here)
@@ -1226,6 +1178,9 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         mpr("Something buggy happened.");
         return spret::abort;
     }
+
+    if (orb_limits_translocation())
+        mprf(MSGCH_ORB, "The Orb disrupts the stability of your passage!");
 
     trap->reveal();
     trap2->reveal();
@@ -1309,7 +1264,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         ray.advance();
         const coord_def newpos = ray.pos();
 
-        if (!victim->can_pass_through_feat(grd(newpos)))
+        if (!victim->can_pass_through_feat(env.grid(newpos)))
         {
             victim->collide(newpos, agent, pow);
             break;
@@ -1378,7 +1333,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
     mprf("Gravity reorients around %s.",
          mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(grd(where)) ? feature_description(grd(where),
+         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
                                                          NUM_TRAPS, "",
                                                          DESC_THE)
                                                          .c_str()

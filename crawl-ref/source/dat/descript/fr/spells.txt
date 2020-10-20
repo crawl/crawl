@@ -178,12 +178,6 @@ Conjure Flame spell
 
 Ce sort crée une colonne de flammes ronflantes.
 %%%%
-Controlled Blink spell
-
-Ce sort permet une translocation à courte distance, avec un contrôle précis.
-Soyez conscient que la téléportation contrôlée entrainera une contamination du
-sorcier par de l'énergie magique.
-%%%%
 Corona spell
 
 Ce sort provoque un halo lumineux qui entoure et surligne une créature. Cette

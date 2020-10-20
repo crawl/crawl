@@ -339,8 +339,10 @@ const vector<misc_item_type> misc_types =
 #endif
     MISC_ZIGGURAT,
 #if TAG_MAJOR_VERSION == 34
-    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET
+    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
 #endif
+    MISC_TIN_OF_TREMORSTONES,
+    MISC_CONDENSER_VANE,
 };
 
 enum missile_type
@@ -509,7 +511,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
 
-enum special_ring_type // jewellery mitm[].special values
+enum special_ring_type // jewellery env.item[].special values
 {
     SPRING_RANDART = 200,
     SPRING_UNRANDART = 201,
@@ -517,20 +519,22 @@ enum special_ring_type // jewellery mitm[].special values
 
 enum stave_type
 {
-    STAFF_WIZARDRY,
 #if TAG_MAJOR_VERSION == 34
+    STAFF_WIZARDRY,
     STAFF_POWER,
 #endif
     STAFF_FIRE,
     STAFF_COLD,
     STAFF_POISON,
+#if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
+#endif
     STAFF_DEATH,
     STAFF_CONJURATION,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENCHANTMENT,
-#endif
     STAFF_SUMMONING,
+#endif
     STAFF_AIR,
     STAFF_EARTH,
 #if TAG_MAJOR_VERSION == 34

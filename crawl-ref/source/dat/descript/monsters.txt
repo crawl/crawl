@@ -299,11 +299,10 @@ almost as deadly as the creatures they impersonate.
 %%%%
 Maggie
 
-A former Hell Knight apprentice. Impatient with the progress she was making
-with her former master, Maggie entered the Dungeon in search of a shortcut to
-fame and fortune. Lacking any sort of imagination on how to achieve this, she
-has settled on trying to slay a dragon - or two or three dragons, if one is not
-enough.
+In a distant time, Maggie was apprenticed to the dreaded Hell Knights - but she
+grew impatient. In search of a shortcut to fame and fortune (and somewhat short
+on imagination), she entered the Dungeon and set out to slay a dragon. Now
+having slain one, Maggie sees no reason to stop.
 %%%%
 Margery
 
@@ -693,6 +692,12 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
+boulder beetle
+
+A grey beetle with an almost impenetrable rocky carapace. When at some distance
+from its foe, a boulder beetle is capable of rolling at high speed, attempting
+to crash into its target for heavy damage.
+%%%%
 briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
@@ -782,10 +787,6 @@ crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
-%%%%
-crocodile
-
-A crocodilian with powerful jaws.
 %%%%
 crystal guardian
 
@@ -1357,11 +1358,6 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
-%%%%
-hippogriff
-
-A hybrid with the hindquarters of a horse and the wings, head and talons of a
-great eagle.
 %%%%
 hobgoblin
 

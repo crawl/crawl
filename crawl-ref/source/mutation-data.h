@@ -1439,6 +1439,22 @@ static const mutation_def mut_data[] =
    "Your yellow scales recede somewhat."},
 },
 
+{ MUT_SHARP_SCALES, 0, 3, mutflag::good, true,
+  "sharp scales",
+
+  {"You are partially covered in razor-sharp scales. (AC +1, Slay +1)",
+   "You are mostly covered in razor-sharp scales. (AC +2, Slay +2)",
+   "You are completely covered in razor-sharp scales. (AC +3, Slay +3)"},
+
+  {"Sharp scales grow over part of your body.",
+   "Sharp scales spread over more of your body.",
+   "Sharp scales cover your body completely."},
+
+  {"Your sharp scales disappear.",
+   "Your sharp scales recede somewhat.",
+   "Your sharp scales recede somewhat."},
+},
+
 { MUT_STURDY_FRAME, 2, 3, mutflag::good, true,
   "sturdy frame",
 
@@ -1469,6 +1485,22 @@ static const mutation_def mut_data[] =
   {"You feel your blood become entirely quiescent.",
    "You feel your blood thin.",
    "You feel your blood thin."},
+},
+
+{ MUT_BIG_BRAIN, 0, 3, mutflag::good, false,
+  "big brain",
+
+  {"You have an unusually large brain. (Int +2)",
+   "You have an extremely huge brain. (Int +4)",
+   "You have an absolutely massive brain. (Int +6, Wiz)"},
+
+  {"Your brain expands.",
+   "Your brain expands.",
+   "Your brain expands to incredible size."},
+
+  {"Your brain returns to normal size.",
+   "Your brain shrinks.",
+   "Your brain shrinks."},
 },
 
 { MUT_CAMOUFLAGE, 1, 3, mutflag::good, true,

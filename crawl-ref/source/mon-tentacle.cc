@@ -812,7 +812,7 @@ void move_solo_tentacle(monster* tentacle)
                 bool near_tree = false;
                 for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
                 {
-                    if (feat_is_tree(grd(*ai)))
+                    if (feat_is_tree(env.grid(*ai)))
                     {
                         near_tree = true;
                         break;
@@ -829,7 +829,7 @@ void move_solo_tentacle(monster* tentacle)
                         {
                             for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                             {
-                                if (feat_is_tree(grd(*ai2)))
+                                if (feat_is_tree(env.grid(*ai2)))
                                 {
                                     pull_constrictee = true;
                                     shift_constrictee = true;
@@ -895,7 +895,7 @@ void move_solo_tentacle(monster* tentacle)
     }
 
     // Why do I have to do this move? I don't get it.
-    // specifically, if tentacle isn't registered at its new position on mgrd
+    // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
     tentacle->move_to_pos(new_pos);
 
@@ -1052,7 +1052,7 @@ void move_child_tentacles(monster* mons)
         if (tentacle->is_constricting() && retract_found)
         {
             constrictee = actor_by_mid(tentacle->constricting->begin()->first);
-            if (feat_has_solid_floor(grd(old_pos))
+            if (feat_has_solid_floor(env.grid(old_pos))
                 && constrictee->is_habitable(old_pos))
             {
                 pull_constrictee = true;
@@ -1091,7 +1091,7 @@ void move_child_tentacles(monster* mons)
 
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
-        // mgrd the search fails (sometimes), Don't know why. -cao
+        // env.mgrid the search fails (sometimes), Don't know why. -cao
         tentacle->move_to_pos(new_pos);
 
         if (pull_constrictee)
@@ -1124,7 +1124,7 @@ void move_child_tentacles(monster* mons)
         // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-            mgrd(tentacle->pos()) = tentacle->mindex();
+            env.mgrid(tentacle->pos()) = tentacle->mindex();
             monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
 
             continue;
@@ -1237,7 +1237,7 @@ void mons_create_tentacles(monster* head)
     // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (monster_habitable_grid(tent_type, grd(*adj_it))
+        if (monster_habitable_grid(tent_type, env.grid(*adj_it))
             && !actor_at(*adj_it))
         {
             adj_squares.push_back(*adj_it);

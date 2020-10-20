@@ -223,6 +223,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
+        new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
@@ -393,6 +394,8 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
+        new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
+        new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -4046,6 +4049,7 @@ static void _edit_save(int argc, char **argv)
     {
         printf("Usage: crawl --edit-save <name> <command>, where <command> may be:\n"
                "  ls                          list the chunks\n"
+               "  info                        list detailed chunk and frag info\n"
                "  get <chunk> [<chunkfile>]   extract a chunk into <chunkfile>\n"
                "  put <chunk> [<chunkfile>]   import a chunk from <chunkfile>\n"
                "     <chunkfile> defaults to \"chunk\"; use \"-\" for stdout/stdin\n"
@@ -4556,6 +4560,9 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
     tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
+
+    tiles.json_write_string("glyph_mode_font", Options.glyph_mode_font);
+    tiles.json_write_int("glyph_mode_font_size", Options.glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 

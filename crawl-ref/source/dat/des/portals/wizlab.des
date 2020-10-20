@@ -1669,9 +1669,8 @@ KITEM:      d = scroll of summoning / scroll of holy word \
 KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
                 / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
-                / staff of summoning w:1 / manual of summonings w:1 \
-                / any randart jewellery w:5 / cloak good_item w:5 \
-                / star_item w:25 / superb_item
+                / manual of summonings w:2 / any randart jewellery w:5 \
+                / cloak good_item w:5 / star_item w:25 / superb_item
 KITEM:      g = randbook disc:summoning
 NSUBST:     d = e / d, ' = 4:1 / 3=12...., " = 4:1 / 3=12....
 NSUBST:     ` = 2:1 / 2:2 / 3=12...., ; = 2:1 / 2:2 / 3=12....

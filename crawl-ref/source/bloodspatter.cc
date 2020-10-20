@@ -37,18 +37,18 @@ static bool _allow_bleeding_on_square(const coord_def& where,
         return false;
 
     // No spattering into lava or water.
-    if (feat_is_lava(grd(where)) || feat_is_water(grd(where)))
+    if (feat_is_lava(env.grid(where)) || feat_is_water(env.grid(where)))
         return false;
 
     // No spattering into fountains (other than blood).
-    if (grd(where) == DNGN_FOUNTAIN_BLUE
-        || grd(where) == DNGN_FOUNTAIN_SPARKLING)
+    if (env.grid(where) == DNGN_FOUNTAIN_BLUE
+        || env.grid(where) == DNGN_FOUNTAIN_SPARKLING)
     {
         return false;
     }
 
     // The good gods like to keep their altars pristine.
-    if (is_good_god(feat_altar_god(grd(where))))
+    if (is_good_god(feat_altar_god(env.grid(where))))
         return false;
 
     return true;

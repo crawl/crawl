@@ -670,6 +670,13 @@ bool melee_attack::handle_phase_end()
         mons_do_tendril_disarm();
     }
 
+    if (attacker->alive()
+        && attacker->is_monster()
+        && attacker->as_monster()->has_ench(ENCH_ROLLING))
+    {
+        attacker->as_monster()->del_ench(ENCH_ROLLING);
+    }
+
     return attack::handle_phase_end();
 }
 
@@ -2087,16 +2094,16 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(SK_EARTH_MAGIC);
-        special_damage = apply_defender_ac(special_damage);
+        special_damage = staff_damage(SK_EARTH_MAGIC) * 4 / 3;
+        special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
 
         if (special_damage > 0)
         {
             special_damage_message =
                 make_stringf(
-                    "%s crush%s %s%s",
+                    "%s %s %s%s",
                     attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "es",
+                    attacker->conj_verb("shatter").c_str(),
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(special_damage).c_str());
         }
@@ -2162,16 +2169,29 @@ bool melee_attack::apply_staff_damage()
         }
         break;
 
-    case STAFF_SUMMONING:
-#if TAG_MAJOR_VERSION == 34
-    case STAFF_POWER:
-#endif
     case STAFF_CONJURATION:
+        special_damage = staff_damage(SK_CONJURATIONS);
+        special_damage = apply_defender_ac(special_damage);
+
+        if (special_damage > 0)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s %s%s",
+                    attacker->name(DESC_THE).c_str(),
+                    attacker->conj_verb("blast").c_str(),
+                    defender->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+
 #if TAG_MAJOR_VERSION == 34
+    case STAFF_SUMMONING:
+    case STAFF_POWER:
     case STAFF_ENCHANTMENT:
-#endif
     case STAFF_ENERGY:
     case STAFF_WIZARDRY:
+#endif
         break;
 
     default:
@@ -3195,9 +3215,9 @@ bool melee_attack::do_knockback(bool trample)
 
     if (!x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
-        || !defender->is_habitable_feat(grd(new_pos))
+        || !defender->is_habitable_feat(env.grid(new_pos))
         // don't trample anywhere the attacker can't follow
-        || !attacker->is_habitable_feat(grd(old_pos))
+        || !attacker->is_habitable_feat(env.grid(old_pos))
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
         || actor_at(new_pos)

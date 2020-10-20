@@ -1787,7 +1787,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_CREATE_TENTACLES:
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_CLOSE:
@@ -1861,6 +1860,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DREAM_DUST:
     case SPELL_CORRUPT_LOCALE:
     case SPELL_SPORULATE:
+    case SPELL_ROLL:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -2227,7 +2227,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
     for (const auto &dc : door)
     {
-        grd(dc) = feat;
+        env.grid(dc) = feat;
         set_terrain_changed(dc);
     }
 }
@@ -2256,7 +2256,7 @@ static int _tension_door_closed(set<coord_def> door,
  */
 static bool _can_force_door_shut(const coord_def& door)
 {
-    if (!feat_is_open_door(grd(door)))
+    if (!feat_is_open_door(env.grid(door)))
         return false;
 
     set<coord_def> all_door;
@@ -2286,7 +2286,7 @@ static bool _can_force_door_shut(const coord_def& door)
         // If there are items in the way, see if there's room to push them
         // out of the way. Having push space for an actor doesn't guarantee
         // push space for items (e.g. with a flying actor over lava).
-        if (igrd(dc) != NON_ITEM)
+        if (env.igrid(dc) != NON_ITEM)
         {
             if (!has_push_spaces(dc, false, &door_spots))
                 return false;
@@ -2321,7 +2321,7 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
     {
         set<coord_def> all_door;
         find_connected_identical(pos, all_door);
-        dungeon_feature_type old_feat = grd(pos);
+        dungeon_feature_type old_feat = env.grid(pos);
 
         act->move_to_pos(c);
         int new_tension = _tension_door_closed(all_door, old_feat);
@@ -2349,10 +2349,10 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
  */
 static bool _should_force_door_shut(const coord_def& door)
 {
-    if (!feat_is_open_door(grd(door)))
+    if (!feat_is_open_door(env.grid(door)))
         return false;
 
-    dungeon_feature_type old_feat = grd(door);
+    dungeon_feature_type old_feat = env.grid(door);
 
     set<coord_def> all_door;
     find_connected_identical(door, all_door);
@@ -2409,7 +2409,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
-        if (feat_is_open_door(grd(*ri)))
+        if (feat_is_open_door(env.grid(*ri)))
         {
             if (!_can_force_door_shut(*ri))
                 continue;
@@ -2457,7 +2457,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
             vector<coord_def> excludes;
             for (const auto &dc : all_door)
             {
-                grd(dc) = DNGN_CLOSED_DOOR;
+                env.grid(dc) = DNGN_CLOSED_DOOR;
                 set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
@@ -2489,7 +2489,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
         }
 
         // Try to seal the door
-        if (feat_is_closed_door(grd(*ri)) && !feat_is_sealed(grd(*ri)))
+        if (feat_is_closed_door(env.grid(*ri)) && !feat_is_sealed(env.grid(*ri)))
         {
             if (check_only)
                 return true;
@@ -2506,13 +2506,13 @@ static bool _seal_doors_and_stairs(const monster* warden,
                 had_effect = true;
             }
         }
-        else if (feat_is_travelable_stair(grd(*ri)))
+        else if (feat_is_travelable_stair(env.grid(*ri)))
         {
             if (check_only)
                 return true;
 
             dungeon_feature_type stype;
-            if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
+            if (feat_stair_direction(env.grid(*ri)) == CMD_GO_UPSTAIRS)
                 stype = DNGN_SEALED_STAIRS_UP;
             else
                 stype = DNGN_SEALED_STAIRS_DOWN;
@@ -2601,7 +2601,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
         victim = you.pos();
     else if (targ->foe != MHITNOT)
     {
-        const monster* vmons = &menv[targ->foe];
+        const monster* vmons = &env.mons[targ->foe];
         if (!vmons->alive())
             return false;
         victim = vmons->pos();
@@ -2789,14 +2789,14 @@ bool mons_word_of_recall(monster* mons, int recall_target)
 
 static bool _valid_vine_spot(coord_def p)
 {
-    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
+    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, env.grid(p)))
         return false;
 
     int num_trees = 0;
     bool valid_trees = false;
     for (adjacent_iterator ai(p); ai; ++ai)
     {
-        if (feat_is_tree(grd(*ai)))
+        if (feat_is_tree(env.grid(*ai)))
         {
             // Make sure this spot is not on a diagonal to its only adjacent
             // tree (so that the vines can pull back against the tree properly)
@@ -3360,7 +3360,7 @@ static coord_def _mons_awaken_earth_target(const monster &mon)
 
         // We can target solid cells, which themselves will awaken, so count
         // those as well.
-        if (_feat_is_awakenable(grd(candidate)))
+        if (_feat_is_awakenable(env.grid(candidate)))
             neighbours++;
 
         if (neighbours > 0)
@@ -3689,7 +3689,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
             || spell == SPELL_BLINK_ALLIES_AWAY))
     {
         for (auto ri = radius_iterator(mons.pos(), LOS_NO_TRANS); ri; ++ri)
-            if (feat_is_trap(grd(*ri)) && you.see_cell(*ri))
+            if (feat_is_trap(env.grid(*ri)) && you.see_cell(*ri))
                 return false;
     }
 
@@ -3999,7 +3999,7 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
+    if (spell_cast == SPELL_BLINK)
     {
         // Why only cast blink if nearby? {dlb}
         if (mons->can_see(you))
@@ -5420,7 +5420,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (grd(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
@@ -5433,12 +5433,12 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/)
                     place_cloud(CLOUD_STORM, pos, random2(7), &mons);
                 break;
             case BEAM_FRAG:
-                if (((grd(pos) == DNGN_ROCK_WALL
-                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
-                     || grd(pos) == DNGN_SLIMY_WALL)
+                if (((env.grid(pos) == DNGN_ROCK_WALL
+                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
+                     || env.grid(pos) == DNGN_SLIMY_WALL)
                      && x_chance_in_y(1, 4)
-                     || feat_is_door(grd(pos))
-                     || grd(pos) == DNGN_GRATE))
+                     || feat_is_door(env.grid(pos))
+                     || env.grid(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
                     destroy_wall(pos);
@@ -5751,7 +5751,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_INK_CLOUD:
-        if (!feat_is_watery(grd(mons->pos())))
+        if (!feat_is_watery(env.grid(mons->pos())))
             return;
 
         big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
@@ -6137,8 +6137,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            if (!safe_tiles.count(grd(*ai)) && !feat_is_trap(grd(*ai))
-                && feat_is_reachable_past(grd(*ai)))
+            if (!safe_tiles.count(env.grid(*ai)) && !feat_is_trap(env.grid(*ai))
+                && feat_is_reachable_past(env.grid(*ai)))
             {
                 sumcount++;
             }
@@ -6165,10 +6165,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            if (safe_tiles.count(grd(*ai)) || feat_is_trap(grd(*ai)))
+            if (safe_tiles.count(env.grid(*ai)) || feat_is_trap(env.grid(*ai)))
             {
                 // All items are moved inside.
-                if (igrd(*ai) != NON_ITEM)
+                if (env.igrid(*ai) != NON_ITEM)
                     move_items(*ai, mons->pos());
 
                 // All clouds are destroyed.
@@ -6594,6 +6594,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+
     case SPELL_CORRUPT_LOCALE:
     {
       ASSERT(foe);
@@ -6602,6 +6603,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
       return;
     }
 
+    case SPELL_ROLL:
+        mons->add_ench(ENCH_ROLLING);
+        simple_monster_message(*mons,
+                " curls into a ball and begins rolling!");
+        return;
     }
 
     if (spell_is_direct_explosion(spell_cast))
@@ -6799,7 +6805,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
-             && menv[mons->foe].type == MONS_NO_MONSTER)
+             && env.mons[mons->foe].type == MONS_NO_MONSTER)
     {
         target = "DEAD FOE";
     }
@@ -6838,9 +6844,9 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
             if (targ_prep == "at")
             {
-                if (grd(pbolt.target) != DNGN_FLOOR)
+                if (env.grid(pbolt.target) != DNGN_FLOOR)
                 {
-                    target = feature_description(grd(pbolt.target),
+                    target = feature_description(env.grid(pbolt.target),
                                                  NUM_TRAPS, "", DESC_THE);
                 }
                 else
@@ -7322,7 +7328,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target)
 
     for (fair_adjacent_iterator ai(target, false); ai; ++ai)
     {
-        if (!_feat_is_awakenable(grd(*ai))
+        if (!_feat_is_awakenable(env.grid(*ai))
             || env.markers.property_at(*ai, MAT_ANY, "veto_destroy")
                == "veto")
         {
@@ -7432,6 +7438,10 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::bad();
 
 
+    // Don't use abilities while rolling.
+    if (mon->has_ench(ENCH_ROLLING))
+        return ai_action::impossible();
+
     // Don't try to cast spells at players who are stepped from time.
     if (foe && foe->is_player() && you.duration[DUR_TIME_STEP])
         return ai_action::impossible();
@@ -7469,8 +7479,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CALL_TIDE:
         if (!player_in_branch(BRANCH_SHOALS) || mon->has_ench(ENCH_TIDE))
             return ai_action::impossible();
-        else if (!foe || (grd(mon->pos()) == DNGN_DEEP_WATER
-                     && grd(foe->pos()) == DNGN_DEEP_WATER))
+        else if (!foe || (env.grid(mon->pos()) == DNGN_DEEP_WATER
+                     && env.grid(foe->pos()) == DNGN_DEEP_WATER))
         {
             return ai_action::bad();
         }
@@ -7516,7 +7526,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
             return ai_action::bad();
         // intentional fall-through
     case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         if (mon->no_tele(true, false))
@@ -7585,7 +7594,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_WATERSTRIKE:
         ASSERT(foe);
-        return ai_action::good_or_impossible(feat_is_watery(grd(foe->pos())));
+        return ai_action::good_or_impossible(feat_is_watery(env.grid(foe->pos())));
 
     // Don't use unless our foe is close to us and there are no allies already
     // between the two of us
@@ -7874,6 +7883,10 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CHAOS_BREATH:
         return ai_action::good_or_impossible(!no_clouds);
 
+    case SPELL_ROLL:
+        // Don't start rolling if adjacent to your foe.
+        return ai_action::good_or_bad(!mon->get_foe()
+                || !adjacent(mon->pos(), mon->get_foe()->pos()));
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:

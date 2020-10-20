@@ -328,7 +328,7 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
+KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
@@ -680,8 +680,7 @@ local cpaEnchant = crawl.random2(6)
 
 -- Don't want to have the same items every time, but also don't want to pick
 -- the same unrandart twice. So build a custom list...
-local items = {"black knight's horse barding",
-               "hat of pondering",
+local items = {"hat of pondering",
                "crystal plate armour ego:ponderousness plus:" .. cpaEnchant,
                "plate armour ego:ponderousness plus:" .. plateEnchant}
 local itemCount = crawl.random2(2) + 1

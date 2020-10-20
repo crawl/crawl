@@ -1600,7 +1600,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1);
 
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = env.grid(you.pos());
 
     if (grants_flight && removing_ends_flight
         && is_feat_dangerous(feat, false, true))
@@ -2047,7 +2047,11 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
         return false;
     }
 
-    if (jewellery_is_amulet(to_puton))
+    // item type checking is a bit convoluted here; we can't yet meet the
+    // conditions for _can_puton_jewellery (called in _puton_ring) but
+    // jewellery_is_amulet is only well-defined if it is passed jewellery,
+    // and ASSERTs accordingly
+    if (to_puton.base_type == OBJ_JEWELLERY && jewellery_is_amulet(to_puton))
         return _puton_amulet(to_puton, check_for_inscriptions);
     const bool prompt = allow_prompt && Options.jewellery_prompt;
     return _puton_ring(to_puton, prompt, check_for_inscriptions);
@@ -2996,15 +3000,6 @@ void read(item_def* scroll)
             canned_msg(MSG_OK);
             return;
         }
-
-        if (scroll->sub_type == SCR_BLINKING
-            && orb_limits_translocation()
-            && !yesno("Your blink will be uncontrolled - continue anyway?",
-                      false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
     }
 
     if (you.get_mutation_level(MUT_BLURRY_VISION)
@@ -3093,16 +3088,8 @@ void read_scroll(item_def& scroll)
         const bool safely_cancellable
             = alreadyknown && !you.get_mutation_level(MUT_BLURRY_VISION);
 
-        if (orb_limits_translocation())
-        {
-            mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
-            uncontrolled_blink();
-        }
-        else
-        {
-            cancel_scroll = (cast_controlled_blink(false, safely_cancellable)
-                             == spret::abort) && alreadyknown;
-        }
+        cancel_scroll = (controlled_blink(safely_cancellable)
+                         == spret::abort) && alreadyknown;
 
         if (!cancel_scroll)
             mpr(pre_succ_msg); // ordering is iffy but w/e
@@ -3131,7 +3118,7 @@ void read_scroll(item_def& scroll)
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
 
-        if (feat_eliminates_items(grd(you.pos())))
+        if (feat_eliminates_items(env.grid(you.pos())))
         {
             mpr("Anything you acquired here would fall and be lost!");
             cancel_scroll = true;
@@ -3398,7 +3385,7 @@ void read_scroll(item_def& scroll)
 
 void tile_item_pickup(int idx, bool part)
 {
-    if (item_is_stationary(mitm[idx]))
+    if (item_is_stationary(env.item[idx]))
     {
         mpr("You can't pick that up.");
         return;

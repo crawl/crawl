@@ -78,7 +78,6 @@
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
 # * fragile:  Is destroyed when unequipped.
-# * fog:      Lets wearer use the evoke fog ability.
 # * evil:     Is treated as an evil item (hated by good gods).
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
@@ -716,14 +715,14 @@ DEX:     4
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 FB_BRAND: SPARM_INVISIBILITY
-INSCRIP:  +Fog
+INSCRIP:  *Fog
 PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
 SLAY:     -2
 STEALTH:  1
-BOOL:     seeinv, fog
+BOOL:     seeinv
 
 # start TAG_MAJOR_VERSION == 34
 NAME:    tower shield "Bullseye"
@@ -842,9 +841,9 @@ PLUS:    +2
 COLOUR:  LIGHTRED
 TILE:    urand_resistance
 TILE_EQ: kite_shield_of_resistance
-FIRE:    1
-COLD:    1
-MAGIC:   1
+FIRE:    2
+COLD:    2
+MAGIC:   2
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -941,7 +940,7 @@ STR:      -1
 INT:      -1
 DEX:      1
 LIFE:     1
-BOOL:     poison
+BOOL:     poison, evil
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
@@ -1262,7 +1261,6 @@ BOOL:     clarity
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
-INSCRIP: Archmagi
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 PLUS:    +6

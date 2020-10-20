@@ -195,13 +195,6 @@ const int AGILITY_BONUS = 5;
 
 #define MAX_MONSTER_HP 10000
 
-// some shortcuts:
-#define menv   env.mons
-#define mitm   env.item
-#define grd    env.grid
-#define mgrd   env.mgrid
-#define igrd   env.igrid
-
 // colours, such pretty colours ...
 // The order is important (IRGB bit patterns).
 enum COLOURS

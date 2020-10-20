@@ -7,6 +7,7 @@
 
 #include "spl-goditem.h"
 
+#include "art-enum.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
@@ -835,7 +836,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             }
 
             // don't try to shove the orb of zot into lava and/or crash
-            if (igrd(*ai) != NON_ITEM)
+            if (env.igrid(*ai) != NON_ITEM)
             {
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
@@ -847,7 +848,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
+            if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;
                 none_vis = false;
@@ -881,21 +882,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // closed doors are solid, but we don't want a behaviour difference
         // between open and closed doors
-        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        proceed = !cell_is_solid(*ai) || feat_is_door(env.grid(*ai));
         if (!zin && monster_at(*ai))
             proceed = false;
 
         if (proceed)
         {
             // All items are moved aside for zin, tomb just skips the tile.
-            if (igrd(*ai) != NON_ITEM && zin)
+            if (env.igrid(*ai) != NON_ITEM && zin)
                 push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
-                grd(*ai) = DNGN_FLOOR;
+                env.grid(*ai) = DNGN_FLOOR;
             }
 
             // Actually place the wall.
@@ -1369,4 +1370,28 @@ spret cast_random_effects(int pow, bolt& beam, bool fail)
     zapping(zap, pow, beam, false);
 
     return spret::success;
+}
+
+void majin_bo_vampirism(monster &mon, int damage)
+{
+    if (!player_equip_unrand(UNRAND_MAJIN) || crawl_state.is_god_acting())
+        return;
+
+    dprf("Majin bo might trigger, dam: %d.", damage);
+
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(mon)
+        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR]
+        || x_chance_in_y(2, 5))
+    {
+        return;
+    }
+
+    int hp_boost = 1 + random2(damage);
+    hp_boost = resist_adjust_damage(&mon, BEAM_NEG, hp_boost);
+
+    if (hp_boost)
+    {
+        canned_msg(MSG_GAIN_HEALTH);
+        inc_hp(hp_boost);
+    }
 }

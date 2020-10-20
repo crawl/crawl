@@ -579,37 +579,38 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
                                       int /*agent*/)
 {
-    // Try to pick an enhancer staff matching the player's best skill.
-    skill_type best_spell_skill = best_skill(SK_FIRST_MAGIC_SCHOOL,
-                                             SK_LAST_MAGIC);
-    bool found_enhancer = false;
-    int result = 0;
-    do
-    {
-        result = random2(NUM_STAVES);
-    }
-    while (item_type_removed(OBJ_STAVES, result));
+    vector<pair<stave_type, int>> weights = {
+        { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
+        { STAFF_COLD,        _skill_rdiv(SK_ICE_MAGIC) },
+        { STAFF_AIR,         _skill_rdiv(SK_AIR_MAGIC) },
+        { STAFF_EARTH,       _skill_rdiv(SK_EARTH_MAGIC) },
+        { STAFF_POISON,      _skill_rdiv(SK_POISON_MAGIC) },
+        { STAFF_DEATH,       _skill_rdiv(SK_NECROMANCY) },
+        { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
+        { NUM_STAVES,        5 },
+    };
 
-    switch (best_spell_skill)
+    for (auto &weight : weights)
     {
-#define TRY_GIVE(x) { if (!you.type_ids[OBJ_STAVES][x]) \
-                      {result = x; found_enhancer = true;} }
-    case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
-    case SK_ICE_MAGIC:    TRY_GIVE(STAFF_COLD);        break;
-    case SK_AIR_MAGIC:    TRY_GIVE(STAFF_AIR);         break;
-    case SK_EARTH_MAGIC:  TRY_GIVE(STAFF_EARTH);       break;
-    case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
-    case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
-    case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
-#undef TRY_GIVE
-    default:                                           break;
+        if (weight.first != NUM_STAVES
+            && get_ident_type(OBJ_STAVES, weight.first))
+        {
+            weight.second = 0;
+        }
     }
-    if (one_chance_in(found_enhancer ? 2 : 3))
-        return result;
 
-    // Otherwise pick a non-enhancer staff.
-    return coinflip() ? STAFF_WIZARDRY : STAFF_ENERGY;
+    stave_type staff = *random_choose_weighted(weights);
+
+    if (staff == NUM_STAVES)
+    {
+        do
+        {
+            staff = static_cast<stave_type>(random2(NUM_STAVES));
+        }
+        while (item_type_removed(OBJ_STAVES, staff));
+    }
+
+    return staff;
 }
 
 /**
@@ -1240,7 +1241,7 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
         }
 
-        item_def &acq_item(mitm[thing_created]);
+        item_def &acq_item(env.item[thing_created]);
         _adjust_brand(acq_item, divine, agent);
 
         // For plain armour, try to change the subtype to something
@@ -1308,16 +1309,7 @@ int acquirement_create_item(object_class_type class_wanted,
         if (class_wanted == OBJ_WANDS)
             acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
         else if (class_wanted == OBJ_GOLD)
-        {
-            // New gold acquirement formula from dpeg.
-            // Min=220, Max=5520, Mean=1218, Std=911
-            int quantity_rnd = roll_dice(1, 8); // ensure rnd sequence points
-            quantity_rnd *= roll_dice(1, 8);
-            quantity_rnd *= roll_dice(1, 8);
-            acq_item.quantity = 10 * (20
-                                    + roll_dice(1, 20)
-                                    + quantity_rnd);
-        }
+            acq_item.quantity = random_range(200, 1400, 2);
         else if (class_wanted == OBJ_MISSILES && !divine)
             acq_item.quantity *= 5;
         else if (quant > 1)
@@ -1339,18 +1331,20 @@ int acquirement_create_item(object_class_type class_wanted,
             // That might have changed the item's subtype.
             item_colour(acq_item);
         }
-        else if (acq_item.base_type == OBJ_JEWELLERY)
+        else if (acq_item.base_type == OBJ_JEWELLERY
+                 && !is_unrandom_artefact(acq_item))
         {
             switch (acq_item.sub_type)
             {
-            case RING_PROTECTION:
             case RING_STRENGTH:
             case RING_INTELLIGENCE:
             case RING_DEXTERITY:
+                acq_item.plus = GOOD_STAT_RING_PLUS;
+                break;
+            case RING_PROTECTION:
             case RING_EVASION:
             case RING_SLAYING:
-                // Make sure plus is >= 1.
-                acq_item.plus = max(abs((int) acq_item.plus), 1);
+                acq_item.plus = GOOD_RING_PLUS;
                 break;
 
             case RING_ATTENTION:
@@ -1412,16 +1406,16 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
-    item_set_appearance(mitm[thing_created]); // cleanup
+    item_set_appearance(env.item[thing_created]); // cleanup
 
     if (thing_created != NON_ITEM)
     {
-        ASSERT(mitm[thing_created].is_valid());
-        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
+        ASSERT(env.item[thing_created].is_valid());
+        env.item[thing_created].props[ACQUIRE_KEY].get_int() = agent;
     }
 
-    ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
-    ASSERT(!god_hates_item(mitm[thing_created]));
+    ASSERT(!is_useless_item(env.item[thing_created], false) || agent == GOD_XOM);
+    ASSERT(!god_hates_item(env.item[thing_created]));
 
     // If we have a zero coord_def, don't move the item to the grid. Used for
     // generating scroll of acquirement items.
@@ -1434,7 +1428,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_items(grd(pos))
+    if (feat_destroys_items(env.grid(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
@@ -1676,10 +1670,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 
     if (item_index != NON_ITEM)
     {
-        ASSERT(!god_hates_item(mitm[item_index]));
+        ASSERT(!god_hates_item(env.item[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
-        item = mitm[item_index];
+        item = env.item[item_index];
         set_ident_flags(item,
                 // Act as if we've recieved this item already to prevent notes.
                 ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);

@@ -196,7 +196,7 @@ define(function () {
     fg_flags.flags.ANIM_WEP     = [0, 0x4000];
     fg_flags.flags.SUMMONED     = [0, 0x8000];
     fg_flags.flags.PERM_SUMMON  = [0, 0x10000];
-    fg_flags.flags.DEATHS_DOOR  = [0, 0x20000];
+    // [0, 0x20000] was DEATHS_DOOR
     fg_flags.flags.RECALL       = [0, 0x40000];
     fg_flags.flags.DRAIN        = [0, 0x80000];
     fg_flags.flags.IDEALISED    = [0, 0x100000];
@@ -204,7 +204,7 @@ define(function () {
     fg_flags.flags.INFESTED     = [0, 0x400000];
     fg_flags.flags.CORRODED     = [0, 0x800000];
     fg_flags.flags.SWIFT        = [0, 0x1000000];
-    // [0, 0x2000000] was PINNED
+    fg_flags.flags.SLOWLY_DYING = [0, 0x2000000];
     fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
     fg_flags.flags.POSSESSABLE  = [0, 0x8000000];
 

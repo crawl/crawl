@@ -119,7 +119,7 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_SOLID); ri; ++ri)
         {
-            dungeon_feature_type f = grd(*ri);
+            dungeon_feature_type f = env.grid(*ri);
 
             _set_agrid_flag(*ri, areaprop::liquid);
 
@@ -620,7 +620,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (!_agrid_valid)
         _update_agrid();
 
-    if (feat_is_water(grd(p)) || feat_is_lava(grd(p)))
+    if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
     // "actually" liquefied (ie, check for movement)

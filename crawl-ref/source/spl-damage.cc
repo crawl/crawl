@@ -44,6 +44,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -80,7 +81,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
 
     if (cell_is_solid(beam.target))
     {
-        const char *feat = feat_type_name(grd(beam.target));
+        const char *feat = feat_type_name(env.grid(beam.target));
         mprf("You can't place the storm on %s.", article_a(feat).c_str());
         return spret::abort;
     }
@@ -387,7 +388,10 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         set_attack_conducts(conducts, mon, you.can_see(mon));
 
     if (damage)
+    {
+        majin_bo_vampirism(mon, min(damage, mon.stat_hp()));
         mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
+    }
 
     if (mon.alive())
     {
@@ -726,12 +730,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
 
 spret vampiric_drain(int pow, monster* mons, bool fail)
 {
-    if (you.hp == you.hp_max)
-    {
-        canned_msg(MSG_FULL_HEALTH);
-        return spret::abort;
-    }
-
     const bool observable = mons && mons->observable();
     if (!mons
         || mons->submerged()
@@ -767,22 +765,20 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
-    int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
+    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
+    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
 
-    hp_gain = min(mons->hit_points, hp_gain);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    hp_gain = resist_adjust_damage(mons, BEAM_NEG, hp_gain);
-
-    if (!hp_gain)
+    if (!dam)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
-    _player_hurt_monster(*mons, hp_gain, BEAM_NEG);
-
+    int hp_gain = min(mons->hit_points, dam);
     hp_gain = div_rand_round(hp_gain, 2);
+    hp_gain = min(you.hp_max - you.hp, hp_gain);
+
+    _player_hurt_monster(*mons, dam, BEAM_NEG);
 
     if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
     {
@@ -966,7 +962,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     if (env.markers.property_at(where, MAT_ANY, "veto_destroy") == "veto")
         return 0;
 
-    const dungeon_feature_type grid = grd(where);
+    const dungeon_feature_type grid = env.grid(where);
 
     switch (grid)
     {
@@ -1382,7 +1378,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
-    if (grd(where) != DNGN_TOXIC_BOG)
+    if (env.grid(where) != DNGN_TOXIC_BOG)
         return false;
 
     if (tracer)
@@ -2010,7 +2006,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.damage = dice_def(0, 5 + pow / 5);
 
     monster* mon = monster_at(target);
-    const dungeon_feature_type grid = grd(target);
+    const dungeon_feature_type grid = env.grid(target);
 
     if (target == you.pos())
     {
@@ -2373,6 +2369,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     bolt beam;
     beam.name              = "thunderbolt";
     beam.aux_source        = "lightning rod";
+    beam.origin_spell      = SPELL_THUNDERBOLT;
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
@@ -2438,7 +2435,7 @@ actor* forest_near_enemy(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(env.grid(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
                 return foe;
     }
 
@@ -2449,7 +2446,7 @@ actor* forest_near_enemy(const actor *mon)
 void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_DEFAULT); ri; ++ri)
-        if (feat_is_tree(grd(*ri))
+        if (feat_is_tree(env.grid(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
             mprf(ch, "%s", msg.c_str());
@@ -2482,7 +2479,7 @@ void forest_damage(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
+            if (feat_is_tree(env.grid(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
                 int dmg = 0;
                 string msg;
@@ -2788,8 +2785,9 @@ void handle_searing_ray()
     {
         monster* mons = nullptr;
         mons = monster_by_mid(you.props["searing_ray_mid"].get_int());
-        // homing targeting, save the target location in case it dies
-        if (mons && mons->alive())
+        // homing targeting, save the target location in case it dies or
+        // disappears
+        if (mons && mons->alive() && you.can_see(*mons))
             you.props["searing_ray_target"].get_coord() = mons->pos();
         else
             you.props["searing_ray_aimed_at_spot"] = true;
@@ -3074,6 +3072,7 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.hit        = 18 + pow / 6;
     beam.name       = "hail";
     beam.hit_verb   = "pelts";
+    beam.origin_spell = SPELL_HAILSTORM;
 
     monster *mons = monster_at(where);
     if (mons && mons->is_icy())
@@ -3103,7 +3102,10 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
         const monster* mon = act->as_monster();
         return mon && !mon->is_icy()
             && !mons_is_firewood(*mon)
-            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon));
+            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon))
+            && !mons_is_projectile(*mon)
+            && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
+            && !testbits(mon->flags, MF_DEMONIC_GUARDIAN);
     };
 
     if (tracer)
@@ -3224,7 +3226,7 @@ spret cast_imb(int pow, bool fail)
 
 void actor_apply_toxic_bog(actor * act)
 {
-    if (grd(act->pos()) != DNGN_TOXIC_BOG)
+    if (env.grid(act->pos()) != DNGN_TOXIC_BOG)
         return;
 
     if (!act->ground_level())
@@ -3308,7 +3310,7 @@ spret cast_frozen_ramparts(int pow, bool fail)
                 spell_range(SPELL_FROZEN_RAMPARTS, -1, false), C_SQUARE,
                 LOS_NO_TRANS, true); ri; ++ri)
     {
-        const auto feat = grd(*ri);
+        const auto feat = env.grid(*ri);
         if (feat_is_wall(feat))
             wall_locs.push_back(*ri);
     }

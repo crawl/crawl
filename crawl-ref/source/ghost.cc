@@ -175,9 +175,11 @@ static attack_type _pan_lord_random_attack_type()
     attack_type attack = AT_HIT;
     if (one_chance_in(4))
     {
-        do {
+        do
+        {
             attack = static_cast<attack_type>(random_range(AT_FIRST_ATTACK, AT_LAST_REAL_ATTACK));
-        } while (attack == AT_HIT || !is_plain_attack_type(attack));
+        }
+        while (attack == AT_HIT || !is_plain_attack_type(attack));
     }
     return attack;
 }
@@ -189,13 +191,15 @@ struct attack_form
     attack_flavour flavour = AF_PLAIN;
 };
 
-static attack_form _brand_attack(brand_type brand) {
+static attack_form _brand_attack(brand_type brand)
+{
     attack_form form;
     form.brand = brand;
     return form;
 }
 
-static attack_form _flavour_attack(attack_flavour flavour) {
+static attack_form _flavour_attack(attack_flavour flavour)
+{
     attack_form form;
     form.flavour = flavour;
     return form;
@@ -241,7 +245,8 @@ void ghost_demon::set_pan_lord_special_attack()
 
     if (brand == SPWPN_VENOM && coinflip())
         att_type = AT_STING; // such flavour!
-    switch (att_flav) {
+    switch (att_flav)
+    {
         case AF_TRAMPLE:
             att_type = AT_TRAMPLE;
             break;
@@ -787,8 +792,10 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
     {
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
+#endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:

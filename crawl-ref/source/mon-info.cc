@@ -74,6 +74,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
+    { ENCH_ROLLING,         MB_ROLLING },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -106,7 +107,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_VILE_CLUTCH,     MB_VILE_CLUTCH },
     { ENCH_WATERLOGGED,     MB_WATERLOGGED },
     { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
@@ -170,6 +170,12 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_MORE_POISONED;
         else
             return MB_MAX_POISONED;
+    case ENCH_SLOWLY_DYING:
+        if (mons.type == MONS_WITHERED_PLANT)
+            return MB_CRUMBLING;
+        if (mons_class_is_fragile(mons.type))
+            return MB_WITHERING;
+        return MB_SLOWLY_DYING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -248,7 +254,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 
         // If there's an adjacent deep water tile, the segment
         // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
+        if (env.grid(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
             if (mon && you.can_see(*mon))
@@ -263,7 +269,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
             return true;
         }
 
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
         {
             const monster *mon = monster_at(*ai);
 
@@ -543,7 +549,7 @@ monster_info::monster_info(const monster* m, int milev)
             && m->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             inv[MSLOT_WEAPON].reset(
-                new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+                new item_def(get_item_info(env.item[m->inv[MSLOT_WEAPON]])));
         }
         return;
     }
@@ -561,7 +567,7 @@ monster_info::monster_info(const monster* m, int milev)
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
-    can_go_frenzy = m->can_go_frenzy();
+    can_go_frenzy = m->can_go_frenzy(false);
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune(false))
@@ -706,7 +712,7 @@ monster_info::monster_info(const monster* m, int milev)
         else
             ok = true;
         if (ok)
-            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
+            inv[i].reset(new item_def(get_item_info(env.item[m->inv[i]])));
     }
 
     fire_blocker = DNGN_UNSEEN;
@@ -1764,6 +1770,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
         if (num && !name.short_singular.empty())
             conditions.push_back(_condition_string(num, count, name));
     }
+
 
     if (conditions.empty())
         return;

@@ -519,8 +519,8 @@ tutorial4 spell_success
 
 To check your spell proficiency, press <input>$cmd[CMD_DISPLAY_SPELLS]</input>
 <localtiles> or <input>mouseover</input> over your memorised
-spells</localtiles>. Compare your spell failure rates before and after wielding
-this staff.
+spells</localtiles>. Compare your spell failure rates before and after wearing
+this ring.
 %%%%
 tutorial4 mephitic_cloud
 

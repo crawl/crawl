@@ -61,7 +61,7 @@ public:
     virtual bool is_perm_summoned() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
-    // grids, such as mgrd.
+    // grids, such as env.mgrid.
     virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the

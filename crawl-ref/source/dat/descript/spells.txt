@@ -112,8 +112,7 @@ Beastly Appendage spell
     end
 }}
 
-While transformed, any equipped weapons, shields, and auxilliary armour are
-melded.
+While transformed, auxilliary armour on the affected body parts is melded.
 %%%%
 Berserker Rage spell
 
@@ -322,12 +321,6 @@ Create a cloud of magically sustained fire at the caster's feet. The fire takes
 a moment to begin burning with vigor and in its fragile initial state is easily
 smothered by either the caster or a wandering monster. Re-casting the spell
 will bring the fire fully to life, but will burn the caster.
-%%%%
-Controlled Blink spell
-
-Translocates the caster a short distance, with precise control. Be wary that
-controlled translocations will cause the subject to become contaminated with
-magical energy.
 %%%%
 Corona spell
 
@@ -1104,6 +1097,12 @@ Calls a surge of power from the earth, striking an enemy within the caster's
 sight. The spell cascades through nearby constructs, growing in strength with
 each one standing near the target.
 %%%%
+Roll spell
+
+Roll into a ball, granting the boulder beetle tremendous speed as well as
+double melee damage. The roll may only be performed when at distance from a
+foe, and the beetle will always unroll after an attempted roll attack.
+%%%%
 Sandblast spell
 
 Consumes a stone to create a short blast of high-velocity rock shards. Its
@@ -1552,7 +1551,6 @@ or rubble.
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
-Life will not be drained in excess of what the caster can capably absorb.
 %%%%
 Venom Bolt spell
 

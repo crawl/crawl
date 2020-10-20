@@ -331,17 +331,12 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Hero",
       "heroism", "",
       "You possess the skills of a mighty hero.", D_NO_FLAGS,
-      {{ "You feel like a meek peon again.", []() {
-          you.redraw_evasion      = true;
-          you.redraw_armour_class = true;
-      }}}},
+      {{"", okawaru_remove_heroism}}},
     { DUR_FINESSE,
       LIGHTBLUE, "Finesse",
       "finesse", "",
       "Your blows are lightning fast.", D_NO_FLAGS,
-      {{ "", []() {
-          mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
-      }}}},
+      {{"", okawaru_remove_finesse}}},
     { DUR_LIFESAVING,
       LIGHTGREY, "Prot",
       "protection", "lifesaving",

@@ -110,7 +110,7 @@ static void _update_feat_at(const coord_def &gp)
     if (!you.see_cell(gp))
         return;
 
-    dungeon_feature_type feat = grd(gp);
+    dungeon_feature_type feat = env.grid(gp);
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;
     if (feat_is_trap(feat))
@@ -234,10 +234,10 @@ void update_item_at(const coord_def &gp, bool detected, bool wizard)
 
     if (you.see_cell(gp) || wizard)
     {
-        const int item_grid = wizard ? igrd(gp) : you.visible_igrd(gp);
+        const int item_grid = wizard ? env.igrid(gp) : you.visible_igrd(gp);
         if (item_grid == NON_ITEM)
             return;
-        eitem = mitm[item_grid];
+        eitem = env.item[item_grid];
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (eitem.link > NON_ITEM)
@@ -282,22 +282,22 @@ static void _update_cloud(cloud_struct& cloud)
 static void _check_monster_pos(const monster* mons)
 {
     int s = mons->mindex();
-    ASSERT(mgrd(mons->pos()) == s);
+    ASSERT(env.mgrid(mons->pos()) == s);
 
     // [rob] The following in case asserts aren't enabled.
-    // [enne] - It's possible that mgrd and mons->x/y are out of
+    // [enne] - It's possible that env.mgrid and mons->x/y are out of
     // sync because they are updated separately. If we can see this
-    // monster, then make sure that the mgrd is set correctly.
-    if (mgrd(mons->pos()) != s)
+    // monster, then make sure that the env.mgrid is set correctly.
+    if (env.mgrid(mons->pos()) != s)
     {
         // If this mprf triggers for you, please note any special
         // circumstances so we can track down where this is coming
         // from.
         mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
-             "improperly placed. Updating mgrd.",
+             "improperly placed. Updating env.mgrid.",
              mons->name(DESC_PLAIN, true).c_str(), s,
              mons->pos().x, mons->pos().y);
-        mgrd(mons->pos()) = s;
+        env.mgrid(mons->pos()) = s;
     }
 }
 
@@ -320,7 +320,7 @@ static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
     if (mons_at && mons_at != mons)
         return false;
 
-    if (monster_habitable_grid(mons, grd(where)))
+    if (monster_habitable_grid(mons, env.grid(where)))
         return true;
 
     return false;
@@ -457,7 +457,7 @@ static void _update_monster(monster* mons)
 
     // Ripple effect?
     // Should match directn.cc's _mon_exposed
-    if (grd(gp) == DNGN_SHALLOW_WATER
+    if (env.grid(gp) == DNGN_SHALLOW_WATER
             && !mons->airborne()
             && !cloud_at(gp)
         || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)

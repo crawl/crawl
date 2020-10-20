@@ -23,14 +23,14 @@ function grandhive_vaults(e, hivewallglyph)
     -- monster set, so specify some monsters for Lair. Also,
     -- avoid hornets and bears, because nature or whatever.
     if you.branch() == "Lair" then
-        e.kmons('0 = yak / hippogriff / wolf w:8 / \
-                     water moccasin w:8 / wyvern w:8 / basilisk w:8 / \
-                     crocodile / river rat w:2 / steam dragon w:2')
+        e.kmons('0 = yak / wolf w:8 / water moccasin w:8 / wyvern w:8 / \
+                     basilisk w:8 / river rat w:2 / \
+                     steam dragon w:2')
         e.kmons('9 = elephant / cane toad / rime drake / \
                      blink frog w:8 / manticore w:4 / hell rat w:4')
         e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
-                     catoblepas w:4')
+                     boulder beetle w:2 / catoblepas w:2')
     end
 end
 

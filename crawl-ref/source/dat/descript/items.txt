@@ -997,49 +997,42 @@ staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it.
+and Ice Magic, they can freeze those struck by it, dealing cold damage which
+bypasses armour.
 %%%%
 staff of conjuration
 
-A staff that increases the power of conjurations cast by its wielder.
+A staff that increases the power of conjurations cast by its wielder. If the
+wielder is skilled in Evocations and Conjurations, they can blast those they
+strike with pure energy, dealing irresistible damage.
 %%%%
 staff of death
 
 A staff that increases the power of necromantic spells cast by its wielder, and
 protects them from negative energy. If the wielder is skilled in Evocations and
-Necromancy, they can inflict great pain on those living souls they strike.
+Necromancy, they can inflict great pain on those living souls they strike,
+dealing negative energy damage which bypasses armour.
 %%%%
 staff of earth
 
 A staff that increases the power of earth spells cast by its wielder. If the
-wielder is skilled in Evocations and Earth magic, they can crush those struck
-by it.
-%%%%
-staff of energy
-
-A staff that allows its wielder to channel ambient magical energy to restore
-their reserves of magic.
+wielder is skilled in Evocations and Earth magic, they can shatter those struck
+by it, dealing substantial irresistible damage which is strongly reduced by
+armour.
 %%%%
 staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it.
+and Fire Magic, they can burn those struck by it, dealing fire damage which
+bypasses armour.
 %%%%
 staff of poison
 
 A staff that increases the power of poisoning spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
-Evocations and Poison Magic, they can inflict poison damage on creatures struck
-by it.
-%%%%
-staff of summoning
-
-A staff that increases the power of summonings cast by its wielder.
-%%%%
-staff of wizardry
-
-A staff that increases the ability of its wielder to use magical spells.
+Evocations and Poison Magic, they can envenom those struck by it, dealing
+poison damage which bypasses armour.
 %%%%
 steam dragon scales
 

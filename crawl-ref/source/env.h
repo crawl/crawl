@@ -141,7 +141,7 @@ struct crawl_environment
 extern struct crawl_environment env;
 
 /**
- * Range proxy to iterate over only "real" menv slots, skipping anon slots.
+ * Range proxy to iterate over only "real" env.mons slots, skipping anon slots.
  *
  * Use as the range expression in a for loop:
  *     for (auto &mons : menv_real)
@@ -149,8 +149,8 @@ extern struct crawl_environment env;
 static const struct menv_range_proxy
 {
     menv_range_proxy() {}
-    monster *begin() const { return &menv[0]; }
-    monster *end()   const { return &menv[MAX_MONSTERS]; }
+    monster *begin() const { return &env.mons[0]; }
+    monster *end()   const { return &env.mons[MAX_MONSTERS]; }
 } menv_real;
 
 /**

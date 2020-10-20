@@ -728,7 +728,7 @@ static void _start_running(int dir, int mode)
     const coord_def next_pos = you.pos() + Compass[dir];
 
     if (!have_passive(passive_t::slime_wall_immune)
-        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
+        && (dir == RDIR_REST || you.is_habitable_feat(env.grid(next_pos)))
         && count_adjacent_slime_walls(next_pos))
     {
         mprf(MSGCH_WARN, "You're about to run into a slime covered wall!");
@@ -1251,12 +1251,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // Held
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't do that while %s.", held_status());
-        return false;
-    }
+    // ATTR_HELD is intentionally not tested here, it's handled in _take_stairs()
 
     // Bidirectional, but not actually a portal - allowed while mesmerised, but
     // not when otherwise unable to move.
@@ -1496,12 +1491,21 @@ static void _take_stairs(bool down)
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!crawl_state.arena_suspended);
 
-    const dungeon_feature_type ygrd = grd(you.pos());
+    const dungeon_feature_type ygrd = env.grid(you.pos());
 
     const bool shaft = (down && get_trap_type(you.pos()) == TRAP_SHAFT);
 
-    if (!(_can_take_stairs(ygrd, down, shaft)
-          && !cancel_barbed_move()
+    if (!_can_take_stairs(ygrd, down, shaft))
+        return;
+
+    if (you.attribute[ATTR_HELD])
+    {
+        free_self_from_net();
+        you.turn_is_over = true;
+        return;
+    }
+
+    if (!(!cancel_barbed_move()
           && _prompt_stairs(ygrd, down, shaft)
           && you.attempt_escape())) // false means constricted and don't escape
     {
@@ -2092,7 +2096,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
-        if (feat_is_altar(grd(you.pos())))
+        if (feat_is_altar(env.grid(you.pos())))
         {
             string msg = "Press <w>%</w> or <w>%</w> to pray at altars.";
             insert_commands(msg, { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
@@ -2166,7 +2170,7 @@ static void _check_trapped()
     }
 }
 
-static void _update_golubria_traps()
+static void _update_golubria_traps(int dur)
 {
     vector<coord_def> traps = find_golubria_on_level();
     for (auto c : traps)
@@ -2174,7 +2178,8 @@ static void _update_golubria_traps()
         trap_def *trap = trap_at(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
         {
-            if (--trap->ammo_qty <= 0)
+            trap->ammo_qty -= div_rand_round(dur, BASELINE_DELAY);
+            if (trap->ammo_qty <= 0)
             {
                 if (you.see_cell(c))
                     mpr("Your passage of Golubria closes with a snap!");
@@ -2273,7 +2278,7 @@ void world_reacts()
     handle_time();
     manage_clouds();
     if (env.level_state & LSTATE_GOLUBRIA)
-        _update_golubria_traps();
+        _update_golubria_traps(you.time_taken);
     if (env.level_state & LSTATE_STILL_WINDS)
         _update_still_winds();
     if (!crawl_state.game_is_arena())
@@ -2450,7 +2455,7 @@ static void _swing_at_target(coord_def move)
     }
 
     // Don't waste a turn if feature is solid.
-    if (feat_is_solid(grd(target)) && !you.confused())
+    if (feat_is_solid(env.grid(target)) && !you.confused())
         return;
     else
     {

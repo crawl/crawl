@@ -203,6 +203,9 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Nemelex
     {
       { 0, "draw from decks of power" },
+      { 1, "Nemelex will now gift you decks of power as you gain piety.",
+           "Nemelex will no longer gift you decks.",
+           "Nemelex will gift you decks of power as you gain piety." },
       { 3, ABIL_NEMELEX_TRIPLE_DRAW, "choose one out of three cards" },
       { 4, ABIL_NEMELEX_DEAL_FOUR, "deal four cards at a time" },
       { 5, ABIL_NEMELEX_STACK_FIVE, "stack five cards from your decks",
@@ -700,7 +703,7 @@ void dec_penance(int val)
 static bool _need_water_walking()
 {
     return you.ground_level() && you.species != SP_MERFOLK
-           && grd(you.pos()) == DNGN_DEEP_WATER;
+           && env.grid(you.pos()) == DNGN_DEEP_WATER;
 }
 
 static void _grant_temporary_waterwalk()
@@ -849,6 +852,13 @@ static void _inc_penance(god_type god, int val)
                 you.attribute[ATTR_DIVINE_ENERGY] = 0;
 #endif
         }
+        else if (god == GOD_OKAWARU)
+        {
+            if (you.duration[DUR_HEROISM])
+                okawaru_remove_heroism();
+            if (you.duration[DUR_FINESSE])
+                okawaru_remove_finesse();
+        }
 
         if (you_worship(god))
         {
@@ -995,29 +1005,39 @@ static bool _want_missile_gift()
            && x_chance_in_y(1 + you.skills[sk], 12);
 }
 
-static bool _give_nemelex_gift(bool forced = false)
+static bool _want_nemelex_gift()
 {
+    if (you.piety < piety_breakpoint(0))
+        return false;
+    const int piety_over_one_star = you.piety - piety_breakpoint(0);
+
     // Nemelex will give at least one gift early.
-    if (forced
-        || !you.num_total_gifts[GOD_NEMELEX_XOBEH]
-           && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
-        || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY))
+    if (!you.num_total_gifts[GOD_NEMELEX_XOBEH]
+        && x_chance_in_y(piety_over_one_star + 1, piety_breakpoint(1)))
     {
-        if (gift_cards())
-        {
-            simple_god_message(" deals you some cards!");
-            mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
-        }
-        else
-            simple_god_message(" goes to deal, but finds you have enough cards.");
-        _inc_gift_timeout(5 + random2avg(9, 2));
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
         return true;
     }
 
-    return false;
+    return one_chance_in(3) && x_chance_in_y(piety_over_one_star + 1, MAX_PIETY);
+}
+
+static bool _give_nemelex_gift(bool forced = false)
+{
+    if (!forced && !_want_nemelex_gift())
+        return false;
+
+    if (gift_cards())
+    {
+        simple_god_message(" deals you some cards!");
+        mprf(MSGCH_GOD, "You now have %s.", deck_summary().c_str());
+    }
+    else
+        simple_god_message(" goes to deal, but finds you have enough cards.");
+    _inc_gift_timeout(5 + random2avg(9, 2));
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    return true;
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1263,8 +1283,8 @@ static int _pakellas_high_misc()
 static bool _give_pakellas_gift()
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(grd(you.pos()))
-        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    if (!(feat_has_solid_floor(env.grid(you.pos()))
+        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
     {
         return false;
     }
@@ -1351,8 +1371,8 @@ static bool _give_pakellas_gift()
 static bool _give_trog_oka_gift(bool forced)
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(grd(you.pos()))
-        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    if (!(feat_has_solid_floor(env.grid(you.pos()))
+        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
     {
         return false;
     }
@@ -1483,7 +1503,7 @@ static bool _gift_sif_kiku_gift(bool forced)
     bool success = false;
     book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
-    if (!feat_has_solid_floor(grd(you.pos())))
+    if (!feat_has_solid_floor(env.grid(you.pos())))
         return false;
 
     // Kikubaaqudgha gives the lesser Necromancy books in a quick
@@ -1521,7 +1541,7 @@ static bool _gift_sif_kiku_gift(bool forced)
         // Replace a Kiku gift by a custom-random book.
         if (you_worship(GOD_KIKUBAAQUDGHA))
         {
-            make_book_kiku_gift(mitm[thing_created],
+            make_book_kiku_gift(env.item[thing_created],
                                 gift == BOOK_NECROMANCY);
         }
         if (thing_created == NON_ITEM)
@@ -2196,7 +2216,7 @@ void god_speaks(god_type god, const char *mesg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int orig_mon = mgrd(you.pos());
+    int orig_mon = env.mgrid(you.pos());
 
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
@@ -2210,7 +2230,7 @@ void god_speaks(god_type god, const char *mesg)
     mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
 
     fake_mon.reset();
-    mgrd(you.pos()) = orig_mon;
+    env.mgrid(you.pos()) = orig_mon;
 }
 
 void religion_turn_start()
@@ -2697,6 +2717,8 @@ int initial_wrath_penance_for(god_type god)
         case GOD_ZIN:
         default:
             return 25;
+        case GOD_RU:
+            return 0;
     }
 }
 
@@ -2986,6 +3008,13 @@ void excommunication(bool voluntary, god_type new_god)
         you.attribute[ATTR_SERPENTS_LASH] = 0;
         if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
             wu_jian_end_heavenly_storm();
+        break;
+
+    case GOD_OKAWARU:
+        if (you.duration[DUR_HEROISM])
+            okawaru_remove_heroism();
+        if (you.duration[DUR_FINESSE])
+            okawaru_remove_finesse();
         break;
 
     default:
@@ -3440,13 +3469,6 @@ static void _join_gozag()
     bool needs_redraw = false;
     for (const auto& power : get_god_powers(you.religion))
     {
-        if (power.abil == ABIL_GOZAG_POTION_PETITION
-            && !you.attribute[ATTR_GOZAG_FIRST_POTION])
-        {
-            simple_god_message(" offers you a free set of potion effects!");
-            needs_redraw = true;
-            continue;
-        }
         if (you.gold >= get_gold_cost(power.abil))
         {
             power.display(true, "You have enough gold to %s.");
@@ -3684,7 +3706,7 @@ void join_religion(god_type which_god)
 
 void god_pitch(god_type which_god)
 {
-    if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
+    if (which_god == GOD_BEOGH && env.grid(you.pos()) != DNGN_ALTAR_BEOGH)
         mpr("You bow before the missionary of Beogh.");
     else
     {

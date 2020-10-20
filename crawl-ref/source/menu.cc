@@ -1471,7 +1471,7 @@ FeatureMenuEntry::FeatureMenuEntry(const string &str, const coord_def p,
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
     if (in_bounds(p))
-        feat = grd(p);
+        feat = env.grid(p);
     else
         feat = DNGN_UNSEEN;
     pos      = p;
@@ -1942,7 +1942,8 @@ void Menu::update_title()
     {
         fs.textcolour(WHITE);
         fs.cprintf("Select what? (regex) %s", m_filter->get_text().c_str());
-    } else
+    }
+    else
         fs = calc_title();
 
     if (fs.empty())

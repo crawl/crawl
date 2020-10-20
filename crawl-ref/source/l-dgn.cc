@@ -1046,14 +1046,14 @@ static int dgn_floor_halo(lua_State *ls)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) == target)
+        if (env.grid(*ri) == target)
         {
             for (adjacent_iterator ai(*ri, false); ai; ++ai)
             {
                 if (!map_bounds(*ai))
                     continue;
 
-                const dungeon_feature_type feat2 = grd(*ai);
+                const dungeon_feature_type feat2 = env.grid(*ai);
 
                 if (feat2 == DNGN_FLOOR)
                     env.grid_colours(*ai) = colour;
@@ -1744,7 +1744,7 @@ LUAFN(dgn_fill_grd_area)
 
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
-            grd[x][y] = feat;
+            env.grid[x][y] = feat;
 
     return 0;
 }

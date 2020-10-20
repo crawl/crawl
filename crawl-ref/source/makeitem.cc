@@ -1542,10 +1542,6 @@ static stave_type _get_random_stave_type()
     }
     while (item_type_removed(OBJ_STAVES, r));
 
-    // staves of energy are 25% less common, wizardry is more common
-    if (r == STAFF_ENERGY && one_chance_in(4))
-        r = STAFF_WIZARDRY;
-
     return r;
 }
 
@@ -1622,22 +1618,23 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
 }
 
 /**
- * A 'good' plus for stat rings is +6, for other rings it's +4.
+ * A 'good' plus for stat rings is GOOD_STAT_RING_PLUS, for other rings it's
+ * GOOD_RING_PLUS.
  *
  * @param subtype       The type of ring in question.
  * @return              4 or 6.
  *                      (minor numerical variations are boring.)
  */
-static int _good_jewellery_plus(int subtype)
+static short _good_jewellery_plus(int subtype)
 {
     switch (subtype)
     {
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
-            return 6;
+            return GOOD_STAT_RING_PLUS;
         default:
-            return 4;
+            return GOOD_RING_PLUS;
     }
 }
 
@@ -1647,13 +1644,13 @@ static int _good_jewellery_plus(int subtype)
  * @param subtype       The type of ring in question.
  * @return              A 'plus' for that ring. 0 for most types.
  */
-static int _determine_ring_plus(int subtype)
+static short _determine_ring_plus(int subtype)
 {
     if (!jewellery_type_has_plusses(subtype))
         return 0;
 
     if (one_chance_in(5)) // 20% of such rings are cursed {dlb}
-        return -4;
+        return BAD_RING_PLUS;
     return _good_jewellery_plus(subtype);
 }
 
@@ -1737,7 +1734,7 @@ static void _generate_misc_item(item_def& item, int force_type)
  */
 void squash_plusses(int item_slot)
 {
-    item_def& item(mitm[item_slot]);
+    item_def& item(env.item[item_slot]);
 
     item.plus         = 0;
     item.plus2        = 0;
@@ -1793,9 +1790,7 @@ static void _setup_fallback_randart(const int unrand_id,
         && fallback_sub_type == WPN_STAFF)
     {
         item.base_type = OBJ_STAVES;
-        if (unrand_id == UNRAND_WUCAD_MU)
-            force_type = STAFF_ENERGY;
-        else if (unrand_id == UNRAND_OLGREB)
+        if (unrand_id == UNRAND_OLGREB)
             force_type = STAFF_POISON;
         else
             force_type = OBJ_RANDOM;
@@ -1881,7 +1876,7 @@ int items(bool allow_uniques,
     if (p == NON_ITEM)
         return NON_ITEM;
 
-    item_def& item(mitm[p]);
+    item_def& item(env.item[p]);
 
     const bool force_good = item_level >= ISPEC_GIFT;
 
@@ -1946,8 +1941,8 @@ int items(bool allow_uniques,
         const int unrand_id = -force_ego;
         if (get_unique_item_status(unrand_id) == UNIQ_NOT_EXISTS)
         {
-            make_item_unrandart(mitm[p], unrand_id);
-            ASSERT(mitm[p].is_valid());
+            make_item_unrandart(env.item[p], unrand_id);
+            ASSERT(env.item[p].is_valid());
             return p;
         }
 
@@ -2045,7 +2040,7 @@ int items(bool allow_uniques,
     item.link = NON_ITEM;
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERTM(mitm[p].is_valid(),
+    ASSERTM(env.item[p].is_valid(),
             "idx: %d, qty: %hd, base: %d, sub: %d, spe: %d, col: %d, rnd: %d",
             item.index(), item.quantity,
             (int)item.base_type, (int)item.sub_type, item.special,

@@ -231,7 +231,7 @@ static void initialize_crawl()
 
     dgn_reset_level();
     for (rectangle_iterator ri(0); ri; ++ri)
-        grd(*ri) = DNGN_FLOOR;
+        env.grid(*ri) = DNGN_FLOOR;
 
     los_changed();
     you.hp = you.hp_max = PLAYER_MAXHP;
@@ -623,7 +623,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
 
             bool this_spec = false;
 
-            monster* mp = &menv[index];
+            monster* mp = &env.mons[index];
 
             if (mp)
             {
@@ -782,7 +782,7 @@ int main(int argc, char* argv[])
     spell_damage_map damages;
     for (int i = 0; i < ntrials; ++i)
     {
-        monster* mp = &menv[index];
+        monster* mp = &env.mons[index];
         const string mname = mp->name(DESC_PLAIN, true);
         exper += exper_value(*mp);
         mac += mp->armour_class();
@@ -796,7 +796,7 @@ int main(int argc, char* argv[])
         // iterations as well.
         for (int obj : mp->inv)
             if (obj != NON_ITEM)
-                set_unique_item_status(mitm[obj], UNIQ_NOT_EXISTS);
+                set_unique_item_status(env.item[obj], UNIQ_NOT_EXISTS);
         // Destroy the monster.
         mp->reset();
         you.unique_creatures.set(spec_type, false);
@@ -815,7 +815,7 @@ int main(int argc, char* argv[])
     mac /= ntrials;
     mev /= ntrials;
 
-    monster& mon(menv[index]);
+    monster& mon(env.mons[index]);
 
     const string symbol(monster_symbol(mon));
 

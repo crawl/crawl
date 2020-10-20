@@ -298,6 +298,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CAUSE_TELEPORTATION,   prop_note::plain },
         { ARTP_NOISE,                 prop_note::plain },
         { ARTP_HARM,                  prop_note::plain },
+        { ARTP_RAMPAGING,             prop_note::plain },
         { ARTP_CORRODE,               prop_note::plain },
         { ARTP_DRAIN,                 prop_note::plain },
         { ARTP_SLOW,                  prop_note::plain },
@@ -569,6 +570,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
         { ARTP_HARM, "It increases damage dealt and taken.", false},
+        { ARTP_RAMPAGING, "It bestows one free step when moving towards enemies.",
+          false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -724,6 +727,7 @@ static string _describe_demon(const string& name, bool flying)
         "bug-like",
         "skeletal",
         "mantis",
+        "slithering",
     };
 
     static const char* wing_names[] =
@@ -774,6 +778,8 @@ static string _describe_demon(const string& name, bool flying)
         "a cow's skull for a head",
         "the head of a bird",
         "a large fungus growing from its neck",
+        "an ominous eye at the end of a thin stalk",
+        "a face from nightmares",
     };
 
     static const char* misc_descs[] =
@@ -816,6 +822,8 @@ static string _describe_demon(const string& name, bool flying)
         " Its body is scourged by damnation.",
         " Its body is extensively scarred.",
         " You find it difficult to look away.",
+        " Oddly mechanical noises accompany its jarring movements.",
+        " Its skin looks unnervingly wrinkled.",
     };
 
     static const char* smell_descs[] =
@@ -1834,7 +1842,7 @@ static string _describe_armour(const item_def &item, bool verbose)
             break;
 
         case SPARM_RAMPAGING:
-            description += "Its wearer goes twice as far when moving towards enemies.";
+            description += "Its wearer takes one free step when moving towards enemies.";
             break;
         }
     }
@@ -2058,7 +2066,9 @@ string get_item_description(const item_def &item, bool verbose,
 
             if (db_desc.empty())
             {
-                if (item_type_known(item))
+                if (item_type_removed(item.base_type, item.sub_type))
+                    description << "This item has been removed.\n";
+                else if (item_type_known(item))
                 {
                     description << "[ERROR: no desc for item name '" << db_name
                                 << "']. Perhaps this item has been removed?\n";
@@ -2172,11 +2182,19 @@ string get_item_description(const item_def &item, bool verbose,
             description << "\n\n" + _describe_lignify_ac();
         break;
 
+    case OBJ_WANDS:
+        if (item_type_known(item))
+        {
+            spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+            description << "\n\nNoise when evoked: " << spell_noise_string(spell);
+        }
+        break;
+
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
-    case OBJ_WANDS:
+
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
@@ -2339,7 +2357,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
 
     // suppress this if the feature changed out of view
-    if (!marker_desc.empty() && grd(pos) == feat)
+    if (!marker_desc.empty() && env.grid(pos) == feat)
         long_desc += marker_desc;
 
     // Display branch descriptions on the entries to those branches.
@@ -2609,7 +2627,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     return actions;
 }
 
-static string _actions_desc(const vector<command_type>& actions, const item_def& item)
+static string _actions_desc(const vector<command_type>& actions)
 {
     static const map<command_type, string> act_str =
     {
@@ -2633,8 +2651,7 @@ static string _actions_desc(const vector<command_type>& actions, const item_def&
                                 {
                                     return act_str.at(cmd);
                                 },
-                                ", or ")
-           + " the " + item.name(DESC_BASENAME) + ".";
+                                ", or ") + ".";
 }
 
 // Take a key and a list of commands and return the command from the list
@@ -2820,7 +2837,7 @@ command_type describe_item_popup(const item_def &item,
     {
         if (!spells.empty())
             footer_text.cprintf("Select a spell, or ");
-        footer_text += formatted_string(_actions_desc(actions, item));
+        footer_text += formatted_string(_actions_desc(actions));
         auto footer = make_shared<Text>();
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
@@ -3515,7 +3532,7 @@ static string _describe_demonspawn_base(int species)
     case MONS_INFERNAL_DEMONSPAWN:
         return "It gives off an intense heat.";
     case MONS_TORTUROUS_DEMONSPAWN:
-        return "It menaces with bony spines.";
+        return "It oozes dark energies.";
     }
     return "";
 }
@@ -3930,7 +3947,8 @@ static int _to_hit_pct(const monster_info& mi, attack &atk, bool melee)
         return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
 
     int hits = 0;
-    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++){
+    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
+    {
         // Apply post-roll manipulations:
         int adjusted_mhit = rolled_mhit + _lighting_modifiers(mi);
 
@@ -3971,7 +3989,9 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
     {
         melee_attack attk(&you, nullptr);
         to_hit_pct = _to_hit_pct(mi, attk, true);
-    } else {
+    }
+    else
+    {
         const int missile = you.m_quiver.get_fire_item();
         if (missile < 0)
             return; // failure to launch
@@ -4613,6 +4633,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     default:
         break;
+    }
+
+    if (mons_class_is_fragile(mi.type))
+    {
+        if (mi.is(MB_CRUMBLING))
+            inf.body << "\nIt is quickly crumbling away.\n";
+        else if (mi.is(MB_WITHERING))
+            inf.body << "\nIt is quickly withering away.\n";
+        else
+            inf.body << "\nIf struck, it will die soon after.\n";
     }
 
     if (!mons_is_unique(mi.type))

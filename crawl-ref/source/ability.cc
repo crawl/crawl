@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -46,6 +47,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -338,8 +340,6 @@ static const ability_def Ability_List[] =
 #endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
-    { ABIL_EVOKE_FOG, "Evoke Fog",
-      2, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
       5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
@@ -718,7 +718,7 @@ int get_gold_cost(ability_type ability)
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_price_for_shop(true);
     case ABIL_GOZAG_POTION_PETITION:
-        return gozag_potion_price();
+        return GOZAG_POTION_PETITION_AMOUNT;
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
     default:
@@ -1311,7 +1311,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_STOP_FLYING)
     {
-        if (is_feat_dangerous(grd(you.pos()), false, true))
+        if (is_feat_dangerous(env.grid(you.pos()), false, true))
         {
             if (!quiet)
                 mpr("Stopping flight right now would be fatal!");
@@ -1573,7 +1573,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_hop(quiet);
 
     case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet);
+    {
+        if (!_can_movement_ability(quiet))
+            return false;
+        targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
+        for (monster_near_iterator mi(&you); mi; ++mi)
+            if (tgt.valid_aim(mi->pos()))
+                return true;
+        if (!quiet)
+            mpr("There's nothing you can charge at!");
+        return false;
+    }
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
@@ -1591,21 +1601,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_TROG_BERSERK:
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
-
-    case ABIL_EVOKE_FOG:
-        if (cloud_at(you.pos()))
-        {
-            if (!quiet)
-                mpr("It's too cloudy to do that here.");
-            return false;
-        }
-        if (env.level_state & LSTATE_STILL_WINDS)
-        {
-            if (!quiet)
-                mpr("The air is too still for clouds to form.");
-            return false;
-        }
-        return true;
 
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
@@ -1672,7 +1667,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         // Is there a valid place to wall jump?
         bool has_targets = false;
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (feat_can_wall_jump_against(grd(*ai)))
+            if (feat_can_wall_jump_against(env.grid(*ai)))
             {
                 has_targets = true;
                 break;
@@ -2197,12 +2192,6 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
-    case ABIL_EVOKE_FOG:     // cloak of the Thief
-        fail_check();
-        mpr("With a swish of your cloak, you release a cloud of fog.");
-        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
-        break;
-
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2448,6 +2437,14 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
 
         monster* mons = monster_at(beam.target);
+
+        if (mons && you.can_see(*mons) && mons->is_illusion())
+        {
+            simple_monster_message(*mons, "'s clone doesn't have a soul to enslave!");
+            // Still costs a turn to gain the information.
+            return spret::success;
+        }
+
         if (mons == nullptr || !you.can_see(*mons)
             || !yred_can_enslave_soul(mons))
         {
@@ -2615,10 +2612,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
-    {
         return divine_exegesis(fail);
-        break;
-    }
 
     case ABIL_ELYVILON_LIFESAVING:
         fail_check();
@@ -2804,11 +2798,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_FEDHAS_GROW_BALLISTOMYCETE:
-    {
         return fedhas_grow_ballistomycete(fail);
-
-        break;
-    }
 
     case ABIL_FEDHAS_OVERGROW:
     {
@@ -2821,11 +2811,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_FEDHAS_GROW_OKLOB:
-    {
         return fedhas_grow_oklob(fail);
-
-        break;
-    }
 
     case ABIL_TRAN_BAT:
     {
@@ -3519,12 +3505,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
-    }
-
-    if (player_equip_unrand(UNRAND_THIEF)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
     }
 
     if (player_equip_unrand(UNRAND_RCLOUDS)
