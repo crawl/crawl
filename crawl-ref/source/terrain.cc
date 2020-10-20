@@ -22,6 +22,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "tile-env.h"
 #include "fight.h"
 #include "feature.h"
 #include "fprop.h"
@@ -1103,11 +1104,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     env.pgrid(dst) = env.pgrid(src);
     env.grid_colours(dst) = env.grid_colours(src);
 #ifdef USE_TILE
-    env.tile_bk_fg(dst) = env.tile_bk_fg(src);
-    env.tile_bk_bg(dst) = env.tile_bk_bg(src);
-    env.tile_bk_cloud(dst) = env.tile_bk_cloud(src);
+    tile_env.bk_fg(dst) = tile_env.bk_fg(src);
+    tile_env.bk_bg(dst) = tile_env.bk_bg(src);
+    tile_env.bk_cloud(dst) = tile_env.bk_cloud(src);
 #endif
-    env.tile_flv(dst) = env.tile_flv(src);
+    tile_env.flv(dst) = tile_env.flv(src);
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
@@ -1258,8 +1259,8 @@ void dungeon_terrain_changed(const coord_def &pos,
 
         env.grid(pos) = nfeat;
         // Reset feature tile
-        env.tile_flv(pos).feat = 0;
-        env.tile_flv(pos).feat_idx = 0;
+        tile_env.flv(pos).feat = 0;
+        tile_env.flv(pos).feat_idx = 0;
 
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);

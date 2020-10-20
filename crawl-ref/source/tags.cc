@@ -45,6 +45,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "end.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "ghost.h"
 #include "god-abil.h" // just for the Ru sac penalty key
@@ -5953,8 +5954,8 @@ void _tag_construct_level_tiles(writer &th)
     // how many Y?
     marshallShort(th, GYM);
 
-    marshallShort(th, env.tile_names.size());
-    for (const string &name : env.tile_names)
+    marshallShort(th, tile_env.names.size());
+    for (const string &name : tile_env.names)
     {
         marshallString(th, name);
 #ifdef DEBUG_TILE_NAMES
@@ -5963,24 +5964,24 @@ void _tag_construct_level_tiles(writer &th)
     }
 
     // flavour
-    marshallShort(th, env.tile_default.wall_idx);
-    marshallShort(th, env.tile_default.floor_idx);
+    marshallShort(th, tile_env.default_flavour.wall_idx);
+    marshallShort(th, tile_env.default_flavour.floor_idx);
 
-    marshallShort(th, env.tile_default.wall);
-    marshallShort(th, env.tile_default.floor);
-    marshallShort(th, env.tile_default.special);
+    marshallShort(th, tile_env.default_flavour.wall);
+    marshallShort(th, tile_env.default_flavour.floor);
+    marshallShort(th, tile_env.default_flavour.special);
 
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallShort(th, env.tile_flv[count_x][count_y].wall_idx);
-            marshallShort(th, env.tile_flv[count_x][count_y].floor_idx);
-            marshallShort(th, env.tile_flv[count_x][count_y].feat_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].wall_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].floor_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].feat_idx);
 
-            marshallShort(th, env.tile_flv[count_x][count_y].wall);
-            marshallShort(th, env.tile_flv[count_x][count_y].floor);
-            marshallShort(th, env.tile_flv[count_x][count_y].feat);
-            marshallShort(th, env.tile_flv[count_x][count_y].special);
+            marshallShort(th, tile_env.flv[count_x][count_y].wall);
+            marshallShort(th, tile_env.flv[count_x][count_y].floor);
+            marshallShort(th, tile_env.flv[count_x][count_y].feat);
+            marshallShort(th, tile_env.flv[count_x][count_y].special);
         }
 
     marshallInt(th, TILE_WALL_MAX);
@@ -6952,13 +6953,13 @@ static void _debug_count_tiles()
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
         {
-            t = env.tile_bk_bg[i][j];
+            t = tile_env.bk_bg[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
-            t = env.tile_bk_fg[i][j];
+            t = tile_env.bk_fg[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
-            t = env.tile_bk_cloud[i][j];
+            t = tile_env.bk_cloud[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
         }
@@ -6975,38 +6976,38 @@ void _tag_read_level_tiles(reader &th)
     // how many Y?
     const int gy = unmarshallShort(th);
 
-    env.tile_names.clear();
+    tile_env.names.clear();
     unsigned int num_tilenames = unmarshallShort(th);
     for (unsigned int i = 0; i < num_tilenames; ++i)
     {
 #ifdef DEBUG_TILE_NAMES
         string temp = unmarshallString(th);
         mprf("Reading tile_names[%d] = %s", i, temp.c_str());
-        env.tile_names.push_back(temp);
+        tile_env.names.push_back(temp);
 #else
-        env.tile_names.push_back(unmarshallString(th));
+        tile_env.names.push_back(unmarshallString(th));
 #endif
     }
 
     // flavour
-    env.tile_default.wall_idx  = unmarshallShort(th);
-    env.tile_default.floor_idx = unmarshallShort(th);
-    env.tile_default.wall      = unmarshallShort(th);
-    env.tile_default.floor     = unmarshallShort(th);
-    env.tile_default.special   = unmarshallShort(th);
+    tile_env.default_flavour.wall_idx  = unmarshallShort(th);
+    tile_env.default_flavour.floor_idx = unmarshallShort(th);
+    tile_env.default_flavour.wall      = unmarshallShort(th);
+    tile_env.default_flavour.floor     = unmarshallShort(th);
+    tile_env.default_flavour.special   = unmarshallShort(th);
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
         {
-            env.tile_flv[x][y].wall_idx  = unmarshallShort(th);
-            env.tile_flv[x][y].floor_idx = unmarshallShort(th);
-            env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
+            tile_env.flv[x][y].wall_idx  = unmarshallShort(th);
+            tile_env.flv[x][y].floor_idx = unmarshallShort(th);
+            tile_env.flv[x][y].feat_idx  = unmarshallShort(th);
 
             // These get overwritten by _regenerate_tile_flavour
-            env.tile_flv[x][y].wall    = unmarshallShort(th);
-            env.tile_flv[x][y].floor   = unmarshallShort(th);
-            env.tile_flv[x][y].feat    = unmarshallShort(th);
-            env.tile_flv[x][y].special = unmarshallShort(th);
+            tile_env.flv[x][y].wall    = unmarshallShort(th);
+            tile_env.flv[x][y].floor   = unmarshallShort(th);
+            tile_env.flv[x][y].feat    = unmarshallShort(th);
+            tile_env.flv[x][y].special = unmarshallShort(th);
         }
 
     _debug_count_tiles();
@@ -7019,15 +7020,15 @@ void _tag_read_level_tiles(reader &th)
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
-    if (idx <= 0 || idx > env.tile_names.size())
+    if (idx <= 0 || idx > tile_env.names.size())
     {
 #ifdef DEBUG_TILE_NAMES
         mprf("Index out of bounds: idx = %d - 1, size(tile_names) = %d",
-            idx, env.tile_names.size());
+            idx, tile_env.names.size());
 #endif
         return 0;
     }
-    string tilename = env.tile_names[idx - 1];
+    string tilename = tile_env.names[idx - 1];
 
     tileidx_t tile;
     if (!tile_dngn_index(tilename.c_str(), &tile))
@@ -7050,16 +7051,16 @@ static void _regenerate_tile_flavour()
 {
     /* Remember the wall_idx and floor_idx; tile_init_default_flavour
        sets them to 0 */
-    tileidx_t default_wall_idx = env.tile_default.wall_idx;
-    tileidx_t default_floor_idx = env.tile_default.floor_idx;
+    tileidx_t default_wall_idx = tile_env.default_flavour.wall_idx;
+    tileidx_t default_floor_idx = tile_env.default_flavour.floor_idx;
     tile_init_default_flavour();
     if (default_wall_idx)
     {
         tileidx_t new_wall = _get_tile_from_vector(default_wall_idx);
         if (new_wall)
         {
-            env.tile_default.wall_idx = default_wall_idx;
-            env.tile_default.wall = new_wall;
+            tile_env.default_flavour.wall_idx = default_wall_idx;
+            tile_env.default_flavour.wall = new_wall;
         }
     }
     if (default_floor_idx)
@@ -7067,15 +7068,15 @@ static void _regenerate_tile_flavour()
         tileidx_t new_floor = _get_tile_from_vector(default_floor_idx);
         if (new_floor)
         {
-            env.tile_default.floor_idx = default_floor_idx;
-            env.tile_default.floor = new_floor;
+            tile_env.default_flavour.floor_idx = default_floor_idx;
+            tile_env.default_flavour.floor = new_floor;
         }
     }
 
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
-        tile_flavour &flv = env.tile_flv(*ri);
+        tile_flavour &flv = tile_env.flv(*ri);
         flv.wall = 0;
         flv.floor = 0;
         flv.feat = 0;

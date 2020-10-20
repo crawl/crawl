@@ -27,6 +27,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
@@ -1049,9 +1050,9 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // We remove any references to mcache when
     // writing to the background.
-    env.tile_bk_fg(gc) = env.tile_fg(ep);
-    env.tile_bk_bg(gc) = env.tile_bg(ep);
-    env.tile_bk_cloud(gc) = env.tile_cloud(ep);
+    tile_env.bk_fg(gc) = tile_env.fg(ep);
+    tile_env.bk_bg(gc) = tile_env.bg(ep);
+    tile_env.bk_cloud(gc) = tile_env.cloud(ep);
 #endif
 
     return ret;
@@ -1110,7 +1111,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
     if (in_bounds(gc))
-        cell->tile.bg = env.tile_bg(ep);
+        cell->tile.bg = tile_env.bg(ep);
 
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #else
@@ -1140,11 +1141,11 @@ static void _draw_player(screen_cell_t *cell,
 #endif
 
 #ifdef USE_TILE
-    cell->tile.fg = env.tile_fg(ep) = tileidx_player();
-    cell->tile.bg = env.tile_bg(ep);
-    cell->tile.cloud = env.tile_cloud(ep);
+    cell->tile.fg = tile_env.fg(ep) = tileidx_player();
+    cell->tile.bg = tile_env.bg(ep);
+    cell->tile.cloud = tile_env.cloud(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
     UNUSED(ep, anim_updates);
 #endif
@@ -1161,11 +1162,11 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 
 #ifdef USE_TILE
-    cell->tile.fg = env.tile_fg(ep);
-    cell->tile.bg = env.tile_bg(ep);
-    cell->tile.cloud = env.tile_cloud(ep);
+    cell->tile.fg = tile_env.fg(ep);
+    cell->tile.bg = tile_env.bg(ep);
+    cell->tile.cloud = tile_env.cloud(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
     UNUSED(ep, anim_updates);
 #endif

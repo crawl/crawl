@@ -10,6 +10,7 @@
 #include "externs.h"
 #include "directn.h"
 #include "env.h"
+#include "tile-env.h"
 #include "colour.h"
 #include "dungeon.h"
 #include "mon-abil.h"
@@ -30,6 +31,7 @@
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
 crawl_environment env; // Requires dlua.
+crawl_tile_environment tile_env; // Requires dlua.
 player you;
 game_state crawl_state;
 

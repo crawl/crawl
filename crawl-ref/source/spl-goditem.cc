@@ -14,6 +14,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "fight.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -911,16 +912,16 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 // Make the walls silver.
                 env.grid_colours(*ai) = WHITE;
-                env.tile_flv(*ai).feat_idx =
+                tile_env.flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_silver_wall");
-                env.tile_flv(*ai).feat = TILE_DNGN_SILVER_WALL;
+                tile_env.flv(*ai).feat = TILE_DNGN_SILVER_WALL;
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
-                    env.tile_bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
-                    env.tile_bk_fg(*ai) = 0;
+                    tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
+                    tile_env.bk_fg(*ai) = 0;
 #endif
                 }
             }

@@ -34,6 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
+#include "tile-env.h"
 #include "files.h"
 #include "flood-find.h"
 #include "ghost.h"
@@ -705,8 +706,8 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
 static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 {
     // It might be good to clear some pgrid flags as well.
-    env.tile_flv(c).feat    = 0;
-    env.tile_flv(c).special = 0;
+    tile_env.flv(c).feat    = 0;
+    tile_env.flv(c).special = 0;
     env.grid_colours(c) = 0;
     env.grid(c) = feat;
 }
@@ -1153,10 +1154,10 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         tileidx_t rock;
         if (tile_dngn_index(place.map.rock_tile.c_str(), &rock))
         {
-            env.tile_default.wall_idx =
+            tile_env.default_flavour.wall_idx =
                 store_tilename_get_index(place.map.rock_tile);
 
-            env.tile_default.wall = rock;
+            tile_env.default_flavour.wall = rock;
         }
     }
 
@@ -1165,10 +1166,10 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         tileidx_t floor;
         if (tile_dngn_index(place.map.floor_tile.c_str(), &floor))
         {
-            env.tile_default.floor_idx =
+            tile_env.default_flavour.floor_idx =
                 store_tilename_get_index(place.map.floor_tile);
 
-            env.tile_default.floor = floor;
+            tile_env.default_flavour.floor = floor;
         }
     }
 
@@ -1357,7 +1358,7 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
-    env.tile_names.clear();
+    tile_env.names.clear();
 
     update_portal_entrances();
 }
@@ -5300,7 +5301,7 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
                 env.map_knowledge(*ri).set_feature(feature, 0,
                                                    get_trap_type(*ri));
 #ifdef USE_TILE
-                env.tile_bk_bg(*ri) = feature;
+                tile_env.bk_bg(*ri) = feature;
 #endif
             }
         }

@@ -7,6 +7,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
+#include "tile-env.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -50,8 +51,8 @@ void InventoryRegion::pack_buffers()
                 if (i > (unsigned int) mx * my * (m_grid_page+1) && item.tile)
                     break;
 
-                int num_floor = tile_dngn_count(env.tile_default.floor);
-                tileidx_t t = env.tile_default.floor + i % num_floor;
+                int num_floor = tile_dngn_count(tile_env.default_flavour.floor);
+                tileidx_t t = tile_env.default_flavour.floor + i % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
             else

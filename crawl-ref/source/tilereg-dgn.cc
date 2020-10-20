@@ -14,6 +14,7 @@
 #include "directn.h"
 #include "dgn-height.h"
 #include "env.h"
+#include "tile-env.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -951,7 +952,7 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
+            tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
         }
         else
         {
@@ -961,7 +962,7 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += "\n";
         }
 
-        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
+        tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');
 
         if (!m_vbuf.empty())
         {
@@ -975,16 +976,16 @@ bool DungeonRegion::update_tip_text(string &tip)
                             "\n     wall:  %d (%s) (%d)"
                             "\n     feat:  %d (%s) (%d)"
                             "\n  special:  %d",
-                            env.tile_flv(gc).floor,
-                            tile_dngn_name(env.tile_flv(gc).floor),
-                            env.tile_flv(gc).floor_idx,
-                            env.tile_flv(gc).wall,
-                            tile_dngn_name(env.tile_flv(gc).wall),
-                            env.tile_flv(gc).wall_idx,
-                            env.tile_flv(gc).feat,
-                            tile_dngn_name(env.tile_flv(gc).feat),
-                            env.tile_flv(gc).feat_idx,
-                            env.tile_flv(gc).special);
+                            tile_env.flv(gc).floor,
+                            tile_dngn_name(tile_env.flv(gc).floor),
+                            tile_env.flv(gc).floor_idx,
+                            tile_env.flv(gc).wall,
+                            tile_dngn_name(tile_env.flv(gc).wall),
+                            tile_env.flv(gc).wall_idx,
+                            tile_env.flv(gc).feat,
+                            tile_dngn_name(tile_env.flv(gc).feat),
+                            tile_env.flv(gc).feat_idx,
+                            tile_env.flv(gc).special);
 
         ret = true;
     }

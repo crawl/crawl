@@ -24,6 +24,7 @@
 #include "dgn-height.h"
 #include "dungeon.h"
 #include "end.h"
+#include "tile-env.h"
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
@@ -189,15 +190,15 @@ int store_tilename_get_index(const string& tilename)
 
     // Increase index by 1 to distinguish between first entry and none.
     unsigned int i;
-    for (i = 0; i < env.tile_names.size(); ++i)
-        if (tilename == env.tile_names[i])
+    for (i = 0; i < tile_env.names.size(); ++i)
+        if (tilename == tile_env.names[i])
             return i+1;
 
 #ifdef DEBUG_TILE_NAMES
     mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
 #endif
     // If not found, add tile name to vector.
-    env.tile_names.push_back(tilename);
+    tile_env.names.push_back(tilename);
     return i+1;
 }
 
@@ -631,7 +632,7 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             string name = (*overlay)(x, y).floortile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).floor_idx =
+                tile_env.flv(gc).floor_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t floor;
@@ -639,14 +640,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
-                env.tile_flv(gc).floor = floor + offset;
+                tile_env.flv(gc).floor = floor + offset;
                 has_floor = true;
             }
 
             name = (*overlay)(x, y).rocktile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).wall_idx =
+                tile_env.flv(gc).wall_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t rock;
@@ -654,14 +655,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
-                env.tile_flv(gc).wall = rock + offset;
+                tile_env.flv(gc).wall = rock + offset;
                 has_rock = true;
             }
 
             name = (*overlay)(x, y).tile;
             if (!name.empty() && name != "none")
             {
-                env.tile_flv(gc).feat_idx =
+                tile_env.flv(gc).feat_idx =
                     store_tilename_get_index(name);
 
                 tileidx_t feat;
@@ -677,14 +678,14 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
                     offset = random2(tile_dngn_count(feat));
 
                 if (!has_floor && env.grid(gc) == DNGN_FLOOR)
-                    env.tile_flv(gc).floor = feat + offset;
+                    tile_env.flv(gc).floor = feat + offset;
                 else if (!has_rock && env.grid(gc) == DNGN_ROCK_WALL)
-                    env.tile_flv(gc).wall = feat + offset;
+                    tile_env.flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = feat + offset;
+                    tile_env.flv(gc).feat = feat + offset;
                 }
             }
         }

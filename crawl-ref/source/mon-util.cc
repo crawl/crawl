@@ -26,6 +26,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "fight.h"
 #include "files.h"
@@ -1126,7 +1127,7 @@ void discover_mimic(const coord_def& pos)
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
-    apply_variations(env.tile_flv(pos), &tile, pos);
+    apply_variations(tile_env.flv(pos), &tile, pos);
 #endif
 
     if (you.see_cell(pos))
