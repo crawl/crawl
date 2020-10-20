@@ -19,24 +19,6 @@ void place_monster(const coord_def& pos, const std::string& spec);
 
 void require_mons_empty(const int);
 
-void require_execstring(const std::string& cmd, int nresults,
-                        const std::string&);
-
-// ------------------------ //
-// General helper functions //
-// ------------------------ //
-
-/// \brief Run dlua command and require no error
-void require_execstring(const std::string& cmd, int nresults = 0,
-                        const std::string& context = "base")
-{
-    const int err = dlua.execstring(cmd.c_str(), context.c_str(), nresults);
-    INFO("Lua command: " << cmd.c_str());
-    INFO("Lua error: " << dlua.error);
-    REQUIRE(err == 0);
-    REQUIRE(dlua.error == "");
-}
-
 // ------------- //
 // General tests //
 // ------------- //

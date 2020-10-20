@@ -190,3 +190,14 @@ FixtureLua::~FixtureLua()
 {
     details_fixture_lua::_teardown_fixture_lua();
 }
+
+/// \brief Run dlua command and require no error
+void require_execstring(const std::string& cmd, int nresults,
+                        const std::string& context)
+{
+    const int err = dlua.execstring(cmd.c_str(), context.c_str(), nresults);
+    INFO("Lua command: " << cmd.c_str());
+    INFO("Lua error: " << dlua.error);
+    REQUIRE(err == 0);
+    REQUIRE(dlua.error == "");
+}
