@@ -1078,6 +1078,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
       }
     },
+    
+    // ('J') for jellies
+    
+    {  MST_HOLY_FLAN,
+      {
+       { SPELL_CLEANSING_FLAME, 50, MON_SPELL_NATURAL },
+      }
+    },
 
     // ('M') Mummies.
     {  MST_MUMMY_PRIEST,
