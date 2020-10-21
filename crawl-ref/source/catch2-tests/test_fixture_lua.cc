@@ -300,9 +300,7 @@ TEST_CASE("Random seed", "[single-file][test_fixture_lua]")
                 CAPTURE(crawl_state.seed, you.game_seed, Options.seed);
                 const std::string m_name = env.mons[j].name(DESC_PLAIN, true);
                 if (i == 0)
-                {
                     saved_names[j] = m_name;
-                }
                 else
                 {
                     CAPTURE(i, j, m_name, saved_names[j]);
