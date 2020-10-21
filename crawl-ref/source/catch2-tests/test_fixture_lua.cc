@@ -27,15 +27,13 @@ void require_mons_empty(const int);
 // ------------- //
 
 /// \brief Setup and tear down the fixture for 3 times
-TEST_CASE("fixture_lua: Test setup and teardown",
-          "[single-file][test_fixture_lua]")
+TEST_CASE("Test setup and teardown", "[single-file][test_fixture_lua]")
 {
     for (int i = 0; i < 5; ++i) FixtureLua fl;
 }
 
 /// \brief Setup and tear down the fixture for 3 times
-TEST_CASE("fixture_lua: Test running a Lua command",
-          "[single-file][test_fixture_lua]")
+TEST_CASE("Test running a Lua command", "[single-file][test_fixture_lua]")
 {
     for (int i = 0; i < 5; ++i)
     {
@@ -45,8 +43,7 @@ TEST_CASE("fixture_lua: Test running a Lua command",
 }
 
 /// \brief Test running a Lua script
-TEST_CASE("fixture_lua: Test running a Lua script",
-          "[single-file][test_fixture_lua]")
+TEST_CASE("Test running a Lua script", "[single-file][test_fixture_lua]")
 {
     for (int i = 0; i < 5; ++i)
     {
@@ -98,8 +95,7 @@ void require_mons_empty(const int start = 0)
 // ---------------------- //
 
 /// \brief Various tests of monster placement with Lua
-TEST_CASE("fixture_lua: Monster placement",
-          "[single-file][test_fixture_lua]")
+TEST_CASE("Monster placement", "[single-file][test_fixture_lua]")
 {
     /// \brief Test if placing a monster causes Lua error
     SECTION("Test if monster placement gives lua error")
@@ -174,7 +170,7 @@ TEST_CASE("fixture_lua: Monster placement",
 // ----------- //
 // Test player //
 // ----------- //
-TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
+TEST_CASE("Player", "[single-file][test_fixture_lua]")
 {
     /// \brief Test if the fixture can reset the player's position
     SECTION("Test resetting the player's position")
@@ -220,7 +216,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
 // ----------------- //
 // Test tile/terrain //
 // ----------------- //
-TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
+TEST_CASE("Dungeon features", "[single-file][test_fixture_lua]")
 {
     /// \brief Test if the fixture can reset a dungeon tile's flavor
     SECTION("Test resetting a dungeon tile")
