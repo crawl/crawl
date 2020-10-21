@@ -1,11 +1,8 @@
 #pragma once
 
-namespace details_fixture_lua
-{
-    void _setup_fixture_lua();
+void _setup_fixture_lua();
 
-    void _teardown_fixture_lua();
-}
+void _teardown_fixture_lua();
 
 class FixtureLua
 {
