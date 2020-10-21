@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mutex>
 #include <vector>
 
 namespace details_init_guards

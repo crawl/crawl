@@ -5,12 +5,15 @@
 /// - Monster placement (dgn.create_monster)
 /// - you.mutate, moveto
 /// - tile and terrain
-
 #include "catch.hpp"
 #include "AppHdr.h"
+#include "dlua.h"
+#include "env.h"
 #include "fixture_lua.h"
-#include "stringutil.h"
+#include "player.h"
 #include "rltiles/tiledef-dngn.h"
+#include "stringutil.h"
+#include "random.h"
 
 // -------------------- //
 // Forward declarations //

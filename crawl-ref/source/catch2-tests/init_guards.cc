@@ -7,6 +7,7 @@
 /// \warning This is a temporary solution. The real solution is of course write
 /// the clean-up functions.
 #include "init_guards.h"
+#include <mutex>
 
 namespace init_guards {
 /// \brief Get an instance of InitGuards
