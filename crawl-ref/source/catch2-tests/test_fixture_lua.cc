@@ -72,19 +72,16 @@ void place_monster(const coord_def& pos, const std::string& spec)
 void require_mons_empty(const int start = 0)
 {
     const int true_start = std::max(start, 0);
-    for (size_t j = true_start; j < env.mons.size(); ++j)
+    for (size_t i = true_start; i < env.mons.size(); ++i)
     {
-        const monster& m_now = env.mons[j];
-        if (j < MAX_MONSTERS)
+        const monster& m_now = env.mons[i];
+        CAPTURE(i, m_now.type, m_now.name(DESC_PLAIN, true));
+        if (i < MAX_MONSTERS)
         {
             REQUIRE(m_now.type == monster_type::MONS_NO_MONSTER);
-        } else if (j == MAX_MONSTERS)
+        }
+        else
         {
-            REQUIRE(m_now.type == monster_type::MONS_PROGRAM_BUG);
-        } else if (j > MAX_MONSTERS)
-        {
-            INFO("mons type: " << m_now.type);
-            INFO("monster_name: " << m_now.name(DESC_PLAIN, true));
             REQUIRE(m_now.type == monster_type::MONS_PROGRAM_BUG);
         }
     }
