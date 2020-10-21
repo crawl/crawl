@@ -37,7 +37,7 @@ The contents of this text are:
                 level_map_cursor_step
 3-e     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
-                view_lock_y, view_lock, center_on_scroll,
+                view_lock_y, view_lock, centre_on_scroll,
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
@@ -720,7 +720,7 @@ view_lock_y = true
 view_lock = true
         Aliased option that sets both view_lock_x and view_lock_y.
 
-center_on_scroll = false
+centre_on_scroll = false
         If this is set, the viewport centres on the player character
         whenever it scrolls (this option is irrelevant if view_lock_x
         and view_lock_y are set).
@@ -738,7 +738,7 @@ symmetric_scroll = true
         not horizontally. symmetric_scroll can be less disorienting
         than free scrolling.
 
-        This option is not relevant if view_lock or center_on_scroll
+        This option is not relevant if view_lock or centre_on_scroll
         are set.
 
 scroll_margin_x = 2
@@ -986,9 +986,8 @@ auto_switch = false
         wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = true
-        If this is set to false, autoexplore/travel will not open doors. If they
-        can explore or travel without opening a door they will do so. If not,
-        they will stop in front of a door they would need to go through.
+        If this is set to false, autoexplore/travel will not open doors,
+        instead stopping in front of them.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
