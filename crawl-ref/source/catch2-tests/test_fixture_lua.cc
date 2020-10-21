@@ -30,11 +30,7 @@ void require_mons_empty(const int);
 TEST_CASE("fixture_lua: Test setup and teardown",
           "[single-file][test_fixture_lua]")
 {
-    for (int i = 0; i < 5; ++i)
-    {
-        _setup_fixture_lua();
-        _teardown_fixture_lua();
-    }
+    for (int i = 0; i < 5; ++i) FixtureLua fl;
 }
 
 /// \brief Setup and tear down the fixture for 3 times
@@ -43,9 +39,8 @@ TEST_CASE("fixture_lua: Test running a Lua command",
 {
     for (int i = 0; i < 5; ++i)
     {
-        _setup_fixture_lua();
+        FixtureLua fl;
         require_execstring("return 1 + 1", 1);
-        _teardown_fixture_lua();
     }
 }
 
@@ -55,10 +50,9 @@ TEST_CASE("fixture_lua: Test running a Lua script",
 {
     for (int i = 0; i < 5; ++i)
     {
-        _setup_fixture_lua();
+        FixtureLua fl;
         you.hp = 100;  // need this or it crashes
         dlua.execfile("mutation.lua");
-        _teardown_fixture_lua();
     }
 }
 
@@ -112,9 +106,8 @@ TEST_CASE("fixture_lua: Monster placement",
     {
         for (int i = 0; i < 3; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
-            _teardown_fixture_lua();
         }
     }
 
@@ -123,14 +116,13 @@ TEST_CASE("fixture_lua: Monster placement",
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             // Require env.mons is totally clean after each init.
             require_mons_empty(0);
             place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
             // Since we have just placed an monster, env.mons should be empty
             // except for the first slot
             require_mons_empty(1);
-            _teardown_fixture_lua();
         }
     }
 
@@ -139,11 +131,10 @@ TEST_CASE("fixture_lua: Monster placement",
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
             const monster& the_orc = env.mons[0];
             REQUIRE(the_orc.type == monster_type::MONS_ORC);
-            _teardown_fixture_lua();
         }
     }
 
@@ -152,12 +143,11 @@ TEST_CASE("fixture_lua: Monster placement",
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             const coord_def pos(i + 3, i + 4);
             place_monster(pos, "orc ench:invis");
             const monster& the_orc = env.mons[0];
             REQUIRE(the_orc.pos() == pos);
-            _teardown_fixture_lua();
         }
     }
 
@@ -166,14 +156,13 @@ TEST_CASE("fixture_lua: Monster placement",
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
             const monster& the_orc = env.mons[0];
             // The orc has an invisibility enchantment
             REQUIRE(the_orc.has_ench(enchant_type::ENCH_INVIS));
             // The orc only has 1 enchanment
             REQUIRE(the_orc.enchantments.size() == 1);
-            _teardown_fixture_lua();
         }
     }
 }
@@ -192,7 +181,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             // Assert that we can reset player's position
             REQUIRE(you.pos() == coord_def(0, 0));
             const coord_def pos(i + 3, i + 4);
@@ -200,7 +189,6 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
                     "you.moveto(%d, %d)", pos.x, pos.y);
             require_execstring(cmd, 1);
             REQUIRE(you.pos() == pos);
-            _teardown_fixture_lua();
         }
     }
 
@@ -209,7 +197,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
     {
         for (int i = 0; i < 5; ++i)
         {
-            _setup_fixture_lua();
+            FixtureLua fl;
             you.species = SP_HUMAN;  // Human has no innate mutation
             // Assert that the player has no mutation
             const int mut_lv_before = you.get_base_mutation_level(
@@ -225,7 +213,6 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
             const int mut_lv_after = you.get_base_mutation_level(
                     mutation_type::MUT_ROBUST);
             REQUIRE(mut_lv_after == 1);
-            _teardown_fixture_lua();
         }
     }
 }
@@ -240,8 +227,8 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
     {
         for (int i = 0; i < 5; ++i)
         {
+            FixtureLua fl;
             const coord_def pos(3 + i, 4 + i);
-            _setup_fixture_lua();
             REQUIRE(env.tile_flv(pos).feat == 0);
             REQUIRE(env.tile_flv(pos).wall == 0);
             REQUIRE(env.tile_flv(pos).feat_idx == 0);
@@ -257,7 +244,6 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             REQUIRE(env.tile_flv(pos).feat == feat);
             REQUIRE(env.tile_flv(pos).wall == 0);
             REQUIRE(env.tile_flv(pos).feat_idx == 1);
-            _teardown_fixture_lua();
         }
     }
 
@@ -266,8 +252,8 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
     {
         for (int i = 0; i < 5; ++i)
         {
+            FixtureLua fl;
             const coord_def pos(3 + i, 4 + i);
-            _setup_fixture_lua();
             // Require that the terrain has been resetted
             REQUIRE(env.grid(pos) == DNGN_UNSEEN);
             // Require that terrain has no special property
@@ -280,7 +266,6 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             REQUIRE(env.grid(pos) == DNGN_CLOSED_DOOR);
             // Require that terrain has no special property
             REQUIRE(env.pgrid(pos) == FPROP_NONE);
-            _teardown_fixture_lua();
         }
     }
 }

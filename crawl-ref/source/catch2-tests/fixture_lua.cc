@@ -53,10 +53,10 @@
 #include "viewchar.h"
 #include "status.h"
 
-
-void _original_main(int argc, char* argv[]);
-
 void _init_lua_test();
+void _original_main(int argc, char* argv[]);
+void _setup_fixture_lua();
+void _teardown_fixture_lua();
 
 /// \brief Recreate the global lua interpreters and global game states
 /// \details Replace the game state and lua interpreter to ensure they are
