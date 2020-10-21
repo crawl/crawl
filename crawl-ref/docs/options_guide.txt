@@ -707,7 +707,7 @@ view_max_height = 21 (max 71)
 * Note that using large viewports can slow the game down.
 
 view_lock_x = true
-        Keeps the player character centered horizontally in the
+        Keeps the player character centred horizontally in the
         viewport, continuously scrolling the viewport to match the
         PC's movements. If this is not set, the player character can
         move horizontally within the viewport, and the viewport will
@@ -715,13 +715,13 @@ view_lock_x = true
         left or right edge.
 
 view_lock_y = true
-        Keeps the character centered vertically in the viewport.
+        Keeps the character centred vertically in the viewport.
 
 view_lock = true
         Aliased option that sets both view_lock_x and view_lock_y.
 
 center_on_scroll = false
-        If this is set, the viewport centers on the player character
+        If this is set, the viewport centres on the player character
         whenever it scrolls (this option is irrelevant if view_lock_x
         and view_lock_y are set).
 
@@ -730,7 +730,7 @@ symmetric_scroll = true
         with the character movement that caused the scroll.
 
         To illustrate, let's say the PC is at the lower edge of the
-        viewport, but is near the horizontal center. Now the PC moves
+        viewport, but is near the horizontal centre. Now the PC moves
         diagonally down and right, forcing the viewport to scroll up
         one line. If symmetric_scroll is set, the viewport will also
         scroll left one column to match the PC's diagonal movement. If
@@ -973,7 +973,7 @@ auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
         exploration that is included in this list, a travel exclusion is
-        automatically set centered on this monster, meaning autoexplore won't
+        automatically set centred on this monster, meaning autoexplore won't
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
 
@@ -986,8 +986,9 @@ auto_switch = false
         wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = true
-        If this is set to false, autoexplore/travel will not open doors,
-        instead stopping in front of them.
+        If this is set to false, autoexplore/travel will not open doors. If they
+        can explore or travel without opening a door they will do so. If not,
+        they will stop in front of a door they would need to go through.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
@@ -1435,7 +1436,7 @@ mlist_allow_alternate_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centered coordinates in the ^x view description.
+        Display player-centred coordinates in the ^x view description.
 
 monster_item_view_features += <regex>, <regex>
         (List option)
@@ -1471,7 +1472,7 @@ msg_webtiles_height = -1
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
-        the last message close to the center of the view when not
+        the last message close to the centre of the view when not
         using clear_messages=true.
 
 msg_condense_repeats = true

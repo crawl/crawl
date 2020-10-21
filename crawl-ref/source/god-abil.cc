@@ -5067,7 +5067,7 @@ bool uskayaw_stomp()
         return false;
     }
 
-    mpr("You stomp with the beat, sending a shockwave through the revelers "
+    mpr("You stomp with the beat, sending a shockwave through the revellers "
             "around you!");
     apply_monsters_around_square(_get_stomped, you.pos());
     return true;

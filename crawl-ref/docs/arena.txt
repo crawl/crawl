@@ -176,4 +176,4 @@ The parameters include:
 
 * move_respawns: Moves respawned monsters to a new, random location as
       soon as they're placed, to avoid monsters clumping up in a massive
-      brawl at the center of the arena.
+      brawl at the centre of the arena.
