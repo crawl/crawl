@@ -190,7 +190,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
         new BoolGameOption(SIMPLE_NAME(view_lock_x), true),
         new BoolGameOption(SIMPLE_NAME(view_lock_y), true),
-        new BoolGameOption(SIMPLE_NAME(center_on_scroll), false),
+        new BoolGameOption(SIMPLE_NAME(centre_on_scroll), false),
         new BoolGameOption(SIMPLE_NAME(symmetric_scroll), true),
         new BoolGameOption(SIMPLE_NAME(always_show_exclusions), true),
         new BoolGameOption(SIMPLE_NAME(note_all_skill_levels), false),
@@ -1593,6 +1593,7 @@ static const char* config_defaults[] =
 void read_init_file(bool runscript)
 {
     Options.reset_options();
+    Options.read_option_line("center_on_scroll := centre_on_scroll"); // alias
 
     // Load Lua builtins.
 #ifdef CLUA_BINDINGS
@@ -1832,7 +1833,10 @@ void game_options::read_options(LineInput &il, bool runscript,
     bool l_init        = false;
 
     if (clear_aliases)
+    {
         aliases.clear();
+        Options.add_alias("center_on_scroll", "centre_on_scroll"); // old name
+    }
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);

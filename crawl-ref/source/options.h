@@ -204,7 +204,7 @@ public:
     bool        view_lock_y;
 
     // For an unlocked viewport, this will centre the viewport when scrolling.
-    bool        center_on_scroll;
+    bool        centre_on_scroll;
 
     // If symmetric_scroll is set, for diagonal moves, if the view
     // scrolls at all, it'll scroll diagonally.
