@@ -2122,6 +2122,7 @@ bool is_imus_throwable(const item_def &wpn)
 {
     return (will_have_passive(passive_t::imus_bounce_wall) && 
          wpn.base_type == OBJ_WEAPONS &&
+         !is_range_weapon(wpn) &&
          you.weapon() == &wpn);
 }
 

@@ -681,7 +681,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         int damage = eval_attack.calc_to_damage();
         damage *= 80; //imus projectile damage is 80%
         damage /= 100;
-        int hit = eval_attack.calc_to_hit();
+        int hit = eval_attack.calc_to_hit(false);
 
         beam.damage = dice_def(1, damage); 
         beam.hit = hit;
@@ -855,6 +855,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool is_imus_throw = is_imus_throwable(thrown);
     bool is_non_waste = is_imus_throw;
 
+    if (is_imus_throw && !enough_mp(1, true)) {
+        mpr("You don't have enough magic to shoot a light.");
+        //crawl_state.zero_turns_taken();
+        return false;
+    }
+
     // Making a copy of the item: changed only for venom launchers.
     item_def item = thrown;
     item.quantity = 1;
@@ -998,6 +1004,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR)) {
             count_action(CACT_THROW, item.unrand_idx);
         }
+        else if (is_imus_throw) {
+            count_action(CACT_THROW, item.sub_type);
+        }
         else {
             count_action(CACT_THROW, wepType, OBJ_MISSILES);
         }
@@ -1024,7 +1033,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Create message.
     mprf("You %s%s %s.",
           teleport ? "magically " : "",
-          is_imus_throw ? "fire"
+          is_imus_throw ? "shoot"
           :(projected == launch_retval::FUMBLED ? "toss away" :
            projected == launch_retval::LAUNCHED ? "shoot" : "throw"),
           ammo_name.c_str());

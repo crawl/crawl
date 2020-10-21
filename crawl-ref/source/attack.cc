@@ -318,12 +318,10 @@ int attack::calc_to_hit(bool random)
 
 int attack::calc_to_damage()
 {
-    int potential_damage = using_weapon() || wpn_skill == SK_THROWING
+    int damage = using_weapon() || wpn_skill == SK_THROWING
         ? weapon_damage() : calc_base_unarmed_damage();
 
-    potential_damage = player_stat_modify_damage(potential_damage);
-
-    int damage = random2(potential_damage+1);
+    damage = player_stat_modify_damage(damage);
     damage = player_apply_weapon_skill(damage);
     damage = player_apply_fighting_skill(damage, false);
     damage = player_apply_misc_modifiers(damage);
