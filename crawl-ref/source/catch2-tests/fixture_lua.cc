@@ -219,7 +219,6 @@ void _teardown_fixture_lua()
     msg::deinitialise_mpr_streams();
 }
 
-
 FixtureLua::FixtureLua()
 {
     _setup_fixture_lua();
