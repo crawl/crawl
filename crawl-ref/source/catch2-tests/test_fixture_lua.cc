@@ -15,6 +15,28 @@
 #include "stringutil.h"
 #include "random.h"
 
+/// \brief Random coordinate generator
+/// \details Generate random valid coordinates for monster placement
+class RandCoordGen
+{
+public:
+    explicit RandCoordGen() : x_dist(X_BOUND_1 + 1, X_BOUND_2 - 1),
+                              y_dist(Y_BOUND_1 + 1, Y_BOUND_2 - 1) {}
+
+    std::vector<coord_def> roll(size_t size = 5)
+    {
+        std::vector<coord_def> data(size);
+        for (size_t i = 0; i < data.size(); ++i)
+            data[i] = coord_def(x_dist(gen), y_dist(gen));
+        return data;
+    }
+
+private:
+    std::default_random_engine gen;
+    std::uniform_int_distribution<int> x_dist;
+    std::uniform_int_distribution<int> y_dist;
+};
+
 // -------------------- //
 // Forward declarations //
 // -------------------- //
@@ -90,25 +112,26 @@ void require_mons_empty(const int start = 0)
 /// \brief Various tests of monster placement with Lua
 TEST_CASE("Monster placement", "[single-file][test_fixture_lua]")
 {
+    RandCoordGen rcg;
     /// \brief Test if placing a monster causes Lua error
     SECTION("Test if monster placement gives lua error")
     {
-        for (int i = 0; i < 3; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
+            place_monster(c, "orc ench:invis");
         }
     }
 
         /// \brief Test if reseting env.mons works
     SECTION("Test reset monster placement")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
             // Require env.mons is totally clean after each init.
             require_mons_empty(0);
-            place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
+            place_monster(c, "orc ench:invis");
             // Since we have just placed an monster, env.mons should be empty
             // except for the first slot
             require_mons_empty(1);
@@ -118,10 +141,10 @@ TEST_CASE("Monster placement", "[single-file][test_fixture_lua]")
         /// \brief Test if we placed the correct monster
     SECTION("Test monster's type")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
+            place_monster(c, "orc ench:invis");
             const monster& the_orc = env.mons[0];
             REQUIRE(the_orc.type == monster_type::MONS_ORC);
         }
@@ -130,23 +153,22 @@ TEST_CASE("Monster placement", "[single-file][test_fixture_lua]")
         /// \brief Test if the monster is placed at the correct position
     SECTION("Test monster's position")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            const coord_def pos(i + 3, i + 4);
-            place_monster(pos, "orc ench:invis");
+            place_monster(c, "orc ench:invis");
             const monster& the_orc = env.mons[0];
-            REQUIRE(the_orc.pos() == pos);
+            REQUIRE(the_orc.pos() == c);
         }
     }
 
         /// \brief Test if the monster has the correct enchantment
     SECTION("Test monster's enchantments")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            place_monster(coord_def(i + 3, i + 4), "orc ench:invis");
+            place_monster(c, "orc ench:invis");
             const monster& the_orc = env.mons[0];
             // The orc has an invisibility enchantment
             REQUIRE(the_orc.has_ench(enchant_type::ENCH_INVIS));
@@ -165,19 +187,19 @@ TEST_CASE("Monster placement", "[single-file][test_fixture_lua]")
 // ----------- //
 TEST_CASE("Player", "[single-file][test_fixture_lua]")
 {
+    RandCoordGen rcg;
     /// \brief Test if the fixture can reset the player's position
     SECTION("Test resetting the player's position")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
             // Assert that we can reset player's position
             REQUIRE(you.pos() == coord_def(0, 0));
-            const coord_def pos(i + 3, i + 4);
             const std::string cmd = make_stringf(
-                    "you.moveto(%d, %d)", pos.x, pos.y);
+                    "you.moveto(%d, %d)", c.x, c.y);
             dlua_exec(cmd, 1);
-            REQUIRE(you.pos() == pos);
+            REQUIRE(you.pos() == c);
         }
     }
 
@@ -211,49 +233,48 @@ TEST_CASE("Player", "[single-file][test_fixture_lua]")
 // ----------------- //
 TEST_CASE("Dungeon features", "[single-file][test_fixture_lua]")
 {
+    RandCoordGen rcg;
     /// \brief Test if the fixture can reset a dungeon tile's flavor
     SECTION("Test resetting a dungeon tile")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            const coord_def pos(3 + i, 4 + i);
-            REQUIRE(env.tile_flv(pos).feat == 0);
-            REQUIRE(env.tile_flv(pos).wall == 0);
-            REQUIRE(env.tile_flv(pos).feat_idx == 0);
+            REQUIRE(env.tile_flv(c).feat == 0);
+            REQUIRE(env.tile_flv(c).wall == 0);
+            REQUIRE(env.tile_flv(c).feat_idx == 0);
             const std::string cmd = make_stringf(
                     R"(dgn.tile_feat_changed(%d, %d, "DNGN_METAL_WALL"))",
-                    pos.x, pos.y);
+                    c.x, c.y);
             dlua_exec(cmd, 1);
             // The dungeon feature doesn't change. Only the tile changed
             tileidx_t feat;
             REQUIRE(tile_dngn_index("DNGN_METAL_WALL", &feat));
-            REQUIRE(env.grid(pos) == DNGN_UNSEEN);
-            REQUIRE(env.tile_flv(pos).feat == feat);
-            REQUIRE(env.tile_flv(pos).wall == 0);
-            REQUIRE(env.tile_flv(pos).feat_idx == 1);
+            REQUIRE(env.grid(c) == DNGN_UNSEEN);
+            REQUIRE(env.tile_flv(c).feat == feat);
+            REQUIRE(env.tile_flv(c).wall == 0);
+            REQUIRE(env.tile_flv(c).feat_idx == 1);
         }
     }
 
         /// \brief Test if the fixture can reset a dungeon terrain
     SECTION("Test resetting a dungeon terrain")
     {
-        for (int i = 0; i < 5; ++i)
+        for (const auto& c : rcg.roll())
         {
             FixtureLua fl;
-            const coord_def pos(3 + i, 4 + i);
             // Require that the terrain has been resetted
-            REQUIRE(env.grid(pos) == DNGN_UNSEEN);
+            REQUIRE(env.grid(c) == DNGN_UNSEEN);
             // Require that terrain has no special property
-            REQUIRE(env.pgrid(pos) == FPROP_NONE);
+            REQUIRE(env.pgrid(c) == FPROP_NONE);
             const std::string cmd = make_stringf(
                     R"(dgn.terrain_changed(%d, %d, "closed_door", false))",
-                    pos.x, pos.y);
+                    c.x, c.y);
             dlua_exec(cmd, 1);
             // Require that terrain has updated
-            REQUIRE(env.grid(pos) == DNGN_CLOSED_DOOR);
+            REQUIRE(env.grid(c) == DNGN_CLOSED_DOOR);
             // Require that terrain has no special property
-            REQUIRE(env.pgrid(pos) == FPROP_NONE);
+            REQUIRE(env.pgrid(c) == FPROP_NONE);
         }
     }
 }
