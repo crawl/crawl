@@ -165,6 +165,7 @@ const char *ammo_name(missile_type ammo) IMMUTABLE;
 const char *ammo_name(const item_def &bow) PURE;
 const char *ammo_name(const weapon_type bow) PURE;
 bool has_launcher(const item_def &ammo) PURE;
+bool is_imus_throwable(const item_def &wpn);
 bool is_throwable(const actor *actor, const item_def &wpn,
                   bool force = false) PURE;
 launch_retval is_launched(const actor *actor, const item_def *launcher,

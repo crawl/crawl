@@ -295,6 +295,8 @@ enum class passive_t
     agraphede_posion_passive,
     // all projectile bounce on wall
     imus_bounce_wall,
+    // can fire light from weapon
+    imus_fire_light,
 };
 
 enum ru_interference

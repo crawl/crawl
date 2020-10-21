@@ -32,6 +32,7 @@
 #include "item-use.h"
 #include "macro.h"
 #include "message.h"
+#include "melee-attack.h"
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
@@ -643,7 +644,7 @@ void throw_item_no_quiver()
 }
 
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
-                                string &ammo_name, bool &returning)
+                                string &ammo_name, bool &returning, bool is_imus_projectile)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
@@ -669,14 +670,28 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.range        = you.current_vision;
     beam.source_id    = agent->mid;
-    beam.item         = &item;
+    beam.item         = is_imus_projectile?nullptr:&item;
     beam.source       = agent->pos();
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = is_penetrating_attack(*agent, launcher, item);
     beam.aux_source.clear();
 
-    beam.name = item.name(DESC_PLAIN, false, false, false);
-    ammo_name = item.name(DESC_PLAIN);
+    if (is_imus_projectile) {
+        melee_attack eval_attack(&you, nullptr);
+        int damage = eval_attack.calc_to_damage();
+        damage *= 80; //imus projectile damage is 80%
+        damage /= 100;
+        int hit = eval_attack.calc_to_hit(false);
+
+        beam.damage = dice_def(1, damage); 
+        beam.hit = hit;
+        beam.name = "light";
+        ammo_name = "light";
+    }
+    else {
+        beam.name = item.name(DESC_PLAIN, false, false, false);
+        ammo_name = item.name(DESC_PLAIN);
+    }
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->unrand_idx) : nullptr;
@@ -804,6 +819,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     dist thr;
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
+
     const bool teleport = is_pproj_active();
 
     if (you.confused())
@@ -836,6 +852,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), thrown);
+    bool is_imus_throw = is_imus_throwable(thrown);
+    bool is_non_waste = is_imus_throw;
+
+    if (is_imus_throw && !enough_mp(1, true)) {
+        mpr("You don't have enough magic to shoot a light.");
+        //crawl_state.zero_turns_taken();
+        return false;
+    }
 
     // Making a copy of the item: changed only for venom launchers.
     item_def item = thrown;
@@ -844,7 +868,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     string ammo_name;
 
-    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning, is_non_waste))
     {
         you.turn_is_over = false;
         return false;
@@ -890,6 +914,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         }
         else
         {
+            dice_def prev_damage = pbolt.damage;
             // Set values absurdly high to make sure the tracer will
             // complain if we're attempting to fire through allies.
             pbolt.damage = dice_def(1, 100);
@@ -904,8 +929,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
             cancelled = pbolt.beam_cancelled;
 
-            pbolt.hit    = 0;
-            pbolt.damage = dice_def();
+            if(!is_imus_throw) {
+                pbolt.hit    = 0;
+                pbolt.damage = dice_def();
+            } else {
+                pbolt.damage = prev_damage;
+            }
         }
     }
 
@@ -920,7 +949,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.is_tracer = false;
 
     bool unwielded = false;
-    if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
+    if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1 && !is_non_waste)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
             return false;
@@ -935,7 +964,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     origin_set_unknown(item);
 
     // bloodpots & chunks need special handling.
-    if (thrown.quantity > 1 && is_perishable_stack(item))
+    if (thrown.quantity > 1 && is_perishable_stack(item) && !is_non_waste)
     {
         // Initialise thrown item with oldest item in stack.
         const int rot_timer = remove_oldest_perishable_item(thrown)
@@ -975,6 +1004,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if(is_unrandom_artefact(item, UNRAND_CRYSTAL_SPEAR)) {
             count_action(CACT_THROW, item.unrand_idx);
         }
+        else if (is_imus_throw) {
+            count_action(CACT_THROW, item.sub_type);
+        }
         else {
             count_action(CACT_THROW, wepType, OBJ_MISSILES);
         }
@@ -990,12 +1022,19 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (teleport)
         returning = false;
 
-    you.time_taken = you.attack_delay(&item).roll();
+    
+    if(is_imus_throw) {
+        you.time_taken = you.attack_delay(&thrown).roll();
+    }
+    else {
+        you.time_taken = you.attack_delay(&item).roll();
+    }
 
     // Create message.
     mprf("You %s%s %s.",
           teleport ? "magically " : "",
-          (projected == launch_retval::FUMBLED ? "toss away" :
+          is_imus_throw ? "shoot"
+          :(projected == launch_retval::FUMBLED ? "toss away" :
            projected == launch_retval::LAUNCHED ? "shoot" : "throw"),
           ammo_name.c_str());
 
@@ -1013,11 +1052,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
-    if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
+    if ((wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS) && !is_non_waste)
         item.flags |= ISFLAG_THROWN;
 
-    pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
+    if(!is_imus_throw) {
+        pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
                          : 0;
+    }
 
     bool hit = false;
     if (teleport)
@@ -1045,8 +1086,8 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             bool first = true;
             for (bolt &beam : hitfunc.beams)
             {
-                _setup_missile_beam(&you, beam, item, ammo_name, returning);
-                if(first && !returning) {
+                _setup_missile_beam(&you, beam, item, ammo_name, returning, is_non_waste);
+                if(first && !returning && !is_non_waste) {
                     beam.drop_item = true;
                     first = false;
                 }
@@ -1055,7 +1096,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
         } else {
             // Dropping item copy, since the launched item might be different.
-            pbolt.drop_item = !returning;
+            pbolt.drop_item = !returning && !is_non_waste;
             pbolt.fire();
         }
 
@@ -1063,8 +1104,12 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         hit = !pbolt.hit_verb.empty();
 
         // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item))
+        if (returning && !is_non_waste && thrown_object_destroyed(&item))
             returning = false;
+
+        if(is_imus_throw) {
+            dec_mp(1);
+        }
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -1076,14 +1121,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
-    if (returning)
+    if (returning && !is_non_waste)
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow();
         pbolt.fire();
     }
-    else
+    else if (!is_non_waste)
     {
         dec_inv_item_quantity(throw_2, 1);
         if (unwielded)
@@ -1155,7 +1200,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     item_def item = mitm[msl];
     item.quantity = 1;
 
-    if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
+    if (_setup_missile_beam(mons, beam, item, ammo_name, returning, false))
         return false;
 
     beam.aimed_at_spot |= returning;
