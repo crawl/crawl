@@ -12,11 +12,11 @@
 /// same game state.
 /// \warning This fixture probably can't reset the key binding to macros.
 /// Changes in one test may persist to another test.
-#include <cstdio>
-
 #include "catch.hpp"
 
 #include "AppHdr.h"
+
+#include <cstdio>
 #include "abyss.h"
 #include "branch.h"
 #include "cio.h"
