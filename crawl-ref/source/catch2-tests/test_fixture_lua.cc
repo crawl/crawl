@@ -77,13 +77,9 @@ void require_mons_empty(const int start = 0)
         const monster& m_now = env.mons[i];
         CAPTURE(i, m_now.type, m_now.name(DESC_PLAIN, true));
         if (i < MAX_MONSTERS)
-        {
             REQUIRE(m_now.type == monster_type::MONS_NO_MONSTER);
-        }
         else
-        {
             REQUIRE(m_now.type == monster_type::MONS_PROGRAM_BUG);
-        }
     }
 }
 
@@ -239,7 +235,7 @@ TEST_CASE("Dungeon features", "[single-file][test_fixture_lua]")
         }
     }
 
-    /// \brief Test if the fixture can reset a dungeon terrain
+        /// \brief Test if the fixture can reset a dungeon terrain
     SECTION("Test resetting a dungeon terrain")
     {
         for (int i = 0; i < 5; ++i)

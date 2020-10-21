@@ -54,8 +54,11 @@
 #include "status.h"
 
 void _init_lua_test();
+
 void _original_main(int argc, char* argv[]);
+
 void _setup_fixture_lua();
+
 void _teardown_fixture_lua();
 
 /// \brief Recreate the global lua interpreters and global game states
@@ -79,8 +82,7 @@ static void _recreate_global_game_states()
 void _original_main(int argc, char* argv[])
 {
     setlocale(LC_ALL, "");
-    msg::force_stderr echo(
-            MB_MAYBE); // Avoid static initialization order woes
+    msg::force_stderr echo(MB_MAYBE); // Avoid static initialization order woes
     init_crash_handler();  // Get reasons instead of core dump for crashes
 
     // -- Run the guarded steps once across all tests. -- //
