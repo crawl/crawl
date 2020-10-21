@@ -40,7 +40,7 @@ TEST_CASE("fixture_lua: Test running a Lua command",
     for (int i = 0; i < 5; ++i)
     {
         FixtureLua fl;
-        require_execstring("return 1 + 1", 1);
+        dlua_exec("return 1 + 1", 1);
     }
 }
 
@@ -67,7 +67,7 @@ void place_monster(const coord_def& pos, const std::string& spec)
 {
     const std::string cmd = make_stringf("dgn.create_monster(%d, %d, \"%s\")",
                                          pos.x, pos.y, spec.c_str());
-    require_execstring(cmd, 1);
+    dlua_exec(cmd, 1);
 }
 
 /// \brief Require that env.mons is empty, starting from an element
@@ -187,7 +187,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
             const coord_def pos(i + 3, i + 4);
             const std::string cmd = make_stringf(
                     "you.moveto(%d, %d)", pos.x, pos.y);
-            require_execstring(cmd, 1);
+            dlua_exec(cmd, 1);
             REQUIRE(you.pos() == pos);
         }
     }
@@ -208,7 +208,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
             const std::string cmd = make_stringf(
                     "you.mutate(\"%s\", \"%s\", \"%s\")",
                     "robust", "reason of the mutation", "false");
-            require_execstring(cmd, 1);
+            dlua_exec(cmd, 1);
             // Assert that the player now has 1 level of robustness mutation
             const int mut_lv_after = you.get_base_mutation_level(
                     mutation_type::MUT_ROBUST);
@@ -235,7 +235,7 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             const std::string cmd = make_stringf(
                     "dgn.tile_feat_changed(%d, %d, \"%s\")",
                     pos.x, pos.y, "DNGN_METAL_WALL");
-            require_execstring(cmd, 1);
+            dlua_exec(cmd, 1);
             // The dungeon feature doesn't change. Only the tile changed
             tileidx_t feat;
             std::string tilename = "DNGN_METAL_WALL";
@@ -261,7 +261,7 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             const std::string cmd = make_stringf(
                     "dgn.terrain_changed(%d, %d, \"%s\", %s)",
                     pos.x, pos.y, "closed_door", "false");
-            require_execstring(cmd, 1);
+            dlua_exec(cmd, 1);
             // Require that terrain has updated
             REQUIRE(env.grid(pos) == DNGN_CLOSED_DOOR);
             // Require that terrain has no special property

@@ -229,8 +229,8 @@ FixtureLua::~FixtureLua()
 }
 
 /// \brief Run dlua command and require no error
-void require_execstring(const std::string& cmd, int nresults,
-                        const std::string& context)
+void dlua_exec(const std::string& cmd, int nresults,
+               const std::string& context)
 {
     const int err = dlua.execstring(cmd.c_str(), context.c_str(), nresults);
     INFO("Lua command: " << cmd.c_str());
