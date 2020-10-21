@@ -65,7 +65,7 @@ TEST_CASE("fixture_lua: Test running a Lua script",
 /// \param spec Specification for the monster. For example, "orc ench:invis".
 void place_monster(const coord_def& pos, const std::string& spec)
 {
-    const std::string cmd = make_stringf("dgn.create_monster(%d, %d, \"%s\")",
+    const std::string cmd = make_stringf(R"(dgn.create_monster(%d, %d, "%s"))",
                                          pos.x, pos.y, spec.c_str());
     dlua_exec(cmd, 1);
 }
@@ -206,7 +206,7 @@ TEST_CASE("fixture_lua: Player", "[single-file][test_fixture_lua]")
             you.hp = 100;   // need to set hp, or we get segmentation fault
             // apply the mutation with Lua
             const std::string cmd = make_stringf(
-                    "you.mutate(\"%s\", \"%s\", \"%s\")",
+                    R"(you.mutate("%s", "%s", "%s"))",
                     "robust", "reason of the mutation", "false");
             dlua_exec(cmd, 1);
             // Assert that the player now has 1 level of robustness mutation
@@ -233,13 +233,12 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             REQUIRE(env.tile_flv(pos).wall == 0);
             REQUIRE(env.tile_flv(pos).feat_idx == 0);
             const std::string cmd = make_stringf(
-                    "dgn.tile_feat_changed(%d, %d, \"%s\")",
-                    pos.x, pos.y, "DNGN_METAL_WALL");
+                    R"(dgn.tile_feat_changed(%d, %d, "DNGN_METAL_WALL"))",
+                    pos.x, pos.y);
             dlua_exec(cmd, 1);
             // The dungeon feature doesn't change. Only the tile changed
             tileidx_t feat;
-            std::string tilename = "DNGN_METAL_WALL";
-            REQUIRE(tile_dngn_index(tilename.c_str(), &feat));
+            REQUIRE(tile_dngn_index("DNGN_METAL_WALL", &feat));
             REQUIRE(env.grid(pos) == DNGN_UNSEEN);
             REQUIRE(env.tile_flv(pos).feat == feat);
             REQUIRE(env.tile_flv(pos).wall == 0);
@@ -259,8 +258,8 @@ TEST_CASE("fixture_lua: Dungeon features", "[single-file][test_fixture_lua]")
             // Require that terrain has no special property
             REQUIRE(env.pgrid(pos) == FPROP_NONE);
             const std::string cmd = make_stringf(
-                    "dgn.terrain_changed(%d, %d, \"%s\", %s)",
-                    pos.x, pos.y, "closed_door", "false");
+                    R"(dgn.terrain_changed(%d, %d, "closed_door", false))",
+                    pos.x, pos.y);
             dlua_exec(cmd, 1);
             // Require that terrain has updated
             REQUIRE(env.grid(pos) == DNGN_CLOSED_DOOR);
