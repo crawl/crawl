@@ -1729,7 +1729,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-            buff << "labeled " << make_name(subtype_rnd, MNAME_SCROLL);
+            buff << "labelled " << make_name(subtype_rnd, MNAME_SCROLL);
         break;
 
     case OBJ_JEWELLERY:

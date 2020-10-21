@@ -1164,7 +1164,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
          "centroid (%d,%d) source (%d,%d) "
-         "heard at (%d,%d), distance: %d (traveled %d)",
+         "heard at (%d,%d), distance: %d (travelled %d)",
          act->name(DESC_PLAIN, true).c_str(),
          final_perceived_point.x, final_perceived_point.y,
          noise_centroid.x, noise_centroid.y,
@@ -1284,7 +1284,7 @@ static void _actor_apply_noise(actor *act,
 {
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
-         "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
+         "from (%d,%d), real source (%d,%d), distance: %d, noise travelled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,
          noise_intensity_millis,
