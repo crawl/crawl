@@ -12,6 +12,8 @@
 /// same game state.
 /// \warning This fixture probably can't reset the key binding to macros.
 /// Changes in one test may persist to another test.
+#include <cstdio>
+
 #include "catch.hpp"
 
 #include "AppHdr.h"
@@ -28,8 +30,10 @@
 #include "files.h"
 #include "fixture_lua.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "init_guards.h"
 #include "initfile.h"
+#include "inttypes.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -47,6 +51,7 @@
 #include "spl-book.h"
 #include "startup.h"
 #include "state.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "terrain.h"
 #include "travel.h"
@@ -55,9 +60,15 @@
 
 void _init_lua_test();
 
+std::string _make_str_seed(uint64_t seed);
+
+void _ng_init();
+
 void _original_main(int argc, char* argv[]);
 
-void _setup_fixture_lua();
+void _set_crawl_seeds(uint64_t seed);
+
+void _setup_fixture_lua(uint64_t);
 
 void _teardown_fixture_lua();
 
@@ -115,7 +126,7 @@ static void _startup_initialize()
     you.symbol = MONS_PLAYER;
     msg::initialise_mpr_streams();
 
-    rng::seed(); // don't use any chosen seed yet
+    // Don't use rng::seed() to set a new seed
 
     clua.init_libraries();
 
@@ -177,21 +188,65 @@ void _init_lua_test()
     lua_stack_cleaner clean(dlua);  // clean lua stack upon destruction
     // dlua/test.lua contains helper functions for testing
     dlua.execfile("dlua/test.lua", true, true);
+    // Clear persistent data in dlua. from ng-setup.cc
+    dlua.callfn("dgn_clear_data", "");
     initialise_branch_depths();
     initialise_item_descriptions();
 }
 
-void _setup_fixture_lua()
+/// \brief Set seed of crawl
+/// \param seed If 0, crawl will generate a new seed
+void _set_crawl_seeds(uint64_t seed)
+{
+    crawl_state.seed = seed;
+    you.game_seed = seed;
+    // prefs.seed = seed;
+    Options.seed = seed;
+}
+
+/// \brief Make seed for command line option of crawl
+std::string _make_str_seed(uint64_t seed)
+{
+    std::string str_seed = std::to_string(seed);
+    uint64_t tmp_seed = 0;
+    sscanf(str_seed.c_str(), "%" SCNu64, &tmp_seed);
+    CAPTURE(seed, str_seed, tmp_seed);
+    REQUIRE(seed == tmp_seed);
+    return str_seed;
+}
+
+/// \brief Setup the Lua fixture
+void _setup_fixture_lua(uint64_t seed)
 {
     _recreate_global_game_states();
-    int argc = 1;
-    char* argv[] = {(char*) "crawl", (char*) "\0"};
+    _set_crawl_seeds(seed);
+    std::srand(seed);
+
+    int argc = 3;
+    std::string str_seed = _make_str_seed(seed);
+    char* argv[] = {(char*) "crawl", (char*) "-seed", (char*) str_seed.c_str(),
+                    (char*) "\0"};
     _original_main(argc, argv);
     _startup_initialize();
+    _ng_init();
     flush_prev_message();
     run_map_global_preludes();
     run_map_local_preludes();
     _init_lua_test();
+    REQUIRE(you.game_seed == seed);
+    REQUIRE(crawl_state.seed == seed);
+    REQUIRE(Options.seed == seed);
+}
+
+/// \brief Initialize a new game without creating a player or dungeon
+/// \brief adapted from ng-setup.cc
+void _ng_init()
+{
+    // initialize rng from Options.seed
+    rng::reset();
+    // Get rid of god companions left from previous games
+    init_companions();
+    // Don't create any save file
 }
 
 /// \brief Reset claw
@@ -219,9 +274,9 @@ void _teardown_fixture_lua()
     msg::deinitialise_mpr_streams();
 }
 
-FixtureLua::FixtureLua()
+FixtureLua::FixtureLua(uint64_t seed)
 {
-    _setup_fixture_lua();
+    _setup_fixture_lua(seed);
 }
 
 FixtureLua::~FixtureLua()

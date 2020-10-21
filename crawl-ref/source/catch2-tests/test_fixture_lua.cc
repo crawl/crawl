@@ -12,6 +12,7 @@
 #include "fixture_lua.h"
 #include "player.h"
 #include "rltiles/tiledef-dngn.h"
+#include "state.h"
 #include "stringutil.h"
 #include "random.h"
 
@@ -275,6 +276,39 @@ TEST_CASE("Dungeon features", "[single-file][test_fixture_lua]")
             REQUIRE(env.grid(c) == DNGN_CLOSED_DOOR);
             // Require that terrain has no special property
             REQUIRE(env.pgrid(c) == FPROP_NONE);
+        }
+    }
+}
+
+// ----------- //
+// Test random //
+// ----------- //
+
+/// \brief Test if the random number generators have a fixed seed
+TEST_CASE("Random seed", "[single-file][test_fixture_lua]")
+{
+    SECTION("Place random creatures")
+    {
+        int n_monsters = 20;
+        std::vector<std::string> saved_names(n_monsters);
+        for (int i = 0; i < 2; ++i)
+        {
+            FixtureLua fl;
+            for (int j = 0; j < n_monsters; ++j)
+            {
+                place_monster(coord_def(j + 1, 10), "orc / bat");
+                CAPTURE(crawl_state.seed, you.game_seed, Options.seed);
+                const std::string m_name = env.mons[j].name(DESC_PLAIN, true);
+                if (i == 0)
+                {
+                    saved_names[j] = m_name;
+                }
+                else
+                {
+                    CAPTURE(i, j, m_name, saved_names[j]);
+                    REQUIRE(saved_names[j] == m_name);
+                }
+            }
         }
     }
 }

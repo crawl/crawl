@@ -5,7 +5,7 @@
 class FixtureLua
 {
 public:
-    FixtureLua();
+    explicit FixtureLua(uint64_t seed=729);
 
     ~FixtureLua();
 };
