@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tag-version.h"
 
 struct form_entry

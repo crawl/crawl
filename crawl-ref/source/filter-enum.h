@@ -1,3 +1,5 @@
+#pragma once
+
 template <typename Enum, typename Predicate>
 vector<Enum> filter_enum(Enum max, Predicate filter)
 {

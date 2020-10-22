@@ -5,6 +5,8 @@
  * Flag descriptions are in spl-cast.h.
 **/
 
+#pragma once
+
 /*
 struct spell_desc
 {

@@ -1,3 +1,5 @@
+#pragma once
+
 #define AT_NO_ATK       {AT_NONE, AF_PLAIN, 0}
 
 #include "enum.h"

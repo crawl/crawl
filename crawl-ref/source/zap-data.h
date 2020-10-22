@@ -3,6 +3,8 @@
  * @brief Zap definitions. See zap_info struct in beam.cc.
 **/
 
+#pragma once
+
 /*
 struct zap_info
 {

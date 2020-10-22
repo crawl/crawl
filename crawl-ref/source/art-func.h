@@ -3,6 +3,8 @@
  * @brief Functions non-standard unrandarts uses.
 **/
 
+#pragma once
+
 /*
  * util/art-data.pl scans through this file to grab the functions
  * non-standard unrandarts use and put them into the unranddata structs

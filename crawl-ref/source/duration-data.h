@@ -2,6 +2,8 @@
  * Status defaults for durations.
  */
 
+#pragma once
+
 #include "act-iter.h"
 #include "god-passive.h"
 #include "tag-version.h"

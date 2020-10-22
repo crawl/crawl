@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tag-version.h"
 
 // In the default case, these translations hold:

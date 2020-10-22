@@ -1,3 +1,5 @@
+#pragma once
+
 #include "colour.h"
 #include "tag-version.h"
 

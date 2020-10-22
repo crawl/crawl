@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tag-version.h"
 
 struct mutation_def

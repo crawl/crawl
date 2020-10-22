@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tag-version.h"
 
 enum weapon_choice

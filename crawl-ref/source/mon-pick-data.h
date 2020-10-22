@@ -1,3 +1,5 @@
+#pragma once
+
 #include "tag-version.h"
 
 static const pop_entry pop_d[] =

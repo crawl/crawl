@@ -3,6 +3,8 @@
  * @brief Declarations for the god menu.
  */
 
+#pragma once
+
 #include "god-type.h"
 #include "menu.h"
 

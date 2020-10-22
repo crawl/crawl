@@ -3,6 +3,8 @@
  * @brief Monster action goodness rating type and associated operations.
 **/
 
+#pragma once
+
 namespace ai_action
 {
     /// Goodness values for actions.
