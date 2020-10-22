@@ -2767,6 +2767,10 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
         return false;
 
+    // Likewise, OOBs (orbs of beetle)
+    if (mpusher->has_ench(ENCH_ROLLING) || mpushee->has_ench(ENCH_ROLLING))
+        return false;
+
     // Fleeing monsters cannot push past other fleeing monsters
     // (This helps to prevent some traffic jams in confined spaces)
     if (mons_is_fleeing(*mpusher) && mons_is_fleeing(*mpushee))
