@@ -986,9 +986,8 @@ auto_switch = false
         wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = true
-        If this is set to false, autoexplore/travel will not open doors. If they
-        can explore or travel without opening a door they will do so. If not,
-        they will stop in front of a door they would need to go through.
+        If this is set to false, autoexplore/travel will not open doors,
+        instead stopping in front of them.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
