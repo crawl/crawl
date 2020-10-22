@@ -2345,7 +2345,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:
-        return random_range(10, 15) * BASELINE_DELAY;
+        return random_range(10 * BASELINE_DELAY, 15 * BASELINE_DELAY);
     case ENCH_WRETCHED:
         cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
         break;
