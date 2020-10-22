@@ -64,6 +64,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "rltiles/tiledef-dngn.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"

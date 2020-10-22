@@ -2,6 +2,7 @@
 #pragma once
 
 #include "map-cell.h"
+#include "tag-version.h"
 
 enum halo_type
 {

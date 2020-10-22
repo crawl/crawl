@@ -25,6 +25,7 @@
 #include "stat-type.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #ifdef TOUCH_UI
 #include "rltiles/tiledef-gui.h"
 #include "tilepick.h"

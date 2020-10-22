@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum shop_type
 {
     SHOP_WEAPON,

@@ -22,6 +22,7 @@
 #include "pcg.h"
 #include "player.h"
 #include "state.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tile-flags.h"
 #include "rltiles/tiledef-dngn.h"

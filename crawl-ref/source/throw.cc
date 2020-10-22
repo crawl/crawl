@@ -40,6 +40,7 @@
 #include "sound.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"

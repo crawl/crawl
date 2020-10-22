@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum job_type
 {
     JOB_FIGHTER,

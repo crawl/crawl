@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // Adding slots breaks saves. YHBW.
 enum mon_inv_type           // env.mons[].inv[]
 {

@@ -19,6 +19,8 @@ struct spell_desc
 }
 */
 
+#include "tag-version.h"
+
 static const struct spell_desc spelldata[] =
 {
 

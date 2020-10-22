@@ -22,6 +22,7 @@
 #include "options.h"
 #include "stringutil.h"
 #include "tags.h"
+#include "tag-version.h"
 #include "travel.h"
 #include "unwind.h"
 #include "viewchar.h"

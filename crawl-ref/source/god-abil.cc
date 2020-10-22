@@ -77,6 +77,7 @@
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "teleport.h" // monster_teleport
 #include "terrain.h"

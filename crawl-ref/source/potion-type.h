@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum potion_type
 {
     POT_CURING,

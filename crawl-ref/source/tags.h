@@ -8,6 +8,7 @@
 #include <cstdio>
 
 #include "package.h"
+#include "tag-version.h"
 
 struct show_type;
 struct monster_info;

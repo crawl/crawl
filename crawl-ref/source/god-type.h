@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum god_type
 {
     GOD_NO_GOD = 0,

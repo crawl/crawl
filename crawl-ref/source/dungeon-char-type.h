@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // NOTE: The order of these is very important to their usage!
 // [dshaligram] If adding/removing from this list, also update viewchar.cc!
 enum dungeon_char_type

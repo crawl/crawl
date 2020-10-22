@@ -2,6 +2,7 @@
 
 #include "enum.h"
 #include "mon-info.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
 #define MAP_MAGIC_MAPPED_FLAG   0x01

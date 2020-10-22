@@ -40,6 +40,7 @@
 #include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tilepick-p.h"
 #include "travel.h"

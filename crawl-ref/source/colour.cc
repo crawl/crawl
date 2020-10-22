@@ -13,6 +13,7 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "tiles-build-specific.h"
 #include "libutil.h" // map_find
 

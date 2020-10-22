@@ -36,6 +36,7 @@
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
+#include "tag-version.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"

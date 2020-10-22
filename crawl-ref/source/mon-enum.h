@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "tag-version.h"
+
 #define HERD_COMFORT_RANGE 6
 
 // TODO: Unify this and a player_equivalent (if applicable)

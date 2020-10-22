@@ -21,6 +21,7 @@
 #include "randbook.h" // roxanne, roxanne...
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "unwind.h"
 

@@ -22,6 +22,7 @@
 #include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "view.h"
 
 #ifdef DEBUG_STATISTICS

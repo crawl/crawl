@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mon-info.h"
+#include "tag-version.h"
 
 struct monster_info_flag_name
 {

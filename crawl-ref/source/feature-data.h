@@ -1,3 +1,5 @@
+#include "tag-version.h"
+
 // In the default case, these translations hold:
 // unseen_colour -> seen_colour
 // seen_colour -> seen_em_colour

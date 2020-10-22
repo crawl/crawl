@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"

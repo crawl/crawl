@@ -9,6 +9,7 @@
 #include "god-type.h"
 #include "mon-inv-type.h"
 #include "item-prop.h"
+#include "tag-version.h"
 
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.

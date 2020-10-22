@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum duration_type
 {
     DUR_INVIS,

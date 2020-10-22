@@ -33,6 +33,7 @@
 #include "skills.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "unicode.h"

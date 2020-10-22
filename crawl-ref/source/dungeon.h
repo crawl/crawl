@@ -12,6 +12,7 @@
 
 #include "env.h"
 #include "mapdef.h"
+#include "tag-version.h"
 
 COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 

@@ -19,6 +19,7 @@
 #include "l-libs.h"
 #include "map-marker-type.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 

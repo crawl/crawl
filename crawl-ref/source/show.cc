@@ -20,6 +20,7 @@
 #include "map-knowledge.h"
 #include "mon-place.h"
 #include "state.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-main.h"
 #ifdef USE_TILE

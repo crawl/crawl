@@ -27,6 +27,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "unicode.h"
 

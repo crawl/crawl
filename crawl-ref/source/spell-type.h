@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum spell_type : int
 {
     SPELL_NO_SPELL,

@@ -40,6 +40,7 @@
 #include "spl-util.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

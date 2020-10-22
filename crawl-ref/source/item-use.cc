@@ -62,6 +62,7 @@
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"

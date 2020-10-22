@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 /* Don't change the order of any enums in this file unless you are breaking
  * save compatibility. See ../docs/develop/save_compatibility.txt for
  * more details, including how to schedule both the current and future

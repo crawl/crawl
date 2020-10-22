@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // This list must match the enchant_names array in mon-ench.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:

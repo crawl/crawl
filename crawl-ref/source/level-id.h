@@ -6,6 +6,7 @@
 #pragma once
 
 #include "coord-def.h"
+#include "tag-version.h"
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua

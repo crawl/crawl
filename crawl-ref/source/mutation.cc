@@ -38,6 +38,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "unicode.h"
 #include "xom.h"

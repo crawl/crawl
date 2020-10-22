@@ -29,6 +29,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tiles-build-specific.h"
+#include "tag-version.h"
 #include "unwind.h"
 #include "view.h"
 

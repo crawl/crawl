@@ -4,6 +4,7 @@
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "tag-version.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
 #define CLOUD_IMMUNE_MB_KEY "cloud_immune"

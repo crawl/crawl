@@ -5,6 +5,7 @@
 #include "holy-word-source-type.h"
 #include "spell-type.h"
 #include "spl-cast.h"
+#include "tag-version.h"
 #include "torment-source-type.h"
 
 spret cast_healing(int pow, bool fail);

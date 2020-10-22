@@ -7,6 +7,8 @@
 
 #include <unordered_set>
 
+#include "tag-version.h"
+
 struct shop_struct;
 
 int artefact_value(const item_def &item);

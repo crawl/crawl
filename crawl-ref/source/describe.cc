@@ -70,6 +70,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
+#include "tag-version.h"
 #include "terrain.h"
 #include "throw.h" // is_pproj_active for _describe_to_hit
 #include "tile-flags.h"

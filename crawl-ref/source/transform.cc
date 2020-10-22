@@ -33,6 +33,7 @@
 #include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "traps.h"
 #include "xom.h"

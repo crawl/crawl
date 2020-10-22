@@ -46,6 +46,7 @@
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "tileview.h"

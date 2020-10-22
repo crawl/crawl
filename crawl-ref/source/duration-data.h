@@ -4,6 +4,7 @@
 
 #include "act-iter.h"
 #include "god-passive.h"
+#include "tag-version.h"
 
 static void _end_weapon_brand()
 {

@@ -11,6 +11,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);

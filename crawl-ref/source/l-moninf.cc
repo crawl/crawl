@@ -16,6 +16,7 @@
 #include "mon-pick.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "math.h" // ceil
 #include "spl-zap.h" // calc_spell_power

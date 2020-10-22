@@ -26,6 +26,7 @@
 #include "scroller.h"
 #include "stairs.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "travel.h"
 #include "unicode.h"

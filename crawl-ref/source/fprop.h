@@ -1,6 +1,8 @@
 #pragma once
 
 #include "enum.h" // DEF_BITFIELD
+#include "tag-version.h"
+
 struct coord_def;
 
 enum feature_property_type

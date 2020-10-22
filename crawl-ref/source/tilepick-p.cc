@@ -14,6 +14,7 @@
 #include "tile-player-flag-cut.h"
 #include "rltiles/tiledef-player.h"
 #include "rltiles/tiledef-unrand.h"
+#include "tag-version.h"
 #include "tiledoll.h"
 #include "tilepick.h"
 #include "transform.h"

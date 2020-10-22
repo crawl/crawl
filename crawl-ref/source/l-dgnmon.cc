@@ -11,6 +11,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "stringutil.h"
+#include "tag-version.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 

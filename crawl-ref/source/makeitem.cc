@@ -25,6 +25,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 
 static void _setup_fallback_randart(const int unrand_id,
                                     item_def &item,

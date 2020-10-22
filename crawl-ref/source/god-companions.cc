@@ -16,6 +16,7 @@
 #include "mon-util.h"
 #include "religion.h"
 #include "spl-other.h"
+#include "tag-version.h"
 
 map<mid_t, companion> companion_list;
 

@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "files.h"
 #include "perlin.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)

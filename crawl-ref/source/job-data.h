@@ -1,3 +1,5 @@
+#include "tag-version.h"
+
 enum weapon_choice
 {
     WCHOICE_NONE,   ///< No weapon choice

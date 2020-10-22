@@ -19,6 +19,7 @@
 #include "libutil.h" // map_find
 #include "mon-place.h"
 #include "religion.h"
+#include "tag-version.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100

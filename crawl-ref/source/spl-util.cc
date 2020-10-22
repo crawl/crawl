@@ -40,6 +40,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "rltiles/tiledef-gui.h"    // spell tiles
+#include "tag-version.h"
 #include "tiles-build-specific.h"
 #include "transform.h"
 

@@ -29,6 +29,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 #ifndef BYTE_ORDER

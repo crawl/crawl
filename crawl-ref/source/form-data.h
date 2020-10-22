@@ -1,3 +1,5 @@
+#include "tag-version.h"
+
 struct form_entry
 {
     // Row 1:

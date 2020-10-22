@@ -8,6 +8,7 @@
 #include "conduct-type.h"
 #include "dungeon-char-type.h"
 #include "mgen-enum.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
 class mons_spec;

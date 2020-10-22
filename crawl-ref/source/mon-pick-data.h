@@ -1,3 +1,5 @@
+#include "tag-version.h"
+
 static const pop_entry pop_d[] =
 { // Dungeon (OOD cap: 27)
   { -2,  8,  515, SEMI, MONS_GIANT_COCKROACH },

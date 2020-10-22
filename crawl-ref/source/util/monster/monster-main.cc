@@ -13,6 +13,7 @@
 #include "los.h"
 #include "message.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "version.h"
 
 const coord_def MONSTER_PLACE(20, 20);

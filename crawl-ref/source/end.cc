@@ -32,6 +32,7 @@
 #include "startup.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "tilepick.h"
 #include "view.h"
 #include "xom.h"

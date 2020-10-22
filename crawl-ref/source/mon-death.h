@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "tag-version.h"
+
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
 #define ELVEN_IS_ENERGIZED_KEY "elven_twin_is_energized"

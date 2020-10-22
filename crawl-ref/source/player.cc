@@ -77,6 +77,7 @@
 #include "status.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"

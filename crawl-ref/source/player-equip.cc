@@ -35,6 +35,7 @@
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();

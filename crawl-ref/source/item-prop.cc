@@ -32,6 +32,7 @@
 #include "skills.h"
 #include "spl-wpnench.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "xom.h"
 #include "xp-evoker-data.h"

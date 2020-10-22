@@ -45,6 +45,7 @@
 #include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "tileview.h"
 #include "transform.h"
 #include "traps.h"

@@ -48,6 +48,7 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
 

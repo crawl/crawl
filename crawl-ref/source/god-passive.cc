@@ -40,6 +40,7 @@
 #include "spl-clouds.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "throw.h"
 #include "unwind.h"

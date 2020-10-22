@@ -9,6 +9,7 @@
 #include <string>
 
 #include "caction-type.h"
+#include "tag-version.h"
 
 #define TIME_PER_LEVEL_KEY "auts_on_level"
 

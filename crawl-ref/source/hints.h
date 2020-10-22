@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "tag-version.h"
+
 class formatted_string;
 class writer;
 class reader;

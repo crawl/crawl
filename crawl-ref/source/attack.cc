@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "xom.h"
 

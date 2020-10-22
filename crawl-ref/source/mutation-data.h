@@ -1,3 +1,5 @@
+#include "tag-version.h"
+
 struct mutation_def
 {
     mutation_type mutation;

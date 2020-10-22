@@ -10,6 +10,7 @@
 
 #include "monster.h"
 #include "mon-transit.h"
+#include "tag-version.h"
 
 struct companion
 {

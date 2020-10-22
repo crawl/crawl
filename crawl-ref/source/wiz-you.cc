@@ -33,6 +33,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "unicode.h"

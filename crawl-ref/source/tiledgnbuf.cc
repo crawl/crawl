@@ -7,6 +7,7 @@
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-player.h"
+#include "tag-version.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
 #include "tilepick.h"

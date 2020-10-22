@@ -39,6 +39,7 @@
 #include "spl-other.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"

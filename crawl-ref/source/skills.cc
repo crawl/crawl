@@ -33,6 +33,7 @@
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).

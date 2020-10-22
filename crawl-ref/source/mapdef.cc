@@ -43,6 +43,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"

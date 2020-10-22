@@ -11,6 +11,7 @@
 #include "item-prop-enum.h"
 #include "reach-type.h"
 #include "size-type.h"
+#include "tag-version.h"
 
 struct bolt;
 

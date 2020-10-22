@@ -64,6 +64,7 @@
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "tag-version.h"
 #include "throw.h"
 #include "travel.h"
 #include "unwind.h"

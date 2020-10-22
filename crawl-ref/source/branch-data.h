@@ -1,4 +1,5 @@
 #include "colour.h"
+#include "tag-version.h"
 
 // The order of these entries must match the order of the branch-type enum.
 const Branch branches[NUM_BRANCHES] =

@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "tag-version.h"
+
 class reader;
 class writer;
 class preserve_quiver_slots;

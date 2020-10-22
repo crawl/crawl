@@ -25,6 +25,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 #include "wiz-you.h"
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum mutation_type
 {
     // body slot facets

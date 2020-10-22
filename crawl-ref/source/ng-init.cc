@@ -22,6 +22,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS

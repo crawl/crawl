@@ -44,6 +44,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "throw.h"
 #include "tiles-build-specific.h"
 #include "transform.h"

@@ -39,6 +39,7 @@
 #include "cloud-type.h"
 #include "store.h"
 #include "rltiles/tiledef_defines.h"
+#include "tag-version.h"
 
 #include "coord-def.h"
 #include "item-def.h"

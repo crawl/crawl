@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // NOTE: Changing this order will break saves! Appending does not.
 enum monster_type                      // env.mons[].type
 {

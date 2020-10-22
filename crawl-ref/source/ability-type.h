@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum ability_type
 {
     ABIL_NON_ABILITY = -1,

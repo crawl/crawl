@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // When adding:
 // * Add an entry in feature-data.h for the feature.
 // * edit dat/descript/features.txt and add a

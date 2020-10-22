@@ -23,6 +23,7 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "state.h"
+#include "tag-version.h"
 #include "tileweb.h"
 #include "unicode.h"
 #ifdef USE_TILE

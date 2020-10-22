@@ -26,6 +26,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "tag-version.h"
 
 #define MIN_START_STAT       3
 

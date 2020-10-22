@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum timed_effect_type
 {
     TIMER_CORPSES,

@@ -42,6 +42,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unicode.h"
 #include "view.h"

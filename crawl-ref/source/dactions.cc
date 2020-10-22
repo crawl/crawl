@@ -23,6 +23,7 @@
 #include "mon-transit.h"
 #include "religion.h"
 #include "state.h"
+#include "tag-version.h"
 #include "view.h"
 
 static void _daction_hog_to_human(monster *mon, bool in_transit);

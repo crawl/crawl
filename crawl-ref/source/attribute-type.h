@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum attribute_type
 {
 #if TAG_MAJOR_VERSION == 34
