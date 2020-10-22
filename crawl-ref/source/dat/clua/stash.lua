@@ -138,6 +138,9 @@ function ch_stash_search_annotate_item(it)
 
   if it.class(true) == "armour" then
       annot = annot .. " {" .. it.subtype() .. " armor}"
+      if it.subtype() ~= "body" then
+          annot = annot .. " {auxiliary armor} {auxiliary armour}"
+      end
   end
 
   local resistances = {
