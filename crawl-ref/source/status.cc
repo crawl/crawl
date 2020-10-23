@@ -709,12 +709,14 @@ bool fill_status_info(int status, status_info& inf)
 static void _describe_zot(status_info& inf)
 {
     const int lvl = bezotting_level();
-    if (lvl <= 0 && !Options.always_show_zot)
+    if (lvl > 0)
+    {
+        inf.short_text = "bezotted";
+        inf.long_text = "Zot is approaching!";
+    } else if (!Options.always_show_zot)
         return;
 
     inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
-    inf.short_text = "bezotted";
-    inf.long_text = "Zot is approaching!";
     switch (lvl)
     {
         case 0:
