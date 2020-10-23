@@ -446,7 +446,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Imus Thea will no longer reflect ranged attacks.",
            "Imus Thea will reflect ranged attacks, depending on piety." },
       { 2, "All your projectiles and spells are reflected off the wall." },
-      { 2, "Can fire light from weapons." },
+      { 2, "Can fire an illusory replication of weapon." },
       { 3, ABIL_IMUS_PRISMATIC_PRISM,
            "create prismatic prism to blind enemies",
            "create prismatic prism" },

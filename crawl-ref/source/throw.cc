@@ -685,8 +685,8 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
         beam.damage = dice_def(1, damage); 
         beam.hit = hit;
-        beam.name = "light";
-        ammo_name = "light";
+        beam.name = "illusory weapon";
+        ammo_name = "illusory weapon";
     }
     else {
         beam.name = item.name(DESC_PLAIN, false, false, false);
@@ -856,7 +856,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool is_non_waste = is_imus_throw;
 
     if (is_imus_throw && !enough_mp(1, true)) {
-        mpr("You don't have enough magic to shoot a light.");
+        mpr("You don't have enough magic to bring the imitation from illusion.");
         //crawl_state.zero_turns_taken();
         return false;
     }

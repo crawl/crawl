@@ -1136,7 +1136,7 @@ void bolt::do_fire()
                                || flavour == BEAM_VISUAL))
     {
         if (is_unrandom_artefact(*item, UNRAND_CRYSTAL_SPEAR) || 
-        (item->base_type == OBJ_WEAPONS && name == "light")) {
+        (item->base_type == OBJ_WEAPONS && name == "illusory spear")) {
 
         } 
         else {
