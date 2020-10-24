@@ -50,6 +50,8 @@ mutations:
     MUT_ACUTE_VISION: 1
     MUT_DEFORMED: 1
     MUT_ROLL: 1
+  7:
+    MUT_CURL: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER

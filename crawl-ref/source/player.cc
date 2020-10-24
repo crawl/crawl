@@ -5965,6 +5965,12 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
 
     AC += sanguine_armour_bonus();
 
+    if (you.has_mutation(MUT_CURL)
+        && you.props[PALENTONGA_CURL_KEY].get_bool())
+    {
+        AC += 7 * scale;
+    }
+
     return AC / scale;
 }
 
