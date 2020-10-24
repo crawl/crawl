@@ -206,10 +206,7 @@ public:
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
-    void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
-    void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
-    void apply_enchantment(const mon_enchant &me);
 
     bool can_drink() const;
     bool can_drink_potion(potion_type ptype) const;
@@ -615,4 +612,8 @@ private:
                               int &nvalid) const;
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
+
+    void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
+    void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
+    void apply_enchantment(const mon_enchant &me);
 };
