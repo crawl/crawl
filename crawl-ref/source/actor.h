@@ -7,6 +7,7 @@
 #include "equipment-type.h"
 #include "god-type.h"
 #include "item-prop-enum.h"
+#include "kill-method-type.h"
 #include "mon-holy-type.h"
 #include "random-var.h"
 #include "ouch.h"

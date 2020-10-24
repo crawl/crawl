@@ -5,6 +5,7 @@
 #include "actor.h"
 #include "beh-type.h"
 #include "enchant-type.h"
+#include "kill-method-type.h"
 #include "mon-ench.h"
 #include "mon-poly.h"
 #include "montravel-target-type.h"
