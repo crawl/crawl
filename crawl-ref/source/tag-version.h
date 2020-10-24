@@ -2,6 +2,8 @@
 
 #include <set>
 
+#include "macros.h"
+
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
 // DO NOT BUMP THIS UNLESS YOU KNOW WHAT YOU'RE DOING. This would break

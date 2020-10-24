@@ -1,5 +1,6 @@
 #pragma once
 
+#include "macros.h"
 #include "tag-version.h"
 
 enum job_type

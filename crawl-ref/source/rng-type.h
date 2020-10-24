@@ -1,4 +1,5 @@
 #pragma once
+
 #include "branch-type.h"
 
 namespace rng

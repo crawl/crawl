@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "tag-version.h"
 
 enum object_class_type : uint8_t           // env.item[].base_type
