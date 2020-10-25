@@ -82,15 +82,20 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
           restore-keys: |
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
             ccache-linux-${{ matrix.compiler }}-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - name: Run tag upgrade scripts
         if: matrix.tag_upgrade == true
         run: |
@@ -147,12 +152,16 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-macos-clang-${{ matrix.build_type }}
+          key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-macos-clang-${{ matrix.build_type }}
-            ccache-macos-clang
+            ccache-macos-clang-${{ matrix.build_type }}-
+            ccache-macos-clang-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -202,12 +211,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-mingw64-${{ matrix.build_type }}
+          key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-mingw64-${{ matrix.build_type }}
-            ccache-mingw64
+            ccache-mingw64-${{ matrix.build_type }}-
+            ccache-mingw64-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -260,11 +275,17 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-catch2
+          key: ccache-catch2-${{ github.sha }}
           restore-keys: |
-            ccache-catch2
+            ccache-catch2-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
