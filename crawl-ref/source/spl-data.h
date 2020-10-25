@@ -3351,6 +3351,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HURL_SLUDGE, "Hurl Sludge",
+    spschool::poison | spschool::conjuration | spschool::transmutation,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    6,
+    200,
+    5, 5,
+    3, 5,
+    TILEG_GENERIC_MONSTER_SPELL
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

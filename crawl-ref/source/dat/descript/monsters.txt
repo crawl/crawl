@@ -1105,6 +1105,11 @@ felid
 A feline creature that has been granted sentience by magical means. It uses the
 gift of speech to demand milk, treats and catnip.
 %%%%
+fenstrider witch
+
+Followers of the ancient swamp ways, these witches rise above the muck and mire
+on a pair of stilt-like chicken legs. They are masters of pain and poison.
+%%%%
 fire bat
 
 A bat whose leathery body burns with a hot flame.

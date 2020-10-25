@@ -499,5 +499,6 @@ enum spell_type : int
     SPELL_IMPLANT_EGGS,
     SPELL_SPLINTERSPRAY,
     SPELL_WOODWEAL,
+    SPELL_HURL_SLUDGE,
     NUM_SPELLS
 };

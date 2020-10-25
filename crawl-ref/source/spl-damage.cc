@@ -3235,6 +3235,9 @@ void actor_apply_toxic_bog(actor * act)
     const bool player = act->is_player();
     monster *mons = !player ? act->as_monster() : nullptr;
 
+    if (mons && mons->type == MONS_FENSTRIDER_WITCH)
+        return; // stilting above the muck!
+
     actor *oppressor = nullptr;
 
     for (map_marker *marker : env.markers.get_markers_at(act->pos()))

@@ -701,6 +701,12 @@ Hurl Damnation spell
 
 <Hurl Damnation ability>
 %%%%
+Hurl Sludge spell
+
+Conjures a focused blast of highly toxic sludge, poisoning the victim and
+drenching their surroundings. The sludge damages and poisons all monsters,
+even those resistant to poison.
+%%%%
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
