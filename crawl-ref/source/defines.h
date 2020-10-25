@@ -8,6 +8,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#include <cstdint>
+
 // Minimum terminal size allowed.
 #define MIN_COLS  79
 #define MIN_LINES 24
