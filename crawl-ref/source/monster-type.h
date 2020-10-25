@@ -315,7 +315,9 @@ enum monster_type                      // env.mons[].type
     MONS_FIRE_VORTEX,
     MONS_SPATIAL_VORTEX,
     MONS_INSUBSTANTIAL_WISP,
-#if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION > 34
+    MONS_WILL_O_THE_WISP,
+#else
     MONS_VAPOUR,
 
     // Mimics:
@@ -1077,6 +1079,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOLIATH_FROG,
     MONS_ELEIONOMA,
     MONS_FENSTRIDER_WITCH,
+    MONS_WILL_O_THE_WISP,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

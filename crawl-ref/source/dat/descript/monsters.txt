@@ -2560,6 +2560,12 @@ wight
 An ancient warrior, kept in a state of perpetual undeath by its desire to die
 with honour in battle.
 %%%%
+will-o-the-wisp
+
+A green-glowing gaseous entity, flickering and pulsing irregularly as it hovers
+through the air. Travelers have been known to confuse these for distant lanterns -
+a mistake rarely made twice.
+%%%%
 wind drake
 
 A small but powerful dragon, particularly adept amongst its kin at manipulating

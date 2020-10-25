@@ -896,6 +896,12 @@ Mara Summon spell
 Weaves illusions of the caster. Such illusions have the same physical prowess
 as the original, and can cast the same spells.
 %%%%
+Marshlight spell
+
+Conjures two balls of burning swamp gas adjacent to the caster. The balls will
+rapidly seek the nearest monster and burn them. Wizards attempted to copy this
+with the spell 'Foxfire', but their version is much less powerful.
+%%%%
 Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.

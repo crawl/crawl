@@ -3262,6 +3262,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MARSHLIGHT, "Marshlight",
+    spschool::conjuration | spschool::fire,
+    spflag::selfench | spflag::monster,
+    4,
+    200,
+    -1, -1,
+    1, 0,
+    TILEG_FOXFIRE,
+},
+
+{
     SPELL_HAILSTORM, "Hailstorm",
     spschool::conjuration | spschool::ice,
     spflag::area,

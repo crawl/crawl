@@ -135,6 +135,7 @@ static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
+static void _cast_marshlight(monster &caster, mon_spell_slot slot, bolt&);
 static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
@@ -342,6 +343,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _branch_summon,
         nullptr,
         MSPELL_NO_AUTO_NOISE,
+    } },
+    { SPELL_MARSHLIGHT, {
+       _always_worthwhile,
+       _cast_marshlight,
     } },
     { SPELL_IMPLANT_EGGS, { _implant_eggs_goodness, _cast_implant_eggs } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
@@ -5066,6 +5071,12 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
             mg.props[MGEN_BLOB_SIZE] = 5;
         create_monster(mg);
     }
+}
+
+static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false);
 }
 
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
