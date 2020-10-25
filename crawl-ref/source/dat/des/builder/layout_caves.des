@@ -231,7 +231,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 # Then add pools like layout_cave_pools (but also including "pools"
 # of trees and stone).
 #
-# TODO: Somebody with greater noise manipulation prowress than I
+# TODO: Somebody with greater noise manipulation prowess than I
 # should widen the occasional thin corridor at the end of each drip.
 #
 NAME:   layout_falls_marsh
@@ -243,7 +243,7 @@ TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
   if is_validating() then return end
 
   local gxm,gym = dgn.max_bounds()
-  local limit,border,margin = 0.35,8,8
+  local limit,border,margin = 0.35,12,12
   local reps = crawl.random_range(70,85)
 
   local fcaves = procedural.worley_diff { scale = 7.5/reps }
@@ -264,12 +264,11 @@ TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
               frequency = pool_frequency }
 
   subst('W = W:75 t')
-  subst('w = w:75 t')
-  subst('c = .:570 w W t')
+  subst('w = W:75 t')
+  subst('c = .:570 w t')
   subst('. = .:' .. 71 - you.depth() * 4 .. ' W:' .. 29 + you.depth() * 4)
   subst('x = t')
 
-  remove_isolated_glyphs { find = "w", percent = 80 }
   remove_isolated_glyphs { find = "W", percent = 80 }
   zonify.grid_fill_water_zones(1,"t")
 }}
