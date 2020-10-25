@@ -1305,6 +1305,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ELEIONOMA,
+      {
+       { SPELL_SPLINTERSPRAY, 50, MON_SPELL_MAGICAL },
+       { SPELL_WOODWEAL, 150, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+      }
+    },
+
     // ('S') Snakes.
     {  MST_LAVA_SNAKE,
       {

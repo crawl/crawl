@@ -1321,6 +1321,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_WOODWEAL, "Woodweal",
+    spschool::necromancy | spschool::transmutation,
+    spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
+        | spflag::emergency | spflag::utility | spflag::not_evil,
+    4,
+    0,
+    1, 1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_HURL_DAMNATION, "Hurl Damnation",
     spschool::conjuration,
     spflag::dir_or_target | spflag::unholy
@@ -1454,6 +1466,17 @@ static const struct spell_desc spelldata[] =
     4, 4,
     5, 0,
     TILEG_METAL_SPLINTERS,
+},
+
+{
+    SPELL_SPLINTERSPRAY, "Splinterspray",
+    spschool::conjuration,
+    spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
+    4,
+    0,
+    3, 3,
+    5, 0,
+    TILEG_METAL_SPLINTERS, // close enough
 },
 
 {
