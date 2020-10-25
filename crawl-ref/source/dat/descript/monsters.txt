@@ -658,6 +658,12 @@ blizzard demon
 
 A greater demon, wreathed in snow and lightning.
 %%%%
+bloated husk
+
+A decaying undead corpse. When it reaches a victim (or if it's destroyed first),
+the gases trapped inside it are released and create a large, violent
+concussive blast.
+%%%%
 block of ice
 
 A block of ice shaped like a statue, but worked by no living hands.

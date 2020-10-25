@@ -1016,6 +1016,9 @@ eleionoma MONS_ELEIONOMA
 %sdir mon/undead
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
+%rim 0
+bloated_husk MONS_BLOATED_HUSK
+%rim 1
 ghoul MONS_GHOUL
 
 %sdir mon/unique
