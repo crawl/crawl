@@ -738,6 +738,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_BUNYIP,
+      {
+        { SPELL_WARNING_CRY, 20, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                 | MON_SPELL_NO_SILENT },
+      }
+    },
+
     // ('y') Flying insects.
     {  MST_MELIAI,
       {
