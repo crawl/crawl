@@ -10,6 +10,9 @@
 
 #include <algorithm>
 #include <chrono>
+#include <vector>
+
+using std::vector;
 
 string weird_glowing_colour();
 

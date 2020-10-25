@@ -9,10 +9,13 @@
 #include <streambuf>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "canned-message-type.h"
 #include "enum.h"
 #include "player.h"
+
+using std::vector;
 
 // Write the message window contents out.
 void display_message_window();

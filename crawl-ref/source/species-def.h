@@ -1,9 +1,13 @@
 #pragma once
 
+#include <vector>
+
 #include "stat-type.h"
 #include "mon-enum.h"
 #include "mutation-type.h"
 #include "undead-state-type.h"
+
+using std::vector;
 
 enum species_flag
 {

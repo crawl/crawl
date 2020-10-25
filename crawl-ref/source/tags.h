@@ -6,9 +6,12 @@
 #pragma once
 
 #include <cstdio>
+#include <vector>
 
 #include "package.h"
 #include "tag-version.h"
+
+using std::vector;
 
 struct show_type;
 struct monster_info;

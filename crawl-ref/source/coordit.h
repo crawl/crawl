@@ -3,6 +3,10 @@
 #include "coord-circle.h"
 #include "los-type.h"
 
+#include <vector>
+
+using std::vector;
+
 class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "format.h"
 #include "KeymapContext.h"
@@ -24,6 +25,8 @@
 # include "tileweb.h"
 # include "json.h"
 #endif
+
+using std::vector;
 
 struct wm_keyboard_event;
 

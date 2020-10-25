@@ -1,8 +1,12 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
+#include <vector>
+
 #include "tiledgnbuf.h"
 #include "tilereg.h"
+
+using std::vector;
 
 class InventoryTile
 {

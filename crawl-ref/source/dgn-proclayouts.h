@@ -5,10 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "dungeon.h"
 #include "enum.h"
 #include "fixedvector.h"
 #include "worley.h"
+
+using std::vector;
 
 dungeon_feature_type sanitize_feature(dungeon_feature_type feature,
         bool strict = false);

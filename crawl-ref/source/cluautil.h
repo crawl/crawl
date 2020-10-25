@@ -13,6 +13,10 @@ extern "C" {
 #include <lualib.h>
 }
 
+#include <vector>
+
+using std::vector;
+
 lua_Integer luaL_safe_checkinteger(lua_State *L, int idx);
 lua_Integer luaL_safe_tointeger(lua_State *L, int idx);
 // override some #defines in the lua libs.

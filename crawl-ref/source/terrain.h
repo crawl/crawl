@@ -6,11 +6,14 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "god-type.h"
 #include "terrain-change-type.h"
+
+using std::vector;
 
 class  actor;
 struct coord_def;

@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include <vector>
+
 #include "terrain.h"
 #include "travel.h"
+
+using std::vector;
 
 template <typename fgrd, typename bound_check>
 class flood_find : public travel_pathfind

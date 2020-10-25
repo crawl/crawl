@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 // [ds] The old noise system was pretty simple: noise level (loudness) ==
 // distance covered. Since the new system considers terrain when propagating
 // sound, using the same noise attenuation of 1 unit per square travelled would

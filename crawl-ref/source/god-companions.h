@@ -7,10 +7,13 @@
 
 #include <list>
 #include <map>
+#include <vector>
 
 #include "monster.h"
 #include "mon-transit.h"
 #include "tag-version.h"
+
+using std::vector;
 
 struct companion
 {

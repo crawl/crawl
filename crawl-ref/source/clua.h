@@ -11,8 +11,11 @@ extern "C" {
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "maybe-bool.h"
+
+using std::vector;
 
 class CLua;
 

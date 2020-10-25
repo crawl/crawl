@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "artefact-prop-type.h"
 #include "beam-type.h"
 #include "conduct-type.h"
@@ -16,6 +18,8 @@
 #include "size-part-type.h"
 #include "size-type.h"
 #include "stat-type.h"
+
+using std::vector;
 
 enum class ev_ignore
 {

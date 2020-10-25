@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 int manual_slot_for_skill(skill_type skill);
 int get_all_manual_charges_for_skill(skill_type skill);
 bool skill_has_manual(skill_type skill);

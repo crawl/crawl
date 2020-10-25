@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include "tag-version.h"
+
+using std::vector;
 
 /* Don't change the order of any enums in this file unless you are breaking
  * save compatibility. See ../docs/develop/save_compatibility.txt for

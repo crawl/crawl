@@ -6,11 +6,14 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include "enum.h"
 #include "format.h"
 #include "menu.h"
 #include "mon-info.h"
+
+using std::vector;
 
 /// What's in a given spellbook?
 struct spellbook_contents

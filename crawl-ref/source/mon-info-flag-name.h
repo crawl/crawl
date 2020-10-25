@@ -1,7 +1,11 @@
 #pragma once
 
+#include <vector>
+
 #include "mon-info.h"
 #include "tag-version.h"
+
+using std::vector;
 
 struct monster_info_flag_name
 {

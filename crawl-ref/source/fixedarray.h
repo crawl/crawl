@@ -6,8 +6,11 @@
 #pragma once
 
 #include <algorithm>
+#include <vector>
 
 #include "fixedvector.h"
+
+using std::vector;
 
 template <class TYPE, int WIDTH, int HEIGHT> class FixedArray
 {

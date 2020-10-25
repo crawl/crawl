@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include <vector>
+
 #include "ui.h"
 #include "tilefont.h"
+
+using std::vector;
 
 class MenuButton : public ui::Bin
 {

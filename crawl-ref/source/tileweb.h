@@ -9,6 +9,8 @@
 
 #include <bitset>
 #include <map>
+#include <vector>
+
 #include <sys/un.h>
 
 #include "cursor-type.h"
@@ -21,6 +23,8 @@
 #include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
+
+using std::vector;
 
 class Menu;
 

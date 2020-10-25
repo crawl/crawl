@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "trap-type.h"
+
+using std::vector;
 
 #define NEWLY_TRAPPED_KEY "newly_trapped"
 

@@ -2,6 +2,7 @@
 
 #include <set>
 #include <memory> // unique_ptr
+#include <vector>
 
 #include "cloud.h"
 #include "coord.h"
@@ -11,6 +12,8 @@
 #include "monster.h"
 #include "shopping.h"
 #include "trap-def.h"
+
+using std::vector;
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 

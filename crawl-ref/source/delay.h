@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "activity-interrupt-type.h"
 #include "command-type.h"
 #include "enum.h"
@@ -12,6 +14,8 @@
 #include "mpr.h"
 #include "operation-types.h"
 #include "seen-context-type.h"
+
+using std::vector;
 
 class interrupt_block
 {

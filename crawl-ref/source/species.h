@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "ability-type.h"
 #include "item-prop-enum.h"
@@ -8,6 +10,8 @@
 #include "size-type.h"
 #include "species-def.h"
 #include "species-type.h"
+
+using std::vector;
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);

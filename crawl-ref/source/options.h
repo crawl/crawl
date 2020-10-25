@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <unordered_set>
+#include <vector>
 
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
@@ -19,6 +20,8 @@
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
 #include "tag-pref.h"
+
+using std::vector;
 
 enum autosac_type
 {

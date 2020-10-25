@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 class monster;
 
 int mons_tracking_range(const monster* mon);

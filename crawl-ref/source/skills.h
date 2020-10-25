@@ -5,7 +5,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "player.h"
+
+using std::vector;
 
 const int MAX_SKILL_ORDER = 100;
 struct skill_state

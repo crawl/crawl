@@ -6,8 +6,11 @@
 #pragma once
 
 #include <unordered_set>
+#include <vector>
 
 #include "tag-version.h"
+
+using std::vector;
 
 struct shop_struct;
 

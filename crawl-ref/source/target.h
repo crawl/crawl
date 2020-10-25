@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "beam.h"
 #include "los-type.h"
 #include "reach-type.h"
+
+using std::vector;
 
 struct passwall_path;
 

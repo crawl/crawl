@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "actor.h"
 #include "beh-type.h"
@@ -13,6 +14,8 @@
 #include "seen-context-type.h"
 #include "spl-util.h"
 #include "xp-tracking-type.h"
+
+using std::vector;
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "ac-type.h"
 #include "beam-type.h"
 #include "enchant-type.h"
@@ -14,6 +16,8 @@
 #include "ray.h"
 #include "spl-cast.h"
 #include "zap-type.h"
+
+using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range

@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "player.h"
 #include "spl-util.h"
+
+using std::vector;
 
 bool is_holy_item(const item_def& item, bool calc_unid = true);
 bool is_potentially_evil_item(const item_def& item, bool calc_unid = true);

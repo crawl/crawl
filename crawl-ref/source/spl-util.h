@@ -6,9 +6,12 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "enum.h"
 #include "mon-info.h"
+
+using std::vector;
 
 enum class spschool
 {

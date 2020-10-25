@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 struct level_exit;
 
 bool target_is_unreachable(monster* mon);

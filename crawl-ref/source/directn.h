@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
@@ -12,6 +14,8 @@
 #include "targeting-type.h"
 #include "trap-type.h"
 #include "view.h"
+
+using std::vector;
 
 struct describe_info;
 

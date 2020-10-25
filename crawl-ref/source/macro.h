@@ -6,10 +6,13 @@
 #pragma once
 
 #include <deque>
+#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "KeymapContext.h"
+
+using std::vector;
 
 class key_recorder;
 typedef deque<int> keyseq;

@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "mpr.h"
 #include "spl-cast.h"
+
+using std::vector;
 
 struct bolt;
 class dist;
