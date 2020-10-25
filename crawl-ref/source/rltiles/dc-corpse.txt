@@ -120,6 +120,7 @@ death_scarab CORPSE_DEATH_SCARAB
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
+goliath_frog CORPSE_GOLIATH_FROG
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON

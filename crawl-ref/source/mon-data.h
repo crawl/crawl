@@ -3209,6 +3209,19 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
     {TILEP_MONS_BLINK_FROG}, TILE_CORPSE_BLINK_FROG
 },
 
+{
+    MONS_GOLIATH_FROG, 'F', LIGHTGREY, "goliath frog",
+    M_COLD_BLOOD,
+    MR_NO_FLAGS, // it's tough out there for a frog.
+    10, MONS_FROG, MONS_GOLIATH_FROG, MH_NATURAL, 80,
+    { { AT_HIT, AF_REACH_TONGUE, 30 }, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    12, 500,
+    4, 18, MST_NO_SPELLS, true, S_SILENT, // IRL, goliath frogs have no vocals!
+    I_ANIMAL, HT_AMPHIBIOUS, 14, SWIM_ENERGY(6),
+    MONUSE_NOTHING, SIZE_LITTLE /* ~13" */, MON_SHAPE_QUADRUPED_TAILLESS,
+    {TILEP_MONS_GOLIATH_FROG}, TILE_CORPSE_GOLIATH_FROG
+},
+
 // dummy for recolouring
 {
     MONS_BARACHI, 'F', LIGHTCYAN, "barachi",

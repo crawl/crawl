@@ -84,8 +84,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 bool melee_attack::can_reach()
 {
     return attk_type == AT_HIT && weapon && weapon_reach(*weapon) > REACH_NONE
-           || attk_flavour == AF_REACH
-           || attk_flavour == AF_REACH_STING;
+           || flavour_has_reach(attk_flavour);
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -2722,6 +2721,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
     }
 
+    case AF_REACH_TONGUE:
     case AF_ACID:
         defender->splash_with_acid(attacker, 3);
         break;

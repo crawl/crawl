@@ -916,12 +916,10 @@ int main(int argc, char* argv[])
                                                  orig_attk.flavour :
                                                  attk.flavour);
 
+                if (flavour_has_reach(flavour))
+                    monsterattacks += "(reach)";
                 switch (flavour)
                 {
-                case AF_REACH:
-                case AF_REACH_STING:
-                    monsterattacks += "(reach)";
-                    break;
                 case AF_KITE:
                     monsterattacks += "(kite)";
                     break;
@@ -1052,6 +1050,9 @@ int main(int argc, char* argv[])
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
+                case AF_REACH:
+                case AF_REACH_STING:
+                case AF_REACH_TONGUE:
                     break;
 #if TAG_MAJOR_VERSION == 34
                 case AF_DISEASE:
