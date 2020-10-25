@@ -1403,8 +1403,8 @@ NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
 DEPTH:   Lair:4-, !Lair:$, Snake, !Snake:$, Depths, !Depths:$
 ORIENT:  float
-KMONS:   1 = slime creature w:20 / swamp worm w:50 / \
-             vampire mosquito / cane toad / swamp drake w:15
+KMONS:   1 = tyrant leech / swamp worm w:50 / \
+             vampire mosquito band / goliath frog / swamp drake w:15
 KMONS:   23 = alligator / swamp dragon / hydra
 KMONS:   45 = tentacled monstrosity / thorn hunter
 KITEM:   3 = any good_item / any potion / gold

@@ -2365,7 +2365,11 @@ ENDMAP
 NAME:   roderic_carrion_pond
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  Lair:2-, !Lair:$, Swamp
+: if you.in_branch("Swamp") then
+MONS:   bloated husk / nothing
+: else
 MONS:   necrophage
+: end
 SUBST:  ' = 111.
 SUBST:  ? = %%.
 : dgn.delayed_decay(_G, '%', 'any corpse')
