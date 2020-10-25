@@ -20,7 +20,7 @@ jobs:
         run: util/checkwhite -n
         working-directory: crawl-ref/source
   build_linux:
-    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }}
+    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,6 +37,8 @@ jobs:
           - FULLDEBUG=1
         tag_upgrade:
           - false
+        build_all:
+          - ""
         exclude:
           # Limit Clang jobs:
           # 1. Only build fulldebug
@@ -53,18 +55,37 @@ jobs:
             build_opts: ""
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: TILES=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: FULLDEBUG=1
+            tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
+          - compiler: clang
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history
+          submodules: true
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -82,8 +103,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
           restore-keys: |
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
@@ -107,11 +129,11 @@ jobs:
           util/tag-major-upgrade -t 35
           util/tag-35-upgrade.py
         working-directory: crawl-ref/source
-      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
+      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }}
         working-directory: crawl-ref/source
       # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
       - if: matrix.debug == 'FULLDEBUG=1' && (matrix.build_opts == '' || matrix.build_opts == 'WEBTILES=1') && matrix.tag_upgrade == false
-        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} test
+        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} test
         working-directory: crawl-ref/source
         env:
           TERM: dumb
