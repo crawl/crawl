@@ -425,6 +425,7 @@ enum monster_type                      // env.mons[].type
     MONS_TENGU_WARRIOR,
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
+    MONS_FENSTRIDER_WITCH,
 #endif
     MONS_MINOTAUR,
     MONS_NAGA,
@@ -1075,6 +1076,7 @@ enum monster_type                      // env.mons[].type
     MONS_DEVOURING_SWARM,
     MONS_GOLIATH_FROG,
     MONS_ELEIONOMA,
+    MONS_FENSTRIDER_WITCH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -1010,6 +1010,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_FENSTRIDER_WITCH,
+      {
+       { SPELL_PARALYSE, 15, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 30, MON_SPELL_WIZARD },
+       { SPELL_HURL_SLUDGE, 15, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_SPHINX,
       {
        { SPELL_CONFUSE, 11, MON_SPELL_WIZARD },
