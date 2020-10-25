@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <cstdint>
+
+#include "macros.h"
+
 // In this case, an x86 CPU will use x87 math for floating point calculations,
 // which uses 80 bit intermediate results, andleads to difference from the
 // (much more common, in 2019) SSE-based calculations.

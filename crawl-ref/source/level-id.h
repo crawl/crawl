@@ -7,6 +7,10 @@
 
 #include "coord-def.h"
 #include "tag-version.h"
+#include "branch-type.h"
+
+class reader;
+class writer;
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
