@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "debug-defines.h"
 #include "macros.h"
 
 // Synch with ANSI definitions.
