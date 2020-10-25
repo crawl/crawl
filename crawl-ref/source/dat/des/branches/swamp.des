@@ -946,7 +946,7 @@ ENDMAP
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-KMONS:   1 = insubstantial wisp
+KMONS:   1 = will-o-the-wisp
 KMONS:   2 = ball lightning
 KMONS:   3 = lightning spire
 KFEAT:   123 = deep_water
@@ -957,9 +957,9 @@ MAP
   Mtttttt  @tt
  Mttttttttt..ttM
 Mttt3twwwtWT.wtt
-Mtt211w}wwt.wwwtt
-ttt11w.w.w.w11ttt
-ttwww.tWw)w112ttM
+Mtt2w1w}wwt.wwwtt
+tttwww.w.w.wwwttt
+ttwww.tWw)w1w2ttM
 Mttw.TWt.wwt3tttM
  Mtt..tttttttttM
    tt@  ttttttt
@@ -1009,12 +1009,12 @@ MtttWTWtttM
  MMtttttMM
 ENDMAP
 
-NAME:    hangedman_swamp_muck
+NAME:    hangedman_swamp_grove
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp, !Swamp:$
-KMONS:   1 = slime creature / jelly
-KMONS:   2 = slime creature
-KMONS:   3 = brown very ugly thing
+KMONS:   1 = eleionoma
+KMONS:   2 = spriggan druid
+KMONS:   3 = bunyip / alligator
 KFEAT:   12 = shallow_water
 SHUFFLE: })
 SUBST:   T = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
@@ -1022,12 +1022,12 @@ CLEAR:   ~
 MAP
  MtttttttttM
 MttW3}2)3wttM
-Mtw.tt1tt.WtM
+Mtw.ttWtt.WtM
 Mtt..wtt..ttM
-Mttt.1t1.tttt
-Mtw.1wtw1.WTt
+Mttt.1tW.tttt
+Mtw.WwtwW.WTt
 MtWtttwtttWtt
-Mt2.tT.Tt.2tM
+MtW.tT.Tt.1tM
 Ttt..twW..ttM
  Ttt.www.ttM
  @WWwtTtwW@
@@ -1096,7 +1096,7 @@ ENDMAP
 
 NAME:    st_shrine_of_shade
 DEPTH:   Swamp, !Swamp:$
-MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
+MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, ghost crab
 KMONS:   P = withered plant
 SUBST:   p = Pp, p = PP., o = P..
 MAP
@@ -1104,11 +1104,11 @@ MAP
   pppp.pppp
  ppccc.cccpp
 opccppo.occpo
-opcp2c1c2ocpo
+opcp2c1c.ocpo
  pc.c111cocp
-...211c112..@
+....11c11...@
  pcoc111cocp
-opco2c1c2ocpo
+opco.c1c2ocpo
 opccoo.ppccpo
  ppccc.cccpp
   ppppo.ppp
@@ -1365,6 +1365,7 @@ KMONS: z = swamp drake zombie / swamp worm zombie / \
         hydra zombie / tyrant leech zombie / hydra zombie / \
         alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
         swamp dragon simulacrum w:1 / hydra simulacrum w:1
+# TODO: update this with bunyips, etc
 KFEAT: z = shallow_water
 MAP
   ttttttt
@@ -1396,7 +1397,7 @@ ENDMAP
 NAME: nicolae_swamp_snake_nest
 TAGS: transparent no_monster_gen
 KMONS: 1 = anaconda
-KMONS: 2 = adder / ball python / water moccasin / black mamba
+KMONS: 2 = water moccasin / black mamba / nothing w:20
 SUBST: T = ..ttw
 SUBST: . = .:20 2:3
 KFEAT: .12 = . / W w:2
@@ -1542,10 +1543,9 @@ DEPTH:   Swamp:2-, !Swamp:$
 ORIENT:  south
 WEIGHT:  5
 MONS:    spectral hydra / spectral swamp dragon, death drake, necromancer
-MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
-         w:1 freezing wraith
+MONS:    bog body w:8 / w:5 wraith / w:3 phantasmal warrior / w:1 freezing wraith
 KMONS:   5 = bog body / spriggan zombie w:4 / troll zombie w:4
-KMONS:   6 = large abomination w:2 / swamp worm zombie / cane toad zombie / \
+KMONS:   6 = large abomination w:2 / swamp worm zombie / goliath frog zombie / \
              tyrant leech zombie w:6 / alligator zombie w:6
 KMONS:   q = withered plant
 KFEAT:   56 = W
@@ -1589,12 +1589,14 @@ xxx%%xxxxxxxx%.....%xxxxxxxx..xxx
             ttttttttt
 ENDMAP
 
-NAME:  cheibrodos_swamp_kobolds
+NAME:  cheibrodos_swamp_witchery
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-MONS:  kobold demonologist
+WEIGHT: 2
+MONS:  fenstrider witch
 ITEM:  book of callings, book of summonings
 SUBST: ' = %:20 d:1 e:1
+SUBST: 1 = 1:1 .:1
 MAP
         WWW
        WxxxW
@@ -1613,7 +1615,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-MONS:  vampire ; long sword . robe, tyrant leech
+MONS:  vampire mage, tyrant leech
 KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
@@ -1632,7 +1634,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_minitomb
 TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
-KMONS: - = bog body w:20 / troll zombie / troll skeleton / shadow w:5
+KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
 SUBST: ' = .W
 MAP
@@ -1648,18 +1650,6 @@ xxx..xxx
 x-+..+-x
 xxxxxxxx
  xxxxxx
-ENDMAP
-
-NAME:  cheibrodos_swamp_slimy
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
-MONS:  slime creature
-MAP
-   tcGct
-tttc111cttt
-@...1U1...@
-tttc111cttt
-   tcGct
 ENDMAP
 
 ####
@@ -1721,7 +1711,7 @@ NAME: cheibrodos_swamp_heart_of_darkness
 DEPTH: Swamp:2-, !Swamp:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: northeast
-MONS: cane toad / ugly thing / hydra / hornet
+MONS: goliath frog / vampire mosquito band / hydra / tyrant leech
 MONS: spriggan rider, spriggan berserker, deep elf knight, spriggan druid
 KMONS: P = plant
 KFEAT: P = W

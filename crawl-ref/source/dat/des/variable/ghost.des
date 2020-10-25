@@ -687,7 +687,7 @@ SUBST:  f = |*, g = *, h = %$, ij = -
 NSUBST: D = 4=1 / 4=1- / 2 / 2=2- / -
 :     end
 : elseif you.in_branch("Swamp") then
-MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / shadow / \
+MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / bloated husk / \
         bog body / vampire mosquito band / tyrant leech
 MONS:   ghost crab / hydra spectre / hydra simulacrum
 SUBST:  fg = |*, h = *%, i = %$--, j = -
@@ -1912,9 +1912,9 @@ MONS:   torpor snail / ghost moth
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Swamp") then
-MONS:   cane toad / komodo dragon / hornet / ugly thing
+MONS:   goliath frog / tyrant leech
 MONS:   hydra / alligator / swamp dragon
-MONS:   very ugly thing
+MONS:   devouring swarm band
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Elf") then
