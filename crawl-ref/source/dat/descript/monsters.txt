@@ -1244,6 +1244,11 @@ golden eye
 A tiny and shimmering floating eye, swift as the wind and glistening like gold.
 It has a peculiarly hypnotic look.
 %%%%
+goliath frog
+
+A frog of exceptional size, for a frog. It lashes its prey with its tongue
+from a distance to coat them in its acidic stomach juices.
+%%%%
 great orb of eyes
 
 A levitating ball, covered in malignant eyes and humming with eldritch

@@ -196,6 +196,7 @@ prince_ribbit MONS_PRINCE_RIBBIT
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+goliath_frog MONS_GOLIATH_FROG
 %rim 1
 cane_toad MONS_CANE_TOAD
 

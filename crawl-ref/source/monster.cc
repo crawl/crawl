@@ -6151,11 +6151,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 reach_type monster::reach_range() const
 {
     const mon_attack_def attk(mons_attack_spec(*this, 0));
-    if ((attk.flavour == AF_REACH || attk.flavour == AF_REACH_STING)
-        && attk.damage)
-    {
+    if (flavour_has_reach(attk.flavour) && attk.damage)
         return REACH_TWO;
-    }
 
     const item_def *wpn = primary_weapon();
     if (wpn)

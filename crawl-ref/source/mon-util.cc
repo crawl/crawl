@@ -2164,6 +2164,25 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
     }
 }
 
+/**
+ * Does a monster attacking with this flavour reach as if using a polearm?
+ *
+ * @param flavour   The attack flavour in question; e.g. AF_COLD.
+ * @return          Whether the flavour grants inherent reach.
+ */
+bool flavour_has_reach(attack_flavour flavour)
+{
+    switch (flavour)
+    {
+        case AF_REACH:
+        case AF_REACH_STING:
+        case AF_REACH_TONGUE:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool mons_immune_magic(const monster& mon)
 {
     return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;
