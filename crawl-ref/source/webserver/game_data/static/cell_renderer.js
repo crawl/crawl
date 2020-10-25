@@ -1022,6 +1022,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0);
                 status_shift += 10;
             }
+            if (fg.INSECT_EGGS)
+            {
+                this.draw_icon(icons.INSECT_EGGS, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
 
             // Anim. weap. and summoned might overlap, but that's okay
             if (fg.ANIM_WEP)

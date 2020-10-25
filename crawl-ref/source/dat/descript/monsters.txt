@@ -935,6 +935,12 @@ demonspawn
 A half-mortal, half-demonic creature, with its hellish heritage asserting
 itself through a certain devilish cast to its features.
 %%%%
+devouring swarm
+
+A whirling mob of biting insects, motivated by a common thirst for blood. To
+reproduce, the swarm lays eggs in the wounds of nearby creatures. The eggs
+hatch when their hosts die, birthing more hungry insects.
+%%%%
 diamond obelisk
 
 A towering obelisk surrounded by a powerful storm.

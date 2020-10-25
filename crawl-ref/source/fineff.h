@@ -338,6 +338,24 @@ protected:
     string name;
 };
 
+class insect_eggs_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(coord_def pos, const string &name)
+    {
+        final_effect::schedule(new insect_eggs_fineff(pos, name));
+    }
+protected:
+    insect_eggs_fineff(coord_def pos, const string &_name)
+        : final_effect(0, 0, pos), name(_name)
+    {
+    }
+    string name;
+};
+
 class make_derived_undead_fineff : public final_effect
 {
 public:

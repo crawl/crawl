@@ -121,6 +121,7 @@ static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
+static ai_action::goodness _implant_eggs_goodness(const monster &caster);
 static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
@@ -128,6 +129,7 @@ static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
+static void _cast_implant_eggs(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
@@ -341,6 +343,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         nullptr,
         MSPELL_NO_AUTO_NOISE,
     } },
+    { SPELL_IMPLANT_EGGS, { _implant_eggs_goodness, _cast_implant_eggs } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
@@ -2514,6 +2517,63 @@ static bool _seal_doors_and_stairs(const monster* warden,
     }
 
     return false;
+}
+
+/// Find a valid creature for the given monster to implant eggs into, if any exists.
+static monster* _find_implant_eggs_target(const monster &caster)
+{
+    for (adjacent_iterator ai(caster.pos()); ai; ai++)
+    {
+        monster *mon = monster_at(*ai);
+        if (mon
+            && caster.can_see(*mon)
+            // It'd be cool to inject eggs into the player but I don't
+            // actually know what it would do.
+            && !mon->is_player()
+            // only injured creatures
+            && mon->hit_points < mon->max_hit_points
+            // don't lay eggs in plants or gargoyles
+            && (mon->holiness() & (MH_NATURAL | MH_UNDEAD | MH_HOLY))
+            // don't lay eggs in ghosts
+            && !mon->is_insubstantial()
+            // don't lay eggs in other bugs
+            && mon->body_size() > SIZE_TINY
+            // summons are safe (gameplay around summons becomes very dumb otherwise)
+            && !mon->is_summoned()
+            // don't re-egg egged monsters
+            && !mon->has_ench(ENCH_INSECT_EGGS))
+        {
+            return mon;
+        }
+    }
+    return nullptr;
+}
+
+/// Should the given monster 'cast' Implant Eggs?
+static ai_action::goodness _implant_eggs_goodness(const monster &caster)
+{
+    const monster* target = _find_implant_eggs_target(caster);
+    if (target == nullptr)
+        return ai_action::impossible(); // could be bad sometimes but eh
+    // swarms from eggs are always hostile, so friendlies shouldn't make more
+    if (caster.wont_attack())
+        return ai_action::bad();
+    return ai_action::good();
+}
+
+/// Attempt to implant eggs into an adjacent injured creature.
+static void _cast_implant_eggs(monster &caster, mon_spell_slot, bolt&)
+{
+    monster* target = _find_implant_eggs_target(caster);
+    if (target == nullptr)
+        return; // should never happen
+    target->add_ench(ENCH_INSECT_EGGS);
+    if (you.can_see(*target) || you.can_see(caster))
+    {
+        mprf("%s implants eggs into %s wounds.",
+             caster.name(DESC_THE).c_str(),
+             apostrophise(target->name(DESC_THE)).c_str());
+    }
 }
 
 /// Should the given monster cast Still Winds?

@@ -756,6 +756,11 @@ Calls forth a plague of scarabs, infesting affected creatures for a duration
 depending on power and causing death scarabs to grow and burst from them upon
 death.
 %%%%
+Inject Eggs spell
+
+Injects eggs into the wounds of an adjacent injured creature. When that
+creature dies, insects born from the eggs will burst out.
+%%%%
 Injury Bond spell
 
 Binds the caster to nearby allies, redirecting half of any damage they suffer

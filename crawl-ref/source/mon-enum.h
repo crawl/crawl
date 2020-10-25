@@ -154,6 +154,7 @@ enum mon_summon_type
     MON_SUMM_SHADOW,  // Shadow trap
     MON_SUMM_LANTERN, // Lantern of shadows
 #endif
+    MON_SUMM_EGGS,    // Insect eggs
 };
 
 #include "mon-flags.h"
