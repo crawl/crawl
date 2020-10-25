@@ -752,6 +752,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_DEVOURING_SWARM,
+      {
+       { SPELL_IMPLANT_EGGS, 200, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_MOTH_OF_WRATH,
       {
        { SPELL_BERSERK_OTHER, 66, MON_SPELL_NATURAL },

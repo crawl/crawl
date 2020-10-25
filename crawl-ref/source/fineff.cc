@@ -560,6 +560,24 @@ void infestation_death_fineff::fire()
     }
 }
 
+// consider unifying with bennus and/or infestation
+void insect_eggs_fineff::fire()
+{
+    mgen_data mg = mgen_data(MONS_DEVOURING_SWARM, BEH_HOSTILE, posn,
+                              MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(nullptr, 0, MON_SUMM_EGGS);
+    mg.set_non_actor_summoner("eggs in a corpse's wounds");
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    monster *newmons = create_monster(mg);
+    if (!newmons) return;
+    if (you.see_cell(posn) || you.can_see(*newmons))
+    {
+        mprf("%s bursts from %s!", newmons->name(DESC_A, true).c_str(),
+                                   name.c_str());
+    }
+}
+
 void make_derived_undead_fineff::fire()
 {
     if (monster *undead = create_monster(mg))

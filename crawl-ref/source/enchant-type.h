@@ -194,6 +194,7 @@ enum enchant_type
     ENCH_RING_OF_DRAINING,
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
+    ENCH_INSECT_EGGS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

@@ -171,6 +171,7 @@ spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 %rim 0
+devouring_swarm MONS_DEVOURING_SWARM
 
 ## Aquatics (';')
 %sdir mon/aquatic

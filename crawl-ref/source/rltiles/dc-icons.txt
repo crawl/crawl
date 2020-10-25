@@ -57,6 +57,7 @@ swift SWIFT
 vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 slowly_dying SLOWLY_DYING
+insect_eggs INSECT_EGGS
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

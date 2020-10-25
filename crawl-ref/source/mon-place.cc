@@ -1799,6 +1799,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
     { MONS_FLYING_SKULL,    { {}, {{ BAND_FLYING_SKULLS, {2, 6} }}}},
     { MONS_SLIME_CREATURE,  { {}, {{ BAND_SLIME_CREATURES, {2, 6} }}}},
+    { MONS_DEVOURING_SWARM, { {}, {{ BAND_DEVOURING_SWARM, {3, 5} }}}},
     { MONS_YAK,             { {}, {{ BAND_YAKS, {2, 6} }}}},
     { MONS_VERY_UGLY_THING, { {0, 19}, {{ BAND_VERY_UGLY_THINGS, {2, 6} }}}},
     { MONS_UGLY_THING,      { {0, 13}, {{ BAND_UGLY_THINGS, {2, 6} }}}},
@@ -2235,6 +2236,16 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_WOLF_SPIDER, 7},
                                   {MONS_ORB_SPIDER, 3},
                                   {MONS_DEMONIC_CRAWLER, 2}}}},
+    // two swarms (counting the leader)...
+    { BAND_DEVOURING_SWARM,     {{{MONS_DEVOURING_SWARM, 1}},
+        // a bloated husk to get things injured
+                                 {{MONS_BLOATED_HUSK, 1}},
+        // and 1-3 fleshy pals to get egged
+                                 {{MONS_TYRANT_LEECH, 9},
+                                  {MONS_GOLIATH_FROG, 9},
+                                  {MONS_BUNYIP, 3},
+                                  {MONS_ALLIGATOR, 3},
+                                  {MONS_HYDRA, 3}}}},
 
     { BAND_VAULT_WARDEN,        {{{MONS_VAULT_SENTINEL, 4},
                                   {MONS_IRONBRAND_CONVOKER, 6},
