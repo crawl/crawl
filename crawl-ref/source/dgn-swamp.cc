@@ -8,7 +8,7 @@
 
 static void _swamp_slushy_patches(int depth_multiplier)
 {
-    const int margin = 11;
+    const int margin = 15;
     const int yinterval = 4;
     const int xinterval = 4;
     const int fuzz = 9;
@@ -34,8 +34,7 @@ static void _swamp_slushy_patches(int depth_multiplier)
 
 static dungeon_feature_type _swamp_feature_for_height(int height)
 {
-    return height >= 14 ? DNGN_DEEP_WATER :
-        height > (8 - you.depth * 2) ? DNGN_SHALLOW_WATER :
+    return height > (8 - you.depth * 2) ? DNGN_SHALLOW_WATER :
         height > -8 ? DNGN_FLOOR :
         height > -10 ? DNGN_SHALLOW_WATER :
         DNGN_TREE;
@@ -65,6 +64,6 @@ void dgn_build_swamp_level()
     dgn_initialise_heightmap(-19);
     _swamp_slushy_patches(swamp_depth * 3);
     dgn_smooth_heights();
-    _swamp_apply_features(2);
+    _swamp_apply_features(6);
     env.heightmap.reset(nullptr);
 }
