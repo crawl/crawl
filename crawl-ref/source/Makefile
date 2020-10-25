@@ -1667,6 +1667,22 @@ config.h: util/configure .cflags
 	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
+# Header build tests.
+#
+
+%.h.o: %.h | $(GENERATED_HEADERS)
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
+endif
+	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -x c++-header -c $< -o $@
+ifndef NO_INLINE_DEPGEN
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+endif
+
+.PHONY: header-build-tests
+header-build-tests: $(HEADER_OBJECTS)
+
+#
 # Contribs
 #
 
