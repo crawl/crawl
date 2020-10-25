@@ -298,8 +298,11 @@ deep_troll CORPSE_DEEP_TROLL
 ## Cephalopods ('x')
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
+%sdir mon/animals
+bunyip CORPSE_BUNYIP
 
 ## Draconians ('d')
+%sdir player
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black

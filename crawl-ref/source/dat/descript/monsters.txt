@@ -722,6 +722,12 @@ An unusually aggressive amphibian that pursues its prey with rapid hops.
 Its croak is loud and distinctive, but unlike its smaller counterparts above
 ground, the dungeon bullfrog is as large as it sounds.
 %%%%
+bunyip
+
+A flesh-eating beast that uses its five long limbs interchangeably. It moves
+with alarming speed, but must pause to reorganize itself after each attack.
+Its distinctive screams carry far and wide.
+%%%%
 butterfly
 
 A large, brightly coloured butterfly with beautifully patterned wings,

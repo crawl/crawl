@@ -426,6 +426,8 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
+%sdir mon/animals
+bunyip MONS_BUNYIP
 
 ## Golems ('8')
 %rim 0
