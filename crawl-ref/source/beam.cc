@@ -2363,12 +2363,13 @@ void bolt::affect_endpoint()
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
                   pos(), "You hear a splash.");
         }
-        const int num = agent() && agent()->is_player() ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
-                                                        : random_range(3, 12, 2);
+        const bool is_player = agent() && agent()->is_player();
+        const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
+                                  : random_range(3, 12, 2);
         const int dur = div_rand_round(ench_power * 4, 3) + 66;
-        vector<coord_def> splash_coords = create_feat_splash(pos(), agent()->is_player() ? 2 : 1, num, dur);
+        vector<coord_def> splash_coords = create_feat_splash(pos(), is_player ? 2 : 1, num, dur);
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
-        if (agent() && agent()->is_player())
+        if (is_player)
         {
             for (const coord_def coord: splash_coords)
             {
