@@ -1242,6 +1242,11 @@ Spit Poison spell
 
 <Spit Poison ability>
 %%%%
+Splinterspray spell
+
+Fires a directed stream of sharp wooden splinters. Its damage is strongly
+reduced by armour.
+%%%%
 Sporulate spell
 
 Releases a fast, gas-filled floating spore. After seeking out its foe, the
@@ -1595,6 +1600,11 @@ caster's blood calms the were-spirit and resets the bonus.
 Wind Blast spell
 
 Causes a strong gust of wind, pushing away creatures and clouds in a cone.
+%%%%
+Woodweal spell
+
+Draws on the vitality of leaf and bark to heal a large amount of damage.
+Cannot be cast without a tree adjacent.
 %%%%
 Word of Recall spell
 

@@ -182,6 +182,7 @@ mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
 %sdir mon/humanoids
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
+eleionoma CORPSE_ELEIONOMA
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4

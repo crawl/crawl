@@ -1005,6 +1005,7 @@ merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
 %sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
+eleionoma MONS_ELEIONOMA
 %rim 1
 
 ## Rotting monsters ('n')

@@ -545,6 +545,10 @@ Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.
 %%%%
+Splinterspray cast
+
+@The_monster@ hurls a spray of @beam@ @at@ @target@.
+%%%%
 Crystal Bolt crystal guardian cast
 
 @The_monster@ fires a crystalline bolt @at@ @target@.
@@ -668,6 +672,10 @@ Fireball hell hog cast
 Throw Barbs peacekeeper cast
 
 @The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
+Woodweal cast
+
+@The_monster@ touches a tree and draws upon its vitality.
 %%%%
 ########################################################################
 # Monster species and genus messages.

@@ -948,6 +948,31 @@ void treant_release_fauna(monster& mons)
     }
 }
 
+static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
+{
+    coord_def p = {0, 0};
+    int seen = 0;
+    // don't bother teleporting to something that's at the same distance
+    // from the target as you already are
+    int closest = grid_distance(cur_loc, target) - 1;
+    for (distance_iterator di(target); di; ++di)
+    {
+        const int dist = grid_distance(target, *di);
+        if (dist > closest)
+            break;
+
+        const dungeon_feature_type grid = env.grid(*di);
+        if (grid != DNGN_TREE)
+            continue;
+        closest = dist;
+
+        seen++;
+        if (x_chance_in_y(1, seen))
+            p = *di;
+    }
+    return p;
+}
+
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -1160,6 +1185,30 @@ bool mon_special_ability(monster* mons)
                 }
             }
         }
+    }
+    break;
+
+    case MONS_ELEIONOMA:
+    {
+        if (!one_chance_in(3))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (!foe)
+            break;
+
+        const int dist = grid_distance(foe->pos(), mons->pos());
+        if (dist < 3)
+            break;
+
+        const coord_def target = _find_nearer_tree(mons->pos(), foe->pos());
+        if (target.origin() || !mons->move_to_pos(target))
+            break;
+
+        env.grid(target) = DNGN_FLOOR;
+        set_terrain_changed(target);
+        simple_monster_message(*mons, " melds with the trees.");
+        used = true;
     }
     break;
 
