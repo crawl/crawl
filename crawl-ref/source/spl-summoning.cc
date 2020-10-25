@@ -3242,16 +3242,18 @@ spret fedhas_grow_oklob(bool fail)
 
 }
 
-spret cast_foxfire(int pow, god_type god, bool fail)
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
     fail_check();
     int created = 0;
 
-    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        mgen_data fox(MONS_FOXFIRE, BEH_FRIENDLY,
+        const auto att = agent.is_player() ? BEH_FRIENDLY
+                                           : SAME_ATTITUDE(agent.as_monster());
+        mgen_data fox(MONS_FOXFIRE, att,
                       *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-        fox.set_summoned(&you, 0, SPELL_FOXFIRE, god);
+        fox.set_summoned(&agent, 0, SPELL_FOXFIRE, god);
         fox.hd = pow;
         monster *foxfire;
 
@@ -3263,8 +3265,11 @@ spret cast_foxfire(int pow, god_type god, bool fail)
             foxfire->steps_remaining = you.current_vision + 2;
 
             // Avoid foxfire without targets always moving towards (0,0)
-            if (!(foxfire->get_foe() && foxfire->get_foe()->is_monster()))
+            if (!foxfire->get_foe()
+                || !foxfire->get_foe()->is_monster() && !agent.is_monster())
+            {
                 set_random_target(foxfire);
+            }
         }
 
         if (created == 2)
@@ -3272,8 +3277,12 @@ spret cast_foxfire(int pow, god_type god, bool fail)
     }
 
     if (created)
-        mpr("You conjure some foxfire!");
-    else
+    {
+        mprf("%s conjure%s some foxfire!",
+             agent.name(DESC_THE).c_str(),
+             agent.is_monster() ? "s" : "");
+    }
+    else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;

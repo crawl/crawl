@@ -3024,6 +3024,11 @@ spret cast_starburst(int pow, bool fail, bool tracer)
 void foxfire_attack(const monster *foxfire, const actor *target)
 {
     actor * summoner = actor_by_mid(foxfire->summoner);
+    if (!summoner || !summoner->alive())
+    {
+        // perish as your master once did
+        return;
+    }
 
     // Don't allow foxfires that have wandered off to attack before dissapating
     if (summoner && !(summoner->can_see(*foxfire)

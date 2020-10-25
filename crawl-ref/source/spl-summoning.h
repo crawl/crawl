@@ -127,4 +127,4 @@ spret fedhas_grow_ballistomycete(bool fail);
 bool fedhas_overgrow();
 spret fedhas_grow_oklob(bool fail);
 
-spret cast_foxfire(int pow, god_type god, bool fail);
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
