@@ -1598,7 +1598,6 @@ void singularity_pull(const monster *singularity)
         if (ai->is_monster())
             behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
         
-        mprf("singularity countdown ; %d", singularity->countdown);
         if (you.can_see(**ai))
         {
             // Note that we don't care if you see the singularity if
