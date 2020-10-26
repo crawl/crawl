@@ -8,7 +8,15 @@
 #include <cstdio>
 #include <vector>
 
+#include "bitary.h"
+#include "coord-def.h"
+#include "debug.h"
+#include "defines.h"
+#include "dungeon-feature-type.h"
+#include "fixedvector.h"
+#include "level-id.h"
 #include "package.h"
+#include "spell-type.h"
 #include "tag-version.h"
 
 using std::vector;
@@ -17,6 +25,8 @@ struct show_type;
 struct monster_info;
 struct map_cell;
 class ghost_demon;
+struct item_def;
+class monster;
 struct mon_spell_slot;
 typedef vector<mon_spell_slot> monster_spells;
 

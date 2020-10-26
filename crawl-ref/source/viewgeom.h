@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tilecell.h"
+#include "coord-def.h"
 
 struct screen_cell_t
 {

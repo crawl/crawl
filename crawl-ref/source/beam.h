@@ -10,6 +10,8 @@
 #include "ac-type.h"
 #include "beam-type.h"
 #include "enchant-type.h"
+#include "externs.h"
+#include "killer-type.h"
 #include "mon-attitude-type.h"
 #include "random.h"
 #include "ray.h"

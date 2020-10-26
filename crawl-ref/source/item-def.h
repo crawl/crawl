@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include "description-level-type.h"
 #include "level-id.h"
 #include "monster-type.h"
+#include "object-class-type.h"
+#include "skill-type.h"
+#include "store.h"
 
 // We are not 64 bits clean here yet since many places still pass (or store!)
 // it as 32 bits or, worse, longs. I considered setting this as uint32_t,
