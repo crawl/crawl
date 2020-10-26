@@ -1491,7 +1491,6 @@ spret cast_singularity(actor* agent, int pow, const coord_def& where,
                  friendly ? "satisfying" : "horrifying",
                  friendly ? "." : "!");
         }
-        you.set_duration(DUR_SLOW, singularity->countdown);
         invalidate_agrid(true);
     }
     else
@@ -1509,9 +1508,6 @@ static void _attract_actor(const actor* agent, actor* victim,
 {
     ASSERT(victim); // XXX: change to actor &victim
 
-    if(victim->is_monster()) {
-        victim->as_monster()->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 0, agent, 1));
-    }
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
@@ -1576,7 +1572,19 @@ void singularity_pull(const monster *singularity)
     actor *agent = actor_by_mid(singularity->summoner);
 
     for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
-    {
+    {   
+
+        if (ai->is_player())
+        {
+            mprf("Gravitational singularity makes you slow down.");
+            ai->as_player()->set_duration(DUR_SLOW, 1+singularity->countdown);
+        }
+        if ( *ai != singularity && ai->is_monster())
+        {
+            monster *m = ai->as_monster();
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, singularity, 1));
+        }
+        
         if (*ai == singularity
             || agent && mons_aligned(*ai, agent))
         {
@@ -1602,7 +1610,8 @@ void singularity_pull(const monster *singularity)
 
         if (ai->is_monster())
             behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
-
+        
+        mprf("singularity countdown ; %d", singularity->countdown);
         if (you.can_see(**ai))
         {
             // Note that we don't care if you see the singularity if
@@ -1613,6 +1622,7 @@ void singularity_pull(const monster *singularity)
                  singularity->name(DESC_THE).c_str(),
                  ai->name(DESC_THE).c_str());
         }
+
         ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
                  KILLED_BY_BEAM, "", GRAVITY);
 
@@ -1641,6 +1651,12 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 
         const int strength = ((pow + 100) / 20) / (range*range);
 
+        monster* mons = ai->as_monster();
+        if(ai->is_monster() && !mons->stasis()
+            && !mons->is_stationary() && !is_sanctuary(mons->pos()))
+        {
+            mons->add_ench(mon_enchant(ENCH_HELD, 0, &you, 1));
+        }
         affected = true;
         _attract_actor(agent, *ai, pos, pow, strength);
     }
@@ -1659,7 +1675,14 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
     fail_check();
 
     monster* mons = monster_at(where);
-
+    if (mons)
+    {
+        if(!mons->stasis()
+            && !mons->is_stationary() && !is_sanctuary(mons->pos()))
+        {
+            mons->add_ench(mon_enchant(ENCH_HELD, 0, &you, 1));
+        }
+    }
     mprf("Gravity reorients around %s.",
          mons                      ? mons->name(DESC_THE).c_str() :
          feat_is_solid(grd(where)) ? feature_description(grd(where),
