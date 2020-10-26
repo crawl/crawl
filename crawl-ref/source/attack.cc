@@ -1637,6 +1637,15 @@ bool attack::apply_damage_brand(const char *what)
     if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
         apply_poison_damage_brand();
 
+    // Use the Nessos hack to give the player glaive of the guard spectral too
+    if (attacker->is_player() && weapon
+        && is_unrandom_artefact(*weapon, UNRAND_GUARD))
+    {
+        const monster* mon = defender->as_monster();
+        if (mon && !mons_is_firewood(*mon))
+            handle_spectral_brand();
+    }
+
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
 

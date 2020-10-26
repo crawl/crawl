@@ -445,13 +445,13 @@ STR:     7
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
-PLUS:     +8
+PLUS:     +0
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
-BOOL:     seeinv, berserk
+INSCRIP:  spectral,
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
