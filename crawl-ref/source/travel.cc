@@ -353,22 +353,18 @@ static bool _feat_is_blocking_door(const dungeon_feature_type grid)
 static bool _feat_is_blocking_door_strict(const dungeon_feature_type grid)
 {
     if (Options.travel_open_doors == travel_open_doors_type::_open)
-	{
         if (!feat_is_runed(grid)) return false;
-	}
     else
-	{
         if (!feat_is_closed_door(grid)) return false;
-	}
 
-	if (you.elapsed_time == you.elapsed_time_at_last_input)
-	{
-		string barrier;
-		if (feat_is_runed(grid)) barrier = "unopened runed door";
-		else barrier = "unopened door";
-		mpr("Could not " + you.running.runmode_name() + ", " + barrier + ".");
-	}
-	return true;
+    if (you.elapsed_time == you.elapsed_time_at_last_input)
+    {
+        string barrier;
+        if (feat_is_runed(grid)) barrier = "unopened runed door";
+        else barrier = "unopened door";
+        mpr("Could not " + you.running.runmode_name() + ", " + barrier + ".");
+    }
+    return true;
 }
 
 /*
@@ -836,7 +832,9 @@ static void _explore_find_target_square()
             // A runed door already implies an unexplored place.
             if (!runed_door_pause && !closed_door_pause &&
                 estatus & EST_PARTLY_EXPLORED)
+            {
                 inacc.push_back("places");
+            }
 
             if (!inacc.empty())
             {
