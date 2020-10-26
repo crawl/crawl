@@ -353,9 +353,13 @@ static bool _feat_is_blocking_door(const dungeon_feature_type grid)
 static bool _feat_is_blocking_door_strict(const dungeon_feature_type grid)
 {
     if (Options.travel_open_doors == travel_open_doors_type::_open)
+    {
         if (!feat_is_runed(grid)) return false;
+    }
     else
+    {
         if (!feat_is_closed_door(grid)) return false;
+    }
 
     if (you.elapsed_time == you.elapsed_time_at_last_input)
     {
