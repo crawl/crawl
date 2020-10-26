@@ -1032,8 +1032,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_PONDEROUSNESS:
-        mpr("That put a bit of spring back into your step.");
+    {
+        const string verb = you.species == SP_NAGA ? "slither" : "step";
+            mprf("That put a bit of spring back into your %s.", verb.c_str());
         break;
+    }
 
     case SPARM_FLYING:
         // Save current flight status so we can restore it on reequip

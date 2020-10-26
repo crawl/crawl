@@ -779,14 +779,12 @@ static void _DRAGONSKIN_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
 }
 
-#if TAG_MAJOR_VERSION == 34
 ///////////////////////////////////////////////////
 static void _BLACK_KNIGHT_HORSE_world_reacts(item_def */*item*/)
 {
     if (one_chance_in(10))
         did_god_conduct(DID_EVIL, 1);
 }
-#endif
 
 ///////////////////////////////////////////////////
 static void _NIGHT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)

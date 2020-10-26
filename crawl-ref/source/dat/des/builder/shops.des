@@ -390,7 +390,7 @@ SUBST: G : YlG
 :   book of necromancy | book of death | book of unlife | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
-:   black_knights_horse_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
+:   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
 :   sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
@@ -680,7 +680,8 @@ local cpaEnchant = crawl.random2(6)
 
 -- Don't want to have the same items every time, but also don't want to pick
 -- the same unrandart twice. So build a custom list...
-local items = {"hat of pondering",
+local items = {"black knight's barding",
+               "hat of pondering",
                "crystal plate armour ego:ponderousness plus:" .. cpaEnchant,
                "plate armour ego:ponderousness plus:" .. plateEnchant}
 local itemCount = crawl.random2(2) + 1
