@@ -2752,7 +2752,13 @@ monster* find_pavise_shield(const actor* agent)
         return nullptr;
 }
 
-
+monster* find_imus_mirror(const actor* agent)
+{
+    if (agent->props.exists("imus_mirror"))
+        return monster_by_mid(agent->props["imus_mirror"].get_int());
+    else
+        return nullptr;
+}
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
     fail_check();
@@ -2829,6 +2835,84 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
     return spret::success;
 }
 
+
+spret cast_imus_mirror(actor* agent, int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    monster* imus_mirror;
+    if (agent->is_player() && (imus_mirror = find_imus_mirror(&you)))
+    {
+        bool recalled = false;
+        if (!you.can_see(*imus_mirror))
+        {
+            coord_def empty;
+            if (find_habitable_spot_near(agent->pos(), MONS_IMUS_MIRROR, 3, false, empty)
+                && imus_mirror->move_to_pos(empty))
+            {
+                recalled = true;
+            }
+        }
+
+        if (recalled)
+        {
+            mpr("You recall your fragmentation and imbue it with additional"
+                " charge.");
+        }
+        else
+            mpr("You imbue your fragmentation with additional charge.");
+
+        imus_mirror->battlecharge = 99;
+
+        // Increase duration
+        mon_enchant abj = imus_mirror->get_ench(ENCH_FAKE_ABJURATION);
+        abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
+        imus_mirror->update_ench(abj);
+    }
+    else
+    {
+        ASSERT(!find_imus_mirror(agent));
+        mgen_data mg (MONS_IMUS_MIRROR,
+                      agent->is_player() ? BEH_FRIENDLY
+                                         : SAME_ATTITUDE(agent->as_monster()),
+                      agent->pos(), agent->mindex());
+        mg.set_summoned(agent, 0, 0, god);
+        mg.hd = 1 + div_rand_round(pow, 11);
+        imus_mirror = create_monster(mg);
+
+        if (imus_mirror)
+        {
+            int dur = min((7 + roll_dice(2, pow)) * 10, 500);
+            imus_mirror->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
+            imus_mirror->summoner = agent->mid;
+            agent->props["imus_mirror"].get_int() = imus_mirror->mid;
+
+            if (agent->is_player())
+                mpr("You conjure a globe of magical energy.");
+            else
+            {
+                if (you.can_see(*agent) && you.can_see(*imus_mirror))
+                {
+                    simple_monster_message(*agent->as_monster(),
+                                           " conjures a globe of magical energy!");
+                }
+                else if (you.can_see(*imus_mirror))
+                    simple_monster_message(*imus_mirror, " appears!");
+                imus_mirror->props["band_leader"].get_int() = agent->mid;
+            }
+            imus_mirror->battlecharge = 99;
+            imus_mirror->foe = agent->mindex();
+            imus_mirror->target = agent->pos();
+        }
+        else if (agent->is_player() || you.can_see(*agent))
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+    return spret::success;
+}
+
+
+
 void end_battlesphere(monster* mons, bool killed)
 {
     // Should only happen if you dismiss it in wizard mode, I think
@@ -2866,30 +2950,68 @@ void end_battlesphere(monster* mons, bool killed)
     }
 }
 
+void end_imus_mirror(monster* mons, bool killed)
+{
+    // Should only happen if you dismiss it in wizard mode, I think
+    if (!mons)
+        return;
+
+    actor* agent = actor_by_mid(mons->summoner);
+    if (agent)
+        agent->props.erase("imus_mirror");
+
+    if (!killed)
+    {
+        if (agent && agent->is_player())
+        {
+            if (you.can_see(*mons))
+            {
+                if (mons->battlecharge == 0)
+                {
+                    mpr("Your fragmentation expends the last of its energy"
+                        " and dissipates.");
+                }
+                else
+                    mpr("Your fragmentation wavers and loses cohesion.");
+            }
+            else
+                mpr("You feel your bond with your fragmentation wane.");
+        }
+        else if (you.can_see(*mons))
+            simple_monster_message(*mons, " dissipates.");
+
+        if (!cell_is_solid(mons->pos()))
+            place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
+
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
+    }
+}
+
 bool battlesphere_can_mirror(spell_type spell)
 {
-    return (spell_typematch(spell, spschool::conjuration)
+    return spell == SPELL_NO_SPELL
+           || ((spell_typematch(spell, spschool::conjuration)
            && spell_to_zap(spell) != NUM_ZAPS)
            || spell == SPELL_FREEZE
            || spell == SPELL_STICKY_FLAME
            || spell == SPELL_SANDBLAST
            || spell == SPELL_AIRSTRIKE
            || spell == SPELL_DAZZLING_SPRAY
-           || spell == SPELL_SEARING_RAY;
+           || spell == SPELL_SEARING_RAY);
 }
 
-bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
+bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam, bool imus_mirror)
 {
     //Is this spell something that will trigger the battlesphere?
     if (battlesphere_can_mirror(spell))
     {
-        monster* battlesphere = find_battlesphere(agent);
+        monster* battlesphere = imus_mirror? find_imus_mirror(agent): find_battlesphere(agent);
 
         // If we've somehow gotten separated from the battlesphere (ie:
         // abyss level teleport), bail out and cancel the battlesphere bond
         if (!battlesphere)
         {
-            agent->props.erase("battlesphere");
+            agent->props.erase(imus_mirror?"imus_mirror":"battlesphere");
             return false;
         }
 
@@ -2925,6 +3047,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         // will be obeyed when figuring out what is being aimed at
         zappy(ztype, powc, false, testbeam);
 
+        battlesphere->props["firing_spell"].get_int() = spell;
         battlesphere->props["firing_target"] = beam.target;
         battlesphere->props.erase("foe");
         if (!actor_at(beam.target))
@@ -2935,6 +3058,7 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
             {
                 if (c != battlesphere->pos() && monster_at(c))
                 {
+                    battlesphere->props["firing_spell"] = spell;
                     battlesphere->props["firing_target"] = c;
                     battlesphere->foe = actor_at(c)->mindex();
                     battlesphere->props["foe"] = battlesphere->foe;
@@ -2960,9 +3084,9 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
     return false;
 }
 
-bool trigger_battlesphere(actor* agent, bolt& beam)
+bool trigger_battlesphere(actor* agent, bolt& beam, bool imus_mirror)
 {
-    monster* battlesphere = find_battlesphere(agent);
+    monster* battlesphere = imus_mirror ? find_imus_mirror(agent) : find_battlesphere(agent);
     if (!battlesphere)
         return false;
 
@@ -3006,7 +3130,6 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
             battlesphere->speed_increment = 100;
             queue_monster_for_action(battlesphere);
         }
-
         return true;
     }
 
@@ -3018,7 +3141,7 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
 // before the next player action
 void reset_battlesphere(monster* mons)
 {
-    if (!mons || mons->type != MONS_BATTLESPHERE)
+    if (!mons || (mons->type != MONS_BATTLESPHERE && mons->type != MONS_IMUS_MIRROR))
         return;
 
     mons->props.erase("ready");
@@ -3035,14 +3158,18 @@ void reset_battlesphere(monster* mons)
 
 bool fire_battlesphere(monster* mons)
 {
-    if (!mons || mons->type != MONS_BATTLESPHERE)
+    if (!mons || (mons->type != MONS_BATTLESPHERE && mons->type != MONS_IMUS_MIRROR))
         return false;
+    bool imus_mirror = mons->type == MONS_IMUS_MIRROR;
 
     actor* agent = actor_by_mid(mons->summoner);
 
     if (!agent || !agent->alive())
     {
-        end_battlesphere(mons, false);
+        if(imus_mirror)
+            end_imus_mirror(mons, false);
+        else 
+            end_battlesphere(mons, false);
         return false;
     }
 
@@ -3075,7 +3202,10 @@ bool fire_battlesphere(monster* mons)
 
         // Set up the beam.
         bolt beam;
-        beam.source_name = "battlesphere";
+        if(imus_mirror)
+            beam.source_name = "fragmentation";
+        else
+            beam.source_name = "battlesphere";
 
         // If we are locked onto a foe, use its current position
         if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
@@ -3086,8 +3216,9 @@ bool fire_battlesphere(monster* mons)
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
-            mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
+            mprf(MSGCH_ERROR, "%s targeting itself? Fixing.", imus_mirror? "Fragmentation" : "Battlesphere");
             mons->props.erase("firing");
+            mons->props.erase("firing_spell");
             mons->props.erase("firing_target");
             mons->props.erase("foe");
             return false;
@@ -3102,9 +3233,23 @@ bool fire_battlesphere(monster* mons)
         beam.flavour    = BEAM_MMISSILE;
         beam.pierce     = false;
 
+        if(imus_mirror && mons->props.exists("firing_spell")) {
+            if(mons->props["firing_spell"].get_int() == SPELL_NO_SPELL){
+                beam.glyph = you.props["imus_glyph"].get_int();
+                beam.colour = you.props["imus_colour"].get_int();
+                beam.damage = dice_def(1, you.props["imus_dam"].get_int());
+                beam.hit = you.props["imus_hit"].get_int();
+            }
+            else {
+                spell_type spell_cast = (spell_type)mons->props["firing_spell"].get_int();
+                if(spell_to_zap(spell_cast) != NUM_ZAPS) {
+                    zappy(spell_to_zap(spell_cast), mons_spellpower(*mons, spell_cast), true, beam);
+                }
+            }
+
+        }
         // Fire tracer.
         fire_tracer(mons, beam);
-
         // Never fire if we would hurt the caster, and ensure that the beam
         // would hit at least SOMETHING, unless it was targeted at empty space
         // in the first place
@@ -3120,8 +3265,12 @@ bool fire_battlesphere(monster* mons)
 
             used = true;
             // Decrement # of volleys left and possibly expire the battlesphere.
-            if (--mons->battlecharge == 0)
-                end_battlesphere(mons, false);
+            if (--mons->battlecharge == 0) {
+                if(imus_mirror)
+                    end_imus_mirror(mons, false);
+                else
+                    end_battlesphere(mons, false);
+            }
 
             mons->props.erase("firing");
         }
@@ -3183,6 +3332,8 @@ bool fire_battlesphere(monster* mons)
 
     return used;
 }
+
+
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail)

@@ -2382,14 +2382,18 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
     }
-    else if (mons.type == MONS_BATTLESPHERE)
+    else if (mons.type == MONS_BATTLESPHERE || mons.type == MONS_IMUS_MIRROR)
     {
         if (!wizard && !mons_reset && !was_banished
             && !cell_is_solid(mons.pos()))
         {
             place_cloud(CLOUD_MAGIC_TRAIL, mons.pos(), 3 + random2(3), &mons);
         }
-        end_battlesphere(&mons, true);
+
+        if(mons.type == MONS_BATTLESPHERE)
+            end_battlesphere(&mons, true);
+        else
+            end_imus_mirror(&mons, true);
     }
     else if (mons.type == MONS_BRIAR_PATCH)
     {

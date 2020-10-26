@@ -4307,9 +4307,9 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_IMUS_FRAGMENTATION:
     {
         fail_check();
-        int frag_power = (you.skill(SK_INVOCATIONS) * 9)
-                        + (you.piety * (you.skill(SK_INVOCATIONS) + 25) / 27) + (you.piety * (3/2));
-        fragmentation(frag_power);
+        int frag_power = you.piety/4/*50*/ + you.skill(SK_INVOCATIONS, 5)/*135*/;
+        cast_imus_mirror(&you, frag_power, GOD_IMUS, fail);
+        //fragmentation(frag_power);
     }
     break;
 

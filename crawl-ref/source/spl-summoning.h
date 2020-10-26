@@ -103,11 +103,16 @@ void do_aura_of_abjuration(int delay);
 
 monster* find_battlesphere(const actor* agent);
 monster* find_pavise_shield(const actor* agent);
+monster* find_imus_mirror(const actor* agent);
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail);
+spret cast_imus_mirror(actor* agent, int pow, god_type god, bool fail);
 void end_battlesphere(monster* mons, bool killed);
+void end_imus_mirror(monster* mons, bool killed);
+
+//recycle for imus mirror
 bool battlesphere_can_mirror(spell_type spell);
-bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam);
-bool trigger_battlesphere(actor* agent, bolt& beam);
+bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam, bool imus_mirror = false);
+bool trigger_battlesphere(actor* agent, bolt& beam, bool imus_mirror = false);
 bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
 

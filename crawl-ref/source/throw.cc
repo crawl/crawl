@@ -36,6 +36,7 @@
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
+#include "ranged-attack.h"
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
@@ -50,6 +51,7 @@
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
+#include "zap-type.h"
 
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
@@ -1154,7 +1156,22 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         dithmenos_shadow_throw(thr, item);
     }
-
+ if (projected != launch_retval::FUMBLED
+        && you.props.exists("imus_mirror")
+        && thrown.sub_type != MI_DART)
+    {
+        ranged_attack eval_attack(&you, nullptr, &item, teleport);
+        int damage_ = eval_attack.calc_to_damage();
+        int hit_ = eval_attack.calc_to_hit(false);
+        pbolt.set_target(thr);
+        you.props["imus_glyph"].get_int() = pbolt.glyph;
+        you.props["imus_colour"].get_int() = pbolt.colour;
+        you.props["imus_dam"].get_int() = damage_;
+        you.props["imus_hit"].get_int() = hit_;
+        
+        aim_battlesphere(&you, SPELL_NO_SPELL, 200, pbolt, true);
+        trigger_battlesphere(&you, pbolt, true);
+    }
     return hit;
 }
 

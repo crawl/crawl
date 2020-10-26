@@ -1296,7 +1296,8 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
+        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species))
+        || (mc == MONS_IMUS_MIRROR && species_is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
@@ -1339,7 +1340,7 @@ monster_type draco_or_demonspawn_subspecies(const monster& mon)
     ASSERT(mons_genus(mon.type) == MONS_DRACONIAN
            || mons_genus(mon.type) == MONS_DEMONSPAWN);
 
-    if (mon.type == MONS_PLAYER_ILLUSION
+    if ((mon.type == MONS_PLAYER_ILLUSION || mon.type == MONS_IMUS_MIRROR)
         && mons_genus(mon.type) == MONS_DRACONIAN)
     {
         return player_species_to_mons_species(mon.ghost->species);
@@ -2401,7 +2402,7 @@ int exper_value(const monster& mon, bool real)
 
     // pghosts and pillusions have no reasonable base values, and you can look
     // up the exact value anyway. Especially for pillusions.
-    if (real || mon.type == MONS_PLAYER_GHOST || mon.type == MONS_PLAYER_ILLUSION)
+    if (real || mon.type == MONS_PLAYER_GHOST || mon.type == MONS_PLAYER_ILLUSION || mon.type == MONS_IMUS_MIRROR)
     {
         // A berserking monster is much harder, but the xp value shouldn't
         // depend on whether it was berserk at the moment of death.

@@ -3042,8 +3042,10 @@ void handle_searing_ray()
     zappy(zap, pow, false, beam);
 
     aim_battlesphere(&you, SPELL_SEARING_RAY, pow, beam);
+    aim_battlesphere(&you, SPELL_SEARING_RAY, pow, beam, true);
     beam.fire();
     trigger_battlesphere(&you, beam);
+    trigger_battlesphere(&you, beam, true);
 
     dec_mp(1);
 

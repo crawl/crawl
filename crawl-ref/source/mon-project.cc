@@ -494,7 +494,7 @@ move_again:
             }
         }
 
-        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
+        if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE || mons->type == MONS_IMUS_MIRROR))
         {
             // Try to swap with the submerged creature.
             if (mon.swap_with(mons))

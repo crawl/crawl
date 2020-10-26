@@ -227,7 +227,8 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     if (mons_is_unique(mon->type)
         || mons_is_ghost_demon(mon->type)
         || mon->is_named()
-        || mon->type == MONS_BATTLESPHERE)
+        || mon->type == MONS_BATTLESPHERE
+        || mon->type == MONS_IMUS_MIRROR)
     {
         return false;
     }

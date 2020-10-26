@@ -84,7 +84,7 @@ int ranged_attack::calc_to_hit(bool random)
     }
 
     int hit = orig_to_hit;
-    const int defl = defender->missile_deflection();
+    const int defl = defender ? defender->missile_deflection() : 0;
     if (defl)
     {
         if (random)

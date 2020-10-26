@@ -6787,6 +6787,7 @@ bool monster::cloud_immune(bool calc_unid, bool items) const
 bool monster::is_illusion() const
 {
     return type == MONS_PLAYER_ILLUSION
+           || type == MONS_IMUS_MIRROR
            || has_ench(ENCH_PHANTOM_MIRROR)
            || props.exists(CLONE_SLAVE_KEY);
 }

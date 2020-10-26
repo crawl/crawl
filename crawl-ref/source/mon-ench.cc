@@ -732,6 +732,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FAKE_ABJURATION:
         if (type == MONS_BATTLESPHERE)
             return end_battlesphere(this, false);
+        if (type == MONS_IMUS_MIRROR)
+            return end_imus_mirror(this, false);
     case ENCH_ABJ:
         if (type == MONS_SPECTRAL_WEAPON)
             return end_spectral_weapon(this, false);

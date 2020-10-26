@@ -1839,7 +1839,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->type == MONS_BATTLESPHERE)
+    if (mons->type == MONS_BATTLESPHERE || mons->type == MONS_IMUS_MIRROR)
     {
         if (fire_battlesphere(mons))
             mons->lose_energy(EUT_SPECIAL);
@@ -4042,7 +4042,8 @@ static bool _monster_move(monster* mons)
 
     // Battlespheres need to preserve their tracking targets after each move
     if (mons_is_wandering(*mons)
-        && mons->type != MONS_BATTLESPHERE)
+        && mons->type != MONS_BATTLESPHERE
+        && mons->type != MONS_IMUS_MIRROR)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();
