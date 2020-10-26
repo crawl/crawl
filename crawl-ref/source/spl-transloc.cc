@@ -1573,20 +1573,7 @@ void singularity_pull(const monster *singularity)
 
     for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
     {   
-
-        if (ai->is_player())
-        {
-            mprf("Gravitational singularity makes you slow down.");
-            ai->as_player()->set_duration(DUR_SLOW, 1+singularity->countdown);
-        }
-        if ( *ai != singularity && ai->is_monster())
-        {
-            monster *m = ai->as_monster();
-            m->add_ench(mon_enchant(ENCH_SLOW, 0, singularity, 1));
-        }
-        
-        if (*ai == singularity
-            || agent && mons_aligned(*ai, agent))
+        if (*ai == singularity)
         {
             continue;
         }
@@ -1631,6 +1618,17 @@ void singularity_pull(const monster *singularity)
 
         if (ai->alive() && !ai->is_stationary())
         {
+            if (ai->is_player())
+            {
+                mprf("Gravitational singularity makes you slow down.");
+                ai->as_player()->set_duration(DUR_SLOW, 1+singularity->countdown);
+            }
+
+            else if (ai->is_monster())
+            {
+                monster *m = ai->as_monster();
+                m->add_ench(mon_enchant(ENCH_SLOW, 0, singularity, 1));
+            }
             _attract_actor(singularity, *ai, singularity->pos(),
                           10 * singularity->get_hit_dice(), strength);
         }
