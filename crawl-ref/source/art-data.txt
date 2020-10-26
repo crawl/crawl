@@ -449,7 +449,7 @@ PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
-BRAND:    SPWPN_ELECTROCUTION
+BRAND:    SPWPN_SPECTRAL
 AC:       5
 BOOL:     seeinv, berserk
 
