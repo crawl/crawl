@@ -3,6 +3,11 @@
 #include <string>
 #include <vector>
 
+#include "externs.h"
+#include "macros.h"
+
+using std::string;
+
 // Definitions for formatted_string
 
 enum fs_op_type

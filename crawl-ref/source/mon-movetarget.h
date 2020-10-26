@@ -1,9 +1,11 @@
 #pragma once
 
+#include "coord-def.h"
 #include <vector>
 
 using std::vector;
 
+class monster;
 struct level_exit;
 
 bool target_is_unreachable(monster* mon);

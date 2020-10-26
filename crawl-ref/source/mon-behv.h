@@ -6,8 +6,11 @@
 #pragma once
 
 #include "beh-type.h"
+#include "coord-def.h"
 #include "enum.h"
 #include "mon-attitude-type.h"
+
+class actor;
 
 enum mon_event_type
 {

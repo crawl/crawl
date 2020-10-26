@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "level-id.h"
+#include "monster-type.h"
 #include "random-pick.h"
 
 typedef random_pick_entry<monster_type> pop_entry;

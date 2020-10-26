@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "macros.h"
+
 #include <iterator>
 #include <type_traits> // underlying_type<>, enable_if<>
 

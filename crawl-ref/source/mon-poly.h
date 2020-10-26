@@ -5,7 +5,10 @@
 
 #pragma once
 
+#include "item-def.h"
 #include "libutil.h" // always_true
+
+class monster;
 
 bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);

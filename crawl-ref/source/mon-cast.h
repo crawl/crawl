@@ -6,7 +6,10 @@
 #pragma once
 
 #include "enum.h"
+#include "externs.h"
+#include "spell-type.h"
 
+class actor;
 class monster;
 struct bolt;
 struct dice_def;

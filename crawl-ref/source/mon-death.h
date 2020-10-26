@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "item-def.h"
+#include "killer-type.h"
 #include "tag-version.h"
 
 #define ORIG_MONSTER_KEY "orig_monster_key"
@@ -14,6 +16,9 @@
 #define OLD_DUVESSA_ENERGIZE_KEY "duvessa_berserk"
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
+
+class actor;
+class monster;
 
 #define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
 

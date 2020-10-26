@@ -1,9 +1,11 @@
 #pragma once
 
+#include "cloud-type.h"
 #include "spl-cast.h"
 
 struct bolt;
 class dist;
+class actor;
 
 spret conjure_flame(int pow, bool fail);
 

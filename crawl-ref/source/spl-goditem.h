@@ -8,6 +8,8 @@
 #include "tag-version.h"
 #include "torment-source-type.h"
 
+class actor;
+
 spret cast_healing(int pow, bool fail);
 bool heal_monster(monster& patient, int amount);
 
