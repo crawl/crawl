@@ -24,6 +24,7 @@
 #include "dgn-height.h"
 #include "dungeon.h"
 #include "end.h"
+#include "mpr.h"
 #include "tile-env.h"
 #include "english.h"
 #include "files.h"

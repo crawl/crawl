@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "misc.h"
+#include "mpr.h"
 
 #include <algorithm>
 #include <cstdio>

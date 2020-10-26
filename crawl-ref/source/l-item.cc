@@ -21,6 +21,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "mon-util.h"
+#include "mpr.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"

@@ -10,6 +10,7 @@
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-place.h"
+#include "mpr.h"
 #include "stringutil.h"
 #include "tag-version.h"
 

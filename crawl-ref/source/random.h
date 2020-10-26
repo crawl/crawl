@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#include "debug.h"
+#include "fixedvector.h"
 #include "hash.h"
 #include "rng-type.h"
 #include "pcg.h"

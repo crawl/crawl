@@ -10,6 +10,7 @@ module "crawl"
 
 #include "cluautil.h"
 #include "mon-util.h"
+#include "options.h"
 #include "stringutil.h"
 #include "wiz-dgn.h"
 #include "wiz-fsim.h"

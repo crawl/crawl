@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "options.h"
 #include "spl-book.h"
 #include "book-data.h"
 

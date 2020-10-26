@@ -25,6 +25,7 @@
 #include "game-chapter.h"
 #include "kill-method-type.h"
 #include "kills.h"
+#include "maybe-bool.h"
 #include "mon-holy-type.h"
 #include "mutation-type.h"
 #include "place-info.h"

@@ -363,6 +363,7 @@ daction-type.h.o \
 dbg-maps.h.o \
 dbg-objstat.h.o \
 dbg-scan.h.o \
+debug-defines.h.o \
 debug.h.o \
 deck-type.h.o \
 defines.h.o \
@@ -393,7 +394,9 @@ game-chapter.h.o \
 game-exit-type.h.o \
 game-type.h.o \
 gender-type.h.o \
+geom2d.h.o \
 god-type.h.o \
+hash.h.o \
 holy-word-source-type.h.o \
 item-prop-enum.h.o \
 item-status-flag-type.h.o \
@@ -426,6 +429,7 @@ montravel-target-type.h.o \
 msvc.h.o \
 mutation.h.o \
 mutation-type.h.o \
+newgame-def.h.o \
 ng-init.h.o \
 ng-restr.h.o \
 ng-wanderer.h.o \
@@ -440,6 +444,8 @@ player-stats.h.o \
 potion-type.h.o \
 pronoun-type.h.o \
 props.h.o \
+random.h.o \
+random-pick.h.o \
 random-var.h.o \
 reach-type.h.o \
 recite-eligibility.h.o \

@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "uncancel.h"
 
 #include "acquire.h"

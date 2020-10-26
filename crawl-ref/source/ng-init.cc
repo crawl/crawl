@@ -8,6 +8,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "ng-init.h"
 
 #include "branch.h"

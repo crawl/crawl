@@ -18,6 +18,7 @@
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
+#include "mpr.h"
 #include "randbook.h" // roxanne, roxanne...
 #include "religion.h" // upgrade_hepliaklqana_weapon
 #include "state.h"

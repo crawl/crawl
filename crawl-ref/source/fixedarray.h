@@ -7,9 +7,11 @@
 
 #include <algorithm>
 #include <vector>
+#include <map>
 
 #include "fixedvector.h"
 
+using std::pair;
 using std::vector;
 
 template <class TYPE, int WIDTH, int HEIGHT> class FixedArray
@@ -59,7 +61,7 @@ public:
     }
 
     template<class First, class Second>
-    TYPE& operator () (const pair<First,Second> &p)
+    TYPE& operator () (const std::pair<First,Second> &p)
     {
         return mData[p.first][p.second];
     }

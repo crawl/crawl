@@ -33,6 +33,7 @@
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"

@@ -48,6 +48,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "nearby-danger.h"
+#include "options.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -111,6 +112,8 @@ const tracer_info& tracer_info::operator+=(const tracer_info &other)
 
     return *this;
 }
+
+bolt::bolt() : animate(bool(Options.use_animations & UA_BEAM)) {}
 
 bool bolt::is_blockable() const
 {

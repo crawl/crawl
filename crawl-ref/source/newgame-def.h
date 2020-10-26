@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "game-type.h"
@@ -7,6 +8,7 @@
 #include "job-type.h"
 #include "species-type.h"
 
+using std::string;
 using std::vector;
 
 // Either a character definition, with real species, job, and

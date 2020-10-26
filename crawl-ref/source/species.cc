@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 #include <map>
 
+#include "mpr.h"
 #include "species.h"
 
 #include "item-prop.h"

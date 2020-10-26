@@ -8,8 +8,13 @@
 #include <vector>
 
 #include "enum.h"
+#include "item-def.h"
+#include "skill-type.h"
+#include "spell-type.h"
 
 using std::vector;
+
+struct monster_info;
 
 enum class spflag
 {

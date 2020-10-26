@@ -11,6 +11,7 @@
 #include <sstream>
 #include <vector>
 
+#include "mpr.h"
 #include "canned-message-type.h"
 #include "enum.h"
 #include "player.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "macros.h"
+
 namespace geom
 {
 

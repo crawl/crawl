@@ -18,6 +18,7 @@
 #include "dbg-util.h"
 #include "end.h"
 #include "env.h"
+#include "feature.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item-name.h"

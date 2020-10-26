@@ -19,6 +19,7 @@
 #include "monster.h"
 #include "notes.h"
 #include "ouch.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "religion.h"

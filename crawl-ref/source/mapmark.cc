@@ -18,6 +18,7 @@
 #include "libutil.h"
 #include "l-libs.h"
 #include "map-marker-type.h"
+#include "mpr.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"

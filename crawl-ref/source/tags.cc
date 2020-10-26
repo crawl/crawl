@@ -13,6 +13,8 @@
 
 #include "AppHdr.h"
 
+#include "feature.h"
+#include "mpr.h"
 #include "tags.h"
 
 #include <algorithm>

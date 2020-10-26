@@ -11,7 +11,6 @@
 #include "beam-type.h"
 #include "enchant-type.h"
 #include "mon-attitude-type.h"
-#include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
@@ -52,6 +51,8 @@ struct tracer_info
 
 struct bolt
 {
+    bolt();
+
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
@@ -108,7 +109,7 @@ struct bolt
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
     // Do we draw animations?
-    bool   animate = bool(Options.use_animations & UA_BEAM);
+    bool   animate;
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.

@@ -3,6 +3,7 @@
  * @brief Wizard mode command handling.
 **/
 #include "AppHdr.h"
+#include "options.h"
 
 #ifdef WIZARD
 

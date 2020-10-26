@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "show.h"
 
 #include "areas.h"
