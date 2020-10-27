@@ -2372,7 +2372,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_WYRM:     return "the Great Wyrm";
     case GOD_IMUS:     return "Imus Thea";
     case GOD_LEGION_FROM_BEYOND:     return "Legion from beyond";
-    case GOD_AGRAPHEDE:     return "agraphede";
+    case GOD_AGRAPHEDE:     return "Agraphede";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
