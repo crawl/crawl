@@ -81,7 +81,7 @@ There are several different types of items:
    armours give more protection, but may hamper your ability to fight, dodge,
    and cast spells. These can also be cursed.
 
- - **Ammunition** (which has the **(** sign). Throw it with `f` and `F` (fire).
+ - **Ammunition** (which has the `(` sign). Throw it with `f` and `F` (fire).
    Stones, tomahawks and javelins are meant to be thrown by hand; other
    missiles need an appropriate launcher to be wielded (e.g. arrows are only
    effective when shot with a bow).
