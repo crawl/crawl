@@ -4214,7 +4214,7 @@ static string _monster_stat_description(const monster_info& mi)
                     level = 0;
                 }
                 else if (you_worship(GOD_AGRAPHEDE)
-                    && you.piety >= piety_breakpoint(5)
+                    && you.piety >= piety_breakpoint(4)
                     && ((mi.holi & MH_HOLY) || (mi.holi & MH_DEMONIC))) {
                     level = 0;
                 }

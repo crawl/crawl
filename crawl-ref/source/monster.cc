@@ -3942,7 +3942,7 @@ int monster::res_poison(bool temp) const
             return 0;
         }
         else if(you_worship(GOD_AGRAPHEDE) 
-            && you.piety >= piety_breakpoint(5)
+            && you.piety >= piety_breakpoint(4)
             && ((holi & MH_HOLY) || (holi & MH_DEMONIC))) {
             return 0;
         }
