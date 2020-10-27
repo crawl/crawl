@@ -94,7 +94,7 @@ There are several different types of items:
    But once you have used, for example, a potion of curing, you will in future
    recognise all potions of curing.
 
- - **Rings** (`=`) and **Amulets** (") provide various mostly-helpful effects. They are
+ - **Rings** (`=`) and **Amulets** (`"`) provide various mostly-helpful effects. They are
    put on with `P` (put on) and can be removed with `R`. They can, like
    weapons, be cursed.
 
