@@ -656,7 +656,10 @@ static bool _can_use_melee(monster* mons, item_def& gift)
         || gift.sub_type == WPN_SCYTHE
         || gift.sub_type == WPN_BARDICHE);
 
-    if ((mons->type == MONS_MERC_SHAMAN && melee_tier1)
+    if (mons->type == MONS_MERC_WITCH
+        || mons->type == MONS_MERC_SORCERESS
+        || mons->type == MONS_MERC_ELEMENTALIST
+        || (mons->type == MONS_MERC_SHAMAN && melee_tier1)
         || (mons->type == MONS_MERC_SHAMAN_II && melee_tier2)
         || (mons->type == MONS_MERC_SHAMAN_III && melee_tier3)
         || (mons->type == MONS_MERC_FIGHTER && melee_tier2)
