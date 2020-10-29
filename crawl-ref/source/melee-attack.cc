@@ -665,7 +665,7 @@ bool melee_attack::handle_phase_hit()
     if (attacker->is_player() && you.species == SP_WIGHT
         && you.has_mutation(MUT_NEGATIVE_ENERGY_ATTACK))
     {
-        if (defender->holiness() & MH_NATURAL)
+        if (defender->alive() && defender->holiness() & MH_NATURAL)
         {
             const int power = random2(max(1, you.experience_level/9))
                         * you.get_mutation_level(MUT_NEGATIVE_ENERGY_ATTACK);
