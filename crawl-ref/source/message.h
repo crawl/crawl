@@ -106,6 +106,7 @@ namespace msg
     public:
         tee();
         tee(string &_target);
+        void force_update();
         virtual ~tee();
         virtual void append(const string &s, msg_channel_type ch = MSGCH_PLAIN);
         virtual void append_line(const string &s, msg_channel_type ch = MSGCH_PLAIN);

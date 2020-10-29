@@ -315,20 +315,25 @@ bool builder(bool enable_random_maps)
     if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
     {
         // Failed to build level, bail out.
-        if (crawl_state.need_save)
-        {
-            save_game(true,
-                  make_stringf("Unable to generate level for '%s'!",
-                               level_id::current().describe().c_str()).c_str());
-        }
-        else
-        {
-            die("Unable to generate level for '%s'!",
-                level_id::current().describe().c_str());
-        }
+        // Don't crash at this point -- this needs to be handled in pregen code
+        // in case the builder fails in the middle of a pregen sequence.
+
+        // A failure here indicates that the builder vetoed or otherwise failed
+        // 50 times in a row. This can occasionally happen in depths due to the
+        // complexity of the placement constraints. In order to not break the
+        // player's save, what should happen is that the rng state for the
+        // relevant level get saved -- this will allow resuming the builder
+        // for another 50 tries with a different level seed. This is handled
+        // in `load_level`.
+
+        // TODO: this doesn't show up in the player's log for some reason. But
+        // it does show up in the builder log / crashlog at least.
+        mprf(MSGCH_ERROR, "Unable to generate level for '%s'!",
+            level_id::current().describe().c_str());
     }
 
-    env.level_layout_types.clear();
+    env.level_layout_types.clear(); // is this necessary?
+
     return false;
 }
 

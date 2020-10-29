@@ -1011,10 +1011,16 @@ namespace msg
         current_message_tees.insert(this);
     }
 
-    tee::~tee()
+    void tee::force_update()
     {
         if (target)
             *target += get_store();
+        store.clear();
+    }
+
+    tee::~tee()
+    {
+        force_update();
         current_message_tees.erase(this);
     }
 
