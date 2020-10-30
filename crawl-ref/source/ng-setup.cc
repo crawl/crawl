@@ -553,6 +553,6 @@ static void _setup_generic(const newgame_def& ng,
 
     // pregen temple -- it's quick and easy, and this prevents a popup from
     // happening. This needs to happen after you.save is created.
-    if (!pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+    if (normal_dungeon_setup && !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
         die("Builder failure while trying to generate temple!");
 }
