@@ -1688,14 +1688,21 @@ bool generate_level(const level_id &l)
 // bel's original proposal generated D to lair depth, then lair, then D
 // to orc depth, then orc, then the rest of D. I have simplified this to
 // just generate whole branches at a time -- I am not sure how much real
-// impact this has. One idea might be to shuffle this slightly based on
-// the seed.
-// TODO: probably need to do portal vaults too?
-// Should this use something like logical_branch_order?
+// impact this has, though it does mean a pregen popup when the player enters
+// lair, typically.
+//
+// Portals are handled via `portal_generation_order`, and generated as-needed
+// with the level they appear on.
+//
+// We generate temple first so as to save the player a popup when they find it
+// in mid-dungeon; it's fully decided in game setup and shouldn't interact with
+// rng for other branches anyways.
+//
+// How should this relate to logical_branch_order etc?
 static const vector<branch_type> branch_generation_order =
 {
-    BRANCH_DUNGEON,
     BRANCH_TEMPLE,
+    BRANCH_DUNGEON,
     BRANCH_LAIR,
     BRANCH_ORC,
     BRANCH_SPIDER,
