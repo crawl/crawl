@@ -13,6 +13,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dgn-height.h"
+#include "dungeon.h"
 #include "env.h"
 #include "tile-env.h"
 #include "invent.h"
@@ -961,6 +962,18 @@ bool DungeonRegion::update_tip_text(string &tip)
             if (env.heightmap)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
             tip += "\n";
+        }
+
+        const int map_index = env.level_map_ids(gc);
+        if (map_index != INVALID_MAP_INDEX)
+        {
+            const vault_placement &vp(*env.level_vaults[map_index]);
+            const coord_def br = vp.pos + vp.size - 1;
+            tip += make_stringf("Vault: %s (%d,%d)-(%d,%d) (%dx%d)\n\n",
+                                 vp.map_name_at(gc).c_str(),
+                                 vp.pos.x, vp.pos.y,
+                                 br.x, br.y,
+                                 vp.size.x, vp.size.y);
         }
 
         tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');
