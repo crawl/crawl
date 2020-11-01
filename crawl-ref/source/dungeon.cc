@@ -1001,7 +1001,8 @@ static bool _is_exit_stair(const coord_def &c)
 static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 bool choose_stairless,
                 dungeon_feature_type fill,
-                bool (*passable)(const coord_def &) = _dgn_square_is_passable)
+                bool (*passable)(const coord_def &) = _dgn_square_is_passable,
+                int fill_small_zones = 0)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
@@ -1017,9 +1018,12 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 continue;
             }
 
+            int zone_size = 0;
+            auto inc_zone_size = [&zone_size](const coord_def &) { zone_size++; };
+
             const bool found_exit_stair =
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
-                               _dgn_point_record_stub,
+                               inc_zone_size,
                                passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
@@ -1029,7 +1033,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
             // have stairs.
             if (choose_stairless && found_exit_stair)
                 ++ngood;
-            else if (fill)
+            else if (fill && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
             {
                 // Don't fill in areas connected to vaults.
                 // We want vaults to be accessible; if the area is disconneted
@@ -1037,6 +1041,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 // vetoed later on.
                 bool veto = false;
                 vector<coord_def> coords;
+                dprf("Filling zone %d", nzones);
                 for (int fy = y1; fy <= y2 ; ++fy)
                 {
                     for (int fx = x1; fx <= x2; ++fx)
@@ -1072,6 +1077,12 @@ int dgn_count_disconnected_zones(bool choose_stairless,
 {
     return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
                                        fill);
+}
+
+static void _fill_small_disconnected_zones()
+{
+    _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
+                                       _dgn_square_is_passable, 4);
 }
 
 static void _fixup_hell_stairs()
@@ -2052,6 +2063,8 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     // disconnected.
     if (dgn_zones && nvaults != env.level_vaults.size())
     {
+        _fill_small_disconnected_zones();
+
         const int newzones = dgn_count_disconnected_zones(false);
 
 #ifdef DEBUG_STATISTICS
