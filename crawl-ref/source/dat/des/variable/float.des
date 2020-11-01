@@ -120,7 +120,7 @@ ENDMAP
 # Staircase flavour vaults.
 #
 NAME:    minmay_staircase_windowed_small
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  5
@@ -142,7 +142,7 @@ ccccc
 ENDMAP
 
 NAME:    minmay_staircase_windowed_large
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  5
@@ -230,7 +230,7 @@ cccccc.....cccccc
 ENDMAP
 
 NAME:    minmay_staircase_bubble
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 SUBST:   m = mmmm.
@@ -6652,7 +6652,10 @@ ENDMAP
 
 NAME:   minmay_four_inscribed_fans
 DEPTH:  Depths
+TAGS:   transparent
 ORIENT: float
+KPROP:  | = no_tele_into
+KMASK:  | = opaque
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  9 = 999.
 MAP
@@ -7118,6 +7121,7 @@ ENDMAP
 
 NAME:   minmay_containers
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  C : B C:5
 SUBST:  B : A B:5

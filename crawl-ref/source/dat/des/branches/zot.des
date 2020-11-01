@@ -374,7 +374,7 @@ cccccccccccccccccccc.........cc
 ENDMAP
 
 NAME:   evilmike_zot_entry_basic
-TAGS:   no_monster_gen zot_entry
+TAGS:   no_monster_gen zot_entry transparent
 TILE:   c = wall_zot_magenta
 COLOUR: c+- = magenta
 FTILE:  O-+c = floor_hall
@@ -395,7 +395,7 @@ dc--O--cd
 ENDMAP
 
 NAME:   evilmike_zot_entry_diamond
-TAGS:   no_monster_gen zot_entry
+TAGS:   no_monster_gen zot_entry transparent
 KFEAT:  A = stone_arch
 TILE:   c = wall_zot_magenta
 COLOUR: c- = magenta
@@ -452,7 +452,7 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_funnels
-TAGS:   no_monster_gen zot_entry patrolling
+TAGS:   no_monster_gen zot_entry patrolling transparent
 COLOUR: 123c+. = magenta
 FTILE:  123c+.O = floor_hall
 NSUBST: 3 = 1:9 / *:3, 1 = 2:0 / *:1
@@ -482,7 +482,7 @@ MAP
 ENDMAP
 
 NAME:   grunt_zot_entry_pinwheel
-TAGS:   no_monster_gen zot_entry patrolling
+TAGS:   no_monster_gen zot_entry patrolling transparent
 KFEAT:  A = stone_arch
 COLOUR: 123c+. = magenta
 FTILE:  123c+.AO = floor_hall
