@@ -628,7 +628,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             ret += "..";
             return ret;
         }
-        else
+        else if (space_idx != nl)
         {
             line[space_idx] = '\n';
             ret[&line[space_idx] - &base[0]] = '\n';
