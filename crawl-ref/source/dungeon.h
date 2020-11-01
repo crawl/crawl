@@ -60,7 +60,7 @@ enum map_mask_type
     MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
 #endif
     MMT_TURNED_TO_FLOOR = 0x800, // This feature was dug, deconstructed or such.
-    MMT_PASSABLE        = 0x1600 // Passable for purposes of determining level connectivity
+    MMT_PASSABLE        = 0x1000 // Passable for purposes of determining level connectivity
 };
 
 class dgn_region;
