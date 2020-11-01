@@ -69,6 +69,9 @@
 #include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
+#ifdef WIZARD
+#include "wiz-dgn.h"
+#endif
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES
@@ -271,6 +274,7 @@ bool builder(bool enable_random_maps)
     unwind_var<coord_def> saved_position(you.position);
     you.position.reset();
 
+    // TODO: why are these globals?
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
     // And unrands
@@ -300,6 +304,36 @@ bool builder(bool enable_random_maps)
         {
             if (_build_level_vetoable(enable_random_maps))
                 return true;
+#if defined(DEBUG_VETO_RESUME) && defined(WIZARD)
+            else if (is_wizard_travel_target(level_id::current()))
+            {
+                mprf(MSGCH_ERROR, "Builder paused after veto; use &ctrl-r to resume.");
+                // reset global state preemptively; otherwise wizard reload will
+                // quickly deviate from the seed
+                get_uniq_map_tags() = uniq_tags;
+                get_uniq_map_names() = uniq_names;
+                you.unique_creatures = temp_unique_creatures;
+                you.unique_items = temp_unique_items;
+
+                // Because vault generation can be interrupted, this potentially
+                // leaves unlinked items kicking around, which triggers a lot
+                // of debug messaging. For the sanity of the user, clean them
+                // up.
+                for (int i = 0; i < MAX_ITEMS; i++)
+                    if (env.item[i].defined()
+                        && !env.item[i].holding_monster()
+                        && (!in_bounds(env.item[i].pos)
+                            || env.igrid(env.item[i].pos) == NON_ITEM))
+                    {
+                        dprf("    Cleaning up unfinished item '%s'",
+                                        env.item[i].name(DESC_PLAIN).c_str());
+                        init_item(i);
+                    }
+
+                return true;
+            }
+#endif
+
         }
         catch (map_load_exception &mload)
         {
@@ -819,6 +853,7 @@ static bool _dgn_fill_zone(
     bool ret = false;
     list<coord_def> points[2];
     int cur = 0;
+    int found_points = 0;
 
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
@@ -828,6 +863,7 @@ static bool _dgn_fill_zone(
         for (const auto &c : points[cur])
         {
             travel_point_distance[c.x][c.y] = zone;
+            found_points++;
 
             if (iswanted && iswanted(c))
                 ret = true;
@@ -850,6 +886,8 @@ static bool _dgn_fill_zone(
         points[cur].clear();
         cur = !cur;
     }
+    dprf("Zone %d contains %d points from seed %d,%d", zone, found_points,
+        start.x, start.y);
     return ret;
 }
 

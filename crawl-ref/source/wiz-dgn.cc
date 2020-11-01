@@ -87,6 +87,8 @@ void wizard_place_stairs(bool down)
     dungeon_terrain_changed(you.pos(), stairs);
 }
 
+static level_id _wizard_level_target = level_id();
+
 void wizard_level_travel(bool down)
 {
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
@@ -103,10 +105,19 @@ void wizard_level_travel(bool down)
         down = !down;
     }
 
+    _wizard_level_target = stair_destination(stairs, "", false);
+
     if (down)
         down_stairs(stairs, false, false);
     else
         up_stairs(stairs, false);
+
+    _wizard_level_target = level_id();
+}
+
+bool is_wizard_travel_target(const level_id l)
+{
+    return _wizard_level_target.is_valid() && l == _wizard_level_target;
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -139,6 +150,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
+    _wizard_level_target = pos.id;
 
     leaving_level_now(stair_taken);
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
@@ -152,6 +164,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level();
+    _wizard_level_target = level_id();
 }
 
 void wizard_interlevel_travel()
@@ -763,7 +776,9 @@ void wizard_recreate_level()
     mpr("Regenerating level.");
 
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
+    #ifndef DEBUG_VETO_RESUME
     _free_all_vaults();
+    #endif
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -776,6 +791,7 @@ void wizard_recreate_level()
     }
 
     level_id lev = level_id::current();
+    _wizard_level_target = lev;
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
     if (lev.depth == 1 && lev != BRANCH_DUNGEON)

@@ -1367,6 +1367,7 @@ void roll_trap_effects()
     int trap_rate = trap_rate_for_place();
 
     you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+        && env.density > 0 // can happen with builder in debug state
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
 
