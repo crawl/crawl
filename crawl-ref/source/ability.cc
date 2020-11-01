@@ -973,9 +973,6 @@ const string make_cost_description(ability_type ability)
         if (ability == ABIL_HEAL_WOUNDS)
             ret += ", Permanent MP";
 
-        if (ability == ABIL_IMUS_FRAGMENTATION)
-            ret += make_stringf(", %d HP", max((you.hp/2)-1, 1));
-
         if (abil.hp_cost)
             ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
     }

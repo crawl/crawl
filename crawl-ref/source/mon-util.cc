@@ -1463,7 +1463,7 @@ bool mons_is_ghost_demon(monster_type mc)
 
 bool mons_is_pghost(monster_type mc)
 {
-    return mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION;
+    return mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION || mc == MONS_IMUS_MIRROR;
 }
 
 /**
@@ -3030,15 +3030,22 @@ void define_monster(monster& mons)
         // intentional fallthrough -- fall back on mirroring the player
     }
     case MONS_PLAYER_ILLUSION:
+    case MONS_IMUS_MIRROR:
     {
         ghost_demon ghost;
         ghost.init_player_ghost();
-        if (mcls == MONS_PLAYER_GHOST)
+        if (mcls == MONS_PLAYER_GHOST || mcls == MONS_IMUS_MIRROR)
         {
             // still don't allow undead ghosts, even mirrored
             if (you.undead_state(false) != US_ALIVE)
                 ghost.species = SP_HUMAN;
             mons.props[MIRRORED_GHOST_KEY] = true;
+        }
+        if (mcls == MONS_IMUS_MIRROR) {
+            ghost.speed = 30; 
+            ghost.att_type = AT_NONE;
+            ghost.att_flav = AF_PLAIN;
+            ghost.damage = 0;
         }
         mons.set_ghost(ghost);
         mons.ghost_init(!mons.props.exists("fake"));

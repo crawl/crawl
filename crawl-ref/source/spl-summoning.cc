@@ -2883,6 +2883,7 @@ spret cast_imus_mirror(actor* agent, int pow, god_type god, bool fail)
         if (imus_mirror)
         {
             int dur = min((7 + roll_dice(2, pow)) * 10, 500);
+            imus_mirror->add_ench(ENCH_PHANTOM_MIRROR);
             imus_mirror->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
             imus_mirror->summoner = agent->mid;
             agent->props["imus_mirror"].get_int() = imus_mirror->mid;
