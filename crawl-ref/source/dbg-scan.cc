@@ -35,6 +35,9 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
+#ifdef WIZARD
+#include "wiz-dgn.h"
+#endif
 
 #ifdef DEBUG_ITEM_SCAN
 
@@ -615,7 +618,7 @@ void debug_mons_scan()
  */
 void check_map_validity()
 {
-#ifdef ASSERTS
+#if defined(ASSERTS) && !defined(DEBUG_VETO_RESUME)
     dungeon_feature_type portal = DNGN_UNSEEN;
     if (player_in_branch(BRANCH_DEPTHS))
     {
