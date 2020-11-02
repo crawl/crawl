@@ -243,7 +243,7 @@ TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
   if is_validating() then return end
 
   local gxm,gym = dgn.max_bounds()
-  local limit,border,margin = 0.35,12,12
+  local limit,border,margin = 0.35,16,16
   local reps = crawl.random_range(70,85)
 
   local fcaves = procedural.worley_diff { scale = 7.5/reps }
