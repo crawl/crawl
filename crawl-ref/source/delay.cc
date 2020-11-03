@@ -877,7 +877,6 @@ void PasswallDelay::finish()
     }
     else
         move_player_to_grid(dest, false);
-
     // the last phase of the delay is a fake (0-time) turn, so world_reacts
     // and player_reacts aren't triggered. Need to do a tiny bit of cleanup.
     // This isn't very elegant, and perhaps a version of player_reacts that is
@@ -886,6 +885,7 @@ void PasswallDelay::finish()
     // refactored in this way.
     you.update_beholders();
     you.update_fearmongers();
+    invalidate_agrid(true);
 }
 
 void ShaftSelfDelay::finish()
