@@ -2461,12 +2461,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe);
         }
-
-        if (mons.has_ench(ENCH_INSECT_EGGS)
-            && !in_transit && !was_banished && !mons_reset && !mons.pacified())
-        {
-            insect_eggs_fineff::schedule(mons.pos(), mons.name(DESC_THE));
-        }
     }
 
     if (mons_is_tentacle_head(mons_base_type(mons)))

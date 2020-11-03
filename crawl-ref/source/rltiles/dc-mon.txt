@@ -170,11 +170,10 @@ hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
-%rim 0
-devouring_swarm MONS_DEVOURING_SWARM
 
 ## Aquatics (';')
 %sdir mon/aquatic
+%rim 0
 electric_eel MONS_ELECTRIC_EEL
 %rim 1
 
