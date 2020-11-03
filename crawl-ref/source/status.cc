@@ -218,6 +218,16 @@ bool fill_status_info(int status, status_info& inf)
         _describe_zot(inf);
         break;
 
+    case STATUS_CURL:
+        if (you.props[PALENTONGA_CURL_KEY].get_bool())
+        {
+            inf.light_text = "Curl";
+            inf.light_colour = BLUE;
+            inf.short_text = "curled up";
+            inf.long_text = "You are defensively curled.";
+        }
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
