@@ -155,4 +155,6 @@ private:
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();
+    bool can_wall_slam();
+    coord_def behind_defender();
 };

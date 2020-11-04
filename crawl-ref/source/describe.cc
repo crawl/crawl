@@ -1181,6 +1181,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\n\nIt hits all enemies adjacent to the wielder, "
                            "dealing less damage to those not targeted.";
             break;
+        case SK_MACES_FLAILS:
+            description += "\n\nIt can slam enemies into walls behind them, "
+                           "dealing extra damage.";
+            break;
         case SK_SHORT_BLADES:
             {
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"

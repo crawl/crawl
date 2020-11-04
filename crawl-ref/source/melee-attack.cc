@@ -2329,10 +2329,27 @@ string melee_attack::mons_attack_desc()
     return ret;
 }
 
+coord_def melee_attack::behind_defender()
+{
+    const coord_def delta = defender->pos() - attacker->pos();
+    return defender->pos() + delta;
+}
+
 void melee_attack::announce_hit()
 {
     if (!needs_message || attk_flavour == AF_CRUSH)
         return;
+
+    if (can_wall_slam())
+    {
+        // The use of 'the' here will be incorrect if we allow slamming
+        // against map borders, e.g. 'the endless sea'.
+        mprf("%s %s %s against the %s!",
+             atk_name(DESC_THE).c_str(),
+             attacker->conj_verb("slam").c_str(),
+             defender_name(true).c_str(),
+             get_feature_def(env.grid(behind_defender())).name);
+    }
 
     if (attacker->is_monster())
     {
@@ -3415,12 +3432,27 @@ bool melee_attack::using_weapon() const
     return weapon && is_melee_weapon(*weapon);
 }
 
+bool melee_attack::can_wall_slam()
+{
+    if (!attacker || !defender)
+        return false;
+    if (!using_weapon() || item_attack_skill(*weapon) != SK_MACES_FLAILS)
+        return false;
+    if (!adjacent(attacker->pos(), defender->pos()))
+        return false;
+    const coord_def behind = behind_defender();
+    return in_bounds(behind) && cell_is_solid(behind);
+}
+
 int melee_attack::weapon_damage()
 {
     if (!using_weapon())
         return 0;
 
-    return property(*weapon, PWPN_DAMAGE);
+    const int base_dam = property(*weapon, PWPN_DAMAGE);
+    if (can_wall_slam())
+        return div_rand_round(base_dam * 3, 2);
+    return base_dam;
 }
 
 int melee_attack::calc_mon_to_hit_base()
