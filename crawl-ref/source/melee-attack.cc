@@ -359,14 +359,10 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_lbl = defender->weapon()
-                && item_attack_skill(*defender->weapon()) == SK_LONG_BLADES;
             const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
                 && (!defender->weapon()
                     || is_melee_weapon(*defender->weapon()));
-            const int chance = using_lbl + using_fencers;
-
-            if (x_chance_in_y(chance, 3) && !is_riposte) // no ping-pong!
+            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
                 riposte();
 
             // Retaliations can kill!

@@ -1010,8 +1010,8 @@ TILE:    urand_fencer
 TILE_EQ: glove_white
 DEX:     3
 VALUE:   400
-DESCRIP: It allows the wearer to riposte with any weapon, or to riposte more
- often with a long blade, swiftly retaliating against a missed attack.
+DESCRIP: It allows the wearer to riposte with melee
+ weapons, swiftly retaliating against missed attacks.
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
