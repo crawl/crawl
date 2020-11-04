@@ -427,11 +427,16 @@ bool spell_harms_area(spell_type spell)
     return false;
 }
 
-// applied to spell misfires (more power = worse) and triggers
-// for Xom acting (more power = more likely to grab his attention) {dlb}
-int spell_mana(spell_type which_spell)
+// How much MP does it cost for the player to cast this spell?
+//
+// @param real_spell  True iff the player is casting the spell normally,
+// not via an evocable or other odd source.
+int spell_mana(spell_type which_spell, bool real_spell)
 {
-    return _seekspell(which_spell)->level;
+    const int level = _seekspell(which_spell)->level;
+    if (real_spell && you.duration[DUR_BRILLIANCE])
+        return level/2 + level%2; // round up
+    return level;
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)

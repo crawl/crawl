@@ -32,7 +32,7 @@ You are unnaturally agile, and gain a bonus to your evasion.
 Brill status
 
 You are unnaturally smart, and gain a bonus to the power of your spells as well
-as completely removing their metabolic cost.
+as halving their mana cost (rounding up).
 %%%%
 Might status
 

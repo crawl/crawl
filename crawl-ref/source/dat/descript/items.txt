@@ -624,7 +624,8 @@ A potion containing the essence of life.
 %%%%
 potion of brilliance
 
-A potion which increases the power of the drinker's spells.
+A potion which increases the power of the drinker's spells and halves their
+mana cost (rounding up).
 %%%%
 potion of cancellation
 

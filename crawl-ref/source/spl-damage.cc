@@ -2362,7 +2362,8 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     fail_check();
 
     const int juice
-        = (spell_mana(SPELL_THUNDERBOLT) + charges) * LIGHTNING_CHARGE_MULT;
+        = (spell_mana(SPELL_THUNDERBOLT, false) + charges)
+          * LIGHTNING_CHARGE_MULT;
 
     dprf("juice: %d", juice);
 
