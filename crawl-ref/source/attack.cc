@@ -1752,9 +1752,8 @@ void attack::player_stab_check()
     stab_type st = find_stab_type(&you, *defender);
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
-    if ((using_weapon()
+    if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        || you.duration[DUR_STABBING] > 0 && coinflip())
         && st != STAB_NO_STAB)
     {
         st = STAB_SLEEPING;

@@ -661,7 +661,7 @@ const char* potion_type_name(int potiontype)
     case POT_HEAL_WOUNDS:       return "heal wounds";
     case POT_HASTE:             return "haste";
     case POT_MIGHT:             return "might";
-    case POT_STABBING:          return "stabbing";
+    case POT_ATTRACTION:        return "attraction";
     case POT_BRILLIANCE:        return "brilliance";
     case POT_FLIGHT:            return "flight";
     case POT_CANCELLATION:      return "cancellation";
@@ -2772,6 +2772,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
                 return false;
             // intentional fallthrough
         case POT_LIGNIFY:
+        case POT_ATTRACTION:
             return true;
         default:
             return false;
@@ -3000,8 +3001,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
-        case POT_STABBING:
-            return will_have_passive(passive_t::no_stabbing);
+        case POT_ATTRACTION:
+            return false;
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 

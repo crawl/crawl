@@ -688,11 +688,9 @@ potion of resistance
 A potion which grants temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of stabbing
+potion of attraction
 
-A potion which makes the drinker better at attacking unaware enemies, giving
-attacks against distracted, confused or otherwise unaware creatures a chance to
-deal increased damage as if the target were completely helpless.
+A potion which makes the drinker attract monsters, pulling them quickly closer.
 %%%%
 quad damage
 

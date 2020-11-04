@@ -62,7 +62,7 @@
        "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air", "ring of attention",
        "manual of axes", "manual of armour", "wand of acid",
-       "acid dragon scales" }
+       "acid dragon scales", "potion of attraction" }
 
       elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
        "book of burglary", "box of beasts",
@@ -156,8 +156,7 @@
        "shortbow", "manual of staves", "steam dragon scales",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
        "manual of short blades", "manual of slings", "manual of shields",
-       "manual of spellcasting", "manual of summonings", "stone",
-       "potion of stabbing" }
+       "manual of spellcasting", "manual of summonings", "stone" }
 
       elseif s == "T" then i = { "book of the tempests", "scroll of torment",
        "book of transfigurations", "ring of teleportation",

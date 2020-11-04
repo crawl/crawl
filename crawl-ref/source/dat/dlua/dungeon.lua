@@ -696,7 +696,6 @@ dgn.loot_potions = [[
     w:15  potion of heal wounds /
     w:10  potion of might /
     w:10  potion of invisibility /
-    w:10  potion of stabbing /
     w:10  potion of magic /
     w:10  potion of mutation /
     w:8   potion of cancellation /

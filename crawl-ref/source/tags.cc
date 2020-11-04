@@ -4799,7 +4799,7 @@ void unmarshallItem(reader &th, item_def &item)
                 item.sub_type = POT_MUTATION;
                 break;
             case POT_DUMMY_AGILITY:
-                item.sub_type = POT_STABBING;
+                item.sub_type = POT_ATTRACTION;
                 break;
             default:
                 break;

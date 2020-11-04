@@ -622,7 +622,7 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
-        potion of might w:5 / potion of brilliance w:5 / potion of stabbing w:5 / \
+        potion of might w:5 / potion of brilliance w:5 / \
         potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon w:5 / scroll of enchant armour w:5
@@ -1013,7 +1013,7 @@ KITEM:  D = any weapon good_item
 KITEM:  e = any armour
 KITEM:  E = any armour good_item
 KITEM:  f = potion of curing / potion of might / potion of brilliance / \
-            potion of stabbing / potion of mutation w:30 / potion of flight w:20 / \
+            potion of attraction / potion of mutation w:30 / potion of flight w:20 / \
             potion of lignification  / \
             scroll of teleportation / scroll of identify w:30 / \
             scroll of fear / scroll of noise w:30 / scroll of magic mapping / \
@@ -1089,7 +1089,7 @@ NAME:   bailey_axe_bossmonster_kennysheep
 ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
-            potion of might w:5 / potion of brilliance w:5 / potion of stabbing w:5 / \
+            potion of might w:5 / potion of brilliance w:5 / \
             potion of magic w:5 / potion of haste w:5 / \
             scroll of teleportation / scroll of blinking / scroll of identify / \
             scroll of enchant weapon w:5 / scroll of enchant armour w:5

@@ -749,11 +749,9 @@ Water status
 
 Your control over your magic has been sapped.
 %%%%
-Stab status
+Attr status
 
-You are better at attacking unaware enemies, giving attacks against distracted,
-confused or otherwise unaware creatures a chance to deal increased damage as if
-the target were completely helpless.
+Monsters are magically pulled toward you.
 %%%%
 Zot status
 

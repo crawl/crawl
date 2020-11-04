@@ -164,7 +164,7 @@ function general_item_setup(e)
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
-          potion of might ident:all w:2 / potion of stabbing w:2 ident:all /\
+          potion of might ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
@@ -174,7 +174,7 @@ function general_item_setup(e)
   e.kitem("% = any ident:all")
   e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
           potion of curing ident:all w:20 / potion of might ident:all /\
-          potion of stabbing ident:all / potion of haste ident:all /\
+          potion of haste ident:all /\
           potion of resistance ident:all w:5 /\
           potion of brilliance ident:all / potion of berserk rage ident:all /\
           potion of mutation ident:all")

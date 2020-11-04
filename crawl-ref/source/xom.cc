@@ -963,7 +963,6 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_MAGIC,
                                      10, POT_HASTE,
                                      10, POT_MIGHT,
-                                     10, POT_STABBING,
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
                                      5,  POT_BERSERK_RAGE,

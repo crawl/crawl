@@ -415,8 +415,8 @@ MONS:   ball python / adder w:5 / frilled lizard w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
-        potion of brilliance w:4 / potion of stabbing w:4 /\
-        potion of flight w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
+        potion of brilliance w:4 / potion of flight w:4 / \
+        any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
 : set_feature_name("clear_stone_wall", "large window")
 KFEAT:  C = deep_water
@@ -469,9 +469,8 @@ KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
 SUBST:   p = ppW
 ITEM:    potion of curing / potion of heal wounds / potion of might w:4 /\
-         potion of brilliance w:4 / potion of stabbing w:4 / \
-         potion of flight w:4 / any scroll w:7 / any armour w:2 / \
-         any weapon w:2
+         potion of brilliance w:4 / potion of flight w:4 / \
+         any scroll w:7 / any armour w:2 / any weapon w:2
 SHUFFLE: DEFH
 NSUBST:  D = 5:1 / 4:d / *:!
 NSUBST:  F = 5:1 / 4:d / *:!
@@ -721,7 +720,7 @@ MONS:   kobold, jackal
 SUBST:  3 = 334
 KMONS:  3 = water moccasin
 KMONS:  4 = Purgy, water moccasin
-ITEM:   potion of flight / potion of stabbing / potion of heal wounds / \
+ITEM:   potion of flight / potion of attraction / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
         scroll of random uselessness / \
@@ -849,7 +848,7 @@ ORIENT: encompass
 MONS:   kobold w:40 / bat / frilled lizard / giant cockroach / \
         adder w:5 / big kobold w:1
 KMONS:  2 = purgy, water moccasin
-ITEM:   potion of flight / potion of stabbing / potion of heal wounds / \
+ITEM:   potion of flight / potion of attraction / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
         scroll of random uselessness / \
@@ -919,13 +918,13 @@ SHUFFLE:  de
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
 ITEM:     potion of flight w:50 / potion of invisibility / \
-          potion of might w:3 / potion of stabbing w:4 / \
+          potion of might w:3 / potion of attraction w:4 / \
           potion of brilliance w:3 / nothing
 #       possibly rather generous loot, if you get to the center
 ITEM:     scroll of vulnerability / scroll of identify / hat / \
           potion of magic / potion of brilliance / potion of resistance
 ITEM:     scroll of identify / potion of invisibility / pair of gloves w:5 / \
-          pair of boots w:5 / potion of stabbing / nothing
+          pair of boots w:5 / potion of attraction / nothing
 ITEM:     scroll of identify / potion of resistance / potion of might / \
           potion of berserk rage / buckler / nothing
 KITEM:    ' = scroll of random uselessness w:30 / \
@@ -1372,7 +1371,7 @@ SUBST:   - = wwwW-
 COLOUR: - = green
 ITEM:    potion of curing / potion of heal wounds / \
          potion of might w:2 / potion of brilliance w:2 / \
-         potion of stabbing w:2 / potion of flight w:14 / \
+         potion of attraction w:2 / potion of flight w:14 / \
          any scroll w:7 / any armour w:2 / any weapon w:2
 NSUBST:  d = 1:*
 : sewer_setup(_G)

@@ -475,13 +475,13 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case POT_MIGHT:
-            case POT_STABBING:
             case POT_BRILLIANCE:
                 valued += 40;
                 break;
 
             case POT_CURING:
             case POT_LIGNIFY:
+            case POT_ATTRACTION:
             case POT_FLIGHT:
                 valued += 30;
                 break;

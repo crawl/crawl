@@ -540,11 +540,11 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
-    { DUR_STABBING,
-      LIGHTBLUE, "Stab",
-      "stab", "stabbing",
-      "You are ready to backstab.", D_DISPELLABLE,
-      {{ "You feel less ready to backstab.", }}},
+    { DUR_ATTRACTIVE,
+      LIGHTBLUE, "Attr",
+      "attractive", "attract",
+      "You attract monsters toward you.", D_DISPELLABLE,
+      {{ "You feel less attractive to monsters.", }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -647,5 +647,6 @@ static const duration_def duration_data[] =
     { DUR_SHROUD_OF_GOLUBRIA, 0, "", "", "old shroud", "", D_NO_FLAGS},
     { DUR_FIRE_SHIELD, 0, "", "", "old ring of flames", "", D_NO_FLAGS},
     { DUR_DARKNESS, 0, "", "", "old darkness", "", D_NO_FLAGS},
+    { DUR_STABBING, 0, "", "", "old stabbing", "", D_NO_FLAGS},
 #endif
 };
