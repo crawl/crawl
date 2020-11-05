@@ -430,6 +430,31 @@ static const zap_info* _seek_zap(zap_type z_type)
         return &zap_data[zap_index[z_type]];
 }
 
+int zap_to_hit(zap_type z_type, int power, bool is_monster)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return 0;
+    const tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
+                                               : zinfo->player_tohit;
+    if (!zinfo->is_enchantment)
+        ASSERT(hit_calc);
+    const int hit = hit_calc ? (*hit_calc)(power) : 0;
+    if (hit != AUTOMATIC_HIT && !is_monster && crawl_state.need_save)
+        return max(0, hit - 5 * you.inaccuracy());
+    return hit;
+}
+
+dice_def zap_damage(zap_type z_type, int power, bool is_monster)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return dice_def(0,0);
+    const dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
+                                             : zinfo->player_damage;
+    return dam_calc ? (*dam_calc)(power) : dice_def(0,0);
+}
+
 int zap_power_cap(zap_type z_type)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -485,19 +510,9 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
     else
-    {
-        tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
-                                             : zinfo->player_tohit;
-        ASSERT(hit_calc);
-        pbolt.hit = (*hit_calc)(power);
-        if (pbolt.hit != AUTOMATIC_HIT && !is_monster)
-            pbolt.hit = max(0, pbolt.hit - 5 * you.inaccuracy());
-    }
+        pbolt.hit = zap_to_hit(z_type, power, is_monster);
 
-    dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
-                                       : zinfo->player_damage;
-    if (dam_calc)
-        pbolt.damage = (*dam_calc)(power);
+    pbolt.damage = zap_damage(z_type, power, is_monster);
 
     if (pbolt.origin_spell == SPELL_NO_SPELL)
         pbolt.origin_spell = zap_to_spell(z_type);

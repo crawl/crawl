@@ -482,6 +482,30 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
+static string _effect_string(spell_type spell, mon_attitude_type att, int hd)
+{
+    if (hd <= 0)
+        return "";
+
+    if (testbits(get_spell_flags(spell), spflag::MR_check))
+    {
+        // MR chances only make sense vs a player
+        if (!crawl_state.need_save
+#ifndef DEBUG_DIAGNOSTICS
+            || attitude != ATT_FRIENDLY)
+#endif
+            )
+        {
+            return "";
+        }
+        if (you.immune_to_hex(spell))
+            return "(immune)";
+        return make_stringf("(%d%%)", hex_chance(spell, hd));
+    }
+
+
+}
+
 /**
  * Describe a given set of spells.
  *
@@ -533,32 +557,20 @@ static void _describe_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end()
                                             ? entry->second : ' ';
 
-        string range_str = _range_string(spell, mon_owner, hd);
+        const string range_str = _range_string(spell, mon_owner, hd);
+        const string effect_str = _effect_string(spell, mon_owner->attitude, hd);
 
-        string hex_str = "";
-
-        if (hd > 0 && crawl_state.need_save
-#ifndef DEBUG_DIAGNOSTICS
-            && mon_owner->attitude != ATT_FRIENDLY
-#endif
-            && testbits(get_spell_flags(spell), spflag::MR_check))
-        {
-            if (you.immune_to_hex(spell))
-                hex_str = "(immune)";
-            else
-                hex_str = make_stringf("(%d%%)", hex_chance(spell, hd));
-        }
-
-        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 3;
-        int hex_range_space = hex_len && range_len ? 1 : 0;
+        const int effect_len = effect_str.length();
+        const int range_len = range_str.empty() ? 0 : 3;
+        const int effect_range_space = effect_len && range_len ? 1 : 0;
+        const int chop_len = 29 - effect_len - range_len - effect_range_space;
 
         description += formatted_string::parse_string(
                 make_stringf("%c - %s%s%s%s", spell_letter,
-                chop_string(spell_title(spell),
-                            29 - hex_len - range_len - hex_range_space).c_str(),
-                hex_str.c_str(),
-                hex_range_space ? " " : "",
-                range_str.c_str()));
+                             chop_string(spell_title(spell), chop_len).c_str(),
+                             effect_str.c_str(),
+                             effect_range_space ? " " : "",
+                             range_str.c_str()));
 
         // only display type & level for book spells
         if (doublecolumn)
