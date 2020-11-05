@@ -1440,7 +1440,7 @@ LUAFN(dgn_map_by_tag)
 {
     if (const char *tag = luaL_checkstring(ls, 1))
     {
-        const bool check_depth = _lua_boolean(ls, 3, true);
+        const bool check_depth = _lua_boolean(ls, 2, true);
         return _lua_push_map(ls, random_map_for_tag(tag, check_depth));
     }
     return 0;
