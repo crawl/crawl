@@ -21,6 +21,7 @@
 #include "shopping.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "stringutil.h"
 #include "state.h"
 #include "tag-version.h"
@@ -482,7 +483,8 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
-static string _effect_string(spell_type spell, mon_attitude_type att, int hd)
+static string _effect_string(spell_type spell, const monster_info *mon_owner,
+                             int hd)
 {
     if (hd <= 0)
         return "";
@@ -492,7 +494,7 @@ static string _effect_string(spell_type spell, mon_attitude_type att, int hd)
         // MR chances only make sense vs a player
         if (!crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
-            || attitude != ATT_FRIENDLY)
+            || mon_owner->attitude != ATT_FRIENDLY)
 #endif
             )
         {
@@ -503,7 +505,15 @@ static string _effect_string(spell_type spell, mon_attitude_type att, int hd)
         return make_stringf("(%d%%)", hex_chance(spell, hd));
     }
 
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return "";
 
+    const int pow = mons_power_for_hd(spell, hd);
+    const dice_def dam = zap_damage(zap, pow, true);
+    if (dam.num == 0 || dam.size == 0)
+        return "";
+    return make_stringf("(%dd%d)", dam.num, dam.size);
 }
 
 /**
@@ -558,7 +568,7 @@ static void _describe_book(const spellbook_contents &book,
                                             ? entry->second : ' ';
 
         const string range_str = _range_string(spell, mon_owner, hd);
-        const string effect_str = _effect_string(spell, mon_owner->attitude, hd);
+        const string effect_str = _effect_string(spell, mon_owner, hd);
 
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
