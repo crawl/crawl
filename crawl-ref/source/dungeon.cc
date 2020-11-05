@@ -830,6 +830,16 @@ static bool _dgn_square_is_passable(const coord_def &c)
         || !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
 }
 
+static bool _dgn_square_is_boring(const coord_def &c)
+{
+    // ignore vault squares by the same algorithm as _dgn_square_is_passable,
+    // but in this case find only floor squares.
+    const dungeon_feature_type feat = env.grid(c);
+    return feat_has_solid_floor(feat)
+        && (env.level_map_mask(c) & MMT_PASSABLE
+            || !(env.level_map_mask(c) & MMT_OPAQUE));
+}
+
 static bool _dgn_square_is_ever_passable(const coord_def &c)
 {
     if (!(env.level_map_mask(c) & MMT_OPAQUE))
@@ -998,10 +1008,12 @@ static bool _is_exit_stair(const coord_def &c)
 //
 // If fill is non-zero, it fills any disconnected regions with fill.
 //
+// TODO: refactor this to something more usable
 static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 bool choose_stairless,
                 dungeon_feature_type fill,
                 bool (*passable)(const coord_def &) = _dgn_square_is_passable,
+                bool (*fill_check)(const coord_def &) = nullptr,
                 int fill_small_zones = 0)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -1033,7 +1045,8 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
             // have stairs.
             if (choose_stairless && found_exit_stair)
                 ++ngood;
-            else if (fill && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
+            else if (fill
+                && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
             {
                 // Don't fill in areas connected to vaults.
                 // We want vaults to be accessible; if the area is disconneted
@@ -1053,7 +1066,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                                 veto = true;
                                 break;
                             }
-                            else
+                            else if (!fill_check || fill_check(coord_def(fx, fy)))
                                 coords.emplace_back(fx, fy);
                         }
                     }
@@ -1081,8 +1094,13 @@ int dgn_count_disconnected_zones(bool choose_stairless,
 
 static void _fill_small_disconnected_zones()
 {
+    // debugging tip: change the feature to something like lava that will be
+    // very noticeable.
+    // TODO: make even more agressive, up to ~25?
     _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
-                                       _dgn_square_is_passable, 4);
+                                       _dgn_square_is_passable,
+                                       _dgn_square_is_boring,
+                                       10);
 }
 
 static void _fixup_hell_stairs()
