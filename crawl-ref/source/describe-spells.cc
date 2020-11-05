@@ -483,10 +483,13 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
-static string _effect_string(spell_type spell, const monster_info *mon_owner,
-                             int hd)
+static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
-    if (hd <= 0)
+    if (!mon_owner)
+        return "";
+
+    const int hd = mon_owner->spell_hd();
+    if (!hd)
         return "";
 
     if (testbits(get_spell_flags(spell), spflag::MR_check))
@@ -494,7 +497,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner,
         // MR chances only make sense vs a player
         if (!crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
-            || mon_owner->attitude != ATT_FRIENDLY)
+            || mon_owner->attitude != ATT_FRIENDLY
 #endif
             )
         {
@@ -568,13 +571,13 @@ static void _describe_book(const spellbook_contents &book,
                                             ? entry->second : ' ';
 
         const string range_str = _range_string(spell, mon_owner, hd);
-        const string effect_str = _effect_string(spell, mon_owner, hd);
+        const string effect_str = _effect_string(spell, mon_owner);
 
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
         const int chop_len = 29 - effect_len - range_len - effect_range_space;
-        
+
         string spell_name = spell_title(spell);
         if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR
             && chop_len < (int)spell_name.length())
