@@ -555,7 +555,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_9_rooms
 ORIENT:  float
-TAGS:    extra luniq_staircase no_monster_gen decor
+TAGS:    extra luniq_staircase no_monster_gen decor transparent
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  2
 # Room contents
@@ -2614,6 +2614,7 @@ ENDMAP
 #
 # (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
 NAME:   grunt_twist_and_shout
+TAGS:   transparent
 ORIENT: centre
 DEPTH:  Depths, Zot, !Zot:$
 PLACE:  Depths:$
@@ -6337,6 +6338,7 @@ ENDMAP
 
 NAME:   minmay_ornate_pinched
 DEPTH:  D:8-, !D:$, Depths, !Depths:$
+TAGS:   transparent
 ORIENT: float
 SUBST:  0 = 0., 9 = 99.
 SUBST:  x : x:7 c:1 v:1 b:1

@@ -4985,6 +4985,8 @@ wwwccccccccccccc
 ww
 ENDMAP
 
+# TODO: this can be hard to place because the boundaries are not passable;
+# maybe add some dead space as a buffer?
 NAME:    kennysheep_island_fort
 TAGS:    no_pool_fixup
 DEPTH:   D:8-, Depths:2-, !D:$, !Depths:$
