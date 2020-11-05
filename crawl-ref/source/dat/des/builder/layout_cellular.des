@@ -569,13 +569,13 @@ TAGS:   no_rotate no_vmirror no_hmirror
   end
 
   local material_pairs = {
-    { outer = 'n', inner = 'l', weight = 5 },
-    { outer = 'n', inner = 'W', weight = 5 },
-    { outer = 'n', inner = 'w', weight = 5 },
-    { outer = 'W', inner = 'w', weight = 2 },
-    { outer = 'l', inner = 'l', weight = 1 },
-    { outer = '1', inner = 'w', weight = 1 },
-    { outer = '1', inner = 'W', weight = 1 },
+    { outer = 'n', inner = 'L', weight = 5 },
+    { outer = 'n', inner = 'y', weight = 5 },
+    { outer = 'n', inner = 'z', weight = 5 },
+    { outer = 'W', inner = 'z', weight = 2 },
+    { outer = 'l', inner = 'L', weight = 1 },
+    { outer = '1', inner = 'z', weight = 1 },
+    { outer = '1', inner = 'y', weight = 1 },
     { outer = 'w', inner = 't', weight = 1 },
     { outer = 'W', inner = 't', weight = 1 },
     { outer = 'b', inner = 'b', weight = 1 },
@@ -660,6 +660,16 @@ TAGS:   no_rotate no_vmirror no_hmirror
       end
     end
   end
+  -- mark all inner lava/water features as no_tele_into. This is overkill,
+  -- in case some rooms are accessible (e.g. with out material plants).
+  -- As far as I can tell doors never place for these blocks, so that's not
+  -- an issue. Also mark shallow water as opaque, to avoid vetoes on
+  -- connectivity.
+  kprop("Lyz = no_tele_into")
+  kmask("y = opaque")
+  kfeat("L = l")
+  kfeat("y = W")
+  kfeat("z = w")
 
   -- This shouldn't be needed once everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')
