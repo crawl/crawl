@@ -160,8 +160,8 @@ public:
     int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
     dungeon_feature_type feature_at(const coord_def &c);
-    bool is_exit(const coord_def &c);
-    bool is_space(const coord_def &c);
+    bool is_exit(const coord_def &c) const;
+    bool is_space(const coord_def &c) const;
 };
 
 class vault_place_iterator
@@ -170,6 +170,7 @@ public:
     vault_place_iterator(const vault_placement &vp);
     operator bool () const;
     coord_def operator * () const;
+    coord_def vault_pos() const;
     const coord_def *operator -> () const;
     vault_place_iterator &operator ++ ();
     vault_place_iterator operator ++ (int);
