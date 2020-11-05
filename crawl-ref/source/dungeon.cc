@@ -1109,10 +1109,12 @@ static void _fixup_pandemonium_stairs()
     }
 }
 
-static void _mask_vault(const vault_placement &place, unsigned mask)
+static void _mask_vault(const vault_placement &place, unsigned mask,
+                        function<bool(const coord_def &)> skip_fun = nullptr)
 {
     for (vault_place_iterator vi(place); vi; ++vi)
-        env.level_map_mask(*vi) |= mask;
+        if (!skip_fun || !skip_fun(vi.vault_pos())) // alert: `skip_fun` takes vault coords
+            env.level_map_mask(*vi) |= mask;
 }
 
 static void _dgn_apply_map_index(const vault_placement &place, int map_index)
@@ -1156,7 +1158,15 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         if (place.map.has_tag("passable"))
             _mask_vault(place, MMT_PASSABLE);
         else if (!transparent)
-            _mask_vault(place, MMT_OPAQUE);
+        {
+            // mask everything except for any marked vault exits as opaque.
+            // (If there's some use for opaque exits, this would be possible
+            // to do with an explicit mask -- but this may lead to vault
+            // placements where e.g. an exit leads to a wall. With one exit,
+            // it may lead to isolated opaque vaults.)
+            _mask_vault(place, MMT_OPAQUE,
+                [&place](const coord_def &c) { return place.is_exit(c); });
+        }
     }
 
     // Find tags matching properties.
@@ -6955,6 +6965,8 @@ int vault_placement::connect(bool spotty) const
 // the code path in apply_grid; but actual modifications to the level
 // are so intertwined with that code path it would be actually quite messy
 // to try and avoid the duplication.
+// TODO: this should be const, but a lot of mapdef stuff is not properly
+// marked for this
 dungeon_feature_type vault_placement::feature_at(const coord_def &c)
 {
     // Can't check outside bounds of vault
@@ -6971,7 +6983,7 @@ dungeon_feature_type vault_placement::feature_at(const coord_def &c)
     return _vault_inspect(*this, feat, mapsp);
 }
 
-bool vault_placement::is_space(const coord_def &c)
+bool vault_placement::is_space(const coord_def &c) const
 {
     // Can't check outside bounds of vault
     if (size.zero() || c.x > size.x || c.y > size.y)
@@ -6980,7 +6992,7 @@ bool vault_placement::is_space(const coord_def &c)
     const int feat = map.map.glyph(c);
     return feat == ' ';
 }
-bool vault_placement::is_exit(const coord_def &c)
+bool vault_placement::is_exit(const coord_def &c) const
 {
     // Can't check outside bounds of vault
     if (size.zero() || c.x > size.x || c.y > size.y)
@@ -7124,6 +7136,11 @@ coord_def vault_place_iterator::operator * () const
 const coord_def *vault_place_iterator::operator -> () const
 {
     return &pos;
+}
+
+coord_def vault_place_iterator::vault_pos() const
+{
+    return pos - tl;
 }
 
 vault_place_iterator &vault_place_iterator::operator ++ ()
