@@ -1648,12 +1648,6 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 
         const int strength = ((pow + 100) / 20) / (range*range);
 
-        monster* mons = ai->as_monster();
-        if(ai->is_monster() && !mons->stasis()
-            && !mons->is_stationary() && !is_sanctuary(mons->pos()))
-        {
-            mons->add_ench(mon_enchant(ENCH_HELD, 0, &you, 1));
-        }
         affected = true;
         _attract_actor(agent, *ai, pos, pow, strength);
     }
@@ -1677,7 +1671,7 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
         if(!mons->stasis()
             && !mons->is_stationary() && !is_sanctuary(mons->pos()))
         {
-            mons->add_ench(mon_enchant(ENCH_HELD, 0, &you, 1));
+            mons->add_ench(mon_enchant(ENCH_WHIRLWIND_PINNED, 0, &you, 1));
         }
     }
     mprf("Gravity reorients around %s.",
