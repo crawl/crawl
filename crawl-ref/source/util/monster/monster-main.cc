@@ -927,6 +927,7 @@ int main(int argc, char* argv[])
                     monsterattacks += "(swoop)";
                     break;
                 case AF_ACID:
+                case AF_REACH_TONGUE:
                     monsterattacks +=
                         colour(YELLOW, damage_flavour("acid", "7d3"));
                     break;
@@ -1052,12 +1053,12 @@ int main(int argc, char* argv[])
                 case AF_PLAIN:
                 case AF_REACH:
                 case AF_REACH_STING:
-                case AF_REACH_TONGUE:
                     break;
 #if TAG_MAJOR_VERSION == 34
                 case AF_DISEASE:
                 case AF_PLAGUE:
                 case AF_STEAL_FOOD:
+                case AF_HUNGER:
                 case AF_POISON_MEDIUM:
                 case AF_POISON_NASTY:
                 case AF_POISON_STR:
