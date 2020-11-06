@@ -307,6 +307,9 @@ bool builder(bool enable_random_maps)
 #if defined(DEBUG_VETO_RESUME) && defined(WIZARD)
             else if (is_wizard_travel_target(level_id::current()))
             {
+                // TODO: as-is, this has no way to look at vetos on D:1. You
+                // can manually force this by adding `|| env.absdepth0 == 0` to
+                // the condition above.
                 mprf(MSGCH_ERROR, "Builder paused after veto; use &ctrl-r to resume.");
                 // reset global state preemptively; otherwise wizard reload will
                 // quickly deviate from the seed
@@ -329,6 +332,25 @@ bool builder(bool enable_random_maps)
                                         env.item[i].name(DESC_PLAIN).c_str());
                         init_item(i);
                     }
+
+                // Remove any portal entrances after a veto; otherwise they
+                // will generate in the pregen code immediately, and can mess
+                // up continuing on with the seed. Leave something behind so
+                // that you can see where it was supposed to go.
+                // This will still usually trigger the announcements, etc, and
+                // possibly the flavor tile for the entrance.
+                for (rectangle_iterator ri(0); ri; ++ri)
+                {
+                    dungeon_feature_type feat = env.grid(*ri);
+                    if (feat_is_portal_entrance(feat) && !feature_mimic_at(*ri))
+                    {
+                        level_id whither = stair_destination(feat, "", false);
+                        dprf("    Removing portal entrance to %s at %d,%d",
+                                whither.describe().c_str(), (*ri).x, (*ri).y);
+                        env.grid(*ri) = DNGN_STONE_ARCH;
+                    }
+                }
+                update_portal_entrances();
 
                 return true;
             }
