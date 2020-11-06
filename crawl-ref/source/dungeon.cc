@@ -835,7 +835,7 @@ static bool _dgn_square_is_boring(const coord_def &c)
     // ignore vault squares by the same algorithm as _dgn_square_is_passable,
     // but in this case find only floor squares.
     const dungeon_feature_type feat = env.grid(c);
-    return feat_has_solid_floor(feat)
+    return (feat_has_solid_floor(feat) || feat_is_door(feat))
         && (env.level_map_mask(c) & MMT_PASSABLE
             || !(env.level_map_mask(c) & MMT_OPAQUE));
 }
