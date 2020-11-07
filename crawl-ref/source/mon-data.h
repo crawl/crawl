@@ -174,7 +174,7 @@ static monsterentry mondata[] =
 },
 
 // Axed monsters.
-// AXED_MON(MONS_MOTHER_IN_LAW)
+// AXED_MON(MONS_AXE_MURDERER)
 #if TAG_MAJOR_VERSION == 34
     AXED_MON(MONS_BUMBLEBEE, "bumblebee")
     AXED_MON(MONS_WOOD_GOLEM, "wood golem")
