@@ -1914,7 +1914,7 @@ NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Swamp") then
 MONS:   goliath frog / tyrant leech
 MONS:   hydra / alligator / swamp dragon
-MONS:   devouring swarm band
+MONS:   bunyip
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Elf") then
