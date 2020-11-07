@@ -307,6 +307,9 @@ mon_energy_usage mons_energy(const monster& mon);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster& mon, bool known = false);
 
+bool monster_class_flies(monster_type mc);
+bool monster_inherently_flies(const monster &mons);
+
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
 bool mons_class_fast_regen(monster_type mc);

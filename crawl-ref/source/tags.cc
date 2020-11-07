@@ -6797,6 +6797,9 @@ void unmarshallMonster(reader &th, monster& m)
     {
         m.xp_tracking = XP_VAULT;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_SETPOLY)
+        init_poly_set(&m);
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)

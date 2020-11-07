@@ -253,6 +253,7 @@ enum tag_minor_version
     TAG_MINOR_MERGE_VETOES,        // Merge veto tags in vaults
     TAG_MINOR_APPENDAGE,           // Change beastly appendage
     TAG_MINOR_REALLY_UNSTACK_EVOKERS, // Unstack all evokers
+    TAG_MINOR_SETPOLY,             // Despoiler polymorph wands
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

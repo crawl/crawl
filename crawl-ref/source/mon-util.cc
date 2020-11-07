@@ -105,6 +105,20 @@ static int _mons_exp_mod(monster_type mclass);
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
+bool monster_class_flies(monster_type mc)
+{
+    return mons_class_flag(mc, M_FLIES);
+}
+
+bool monster_inherently_flies(const monster &mons)
+{
+    // check both so spectral humans and zombified dragons both fly
+    return monster_class_flies(mons.type)
+        || monster_class_flies(mons_base_type(mons))
+        || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
+        || mons.has_facet(BF_BAT);
+}
+
 static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
     if (feat_is_watery(grid))

@@ -1263,34 +1263,51 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
-    vector<string> descs;
     const int mr = mi.res_magic();
     if (mr == MAG_IMMUNE)
-        descs.push_back("magic immune");
-    else if (hitfunc && !hitfunc->affects_monster(mi))
-        descs.push_back("not susceptible");
-    // Polymorph has a special effect on ugly things and shapeshifters that
-    // does not require passing an MR check.
-    else if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH
-             && (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING
-                 || mi.is(MB_SHAPESHIFTER)))
+        return vector<string>{"magic immune"};
+    if (hitfunc && !hitfunc->affects_monster(mi))
+        return vector<string>{"not susceptible"};
+    vector<string> descs;
+    if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH)
     {
-        descs.push_back(make_stringf("will change %s",
-                                     mi.is(MB_SHAPESHIFTER) ? "shape"
-                                     /* ugly things */      : "colour"));
+        // Polymorph has a special effect on ugly things and shapeshifters that
+        // does not require passing an MR check.
+        if (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING)
+            return vector<string>{"will change colour"};
+        if (mi.is(MB_SHAPESHIFTER))
+            return vector<string>{"will change shape"};
+        if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
+            descs.push_back("will probably split");
+
+        // list out the normal poly set
+        if (!mi.props.exists(POLY_SET_KEY))
+            return vector<string>{"not susceptible"};
+        const CrawlVector &set = mi.props[POLY_SET_KEY].get_vector();
+        if (set.size() <= 0)
+            return vector<string>{"not susceptible"};
+        string target_names = "will become ";
+        // XXX: use comma_separated_line here?
+        for (int i = 0; i < set.size(); i++)
+        {
+            const monster_type mc = (monster_type)set[i].get_int();
+            if (i != 0)
+                target_names += (i == set.size() - 1) ? ", or " : ", ";
+            target_names += mons_type_name(mc, DESC_A);
+        }
+        descs.push_back(target_names);
     }
-    else
-    {
+
 #if TAG_MAJOR_VERSION == 34
-        const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
+    const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
                                    : pow;
 #else
-        UNUSED(evoked);
-        const int adj_pow = pow;
+    UNUSED(evoked);
+    const int adj_pow = pow;
 #endif
-        const int success = hex_success_chance(mr, adj_pow, 100);
-        descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
-    }
+    const int success = hex_success_chance(mr, adj_pow, 100);
+    descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
+
     return descs;
 }
 

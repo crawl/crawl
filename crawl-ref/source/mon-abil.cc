@@ -666,7 +666,7 @@ bool slime_creature_polymorph(monster& slime, poly_power_type power)
         }
     }
 
-    return monster_polymorph(&slime, RANDOM_MONSTER, power);
+    return monster_polymorph(&slime, RANDOM_POLYMORPH_MONSTER, power);
 }
 
 static bool _starcursed_split(monster* mon)

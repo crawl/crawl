@@ -748,6 +748,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mon)
         return nullptr;
 
+    init_poly_set(mon);
+
     if (mg.props.exists(MAP_KEY))
         mon->set_originating_map(mg.props[MAP_KEY].get_string());
 
