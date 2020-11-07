@@ -6248,6 +6248,21 @@ static spell_type _fixup_soh_breath(monster_type mtyp)
             return SPELL_SERPENT_OF_HELL_TAR_BREATH;
     }
 }
+
+static bool _need_poly_refresh(const monster &mon)
+{
+    if (!mon.props.exists(POLY_SET_KEY))
+        return true;
+    const CrawlVector &set = mon.props[POLY_SET_KEY].get_vector();
+    for (int poly_mon : set)
+    {
+        const monster_type mc = (monster_type)poly_mon;
+        // removed monster
+        if (mc == MONS_PROGRAM_BUG || mons_species(mc) == MONS_PROGRAM_BUG)
+            return true;
+    }
+    return false;
+}
 #endif
 
 static void _tag_read_level_items(reader &th)
@@ -6798,7 +6813,7 @@ void unmarshallMonster(reader &th, monster& m)
         m.xp_tracking = XP_VAULT;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_SETPOLY)
+    if (th.getMinorVersion() < TAG_MINOR_SETPOLY || _need_poly_refresh(m))
         init_poly_set(&m);
 #endif
 
