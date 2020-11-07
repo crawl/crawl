@@ -915,7 +915,7 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
     if (you.has_hydra_multi_attack()) {
-        _update_int(force_full, c.has_hydra_multi_attack, you.has_hydra_multi_attack(), "has_hydra_multi_attack");
+        _update_int(force_full, c.has_hydra_multi_attack, (int)you.has_hydra_multi_attack(), "has_hydra_multi_attack");
     }
     else {
         _update_int(force_full, c.has_hydra_multi_attack, -1, "has_hydra_multi_attack");
