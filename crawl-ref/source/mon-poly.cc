@@ -509,7 +509,8 @@ void init_poly_set(monster *mons)
 
 static monster_type _poly_from_set(monster *mons)
 {
-    ASSERT(mons->props.exists(POLY_SET_KEY));
+    if (!mons->props.exists(POLY_SET_KEY))
+        return MONS_NO_MONSTER;
     const CrawlVector &set = mons->props[POLY_SET_KEY];
     if (set.size() <= 0)
         return MONS_NO_MONSTER;
