@@ -107,6 +107,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 2 (Lemuel)
 NAME:   hellmouth_2
+TAGS:   transparent
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen transparent
@@ -148,6 +149,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
+TAGS:   transparent
 ORIENT: float
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater / smoke demon

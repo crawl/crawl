@@ -40,7 +40,12 @@
 #  and thus failed an implicit accesibility validation of some
 #  sort.  Taking out transparent solved the problem.
 #
-
+# advil: I've readded transparent, in combination with explicit
+# opacity on the aquariums. This vault does have a lot of
+# trouble placing, but lack of transparent was contributing as
+# much as anything else. One challenge is that it's highly
+# likely that many of the serial vaults will break a level into
+# multiple zones. This might do better as some kind of layout?
 
 # These vaults do not generate randomly.  They are too weird.
 default-depth:
@@ -60,6 +65,7 @@ function init_aquarium(e)
   e.tags('no_monster_gen')
   e.tags('no_item_gen')
   e.tags('no_trap_gen')
+  e.tags('transparent')
   if dgn.persist.aquarium_serial_pool_size == 0 then
     e.subst('D : x')
     e.subst('E : x')
@@ -73,14 +79,19 @@ function init_aquarium(e)
     e.subst('E : w')
     nothing_weight = 200
   end
+  e.kmask('w = opaque')
   e.kprop('w = no_tele_into')
   e.kprop('w = no_jiyva')
+  e.kmask('_ = opaque')
   e.kprop('_ = no_tele_into')
   e.kprop('_ = no_jiyva')
+  e.kmask('W = opaque')
   e.kprop('W = no_tele_into')
   e.kprop('W = no_jiyva')
+  e.kmask('l = opaque')
   e.kprop('l = no_tele_into')
   e.kprop('l = no_jiyva')
+  e.kmask('! = opaque')
   e.kprop('! = no_tele_into')
   e.kprop('! = no_jiyva')
 
@@ -318,7 +329,7 @@ KPROP:   . = no_tele_into
 MAP
  xDD
  xDDw
-.xDDwm
+@xDDwm
  xDDw
  xDD
 ENDMAP

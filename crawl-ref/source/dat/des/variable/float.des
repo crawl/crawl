@@ -789,7 +789,7 @@ ENDMAP
 # This is replaced by infiniplex_staircase_pool_lava for low levels
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   D, !D:$, Lair, Swamp
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
@@ -814,7 +814,7 @@ ENDMAP
 #    There are a few small changes to accout for lava being impassible.
 NAME:    infiniplex_staircase_pool_lava
 ORIENT:  float
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   Depths
 WEIGHT:  2
 SUBST:   D = ll.
@@ -9045,7 +9045,7 @@ cc```wwwcccncccwww'''cc
 ENDMAP
 
 NAME: cheibrodos_barr_body
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 DEPTH: D:4-12
 ORIENT: float
 NSUBST: " = 1:9 / 2:0 / 2=0., ; = 2:0 / 2=0.
@@ -9069,7 +9069,7 @@ MAP
 ENDMAP
 
 NAME: cheibrodos_old_hovel
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 DEPTH: D:2-4
 ORIENT: float
 KMONS: P = plant
@@ -9089,7 +9089,7 @@ MAP
 ENDMAP
 
 NAME: cheibrodos_fzero
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 DEPTH: D:5-
 ORIENT: float
 NSUBST: " = 3:0 / 3=0. / 1=9.., ` = 3:0 / 2=0. / 1=9..
