@@ -450,6 +450,8 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
 
 void init_poly_set(monster *mons)
 {
+    rng::subgenerator poly_rng;
+
     if (mons->props.exists(POLY_SET_KEY))
         return;
 
