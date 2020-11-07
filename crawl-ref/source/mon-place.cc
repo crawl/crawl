@@ -634,7 +634,7 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
     rng::subgenerator monster_rng;
-    
+
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
