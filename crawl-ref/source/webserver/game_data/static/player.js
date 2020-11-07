@@ -400,7 +400,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
         var species_god = player.species;
         
-        if (player.has_hydra_multi_attack)
+        if (player.has_hydra_multi_attack > 0)
             species_god = player.heads + "-headed " + species_god;
         if (player.god != "")
             species_god += " of " + player.god;
