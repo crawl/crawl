@@ -497,7 +497,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         // MR chances only make sense vs a player
         if (!crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
-            || mon_owner->attitude != ATT_FRIENDLY
+            || mon_owner->attitude == ATT_FRIENDLY
 #endif
             )
         {
