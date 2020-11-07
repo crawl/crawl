@@ -3808,6 +3808,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    && (you.species != SP_VAMPIRE
                        || temp && !you.vampire_alive)
                    || you.species == SP_FORMICID
+                   || you.species == SP_ANGEL
                    || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_RESIST_CORROSION:
@@ -3818,6 +3819,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.get_mutation_level(MUT_GOURMAND) > 0
                    || you.get_mutation_level(MUT_HERBIVOROUS) > 0
                    || you.species == SP_DJINNI
+                   || you.species == SP_ANGEL
                    || you.undead_state(temp);
 
         case AMU_FAITH:

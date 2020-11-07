@@ -1187,6 +1187,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             }
         }
     }
+    if (you.species == SP_ANGEL)
+    {
+        if (spell == SPELL_NECROMUTATION)
+            return "you're a holy being.";
+    }
 
     switch (spell)
     {
