@@ -1014,6 +1014,24 @@ xxt.txx
    @
 ENDMAP
 
+NAME:   nzn_hepliaklqana_mist_gate
+DEPTH:  D:2-, Lair, Depths
+TAGS:   temple_overflow_1 temple_overflow_hepliaklqana no_monster_gen
+KFEAT:  _ = altar_hepliaklqana
+MARKER: A = lua:fog_machine { cloud_type = "grey smoke", pow_min = 20, \
+   pow_max = 40, delay = 10, size = 1, spread_rate = -1 }
+: interest_check(_G)
+MAP
+xxxxx
+x...x
+x._.x
+x...x
+xx.xx
+ xAx
+ x.x
+  @
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -1276,6 +1294,20 @@ x.w'w.x
 xx...xx
  xx+xx
    @
+ENDMAP
+
+NAME:   nzn_makhleb_speed_demon
+TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
+DEPTH:  D:7-11
+KFEAT:  _ = altar_makhleb
+KMONS:  _ = executioner
+: interest_check(_G)
+MAP
+.....
+.ccc.
+.c_c.
+.c=c.
+..@..
 ENDMAP
 
 ### Nemelex overflow altars ###################################################
@@ -2274,6 +2306,52 @@ MAP
 .......
 ...x...
 .......
+ENDMAP
+
+### Wu Jian overflow altars ###################################################
+
+NAME:   nzn_wu_jian_council_hall
+TAGS:   temple_overflow_1 temple_overflow_wu_jian no_monster_gen no_item_gen
+DEPTH:  D:2-9
+KFEAT:  _ = altar_wu_jian
+MAP
+    x@x
+  xxx.xxx
+ xxG...Gxx
+xx.......xx
+xG..._...Gx
+xx.......xx
+ xxG...Gxx
+  xxxGxxx
+    xxx
+ENDMAP
+
+NAME:    nzn_wu_jian_contemplation
+TAGS:    temple_overflow_1 temple_overflow_wu_jian no_monster_gen no_item_gen
+TAGS:    no_pool_fixup
+DEPTH:   D:2-9
+KFEAT:   _ = altar_wu_jian
+ITEM:    mundane spear / w:2 mundane quarterstaff / w:2 mundane trident, stone
+NSUBST:  ' = 3:e / *:'
+NSUBST:  " = 4:W / *:'
+NSUBST:  t = 1:t / 1:d / *:-
+SUBST:   ` = '
+FTILE:   e' = floor_sand
+FTILE:   td- = floor_grass
+COLOUR:  e' = yellow
+COLOUR:  d- = green
+MAP
+ x@x
+xx.xxxxxxxxxx
+x'`.```'``"Wx
+x```.`'``"WWx
+x'`.````"WWWx
+x`.t`'``"WWWx
+x`t_t`'`"WWWx
+x``t.'`'`"WWx
+x'`'`.``'`"Wx
+xxxxxx.xxxxxx
+     x@x
 ENDMAP
 
 ### Xom overflow altars #######################################################
@@ -3472,6 +3550,53 @@ MAP
 @+.._m$$x.O..+@
  cc..mm$x...xx
   ccccccxxxxx
+ENDMAP
+
+NAME:    nzn_overflow_gifts_of_might_and_magic
+TAGS:    temple_overflow_2 temple_overflow_trog temple_overflow_sif_muna
+TAGS:    no_item_gen no_monster_gen patrolling
+DEPTH:   D:2-10
+SHUFFLE: D1-/E2'
+COLOUR:  1- = red
+COLOUR:  2' = blue
+KFEAT:   D = altar_trog
+KFEAT:   E = altar_sif_muna
+: if you.absdepth() <= 3 then
+KMONS:   1 = gnoll ; animal skin / w:2 Terence
+KMONS:   2 = white imp / w:2 Jessica
+KITEM:   1 = mundane spear / mundane handaxe / mundane mace / mundane falchion
+KITEM:   2 = randbook owner:Sif_Muna numspells:1 slevels:1
+: elseif you.absdepth() <= 7 then
+: if crawl.random2(5) == 0 then
+KMONS:   1 = duvessa
+KMONS:   2 = dowan
+: else
+KMONS:   1 = orc warrior
+KMONS:   2 = orc wizard
+: end
+KITEM:   1 = mundane trident / mundane war axe / mundane flail /\
+         mundane long sword
+KITEM:   2 = randbook owner:Sif_Muna maxspells:2 slevels:2
+: else
+KMONS:   1 = troll
+KMONS:   2 = ynoxinul
+KITEM:   1 = mundane trident / mundane war axe / mundane morningstar /\
+         mundane scimitar
+KITEM:   2 = randbook owner:Sif_Muna maxspells:3 slevels:4
+: end
+: interest_check(_G)
+MAP
+     xx@@@x
+    xx...xx
+   xx...xxxxx
+  xx...xx-D-x
+ xx...xxx-1-x
+xx...xAx...xx
+x'2'xxx...xx
+x'E'xx...xx
+xxxxx...xx
+  xx...xx
+  x@@@xx
 ENDMAP
 
 ### Variable overflow altars ##################################################

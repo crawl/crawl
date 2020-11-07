@@ -488,6 +488,23 @@ MAP
   ....
 ENDMAP
 
+NAME:    nzn_masters_of_martial_movement
+TAGS:    no_pool_fixup no_monster_gen patrolling
+DEPTH:   D:9-12, Lair
+KFEAT:   D = altar_wu_jian
+KFEAT:   E = altar_uskayaw
+MONS:    boulder beetle
+SUBST:   W : W:50 w:40 l
+MAP
+ x...@...x
+xxW.W.W.Wxx
+.W.W.W.W.W.
+@.W.D1E.W.@
+.W.W.W.W.W.
+xxW.W.W.Wxx
+ x...@...x
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -2633,6 +2650,43 @@ xxxxxxxx.%..*..xxx
      xxxxGxHx4xxxx
      xxxxxxxxxxx
      xxxxxxxxxxx
+ENDMAP
+
+NAME:    nzn_life_drinkers
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:8-, Crypt, Vaults, Depths
+SHUFFLE: '/-
+NSUBST:  ' = 1:D / 1:E
+NSUBST:  1 = 1:1 / *:.
+KFEAT:   D = altar_makhleb
+KFEAT:   E = altar_the_shining_one
+SUBST:   A = V:50 Y
+: if you.in_branch("Vaults") then
+SUBST:   c = v
+: end
+: if you.absdepth() <= 12 then
+MONS:    vampire
+: elseif you.absdepth() <= 15 then
+MONS:    vampire mage
+: else
+MONS:    vampire knight
+: end
+MAP
+       @
+      c+c
+     cc.cc
+    cc...cc
+   cc.....cc
+  cc...1...cc
+ cc...'c-...cc
+ccA..1ccc1..Acc
+ cc...-c'...cc
+  cc...1...cc
+   cc.....cc
+    cc...cc
+     cc.cc
+      c+c
+       @
 ENDMAP
 
 ################################################################################
