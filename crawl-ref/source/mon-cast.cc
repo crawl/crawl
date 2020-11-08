@@ -6056,6 +6056,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                       "", "by the raging water");
+        foe->expose_to_element(BEAM_WATER, 2);
         return;
     }
 
