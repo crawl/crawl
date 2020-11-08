@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "mon-attitude-type.h"
+
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
 #define ELVEN_IS_ENERGIZED_KEY "elven_twin_is_energized"
@@ -69,7 +71,7 @@ bool mons_is_elven_twin(const monster* mons);
 monster* mons_find_elven_twin_of(const monster* mons);
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index);
 void elven_twin_energize(monster* mons);
-void elven_twins_pacify(monster* twin);
+void elven_twins_pacify(monster* twin, mon_attitude_type att);
 void elven_twins_unpacify(monster* twin);
 
 void hogs_to_humans();

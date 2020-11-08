@@ -3542,7 +3542,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (twin->neutral() && !twin->has_ench(ENCH_INSANE)
                                                     && !twin->strict_neutral())
     {
-        elven_twins_pacify(twin);
+        elven_twins_pacify(twin, ATT_NEUTRAL);
         return;
     }
 
@@ -3651,7 +3651,7 @@ void elven_twin_energize(monster* mons)
  *
  * @param twin    The original monster pacified.
 **/
-void elven_twins_pacify(monster* twin)
+void elven_twins_pacify(monster* twin, mon_attitude_type att)
 {
     monster* mons = mons_find_elven_twin_of(twin);
 
@@ -3659,13 +3659,13 @@ void elven_twins_pacify(monster* twin)
         return;
 
     // Don't consider already neutralised monsters.
-    if (mons->neutral())
+    if (mons->neutral() || mons->friendly())
         return;
 
-    simple_monster_message(*mons, " likewise turns neutral.");
+    simple_monster_message(*mons, att == ATT_NEUTRAL ?" likewise turns neutral.": " likewise turns friendly.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
-    mons_pacify(*mons, ATT_NEUTRAL);
+    mons_pacify(*mons, att);
 }
 
 /**

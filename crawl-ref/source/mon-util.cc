@@ -3728,7 +3728,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     if (mons_is_mons_class(&mon, MONS_PIKEL))
         pikel_band_neutralise();
     if (mons_is_elven_twin(&mon))
-        elven_twins_pacify(&mon);
+        elven_twins_pacify(&mon, att);
     if (mons_is_mons_class(&mon, MONS_KIRKE))
         hogs_to_humans();
     if (mon.type == MONS_VAULT_WARDEN)
