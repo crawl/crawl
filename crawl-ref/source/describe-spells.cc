@@ -673,22 +673,11 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
+        tiles.json_write_string("effect", _effect_string(spell, mon_owner));
+
         string range_str = _range_string(spell, mon_owner, hd);
         if (range_str.size() > 0)
             tiles.json_write_string("range_string", range_str);
-
-        if (hd > 0 && crawl_state.need_save
-#ifndef DEBUG_DIAGNOSTICS
-            && mon_owner->attitude != ATT_FRIENDLY
-#endif
-            && (get_spell_flags(spell) & spflag::MR_check))
-        {
-            if (you.immune_to_hex(spell))
-                tiles.json_write_string("hex_chance", "immune");
-            else
-                tiles.json_write_string("hex_chance",
-                        make_stringf("%d%%", hex_chance(spell, hd)));
-        }
 
 #if TAG_MAJOR_VERSION == 34
         string schools = (source_item && source_item->base_type == OBJ_RODS) ?
