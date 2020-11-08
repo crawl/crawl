@@ -1,3 +1,44 @@
+Stone Soup kimchi-1.2.3 (20201108)
+--------------------------------
+
+Bugfix Release
+--------------
+* Fixed bug where acqscrolls can be re-rollable with R keys
+* Fixed crash bugs of two-headed ogre
+* Fixed bug trog can not use a rod and wand.
+* Fixed agraphede passive that removes poison resistance from 
+  demons and holys applied as 6-star passive.
+* Fixed crash bugs such as wight's distortion weapons
+* Fixed caravan witch staff bug
+* Fixed mantis with passwall bug
+* Rage and gourmand amulet to make useless to angel
+* Fixed angels using lich forms and eldrich forms
+* Fixed 1-headed notation bug in webtiles
+* Fixed sparkborn and waterstrike interaction
+* Fixed the angel to make dowan and duvessa friendly 
+  at the same time
+* Fixed cloud Immune scarf to prevent healing cloud.
+
+Added
+----------
+* Rollback artefact,   the +6 Lehudib's crystal spear
+  {return, throwable Int+3}
+
+Changed
+----------
+* Rework Imus thea, but It is still unfinished.
+  - 0*: remove two-handed penalty 
+  - 1*: weapons can be fired like projectiles
+  - 2*: all projectiles are reflected off the wall
+  - 3*: Spectrum: Projectiles are dispersed like 
+         Dazzling spray
+  - 5*: Fragmentation. Rework to follow projectile
+         firing and without losing health.
+* Gives meliai the smite ability
+* Singularity now hits allies and slow down all thing near it.
+* Hell stairs now go down one~three floors at a time
+* Get resistance bonuses from dragon scale in dragon form.
+
 Stone Soup kimchi-1.2.1 (20201004)
 --------------------------------
 
