@@ -3899,7 +3899,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IMUS_PRISMATIC_PRISM;
     case ABIL_IMUS_FRAGMENTATION:
         return TILEG_ABILITY_IMUS_FRAGMENTATION;
-
+    case ABIL_IMUS_SPECTRUM:
+        return TILEG_ABILITY_IMUS_SPECTRUM;
     // Agraphede
     case ABIL_AGRAPHEDE_WEB:
         return TILEG_ABILITY_AGRAPHEDE_WEB;

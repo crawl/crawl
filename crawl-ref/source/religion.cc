@@ -441,20 +441,18 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Imus Thea
     { { 0, "You are unable to wear heavy armour and all kinds of shield." },
-      { 0, "You need more training to use two-handed weapon accuratively." },
       { 0, "Imus Thea will reflect ranged attaks, depending on piety.",
            "Imus Thea will no longer reflect ranged attacks.",
            "Imus Thea will reflect ranged attacks, depending on piety." },
+      { 1, "Can fire an illusory replication of weapon." },
       { 2, "All your projectiles and spells are reflected off the wall." },
-      { 2, "Can fire an illusory replication of weapon." },
       { 3, ABIL_IMUS_PRISMATIC_PRISM,
            "create prismatic prism to blind enemies",
            "create prismatic prism" },
       { 4, ABIL_IMUS_SPECTRUM,
            "copy projectiles and fire them at multiple"},
       { 5, ABIL_IMUS_FRAGMENTATION,
-           "shatter your half of health to duplicate yourself",
-           "duplicate yourself" },
+           "duplicate yourself"},
     },
 
     // Legion from beyond
@@ -3462,6 +3460,8 @@ bool player_can_join_god(god_type which_god)
             return false;
         }
     }
+    if (which_god == GOD_IMUS && (you.species == SP_FELID || you.species == SP_HYDRA))
+        return false;
 
     return _transformed_player_can_join_god(which_god);
 }

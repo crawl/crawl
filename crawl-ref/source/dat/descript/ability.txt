@@ -1126,9 +1126,15 @@ depends on your piety, and it will be shattered after 3 turns.
 %%%%
 Fragmentation ability
 
-Shatters youself to duplicate yourself. It costs half of your current HP. The
-mirror image is almost same with you and has the same spells and equipments as
+Shatters youself to duplicate yourself. The mirror image fire the same attack
+in response to your throw, or spell.
 yours.
+%%%%
+Spectrum ability
+
+During the duration of the buff, your throwing attack becomes a spread shot and 
+flies to the enemy.
+%%%%
 # The Legion from Beyond
 %%%%
 Positioning ability
