@@ -1475,7 +1475,7 @@ int actor_apply_cloud(actor *act)
     monster *mons = !player? act->as_monster() : nullptr;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
-    if (cloud.type == CLOUD_HEAL)
+    if (cloud.type == CLOUD_HEAL && act->cloud_immune() == false)
     { //special case. because this cloud is harmless
         if (player)
         {
