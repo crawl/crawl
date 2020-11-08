@@ -4812,7 +4812,7 @@ DEPTH:   D:2-, Depths, Zot, Snake, Elf, Crypt
 : grunt_ministairs_setup(_G, false)
 MAP
       @
-     xxx
+     x+x
      x.xx
 xxxxxx..xx
 x........xx

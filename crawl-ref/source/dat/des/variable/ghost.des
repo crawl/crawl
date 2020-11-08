@@ -222,6 +222,7 @@ ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
 ORIENT:  float
+KMASK:   . = !opaque
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.

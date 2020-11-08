@@ -263,7 +263,7 @@ ENDMAP
 
 NAME:    infiniplex_staircase_zigzag_1
 ORIENT:  float
-TAGS:    extra luniq_staircase decor
+TAGS:    extra luniq_staircase decor transparent
 DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
@@ -2226,7 +2226,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   nicolae_whirlpool
-TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen
+TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
 MONS:   centaur, centaur warrior
 DEPTH:  D:6-, Depths
@@ -5999,7 +5999,7 @@ ENDMAP
 # non-D branches)
 
 NAME:   grunt_deathspiral_large
-TAGS:   patrolling uniq_deathspiral
+TAGS:   patrolling uniq_deathspiral transparent
 DEPTH:  Depths, !Depths:$
 ORIENT: centre
 SHUFFLE: )]}>
@@ -6051,7 +6051,7 @@ cc..c..cc..cc...ccc+cccc..c..c...c..c
 ENDMAP
 
 NAME: grunt_deathspiral_small
-TAGS: patrolling uniq_deathspiral
+TAGS: patrolling uniq_deathspiral transparent
 DEPTH: Depths, !Depths:$, Crypt, !Crypt:$, \
        Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
        Zot, !Zot:$
@@ -7574,6 +7574,7 @@ ENDMAP
 
 NAME:   grunt_arcs
 ORIENT: float
+TAGS:   transparent
 DEPTH:  Depths
 KMONS:  0 = 0 band
 KMONS:  9 = 9 band

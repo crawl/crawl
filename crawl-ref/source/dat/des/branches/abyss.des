@@ -106,11 +106,11 @@ xb.....bx
 ENDMAP
 
 NAME:    abyss_entry_glasseish
-TAGS:    nolayout_encompass transparent
+TAGS:    nolayout_encompass
 WEIGHT:  5
 : abyss_entry(_G, 'O')
 KPROP:   T = no_tele_into
-KMASK:   T = opaque
+KMASK:   .O = !opaque
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    demonic plant
