@@ -4,15 +4,85 @@
 
 이 체인지 로그 포맷은 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)를 기반으로 작성됨,
 
+
 ## [Unreleased]
 ### Added
-- 아티팩트 +6 레후딥의 수정창 {return, throwable Int+3} 복구. 베이스 무기가 수정창으로 바뀌었고, 근접이나 투척으로 둘다 사용할 수 있다. (베이스 데미지 14)
-  - Rollback artefact, the +6 Lehudib's crystal spear {return, throwable Int+3}. The base weapon has been changed to a crystal spear, and can be used both by melee weapon and projectile. (base damage 14)
 
 ### Changed
 
 
 ### Removed
+
+
+## [kimchi-1.2.3] - ~2020-11-08
+### Bug Fixed
+- 획득스크롤을 R키로 리롤가능한 버그 수정
+  - Fixed bug where acqscrolls can be re-rollable with R keys
+  
+- 투헤드오우거 장착시 발생하는 크래쉬 버그 수정
+  - Fixed crash bugs of two-headed ogre
+  
+- 트로그가 로드와 완드를 사용하지 못하는 버그 수정
+  - Fixed bug trog can not use a rod and wand
+  
+- 아그라피드의 악마, 신성 상대 독저항 감소 패시브가 6성에 적용되던 버그 수정
+  - Fixed agraphede passive that removes poison resistance from demons and holys applied as 6-star passive
+  
+- 와이트가 왜곡 무기를 사용하면 튕기는 버그 수정
+  - Fixed crash bugs such as wight's distortion weapons
+  
+- 캐러밴 마녀가 스태프를 장착하지 못하는 버그 수정
+  - Fixed caravan witch staff bug
+  
+- 맨티스가 패스월을 사용시 발생하는 타일 버그 수정
+  - Fixed mantis with passwall bug
+  
+- 광폭화와 대식가가 천사에게 필요없도록 수정
+  - Rage and gourmand amulet to make useless to angel
+  
+- 천사가 리치폼과 촉수폼을 사용가능한 버그 수정
+  - Fixed angels using lich forms and eldrich forms
+  
+- 웹타일에서 히드라로 컨큐시 1-headed라는 수식어가 붙는 버그 수정
+  - Fixed 1-headed notation bug in webtiles
+  
+- 스파크본이 워터스트라이크를 맞아도 마나가 줄어들지 않는 버그 수정
+  - Fixed sparkborn and waterstrike interaction
+  
+- 천사가 도완 듀베사를 동시에 우호화시키도록 수정
+  - Fixed the angel to make dowan and duvessa friendly at the same time
+  
+- 구름 면역 스카프가 힐링클라우드를 막도록 수정
+  - Fixed cloud Immune scarf to prevent healing cloud. 
+ 
+### Added
+- 아티팩트 +6 레후딥의 수정창 {return, throwable Int+3} 복구. 베이스 무기가 수정창으로 바뀌었고, 근접이나 투척으로 둘다 사용할 수 있다. (베이스 데미지 14)
+  - Rollback artefact, the +6 Lehudib's crystal spear {return, throwable Int+3}. The base weapon has been changed to a crystal spear, and can be used both by melee weapon and projectile. (base damage 14)
+
+### Changed
+- 이머스테하 리워크. 아직 미완성임 Rework Imus thea, but It is still unfinished.
+  - 0*: 양손 패널티 삭제
+    - 0*: remove two-handed penalty 
+  - 1*: 들고 있는 무기를 투사체처럼 발사 가능 (1마나)
+    - 1*: weapons can be fired like projectiles (1 mana)
+  - 2*: 모든 투사체가 벽에 반사됨
+    - 2*: all projectiles are reflected off the wall
+  - 3*: 스펙트럼: 투사체가 다즐링 스프레이와 같이 분산가능해짐
+    - 3*: Spectrum: Projectiles are dispersed like Dazzling spray
+  - 5*: 분산: 더 이상 사용시 체력을 깎지않고 투사체에 반응하여 똑같은 투사체를 발사하도록 리워크
+    - 5*: Fragmentation. Rework to follow projectile firing and without losing health.
+    
+- 멜리아이에게 스마이트 능력 부여
+  - Gives meliai the smite ability
+  
+- 특이점은 이제 피아식별을 하지않고 근처의 모든 것을 느리게 한다
+  - Singularity now hits allies and slow down all thing near it.
+  
+- 지옥 계단은 이제 한번에 1~3칸씩 내려감
+  - Hell stairs now go down one~three floors at a time
+  
+- 용갑옷을 입고 용폼을 사용하면 해당 갑옷의 저항을 획득함
+  - Get resistance bonuses from dragon scale in dragon form.
 
 ## [kimchi-1.2] - ~2020-10-04
 ### Added
@@ -477,7 +547,8 @@
 - 헤일스톰추가 Added Hailstorm
 - 냉기술사의 기본책은 이제 예전버전과 최신버전을 고를 수 있음 Ice elementalist chooses old or new spell set.
   
-[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.2.0...HEAD  
+[Unreleased]: https://github.com/kimjoy2002/crawl/compare/kimchi-1.2.3...HEAD  
+[kimchi-1.2.3]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.2.3
 [kimchi-1.2]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.2.0
 [kimchi-1.1]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.1.1
 [kimchi-1.0]: https://github.com/kimjoy2002/crawl/tree/kimchi-1.0.1
