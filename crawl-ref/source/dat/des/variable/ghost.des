@@ -44,20 +44,14 @@ end
 
 function wrathful_weapon(class, quality)
     local egos
+    -- Only the egos Trog gifts, using equal weights for good_item but giving
+    -- the more desireable antimagic brand for randarts, which are trying to be
+    -- better quality.
     if quality == "good_item" then
-        -- No egos that Trog hates (pain) or that don't occur on mundane
-        -- weapons, like chaos.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
-                ["flaming"] = 10, ["venom"] = 10, ["protection"] = 10,
-                ["electrocution"] = 5, ["vampirism"] = 5, ["holy_wrath"] = 5,
-                ["draining"] = 5, ["distortion"] = 5, ["speed"] = 2}
+        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["flaming"] = 10}
     elseif quality == "randart" then
-        -- Allow chaos and make weights more favourable for better brands.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
-                ["flaming"] = 10, ["vampirism"] = 10, ["draining"] = 10,
-                ["electrocution"] = 10, ["protection"] = 5, ["venom"] = 5,
-                ["holy_wrath"] = 5, ["distortion"] = 5, ["speed"] = 4,
-                ["chaos"] = 4}
+        -- Increased chance for antimagic.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["flaming"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end
