@@ -104,7 +104,7 @@ Branches, Environment
 ---------------------
 * Swamp's levels are now smaller, and many weak monsters no longer appear.
 * Crimson and shadow imps are now much less common in the Dungeon. White imps
-  and ufetubi take their place. 
+  and ufetubi take their place.
 * Shadows and wights no longer appear in the Crypt spawn list, replaced with
   flying skulls, necromancers, and wraiths.
 * Spider is now quiet.
