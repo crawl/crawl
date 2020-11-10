@@ -345,14 +345,25 @@ static bool _feat_is_blocking_door(const dungeon_feature_type grid)
 }
 
 // Returns true if the feature type "grid" is a closed door which autotravel
-// will not pass through.
+// will not pass through. Print a message if no game time has passed since the
+// player pressed (say) "o", so that there is some response.
 // This should only be used for the choice to open the door itself.
 static bool _feat_is_blocking_door_strict(const dungeon_feature_type grid)
 {
-    if (Options.travel_open_doors == travel_open_doors_type::_open)
-        return feat_is_runed(grid);
-    else
-        return feat_is_closed_door(grid);
+    if (Options.travel_open_doors == travel_open_doors_type::_open
+        ? !feat_is_runed(grid) : !feat_is_closed_door(grid))
+    {
+        return false;
+    }
+
+    if (you.elapsed_time == you.elapsed_time_at_last_input)
+    {
+        string barrier;
+        if (feat_is_runed(grid)) barrier = "unopened runed door";
+        else barrier = "unopened door";
+        mpr("Could not " + you.running.runmode_name() + ", " + barrier + ".");
+    }
+    return true;
 }
 
 /*
