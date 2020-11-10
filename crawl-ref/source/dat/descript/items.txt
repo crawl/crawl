@@ -690,7 +690,7 @@ fire, cold, electricity, poison, and acid.
 %%%%
 potion of attraction
 
-A potion which makes the drinker attract monsters, pulling them quickly closer.
+A potion which makes the drinker attract enemies, pulling them quickly closer.
 %%%%
 quad damage
 

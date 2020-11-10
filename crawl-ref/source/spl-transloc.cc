@@ -1417,7 +1417,7 @@ void attract_monsters()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!_can_beckon(**mi))
+        if (!_can_beckon(**mi) || mi->friendly())
             continue;
 
         const int orig_dist = grid_distance(you.pos(), mi->pos());

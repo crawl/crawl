@@ -751,7 +751,7 @@ Your control over your magic has been sapped.
 %%%%
 Attr status
 
-Monsters are magically pulled toward you.
+Enemies are magically pulled toward you.
 %%%%
 Zot status
 
