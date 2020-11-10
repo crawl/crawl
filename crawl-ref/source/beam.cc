@@ -2708,11 +2708,7 @@ void bolt::internal_ouch(int dam)
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (monst && (monst->type == MONS_BALLISTOMYCETE_SPORE
-                       || monst->type == MONS_BALL_LIGHTNING
-                       || monst->type == MONS_FULMINANT_PRISM
-                       || monst->type == MONS_BENNU // death flames
-                       ))
+    else if (monst && (mons_blows_up(*monst) || monst->type == MONS_BENNU))
     {
         ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
