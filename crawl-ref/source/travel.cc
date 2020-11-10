@@ -1481,6 +1481,7 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
 void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
+        && (!ignore_hostile || point_distance[c.x][c.y] > 0)
         && is_greed_inducing_square(c)
         && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
