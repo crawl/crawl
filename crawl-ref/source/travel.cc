@@ -129,7 +129,9 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
+#ifdef DEBUG_DIAGNOSTICS
 //#define DEBUG_TRAVEL
+#endif
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
