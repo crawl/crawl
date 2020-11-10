@@ -1585,7 +1585,10 @@ static void _experience_check()
 
     handle_real_time();
     msg::stream << "Play time: " << make_time_string(you.real_time())
-                << " (" << you.num_turns << " turns)"
+                << " (" << you.num_turns << " turns)."
+                << endl
+                << "Zot will find you in " << turns_until_zot() << " turns"
+                << " if you stay in this branch and explore no new floors."
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
