@@ -988,9 +988,15 @@ auto_switch = false
         weapon when attacking in melee, as long as the one you are wielding
         and the one you switch to are both in slot 'a' or 'b'.
 
-travel_open_doors = true
-        If this is set to false, autoexplore/travel will not open doors,
-        instead stopping in front of them.
+travel_open_doors = (avoid | approach | open)
+        Change how autoexplore/travel interact with closed doors.
+           avoid = If they can explore (or reach their destination) without
+                   opening doors, they will do. If not, the stop by a closed
+                   door.
+        approach = They walk up to a door if it's on their route, and stop in
+                   front of it.
+            open = They open any closed doors in their path. (default)
+        This does not affect runed door, which they always avoid.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.

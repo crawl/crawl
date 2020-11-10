@@ -1110,9 +1110,7 @@ void move_player_action(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors || !you.running)
-        && !attacking
-        && feat_is_closed_door(env.grid(targ)))
+    if (!attacking && feat_is_closed_door(env.grid(targ)))
     {
         open_door_action(move);
         move.reset();

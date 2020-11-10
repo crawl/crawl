@@ -20,6 +20,7 @@
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
 #include "tag-pref.h"
+#include "travel-open-doors-type.h"
 
 using std::vector;
 
@@ -232,7 +233,7 @@ public:
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
-    bool        travel_open_doors;     // open doors while exploring
+    travel_open_doors_type travel_open_doors; // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
