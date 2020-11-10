@@ -55,11 +55,41 @@ static int option_autopick(lua_State *ls, const char */*name*/, void */*data*/,
     return 1;
 }
 
+static int option_travel_open_doors(lua_State *ls, const char *name,
+                                    void *data, bool get)
+{
+    if (get)
+    {
+#define X(s, i) \
+        if (travel_open_doors_type::_ ## s == \
+            *((travel_open_doors_type*)(data))) \
+        { \
+            lua_pushstring(ls, #s); \
+        } \
+        else
+
+        TRAVEL_OPEN_DOORS_LIST
+        {} // We've covered the whole enum, so don't need a default case.
+#undef X
+        return 1;
+    }
+    else
+    {
+        if (lua_isstring(ls, 3))
+        {
+            const string s = string(name) + "=" + string(lua_tostring(ls, 3));
+            Options.read_option_line(s);
+        }
+        return 0;
+    }
+}
+
 static option_handler handlers[] =
 {
     // Boolean options come first
     { "autoswitch",    &Options.auto_switch, option_hboolean },
-    { "travel_open_doors",    &Options.travel_open_doors, option_hboolean },
+    { "travel_open_doors", &Options.travel_open_doors,
+                           option_travel_open_doors},
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },

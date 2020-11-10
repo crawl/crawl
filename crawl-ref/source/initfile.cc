@@ -156,7 +156,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(easy_quit_item_prompts,
                            { "easy_quit_item_prompts", "easy_quit_item_lists" },
                            true),
-        new BoolGameOption(SIMPLE_NAME(travel_open_doors), true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -1063,6 +1062,7 @@ void game_options::reset_options()
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
+    travel_open_doors      = travel_open_doors_type::_open;
 
     user_note_prefix       = "";
 
@@ -2698,6 +2698,18 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = confirm_butcher_type::never;
         else if (field == "auto")
             confirm_butcher = confirm_butcher_type::normal;
+    }
+
+    else if (key == "travel_open_doors")
+    {
+#define X(s, i) \
+        if (field == #s) \
+            travel_open_doors = travel_open_doors_type::_ ## s; \
+        else
+
+        TRAVEL_OPEN_DOORS_LIST // See travel-open-doors-type.h for options.
+        report_error("Bad travel_open_doors value: %s", field.c_str());
+#undef X
     }
     else if (key == "lua_file" && runscript)
     {
