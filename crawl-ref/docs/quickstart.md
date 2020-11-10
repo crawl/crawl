@@ -37,9 +37,9 @@ weapons. I suggest an axe (axes are fun).
 
 Now you are in the game. The game screen has three parts:
  - the Map takes up the upper left part of the screen. In its very centre is
-   the `@` sign which represents You. The coloured parts of the Map are the parts
-   you can see, while places which you have visited before but cannot currently
-   see are shown in grey.
+   the `@` sign which represents You. The coloured parts of the Map are the
+   parts you can see, while places which you have visited before but cannot
+   currently see are shown in grey.
  - the Message box is the large part of the screen below the map. It describes
    events as they happen and asks you questions from time to time.
  - the Stats area (to the right of the Map) contains various indicators of
@@ -77,30 +77,30 @@ There are several different types of items:
    command. Some weapons are cursed and cannot be un-wielded without the use of
    magic.
 
- - **Armour** (`[`). Wear it, or take it off, with the `W` (Wear) command. Heavier
-   armours give more protection, but may hamper your ability to fight, dodge,
-   and cast spells. These can also be cursed.
+ - **Armour** (`[`). Wear it, or take it off, with the `W` (Wear) command.
+   Heavier armours give more protection, but may hamper your ability to fight,
+   dodge, and cast spells. These can also be cursed.
 
  - **Ammunition** (which has the `(` sign). Throw it with `f` and `F` (fire).
    Stones, tomahawks and javelins are meant to be thrown by hand; other
    missiles need an appropriate launcher to be wielded (e.g. arrows are only
    effective when shot with a bow).
 
- - **Wands** (`/`), **Scrolls** (`?`) and **Potions** (`!`) can be very valuable, but have
-   limited uses (scrolls and potions can only be used once each, wands contain
-   only a certain number of charges). Wands are e`V`oked, scrolls are `r`ead
-   and potions are `q`uaffed. Unfortunately, you won't at first know what a
-   scroll or potion does; it will only be described by its physical appearance.
-   But once you have used, for example, a potion of curing, you will in future
-   recognise all potions of curing.
+ - **Wands** (`/`), **Scrolls** (`?`) and **Potions** (`!`) can be very
+   valuable, but have limited uses (scrolls and potions can only be used once
+   each, wands contain only a certain number of charges). Wands are e`V`oked,
+   scrolls are `r`ead and potions are `q`uaffed. Unfortunately, you won't at
+   first know what a scroll or potion does; it will only be described by its
+   physical appearance. But once you have used, for example, a potion of curing,
+   you will in the future recognise all potions of curing.
 
- - **Rings** (`=`) and **Amulets** (`"`) provide various mostly-helpful effects. They are
-   put on with `P` (put on) and can be removed with `R`. They can, like
+ - **Rings** (`=`) and **Amulets** (`"`) provide various mostly-helpful effects.
+   They are put on with `P` (put on) and can be removed with `R`. They can, like
    weapons, be cursed.
 
- - **Food** (`%`) is vital to your survival. Eat it with the `e` (eat) command when
-   hungry. Monsters' corpses, also marked as `%`, can be eaten if chopped up (the `c`
-   command), though not all of them are edible.
+ - **Food** (`%`) is vital to your survival. Eat it with the `e` (eat) command
+   when hungry. Monsters' corpses, also marked as `%`, can be eaten if chopped
+   up (the `c` command), though not all of them are edible.
 
  - **Money** (`$`) can be used to buy stuff in shops.
 
