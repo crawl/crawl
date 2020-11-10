@@ -46,6 +46,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
+#include "travel-open-doors-type.h"
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
@@ -1096,9 +1097,9 @@ void move_player_action(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors || !you.running)
-        && !attacking
-        && feat_is_closed_door(env.grid(targ)))
+    if ((Options.travel_open_doors == travel_open_doors_type::open
+             || !you.running)
+        && !attacking && feat_is_closed_door(env.grid(targ)))
     {
         open_door_action(move);
         move.reset();

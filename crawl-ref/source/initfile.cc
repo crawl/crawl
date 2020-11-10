@@ -156,7 +156,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(easy_quit_item_prompts,
                            { "easy_quit_item_prompts", "easy_quit_item_lists" },
                            true),
-        new BoolGameOption(SIMPLE_NAME(travel_open_doors), true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -305,6 +304,13 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+        new MultipleChoiceGameOption<travel_open_doors_type>(
+            SIMPLE_NAME(travel_open_doors), travel_open_doors_type::open,
+            {{"avoid", travel_open_doors_type::avoid},
+             {"approach", travel_open_doors_type::approach},
+             {"open", travel_open_doors_type::open},
+             {"false", travel_open_doors_type::_false},
+             {"true", travel_open_doors_type::_true}}),
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
