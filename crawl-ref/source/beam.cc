@@ -405,7 +405,6 @@ struct zap_info
     bool is_enchantment;
     beam_type flavour;
     dungeon_char_type glyph;
-    bool always_obvious;
     bool can_beam;
     bool is_explosion;
     int hit_loudness;
@@ -499,7 +498,6 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     pbolt.real_flavour   = zinfo->flavour;
     pbolt.colour         = zinfo->colour;
     pbolt.glyph          = dchar_glyph(zinfo->glyph);
-    pbolt.obvious_effect = zinfo->always_obvious;
     pbolt.pierce         = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
 

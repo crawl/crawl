@@ -118,7 +118,9 @@ struct bolt
 #endif
 
     // OUTPUT parameters (tracing, ID)
-    bool obvious_effect = false; // did an 'obvious' effect happen?
+    bool obvious_effect = false; // is this a non-enchantment, or did it already
+                                 // show some effect or message? (Otherwise, we'll
+                                 // print the canned 'nothing happened.)
 
     bool seen = false;          // Has player seen the beam?
     bool heard = false;         // Has the player heard the beam?
