@@ -1,5 +1,8 @@
 #pragma once
 
+#include "coord-def.h"
+#include "macros.h"
+
 enum circle_type
 {
     C_CIRCLE,      // circle specified by pre-squared radius

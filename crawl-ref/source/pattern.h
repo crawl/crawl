@@ -1,5 +1,10 @@
 #pragma once
 
+#include <cstring>
+#include <string>
+
+using std::string;
+
 class pattern_match
 {
 public:

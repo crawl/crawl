@@ -1,6 +1,12 @@
 #pragma once
 
+#include <string>
+
+#include "coord-def.h"
+#include "defines.h"
 #include "tag-version.h"
+
+using std::string;
 
 struct monster_info;
 

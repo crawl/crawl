@@ -5,6 +5,8 @@
 
 #pragma once
 
+struct item_def;
+
 // aut / rot_time_factor = units on corpse "special" property
 #define ROT_TIME_FACTOR 20
 

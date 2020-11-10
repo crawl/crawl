@@ -5,7 +5,13 @@
 
 #pragma once
 
+#include <cstdint>
+#include <string>
+
 #include "artefact-prop-type.h"
+#include "defines.h"
+#include "item-def.h"
+#include "object-class-type.h"
 #include "unique-item-status-type.h"
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
@@ -18,6 +24,7 @@
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
 
+class actor;
 struct bolt;
 
 enum unrand_flag_type
@@ -88,7 +95,7 @@ unique_item_status_type get_unique_item_status(int unrand_index);
 void set_unique_item_status(const item_def& item,
                             unique_item_status_type status);
 
-string get_artefact_base_name(const item_def &item, bool terse = false);
+std::string get_artefact_base_name(const item_def &item, bool terse = false);
 string get_artefact_name(const item_def &item, bool force_known = false);
 
 void set_artefact_name(item_def &item, const string &name);

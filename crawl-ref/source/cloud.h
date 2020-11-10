@@ -5,6 +5,12 @@
 
 #pragma once
 
+#include "cloud-type.h"
+#include "coord-def.h"
+#include "externs.h"
+#include "kill-category.h"
+#include "killer-type.h"
+
 struct cloud_struct
 {
     coord_def     pos;

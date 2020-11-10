@@ -1,5 +1,7 @@
 #pragma once
 
+class monster;
+
 void mons_att_changed(monster* mons);
 
 void fedhas_neutralise(monster* mons);

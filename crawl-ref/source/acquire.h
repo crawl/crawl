@@ -5,7 +5,9 @@
 
 #pragma once
 
+#include "coord-def.h"
 #include "item-prop-enum.h"
+#include "object-class-type.h"
 
 bool acquirement_menu();
 

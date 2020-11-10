@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include "coord-def.h"
+#include "externs.h"
+
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false,
                       const coord_def& from = INVALID_COORD,

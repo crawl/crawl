@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include "coord-def.h"
+
+class monster;
+
 // Note: find_ray relies on the fact that 2*OPC_HALF == OPC_OPAQUE.
 // On the other hand, losight tracks this explicitly.
 enum opacity_type

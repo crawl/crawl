@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tags.h"
 extern "C" {
 #include <lua.h>
 #include <lauxlib.h>
@@ -14,7 +15,10 @@ extern "C" {
 #include <vector>
 
 #include "maybe-bool.h"
+#include "pattern.h"
 
+using std::map;
+using std::string;
 using std::vector;
 
 class CLua;

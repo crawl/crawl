@@ -6,9 +6,13 @@
 #pragma once
 
 #include "coord-circle.h"
+#include "defines.h"
+#include "dungeon-feature-type.h"
+#include "fixedarray.h"
 #include "los-type.h"
 #include "losparam.h"
 
+class actor;
 class circle_def;
 struct ray_def;
 

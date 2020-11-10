@@ -6,6 +6,9 @@
 #pragma once
 
 #include "enum.h"
+#include "item-def.h"
+#include "killer-type.h"
+#include "monster-type.h"
 
 class level_id;
 class monster;

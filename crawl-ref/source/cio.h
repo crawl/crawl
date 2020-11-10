@@ -6,15 +6,21 @@
 #pragma once
 
 #include <cctype>
+#include <list>
 #include <string>
 #include <vector>
 
+#include "coord-def.h"
+#include "defines.h"
 #include "enum.h"
 #include "KeymapContext.h"
+#include "libconsole.h"
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
+
+using std::list;
 
 enum keyfun_action
 {

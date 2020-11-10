@@ -6,9 +6,10 @@
 #pragma once
 
 #include <cstdio>
+#include <string>
 
 void init_crash_handler();
-string crash_signal_info();
+std::string crash_signal_info();
 void write_stack_trace(FILE* file);
 void call_gdb(FILE *file);
 void disable_other_crashes();

@@ -10,6 +10,8 @@
 #include <cstring>
 #include <vector>
 
+#include "debug.h"
+
 using std::vector;
 
 template <class TYPE, int SIZE> class FixedVector

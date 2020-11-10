@@ -1,3 +1,5 @@
 #pragma once
 
-string branch_data_json();
+#include <string>
+
+std::string branch_data_json();

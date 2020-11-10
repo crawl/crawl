@@ -9,9 +9,12 @@
 #include <string>
 #include <vector>
 
+#include "branch-type.h"
 #include "command-type.h"
 #include "daction-type.h"
+#include "dungeon-feature-type.h"
 #include "exclude.h"
+#include "item-def.h"
 #include "travel-defs.h"
 
 class reader;

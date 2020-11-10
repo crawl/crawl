@@ -1,8 +1,13 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
+#include "coord-def.h"
+#include "defines.h"
+
 using std::vector;
+using std::string;
 
 coord_def random_in_bounds();
 

@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include "coord-def.h"
+#include "defines.h"
+#include "level-id.h"
+
 // When shifting areas in the abyss, shift the square containing player LOS
 // plus a little extra so that the player won't be disoriented by taking a
 // step backward after an abyss shift.

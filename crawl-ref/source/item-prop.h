@@ -5,14 +5,18 @@
 
 #pragma once
 
+#include <cstdint>
 #include <set>
 
 #include "equipment-type.h"
+#include "item-def.h"
 #include "item-prop-enum.h"
+#include "object-class-type.h"
 #include "reach-type.h"
 #include "size-type.h"
 #include "tag-version.h"
 
+class actor;
 struct bolt;
 
 void init_properties();

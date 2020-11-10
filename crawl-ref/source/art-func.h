@@ -23,11 +23,13 @@
 #define ART_FUNC_H
 
 #include "areas.h"         // For silenced() and invalidate_agrid()
+#include "art-enum.h"
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "bloodspatter.h"  // For Leech
 #include "cloud.h"         // For robe of clouds' thunder and salamander's flame
 #include "coordit.h"       // For distance_iterator()
+#include "database.h"
 #include "death-curse.h"   // For the Scythe of Curses
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
@@ -35,14 +37,17 @@
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "god-conduct.h"   // did_god_conduct
 #include "god-passive.h"   // passive_t::want_curses
-#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "items.h"
 #include "message.h"
-#include "monster.h"
+#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
+#include "monster.h"
 #include "nearby-danger.h" // For Zhor
 #include "player.h"
 #include "player-stats.h"
+#include "religion.h"
+#include "shout.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
@@ -58,6 +63,8 @@
 #define SS_WELCOME_KEY "ss_welcome"
 // similarly, for the majin-bo
 #define MB_WELCOME_KEY "mb_welcome"
+
+class actor;
 
 /*******************
  * Helper functions.

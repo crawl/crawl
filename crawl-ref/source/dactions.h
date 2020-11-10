@@ -3,6 +3,8 @@
 #include "daction-type.h"
 #include "travel.h"
 
+class monster;
+
 void add_daction(daction_type act);
 void catchup_dactions();
 void update_daction_counters(LevelInfo *lev);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "coord-circle.h"
+#include "defines.h"
 #include "los-type.h"
 
 #include <vector>

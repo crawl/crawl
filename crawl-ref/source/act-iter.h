@@ -5,7 +5,11 @@
 
 #pragma once
 
+#include "coord-def.h"
 #include "los-type.h"
+
+class actor;
+class monster;
 
 class actor_near_iterator
 {

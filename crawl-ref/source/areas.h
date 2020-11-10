@@ -1,5 +1,6 @@
 #pragma once
 
+#include "coord-def.h"
 #include "tag-version.h"
 
 enum class area_centre_type

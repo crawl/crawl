@@ -5,9 +5,16 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 
+#include "skill-type.h"
+#include "monster-type.h"
+
+using std::string;
 using std::vector;
+
+class actor;
 
 monster_type debug_prompt_for_monster();
 skill_type debug_prompt_for_skill(const char *prompt);

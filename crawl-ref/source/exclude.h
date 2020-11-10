@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "defines.h"
 #include "los-def.h"
 
 using std::vector;
