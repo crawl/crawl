@@ -7,6 +7,7 @@
 
 #include "describe-spells.h"
 
+#include "colour.h"
 #include "delay.h"
 #include "describe.h"
 #include "english.h"
@@ -505,6 +506,33 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
     return mon_owner.hd;
 }
 
+static colour_t _spell_colour(spell_type spell)
+{
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return COL_UNKNOWN;
+    return zap_colour(zap);
+}
+
+static string _colourize(string base, colour_t col)
+{
+    if (col < NUM_TERM_COLOURS)
+    {
+        const string col_name = colour_to_str(col);
+        return make_stringf("<%s>%s</%s>",
+                            col_name.c_str(), base.c_str(), col_name.c_str());
+    }
+    string out = make_stringf("%c", base[0]);
+    for (int i = 1; i < (int)base.length() - 1; i++)
+    {
+        const int term_col = element_colour(col, false, you.pos());
+        const string col_name = colour_to_str(term_col);
+        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
+    }
+    out += base[base.length() - 1];
+    return out;
+}
+
 static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
     if (!mon_owner)
@@ -591,12 +619,14 @@ static void _describe_book(const spellbook_contents &book,
                                             ? entry->second : ' ';
 
         const string range_str = _range_string(spell, mon_owner, hd);
-        const string effect_str = _effect_string(spell, mon_owner);
+        string effect_str = _effect_string(spell, mon_owner);
 
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
         const int chop_len = 29 - effect_len - range_len - effect_range_space;
+
+        effect_str = _colourize(effect_str, _spell_colour(spell));
 
         string spell_name = spell_title(spell);
         if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR

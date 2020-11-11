@@ -457,6 +457,14 @@ dice_def zap_damage(zap_type z_type, int power, bool is_monster)
     return dam_calc ? (*dam_calc)(power) : dice_def(0,0);
 }
 
+colour_t zap_colour(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return BLACK;
+    return zinfo->colour;
+}
+
 int zap_power_cap(zap_type z_type)
 {
     const zap_info* zinfo = _seek_zap(z_type);
