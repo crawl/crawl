@@ -1142,6 +1142,20 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 
 }
 
+struct monster_explosion {
+    function<void(bolt&, const monster&)> prep_explode;
+    string sanct_effect;
+};
+
+static const map<monster_type, monster_explosion> explosions {
+    { MONS_BALLISTOMYCETE_SPORE, { setup_spore_explosion } },
+    { MONS_BALL_LIGHTNING, { _setup_lightning_explosion } },
+    { MONS_LURKING_HORROR, { nullptr, "torment is averted" } },
+    { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
+    { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
+    { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
+};
+
 static bool _explode_monster(monster* mons, killer_type killer,
                              bool pet_kill, bool wizard)
 {
@@ -1154,39 +1168,23 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
 
     bolt beam;
-    const int type = mons->type;
-    const char* sanct_msg = nullptr;
+    const monster_type type = mons->type;
+    string sanct_msg = "";
     actor* agent = mons;
 
-    switch (type)
+    auto it = explosions.find(type);
+    if (it != explosions.end())
     {
-    case MONS_BALLISTOMYCETE_SPORE:
-        setup_spore_explosion(beam, *mons);
-        sanct_msg    = "By Zin's power, the ballistomycete spore's explosion is "
-                       "contained.";
-        break;
-    case MONS_BALL_LIGHTNING:
-        _setup_lightning_explosion(beam, *mons);
-        sanct_msg    = "By Zin's power, the ball lightning's explosion is "
-                       "contained.";
-        break;
-    case MONS_LURKING_HORROR:
-        sanct_msg = "The lurking horror fades away harmlessly.";
-        break;
-    case MONS_FULMINANT_PRISM:
-        _setup_prism_explosion(beam, *mons);
-        sanct_msg = "By Zin's power, the prism's explosion is contained.";
-        break;
-    case MONS_BENNU:
-        _setup_bennu_explosion(beam, *mons);
-        sanct_msg = "By Zin's power, the bennu's fires are quelled.";
-        break;
-    case MONS_BLOATED_HUSK:
-        _setup_bloated_husk_explosion(beam, *mons);
-        sanct_msg    = "By Zin's power, the bloated husk's explosion is "
-                       "contained.";
-        break;
-    default:
+        const monster_explosion &explosion = it->second;
+        if (explosion.prep_explode)
+            explosion.prep_explode(beam, *mons);
+        string effect = "explosion is contained";
+        if (explosion.sanct_effect != "")
+            effect = explosion.sanct_effect;
+        sanct_msg = string("By Zin's power, ") +
+                    apostrophise(mons->name(DESC_THE)) + " " +
+                    effect + ".";
+    } else {
         if (!mons->has_ench(ENCH_INNER_FLAME))
         {
             msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
@@ -1207,7 +1205,6 @@ static bool _explode_monster(monster* mons, killer_type killer,
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "exploding inner flame";
-        break;
     }
 
     if (beam.aux_source.empty())
@@ -1235,7 +1232,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
         viewwindow();
         update_screen();
         if (is_sanctuary(mons->pos()))
-            mprf(MSGCH_GOD, "%s", sanct_msg);
+            mprf(MSGCH_GOD, "%s", sanct_msg.c_str());
         else if (type == MONS_BENNU)
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s blazes out!",
                  mons->full_name(DESC_THE).c_str());
