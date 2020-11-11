@@ -855,7 +855,10 @@ void move_player_action(coord_def move)
     {
         // Why isn't the border permarock?
         if (you.digging)
+        {
             mpr("This wall is too hard to dig through.");
+            you.digging = false;
+        }
         return;
     }
 
