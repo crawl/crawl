@@ -1344,6 +1344,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_HURL_DAMNATION:
     case SPELL_SPIT_POISON:
     case SPELL_MIASMA_BREATH:      // death drake
+    case SPELL_GHOSTLY_FIREBALL:
+    case SPELL_FLASH_FREEZE:
+    case SPELL_CRYSTAL_BOLT:
+    case SPELL_SPIT_LAVA:
+    case SPELL_HURL_SLUDGE:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1509,10 +1514,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_GHOSTLY_FIREBALL:
-        _setup_ghostly_beam(beam, power, 3);
-        break;
-
     case SPELL_DIMENSION_ANCHOR:
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
         break;
@@ -1528,14 +1529,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage     = dice_def(2, 7 + (power / 13));
         break;
 
-    case SPELL_FLASH_FREEZE:
-        beam.name     = "flash freeze";
-        beam.damage   = dice_def(3, 7 + (power / 12));
-        beam.colour   = WHITE;
-        beam.flavour  = BEAM_ICE;
-        beam.hit      = 5 + power / 3;
-        break;
-
     case SPELL_SHADOW_BOLT:
         beam.name     = "shadow bolt";
         beam.pierce   = true;
@@ -1547,24 +1540,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.colour   = MAGENTA;
         beam.flavour  = BEAM_MMISSILE;
         beam.hit      = 17 + power / 25;
-        break;
-
-    case SPELL_CRYSTAL_BOLT:
-        beam.name     = "crystal bolt";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = GREEN;
-        beam.flavour  = BEAM_CRYSTAL;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_SPIT_LAVA:
-        beam.name        = "glob of lava";
-        beam.damage      = dice_def(3, 10);
-        beam.hit         = 20;
-        beam.colour      = RED;
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.flavour     = BEAM_LAVA;
         break;
 
     case SPELL_ELECTRICAL_BOLT:
@@ -1589,14 +1564,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_THROW_BARBS:
-        beam.name        = "volley of spikes";
-        beam.aux_source  = "volley of spikes";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.hit_verb    = "skewers";
-        beam.hit         = 27;
-        beam.damage      = dice_def(2, 13);
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.colour      = LIGHTGREY;
-        beam.flavour     = BEAM_MISSILE;
         break;
 
     case SPELL_DEATH_RATTLE:
@@ -1607,15 +1576,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_DEATH_RATTLE;
         beam.foe_ratio = 30;
         beam.pierce   = true;
-        break;
-
-    case SPELL_HURL_SLUDGE:
-        beam.name     = "toxic sludge";
-        beam.colour   = LIGHTGREEN;
-        beam.hit      = 20 + power / 15;
-        beam.damage   = dice_def(3, 7 + mons->get_hit_dice() / 2);
-        beam.flavour  = BEAM_POISON_ARROW;
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         break;
 
     // Special behaviour handled in _mons_upheaval
