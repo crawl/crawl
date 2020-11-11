@@ -1156,6 +1156,12 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
 };
 
+// When this monster dies, does it explode?
+bool mon_explodes_on_death(monster_type mc)
+{
+    return explosions.find(mc) != explosions.end();
+}
+
 static bool _explode_monster(monster* mons, killer_type killer,
                              bool pet_kill, bool wizard)
 {

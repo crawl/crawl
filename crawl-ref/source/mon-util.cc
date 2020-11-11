@@ -3472,20 +3472,21 @@ bool mons_wields_two_weapons(const monster& mon)
     return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
+// When this monster reaches its target, does it do impact damage
+// and then cease to exist?
 bool mons_destroyed_on_impact(const monster& m)
 {
     return mons_is_projectile(m) || m.type == MONS_FOXFIRE;
 }
 
+// When this monster reaches its target, does it explode and then
+// cease to exist?
 bool mons_blows_up(const monster& m)
 {
-    return m.type == MONS_BALLISTOMYCETE_SPORE
-        || m.type == MONS_BALL_LIGHTNING
-        || m.type == MONS_LURKING_HORROR
-        || m.type == MONS_FULMINANT_PRISM
-        || m.type == MONS_BLOATED_HUSK;
+    return mon_explodes_on_death(m.type) && m.type != MONS_BENNU;
 }
 
+// When this monster reaches its target, does it cease to exist?
 bool mons_self_destructs(const monster& m)
 {
     return mons_blows_up(m) || mons_destroyed_on_impact(m);
