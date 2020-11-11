@@ -21,7 +21,7 @@ void aura_of_brilliance(monster* agent);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 
-dice_def waterstrike_damage(const monster &caster);
+dice_def waterstrike_damage(int spell_hd);
 dice_def resonance_strike_base_damage(const monster &caster);
 
 void flay(const monster &caster, actor &defender, int damage);

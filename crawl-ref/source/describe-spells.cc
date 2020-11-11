@@ -483,6 +483,19 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
     return make_stringf("(<%s>%d</%s>)", range_col, range, range_col);
 }
 
+static dice_def _spell_damage(spell_type spell, int hd)
+{
+    if (spell == SPELL_WATERSTRIKE)
+        return waterstrike_damage(hd);
+
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return dice_def(0,0);
+
+    const int pow = mons_power_for_hd(spell, hd);
+    return zap_damage(zap, pow, true);
+}
+
 static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
     if (!mon_owner)
@@ -508,12 +521,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return make_stringf("(%d%%)", hex_chance(spell, hd));
     }
 
-    const zap_type zap = spell_to_zap(spell);
-    if (zap == NUM_ZAPS)
-        return "";
-
-    const int pow = mons_power_for_hd(spell, hd);
-    const dice_def dam = zap_damage(zap, pow, true);
+    const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
     return make_stringf("(%dd%d)", dam.num, dam.size);
