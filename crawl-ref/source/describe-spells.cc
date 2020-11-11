@@ -533,7 +533,10 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
-    return make_stringf("(%dd%d)", dam.num, dam.size);
+    string mult = "";
+    if (spell == SPELL_MARSHLIGHT)
+        mult = "2x";
+    return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
 }
 
 /**
