@@ -12,6 +12,7 @@
 #include "item-prop.h"
 #include "los.h"
 #include "message.h"
+#include "mon-project.h"
 #include "syscalls.h"
 #include "tag-version.h"
 #include "version.h"
