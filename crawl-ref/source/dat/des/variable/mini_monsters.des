@@ -489,11 +489,11 @@ MAP
 ENDMAP
 
 NAME:    nzn_masters_of_martial_movement
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen
 DEPTH:   D:9-12, Lair
 KFEAT:   D = altar_wu_jian
 KFEAT:   E = altar_uskayaw
-MONS:    boulder beetle
+MONS:    patrolling boulder beetle
 SUBST:   W : W:50 w:40 l
 MAP
  x...@...x
@@ -505,6 +505,17 @@ xxW.W.W.Wxx
  x...@...x
 ENDMAP
 
+NAME:   nzn_sisyphean_effort
+DEPTH:  D:9-12, Lair
+MONS:   patrolling boulder beetle
+ITEM:   never_decay human corpse, potion of attraction ident:all
+MAP
+xxxxxxxxx
+@.......@
+@..d1e..@
+@.......@
+xxxxxxxxx
+ENDMAP
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -2199,6 +2210,18 @@ MAP
 ...+1m...
  ..xxx..
   .....
+ENDMAP
+
+NAME:   nzn_prometheus_bound
+PLACE:  Shoals
+MONS:   patrolling harpy
+ITEM:   never_decay demigod corpse, book of flames ident:all
+KPROP:  md = bloody
+KFEAT:  n = iron_grate
+MAP
+ 1e1
+xndnx
+ @1@
 ENDMAP
 
 ################################################################################
