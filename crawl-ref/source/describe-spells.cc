@@ -626,7 +626,8 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_range_space = effect_len && range_len ? 1 : 0;
         const int chop_len = 29 - effect_len - range_len - effect_range_space;
 
-        effect_str = _colourize(effect_str, _spell_colour(spell));
+        if (effect_len && !testbits(get_spell_flags(spell), spflag::MR_check))
+            effect_str = _colourize(effect_str, _spell_colour(spell));
 
         string spell_name = spell_title(spell);
         if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR
