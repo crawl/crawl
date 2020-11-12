@@ -22,6 +22,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
+#include "spl-damage.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
@@ -565,6 +566,12 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         if (you.immune_to_hex(spell))
             return "(immune)";
         return make_stringf("(%d%%)", hex_chance(spell, hd));
+    }
+
+    if (spell == SPELL_CHAIN_LIGHTNING)
+    {
+        const int pow = mons_power_for_hd(spell, hd);
+        return make_stringf("(%s)", desc_chain_lightning_dam(pow).c_str());
     }
 
     const dice_def dam = _spell_damage(spell, hd);
