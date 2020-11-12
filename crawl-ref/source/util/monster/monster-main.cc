@@ -248,9 +248,8 @@ static string dice_def_string(dice_def dice)
 
 static dice_def mi_calc_iood_damage(monster* mons)
 {
-    const int power =
-        stepdown_value(6 * mons->get_experience_level(), 30, 30, 200, -1);
-    return dice_def(9, power / 4);
+    const int pow = mons_power_for_hd(SPELL_IOOD, mons->get_hit_dice());
+    return iood_damage(pow, INFINITE_DISTANCE);
 }
 
 static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }

@@ -17,6 +17,7 @@
 #include "menu.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-project.h" // iood_damage
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "religion.h"
 #include "shopping.h"
@@ -486,14 +487,22 @@ static string _range_string(const spell_type &spell, const monster_info *mon_own
 
 static dice_def _spell_damage(spell_type spell, int hd)
 {
-    if (spell == SPELL_WATERSTRIKE)
-        return waterstrike_damage(hd);
+    const int pow = mons_power_for_hd(spell, hd);
+
+    switch (spell)
+    {
+        case SPELL_WATERSTRIKE:
+            return waterstrike_damage(hd);
+        case SPELL_IOOD:
+            return iood_damage(pow, INFINITE_DISTANCE);
+        default:
+            break;
+    }
 
     const zap_type zap = spell_to_zap(spell);
     if (zap == NUM_ZAPS)
         return dice_def(0,0);
 
-    const int pow = mons_power_for_hd(spell, hd);
     return zap_damage(zap, pow, true);
 }
 

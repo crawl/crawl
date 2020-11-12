@@ -279,6 +279,14 @@ static bool _iood_shielded(monster& mon, actor &victim)
     return pro_block >= con_block;
 }
 
+dice_def iood_damage(int pow, int dist)
+{
+    pow = stepdown_value(pow, 30, 30, 200, -1);
+    if (dist < 4)
+        pow = pow * (dist*2+3) / 10;
+    return dice_def(9, pow / 4);
+}
+
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
@@ -314,13 +322,10 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.source_name = mon.props[IOOD_CASTER].get_string();
     beam.origin_spell = SPELL_IOOD;
 
-    int pow = mon.props[IOOD_POW].get_short();
-    pow = stepdown_value(pow, 30, 30, 200, -1);
+    const int pow = mon.props[IOOD_POW].get_short();
     const int dist = mon.props[IOOD_DIST].get_int();
     ASSERT(dist >= 0);
-    if (dist < 4)
-        pow = pow * (dist*2+3) / 10;
-    beam.damage = dice_def(9, pow / 4);
+    beam.damage = iood_damage(pow, dist);
 
     if (dist < 3)
         beam.name = "wavering " + beam.name;
