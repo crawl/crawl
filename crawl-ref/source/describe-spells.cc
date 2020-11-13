@@ -740,7 +740,10 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        tiles.json_write_string("effect", _effect_string(spell, mon_owner));
+        string effect_str = _effect_string(spell, mon_owner);
+        if (!testbits(get_spell_flags(spell), spflag::MR_check))
+            effect_str = _colourize(effect_str, _spell_colour(spell));
+        tiles.json_write_string("effect", effect_str);
 
         string range_str = _range_string(spell, mon_owner, hd);
         if (range_str.size() > 0)
