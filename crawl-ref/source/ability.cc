@@ -1577,7 +1577,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     {
         if (!_can_movement_ability(quiet))
             return false;
-        targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
+        targeter_charge tgt(&you, palentonga_charge_range());
         for (monster_near_iterator mi(&you); mi; ++mi)
             if (tgt.valid_aim(mi->pos()))
                 return true;

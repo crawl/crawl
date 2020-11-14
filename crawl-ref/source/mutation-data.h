@@ -892,12 +892,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLL, 0, 1, mutflag::good, true,
+{ MUT_ROLL, 8, 3, mutflag::good, true,
   "roll",
 
-  {"You can roll at foes to attack.", "", ""},
-  {"", "", ""},
-  {"", "", ""},
+  {"You can roll at nearby foes to attack.",
+   "You can roll at foes to attack.",
+   "You can roll a great distance at foes to attack."},
+
+  {"",
+   "You feel you can roll further.",
+   "You feel you can roll even further."},
+
+  {"",
+   "You can no longer roll as far.",
+   "You can no longer roll as far."},
 },
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,

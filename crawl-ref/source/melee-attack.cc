@@ -1441,7 +1441,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
     // Palentonga rolling charge bonus
     if (roll_dist > 0) {
         // + 1/3rd base per distance rolled, up to double at dist 3.
-        damage += damage * roll_dist / 3;
+        const int extra_dam = damage * roll_dist / 3;
+        damage += extra_dam > damage ? damage : extra_dam;
     }
 
     // not additive, statues are supposed to be bad with tiny toothpicks but

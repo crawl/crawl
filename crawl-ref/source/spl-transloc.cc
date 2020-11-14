@@ -508,6 +508,11 @@ static void _charge_cloud_trail(const coord_def pos)
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
+int palentonga_charge_range()
+{
+    return 3 + you.get_mutation_level(MUT_ROLL);
+}
+
 /**
  * Attempt to charge the player to a target of their choosing.
  *
@@ -523,8 +528,8 @@ spret palentonga_charge(bool fail)
         return spret::abort;
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
-    if (!_find_charge_target(target_path, PALENTONGA_CHARGE_RANGE, &tgt))
+    targeter_charge tgt(&you, palentonga_charge_range());
+    if (!_find_charge_target(target_path, palentonga_charge_range(), &tgt))
         return spret::abort;
 
     fail_check();
