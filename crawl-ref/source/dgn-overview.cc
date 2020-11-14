@@ -1084,23 +1084,13 @@ void unmarshallUniqueAnnotations(reader& inf)
 */
 bool connected_branch_can_exist(branch_type br)
 {
-    static const set<branch_type> lair_branches = set<branch_type>{
-        BRANCH_SNAKE,
-        BRANCH_SHOALS,
-        BRANCH_SPIDER,
-        BRANCH_SWAMP
-    };
-    if (lair_branches.find(br) == lair_branches.end())
-        return true;
-
-    int br_count = 0;
-    for (branch_type lair_br : lair_branches)
+    if (br == BRANCH_SPIDER && stair_level.count(BRANCH_SNAKE)
+        || br == BRANCH_SNAKE && stair_level.count(BRANCH_SPIDER)
+        || br == BRANCH_SWAMP && stair_level.count(BRANCH_SHOALS)
+        || br == BRANCH_SHOALS && stair_level.count(BRANCH_SWAMP))
     {
-        if (!stair_level.count(lair_br))
-            continue;
-        if (lair_br == br)
-            return true;
-        br_count++;
+        return false;
     }
-    return br_count < 2;
+
+    return true;
 }
