@@ -32,7 +32,7 @@
 --    involving water, or CLEAR tiles, etc.) and need further debugging.
 
 local basic_usage = [=[
-Usage: util/fake_pty ./crawl -script placement.lua (<maps_to_test>|-all) [-count <n>] [-des <des_file>] [-fill] [-dump] [-force]
+Usage: util/fake_pty ./crawl -script placement.lua (<maps_to_test>|-all) [-count <n>] [-des <des_file>] [-fill] [-dump] [-log] [-force]
     Vault placement testing script. Places a vault in an empty level and test
     connectivity. A vault will fail if fails to place, or if it breaks
     connectivity. This script cannot handle all types of maps, e.g. encompass
@@ -42,8 +42,10 @@ Usage: util/fake_pty ./crawl -script placement.lua (<maps_to_test>|-all) [-count
     -count <n>:      the number of iterations to test. Default: 1.
     -des <des_file>: a des file to load, if not specified in dat/dlua/loadmaps.lua
     -fill:           use a filled level as the background. Useful for debugging
-                     CLEAR issues.
+                     CLEAR issues. However, minivaults will always fail.
     -dump:           write placed maps out to a file, named with the vault name
+    -log:            Append message log to dump output; requires a fulldebug
+                     build to be most useful. Entails -dump.
     -force:          place maps that would normally be skipped by this script
                      (i.e. `unrand` tagged vaults, encompass vaults, etc). This
                      will often cause errors.
@@ -105,9 +107,17 @@ local checks = one_arg(args, "-count", 1)
 -- placement-map.1, placement-map.2, etc.
 local output_to_base = "placement-"
 
-local dump = args["-dump"] ~= nil
 local force = args["-force"] ~= nil
+
+-- fill_level will fail all minivaults, because their connectivity check fails.
+-- In principle, this could be changed in maps.cc:_find_minivault_place, by only
+-- doing the _connected_minivault_place check if check_place is true, but this
+-- is a pretty worryingly low-level change; in my testing, making this change
+-- will interfere with Vaults layouts in ways that I don't understand.
 local fill_level = args["-fill"] ~= nil
+local dump = args["-dump"] ~= nil
+local builder_log = args["-log"] ~= nil
+if builder_log then dump = true end
 
 local force_skip = util.set{
     -- skip these because they will veto unless their rune has been collected.
@@ -178,30 +188,36 @@ local function generate_map(map)
         end
     end
 
-    crawl.stderr("Testing map '" .. map_to_test .."'")
+    crawl.stderr("Testing vault '" .. map_to_test .."'")
 
     debug.builder_ignore_depth(true)
     for iter_i = 1, checks do
         output_to = output_to_base .. map_to_test .. "." .. iter_i .. ".txt"
         debug.flush_map_memory()
         dgn.reset_level()
+        crawl.clear_message_store()
+        crawl.mpr("Testing vault '" .. map_to_test .. "', iteration " .. iter_i .. " of " .. checks)
         if not fill_level then
             dgn.fill_grd_area(1, 1, dgn.GXM - 2, dgn.GYM - 2, 'floor')
         end
         -- TODO: are there any issues that using these tags will hide? I'm
         -- pretty sure the rotate/mirror ones are ok, not sure about water
         dgn.tags(map, "no_rotate no_vmirror no_hmirror no_pool_fixup")
-        if not dgn.place_map(map, true, true) then
+        if not dgn.place_map(map, false, true) then
             local e = "Failed to place '" .. map_to_test .. "'"
             local last_error = dgn.last_builder_error()
             if last_error and #last_error > 0 then
               e = e .. "; last builder error: " .. last_error
             end
+            if dump then
+                -- even if the map is empty, the log could contain useful info
+                debug.dump_map(output_to, builder_log)
+            end
             assert(false, e)
         end
         local z = dgn.count_disconnected_zones()
         if dump then
-            debug.dump_map(output_to)
+            debug.dump_map(output_to, builder_log)
             crawl.message("   Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to)
         end
         if z ~= 1 then

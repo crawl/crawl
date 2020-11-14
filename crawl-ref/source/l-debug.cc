@@ -132,8 +132,9 @@ LUAFN(debug_builder_ignore_depth)
 LUAFN(debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
+    const bool builder_output = lua_toboolean(ls, pos + 1);
     if (lua_isstring(ls, pos))
-        dump_map(lua_tostring(ls, pos), true);
+        dump_map(lua_tostring(ls, pos), true, false, builder_output);
     return 0;
 }
 

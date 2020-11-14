@@ -1535,7 +1535,7 @@ string morgue_directory()
     return dir;
 }
 
-void dump_map(FILE *fp, bool debug, bool dist)
+void dump_map(FILE *fp, bool debug, bool dist, bool log)
 {
     if (debug)
     {
@@ -1633,15 +1633,22 @@ void dump_map(FILE *fp, bool debug, bool dist)
             fputc('\n', fp);
         }
     }
+
+    // for debug use in scripts, e.g. placement.lua
+    if (log)
+    {
+        string the_log = get_last_messages(NUM_STORED_MESSAGES, true);
+        fprintf(fp, "\n%s", the_log.c_str());
+    }
 }
 
-void dump_map(const char* fname, bool debug, bool dist)
+void dump_map(const char* fname, bool debug, bool dist, bool log)
 {
     FILE* fp = fopen_replace(fname);
     if (!fp)
         return;
 
-    dump_map(fp, debug, dist);
+    dump_map(fp, debug, dist, log);
 
     fclose(fp);
 }
