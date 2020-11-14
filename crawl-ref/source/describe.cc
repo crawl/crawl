@@ -2854,8 +2854,8 @@ command_type describe_item_popup(const item_def &item,
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
-    command_type action;
-    int lastch;
+    command_type action = CMD_NO_CMD;
+    int lastch; // unused??
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
