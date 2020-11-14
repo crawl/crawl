@@ -613,7 +613,7 @@ ENDMAP
 # The Storerooms
 ################################################################################
 NAME:     storerooms_1
-TAGS:     the_storerooms
+TAGS:     the_storerooms unrand
 SUBVAULT: Z : storerooms_room_a
 SUBVAULT: Y : storerooms_room_b
 SUBVAULT: T : the_temple
@@ -705,7 +705,7 @@ vvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 NAME:  equipment_1
-TAGS:  equipment_1
+TAGS:  equipment_1 unrand
 KITEM: a = dagger plus:2 ident:all not_cursed, /\
            falchion plus:2 ident:all not_cursed
 KITEM: b = hand axe plus:2 ident:all not_cursed, /\
@@ -752,7 +752,7 @@ ENDMAP
 
 
 NAME:  storerooms_room_a_1
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -770,7 +770,7 @@ G1vUUUUU
 ENDMAP
 
 NAME:  storerooms_room_a_2
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -788,7 +788,7 @@ v&v....G
 ENDMAP
 
 NAME:  storerooms_room_a_3
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -806,7 +806,7 @@ v&v..v&v
 ENDMAP
 
 NAME:  storerooms_room_a_4
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -824,7 +824,7 @@ G....v&v
 ENDMAP
 
 NAME:  storerooms_room_a_5
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -842,7 +842,7 @@ G......G
 ENDMAP
 
 NAME:  storerooms_room_a_6
-TAGS:  storerooms_room_a
+TAGS:  storerooms_room_a unrand
 SUBVAULT: U : equipment_2
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
@@ -860,7 +860,7 @@ vvvv&vvv
 ENDMAP
 
 NAME:  storerooms_room_b_1
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -876,7 +876,7 @@ MAP
 ENDMAP
 
 NAME:  storerooms_room_b_2
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -892,7 +892,7 @@ MAP
 ENDMAP
 
 NAME:  storerooms_room_b_3
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -908,7 +908,7 @@ MAP
 ENDMAP
 
 NAME:  storerooms_room_b_4
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -924,7 +924,7 @@ MAP
 ENDMAP
 
 NAME:  storerooms_room_b_5
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -940,7 +940,7 @@ v.v1v.1
 ENDMAP
 
 NAME:  storerooms_room_b_6
-TAGS:  storerooms_room_b
+TAGS:  storerooms_room_b unrand
 TILE:  v = dngn_metal_wall_cyan
 : general_setup(_G)
 : general_item_setup(_G)
@@ -957,7 +957,7 @@ ENDMAP
 
 
 NAME:    temple_room_1
-TAGS:    the_temple
+TAGS:    the_temple unrand
 KFEAT:   a = altar_ashenzari
 KFEAT:   b = altar_beogh
 KFEAT:   c = altar_cheibriados
@@ -999,7 +999,7 @@ ENDMAP
 # the Entrance Room
 ################################################################################
 NAME:    entrance_room_1
-TAGS:    the_entrance_hall
+TAGS:    the_entrance_hall unrand
 COLOUR:  v = lightgrey
 TILE:    v = wall_crypt_metal
 : general_setup(_G)
@@ -1041,7 +1041,7 @@ ENDMAP
 
 
 NAME:    main_hall_1
-TAGS:    the_main_hall
+TAGS:    the_main_hall unrand
 COLOUR:  v = lightgrey
 TILE:    v = wall_crypt_metal
 : general_setup(_G)
@@ -1091,6 +1091,7 @@ ENDMAP
 # 37
 # 27 '2', 7 '1', 3 '3'
 NAME:    metal_vault_1
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1116,6 +1117,7 @@ ENDMAP
 # 37
 # 27 '2', 7 '1', 3 '3'
 NAME:    metal_vault_2
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1141,6 +1143,7 @@ ENDMAP
 # 36
 # 27 '2', 6 '1', 3 '3'
 NAME:    metal_vault_3
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1166,6 +1169,7 @@ ENDMAP
 # 36
 # 26 '2', 7 '1', 3 '3'
 NAME:    metal_vault_4
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1191,6 +1195,7 @@ ENDMAP
 # 37
 # 28 '2', 6 '1', 3 '3'
 NAME:    metal_vault_5
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1216,6 +1221,7 @@ ENDMAP
 # 37
 # 27 '2', 7 '1', 3 '3'
 NAME:    metal_vault_6
+TAGS:    unrand
 : metal_vault_setup(_G)
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1241,6 +1247,7 @@ ENDMAP
 # 35
 # 26 '2', 6 '1', 3 '3'
 NAME:    metal_vault_7
+TAGS:    unrand
 WEIGHT:  5
 : metal_vault_setup(_G)
 : general_setup(_G)
@@ -1267,6 +1274,7 @@ ENDMAP
 # 35
 # 26 '2', 6 '1', 3 '3'
 NAME:    metal_vault_8
+TAGS:    unrand
 WEIGHT:  5
 : metal_vault_setup(_G)
 : general_setup(_G)
@@ -1297,6 +1305,7 @@ ENDMAP
 # 44
 # 17 '3', 24 '4', 3 '5'
 NAME:   steel_vault_1
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1322,6 +1331,7 @@ ENDMAP
 # 44
 # 17 '3', 24 '4', 3 '5'
 NAME:   steel_vault_2
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1348,6 +1358,7 @@ ENDMAP
 # 44
 # 17 '3', 24 '4', 3 '5'
 NAME:   steel_vault_3
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1373,6 +1384,7 @@ ENDMAP
 # 44
 # 17 '3', 24 '4', 3 '5'
 NAME:   steel_vault_4
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1398,6 +1410,7 @@ ENDMAP
 # 44
 # 16 '3', 25 '4', 3 '5'
 NAME:   steel_vault_5
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1427,6 +1440,7 @@ ENDMAP
 # 47
 # 20 '4', 27 '5'
 NAME:   crystal_vault_1
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1450,6 +1464,7 @@ ENDMAP
 # 46
 # 20 '4', 26 '5'
 NAME:   crystal_vault_2
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1474,6 +1489,7 @@ ENDMAP
 # 20 '4', 27 '5'
 NAME:   crystal_vault_3
 WEIGHT: 5
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1497,6 +1513,7 @@ ENDMAP
 # 47
 # 20 '4', 27 '5'
 NAME:   crystal_vault_4
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1521,6 +1538,7 @@ ENDMAP
 # 20 '4', 27 '5'
 NAME:   crystal_vault_5
 WEIGHT: 5
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1545,6 +1563,7 @@ ENDMAP
 # 20 '4', 27 '5'
 NAME:   crystal_vault_6
 WEIGHT: 5
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1572,6 +1591,7 @@ ENDMAP
 # 42
 # 21 '5', 21 '6'
 NAME:   iron_vault_1
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1599,6 +1619,7 @@ ENDMAP
 # 42
 # 21 '5', 21 '6'
 NAME:   iron_vault_2
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1626,6 +1647,7 @@ ENDMAP
 # 44
 # 21 '5', 23 '6'
 NAME:   iron_vault_3
+TAGS:    unrand
 WEIGHT: 5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1654,6 +1676,7 @@ ENDMAP
 # 43
 # 21 '5', 22 '6'
 NAME:   iron_vault_4
+TAGS:    unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1681,6 +1704,7 @@ ENDMAP
 # 42
 # 20 '5', 22 '6'
 NAME:   iron_vault_5
+TAGS:    unrand
 WEIGHT: 5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1713,7 +1737,7 @@ ENDMAP
 # The Armoury
 ################################################################################
 NAME:    armoury_1
-TAGS:    the_armoury
+TAGS:    the_armoury unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1736,7 +1760,7 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
 ENDMAP
 
 NAME:    armoury_2
-TAGS:    the_armoury
+TAGS:    the_armoury unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1759,7 +1783,7 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
 ENDMAP
 
 NAME:    armoury_3
-TAGS:    the_armoury
+TAGS:    the_armoury unrand
 WEIGHT:  5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1789,7 +1813,7 @@ ENDMAP
 # 25
 # 6 '4', 19 '0'
 NAME:   the_coven_1
-TAGS:   the_coven
+TAGS:   the_coven unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1815,7 +1839,7 @@ ENDMAP
 # 25
 # 6 '4', 19 '0'
 NAME:   the_coven_2
-TAGS:   the_coven
+TAGS:   the_coven unrand
 WEIGHT: 5
 : general_setup(_G)
 : general_item_setup(_G)
@@ -1842,7 +1866,7 @@ ENDMAP
 # 25
 # 6 '4', 19 '0'
 NAME:   the_coven_3
-TAGS:   the_coven
+TAGS:   the_coven unrand
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
@@ -1870,7 +1894,7 @@ ENDMAP
 # Mini-Vaults
 ################################################################################
 NAME:   mini_pit_1
-TAGS:   the_minivault
+TAGS:   the_minivault unrand
 COLOUR: v = white
 TILE:   v = wall_cobalt_stone
 : general_setup(_G)
@@ -1895,7 +1919,7 @@ vvvvvvvv
 ENDMAP
 
 NAME:   grid_room_1
-TAGS:   the_grid_vault
+TAGS:   the_grid_vault unrand
 NSUBST: + = 1:& / *:v
 COLOUR: v = white
 TILE:   v = wall_cobalt_stone
@@ -1926,7 +1950,7 @@ vvvvvvvvvv~~vvvvvvvvvv
 ENDMAP
 
 NAME:   hallway_of_sentries
-TAGS:   the_hallway_of_sentries
+TAGS:   the_hallway_of_sentries unrand
 KFEAT:  & = closed_door
 MARKER: & = lua:restrict_door()
 TILE:   v = dngn_metal_wall_cyan
@@ -1973,7 +1997,7 @@ v<v
 ENDMAP
 
 NAME:   the_vestibule_1
-TAGS:   the_vestibule
+TAGS:   the_vestibule unrand
 COLOUR: v = magenta
 TILE:   v = dngn_metal_wall_blue
 : general_setup(_G)
@@ -2005,7 +2029,7 @@ ENDMAP
 # The Silver Pit
 ################################################################################
 NAME:   silver_pit
-TAGS:   the_silver_pit
+TAGS:   the_silver_pit unrand
 KITEM:  2ABCDE = silver rune of zot
 KITEM:  1abcde = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:133
@@ -2055,7 +2079,7 @@ ENDMAP
 # The Golden Pit
 ################################################################################
 NAME:   golden_pit
-TAGS:   the_golden_pit
+TAGS:   the_golden_pit unrand
 KITEM:  2ABCD = golden rune of zot
 KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:33
@@ -2102,7 +2126,7 @@ ENDMAP
 # 65
 # ~13 '7', 13 '6', ~12 '0', 4 '5', 23 '9'
 NAME:    final_vault
-TAGS:    the_final_vault
+TAGS:    the_final_vault unrand
 KMONS:   98 = patrolling orb guardian
 KITEM:   8 = orb of zot
 SUBST:   0 = 65., 7 = 5.

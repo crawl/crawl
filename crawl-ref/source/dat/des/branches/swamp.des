@@ -56,19 +56,20 @@ ENDMAP
 NAME:   swamp_mist_pool
 TAGS:   swamp_entry no_pool_fixup transparent
 KFEAT:  O = enter_swamp
+SHUFFLE: XYZ
+SUBST: Y : YX, Z : ZX, X = W, Y = w, Z = w
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-SUBST:  '= t.., "= tw, t=ttw, w=Ww
-validate {{ return glyphs_connected("O", "@") }}
+SUBST:  '= t.., "= tw, t=ttw, A=Ww
 MAP
        @
-   't"wwt@
-  't"wwwwt'
- 't"wwwww"t'
- t"wwwOwww"t
- 't"wwwww"t'
-  't"www"t'
+   't"Ywt@
+  't"wYwXt'
+ 't"wAYXw"t'
+ t"wwAOAZw"t
+ 't"wAAZw"t'
+  't"wwZ"t'
    't"wt@
 ENDMAP
 
@@ -399,10 +400,10 @@ SUBST: T = t., W = .Ww t:5, Q = tw, f = .GTV U:5 C:5
 MAP
      tttQ..@..Qttt
     ttQQQ.....QQQtt
-tttttQQWW.....WWQQttttt
-  ttQQwWW.....WWwQQtt
-  ttQwwWW..f..WWwwQtt
-   ttwwWW.....WWwwtt
+tttttQQwW.....WwQQttttt
+  ttQQwwW.....WwwQQtt
+  ttQwwwW..f..WwwwQtt
+   ttwwwW.....Wwwwtt
    @TwwwWW...WWwwwT@
    ..WwwwWWWWWwwwW..
    T..WwwwwwwwwwW..T
@@ -949,7 +950,10 @@ DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = will-o-the-wisp
 KMONS:   2 = ball lightning
 KMONS:   3 = lightning spire
-KFEAT:   123 = deep_water
+KFEAT:   12 = deep_water
+KFEAT:   3 = shallow_water
+KMASK:   3 = opaque
+KPROP:   3 = no_tele_into
 SHUFFLE: })
 SUBST:   T = w:3 t, M = ~:4 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>
 CLEAR:   ~
@@ -1717,11 +1721,11 @@ KMONS: P = plant
 KFEAT: P = W
 NSUBST: 25 = 1:.
 MAP
-                              ttt
-                              ttt
-                          ttttttttt
-                        ttttttwwttttt
-                      tttttwwWWWWwtttt
+                              ttttttttt
+                              ttttttttt
+                          ttttttttttttt
+                        ttttttwwttttttt
+                      tttttwwWWWWwttttt
           ttt     tttttttwwWWW222WWWttt
    ttttttttttt  tttttttwWWW.........5tt
   ttttttttWWWttttttttwwWW.tt......c+ctt
@@ -1990,6 +1994,7 @@ SUBST:   1 = 111., 2 = 2., 3 = 333.
 SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
 KPROP:   ` = no_tele_into
+KMASK:   ` = opaque
 : if crawl.one_chance_in(11) then
 SUBST:   6 = .:999 6:1, OP = &
 : end
@@ -2089,7 +2094,7 @@ MAP
 --tcc.LLl.43Ll344cc.c.L4.cct-
 -tcccc4llLLlllLLl..L3Lll.Lct-
 --tcc.LllllclllllLlllllL.cct-
- --tcc3LllRcclLllRll.443cct--
+ --tcc3LllRccllllRll.443cct--
   -tccL.Lllllccclll3lcccct--
   --tccc3L2lcctccO12ccttt--
    --ttcc1Occt-tccccct----
@@ -2144,7 +2149,7 @@ MAP
      ttccwwww22YwwwwY2wctt
     ttccwww.2YwwQwwwY2wctt
    ttccww1.YwwwwwwwY2wwctt
-  ttcccwOYwwWcccWY1.wwcctt
+  ttcccwOYwWWcccWY1.wwcctt
  ttcccccwwwwcW4WwOYYcccttt
 tttccccccccccccccccccttttt
 tttttttttttttttttttttttttt

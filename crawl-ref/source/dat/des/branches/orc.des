@@ -1720,7 +1720,7 @@ MONS: nothing w:20 / fungus
 SUBST: . = ..4
 NSUBST: 3 = 5:3 / 1:I / 4:P / *:.
 SUBST: P = .4
-: if is_validating() then
+: if is_validating() or dgn.persist.grunt_orc_gardens_store == nil then
 KFEAT: A = any shop
 : else
 : kfeat("A = " .. dgn.persist.grunt_orc_gardens_store)

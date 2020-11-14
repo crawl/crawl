@@ -780,8 +780,8 @@ EWwwwwwwwWE
 EZwwDEDwwZE
 DZwwE}EwwZD
 EZwwDEDwwZE
-EWwSWwwwwWE
-!DZSSSwwZD!
+EWwZWwwwwWE
+!DZSSZwwZD!
  EDWZZZWDE
   !EEDEE!
 ENDMAP
@@ -1134,7 +1134,7 @@ ENDMAP
 # Cavepeople
 #
 NAME:   erik_cavepeople
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 DEPTH:  D:7-11
 ORIENT: float
 WEIGHT: 5
@@ -1145,7 +1145,7 @@ MONS:   Edmund / Jessica / Sigmund, Ijyb / Psyche
 SUBST:  1 = 11., 3 = 3., 4 = 34, 5 = 35
 # Guarantee two winding tunnel into the center in this mess.
 SHUFFLE: rR / sS / uU / vV / wW / yY / zZ, uU / nN
-SUBST:   rsn = . RSN = @, uUvVwWyYzZ = x
+SUBST:   rsn = ., RSN = @, uUvVwWyYzZ = x
 MAP
          xSxxxxx    xxxxxxxxxxUx
          xxssxxx    xx1xxxxxxuxx
@@ -1466,7 +1466,7 @@ SUBST:   Y=xw
 SUBST:   Z=xWw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxXW**wZxxxxxxxxxxxxxxX**XXx
+xxXW**wwxxxxxxxxxxxxxxX**XXx
 xZwWwwwZxxxxxxX33xxxxxX423Xx
 xZWww232ZxxxxX121xxxxX.13Xxx
 xZZWww2ZxxxxxX.1xxxxxw222Xxx
@@ -2683,7 +2683,7 @@ MAP
    cccccccc     cccccccc
   cc|*2...ccccccc......cc
  cc|**..2.+......cccccc.c
-  cc|*2...cccccccc    c.c
+  cc|*2...ccccccccccccc.c
 ccccccccccccccccccccccc.cc
 @...1...1........1...1...@
 ..........................
@@ -2691,7 +2691,7 @@ ccccccccccccccccccccccc.cc
 ..........................
 @...1...1........1...1...@
 cc.ccccccccccccccccccccccc
- c.c    cccccccc...2*|cc
+ c.ccccccccccccc...2*|cc
  c.cccccc......+.2..**|cc
  cc......ccccccc...2*|cc
   cccccccc     cccccccc
@@ -6376,6 +6376,7 @@ ENDMAP
 
 NAME:   minmay_split_circle
 DEPTH:  Depths, !Depths:$
+TAGS:   transparent
 ORIENT: float
 SUBST:  0 = 01., 9 = 91.
 SUBST:  c : cv b:1
@@ -6416,6 +6417,7 @@ ENDMAP
 
 NAME:   minmay_quantized_circle
 DEPTH:  Depths, !Depths:$
+TAGS:   transparent
 ORIENT: float
 SUBST:  0 = 0., 9 = 9., b : ccb, t : ttm, x : xxxxvb
 MAP
@@ -6454,6 +6456,7 @@ ENDMAP
 
 NAME:   minmay_four_partial_circles
 DEPTH:  D:8-, !D:$
+TAGS:   transparent
 ORIENT: float
 WEIGHT: 7
 SUBST:  ? : . x:8 b:1 v:1, ! : . x:2, 0 = 00.
@@ -6524,6 +6527,7 @@ ENDMAP
 
 NAME:   minmay_swirls_squares
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 999.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -6598,29 +6602,31 @@ NAME:   minmay_blocking_statues
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 99.
+KMASK:  - = !opaque
 MAP
 @cccccccccccccccccc
-.cccccccccccc99***c
-..GccG....GccGxxx*c
-.0.cc.0..0.cc.xxx*c
-...G...xx.....xxx9c
-...G...xx......0c9c
-.0.cc.0..0.cc...c0c
-..GccG....Gcc...c0c
-.ccxxcc..ccxxcc.00c
-.ccxxcc..ccxxcc.00c
-..GccG....Gcc...c0c
-.0.cc.0..0.cc...c0c
-.......xx...G..0c9c
-.......xx...G.xxx9c
-.0.cc.0..0.cc.xxx*c
-..GccG....GccGxxx*c
-.cccccccccccc99***c
+-cccccccccccc99***c
+-.GccG....GccGxxx*c
+-0.cc.0..0.cc.xxx*c
+-..G...xx.....xxx9c
+-..G...xx......0c9c
+-0.cc.0..0.cc...c0c
+-.GccG....Gcc...c0c
+-ccxxcc..ccxxcc.00c
+-ccxxcc..ccxxcc.00c
+-.GccG....Gcc...c0c
+-0.cc.0..0.cc...c0c
+-......xx...G..0c9c
+-......xx...G.xxx9c
+-0.cc.0..0.cc.xxx*c
+-.GccG....GccGxxx*c
+-cccccccccccc99***c
 @cccccccccccccccccc
 ENDMAP
 
 NAME:   minmay_flawed_box
 DEPTH:  D:6-10
+TAGS:   transparent
 ORIENT: float
 SUBST:  X = x.
 MONS:   orc wizard / nothing
@@ -6705,6 +6711,7 @@ ENDMAP
 
 NAME:   minmay_concentric_multi
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 NSUBST: A = 1:+ / *:+xx, B = 1:+ / *:+cc, C = 1:+ / *:+xx
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
@@ -6754,28 +6761,30 @@ SUBST:  9 = 9.
 : if you.absdepth() < 12 then
 SUBST:  8 = 9
 : end
+KMASK: - = !opaque
 MAP
-            .......
-          ....9x9....
-        .....ccccc.....
-      .....xxc<.>cxx.....
-    .....xxx.c.8.c.xxx.....
-  .....xxx...c...c...xxx.....
-.....xxx...F.c...c.F...xxx.....
-..9xxx.......c...c.......xxx9..
-.xxx{........+...+........}xxx.
-..9xxx.......c...c.......xxx9..
-.....xxx...F.c...c.F...xxx.....
-  .....xxx...c...c...xxx.....
-    .....xxx.c.8.c.xxx.....
-      .....xxc<.>cxx.....
-        .....ccccc.....
-          ....9x9....
-            .......
+            -------
+          ----9x9----
+        -----ccccc-----
+      -----xxc<.>cxx-----
+    -----xxx.c.8.c.xxx-----
+  -----xxx...c...c...xxx-----
+-----xxx...F.c...c.F...xxx-----
+--9xxx.......c...c.......xxx9--
+-xxx{........+...+........}xxx-
+--9xxx.......c...c.......xxx9--
+-----xxx...F.c...c.F...xxx-----
+  -----xxx...c...c...xxx-----
+    -----xxx.c.8.c.xxx-----
+      -----xxc<.>cxx-----
+        -----ccccc-----
+          ----9x9----
+            -------
 ENDMAP
 
 NAME:   minmay_octo_star
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  9 = 999.
@@ -6815,6 +6824,7 @@ ENDMAP
 
 NAME:   minmay_central_circle
 DEPTH:  Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  x : x:8 c:2, c : c:8 v:2
 SUBST:  9 = 999., 8 = 888.
@@ -6856,6 +6866,7 @@ ENDMAP
 
 NAME:   minmay_strange_plus
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 999., 8 = 888.
 MAP
@@ -6892,6 +6903,7 @@ ENDMAP
 
 NAME:   minmay_cut_squares
 DEPTH:  D:8-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -6923,6 +6935,7 @@ ENDMAP
 
 NAME:   minmay_bad_star
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9., 8 = 8.
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
@@ -6957,6 +6970,7 @@ ENDMAP
 
 NAME:   minmay_door_path
 DEPTH:  D:1-4
+TAGS:   transparent
 ORIENT: float
 SUBST:  0 = .0%
 SUBST:  ? : .GTV
@@ -6993,6 +7007,7 @@ ENDMAP
 
 NAME:   minmay_tri_box
 DEPTH:  D:8-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9.
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
@@ -7024,6 +7039,7 @@ ENDMAP
 
 NAME:   minmay_dotted_concentric_squares
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9....
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
@@ -7060,6 +7076,7 @@ ENDMAP
 
 NAME:   minmay_textured_paths
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  8 = 888., 9 = 9.
 SUBST:  ? = .:70 GTUVm<>
@@ -7096,6 +7113,7 @@ ENDMAP
 
 NAME:   minmay_distorted_concentric_squares
 DEPTH:  D:8-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9., 0 = 0.
 SUBST:  x : x:27 c:1 v:1 b:1
@@ -7160,6 +7178,7 @@ ENDMAP
 
 NAME:   minmay_curly_fans
 DEPTH:  D:8-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  9 = 9.
@@ -7187,6 +7206,7 @@ ENDMAP
 
 NAME:   minmay_crescents
 DEPTH:  D:12-, Depths
+TAGS:   transparent
 ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  G = .GTU
@@ -7298,6 +7318,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   minmay_rotating_shell
+TAGS:   transparent
 ORIENT: float
 DEPTH:  Depths
 WEIGHT: 3
@@ -7359,7 +7380,7 @@ PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 :     zot_entry_setup(_G)
-TAGS:   patrolling no_monster_gen
+TAGS:   patrolling no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
 NSUBST: 9 = 2:3 / 1:9 / *:.
 SUBST:  8 = 2, | = -
@@ -7397,7 +7418,7 @@ PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 :     zot_entry_setup(_G)
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 NSUBST: 0 = 6:1 / 2 = 1. / 2:0 / *:.
 NSUBST: 9 = 2:3 / 1:9 / *:.
 SUBST:  8 = 2, | = -
@@ -7554,7 +7575,7 @@ MAP
      xx.......xx
     xx.0..G..0.xx
    xx...xxxxx...xx
-  xx.0.xx   xx.0.xx
+  xx.0.xxxxxxx.0.xx
   x...xxxxxxxxx...x
 xxx...xxx...xxx...xxx
 @...................@
@@ -7562,7 +7583,7 @@ xG..0..G..{..G..0..Gx
 @...................@
 xxx...xxx...xxx...xxx
   x...xxxxxxxxx...x
-  xx.0.xx   xx.0.xx
+  xx.0.xxxxxxx.0.xx
    xx...xxxxx...xx
     xx.0..G..0.xx
      xx.......xx
@@ -8479,11 +8500,11 @@ MAP
      xx...........xx
      x.............x
     xx...0.xxx.0...xx
-    x.....xx xx.....x
-    x....xx   xx....+
-    x....x     x....+
-    x....xx   xx....+
-    x.....xx xx.....x
+    x.....xxxxx.....x
+    x....xxxxxxx....+
+    x....xxxxxxx....+
+    x....xxxxxxx....+
+    x.....xxxxx.....x
     xx...0.xxx.0...xx
      x.............x
   xxxxx...........xx

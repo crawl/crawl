@@ -1254,6 +1254,7 @@ NSUBST:  H = 1:X / *:x, I = 1:X / *:x, J = 1:X / *:x
 NSUBST:  K = 1:X / *:x, L = 1:X / *:x, M = 1:X / *:x
 NSUBST:  N = 1:X / *:x, O = 1:X / *:x, P = 1:X / *:x
 # Even random trimming can have weighed styles to it.
+# TODO: the z SUBST here can generate pockets that will force a veto
 SUBST:   z : ^<>, ^ = xx', < = xx''', > = x'
 SUBST:   y : XYZ, X = xx., Y = xx..., Z = x.
 SUBST:   X : %*|, % = xxx.., * = x., | = xx...
@@ -1293,11 +1294,12 @@ xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 .....................HH.II....KK.LL..CCCC....NN...............
  .""..""..""..""........II.......LL..CxxC.MM.NN.OO.....DDDDDD.
                  ....................CxxC.MM....OO.PP..DxxxxD.
-                 @"".""."".""."".""..CCCC..........PP..DxxxxD"
-                                    ...................DxxxxD"
+                 @"".""."".""."".""..CCCC..........PP..DxxxxD.
+                                    ...................DxxxxD.
                                     @."".."".""."".""..DxxxxD.
                                                       .DDDDDD.
-                                                      ...""..
+                                                      ........
+                                                      ...""...
 ENDMAP
 
 NAME: nicolae_spider_webbed_stairs
@@ -1684,8 +1686,8 @@ xc-......_WwwCC--0.---CwwwW....-"-
 xc-..j.._-WwwC--3_9__-CCwwW..0.-"-
 xc-.j.j_-"-"wC-0_0d0_--CwwW....-"-
 xc-..._-"---_+3.9ddd9-CCwwW...f-"-
-xc- j.j_-"-"wC-0_0d0--CwwwW...g-"-
-xc-. j.._"WwwC--3_9--CCwwwW..g.-"@
+xc-.j.j_-"-"wC-0_0d0--CwwwW...g-"-
+xc-..j.._"WwwC--3_9--CCwwwW..g.-"@
 xcc......_WwwCC--0_-CCwwwWW....-"-
 xcc.......WwwwCC----CwwwwW....5-"-
 xcc.......WwwwwCCCCCCwwwWW...g.-"-

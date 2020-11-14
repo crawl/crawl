@@ -2521,6 +2521,9 @@ ENDMAP
 #    from being insufficient, shows player-visible error messages) -
 #    some validator check is needed for the concept to work.
 NAME:   pan_demonic_rune_highlights
+# mark this as removed so that it doesn't get tested, remove if this ever is
+# made to work:
+TAGS:   removed
 ORIENT: float
 WEIGHT: 0
 : pan_highlights_setup(_G)
@@ -2890,11 +2893,11 @@ xp.x.....................---------------_....xXXX
 xxxx.....................---------------_.d6.xXXX
    x.xxxxxxxxxxxxxxxxx..x---------------_....xXXX
    x.x0d0x.d0x0d.x0d0x..x---------------xxxxxxXXX
-   x.x0..x0..x..0x..0x..x-------------1-x
-   x._..............._..x2-------------3x
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   x.x0..x0..x..0x..0x..x-------------1-xxxxxxXXX
+   x._..............._..x2-------------3xxxxxxXXX
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: serial_pan_fixed_disco_one

@@ -107,10 +107,9 @@ ENDMAP
 ##############################################################################
 # Hellmouth 2 (Lemuel)
 NAME:   hellmouth_2
-TAGS:   transparent
 WEIGHT: 6
 ORIENT: float
-TAGS:   no_monster_gen transparent
+TAGS:   no_monster_gen
 MONS:   crimson imp / red devil / hellwing / hell hound
 MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
 ITEM:   good_item demon blade / good_item demon whip /\
@@ -121,29 +120,30 @@ ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
+KMASK:  @' = !opaque
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "high")
 MAP
-..........................
-.......bbbbbbbbbbbb.......
-....bbbb..........bbbb....
-..bbb....llllllll....bbb..
-.bb....llllllllllll....bb.
-.b....llllllllllllll....b.
-.b....llllll??llllll....b.
-.b...?lll??.....?lll?...b.
-.b...?ll?...111...ll?...b.
-@+...?l?...11211d..l?...b.
-@+...?l?...12A21|f.l?...b.
-.b...?ll...11211d.ll?...b.
-.b...?lll?..111..lll?...b.
-.b....llll?.....llll....b.
-.b....llllll??llllll....b.
-.bb....llllllllllll....bb.
-..bbb....llllllll....bbb..
-....bbbb..........bbbb....
-.......bbbbbbbbbbbb.......
-..........................
+''''''''''''''''''''''''''
+'''''''bbbbbbbbbbbb'''''''
+''''bbbb..........bbbb''''
+''bbb....llllllll....bbb''
+'bb....llllllllllll....bb'
+'b....llllllllllllll....b'
+'b....llllll??llllll....b'
+'b...?lll??.....?lll?...b'
+'b...?ll?...111...ll?...b'
+@+...?l?...11211d..l?...b'
+@+...?l?...12A21|f.l?...b'
+'b...?ll...11211d.ll?...b'
+'b...?lll?..111..lll?...b'
+'b....llll?.....llll....b'
+'b....llllll??llllll....b'
+'bb....llllllllllll....bb'
+''bbb....llllllll....bbb''
+''''bbbb..........bbbb''''
+'''''''bbbbbbbbbbbb'''''''
+''''''''''''''''''''''''''
 ENDMAP
 
 ##############################################################################

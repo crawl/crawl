@@ -287,6 +287,10 @@ MAP
 ENDMAP
 
 # Lava Lair entry
+# TODO: this vault will veto without a path to the O tile, which lowers the
+# probability below weight 1. It would be better to not use vetoes to control
+# the probability. This vault vetos around 80-85% of the time in the
+# placement.lua test script case (completely open level)
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
@@ -318,7 +322,7 @@ MAP
 .@........wwwwww-.....
 ..-.-.-..wwwwwww.-..-.
 ..--w..wwwwwwwww-.--..
-...--w.wwwwwwww-www-..
+...--w.wwwwwwwwwwww-..
 ...wwww-wwwwwwwwww--..
 ..wwwwww--w--w2wwww..@
 ..wwwwww--....wwww---.
@@ -1209,6 +1213,7 @@ MONS:   plant / bush
 NSUBST: t = 2:t / * = t..
 SUBST:  T = t, * = **t
 KPROP:  * = no_tele_into
+KMASK:  * = opaque
 MAP
  tt@@@tt
 t.......t
@@ -3036,9 +3041,9 @@ NSUBST:  7 = 1:7 / 2 = 7. / *:.
                              .. " / merfolk skeleton w:1")
 }}
 MAP
-                xxxxxx
-          xxxxxxx5P.Pxx
-         xxP..5.5..P..xxxxxx
+                xxxxxxxxxxxxxx
+          xxxxxxx5P.Pxxxxxxxxx
+         xxP..5.5..P..xxxxxxxx
         xxP5d5.5.5P.P..xxP.xxx
        xx.5.5.5ccccccc....P..x
        x...5.ccc.d...ccc.P..xx

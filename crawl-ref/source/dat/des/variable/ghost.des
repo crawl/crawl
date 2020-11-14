@@ -100,6 +100,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
+TAGS:   transparent
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -197,21 +198,22 @@ MARKER: P = lua:transp_loc("ghost_arena_entry")
 MARKER: Q = lua:transp_dest_loc("ghost_arena_entry")
 MARKER: R = lua:transp_loc("ghost_arena_exit")
 MARKER: S = lua:transp_dest_loc("ghost_arena_exit")
+KMASK: - = !opaque
 : ghost_setup(_G)
 MAP
-  ...........
- ..nnnnnnnnn..
- .nnRD...DRnn.
- .nG.rsDsrDGn.
- .nD.sr.rsqgn.
-..n.D..D.Djen..
+  -----------
+ --nnnnnnnnn--
+ -nnRD...DRnn-
+ -nG.rsDsrDGn-
+ -nD.sr.rsqgn-
+--n.D..D.Djen--
 @Pn.O.DQD.idnS@
-..n.D..D.Dkfn..
- .nD.sr.rsphn.
- .nG.rsDsrDGn.
- .nnRD...DRnn.
- ..nnnnnnnnn..
-  ...........
+--n.D..D.Dkfn--
+ -nD.sr.rsphn-
+ -nG.rsDsrDGn-
+ -nnRD...DRnn-
+ --nnnnnnnnn--
+  -----------
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
@@ -1192,6 +1194,7 @@ ENDMAP
 
 NAME:   maelrawn_ghost_gauntlet_escape
 # Same depths where Gauntlets can place
+TAGS:   transparent
 DEPTH:  D:11-, Lair, Orc:$
 ORIENT: float
 KPROP:  x = bloody
@@ -1236,6 +1239,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
+TAGS:   transparent
 WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
@@ -1255,6 +1259,7 @@ ENDMAP
 
 # based on sewer_entry_d
 NAME:   ebering_ghost_sewer_d
+TAGS:   transparent
 ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost

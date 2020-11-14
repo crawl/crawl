@@ -33,6 +33,8 @@ DEPTH:  Coc:1-6
 COLOUR: c = blue
 MONS:   Ice Fiend, blizzard demon, ice devil, white imp
 KMONS:  H = ice statue
+KMASK:  H = opaque
+KPROP:  H = no_tele_into
 MAP
 xwww..3......
 xwwwwww..4...

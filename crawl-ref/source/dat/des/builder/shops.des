@@ -610,6 +610,7 @@ TAGS:   transparent no_pool_fixup
 KPROP:  -1wP = no_tele_into
 KMASK:  -w = no_monster_gen
 KMASK:  -1wP = no_item_gen
+KMASK:  -1wP = opaque
 MONS:   hydra
 KMONS:  P = plant
 KFEAT:  P = shallow_water

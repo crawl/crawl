@@ -1129,11 +1129,11 @@ MAP
         ccccccc
      cccc2.1.2cccc
   @@ccyycm+m+mcyycc@@
-  @..clyyl```lyylc..@
+  @..cl`yl```ly`lc..@
   c.c.```````````.c.c
  ccc.l````.c.````l.ccc
  cyl``c..`.>.`..c``lyc
- cyy``.>.`d..`d>.``yyc
+ cy```.>.`d..`d>.```yc
 cccy``.d.^~~^`...``yccc
 c3ml`````m==mm^````lm6c
 c.+``...^m999=~d..``+.c
@@ -1141,11 +1141,11 @@ c4m``c>.~=9_9=~.>c``m5c
 c.+``..d~=999m^...``+.c
 c3ml````^mm==m`````lm6c
 cccy``...`^~~^.d.``yccc
- cyy``.>d`..d`.>.``yyc
+ cy```.>d`..d`.>.```yc
  cyl``c..`.>.`..c``lyc
  ccc.l````.c.````l.ccc
   c.c.```````````.c.c
-  @..clyyl```lyylc..@
+  @..cl`yl```ly`lc..@
   @@ccyycm+m+mcyycc@@
      cccc8.7.8cccc
         ccccccc
@@ -1781,12 +1781,14 @@ MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3 / war gargoyle w:3
 MONS:    nonbase draconian w:20 / killer klown / orb of fire w:5 / \
          curse toe w:5 / ancient lich / electric golem / death cob
-SHUFFLE: ABCDEF, GH / GH / GH / HG
+SHUFFLE: EF
+SUBST:   E : .
+SHUFFLE: ABCDF, GH / GH / GH / HG
 NSUBST:  1 = 3:1 / 3:2 / 1:112 / 1:122, 0 = 3:1 / 3:2 / 1:112 / 1:122
 NSUBST:  3 = 3:3 / 3:4 / 1:334 / 1:344, 6 = 3:5 / 3:6 / 1:556 / 1:566
 SUBST:   % = $%, * = %:3 *:1, | = %:60 *:25 |:15, 1 = 1:3 .:2
 SUBST:   2 = 2:2 .:1, 3 = 3:4 .:1, 4 = 4:6 .:1, 5 = 5:6 .:1, 6 = 6:5 .:1
-SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DEFH = .
+SUBST:   A : v:4 .:1, B : v:7 .:3, C : v:1 .:4, DFH = .
 SUBST:   G : v:9 .:1, - : +., + : +:5 .:1, { : {:2 }:3 .:2
 NSUBST:  { = 1:{ / 1:( / 1:[ / 1:<, } = 1:} / 1:) / 1:] / 1:>
 SUBST:   ( = (:14 >:1 <:1 ):2, [ = [:14 >:1 <:1 ]:2, ) = ):70 >(, ] = ]:70 >[

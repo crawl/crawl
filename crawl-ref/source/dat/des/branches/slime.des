@@ -250,7 +250,7 @@ ORIENT: float
 SHUFFLE: abcd
 SUBST: ab : @, cd : .
 KPROP: f = no_tele_into
-SUBST: f = w.1
+SUBST: f = W'1
 KMASK: w = no_monster_gen
 KMASK: W = no_monster_gen
 MAP

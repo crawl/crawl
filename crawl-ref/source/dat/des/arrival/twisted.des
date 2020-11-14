@@ -267,10 +267,12 @@ ENDMAP
 
 ##############################################################################
 NAME:    dpeg_arrival_solitude
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen transparent
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   ([ = x
+# TODO: there are ways for " and ' to get to @, which seems odd. (It'll cause
+# issues if this map isn't transparent, at least.)
 SUBST:   C=., !=@
 SHUFFLE: B' / xx, V" / xx
 SUBST:   B=., '=+, V=., "=+

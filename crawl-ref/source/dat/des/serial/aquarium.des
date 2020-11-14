@@ -323,7 +323,7 @@ CHANCE:  1%
 # subvaults for possible bridge side pieces
 
 NAME:    aquarium_subvault_wall
-TAGS:    aquarium_subvault_wall
+TAGS:    aquarium_subvault_wall unrand
 KPROP:   . = no_tele_into
 : init_aquarium(_G)
 MAP
@@ -335,7 +335,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_window
-TAGS:    aquarium_subvault_window
+TAGS:    aquarium_subvault_window unrand
 : init_aquarium(_G)
 MAP
  xDD
@@ -346,7 +346,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_balcony
-TAGS:    aquarium_subvault_balcony
+TAGS:    aquarium_subvault_balcony unrand
 : init_aquarium(_G)
 MAP
  xww
@@ -357,7 +357,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_bridge
-TAGS:    aquarium_subvault_bridge
+TAGS:    aquarium_subvault_bridge unrand
 : init_aquarium(_G)
 MAP
  xww
@@ -370,7 +370,7 @@ ENDMAP
 # subvaults for small islands
 
 NAME:    aquarium_subvault_small_water
-TAGS:    aquarium_subvault_small_water no_exits
+TAGS:    aquarium_subvault_small_water no_exits unrand
 : init_aquarium(_G)
 MAP
 cmc
@@ -379,7 +379,7 @@ cmc
 ENDMAP
 
 NAME:    aquarium_subvault_small_open
-TAGS:    aquarium_subvault_small_open
+TAGS:    aquarium_subvault_small_open unrand
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
 MAP
@@ -391,7 +391,7 @@ ENDMAP
 # subvaults for large islands
 
 NAME:    aquarium_subvault_large_water
-TAGS:    aquarium_subvault_large_water no_exits
+TAGS:    aquarium_subvault_large_water no_exits unrand
 : init_aquarium(_G)
 MAP
 cmmmmmc
@@ -404,7 +404,7 @@ cmmmmmc
 ENDMAP
 
 NAME:    aquarium_subvault_large_open
-TAGS:    aquarium_subvault_large_open
+TAGS:    aquarium_subvault_large_open unrand
 SUBST:   S : .:89 0:10 9:1
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
@@ -419,7 +419,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_large_1_pool
-TAGS:    aquarium_subvault_large_1_pool
+TAGS:    aquarium_subvault_large_1_pool unrand
 SUBST:   S : .:89 0:10 9:1
 : init_aquarium(_G)
 MAP
@@ -433,7 +433,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_large_4_pools
-TAGS:    aquarium_subvault_large_4_pools
+TAGS:    aquarium_subvault_large_4_pools unrand
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
 MAP

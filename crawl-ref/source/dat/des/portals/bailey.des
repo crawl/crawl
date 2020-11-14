@@ -206,13 +206,13 @@ MAP
 .wc>...Ocw.
 .wc11111cw.
 .wcc+++ccw.
-.wwwwwwwww.
-.wwwwwwwww.
+.wwwwWwwww.
+.wwwwWwwww.
 ...........
 ENDMAP
 
 NAME: enter_bailey_5
-TAGS: transparent
+TAGS: transparent no_pool_fixup
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; boomerang ident:type q:4 | \
@@ -222,14 +222,16 @@ MONS: goblin ; boomerang ident:type q:4 | \
 MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
+SHUFFLE: ABCD
+SUBST: A : W, BCD : wW
 KMASK: wW = no_monster_gen
 MAP
 .......
-.wwwww.
+.wwDww.
 .w1>1w.
-.w.O.w.
+.C.O.A.
 .w1.1w.
-.wwwww.
+.wwBww.
 .......
 ENDMAP
 
