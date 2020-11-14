@@ -4031,7 +4031,7 @@ TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
 TAGS:  temple_overflow_generic_3
 {{
   local altarcount = get_overflow_altar_count(_G)
-  if is_validating() or altar_count == nil then
+  if is_validating() or altarcount == nil then
     altarcount = 5
   end
   nsubst("O = " .. altarcount .. ":B / *:l")
