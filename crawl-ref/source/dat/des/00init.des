@@ -1,5 +1,6 @@
 default-depth: Zot:27
 NAME:   des_cache_test
+TAGS:   unrand
 WEIGHT: 0
 {{
     -- this detects an empty des cache. It won't detect a changed des cache
