@@ -227,6 +227,8 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
                                           bool make_no_exits,
                                           const coord_def &pos = INVALID_COORD);
 
+void dgn_record_veto(const dgn_veto_exception &e);
+
 void level_clear_vault_memory();
 void run_map_epilogues();
 

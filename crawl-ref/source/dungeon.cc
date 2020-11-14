@@ -393,6 +393,21 @@ bool builder(bool enable_random_maps)
     return false;
 }
 
+void dgn_record_veto(const dgn_veto_exception &e)
+{
+    string error = make_stringf("%s: %s",
+         level_id::current().describe().c_str(), e.what());
+
+    crawl_state.last_builder_error = error;
+
+    dprf(DIAG_DNGN, "<white>VETO</white>: %s", error.c_str());
+
+#ifdef DEBUG_STATISTICS
+    mapstat_report_map_veto(e.what());
+#endif
+
+}
+
 static bool _build_level_vetoable(bool enable_random_maps)
 {
 #ifdef DEBUG_STATISTICS
@@ -404,17 +419,16 @@ static bool _build_level_vetoable(bool enable_random_maps)
     if (player_in_branch(BRANCH_TEMPLE))
         _setup_temple_altars(you.props);
 
+    crawl_state.last_builder_error = "";
+
     try
     {
         _build_dungeon_level();
     }
     catch (dgn_veto_exception& e)
     {
-        dprf(DIAG_DNGN, "<white>VETO</white>: %s: %s",
-             level_id::current().describe().c_str(), e.what());
-#ifdef DEBUG_STATISTICS
-        mapstat_report_map_veto(e.what());
-#endif
+        dgn_record_veto(e);
+
         // try not to lose any ghosts that have been placed
         save_ghosts(ghost_demon::find_ghosts(false), false);
         return false;
@@ -1286,10 +1300,11 @@ dgn_register_place(const vault_placement &place, bool register_vault)
 }
 
 static bool _dgn_ensure_vault_placed(bool vault_success,
-                                     bool disable_further_vaults)
+                                     bool disable_further_vaults,
+                                     string desc)
 {
     if (!vault_success)
-        throw dgn_veto_exception("Vault placement failure.");
+        throw dgn_veto_exception(make_stringf("Vault placement failure (%s).", desc.c_str()));
     else if (disable_further_vaults)
         use_random_maps = false;
     return vault_success;
@@ -1299,7 +1314,8 @@ static bool _ensure_vault_placed_ex(bool vault_success, const map_def *vault)
 {
     return _dgn_ensure_vault_placed(vault_success,
                                     (!vault->is_extra_vault()
-                                     && vault->orient == MAP_ENCOMPASS));
+                                     && vault->orient == MAP_ENCOMPASS),
+                                    vault->name);
 }
 
 static coord_def _find_level_feature(int feat)
@@ -2295,7 +2311,7 @@ static void _build_overflow_temples()
             dgn_map_parameters mp(vault_tag);
             if (!_dgn_ensure_vault_placed(
                     _build_secondary_vault(vault),
-                    false))
+                    false, vault->name))
             {
 #ifdef DEBUG_TEMPLES
                 mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
@@ -2773,7 +2789,7 @@ static bool _pan_level()
             find_map_by_name(you.props["force_map"].get_string());
         ASSERT(vault);
 
-        _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), false, vault->name);
         return vault->orient != MAP_ENCOMPASS;
     }
 
@@ -2812,7 +2828,7 @@ static bool _pan_level()
 
     // Every Pan level should have a primary vault.
     ASSERT(vault);
-    _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    _dgn_ensure_vault_placed(_build_primary_vault(vault), false, vault->name);
     return vault->orient != MAP_ENCOMPASS;
 }
 
@@ -3289,7 +3305,7 @@ static void _place_minivaults()
     if (you.props.exists("force_minivault")
         && (vault = find_map_by_name(you.props["force_minivault"])))
     {
-        _dgn_ensure_vault_placed(_build_secondary_vault(vault), false);
+        _dgn_ensure_vault_placed(_build_secondary_vault(vault), false, vault->name);
     }
     // Always try to place PLACE:X minivaults.
     if ((vault = random_map_for_place(level_id::current(), true)))
@@ -3344,7 +3360,7 @@ static bool _builder_normal()
     if (!vault)
         die("Couldn't pick a layout.");
 
-    _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    _dgn_ensure_vault_placed(_build_primary_vault(vault), false, vault->name);
     return true;
 }
 

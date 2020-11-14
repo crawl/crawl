@@ -15,6 +15,7 @@
 #include "files.h"
 #include "god-wrath.h"
 #include "los.h"
+#include "maps.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-cast.h"
@@ -120,6 +121,13 @@ LUAFN(debug_reveal_mimics)
 }
 
 LUAWRAP(debug_los_changed, los_changed())
+
+LUAFN(debug_builder_ignore_depth)
+{
+    const bool b = lua_toboolean(ls, 1);
+    dgn_ignore_depth(b);
+    return 0;
+}
 
 LUAFN(debug_dump_map)
 {
@@ -532,6 +540,7 @@ const struct luaL_reg debug_dlib[] =
 { "down_stairs", debug_down_stairs },
 { "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
+{ "builder_ignore_depth", debug_builder_ignore_depth },
 { "generate_level", debug_generate_level },
 { "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },

@@ -622,7 +622,10 @@ static void debug_load_map_by_name(string name, bool primary)
             dgn_make_transporters_from_markers();
         }
         else
-            mprf("Failed to place %s.", toplace->name.c_str());
+        {
+            mprf("Failed to place %s; last builder error: %s",
+                toplace->name.c_str(), crawl_state.last_builder_error.c_str());
+        }
     }
 }
 
