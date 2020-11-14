@@ -1275,6 +1275,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
+    case ABIL_IMUS_FRAGMENTATION:
         if (you.get_mutation_level(MUT_NO_LOVE))
             return ABIL_NON_ABILITY;
         else
