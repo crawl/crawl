@@ -1281,6 +1281,12 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_PIPE_RECALL:
+        if (you.get_mutation_level(MUT_NO_ARTIFICE))
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         if (you.species == SP_GNOLL)
             return ABIL_NON_ABILITY;
