@@ -24,7 +24,6 @@ aptitudes:
   dodging: 3
   stealth: 4
   shields: False
-  spellcasting: -1
   conjurations: -1
   hexes: 4
   translocations: 4

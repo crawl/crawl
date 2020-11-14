@@ -17,7 +17,6 @@ aptitudes:
   throwing: -1
   armour: False
   dodging: -1
-  spellcasting: -1
   hexes: -1
   invocations: 1
 str: 10

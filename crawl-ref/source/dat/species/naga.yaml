@@ -18,7 +18,6 @@ aptitudes:
   dodging: -2
   stealth: 5
   shields: -2
-  spellcasting: -1
   poison_magic: 3
   invocations: 1
 size: large
