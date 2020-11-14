@@ -327,7 +327,8 @@ static void _give_player_experience(int experience, killer_type killer,
     if (experience <= 0 || crawl_state.game_is_arena())
         return;
 
-    const unsigned int exp_gain = gain_exp(experience);
+    unsigned int exp_gain = 0;
+    gain_exp(experience, &exp_gain);
 
     kill_category kc =
             (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :

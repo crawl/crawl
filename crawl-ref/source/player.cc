@@ -2450,29 +2450,10 @@ static void _handle_god_wrath(int exp)
     }
 }
 
-unsigned int gain_exp(unsigned int exp_gained)
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
-        return 0;
-
-    you.experience_pool += exp_gained;
-
-    if (player_under_penance(GOD_HEPLIAKLQANA))
-        return 0; // no XP for you!
-
-    const unsigned int max_gain = (unsigned int)MAX_EXP_TOTAL - you.experience;
-    if (max_gain < exp_gained)
-        return max_gain;
-    return exp_gained;
-}
-
-void apply_exp()
-{
-    const unsigned int exp_gained = you.experience_pool;
-    if (exp_gained == 0)
         return;
-
-    you.experience_pool = 0;
 
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
@@ -2500,6 +2481,8 @@ void apply_exp()
     // handle actual experience gains,
     // i.e. XL and skills
 
+    const unsigned int old_exp = you.experience;
+
     dprf("gain_exp: %d", exp_gained);
 
     if (you.experience + exp_gained > (unsigned int)MAX_EXP_TOTAL)
@@ -2517,6 +2500,9 @@ void apply_exp()
     }
 
     level_change();
+
+    if (actual_gain != nullptr)
+        *actual_gain = you.experience - old_exp;
 }
 
 bool will_gain_life(int lev)

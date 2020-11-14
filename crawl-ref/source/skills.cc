@@ -18,7 +18,6 @@
 #include "clua.h"
 #include "describe-god.h"
 #include "evoke.h"
-#include "files.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -748,12 +747,6 @@ bool check_selected_skills()
         // did the callback do anything?
         if (skills_being_trained())
             return true;
-    }
-
-    if (crawl_state.seen_hups)
-    {
-        save_game(true, "Game saved, see you later!");
-        return false;
     }
 
     mpr("You need to enable at least one skill for training.");
