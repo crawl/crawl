@@ -49,8 +49,6 @@ item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
 item_def* place_monster_corpse(const monster& mons, bool force = false);
 
 void monster_cleanup(monster* mons);
-bool mon_explodes_on_death(monster_type mc);
-void setup_spore_explosion(bolt & beam, const monster& origin);
 void record_monster_defeat(const monster* mons, killer_type killer);
 void unawaken_vines(const monster* mons, bool quiet);
 int mummy_curse_power(monster_type type);
