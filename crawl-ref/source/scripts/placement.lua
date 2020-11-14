@@ -1,14 +1,14 @@
 -- Script for automated / bulk vault generation tests
 
 -- Use case:
-    
+
 --     ```
 --     $ util/fake_pty ./crawl -script placement.lua minmay_nonomino_d4 -count 10 -dump
 --     Testing map 'minmay_nonomino_d4'
 --         Failing vault output to: placement-minmay_nonomino_d4.10.txt
 --     script error: ./scripts/placement.lua:184: Isolated area in vault minmay_nonomino_d4 (2 zones)
 --     ```
-    
+
 --     This generates this vault on a blank level 10 times and outputs each map
 --     to a file. In this case, it failed on try 10 (which aborts) and so it
 --     stops then and points out the specific failing file to you. This file
