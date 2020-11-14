@@ -1222,7 +1222,13 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+        if (!you.recall_list.empty())
+            return ABIL_STOP_RECALL;
+        return ability;
+
     case ABIL_PIPE_RECALL:
+        if (you.get_mutation_level(MUT_NO_ARTIFICE))
+            return ABIL_NON_ABILITY;
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
         return ability;
@@ -1277,12 +1283,6 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
     case ABIL_IMUS_FRAGMENTATION:
         if (you.get_mutation_level(MUT_NO_LOVE))
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
-    case ABIL_PIPE_RECALL:
-        if (you.get_mutation_level(MUT_NO_ARTIFICE))
             return ABIL_NON_ABILITY;
         else
             return ability;
