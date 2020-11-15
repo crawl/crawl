@@ -568,6 +568,11 @@ namespace quiver
                                 && !_spell_autotarget_incompatible(spell);
         }
 
+        bool uses_mp() const override
+        {
+            return is_valid();
+        }
+
         void trigger(dist &t) override
         {
             // note: we don't do the enabled check here, because cast_a_spell
@@ -710,6 +715,9 @@ namespace quiver
         {
             return true;
         }
+
+        // TOOD: uses_mp for wand mp mutation? Because this mut no longer forces
+        // mp use, the result is somewhat weird
 
         void trigger(dist &t) override
         {
