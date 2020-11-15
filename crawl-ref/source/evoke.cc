@@ -305,7 +305,7 @@ static void _spray_lightning(int range, int power)
  *
  * @return  Whether anything happened.
  */
-static bool _lightning_rod()
+static bool _lightning_rod(dist *preselect)
 {
     if (you.confused())
     {
@@ -322,7 +322,8 @@ static bool _lightning_rod()
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
 
-    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false,
+                                                        nullptr, preselect);
 
     if (ret == spret::abort)
         return false;
@@ -862,15 +863,18 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             it.first->collide(it.second, agent, pow);
 }
 
-static bool _phial_of_floods()
+static bool _phial_of_floods(dist *target)
 {
+    // TODO: code duplication with your_spells
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
-    dist target;
+    dist target_local;
+    if (!target)
+        target = &target_local;
     bolt beam;
 
     if (you.confused())
@@ -884,11 +888,12 @@ static bool _phial_of_floods()
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
+    // TODO: this needs a custom targeter
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
     args.top_prompt = "Aim the phial where?";
 
-    if (spell_direction(target, beam, &args)
+    if (spell_direction(*target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
 #if TAG_MAJOR_VERSION == 34
@@ -908,11 +913,14 @@ static bool _phial_of_floods()
     return false;
 }
 
-static spret _phantom_mirror()
+static spret _phantom_mirror(dist *target)
 {
     bolt beam;
     monster* victim = nullptr;
-    dist spd;
+    dist target_local;
+    if (!target)
+        target = &target_local;
+
     targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
 
     direction_chooser_args args;
@@ -921,7 +929,7 @@ static spret _phantom_mirror()
     args.self = confirm_prompt_type::cancel;
     args.top_prompt = "Aiming: <white>Phantom Mirror</white>";
     args.hitfunc = &tgt;
-    if (!spell_direction(spd, beam, &args))
+    if (!spell_direction(*target, beam, &args))
         return spret::abort;
     victim = monster_at(beam.target);
     if (!victim || !you.can_see(*victim))
@@ -1308,7 +1316,13 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
-    // check xp evocable charges here?
+    if (i && is_xp_evoker(*i) && evoker_charges(i->sub_type) <= 0)
+    {
+        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
+        if (!quiet)
+            mprf("The %s is presently inert.", i->name(DESC_DBNAME).c_str());
+        return false;
+    }
 
     return true;
 }
@@ -1416,12 +1430,7 @@ bool evoke_item(int slot, dist *preselect)
 #endif
 
         case MISC_PHIAL_OF_FLOODS:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-            if (_phial_of_floods())
+            if (_phial_of_floods(preselect))
             {
                 expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
@@ -1431,11 +1440,6 @@ bool evoke_item(int slot, dist *preselect)
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_evoke_horn_of_geryon())
             {
                 expend_xp_evoker(item.sub_type);
@@ -1446,11 +1450,6 @@ bool evoke_item(int slot, dist *preselect)
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_box_of_beasts())
             {
                 expend_xp_evoker(item.sub_type);
@@ -1471,12 +1470,7 @@ bool evoke_item(int slot, dist *preselect)
 #endif
 
         case MISC_LIGHTNING_ROD:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-            if (_lightning_rod())
+            if (_lightning_rod(preselect))
             {
                 practise_evoking(1);
                 expend_xp_evoker(item.sub_type);
@@ -1496,12 +1490,7 @@ bool evoke_item(int slot, dist *preselect)
             break;
 
         case MISC_PHANTOM_MIRROR:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-            switch (_phantom_mirror())
+            switch (_phantom_mirror(preselect))
             {
                 default:
                 case spret::abort:
@@ -1524,11 +1513,6 @@ bool evoke_item(int slot, dist *preselect)
             break;
 
         case MISC_TIN_OF_TREMORSTONES:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             switch (_tremorstone())
             {
                 default:
@@ -1546,11 +1530,6 @@ bool evoke_item(int slot, dist *preselect)
             break;
 
         case MISC_CONDENSER_VANE:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             switch (_condenser())
             {
                 default:

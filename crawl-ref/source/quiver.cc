@@ -688,7 +688,7 @@ namespace quiver
         {
         }
 
-        void save(CrawlHashTable &save_target) const override; // defined below
+        virtual void save(CrawlHashTable &save_target) const override; // defined below
 
         bool equals(const action &other) const override
         {
@@ -701,7 +701,7 @@ namespace quiver
             return evoke_check(wand_slot, true);
         }
 
-        bool is_valid() const override
+        virtual bool is_valid() const override
         {
             if (wand_slot < 0 || wand_slot >= ENDOFPACK)
                 return false;
@@ -739,6 +739,11 @@ namespace quiver
             t = target; // copy back, in case they are different
         }
 
+        virtual string quiver_verb() const
+        {
+            return "Zap";
+        }
+
         virtual formatted_string quiver_description(bool short_desc) const override
         {
             ASSERT_RANGE(wand_slot, -1, ENDOFPACK);
@@ -751,7 +756,7 @@ namespace quiver
             ASSERT(quiver.link != NON_ITEM);
             hud_letter = index_to_letter(quiver.link);
             qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("Zap: %c) ", hud_letter);
+            qdesc.cprintf("%s: %c) ", quiver_verb().c_str(), hud_letter);
 
             qdesc.textcolour(quiver_color());
             qdesc += quiver.name(DESC_PLAIN, true);
@@ -763,7 +768,7 @@ namespace quiver
             return wand_slot;
         }
 
-        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
+        virtual vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
         {
             // go by pack order
             vector<shared_ptr<action>> result;
@@ -782,8 +787,102 @@ namespace quiver
             return result;
         }
 
-    private:
+    protected:
         int wand_slot;
+    };
+
+    static bool _misc_needs_manual_targeting(int subtype)
+    {
+            // autotargeting seems less useful on the others. Maybe this should
+            // be configurable somehow?
+        return subtype != MISC_PHIAL_OF_FLOODS;
+    }
+
+    struct misc_action : public wand_action
+    {
+        misc_action(int slot=-1) : wand_action(slot)
+        {
+        }
+
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool is_valid() const override
+        {
+            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
+                return false;
+            const item_def& wand = you.inv[wand_slot];
+            // MISC_ZIGGURAT is valid (so can be force quivered) but is skipped
+            // in the fire order
+            if (!wand.defined() || wand.base_type != OBJ_MISCELLANY)
+                return false;
+            return true;
+        }
+
+        // equals should work without override
+
+        bool allow_autotarget() const override
+        {
+            // all of these use the spell direction chooser
+            return false;
+        }
+
+        void trigger(dist &t) override
+        {
+            if (is_valid()
+                && _misc_needs_manual_targeting(you.inv[wand_slot].sub_type))
+            {
+                t.interactive = true;
+            }
+            wand_action::trigger(t);
+        }
+
+        string quiver_verb() const override
+        {
+            ASSERT(is_valid());
+            switch (you.inv[wand_slot].sub_type)
+            {
+            case MISC_TIN_OF_TREMORSTONES:
+                return "Throw";
+            case MISC_HORN_OF_GERYON:
+                return "Blow";
+            case MISC_BOX_OF_BEASTS:
+                return "Open";
+            default:
+                return "Evoke";
+            }
+        }
+
+        bool is_targeted() const override
+        {
+            if (!is_valid())
+                return false;
+            switch (you.inv[wand_slot].sub_type)
+            {
+            case MISC_PHIAL_OF_FLOODS:
+            case MISC_LIGHTNING_ROD:
+            case MISC_PHANTOM_MIRROR:
+                return true;
+            default:
+                return false;
+            }
+        }
+
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
+        {
+            // go by pack order
+            vector<shared_ptr<action>> result;
+            for (int slot = 0; slot < ENDOFPACK; slot++)
+            {
+                auto w = make_shared<misc_action>(slot);
+                if (w->is_valid()
+                    && (allow_disabled || w->is_enabled())
+                    && you.inv[slot].sub_type != MISC_ZIGGURAT)
+                {
+                    result.push_back(move(w));
+                }
+            }
+            return result;
+        }
     };
 
     void action::save(CrawlHashTable &save_target) const
@@ -815,6 +914,12 @@ namespace quiver
         save_target["param"] = static_cast<int>(wand_slot);
     }
 
+    void misc_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "misc_action";
+        save_target["param"] = static_cast<int>(wand_slot);
+    }
+
     static shared_ptr<action> _load_action(CrawlHashTable &source)
     {
         // pretty minimal: but most actions that I can think of shouldn't need
@@ -837,6 +942,8 @@ namespace quiver
             return make_shared<spell_action>(static_cast<spell_type>(param));
         else if (type == "wand_action")
             return make_shared<wand_action>(param);
+        else if (type == "misc_action")
+            return make_shared<misc_action>(param);
         else if (type == "fumble_action")
             return make_shared<fumble_action>(param);
         else
@@ -1056,6 +1163,7 @@ namespace quiver
         vector<shared_ptr<action>> action_types;
         action_types.push_back(make_shared<ammo_action>(-1));
         action_types.push_back(make_shared<wand_action>(-1));
+        action_types.push_back(make_shared<misc_action>(-1));
         action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
 
         if (dir < 0)
@@ -1152,7 +1260,7 @@ namespace quiver
 
     shared_ptr<action> slot_to_action(int slot, bool force)
     {
-        if (slot < 0 || slot >= ENDOFPACK)
+        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
 
         // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
@@ -1165,8 +1273,10 @@ namespace quiver
             }
         }
 
-        if (you.inv[slot].defined() && you.inv[slot].base_type == OBJ_WANDS)
+        if (you.inv[slot].base_type == OBJ_WANDS)
             return make_shared<wand_action>(slot);
+        else if (you.inv[slot].base_type == OBJ_MISCELLANY)
+            return make_shared<misc_action>(slot);
 
         // use ammo as the fallback -- may well end up invalid
         auto a = make_shared<ammo_action>(slot);
@@ -1370,6 +1480,8 @@ namespace quiver
         auto tmp = ammo_action(-1).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = wand_action(-1).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = misc_action(-1).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = spell_action(SPELL_NO_SPELL).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
