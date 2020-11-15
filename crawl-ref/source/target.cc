@@ -1757,8 +1757,8 @@ aff_type targeter_ramparts::is_affected(coord_def loc)
 }
 
 // note: starburst is not in spell_to_zap
-targeter_starburst_beam::targeter_starburst_beam(const actor *a, int range, int pow, const coord_def &offset)
-    : targeter_beam(a, range, ZAP_BOLT_OF_FIRE, pow, 0, 0)
+targeter_starburst_beam::targeter_starburst_beam(const actor *a, int _range, int pow, const coord_def &offset)
+    : targeter_beam(a, _range, ZAP_BOLT_OF_FIRE, pow, 0, 0)
 {
     set_aim(a->pos() + offset);
 }

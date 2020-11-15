@@ -178,7 +178,7 @@ private:
 class targeter_radius : public targeter
 {
 public:
-    targeter_radius(const actor *act, los_type los = LOS_DEFAULT,
+    targeter_radius(const actor *act, los_type _los = LOS_DEFAULT,
                   int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0);
     bool valid_aim(coord_def a) override;
     virtual aff_type is_affected(coord_def loc) override;
@@ -191,9 +191,9 @@ private:
 class targeter_maybe_radius : public targeter_radius
 {
 public:
-    targeter_maybe_radius(const actor *act, los_type los = LOS_DEFAULT,
+    targeter_maybe_radius(const actor *act, los_type _los = LOS_DEFAULT,
                   int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0)
-        : targeter_radius(act, los, ran, ran_max, ran_min)
+        : targeter_radius(act, _los, ran, ran_max, ran_min)
     { }
 
     virtual aff_type is_affected(coord_def loc) override
@@ -409,7 +409,7 @@ public:
 class targeter_starburst_beam : public targeter_beam
 {
 public:
-    targeter_starburst_beam(const actor *a, int range, int pow, const coord_def &offset);
+    targeter_starburst_beam(const actor *a, int _range, int pow, const coord_def &offset);
     // this is a bit of ui hack: lets us set starburst beams even when the
     // endpoint would be out of los
     bool can_affect_unseen() override { return true; }
