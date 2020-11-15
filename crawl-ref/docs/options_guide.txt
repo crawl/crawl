@@ -1022,9 +1022,11 @@ simple_targeting = false
         zapping as well as autotarget selection for quivered spells.
 
 always_use_static_targeters = false
-        If set to true, shows static targeters when casting via `z`. When false,
-        they are visible only via `Z` and via the fire interface. Targeters are
-        never shown when firing via AUTOFIRE and other autoattack commands.
+        A static targeter shows the possible area of effect for a spell that
+        does not have controllable targeting. If this option is set to true,
+        static targeters are shown when casting via `z`. When false, they are
+        shown only via `Z` and via the fire interface. Targeters are never shown
+        when firing via AUTOFIRE and other autoattack commands.
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
@@ -1238,9 +1240,10 @@ autofight_warning = 0
         or equal to zero disables this check.
 
 autofight_throw = false
-        If your quiver contains a throwable item, autofight will throw it
-        at enemies out of melee range. Without this option, only a wielded
-        launcher (a bow, crossbow or sling) will be considered.
+        If your quiver contains contains a fireable action, regular autofight
+        (i.e., tab on the default binding) will trigger it at enemies out of
+        melee range. Without this option, only a wielded launcher (a bow,
+        crossbow or sling) will be considered.
 
 autofight_throw_nomove = true
         This works same as above, except only for ===hit_closest_nomove rather
@@ -1268,17 +1271,20 @@ autofight_prompt_range = true
         to attack.
 
 automagic_enable = false
-        If true, the autofight function will resort to casting an assigned
-        spell at a target. Initial spell slot is a.
+        Option to enable the old automagic system; new players are recommended
+        to just use quivered spells. If true, autofight (i.e. tab on the
+        default bindings) will cast a spell in a designated slot at a target.
+        Initial spell slot is a. (deprecated)
 
 automagic_slot = a
-        Setting this changes the initial spell slot for automagic. Can be
-        changed for games in progress in-game by setting a macro to call
-        ===am_set_spell.
+        Setting this changes the initial spell slot for the old automagic
+        system. Can be changed for games in progress in-game by setting a macro
+        to call ===am_set_spell.
 
 automagic_fight = false
-        Setting this to true causes melee combat when trying to cast a spell
-        that you either do not have enough magic points for, or are below
+        With the old automagic system enabled, setting this to true causes
+        a fallback to regular autofight (e.g. melee) when trying to cast a
+        spell that you either do not have enough magic points for, or are below
         the set threshold. If false, a message will appear and no further
         action is taken.
 
