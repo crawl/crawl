@@ -102,7 +102,9 @@ local function have_ranged()
 end
 
 local function have_quiver_action(no_move)
-  return (AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE) and you.quiver_valid(1) and you.quiver_enabled(1)
+  return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
+          and you.quiver_valid(1) and you.quiver_enabled(1)
+          and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))
 end
 
 local function is_safe_square(dx, dy)
@@ -362,20 +364,40 @@ function af_hp_is_low()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
 end
 
-function attack(allow_movement)
-  local x, y, info = get_target(not allow_movement)
+function af_mp_is_low()
+  local mp, mmp = you.mp()
+  return (100*mp <= AUTOMAGIC_STOP*mmp)
+end
+
+function autofight_check_preconditions()
   local caught = you.caught()
   if af_hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
+    return false
   elseif you.confused() then
     crawl.mpr("You are too confused!")
+    return false
   elseif caught then
-    if AUTOFIGHT_CAUGHT then
-      crawl.do_commands({delta_to_cmd(1, 0)}) -- Direction doesn't matter.
-    else
+    if not AUTOFIGHT_CAUGHT then
       crawl.mpr("You are " .. caught .. "!")
+      return false
     end
-  elseif info == nil then
+  end
+  return true
+end
+
+function attack(allow_movement)
+  local x, y, info = get_target(not allow_movement)
+  if not autofight_check_preconditions() then
+    return
+  end
+
+  if you.caught() then
+    crawl.do_commands({delta_to_cmd(1, 0)}) -- Direction doesn't matter.
+    return
+  end
+
+  if info == nil then
     if AUTOFIGHT_WAIT and not allow_movement then
       crawl.do_commands({"CMD_WAIT"})
     else

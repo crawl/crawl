@@ -55,10 +55,11 @@ namespace quiver
             return !operator==(other);
         }
 
-        virtual bool is_enabled() const { return false; };
-        virtual bool is_valid() const { return true; };
-        virtual bool is_targeted() const { return false; };
+        virtual bool is_enabled() const { return false; }
+        virtual bool is_valid() const { return true; }
+        virtual bool is_targeted() const { return false; }
         virtual bool allow_autotarget() const { return is_targeted(); }
+        virtual bool uses_mp() const { return false; }
 
         virtual void find_target() const { };
 
@@ -79,7 +80,7 @@ namespace quiver
             trigger(target);
         };
 
-        virtual void trigger(dist &t) { target = t; };
+        virtual void trigger(dist &t) { target = t; }
 
         virtual void save(CrawlHashTable &save_target) const;
 
