@@ -182,7 +182,7 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 /////////////////////////////////////////////////////
 
-static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
+static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
     if (!enough_hp(14, true))
     {
@@ -200,7 +200,7 @@ static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HURL_DAMNATION, power, false) == spret::abort)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target) == spret::abort)
     {
         *unevokable = true;
         return false;
@@ -273,7 +273,7 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == spret::abort)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr) == spret::abort)
     {
         *unevokable = true;
         return false;

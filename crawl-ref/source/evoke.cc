@@ -1329,7 +1329,6 @@ bool evoke_check(int slot, bool quiet)
 
 bool evoke_item(int slot, dist *preselect)
 {
-    // TODO: implement preselect for items besides weapons
     if (!evoke_check(slot))
         return false;
 
@@ -1362,11 +1361,18 @@ bool evoke_item(int slot, dist *preselect)
     const unrandart_entry *entry = is_unrandom_artefact(item)
         ? get_unrand_entry(item.unrand_idx) : nullptr;
 
-    if (entry && entry->evoke_func)
+    if (entry && (entry->evoke_func || entry->targeted_evoke_func))
     {
         ASSERT(item_is_equipped(item));
 
-        bool qret = entry->evoke_func(&item, &did_work, &unevokable);
+        bool qret;
+        // only use one of these, prioritizing the targeted version. In
+        // principle we could call them both?
+        ASSERT(!(entry->evoke_func && entry->targeted_evoke_func)); // probably should be in art-data.pl
+        if (entry->targeted_evoke_func)
+            qret = entry->targeted_evoke_func(&item, &did_work, &unevokable, preselect);
+        else
+            qret = entry->evoke_func(&item, &did_work, &unevokable);
 
         if (!unevokable)
             count_action(CACT_EVOKE, item.unrand_idx);
