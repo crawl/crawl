@@ -643,9 +643,12 @@ void Text::wrap_text_to_size(int width, int height)
 
     height = height ? height : 0xfffffff;
 
-#ifdef USE_TILE_LOCAL
     if (wrap_text || ellipsize)
+#ifdef USE_TILE_LOCAL
         m_text_wrapped = m_font->split(m_text, width, height);
+#else
+        m_text_wrapped = linebreak_formatted_string(m_text, width, height);
+#endif
     else
         m_text_wrapped = m_text;
 
@@ -668,36 +671,12 @@ void Text::wrap_text_to_size(int width, int height)
     }
 
     // if the request was to figure out the height, record the height found
+#ifdef USE_TILE_LOCAL
     m_wrapped_size.height = m_font->string_height(m_text_wrapped);
     m_wrapped_size.width = m_font->string_width(m_text_wrapped);
 #else
-    m_wrapped_lines.clear();
-    formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
-    // add ellipsis to last line of text if necessary
-    if (height < (int)m_wrapped_lines.size())
-    {
-        auto& last_line = m_wrapped_lines[height-1], next_line = m_wrapped_lines[height];
-        last_line += " ";
-        last_line += next_line;
-        last_line = last_line.chop(width-2);
-        last_line += "..";
-        m_wrapped_lines.resize(height);
-    }
-    if (m_wrapped_lines.empty())
-        m_wrapped_lines.emplace_back("");
-
-    m_wrapped_size.height = m_wrapped_lines.size();
-    if (width <= 0)
-    {
-        // only bother recalculating if there was no requested width --
-        // parse_string_to_multiple will exactly obey any explicit width value
-        int max_width = 0;
-        for (auto &fs : m_wrapped_lines)
-            max_width = max(max_width, fs.width());
-        m_wrapped_size.width = max_width;
-    }
-    else
-        m_wrapped_size.width = width;
+    m_wrapped_size.height = m_text_wrapped.string_height();
+    m_wrapped_size.width = m_text_wrapped.string_width();
 #endif
 }
 
@@ -730,6 +709,10 @@ void Text::_render()
                                         region.y + region.height - m_region.y);
     const int line_min = line_min_pos / dev_line_height;
     const int line_max = line_max_pos / dev_line_height;
+#else
+    const int line_min = region.y - m_region.y;
+    const int line_max = region.y + region.height - m_region.y;
+#endif
 
     // find the earliest and latest ops in the string that could be displayed
     // in the currently visible region, as well as the line offset of the
@@ -759,6 +742,7 @@ void Text::_render()
         m_text_wrapped.ops.begin() + ops_min,
         m_text_wrapped.ops.begin() + ops_max);
 
+#ifdef USE_TILE_LOCAL
     // TODO: this is really complicated, can it be refactored? Does it
     // really need to iterate over the formatted_text slices? I'm not sure
     // the formatting ever matters for highlighting locations.
@@ -906,6 +890,9 @@ void Text::_render()
             display_density.device_to_logical(dev_line_height * line_off));
     m_font_buf.draw();
 #else
+    vector<formatted_string> m_wrapped_lines;
+    formatted_string::parse_string_to_multiple(slice.to_colour_string(), m_wrapped_lines, INT_MAX);
+
     const auto& lines = m_wrapped_lines;
     vector<size_t> highlights;
     int begin_idx = 0;
@@ -914,19 +901,19 @@ void Text::_render()
 
     if (!hl_pat.empty())
     {
-        for (int i = 0; i < region.y-m_region.y; i++)
+        for (int i = 0; i < region.y-m_region.y-line_off; i++)
             begin_idx += m_wrapped_lines[i].tostring().size()+1;
         int end_idx = begin_idx;
-        for (int i = region.y-m_region.y; i < region.y-m_region.y+region.height; i++)
+        for (int i = region.y-m_region.y-line_off; i < region.y-m_region.y-line_off+region.height; i++)
             end_idx += m_wrapped_lines[i].tostring().size()+1;
-        highlights = _find_highlights(m_text.tostring(), hl_pat, begin_idx, end_idx);
+        highlights = _find_highlights(slice.tostring(), hl_pat, begin_idx, end_idx);
     }
 
     unsigned int hl_idx = 0;
     for (size_t i = 0; i < min(lines.size(), (size_t)region.height); i++)
     {
         cgotoxy(region.x+1, region.y+1+i);
-        formatted_string line = lines[i+region.y-m_region.y];
+        formatted_string line = lines[i+region.y-m_region.y - line_off];
         int end_idx = begin_idx + line.tostring().size();
 
         // convert highlights on this line to a list of line cuts
@@ -1002,7 +989,7 @@ SizeReq Text::_get_preferred_size(Direction dim, int prosp_width)
     else
     {
         wrap_text_to_size(prosp_width, 0);
-        int height = m_wrapped_lines.size();
+        int height = m_text_wrapped.string_height();
         return { ellipsize ? 1 : height, height };
     }
 #endif

@@ -772,14 +772,13 @@ protected:
     bool ellipsize = false;
 
     formatted_string m_text;
-#ifdef USE_TILE_LOCAL
     struct brkpt { unsigned int op, line; };
     vector<brkpt> m_brkpts;
     formatted_string m_text_wrapped;
+#ifdef USE_TILE_LOCAL
     ShapeBuffer m_hl_buf;
     FontWrapper *m_font;
 #else
-    vector<formatted_string> m_wrapped_lines;
     COLOURS m_bg_colour = BLACK;
 #endif
     Size m_wrapped_size = Size{-1};
