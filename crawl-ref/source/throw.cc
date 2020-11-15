@@ -420,7 +420,7 @@ void throw_item_no_quiver(dist *target)
         && in_bounds(target->target)
         && cell_is_solid(target->target))
     {
-        const char *feat = feat_type_name(grd(target->target));
+        const char *feat = feat_type_name(env.grid(target->target));
         mprf("There is %s there.", article_a(feat).c_str());
         return;
     }

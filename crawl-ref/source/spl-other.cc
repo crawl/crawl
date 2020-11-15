@@ -236,7 +236,7 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 bool passwall_simplified_check(const actor &act)
 {
     for (adjacent_iterator ai(act.pos(), true); ai; ++ai)
-        if (_feat_is_passwallable(grd(*ai)))
+        if (_feat_is_passwallable(env.grid(*ai)))
             return true;
     return false;
 }
