@@ -2129,7 +2129,8 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->evoke_func && item_type_known(item))
+        if ((entry->evoke_func || entry->targeted_evoke_func)
+            && item_type_known(item))
         {
             if (no_evocables)
             {
