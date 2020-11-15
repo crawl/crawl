@@ -48,6 +48,9 @@ public:
     int width() const;
     string html_dump() const;
 
+    int string_width() const;
+    int string_height() const;
+
     bool operator < (const formatted_string &other) const;
     bool operator == (const formatted_string &other) const;
     const formatted_string &operator += (const formatted_string &other);
@@ -128,3 +131,5 @@ inline formatted_string&& operator+(formatted_string&& lhs, const char* rhs)
 int count_linebreaks(const formatted_string& fs);
 
 void display_tagged_block(const string& s);
+
+formatted_string linebreak_formatted_string(const formatted_string &str, int max_str_width, int max_str_height);

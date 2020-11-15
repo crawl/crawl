@@ -602,3 +602,153 @@ int count_linebreaks(const formatted_string& fs)
     }
     return count;
 }
+
+int _find_index_before_width(const char *text, int max_str_width)
+{
+    int width = 0;
+
+    for (char *itr = (char *)text; *itr; itr = next_glyph(itr))
+    {
+        if (*itr == '\n')
+            return INT_MAX;
+
+        char32_t ch;
+        utf8towc(&ch, itr);
+
+        int cw = wcwidth(ch);
+        if (cw != -1) // shouldn't ever happen
+            width += cw;
+        if (width > max_str_width)
+            return itr-text;
+    }
+
+    return INT_MAX;
+}
+
+static int _find_newline(const char *s)
+{
+    const char *nl = strchr(s, '\n');
+    return nl ? nl-s : INT_MAX;
+}
+
+/**
+ * Linebreaks a formatted string into the specified width and height.
+ *
+ * @param str            The input string: e.g. "<red>foo</red>".
+ * @param max_str_width  The maximum width of the output string.
+ * @param max_str_height The maximum height of the output string.
+ * @return          The wrapped formatted string.
+ */
+formatted_string linebreak_formatted_string(const formatted_string &str, int max_str_width, int max_str_height)
+{
+    const int max_lines = max_str_height;
+
+    if (max_lines < 1)
+        return formatted_string();
+
+    formatted_string ret;
+    ret += str;
+
+    string base = str.tostring();
+    int num_lines = 0;
+
+    char *line = &base[0];
+    while (true)
+    {
+        int nl = _find_newline(line);
+        int line_end = _find_index_before_width(line, max_str_width);
+        if (line_end == INT_MAX && nl == INT_MAX)
+            break;
+
+        int space_idx = 0;
+        if (nl < line_end)
+            space_idx = nl;
+        else
+        {
+            space_idx = -1;
+            for (char *search = &line[line_end];
+                 search > line;
+                 search = prev_glyph(search, line))
+            {
+                if (*search == ' ')
+                {
+                    space_idx = search - line;
+                    break;
+                }
+            }
+        }
+
+        if (++num_lines >= max_lines || space_idx == -1)
+        {
+            line_end = min(line_end, nl);
+            int ellipses;
+            if (space_idx != -1 && space_idx - line_end > 2)
+                ellipses = space_idx;
+            else
+            {
+                ellipses = line_end;
+                for (unsigned i = 0; i < strlen(".."); i++)
+                {
+                    char *prev = prev_glyph(&line[ellipses], line);
+                    ellipses = (prev ? prev : line) - line;
+                }
+            }
+
+            ret = ret.chop_bytes(&line[ellipses] - &base[0]);
+            ret += "..";
+            return ret;
+        }
+        else if (space_idx != nl)
+        {
+            line[space_idx] = '\n';
+            ret[&line[space_idx] - &base[0]] = '\n';
+        }
+
+        line = &line[space_idx+1];
+    }
+
+    return ret;
+}
+
+/**
+ * Determines the maximum width of a (possibly multiline) formatted_string.
+ *
+ * In contrast to width(), which just detmines the total 'length'.
+ *
+ * @return The maximum width, in characters.
+ */
+int formatted_string::string_width() const
+{
+    unsigned int max_str_width = 0;
+    unsigned int width = 0;
+    const auto s = tostring();
+
+    for (char *itr = (char *)s.c_str(); *itr; itr = next_glyph(itr))
+    {
+        if (*itr == '\n')
+        {
+            max_str_width = max(width, max_str_width);
+            width = 0;
+        }
+        else
+        {
+            char32_t ch;
+            utf8towc(&ch, itr);
+            width += wcwidth(ch);
+        }
+    }
+
+    return max(width, max_str_width);
+
+}
+
+/**
+ * Determines the maximum number of lines in a formatted_string.
+ *
+ * @return The maximum height, in lines.
+ */
+int formatted_string::string_height() const
+{
+    const auto& s = tostring();
+    return count(begin(s), end(s), '\n') + 1;
+}
