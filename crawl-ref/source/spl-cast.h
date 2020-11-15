@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "enum.h"
 #include "item-def.h"
@@ -15,6 +16,7 @@
 using std::vector;
 
 struct monster_info;
+class dist;
 
 enum class spflag
 {

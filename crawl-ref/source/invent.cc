@@ -46,6 +46,7 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
+#include "tile-env.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
