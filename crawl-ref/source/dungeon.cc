@@ -872,6 +872,8 @@ static bool _dgn_square_is_boring(const coord_def &c)
     // but in this case find only floor squares.
     const dungeon_feature_type feat = env.grid(c);
     return (feat_has_solid_floor(feat) || feat_is_door(feat))
+        && (env.mgrid(c) == NON_MONSTER
+            || mons_is_firewood(env.mons[env.mgrid(c)]))
         && (env.level_map_mask(c) & MMT_PASSABLE
             || !(env.level_map_mask(c) & MMT_OPAQUE));
 }
@@ -1112,7 +1114,15 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 if (!veto)
                 {
                     for (auto c : coords)
+                    {
                         _set_grd(c, fill);
+                        if (env.mgrid(c) != NON_MONSTER
+                            && !env.mons[env.mgrid(c)].is_habitable_feat(fill))
+                        {
+                            monster_die(env.mons[env.mgrid(c)],
+                                        KILL_RESET, NON_MONSTER, false, true);
+                        }
+                    }
                 }
             }
         }

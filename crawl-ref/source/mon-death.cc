@@ -2105,7 +2105,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Make sure that the monster looks dead.
     if (mons.alive() && (!summoned || duration > 0))
     {
-        dprf("Granting xp for non-damage kill.");
+        dprf("Non-damage %s of %s.", mons_reset ? "reset" : "kill",
+                                        mons.name(DESC_A, true).c_str());
         if (YOU_KILL(killer))
             mons.damage_friendly += mons.hit_points * 2;
         else if (pet_kill)
