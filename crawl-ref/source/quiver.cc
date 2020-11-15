@@ -9,6 +9,8 @@
 
 #include <algorithm>
 
+#include "artefact.h"
+#include "art-enum.h"
 #include "env.h"
 #include "evoke.h"
 #include "invent.h"
@@ -885,6 +887,117 @@ namespace quiver
         }
     };
 
+    struct artefact_evoke_action : public wand_action
+    {
+        artefact_evoke_action(int slot=-1) : wand_action(slot)
+        {
+        }
+
+        // equals should work without override
+
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool is_valid() const override
+        {
+            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
+                return false;
+
+            const item_def& item = you.inv[wand_slot];
+            if (!item.defined() || !is_unrandom_artefact(item)
+                                || !item_is_equipped(item))
+            {
+                return false;
+            }
+
+            const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
+
+            if (!entry || !(entry->evoke_func || entry->targeted_evoke_func))
+                return false;
+
+            return true;
+        }
+
+        // TODO: there's no generic API for this, and it would be a pain to
+        // add one...and there's only three of these. So we do a bit of dumb
+        // code duplication. Maybe this could eventually be moved into
+        // evoke_check?
+        bool artefact_evoke_check(bool quiet) const
+        {
+            if (!is_valid())
+                return false;
+
+            switch (you.inv[wand_slot].unrand_idx)
+            {
+            case UNRAND_DISPATER:
+                return enough_hp(14, quiet) && enough_mp(4, quiet); // TODO: code duplication...
+            case UNRAND_OLGREB:
+                return enough_mp(4, quiet); // TODO: code duplication...
+            default:
+                return true; // UNRAND_ASMODEUS has no up-front cost
+            }
+        }
+
+        bool is_enabled() const override
+        {
+            return artefact_evoke_check(true);
+        }
+
+        bool allow_autotarget() const override
+        {
+            // all of these use the spell direction chooser
+            return false;
+        }
+
+        bool is_targeted() const override
+        {
+            if (!is_valid())
+                return false;
+            // is_valid checks the preconditions for this:
+            return get_unrand_entry(you.inv[wand_slot].unrand_idx)->targeted_evoke_func;
+        }
+
+        // use superclass trigger: this means that dispater does not use
+        // interactive targeting (maybe it should)
+
+        string quiver_verb() const override
+        {
+            return "Evoke";
+        }
+
+        void trigger(dist &t) override
+        {
+            target = t;
+            if (!is_valid())
+                return;
+
+            if (!artefact_evoke_check(false))
+                return;
+
+            target.find_target = true;
+            evoke_item(wand_slot, &target);
+
+            t = target; // copy back, in case they are different
+        }
+
+
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
+        {
+            // go by pack order
+            vector<shared_ptr<action>> result;
+            for (int slot = 0; slot < ENDOFPACK; slot++)
+            {
+                auto w = make_shared<artefact_evoke_action>(slot);
+                if (w->is_valid()
+                    && (allow_disabled || w->is_enabled()))
+                {
+                    result.push_back(move(w));
+                }
+            }
+            return result;
+        }
+    };
+
+
     void action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "action";
@@ -920,6 +1033,12 @@ namespace quiver
         save_target["param"] = static_cast<int>(wand_slot);
     }
 
+    void artefact_evoke_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "artefact_evoke_action";
+        save_target["param"] = static_cast<int>(wand_slot);
+    }
+
     static shared_ptr<action> _load_action(CrawlHashTable &source)
     {
         // pretty minimal: but most actions that I can think of shouldn't need
@@ -944,6 +1063,8 @@ namespace quiver
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
             return make_shared<misc_action>(param);
+        else if (type == "artefact_evoke_action")
+            return make_shared<artefact_evoke_action>(param);
         else if (type == "fumble_action")
             return make_shared<fumble_action>(param);
         else
@@ -1164,6 +1285,7 @@ namespace quiver
         action_types.push_back(make_shared<ammo_action>(-1));
         action_types.push_back(make_shared<wand_action>(-1));
         action_types.push_back(make_shared<misc_action>(-1));
+        action_types.push_back(make_shared<artefact_evoke_action>(-1));
         action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
 
         if (dir < 0)
@@ -1277,6 +1399,8 @@ namespace quiver
             return make_shared<wand_action>(slot);
         else if (you.inv[slot].base_type == OBJ_MISCELLANY)
             return make_shared<misc_action>(slot);
+        else if (is_unrandom_artefact(you.inv[slot]))
+            return make_shared<artefact_evoke_action>(slot);
 
         // use ammo as the fallback -- may well end up invalid
         auto a = make_shared<ammo_action>(slot);
@@ -1483,6 +1607,8 @@ namespace quiver
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = artefact_evoke_action(-1).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = spell_action(SPELL_NO_SPELL).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
 
@@ -1626,8 +1752,9 @@ namespace quiver
     {
         const item_def* weapon = you.weapon();
         you.launcher_action.set(quiver::find_action_from_launcher(weapon));
+
         if (!you.quiver_action.get().is_valid()
-            && you.launcher_action.get().is_valid())
+                                        && !you.launcher_action.is_empty())
         {
             // if changing weapons has invalidated the main quiver, and we
             // did find valid ammo, set that to the main quiver
@@ -1637,6 +1764,16 @@ namespace quiver
         // a different launcher type, stones remain quivered as a throwable.
         // Seems like it would be better if the main quiver changed. (But this
         // is too niche to bother with now...)
+
+        // if switching invalidates the quiver, and the new weapon is an
+        // evokable randart, use that action. (If someone ever makes an
+        // evokable launcher, its ammo will be prioritized, revisit.)
+        if (weapon && is_unrandom_artefact(*weapon)
+                                    && !you.quiver_action.get().is_valid())
+        {
+            you.quiver_action.set(
+                            make_shared<artefact_evoke_action>(weapon->link));
+        }
 
     }
 }

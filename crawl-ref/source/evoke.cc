@@ -1213,6 +1213,11 @@ static spret _condenser()
     return spret::success;
 }
 
+
+// Is there anything that would prevent a player from evoking?
+// If slot == -1, it asks this question in general.
+// If slot is a particular item, it asks this question for that item. This
+// wierdly does not check whether an item is actually evokable! (TODO)
 bool evoke_check(int slot, bool quiet)
 {
     item_def *i = nullptr;
