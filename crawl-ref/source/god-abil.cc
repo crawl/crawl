@@ -3178,7 +3178,7 @@ static int _upheaval_radius(int pow)
     return pow >= 100 ? 2 : 1;
 }
 
-spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
+spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = _upheaval_radius(pow);
@@ -3199,7 +3199,10 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
 
     if (target.origin())
     {
-        dist spd;
+        dist target_local;
+        if (!player_target)
+            player_target = &target_local;
+
         targeter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
@@ -3208,7 +3211,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
         args.top_prompt = "Aiming: <white>Upheaval</white>";
         args.self = confirm_prompt_type::cancel;
         args.hitfunc = &tgt;
-        if (!spell_direction(spd, beam, &args))
+        if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
 
         if (cell_is_solid(beam.target))
