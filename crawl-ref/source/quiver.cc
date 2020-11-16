@@ -1141,9 +1141,6 @@ namespace quiver
             return get_unrand_entry(you.inv[wand_slot].unrand_idx)->targeted_evoke_func;
         }
 
-        // use superclass trigger: this means that dispater does not use
-        // interactive targeting (maybe it should)
-
         string quiver_verb() const override
         {
             return "Evoke";
