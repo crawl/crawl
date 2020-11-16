@@ -111,7 +111,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     {
     case SKM_SHOW_DEFAULT:
         return you.can_currently_train[sk] && (you.should_show_skill[sk]
-                                               || you.train[sk])
+                                               || you.training[sk])
             || you.skill(sk, 10, false, false)
             || sk == you.transfer_from_skill
             || sk == you.transfer_to_skill;
