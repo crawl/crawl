@@ -257,7 +257,9 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
 }
 
-static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
+// this isn't targeted, but using the targeted version lets the olgreb static
+// targeter work
+static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
     if (!enough_mp(4, false))
     {
@@ -273,7 +275,8 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr) == spret::abort)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr, target,
+        !target || !target->interactive) == spret::abort)
     {
         *unevokable = true;
         return false;
