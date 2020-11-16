@@ -427,7 +427,7 @@ bool dec_inv_item_quantity(int obj, int amount)
             }
         }
 
-        item_skills(you.inv[obj], you.stop_train);
+        item_skills(you.inv[obj], you.skills_to_hide);
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity  = 0;
@@ -2070,7 +2070,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     you.m_quiver.on_inv_quantity_changed(freeslot, quant_got);
     you.last_pickup[item.link] = quant_got;
-    item_skills(item, you.start_train);
+    item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;

@@ -3035,7 +3035,7 @@ void excommunication(bool voluntary, god_type new_god)
                           coord_def((int)new_god, old_piety));
 
     for (ability_type abil : get_god_abilities())
-        you.stop_train.insert(abil_skill(abil));
+        you.skills_to_hide.insert(abil_skill(abil));
 
     update_can_currently_train();
     you.can_currently_train.set(SK_INVOCATIONS, false);
@@ -3687,7 +3687,7 @@ void join_religion(god_type which_god)
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities();
     for (ability_type abil : abilities)
-        you.start_train.insert(abil_skill(abil));
+        you.skills_to_show.insert(abil_skill(abil));
     update_can_currently_train();
 
     // now that you have a god, you can't save any piety from your prev god

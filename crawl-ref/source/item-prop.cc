@@ -1068,7 +1068,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
         if (in_inventory(item))
         {
             shopping_list.cull_identical_items(item);
-            item_skills(item, you.start_train);
+            item_skills(item, you.skills_to_show);
         }
     }
 
@@ -1930,7 +1930,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         const skill_type skill = static_cast<skill_type>(item.plus);
-        if (training_restricted(skill))
+        if (!skill_default_shown(skill))
             skills.insert(skill);
     }
 
@@ -1968,8 +1968,8 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
-    skill_type sk = item_attack_skill(item);
-    if (sk != SK_FIGHTING && sk != SK_THROWING)
+    const skill_type sk = item_attack_skill(item);
+    if (sk != SK_FIGHTING)
         skills.insert(sk);
 
     return !skills.empty();

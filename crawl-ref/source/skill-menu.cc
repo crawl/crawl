@@ -110,8 +110,11 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_currently_train[sk] || you.skill(sk, 10, false, false)
-               || sk == you.transfer_from_skill || sk == you.transfer_to_skill;
+        return you.can_currently_train[sk] && (you.should_show_skill[sk]
+                                               || you.train[sk])
+            || you.skill(sk, 10, false, false)
+            || sk == you.transfer_from_skill
+            || sk == you.transfer_to_skill;
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
@@ -681,7 +684,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_MODE_MANUAL:    return "manual";
     case SKM_DO_PRACTISE:    return "train";
     case SKM_DO_FOCUS:       return "focus";
-    case SKM_SHOW_DEFAULT:   return "trainable";
+    case SKM_SHOW_DEFAULT:   return "useful";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
         return (skm.is_set(SKMF_ENHANCED)
@@ -1816,9 +1819,8 @@ bool UISkillMenu::on_event(const Event& ev)
 void skill_menu(int flag, int exp)
 {
     // experience potion; you may elect to put experience in normally
-    // untrainable skills (skills where you aren't carrying the right item,
-    // or skills that your god hates). The only case where we abort is if all
-    // in-principle trainable skills are maxed.
+    // untrainable skills (e.g. skills that your god hates). The only
+    // case where we abort is if all in-principle trainable skills are maxed.
     if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
     {
         mpr("You feel omnipotent.");

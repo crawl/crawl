@@ -2034,7 +2034,7 @@ bool set_ident_type(item_def &item, bool identify)
     {
         shopping_list.cull_identical_items(item);
         if (identify)
-            item_skills(item, you.start_train);
+            item_skills(item, you.skills_to_show);
     }
 
     if (identify && notes_are_active()
