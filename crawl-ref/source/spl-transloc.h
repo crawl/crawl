@@ -3,6 +3,7 @@
 #include "spl-cast.h"
 
 class actor;
+class dist;
 
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
@@ -13,7 +14,7 @@ spret controlled_blink(bool safe_cancel = true);
 void wizard_blink();
 
 spret frog_hop(bool fail);
-spret palentonga_charge(bool fail);
+spret palentonga_charge(bool fail, dist *target=nullptr);
 int palentonga_charge_range();
 
 void you_teleport();

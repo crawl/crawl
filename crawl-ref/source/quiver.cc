@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "env.h"
@@ -672,7 +673,7 @@ namespace quiver
                     && fail_severity(s) < Options.fail_severity_to_quiver
                     && spell_highlight_by_utility(s, COL_UNKNOWN) != COL_FORBIDDEN)
                 {
-                    result.push_back(make_shared<spell_action>(s));
+                    result.push_back(move(a));
                 }
             }
             return result;
@@ -681,6 +682,190 @@ namespace quiver
     private:
         spell_type spell;
     };
+
+    // stuff that is silly to quiver. Basically four (overlapping) cases:
+    // * one-off things that are implemented as abilities because that's what
+    //   you do with random stuff that doesn't fit neatly into any triggerable
+    //   type. E.g. abandon religion, choose ancestor type, etc.
+    // * "stop X" type abilities, these just clutter up the list
+    // * capstone abilities + stuff with a significant cost (revivify etc)
+    // * abilities that vanish when triggered. E.g. fly *might* make more sense
+    //   if it was a toggle, but that's not how it's implemented
+    static bool _pseudoability(ability_type a)
+    {
+        if (   static_cast<int>(a) >= ABIL_FIRST_SACRIFICE
+                    && static_cast<int>(a) <= ABIL_FINAL_SACRIFICE
+            || static_cast<int>(a) >= ABIL_HEPLIAKLQANA_FIRST_TYPE
+                    && static_cast<int>(a) <= ABIL_HEPLIAKLQANA_LAST_TYPE)
+        {
+            return true;
+        }
+
+        switch (a)
+        {
+        case ABIL_END_TRANSFORMATION:
+        case ABIL_CANCEL_PPROJ:
+        case ABIL_EXSANGUINATE:
+        case ABIL_REVIVIFY:
+        case ABIL_EVOKE_TURN_VISIBLE:
+        case ABIL_EVOKE_STOP_LEVITATING:
+        case ABIL_ZIN_DONATE_GOLD:
+        case ABIL_TSO_BLESS_WEAPON:
+        case ABIL_KIKU_BLESS_WEAPON:
+        case ABIL_KIKU_GIFT_NECRONOMICON:
+        case ABIL_SIF_MUNA_FORGET_SPELL:
+        case ABIL_LUGONU_BLESS_WEAPON:
+        case ABIL_BEOGH_GIFT_ITEM:
+        case ABIL_ASHENZARI_CURSE:
+        case ABIL_RU_REJECT_SACRIFICES:
+        case ABIL_HEPLIAKLQANA_IDENTITY:
+        case ABIL_STOP_RECALL:
+        case ABIL_RENOUNCE_RELIGION:
+        case ABIL_CONVERT_TO_BEOGH:
+        // not entirely pseudo, but doesn't make a lot of sense to quiver:
+        case ABIL_FLY:
+        case ABIL_TRAN_BAT:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    struct ability_action : public action
+    {
+        ability_action(ability_type a = ABIL_NON_ABILITY) : ability(a) { };
+        void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            return ability == static_cast<const ability_action&>(other).ability;
+        }
+
+        bool is_valid() const override
+        {
+            if (ability == ABIL_NON_ABILITY || ability == NUM_ABILITIES)
+                return false;
+            // it's quite something that this vector needs to be reconstructed
+            // every time...
+            vector<talent> talents = your_talents(false, true);
+            for (const auto &t : talents)
+                if (t.which == ability)
+                    return true;
+            return false;
+        }
+
+        bool is_enabled() const override
+        {
+            // TODO: _check_ability_dangerous?
+            return is_valid() && check_ability_possible(ability, true);
+        }
+
+        bool is_targeted() const override
+        {
+            // hard-coded list of abilities that have a targeter
+            // there is no general way of getting this?
+            // TODO: implement static targeters for relevant abilities (which
+            // is pretty much everything)
+            switch (ability)
+            {
+            case ABIL_HOP:
+            case ABIL_ROLLING_CHARGE:
+            case ABIL_SPIT_POISON:
+            case ABIL_BREATHE_ACID:
+            case ABIL_BREATHE_FIRE:
+            case ABIL_BREATHE_FROST:
+            case ABIL_BREATHE_POISON:
+            case ABIL_BREATHE_POWER:
+            case ABIL_BREATHE_STEAM:
+            case ABIL_BREATHE_MEPHITIC:
+            case ABIL_DAMNATION:
+            case ABIL_ZIN_IMPRISON:
+            case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+            case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+            case ABIL_LUGONU_BANISH:
+            case ABIL_BEOGH_SMITING:
+            case ABIL_DITHMENOS_SHADOW_STEP:
+            case ABIL_QAZLAL_UPHEAVAL:
+            case ABIL_RU_POWER_LEAP:
+            case ABIL_USKAYAW_LINE_PASS:
+            case ABIL_USKAYAW_GRAND_FINALE:
+            case ABIL_WU_JIAN_WALLJUMP:
+                return true;
+            default:
+                return false;
+            }
+        }
+
+        bool allow_autotarget() const override
+        {
+            return false;
+        }
+
+        bool uses_mp() const override
+        {
+            return ability_mp_cost(ability) > 0;
+        }
+
+        void trigger(dist &t) override
+        {
+            if (!is_valid())
+                return;
+
+            if (!is_enabled())
+            {
+                check_ability_possible(ability, false);
+                return;
+            }
+
+            target = t;
+            target.find_target = true;
+            talent tal = get_talent(ability, false);
+            activate_talent(tal, &target);
+
+            target = t;
+
+            t = target; // copy back, in case they are different
+        }
+
+        formatted_string quiver_description(bool short_desc) const override
+        {
+            if (!is_valid())
+                return action::quiver_description(short_desc);
+
+            formatted_string qdesc;
+
+            qdesc.textcolour(Options.status_caption_colour);
+            qdesc.cprintf("Abil: ");
+
+            qdesc.textcolour(quiver_color());
+            qdesc.cprintf("%s", ability_name(ability));
+
+            return qdesc;
+        }
+
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled=true) const override
+        {
+            vector<talent> talents = your_talents(false, true);
+            // goes by letter order
+            vector<shared_ptr<action>> result;
+
+            // TODO: all sorts of random chaff that shouldn't be in fire order
+            for (const auto &tal : talents)
+            {
+                if (_pseudoability(tal.which))
+                    continue;
+                auto a = make_shared<ability_action>(tal.which);
+                if (a->is_valid() && (allow_disabled || a->is_enabled()))
+                    result.push_back(move(a));
+            }
+            return result;
+        }
+
+    private:
+        ability_type ability;
+    };
+
 
     // TODO: generalize to misc evokables? Code should be similar if targeting
     // can be easily implemented
@@ -1021,6 +1206,12 @@ namespace quiver
         save_target["param"] = static_cast<int>(spell);
     }
 
+    void ability_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "ability_action";
+        save_target["param"] = static_cast<int>(ability);
+    }
+
     void wand_action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "wand_action";
@@ -1059,6 +1250,8 @@ namespace quiver
             return make_shared<ammo_action>(param);
         else if (type == "spell_action")
             return make_shared<spell_action>(static_cast<spell_type>(param));
+        else if (type == "ability_action")
+            return make_shared<ability_action>(static_cast<ability_type>(param));
         else if (type == "wand_action")
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
@@ -1287,6 +1480,7 @@ namespace quiver
         action_types.push_back(make_shared<misc_action>(-1));
         action_types.push_back(make_shared<artefact_evoke_action>(-1));
         action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
+        action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
 
         if (dir < 0)
             reverse(action_types.begin(), action_types.end());
@@ -1476,6 +1670,16 @@ namespace quiver
             return !set_to_quiver(slot_to_action(slot, true));
         }
 
+        bool _choose_from_abilities()
+        {
+            vector<talent> talents = your_talents(false);
+            // TODO: better handling for no abilities?
+            int selected = choose_ability_menu(talents);
+
+            return selected >= 0 && selected < static_cast<int>(talents.size())
+                && !set_to_quiver(make_shared<ability_action>(talents[selected].which));
+        }
+
         bool process_key(int key) override
         {
             // TODO: some kind of view action option?
@@ -1502,6 +1706,8 @@ namespace quiver
                 }
                 return false;
             }
+            else if (key == '^')
+                return _choose_from_abilities();
             return Menu::process_key(key);
         }
 
@@ -1509,8 +1715,8 @@ namespace quiver
         {
             string s = "Quiver which action? (";
             if (allow_empty)
-                s += "<w>-</w> for none, ";
-            s += "<w>*</w> for full inventory, <w>&</w> for all spells)";
+                s += "<w>-</w>: none, ";
+            s += "<w>*</w>: full inventory, <w>&</w>: spells, <w>^</w>: abilities)";
             return formatted_string::parse_string(s);
         }
     };
@@ -1610,6 +1816,8 @@ namespace quiver
         tmp = artefact_evoke_action(-1).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = spell_action(SPELL_NO_SPELL).get_fire_order();
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
 
         menu.set_title(new MenuEntry("", MEL_TITLE));

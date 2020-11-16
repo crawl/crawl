@@ -15,6 +15,8 @@
 #include "recite-type.h"
 #include "spl-cast.h"
 
+class dist;
+
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
 #define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
@@ -140,7 +142,7 @@ bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
-                           bool fail = false);
+                           bool fail = false, dist *player_target=nullptr);
 spret qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 

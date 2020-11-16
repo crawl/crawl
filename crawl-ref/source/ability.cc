@@ -259,7 +259,7 @@ struct ability_def
 };
 
 static int _lookup_ability_slot(ability_type abil);
-static spret _do_ability(const ability_def& abil, bool fail);
+static spret _do_ability(const ability_def& abil, bool fail, dist *target=nullptr);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 
@@ -1603,6 +1603,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return you.can_go_berserk(true, false, true)
                && (quiet || berserk_check_wielded_weapon());
 
+    case ABIL_EVOKE_TURN_INVISIBLE:
+        if (you.duration[DUR_INVIS])
+        {
+            if (!quiet)
+                mpr("You are already invisible!");
+            return false;
+        }
+        return true;
+
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_setup_potion_petition(quiet);
 
@@ -1708,7 +1717,7 @@ bool check_ability_possible(const ability_type ability, bool quiet)
     return _check_ability_possible(get_ability_def(ability), quiet);
 }
 
-bool activate_talent(const talent& tal)
+bool activate_talent(const talent& tal, dist *target)
 {
     const ability_def& abil = get_ability_def(tal.which);
 
@@ -1720,7 +1729,7 @@ bool activate_talent(const talent& tal)
 
     bool fail = random2avg(100, 3) < tal.fail;
 
-    const spret ability_result = _do_ability(abil, fail);
+    const spret ability_result = _do_ability(abil, fail, target);
     switch (ability_result)
     {
         case spret::success:
@@ -1894,11 +1903,13 @@ static void _cause_vampire_bat_form_stat_drain()
  * @returns Whether the spell succeeded (spret::success), failed (spret::fail),
  *  or was canceled (spret::abort). Never returns spret::none.
  */
-static spret _do_ability(const ability_def& abil, bool fail)
+static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 {
-    dist abild;
+    dist target_local;
+    if (!target)
+      target = &target_local;
+
     bolt beam;
-    dist spd;
 
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
@@ -1943,13 +1954,13 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HOP:
         if (_can_hop(false))
-            return frog_hop(fail);
+            return frog_hop(fail); // TODO dist arg
         else
             return spret::abort;
 
     case ABIL_ROLLING_CHARGE:
         if (_can_movement_ability(false))
-            return palentonga_charge(fail);
+            return palentonga_charge(fail, target);
         else
             return spret::abort;
 
@@ -1958,7 +1969,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         int power = 10 + you.experience_level;
         beam.range = _calc_breath_ability_range(abil.ability);
 
-        if (!spell_direction(abild, beam)
+        if (!spell_direction(*target, beam)
             || !player_tracer(ZAP_SPIT_POISON, power, beam))
         {
             return spret::abort;
@@ -1979,7 +1990,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
-        if (!spell_direction(abild, beam, &args))
+        if (!spell_direction(*target, beam, &args))
           return spret::abort;
 
         if (stop_attack_prompt(hitfunc, "spit at", _acid_breath_can_hit))
@@ -2002,7 +2013,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
         beam.range = _calc_breath_ability_range(abil.ability);
-        if (!spell_direction(abild, beam))
+        if (!spell_direction(*target, beam))
             return spret::abort;
 
         // fallthrough to ABIL_BREATHE_LIGHTNING
@@ -2143,7 +2154,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_HURL_DAMNATION,
                         you.experience_level * 10,
-                        false) == spret::abort)
+                        false, nullptr, target) == spret::abort)
         {
             return spret::abort;
         }
@@ -2254,7 +2265,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
-        if (!spell_direction(spd, beam, &args))
+        if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
         if (beam.target == you.pos())
@@ -2428,7 +2439,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
 
-        if (!spell_direction(spd, beam, &args))
+        if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
         if (beam.target == you.pos())
@@ -2503,7 +2514,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     {
         beam.range = min((int)you.current_vision, 5);
 
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(*target, beam))
             return spret::abort;
 
         int power = you.skill(SK_INVOCATIONS, 1)
@@ -2540,7 +2551,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
     {
         beam.range = you.current_vision;
 
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(*target, beam))
             return spret::abort;
 
         int power = you.skill(SK_INVOCATIONS, 1)
@@ -2682,7 +2693,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         args.get_desc_func = bind(desc_success_chance, placeholders::_1,
                                   zap_ench_power(ZAP_BANISHMENT, pow, false),
                                   false, nullptr);
-        if (!spell_direction(spd, beam, &args))
+        if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
         if (beam.target == you.pos())
@@ -2765,7 +2776,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_SMITING,
                         12 + skill_bump(SK_INVOCATIONS, 6),
-                        false, nullptr) == spret::abort)
+                        false, nullptr, target) == spret::abort)
         {
             return spret::abort;
         }
@@ -2951,7 +2962,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (_abort_if_stationary())
             return spret::abort;
         fail_check();
-        if (!dithmenos_shadow_step())
+        if (!dithmenos_shadow_step()) // TODO dist arg
         {
             canned_msg(MSG_OK);
             return spret::abort;
@@ -2984,7 +2995,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_QAZLAL_UPHEAVAL:
-        return qazlal_upheaval(coord_def(), false, fail);
+        return qazlal_upheaval(coord_def(), false, fail, target);
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         return qazlal_elemental_force(fail);
@@ -3056,7 +3067,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
 
-        if (!ru_power_leap())
+        if (!ru_power_leap()) // TODO dist arg
         {
             canned_msg(MSG_OK);
             return spret::abort;
@@ -3100,12 +3111,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         if (_abort_if_stationary())
             return spret::abort;
         fail_check();
-        if (!uskayaw_line_pass())
+        if (!uskayaw_line_pass()) // TODO dist arg
             return spret::abort;
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
-        return uskayaw_grand_finale(fail);
+        return uskayaw_grand_finale(fail); // TODO dist arg
 
     case ABIL_HEPLIAKLQANA_IDEALISE:
         return hepliaklqana_idealise(fail);
@@ -3117,7 +3128,7 @@ static spret _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
-        return hepliaklqana_transference(fail);
+        return hepliaklqana_transference(fail); // TODO: dist arg
 
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
@@ -3518,8 +3529,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
     if (you.evokable_invis() > 0
-        && !you.get_mutation_level(MUT_NO_ARTIFICE)
-        && !you.duration[DUR_INVIS])
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
+        //&& !you.duration[DUR_INVIS])
     {
         _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }

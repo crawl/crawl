@@ -20,6 +20,8 @@ struct talent
     bool is_invocation;
 };
 
+class dist;
+
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
@@ -36,7 +38,7 @@ int abil_skill_weight(ability_type abil);
 void no_ability_msg();
 bool activate_ability();
 bool check_ability_possible(const ability_type ability, bool quiet = false);
-bool activate_talent(const talent& tal);
+bool activate_talent(const talent& tal, dist *target=nullptr);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
 ability_type ability_by_name(const string &name);
