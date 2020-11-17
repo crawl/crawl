@@ -485,8 +485,6 @@ spret change_lesser_lich(int , bool fail)
         check_skill_level_change(sk);
     }
 
-    you.innate_mutation[MUT_COMBAT_MANA_REGENERATE]--;
-    delete_mutation(MUT_COMBAT_MANA_REGENERATE, "necromutation", false, true, false, false);
     you.innate_mutation[MUT_STOCHASTIC_TORMENT_RESISTANCE]--;
     delete_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE, "necromutation", false, true, false, false);
     you.innate_mutation[MUT_NO_DEVICE_HEAL]--;
