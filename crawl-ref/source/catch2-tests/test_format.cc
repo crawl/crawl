@@ -61,3 +61,23 @@ TEST_CASE( "formatted_string::parse_string_to_multiple() preserves nesting over 
         REQUIRE( out[1].to_colour_string() == "<red>1</red>" );
     }
 }
+
+TEST_CASE("formatted_string::add_glyph() reuses current colour",
+          "[single-file]")
+{
+    formatted_string str;
+    str.textcolour(RED);
+
+    str.add_glyph({' ', RED});
+
+    REQUIRE(str.to_colour_string() == "<red> ");
+}
+
+TEST_CASE("formatted_string::add_glyph() will push/pop colour"
+          "[single-file]")
+{
+    formatted_string str;
+    str.add_glyph({' ', RED});
+
+    REQUIRE(str.to_colour_string() == "<red> </red>");
+}

@@ -513,9 +513,14 @@ void formatted_string::del_char()
 void formatted_string::add_glyph(cglyph_t g)
 {
     const int last_col = find_last_colour();
-    textcolour(g.col);
+    if (last_col != g.col)
+        textcolour(g.col);
     cprintf("%s", stringize_glyph(g.ch).c_str());
-    textcolour(last_col);
+    if (last_col != g.col)
+    {
+        textcolour(last_col);
+        ops.back().closing_colour = g.col;
+    }
 }
 
 void formatted_string::textcolour(int colour)
