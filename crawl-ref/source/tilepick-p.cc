@@ -1228,8 +1228,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BODY] = TILEP_FLAG_HIDE;
         if (doll.parts[TILEP_PART_HAND1] == TILEP_HAND1_BLADEHAND)
             flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
-	flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
-	flag[TILEP_PART_CLOAK] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_CLOAK] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
