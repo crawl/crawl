@@ -374,10 +374,8 @@ namespace quiver
 
             formatted_string qdesc;
 
-            char hud_letter = '-';
             const item_def& quiver = you.inv[ammo_slot];
             ASSERT(quiver.link != NON_ITEM);
-            hud_letter = index_to_letter(quiver.link);
             // TODO: or just lightgrey?
             qdesc.textcolour(Options.status_caption_colour);
             const launch_retval projected = is_launched(&you, you.weapon(),
@@ -394,9 +392,6 @@ namespace quiver
                 }
                 qdesc.cprintf("%s: ", uppercase_first(verb).c_str());
             }
-
-            if (!short_desc)
-                qdesc.cprintf("%c) ", hud_letter);
 
             // TODO: I don't actually know what this prefix stuff is
             const string prefix = item_prefix(quiver);
@@ -937,12 +932,10 @@ namespace quiver
                 return action::quiver_description(short_desc);
             formatted_string qdesc;
 
-            char hud_letter = '-';
             const item_def& quiver = you.inv[wand_slot];
             ASSERT(quiver.link != NON_ITEM);
-            hud_letter = index_to_letter(quiver.link);
             qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("%s: %c) ", quiver_verb().c_str(), hud_letter);
+            qdesc.cprintf("%s: ", quiver_verb().c_str());
 
             qdesc.textcolour(quiver_color());
             qdesc += quiver.name(DESC_PLAIN, true);
