@@ -6569,7 +6569,7 @@ bool monster::is_divine_companion() const
 
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER;
+    return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;
 }
 
 // HD for spellcasting purposes.
