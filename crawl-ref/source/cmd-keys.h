@@ -42,6 +42,9 @@
 {'g', CMD_PICKUP},
 {'i', CMD_DISPLAY_INVENTORY},
 {'m', CMD_DISPLAY_SKILLS},
+#ifdef CLUA_BINDINGS
+{'p', CMD_AUTOFIRE}, // also shift-tab
+#endif
 {'o', CMD_EXPLORE},
 {'q', CMD_QUAFF},
 {'r', CMD_READ},
@@ -334,7 +337,7 @@
 {ESCAPE, CMD_MAP_EXIT_MAP},
 #ifdef CLUA_BINDINGS
 {CONTROL('I'), CMD_AUTOFIGHT},
-{CK_SHIFT_TAB, CMD_AUTOFIRE},
+{CK_SHIFT_TAB, CMD_AUTOFIRE}, // also 'p'
 #endif
 
 #ifdef WIZARD
