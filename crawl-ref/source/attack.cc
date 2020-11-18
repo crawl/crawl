@@ -136,9 +136,6 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
-    // This may invalidate both the attacker and defender.
-    fire_final_effects();
-
     return true;
 }
 

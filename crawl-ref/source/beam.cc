@@ -31,6 +31,7 @@
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
+#include "fineff.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
@@ -945,6 +946,7 @@ int bolt::range_used(bool leg_only) const
 void bolt::finish_beam()
 {
     extra_range_used = BEAM_STOP;
+    fire_final_effects();
 }
 
 void bolt::affect_wall()

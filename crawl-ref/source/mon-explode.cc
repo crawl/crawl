@@ -13,6 +13,7 @@
 #include "dungeon-char-type.h"
 #include "english.h"
 #include "env.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "message.h"
 #include "monster.h"
@@ -20,8 +21,9 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "mpr.h"
-#include "state.h"
 #include "spl-goditem.h"
+#include "state.h"
+#include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
 #include "torment-source-type.h"
@@ -177,7 +179,9 @@ bool explode_monster(monster* mons, killer_type killer,
     bolt beam;
     const monster_type type = mons->type;
     string sanct_msg = "";
-    actor* agent = mons;
+    string boom_msg = make_stringf("%s explodes!", mons->full_name(DESC_THE).c_str());
+    actor* agent = nullptr;
+    bool inner_flame = false;
 
     auto it = explosions.find(type);
     if (it != explosions.end())
@@ -191,6 +195,8 @@ bool explode_monster(monster* mons, killer_type killer,
         sanct_msg = string("By Zin's power, ") +
                     apostrophise(mons->name(DESC_THE)) + " " +
                     effect + ".";
+        if (type == MONS_BENNU)
+            boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
     } else {
         if (!mons->has_ench(ENCH_INNER_FLAME))
         {
@@ -212,6 +218,7 @@ bool explode_monster(monster* mons, killer_type killer,
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "exploding inner flame";
+        inner_flame = true;
     }
 
     if (beam.aux_source.empty())
@@ -232,34 +239,15 @@ bool explode_monster(monster* mons, killer_type killer,
         }
     }
 
-    bool saw = false;
-    if (you.can_see(*mons))
+    if (is_sanctuary(mons->pos()))
     {
-        saw = true;
-        viewwindow();
-        update_screen();
-        if (is_sanctuary(mons->pos()))
+        if (you.can_see(*mons))
             mprf(MSGCH_GOD, "%s", sanct_msg.c_str());
-        else if (type == MONS_BENNU)
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s blazes out!",
-                 mons->full_name(DESC_THE).c_str());
-        else
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
-                 mons->full_name(DESC_THE).c_str());
+        return false;
     }
 
-    if (is_sanctuary(mons->pos()))
-        return false;
-
-    // Explosion side-effects.
     if (type == MONS_LURKING_HORROR)
         torment(mons, TORMENT_LURKING_HORROR, mons->pos());
-    else if (mons->has_ench(ENCH_INNER_FLAME))
-    {
-        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
-                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
-    }
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
@@ -275,11 +263,6 @@ bool explode_monster(monster* mons, killer_type killer,
 
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
-    if (saw)
-    {
-        viewwindow();
-        update_screen();
-    }
 
     // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
@@ -288,7 +271,7 @@ bool explode_monster(monster* mons, killer_type killer,
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
-        beam.explode();
+        explosion_fineff::schedule(beam, boom_msg, sanct_msg, inner_flame, agent);
 
     // Monster died in explosion, so don't re-attach it to the grid.
     return true;
