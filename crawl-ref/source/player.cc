@@ -6659,7 +6659,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
     }
 }
 
-bool player::drain_exp(actor */*who*/, bool quiet, int pow)
+bool player::drain_exp(const actor */*who*/, bool quiet, int pow)
 {
     return drain_player(pow, !quiet);
 }

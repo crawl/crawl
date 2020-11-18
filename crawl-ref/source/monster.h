@@ -472,7 +472,7 @@ public:
     bool fully_petrify(actor *foe, bool quiet = false) override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
-    bool drain_exp(actor *, bool quiet = false, int pow = 3) override;
+    bool drain_exp(const actor *, bool quiet = false, int pow = 3) override;
     bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
         override;
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
