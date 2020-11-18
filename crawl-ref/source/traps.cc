@@ -1197,7 +1197,7 @@ void trap_def::shoot_ammo(actor& act, bool trig_smart)
         mprf("%s shoots out and hits %s shield.", shot.name(DESC_A).c_str(),
              owner.c_str());
 
-        act.shield_block_succeeded(0);
+        act.shield_block_succeeded();
     }
     else // OK, we've been hit.
     {

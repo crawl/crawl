@@ -721,7 +721,7 @@ public:
     bool sicken(int amount) override;
     void paralyse(actor *, int str, string source = "") override;
     void petrify(actor *, bool force = false) override;
-    bool fully_petrify(actor *foe, bool quiet = false) override;
+    bool fully_petrify(bool quiet = false) override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
@@ -837,7 +837,7 @@ public:
     int shield_bonus() const override;
     int shield_block_penalty() const override;
     int shield_bypass_ability(int tohit) const override;
-    void shield_block_succeeded(actor *foe) override;
+    void shield_block_succeeded() override;
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods

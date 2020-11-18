@@ -173,7 +173,7 @@ bool actor::can_sleep(bool holi_only) const
     return true;
 }
 
-void actor::shield_block_succeeded(actor *foe)
+void actor::shield_block_succeeded()
 {
     item_def *sh = shield();
     const unrandart_entry *unrand_entry;
@@ -186,7 +186,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
-        unrand_entry->melee_effects(sh, this, foe, false, 0);
+        unrand_entry->melee_effects(sh, this, nullptr, false, 0);
     }
 }
 

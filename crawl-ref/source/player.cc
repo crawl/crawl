@@ -5491,9 +5491,9 @@ int player::shield_bypass_ability(int tohit) const
     return 15 + tohit / 2;
 }
 
-void player::shield_block_succeeded(actor *foe)
+void player::shield_block_succeeded()
 {
-    actor::shield_block_succeeded(foe);
+    actor::shield_block_succeeded();
 
     shield_blocks++;
     practise_shield_block();
@@ -6760,7 +6760,7 @@ void player::petrify(actor *who, bool force)
     mprf(MSGCH_WARN, "You are slowing down.");
 }
 
-bool player::fully_petrify(actor */*foe*/, bool /*quiet*/)
+bool player::fully_petrify(bool /*quiet*/)
 {
     duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
                         + random2(4 * BASELINE_DELAY);

@@ -197,7 +197,7 @@ static void _decrement_petrification(int delay)
             // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
-            you.fully_petrify(nullptr);
+            you.fully_petrify();
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");

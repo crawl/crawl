@@ -563,7 +563,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_PETRIFYING:
-        fully_petrify(me.agent(), quiet);
+        fully_petrify(quiet);
 
         if (alive()) // losing active flight over lava
             behaviour_event(this, ME_EVAL);

@@ -226,7 +226,7 @@ public:
     virtual bool sicken(int amount) = 0;
     virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker, bool force = false) = 0;
-    virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
+    virtual bool fully_petrify(bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength,
@@ -276,7 +276,7 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
-    virtual void shield_block_succeeded(actor *foe);
+    virtual void shield_block_succeeded();
     virtual bool missile_repulsion() const = 0;
     virtual void ablate_repulsion()
     {
