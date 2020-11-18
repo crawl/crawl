@@ -6678,7 +6678,7 @@ void player::confuse(actor */*who*/, int str)
  * @param str The number of turns the paralysis will last.
  * @param source Description of the source of the paralysis.
  */
-void player::paralyse(actor *who, int str, string source)
+void player::paralyse(const actor *who, int str, string source)
 {
     ASSERT(!crawl_state.game_is_arena());
 

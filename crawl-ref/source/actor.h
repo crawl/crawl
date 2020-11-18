@@ -224,7 +224,8 @@ public:
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount) = 0;
-    virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
+    virtual void paralyse(const actor *attacker, int strength,
+                          string source = "") = 0;
     virtual void petrify(actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
