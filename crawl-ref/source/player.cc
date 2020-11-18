@@ -5353,7 +5353,7 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(actor* /*agent*/, const string &who, const int power,
+void player::banish(const actor* /*agent*/, const string &who, const int power,
                     bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
