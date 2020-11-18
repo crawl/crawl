@@ -1125,7 +1125,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
         holy_word_monsters(*ri, pow, source, attacker);
 }
 
-void torment_player(actor *attacker, torment_source_type taux)
+void torment_player(const actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
