@@ -4667,10 +4667,11 @@ MAP
   ...P...
 ENDMAP
 
-# Based on the idea in the former vault boulder_indie by mumra, apparently
-# based on a suggestion from ZorbaBeta.
+# Based on the idea of the former vault boulder_indie by mumra, originally
+# suggested by ZorbaBeta. Reworked from that lua trap vault into something more
+# conventional, but with much more detail.
 NAME:    gammafunk_indiana_jones
-TAGS:    no_monster_gen no_trap_gen patrolling
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   D:8-, Lair
 ORIENT:  float
 ITEM:    whip good_item, hat good_item, any jewellery good_item
@@ -4679,81 +4680,91 @@ ITEM:    demon whip good_item
 KITEM:   k = any jewellery randart, gold, gold
 MONS:    boulder beetle
 KMONS:   K = lava snake
+KMONS:   p = plant
 KFEAT:   ~ = closed_clear_door
 KFEAT:   ^ = zot trap
 KFEAT:   K = l
-KMONS:   p = plant
+KFEAT:   a = x
 SHUFFLE: deF
 : if you.in_branch("D") then
 CLEAR:   '"
 :     if you.depth() < 11 then
 MONS:    redback
-SUBST:   DEH = c, MN = L
-NSUBST:  - = 2 / 2=2. / ., J = 1 / ., l = K / 2=Kl / l
+# D must always be either floor or a trap (later depths) so that players can
+# see somewhat into the vault from the runed door. E and H always have one tile
+# turned to floor or (later) a trap. In the final treasure room, we initially
+# place flame clouds on L and place lava snakes. At later depths we use traps +
+# spiders instead.
+SUBST:   D = ., MN = L
+NSUBST:  - = 2 / 2=2. / ., E = . / x, H = . / x, J = 1 / ., l = K / 2=Kl / l
 :     elseif you.depth() < 14 then
 MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-SUBST:   d = g, e = h, f = i, DEH = c, MN = L
-NSUBST:  - = 2=2 / 2=2. / ., J = 1 / 2=1., l = 2=K / 2=Kl / l
+SUBST:   d = g, e = h, f = i, D = ., MN = L
+NSUBST:  - = 2=2 / 2=2. / ., E = . / x, H = . / x, J = 1 / 2=1.
+NSUBST:  l = 2=K / 2=Kl / l
 :     else
 MONS:   redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, f = L, M = i
-NSUBST:  - = 2=2 / 4=2. / ., D = ^ccc / c, E = ^ / c, H = ^ccc / c
-# Only 3 N locations available for monsters, so always place one monster on an
-# L location that doesn't get a trap.
-NSUBST:  J = 2=1 / 1. / ., L = ^ / 2^ / N, N = 2 / 2.
+SUBST:   d = j, e = h, f = L, D = ^..., N = i
+NSUBST:  - = 2=2 / 4=2. / ., E = ^ / x, H = ^... / x, J = 2=1 / 1. / .
+# 3 M locations available for monsters on D:14-15, so always place one monster
+# on an L location that doesn't get a trap.
+NSUBST:  L = ^ / 2^ / M, M = 2 / 2.
 :     end
 : elseif you.in_branch("Lair") then
-SUBST:   d = g, ' = x:9 p:1 ', " = @
+# Add a border of ruined rock for Lair and Spider, adding plants for Lair.
+SUBST:   d = g, ' = a:9 p:1 ', " = @
+CLEAR:   '
 :     if you.depth() < 5 then
 MONS:   redback / jumping spider / tarantella / wolf spider
-SUBST:   DEH = c, MN = L
-NSUBST:  - = 2 / 3=2. / ., J = 1 / 1. / ., l = K / 3=Kl / l
+SUBST:   D = ., MN = L
+NSUBST:  - = 2 / 3=2. / ., E = . / x, H = . / x, J = 1 / 1. / .
+NSUBST:  l = K / 3=Kl / l
 :     else
 MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-SUBST:   e = h, DH = c, f = L, M = f
-# Introduce zot traps in the final chamber from Lair:5-6, D:14-, and Spider.
-# Move jewellery on f to M, placing L in its place, and using L for trap
-# placement randomization, since these locations are in front of chamber.
-# Non-trapped tiles become N, which we use to randomize monsters (4 N
-# locations available).
-NSUBST:  - = 2=2 / 2=2. / ., J = 1 / 2=1., E = ^c / c, L = ^ / N
-NSUBST:  N = 2 / 2.
+# Introduce zot traps and spiders in the final chamber from Lair:5-6, D:14-,
+# and Spider. Move jewellery from f to N. We want the traps to be adjacent to
+# the door so they're likely to actually trigger. Non-trapped tiles become M,
+# which we use to randomize monsters. 4 M locations available for Lair:5-6.
+SUBST:   e = h, f = L, D = ., N = f
+NSUBST:  - = 2=2 / 2=2. / ., E = ^. / x, H = . / x, J = 1 / 2=1., L = ^ / M
+NSUBST:  M = 2 / 2.
 :     end
-CLEAR:   '
 : else
 MONS:    redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, J = 1, f = L, M = k, ' = x', " = @
-NSUBST:  - = 2=2 / 5=2. / ., D = ^cc / c, E = ^ / ^cc / c, H = ^cc / c
-# Only 2 N locations available for monsters, so always place one on the single
-# L location that doesn't get a trap.
-NSUBST:  L = 2=^ / 2, N = 2
+SUBST:   d = j, e = h, J = 1, f = L, D = ^., N = k, ' = a', " = @
+NSUBST:  - = 2=2 / 5=2. / ., E = ^ / x, H = ^.. / x, L = 2=^ / 2
+# 2 M locations available for Spider.
+SUBST:   M = 2
 CLEAR:   '
 : end
 MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                    pow_max = 100, delay = 10, size = 1, walk_dist = 0, \
                    excl_rad = 0 }
 : dgn.delayed_decay(_G, 'F', 'human corpse')
+TILE:   x = wall_brick_brown_vines
+FTILE:  .^~defghijkFL12xc = floor_pebble_yellow
 MAP
-'''''''"'''''''
-'xxxxxx.xxxxxx'
-'xxcccc=cxxxxx'
-'xcc---ccxxxxx'
-'xc-DDDccxxxxx'
-'xcc--dEccxxxx'
-'xxcccEFEcccxx'
-'xxxxccEe--ccx'
-'xxxxxccHHH-cx'
-'xxxxxcc---ccx'
-'xxxxcc-ccccxx'
-'xxxxc~~~cxxxx'
-'xxxxcJJJcxxxx'
-'xxxccn+nccxxx'
-'xxxclLfLlcxxx'
-'xxxclNMNlcxxx'
-'xxxclllllcxxx'
-'xxxcccccccxxx'
-'xxxxxxxxxxxxx'
-'''''''''''''''
+'''''''"'''''''''
+'aaaaaa@aaaaaaaa'
+'accccc=cccaaaaa'
+'acxx---xxcaaaaa'
+'acx-xxxDxccaaaa'
+'acxx---dxxcccaa'
+'accxxxEFExxxcca'
+'aacccxxEe--xxca'
+'aaaaccxxHHH-xca'
+'aaaaccxx---xxca'
+'aaaacxx-xxxxcca'
+'aaaacx~~~xcccaa'
+'aaaccxJJJxccaaa'
+'aaacxxn~nxxcaaa'
+'aaacxlLfLlxcaaa'
+'aaacxlMNMlxcaaa'
+'aaacxlllllxcaaa'
+'aaacxxxxxxxcaaa'
+'aaacccccccccaaa'
+'aaaaaaaaaaaaaaa'
+'''''''''''''''''
 ENDMAP
 
 NAME:   gammafunk_boulding_lane
