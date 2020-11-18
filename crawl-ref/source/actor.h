@@ -226,7 +226,7 @@ public:
     virtual bool sicken(int amount) = 0;
     virtual void paralyse(const actor *attacker, int strength,
                           string source = "") = 0;
-    virtual void petrify(actor *attacker, bool force = false) = 0;
+    virtual void petrify(const actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
