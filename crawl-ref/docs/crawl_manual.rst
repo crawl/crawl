@@ -1769,10 +1769,7 @@ Vampires (Vp)
   mutated normally at all times.
 
 Demigods (Dg)
-  Demigods are mortals with some divine or angelic ancestry, however distant;
-  they can be created by a number of processes, including magical experiments
-  and the time-honoured practise of interplanar miscegenation.
-
+  Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but
   have excellent attributes (Str, Int, Dex) and are extremely robust; they can
   also draw on great supplies of magical energy. On the downside, they advance
