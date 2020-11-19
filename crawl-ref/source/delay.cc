@@ -878,6 +878,7 @@ void run_macro(const char *macroname)
             --delay->duration;
     }
 #else
+    mprf(MSGCH_ERROR, "CLua bindings not available on this build!");
     UNUSED(macroname);
     stop_delay();
 #endif
@@ -889,7 +890,6 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
                                               activity_interrupt ai,
                                               const activity_interrupt_data &at)
 {
-#ifdef CLUA_BINDINGS
     lua_State *ls = clua.state();
     if (!ls || ai == activity_interrupt::force)
         return MB_TRUE;
@@ -918,9 +918,6 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
     {
         return MB_TRUE;
     }
-#else
-    UNUSED(_activity_interrupt_name);
-#endif
     return MB_MAYBE;
 }
 

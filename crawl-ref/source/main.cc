@@ -1770,7 +1770,6 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_RUN_DOWN_RIGHT:_start_running(RDIR_DOWN_RIGHT, RMODE_START); break;
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
-#ifdef CLUA_BINDINGS
     case CMD_AUTOFIRE:
         if (!you.quiver_action.get().is_valid())
             mpr("Nothing quivered!"); // shouldn't actually be possible...
@@ -1795,7 +1794,7 @@ void process_command(command_type cmd, command_type prev_cmd)
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
         break;
-#endif
+
     case CMD_REST:           _do_rest(); break;
 
     case CMD_GO_UPSTAIRS:

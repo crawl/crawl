@@ -53,7 +53,6 @@ StashTracker StashTrack;
 
 string userdef_annotate_item(const char *s, const item_def *item)
 {
-#ifdef CLUA_BINDINGS
     lua_stack_cleaner cleaner(clua);
     clua_push_item(clua, const_cast<item_def*>(item));
     if (!clua.callfn(s, 1, 1) && !clua.error.empty())
@@ -62,9 +61,6 @@ string userdef_annotate_item(const char *s, const item_def *item)
     if (lua_isstring(clua, -1))
         ann = luaL_checkstring(clua, -1);
     return ann;
-#else
-    return "";
-#endif
 }
 
 string stash_annotate_item(const char *s, const item_def *item)
