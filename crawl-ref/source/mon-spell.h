@@ -706,7 +706,7 @@ static const mon_spellbook mspell_list[] =
     // ('v') Vortices.
     {  MST_WILL_O_THE_WISP,
       {
-       { SPELL_MARSHLIGHT, 33, MON_SPELL_MAGICAL },
+       { SPELL_MARSHLIGHT, 50, MON_SPELL_MAGICAL },
        { SPELL_BLINK, 12, MON_SPELL_MAGICAL },
       }
     },
