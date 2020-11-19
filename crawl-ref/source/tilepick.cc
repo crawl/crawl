@@ -3264,11 +3264,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EXPLORE;
     case CMD_INTERLEVEL_TRAVEL:
         return TILEG_CMD_INTERLEVEL_TRAVEL;
-#ifdef CLUA_BINDINGS
-    // might not be defined if building without LUA
     case CMD_AUTOFIGHT:
         return TILEG_CMD_AUTOFIGHT;
-#endif
     case CMD_WAIT:
         return TILEG_CMD_WAIT;
     case CMD_USE_ABILITY:

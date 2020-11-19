@@ -176,11 +176,9 @@ bool trap_def::is_safe(actor* act) const
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
         return true;
 
-#ifdef CLUA_BINDINGS
     // Let players specify traps as safe via lua.
     if (clua.callbooleanfn(false, "c_trap_is_safe", "s", trap_name(type).c_str()))
         return true;
-#endif
 
     if (type == TRAP_DART)
         return you.hp > 15;

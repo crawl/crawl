@@ -30,9 +30,7 @@
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1
 
-#ifdef CLUA_BINDINGS
 static void kill_lua_filltable(vector<kill_exp> &v);
-#endif
 
 ///////////////////////////////////////////////////////////////////////////
 // KillMaster
@@ -159,13 +157,11 @@ string KillMaster::kill_info() const
         grandt = buf;
     }
 
-#ifdef CLUA_BINDINGS
     bool custom = false;
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
     if (!clua.callfn("c_kill_list", "ss>b", nullptr, grandt.c_str(), &custom)
         || !custom)
-#endif
     {
         // We can sum up ourselves, if Lua doesn't want to.
         if (categories > 1)
@@ -185,7 +181,6 @@ void KillMaster::add_kill_info(string &killtext,
                                const char *category,
                                bool separator) const
 {
-#ifdef CLUA_BINDINGS
     // Set a pointer to killtext as a Lua global
     lua_pushlightuserdata(clua.state(), &killtext);
     clua.setregistry("cr_skill");
@@ -204,15 +199,12 @@ void KillMaster::add_kill_info(string &killtext,
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     if (!clua.callfn("c_kill_list", 3, 1)
         || !lua_isboolean(clua, -1) || !lua_toboolean(clua, -1))
-#endif
     {
-#ifdef CLUA_BINDINGS
         if (!clua.error.empty())
         {
             killtext += "Lua error:\n";
             killtext += clua.error + "\n\n";
         }
-#endif
         if (separator)
             killtext += "\n";
 
@@ -228,9 +220,7 @@ void KillMaster::add_kill_info(string &killtext,
         killtext += make_stringf("%d creature%s vanquished.\n",
                                  count, count == 1 ? "" : "s");
     }
-#ifdef CLUA_BINDINGS
     lua_pop(clua, 1);
-#endif
 }
 
 int KillMaster::num_kills(const monster* mon, kill_category cat) const
@@ -994,7 +984,6 @@ void cluaopen_kills(lua_State *ls)
     luaL_openlib(ls, "kills", kill_lib, 0);
 }
 
-#ifdef CLUA_BINDINGS
 static void kill_lua_filltable(vector<kill_exp> &v)
 {
     lua_State *ls = clua.state();
@@ -1005,4 +994,3 @@ static void kill_lua_filltable(vector<kill_exp> &v)
         lua_rawseti(ls, -2, i + 1);
     }
 }
-#endif

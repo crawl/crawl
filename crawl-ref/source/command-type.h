@@ -129,11 +129,9 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
-#ifdef CLUA_BINDINGS
     CMD_AUTOFIGHT,
     CMD_AUTOFIGHT_NOMOVE,
     CMD_AUTOFIRE,
-#endif
 
 #ifdef USE_TILE
     CMD_ZOOM_IN,

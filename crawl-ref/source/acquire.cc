@@ -1741,7 +1741,6 @@ bool acquirement_menu()
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
-#ifdef CLUA_BINDINGS
     int index = 0;
     if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
@@ -1753,7 +1752,6 @@ bool acquirement_menu()
         _create_acquirement_item(acq_items[index - 1]);
         return true;
     }
-#endif
 
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();

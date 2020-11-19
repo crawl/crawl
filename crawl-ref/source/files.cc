@@ -482,9 +482,7 @@ void validate_basedirs()
     // there are a few others, but this should be enough to minimally run something
     const vector<string> data_subfolders =
     {
-#ifdef CLUA_BINDINGS
         "clua",
-#endif
         "database",
         "defaults",
         "des",
@@ -2321,10 +2319,8 @@ static void _save_game_base()
     /* Stashes */
     SAVEFILE("st", "stashes", StashTrack.save);
 
-#ifdef CLUA_BINDINGS
     /* lua */
-    SAVEFILE("lua", "lua", clua.save);
-#endif
+    SAVEFILE("lua", "lua", clua.save); // what goes in here?
 
     /* kills */
     SAVEFILE("kil", "kills", you.kills.save);

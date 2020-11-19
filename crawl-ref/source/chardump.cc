@@ -89,9 +89,7 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
-#ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
-#endif
 static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
@@ -151,11 +149,7 @@ static dump_section_handler dump_handlers[] =
     { "",               _sdump_newline       },
     { "-",              _sdump_separator     },
 
-#ifdef CLUA_BINDINGS
     { nullptr,          _sdump_lua           }
-#else
-    { nullptr,          nullptr              }
-#endif
 };
 
 static void dump_section(dump_params &par)
@@ -584,7 +578,6 @@ static void _sdump_separator(dump_params &par)
     par.text += string(79, '-') + "\n";
 }
 
-#ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
 static void _sdump_lua(dump_params &par)
@@ -598,7 +591,6 @@ static void _sdump_lua(dump_params &par)
     else
         par.text += luatext;
 }
-#endif
 
 string chardump_desc(const item_def& item)
 {

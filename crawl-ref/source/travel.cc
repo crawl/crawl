@@ -598,20 +598,14 @@ static inline void _check_interesting_square(const coord_def pos,
 
 static void _userdef_run_stoprunning_hook()
 {
-#ifdef CLUA_BINDINGS
     if (you.running)
         clua.callfn("ch_stop_running", "s", _run_mode_name(you.running));
-#else
-    UNUSED(_run_mode_name);
-#endif
 }
 
 static void _userdef_run_startrunning_hook()
 {
-#ifdef CLUA_BINDINGS
     if (you.running)
         clua.callfn("ch_start_running", "s", _run_mode_name(you.running));
-#endif
 }
 
 bool is_resting()
