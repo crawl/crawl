@@ -7413,7 +7413,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_AWAKEN_FOREST:
         if (mon->has_ench(ENCH_AWAKEN_FOREST)
-               || env.forest_awoken_until <= you.elapsed_time)
+               || env.forest_awoken_until > you.elapsed_time)
         {
             return ai_action::impossible();
         }
