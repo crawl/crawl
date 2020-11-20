@@ -366,6 +366,7 @@ end
 
 function af_mp_is_low()
   local mp, mmp = you.mp()
+  -- AUTOMAGIC_STOP is currently in automagic.lua
   return (100*mp <= AUTOMAGIC_STOP*mmp)
 end
 

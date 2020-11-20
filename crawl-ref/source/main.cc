@@ -1708,6 +1708,56 @@ static bool _check_recklessness(command_type prev_cmd)
     return false;
 }
 
+static const string _autofight_lua_fn(command_type cmd)
+{
+    switch (cmd)
+    {
+    case CMD_AUTOFIRE:
+        return "fire_closest";
+    case CMD_AUTOFIGHT_NOMOVE:
+        return "hit_closest_nomove";
+    case CMD_AUTOFIGHT:
+        return "hit_closest";
+    default:
+        die("Unknown autofight command");
+    }
+}
+
+static void _handle_autofight(command_type cmd, command_type prev_cmd)
+{
+    // This will lead to recklessness messages taking priority over disabled
+    // quiver messages -- is this good?
+    if (_check_recklessness(prev_cmd))
+        return;
+
+    if (cmd == CMD_AUTOFIRE)
+    {
+        if (!you.quiver_action.get().is_valid())
+        {
+            mpr("Nothing quivered!"); // Can this happen?
+            return;
+        }
+
+        // Some quiver actions need to be triggered directly. Disabled quiver
+        // actions are also triggered here for messaging purposes -- the errors
+        // are more informative than what you'd get through autofight.
+        if (!you.quiver_action.get().allow_autofight()
+            || !you.quiver_action.get().is_enabled())
+        {
+            you.quiver_action.get().trigger();
+            return;
+        }
+
+        // quiver actions that aren't called directly above are triggered via
+        // autofight code below
+    }
+
+    const string fnname = _autofight_lua_fn(cmd);
+
+    if (!clua.callfn(fnname.c_str(), 0, 0))
+        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+}
+
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
@@ -1771,28 +1821,9 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_RUN_RIGHT:     _start_running(RDIR_RIGHT, RMODE_START);     break;
 
     case CMD_AUTOFIRE:
-        if (!you.quiver_action.get().is_valid())
-            mpr("Nothing quivered!"); // shouldn't actually be possible...
-
-        // disabled quiver actions are triggered here for messaging purposes
-        if (!you.quiver_action.get().allow_autotarget()
-                                    || !you.quiver_action.get().is_enabled())
-        {
-            if (!_check_recklessness(prev_cmd))
-                you.quiver_action.get().trigger();
-            break;
-        }
-        // intentional fallthrough
     case CMD_AUTOFIGHT:
     case CMD_AUTOFIGHT_NOMOVE:
-        if (!_check_recklessness(prev_cmd))
-        {
-            const char * const fnname = cmd == CMD_AUTOFIGHT ? "hit_closest"
-                                      : cmd == CMD_AUTOFIRE  ? "fire_closest"
-                                                             : "hit_closest_nomove";
-            if (!clua.callfn(fnname, 0, 0))
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-        }
+        _handle_autofight(cmd, prev_cmd);
         break;
 
     case CMD_REST:           _do_rest(); break;
