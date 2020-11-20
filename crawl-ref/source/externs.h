@@ -341,6 +341,7 @@ public:
     dist();
 
     bool isMe() const;
+    bool needs_targeting() const;
 
     bool isValid;       // output: valid target chosen?
     bool isTarget;      // output: target (true), or direction (false)?

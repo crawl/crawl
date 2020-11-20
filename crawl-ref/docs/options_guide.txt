@@ -1227,9 +1227,8 @@ ability_slot ^= <regex>:<ability letters>
 
 autofight_stop = 50
         Autofight will not act if your HP is at or lower than this
-        percentage of your max HP. For example, to remove this stop
-        you would want:
-            autofight_stop = 0
+        percentage of your max HP. Disabled when set to 0. This setting applies
+        both to autofight and to autofire.
 
 autofight_warning = 0
         Enforce a minimum time (in milliseconds) between autofight commands.
@@ -1290,8 +1289,8 @@ automagic_fight = false
 
 automagic_stop = 0
         Similar to autofight_stop, if magic points are below this number
-        (percentage of total), casting is prevented. What happens depends
-        on automagic_fight setting.
+        (percentage of total), casting via autofight/autofire is prevented.
+        Disabled when set to 0.
 
 fail_severity_to_confirm = 3
         Ask for confirmation when attempting to cast a spell where a miscast
