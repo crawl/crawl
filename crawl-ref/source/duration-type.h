@@ -215,5 +215,6 @@ enum duration_type
     DUR_STABBING,
 #endif
     DUR_ATTRACTIVE,
+    DUR_LOCKED_DOWN,
     NUM_DURATIONS
 };

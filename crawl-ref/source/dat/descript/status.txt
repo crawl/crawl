@@ -145,6 +145,11 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
+-Move status
+
+You are prevented from moving, blinking, or teleporting. (You can still take
+other actions.)
+%%%%
 Mark status
 
 Your location is marked due to the effects of a trap or a spell, and monsters
