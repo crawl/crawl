@@ -1272,7 +1272,7 @@ namespace quiver
         // save compat (or bug compat): initialize to an invalid action if we
         // are missing the keys altogether
         if (!source.exists("type") || !source.exists("param"))
-            return make_shared<action>();
+            return make_shared<ammo_action>(-1);
 
         const string &type = source["type"].get_string();
         const int param = source["param"].get_int();
@@ -1374,7 +1374,7 @@ namespace quiver
         return result;
     }
 
-    action_cycler::action_cycler() : current(make_shared<action>()) { };
+    action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { };
 
     void action_cycler::save(const string key) const
     {
@@ -1575,9 +1575,9 @@ namespace quiver
         if (!result || !result->is_valid())
             result = _get_next_action_type(get_ptr(), dir, allow_disabled);
 
-        // no valid actions, return an empty-quiver action
+        // no valid actions, return an (invalid) empty-quiver action
         if (!result)
-            return make_shared<action>();
+            return make_shared<ammo_action>(-1);
 
         return result;
     }
@@ -1595,7 +1595,10 @@ namespace quiver
             if (r && r->is_valid())
                 set(r);
             else
+            {
+                dprf("cycle");
                 cycle();
+            }
         }
         set_needs_redraw();
     }
@@ -1993,21 +1996,20 @@ namespace quiver
         const item_def* weapon = you.weapon();
         you.launcher_action.set(quiver::find_action_from_launcher(weapon));
 
-        if (!you.quiver_action.get().is_valid()
-                                        && !you.launcher_action.is_empty())
+        if (!you.launcher_action.is_empty())
         {
-            // if changing weapons has invalidated the main quiver, and we
-            // did find valid ammo, set that to the main quiver
+            // If the launcher has valid ammo, set that to the main quiver as
+            // well. TODO: is this too annoying? It is based on previous
+            // behavior, and is relatively intuitive in simple cases. But it
+            // could be pretty annoying in a char using both spells and ranged
+            // weapons. Maybe add an option?
             you.quiver_action.set(you.launcher_action.get_ptr());
         }
-        // TODO: if wielding a sling and launching stones, you switch to
-        // a different launcher type, stones remain quivered as a throwable.
-        // Seems like it would be better if the main quiver changed. (But this
-        // is too niche to bother with now...)
 
         // if switching invalidates the quiver, and the new weapon is an
         // evokable randart, use that action. (If someone ever makes an
-        // evokable launcher, its ammo will be prioritized, revisit.)
+        // evokable launcher, its ammo will be prioritized, revisit.) This
+        // isn't as aggressive as the launcher case.
         if (weapon && is_unrandom_artefact(*weapon)
                                     && !you.quiver_action.get().is_valid())
         {

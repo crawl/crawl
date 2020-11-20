@@ -711,6 +711,7 @@ void MemoriseDelay::finish()
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
+    quiver::on_actions_changed();
 }
 
 void PasswallDelay::finish()
