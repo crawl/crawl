@@ -3038,7 +3038,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.skills_to_hide.insert(abil_skill(abil));
 
     update_can_currently_train();
-    you.can_currently_train.set(SK_INVOCATIONS, false);
     reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.

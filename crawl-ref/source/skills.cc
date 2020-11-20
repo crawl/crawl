@@ -484,26 +484,15 @@ string skill_names(const skill_set &skills)
 
 static void _check_skills_to_show()
 {
-    skill_set skills;
     for (skill_type sk : you.skills_to_show)
     {
         if (is_invalid_skill(sk) || is_useless_skill(sk))
             continue;
 
-        if (!you.can_currently_train[sk] && you.train[sk])
-            skills.insert(sk);
         you.should_show_skill.set(sk);
     }
 
     reset_training();
-
-    // We're careful of not invalidating the iterator when erasing.
-    for (auto it = skills.begin(); it != skills.end();)
-        if (!you.training[*it])
-            skills.erase(it++);
-        else
-            ++it;
-
     you.skills_to_show.clear();
 }
 
