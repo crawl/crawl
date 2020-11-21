@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "attack.h"
 #include "colour.h"
 #include "coordit.h"
 #include "english.h"
@@ -801,6 +802,24 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     return make_stringf("about %d", mhp);
+}
+
+/**
+ * Calculate some defender-specific effects on an attacker's to-hit.
+ */
+int monster_info::lighting_modifiers() const
+{
+    // Lighting effects.
+    if (is(MB_GLOWING)       // corona, silver corona (!)
+        || is(MB_BURNING)    // sticky flame
+        || is(MB_HALOED))
+    {
+        return BACKLIGHT_TO_HIT_BONUS;
+    }
+    if (is(MB_UMBRAED) && !you.nightvision())
+        return UMBRA_TO_HIT_MALUS;
+
+    return 0;
 }
 
 

@@ -3953,7 +3953,7 @@ static int _to_hit_pct(const monster_info& mi, attack &atk, bool melee)
     for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
     {
         // Apply post-roll manipulations:
-        int adjusted_mhit = rolled_mhit + _lighting_modifiers(mi);
+        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
 
         adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
 

@@ -1258,6 +1258,49 @@ int hex_success_chance(const int mr, int powc, int scale, bool round_up)
     return (scale * _triangular_number(201 - target) + adjust) / denom;
 }
 
+// approximates _test_beam_hit in a deterministic fashion.
+static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
+{
+    if (acc == AUTOMATIC_HIT)
+        return 100;
+
+    acc += mi.lighting_modifiers();
+
+    int hits = 0;
+    for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
+    {
+        int adjusted_mhit = rolled_mhit;
+        if (mi.is(MB_REPEL_MSL))
+        {
+            // this is wrong - we should be re-rolling here.
+            if (pierce)
+                adjusted_mhit = adjusted_mhit * 3 /4;
+            else
+                adjusted_mhit /= 2;
+        }
+
+        // ev is effectively quartered (!) against beams, since we call random2
+        // on ev *twice* before checking it against hit. (Probably we should
+        // simulate more rolls here...)
+        if (adjusted_mhit >= mi.ev / 4)
+            hits++;
+    }
+
+    return hits * 100 / acc;
+}
+
+static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc)
+{
+    targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
+    if (!beam_hitf)
+        return vector<string>{};
+    const int acc = beam_hitf->beam.hit;
+    if (!acc)
+        return vector<string>{};
+    const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
+    return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
+}
+
 // Include success chance in targeter for spells checking monster MR.
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc)
@@ -1386,15 +1429,24 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                               && testbits(flags, spflag::dir_or_target)
                               && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
+        const zap_type zap = spell_to_zap(spell);
         if (mr_check)
         {
-            const zap_type zap = spell_to_zap(spell);
             const int eff_pow = zap == NUM_ZAPS ? powc
                                                 : zap_ench_power(zap, powc,
                                                                  false);
             additional_desc = bind(desc_success_chance, placeholders::_1,
                                    eff_pow, evoked_item, hitfunc.get());
+        } else {
+            targeter_beam* beam_hitf =
+                dynamic_cast<targeter_beam*>(hitfunc.get());
+            if (beam_hitf && beam_hitf->beam.hit > 0)
+            {
+                additional_desc = bind(_desc_hit_chance, placeholders::_1,
+                                       hitfunc.get());
+            }
         }
+
 
         string title = make_stringf("Aiming: <w>%s</w>", spell_title(spell));
         if (allow_fail)
