@@ -3015,6 +3015,23 @@ void bolt::tracer_affect_player()
     extra_range_used += range_used_on_hit();
 }
 
+int bolt::apply_lighting(int base_hit, const actor &targ) const
+{
+    if (targ.invisible() && !can_see_invis)
+        base_hit /= 2;
+
+    // We multiply these lighting effects by 2, since they're applied
+    // before rolling to-hit (and hence will get halved later)
+
+    if (targ.backlit(false))
+        base_hit += BACKLIGHT_TO_HIT_BONUS * 2;
+
+    if (!nightvision && targ.umbra())
+        base_hit -= UMBRA_TO_HIT_MALUS * 2;
+
+    return base_hit;
+}
+
 /* Determine whether the beam hit or missed the player, and tell them if it
  * missed.
  *
@@ -3032,19 +3049,7 @@ bool bolt::misses_player()
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
-    {
-        // Monsters shooting at an invisible player are very inaccurate.
-        if (you.invisible() && !can_see_invis)
-            real_tohit /= 2;
-
-        // Backlit is easier to hit:
-        if (you.backlit(false))
-            real_tohit += 2 + random2(8);
-
-        // Umbra is harder to hit:
-        if (!nightvision && you.umbra())
-            real_tohit -= 2 + random2(4);
-    }
+        real_tohit = apply_lighting(real_tohit, you);
 
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
@@ -4794,18 +4799,7 @@ void bolt::affect_monster(monster* mon)
     int beam_hit = hit;
 
     if (beam_hit != AUTOMATIC_HIT)
-    {
-        if (mon->invisible() && !can_see_invis)
-            beam_hit /= 2;
-
-        // Backlit is easier to hit:
-        if (mon->backlit(false))
-            beam_hit += 2 + random2(8);
-
-        // Umbra is harder to hit:
-        if (!nightvision && mon->umbra())
-            beam_hit -= 2 + random2(4);
-    }
+        beam_hit = apply_lighting(beam_hit, *mon);
 
     // The monster may block the beam.
     if (!engulfs && is_blockable() && attempt_block(mon))
