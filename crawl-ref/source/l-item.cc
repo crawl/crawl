@@ -1534,6 +1534,38 @@ static int l_item_acquirement_items(lua_State *ls)
     return 1;
 }
 
+/*** Fire an item in inventory at a target, either an evokable or a throwable
+ * ammo. This will work for launcher ammo, but only if the launcher is wielded.
+ * Some evokables (e.g. artefact weapons) may also need to be wielded.
+ *
+ * @tparam number the item's slot
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @tparam[opt=false] boolean whether to allow fumble throwing of non-activatable items
+ * @treturn boolean whether an action took place
+ */
+static int l_item_fire(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const int slot = luaL_safe_checkint(ls, 1);
+
+    if (slot < 0 || slot > ENDOFPACK || !you.inv[slot].defined())
+    {
+        luaL_argerror(ls, 1,
+                        make_stringf("Invalid item slot: %d", slot).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    const bool force = lua_toboolean(ls, 5); // can be nil
+    quiver::slot_to_action(slot, force)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1633,6 +1665,7 @@ static const struct luaL_reg item_lib[] =
     { "shop_inventory",    l_item_shop_inventory },
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
+    { "fire",              l_item_fire },
     { nullptr, nullptr },
 };
 
