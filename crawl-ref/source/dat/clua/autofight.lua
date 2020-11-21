@@ -201,12 +201,13 @@ local function will_tab(ax, ay, bx, by)
   return will_tab(ax+move[1], ay+move[2], bx, by)
 end
 
--- attack types
---  -1: fail
---   0: move towards target
---   1: reaching (evoke weapon with target)
---   2: melee
---   3: fire
+-- attack types for get_monster_info return value
+local AF_FAILS = -1
+local AF_MOVES = 0    -- target not in range, can move towards it
+local AF_REACHING = 1 -- target in range for a reaching attack + reaching available
+local AF_MELEE = 2    -- target in melee range + melee attack available
+local AF_FIRE = 3     -- target in fire range + ranged attack available
+
 local function get_monster_info(dx,dy,no_move)
   m = monster.get_monster_at(dx,dy)
   name = m:name()
@@ -216,31 +217,33 @@ local function get_monster_info(dx,dy,no_move)
   info = {}
   info.distance = (abs(dx) > abs(dy)) and -abs(dx) or -abs(dy)
   if have_ranged() then
-    info.attack_type = you.see_cell_no_trans(dx, dy) and 3 or 0
+    info.attack_type = you.see_cell_no_trans(dx, dy) and AF_FIRE or AF_MOVES
   elseif not have_reaching() then
-    info.attack_type = (-info.distance < 2) and 2 or 0
+    info.attack_type = (-info.distance < 2) and AF_MELEE or AF_MOVES
   else
     local range = reach_range()
     -- Assume extended reach (i.e. Rift) gets smite targeting.
     local can_reach = range > 2 and you.see_cell_no_trans or view.can_reach
     if -info.distance > range then
-      info.attack_type = 0
+      info.attack_type = AF_MOVES
     elseif -info.distance < 2 then
-      info.attack_type = 2
+      info.attack_type = AF_MELEE
     else
-      info.attack_type = can_reach(dx, dy) and 1 or 0
+      info.attack_type = can_reach(dx, dy) and AF_REACHING or AF_MOVES
     end
   end
   if info.attack_type == 0 and have_quiver_action(no_move) and you.see_cell_no_trans(dx, dy) then
-    info.attack_type = 3
+    info.attack_type = AF_FIRE
   end
-  if info.attack_type <= 2 and AUTOFIGHT_FORCE_FIRE then
+  if info.attack_type ~= AF_FIRE and AUTOFIGHT_FORCE_FIRE then
+    -- firing can often be preempted by melee etc, but we have been called by
+    -- CMD_AUTOFIRE, so force firing.
     -- TODO: refactor so that this is less hacky
-    info.attack_type = 3
+    info.attack_type = AF_FIRE
   end
 
-  if info.attack_type == 0 and not will_tab(0,0,dx,dy) then
-    info.attack_type = -1
+  if info.attack_type == AF_MOVES and not will_tab(0,0,dx,dy) then
+    info.attack_type = AF_FAILS
   end
   info.can_attack = (info.attack_type > 0) and 1 or info.attack_type
   info.safe = m:is_safe() and -1 or 0
@@ -404,13 +407,13 @@ function attack(allow_movement)
     else
       crawl.mpr("No target in view!")
     end
-  elseif info.attack_type == 3 then
+  elseif info.attack_type == AF_FIRE then
     attack_fire(x,y)
-  elseif info.attack_type == 2 then
+  elseif info.attack_type == AF_MELEE then
     attack_melee(x,y)
-  elseif info.attack_type == 1 then
+  elseif info.attack_type == AF_REACHING then
     attack_reach(x,y)
-  elseif info.attack_type == -1 then
+  elseif info.attack_type == AF_FAILS then
     crawl.mpr("No reachable target in view!")
   elseif allow_movement then
     if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
