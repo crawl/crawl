@@ -911,7 +911,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
                          { CMD_ADJUST_INVENTORY });
 
-    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
+    _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",

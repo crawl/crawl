@@ -12,8 +12,10 @@
 #include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "directn.h"
 #include "env.h"
 #include "evoke.h"
+#include "fight.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
@@ -28,7 +30,10 @@
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
+#include "terrain.h"
 #include "throw.h"
+#include "transform.h"
+#include "traps.h"
 
 static int _get_pack_slot(const item_def&);
 static bool _item_matches(const item_def &item, fire_type types,
@@ -288,6 +293,298 @@ namespace quiver
         for (unsigned int i = 0; i < order.size(); i++)
             order[i] &= 0xffff;
     }
+
+    // class isn't intended for quivering per se. Rather, it's a wrapper on
+    // targeted attacks involving melee weapons or unarmed fighting. This
+    // covers regular 1-space melee attacks, as well as reaching attacks of
+    // arbitrary distance (currently only going up to 2 in practice).
+    struct melee_action : public action
+    {
+        melee_action() : action()
+        {
+        }
+
+        void save(CrawlHashTable &save_target) const override;
+
+        bool is_enabled() const override
+        {
+            // just disable the action for these cases. In the long run it
+            // may be good to merge swing_at_target into here?
+            return !you.caught()
+                && !you.confused();
+        }
+
+        bool is_valid() const override { return true; }
+        bool is_targeted() const override { return true; }
+
+        string quiver_verb() const
+        {
+            const item_def *weapon = you.weapon();
+
+            if (!weapon)
+            {
+                const auto form_verbs = get_form(you.form)->uc_attack_verbs;
+                if (form_verbs.medium) // we use med because it mostly has better flavor
+                    return form_verbs.medium;
+                else
+                {
+                    // this is actually a bitmask, but we will simplify quite a
+                    // bit here and only use this for unarmed/forms. See
+                    // melee_attack::set_attack_verb for the real thing.
+                    const int dt = you.damage_type();
+                    if (dt | DVORP_CLAWING || dt | DVORP_TENTACLE)
+                        return "attack";
+                }
+                return "punch";
+            }
+
+            const launcher lt = _get_weapon_ammo_type(weapon);
+            if (lt != AMMO_THROW)
+                return lt == AMMO_SLING ? "fire" : "shoot";
+            else if (attack_cleaves(you))
+                return "cleave";
+            else if (weapon_reach(*weapon) > REACH_NONE)
+                return "reach";
+            else
+                return "hit"; // could use more subtype flavor Vs?
+        }
+
+        formatted_string quiver_description(bool short_desc=false) const override
+        {
+            if (!is_valid())
+                return action::quiver_description(short_desc);
+
+            formatted_string qdesc;
+            const item_def *weapon = you.weapon();
+
+            // TODO: or just lightgrey?
+            qdesc.textcolour(Options.status_caption_colour);
+
+            if (!short_desc)
+            {
+                string verb = you.confused() ? "confused " : "";
+
+                verb += quiver_verb();
+                qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
+                                weapon ? index_to_letter(weapon->link) : '-');
+            }
+
+            const string prefix = weapon ? item_prefix(*weapon) : "";
+
+            const int prefcol =
+                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats");
+            if (!is_enabled())
+                qdesc.textcolour(DARKGREY);
+            else if (prefcol != -1)
+                qdesc.textcolour(prefcol);
+            else
+                qdesc.textcolour(LIGHTGREY);
+
+            qdesc += weapon ? weapon->name(DESC_PLAIN, true)
+                            : you.unarmed_attack_name();
+
+            return qdesc;
+        }
+
+        void trigger(dist &t) override
+        {
+            // TODO: does it actually make sense to have this monster in
+            // quiver.cc?
+
+            target = t;
+
+            if (you.confused() && target.needs_targeting())
+            {
+                mpr("You're too confused to aim your attacks!");
+                return;
+            }
+
+            if (you.caught())
+            {
+                if (target.needs_targeting())
+                    mprf("You cannot attack while %s.", held_status());
+                else
+                {
+                    // assume that if a target was explicitly supplied, it was
+                    // done intentionally
+                    free_self_from_net();
+                    you.turn_is_over = true;
+                    return;
+                }
+                return;
+            }
+
+            bool targ_mid = false;
+
+            // TODO melded weapons
+            const item_def *weapon = you.weapon();
+            target.isEndpoint = true; // is this needed? imported from autofight code
+            const reach_type reach_range = !weapon ? REACH_NONE
+                                                    : weapon_reach(*weapon);
+
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_HOSTILE;
+            args.range = reach_range;
+            args.top_prompt = quiver_description().tostring();
+            args.self = confirm_prompt_type::cancel;
+
+            unique_ptr<targeter> hitfunc;
+            if (attack_cleaves(you, -1))
+                hitfunc = make_unique<targeter_cleave>(&you, you.pos());
+            else
+                hitfunc = make_unique<targeter_reach>(&you, reach_range);
+            args.hitfunc = hitfunc.get();
+
+            direction(target, args);
+            t = target;
+
+            if (!target.isValid)
+            {
+                if (target.isCancel)
+                    canned_msg(MSG_OK);
+                return;
+            }
+
+            if (target.isMe())
+            {
+                canned_msg(MSG_UNTHINKING_ACT);
+                return;
+            }
+
+            const coord_def delta = target.target - you.pos();
+            const int x_distance  = abs(delta.x);
+            const int y_distance  = abs(delta.y);
+            monster* mons = monster_at(target.target);
+            // don't allow targeting of submerged monsters
+            if (mons && mons->submerged())
+                mons = nullptr;
+
+            if (x_distance > reach_range || y_distance > reach_range)
+            {
+                mpr("Your weapon cannot reach that far!");
+                return;
+            }
+
+            if (feat_is_solid(env.grid(target.target)))
+            {
+                canned_msg(MSG_SOMETHING_IN_WAY);
+                return;
+            }
+
+            // Failing to hit someone due to a friend blocking is infuriating,
+            // shadow-boxing empty space is not (and would be abusable to wait
+            // with no penalty).
+            if (mons)
+                you.apply_berserk_penalty = false;
+
+            // Calculate attack delay now in case we have to apply it.
+            const int attack_delay = you.attack_delay().roll();
+
+            // Check for a monster in the way. If there is one, it blocks the reaching
+            // attack 50% of the time, and the attack tries to hit it if it is hostile.
+            // REACH_THREE entails smite targeting; this is a bit hacky in that
+            // this is entirely for the sake of UNRAND_RIFT.
+            if (reach_range < REACH_THREE && (x_distance > 1 || y_distance > 1))
+            {
+                const int x_first_middle = you.pos().x + (delta.x) / 2;
+                const int y_first_middle = you.pos().y + (delta.y) / 2;
+                const int x_second_middle = target.target.x - (delta.x) / 2;
+                const int y_second_middle = target.target.y - (delta.y) / 2;
+                const coord_def first_middle(x_first_middle, y_first_middle);
+                const coord_def second_middle(x_second_middle, y_second_middle);
+
+                if (!feat_is_reachable_past(env.grid(first_middle))
+                    && !feat_is_reachable_past(env.grid(second_middle)))
+                {
+                    canned_msg(MSG_SOMETHING_IN_WAY);
+                    return;
+                }
+
+                // Choose one of the two middle squares (which might be the same).
+                const coord_def middle =
+                    !feat_is_reachable_past(env.grid(first_middle)) ? second_middle :
+                    !feat_is_reachable_past(env.grid(second_middle)) ? first_middle :
+                random_choose(first_middle, second_middle);
+
+                bool success = true;
+                monster *midmons;
+                if ((midmons = monster_at(middle))
+                    && !midmons->submerged()
+                    && coinflip())
+                {
+                    success = false;
+                    target.target = middle;
+                    mons = midmons;
+                    targ_mid = true;
+                    t = target;
+                    if (mons->wont_attack())
+                    {
+                        // Let's assume friendlies cooperate.
+                        mpr("You could not reach far enough!");
+                        you.time_taken = attack_delay;
+                        you.turn_is_over = true;
+                        return;
+                    }
+                }
+
+                if (success)
+                    mpr("You reach to attack!");
+                else
+                {
+                    mprf("%s is in the way.",
+                         mons->observable() ? mons->name(DESC_THE).c_str()
+                                            : "Something you can't see");
+                }
+            }
+
+            if (mons == nullptr)
+            {
+                if (feat_is_solid(env.grid(target.target)) && !you.confused())
+                    return;
+
+                if (!force_player_cleave(target.target) && !you.fumbles_attack())
+                {
+                    if (x_distance <= 1 && y_distance <= 1)
+                        mpr("You swing at nothing.");
+                    else
+                        mpr("You attack empty space.");
+                }
+                you.time_taken = attack_delay;
+                you.turn_is_over = true;
+            }
+            else
+            {
+                // something to attack, let's do it:
+                you.turn_is_over = true;
+                if (!fight_melee(&you, mons) && targ_mid)
+                {
+                    // turn_is_over may have been reset to false by fight_melee, but
+                    // a failed attempt to reach further should not be free; instead,
+                    // charge the same as a successful attempt.
+                    you.time_taken = attack_delay;
+                    you.turn_is_over = true;
+                }
+                you.berserk_penalty = 0;
+                you.apply_berserk_penalty = false;
+            }
+
+            return;
+        }
+
+        int get_item() const override
+        {
+            return you.equip[EQ_WEAPON];
+        };
+
+        vector<shared_ptr<action>> get_fire_order(bool allow_disabled) const override
+        {
+            if (allow_disabled || is_enabled())
+                return { make_shared<melee_action>() };
+            else
+                return { };
+        }
+    };
 
     /**
      * An ammo_action is an action that fires ammo from a slot in the
@@ -1262,6 +1559,12 @@ namespace quiver
         save_target["param"] = static_cast<int>(wand_slot);
     }
 
+    // not currently used, but for completeness
+    void melee_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "melee_action";
+    }
+
     static shared_ptr<action> _load_action(CrawlHashTable &source)
     {
         // pretty minimal: but most actions that I can think of shouldn't need
@@ -1292,6 +1595,8 @@ namespace quiver
             return make_shared<artefact_evoke_action>(param);
         else if (type == "fumble_action")
             return make_shared<fumble_action>(param);
+        else if (type == "melee_action")
+            return make_shared<melee_action>();
         else
             return make_shared<action>();
     }
@@ -1636,6 +1941,14 @@ namespace quiver
         if (force && (!a || !a->is_valid()))
             return make_shared<fumble_action>(slot);
         return a;
+    }
+
+    shared_ptr<action> get_primary_action()
+    {
+        if (you.launcher_action.is_empty())
+            return make_shared<melee_action>();
+        else
+            return you.launcher_action.get_ptr();
     }
 
     bool action_cycler::set_from_slot(int slot)

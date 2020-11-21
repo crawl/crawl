@@ -804,7 +804,10 @@ aff_type targeter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
+    // hacks: REACH_THREE entails smite targeting, because it exists entirely
+    // for the sake of UNRAND_RIFT. So, don't show the tracer.
+    if (range < REACH_THREE
+        && ((loc - origin) * 2 - (aim - origin)).abs() <= 1
         && feat_is_reachable_past(env.grid(loc)))
     {
         return AFF_TRACER;
@@ -818,14 +821,29 @@ targeter_cleave::targeter_cleave(const actor* act, coord_def target)
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    set_aim(target);
+}
+
+bool targeter_cleave::valid_aim(coord_def a)
+{
+    if ((origin - a).rdist() > 1)
+        return notify_fail("You can't reach that far!");
+    return true;
+}
+
+
+bool targeter_cleave::set_aim(coord_def target)
+{
     aim = target;
+    targets.clear();
     list<actor*> act_targets;
-    get_cleave_targets(*act, target, act_targets);
+    get_cleave_targets(*agent, target, act_targets);
     while (!act_targets.empty())
     {
         targets.insert(act_targets.front()->pos());
         act_targets.pop_front();
     }
+    return true;
 }
 
 aff_type targeter_cleave::is_affected(coord_def loc)

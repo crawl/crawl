@@ -1933,6 +1933,12 @@ void process_command(command_type cmd, command_type prev_cmd)
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
+    case CMD_PRIMARY_ATTACK:
+        quiver::get_primary_action()->trigger();
+        if (!you.turn_is_over)
+            flush_input_buffer(FLUSH_ON_FAILURE);
+        break;
+
     case CMD_EVOKE_WIELDED:
     case CMD_FORCE_EVOKE_WIELDED:
         if (!evoke_item(you.equip[EQ_WEAPON]))
@@ -2459,73 +2465,10 @@ static keycode_type _get_next_keycode()
 
 static void _swing_at_target(coord_def move)
 {
-    if (you.attribute[ATTR_HELD])
-    {
-        free_self_from_net();
-        you.turn_is_over = true;
-        return;
-    }
-
-    if (you.confused())
-    {
-        if (!you.is_stationary())
-        {
-            mpr("You're too confused to attack without stumbling around!");
-            return;
-        }
-
-        if (cancel_confused_move(true))
-            return;
-
-        if (!one_chance_in(3))
-        {
-            move.x = random2(3) - 1;
-            move.y = random2(3) - 1;
-            if (move.origin())
-            {
-                mpr("You nearly hit yourself!");
-                you.turn_is_over = true;
-                return;
-            }
-        }
-    }
-
-    const coord_def target = you.pos() + move;
-    monster* mon = monster_at(target);
-    if (mon && !mon->submerged())
-    {
-        you.turn_is_over = true;
-        fight_melee(&you, mon);
-
-        you.berserk_penalty = 0;
-        you.apply_berserk_penalty = false;
-        return;
-    }
-
-    // Don't waste a turn if feature is solid.
-    if (feat_is_solid(env.grid(target)) && !you.confused())
-        return;
-    else
-    {
-        list<actor*> cleave_targets;
-        get_cleave_targets(you, target, cleave_targets);
-
-        if (!cleave_targets.empty())
-        {
-            targeter_cleave hitfunc(&you, target);
-            if (stop_attack_prompt(hitfunc, "attack"))
-                return;
-
-            if (!you.fumbles_attack())
-                attack_cleave_targets(you, cleave_targets);
-        }
-        else if (!you.fumbles_attack())
-            mpr("You swing at nothing.");
-        // Take the usual attack delay.
-        you.time_taken = you.attack_delay().roll();
-    }
-    you.turn_is_over = true;
-    return;
+    dist target;
+    target.target = you.pos() + move;
+    // this lets ranged weapons work via this command also -- good or bad?
+    quiver::get_primary_action()->trigger(target);
 }
 
 // An attempt to tone down berserk a little bit. -- bwross

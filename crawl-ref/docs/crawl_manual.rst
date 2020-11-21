@@ -2555,8 +2555,9 @@ w
   Wield item a, or switch to b.
 
 v
-  Evoke power of wielded item. Also used to attack non-adjacent monsters with
-  a polearm.
+  Targeted attacks with your primary weapon, including attacking non-adjacent
+  monsters with a polearm, or firing a wielded launcher (regardless of the
+  state of the main quiver).
 
 V
   Evoke an item from the inventory. This includes using wands.
