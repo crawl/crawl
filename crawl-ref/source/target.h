@@ -143,7 +143,8 @@ class targeter_cleave : public targeter
 public:
     targeter_cleave(const actor* act, coord_def target);
     aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def) override { return false; }
+    bool valid_aim(coord_def) override;
+    bool set_aim(coord_def a) override;
 private:
     set<coord_def> targets;
 };

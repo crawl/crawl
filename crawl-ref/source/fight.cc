@@ -677,6 +677,42 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
 }
 
 /**
+ * Force cleave attacks. Used for melee actions that don't have targets, e.g.
+ * attacking empty space (otherwise, cleaving is handled in melee_attack).
+ *
+ * @param target the nominal target of the original attack.
+ * @return whether there were cleave targets relative to the player and `target`.
+ */
+bool force_player_cleave(coord_def target)
+{
+    list<actor*> cleave_targets;
+    get_cleave_targets(you, target, cleave_targets);
+
+    if (!cleave_targets.empty())
+    {
+        targeter_cleave hitfunc(&you, target);
+        if (stop_attack_prompt(hitfunc, "attack"))
+            return true;
+
+        if (!you.fumbles_attack())
+            attack_cleave_targets(you, cleave_targets);
+        return true;
+    }
+
+    return false;
+}
+
+bool attack_cleaves(const actor &attacker, int which_attack)
+{
+    const item_def* weap = attacker.weapon(which_attack);
+
+    return weap && item_attack_skill(*weap) == SK_AXES
+        || attacker.is_player()
+               && (you.form == transformation::hydra && you.heads() > 1
+                   || you.duration[DUR_CLEAVE]);
+}
+
+/**
  * List potential cleave targets (adjacent hostile creatures), including the
  * defender itself.
  *
@@ -696,12 +732,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    const item_def* weap = attacker.weapon(which_attack);
-
-    if (weap && item_attack_skill(*weap) == SK_AXES
-            || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
-                   || you.duration[DUR_CLEAVE]))
+    if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
@@ -717,6 +748,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         }
     }
 
+    // fake cleaving: gyre and gimble's extra attacks are implemented as
+    // cleaving attacks on enemies already in `targets`
+    const item_def* weap = attacker.weapon(which_attack);
     if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;

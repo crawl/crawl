@@ -70,165 +70,6 @@
 #include "unicode.h"
 #include "view.h"
 
-static bool _reaching_weapon_attack(const item_def& wpn, dist *_beam)
-{
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (you.caught())
-    {
-        mprf("You cannot attack while %s.", held_status());
-        return false;
-    }
-
-    bool targ_mid = false;
-    dist beam;
-    if (_beam)
-        beam = *_beam;
-
-    beam.isEndpoint = true; // is this needed? imported from autofight code
-    const reach_type reach_range = weapon_reach(wpn);
-
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE;
-    args.range = reach_range;
-    args.top_prompt = "Attack whom?";
-    args.self = confirm_prompt_type::cancel;
-
-    unique_ptr<targeter> hitfunc;
-    if (reach_range == REACH_TWO)
-        hitfunc = make_unique<targeter_reach>(&you, reach_range);
-    // Assume all longer forms of reach use smite targeting.
-    else
-    {
-        hitfunc = make_unique<targeter_smite>(&you, reach_range, 0, 0, false,
-                                              [](const coord_def& p) -> bool {
-                                              return you.pos() != p; });
-    }
-    args.hitfunc = hitfunc.get();
-
-    direction(beam, args);
-    if (_beam)
-        *_beam = beam;
-
-    if (!beam.isValid)
-    {
-        if (beam.isCancel)
-            canned_msg(MSG_OK);
-        return false;
-    }
-
-    if (beam.isMe())
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return false;
-    }
-
-    const coord_def delta = beam.target - you.pos();
-    const int x_distance  = abs(delta.x);
-    const int y_distance  = abs(delta.y);
-    monster* mons = monster_at(beam.target);
-    // don't allow targeting of submerged monsters
-    if (mons && mons->submerged())
-        mons = nullptr;
-
-    if (x_distance > reach_range || y_distance > reach_range)
-    {
-        mpr("Your weapon cannot reach that far!");
-        return false;
-    }
-
-    // Failing to hit someone due to a friend blocking is infuriating,
-    // shadow-boxing empty space is not (and would be abusable to wait
-    // with no penalty).
-    if (mons)
-        you.apply_berserk_penalty = false;
-
-    // Calculate attack delay now in case we have to apply it.
-    const int attack_delay = you.attack_delay().roll();
-
-    // Check for a monster in the way. If there is one, it blocks the reaching
-    // attack 50% of the time, and the attack tries to hit it if it is hostile.
-    if (reach_range < REACH_THREE && (x_distance > 1 || y_distance > 1))
-    {
-        const int x_first_middle = you.pos().x + (delta.x) / 2;
-        const int y_first_middle = you.pos().y + (delta.y) / 2;
-        const int x_second_middle = beam.target.x - (delta.x) / 2;
-        const int y_second_middle = beam.target.y - (delta.y) / 2;
-        const coord_def first_middle(x_first_middle, y_first_middle);
-        const coord_def second_middle(x_second_middle, y_second_middle);
-
-        if (!feat_is_reachable_past(env.grid(first_middle))
-            && !feat_is_reachable_past(env.grid(second_middle)))
-        {
-            canned_msg(MSG_SOMETHING_IN_WAY);
-            return false;
-        }
-
-        // Choose one of the two middle squares (which might be the same).
-        const coord_def middle =
-            !feat_is_reachable_past(env.grid(first_middle)) ? second_middle :
-            !feat_is_reachable_past(env.grid(second_middle)) ? first_middle :
-        random_choose(first_middle, second_middle);
-
-        bool success = true;
-        monster *midmons;
-        if ((midmons = monster_at(middle))
-            && !midmons->submerged()
-            && coinflip())
-        {
-            success = false;
-            beam.target = middle;
-            mons = midmons;
-            targ_mid = true;
-            if (mons->wont_attack())
-            {
-                // Let's assume friendlies cooperate.
-                mpr("You could not reach far enough!");
-                you.time_taken = attack_delay;
-                return true;
-            }
-        }
-
-        if (success)
-            mpr("You reach to attack!");
-        else
-        {
-            mprf("%s is in the way.",
-                 mons->observable() ? mons->name(DESC_THE).c_str()
-                                    : "Something you can't see");
-        }
-    }
-
-    if (mons == nullptr)
-    {
-        // Must return true, otherwise you get a free discovery
-        // of invisible monsters.
-        mpr("You attack empty space.");
-        you.time_taken = attack_delay;
-        return true;
-    }
-    else if (!fight_melee(&you, mons))
-    {
-        if (targ_mid)
-        {
-            // turn_is_over may have been reset to false by fight_melee, but
-            // a failed attempt to reach further should not be free; instead,
-            // charge the same as a successful attempt.
-            you.time_taken = attack_delay;
-            you.turn_is_over = true;
-        }
-        else
-            return false;
-    }
-
-    return true;
-}
-
 static bool _evoke_horn_of_geryon()
 {
     bool created = false;
@@ -1231,7 +1072,7 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
-    // TODO: move these cases out of evocation...
+    // TODO: are these reaching checks necessary any more?
     // is slot a wielded reaching weapon, or if no slot, is the player wielding
     // a reaching weapon?
     const bool wielded = you.weapon()
@@ -1393,29 +1234,15 @@ bool evoke_item(int slot, dist *preselect)
         return true;
 
     case OBJ_WEAPONS:
+    {
         ASSERT(wielded);
+        dist targ_local;
+        if (!preselect)
+            preselect = &targ_local;
 
-        if (weapon_reach(item) > REACH_NONE)
-        {
-            if (_reaching_weapon_attack(item, preselect))
-                did_work = true;
-            else
-                return false;
-        }
-        else if (!you.launcher_action.is_empty()
-                                    && you.launcher_action.get().is_valid())
-        {
-            // better handling for no ammo?
-            dist tmp;
-            if (!preselect)
-                preselect = &tmp;
-            // weapon check is handled by the validity check above
-            you.launcher_action.get().trigger(*preselect);
-            return true;
-        }
-        else
-            unevokable = true;
-        break;
+        quiver::get_primary_action()->trigger(*preselect);
+        return you.turn_is_over;
+    }
 
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items

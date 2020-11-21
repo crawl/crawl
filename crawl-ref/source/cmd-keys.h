@@ -48,7 +48,7 @@
 {'r', CMD_READ},
 {'t', CMD_SHOUT},
 {'V', CMD_EVOKE},
-{'v', CMD_EVOKE_WIELDED},
+{'v', CMD_PRIMARY_ATTACK},
 {'w', CMD_WIELD_WEAPON},
 {'x', CMD_LOOK_AROUND},
 {'z', CMD_CAST_SPELL},
