@@ -792,6 +792,37 @@ static int l_you_abil_table(lua_State *ls)
     return 1;
 }
 
+
+/*** Activate an ability by name, supplying a target where relevant. If the
+ * ability is not targeted, the target is ignored. An invalid target will
+ * open interactive targeting.
+ *
+ * @tparam string the name of the ability
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @treturn boolean whether an action took place
+ */
+static int you_activate_ability(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const string abil_name = luaL_checkstring(ls, 1);
+
+    ability_type abil = ability_by_name(abil_name);
+    if (abil == ABIL_NON_ABILITY)
+    {
+        luaL_argerror(ls, 1, ("Invalid ability: " + abil_name).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    quiver::ability_to_action(abil)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
+}
+
 /*** How much gold do you have?
  * @treturn int
  * @function gold
@@ -1287,6 +1318,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_valid",       you_quiver_valid},
     { "quiver_enabled",     you_quiver_enabled},
     { "quiver_uses_mp",     you_quiver_uses_mp},
+    { "activate_ability",        you_activate_ability},
 
     { nullptr, nullptr },
 };
