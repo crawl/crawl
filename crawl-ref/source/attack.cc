@@ -498,9 +498,9 @@ bool attack::distortion_affects_defender()
 
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       10,  BANISH,
+                                                       5,  BANISH,
                                                        20, BLINK,
-                                                       10,  NONE);
+                                                       15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
         return false;
