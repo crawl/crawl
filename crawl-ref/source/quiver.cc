@@ -145,7 +145,7 @@ namespace quiver
         // moving untargeted_fire somewhere else
         // should this reset()?
 
-        shared_ptr<action> a = get_ptr();
+        shared_ptr<action> a = get();
         if (!a || !a->is_valid())
             return nullptr;
 
@@ -174,7 +174,7 @@ namespace quiver
 
     string action_cycler::fire_key_hints()
     {
-        const bool no_other_items = get() == *next();
+        const bool no_other_items = *get() == *next();
         string key_hint = no_other_items
                             ? ", <w>%</w> - select action"
                             : ", <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle";
@@ -603,7 +603,7 @@ namespace quiver
         bool equals(const action &other) const override
         {
             // type ensured in base class
-            return ammo_slot == static_cast<const ammo_action&>(other).ammo_slot;
+            return ammo_slot == static_cast<const ammo_action &>(other).ammo_slot;
         }
 
         virtual bool launcher_check() const
@@ -866,7 +866,7 @@ namespace quiver
         bool equals(const action &other) const override
         {
             // type ensured in base class
-            return spell == static_cast<const spell_action&>(other).spell;
+            return spell == static_cast<const spell_action &>(other).spell;
         }
 
         bool is_dynamic_targeted() const
@@ -1065,7 +1065,7 @@ namespace quiver
         bool equals(const action &other) const override
         {
             // type ensured in base class
-            return ability == static_cast<const ability_action&>(other).ability;
+            return ability == static_cast<const ability_action &>(other).ability;
         }
 
         bool is_valid() const override
@@ -1208,7 +1208,7 @@ namespace quiver
         bool equals(const action &other) const override
         {
             // type ensured in base class
-            return wand_slot == static_cast<const wand_action&>(other).wand_slot;
+            return wand_slot == static_cast<const wand_action &>(other).wand_slot;
         }
 
         bool is_enabled() const override
@@ -1613,8 +1613,8 @@ namespace quiver
 
         int slot = -1;
 
-        const int cur_launcher_item = you.launcher_action.get().get_item();
-        const int cur_quiver_item = you.quiver_action.get().get_item();
+        const int cur_launcher_item = you.launcher_action.get()->get_item();
+        const int cur_quiver_item = you.quiver_action.get()->get_item();
 
         if (cur_launcher_item >= 0 && you.inv[cur_launcher_item].defined()
             && _item_matches(you.inv[cur_launcher_item], FIRE_LAUNCHER, item, false))
@@ -1679,12 +1679,13 @@ namespace quiver
         return result;
     }
 
+    // initialize as invalid, not empty
     action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { };
 
     void action_cycler::save(const string key) const
     {
         auto &target = you.props[key].get_table();
-        get().save(target);
+        get()->save(target);
     }
 
     void action_cycler::load(const string key)
@@ -1695,7 +1696,7 @@ namespace quiver
             // in the quiver from whatever is wielded -- will select launcher
             // ammo if applicable, or throwing.
             set(find_action_from_launcher(you.weapon()));
-            if (!get().is_valid())
+            if (!get()->is_valid())
                 cycle();
             save(key);
         }
@@ -1706,18 +1707,26 @@ namespace quiver
         on_actions_changed();
     }
 
+    /**
+     * Set the current action for this action_cycler. If the provided action
+     * is null, a valid `action` will be used (guaranteeing that the stored
+     * action is never nullptr), corresponding to an empty quiver.
+     *
+     * @param new_act the action to fill in. nullptr is safe.
+     * @return whether the action changed as a result of the call.
+     */
     bool action_cycler::set(const shared_ptr<action> new_act)
     {
         auto n = new_act ? new_act : make_shared<action>();
 
-        const bool diff = *n != get();
+        const bool diff = *n != *get();
         current = n;
         if (diff)
         {
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
-            const int item_slot = get().get_item();
+            const int item_slot = get()->get_item();
             if (item_slot >= 0 && you.inv[item_slot].defined())
             {
                 const item_def item = you.inv[item_slot];
@@ -1751,13 +1760,14 @@ namespace quiver
     {
         if (action_cycler::is_empty())
             return true;
-        return !_is_currently_launched_ammo(get().get_item());
+        return !_is_currently_launched_ammo(get()->get_item());
     }
 
     bool launcher_action_cycler::set(const shared_ptr<action> new_act)
     {
-        if (_is_currently_launched_ammo(new_act->get_item())
-            || *new_act == action())
+        if (new_act &&
+            (_is_currently_launched_ammo(new_act->get_item())
+            || *new_act == action()))
         {
             return action_cycler::set(new_act);
         }
@@ -1772,38 +1782,43 @@ namespace quiver
         you.wield_change = true;
     }
 
+    /**
+     * Set the action for this object based on another action_cycler. Guarantees
+     * not null.
+     *
+     * @return whether the action changed.
+     */
     bool action_cycler::set(const action_cycler &other)
     {
         const bool diff = current != other.current;
         // don't use regular set: avoid all the side effects when importing
         // from another action cycler. (Used in targeting.)
-        current = other.current;
+        current = other.get();
         set_needs_redraw();
         return diff;
     }
 
-    // pitfall: if you do not use this return value by reference, polymorphism
-    // will fail and you will end up with an action(). Easiest way to make
-    // this mistake: `auto a = you.quiver_action.get()`.
-    // (TODO: something to avoid this? Work with a shared_ptr after all?)
-    action &action_cycler::get() const
+    /**
+     * Get the currently chosen action for this action_cycler.
+     * @return a shared_ptr of the action. Guarantees not null.
+     */
+    shared_ptr<action> action_cycler::get() const
     {
-        // TODO: or find an action?
-        ASSERT(current);
+        ASSERT(current); // sanity check: `set` prevents nullptr
 
-        return *current;
+        return current;
     }
 
     bool action_cycler::spell_is_quivered(spell_type s) const
     {
         // validity check??
-        return get() == spell_action(s);
+        return *get() == spell_action(s);
     }
 
     bool action_cycler::item_is_quivered(int item_slot) const
     {
         return item_slot >= 0 && item_slot < ENDOFPACK
-                              && get().get_item() == item_slot;
+                              && get()->get_item() == item_slot;
     }
 
     static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir, bool allow_disabled)
@@ -1871,14 +1886,20 @@ namespace quiver
         return nullptr;
     }
 
-    // not_null guaranteed
+    /**
+     * Find the next item in the fire order relative to the current item.
+     * @param dir negative for reverse, non-negative for forward
+     * @param allow_disabled include valid, but disabled items in the fire order
+     * @return the resulting action, which may be invalid or an empty quiver.
+     *         Guaranteed to be not nullptr
+     */
     shared_ptr<action> action_cycler::next(int dir, bool allow_disabled)
     {
         // first try the next action of the same type
-        shared_ptr<action> result = get().find_next(dir, allow_disabled, false);
+        shared_ptr<action> result = get()->find_next(dir, allow_disabled, false);
         // then, try to find a different action type
         if (!result || !result->is_valid())
-            result = _get_next_action_type(get_ptr(), dir, allow_disabled);
+            result = _get_next_action_type(get(), dir, allow_disabled);
 
         // no valid actions, return an (invalid) empty-quiver action
         if (!result)
@@ -1887,6 +1908,13 @@ namespace quiver
         return result;
     }
 
+    /**
+     * Cycle to the next action in the fire order. Guaranteed to result in a
+     * non-nullptr action being quivered, but it may be an empty quiver or
+     * invalid.
+     * @param allow_disabled include valid, but disabled items in the fire order
+     * @return whether the action changed
+     */
     bool action_cycler::cycle(int dir, bool allow_disabled)
     {
         return set(next(dir, allow_disabled));
@@ -1894,9 +1922,9 @@ namespace quiver
 
     void action_cycler::on_actions_changed()
     {
-        if (!get().is_valid())
+        if (!get()->is_valid())
         {
-            auto r = get().find_replacement();
+            auto r = get()->find_replacement();
             if (r && r->is_valid())
                 set(r);
             else
@@ -1914,7 +1942,17 @@ namespace quiver
         you.redraw_quiver = true;
     }
 
-    shared_ptr<action> slot_to_action(int slot, bool force)
+    /**
+     * Given an inventory slot containing ammo, return an appropriate throwing
+     * or firing action. If `slot` doesn't contain ammo, returns either an
+     * invalid action or a fumble action based on `force`.
+     *
+     * @param slot the inventory slot number to use.
+     * @param force whether to force non-ammo items to be throwable via
+     *              fumble throwing.
+     * @return the resulting action. May be invalid, or nullptr on an error.
+     */
+    shared_ptr<action> ammo_to_action(int slot, bool force)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
@@ -1924,17 +1962,10 @@ namespace quiver
         {
             if (you.equip[i] == slot)
             {
-                mpr("You can't quiver worn items.");
+                mpr("You can't toss equipped items.");
                 return make_shared<ammo_action>(-1);
             }
         }
-
-        if (you.inv[slot].base_type == OBJ_WANDS)
-            return make_shared<wand_action>(slot);
-        else if (you.inv[slot].base_type == OBJ_MISCELLANY)
-            return make_shared<misc_action>(slot);
-        else if (is_unrandom_artefact(you.inv[slot]))
-            return make_shared<artefact_evoke_action>(slot);
 
         // use ammo as the fallback -- may well end up invalid
         auto a = make_shared<ammo_action>(slot);
@@ -1943,19 +1974,105 @@ namespace quiver
         return a;
     }
 
+    /**
+     * Given an inventory slot, return an appropriate action if possible.
+     * For a weapon with both an attack and an evokable ability, this
+     * will always give the latter. If not possible, this will return an invalid
+     * action or nullptr.
+     *
+     * @param slot the inventory slot number to use.
+     * @param force whether to force non-throwable, non-evokable items to be
+     *              throwable via fumble throwing.
+     * @return the resulting action. May be invalid, or nullptr on an error.
+     */
+    shared_ptr<action> slot_to_action(int slot, bool force)
+    {
+        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
+            return nullptr;
+
+        if (you.inv[slot].base_type == OBJ_WANDS)
+            return make_shared<wand_action>(slot);
+        else if (you.inv[slot].base_type == OBJ_MISCELLANY)
+            return make_shared<misc_action>(slot);
+        else if (is_unrandom_artefact(you.inv[slot]))
+            return make_shared<artefact_evoke_action>(slot);
+
+        // use ammo as the fallback -- may well end up invalid. This means that
+        // by this call, it isn't possible to get toss actions for anything
+        // handled in the above conditional.
+        return ammo_to_action(slot, force);
+    }
+
+    /**
+     * Return an action corresponding to the wielded item. This action will
+     * handle melee attacks, reaching attacks, or firing depending on what is
+     * wielded. If nothing is wielded, the action will handle unarmed combat.
+     * This action is guaranteed to be valid (hopefully).
+     *
+     * @return the resulting action
+     */
     shared_ptr<action> get_primary_action()
     {
         if (you.launcher_action.is_empty())
-            return make_shared<melee_action>();
+            return make_shared<melee_action>(); // always valid
         else
-            return you.launcher_action.get_ptr();
+            return you.launcher_action.get();
     }
 
+    /**
+     * Return the quivered action. Simply a convenience wrapper around
+     * you.quiver_action.
+     *
+     * @return the resulting action. May be invalid.
+     */
+    shared_ptr<action> get_secondary_action()
+    {
+        auto a = you.quiver_action.get();
+        ASSERT(a); // should be redundant
+        return a;
+    }
+
+    /**
+     * Return an action corresponding to a spell.
+     *
+     * @param spell the spell to use
+     * @return the resulting action. May be invalid.
+     */
+    shared_ptr<action> spell_to_action(spell_type spell)
+    {
+        // could just expose spell_action outside this file?
+        return make_shared<spell_action>(spell);
+    }
+
+    /**
+     * Return an action corresponding to an ability.
+     *
+     * @abil the abilty to use
+     * @return the resulting action. May be invalid.
+     */
+    shared_ptr<action> ability_to_action(ability_type abil)
+    {
+        // could just expose spell_action outside this file?
+        return make_shared<ability_action>(abil);
+    }
+
+    /**
+     * Set the quiver from an inventory slot. May result in an invalid action,
+     * but guarantees a non-nullptr action.
+     *
+     * @param slot an inventory slot to use. An invalid slot (e.g. -1) results
+     *             in an invalid action.
+     */
     bool action_cycler::set_from_slot(int slot)
     {
-        return(set(slot_to_action(slot)));
+        return set(slot_to_action(slot));
     }
 
+    /**
+     * Clear the quiver. This results in a valid, but inert action filling the
+     * quiver.
+     * @return whether the action changed
+     */
     bool action_cycler::clear()
     {
         return(set(make_shared<action>()));
@@ -2069,6 +2186,10 @@ namespace quiver
         }
     };
 
+    /**
+     * Do interactive targeting for the currently selected action. Allows the
+     * player to change actions.
+     */
     void action_cycler::target()
     {
         // This is a somewhat indirect interface that allows cycling between
@@ -2089,7 +2210,7 @@ namespace quiver
         // involved to support that, but for now that project is too
         // impractical, because each code path (except throwing) is called from
         // many places.
-        shared_ptr<action> initial = get_ptr();
+        shared_ptr<action> initial = get();
         clear_messages(); // this kind of looks better as a force clear, but
                           // for consistency with direct targeting commands,
                           // I will leave it as non-force
@@ -2149,9 +2270,15 @@ namespace quiver
         }
     }
 
-    // should be action_cycler method?
+    /**
+     * Presents an interface for the player to choose an action to quiver from
+     * a list of options.
+     * @param cur_quiver a quiver to use for context
+     * @param allow_empty whether to allow the player to set the empty quiver
+     */
     void choose(action_cycler &cur_quiver, bool allow_empty)
     {
+        // should be action_cycler method?
         // TODO: icons in tiles, dividers or subtitles for each category?
         ActionSelectMenu menu(cur_quiver, allow_empty);
         vector<shared_ptr<action>> actions;
@@ -2263,12 +2390,10 @@ namespace quiver
     // Save/load
     // ----------------------------------------------------------------------
 
-    // this save/load code is extremely legacy
+    // legacy marshalling code, still semi-used
     static const short QUIVER_COOKIE = short(0xb015);
     void ammo_history::save(writer& outf) const
     {
-        // TODO: action-based marshalling/unmarshalling. But we will still need
-        // the history here, probably.
         marshallShort(outf, QUIVER_COOKIE);
 
         marshallItem(outf, item_def()); // was: m_last_weapon
@@ -2279,6 +2404,7 @@ namespace quiver
             marshallItem(outf, m_last_used_of_type[i]);
     }
 
+    // legacy unmarshalling code, still semi-used
     void ammo_history::load(reader& inf)
     {
         // warning: this is called in the unmarshalling sequence before the
@@ -2316,7 +2442,7 @@ namespace quiver
             // behavior, and is relatively intuitive in simple cases. But it
             // could be pretty annoying in a char using both spells and ranged
             // weapons. Maybe add an option?
-            you.quiver_action.set(you.launcher_action.get_ptr());
+            you.quiver_action.set(you.launcher_action.get());
         }
 
         // if switching invalidates the quiver, and the new weapon is an
@@ -2324,7 +2450,7 @@ namespace quiver
         // evokable launcher, its ammo will be prioritized, revisit.) This
         // isn't as aggressive as the launcher case.
         if (weapon && is_unrandom_artefact(*weapon)
-                                    && !you.quiver_action.get().is_valid())
+                                    && !you.quiver_action.get()->is_valid())
         {
             you.quiver_action.set(
                             make_shared<artefact_evoke_action>(weapon->link));

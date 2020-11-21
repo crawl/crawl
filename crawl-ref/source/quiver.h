@@ -7,7 +7,9 @@
 
 #include <vector>
 
+#include "ability-type.h"
 #include "format.h"
+#include "spell-type.h"
 
 class reader;
 class writer;
@@ -102,8 +104,12 @@ namespace quiver
     shared_ptr<action> find_ammo_action();
     shared_ptr<action> find_action_from_launcher(const item_def *item);
 
+    shared_ptr<action> ammo_to_action(int slot, bool force=false);
     shared_ptr<action> slot_to_action(int slot, bool force=false);
+    shared_ptr<action> spell_to_action(spell_type spell);
+    shared_ptr<action> ability_to_action(ability_type abil);
     shared_ptr<action> get_primary_action();
+    shared_ptr<action> get_secondary_action();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
@@ -113,8 +119,7 @@ namespace quiver
         void save(const string key) const;
         void load(const string key);
 
-        action &get() const;
-        shared_ptr<action> get_ptr() { return current; }
+        shared_ptr<action> get() const;
         virtual bool is_empty() const { return *current == action(); }
         bool spell_is_quivered(spell_type s) const;
         bool item_is_quivered(int item_slot) const;

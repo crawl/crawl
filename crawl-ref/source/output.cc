@@ -945,17 +945,22 @@ static void _print_stats_wp(int y)
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour());
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
+
+    // If there is a launcher, but something unrelated is quivered, show the
+    // launcher's ammo in the line with the weapon
     if (you.weapon() && fires_ammo_type(*you.weapon()) != MI_NONE
-        && you.launcher_action.get() != you.quiver_action.get())
+        && *you.launcher_action.get() != *you.quiver_action.get())
     {
         formatted_string lammo;
         if (you.launcher_action.is_empty()
-            || !you.launcher_action.get().is_valid())
+            || !you.launcher_action.get()->is_valid())
         {
+            // the player has no ammo for the wielded launcher, or has
+            // explicitly unquivered it
             lammo = quiver::action().quiver_description(true);
         }
         else
-            lammo = you.launcher_action.get().quiver_description(true);
+            lammo = you.launcher_action.get()->quiver_description(true);
 
         const int trimmed_size = max_name_width - lammo.tostring().size() - 3;
         CPRINTF("%s ", chop_string(text, trimmed_size).c_str());
@@ -973,7 +978,7 @@ static void _print_stats_wp(int y)
 static void _print_stats_qv(int y)
 {
     CGOTOXY(1, y, GOTO_STAT);
-    formatted_string qdesc = you.quiver_action.get().quiver_description();
+    formatted_string qdesc = quiver::get_secondary_action()->quiver_description();
 #ifdef USE_TILE_LOCAL
     const int max_width = crawl_view.hudsz.x - (tiles.is_using_small_layout() ? 0 : 4);
 #else

@@ -1378,11 +1378,11 @@ static int l_item_equipped_at(lua_State *ls)
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    const auto &a = you.quiver_action.get();
-    if (!a.is_valid() || !a.is_enabled())
+    const auto a = quiver::get_primary_action();
+    if (!a->is_valid() || !a->is_enabled())
         return 0;
 
-    const int q = a.get_item();
+    const int q = a->get_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;

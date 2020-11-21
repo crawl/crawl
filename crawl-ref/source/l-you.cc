@@ -1133,7 +1133,7 @@ LUAFN(you_quiver_valid)
     // this order is slightly weird but is aimed at forward compatibility
     const int q_num = luaL_safe_checkint(ls, 1);
     const auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get().is_valid());
+    PLUARET(boolean, !q.is_empty() && q.get()->is_valid());
 }
 
 LUAFN(you_quiver_enabled)
@@ -1142,14 +1142,13 @@ LUAFN(you_quiver_enabled)
     // 1 = regular quiver
     const int q_num = luaL_safe_checkint(ls, 1);
     const auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get().is_enabled());
+    PLUARET(boolean, !q.is_empty() && q.get()->is_enabled());
 }
 
 LUAFN(you_quiver_uses_mp)
 {
     // ignore launcher quiver here
-    const auto &q = you.quiver_action;
-    PLUARET(boolean, q.get().uses_mp());
+    PLUARET(boolean, quiver::get_secondary_action()->uses_mp());
 }
 
 static const struct luaL_reg you_clib[] =

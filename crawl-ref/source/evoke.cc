@@ -1105,7 +1105,7 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
     if (ranged && (you.launcher_action.is_empty()
-                    || !you.launcher_action.get().is_valid()))
+                    || !you.launcher_action.get()->is_valid()))
     {
         if (!quiet)
         {

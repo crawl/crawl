@@ -66,7 +66,8 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link == you.quiver_action.get().get_item();
+    return in_inventory(item) && item.link
+                                == quiver::get_secondary_action()->get_item();
 }
 
 static bool _slot_is_pprojable(int slot)
@@ -363,7 +364,7 @@ bool is_pproj_active()
            && enough_mp(1, true, false);
 }
 
-// Basically does what throwing used to do: throw an item without changing
+// Basically does what throwing used to do: throw/fire an item without changing
 // the quiver.
 void throw_item_no_quiver(dist *target)
 {
@@ -385,7 +386,7 @@ void throw_item_no_quiver(dist *target)
 
     // first find an action
     string warn;
-    auto a = quiver::slot_to_action(_fire_prompt_for_item(), true);
+    auto a = quiver::ammo_to_action(_fire_prompt_for_item(), true);
 
     // handles slot == -1
     if (!a || !a->is_valid())
