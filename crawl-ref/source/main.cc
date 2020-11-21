@@ -1675,12 +1675,12 @@ static void _do_display_map()
 static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
-    you.launcher_action.set(you.quiver_action.get_ptr());
+    you.launcher_action.set(you.quiver_action.get());
     you.redraw_quiver = true;
 
-    if (!changed && you.quiver_action.get().is_valid())
+    if (!changed && you.quiver_action.get()->is_valid())
         mpr("No other quiver actions available. Use F to throw any item.");
-    else if (!you.quiver_action.get().is_valid())
+    else if (!you.quiver_action.get()->is_valid())
         mpr("No quiver actions available. Use F to throw any item.");
 }
 
@@ -1732,7 +1732,8 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
 
     if (cmd == CMD_AUTOFIRE)
     {
-        if (!you.quiver_action.get().is_valid())
+        auto a = quiver::get_secondary_action();
+        if (!a || !a->is_valid())
         {
             mpr("Nothing quivered!"); // Can this happen?
             return;
@@ -1741,10 +1742,10 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         // Some quiver actions need to be triggered directly. Disabled quiver
         // actions are also triggered here for messaging purposes -- the errors
         // are more informative than what you'd get through autofight.
-        if (!you.quiver_action.get().allow_autofight()
-            || !you.quiver_action.get().is_enabled())
+        if (!a->allow_autofight()
+            || !a->is_enabled())
         {
-            you.quiver_action.get().trigger();
+            a->trigger();
             return;
         }
 
