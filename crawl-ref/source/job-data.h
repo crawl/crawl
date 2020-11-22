@@ -187,7 +187,7 @@ static const map<job_type, job_def> job_data =
 { JOB_STALKER, {
     "St", "Stalker",
     2, 4, 6,
-    { SP_SPRIGGAN, SP_VAMPIRE, SP_MERFOLK, SP_HUMAN, },
+    { SP_SPRIGGAN, SP_VAMPIRE, SP_MERFOLK, SP_HUMAN, SP_SLUDGE_ELF },
     { "dagger plus:2", "robe", "cloak", "book of stalking", "potion of degeneration q:2" },
     WCHOICE_NONE,
     {{ SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 2 },
@@ -241,7 +241,7 @@ static const map<job_type, job_def> job_data =
     "Tm", "Transmuter",
     2, 5, 5,
     { SP_NAGA, SP_MERFOLK, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DEMONSPAWN,
-      SP_TROLL, },
+      SP_TROLL, SP_SLUDGE_ELF },
     { "arrow q:12", "robe", "book of Changes" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_UNARMED_COMBAT, 3 }, { SK_DODGING, 2 },

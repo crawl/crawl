@@ -1,19 +1,2 @@
 #if TAG_MAJOR_VERSION == 34
-{ SP_SLUDGE_ELF, {
-    "SE",
-    "Sludge Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    0, -1, 1, 3,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
-    { STAT_INT, STAT_DEX }, 4,
-    {},
-    {},
-    {},
-    {}, // not a starting race
-    {}, // not a starting race
-    nullptr,
-    nullptr
-} },
 #endif

@@ -130,6 +130,11 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
 %%%%
+Sludge Elf
+
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic
+to other wizardry.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans make highly competent stabbers
