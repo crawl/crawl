@@ -1563,7 +1563,10 @@ static string _describe_ammo(const item_def &item)
     if (player_throwable)
     {
         const int throw_delay = (10 + dam / 2);
-        const int target_skill = _item_training_target(item);
+        const int throw_dam = property(item, PWPN_DAMAGE);
+        const int target_skill = item.base_type == OBJ_WEAPONS ?
+            (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10
+            : _item_training_target(item);
         const bool could_set_target = _could_set_training_target(item, true);
 
         if (item.base_type == OBJ_WEAPONS) {
