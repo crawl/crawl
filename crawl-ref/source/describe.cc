@@ -3912,26 +3912,6 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
-/**
- * Calculate some defender-specific effects on the player's to-hit.
- *
- * @param mi[in]        Player-visible info about the monster in question.
- */
-static int _lighting_modifiers(const monster_info& mi)
-{
-    // Lighting effects.
-    if (mi.is(MB_GLOWING)       // corona, silver corona (!)
-        || mi.is(MB_BURNING)    // sticky flame
-        || mi.is(MB_HALOED))
-    {
-        return BACKLIGHT_TO_HIT_BONUS;
-    }
-    if (mi.is(MB_UMBRAED) && !you.nightvision())
-        return UMBRA_TO_HIT_MALUS;
-
-    return 0;
-}
-
 
 /**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
