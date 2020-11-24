@@ -1684,23 +1684,6 @@ bool targeter_overgrow::set_aim(coord_def a)
     return affected_positions.size();
 }
 
-targeter_absolute_zero::targeter_absolute_zero(int range)
-{
-    monster *mon = find_abszero_target(range);
-    if (mon)
-        target_location = mon->pos();
-    else
-        target_location = coord_def(-1, -1);
-}
-
-aff_type targeter_absolute_zero::is_affected(coord_def loc)
-{
-    if (in_bounds(target_location) && target_location == loc)
-        return AFF_YES;
-    else
-        return AFF_NO;
-}
-
 targeter_multiposition::targeter_multiposition(const actor *a,
             vector<coord_def> seeds, bool _hit_friends, aff_type _positive)
     : targeter(), hit_friends(_hit_friends), positive(_positive)
@@ -1709,6 +1692,26 @@ targeter_multiposition::targeter_multiposition(const actor *a,
     for (auto &c : seeds)
         add_position(c);
 }
+
+targeter_multiposition::targeter_multiposition(const actor *a,
+            vector<monster *> seeds, bool _hit_friends, aff_type _positive)
+    : targeter(), hit_friends(_hit_friends), positive(_positive)
+{
+    agent = a;
+    for (monster *m : seeds)
+        if (m)
+            add_position(m->pos());
+}
+
+// sigh, necessary to allow empty initializer lists with the above two
+// constructors
+targeter_multiposition::targeter_multiposition(const actor *a,
+            initializer_list<coord_def> seeds, bool _hit_friends, aff_type _positive)
+    : targeter_multiposition(a, vector<coord_def>(seeds.begin(), seeds.end()),
+        _hit_friends, _positive)
+{
+}
+
 
 void targeter_multiposition::add_position(const coord_def &loc)
 {
@@ -1736,6 +1739,13 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
 
     // is this better with maybe or yes?
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
+}
+
+targeter_absolute_zero::targeter_absolute_zero(int range)
+    : targeter_multiposition(&you, find_abszero_possibles(range))
+{
+    if (affected_positions.size() == 1)
+        positive = AFF_YES;
 }
 
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
