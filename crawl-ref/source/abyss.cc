@@ -664,6 +664,22 @@ static void _push_items()
         if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
             continue;
 
+        if (env.item[i].flags & ISFLAG_SUMMONED)
+        {
+            // this is here because of hep-related crashes that no one has
+            // figured out. Under some circumstances, a hep ancestor can drop
+            // its items in the abyss in a stack of copies(??), and when they
+            // do, on the next abyss morph the call below to move_item_to_grid
+            // will trigger a crash, softlocking the player out of abyss.
+            // Therefore, preemptively clean things up until someone figures
+            // out this bug. See
+            // https://crawl.develz.org/mantis/view.php?id=11756 among others.
+            debug_dump_item(item.name(DESC_PLAIN).c_str(),
+                i, item, "Cleaning up buggy summoned item!");
+            destroy_item(i);
+            continue;
+        }
+
         if (!_pushy_feature(grd(item.pos)))
             continue;
 
