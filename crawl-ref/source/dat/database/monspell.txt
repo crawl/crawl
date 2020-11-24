@@ -205,6 +205,10 @@ Harpoon Shot cast
 
 @The_monster@ fires a harpoon shot @at@ @target@.
 %%%%
+Throw Klown Pie cast
+
+@The_monster@ pies you viciously!
+%%%%
 #################################################
 # These have special hard-coded messaging.
 #################################################
