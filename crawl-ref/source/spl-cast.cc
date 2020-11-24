@@ -1440,7 +1440,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         } else {
             targeter_beam* beam_hitf =
                 dynamic_cast<targeter_beam*>(hitfunc.get());
-            if (beam_hitf && beam_hitf->beam.hit > 0)
+            if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
             {
                 additional_desc = bind(_desc_hit_chance, placeholders::_1,
                                        hitfunc.get());
