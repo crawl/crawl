@@ -305,8 +305,8 @@ static string mi_calc_major_healing(monster* mons)
 static string mons_human_readable_spell_damage_string(monster* monster,
                                                       spell_type sp)
 {
-    bolt spell_beam = mons_spell_beam(
-        monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp)), true);
+    const int pow = mons_power_for_hd(sp, monster->spell_hd(sp));
+    bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
         case SPELL_PORTAL_PROJECTILE:
@@ -320,6 +320,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return mi_calc_glaciate_damage(monster);
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
+        case SPELL_MARSHLIGHT:
+            return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_WATERSTRIKE:
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
