@@ -359,25 +359,16 @@ public:
     bool can_affect_walls() override { return true; }
 };
 
-// A fixed targeter for absolute 0 that finds the closest monster using the
-// abs 0 code.
-class targeter_absolute_zero : public targeter
-{
-public:
-    targeter_absolute_zero(int range);
-    aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def) override { return true; }
-private:
-    coord_def target_location;
-};
-
-
 // A fixed targeter for multi-position attacks, i.e. los stuff that only
 // affects monsters
 class targeter_multiposition : public targeter
 {
 public:
     targeter_multiposition(const actor *a, vector<coord_def> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+    targeter_multiposition(const actor *a, vector<monster *> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+    targeter_multiposition(const actor *a, initializer_list<coord_def> seeds,
                         bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
 
     void add_position(const coord_def &c);
@@ -388,6 +379,14 @@ protected:
     bool hit_friends;
     set<coord_def> affected_positions;
     aff_type positive;
+};
+
+// A static targeter for absolute zero that finds the closest monster using the
+// absolute zero code.
+class targeter_absolute_zero : public targeter_multiposition
+{
+public:
+    targeter_absolute_zero(int range);
 };
 
 class targeter_multifireball : public targeter_multiposition

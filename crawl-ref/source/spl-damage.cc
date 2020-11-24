@@ -3391,28 +3391,51 @@ spret cast_frozen_ramparts(int pow, bool fail)
     return spret::success;
 }
 
-//returns the closest target to the player
-monster* find_abszero_target(int radius)
+static bool _abszero_target_check(monster &m)
+{
+    return you.see_cell_no_trans(m.pos())
+            && !m.wont_attack()
+            && !mons_is_firewood(m)
+            && !mons_is_conjured(m.type);
+}
+
+// returns the closest target to the player, choosing randomly if there are more
+// than one (see `fair` argument to distance_iterator).
+static monster* _find_abszero_target(int radius)
 {
     for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon
-            && you.see_cell_no_trans(mon->pos())
-            && !mon->wont_attack()
-            && !mons_is_firewood(*mon)
-            && !mons_is_conjured(mon->type))
-        {
+        if (mon && _abszero_target_check(*mon))
             return mon;
-        }
     }
 
     return nullptr;
 }
 
+// find all possible targets at the closest distance; used for targeting
+vector<monster *> find_abszero_possibles(int radius)
+{
+    vector<monster *> result;
+    monster *seed = _find_abszero_target(radius);
+    if (seed)
+    {
+        const int distance = max(abs(you.pos().x - seed->pos().x),
+                                        abs(you.pos().y - seed->pos().y));
+        dprf("searching at rad %d, initial radius %d", distance, radius);
+        for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
+        {
+            monster *mon = monster_at(*di);
+            if (mon && _abszero_target_check(*mon))
+                result.push_back(mon);
+        }
+    }
+    return result;
+}
+
 spret cast_absolute_zero(int pow, bool fail, bool tracer)
 {
-    monster* const mon = find_abszero_target(
+    monster* const mon = _find_abszero_target(
             spell_range(SPELL_ABSOLUTE_ZERO, pow));
 
     if (tracer)
