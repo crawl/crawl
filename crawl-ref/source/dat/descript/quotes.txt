@@ -1432,10 +1432,6 @@ great sword
 
 <demon blade>
 %%%%
-greater mummy
-
-<mummy>
-%%%%
 guardian golem
 
 “‘Listen Reb _Golem_,’ the old man said, wagging his finger. ‘Pay attention to
@@ -2332,6 +2328,10 @@ robe
 rotten bat
 
 <bat>
+%%%%
+royal mummy
+
+<mummy>
 %%%%
 salamander
 

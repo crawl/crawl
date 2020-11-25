@@ -2215,7 +2215,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_MERFOLK_IMPALER, 2}}}},
     { BAND_AZRAEL,              {{{MONS_FIRE_ELEMENTAL, 1},
                                   {MONS_HELL_HOUND, 1}}}},
-    { BAND_KHUFU,               {{{MONS_GREATER_MUMMY, 1},
+    { BAND_KHUFU,               {{{MONS_ROYAL_MUMMY, 1},
                                   {MONS_MUMMY, 1}}}},
     { BAND_MERFOLK_AQUAMANCER,  {{{MONS_MERFOLK, 4},
                                   {MONS_WATER_ELEMENTAL, 11}}}},

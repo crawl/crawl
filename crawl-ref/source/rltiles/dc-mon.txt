@@ -789,7 +789,7 @@ khufu MONS_KHUFU
 %sdir mon/undead
 mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
-greater_mummy MONS_GREATER_MUMMY
+royal_mummy MONS_ROYAL_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
 %rim 1
 

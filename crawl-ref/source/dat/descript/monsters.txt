@@ -1278,11 +1278,6 @@ A levitating ball, covered in malignant eyes and humming with eldritch
 energies. Many is the adventurer ripped limb from limb by its dreadful
 eyeteeth.
 %%%%
-greater mummy
-
-An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
-terrifying feats of magic.
-%%%%
 green death
 
 A bloated form covered in oozing sores and exhaling clouds of lethal poison.
@@ -2036,6 +2031,11 @@ the Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
+%%%%
+royal mummy
+
+An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
+terrifying feats of magic.
 %%%%
 rust devil
 

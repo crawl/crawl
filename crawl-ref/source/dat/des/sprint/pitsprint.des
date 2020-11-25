@@ -81,7 +81,7 @@ function base_monster_setup(e)
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
            iron dragon / quicksilver dragon / titan / acid blob /\
            azure jelly / golden eye / ancient lich w:5 /\
-           death ooze / reaper / greater mummy w:3 / curse toe / ghost moth /\
+           death ooze / reaper / royal mummy w:3 / curse toe / ghost moth /\
            killer klown / nonbase draconian w:15 /\
            nonbase draconian band w:15 / storm dragon / shadow dragon /\
            hellephant / balrug w:5 / deep elf blademaster / cacodemon /\
@@ -90,7 +90,7 @@ function base_monster_setup(e)
            death drake w:2 / hell sentinel w:2 / brimstone fiend w:2 /\
            ice fiend w:2 / tzitzimitl w:2 / moth of wrath w:5 /\
            balrug band w:5")
-  e.kmons("F = orb of fire / electric golem / ancient lich / greater mummy /\
+  e.kmons("F = orb of fire / electric golem / ancient lich / royal mummy /\
            hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
            pandemonium lord w:20 / pearl dragon / titan")
   e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
@@ -127,7 +127,7 @@ function base_monster_setup(e)
   e.kmons("Q = skeleton / zombie / skeletal warrior band /\
            ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
            guardian mummy / mummy priest w:5")
-  e.kmons("R = greater mummy w:3 / mummy priest / lich / ancient lich /\
+  e.kmons("R = royal mummy w:3 / mummy priest / lich / ancient lich /\
            ghoul band / skeletal warrior band / vampire knight /\
            vampire mage band")
   e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul /\
@@ -2088,7 +2088,7 @@ KMONS:  A = titan
 # I'm sorry if you get an undead pit here
 KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\
         ancient lich w:5 / vampire knight / mummy priest / lich /\
-        greater mummy / bone dragon / ghoul / skeletal warrior /\
+        royal mummy / bone dragon / ghoul / skeletal warrior /\
         guardian mummy
 KMONS:  B = ancient lich
 KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\

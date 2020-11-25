@@ -686,7 +686,7 @@ enum monster_type                      // env.mons[].type
     MONS_MUMMY,
     MONS_BOG_BODY,
     MONS_GUARDIAN_MUMMY,
-    MONS_GREATER_MUMMY,
+    MONS_ROYAL_MUMMY,
     MONS_MUMMY_PRIEST,
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,

@@ -3585,7 +3585,7 @@ NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  D:9-, Depths
 : if you.absdepth() > 24 then
-MONS:   ancient lich w:50 / greater mummy
+MONS:   ancient lich w:50 / royal mummy
 ITEM:   any scroll w:6 / any book
 : elseif you.absdepth() > 20 then
 MONS:   lich w:60 / draconian annihilator w:20 / \

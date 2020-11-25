@@ -506,7 +506,7 @@ static const pop_entry pop_tomb[] =
   {  1,  5,  230, FLAT, MONS_FLYING_SKULL },
   {  1,  5,  600, FLAT, MONS_GUARDIAN_MUMMY },
   { -1,  9,  335, SEMI, MONS_MUMMY_PRIEST },
-  {  4,  5,    3, RISE, MONS_GREATER_MUMMY },
+  {  4,  5,    3, RISE, MONS_ROYAL_MUMMY },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
   {  1,  5,  250, FLAT, MONS_USHABTI },

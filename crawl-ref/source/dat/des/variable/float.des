@@ -1237,7 +1237,7 @@ NAME:    lemuel_minitomb
 ORIENT:  float
 DEPTH:   Depths, !Depths:$, Crypt
 MONS:    zombie / nothing
-MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
+MONS:    mummy, patrolling guardian mummy, patrolling royal mummy
 MONS:    zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
@@ -2788,7 +2788,7 @@ KFEAT:  ~ = zot trap
 KMONS:  1 = mummy
 KMONS:  25 = guardian mummy
 KMONS:  36 = mummy priest
-KMONS:  47 = greater mummy
+KMONS:  47 = royal mummy
 KMONS:  H = sphinx
 : if you.absdepth() <= 17 then
 SUBST: 12 = 12d, 3 = 123, 4 = 6, H = .
@@ -2796,7 +2796,7 @@ SUBST: 12 = 12d, 3 = 123, 4 = 6, H = .
 SUBST: 4 = 67, 3 = 345, 2 = 23d, 1 = 12, H = H`
 : end
 : if you.in_branch("Crypt") then
-KMONS: M = Khufu, greater mummy
+KMONS: M = Khufu, royal mummy
 : elseif you.absdepth() <= 17 then
 KMONS: M = Menkaure, mummy priest
 : else
@@ -3387,9 +3387,9 @@ ENDMAP
 NAME:    minmay_guarded_unrand_sceptre_of_torment
 ORIENT:  float
 DEPTH:   Depths, Crypt
-MONS:    mummy priest, greater mummy
+MONS:    mummy priest, royal mummy
 KITEM:   d = sceptre_of_torment no_pickup ident:type
-KMONS:   d = greater mummy
+KMONS:   d = royal mummy
 MAP
 ccccccccccc@ccccccccccc
  cc2.....cc..c.....1cc

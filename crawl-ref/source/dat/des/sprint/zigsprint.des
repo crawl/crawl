@@ -275,7 +275,7 @@ function choose_mset_2(e)
     e.kmons("1 = lesser demon / common demon w:5 / pandemonium lord w:2")
 -- Tomb
   elseif rnd < 109 then
-    e.kmons("1 = place:Tomb:$ w:250 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:250 / royal mummy")
 -- Elf
   elseif rnd < 119 then
     e.kmons("1 = place:Elf:$")
@@ -395,7 +395,7 @@ function choose_mset_3(e)
     e.kmons("1 = common demon / place:Pan / pandemonium lord w:5")
 -- Tomb
   elseif rnd < 93 then
-    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:100 / royal mummy")
 -- Elf
   elseif rnd < 98 then
     e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
@@ -530,7 +530,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Pan w:5 / pandemonium lord")
 -- Tomb
   elseif rnd < 104 then
-    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
+    e.kmons("1 = place:Tomb:$ w:100 / royal mummy")
 -- Elf
   elseif rnd < 114 then
     e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster /\

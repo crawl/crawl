@@ -1113,7 +1113,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_I,
+    {  MST_ROYAL_MUMMY_I,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1122,7 +1122,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_II,
+    {  MST_ROYAL_MUMMY_II,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1131,7 +1131,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_III,
+    {  MST_ROYAL_MUMMY_III,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1140,7 +1140,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_IV,
+    {  MST_ROYAL_MUMMY_IV,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },

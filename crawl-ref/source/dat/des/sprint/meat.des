@@ -78,7 +78,7 @@
     "perm_ench:invis perm_ench:haste"
 
   local accursed =
-    "greater mummy hp:500 hd:40 name:accursed n_rpl n_des n_spe " ..
+    "royal mummy hp:500 hd:40 name:accursed n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
     "spells:smiting.90.wizard"
 
