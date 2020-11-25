@@ -1309,7 +1309,7 @@ static bool _zot_clock_active_in(branch_type br)
 }
 
 // Is the zot clock running, or is it paused or stopped altogether?
-static bool _zot_clock_active()
+bool zot_clock_active()
 {
     return _zot_clock_active_in(you.where_are_you);
 }
@@ -1367,7 +1367,7 @@ bool bezotted()
 // Decrease the zot clock when the player enters a new level.
 void decr_zot_clock()
 {
-    if (!_zot_clock_active())
+    if (!zot_clock_active())
         return;
     int &zot = _zot_clock();
     if (zot == -1)
