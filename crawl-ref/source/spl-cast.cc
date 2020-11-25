@@ -1265,28 +1265,45 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
         return 100;
 
     acc += mi.lighting_modifiers();
+    if (acc <= 1)
+        return mi.ev <= 2 ? 100 : 0;
 
     int hits = 0;
-    for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
+    int iters = 0;
+    const bool rmsl = mi.is(MB_REPEL_MSL);
+    for (int outer_ev_roll = 0; outer_ev_roll < mi.ev; outer_ev_roll++)
     {
-        int adjusted_mhit = rolled_mhit;
-        if (mi.is(MB_REPEL_MSL))
+        for (int inner_ev_roll_a = 0; inner_ev_roll_a < outer_ev_roll; inner_ev_roll_a++)
         {
-            // this is wrong - we should be re-rolling here.
-            if (pierce)
-                adjusted_mhit = adjusted_mhit * 3 /4;
-            else
-                adjusted_mhit /= 2;
-        }
+            for (int inner_ev_roll_b = 0; inner_ev_roll_b < outer_ev_roll; inner_ev_roll_b++)
+            {
+                const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2; // not right but close
+                for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
+                {
+                    int adjusted_mhit = rolled_mhit;
+                    if (rmsl)
+                    {
+                        // this is wrong - we should be re-rolling here.
+                        if (pierce)
+                            adjusted_mhit = adjusted_mhit * 3 /4;
+                        else
+                            adjusted_mhit /= 2;
+                    }
 
-        // ev is effectively quartered (!) against beams, since we call random2
-        // on ev *twice* before checking it against hit. (Probably we should
-        // simulate more rolls here...)
-        if (adjusted_mhit >= mi.ev / 4)
-            hits++;
+                    iters++;
+                    if (iters >= 1000000)
+                        return -1; // sanity breakout to not kill servers
+                    if (adjusted_mhit >= ev)
+                        hits++;
+                }
+            }
+        }
     }
 
-    return hits * 100 / acc;
+    if (iters <= 0) // probably low monster ev?
+        return 100;
+
+    return hits * 100 / iters;
 }
 
 static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc)
@@ -1298,6 +1315,8 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     if (!acc)
         return vector<string>{};
     const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
+    if (hit_pct == -1)
+        return vector<string>{};
     return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
 }
 
