@@ -1404,6 +1404,8 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
 
 bool spell_no_hostile_in_range(spell_type spell)
 {
+    if (!in_bounds(you.pos()))
+        return true;
     const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell, true, false, true);
