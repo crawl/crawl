@@ -1124,8 +1124,9 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent,
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                                 bool skip_casting_checks)
 {
-    // prevent all of this logic during excursions / levelgen
-    if (!in_bounds(you.pos()) || !you.on_current_level)
+    // prevent all of this logic during excursions / levelgen. This function
+    // does get called during character creation, so allow it to run for !temp.
+    if (temp && (!in_bounds(you.pos()) || !you.on_current_level))
         return "you can't cast spells right now.";
 
     if (!skip_casting_checks)
