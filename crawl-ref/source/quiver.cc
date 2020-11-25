@@ -139,6 +139,20 @@ namespace quiver
         return o[i % o.size()];
     }
 
+    /**
+     * Generic inscription check: if this action uses an item, is it inscribed
+     * in a way that allows firing? Returns true if no item or an invalid item
+     * is used.
+     */
+    bool action::do_inscription_check() const
+    {
+        const int slot = get_item();
+        if (slot <= 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
+            return true;
+
+        return check_warning_inscriptions(you.inv[slot], OPER_FIRE);
+    }
+
     shared_ptr<action> action_cycler::do_target()
     {
         // this would be better as an action method, but it's tricky without
@@ -614,6 +628,20 @@ namespace quiver
                 you.weapon(), false);
         }
 
+        bool do_inscription_check() const override
+        {
+            // need to also check the launcher's inscription here, in addition
+            // to ammo
+            if (!is_valid()) // sanity check
+                return true;
+            const item_def *weapon = you.weapon();
+            const item_def& ammo = you.inv[ammo_slot];
+            return action::do_inscription_check()
+                && (!weapon
+                    || is_launched(&you, weapon, ammo) != launch_retval::LAUNCHED
+                    || check_warning_inscriptions(*weapon, OPER_FIRE));
+        }
+
         virtual bool is_enabled() const override
         {
             if (!is_valid())
@@ -625,16 +653,9 @@ namespace quiver
             if (!launcher_check())
                 return false;
 
-            const item_def *weapon = you.weapon();
-            const item_def& ammo = you.inv[ammo_slot];
-
-            // disable if there's a no-fire inscription on ammo
-            // maybe this should just be skipped altogether for this case?
-            // or prompt on trigger..
-            return check_warning_inscriptions(ammo, OPER_FIRE)
-                && (!weapon
-                    || is_launched(&you, weapon, ammo) != launch_retval::LAUNCHED
-                    || check_warning_inscriptions(*weapon, OPER_FIRE));
+            // TODO: check inscriptions here? That code would need to be
+            // refactored.
+            return true;
         }
 
         virtual bool is_valid() const override
@@ -683,7 +704,7 @@ namespace quiver
                     fire_warn_if_impossible(); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
-            if (autofight_check())
+            if (autofight_check() || !do_inscription_check())
                 return;
 
             bolt beam;
@@ -1246,7 +1267,7 @@ namespace quiver
                 return;
             }
 
-            if (autofight_check())
+            if (autofight_check() || !do_inscription_check())
                 return;
 
             // to apply smart targeting behavior for iceblast; should have no
@@ -1484,7 +1505,7 @@ namespace quiver
             if (!artefact_evoke_check(false))
                 return;
 
-            if (autofight_check())
+            if (autofight_check() || !do_inscription_check())
                 return;
 
             target.find_target = true;
