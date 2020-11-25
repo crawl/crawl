@@ -49,6 +49,8 @@
 #include "travel.h"
 #include "xom.h"
 
+static const string TRAP_PROJECTILE_KEY = "trap_projectile";
+
 bool trap_def::active() const
 {
     return type != TRAP_UNASSIGNED;
@@ -719,8 +721,6 @@ void trap_def::trigger(actor& triggerer)
                     _mark_net_trapping(you.pos());
                 }
             }
-
-            trap_destroyed = true;
         }
         }
         break;
@@ -1056,24 +1056,26 @@ void mons_clear_trapping_net(monster* mon)
 void free_stationary_net(int item_index)
 {
     item_def &item = env.item[item_index];
-    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
-    {
-        const coord_def pos = item.pos;
-        // Probabilistically mulch net based on damage done, otherwise
-        // reset damage counter (ie: item.net_durability).
-        if (x_chance_in_y(-item.net_durability, 9))
-            destroy_item(item_index);
-        else
-        {
-            item.net_durability = 0;
-            item.net_placed = false;
-        }
+    if (!item.is_type(OBJ_MISSILES, MI_THROWING_NET))
+        return;
 
-        // Make sure we don't leave a bad trapping net in the stash
-        // FIXME: may leak info if a monster escapes an out-of-sight net.
-        StashTrack.update_stash(pos);
-        StashTrack.unmark_trapping_nets(pos);
+    const coord_def pos = item.pos;
+    // Probabilistically mulch net based on damage done, otherwise
+    // reset damage counter (ie: item.net_durability).
+    const bool mulch = item.props.exists(TRAP_PROJECTILE_KEY)
+                    || x_chance_in_y(-item.net_durability, 9);
+    if (mulch)
+        destroy_item(item_index);
+    else
+    {
+        item.net_durability = 0;
+        item.net_placed = false;
     }
+
+    // Make sure we don't leave a bad trapping net in the stash
+    // FIXME: may leak info if a monster escapes an out-of-sight net.
+    StashTrack.update_stash(pos);
+    StashTrack.unmark_trapping_nets(pos);
 }
 
 void clear_trapping_net()
@@ -1123,6 +1125,9 @@ item_def trap_def::generate_trap_item()
     }
     else
         set_item_ego_type(item, base, SPWPN_NORMAL);
+
+    // Make nets from net traps always mulch.
+    item.props[TRAP_PROJECTILE_KEY] = true;
 
     item_colour(item);
     return item;
