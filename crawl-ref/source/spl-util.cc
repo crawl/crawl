@@ -1124,6 +1124,10 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent,
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                                 bool skip_casting_checks)
 {
+    // prevent all of this logic during excursions / levelgen
+    if (!in_bounds(you.pos()) || !you.on_current_level)
+        return "you can't cast spells right now.";
+
     if (!skip_casting_checks)
     {
         string c_check = casting_uselessness_reason(spell, temp);
@@ -1404,8 +1408,10 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
 
 bool spell_no_hostile_in_range(spell_type spell)
 {
-    if (!in_bounds(you.pos()))
+    // sanity check: various things below will be prone to crash in these cases.
+    if (!in_bounds(you.pos()) || !you.on_current_level)
         return true;
+
     const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell, true, false, true);
