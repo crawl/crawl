@@ -701,14 +701,15 @@ void trap_def::trigger(actor& triggerer)
 
         if (triggered)
         {
-            item_def item = generate_trap_item();
-            copy_item_to_grid(item, you.pos());
-
             if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
-                mpr("A net drops to the ground!");
+                mpr("You avoid being caught in a net.");
             else
             {
                 mpr("A large net falls onto you!");
+
+                item_def item = generate_trap_item();
+                copy_item_to_grid(item, you.pos());
+
                 if (player_caught_in_net())
                 {
                     if (player_in_a_dangerous_place())
