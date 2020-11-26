@@ -401,34 +401,10 @@ void throw_item_no_quiver(dist *target)
         return;
     }
 
-    // then find a target
-    fire_target_behaviour beh(a);
-
-    direction_chooser_args args;
-    args.mode = TARG_HOSTILE;
-    args.behaviour = &beh;
-
-    direction(*target, args);
-
-    if (!target->isValid || target->isCancel)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    // should this be somewhere else?
-    if (is_pproj_active()
-        && in_bounds(target->target)
-        && cell_is_solid(target->target))
-    {
-        const char *feat = feat_type_name(env.grid(target->target));
-        mprf("There is %s there.", article_a(feat).c_str());
-        return;
-    }
-
-    // can't I just use the targeting from throw_it?
-    target->interactive = false;
+    // causes interactive targeting unless target was provided
     a->trigger(*target);
+    if (target->isCancel)
+        canned_msg(MSG_OK);
 }
 
 static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
@@ -580,7 +556,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(level, act->pos(), msg, act->mid);
 }
 
-// throw_it - currently handles player throwing only. Monster
+// throw_it - currently handles player throwing/firing only. Monster
 // throwing is handled in mon-act:_mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
 // and teleport the projectile onto the square.
@@ -616,8 +592,19 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         args.mode = TARG_HOSTILE;
         direction(*target, args);
     }
-    if (!target->isValid)
+    if (!target->isValid || target->isCancel)
         return false;
+
+    if (teleport
+        && in_bounds(target->target)
+        && cell_is_solid(target->target))
+    {
+        // why doesn't the targeter check this?
+        const char *feat = feat_type_name(env.grid(target->target));
+        mprf("There is %s there.", article_a(feat).c_str());
+        target->isValid = false;
+        return false;
+    }
 
     pbolt.set_target(*target);
 
