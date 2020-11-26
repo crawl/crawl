@@ -433,7 +433,7 @@ static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
     { "aptitudes.txt",     '%', false },
-    { "quickstart.md",     '^', false },
+    { "quickstart.txt",     '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
 #ifdef USE_TILE_LOCAL
