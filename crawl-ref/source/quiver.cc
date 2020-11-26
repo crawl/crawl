@@ -366,10 +366,10 @@ namespace quiver
             const launcher lt = _get_weapon_ammo_type(weapon);
             if (lt != AMMO_THROW)
                 return lt == AMMO_SLING ? "fire" : "shoot";
-            else if (attack_cleaves(you))
-                return "cleave";
             else if (weapon_reach(*weapon) > REACH_NONE)
                 return "reach";
+            else if (attack_cleaves(you))
+                return "cleave";
             else
                 return "hit"; // could use more subtype flavor Vs?
         }
@@ -455,7 +455,10 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            if (attack_cleaves(you, -1))
+            // Xom can give you cleaving status while wielding a reaching
+            // weapon, just use the reach targeter for this case. (TODO:
+            // show cleave effect in targeter.)
+            if (attack_cleaves(you, -1) && reach_range < REACH_TWO)
                 hitfunc = make_unique<targeter_cleave>(&you, you.pos());
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
