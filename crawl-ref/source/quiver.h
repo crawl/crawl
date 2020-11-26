@@ -93,7 +93,7 @@ namespace quiver
         virtual shared_ptr<action> find_replacement() const { return nullptr; }
         virtual shared_ptr<action> find_next(int dir=1, bool allow_disabled=true, bool loop=false) const;
 
-        virtual vector<shared_ptr<action>> get_fire_order(bool=true) const // valid c++11 syntax!
+        virtual vector<shared_ptr<action>> get_fire_order(bool=true, bool=false) const // valid c++11 syntax!
         {
             return { };
         }
