@@ -3753,9 +3753,8 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
                                        bool ignore_penance)
 {
     vector<ability_type> abilities;
-    if (you_worship(GOD_RU))
+    if (you_worship(GOD_RU) && you.props.exists(AVAILABLE_SAC_KEY))
     {
-        ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
         bool any_sacrifices = false;
         for (const auto& store : you.props[AVAILABLE_SAC_KEY].get_vector())
         {
