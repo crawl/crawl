@@ -291,7 +291,7 @@ namespace quiver
 
             // =f prevents item from being in fire order.
             if (!ignore_inscription_etc
-                    && _fireorder_inscription_ok(i_inv, manual) != MB_FALSE)
+                    && _fireorder_inscription_ok(i_inv, manual) == MB_FALSE)
             {
                 continue;
             }
@@ -795,7 +795,7 @@ namespace quiver
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, you.weapon(), true);
+            _get_item_fire_order(fire_order, ignore_inscription, you.weapon(), false);
 
             vector<shared_ptr<action>> result;
 
