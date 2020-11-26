@@ -109,8 +109,8 @@ action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
-Sends you to a random position one to two floors down, as if you jumped into a
-shaft trap. It takes some time to dig the shaft.
+Sends you to a random position one to three floors down, as if you jumped into
+a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
