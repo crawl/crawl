@@ -1029,6 +1029,13 @@ always_use_static_targeters = false
         never shown when firing via AUTOFIRE (shift-tab, `p`) and other
         autoattack commands.
 
+force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition
+        Force showing a targeter for the listed spells when casting normally
+        even if the spell isn't targeted. This for practical purposes only has
+        an effect on statically targeted spells, such as the ones in the
+        default value. It is overridden by `always_use_static_targeters = true`,
+        which amounts to listing every spell here.
+
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
         or a wand of paralysis.) Values: (yes | no | prompt).

@@ -152,6 +152,11 @@ void init_spell_name_cache()
     }
 }
 
+bool spell_data_initialized()
+{
+    return spell_name_cache.size() > 0;
+}
+
 spell_type spell_by_name(string name, bool partial_match)
 {
     if (name.empty())
