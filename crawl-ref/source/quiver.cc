@@ -795,7 +795,7 @@ namespace quiver
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, you.weapon(), false);
+            _get_item_fire_order(fire_order, ignore_inscription, you.weapon(), true);
 
             vector<shared_ptr<action>> result;
 
