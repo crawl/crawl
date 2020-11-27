@@ -1024,9 +1024,10 @@ simple_targeting = false
 always_use_static_targeters = false
         A static targeter shows the possible area of effect for a spell that
         does not have controllable targeting. If this option is set to true,
-        static targeters are shown when casting via `z`. When false, they are
-        shown only via `Z` and via the fire interface. Targeters are never shown
-        when firing via AUTOFIRE and other autoattack commands.
+        static targeters are shown when casting via `z` and `Z`. When false,
+        they are shown only via `Z` and via the fire interface. Targeters are
+        never shown when firing via AUTOFIRE (shift-tab, `p`) and other
+        autoattack commands.
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma

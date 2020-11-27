@@ -897,7 +897,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     dec_mp(cost, true);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
-                                          nullptr, _target, check_range);
+                                          nullptr, _target);
     if (cast_result == spret::abort)
     {
         crawl_state.zero_turns_taken();
@@ -1579,8 +1579,7 @@ private:
  * the casting.
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item,
-                       dist *target, bool range_checked)
+                       const item_def* const evoked_item, dist *target)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!evoked_item || evoked_item->base_type == OBJ_WANDS);
@@ -1617,7 +1616,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     // because of it). Hopefully, those will eventually be fixed. - bwr
     // TODO: what's the status of the above comment in 2020+?
     if (is_targeted
-        || hitfunc && (!range_checked || Options.always_use_static_targeters))
+        // force static targeters when called in "fire" mode
+        || hitfunc && (target->fire_context || Options.always_use_static_targeters))
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :

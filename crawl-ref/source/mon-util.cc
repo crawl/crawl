@@ -4852,11 +4852,11 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (!mons_is_threatening(*mon))
+        if ((!mons_is_threatening(*mon) || mon->wont_attack())
+            && mon->type != MONS_TEST_STATUE)
+        {
             continue;
-
-        if (mon->wont_attack())
-            continue;
+        }
 
         int dist = grid_distance(you.pos(), *ri);
         if (dist < minRange)

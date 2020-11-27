@@ -275,8 +275,8 @@ static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* une
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr, target,
-        !target || !target->interactive) == spret::abort)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
+        target) == spret::abort)
     {
         *unevokable = true;
         return false;
