@@ -1880,7 +1880,6 @@ namespace quiver
         // Construct the type order.
         vector<shared_ptr<action>> action_types;
         action_types.push_back(make_shared<ammo_action>(-1));
-        action_types.push_back(make_shared<wand_action>(-1));
         action_types.push_back(make_shared<misc_action>(-1));
         action_types.push_back(make_shared<artefact_evoke_action>(-1));
         action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
