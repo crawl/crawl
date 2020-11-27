@@ -1615,9 +1615,12 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
     // TODO: what's the status of the above comment in 2020+?
-    if (is_targeted
-        // force static targeters when called in "fire" mode
-        || hitfunc && (target->fire_context || Options.always_use_static_targeters))
+    const bool use_targeter = is_targeted
+        || hitfunc && (target->fire_context // force static targeters when called in "fire" mode
+                       || Options.always_use_static_targeters
+                       || Options.force_targeter.count(spell) > 0);
+
+    if (use_targeter)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :

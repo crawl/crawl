@@ -284,6 +284,8 @@ public:
 
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
+    unordered_set<int> force_targeter; // spell types to always use a
+                                       // targeter for
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
@@ -656,6 +658,7 @@ private:
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
+    void add_force_targeter(const string &s, bool prepend);
 
     static const string interrupt_prefix;
 

@@ -1101,6 +1101,11 @@ void game_options::reset_options()
                    "inscribed",
                    false, false);
 
+    // TODO: what else?
+    force_targeter =
+        { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
+          SPELL_ABSOLUTE_ZERO, SPELL_IGNITION };
+
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
     sc_entries             = 0;
@@ -1306,6 +1311,15 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
         else
             fire_order.push_back(flags);
     }
+}
+
+void game_options::add_force_targeter(const string &s, bool)
+{
+    auto spell = spell_by_name(s, true);
+    if (is_valid_spell(spell))
+        force_targeter.insert(spell);
+    else
+        report_error("Unknown spell '%s'\n", s.c_str());
 }
 
 static monster_type _mons_class_by_string(const string &name)
@@ -3149,6 +3163,18 @@ void game_options::read_option_line(const string &str, bool runscript)
                              thesplit[i].c_str());
                 continue;
             }
+        }
+    }
+    else if (key == "force_targeter")
+    {
+        // first pass through the rc file happens before the spell name cache
+        // is initialized, just skip it
+        if (spell_data_initialized())
+        {
+            if (plain)
+                force_targeter.clear();
+
+            split_parse(field, ",", &game_options::add_force_targeter);
         }
     }
     else if (key == "spell_slot"
