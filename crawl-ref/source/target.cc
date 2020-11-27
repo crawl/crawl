@@ -1729,7 +1729,7 @@ void targeter_multiposition::add_position(const coord_def &loc)
         return;
     }
 
-    affected_positions.emplace(loc);
+    affected_positions.insert(loc);
 }
 
 aff_type targeter_multiposition::is_affected(coord_def loc)
