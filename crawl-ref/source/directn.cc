@@ -951,13 +951,18 @@ bool direction_chooser::move_is_ok() const
                        && Options.allow_self_target
                               == confirm_prompt_type::cancel)
                 {
-                    mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
+                    if (moves.interactive)
+                        mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
                 }
                 else if (self != confirm_prompt_type::none
                          && Options.allow_self_target
                                 != confirm_prompt_type::none)
                 {
+                    // if it needs to be asked, simply disallow it when
+                    // calling in non-interactive mode
+                    if (!moves.interactive)
+                        return false;
                     return yesno("Really target yourself?", false, 'n',
                                  true, true, false, nullptr, false);
                 }

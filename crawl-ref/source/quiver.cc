@@ -1190,6 +1190,10 @@ namespace quiver
             talent tal = get_talent(ability, false);
             activate_talent(tal, &target);
 
+            // TODO: does non-targeted case come up?
+            if (target.isCancel && !target.interactive && is_targeted())
+                mprf("No targets found!");
+
             target = t;
 
             t = target; // copy back, in case they are different
