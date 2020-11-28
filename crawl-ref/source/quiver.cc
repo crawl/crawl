@@ -85,7 +85,7 @@ namespace quiver
     void action::reset()
     {
         target = dist();
-    };
+    }
 
     /**
      * Does this action meet preconditions for triggering? Checks configurable
@@ -1736,7 +1736,7 @@ namespace quiver
     }
 
     // initialize as invalid, not empty
-    action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { };
+    action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { }
 
     void action_cycler::save(const string key) const
     {
