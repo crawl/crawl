@@ -314,6 +314,7 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_FREEZING:
     case SPWPN_SILVER:
     case SPWPN_ACID:
+    case SPWPN_REACHING:
         break;
 
     // Melee-only brands.
@@ -340,7 +341,6 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 #if TAG_MAJOR_VERSION == 34
     // Removed brands.
     case SPWPN_RETURNING:
-    case SPWPN_REACHING:
     case SPWPN_ORC_SLAYING:
     case SPWPN_FLAME:
     case SPWPN_FROST:
