@@ -1742,6 +1742,14 @@ namespace quiver
     {
         auto &target = you.props[key].get_table();
         get()->save(target);
+        CrawlVector &history_vec = you.props[key]["history"].get_vector();
+        history_vec.clear();
+        for (auto &a : history)
+        {
+            CrawlStoreValue v;
+            a->save(v.get_table());
+            history_vec.push_back(v);
+        }
     }
 
     void action_cycler::load(const string key)
@@ -1759,8 +1767,27 @@ namespace quiver
 
         auto &target = you.props[key].get_table();
         set(_load_action(target));
-        // in case this is invalid, cycle. TODO: is this the right thing to do?
-        on_actions_changed();
+        CrawlVector &history_vec = you.props[key]["history"].get_vector();
+        history.clear();
+        for (auto &val : history_vec)
+        {
+            auto a = _load_action(val.get_table());
+            history.push_back(move(a));
+        }
+    }
+
+    /**
+     * Returns the most recent valid action in the quiver history. May return
+     * nullptr if no valid actions are found.
+     */
+    shared_ptr<action> action_cycler::find_last_valid()
+    {
+        for (auto it = history.rbegin(); it != history.rend(); ++it)
+        {
+            if ((*it) && (*it)->is_valid())
+                return *it;
+        }
+        return nullptr;
     }
 
     /**
@@ -1776,9 +1803,17 @@ namespace quiver
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
-        current = n;
+        auto old = move(current);
+        current = move(n);
+
         if (diff)
         {
+            if (history.size() > 5) // 5 chosen arbitrarily
+                history.erase(history.begin());
+            // this may push back an invalid action, which is useful for all
+            // sorts of reasons
+            history.push_back(move(old));
+
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
@@ -2482,32 +2517,42 @@ namespace quiver
     }
 
     // Called when the player has switched weapons
+    // Some cases of interest:
+    // * player picks up a new weapon and wields it
+    // * player is swapping between a launcher and melee
     void on_weapon_changed()
     {
         const item_def* weapon = you.weapon();
         you.launcher_action.set(quiver::find_action_from_launcher(weapon));
 
-        if (!you.launcher_action.is_empty())
+        // If the new weapon is a launcher, and ammo was quivered, autoquiver
+        // the launcher ammo in the main quiver. This should maybe be more
+        // configurable.
+        const action &q_current = *you.quiver_action.get();
+        const action &l_current = *you.launcher_action.get();
+        if (!you.launcher_action.is_empty()
+            && (!you.quiver_action.get()->is_valid()
+                || typeid(l_current) == typeid(q_current)))
         {
-            // If the launcher has valid ammo, set that to the main quiver as
-            // well. TODO: is this too annoying? It is based on previous
-            // behavior, and is relatively intuitive in simple cases. But it
-            // could be pretty annoying in a char using both spells and ranged
-            // weapons. Maybe add an option?
             you.quiver_action.set(you.launcher_action.get());
         }
 
-        // if switching invalidates the quiver, and the new weapon is an
-        // evokable randart, use that action. (If someone ever makes an
-        // evokable launcher, its ammo will be prioritized, revisit.) This
-        // isn't as aggressive as the launcher case.
+        // see if there's anything valid in the quiver history
+        if (!you.quiver_action.get()->is_valid())
+        {
+            auto a = you.quiver_action.find_last_valid();
+            if (a)
+                you.quiver_action.set(a);
+        }
+
+        // if we *still* can't find an action, and the new weapon is evokable,
+        // try quivering that. (This will come up only very rarely.)
         if (weapon && is_unrandom_artefact(*weapon)
                                     && !you.quiver_action.get()->is_valid())
         {
             you.quiver_action.set(
                             make_shared<artefact_evoke_action>(weapon->link));
         }
-
     }
 }
 
