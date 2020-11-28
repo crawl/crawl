@@ -134,6 +134,7 @@ namespace quiver
         bool clear();
         void on_actions_changed();
         virtual void set_needs_redraw();
+        shared_ptr<action> find_last_valid();
 
         void target();
         shared_ptr<action> do_target();
@@ -141,6 +142,7 @@ namespace quiver
 
     private:
         shared_ptr<action> current;
+        vector<shared_ptr<action>> history;
     };
 
     struct launcher_action_cycler : public action_cycler
