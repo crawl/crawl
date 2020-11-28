@@ -1468,9 +1468,9 @@ LUAFN(dgn_map_by_index)
     return 0;
 }
 
-LUARET1(dgn_map_count, number, map_count());
+LUARET1(dgn_map_count, number, map_count())
 
-LUARET1(dgn_last_builder_error, string, crawl_state.last_builder_error.c_str());
+LUARET1(dgn_last_builder_error, string, crawl_state.last_builder_error.c_str())
 
 LUAFN(dgn_map_in_depth)
 {
