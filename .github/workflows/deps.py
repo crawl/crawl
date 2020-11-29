@@ -6,7 +6,6 @@ import argparse
 import os
 import subprocess
 import sys
-import shutil
 import time
 from typing import Dict, List, Set
 
@@ -31,7 +30,7 @@ def run(cmd: List[str], max_retries: int = 1) -> None:
             return
 
 
-def build_opts(string: str) -> Dict[str, str]:
+def make_opts(string: str) -> Dict[str, str]:
     """Parse Make opts, eg "DEBUG=1 TILES=1" => {"DEBUG": "1", "TILES": "1"}."""
     if string:
         return {arg: val for arg, val in (opt.split("=") for opt in string.split(" "))}
@@ -67,6 +66,8 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
                 "ttf-dejavu-core",
             ]
         )
+    if "FULLDEBUG" in args.debug_opts:
+        packages.add("gdb")
     if args.coverage:
         packages.add("lcov")
     if args.crosscompile:
@@ -125,7 +126,8 @@ if __name__ == "__main__":
         description="Install packages required to build DCSS"
     )
     parser.add_argument("--compiler", choices=("gcc", "clang"))
-    parser.add_argument("--build-opts", default={}, type=build_opts)
+    parser.add_argument("--build-opts", default={}, type=make_opts)
+    parser.add_argument("--debug-opts", default={}, type=make_opts)
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--crosscompile", action="store_true")
 

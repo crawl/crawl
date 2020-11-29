@@ -20,7 +20,7 @@ jobs:
         run: util/checkwhite -n
         working-directory: crawl-ref/source
   build_linux:
-    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }}
+    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,6 +37,8 @@ jobs:
           - FULLDEBUG=1
         tag_upgrade:
           - false
+        build_all:
+          - ""
         exclude:
           # Limit Clang jobs:
           # 1. Only build fulldebug
@@ -53,18 +55,37 @@ jobs:
             build_opts: ""
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: TILES=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: FULLDEBUG=1
+            tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
+          - compiler: clang
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history
+          submodules: true
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -76,36 +97,27 @@ jobs:
             pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
         working-directory: crawl-ref/source
       - name: Install dependencies
-        run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}"
+        run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
           restore-keys: |
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
             ccache-linux-${{ matrix.compiler }}-
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/lib/ccache
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - name: Run tag upgrade scripts
         if: matrix.tag_upgrade == true
         run: |
@@ -117,11 +129,14 @@ jobs:
           util/tag-major-upgrade -t 35
           util/tag-35-upgrade.py
         working-directory: crawl-ref/source
-      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
+      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }}
         working-directory: crawl-ref/source
-      # - if: matrix.debug == 'FULLDEBUG=1' && matrix.build_opts != 'TILES=1'
-      #   run: make test
-      #   working-directory: crawl-ref/source
+      # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
+      - if: matrix.debug == 'FULLDEBUG=1' && (matrix.build_opts == '' || matrix.build_opts == 'WEBTILES=1') && matrix.tag_upgrade == false
+        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} test
+        working-directory: crawl-ref/source
+        env:
+          TERM: dumb
       - name: Print ccache stats
         run: ccache -s
 
@@ -154,42 +169,28 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Install Dependencies
         run: |
-          brew install ccache
           sudo pip3 install PyYAML
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/local/opt/ccache/libexec"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-macos-clang-${{ matrix.build_type }}
+          key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-macos-clang-${{ matrix.build_type }}
-            ccache-macos-clang
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/local/opt/ccache/libexec
+            ccache-macos-clang-${{ matrix.build_type }}-
+            ccache-macos-clang-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
         run: ccache -s
       - name: Add build to release
         if: github.event.release.tag_name != null
-        # Go back to the upstream action (svenstaro/upload-release-action) once this PR merges:
-        # https://github.com/svenstaro/upload-release-action/pull/13
-        uses: alexjurkiewicz/upload-release-action@6408db765e9a0413e6c5b8231ecd3eb45352cc99
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
@@ -228,31 +229,22 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-mingw64-${{ matrix.build_type }}
+          key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-mingw64-${{ matrix.build_type }}
-            ccache-mingw64
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/lib/ccache
+            ccache-mingw64-${{ matrix.build_type }}-
+            ccache-mingw64-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -274,9 +266,7 @@ jobs:
           echo "::set-output name=dest::$dest"
       - name: Add build to release
         if: github.event.release.tag_name != null
-        # Go back to the upstream action (svenstaro/upload-release-action) once this PR merges:
-        # https://github.com/svenstaro/upload-release-action/pull/13
-        uses: alexjurkiewicz/upload-release-action@6408db765e9a0413e6c5b8231ecd3eb45352cc99
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref }}
@@ -303,30 +293,21 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --coverage
         working-directory: .github/workflows
-      - name: Add ccache to PATH
-        run: echo "::add-path::/usr/lib/ccache"
       - name: Cache compilation
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-catch2
+          key: ccache-catch2-${{ github.sha }}
           restore-keys: |
-            ccache-catch2
-      # ccache uses ~110mb to store the output from a single crawl compile
-      # (including submodules) (when compressed)
-      - name: Configure ccache
-        run: |
-          mkdir -p ~/.ccache
-          cat >~/.ccache/ccache.conf <<EOF
-          compression = true
-          compression_level = 9
-          log_file = /tmp/ccache.log
-          max_size = 150M
-          EOF
-      - name: Display ccache configuration
-        run: |
-          ccache -s
-          ls -l /usr/lib/ccache
+            ccache-catch2-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -380,7 +361,7 @@ jobs:
       run: pytest
 
   notify_irc:
-    name: "Notify ##crawl-dev of build result"
+    name: "Notify ##crawl-dev of build failure"
     needs:
       - linting
       - build_linux
@@ -399,37 +380,14 @@ jobs:
           sha="${{ github.sha }}"
           short_sha="${sha:0:8}"
 
-          linting_result="${{ needs.linting.result }}"
-          build_linux_result="${{ needs.build_linux.result }}"
-          build_macos_result="${{ needs.build_macos.result }}"
-          build_mingw64_crosscompile_result="${{ needs.build_mingw64_crosscompile.result }}"
-          codecov_catch2_result="${{ needs.codecov_catch2.result }}"
-          webserver_result="${{ needs.webserver.result }}"
-
-          failed_components=()
-          if [[ $linting_result != success ]]; then
-            failed_components+=('Linting')
-          fi
-          if [[ $build_linux_result != success ]]; then
-            failed_components+=('Linux Build')
-          fi
-          if [[ $build_macos_result != success ]]; then
-            failed_components+=('MacOS Build')
-          fi
-          if [[ $build_mingw64_crosscompile_result != success ]]; then
-            failed_components+=('Linux MingW Build')
-          fi
-          if [[ $codecov_catch2_result != success ]]; then
-            failed_components+=('Catch2/codecov')
-          fi
-          if [[ $webserver_result != success ]]; then
-            failed_components+=('Webtiles Server')
-          fi
-
+          # https://modern.ircdocs.horse/formatting.html
+          bold=$(printf '\x02')
+          col=$(printf '\x03')
+          red="04"
+          magenta="06"
+          yellow="08"
           url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          message="Build failed for $branch @ $short_sha $url"
-          function join { local IFS=","; echo "$*"; }
-          message="${message} (failed: $(join "${failed_components[@]}"))"
+          message="${bold}${col}${red}Build failed${col}${bold} for ${col}${yellow}${branch}${col} @ $short_sha ${col}${magenta}${url}"
 
           echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
