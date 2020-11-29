@@ -112,6 +112,7 @@ command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
 string keyseq_to_str(const keyseq &seq);
+keyseq parse_keyseq(string s);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
