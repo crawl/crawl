@@ -2448,6 +2448,17 @@ static void _bindkey(string field)
 
         key = CONTROL(wchars[1]);
     }
+    else if (wchars[0] == '\\')
+    {
+        // does this need to validate non-widechars?
+        keyseq ks = parse_keyseq(key_str);
+        if (ks.size() != 1)
+        {
+            mprf(MSGCH_ERROR, "Invalid keyseq '%s' in bindkey directive '%s'",
+                key_str.c_str(), field.c_str());
+        }
+        key = ks[0];
+    }
     else
     {
         mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",

@@ -282,7 +282,7 @@ static int read_key_code(string s)
  *   \{x40} produces 64 (hexadecimal code)
  *   \{!more} or \{!m} disables -more- prompt until the end of the macro.
  */
-static keyseq parse_keyseq(string s)
+keyseq parse_keyseq(string s)
 {
     int state = 0;
     keyseq v;
