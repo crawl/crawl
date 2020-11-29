@@ -122,10 +122,6 @@ body {
     background-color: #204a87; /* blue */
 }
 
-#stats[data-species="Felid"] #stats_quiver_line {
-    display: none;
-}
-
 /* default color when showing "Silenced" */
 #stats_noise_status {
     color: #FF00FF; /* magenta */
