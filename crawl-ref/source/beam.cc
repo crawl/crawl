@@ -3728,7 +3728,8 @@ void bolt::affect_player()
         {
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
-            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+            mprf("The %s %s %s!", name.c_str(), hit_verb.c_str(),
+                you.hp > 0 ? "you" : "your lifeless body");
         }
 
         affect_player_enchantment();
@@ -3778,7 +3779,8 @@ void bolt::affect_player()
 
     if (flavour != BEAM_VISUAL && !is_enchantment())
     {
-        mprf("The %s %s you%s%s", name.c_str(), hit_verb.c_str(),
+        mprf("The %s %s %s%s%s", name.c_str(), hit_verb.c_str(),
+             you.hp > 0 ? "you" : "your lifeless body",
              final_dam ? "" : " but does no damage",
              attack_strength_punctuation(final_dam).c_str());
     }
