@@ -741,7 +741,7 @@ ENDMAP
 
 # A plain guardian serpent vault. (nrook)
 NAME:  nrook_guardian_serpent_ordinary
-DEPTH: D:9-, Snake, Crypt
+DEPTH: D:11-, Snake, Crypt
 TAGS:  no_monster_gen no_item_gen transparent
 : if you.in_branch("Crypt") then
 TAGS:  extra
@@ -767,7 +767,7 @@ ENDMAP
 # A real vault behind a false one. (nrook)
 NAME:  nrook_guardian_serpent_double
 TAGS:  no_monster_gen transparent
-DEPTH: D:9-, Snake
+DEPTH: D:11-, Snake
 MONS:  patrolling guardian serpent
 KMASK: *| = opaque
 KPROP: *| = no_tele_into
