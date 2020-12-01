@@ -1924,6 +1924,113 @@ tttt----WWtt'
   '''''''''
 ENDMAP
 
+NAME:   nzn_swamp_weyward_sisters
+DEPTH:  Swamp:3-
+TAGS:   no_pool_fixup
+WEIGHT: 5
+SUBST:  e = ddee. *:5
+SUBST:  2 = 222. *:1
+NSUBST: 3 = 1:3 / 1:f / *:.
+MONS:   patrolling fenstrider witch, fungus, human att:good_neutral
+ITEM:   never_decay human corpse, human skeleton, any good_item no_pickup
+KFEAT:  n = iron_grate
+MARKER: O = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
+                                pow_max = 10, delay = 10, size = 1, \
+                                walk_dist = 0, excl_rad = 0 }
+MAP
+    xxxxx@t
+    xxOxxWt
+    xeeexWt
+    x.1.xWt
+    xxAxxWt
+     t.tWWt
+tttttt.Wwxxxxx
+@WWWWwW.tx.n3x
+xxxxxW.W.A1+3x
+x222x.WWwx.n3x
+x21.AWtWwxxxxx
+x222xtttWWWWW@
+xxxxx  ttttttt
+ENDMAP
+
+NAME:   nzn_swamp_stair_ambush
+DEPTH:  Swamp:2-3
+NSUBST: 1 = 1:3 / *:1
+NSUBST: 2 = 1:4 / *:2
+MONS:   goliath frog / swamp worm, hydra / w:5 eleionoma, bunyip, spriggan druid
+MAP
+    @
+    1t
+   2WWt
+  tWWWW2
+ tWW{WWW1@
+@1WWW>WWt
+  2WWWWt
+   tWW2
+    t1
+     @
+ENDMAP
+
+# Averages 2 husks and 1.5 earth elementals ~1/3 chance of a tin
+NAME:    nzn_swamp_blast_mining
+DEPTH:   Swamp
+TAGS:    no_pool_fixup
+WEIGHT:  5
+SHUFFLE: DE / 12
+SUBST:   A = WWWw..
+SUBST:   B = xxWwd.
+SUBST:   C = WWd.
+SUBST:   D = 111dx.
+SUBST:   E = 22ddxx..
+SUBST:   F = xxWwde
+NSUBST:  e = 1:e / *:d
+MONS:    bloated husk, earth elemental
+ITEM:    stone, tin of tremorstones
+MAP
+@          @
+ CAAAAAAAAC
+ ACAAAAAACA
+ AACBBBCCAA
+ AACBBCBBAA
+ AABCEDBBAA
+ AABF12FBAA
+ AABBEDCBAA
+ AABBCBBCAA
+ AACCBBBCAA
+ ACAAAAAACA
+ CAAAAAAAAC
+@          @
+ENDMAP
+
+NAME:   nzn_swamp_dancing_lights
+DEPTH:  Swamp
+TAGS:   transparent no_pool_fixup
+WEIGHT: 5
+NSUBST: A = 1:W / *:w
+NSUBST: C = 1:W / *:w
+NSUBST: E = 1:W / *:w
+NSUBST: B = 1:O / *:W
+NSUBST: D = 1:O / *:W
+NSUBST: F = 1:O / *:W
+SUBST:  w = wwwt
+KMONS:  O = will-o-the-wisp
+KFEAT:  O = shallow_water
+MARKER: O = lua:fog_machine {  pow_min = 8, pow_max = 12, delay = 25, \
+                                size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+     www
+    wwBww
+    wBBBw
+    AABAA
+  @@WAAAW@@
+  @WwWWWwW@
+ wCCWWWWWEEw
+wwDCCWwWEEFEw
+wDDDC@@@EFFFw
+wwDww   wwFww
+ www     www
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
@@ -2414,4 +2521,57 @@ cccccccOcccccccccE333333Eccc
   cccccccccccccccEEOEEEEEcc
     ccccccc    cccEEEcccccc
       cc        ccccccc cc
+ENDMAP
+
+###############################################################################
+# Witches Coven by nikheizen/nzn
+# 13 witches (or wizards, or druids, or magi, or sorcerers; they're rather
+# inclusive) gather around the rune of power to enact a ritual most foul.
+# Also features five tier 4 demons and two tier 2 demons.
+# Averages nineteen extra monsters, of which 1/3 are tier 4 demons, 1/3 are
+# random 0s, and 1/3 are random 9s
+NAME:   nzn_swamp_witches_coven
+PLACE:  Swamp:$
+ORIENT: float
+TAGS:   no_monster_gen no_rotate no_vmirror
+MONS:   fenstrider witch
+MONS:   green death / reaper / blizzard demon
+MONS:   neqoxec / soul eater / sixfirhy
+MONS:   orange demon / hellwing / chaos spawn
+MONS:   w:20 spriggan druid / orc sorcerer / ogre mage / w:5 wizard
+KITEM:  O = decaying rune of zot
+KFEAT:  B = stone_arch
+MARKER: B = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
+                                pow_max = 10, delay = 10, size = 1, \
+                                walk_dist = 0, excl_rad = 0 }
+SUBST:  ' = WWWWWW. 4:5
+SUBST:  4 = 004499
+MAP
+         ccccccccc
+       ccc''5t5''ccc
+     ccct'''ttt'''tccc
+    cc'''''''t'''''''cc
+   cc'cc'''''t'''''cc'cc
+  cc''cAcct''t''tccAc''cc
+  ct'''c'cc''t''cc'c'''tc
+ cc''''c'3cct'tcc3'c''''cc
+ ct''''cc'5cctcc5'cc''''tc
+@c'''''tc'''tct'''c''''''c@
+c'''''''cct'''''tcc'''''''c
+c''t''''5cc'''''cc5'''t'''c
+c'''''''cct''2''tcc'''''''c
+c''''tcccct''G''tcccct''''c
+c''tccc''c'''t'''c''ccct''c
+cttcc53'''ctttttc'''35ccttc
+ccccccccc'ccccccc'ccccccccc
+ ct'''''''c'''''c'''''''tc
+ ct''''tttcA'''Acttt''''tc
+ cct''t''''c'''c''''t''tcc
+  ct5'1'''tc'1'ct'''1'5tc
+  cct'''''tc'2'ct'''''tcc
+   cct''''tccOcct''''tcc
+    cct'''''cBc'''''tcc
+     ccct'''ccc'''tccc
+       ccc'''c'''ccc
+         ccccccccc
 ENDMAP
