@@ -198,6 +198,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "register": self.register,
             "start_change_email": self.start_change_email,
             "change_email": self.change_email,
+            "start_change_password": self.start_change_password,
+            "change_password": self.change_password,
             "forgot_password": self.forgot_password,
             "reset_password": self.reset_password,
             "go_lobby": self.go_lobby,
@@ -728,6 +730,29 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
+    def start_change_password(self):
+        self.send_message("start_change_password")
+
+    def change_password(self, cur_password, new_password):
+        if self.username is None:
+            self.send_message("change_password_fail", reason = "You need to log in to change your password.")
+            return
+
+        if not userdb.user_passwd_match(self.username, cur_password):
+            self.send_message("change_password_fail", reason = "Your password didn't match.")
+            self.logger.info("Non-matching current password during password change for %s", self.username)
+            return
+
+        error = userdb.change_password(self.user_id, new_password)
+        if error is None:
+            self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+            self.logger.info("User %s changed password.", self.username)
+            self.send_message("change_password_done")
+        else:
+            self.logger.info("Failed to change username for %s: %s", self.username, error)
+            self.send_message("change_password_fail", reason = error)
+
 
     def start_change_email(self):
         self.send_message("start_change_email", email = self.user_email)

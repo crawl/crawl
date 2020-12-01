@@ -239,6 +239,22 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
 
     return None
 
+def change_password(userid, passwd):
+    if passwd == "":
+        return "The password can't be empty."
+
+    crypted_pw = encrypt_pw(passwd)
+
+    with crawl_db(password_db) as db:
+        db.c.execute("update dglusers set password=? where id=?",
+                     (crypted_pw, userid))
+        # invalidate any recovery tokens that might exist, even for normal
+        # password changes:
+        db.c.execute("delete from recovery_tokens where user_id=?",
+                     (userid,))
+        db.conn.commit()
+
+    return None
 
 def change_email(user_id, email):  # type: (str, str) -> Optional[str]
     """Returns an error message or None on success."""

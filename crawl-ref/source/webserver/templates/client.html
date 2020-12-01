@@ -29,6 +29,7 @@
           <a id="forgot_link" href="javascript:">Forgot Password</a>
 {% end %}
           <a id="chem_link" href="javascript:" style="display: none;">Change Email</a>
+          <a id="chpw_link" href="javascript:" style="display: none;">Change Password</a>
           <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
         </div>
       </div>
@@ -55,6 +56,24 @@
         </form>
       </div>
 
+      <div id="change_password" class="floating_dialog" style="display: none;">
+        <span id="chpw_message"></span>
+        <form action="#" id="chpw_form">
+          <label for="change_cur_password">Current password:</label>
+          <input class="text" type="password" name="change_cur_password" id="change_cur_password">
+          <br>
+          <label for="change_password">New password:</label>
+          <input class="text" type="password" name="change_new_password" id="change_new_password">
+          <br>
+          <label for="change_repeat_password">Repeat password:</label>
+          <input class="text" type="password" name="change_repeat_password" id="change_repeat_password">
+          <br><br>
+          <input class="button" type="button" name="cancel" id="chpw_cancel"
+                 value="Cancel">
+          <input class="button" type="submit" name="submit" id="chpw_submit" value="Submit">
+        </form>
+      </div>
+
       <div id="change_email" class="floating_dialog" style="display: none;">
         <p>Your current email address is: <span id="chem_current"></span></p>
         <span id="chem_message"></span>
@@ -68,8 +87,8 @@
         </form>
       </div>
 
-      <div id="change_email_2" class="floating_dialog" style="display: none;">
-        <span id="chem_confirmation_message"></span>
+      <div id="floating_ok_message" class="floating_dialog" style="display: none;">
+        <span id="ok_message_content"></span>
         <input class="button" type="submit" name="submit" value="OK">
       </div>
 
