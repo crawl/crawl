@@ -37,7 +37,7 @@ class MainHandler(tornado.web.RequestHandler):
         recovery_token = None
         recovery_token_error = None
 
-        if getattr(config, "allow_password_reset", False):
+        if getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False):
             recovery_token = self.get_argument("ResetToken",None)
             if recovery_token:
                 recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
@@ -262,7 +262,7 @@ def check_config():
 
     load_games.collect_game_modes()
 
-    if getattr(config, "allow_password_reset", False) and not config.lobby_url:
+    if (getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False)) and not config.lobby_url:
         logging.warning("Lobby URL needs to be defined!")
         success = False
     return success

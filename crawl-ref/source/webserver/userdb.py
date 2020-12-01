@@ -328,26 +328,22 @@ def update_user_password_from_token(token, passwd):
 
     return username, token_error
 
-
-def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
-    """
-    Returns:
-        (email_sent: bool, error: string)
-    """
-    if not email:
-        return False, "Email address can't be empty"
-    email_error = validate_email_address(email)
-    if email_error:
-        return False, email_error
-
+def clear_password_token(username):
+    if not username:
+        return False, "Invalid username"
     with crawl_db(password_db) as db:
-        db.c.execute("select id from dglusers where email=? collate nocase", (email,))
+        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
         result = db.c.fetchone()
     if not result:
-        return False, None
+        return False, "Invalid username"
+    with crawl_db(password_db) as db:
+        db.c.execute("delete from recovery_tokens where user_id=?",
+                     (result[0],))
+        db.conn.commit()
+    return True, ""
 
-    userid = result[0]
-    # generate random token
+def create_password_token(userid):
+    # userid is not checked here
     token_bytes = os.urandom(32)
     token = urlsafe_b64encode(token_bytes)
     # hash token
@@ -358,7 +354,9 @@ def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
         db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
                      "values (?,datetime('now'),?)", (token_hash, userid))
         db.conn.commit()
+    return token
 
+def generate_token_email(token):
     # send email
     lobby_url = getattr(config, 'lobby_url', '')  # note: hack to satisfy mypy
     url_text = lobby_url + "?ResetToken=" + to_unicode(token)
@@ -384,6 +382,44 @@ If you did not ask to reset your password, feel free to ignore this email.
     </p>
   </body>
 </html>"""
+
+    return msg_body_plaintext, msg_body_html
+
+def generate_forgot_password(username):
+    if not username:
+        return False, "Empty username"
+
+    with crawl_db(password_db) as db:
+        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
+        result = db.c.fetchone()
+    if not result:
+        return False, "Invalid username"
+
+    userid = result[0]
+    token = create_password_token(userid)
+    msg_body_plaintext, msg_body_html = generate_token_email(token)
+    return True, msg_body_plaintext
+
+def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
+    """
+    Returns:
+        (email_sent: bool, error: string)
+    """
+    if not email:
+        return False, "Email address can't be empty"
+    email_error = validate_email_address(email)
+    if email_error:
+        return False, email_error
+
+    with crawl_db(password_db) as db:
+        db.c.execute("select id from dglusers where email=? collate nocase", (email,))
+        result = db.c.fetchone()
+    if not result:
+        return False, None
+
+    userid = result[0]
+    token = create_password_token(userid)
+    msg_body_plaintext, msg_body_html = generate_token_email(token)
 
     send_email(email, 'Request to reset your password',
                msg_body_plaintext, msg_body_html)

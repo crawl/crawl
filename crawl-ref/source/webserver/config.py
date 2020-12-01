@@ -149,12 +149,17 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
-allow_password_reset = False # Set to true to allow users to request a password reset email. Some settings must be properly configured for this to work
+# Set to True to allow users to request a password reset email. Some settings
+# must be properly configured for this to work:
+allow_password_reset = False
+# Set to True to allow dgl admin users to generate password reset tokens in the
+# admin panel. Only use if you really trust your admin users!
+admin_password_reset = False
 
 # Set to the primary URL where a player would reach the main lobby
 # For example: "http://crawl.akrasiac.org/"
 # This is required for for password reset, as it will be the base URL for
-# recovery URLs.
+# recovery URLs. Use "http://localhost:8080/" for testing.
 lobby_url = None
 
 # Proper SMTP settings are required for password reset to function properly.

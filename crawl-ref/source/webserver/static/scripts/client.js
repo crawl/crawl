@@ -516,11 +516,51 @@ function (exports, $, key_conversion, chat, comm) {
         }
     }
 
-    function admin_log(data)
+    function admin_pw_reset()
     {
-        var text = data.text;
+        var username = $("#admin_username").val();
+        if (username.length == 0)
+            admin_log_msg("No username provided!");
+        else
+            send_message("admin_pw_reset", {username: username});
+    }
+
+    function admin_pw_reset_done(data)
+    {
+        if (data.error)
+            admin_log_msg("Password reset failed: " + data.error);
+        else
+        {
+            admin_log_msg("Password reset token set for " + data.username);
+            $("#ok_message_content").html("<div><span><b>Password reset info:</b></span></div>");
+            $("#ok_message_content").append("<div><span>Username: " + data.username + "</span></div>");
+            $("#ok_message_content").append("<div><span>User email: <tt>" + data.email + "</tt></span></div>");
+            $("#ok_message_content").append("<div>Message to send:<pre>" + data.email_body + "</pre></div>");
+            show_dialog("#floating_ok_message");
+        }
+    }
+
+    function admin_pw_reset_clear()
+    {
+        var username = $("#admin_username").val();
+        if (username.length == 0)
+            admin_log_msg("No username provided!");
+        else
+        {
+            admin_log_msg("Password reset token cleared for " + username);
+            send_message("admin_pw_reset_clear", {username: username});
+        }
+    }
+
+    function admin_log_msg(text)
+    {
         $("#admin_panel_log").append(
             '<div><span>' + text + "</span></div>");
+    }
+
+    function admin_log(data)
+    {
+        admin_log_msg(data.text);
     }
 
     function server_announcement(data)
@@ -1410,6 +1450,7 @@ function (exports, $, key_conversion, chat, comm) {
         "reset_password_fail": reset_password_failed,
 
         "admin_log": admin_log,
+        "admin_pw_reset_done": admin_pw_reset_done,
 
         "watching_started": watching_started,
 
@@ -1478,6 +1519,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#admin_panel_button").click(toggle_admin_panel);
         $("#announcement_submit").click(admin_announce);
+        $("#admin_pw_reset").click(admin_pw_reset);
+        $("#admin_pw_reset_clear").click(admin_pw_reset_clear);
 
         do_layout();
 

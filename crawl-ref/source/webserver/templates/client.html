@@ -111,7 +111,7 @@
       </div>
 {% end %}
 
-{% if getattr(config, "allow_password_reset", False) and reset_token %}
+{% if (getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False)) and reset_token %}
       <div id="reset_pw" class="floating_dialog" style="display: none;">
   {% if reset_token_error %}
         <form action="#" id="reset_pw_form">
@@ -173,8 +173,20 @@
               <input class="text" type="text" name="announcement_text" id="announcement_text" />
               <span><a href="javascript:" id="announcement_submit">send announcement</a></span>
             </form>
-            <div id="admin_panel_log"></div>
           </div>
+          <hr />
+{% if getattr(config, "admin_password_reset", False) %}
+          <div id="user_control">
+            <form action="#" id="admin_user_control">
+            <label for="admin_username">User:</label>
+            <input class="text" type="text" name="admin_username" id="admin_username">
+            <input class="button" type="button" name="admin_pw_reset" id="admin_pw_reset" value="Generate password token">
+            <input class="button" type="button" name="admin_pw_reset_clear" id="admin_pw_reset_clear" value="Clear password token">
+            </form>
+          </div>
+          <hr />
+{% end %}
+          <div id="admin_panel_log"></div>
         </div>
       </div>
 
