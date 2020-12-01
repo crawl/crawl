@@ -612,9 +612,15 @@ static void _print_stats_equip(int x, int y)
  */
 static void _print_stats_noise(int x, int y)
 {
+    CGOTOXY(x, y, GOTO_STAT);
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
     bool silence = silenced(you.pos());
     int level = silence ? 0 : you.get_noise_perception(true);
-    CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     cprintf("Noise: ");
     colour_t noisecolour;
@@ -925,6 +931,14 @@ static int _wpn_name_colour()
 static void _print_stats_wp(int y)
 {
     string text;
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
+    CGOTOXY(1, y, GOTO_STAT);
+
     if (you.weapon())
     {
         item_def wpn = *you.weapon(); // copy
@@ -937,7 +951,6 @@ static void _print_stats_wp(int y)
     else
         text = you.unarmed_attack_name();
 
-    CGOTOXY(1, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
                                           : '-';
@@ -978,6 +991,12 @@ static void _print_stats_wp(int y)
 static void _print_stats_qv(int y)
 {
     CGOTOXY(1, y, GOTO_STAT);
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
     formatted_string qdesc = quiver::get_secondary_action()->quiver_description();
 #ifdef USE_TILE_LOCAL
     const int max_width = crawl_view.hudsz.x - (tiles.is_using_small_layout() ? 0 : 4);
@@ -1021,6 +1040,8 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 static void _get_status_lights(vector<status_light>& out)
 {
 #ifdef DEBUG_DIAGNOSTICS
+    if (mouse_control::current_mode() != MOUSE_MODE_NORMAL
+        || !(you.running > 0 || you.running < 0 && Options.travel_delay == -1))
     {
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
