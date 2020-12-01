@@ -451,6 +451,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_link").hide();
         $("#forgot_link").hide();
         $('#chem_link').show();
+        $('#chpw_link').show();
         $("#logout_link").show();
 
         chat.reset_visibility(true);
@@ -699,6 +700,59 @@ function (exports, $, key_conversion, chat, comm) {
         $("#register_message").html(data.reason);
     }
 
+
+    function ask_change_password()
+    {
+        send_message("start_change_password");
+    }
+
+    function start_change_password(data)
+    {
+        $("#chpw_message").html("");
+        show_dialog("#change_password");
+        $("#change_cur_password").focus();
+    }
+
+    function cancel_change_password()
+    {
+        hide_dialog();
+    }
+
+    function change_password_done(data)
+    {
+        $("#ok_message_content").html("Password changed!");
+        show_dialog("#floating_ok_message");
+    }
+
+    function change_password()
+    {
+        var cur_password = $("#change_cur_password").val();
+        var new_password = $("#change_new_password").val();
+        var new_password_repeat = $("#change_repeat_password").val();
+
+        if (new_password !== new_password_repeat)
+        {
+            $("#chpw_message").html("Passwords don't match.");
+            return false;
+        }
+
+        send_message("change_password", {
+            cur_password: cur_password,
+            new_password: new_password,
+        });
+
+        return false;
+    }
+
+    function change_password_failed(data)
+    {
+        var msg = "Password change failed!";
+        if (data.reason)
+            msg = msg + " " + data.reason;
+        $("#ok_message_content").html(msg);
+        show_dialog("#floating_ok_message");
+    }
+
     function ask_change_email()
     {
         send_message("start_change_email");
@@ -737,14 +791,14 @@ function (exports, $, key_conversion, chat, comm) {
     {
         if ( data.email == "" )
         {
-            $("#chem_confirmation_message").html("Your account is no longer associated with an email address.");
+            $("#ok_message_content").html("Your account is no longer associated with an email address.");
         }
         else
         {
-            $("#chem_confirmation_message").html("Your email address has been set to " + data.email + ".");
+            $("#ok_message_content").html("Your email address has been set to " + data.email + ".");
         }
 
-        show_dialog("#change_email_2");
+        show_dialog("#floating_ok_message");
     }
 
     function start_forgot_password()
@@ -1348,6 +1402,9 @@ function (exports, $, key_conversion, chat, comm) {
         "start_change_email": start_change_email,
         "change_email_fail": change_email_failed,
         "change_email_done": change_email_done,
+        "start_change_password": start_change_password,
+        "change_password_done": change_password_done,
+        "change_password_fail": change_password_failed,
         "forgot_password_fail": forgot_password_failed,
         "forgot_password_done": forgot_password_done,
         "reset_password_fail": reset_password_failed,
@@ -1396,8 +1453,11 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chem_link").bind("click", ask_change_email);
         $("#chem_form").bind("submit", change_email);
         $("#chem_cancel").bind("click", cancel_change_email);
+        $("#chpw_link").bind("click", ask_change_password);
+        $("#chpw_form").bind("submit", change_password);
+        $("#chpw_cancel").bind("click", cancel_change_password);
 
-        $("#change_email_2 input").bind("click", hide_dialog);
+        $("#floating_ok_message input").bind("click", hide_dialog);
 
         $("#forgot_link").bind("click", start_forgot_password);
         $("#forgot_form").bind("submit", forgot_password);
