@@ -111,7 +111,7 @@
       </div>
 {% end %}
 
-{% if (getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False)) and reset_token %}
+{% if reset_token %}
       <div id="reset_pw" class="floating_dialog" style="display: none;">
   {% if reset_token_error %}
         <form action="#" id="reset_pw_form">
