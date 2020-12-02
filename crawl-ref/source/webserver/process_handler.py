@@ -625,7 +625,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             try:
                 with open(lockfile) as f:
                     pid = f.readline()
-                pid = int(pid)
+
+                try:
+                    pid = int(pid)
+                except ValueError:
+                    # pidfile is empty or corrupted, can happen if the server
+                    # crashed. Just clear it...
+                    self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
+                    self._purge_stale_lock()
+                    return
+
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:
