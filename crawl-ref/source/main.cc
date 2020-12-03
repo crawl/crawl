@@ -2067,6 +2067,13 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_QUIVER_ITEM:           quiver::choose(you.quiver_action); break;
     case CMD_CYCLE_QUIVER_FORWARD:  _do_cycle_quiver(+1);     break;
     case CMD_CYCLE_QUIVER_BACKWARD: _do_cycle_quiver(-1);     break;
+    case CMD_SWAP_QUIVER_RECENT:
+    {
+        auto a = you.quiver_action.find_last_valid();
+        if (a)
+            you.quiver_action.set(a);
+        break;
+    }
 
 #ifdef WIZARD
     case CMD_WIZARD: handle_wizard_command(); break;

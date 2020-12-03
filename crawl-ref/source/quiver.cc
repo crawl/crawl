@@ -1819,11 +1819,15 @@ namespace quiver
 
         if (diff)
         {
-            if (history.size() > 5) // 5 chosen arbitrarily
-                history.erase(history.begin());
+            // only store the most recently used instance of any action in the
+            // history
+            history.erase(remove(history.begin(), history.end(), old), history.end());
             // this may push back an invalid action, which is useful for all
             // sorts of reasons
             history.push_back(move(old));
+
+            if (history.size() > 6) // 6 chosen arbitrarily
+                history.erase(history.begin());
 
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
