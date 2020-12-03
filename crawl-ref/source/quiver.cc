@@ -898,7 +898,11 @@ namespace quiver
 
     struct spell_action : public action
     {
-        spell_action(spell_type s = SPELL_NO_SPELL) : spell(s) { };
+        spell_action(spell_type s = SPELL_NO_SPELL) : spell(s), enabled_cache(false)
+        {
+            invalidate();
+        };
+
         void save(CrawlHashTable &save_target) const override; // defined below
 
         bool equals(const action &other) const override
@@ -913,9 +917,15 @@ namespace quiver
             return !!(get_spell_flags(spell) & spflag::targeting_mask);
         }
 
+        void invalidate() override
+        {
+            enabled_cache = can_cast_spells(true)
+                                    && !spell_is_useless(spell, true, false);
+        }
+
         bool is_enabled() const override
         {
-            return can_cast_spells(true) && !spell_is_useless(spell, true, false);
+            return enabled_cache;
         }
 
         bool is_valid() const override
@@ -1047,6 +1057,7 @@ namespace quiver
 
     private:
         spell_type spell;
+        bool enabled_cache;
     };
 
     // stuff that is silly to quiver. Basically four (overlapping) cases:
@@ -2024,6 +2035,7 @@ namespace quiver
 
     void action_cycler::set_needs_redraw()
     {
+        get()->invalidate();
         // TODO: abstract from `you`
         you.redraw_quiver = true;
     }

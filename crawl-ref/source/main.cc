@@ -2170,6 +2170,7 @@ static void _prep_input()
     you.shield_blocks = 0;              // no blocks this round
 
     you.redraw_status_lights = true;
+    you.quiver_action.set_needs_redraw();
     print_stats();
     update_screen();
 

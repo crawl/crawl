@@ -57,6 +57,7 @@ namespace quiver
             return !operator==(other);
         }
 
+        virtual void invalidate() { }
         virtual bool is_enabled() const { return false; }
         virtual bool is_valid() const { return true; }
         virtual bool is_targeted() const { return false; }
