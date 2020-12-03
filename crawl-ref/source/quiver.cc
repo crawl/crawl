@@ -2540,19 +2540,14 @@ namespace quiver
         const item_def* weapon = you.weapon();
         you.launcher_action.set(quiver::find_action_from_launcher(weapon));
 
-        // If the new weapon is a launcher, and ammo was quivered, autoquiver
-        // the launcher ammo in the main quiver. This should maybe be more
-        // configurable.
-        const action &q_current = *you.quiver_action.get();
-        const action &l_current = *you.launcher_action.get();
-        if (!you.launcher_action.is_empty()
-            && (!you.quiver_action.get()->is_valid()
-                || typeid(l_current) == typeid(q_current)))
-        {
+        // if the new weapon is a launcher with ammo, and the autoquiver option
+        // is set, quiver that ammo in the main quiver
+        if (!you.launcher_action.is_empty() && Options.launcher_autoquiver)
             you.quiver_action.set(you.launcher_action.get());
-        }
 
-        // see if there's anything valid in the quiver history
+        // If that failed, see if there's anything valid in the quiver history.
+        // This is aimed at using the quiver history when switching away from
+        // a weapon.
         if (!you.quiver_action.get()->is_valid())
         {
             auto a = you.quiver_action.find_last_valid();

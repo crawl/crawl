@@ -284,6 +284,8 @@ public:
 
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
+    bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
+
     unordered_set<int> force_targeter; // spell types to always use a
                                        // targeter for
 
