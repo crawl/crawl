@@ -490,7 +490,7 @@ namespace quiver
 
             if (x_distance > reach_range || y_distance > reach_range)
             {
-                mpr("Your weapon cannot reach that far!");
+                mpr("Your weapon can't reach that far!");
                 return;
             }
 

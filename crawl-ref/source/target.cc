@@ -791,7 +791,7 @@ bool targeter_reach::valid_aim(coord_def a)
     int dist = (origin - a).rdist();
 
     if (dist > range)
-        return notify_fail("You can't reach that far!");
+        return notify_fail("Your weapon can't reach that far!");
 
     return true;
 }
@@ -827,7 +827,7 @@ targeter_cleave::targeter_cleave(const actor* act, coord_def target)
 bool targeter_cleave::valid_aim(coord_def a)
 {
     if ((origin - a).rdist() > 1)
-        return notify_fail("You can't reach that far!");
+        return notify_fail("Your weapon can't reach that far!");
     return true;
 }
 
