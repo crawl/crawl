@@ -806,8 +806,8 @@ aff_type targeter_reach::is_affected(coord_def loc)
 
     // hacks: REACH_THREE entails smite targeting, because it exists entirely
     // for the sake of UNRAND_RIFT. So, don't show the tracer.
-    if (range < REACH_THREE
-        && ((loc - origin) * 2 - (aim - origin)).abs() <= 1
+    if (range == REACH_TWO
+        && ((loc - origin) * 2 - (aim - origin)).abs() < 1
         && feat_is_reachable_past(env.grid(loc)))
     {
         return AFF_TRACER;
