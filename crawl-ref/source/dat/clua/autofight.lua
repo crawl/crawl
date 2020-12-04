@@ -248,7 +248,7 @@ local function get_monster_info(dx,dy,no_move)
   info.can_attack = (info.attack_type > 0) and 1 or info.attack_type
   info.safe = m:is_safe() and -1 or 0
   info.constricting_you = m:is_constricting_you() and 1 or 0
-  -- Only prioritize good stabs: sleep and paralysis.
+  -- Only prioritize top-tier stabs: sleep, petrification, and paralysis.
   info.very_stabbable = (m:stabbability() >= 1) and 1 or 0
   info.injury = m:damage_level()
   info.threat = m:threat()
