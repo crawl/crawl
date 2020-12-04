@@ -474,10 +474,9 @@ static bool cant_see_you(const monster_info *mi)
  * The return value is a number representing the percentage of a top-tier stab
  * you can currently get by attacking the monster. Possible values are:
  *
- * - 1.0 Sleep and paralysis stabs.
- * - 0.5 Net, web, and petrification stabs.
- * - 0.25 Confusion, fear, and invisibility stabs.
- * - 0.166666666 Distraction stabs.
+ * - 1.0 Sleep, petrified, and paralysis stabs.
+ * - 0.25 Net, web, petrifying, confusion, fear, invisibility, and distraction
+ *   stabs
  * - 0.0 No stab bonus.
  *
  * @treturn number
@@ -486,17 +485,17 @@ static bool cant_see_you(const monster_info *mi)
 LUAFN(moninf_get_stabbability)
 {
     MONINF(ls, 1, mi);
-    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PARALYSED))
-        lua_pushnumber(ls, 1.0);
-    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
-             || mi->is(MB_PETRIFIED))
+    if (mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) || mi->is(MB_PETRIFIED)
+            || mi->is(MB_PARALYSED))
     {
-        lua_pushnumber(ls, 0.5);
+        lua_pushnumber(ls, 1.0);
     }
-    else if (mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi))
+    else if (mi->is(MB_CAUGHT) || mi->is(MB_WEBBED) || mi->is(MB_PETRIFYING)
+             || mi->is(MB_CONFUSED) || mi->is(MB_FLEEING) || cant_see_you(mi)
+             || mi->is(MB_DISTRACTED))
+    {
         lua_pushnumber(ls, 0.25);
-    else if (mi->is(MB_DISTRACTED))
-        lua_pushnumber(ls, 0.16666666);
+    }
     else
         lua_pushnumber(ls, 0);
 
