@@ -115,8 +115,8 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_EVASION;
     if (s.substr(0, 5) == "Stlth")
         return RING_STEALTH;
-    if (s.substr(0, 2) == "MR")
-        return RING_PROTECTION_FROM_MAGIC;
+    if (s.substr(0, 2) == "WL")
+        return RING_WILLPOWER;
 
     if (s.substr(0, 2) == "rF")
         return RING_PROTECTION_FROM_FIRE;
@@ -522,7 +522,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 9;
     else if (tokens[0] == "Gourm") // older dump files
         offset = 5;
-    else if (tokens[0] == "MR")
+    else if (tokens[0] == "WL")
         offset = 5;
     else if (tokens[0] == "Stlth")
         offset = 5;

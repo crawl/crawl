@@ -50,7 +50,7 @@ enum class spflag
     utility            = 0x01000000,      // usable no matter what foe is
     no_ghost           = 0x02000000,      // ghosts can't get this spell
     cloud              = 0x04000000,      // makes a cloud
-    MR_check           = 0x08000000,      // spell that checks monster MR
+    WL_check           = 0x08000000,      // spell that checks monster WL
     mons_abjure        = 0x10000000,      // monsters can cast abjuration
                                           // instead of this spell
     not_evil           = 0x20000000,      // not considered evil by the

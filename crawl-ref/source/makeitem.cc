@@ -842,13 +842,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_MAGIC_RESISTANCE,
+                             SPARM_WILLPOWER,
                              SPARM_STEALTH,
                              SPARM_PRESERVATION);
 
     case ARM_HAT:
         return random_choose_weighted(7, SPARM_NORMAL,
-                                      3, SPARM_MAGIC_RESISTANCE,
+                                      3, SPARM_WILLPOWER,
                                       2, SPARM_INTELLIGENCE,
                                       2, SPARM_SEE_INVISIBLE);
 
@@ -873,13 +873,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
                                       2, SPARM_POSITIVE_ENERGY,
-                                      4, SPARM_MAGIC_RESISTANCE);
+                                      4, SPARM_WILLPOWER);
 
     case ARM_PLATE_ARMOUR:
         return random_choose_weighted(26, SPARM_FIRE_RESISTANCE,
                                       26, SPARM_COLD_RESISTANCE,
                                       19, SPARM_POISON_RESISTANCE,
-                                      15, SPARM_MAGIC_RESISTANCE,
+                                      15, SPARM_WILLPOWER,
                                        7, SPARM_POSITIVE_ENERGY,
                                        7, SPARM_PONDEROUSNESS);
 
@@ -901,7 +901,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     return random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
                                   7, SPARM_COLD_RESISTANCE,
                                   5, SPARM_POISON_RESISTANCE,
-                                  4, SPARM_MAGIC_RESISTANCE,
+                                  4, SPARM_WILLPOWER,
                                   2, SPARM_POSITIVE_ENERGY);
 }
 
@@ -995,7 +995,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         }
         return true; // in portal vaults, these can happen on every slot
 
-    case SPARM_MAGIC_RESISTANCE:
+    case SPARM_WILLPOWER:
         if (type == ARM_HAT)
             return true;
         // deliberate fall-through

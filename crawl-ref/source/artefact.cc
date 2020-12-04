@@ -345,7 +345,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
     proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
     proprt[ARTP_RCORR] += armour_type_prop(arm, ARMF_RES_CORR);
-    proprt[ARTP_MAGIC_RESISTANCE] += armour_type_prop(arm, ARMF_RES_MAGIC);
+    proprt[ARTP_WILLPOWER] += armour_type_prop(arm, ARMF_WILLPOWER);
     proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
 }
@@ -373,7 +373,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
     { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
     { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
-    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC_RESISTANCE, 1 } } },
+    { RING_WILLPOWER, { { ARTP_WILLPOWER, 1 } } },
     { RING_RESIST_CORROSION, { { ARTP_RCORR, 1 } } },
 
     { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 } } },
@@ -660,7 +660,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "rN", ARTP_VAL_ANY, 55,       // ARTP_NEGATIVE_ENERGY,
         _gen_good_res_artp, nullptr, 2, 4 },
-    { "MR", ARTP_VAL_ANY, 50,       // ARTP_MAGIC_RESISTANCE,
+    { "WL", ARTP_VAL_ANY, 50,       // ARTP_WILLPOWER,
         _gen_good_res_artp, _gen_bad_res_artp, 2, 4 },
     { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_SEE_INVISIBLE,
         []() { return 1; }, nullptr, 0, 0 },
@@ -1497,8 +1497,8 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_NEGATIVE_ENERGY;
         break;
 
-    case RING_PROTECTION_FROM_MAGIC:
-        provides = ARTP_MAGIC_RESISTANCE;
+    case RING_WILLPOWER:
+        provides = ARTP_WILLPOWER;
         break;
 
     case RING_RESIST_CORROSION:

@@ -322,7 +322,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_FIRE,                  prop_note::symbolic },
         { ARTP_COLD,                  prop_note::symbolic },
         { ARTP_NEGATIVE_ENERGY,       prop_note::symbolic },
-        { ARTP_MAGIC_RESISTANCE,      prop_note::symbolic },
+        { ARTP_WILLPOWER,             prop_note::symbolic },
         { ARTP_REGENERATION,          prop_note::symbolic },
         { ARTP_RMUT,                  prop_note::plain },
         { ARTP_RCORR,                 prop_note::plain },
@@ -547,8 +547,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
-                                 "enchantments.", false},
+        { ARTP_WILLPOWER, "It affects your willpower, "
+                          "your defense against some magical effects.", false},
         { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
         { ARTP_SEE_INVISIBLE, "It lets you see invisible.", false},
@@ -1774,9 +1774,9 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It can be activated to allow its wearer to "
                 "fly indefinitely.";
             break;
-        case SPARM_MAGIC_RESISTANCE:
-            description += "It increases its wearer's resistance "
-                "to enchantments.";
+        case SPARM_WILLPOWER:
+            description += "It increases its wearer's willpower, protecting against "
+                           "some magical effects.";
             break;
         case SPARM_PROTECTION:
             description += "It protects its wearer from harm (+3 to AC).";
@@ -3078,10 +3078,10 @@ static int _hex_pow(const spell_type spell, const int hd)
 int hex_chance(const spell_type spell, const int hd)
 {
     const int capped_pow = _hex_pow(spell, hd);
-    const int chance = hex_success_chance(you.res_magic(), capped_pow,
+    const int chance = hex_success_chance(you.willpower(), capped_pow,
                                           100, true);
-    if (spell == SPELL_STRIP_RESISTANCE)
-        return chance + (100 - chance) / 3; // ignores mr 1/3rd of the time
+    if (spell == SPELL_STRIP_WILLPOWER)
+        return chance + (100 - chance) / 3; // ignores wl 1/3rd of the time
     return chance;
 }
 
@@ -3263,7 +3263,7 @@ static void _get_spell_description(const spell_type spell,
                        + "\n";
 
         // only display this if the player exists (not in the main menu)
-        if (crawl_state.need_save && (get_spell_flags(spell) & spflag::MR_check)
+        if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
 #endif
@@ -3278,7 +3278,7 @@ static void _get_spell_description(const spell_type spell,
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
-                : make_stringf("Chance to beat your MR: %d%%%s\n",
+                : make_stringf("Chance to beat your WL: %d%%%s\n",
                                hex_chance(spell, hd),
                                wiz_info.c_str());
         }
@@ -3686,7 +3686,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ENGULF,            "engulf with water" },
         { AF_PURE_FIRE,         "" },
         { AF_DRAIN_SPEED,       "drain speed" },
-        { AF_VULN,              "reduce resistance to hostile enchantments" },
+        { AF_VULN,              "reduce willpower" },
         { AF_SHADOWSTAB,        "deal increased damage when unseen" },
         { AF_DROWN,             "deal drowning damage" },
         { AF_CORRODE,           "cause corrosion" },
@@ -3886,7 +3886,7 @@ static string _monster_spells_description(const monster_info& mi)
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("\nTo read a description, press the key listed above. "
-        "(AdB) indicate damage dice, (x%%) indicates the chance to beat your MR, "
+        "(AdB) indicate damage dice, (x%%) indicates the chance to beat your WL, "
         "and (y) indicates the spell range");
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
@@ -4095,21 +4095,21 @@ static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 }
 
 /**
- * Append information about a given monster's MR to the provided stream.
+ * Append information about a given monster's WL to the provided stream.
  *
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
  */
-static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
+static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
-    if (mi.res_magic() == MAG_IMMUNE)
+    if (mi.willpower() == WILL_INVULN)
     {
-        result << "MR ∞\n";
+        result << "WL ∞\n";
         return;
     }
 
-    const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), bar_scale, "MR", result);
+    const int bar_scale = WL_PIP;
+    _print_bar(mi.willpower(), bar_scale, "WL", result);
     result << "\n";
 }
 
@@ -4168,7 +4168,7 @@ static string _monster_stat_description(const monster_info& mi)
     _describe_monster_hp(mi, result);
     _describe_monster_ac(mi, result);
     _describe_monster_ev(mi, result);
-    _describe_monster_mr(mi, result);
+    _describe_monster_wl(mi, result);
 
     result << "\n";
 

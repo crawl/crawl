@@ -406,7 +406,7 @@ NAME:     items_4
 TAGS:     items_4
 KITEM:    a = ring of protection from fire ident:all not_cursed /\
           ring of protection from cold ident:all not_cursed /\
-          ring of protection from magic ident:all not_cursed /\
+          ring of willpower ident:all not_cursed /\
           ring of fire ident:all not_cursed /\
           ring of ice ident:all not_cursed /\
           ring of see invisible ident:all not_cursed /\
@@ -789,7 +789,7 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
     ring of protection from fire randart ident:all not_cursed /\
     ring of protection from cold randart ident:all not_cursed /\
-    ring of protection from magic randart ident:all not_cursed /\
+    ring of willpower randart ident:all not_cursed /\
     ring of fire randart ident:all not_cursed /\
     ring of ice randart ident:all not_cursed /\
     ring of see invisible randart ident:all not_cursed /\

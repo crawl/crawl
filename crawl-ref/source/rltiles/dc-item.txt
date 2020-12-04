@@ -775,7 +775,7 @@ i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
 i-life-protection RING_LIFE_PROTECTION
-i-r-magic RING_PROTECTION_FROM_MAGIC
+i-r-magic RING_WILLPOWER
 i-fire RING_FIRE
 # start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE

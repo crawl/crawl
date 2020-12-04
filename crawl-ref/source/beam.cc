@@ -1680,7 +1680,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (!(mons->holiness() & MH_UNDEAD))
             return true;
 
-        int res_margin = mons->check_res_magic(pow);
+        int res_margin = mons->check_willpower(pow);
         if (res_margin > 0)
         {
             if (simple_monster_message(*mons,
@@ -1706,7 +1706,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return true;
         }
 
-        int res_margin = mons->check_res_magic(pow);
+        int res_margin = mons->check_willpower(pow);
         if (res_margin > 0)
         {
             if (simple_monster_message(*mons,
@@ -3149,7 +3149,7 @@ void bolt::affect_player_enchantment(bool resistible)
 {
     if (resistible
         && has_saving_throw()
-        && you.check_res_magic(ench_power) > 0)
+        && you.check_willpower(ench_power) > 0)
     {
         // You resisted it.
 
@@ -3161,19 +3161,19 @@ void bolt::affect_player_enchantment(bool resistible)
             if (mon && !mon->observable())
             {
                 mprf("Something tries to affect you, but you %s.",
-                     you.res_magic() == MAG_IMMUNE ? "are unaffected"
+                     you.willpower() == WILL_INVULN ? "are unaffected"
                                                    : "resist");
                 need_msg = false;
             }
         }
         if (need_msg)
         {
-            if (you.res_magic() == MAG_IMMUNE)
+            if (you.willpower() == WILL_INVULN)
                 canned_msg(MSG_YOU_UNAFFECTED);
             else
             {
                 // the message reflects the level of difficulty resisting.
-                const int margin = you.res_magic() - ench_power;
+                const int margin = you.willpower() - ench_power;
                 mprf("You%s", you.resist_margin_phrase(margin).c_str());
             }
         }
@@ -3405,9 +3405,9 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_VULNERABILITY:
-        if (!you.duration[DUR_LOWERED_MR])
-            mpr("Your magical defenses are stripped away!");
-        you.increase_duration(DUR_LOWERED_MR, 12 + random2(18), 50);
+        if (!you.duration[DUR_LOWERED_WL])
+            mpr("Your willpower is stripped away!");
+        you.increase_duration(DUR_LOWERED_WL, 12 + random2(18), 50);
         obvious_effect = true;
         break;
 
@@ -4011,7 +4011,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
     if (ench_flavour_affects_monster(flavour, mon, true)
-        && !(has_saving_throw() && mons_immune_magic(*mon)))
+        && !(has_saving_throw() && mons_invuln_will(*mon)))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
@@ -5039,7 +5039,7 @@ bool bolt::has_saving_throw() const
     case BEAM_VILE_CLUTCH:
         return false;
     case BEAM_VULNERABILITY:
-        return !one_chance_in(3);  // Ignores MR 1/3 of the time
+        return !one_chance_in(3);  // Ignores HR 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
         return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:
@@ -5188,7 +5188,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     // Check magic resistance.
     if (has_saving_throw())
     {
-        if (mons_immune_magic(*mon))
+        if (mons_invuln_will(*mon))
             return MON_UNAFFECTED;
 
         // (Very) ugly things and shapeshifters will never resist
@@ -5203,10 +5203,10 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // Chaos effects don't get a resistance check to match melee chaos.
         else if (real_flavour != BEAM_CHAOS)
         {
-            if (mon->check_res_magic(ench_power) > 0)
+            if (mon->check_willpower(ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
-                res_margin = mon->res_magic() - ench_power_stepdown(ench_power);
+                res_margin = mon->willpower() - ench_power_stepdown(ench_power);
                 return MON_RESIST;
             }
         }
@@ -5556,13 +5556,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_VULNERABILITY:
-        if (!mon->has_ench(ENCH_LOWERED_MR)
-            && mon->add_ench(mon_enchant(ENCH_LOWERED_MR, 0, agent(),
+        if (!mon->has_ench(ENCH_LOWERED_WL)
+            && mon->add_ench(mon_enchant(ENCH_LOWERED_WL, 0, agent(),
                                          random_range(20, 30) * BASELINE_DELAY)))
         {
             if (you.can_see(*mon))
             {
-                mprf("%s magical defenses are stripped away.",
+                mprf("%s willpower is stripped away.",
                      mon->name(DESC_ITS).c_str());
                 obvious_effect = true;
             }

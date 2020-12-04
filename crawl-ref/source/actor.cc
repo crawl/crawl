@@ -106,23 +106,23 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_res_magic(int power)
+int actor::check_willpower(int power)
 {
-    const int mrs = res_magic();
+    const int wl = willpower();
 
-    if (mrs == MAG_IMMUNE)
+    if (wl == WILL_INVULN)
         return 100;
 
     const int adj_pow = ench_power_stepdown(power);
 
-    const int mrchance = (100 + mrs) - adj_pow;
-    int mrch2 = random2(100);
-    mrch2 += random2(101);
+    const int wlchance = (100 + wl) - adj_pow;
+    int wlch2 = random2(100);
+    wlch2 += random2(101);
 
-    dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
-         adj_pow, power, mrs, mrchance, mrch2);
+    dprf("Power: %d (%d pre-stepdown), WL: %d, target: %d, roll: %d",
+         adj_pow, power, wl, wlchance, wlch2);
 
-    return mrchance - mrch2;
+    return wlchance - wlch2;
 }
 
 void actor::set_position(const coord_def &c)
@@ -900,7 +900,7 @@ bool actor::torpor_slowed() const
 
 string actor::resist_margin_phrase(int margin) const
 {
-    if (res_magic() == MAG_IMMUNE)
+    if (willpower() == WILL_INVULN)
         return " " + conj_verb("are") + " unaffected.";
 
     static const string resist_messages[][2] =

@@ -1637,8 +1637,8 @@ static int _get_monster_armour_value(const monster *mon,
               + get_armour_res_elec(item, true)
               + get_armour_res_corr(item);
 
-    // Give a simple bonus, no matter the size of the MR bonus.
-    if (get_armour_res_magic(item, true) > 0)
+    // Give a simple bonus, no matter the size of the WL bonus.
+    if (get_armour_willpower(item, true) > 0)
         value++;
 
     // Poison becomes much less valuable if the monster is
@@ -1801,8 +1801,8 @@ static int _get_monster_jewellery_value(const monster *mon,
     value += get_jewellery_res_cold(item, true);
     value += get_jewellery_res_elec(item, true);
 
-    // Give a simple bonus, no matter the size of the MR bonus.
-    if (get_jewellery_res_magic(item, true) > 0)
+    // Give a simple bonus, no matter the size of the WL bonus.
+    if (get_jewellery_willpower(item, true) > 0)
         value++;
 
     // Poison becomes much less valuable if the monster is
@@ -1917,8 +1917,7 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
         else // None of these exceptions hold for throwing nets.
         {
             // Spellcasters should not waste time with ammunition.
-            // Neither summons nor hostile enchantments are counted for
-            // this purpose.
+            // Neither summons nor debuffs are counted for this purpose.
             if (!force && mons_has_ranged_spell(*this, true, false))
                 return false;
 
@@ -4025,34 +4024,34 @@ int monster::res_acid(bool calc_unid) const
 }
 
 /**
- * What MR (resistance to hexes, etc) does this monster have?
+ * What WL (resistance to hexes, etc) does this monster have?
  *
  * @param calc_unid     Whether to include items & effects the player may not
  *                      know about.
- * @return              The monster's magic resistance value.
+ * @return              The monster's willpower value.
  */
-int monster::res_magic(bool calc_unid) const
+int monster::willpower(bool calc_unid) const
 {
-    if (mons_immune_magic(*this))
-        return MAG_IMMUNE;
+    if (mons_invuln_will(*this))
+        return WILL_INVULN;
 
-    const int type_mr = (get_monster_data(type))->resist_magic;
+    const int type_wl = (get_monster_data(type))->willpower;
     // Negative values get multiplied with monster hit dice.
-    int u = type_mr < 0 ?
-                get_hit_dice() * -type_mr * 4 / 3 :
-                mons_class_res_magic(type, base_monster);
+    int u = type_wl < 0 ?
+                get_hit_dice() * -type_wl * 4 / 3 :
+                mons_class_willpower(type, base_monster);
 
     // Hepliaklqana ancestors scale with xl.
     if (mons_is_hepliaklqana_ancestor(type))
         u = get_experience_level() * get_experience_level() / 2; // 0-160ish
 
-    // Draining/malmutation reduce monster base MR proportionately.
+    // Draining/malmutation reduce monster base WL proportionately.
     const int HD = get_hit_dice();
     if (HD < get_experience_level())
         u = u * HD / get_experience_level();
 
     // Resistance from artefact properties.
-    u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
+    u += WL_PIP * scan_artefacts(ARTP_WILLPOWER);
 
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
@@ -4065,25 +4064,25 @@ int monster::res_magic(bool calc_unid) const
     if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
         && (calc_unid || (env.item[armour].flags & ISFLAG_KNOW_TYPE)))
     {
-        u += get_armour_res_magic(env.item[armour], false);
+        u += get_armour_willpower(env.item[armour], false);
     }
 
     if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR
         && (calc_unid || (env.item[shld].flags & ISFLAG_KNOW_TYPE)))
     {
-        u += get_armour_res_magic(env.item[shld], false);
+        u += get_armour_willpower(env.item[shld], false);
     }
 
     if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
         && calc_unid) // XXX: can you ever see monster jewellery?
     {
-        u += get_jewellery_res_magic(env.item[jewellery], false);
+        u += get_jewellery_willpower(env.item[jewellery], false);
     }
 
-    if (has_ench(ENCH_RAISED_MR)) //trog's hand
+    if (has_ench(ENCH_STRONG_WILLED)) //trog's hand
         u += 80;
 
-    if (has_ench(ENCH_LOWERED_MR))
+    if (has_ench(ENCH_LOWERED_WL))
         u /= 2;
 
     if (u < 0)

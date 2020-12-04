@@ -2198,9 +2198,9 @@ bool flavour_has_reach(attack_flavour flavour)
     }
 }
 
-bool mons_immune_magic(const monster& mon)
+bool mons_invuln_will(const monster& mon)
 {
-    return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;
+    return get_monster_data(mon.type)->willpower == WILL_INVULN;
 }
 
 bool mons_skeleton(monster_type mc)
@@ -2256,13 +2256,13 @@ int mons_class_hit_dice(monster_type mc)
 }
 
 /**
- * What base MR does a monster of the given type have?
+ * What base WL does a monster of the given type have?
  *
  * @param type    The monster type in question.
  * @param base    The base type of the monster. (For e.g. draconians.)
- * @return        The MR of a normal monster of that type.
+ * @return        The WL of a normal monster of that type.
  */
-int mons_class_res_magic(monster_type type, monster_type base)
+int mons_class_willpower(monster_type type, monster_type base)
 {
     const monster_type base_type =
         base != MONS_NO_MONSTER &&
@@ -2270,12 +2270,12 @@ int mons_class_res_magic(monster_type type, monster_type base)
             ? draco_or_demonspawn_subspecies(type, base)
             : type;
 
-    const int type_mr = (get_monster_data(base_type))->resist_magic;
+    const int type_wl = (get_monster_data(base_type))->willpower;
 
     // Negative values get multiplied with monster hit dice.
-    if (type_mr >= 0)
-        return type_mr;
-    return mons_class_hit_dice(base_type) * -type_mr * 4 / 3;
+    if (type_wl >= 0)
+        return type_wl;
+    return mons_class_hit_dice(base_type) * -type_wl * 4 / 3;
 }
 
 /**
@@ -4996,11 +4996,11 @@ void debug_mondata()
 
         const monsterentry *md = get_monster_data(mc);
 
-        int MR = md->resist_magic;
-        if (MR < 0)
-            MR = md->HD * -MR * 4 / 3;
-        if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
-            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+        int WL = md->willpower;
+        if (WL < 0)
+            WL = md->HD * -WL * 4 / 3;
+        if (md->willpower > 200 && md->willpower != WILL_INVULN)
+            fails += make_stringf("%s has WL %d > 200\n", name, WL);
         if (get_resist(md->resists, MR_RES_POISON) == 2)
             fails += make_stringf("%s has rPois++\n", name);
         if (get_resist(md->resists, MR_RES_ELEC) == 2)

@@ -140,7 +140,7 @@ sub aptitude_table
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
-            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'MR';
+            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'WL';
             $pos-- if $abbr eq 'HP';
             if ($pos > length($line))
             {

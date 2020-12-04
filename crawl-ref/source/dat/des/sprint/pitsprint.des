@@ -340,7 +340,7 @@ function metal_vault_setup(e)
   e.kitem("a = ring of protection from fire ident:all not_cursed /\
           ring of protection from cold ident:all not_cursed /\
           ring of positive energy ident:all not_cursed /\
-          ring of protection from magic ident:all not_cursed /\
+          ring of willpower ident:all not_cursed /\
           ring of fire ident:all not_cursed /\
           ring of ice ident:all not_cursed /\
           ring of see invisible ident:all not_cursed /\
@@ -484,7 +484,7 @@ function coven_setup(e)
   e.kitem("c = ring of protection from fire randart ident:all not_cursed /\
           ring of protection from cold randart ident:all not_cursed /\
           ring of positive energy randart ident:all not_cursed /\
-          ring of protection from magic randart ident:all not_cursed /\
+          ring of willpower randart ident:all not_cursed /\
           ring of fire randart ident:all not_cursed /\
           ring of ice randart ident:all not_cursed /\
           ring of see invisible randart ident:all not_cursed /\

@@ -810,7 +810,7 @@ static spret _phantom_mirror(dist *target)
                          player_adjust_evoc_power(
                              you.skill(SK_EVOCATIONS, 1) / 4 + 1,
                              surge)
-                         * (100 - victim->check_res_magic(power)) / 100));
+                         * (100 - victim->check_willpower(power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 

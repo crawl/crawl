@@ -326,9 +326,9 @@ int species_mp_modifier(species_type species)
     return get_species_def(species).mp_mod;
 }
 
-int species_mr_modifier(species_type species)
+int species_wl_modifier(species_type species)
 {
-    return get_species_def(species).mr_mod;
+    return get_species_def(species).wl_mod;
 }
 
 /**

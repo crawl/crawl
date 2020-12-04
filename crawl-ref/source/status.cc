@@ -791,7 +791,7 @@ static void _describe_regen(status_info& inf)
     {
         inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_TROGS_HAND));
         inf.light_text   = "Regen";
-        inf.light_text += " MR++";
+        inf.light_text += " WL++";
     }
 
     if (no_heal || (you.disease && !trogs_hand))

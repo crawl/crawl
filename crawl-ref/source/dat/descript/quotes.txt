@@ -2284,7 +2284,7 @@ ring of protection from fire
 
 <ring>
 %%%%
-ring of protection from magic
+ring of willpower
 
 <ring>
 %%%%

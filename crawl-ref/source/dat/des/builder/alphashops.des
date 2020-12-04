@@ -136,8 +136,8 @@
        "plate armour", "ring of poison resistance", "manual of polearms",
        "wand of polymorph", "ring of positive energy", "ring of protection",
        "manual of poison magic", "wand of paralysis",
-       "ring of protection from fire", "ring of protection from magic",
-       "staff of poison", "ring of protection from cold" }
+       "ring of protection from fire", "staff of poison",
+       "ring of protection from cold" }
 
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
        "quick blade" }
@@ -170,7 +170,7 @@
       elseif s == "V" then i = { "scroll of vulnerability" }
 
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
-       "war axe" }
+       "war axe", "ring of willpower" }
 
       elseif s == "X" then i = { "any" }
 

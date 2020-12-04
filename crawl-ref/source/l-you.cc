@@ -233,11 +233,11 @@ LUARET1(you_res_shock, number, player_res_electricity(false))
  * @function stealth_pips
  */
 LUARET1(you_stealth_pips, number, stealth_breakpoint(player_stealth()))
-/*** Magic resistance (MR).
- * @treturn int number of MR pips
- * @function res_magic
+/*** Willpower (WL).
+ * @treturn int number of WL pips
+ * @function willpower
  */
-LUARET1(you_res_magic, number, player_res_magic(false) / MR_PIP)
+LUARET1(you_willpower, number, player_willpower(false) / WL_PIP)
 /*** Drowning resistance (rDrown).
  * @treturn int resistance level
  * @function res_drowning
@@ -1230,7 +1230,7 @@ static const struct luaL_reg you_clib[] =
     { "res_draining", you_res_draining },
     { "res_shock"   , you_res_shock },
     { "stealth_pips", you_stealth_pips },
-    { "res_magic"   , you_res_magic },
+    { "willpower"   , you_willpower },
     { "res_drowning", you_res_drowning },
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },

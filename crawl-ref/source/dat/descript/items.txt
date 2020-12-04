@@ -706,8 +706,8 @@ quicksilver dragon scales
 
 The scales of a quicksilver dragon. Although it does not provide its wearer
 with as much protection as the scales of some heavier dragons, it is somewhat
-lighter and less encumbering. It is excellent at repelling hostile enchantments
-– and also cannot be enchanted beyond its current form as a result.
+lighter and less encumbering. The armour repels both attacks on the wearer's
+willpower and magical modification of itself - it cannot be enchanted.
 %%%%
 quick blade
 
@@ -788,9 +788,10 @@ ring of protection from fire
 
 A ring that provides protection from fire.
 %%%%
-ring of protection from magic
+ring of willpower
 
-A ring that increases its wearer's resistance to hostile enchantments.
+A ring that increases its wearer's willpower, helping to protect against
+certain magical effects.
 %%%%
 ring of see invisible
 
@@ -960,9 +961,9 @@ living creatures, although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-A scroll that briefly halves the resistance to hostile enchantments of the
-reader and any nearby beings. The scroll cannot affect those fully immune to
-magic.
+A scroll that briefly halves the willpower of the reader and any nearby beings,
+rendering them vulnerable to many magical effects. The scroll cannot affect
+those fully immune to such effects.
 %%%%
 scythe
 
@@ -1118,7 +1119,8 @@ A magical device which drills tunnels through unworked rock.
 wand of disintegration
 
 A magical device which disrupts the physical structure of a target creature,
-dealing heavy damage and bypassing armour.
+dealing heavy damage and bypassing armour. Only strong-willed beings can hold
+themselves together.
 %%%%
 wand of enslavement
 

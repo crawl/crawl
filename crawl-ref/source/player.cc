@@ -6271,48 +6271,48 @@ int player::res_constrict() const
     return 0;
 }
 
-int player::res_magic(bool /*calc_unid*/) const
+int player::willpower(bool /*calc_unid*/) const
 {
-    return player_res_magic();
+    return player_willpower();
 }
 
-int player_res_magic(bool calc_unid, bool temp)
+int player_willpower(bool calc_unid, bool temp)
 {
 
     if (temp && you.form == transformation::shadow)
-        return MAG_IMMUNE;
+        return WILL_INVULN;
 
-    int rm = you.experience_level * species_mr_modifier(you.species);
+    int rm = you.experience_level * species_wl_modifier(you.species);
 
     // randarts
-    rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC_RESISTANCE, calc_unid);
+    rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER, calc_unid);
 
     // body armour
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
     if (body_armour)
-        rm += armour_type_prop(body_armour->sub_type, ARMF_RES_MAGIC) * MR_PIP;
+        rm += armour_type_prop(body_armour->sub_type, ARMF_WILLPOWER) * WL_PIP;
 
     // ego armours
-    rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+    rm += WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_WILLPOWER,
                                    calc_unid);
 
     // rings of magic resistance
-    rm += MR_PIP * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
+    rm += WL_PIP * you.wearing(EQ_RINGS, RING_WILLPOWER, calc_unid);
 
     // Mutations
-    rm += MR_PIP * you.get_mutation_level(MUT_MAGIC_RESISTANCE);
-    rm -= MR_PIP * you.get_mutation_level(MUT_MAGICAL_VULNERABILITY);
+    rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
+    rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);
 
     // transformations
     if (you.form == transformation::lich && temp)
-        rm += MR_PIP;
+        rm += WL_PIP;
 
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
-        rm += MR_PIP * 2;
+        rm += WL_PIP * 2;
 
     // Enchantment effect
-    if (you.duration[DUR_LOWERED_MR] && temp)
+    if (you.duration[DUR_LOWERED_WL] && temp)
         rm /= 2;
 
     if (rm < 0)

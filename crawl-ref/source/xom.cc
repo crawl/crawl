@@ -711,7 +711,7 @@ static bool _choose_mutatable_monster(const monster& mon)
 static bool _choose_enchantable_monster(const monster& mon)
 {
     return mon.alive() && !mon.wont_attack()
-           && !mons_immune_magic(mon);
+           && !mons_invuln_will(mon);
 }
 
 static bool _is_chaos_upgradeable(const item_def &item,

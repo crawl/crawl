@@ -962,7 +962,7 @@ static void _velocity_card(int power)
     if (!apply_visible_monsters([=](monster& mon)
           {
               bool affected = false;
-              if (!mons_immune_magic(mon))
+              if (!mons_invuln_will(mon))
               {
                   const bool hostile = !mon.wont_attack();
                   const bool haste_immune = (mon.stasis()

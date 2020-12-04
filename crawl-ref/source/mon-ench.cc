@@ -860,12 +860,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " is no longer regenerating.");
         break;
 
-    case ENCH_RAISED_MR:
+    case ENCH_STRONG_WILLED:
         if (!quiet)
-        {
-            simple_monster_message(*this, " is no longer resistant to hostile "
-                                          "enchantments.");
-        }
+            simple_monster_message(*this, " is no longer strong-willed.");
         break;
 
     case ENCH_WRETCHED:
@@ -1398,11 +1395,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
-    case ENCH_LOWERED_MR:
+    case ENCH_LOWERED_WL:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
     case ENCH_REGENERATION:
-    case ENCH_RAISED_MR:
+    case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
@@ -2246,7 +2243,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
     case ENCH_REGENERATION:
-    case ENCH_RAISED_MR:
+    case ENCH_STRONG_WILLED:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:

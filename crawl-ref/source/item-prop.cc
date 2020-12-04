@@ -160,7 +160,7 @@ static const armour_def Armour_prop[] =
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
         ARMF_RES_CORR),
     DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
-        ARMF_RES_MAGIC),
+        ARMF_WILLPOWER),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
         ARMF_RES_POISON),
     DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,  600,
@@ -2336,21 +2336,21 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
     return res;
 }
 
-int get_armour_res_magic(const item_def &arm, bool check_artp)
+int get_armour_willpower(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_prop(arm.sub_type, ARMF_RES_MAGIC) * MR_PIP;
+    res += armour_type_prop(arm.sub_type, ARMF_WILLPOWER) * WL_PIP;
 
     // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
-        res += MR_PIP;
+    if (get_armour_ego_type(arm) == SPARM_WILLPOWER)
+        res += WL_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_property(arm, ARTP_MAGIC_RESISTANCE);
+        res += WL_PIP * artefact_property(arm, ARTP_WILLPOWER);
 
     return res;
 }
@@ -2501,17 +2501,17 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
     return res;
 }
 
-int get_jewellery_res_magic(const item_def &ring, bool check_artp)
+int get_jewellery_willpower(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
 
     int res = 0;
 
-    if (ring.sub_type == RING_PROTECTION_FROM_MAGIC)
-        res += 40;
+    if (ring.sub_type == RING_WILLPOWER)
+        res += WL_PIP;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_property(ring, ARTP_MAGIC_RESISTANCE);
+        res += WL_PIP * artefact_property(ring, ARTP_WILLPOWER);
 
     return res;
 }
@@ -2672,7 +2672,7 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_PROTECTION_FROM_COLD
                 || item.sub_type == RING_RESIST_CORROSION
                 || item.sub_type == RING_LIFE_PROTECTION
-                || item.sub_type == RING_PROTECTION_FROM_MAGIC
+                || item.sub_type == RING_WILLPOWER
                 || item.sub_type == RING_FIRE
                 || item.sub_type == RING_ICE)
             {
@@ -2690,7 +2690,7 @@ bool gives_resistance(const item_def &item)
         if (ego == SPARM_FIRE_RESISTANCE
             || ego == SPARM_COLD_RESISTANCE
             || ego == SPARM_POISON_RESISTANCE
-            || ego == SPARM_MAGIC_RESISTANCE
+            || ego == SPARM_WILLPOWER
             || ego == SPARM_RESISTANCE
             || ego == SPARM_PRESERVATION
             || ego == SPARM_POSITIVE_ENERGY)
@@ -2725,7 +2725,7 @@ bool gives_resistance(const item_def &item)
                 || rap == ARTP_ELECTRICITY
                 || rap == ARTP_POISON
                 || rap == ARTP_NEGATIVE_ENERGY
-                || rap == ARTP_MAGIC_RESISTANCE
+                || rap == ARTP_WILLPOWER
                 || rap == ARTP_RCORR
                 || rap == ARTP_RMUT))
         {

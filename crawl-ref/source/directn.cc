@@ -3418,7 +3418,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     {
         const int pow = you.props["confusing touch power"].get_int();
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
-                                        hex_success_chance(mi.res_magic(),
+                                        hex_success_chance(mi.willpower(),
                                                            pow, 100)));
     }
     else if (you.form == transformation::fungus

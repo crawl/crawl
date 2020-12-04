@@ -98,9 +98,9 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_MAGIC_RESISTANCE ] > 0)
-        ret += 4 + 4 * prop[ ARTP_MAGIC_RESISTANCE ];
-    else if (prop[ ARTP_MAGIC_RESISTANCE ] < 0)
+    if (prop[ ARTP_WILLPOWER ] > 0)
+        ret += 4 + 4 * prop[ ARTP_WILLPOWER ];
+    else if (prop[ ARTP_WILLPOWER ] < 0)
         ret -= 6;
 
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
@@ -351,7 +351,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
             case SPARM_INVISIBILITY:
-            case SPARM_MAGIC_RESISTANCE:
+            case SPARM_WILLPOWER:
             case SPARM_PROTECTION:
             case SPARM_ARCHERY:
             case SPARM_REPULSION:
@@ -617,7 +617,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_ICE:
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
-                case RING_PROTECTION_FROM_MAGIC:
+                case RING_WILLPOWER:
                     valued += 250;
                     break;
 

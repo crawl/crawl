@@ -38,7 +38,7 @@ struct species_def
     int xp_mod; ///< Experience level modifier
     int hp_mod; ///< HP modifier (in tenths)
     int mp_mod; ///< MP modifier
-    int mr_mod; ///< MR modifier (multiplied by XL for base MR)
+    int wl_mod; ///< WL modifier (multiplied by XL for base WL)
     monster_type monster_species; ///< Corresponding monster (for display)
     habitat_type habitat; ///< Where it can live; HT_WATER -> no penalties
     undead_state_type undeadness; ///< What kind of undead (if any)

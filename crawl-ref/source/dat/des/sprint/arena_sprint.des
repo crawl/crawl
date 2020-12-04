@@ -1096,7 +1096,7 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
-            ring of protection from magic | amulet of regeneration |\
+            ring of willpower | amulet of regeneration |\
             amulet of reflection |\
             ring of see invisible
 SUBST:  b : cb

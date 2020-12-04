@@ -424,7 +424,7 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BERSERK, "Berserk",
         0, 0, 0, {fail_basis::invo}, abflag::none },
-    { ABIL_TROG_REGEN_MR, "Trog's Hand",
+    { ABIL_TROG_HAND, "Trog's Hand",
         0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
         0, 0, generic_cost::range(5, 6),
@@ -2608,7 +2608,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.go_berserk(true);
         break;
 
-    case ABIL_TROG_REGEN_MR:
+    case ABIL_TROG_HAND:
         fail_check();
         // Trog abilities don't use or train invocations.
         trog_do_trogs_hand(you.piety / 2);

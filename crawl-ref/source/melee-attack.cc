@@ -2898,25 +2898,25 @@ void melee_attack::mons_apply_attack_flavour()
             bool visible_effect = false;
             if (defender->is_player())
             {
-                if (!you.duration[DUR_LOWERED_MR])
+                if (!you.duration[DUR_LOWERED_WL])
                     visible_effect = true;
-                you.increase_duration(DUR_LOWERED_MR, 20 + random2(20), 40);
+                you.increase_duration(DUR_LOWERED_WL, 20 + random2(20), 40);
             }
             else
             {
-                // Halving the MR of magic immune targets has no effect
-                if (defender->as_monster()->res_magic() == MAG_IMMUNE)
+                // Halving the WL of targets with invulnerable wills has no effect
+                if (defender->as_monster()->willpower() == WILL_INVULN)
                     break;
-                if (!defender->as_monster()->has_ench(ENCH_LOWERED_MR))
+                if (!defender->as_monster()->has_ench(ENCH_LOWERED_WL))
                     visible_effect = true;
-                mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, attacker,
+                mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, attacker,
                                        (20 + random2(20)) * BASELINE_DELAY);
-                defender->as_monster()->add_ench(lowered_mr);
+                defender->as_monster()->add_ench(lowered_wl);
             }
 
             if (needs_message && visible_effect)
             {
-                mprf("%s magical defenses are stripped away!",
+                mprf("%s willpower is stripped away!",
                      def_name(DESC_ITS).c_str());
             }
         }
@@ -2995,7 +2995,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = you.get_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (mon->check_res_magic(ench_pow) <= 0)
+        if (mon->check_willpower(ench_pow) <= 0)
         {
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());

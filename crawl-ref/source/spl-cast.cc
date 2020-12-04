@@ -1394,9 +1394,9 @@ static int _triangular_number(int n)
 }
 
 /**
- * Compute success chance for MR-checking spells and abilities.
+ * Compute success chance for WL-checking spells and abilities.
  *
- * @param mr The magic resistance of the target.
+ * @param wl The willpower of the target.
  * @param powc The enchantment power.
  * @param scale The denominator of the result.
  * @param round_up Should the resulting chance be rounded up (true) or
@@ -1404,10 +1404,10 @@ static int _triangular_number(int n)
  *
  * @return The chance, out of scale, that the enchantment affects the target.
  */
-int hex_success_chance(const int mr, int powc, int scale, bool round_up)
+int hex_success_chance(const int wl, int powc, int scale, bool round_up)
 {
     const int pow = ench_power_stepdown(powc);
-    const int target = mr + 100 - pow;
+    const int target = wl + 100 - pow;
     const int denom = 101 * 100;
     const int adjust = round_up ? denom - 1 : 0;
 
@@ -1482,21 +1482,21 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
 }
 
-// Include success chance in targeter for spells checking monster MR.
+// Include success chance in targeter for spells checking monster WL.
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
-    const int mr = mi.res_magic();
-    if (mr == MAG_IMMUNE)
-        return vector<string>{"magic immune"};
+    const int wl = mi.willpower();
+    if (wl == WILL_INVULN)
+        return vector<string>{"invulnerable will"};
     if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
     vector<string> descs;
     if (beam_hitf && beam_hitf->beam.flavour == BEAM_POLYMORPH)
     {
         // Polymorph has a special effect on ugly things and shapeshifters that
-        // does not require passing an MR check.
+        // does not require passing an WL check.
         if (mi.type == MONS_UGLY_THING || mi.type == MONS_VERY_UGLY_THING)
             return vector<string>{"will change colour"};
         if (mi.is(MB_SHAPESHIFTER))
@@ -1529,8 +1529,8 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
     UNUSED(evoked);
     const int adj_pow = pow;
 #endif
-    const int success = hex_success_chance(mr, adj_pow, 100);
-    descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
+    const int success = hex_success_chance(wl, adj_pow, 100);
+    descs.push_back(make_stringf("chance to defeat WL: %d%%", success));
 
     return descs;
 }
@@ -1642,8 +1642,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
 
-        // Add success chance to targeted spells checking monster MR
-        const bool mr_check = testbits(flags, spflag::MR_check)
+        // Add success chance to targeted spells checking monster WL
+        const bool mr_check = testbits(flags, spflag::WL_check)
                               && testbits(flags, spflag::dir_or_target)
                               && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;

@@ -873,8 +873,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
             break;
 
-        case SPARM_MAGIC_RESISTANCE:
-            mpr("You feel resistant to hostile enchantments.");
+        case SPARM_WILLPOWER:
+            mpr("You feel strong-willed.");
             break;
 
         case SPARM_PROTECTION:
@@ -1048,8 +1048,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         lose_permafly_source();
         break;
 
-    case SPARM_MAGIC_RESISTANCE:
-        mpr("You feel less resistant to hostile enchantments.");
+    case SPARM_WILLPOWER:
+        mpr("You feel less strong-willed.");
         break;
 
     case SPARM_PROTECTION:
@@ -1366,7 +1366,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_POISON_RESISTANCE:
     case RING_PROTECTION_FROM_COLD:
     case RING_PROTECTION_FROM_FIRE:
-    case RING_PROTECTION_FROM_MAGIC:
+    case RING_WILLPOWER:
     case RING_SLAYING:
     case RING_STEALTH:
     case RING_TELEPORTATION:

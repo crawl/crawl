@@ -60,13 +60,13 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STICKY_FLAME,    MB_BURNING },
     { ENCH_PETRIFIED,       MB_PETRIFIED },
     { ENCH_PETRIFYING,      MB_PETRIFYING },
-    { ENCH_LOWERED_MR,      MB_VULN_MAGIC },
+    { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
     { ENCH_REGENERATION,    MB_REGENERATION },
-    { ENCH_RAISED_MR,       MB_RAISED_MR },
+    { ENCH_STRONG_WILLED,   MB_STRONG_WILLED },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
     { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
     { ENCH_DAZED,           MB_DAZED },
@@ -347,7 +347,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
-    mr = mons_class_res_magic(type, base_type);
+    mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
@@ -563,7 +563,7 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(ev_ignore::unided);
     base_ev = m->base_evasion();
-    mr = m->res_magic(false);
+    mr = m->willpower(false);
     can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
@@ -1470,7 +1470,7 @@ bool monster_info::can_see_invisible() const
     return can_see_invis;
 }
 
-int monster_info::res_magic() const
+int monster_info::willpower() const
 {
     return mr;
 }

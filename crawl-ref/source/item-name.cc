@@ -549,7 +549,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PONDEROUSNESS:     return "ponderousness";
         case SPARM_FLYING:            return "flying";
 
-        case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
+        case SPARM_WILLPOWER:  return "willpower";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
         case SPARM_RESISTANCE:        return "resistance";
@@ -588,7 +588,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INTELLIGENCE:      return "Int+3";
         case SPARM_PONDEROUSNESS:     return "ponderous";
         case SPARM_FLYING:            return "Fly";
-        case SPARM_MAGIC_RESISTANCE:  return "MR+";
+        case SPARM_WILLPOWER:  return "WL+";
         case SPARM_PROTECTION:        return "AC+3";
         case SPARM_STEALTH:           return "Stlth+";
         case SPARM_RESISTANCE:        return "rC+ rF+";
@@ -755,7 +755,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
         case RING_LIFE_PROTECTION:       return "positive energy";
-        case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
+        case RING_WILLPOWER: return "willpower";
         case RING_FIRE:                  return "fire";
         case RING_ICE:                   return "ice";
 #if TAG_MAJOR_VERSION == 34
@@ -804,7 +804,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "MP+9";
         case RING_FLIGHT:                return "+Fly";
         case RING_LIFE_PROTECTION:       return "rN+";
-        case RING_PROTECTION_FROM_MAGIC: return "MR+";
+        case RING_WILLPOWER:             return "WL+";
         case AMU_REGENERATION:           return "Regen";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";

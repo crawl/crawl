@@ -552,9 +552,9 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (!hd)
         return "";
 
-    if (testbits(get_spell_flags(spell), spflag::MR_check))
+    if (testbits(get_spell_flags(spell), spflag::WL_check))
     {
-        // MR chances only make sense vs a player
+        // WL chances only make sense vs a player
         if (!crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             || mon_owner->attitude == ATT_FRIENDLY
@@ -642,7 +642,7 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_range_space = effect_len && range_len ? 1 : 0;
         const int chop_len = 29 - effect_len - range_len - effect_range_space;
 
-        if (effect_len && !testbits(get_spell_flags(spell), spflag::MR_check))
+        if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = _colourize(effect_str, _spell_colour(spell));
 
         string spell_name = spell_title(spell);
@@ -741,7 +741,7 @@ static void _write_book(const spellbook_contents &book,
         tiles.json_write_string("letter", string(1, spell_letter));
 
         string effect_str = _effect_string(spell, mon_owner);
-        if (!testbits(get_spell_flags(spell), spflag::MR_check))
+        if (!testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = _colourize(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
 

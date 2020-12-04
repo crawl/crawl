@@ -237,30 +237,30 @@ static int moninf_get_max_hp(lua_State *ls)
     return 1;
 }
 
-/*** The monster's MR level, in "pips" (number of +'s shown on its description).
+/*** The monster's WL level, in "pips" (number of +'s shown on its description).
  * Returns a value ranging from 0 to 125 (immune).
- * @treturn int MR level
- * @function mr
+ * @treturn int WL level
+ * @function wl
  */
-static int moninf_get_mr(lua_State *ls)
+static int moninf_get_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(1.0*mi->res_magic()/MR_PIP));
+    lua_pushnumber(ls, ceil(1.0*mi->willpower()/WL_PIP));
     return 1;
 }
 
-/*** Your probability of defeating the monster's MR with a given spell or zap.
+/*** Your probability of defeating the monster's WL with a given spell or zap.
  * Returns a value ranging from 0 (no chance) to 100 (guaranteed success).
- *    Returns nil if MR does not apply or the spell can't be cast.
+ *    Returns nil if WL does not apply or the spell can't be cast.
  * @tparam string spell name
  * @tparam[opt] boolean true if this spell is evoked rather than cast;
  *    defaults to false
  * @treturn int|string|nil percent chance of success (0-100);
- *     returns "magic immune" if monster is immune;
- *     returns nil if MR does not apply.
- * @function defeat_mr
+ *     returns "invulnerable will" if monster is immune;
+ *     returns nil if WL does not apply.
+ * @function defeat_wl
  */
-static int moninf_get_defeat_mr(lua_State *ls)
+static int moninf_get_defeat_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
     spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
@@ -269,27 +269,27 @@ static int moninf_get_defeat_mr(lua_State *ls)
         (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (wand_mp_cost() + 9) / 9 :
         calc_spell_power(spell, true);
     spell_flags flags = get_spell_flags(spell);
-    bool mr_check = testbits(flags, spflag::MR_check)
+    bool wl_check = testbits(flags, spflag::WL_check)
         && testbits(flags, spflag::dir_or_target)
         && !testbits(flags, spflag::helpful);
-    if (power <= 0 || !mr_check)
+    if (power <= 0 || !wl_check)
     {
         lua_pushnil(ls);
         return 1;
     }
-    int mr = mi->res_magic();
-    if (mr == MAG_IMMUNE)
+    int wl = mi->willpower();
+    if (wl == WILL_INVULN)
     {
-        lua_pushstring(ls, "magic immune");
+        lua_pushstring(ls, "invulnerable will");
         return 1;
     }
     zap_type zap = spell_to_zap(spell);
     int eff_power = zap == NUM_ZAPS ? power : zap_ench_power(zap, power, false);
 #if TAG_MAJOR_VERSION == 34
     int adj_power = is_evoked ? pakellas_effective_hex_power(eff_power) : eff_power;
-    int success = hex_success_chance(mr, adj_power, 100);
+    int success = hex_success_chance(wl, adj_power, 100);
 #else
-    int success = hex_success_chance(mr, eff_power, 100);
+    int success = hex_success_chance(wl, eff_power, 100);
 #endif
     lua_pushnumber(ls, success);
     return 1;
@@ -743,8 +743,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_corr),
     MIREG(can_go_frenzy),
     MIREG(max_hp),
-    MIREG(mr),
-    MIREG(defeat_mr),
+    MIREG(wl),
+    MIREG(defeat_wl),
     MIREG(ac),
     MIREG(ev),
     MIREG(x_pos),

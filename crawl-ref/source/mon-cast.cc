@@ -292,7 +292,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_TROGS_HAND, {
         [](const monster &caster) {
             return ai_action::good_or_impossible(
-                                       !caster.has_ench(ENCH_RAISED_MR)
+                                       !caster.has_ench(ENCH_STRONG_WILLED)
                                     && !caster.has_ench(ENCH_REGENERATION));
         },
         [](monster &caster, mon_spell_slot, bolt&) {
@@ -304,7 +304,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int dur = BASELINE_DELAY
                 * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
                       100);
-            caster.add_ench(mon_enchant(ENCH_RAISED_MR, 0, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, 0, &caster, dur));
             caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
             dprf("Trog's Hand cast (dur: %d aut)", dur);
         },
@@ -459,8 +459,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
         }, 6)
     },
-    { SPELL_STRIP_RESISTANCE,
-        _hex_logic(SPELL_STRIP_RESISTANCE, _foe_mr_lower_goodness, 6)
+    { SPELL_STRIP_WILLPOWER,
+        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_mr_lower_goodness, 6)
     },
     { SPELL_SENTINEL_MARK, _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) },
     { SPELL_SAP_MAGIC, {
@@ -594,7 +594,7 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
 
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
 {
-    return _foe_effect_viable(caster, DUR_LOWERED_MR, ENCH_LOWERED_MR);
+    return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
 }
 
 /**
@@ -3345,13 +3345,13 @@ static ai_action::goodness _hexing_goodness(const monster &caster, spell_type sp
     if (mons_intel(caster) < I_HUMAN)
         return ai_action::good();
 
-    // Simulate Strip Resistance's 1/3 chance of ignoring MR
-    if (spell == SPELL_STRIP_RESISTANCE && one_chance_in(3))
+    // Simulate Strip Willpower's 1/3 chance of ignoring WL
+    if (spell == SPELL_STRIP_WILLPOWER && one_chance_in(3))
         return ai_action::good();
 
     // We'll estimate the target's resistance to magic, by first getting
     // the actual value and then randomising it.
-    const int est_magic_resist = foe->res_magic() + random2(60) - 30; // +-30
+    const int est_magic_resist = foe->willpower() + random2(60) - 30; // +-30
     const int power = ench_power_stepdown(mons_spellpower(caster, spell));
 
     // Determine the amount of chance allowed by the benefit from
@@ -4311,11 +4311,11 @@ static int _mons_mesmerise(monster* mons, bool actual)
     }
 
     const int pow = _ench_power(SPELL_MESMERISE, *mons);
-    const int res_magic = you.check_res_magic(pow);
+    const int will_check = you.check_willpower(pow);
 
-    // Don't mesmerise if you pass an MR check or have clarity.
+    // Don't mesmerise if you pass an WL check or have clarity.
     // If you're already mesmerised, you cannot resist further.
-    if ((res_magic > 0 || you.clarity()
+    if ((will_check > 0 || you.clarity()
          || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
     {
         if (actual)
@@ -4325,7 +4325,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
             else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
                 canned_msg(MSG_YOU_RESIST);
             else
-                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+                mprf("You%s", you.resist_margin_phrase(will_check).c_str());
         }
 
         return 0;
@@ -4368,7 +4368,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             retval = 0;
         else
         {
-            const int res_margin = you.check_res_magic(pow);
+            const int res_margin = you.check_willpower(pow);
             if (you.clarity())
                 canned_msg(MSG_YOU_UNAFFECTED);
             else if (res_margin > 0)
@@ -4390,11 +4390,11 @@ static int _mons_cause_fear(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        // Magic-immune, unnatural and "firewood" monsters are
+        // Invulnerable-willed, unnatural and "firewood" monsters are
         // immune to being scared. Same-aligned monsters are
         // never affected, even though they aren't immune.
         // Will not further scare a monster that is already afraid.
-        if (mons_immune_magic(**mi)
+        if (mons_invuln_will(**mi)
             || !(mi->holiness() & MH_NATURAL)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
@@ -4410,7 +4410,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
         // It's possible to scare this monster. If its magic
         // resistance fails, do so.
-        int res_margin = mi->check_res_magic(pow);
+        int res_margin = mi->check_willpower(pow);
         if (res_margin > 0)
         {
             simple_monster_message(**mi,
@@ -4452,9 +4452,9 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (actual)
         {
-            const int res_magic = you.check_res_magic(pow);
-            if (res_magic > 0)
-                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+            const int willpower = you.check_willpower(pow);
+            if (willpower > 0)
+                mprf("You%s", you.resist_margin_phrase(willpower).c_str());
             else
             {
                 you.confuse(mons, 5 + random2(3));
@@ -4468,7 +4468,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_immune_magic(**mi)
+        if (mons_invuln_will(**mi)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mons->has_ench(ENCH_HEXED))
@@ -4478,7 +4478,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         retval = max(retval, 0);
 
-        int res_margin = mi->check_res_magic(pow);
+        int res_margin = mi->check_willpower(pow);
         if (res_margin > 0)
         {
             if (actual)
@@ -5543,7 +5543,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     {
         ASSERT(foe);
-        const int res_margin = foe->check_res_magic(splpow / ENCH_POW_FACTOR);
+        const int res_margin = foe->check_willpower(splpow / ENCH_POW_FACTOR);
         if (res_margin > 0)
         {
             if (you.can_see(*foe))
@@ -7251,19 +7251,19 @@ static void _siren_sing(monster* mons, bool avatar)
 
     // power is the same for siren & avatar song, so just use siren
     const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
-    const int res_magic = you.check_res_magic(pow);
+    const int willpower = you.check_willpower(pow);
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
     if (you.duration[DUR_MESMERISE_IMMUNE]
         || !already_mesmerised
-           && (res_magic > 0 || you.clarity()))
+           && (willpower > 0 || you.clarity()))
     {
         if (you.clarity())
             canned_msg(MSG_YOU_UNAFFECTED);
         else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
             canned_msg(MSG_YOU_RESIST);
         else
-            mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+            mprf("You%s", you.resist_margin_phrase(willpower).c_str());
         return;
     }
 

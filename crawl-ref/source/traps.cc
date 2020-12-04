@@ -449,8 +449,8 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
     { [] { dec_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
     { [] { you.petrify(nullptr); }, 1 },
-    { [] { you.increase_duration(DUR_LOWERED_MR, random2(20), 20,
-                "You feel susceptible to magic."); }, 4 },
+    { [] { you.increase_duration(DUR_LOWERED_WL, random2(20), 20,
+                "You feel weak-willed."); }, 4 },
     { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
     { [] {
               mgen_data mg = mgen_data::hostile_at(RANDOM_DEMON_GREATER,

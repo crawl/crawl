@@ -1014,15 +1014,15 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
 
 // Returns a numeric resistance value for the actor's resistance to
 // the cloud's effects. If the actor is immune to the cloud's damage,
-// returns MAG_IMMUNE.
+// returns WILL_INVULN.
 static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 {
     if (actor_cloud_immune(*act, cloud))
-        return MAG_IMMUNE;
+        return WILL_INVULN;
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        return act->is_fiery()? 0 : MAG_IMMUNE;
+        return act->is_fiery()? 0 : WILL_INVULN;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
@@ -1218,7 +1218,7 @@ static int _actor_cloud_base_damage(const actor *act,
 
     const int cloud_raw_base_damage =
         _cloud_base_damage(act, cloud.type, maximum_damage);
-    const int cloud_base_damage = (resist == MAG_IMMUNE ?
+    const int cloud_base_damage = (resist == WILL_INVULN ?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
 }

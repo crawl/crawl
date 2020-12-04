@@ -116,7 +116,7 @@ Minor:
 - Your rate of level advancement
 - Occasional bonus points added to some primary attributes
 - The amount of magic points you get each level
-- Your innate resistance to hostile enchantments
+- Your innate willpower, your resistance to subtle magic
 - Your initial equipment (this also depends on background)
 
 .. note:: Humans are the average to which all other species are compared.
@@ -259,14 +259,14 @@ There are some additional stats that aren't as important on a turn to turn basis
 and thus aren't listed in the main stats area. They can easily be checked with
 the '@' or '%' commands, though.
 
-Magic Resistance
-  Affects your ability to resist the effects of enchantments and similar magic
-  directed at you. Has no effect on direct damage dealt by magic, just on more
-  subtle effects. Although your magic resistance increases with your level to
-  an extent determined by your character's species, the creatures you will meet
-  deeper in the dungeon are better at casting spells, and are more likely to be
-  able to affect you. You can get a rough idea of your current MR by pressing
-  '@' or '%'.
+Willpower
+  Affects your ability to resist the effects of enchantments and similar
+  magic directed at you. Has no effect on direct damage dealt by magic,
+  just on more subtle effects. Although your willpower increases with your
+  level to an extent determined by your character's species, the creatures
+  you will meet deeper in the dungeon are better at casting spells, and are
+  more likely to be able to affect you. You can get a rough idea of your
+  current WL by pressing '%'.
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
@@ -642,8 +642,7 @@ The details screen shows:
   * EV: evasion; how well it avoids being hit (and your odds of hitting it
     with your current melee attack)
 
-  * MR: magic resistance; how well it resists most Hexes and similar
-    enchantments.
+  * WL: willpower; its resistance to most Hexes and similar effects.
 
 - Its difficulty level, speed (if different from average speed), size,
   resistances, and special attacks.
@@ -1904,8 +1903,7 @@ Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes and charms in
   particular. They are a bit better at evoking things than most other
   Draconians. They can breathe dispelling energy which strips those it hits of
-  their enchantments, and are naturally more resistant to hostile enchantments
-  than other draconians.
+  their enchantments, and are naturally stronger-willed than other draconians.
 
 Pale Draconians
   are better at air and fire magic, and have no deficiencies in other schools.

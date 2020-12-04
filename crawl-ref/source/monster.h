@@ -394,7 +394,7 @@ public:
     bool res_tornado() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
-    int res_magic(bool calc_unid = true) const override;
+    int willpower(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;

@@ -142,7 +142,7 @@ struct monsterentry
 
     mon_holy_type holiness;
 
-    short resist_magic;  // (positive sets value, negative is relative to hd)
+    short willpower;  // (positive sets value, negative is relative to hd)
 
     // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
@@ -243,10 +243,10 @@ int exper_value(const monster& mon, bool real = true);
 int hit_points(int avg_hp, int scale = 10);
 
 int mons_class_hit_dice(monster_type mc);
-int mons_class_res_magic(monster_type type, monster_type base);
+int mons_class_willpower(monster_type type, monster_type base);
 bool mons_class_sees_invis(monster_type type, monster_type base);
 
-bool mons_immune_magic(const monster& mon);
+bool mons_invuln_will(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = true);
 string mon_attack_name(attack_type attack, bool with_object = true);

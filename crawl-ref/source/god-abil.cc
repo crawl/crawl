@@ -1468,13 +1468,13 @@ void trog_do_trogs_hand(int pow)
     you.increase_duration(DUR_TROGS_HAND,
                           5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
-    mprf(MSGCH_DURATION, "You feel resistant to hostile enchantments.");
+    mprf(MSGCH_DURATION, "You feel strong-willed.");
 }
 
 void trog_remove_trogs_hand()
 {
     mprf(MSGCH_DURATION, "Your skin stops crawling.");
-    mprf(MSGCH_DURATION, "You feel less resistant to hostile enchantments.");
+    mprf(MSGCH_DURATION, "You feel less strong-willed.");
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
@@ -3544,8 +3544,8 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
     /// Mutations granted by ABIL_RU_SACRIFICE_ESSENCE
     { ESSENCE_SAC_KEY, {
         MUT_ANTI_WIZARDRY,
-        MUT_MAGICAL_VULNERABILITY,
-        MUT_MAGICAL_VULNERABILITY,
+        MUT_WEAK_WILLED,
+        MUT_WEAK_WILLED,
         MUT_LOW_MAGIC,
     }},
     /// Mutations granted by ABIL_RU_SACRIFICE_PURITY
@@ -3907,7 +3907,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        max( you.skill_rdiv(SK_SPELLCASTING, 1, 2),
                                             you.skill_rdiv(SK_EVOCATIONS, 1, 2)));
             }
-            else if (mut == MUT_MAGICAL_VULNERABILITY)
+            else if (mut == MUT_WEAK_WILLED)
                 piety_gain += 28;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6);

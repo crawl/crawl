@@ -590,7 +590,7 @@ static bool _is_chaos_polyable(const actor &defender)
     if (!mon)
         return true;
 
-    return !mons_is_firewood(*mon) && !mons_immune_magic(*mon);
+    return !mons_is_firewood(*mon) && !mons_invuln_will(*mon);
 }
 
 static bool _is_chaos_slowable(const actor &defender)

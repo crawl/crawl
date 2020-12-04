@@ -1146,33 +1146,33 @@ int main(int argc, char* argv[])
 
         printf("%s", monsterflags.c_str());
 
-        if (me->resist_magic == 5000)
+        if (me->willpower == 5000)
         {
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
-            monsterresistances += colour(LIGHTMAGENTA, "magic(immune)");
+            monsterresistances += colour(LIGHTMAGENTA, "will(invuln)");
         }
-        else if (me->resist_magic < 0)
+        else if (me->willpower < 0)
         {
-            const int res = (mbase) ? mbase->resist_magic : me->resist_magic;
+            const int res = (mbase) ? mbase->willpower : me->willpower;
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
             monsterresistances +=
                 colour(MAGENTA,
-                       "magic(" + to_string(hd * res * 4 / 3 * -1) + ")");
+                       "will(" + to_string(hd * res * 4 / 3 * -1) + ")");
         }
-        else if (me->resist_magic > 0)
+        else if (me->willpower > 0)
         {
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
             monsterresistances += colour(
-                MAGENTA, "magic(" + to_string(me->resist_magic) + ")");
+                MAGENTA, "magic(" + to_string(me->willpower) + ")");
         }
 
         const resists_t res(shapeshifter ? me->resists :

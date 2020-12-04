@@ -457,7 +457,7 @@ selection of powers.
 amulet of the Four Winds
 
 A pendant made of purest jade. It grants its wearer an immense mystic strength,
-sufficient to shrug off all but the most potent of hostile enchantments.
+sufficient to shrug off all but the most potent of willpower-attacking effects.
 %%%%
 necklace of Bloodlust
 

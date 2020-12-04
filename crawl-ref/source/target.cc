@@ -372,7 +372,7 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
 
     if (beam.is_enchantment() && beam.has_saving_throw()
-        && mon.res_magic() == MAG_IMMUNE)
+        && mon.willpower() == WILL_INVULN)
     {
         return false;
     }

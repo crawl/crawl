@@ -2757,16 +2757,16 @@ void random_uselessness()
 
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
-            // If relevant, monsters have their MR halved.
-            if (!mons_immune_magic(*mon))
-                mon->add_ench(lowered_mr);
+            // If relevant, monsters have their WL halved.
+            if (!mons_invuln_will(*mon))
+                mon->add_ench(lowered_wl);
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
@@ -2774,7 +2774,7 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -3186,7 +3186,7 @@ void read_scroll(item_def& scroll)
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_immune_magic(**mi))
+            if (mons_invuln_will(**mi))
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))

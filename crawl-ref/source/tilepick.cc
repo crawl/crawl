@@ -3524,7 +3524,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Trog
     case ABIL_TROG_BERSERK:
         return TILEG_ABILITY_TROG_BERSERK;
-    case ABIL_TROG_REGEN_MR:
+    case ABIL_TROG_HAND:
         return TILEG_ABILITY_TROG_HAND;
     case ABIL_TROG_BROTHERS_IN_ARMS:
         return TILEG_ABILITY_TROG_BROTHERS_IN_ARMS;

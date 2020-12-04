@@ -66,8 +66,8 @@
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
 static const int REGEN_PIP = 40;
-/// The standard unit of MR; one level in %/@ screens
-static const int MR_PIP = 40;
+/// The standard unit of WL; one level in %/@ screens
+static const int WL_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
@@ -775,7 +775,7 @@ public:
     bool res_tornado() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
-    int res_magic(bool /*calc_unid*/ = true) const override;
+    int willpower(bool /*calc_unid*/ = true) const override;
     bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
                  bool blink = false) const override;
     string no_tele_reason(bool calc_unid = true, bool blink = false) const;
@@ -1018,7 +1018,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
-int player_res_magic(bool calc_unid = true, bool temp = true);
+int player_willpower(bool calc_unid = true, bool temp = true);
 
 int player_shield_class();
 int player_displayed_shield_class();
