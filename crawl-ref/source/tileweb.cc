@@ -269,6 +269,10 @@ void TilesFramework::finish_message()
     m_msg_buf.clear();
     m_need_flush = true;
 #ifdef DEBUG_WEBSOCKETS
+    // should the game actually crash in this case?
+    if (m_controlled_from_web && m_dest_addrs.size() == 0)
+        fprintf(stderr, "No open websockets after finish_message!!\n");
+
     fprintf(stderr, "websocket: Sent %d bytes in %d fragments.\n",
                                                 initial_buf_size, fragments);
 #endif
@@ -326,6 +330,7 @@ wint_t TilesFramework::_receive_control_message()
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
+    memset(&srcaddr, 0, sizeof(struct sockaddr_un));
 
     srcaddr_len = sizeof(srcaddr);
 
