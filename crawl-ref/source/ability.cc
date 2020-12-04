@@ -669,6 +669,11 @@ bool string_matches_ability_name(const string& key)
     return ability_by_name(key) != ABIL_NON_ABILITY;
 }
 
+static bool _invis_causes_drain()
+{
+    return !player_equip_unrand(UNRAND_INVISIBILITY);
+}
+
 /**
  * Find an ability whose name matches the given key.
  *
@@ -782,8 +787,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::skill_drain)
+    if (abil.flags & abflag::skill_drain
+        && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
+    {
         ret += ", Skill drain";
+    }
 
     if (abil.flags & abflag::remove_curse_scroll)
         ret += ", Scroll of remove curse";
@@ -904,7 +912,8 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::conf_ok)
         ret << "\nYou can use this ability even if confused.";
 
-    if (abil.flags & abflag::skill_drain)
+    if (abil.flags & abflag::skill_drain
+        && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
         ret << "\nThis ability will temporarily drain your skills when used";
         if (ability == ABIL_EVOKE_TURN_INVISIBLE)
@@ -2168,7 +2177,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())
             return spret::abort;
-        drain_player(40, false, true); // yes, before the fail check!
+        if (_invis_causes_drain())
+            drain_player(40, false, true); // yes, before the fail check!
         fail_check();
 #if TAG_MAJOR_VERSION == 34
         surge_power(you.spec_evoke());
