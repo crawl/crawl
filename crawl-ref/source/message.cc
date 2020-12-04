@@ -1947,7 +1947,7 @@ void canned_msg(canned_message_type which_message)
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_TOO_CONFUSED:
-            mpr("You're too confused!");
+            mpr("You are too confused!");
             break;
         case MSG_PRESENT_FORM:
             mpr("You can't do that in your present form.");
