@@ -7,13 +7,35 @@ import struct
 import sys
 
 import tornado.ioloop
-import tornado.platform.posix
+
 from tornado.ioloop import IOLoop
 
 try:
     from typing import Any, Callable, Dict
 except ImportError:
     pass
+
+# compatibility stuff for certain FD management calls.
+# these calls require py3.5+ if used on tornado 6.1.0. However, Tornado 6.0
+# already requires py3.5+, so all should be good.
+
+def _set_nonblocking(fd):
+    try:
+        # Use tornado call up through Tornado 6.0.4; this is removed in 6.1.0
+        # see https://github.com/tornadoweb/tornado/commit/99773282ec5101be3349d69f5628f74fe75aaeeb
+        import tornado.platform.posix
+        tornado.platform.posix._set_nonblocking(fd)
+    except ImportError:
+        os.set_blocking(fd, False) # available in py3.5+
+
+def _set_close_exec(fd):
+    try:
+        # this is obsolete in py3.4+, which is why it was removed from tornado
+        # in tornado 6.1.0. See https://github.com/tornadoweb/tornado/commit/e050be1859c476e2158df14aefcec4036cd9c1e0
+        import tornado.platform.posix
+        tornado.platform.posix.set_close_exec(fd)
+    except ImportError:
+        os.set_inheritable(fd, False) # available in py3.4+
 
 # The below class is from pyinotify, released under the MIT license
 # Copyright (c) 2010 Sebastien Martini <seb@dbzteam.org>
@@ -85,8 +107,8 @@ class DirectoryWatcher(object):
         self.enabled = self.inotify.init()
         if self.enabled:
             self.fd = self.inotify._inotify_init()
-            tornado.platform.posix._set_nonblocking(self.fd)
-            tornado.platform.posix.set_close_exec(self.fd)
+            _set_nonblocking(self.fd)
+            _set_close_exec(self.fd)
             IOLoop.current().add_handler(self.fd, self._handle_read,
                                          IOLoop.ERROR | IOLoop.READ)
         self.handlers = dict() # type: Dict[int, Callable[[str, int], Any]]
