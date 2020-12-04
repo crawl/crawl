@@ -2544,6 +2544,15 @@ namespace quiver
         // is set, quiver that ammo in the main quiver
         if (!you.launcher_action.is_empty() && Options.launcher_autoquiver)
             you.quiver_action.set(you.launcher_action.get());
+        else if (weapon && is_unrandom_artefact(*weapon)
+                                            && Options.launcher_autoquiver)
+        {
+            // apply similar logic to the (few) evokable weapons
+            auto a = make_shared<artefact_evoke_action>(weapon->link);
+            if (a->is_valid())
+                you.quiver_action.set(a);
+        }
+
 
         // If that failed, see if there's anything valid in the quiver history.
         // This is aimed at using the quiver history when switching away from
@@ -2553,15 +2562,6 @@ namespace quiver
             auto a = you.quiver_action.find_last_valid();
             if (a)
                 you.quiver_action.set(a);
-        }
-
-        // if we *still* can't find an action, and the new weapon is evokable,
-        // try quivering that. (This will come up only very rarely.)
-        if (weapon && is_unrandom_artefact(*weapon)
-                                    && !you.quiver_action.get()->is_valid())
-        {
-            you.quiver_action.set(
-                            make_shared<artefact_evoke_action>(weapon->link));
         }
     }
 }

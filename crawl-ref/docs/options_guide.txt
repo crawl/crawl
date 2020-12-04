@@ -1744,7 +1744,8 @@ fire_order += inscribed
 launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding
         that launcher; if set to false, the main quiver is unaffaceted by
-        wielding a launcher. (Firing via tab or `v` still work.)
+        wielding a launcher. (Firing via tab or `v` still work.). This also
+        affects rare artefacts that may be evoked.
 
 3-k     Message Channels.
 -------------------------
