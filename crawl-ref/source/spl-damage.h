@@ -9,6 +9,7 @@
 using std::vector;
 
 struct bolt;
+struct dice_def;
 class dist;
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
@@ -30,6 +31,7 @@ spret cast_freeze(int pow, monster* mons, bool fail);
 spret cast_airstrike(int pow, const dist &beam, bool fail);
 spret cast_shatter(int pow, bool fail);
 spret cast_irradiate(int powc, actor* who, bool fail);
+dice_def irradiate_damage(int powc);
 bool ignite_poison_affects(const actor* act);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);

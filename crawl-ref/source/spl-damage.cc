@@ -1251,6 +1251,13 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         _shatter_player(pow, wielder, true);
 }
 
+dice_def irradiate_damage(int pow)
+{
+    const int dice = 6;
+    const int max_dam = 30 + div_rand_round(pow, 2);
+    return calc_dice(dice, max_dam);
+}
+
 /**
  * Irradiate the given cell. (Per the spell.)
  *
@@ -1264,14 +1271,12 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (!mons || !mons->alive())
         return 0; // XXX: handle damaging the player for mons casts...?
 
-    const int dice = 6;
-    const int max_dam = 30 + div_rand_round(pow, 2);
-    const dice_def dam_dice = calc_dice(dice, max_dam);
+    const dice_def dam_dice = irradiate_damage(pow);
     const int dam = dam_dice.roll();
     mprf("%s is blasted with magical radiation%s",
          mons->name(DESC_THE).c_str(),
          attack_strength_punctuation(dam).c_str());
-    dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
+    dprf("irr for %d (%d pow, %dd%d)", dam, pow, dam_dice.num, dam_dice.size);
 
     if (agent->deity() == GOD_FEDHAS && fedhas_protects(mons))
     {
