@@ -62,6 +62,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_DRAIN_LIFE, ZAP_DRAIN_LIFE},
     { SPELL_SONIC_WAVE, ZAP_SONIC_WAVE},
     { SPELL_BORGNJORS_VILE_CLUTCH, ZAP_VILE_CLUTCH},
+    { SPELL_STARBURST, ZAP_BOLT_OF_FIRE },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },

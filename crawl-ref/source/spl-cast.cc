@@ -2506,8 +2506,17 @@ string spell_damage_string(spell_type spell)
     if (dam.num == 0 || dam.size == 0)
         return "";
     string mult = "";
-    if (spell == SPELL_FOXFIRE)
-        mult = "2x";
+    switch (spell)
+    {
+        case SPELL_FOXFIRE:
+            mult = "2x";
+            break;
+        case SPELL_STARBURST:
+            mult = "8x";
+            break;
+        default:
+            break;
+    }
     return make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
 }
 
