@@ -2499,6 +2499,8 @@ dice_def _spell_damage(spell_type spell)
             return freeze_damage(power);
         case SPELL_FULMINANT_PRISM:
             return prism_damage(prism_hd(power, false), true);
+        case SPELL_CONJURE_BALL_LIGHTNING:
+            return ball_lightning_damage(ball_lightning_hd(power, false));
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE);
         case SPELL_IRRADIATE:
@@ -2526,6 +2528,9 @@ string spell_damage_string(spell_type spell)
     {
         case SPELL_FOXFIRE:
             mult = "2x";
+            break;
+        case SPELL_CONJURE_BALL_LIGHTNING:
+            mult = "3x";
             break;
         case SPELL_STARBURST:
             mult = "8x";

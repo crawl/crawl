@@ -766,6 +766,11 @@ void cast_tukimas_dance(int pow, actor* target)
     _animate_weapon(pow, target);
 }
 
+int ball_lightning_hd(int pow, bool random)
+{
+    return max(1, maybe_random_div(pow, 6, random) - 6);
+}
+
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -773,7 +778,7 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     mgen_data cbl =_pal_data(MONS_BALL_LIGHTNING, 0, god,
                              SPELL_CONJURE_BALL_LIGHTNING);
-    cbl.hd = max(1, div_rand_round(pow, 6) - 6);
+    cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
     {

@@ -63,11 +63,16 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
     beam.ex_size = 1;
 }
 
+dice_def ball_lightning_damage(int hd)
+{
+    return dice_def(3, 5 + hd * 5 / 4);
+}
+
 static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour   = BEAM_ELECTRICITY;
-    beam.damage    = dice_def(3, 5 + origin.get_hit_dice() * 5 / 4);
+    beam.damage    = ball_lightning_damage(origin.get_hit_dice());
     beam.name      = "blast of lightning";
     beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;

@@ -41,6 +41,7 @@ bool summon_holy_warrior(int pow, bool punish);
 bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail);
+int ball_lightning_hd(int pow, bool random = true);
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail);
 
 spret cast_call_imp(int pow, god_type god, bool fail);
