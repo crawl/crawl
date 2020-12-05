@@ -1818,7 +1818,6 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
         zappy(ZAP_IGNITION, pow, false, beam_actual);
         beam_actual.set_agent(agent);
         beam_actual.ex_size       = 0;
-        beam_actual.origin_spell  = SPELL_IGNITION;
         beam_actual.apply_beam_conducts();
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3120,7 +3119,6 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.source     = where;
     beam.target     = where;
     beam.hit_verb   = "pelts";
-    beam.origin_spell = SPELL_HAILSTORM;
 
     monster *mons = monster_at(where);
     if (mons && mons->is_icy())
