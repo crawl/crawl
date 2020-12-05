@@ -2992,6 +2992,13 @@ static string _player_spell_stats(const spell_type spell)
 
     description += "\n\nPower : ";
     description += spell_power_string(spell);
+
+    const string damage_string = spell_damage_string(spell);
+    if (damage_string != "") {
+        description += "\n\nDamage : ";
+        description += damage_string;
+    }
+
     description += "\nRange : ";
     description += spell_range_string(spell);
     description += "\nNoise : ";

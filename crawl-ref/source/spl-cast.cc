@@ -2463,13 +2463,17 @@ int power_to_barcount(int power)
     return breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1;
 }
 
-static int _spell_power_bars(spell_type spell)
+static int _spell_power(spell_type spell)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
-    const int power = min(calc_spell_power(spell, true, false, false), cap);
-    return power_to_barcount(power);
+    return min(calc_spell_power(spell, true, false, false), cap);
+}
+
+static int _spell_power_bars(spell_type spell)
+{
+    return power_to_barcount(_spell_power(spell));
 }
 
 #ifdef WIZARD
@@ -2482,6 +2486,30 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
     return make_stringf("%d (%d)", power, cap);
 }
 #endif
+
+dice_def _spell_damage(spell_type spell)
+{
+    const int power = _spell_power(spell);
+    if (power < 0)
+        return dice_def(0,0);
+    if (spell == SPELL_IOOD)
+        return iood_damage(power, INFINITE_DISTANCE);
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return dice_def(0,0);
+    return zap_damage(zap, power, false);
+}
+
+string spell_damage_string(spell_type spell)
+{
+    const dice_def dam = _spell_damage(spell);
+    if (dam.num == 0 || dam.size == 0)
+        return "";
+    string mult = "";
+    if (spell == SPELL_FOXFIRE)
+        mult = "2x";
+    return make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+}
 
 string spell_power_string(spell_type spell)
 {
