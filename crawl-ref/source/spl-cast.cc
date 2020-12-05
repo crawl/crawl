@@ -2498,6 +2498,8 @@ dice_def _spell_damage(spell_type spell)
             return iood_damage(power, INFINITE_DISTANCE);
         case SPELL_IRRADIATE:
             return irradiate_damage(power);
+        case SPELL_SHATTER:
+            return shatter_damage(power);
         default:
             break;
     }

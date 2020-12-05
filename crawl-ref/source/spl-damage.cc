@@ -910,8 +910,9 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 // Here begin the actual spells:
 static int _shatter_mon_dice(const monster *mon)
 {
+    const int DEFAULT_DICE = 3;
     if (!mon)
-        return 0;
+        return DEFAULT_DICE;
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
@@ -932,32 +933,37 @@ static int _shatter_mon_dice(const monster *mon)
     case MONS_OBSIDIAN_STATUE:
     case MONS_ORANGE_STATUE:
     case MONS_ROXANNE:
-        return 6;
+        return DEFAULT_DICE * 2;
 
     default:
         if (mon->is_insubstantial())
             return 1;
         if (mon->petrifying() || mon->petrified())
-            return 6; // reduced later by petrification's damage reduction
+            return DEFAULT_DICE * 2;
+            // reduced later by petrification's damage reduction
         else if (mon->is_skeletal() || mon->is_icy())
-            return 6;
+            return DEFAULT_DICE * 2;
         else if (mon->airborne() || mons_is_slime(*mon))
             return 1;
         // Normal damage to everything else.
         else
-            return 3;
+            return DEFAULT_DICE;
     }
+}
+
+dice_def shatter_damage(int pow, monster *mon)
+{
+    return dice_def(_shatter_mon_dice(mon), 5 + pow / 3);
 }
 
 static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
-    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
     if (!mon || !mon->alive() || mon == agent)
         return 0;
 
-    dam_dice.num = _shatter_mon_dice(mon);
+    const dice_def dam_dice = shatter_damage(pow, mon);
     int damage = max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (agent->is_player())
