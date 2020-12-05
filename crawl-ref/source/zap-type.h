@@ -113,5 +113,6 @@ enum zap_type
     ZAP_FLAMING_CLOUD,
     ZAP_IGNITION,
     ZAP_HAILSTORM,
+    ZAP_MYSTIC_BLAST,
     NUM_ZAPS
 };

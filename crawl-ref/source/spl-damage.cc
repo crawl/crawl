@@ -3195,29 +3195,22 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 static void _imb_actor(actor * act, int pow)
 {
     bolt beam;
+    zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
     beam.source          = you.pos();
     beam.thrower         = KILL_YOU;
     beam.source_id       = MID_PLAYER;
     beam.range           = LOS_RADIUS;
-    beam.colour          = LIGHTMAGENTA;
-    beam.glyph           = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.name            = "mystic blast";
-    beam.origin_spell    = SPELL_ISKENDERUNS_MYSTIC_BLAST;
     beam.ench_power      = pow;
     beam.aimed_at_spot   = true;
-    beam.loudness        = 10;
 
     beam.target          = act->pos();
 
     beam.flavour          = BEAM_VISUAL;
     beam.affects_nothing = true;
-    beam.pierce          = true;
     beam.fire();
 
-    beam.flavour          = BEAM_MMISSILE;
+    zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
     beam.affects_nothing = false;
-    beam.hit             = 10 + pow / 7;
-    beam.damage          = calc_dice(2, 6 + pow / 3);
 
     beam.affect_actor(act);
 }
