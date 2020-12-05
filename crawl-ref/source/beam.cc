@@ -454,9 +454,10 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster)
         return 0;
     const tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
                                                : zinfo->player_tohit;
-    if (!zinfo->is_enchantment)
-        ASSERT(hit_calc);
-    const int hit = hit_calc ? (*hit_calc)(power) : 0;
+    if (zinfo->is_enchantment)
+        return 0;
+    ASSERT(hit_calc);
+    const int hit = (*hit_calc)(power);
     if (hit != AUTOMATIC_HIT && !is_monster && crawl_state.need_save)
         return max(0, hit - 5 * you.inaccuracy());
     return hit;
