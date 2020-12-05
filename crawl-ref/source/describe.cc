@@ -2995,7 +2995,7 @@ static string _player_spell_stats(const spell_type spell)
 
     const string damage_string = spell_damage_string(spell);
     if (damage_string != "") {
-        description += "\n\nDamage : ";
+        description += "\nDamage : ";
         description += damage_string;
     }
 
