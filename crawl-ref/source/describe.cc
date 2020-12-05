@@ -87,6 +87,10 @@
 
 using namespace ui;
 
+
+static void _print_bar(int value, int scale, string name,
+                       ostringstream &result, int base_value = INT_MAX);
+
 int count_desc_lines(const string &_desc, const int width)
 {
     string desc = get_linebreak_string(_desc, width);
@@ -2998,6 +3002,13 @@ static string _player_spell_stats(const spell_type spell)
         description += "\nDamage : ";
         description += damage_string;
     }
+    const int acc = spell_acc(spell);
+    if (acc != -1)
+    {
+        ostringstream acc_str;
+        _print_bar(acc, 3, "", acc_str);
+        description += "\nAccuracy: :" + acc_str.str();
+    }
 
     description += "\nRange : ";
     description += spell_range_string(spell);
@@ -4007,7 +4018,7 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
  *                          INT_MAX, is ignored.
  */
 static void _print_bar(int value, int scale, string name,
-                       ostringstream &result, int base_value = INT_MAX)
+                       ostringstream &result, int base_value)
 {
     if (base_value == INT_MAX)
         base_value = value;

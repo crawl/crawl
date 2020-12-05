@@ -130,6 +130,7 @@ int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell);
 string spell_damage_string(spell_type spell);
+int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);

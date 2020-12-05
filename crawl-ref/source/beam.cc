@@ -435,6 +435,18 @@ static const zap_info* _seek_zap(zap_type z_type)
         return &zap_data[zap_index[z_type]];
 }
 
+bool zap_explodes(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    return zinfo && zinfo->is_explosion;
+}
+
+bool zap_is_enchantment(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    return zinfo && zinfo->is_enchantment;
+}
+
 int zap_to_hit(zap_type z_type, int power, bool is_monster)
 {
     const zap_info* zinfo = _seek_zap(z_type);

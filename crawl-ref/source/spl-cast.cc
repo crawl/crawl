@@ -2511,6 +2511,22 @@ string spell_damage_string(spell_type spell)
     return make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
 }
 
+int spell_acc(spell_type spell)
+{
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return -1;
+    if (zap_explodes(zap) || zap_is_enchantment(zap))
+        return -1;
+    const int power = _spell_power(spell);
+    if (power < 0)
+        return -1;
+    const int acc = zap_to_hit(zap, power, false);
+    if (acc == AUTOMATIC_HIT)
+        return -1;
+    return acc;
+}
+
 string spell_power_string(spell_type spell)
 {
 #ifdef WIZARD
