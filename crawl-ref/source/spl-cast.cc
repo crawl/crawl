@@ -2518,8 +2518,18 @@ dice_def _spell_damage(spell_type spell)
 
 string spell_damage_string(spell_type spell)
 {
-    if (spell == SPELL_ABSOLUTE_ZERO)
-        return "∞";
+    switch (spell)
+    {
+        case SPELL_VAMPIRIC_DRAINING:
+        {
+            const int power = _spell_power(spell);
+            return make_stringf("2d5+1d%d", power / 7);
+        }
+        case SPELL_ABSOLUTE_ZERO:
+            return "∞";
+        default:
+            break;
+    }
     const dice_def dam = _spell_damage(spell);
     if (dam.num == 0 || dam.size == 0)
         return "";
