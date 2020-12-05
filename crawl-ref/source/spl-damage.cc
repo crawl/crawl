@@ -944,8 +944,10 @@ static int _shatter_mon_dice(const monster *mon)
         if (mon->is_insubstantial())
             return 1;
         if (mon->petrifying() || mon->petrified())
+        {
             return DEFAULT_DICE * 2;
             // reduced later by petrification's damage reduction
+        }
         else if (mon->is_skeletal() || mon->is_icy())
             return DEFAULT_DICE * 2;
         else if (mon->airborne() || mons_is_slime(*mon))
