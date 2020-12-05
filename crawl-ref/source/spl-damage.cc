@@ -1788,6 +1788,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
         bolt beam_visual;
         beam_visual.set_agent(agent);
         beam_visual.flavour       = BEAM_VISUAL;
+        // XXX: why is this different from fireball?
         beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
         beam_visual.colour        = RED;
         beam_visual.ex_size       = 1;
@@ -1795,16 +1796,9 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
 
         // Used to deal damage; invisible
         bolt beam_actual;
+        zappy(ZAP_IGNITION, pow, false, beam_actual);
         beam_actual.set_agent(agent);
-        beam_actual.flavour       = BEAM_FIRE;
-        beam_actual.real_flavour  = BEAM_FIRE;
-        beam_actual.glyph         = 0;
-        beam_actual.damage        = calc_dice(3, 10 + pow/3); // less than fireball
-        beam_actual.name          = "fireball";
-        beam_actual.colour        = RED;
         beam_actual.ex_size       = 0;
-        beam_actual.is_explosion  = true;
-        beam_actual.loudness      = 0;
         beam_actual.origin_spell  = SPELL_IGNITION;
         beam_actual.apply_beam_conducts();
 
