@@ -1695,4 +1695,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0 // Noise comes from explosion
 },
 
+{
+    ZAP_HAILSTORM,
+    "hail",
+    100,
+    new calcdice_calculator<3, 10, 1, 2>,
+    new tohit_calculator<18, 1, 6>,
+    nullptr,
+    nullptr,
+    ETC_ICE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_BURST,
+    false,
+    false,
+    0
+},
+
 };

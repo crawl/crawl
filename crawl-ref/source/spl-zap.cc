@@ -66,6 +66,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_IGNITION, ZAP_IGNITION },
     { SPELL_FIRE_STORM, ZAP_FIRE_STORM },
     { SPELL_SEARING_RAY, ZAP_SEARING_RAY },
+    { SPELL_HAILSTORM, ZAP_HAILSTORM },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },

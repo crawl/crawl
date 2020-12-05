@@ -3108,21 +3108,16 @@ void foxfire_attack(const monster *foxfire, const actor *target)
 static void _hailstorm_cell(coord_def where, int pow, actor *agent)
 {
     bolt beam;
-    beam.flavour    = BEAM_ICE;
+    zappy(ZAP_HAILSTORM, pow, agent->is_monster(), beam);
     beam.thrower    = agent->is_player() ? KILL_YOU : KILL_MON;
     beam.source_id  = agent->mid;
     beam.attitude   = agent->temp_attitude();
-    beam.glyph      = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour     = ETC_ICE;
 #ifdef USE_TILE
     beam.tile_beam  = -1;
 #endif
     beam.draw_delay = 10;
     beam.source     = where;
     beam.target     = where;
-    beam.damage     = calc_dice(3, 10 + pow / 2);
-    beam.hit        = 18 + pow / 6;
-    beam.name       = "hail";
     beam.hit_verb   = "pelts";
     beam.origin_spell = SPELL_HAILSTORM;
 
