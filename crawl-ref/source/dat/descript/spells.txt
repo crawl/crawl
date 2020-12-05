@@ -853,9 +853,8 @@ Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 
-Fires a mighty bolt of lightning. It inflicts less damage than other similar
-bolts, but its damage partially bypasses armour and it can be bounced off walls
-to hit targets twice.
+Fires a mighty bolt of lightning. Its damage partially bypasses armour and
+it can be bounced off walls to hit targets twice.
 %%%%
 Magic Dart spell
 
