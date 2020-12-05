@@ -807,6 +807,11 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     return spret::success;
 }
 
+dice_def freeze_damage(int pow)
+{
+    return dice_def(1, 3 + pow / 3);
+}
+
 spret cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
@@ -837,7 +842,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
-    const int orig_hurted = roll_dice(1, 3 + pow / 3);
+    const int orig_hurted = freeze_damage(pow).roll();
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
     mprf("You freeze %s%s%s",
          mons->name(DESC_THE).c_str(),

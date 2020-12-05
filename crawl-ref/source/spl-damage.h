@@ -28,6 +28,7 @@ bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret vampiric_drain(int pow, monster* mons, bool fail);
 spret cast_freeze(int pow, monster* mons, bool fail);
+dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, const dist &beam, bool fail);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);

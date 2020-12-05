@@ -2494,6 +2494,8 @@ dice_def _spell_damage(spell_type spell)
         return dice_def(0,0);
     switch (spell)
     {
+        case SPELL_FREEZE:
+            return freeze_damage(power);
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE);
         case SPELL_IRRADIATE:
@@ -2511,6 +2513,8 @@ dice_def _spell_damage(spell_type spell)
 
 string spell_damage_string(spell_type spell)
 {
+    if (spell == SPELL_ABSOLUTE_ZERO)
+        return "∞";
     const dice_def dam = _spell_damage(spell);
     if (dam.num == 0 || dam.size == 0)
         return "";
