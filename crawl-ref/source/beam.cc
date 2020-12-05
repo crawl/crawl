@@ -2217,7 +2217,6 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
  */
 static void _unravelling_explode(bolt &beam)
 {
-    beam.damage       = dice_def(3, 3 + div_rand_round(beam.ench_power, 6));
     beam.colour       = ETC_MUTAGENIC;
     beam.flavour      = BEAM_UNRAVELLED_MAGIC;
     beam.ex_size      = 1;
