@@ -107,6 +107,7 @@ void reset_battlesphere(monster* mons);
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
+int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
 bool weapon_can_be_spectral(const item_def *weapon);

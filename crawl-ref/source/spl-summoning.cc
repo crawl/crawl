@@ -2554,6 +2554,11 @@ bool fire_battlesphere(monster* mons)
     return used;
 }
 
+int prism_hd(int pow, bool random)
+{
+    return maybe_random_div(pow, 10, random);
+}
+
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail)
 {
@@ -2601,7 +2606,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
 
     fail_check();
 
-    int hd = div_rand_round(pow, 10);
+    const int hd = prism_hd(pow);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM,
                                      caster->is_player()

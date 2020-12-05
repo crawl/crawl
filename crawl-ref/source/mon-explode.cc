@@ -79,13 +79,17 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_MON;
 }
 
+dice_def prism_damage(int hd, bool fully_powered)
+{
+    const int dice = fully_powered ? 3 : 2;
+    return dice_def(dice, 6 + hd * 7 / 4);
+}
+
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_MMISSILE;
-    beam.damage  = (origin.prism_charge == 2 ?
-                        dice_def(3, 6 + origin.get_hit_dice() * 7 / 4)
-                        : dice_def(2, 6 + origin.get_hit_dice() * 7 / 4));
+    beam.damage  = prism_damage(origin.get_hit_dice(), origin.prism_charge == 2);
     beam.name    = "blast of energy";
     beam.colour  = MAGENTA;
     beam.ex_size = origin.prism_charge;

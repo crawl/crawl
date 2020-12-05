@@ -41,6 +41,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-explode.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-util.h"
@@ -2496,6 +2497,8 @@ dice_def _spell_damage(spell_type spell)
     {
         case SPELL_FREEZE:
             return freeze_damage(power);
+        case SPELL_FULMINANT_PRISM:
+            return prism_damage(prism_hd(power, false), true);
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE);
         case SPELL_IRRADIATE:
