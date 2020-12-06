@@ -1275,7 +1275,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         if (interference == DO_BLOCK_ATTACK)
         {
             simple_monster_message(*mons,
-                                " is stunned by your will and fails to attack.",
+                                " is stunned by your power and fails to attack.",
                                 MSGCH_GOD);
             return false;
         }
@@ -1914,7 +1914,7 @@ void handle_monster_move(monster* mons)
                         if (interference == DO_BLOCK_ATTACK)
                         {
                             simple_monster_message(*mons,
-                                " is stunned by your will and fails to attack.",
+                                " is stunned by your power and fails to attack.",
                                 MSGCH_GOD);
                             mons->speed_increment -= non_move_energy;
                             return;

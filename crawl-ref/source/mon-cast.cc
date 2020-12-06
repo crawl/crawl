@@ -3776,7 +3776,7 @@ bool handle_mon_spell(monster* mons)
         if (interference == DO_BLOCK_ATTACK)
         {
             const string message
-                = make_stringf(" begins to %s, but is stunned by your will!",
+                = make_stringf(" begins to %s, but is stunned by your power!",
                                _ru_spell_stop_desc(*mons).c_str());
             simple_monster_message(*mons, message.c_str(), MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
