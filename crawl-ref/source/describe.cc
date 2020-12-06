@@ -4104,12 +4104,12 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
     if (mi.willpower() == WILL_INVULN)
     {
-        result << "WL ∞\n";
+        result << "Will ∞\n";
         return;
     }
 
     const int bar_scale = WL_PIP;
-    _print_bar(mi.willpower(), bar_scale, "WL", result);
+    _print_bar(mi.willpower(), bar_scale, "Will", result);
     result << "\n";
 }
 

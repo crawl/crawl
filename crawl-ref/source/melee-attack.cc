@@ -2904,7 +2904,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
             else
             {
-                // Halving the WL of targets with invulnerable wills has no effect
+                // Halving the WL of targets with infinite wills has no effect
                 if (defender->as_monster()->willpower() == WILL_INVULN)
                     break;
                 if (!defender->as_monster()->has_ench(ENCH_LOWERED_WL))

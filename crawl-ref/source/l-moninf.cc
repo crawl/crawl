@@ -256,7 +256,7 @@ static int moninf_get_wl(lua_State *ls)
  * @tparam[opt] boolean true if this spell is evoked rather than cast;
  *    defaults to false
  * @treturn int|string|nil percent chance of success (0-100);
- *     returns "invulnerable will" if monster is immune;
+ *     returns "infinite will" if monster is immune;
  *     returns nil if WL does not apply.
  * @function defeat_wl
  */
@@ -280,7 +280,7 @@ static int moninf_get_defeat_wl(lua_State *ls)
     int wl = mi->willpower();
     if (wl == WILL_INVULN)
     {
-        lua_pushstring(ls, "invulnerable will");
+        lua_pushstring(ls, "infinite will");
         return 1;
     }
     zap_type zap = spell_to_zap(spell);
