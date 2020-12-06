@@ -1209,11 +1209,12 @@ namespace quiver
                 check_ability_possible(ability, false);
                 return;
             }
+            target = t;
+            target.find_target = true;
+
             if (autofight_check())
                 return;
 
-            target = t;
-            target.find_target = true;
             talent tal = get_talent(ability, false);
             activate_talent(tal, &target);
 
@@ -1320,12 +1321,12 @@ namespace quiver
                 return;
             }
 
-            if (autofight_check() || !do_inscription_check())
-                return;
-
             // to apply smart targeting behavior for iceblast; should have no
             // impact on other wands
             target.find_target = true;
+            if (autofight_check() || !do_inscription_check())
+                return;
+
             evoke_item(wand_slot, &target);
 
             t = target; // copy back, in case they are different
@@ -1565,10 +1566,10 @@ namespace quiver
             if (!artefact_evoke_check(false))
                 return;
 
+            target.find_target = true;
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            target.find_target = true;
             evoke_item(wand_slot, &target);
 
             t = target; // copy back, in case they are different
