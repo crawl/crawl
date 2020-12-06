@@ -1876,7 +1876,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_WEAK_WILLED, 0, 3, mutflag::bad, false,
-  "weakened will",
+  "weak-willed",
 
   {"You are slightly weak-willed. (Will-)",
     "You are weak-willed. (Will--)",

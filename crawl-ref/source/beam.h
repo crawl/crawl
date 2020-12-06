@@ -167,7 +167,7 @@ private:
     bool nightvision = false;
 
 public:
-    bool is_enchantment() const; // no block/dodge, use magic resist
+    bool is_enchantment() const; // no block/dodge, use willpower
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();

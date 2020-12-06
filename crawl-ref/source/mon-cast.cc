@@ -3330,7 +3330,7 @@ static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type
  * @param caster    The monster casting the hex.
  * @param spell     The spell to cast; e.g. SPELL_DIMENSIONAL_ANCHOR.
  * @return          Whether the monster thinks it's worth trying to beat the
- *                  defender's magic resistance.
+ *                  defender's willpower.
  */
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell)
 {

@@ -591,8 +591,8 @@ phantom mirror
 
 A hand mirror which can create a reflection of a nearby creature, clouding
 in the process. The reflection's duration increases with Evocations skill and
-decreases with the magic resistance of the target. It is, invariably, slightly
-weaker than the creature it mirrors.
+decreases with the willpower of the target. It is, invariably, slightly weaker
+than the creature it mirrors.
 %%%%
 phial of floods
 

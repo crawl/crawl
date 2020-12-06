@@ -5185,7 +5185,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     if (!ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
 
-    // Check magic resistance.
+    // Check willpower.
     if (has_saving_throw())
     {
         if (mons_invuln_will(*mon))

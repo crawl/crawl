@@ -1451,7 +1451,7 @@ the species.
 .. note:: Humans are a useful reference point when considering other species:
           they have 0 for almost all aptitudes; have no special abilities,
           weakness, or constraints against using certain types of equipment;
-          move normally; and gain experience and magic resistance at a "typical"
+          move normally; and gain experience and willpower at a "typical"
           rate. However, you will see that they are categorized as an
           *Intermediate* species -- because they are decent, but not excellent,
           at nearly everything, a Human may need to make use of all sorts of

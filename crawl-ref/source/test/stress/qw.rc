@@ -313,8 +313,8 @@ function item_resist(str, it)
       else
         return 0
       end
-    elseif str == "WL" then
-      if ego == "magic resistance" or subtype == "ring of willpower"
+    elseif str == "Will" then
+      if ego == "willpower" or subtype == "ring of willpower"
          or name:find("quicksilver dragon") then
         return 1
       else
@@ -359,8 +359,8 @@ function intrinsic_resist(str)
     end
   elseif str == "rN" then
     return you.mutation("negative energy resistance")
-  elseif str == "WL" then
-    return you.mutation("magic resistance") + ((you.god() == "Trog") and 1 or 0)
+  elseif str == "Will" then
+    return you.mutation("strong-willed") + ((you.god() == "Trog") and 1 or 0)
   elseif str == "rCorr" then
     return 0
   elseif str == "SInv" then

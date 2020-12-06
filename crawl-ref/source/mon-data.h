@@ -16,7 +16,7 @@
     - row 1: monster id, display character, display colour, name
     - row 2: monster flags
     - row 3: monster resistance flags
-    - row 4: experience modifier, genus, species, holiness, resist magic
+    - row 4: experience modifier, genus, species, holiness, willpower
     - row 5: damage for each of four attacks
     - row 6: hit dice, hit points
     - row 7: AC, evasion, spells, corpse, shouts
@@ -141,7 +141,7 @@ static monsterentry mondata[] =
     M_NOT_DANGEROUS | M_CANT_SPAWN,
     // resistance flags
     MR_NO_FLAGS,
-    // xp modifier, genus, species, holiness, magic resistance
+    // xp modifier, genus, species, holiness, willpower
     10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NATURAL, 10,
     // up to four attacks
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

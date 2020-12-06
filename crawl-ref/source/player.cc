@@ -6296,7 +6296,7 @@ int player_willpower(bool calc_unid, bool temp)
     rm += WL_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_WILLPOWER,
                                    calc_unid);
 
-    // rings of magic resistance
+    // rings of willpower
     rm += WL_PIP * you.wearing(EQ_RINGS, RING_WILLPOWER, calc_unid);
 
     // Mutations
