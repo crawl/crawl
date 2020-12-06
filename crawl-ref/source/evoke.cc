@@ -1083,7 +1083,7 @@ bool evoke_check(int slot, bool quiet)
 
     // ammo checks are done below, this is the precondition for messaging
     // about ranged failures
-    const bool ranged = wielded && fires_ammo_type(*you.weapon()) != MI_NONE;
+    const bool ranged = wielded && is_range_weapon(*you.weapon());
 
     if ((reaching || ranged) && you.melded[EQ_WEAPON])
     {
@@ -1104,7 +1104,7 @@ bool evoke_check(int slot, bool quiet)
             canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
-    if (ranged && (you.launcher_action.is_empty()
+    if (ranged && i && (you.launcher_action.is_empty()
                     || !you.launcher_action.get()->is_valid()))
     {
         if (!quiet)

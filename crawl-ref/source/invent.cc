@@ -2185,7 +2185,7 @@ bool item_is_evokable(const item_def &item, bool unskilled,
         // XX code duplication with evoke_check
         if (unskilled
             && (weapon_reach(item) > REACH_NONE && item_type_known(item)
-                || you.weapon() && fires_ammo_type(*you.weapon()) != MI_NONE))
+                || you.weapon() && is_range_weapon(*you.weapon())))
         {
             if (!wielded)
             {

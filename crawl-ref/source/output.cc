@@ -961,7 +961,7 @@ static void _print_stats_wp(int y)
 
     // If there is a launcher, but something unrelated is quivered, show the
     // launcher's ammo in the line with the weapon
-    if (you.weapon() && fires_ammo_type(*you.weapon()) != MI_NONE
+    if (you.weapon() && is_range_weapon(*you.weapon())
         && *you.launcher_action.get() != *you.quiver_action.get())
     {
         formatted_string lammo;

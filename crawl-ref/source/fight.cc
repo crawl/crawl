@@ -604,7 +604,7 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(item_def *weapon)
+bool wielded_weapon_check(const item_def *weapon)
 {
     bool penance = false;
     if (you.received_weapon_warning
