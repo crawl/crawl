@@ -314,9 +314,9 @@ static const mutation_def mut_data[] =
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
   "strong-willed",
 
-  {"You are strong-willed. (WL+)",
-   "You are highly strong-willed. (WL++)",
-   "You are extremely strong-willed. (WL+++)"},
+  {"You are strong-willed. (Will+)",
+   "You are highly strong-willed. (Will++)",
+   "You are extremely strong-willed. (Will+++)"},
 
   {"You feel strong-willed.",
    "You feel more strong-willed.",
@@ -1878,9 +1878,9 @@ static const mutation_def mut_data[] =
 { MUT_WEAK_WILLED, 0, 3, mutflag::bad, false,
   "weakened will",
 
-  {"You are slightly weak-willed. (WL-)",
-    "You are weak-willed. (WL--)",
-    "You are extremely weak-willed. (WL---)"},
+  {"You are slightly weak-willed. (Will-)",
+    "You are weak-willed. (Will--)",
+    "You are extremely weak-willed. (Will---)"},
   {"You feel weak-willed.",
     "You feel more weak-willed.",
     "You feel more weak-willed."},

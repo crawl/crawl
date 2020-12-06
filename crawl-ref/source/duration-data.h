@@ -223,7 +223,7 @@ static const duration_def duration_data[] =
       "liquid flames", "",
       "You are covered in liquid flames.", D_NO_FLAGS},
     { DUR_LOWERED_WL,
-      RED, "WL/2",
+      RED, "Will/2",
       "weak-willed", "lowered wp",
       "", D_DISPELLABLE,
       {{ "You feel your willpower return." }}},

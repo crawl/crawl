@@ -108,7 +108,7 @@ function ch_stash_search_annotate_item(it)
       ["troll"] = "Regen+",
       ["steam"] = "rSteam",
       ["acid"] = "rCorr",
-      ["quicksilver"] = "WL+",
+      ["quicksilver"] = "Will+",
       ["swamp"] = "rPois",
       ["fire"] = "rF++ rC-",
       ["ice"] = "rC++ rF-",
@@ -144,7 +144,7 @@ function ch_stash_search_annotate_item(it)
   end
 
   local resistances = {
-    ["WL+"] = "willpower",
+    ["Will+"] = "willpower",
     ["rC+"] = "cold",
     ["rCorr"] = "corrosion",
     ["rElec"] = "electricity",
