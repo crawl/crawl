@@ -1745,7 +1745,15 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         if (!a->allow_autofight()
             || !a->is_enabled())
         {
-            a->trigger();
+            dist target;
+            // TODO is there a better way to handle this division of labor??
+            if (!clua.callfn("get_af_fire_stop", ">b", &target.isEndpoint))
+            {
+                if (!clua.error.empty())
+                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                // just continue with the default value in this case
+            }
+            a->trigger(target);
             return;
         }
 

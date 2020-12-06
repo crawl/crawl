@@ -315,10 +315,10 @@ end
 local function attack_fire(x,y)
   if AUTOFIGHT_FORCE_FIRE or not have_ranged() then
     -- fire from quiver
-    crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_STOP)
+    crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_FIRE_STOP)
   else
     -- fire a wielded launcher
-    crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, AUTOFIGHT_STOP)
+    crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, AUTOFIGHT_FIRE_STOP)
   end
 end
 
@@ -348,6 +348,11 @@ end
 
 local function set_af_fire_stop(key, value, mode)
   AUTOFIGHT_FIRE_STOP = string.lower(value) ~= "false"
+end
+
+-- is there a better way to get lua options from c++ than defining a function?
+function get_af_fire_stop()
+  return AUTOFIGHT_FIRE_STOP
 end
 
 local function set_af_wait(key, value, mode)
