@@ -548,8 +548,7 @@ static const duration_def duration_data[] =
     { DUR_ATTRACTIVE,
       LIGHTBLUE, "Attr",
       "attractive", "attract",
-      "You attract monsters toward you.", D_DISPELLABLE,
-      {{ "You feel less attractive to monsters.", }}},
+      "You attract monsters toward you.", D_DISPELLABLE },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
