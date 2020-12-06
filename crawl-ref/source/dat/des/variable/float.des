@@ -3967,11 +3967,11 @@ ORIENT: float
 MONS: mana viper, orc knight ; battleaxe | great mace | broad axe \
           | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
           | w:3 broad axe ego:antimagic . plate armour \
-          | plate armour ego:magic_resistance \
+          | plate armour ego:willpower \
       / w:2 orc warlord ; battleaxe | great mace | broad axe \
           | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
           | w:3 broad axe ego:antimagic . plate armour \
-          | plate armour ego:magic_resistance
+          | plate armour ego:willpower
 MONS: stone giant / iron troll / w:5 ettin
 MONS: spriggan berserker ; rapier | quick blade | demon whip \
           | w:3 rapier ego:antimagic | w:3 quick blade ego:antimagic \
@@ -3982,11 +3982,11 @@ KMONS: T = yaktaur captain
 KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
-               | plate armour ego:magic_resistance \
+               | plate armour ego:willpower \
            / w:2 orc warlord ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
-               | plate armour ego:magic_resistance
+               | plate armour ego:willpower
 KMONS: U = stone giant / iron troll / w:5 ettin
 KMONS: r = lich / w:5 ancient lich
 KMONS: E = w:3 plant / nothing
