@@ -105,6 +105,7 @@ bool aim_battlesphere(actor* agent, spell_type spell);
 bool trigger_battlesphere(actor* agent);
 bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
+dice_def battlesphere_damage(int pow);
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
