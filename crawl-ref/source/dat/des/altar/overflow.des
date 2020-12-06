@@ -3450,6 +3450,30 @@ DD-n....n--E
    cc@@cEEE
 ENDMAP
 
+NAME:   pdpol_temple_overflow_zin_treasury_gozag_greed
+TAGS:   temple_overflow_2 temple_overflow_zin temple_overflow_gozag
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:2-9
+KFEAT:  _ = altar_zin
+KFEAT:  O = altar_gozag
+KITEM:  O = wand of digging charges:1
+KFEAT:  m = iron_grate
+KPROP:  $ = no_tele_into
+KITEM:  $ = gold q:1 / gold q:2
+RTILE:  x = wall_sandstone
+COLOUR: x = yellow
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  _.m+c$ = floor_limestone
+: interest_check(_G)
+MAP
+  ccccccxxxxx
+ cc..mm$x...xx
+@+.._m$$x.O..+@
+ cc..mm$x...xx
+  ccccccxxxxx
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
