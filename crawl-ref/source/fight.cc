@@ -604,7 +604,7 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(const item_def *weapon)
+bool wielded_weapon_check(const item_def *weapon, string attack_verb)
 {
     bool penance = false;
     if (you.received_weapon_warning
@@ -629,10 +629,9 @@ bool wielded_weapon_check(const item_def *weapon)
     }
 
     string prompt;
-    if (weapon)
-        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
-    else
-        prompt = "Really attack unarmed?";
+    prompt = make_stringf("Really %s while wielding %s?",
+        attack_verb.size() ? attack_verb.c_str() : "attack",
+        weapon ? weapon->name(DESC_YOUR).c_str() : "nothing");
     if (penance)
         prompt += " This could place you under penance!";
 

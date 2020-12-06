@@ -37,7 +37,7 @@ int apply_chunked_AC(int dam, int ac);
 
 int melee_confuse_chance(int HD);
 
-bool wielded_weapon_check(const item_def *weapon);
+bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
 
 stab_type find_stab_type(const actor *attacker,
                          const actor &defender,

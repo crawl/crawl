@@ -382,7 +382,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist *target)
 {
     // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon()))
+    if (!wielded_weapon_check(you.weapon(), "roll"))
         return false;
 
     const bool interactive = target && target->interactive;

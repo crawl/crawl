@@ -656,7 +656,7 @@ static spret _rampage_forward(coord_def move)
     // exclusion prompt and weapon check prompts;
     // messaging for this is handled by check_moveto().
     if (!check_moveto(beam.target, "rampage")
-        || attacking && !wielded_weapon_check(you.weapon())
+        || attacking && !wielded_weapon_check(you.weapon(), "rampage")
         || !attacking && !check_moveto(rampage_target, "rampage"))
     {
         stop_running();
