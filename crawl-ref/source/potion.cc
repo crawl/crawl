@@ -318,7 +318,7 @@ public:
         mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
              was_attractive ? "more " : "");
 
-        you.increase_duration(DUR_ATTRACTIVE, 35 + random2(pow), 80);
+        you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);
         return true;
     }
 };
