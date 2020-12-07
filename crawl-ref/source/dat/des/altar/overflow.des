@@ -1299,6 +1299,7 @@ ENDMAP
 NAME:   nzn_makhleb_speed_demon
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 DEPTH:  D:7-11
+WEIGHT: 2
 KFEAT:  _ = altar_makhleb
 KMONS:  _ = executioner
 : interest_check(_G)
