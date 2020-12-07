@@ -951,6 +951,7 @@ ENDMAP
 NAME:   nzn_winding_woodlands_15x15_witchcraft
 TAGS:   winding_woodlands_15x15 unrand no_pool_fixup
 DEPTH:  Swamp:2-
+WEIGHT: 20
 NSUBST: A = 2:2 / 4:3 / *:W
 NSUBST: B = 2:1 / *:W
 KMONS:  1 = fenstrider witch
