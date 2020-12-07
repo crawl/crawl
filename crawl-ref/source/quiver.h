@@ -77,6 +77,8 @@ namespace quiver
             return is_enabled() ? LIGHTGREY : DARKGREY;
         };
 
+        virtual vector<tile_def> get_tiles() const;
+
         virtual formatted_string quiver_description(bool short_desc=false) const;
 
         // basically noops for this class, but keep `target` clean
