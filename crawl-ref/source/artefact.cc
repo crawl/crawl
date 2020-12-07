@@ -660,7 +660,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "rN", ARTP_VAL_ANY, 55,       // ARTP_NEGATIVE_ENERGY,
         _gen_good_res_artp, nullptr, 2, 4 },
-    { "WL", ARTP_VAL_ANY, 50,       // ARTP_WILLPOWER,
+    { "Will", ARTP_VAL_ANY, 50,       // ARTP_WILLPOWER,
         _gen_good_res_artp, _gen_bad_res_artp, 2, 4 },
     { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_SEE_INVISIBLE,
         []() { return 1; }, nullptr, 0, 0 },
