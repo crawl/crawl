@@ -100,6 +100,8 @@ static void _setup_prism_explosion(bolt& beam, const monster& origin)
     beam.ex_size = origin.prism_charge;
     if (origin.summoner)
         beam.origin_spell = SPELL_FULMINANT_PRISM;
+    dprf("prism hd: %d, damage: %dd%d", origin.get_hit_dice(),
+         beam.damage.num, beam.damage.size);
 }
 
 static void _setup_bennu_explosion(bolt& beam, const monster& origin)

@@ -768,7 +768,9 @@ void cast_tukimas_dance(int pow, actor* target)
 
 int ball_lightning_hd(int pow, bool random)
 {
-    return max(1, maybe_random_div(pow, 6, random) - 6);
+    if (random)
+        return max(1, div_rand_round(pow, 6) - 6);
+    return max(1, pow / 6 - 6);
 }
 
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
@@ -2204,7 +2206,9 @@ monster* find_battlesphere(const actor* agent)
 
 static int _battlesphere_hd(int pow, bool random = true)
 {
-    return 1 + maybe_random_div(pow, 11, random);
+    if (random)
+        return 1 + div_rand_round(pow, 11);
+    return 1 + pow / 11;
 }
 
 static dice_def _battlesphere_damage(int hd)
@@ -2576,7 +2580,9 @@ bool fire_battlesphere(monster* mons)
 
 int prism_hd(int pow, bool random)
 {
-    return maybe_random_div(pow, 10, random);
+    if (random)
+        return div_rand_round(pow, 10);
+    return pow / 10;
 }
 
 spret cast_fulminating_prism(actor* caster, int pow,
