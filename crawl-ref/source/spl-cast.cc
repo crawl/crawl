@@ -1530,7 +1530,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
     const int adj_pow = pow;
 #endif
     const int success = hex_success_chance(wl, adj_pow, 100);
-    descs.push_back(make_stringf("chance to beat Will: %d%%", success));
+    descs.push_back(make_stringf("chance to resist: %d%%", 100 - success));
 
     return descs;
 }
