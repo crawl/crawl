@@ -10,6 +10,7 @@
 #include "ability-type.h"
 #include "format.h"
 #include "spell-type.h"
+#include "tiles.h" // for tile_def
 
 class reader;
 class writer;
