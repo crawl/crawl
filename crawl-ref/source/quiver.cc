@@ -1938,6 +1938,12 @@ namespace quiver
         return *get() == spell_action(s);
     }
 
+
+    bool action_cycler::item_is_quivered(const item_def &item)
+    {
+        return in_inventory(item) && item_is_quivered(item.link);
+    }
+
     bool action_cycler::item_is_quivered(int item_slot) const
     {
         return item_slot >= 0 && item_slot < ENDOFPACK
@@ -2423,7 +2429,12 @@ namespace quiver
         {
             if (!a || !a->is_valid())
                 continue;
-            MenuEntry *me = new MenuEntry(a->quiver_description(),
+            string action_desc = a->quiver_description();
+            if (you.launcher_action.item_is_quivered(a->get_item()))
+                action_desc += " (quivered ammo)";
+            else if (you.quiver_action.item_is_quivered(a->get_item()))
+                action_desc += " (quivered)";
+            MenuEntry *me = new MenuEntry(action_desc,
                                                 MEL_ITEM, 1,
                                                 (int) hotkey);
             // TODO: is there a way to show formatting in menu items?

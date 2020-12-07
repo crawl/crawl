@@ -124,6 +124,7 @@ namespace quiver
         shared_ptr<action> get() const;
         virtual bool is_empty() const { return *current == action(); }
         bool spell_is_quivered(spell_type s) const;
+        bool item_is_quivered(const item_def &item);
         bool item_is_quivered(int item_slot) const;
 
         shared_ptr<action> next(int dir = 0, bool allow_disabled=true);
