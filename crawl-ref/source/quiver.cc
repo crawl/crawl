@@ -1941,6 +1941,7 @@ namespace quiver
     bool action_cycler::item_is_quivered(int item_slot) const
     {
         return item_slot >= 0 && item_slot < ENDOFPACK
+                              && get()->is_valid()
                               && get()->get_item() == item_slot;
     }
 

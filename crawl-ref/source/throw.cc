@@ -66,8 +66,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 
 bool item_is_quivered(const item_def &item)
 {
-    return in_inventory(item) && item.link
-                                == quiver::get_secondary_action()->get_item();
+    return in_inventory(item) && you.quiver_action.item_is_quivered(item.link);
 }
 
 static bool _slot_is_pprojable(int slot)
