@@ -450,11 +450,13 @@ macro_dir = settings/
         For tile games, wininit.txt will also be stored here.
         It should end with the path delimiter.
 
-sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
         (Ordered list option)
-        Plays the sound file if a message contains regex. The regex
-        should not include commas or colons. For example
+        Plays the sound file if a message contains regex. In case of 
+        multiple matching regexes, only the sound of the last regex 
+        is played. The regex should not include commas or colons. 
+        For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         There are certain pre-defined regexes, as well, which can be
         used to get a sound to trigger for something that cannot
