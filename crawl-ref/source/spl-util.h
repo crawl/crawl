@@ -81,6 +81,7 @@ tileidx_t get_spell_tile(spell_type which_spell);
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
+bool spell_is_direct_attack(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
 spell_flags get_spell_flags(spell_type which_spell);

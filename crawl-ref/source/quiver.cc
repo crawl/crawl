@@ -738,6 +738,11 @@ namespace quiver
             return !you.confused();
         }
 
+        bool allow_autofight() const override
+        {
+            return is_enabled();
+        }
+
         bool uses_mp() const override
         {
             return is_pproj_active();
@@ -903,7 +908,7 @@ namespace quiver
 
     // for spells that are targeted, but should skip the lua target selection
     // pass for one reason or another
-    static bool _spell_autotarget_incompatible(spell_type s)
+    static bool _spell_no_autofight_targeting(spell_type s)
     {
         // XX perhaps all spells should just use direction chooser target
         // selection? This is how automagic.lua handled it.
@@ -975,10 +980,23 @@ namespace quiver
             return is_dynamic_targeted() || spell_has_targeter(spell);
         }
 
-        bool allow_autofight() const override
+        bool use_autofight_targeting() const override
         {
             return is_dynamic_targeted()
-                                && !_spell_autotarget_incompatible(spell);
+                                && !_spell_no_autofight_targeting(spell);
+        }
+
+        bool allow_autofight() const override
+        {
+            if (!is_enabled())
+                return false;
+            if (_spell_needs_manual_targeting(spell))
+                return false;
+            if (spell_is_direct_attack(spell))
+                return true;
+            if (spell == SPELL_FOXFIRE) // not a direct attack, but has sensible autofight behavior
+                return true;
+            return false;
         }
 
         bool uses_mp() const override
@@ -1003,7 +1021,7 @@ namespace quiver
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
             }
-            else if (_spell_autotarget_incompatible(spell))
+            else if (_spell_no_autofight_targeting(spell))
             {
                 target.target = coord_def(-1,-1);
                 target.find_target = true;
@@ -1217,6 +1235,34 @@ namespace quiver
 
         bool allow_autofight() const override
         {
+            if (!is_enabled())
+                return false;
+            switch (ability)
+            {
+            case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
+            case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
+            case ABIL_SPIT_POISON:
+            case ABIL_BREATHE_ACID:
+            case ABIL_BREATHE_FIRE:
+            case ABIL_BREATHE_FROST:
+            case ABIL_BREATHE_POISON:
+            case ABIL_BREATHE_POWER:
+            case ABIL_BREATHE_STEAM:
+            case ABIL_BREATHE_MEPHITIC:
+            case ABIL_DAMNATION:
+            case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+            case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+            case ABIL_LUGONU_BANISH:
+            case ABIL_BEOGH_SMITING:
+            case ABIL_QAZLAL_UPHEAVAL:
+                return true;
+            default:
+                return false;
+            }
+        }
+
+        bool use_autofight_targeting() const override
+        {
             return false;
         }
 
@@ -1337,6 +1383,23 @@ namespace quiver
             return true;
         }
 
+        bool allow_autofight() const override
+        {
+            if (!is_valid() || !is_enabled()) // need to check item validity
+                return false;
+
+            switch (you.inv[wand_slot].sub_type)
+            {
+            case WAND_DIGGING:     // non-damaging wands
+            case WAND_POLYMORPH:
+            case WAND_ENSLAVEMENT:
+            case WAND_PARALYSIS:
+                return false;
+            default:
+                return true;
+            }
+        }
+
         // TOOD: uses_mp for wand mp mutation? Because this mut no longer forces
         // mp use, the result is somewhat weird
 
@@ -1446,10 +1509,28 @@ namespace quiver
 
         // equals should work without override
 
-        bool allow_autofight() const override
+        bool use_autofight_targeting() const override
         {
             // all of these use the spell direction chooser
             return false;
+        }
+
+        bool allow_autofight() const override
+        {
+            if (!is_valid() || !is_enabled()) // need to check item validity
+                return false;
+
+            switch (you.inv[wand_slot].sub_type)
+            {
+            case MISC_ZIGGURAT:     // non-damaging misc items
+            case MISC_BOX_OF_BEASTS:
+            case MISC_HORN_OF_GERYON:
+            case MISC_QUAD_DAMAGE:
+            case MISC_PHANTOM_MIRROR:
+                return false;
+            default:
+                return true;
+            }
         }
 
         void trigger(dist &t) override
@@ -1569,10 +1650,25 @@ namespace quiver
             return artefact_evoke_check(true);
         }
 
-        bool allow_autofight() const override
+        bool use_autofight_targeting() const override
         {
             // all of these use the spell direction chooser
             return false;
+        }
+
+        bool allow_autofight() const override
+        {
+            if (!is_valid() || !is_enabled()) // need to check item validity
+                return false;
+
+            switch (you.inv[wand_slot].unrand_idx)
+            {
+            case UNRAND_OLGREB: // only indirect damage
+            case UNRAND_ASMODEUS:
+                return false;
+            default:
+                return true;
+            }
         }
 
         bool is_targeted() const override

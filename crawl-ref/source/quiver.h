@@ -66,7 +66,8 @@ namespace quiver
 
         /// Should the action be triggered indirectly via autofight lua code,
         /// or does it need to be triggered directly?
-        virtual bool allow_autofight() const { return is_targeted(); }
+        virtual bool use_autofight_targeting() const { return is_targeted(); }
+        virtual bool allow_autofight() const { return false; }
         virtual bool uses_mp() const { return false; }
         virtual bool autofight_check() const;
 

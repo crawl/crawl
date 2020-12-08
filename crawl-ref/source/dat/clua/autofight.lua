@@ -2,29 +2,30 @@
 -- autofight.lua:
 -- One-key fighting.
 --
--- To use this, please bind a key to the following commands:
--- ===hit_closest         (Tab by default)         With autofight_throw = false:
---                                                   Attack with primary weapon,
---                                                   moving towards enemy if
---                                                   needed. If the primary
---                                                   weapon is ranged, it will
---                                                   fire. Default.
---                                                 With autofight_throw = true:
---                                                   Attack with primary weapon
---                                                   if within range. Otherwise,
---                                                   fire quiver action if
---                                                   possible. If the primary
---                                                   weapon is melee, this will
---                                                   fall back on movement on
---                                                   disabled quiver action.
--- ===fire_closest        (Shift-tab by default)   Fire the quiver action; never
---                                                 moves
--- ===hit_closest_nomove  (not bound by default)   Attack with primary weapon
---                                                 if within range, fire the
---                                                 quiver action if not; never
---                                                 moves
--- ===toggle_autothrow    (not bound by default)   Switch between the two
---                                                 behaviors of hit_closest
+-- To use these, it is *not* recommended to bind a key directly to the lua
+-- functions, except for toggle_autothrow. Rather, bind a key to the associated
+-- commands.
+--
+-- CMD_AUTOFIGHT (===hit_closest), tab on the default binding.
+-- With autofight_throw = false: Attack with primary weapon, moving towards
+--     enemy if needed. If the primary weapon is ranged, it will fire. Default.
+-- With autofight_throw = true: Attack with primary weapon if within range.
+--     Otherwise, fire quiver action if possible; only actions that do direct
+--     damage will be considered. If no ranged attack is available, fall back on
+--     movement. If a launcher is wielded, prioritize the launcher over the
+--     quiver.
+--
+-- ===toggle_autothrow, not bound by default
+-- toggle autofight_throw
+--
+-- CMD_AUTOFIRE (===hit_closest), shift-tab on the default binding
+-- Fire the quiver action, including actions that don't do direct damage; never
+-- moves.
+--
+-- CMD_AUTOFIGHT_NOMOVE (===hit_closest_nomove), not bound by default
+-- Attack with primary weapon if within range, fire the quiver action if not;
+-- never moves. Only fires quiver actions that do direct damage. If a launcher
+-- is wielded, prioritize the launcher over the quiver.
 --
 -- This uses the very incomplete client monster and view bindings, and
 -- is currently very primitive. Improvements welcome!
@@ -104,6 +105,9 @@ end
 local function have_quiver_action(no_move)
   return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
           and you.quiver_valid(1) and you.quiver_enabled(1)
+          -- TODO: palentonga roll passes the following check, which may be
+          -- counterintuitive for the nomove case
+          and you.quiver_allows_autofight()
           and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))
 end
 

@@ -1182,6 +1182,12 @@ LUAFN(you_quiver_uses_mp)
     PLUARET(boolean, quiver::get_secondary_action()->uses_mp());
 }
 
+LUAFN(you_quiver_allows_autofight)
+{
+    // don't bother with launcher quiver
+    PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1318,6 +1324,7 @@ static const struct luaL_reg you_clib[] =
     { "quiver_valid",       you_quiver_valid},
     { "quiver_enabled",     you_quiver_enabled},
     { "quiver_uses_mp",     you_quiver_uses_mp},
+    { "quiver_allows_autofight", you_quiver_allows_autofight },
     { "activate_ability",        you_activate_ability},
 
     { nullptr, nullptr },

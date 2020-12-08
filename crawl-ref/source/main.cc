@@ -1742,8 +1742,7 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         // Some quiver actions need to be triggered directly. Disabled quiver
         // actions are also triggered here for messaging purposes -- the errors
         // are more informative than what you'd get through autofight.
-        if (!a->allow_autofight()
-            || !a->is_enabled())
+        if (!a->use_autofight_targeting() || !a->is_enabled())
         {
             dist target;
             // TODO is there a better way to handle this division of labor??

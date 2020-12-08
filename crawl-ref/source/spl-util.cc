@@ -418,6 +418,8 @@ bool spell_harms_target(spell_type spell)
     if (flags & spflag::targeting_mask)
         return true;
 
+    // n.b. this excludes various untargeted attack spells like hailstorm, abs 0
+
     return false;
 }
 
@@ -431,6 +433,62 @@ bool spell_harms_area(spell_type spell)
     if (flags & spflag::area)
         return true;
 
+    return false;
+}
+
+/**
+ * Does the spell cause damage directly on a successful, non-resisted, cast?
+ * This is much narrower than "harm", and excludes e.g. hexes that harm in a
+ * broader sense.
+ */
+bool spell_is_direct_attack(spell_type spell)
+{
+    if (spell_harms_target(spell))
+    {
+        // spell school exceptions
+        if (   spell == SPELL_VIOLENT_UNRAVELLING  // hex
+            || spell == SPELL_FORCE_LANCE // transloc
+            || spell == SPELL_GRAVITAS
+            || spell == SPELL_BLINKBOLT
+            || spell == SPELL_BANISHMENT)
+        {
+            return true;
+        }
+
+        // spell schools that generally "harm" but not damage
+        if (get_spell_disciplines(spell) & (spschool::hexes | spschool::translocation | spschool::summoning))
+            return false;
+
+        // harms target exceptions outside of those schools
+        if (spell == SPELL_PETRIFY
+            || spell == SPELL_STICKY_FLAME // maybe ok?
+            || spell == SPELL_FREEZING_CLOUD // some targeted cloud spells that do indirect damage via the clouds
+            || spell == SPELL_MEPHITIC_CLOUD
+            || spell == SPELL_POISONOUS_CLOUD)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    // The area harm check has too many false positives to bother with here
+    if (   spell == SPELL_ISKENDERUNS_MYSTIC_BLAST
+        || spell == SPELL_OZOCUBUS_REFRIGERATION
+        || spell == SPELL_SYMBOL_OF_TORMENT
+        || spell == SPELL_SHATTER
+        || spell == SPELL_DISCHARGE
+        || spell == SPELL_CHAIN_LIGHTNING
+        || spell == SPELL_DRAIN_LIFE
+        || spell == SPELL_CHAIN_OF_CHAOS
+        || spell == SPELL_IRRADIATE
+        || spell == SPELL_IGNITION
+        || spell == SPELL_STARBURST
+        || spell == SPELL_HAILSTORM
+        || spell == SPELL_ABSOLUTE_ZERO) // n.b. not an area spell
+    {
+        return true;
+    }
     return false;
 }
 

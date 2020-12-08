@@ -1247,10 +1247,14 @@ autofight_warning = 0
         or equal to zero disables this check.
 
 autofight_throw = false
-        If your quiver contains contains a fireable action, regular autofight
-        (i.e., tab on the default binding) will trigger it at enemies out of
-        melee range. Without this option, only a wielded launcher (a bow,
-        crossbow or sling) will be considered.
+        If your quiver contains contains a fireable action that does direct
+        damage to the enemy, regular CMD_AUTOFIGHT (i.e., tab on the default
+        binding) will trigger it at enemies out of melee range. Without this
+        option, only a wielded launcher (a bow, crossbow or sling) will be
+        triggered by CMD_AUTOFIGHT. If an action that does direct damage is
+        quivered but out of range, you will move towards the enemy. If an
+        action is quivered that does not do direct damage, CMD_AUTOFIGHT will
+        ignore it entirely.
 
 autofight_throw_nomove = true
         This works same as above, except only for ===hit_closest_nomove rather
