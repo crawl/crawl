@@ -323,6 +323,29 @@ to just pressing the direction key several times.
 Another convenient method for moving long distances is described in the section
 on Automated Travel and Exploration below.
 
+Combat
+========================================
+
+The dungeon is a hostile place, and you will likely need to defend yourself. The
+basic case of combat involves melee attacks: if you are adjacent to a monster,
+moving towards that monster will cause you to attack it with a wielded melee
+weapon, or your fists. There are also a wide variety of ways to attack monsters
+that are further away, including polearms (which can reach a tile away), various
+bows, launchers, and throwable items, magical items that can be evoked such as
+wands, spells, and abilities. These are described throughout the rest of this
+document. These are triggered in a variety of ways, but one commonality is that
+all of these can be quivered: the quiver provides quick access to an action that
+can be fired.
+
+Both melee and ranged combat provide shortcuts that autotarget the nearest
+enemy, if there is one available. Your wielded weapon can be triggered by Tab
+("Autofight"), moving towards or attacking the nearest enemy depending on
+whether there is one in range for the weapon. Your quivered action can be
+triggered by Shift-Tab or 'p' ("Autofire"); if the action takes a target the
+nearest enemy will be selected, otherwise the action will be triggered. See
+`Attacking and firing`_ for the full key list related to attacking, quivers, and
+firing.
+
 Resting
 ========================================
 
@@ -2296,6 +2319,67 @@ Ctrl-W
   Set waypoint (a digit between 0 and 9). Check the option show_waypoints. You
   can go to a waypoint by pressing Ctrl-G or G and the digit.
 
+Attacking and firing
+----------------------------------------
+
+Several of these commands enter targeting mode; see `Targeting`_ for more
+information about this mode.
+
+direction
+  If a monster is in the target square, attack that monster.
+
+Tab
+  Autofight: Attack the nearest monster with your current weapon. If the
+  nearest monster is not in range, by default, this will move towards it.
+
+v
+  Targeted attacks with your primary weapon, including attacking non-adjacent
+  monsters with a polearm, or firing a wielded launcher (regardless of the
+  state of the main quiver).
+
+Q
+  Quiver an item, spell, or ability from a menu.
+
+( and )
+  Cycle quiver to next/previous suitable action (item, spell, ability).
+
+f
+  Fire currently quivered action, showing a targeter. If some monster is in
+  sight and the action takes a target, either the last target or the nearest
+  monster will be automatically highlighted. If the action does not take a
+  target, the display will typically show an area of effect. Pressing f again
+  triggers the action.
+
+Shift-tab, p
+  Autofire: Fire a quivered action, if needed selecting a target automatically;
+  typically fires at the nearest monster.
+
+F
+  Directly choose ammo to throw or fire. In contrast to 'f' this does not
+  interact with the quiver.
+
+V
+  Evoke an item directly from the inventory. This includes using wands.
+
+Spells and abilities
+----------------------------------------
+
+Spells and abilities may also be quivered; see `Attacking and firing`_. Many
+spells and abilities enter targeting mode on activation; see `Targeting`_ for
+more information about this mode.
+
+a
+  Show the ability menu, allowing you to activate an ability or read its
+  description.
+
+z
+  Cast a spell. Should the spell demand monsters as targets but there are none
+  within range, casting will be stopped. In this case, neither turns nor magic
+  are used. If you want to cast the spell nonetheless, use Z.
+
+Z
+  Cast a spell regardless of available targets.
+
 Resting
 ----------------------------------------
 
@@ -2384,10 +2468,6 @@ E
 A
   Show abilities/mutations.
 
-a
-  Show the ability menu, allowing you to activate an ability or read its
-  description.
-
 \\
   Show item knowledge. You can toggle autopickup exceptions for item types in
   this screen. The screen has its own help text.
@@ -2409,36 +2489,8 @@ I
   the command @, A, a). This is a highly condensed conglomeration of [, ", E, ^,
   @, A, a, $ on a single screen. Pressing the key of a displayed item views it.
 
-Other game-playing commands: quivers, spells, etc
+Other game-playing commands
 ----------------------------------------
-
-Q
-  Quiver an item, spell, or ability from a menu.
-
-( and )
-  Cycle quiver to next/previous suitable action (item, spell, ability).
-
-f
-  Fire currently quivered action. If some monster is in sight and the action
-  takes a target, either the last target or the nearest monster will be
-  automatically targeted. If the action does not take a target, the display
-  will typically show an area of effect. Pressing f again shoots.
-
-Tab
-  Autofight: Attack the nearest monster with your current weapon. If the
-  nearest monster is not in range, by default, this will move towards it.
-
-Shift-tab, p
-  Autofire: Fire a quivered action; if this action takes a target, it will fire
-  at the nearest monster.
-
-z
-  Cast a spell. Should the spell demand monsters as targets but there are none
-  within range, casting will be stopped. In this case, neither turns nor magic
-  are used. If you want to cast the spell nonetheless, use Z.
-
-Z
-  Cast a spell regardless of available targets.
 
 t
   Tell commands to allies, or shout (with tt).
@@ -2527,15 +2579,14 @@ Ctrl-F
 Item interaction (inventory)
 ========================================
 
+See also `Attacking and firing`_ for item interaction commands related to
+attacking and firing.
+
 {
   Inscribe item (check the autoinscribe option). An empty inscription or
   inscribing only space will remove prior inscriptions. See Appendix `5.
   Inscriptions`_. You can also inscribe items when viewing them by pressing
   their slot key in the inventory.
-
-F
-  Directly choose an item and fire. Contrary to fi this does not change the
-  quiver.
 
 q
   Quaff a potion.
@@ -2551,14 +2602,6 @@ w
 
 '
   Wield item a, or switch to b.
-
-v
-  Targeted attacks with your primary weapon, including attacking non-adjacent
-  monsters with a polearm, or firing a wielded launcher (regardless of the
-  state of the main quiver).
-
-V
-  Evoke an item from the inventory. This includes using wands.
 
 W
   Wear armour.
