@@ -1150,10 +1150,9 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_MIASMA:
         if (player)
-            miasma_player(cloud.agent(), cloud.cloud_name());
+            return miasma_player(cloud.agent(), cloud.cloud_name());
         else
-            miasma_monster(mons, cloud.agent());
-        break;
+            return miasma_monster(mons, cloud.agent());
 
     case CLOUD_MUTAGENIC:
         if (player)
