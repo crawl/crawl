@@ -2488,7 +2488,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 }
 #endif
 
-dice_def _spell_damage(spell_type spell)
+static dice_def _spell_damage(spell_type spell)
 {
     const int power = _spell_power(spell);
     if (power < 0)
