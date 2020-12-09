@@ -2248,7 +2248,12 @@ namespace quiver
         else if (you.inv[slot].base_type == OBJ_MISCELLANY)
             return make_shared<misc_action>(slot);
         else if (is_unrandom_artefact(you.inv[slot]))
-            return make_shared<artefact_evoke_action>(slot);
+        {
+            auto a = make_shared<artefact_evoke_action>(slot);
+            if (a->is_valid() || !force)
+                return a;
+            // otherwise, fall back on ammo
+        }
 
         // use ammo as the fallback -- may well end up invalid. This means that
         // by this call, it isn't possible to get toss actions for anything
@@ -2383,9 +2388,13 @@ namespace quiver
                 return false;
             }
 
+            // At this point, an item has been selected, which will lead to
+            // either an invalid or valid action. Either way, exit, so that
+            // the message can  be seen.
             // TODO: in failure it would be better to set the more with an
             // error instead of exiting the menu
-            return !set_to_quiver(slot_to_action(slot, true));
+            set_to_quiver(slot_to_action(slot, true));
+            return false;
         }
 
         bool _choose_from_abilities()
