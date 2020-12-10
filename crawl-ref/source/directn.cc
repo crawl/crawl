@@ -2573,7 +2573,7 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
                                   int range)
 {
     // Monsters that are no threat to you don't count as monsters.
-    if (!mons_is_threatening(*mon) && mon->type != MONS_TEST_STATUE)
+    if (!mons_is_threatening(*mon) && !mons_class_is_test(mon->type))
         return false;
 
     // Don't target submerged monsters.

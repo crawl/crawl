@@ -891,6 +891,7 @@ enum monster_type                      // env.mons[].type
     MONS_TEST_SPAWNER,
 #if TAG_MAJOR_VERSION > 34
     MONS_TEST_STATUE,
+    MONS_TEST_BLOB,
     MONS_NAMELESS,              // summoning miscast
 #endif
 
@@ -1083,6 +1084,7 @@ enum monster_type                      // env.mons[].type
     MONS_ELEIONOMA,
     MONS_FENSTRIDER_WITCH,
     MONS_WILL_O_THE_WISP,
+    MONS_TEST_BLOB,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

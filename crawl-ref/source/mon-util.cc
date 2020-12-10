@@ -776,9 +776,19 @@ bool mons_is_active_ballisto(const monster& mon)
 bool mons_class_is_firewood(monster_type mc)
 {
     return mons_class_is_stationary(mc)
-           && mc != MONS_TEST_STATUE
+           && !mons_class_is_test(mc)
            && mons_class_flag(mc, M_NO_THREAT)
            && !mons_is_tentacle_or_tentacle_segment(mc);
+}
+
+/**
+ * Is this a test monster? Mainly used for exempting these from various checks
+ * like firewood, etc.
+ */
+bool mons_class_is_test(monster_type mc)
+{
+    return mc == MONS_TEST_SPAWNER || mc == MONS_TEST_STATUE
+        || mc == MONS_TEST_BLOB;
 }
 
 /**
@@ -4853,7 +4863,7 @@ int get_dist_to_nearest_monster()
 
         // Plants/fungi don't count.
         if ((!mons_is_threatening(*mon) || mon->wont_attack())
-            && mon->type != MONS_TEST_STATUE)
+            && !mons_class_is_test(mon->type))
         {
             continue;
         }
