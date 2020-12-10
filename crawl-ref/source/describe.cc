@@ -1069,8 +1069,8 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
         description += make_stringf("At a training level of %d%% ", training);
 
     description += make_stringf(
-        "you %s reach %d.%d in %s %d.%d XLs.",
-            hypothetical ? "would" : "will",
+        "you %sreach %d.%d in %s %d.%d XLs.",
+            hypothetical ? "would " : "",
             scaled_target / 10, scaled_target % 10,
             (you.experience_level + (level_diff + 9) / 10) > 27
                                 ? "the equivalent of" : "about",
@@ -1261,7 +1261,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
             {
                 description += ", and any ";
                 description += ammo_name(item);
-                description += " fired from it will";
+                description += " fired from it";
             }
             else
                 description += " to";
@@ -1276,9 +1276,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
             else
             {
-                description += "Occasionally, upon striking a foe, it will "
-                    "discharge some electrical energy and cause terrible "
-                    "harm.";
+                description += "Occasionally, upon striking a foe, it can "
+                    "discharge electrical energy and cause terrible harm.";
             }
             break;
         case SPWPN_VENOM:
@@ -1336,14 +1335,14 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "Unwielding it can cause banishment or high damage.";
             break;
         case SPWPN_PENETRATION:
-            description += "Ammo fired by it will pass through the "
+            description += "Ammo fired by it passes through the "
                 "targets it hits, potentially hitting all targets in "
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
             description += "If a monster killed with it leaves a "
-                "corpse in good enough shape, the corpse will be "
-                "animated as a zombie friendly to the killer.";
+                "corpse in good enough shape, the corpse is "
+                "reanimated as a zombie friendly to the killer.";
             break;
         case SPWPN_ANTIMAGIC:
             description += "It reduces the magical energy of the wielder, "
@@ -1368,7 +1367,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (is_unrandom_artefact(item, UNRAND_STORM_BOW))
     {
-        description += "\n\nAmmo fired by it will pass through the "
+        description += "\n\nAmmo fired by it passes through the "
             "targets it hits, potentially hitting all targets in "
             "its path until it reaches maximum range.";
     }
@@ -1523,7 +1522,7 @@ static string _describe_ammo(const item_def &item)
                            "blindness and brief confusion.";
             break;
         case SPMSL_DISPERSAL:
-            description += "It will cause any target it hits to blink, with a "
+            description += "It causes any target it hits to blink, with a "
                            "tendency towards blinking further away from the "
                            "one who " + threw_or_fired + " it.";
             break;
@@ -1566,7 +1565,7 @@ static string _describe_ammo(const item_def &item)
     }
 
     if (ammo_always_destroyed(item))
-        description += "\n\nIt will always be destroyed on impact.";
+        description += "\n\nIt is always destroyed on impact.";
     else if (!ammo_never_destroyed(item))
         description += "\n\nIt may be destroyed on impact.";
 
@@ -1621,7 +1620,7 @@ static string _armour_ac_sub_change_description(const item_def &item)
 
 
     description += "\n\nIf you switch to wearing this armour,"
-                        " your AC will ";
+                        " your AC would ";
 
     int you_ac_with_this_item =
                  you.armour_class_with_one_sub(item);
@@ -1637,7 +1636,7 @@ static string _armour_ac_remove_change_description(const item_def &item)
     string description;
 
     description += "\n\nIf you remove this armour,"
-                        " your AC will ";
+                        " your AC would ";
 
     int you_ac_without_item =
                  you.armour_class_with_one_removal(item);
@@ -1905,7 +1904,7 @@ static string _describe_lignify_ac()
          - you.racial_ac(true) - you.ac_changes_from_mutations()
          - get_form()->get_ac_bonus() + tree_form->get_ac_bonus()) / 100;
 
-    return make_stringf("If you quaff this potion your AC will be %d.",
+    return make_stringf("If you quaff this potion your AC would be %d.",
                         treeform_ac);
 }
 
@@ -2175,9 +2174,9 @@ string get_item_description(const item_def &item, bool verbose,
                         << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
                            "and all other devices of its kind " : "")
-                        << "will be rendered temporarily inert. However, "
+                        << "are rendered temporarily inert. However, "
                         << (!item_is_horn_of_geryon(item) ? "they " : "it ")
-                        << "will recharge as you gain experience."
+                        << "recharges as you gain experience."
                         << (!evoker_charges(item.sub_type) ?
                            " The device is presently inert." : "");
         }
@@ -3051,7 +3050,7 @@ string get_skill_description(skill_type skill, bool need_title)
             if (you_worship(GOD_TROG))
             {
                 result += "\n";
-                result += "Keep in mind, though, that Trog will greatly "
+                result += "Keep in mind, though, that Trog would greatly "
                           "disapprove of this.";
             }
             break;
@@ -3150,7 +3149,7 @@ static string _player_spell_desc(spell_type spell)
 
     ostringstream description;
 
-    description << "Miscasting this spell will cause magic contamination"
+    description << "Miscasting this spell causes magic contamination"
                 << (fail_severity(spell) ?
                     " and also " + _miscast_damage_string(spell) : "")
                 << ".\n";
@@ -3163,7 +3162,7 @@ static string _player_spell_desc(spell_type spell)
             description << " would be unable to mimic any of your spells";
         else
         {
-            description << " will cast "
+            description << " casts "
                         << spell_title(player_servitor_spell());
         }
         description << ".\n";
@@ -3201,7 +3200,7 @@ static string _player_spell_desc(spell_type spell)
     }
     else if (spell_is_useless(spell, true, false))
     {
-        description << "\nThis spell will have no effect right now because "
+        description << "\nThis spell would have no effect right now because "
                     << spell_uselessness_reason(spell, true, false)
                     << "\n";
     }
