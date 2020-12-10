@@ -2175,8 +2175,8 @@ string get_item_description(const item_def &item, bool verbose,
                         << (!item_is_horn_of_geryon(item) ?
                            "and all other devices of its kind " : "")
                         << "are rendered temporarily inert. However, "
-                        << (!item_is_horn_of_geryon(item) ? "they " : "it ")
-                        << "recharges as you gain experience."
+                        << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
+                        << "as you gain experience."
                         << (!evoker_charges(item.sub_type) ?
                            " The device is presently inert." : "");
         }
