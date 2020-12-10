@@ -3193,11 +3193,11 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-static void _imb_actor(actor * act, int pow)
+static void _imb_actor(actor * act, int pow, coord_def source)
 {
     bolt beam;
     zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
-    beam.source          = you.pos();
+    beam.source          = source;
     beam.thrower         = KILL_YOU;
     beam.source_id       = MID_PLAYER;
     beam.range           = LOS_RADIUS;
@@ -3229,7 +3229,7 @@ spret cast_imb(int pow, bool fail)
 {
     int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
     auto hitfunc = find_spell_targeter(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow, range);
-    //targeter_radius hitfunc(&you, LOS_SOLID_SEE, range);
+
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
@@ -3244,8 +3244,10 @@ spret cast_imb(int pow, bool fail)
     mpr("You erupt in a blast of force!");
 
     vector<actor *> act_list;
+    // knock back into dispersal could move the player, so save the current pos
+    coord_def source = you.pos();
 
-    for (actor_near_iterator ai(you.pos(), LOS_SOLID_SEE); ai; ++ai)
+    for (actor_near_iterator ai(source, LOS_SOLID_SEE); ai; ++ai)
     {
         if (ai->pos().distance_from(you.pos()) > range
             || ai->pos() == you.pos() // so it's never aimed_at_feet
@@ -3257,11 +3259,12 @@ spret cast_imb(int pow, bool fail)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = {you.pos()};
+    dist_sorter sorter = { source };
     sort(act_list.begin(), act_list.end(), sorter);
 
     for (actor *act : act_list)
-        _imb_actor(act, pow);
+        if (cell_see_cell(source, act->pos(), LOS_SOLID_SEE)) // sanity check vs dispersal
+            _imb_actor(act, pow, source);
 
     return spret::success;
 }
