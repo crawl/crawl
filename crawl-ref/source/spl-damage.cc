@@ -2379,20 +2379,36 @@ static bool _elec_not_immune(const actor *act)
                                     && fedhas_protects(act->as_monster()));
 }
 
-spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
+coord_def get_thunderbolt_last_aim(actor *caster)
 {
-    coord_def prev;
+    const int &last_turn = caster->props[THUNDERBOLT_LAST_KEY].get_int();
+    const coord_def &last_aim = caster->props[THUNDERBOLT_AIM_KEY].get_coord();
 
-    int &charges = caster->props[THUNDERBOLT_CHARGES_KEY].get_int();
-    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
+    // check against you.pos() in case the player has moved instantaneously,
+    // via mesmerise, wjc, etc. In principle, this should probably also
+    // record and check the player's location on their last cast.
+    if (last_turn && last_turn + 1 == you.num_turns && last_aim != you.pos())
+        return last_aim;
+    else
+        return coord_def();
+}
 
+static void _set_thundervolt_last_aim(actor *caster, coord_def aim)
+{
     int &last_turn = caster->props[THUNDERBOLT_LAST_KEY].get_int();
     coord_def &last_aim = caster->props[THUNDERBOLT_AIM_KEY].get_coord();
 
+    last_turn = you.num_turns;
+    last_aim = aim;
+}
 
-    if (last_turn && last_turn + 1 == you.num_turns)
-        prev = last_aim;
-    else
+spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
+{
+    int &charges = caster->props[THUNDERBOLT_CHARGES_KEY].get_int();
+    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
+
+    coord_def prev = get_thunderbolt_last_aim(caster);
+    if (!in_bounds(prev))
         charges = 0;
 
     targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
@@ -2462,8 +2478,8 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.fire();
     }
 
-    last_turn = you.num_turns;
-    last_aim = aim;
+    _set_thundervolt_last_aim(caster, aim);
+
     if (charges < LIGHTNING_MAX_CHARGE)
         charges++;
 

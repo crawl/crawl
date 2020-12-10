@@ -1237,9 +1237,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_cloud>(&you, range);
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
-            (you.props.exists(THUNDERBOLT_LAST_KEY)
-             && you.props[THUNDERBOLT_LAST_KEY].get_int() + 1 == you.num_turns) ?
-                you.props[THUNDERBOLT_AIM_KEY].get_coord() : coord_def());
+                                            get_thunderbolt_last_aim(&you));
     case SPELL_LRD:
         return make_unique<targeter_fragment>(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
