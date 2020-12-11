@@ -7377,6 +7377,12 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
                 touch_wood = true;
                 break;
             }
+            const monster *adj_mons = monster_at(*ai);
+            if (adj_mons && mons_genus(adj_mons->type) == MONS_SHAMBLING_MANGROVE)
+            {
+                touch_wood = true;
+                break;
+            }
         }
         if (!touch_wood)
             return ai_action::impossible();
