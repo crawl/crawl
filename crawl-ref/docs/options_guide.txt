@@ -450,7 +450,7 @@ macro_dir = settings/
         For tile games, wininit.txt will also be stored here.
         It should end with the path delimiter.
 
-sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
         (Ordered list option)
         Plays the sound file if a message contains regex. In case of 
