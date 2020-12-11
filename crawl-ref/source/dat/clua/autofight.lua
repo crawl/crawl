@@ -425,7 +425,7 @@ function attack(allow_movement)
   elseif info.attack_type == AF_FAILS then
     crawl.mpr("No reachable target in view!")
   elseif allow_movement then
-    if not AUTOFIGHT_PROMPT_RANGE or crawl.weapon_check() then
+    if not AUTOFIGHT_PROMPT_RANGE or you.quiver_valid(0) or crawl.weapon_check() then
       move_towards(x,y)
     end
   elseif AUTOFIGHT_WAIT then
