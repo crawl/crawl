@@ -159,6 +159,11 @@ function ch_stash_search_annotate_item(it)
     end
   end
 
+  -- Tag Willpower items as MR for back-compat.
+  if annot:find("Will+", 1, true) then
+    annot = annot .. " {MR} {resist magic} {magic resistance}"
+  end
+
   return annot
 end
 
