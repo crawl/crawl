@@ -34,7 +34,7 @@
 #include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#include "timed-effects.h" // decr_zot_clock
+#include "timed-effects.h" // zot clock
 #include "transform.h"
 #include "unicode.h"
 #include "view.h"
@@ -986,5 +986,22 @@ void wizard_xom_acts()
 
     dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
     xom_take_action(event, severity);
+}
+
+void wizard_set_zot_clock()
+{
+    const int max_zot_clock = MAX_ZOT_CLOCK / BASELINE_DELAY;
+
+    string prompt = make_stringf("Enter new Zot clock value "
+                                 "(current = %d, from 0 to %d): ",
+                                 turns_until_zot(), max_zot_clock);
+    int turns_left = prompt_for_int(prompt.c_str(), true);
+
+    if (turns_left == -1)
+        canned_msg(MSG_OK);
+    else if (turns_left > max_zot_clock)
+        mprf("Zot clock should be between 0 and %d", max_zot_clock);
+    else
+        set_turns_until_zot(turns_left);
 }
 #endif

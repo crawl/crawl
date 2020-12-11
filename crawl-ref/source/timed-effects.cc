@@ -1258,12 +1258,6 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-// How many auts does the clock roll back every time the player
-// enters a new floor?
-static const int ZOT_CLOCK_PER_FLOOR = 6000 * BASELINE_DELAY;
-// After how many auts without visiting new floors does the player die instantly?
-static const int MAX_ZOT_CLOCK = 27000 * BASELINE_DELAY;
-
 #if TAG_MAJOR_VERSION == 34
 static int _old_zot_clock(const string& branch_name) {
     // The old clock was measured in turns (deca-auts), not aut.
@@ -1416,4 +1410,13 @@ void incr_zot_clock()
     }
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
+}
+
+void set_turns_until_zot(int turns_left)
+{
+    if (turns_left < 0 || turns_left > MAX_ZOT_CLOCK / BASELINE_DELAY)
+        return;
+
+    int &clock = _zot_clock();
+    clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
 }
