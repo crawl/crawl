@@ -121,7 +121,7 @@ static void _do_wizard_command(int wiz_command)
     case 'm': wizard_create_spec_monster_name(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    // case 'n': break;
+    case 'n': wizard_set_zot_clock(); break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
@@ -422,6 +422,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>#</w>      load character from a dump file\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
+                       "<w>n</w>      set Zot clock to a value\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
@@ -429,7 +430,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>,</w>/<w>.</w>    create up/down staircase\n"
                        "<w>(</w>      turn cell into feature\n"
                        "<w>\\</w>      make a shop\n"
-                       "<w>K</w> mark all vaults as unused\n"
+                       "<w>K</w>      mark all vaults as unused\n"
                        "\n"
                        "<yellow>Other level related commands</yellow>\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
