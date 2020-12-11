@@ -1588,10 +1588,23 @@ static void _experience_check()
     handle_real_time();
     msg::stream << "Play time: " << make_time_string(you.real_time())
                 << " (" << you.num_turns << " turns)."
-                << endl
-                << "Zot will find you in " << turns_until_zot() << " turns"
-                << " if you stay in this branch and explore no new floors."
                 << endl;
+
+    if (!crawl_state.game_is_sprint())
+    {
+        if (player_has_orb())
+            msg::stream << "You are forever immune to Zot's power.";
+        else if (player_in_branch(BRANCH_ABYSS))
+            msg::stream << "You have unlimited time to explore this branch.";
+        else
+        {
+            msg::stream << "Zot will find you in " << turns_until_zot()
+                        << " turns if you stay in this branch and explore no"
+                        << " new floors.";
+        }
+        msg::stream << endl;
+    }
+
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
