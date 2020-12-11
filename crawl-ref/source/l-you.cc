@@ -232,7 +232,7 @@ LUARET1(you_res_shock, number, player_res_electricity(false))
  * @treturn int number of stealth pips
  * @function stealth_pips
  */
-LUARET1(you_stealth_pips, number, stealth_breakpoint(player_stealth()))
+LUARET1(you_stealth_pips, number, stealth_pips())
 /*** Willpower (WL).
  * @treturn int number of WL pips
  * @function willpower

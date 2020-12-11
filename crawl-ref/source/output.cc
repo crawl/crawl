@@ -1876,16 +1876,10 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
-int stealth_breakpoint(int stealth)
+int stealth_pips()
 {
-    if (stealth == 0)
-        return 0;
-    else if (stealth >= 500)
-        return 10;
-    else if (stealth >= 450)
-        return 9;
-    else
-        return 1 + stealth / STEALTH_PIP;
+    // round up.
+    return (player_stealth() + STEALTH_PIP - 1) / STEALTH_PIP;
 }
 
 static string _stealth_bar(int sw)
@@ -1894,11 +1888,19 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth    ";
-    const int stealth_num = stealth_breakpoint(player_stealth());
-    for (int i = 0; i < stealth_num; i++)
-        bar += "+";
-    for (int i = 0; i < 10 - stealth_num; i++)
-        bar += ".";
+
+    const int unadjusted_pips = stealth_pips();
+    const int bar_len = 10;
+    const int num_high_pips = unadjusted_pips % bar_len;
+    static const vector<string> pip_tiers = { ".", "+", "*", "#", "!" };
+    const int max_tier = pip_tiers.size() - 1;
+    const int low_tier = min(unadjusted_pips / bar_len, max_tier);
+    const int high_tier = min(low_tier + 1, max_tier);
+
+    for (int i = 0; i < num_high_pips; i++)
+        bar += pip_tiers[high_tier];
+    for (int i = num_high_pips; i < bar_len; i++)
+        bar += pip_tiers[low_tier];
     bar += "\n";
     linebreak_string(bar, sw);
     return bar;
