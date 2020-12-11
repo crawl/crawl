@@ -1882,7 +1882,7 @@ void game_options::read_options(LineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]])");
+                    luacond.add(line - 1, "]==])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -1908,7 +1908,7 @@ void game_options::read_options(LineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]])");
+                    luacond.add(line - 1, "]==])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -2003,7 +2003,7 @@ void game_options::read_options(LineInput &il, bool runscript,
         {
             if (!l_init)
             {
-                luacond.add(line, "crawl.setopt([[");
+                luacond.add(line, "crawl.setopt([==[");
                 l_init = true;
             }
 
@@ -2018,7 +2018,7 @@ void game_options::read_options(LineInput &il, bool runscript,
     {
 #ifdef CLUA_BINDINGS
         if (l_init)
-            luacond.add(line, "]])");
+            luacond.add(line, "]==])");
         if (luacond.run(clua))
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
 #else
