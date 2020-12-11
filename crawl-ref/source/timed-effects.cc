@@ -1380,6 +1380,9 @@ void decr_zot_clock()
 
 void incr_zot_clock()
 {
+    if (!zot_clock_active())
+        return;
+
     const int old_lvl = bezotting_level();
     _zot_clock() += you.time_taken;
     if (!bezotted())
