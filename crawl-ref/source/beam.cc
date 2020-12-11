@@ -2470,7 +2470,7 @@ bool bolt::stop_at_target() const
             (aimed_at_spot && (pos() == source || flavour != BEAM_DIGGING));
 }
 
-void bolt::drop_object()
+void bolt::drop_object(bool allow_mulch)
 {
     ASSERT(item != nullptr);
     ASSERT(item->defined());
@@ -2493,7 +2493,7 @@ void bolt::drop_object()
         return;
     }
 
-    if (!thrown_object_destroyed(item))
+    if (!allow_mulch || !thrown_object_destroyed(item))
     {
         if (item->sub_type == MI_THROWING_NET)
         {

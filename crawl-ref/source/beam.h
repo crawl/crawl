@@ -200,7 +200,7 @@ public:
     bool has_saving_throw() const;
 
     void draw(const coord_def& p, bool force_refresh=true);
-    void drop_object();
+    void drop_object(bool allow_mulch=true);
 
     // Various explosion-related stuff.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);

@@ -608,6 +608,8 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), thrown);
 
+    const bool tossing = projected == launch_retval::FUMBLED;
+
     // Making a copy of the item: changed only for venom launchers.
     item_def item = thrown;
     item.quantity = 1;
@@ -779,7 +781,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         pbolt.affect_cell();
         pbolt.affect_endpoint();
         if (!did_return)
-            pbolt.drop_object();
+            pbolt.drop_object(!tossing);
         // Costs 1 MP per shot.
         dec_mp(1);
     }
@@ -788,14 +790,15 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if (crawl_state.game_is_hints())
             Hints.hints_throw_counter++;
 
-        // Dropping item copy, since the launched item might be different.
-        pbolt.drop_item = !returning;
+        pbolt.drop_item = !returning && !tossing;
         pbolt.fire();
 
         hit = !pbolt.hit_verb.empty();
 
-        // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item))
+        // For returning ammo, check for mulching before the return step
+        if (tossing)
+            pbolt.drop_object(false); // never mulch
+        else if (returning && thrown_object_destroyed(&item))
             returning = false;
     }
 
@@ -835,7 +838,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         delete pbolt.special_explosion;
 
     if (!teleport
-        && projected != launch_retval::FUMBLED
+        && !tossing
         && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_DART)
