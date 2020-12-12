@@ -717,20 +717,32 @@ static int l_you_mem_spells(lua_State *ls)
 {
     lua_newtable(ls);
 
-    char buf[2];
-    buf[1] = 0;
-
     vector<spell_type> mem_spells = get_sorted_spell_list(true);
 
     for (size_t i = 0; i < mem_spells.size(); ++i)
     {
-        buf[0] = index_to_letter(i);
-
-        lua_pushstring(ls, buf);
         lua_pushstring(ls, spell_title(mem_spells[i]));
-        lua_rawset(ls, -3);
+        lua_rawseti(ls, -2, i + 1);
     }
     return 1;
+}
+
+/*** Memorise a spell by name
+ * Memorise a spell by name, erroring only on an invalid spell name.
+ * @treturn boolean whether memorisation succeeded
+ * @function memorise
+ */
+static int l_you_memorise(lua_State *ls)
+{
+    string spellname = luaL_checkstring(ls, 1);
+    spell_type s = spell_by_name(spellname, true);
+    if (!is_valid_spell(s))
+    {
+        const string err = make_stringf("Invalid spell: '%s'.", spellname.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    // further error cases printed to messages if this call fails
+    PLUARET(boolean, learn_spell(s, false, false));
 }
 
 /*** Available abilities
@@ -1197,7 +1209,8 @@ static const struct luaL_reg you_clib[] =
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
     { "spell_levels", you_spell_levels },
-    { "mem_spells", l_you_mem_spells },
+    { "mem_spells",   l_you_mem_spells },
+    { "memorise",     l_you_memorise },
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
