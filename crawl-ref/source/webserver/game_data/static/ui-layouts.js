@@ -5,12 +5,25 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function fmt_body_txt(txt)
     {
+        console.log(txt);
         return txt
+            // preserve all leading spaces
+            .split("\n")
+            .map(function (s) { return s.replace(/^\s+/, function (m)
+                    {
+                        // TODO: or mark as preformatted? something else?
+                        return m.replace(/\s/g, "&nbsp;");
+                    }).trim();
+                })
+            .join("\n")
+            // convert double linebreaks into paragraph markers
             .split("\n\n")
-            .map(function (s) { return "<p>"+s.trim()+"</p>"; })
+            .map(function (s) { return "<p>" + s + "</p>"; })
             .filter(function (s) { return s !== "<p></p>"; })
             .join("")
-            .split("\n").join("<br>");
+            // replace single linebreaks with manual linebreaks
+            .split("\n")
+            .join("<br>");
     }
 
     function _fmt_spellset_html(desc)

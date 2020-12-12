@@ -2992,25 +2992,28 @@ static string _player_spell_stats(const spell_type spell)
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
 
-    description += "\n\nPower : ";
+    const string damage_string = spell_damage_string(spell);
+    const int acc = spell_acc(spell);
+    // TODO: generalize this pattern? It's very common in descriptions
+    const int padding = (acc != -1) ? 8 : damage_string.size() ? 6 : 5;
+    description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
-    const string damage_string = spell_damage_string(spell);
     if (damage_string != "") {
-        description += "\nDamage : ";
+        description += make_stringf("\n%*s: ", padding, "Damage");
         description += damage_string;
     }
-    const int acc = spell_acc(spell);
     if (acc != -1)
     {
         ostringstream acc_str;
         _print_bar(acc, 3, "", acc_str);
-        description += "\nAccuracy: :" + acc_str.str();
+        description += make_stringf("\n%*s: %s", padding, "Accuracy",
+                                                    acc_str.str().c_str());
     }
 
-    description += "\nRange : ";
+    description += make_stringf("\n%*s: ", padding, "Range");
     description += spell_range_string(spell);
-    description += "\nNoise : ";
+    description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
     description += "\n";
     return description;
@@ -4022,38 +4025,40 @@ static void _print_bar(int value, int scale, string name,
     if (base_value == INT_MAX)
         base_value = value;
 
-    result << name << " ";
+    if (name.size())
+        result << name << " ";
 
     const int display_max = value ? value : base_value;
     const bool currently_disabled = !value && base_value;
 
     if (currently_disabled)
-      result << "(";
+      result << "none (normally ";
 
-    for (int i = 0; i * scale < display_max; i++)
+    if (display_max == 0)
+        result <<  "none";
+    else
     {
-        result << "+";
-        if (i % 5 == 4)
-            result << " ";
+        for (int i = 0; i * scale < display_max; i++)
+        {
+            result << "+";
+            if (i % 5 == 4)
+                result << " ";
+        }
     }
 
     if (currently_disabled)
-      result << ")";
+        result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!you.suppress_wizard)
         result << " (" << value << ")";
 #endif
 
-    if (currently_disabled)
-    {
-        result << " (Normal " << name << ")";
-
 #ifdef DEBUG_DIAGNOSTICS
+    if (currently_disabled)
         if (!you.suppress_wizard)
-            result << " (" << base_value << ")";
+            result << " (base: " << base_value << ")";
 #endif
-    }
 }
 
 /**
@@ -4076,7 +4081,7 @@ static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
     // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
-    _print_bar(mi.ac, 5, "AC", result);
+    _print_bar(mi.ac, 5, "    AC:", result);
     result << "\n";
 }
 
@@ -4088,7 +4093,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
     _describe_to_hit(mi, result);
     result << "\n";
 }
@@ -4103,12 +4108,12 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
     if (mi.willpower() == WILL_INVULN)
     {
-        result << "Will ∞\n";
+        result << "  Will: ∞\n";
         return;
     }
 
     const int bar_scale = WL_PIP;
-    _print_bar(mi.willpower(), bar_scale, "Will", result);
+    _print_bar(mi.willpower(), bar_scale, "  Will:", result);
     result << "\n";
 }
 
