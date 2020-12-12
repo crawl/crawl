@@ -661,6 +661,7 @@ private:
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
     void add_force_targeter(const string &s, bool prepend);
+    void remove_force_targeter(const string &s, bool prepend);
 
     static const string interrupt_prefix;
 

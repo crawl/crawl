@@ -1021,20 +1021,14 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-always_use_static_targeters = false
-        A static targeter shows the possible area of effect for a spell that
-        does not have controllable targeting. If this option is set to true,
-        static targeters are shown when casting via `z` and `Z`. When false,
-        they are shown only via `Z` and via the fire interface. Targeters are
-        never shown when firing via AUTOFIRE (shift-tab, `p`) and other
-        autoattack commands.
-
 force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition
-        Force showing a targeter for the listed spells when casting normally
+        Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
-        default value. It is overridden by `always_use_static_targeters = true`,
-        which amounts to listing every spell here.
+        default value; it is particularly useful for spells with an unusual
+        targeting pattern. If "all" appears in the options list, the rest of
+        the list (however constructed) will be ignored, and targeters will
+        be shown with every spell.
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma

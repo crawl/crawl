@@ -153,7 +153,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
         new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
-        new BoolGameOption(SIMPLE_NAME(always_use_static_targeters), false),
         new BoolGameOption(easy_quit_item_prompts,
                            { "easy_quit_item_prompts", "easy_quit_item_lists" },
                            true),
@@ -1106,6 +1105,7 @@ void game_options::reset_options()
     force_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_ABSOLUTE_ZERO, SPELL_IGNITION };
+    always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1316,9 +1316,28 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
 
 void game_options::add_force_targeter(const string &s, bool)
 {
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = true;
+        return;
+    }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
         force_targeter.insert(spell);
+    else
+        report_error("Unknown spell '%s'\n", s.c_str());
+}
+
+void game_options::remove_force_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = false;
+        return;
+    }
+    auto spell = spell_by_name(s, true);
+    if (is_valid_spell(spell))
+        force_targeter.erase(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
 }
@@ -3184,9 +3203,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (spell_data_initialized())
         {
             if (plain)
+            {
+                always_use_static_targeters = false;
                 force_targeter.clear();
+            }
 
-            split_parse(field, ",", &game_options::add_force_targeter);
+            if (minus_equal)
+                split_parse(field, ",", &game_options::remove_force_targeter);
+            else
+                split_parse(field, ",", &game_options::add_force_targeter);
         }
     }
     else if (key == "spell_slot"
