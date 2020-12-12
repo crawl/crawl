@@ -14,6 +14,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "fight.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -35,6 +36,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "traps.h"
@@ -836,7 +838,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             }
 
             // don't try to shove the orb of zot into lava and/or crash
-            if (igrd(*ai) != NON_ITEM)
+            if (env.igrid(*ai) != NON_ITEM)
             {
                 if (!has_push_spaces(*ai, false, &adj_spots))
                 {
@@ -848,7 +850,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
+            if (cell_is_solid(*ai) && !feat_is_opaque(env.grid(*ai)))
             {
                 success = false;
                 none_vis = false;
@@ -882,21 +884,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         // closed doors are solid, but we don't want a behaviour difference
         // between open and closed doors
-        proceed = !cell_is_solid(*ai) || feat_is_door(grd(*ai));
+        proceed = !cell_is_solid(*ai) || feat_is_door(env.grid(*ai));
         if (!zin && monster_at(*ai))
             proceed = false;
 
         if (proceed)
         {
             // All items are moved aside for zin, tomb just skips the tile.
-            if (igrd(*ai) != NON_ITEM && zin)
+            if (env.igrid(*ai) != NON_ITEM && zin)
                 push_items_from(*ai, &adj_spots);
 
             // All traps are destroyed.
             if (trap_def *ptrap = trap_at(*ai))
             {
                 ptrap->destroy();
-                grd(*ai) = DNGN_FLOOR;
+                env.grid(*ai) = DNGN_FLOOR;
             }
 
             // Actually place the wall.
@@ -911,16 +913,16 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
                 // Make the walls silver.
                 env.grid_colours(*ai) = WHITE;
-                env.tile_flv(*ai).feat_idx =
+                tile_env.flv(*ai).feat_idx =
                         store_tilename_get_index("dngn_silver_wall");
-                env.tile_flv(*ai).feat = TILE_DNGN_SILVER_WALL;
+                tile_env.flv(*ai).feat = TILE_DNGN_SILVER_WALL;
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
-                    env.tile_bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
-                    env.tile_bk_fg(*ai) = 0;
+                    tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
+                    tile_env.bk_fg(*ai) = 0;
 #endif
                 }
             }
@@ -1123,7 +1125,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
         holy_word_monsters(*ri, pow, source, attacker);
 }
 
-void torment_player(actor *attacker, torment_source_type taux)
+void torment_player(const actor *attacker, torment_source_type taux)
 {
     ASSERT(!crawl_state.game_is_arena());
 

@@ -37,10 +37,11 @@ class MainHandler(tornado.web.RequestHandler):
         recovery_token = None
         recovery_token_error = None
 
-        if getattr(config, "allow_password_reset", False):
-            recovery_token = self.get_argument("ResetToken",None)
-            if recovery_token:
-                recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
+        recovery_token = self.get_argument("ResetToken",None)
+        if recovery_token:
+            recovery_token_error = userdb.find_recovery_token(recovery_token)[2]
+            if recovery_token_error:
+                logging.warning("Recovery token error from %s", self.request.remote_ip)
 
         self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None, config = config,
@@ -262,7 +263,7 @@ def check_config():
 
     load_games.collect_game_modes()
 
-    if getattr(config, "allow_password_reset", False) and not config.lobby_url:
+    if (getattr(config, "allow_password_reset", False) or getattr(config, "admin_password_reset", False)) and not config.lobby_url:
         logging.warning("Lobby URL needs to be defined!")
         success = False
     return success
@@ -327,8 +328,10 @@ def parse_args():
         help=('Debug mode for server admins. Will use a separate directory for sockets. '
               'Entails --no-pidfile, --no-daemon, --logfile -, watch_socket_dirs=False. '
               '(Further command line options can override these.)'))
+    parser.add_argument('--reset-password', type=str, help='A username to generate a password reset token for. Does not start the server.')
+    parser.add_argument('--clear-reset-password', type=str, help='A username to clear password reset tokens for. Does not start the server.')
     result = parser.parse_args()
-    if result.live_debug:
+    if result.live_debug or result.reset_password or result.clear_reset_password:
         if not result.logfile:
             result.logfile = '-'
         if result.daemon is None:
@@ -359,11 +362,57 @@ def export_args_to_config(args):
                 logging.info("Command line overrides config-specified PID file!")
             config.pidfile = None
 
+def reset_token_commands(args):
+    if args.clear_reset_password:
+        username = args.clear_reset_password
+    else:
+        username = args.reset_password
+
+    # duplicate some minimal setup needed for this to work
+    config.logging_config.pop('filename', None)
+    args.logfile = "<stdout>"  # make the log message easier to read
+
+    init_logging(config.logging_config)
+
+    if not check_config():
+        err_exit("Errors in config. Exiting.")
+    if config.dgl_mode:
+        userdb.ensure_user_db_exists()
+        userdb.upgrade_user_db()
+    userdb.ensure_settings_db_exists()
+    user_info = userdb.get_user_info(username)
+    if not user_info:
+        err_exit("Reset/clear password failed; invalid user: %s" % username)
+
+    # don't crash on the default config
+    if config.lobby_url is None:
+        config.lobby_url = "[insert lobby url here]"
+
+    if args.clear_reset_password:
+        ok, msg = userdb.clear_password_token(username)
+        if not ok:
+            err_exit("Error clearing password reset token for %s: %s" % (username, msg))
+        else:
+            print("Password reset token cleared for account '%s'." % username)
+    else:
+        ok, msg = userdb.generate_forgot_password(username)
+        if not ok:
+            err_exit("Error generating password reset token for %s: %s" % (username, msg))
+        else:
+            if not user_info[1]:
+                logging.warning("No email set for account '%s', use caution!" % username)
+            print("Setting a password reset token on account '%s'." % username)
+            print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
+
 
 def server_main():
     args = parse_args()
     if config.chroot:
         os.chroot(config.chroot)
+
+    if args.reset_password or args.clear_reset_password:
+        reset_token_commands(args)
+        return
 
     if getattr(config, 'live_debug', False):
         logging.info("Starting in live-debug mode.")

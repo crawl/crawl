@@ -54,6 +54,7 @@
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
@@ -961,7 +962,7 @@ static void _velocity_card(int power)
     if (!apply_visible_monsters([=](monster& mon)
           {
               bool affected = false;
-              if (!mons_immune_magic(mon))
+              if (!mons_invuln_will(mon))
               {
                   const bool hostile = !mon.wont_attack();
                   const bool haste_immune = (mon.stasis()
@@ -1035,7 +1036,7 @@ static void _stairs_card(int /*power*/)
     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
 
-    if (feat_stair_direction(grd(you.pos())) == CMD_NO_CMD)
+    if (feat_stair_direction(env.grid(you.pos())) == CMD_NO_CMD)
         you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
     else
         you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
@@ -1044,7 +1045,7 @@ static void _stairs_card(int /*power*/)
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
     {
-        dungeon_feature_type feat = grd(*ri);
+        dungeon_feature_type feat = env.grid(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
@@ -1153,7 +1154,7 @@ static void _damaging_card(card_type card, int power,
         if (power_level == 1)
         {
             cast_iood(&you, power/6, &beam, 0, 0,
-                      mgrd(beam.target), false, false);
+                      env.mgrid(beam.target), false, false);
         }
         else
             cast_iood_burst(power/6, beam.target);
@@ -1443,7 +1444,7 @@ static void _cloud_card(int power)
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
-            if (grd(*ai) == DNGN_FLOOR && !cloud_at(*ai))
+            if (env.grid(*ai) == DNGN_FLOOR && !cloud_at(*ai))
             {
                 const int cloud_power = 5 + random2avg(power_level * 6, 2);
                 place_cloud(cloudy, *ai, cloud_power, &you);
@@ -1544,7 +1545,7 @@ static void _illusion_card(int power)
     mon->attitude = ATT_FRIENDLY;
     mon->set_position(you.pos());
     mon->mid = MID_PLAYER;
-    mgrd(you.pos()) = mon->mindex();
+    env.mgrid(you.pos()) = mon->mindex();
 
     mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
     mon->reset();
@@ -1761,7 +1762,7 @@ bool is_deck(const item_def &item)
 
 void reclaim_decks_on_level()
 {
-    for (auto &item : mitm)
+    for (auto &item : env.item)
         if (item.defined() && is_deck(item))
             destroy_item(item.index());
 }

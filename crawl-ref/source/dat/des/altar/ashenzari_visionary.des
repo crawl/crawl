@@ -127,8 +127,8 @@ MARKER: H = lua:fog_machine { cloud_type = "thin mist", pow_min = 3, \
                               pow_max = 10, delay = 10, start_clouds = 1, \
                               size_min = 1, size_max = 3, walk_dist = 2 }
 # Monsters specified here to omit aquatic placements.
-MONS: plant w:150 / fungus w:99 / hornet w:20 / bullfrog w:30 / \
-      swamp drake w:80 / alligator band w:150 / water moccasin w:75
+MONS: plant w:150 / fungus w:99 / vampire mosquito band w:75 / will-o-the-wisp w:50 / \
+      swamp drake w:80 / alligator w:75 / goliath frog w:75
 KPROP: w = no_tele_into
 SUBST: w = wwwWWt1
 FTILE: 1 = floor_swamp

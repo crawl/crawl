@@ -4,6 +4,8 @@
 #include "spl-cast.h"
 #include "transformation.h"
 
+class actor;
+
 spret cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
 spret ice_armour(int pow, bool fail);

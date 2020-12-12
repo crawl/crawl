@@ -5,10 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
+
+using std::vector;
 
 #define MAX_PIETY      200
 #define HALF_MAX_PIETY (MAX_PIETY / 2)

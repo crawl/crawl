@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "beam.h"
 #include "los-type.h"
 #include "reach-type.h"
+
+using std::vector;
 
 struct passwall_path;
 
@@ -139,7 +143,8 @@ class targeter_cleave : public targeter
 public:
     targeter_cleave(const actor* act, coord_def target);
     aff_type is_affected(coord_def loc) override;
-    bool valid_aim(coord_def) override { return false; }
+    bool valid_aim(coord_def) override;
+    bool set_aim(coord_def a) override;
 private:
     set<coord_def> targets;
 };
@@ -174,13 +179,31 @@ private:
 class targeter_radius : public targeter
 {
 public:
-    targeter_radius(const actor *act, los_type los = LOS_DEFAULT,
+    targeter_radius(const actor *act, los_type _los = LOS_DEFAULT,
                   int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0);
     bool valid_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
+    virtual aff_type is_affected(coord_def loc) override;
 private:
     los_type los;
     int range, range_max, range_min;
+};
+
+// like targeter_radius, but converts all AFF_YESes to AFF_MAYBE
+class targeter_maybe_radius : public targeter_radius
+{
+public:
+    targeter_maybe_radius(const actor *act, los_type _los = LOS_DEFAULT,
+                  int ran = LOS_RADIUS, int ran_max = 0, int ran_min = 0)
+        : targeter_radius(act, _los, ran, ran_max, ran_min)
+    { }
+
+    virtual aff_type is_affected(coord_def loc) override
+    {
+        if (targeter_radius::is_affected(loc))
+            return AFF_MAYBE;
+        else
+            return AFF_NO;
+    }
 };
 
 class targeter_thunderbolt : public targeter
@@ -326,3 +349,79 @@ private:
 
 string bad_charge_target(coord_def a);
 bool can_charge_through_mons(coord_def a);
+
+// a fixed los targeter matching how it is called for shatter, with a custom
+// tweak to affect walls.
+class targeter_shatter : public targeter_radius
+{
+public:
+    targeter_shatter(const actor *act) : targeter_radius(act, LOS_ARENA) { }
+    bool can_affect_walls() override { return true; }
+};
+
+// A fixed targeter for multi-position attacks, i.e. los stuff that only
+// affects monsters
+class targeter_multiposition : public targeter
+{
+public:
+    targeter_multiposition(const actor *a, vector<coord_def> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+    targeter_multiposition(const actor *a, vector<monster *> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+    targeter_multiposition(const actor *a, initializer_list<coord_def> seeds,
+                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+
+    void add_position(const coord_def &c);
+    bool valid_aim(coord_def) override { return true; }
+    aff_type is_affected(coord_def loc) override;
+
+protected:
+    bool hit_friends;
+    set<coord_def> affected_positions;
+    aff_type positive;
+};
+
+// A static targeter for absolute zero that finds the closest monster using the
+// absolute zero code.
+class targeter_absolute_zero : public targeter_multiposition
+{
+public:
+    targeter_absolute_zero(int range);
+};
+
+class targeter_multifireball : public targeter_multiposition
+{
+public:
+    targeter_multifireball(const actor *a, vector<coord_def> seeds);
+};
+
+// this is implemented a bit like multifireball, but with some tweaks
+class targeter_ramparts : public targeter_multiposition
+{
+public:
+    targeter_ramparts(const actor *a);
+
+    aff_type is_affected(coord_def loc) override;
+    bool can_affect_walls() override { return true; }
+};
+
+// a class for fixed beams at some offset from the player
+class targeter_starburst_beam : public targeter_beam
+{
+public:
+    targeter_starburst_beam(const actor *a, int _range, int pow, const coord_def &offset);
+    // this is a bit of ui hack: lets us set starburst beams even when the
+    // endpoint would be out of los
+    bool can_affect_unseen() override { return true; }
+    bool valid_aim(coord_def) override { return true; }
+};
+
+class targeter_starburst : public targeter
+{
+public:
+    targeter_starburst(const actor *a, int range, int pow);
+    bool valid_aim(coord_def) override { return true; }
+    aff_type is_affected(coord_def loc) override;
+private:
+    vector<targeter_starburst_beam> beams;
+};

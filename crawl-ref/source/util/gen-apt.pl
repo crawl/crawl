@@ -140,7 +140,7 @@ sub aptitude_table
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
-            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'MR';
+            $pos++ unless $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'WL';
             $pos-- if $abbr eq 'HP';
             if ($pos > length($line))
             {
@@ -264,16 +264,16 @@ sub load_mods
     {
         my $sp = $_;
         $sp =~ s/Base //;
-        my ($xp, $hp, $mp, $mr) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
+        my ($xp, $hp, $mp, $wl) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d), (\d),/;
 
         $SPECIES_SKILLS{$_}{"Experience"} = $xp;
         $SPECIES_SKILLS{$_}{"Hit Points"} = $hp;
         $SPECIES_SKILLS{$_}{"Magic Points"} = $mp;
-        $SPECIES_SKILLS{$_}{"Magic Resistance"} = $mr;
+        $SPECIES_SKILLS{$_}{"Willpower"} = $wl;
         die "couldn't parse mods for $_" unless defined $xp
                                                 && defined $hp
                                                 && defined $mp
-                                                && defined $mr;
+                                                && defined $wl;
     }
     close $inf;
 }

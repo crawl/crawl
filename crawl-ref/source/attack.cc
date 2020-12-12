@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "xom.h"
 
@@ -135,9 +136,6 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
-    // This may invalidate both the attacker and defender.
-    fire_final_effects();
-
     return true;
 }
 
@@ -243,9 +241,9 @@ int attack::calc_pre_roll_to_hit(bool random)
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+            && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
-            mhit += mitm[jewellery].plus;
+            mhit += env.item[jewellery].plus;
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
@@ -437,7 +435,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-            if (weap == NON_ITEM || is_range_weapon(mitm[weap]))
+            if (weap == NON_ITEM || is_range_weapon(env.item[weap]))
                 attk_type = AT_NONE;
             else
                 attk_type = AT_HIT;
@@ -500,9 +498,9 @@ bool attack::distortion_affects_defender()
 
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       10,  BANISH,
+                                                       5,  BANISH,
                                                        20, BLINK,
-                                                       10,  NONE);
+                                                       15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
         return false;
@@ -511,10 +509,9 @@ bool attack::distortion_affects_defender()
     {
     case SMALL_DMG:
         special_damage += 1 + random2avg(7, 2);
-        // No need to call attack_strength_punctuation here,
-        // since special damage < 7, so it will always return "."
-        special_damage_message = make_stringf("Space bends around %s.",
-                                              defender_name(false).c_str());
+        special_damage_message = make_stringf("Space bends around %s%s",
+                                              defender_name(false).c_str(),
+                                              attack_strength_punctuation(special_damage).c_str());
         break;
     case BIG_DMG:
         special_damage += 3 + random2avg(24, 2);
@@ -593,7 +590,7 @@ static bool _is_chaos_polyable(const actor &defender)
     if (!mon)
         return true;
 
-    return !mons_is_firewood(*mon) && !mons_immune_magic(*mon);
+    return !mons_is_firewood(*mon) && !mons_invuln_will(*mon);
 }
 
 static bool _is_chaos_slowable(const actor &defender)
@@ -1204,9 +1201,9 @@ int attack::calc_damage()
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM
-                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+                && env.item[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
             {
-                wpn_damage_plus += mitm[jewellery].plus;
+                wpn_damage_plus += env.item[jewellery].plus;
             }
 
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
@@ -1347,7 +1344,7 @@ bool attack::attack_shield_blocked(bool verbose)
                                       : atk_name(DESC_ITS).c_str());
         }
 
-        defender->shield_block_succeeded(attacker);
+        defender->shield_block_succeeded();
 
         return true;
     }
@@ -1751,9 +1748,8 @@ void attack::player_stab_check()
     stab_type st = find_stab_type(&you, *defender);
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
-    if ((using_weapon()
+    if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        || you.duration[DUR_STABBING] > 0 && coinflip())
         && st != STAB_NO_STAB)
     {
         st = STAB_SLEEPING;

@@ -349,10 +349,10 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
         else if (c.y + LOS_RADIUS > vgrdc.y + viewhalfsz.y - ymarg)
             vgrdc.y = c.y + LOS_RADIUS - viewhalfsz.y + ymarg;
 
-        if (vgrdc != oldc && Options.center_on_scroll)
+        if (vgrdc != oldc && Options.centre_on_scroll)
             vgrdc = c;
 
-        if (!Options.center_on_scroll && Options.symmetric_scroll
+        if (!Options.centre_on_scroll && Options.symmetric_scroll
             && !Options.view_lock_x
             && !Options.view_lock_y
             && (c - last_player_pos).abs() == 2

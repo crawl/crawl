@@ -26,6 +26,7 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "tag-version.h"
 
 #define MIN_START_STAT       3
 
@@ -534,6 +535,9 @@ static void _setup_generic(const newgame_def& ng,
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
 
+    // look for something fun to quiver
+    you.quiver_action.cycle();
+
     if (normal_dungeon_setup)
         initial_dungeon_setup();
 
@@ -549,4 +553,9 @@ static void _setup_generic(const newgame_def& ng,
     else
         you.save = new package(get_savedir_filename(you.your_name).c_str(),
                                true, true);
+
+    // pregen temple -- it's quick and easy, and this prevents a popup from
+    // happening. This needs to happen after you.save is created.
+    if (normal_dungeon_setup && !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+        die("Builder failure while trying to generate temple!");
 }

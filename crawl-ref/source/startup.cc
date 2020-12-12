@@ -111,8 +111,8 @@ static void _initialize()
     reset_all_monsters();
     init_anon();
 
-    igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
+    env.igrid.init(NON_ITEM);
+    env.mgrid.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
     env.pgrid.init(terrain_property_t{});
 
@@ -213,9 +213,9 @@ static void _zap_los_monsters()
     {
         if (items_also)
         {
-            int item = igrd(*ri);
+            int item = env.igrid(*ri);
 
-            if (item != NON_ITEM && mitm[item].defined())
+            if (item != NON_ITEM && env.item[item].defined())
                 destroy_item(item);
         }
 
@@ -226,6 +226,20 @@ static void _zap_los_monsters()
         dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str());
 
+        // If a unique gets zapped, let it generate elsewhere
+        if (mons_is_or_was_unique(*mon))
+        {
+            you.unique_creatures.set(mon->type, false);
+            if (mons_is_elven_twin(mon))
+            {
+                if (monster* sibling = mons_find_elven_twin_of(mon))
+                {
+                    you.unique_creatures.set(sibling->type, false);
+                    sibling->flags |=MF_HARD_RESET;
+                    monster_die(*sibling, KILL_DISMISSED, NON_MONSTER, true, true);
+                }
+            }
+        }
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
@@ -316,7 +330,8 @@ static void _post_init(bool newc)
     // Start timer on session.
     you.last_keypress_time = chrono::system_clock::now();
 
-#ifdef CLUA_BINDINGS
+    // in principle everything here might be skippable if CLUA_BINDINGS is not
+    // defined, but do it anyways for consistency with normal builds.
     clua.runhook("chk_startgame", "b", newc);
 
     read_init_file(true);
@@ -326,7 +341,6 @@ static void _post_init(bool newc)
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
-#endif
 
 #ifdef USE_TILE
     init_player_doll();

@@ -48,6 +48,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "end.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "player-save-info.h"
 #include "fineff.h"
@@ -72,12 +73,14 @@
 #include "notes.h"
 #include "place.h"
 #include "prompt.h"
+#include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -480,9 +483,7 @@ void validate_basedirs()
     // there are a few others, but this should be enough to minimally run something
     const vector<string> data_subfolders =
     {
-#ifdef CLUA_BINDINGS
         "clua",
-#endif
         "database",
         "defaults",
         "des",
@@ -1225,7 +1226,9 @@ static void _grab_followers()
         }
     }
 
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
+
     vector<coord_def> places[2] = { { you.pos() }, {} };
     int place_set = 0;
     while (!places[place_set].empty())
@@ -1234,10 +1237,10 @@ static void _grab_followers()
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if (travel_point_distance[ai->x][ai->y])
+                if (visited[ai->x][ai->y])
                     continue;
 
-                travel_point_distance[ai->x][ai->y] = 1;
+                visited[ai->x][ai->y] = true;
                 if (_grab_follower_at(*ai, can_follow))
                     places[!place_set].push_back(*ai);
             }
@@ -1274,7 +1277,7 @@ static void _do_lost_monsters()
 // followers won't be considered lost.
 static void _do_lost_items()
 {
-    for (const auto &item : mitm)
+    for (const auto &item : env.item)
         if (item.defined() && item.pos != ITEM_IN_INVENTORY)
             item_was_lost(item);
 }
@@ -1362,9 +1365,9 @@ static void _place_player(dungeon_feature_type stair_taken,
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
-        if (you.is_habitable_feat(grd(*di))
-            && !is_feat_dangerous(grd(*di), true)
-            && !feat_is_trap(grd(*di)))
+        if (you.is_habitable_feat(env.grid(*di))
+            && !is_feat_dangerous(env.grid(*di), true)
+            && !feat_is_trap(env.grid(*di)))
         {
             if (you.pos() != *di)
                 you.moveto(*di);
@@ -1479,7 +1482,8 @@ static void _generic_level_reset()
 
 
 // used to resolve generation order for cases where a single level has multiple
-// portals.
+// portals. This currently should only include portals that can appear at most
+// once.
 static const vector<branch_type> portal_generation_order =
 {
     BRANCH_SEWER,
@@ -1542,7 +1546,13 @@ void reset_portal_entrances()
             brentry[b] = level_id();
 }
 
-static bool _generate_portal_levels()
+/**
+ * Generate portals relative to the current level. This function does not clean
+ * up builder state.
+ *
+ * @return the number of levels that generated, or -1 if the builder failed.
+ */
+static int _generate_portal_levels()
 {
     // find any portals that branch off of the current level.
     level_id here = level_id::current();
@@ -1552,10 +1562,21 @@ static bool _generate_portal_levels()
             for (int i = 1; i <= brdepth[b]; i++)
                 to_build.push_back(level_id(b, i));
 
-    bool generated = false;
+    int count = 0;
     for (auto lid : to_build)
-        generated = generate_level(lid) || generated;
-    return generated;
+    {
+        if (!generate_level(lid))
+        {
+            // Should this crash? Reaching this case means that multiple
+            // entrances to a non-reusable portal generated.
+            if (you.save->has_chunk(lid.describe()))
+                mprf(MSGCH_ERROR, "Portal %s already exists!", lid.describe().c_str());
+            else
+                return -1;
+        }
+        count++;
+    }
+    return count;
 }
 
 /**
@@ -1565,8 +1586,13 @@ static bool _generate_portal_levels()
  * current location state if a level is built). Does not do anything if the
  * save already contains the relevant level.
  *
+ * This function may generate multiple levels: any necessary portal levels
+ * needed for `l` are built also.
+ *
  * @param l the level to try to build.
- * @return whether a level was built.
+ * @return whether the required builder steps succeeded, if there are any;
+ * false means that either there was a builder error, or the level already
+ * exists. This can be checked by looking at whether the save chunk exists.
  */
 bool generate_level(const level_id &l)
 {
@@ -1600,12 +1626,13 @@ bool generate_level(const level_id &l)
     env.turns_on_level = -1;
     tile_init_default_flavour();
     tile_clear_flavour();
-    env.tile_names.clear();
+    tile_env.names.clear();
     _clear_env_map();
 
     // finally -- everything is set up, call the builder.
     dprf("Generating new level for '%s'.", level_name.c_str());
-    builder(true);
+    if (!builder(true))
+        return false;
 
     auto &vault_list =  you.vault_list[level_id::current()];
 #ifdef DEBUG
@@ -1637,17 +1664,21 @@ bool generate_level(const level_id &l)
     const string save_name = level_id::current().describe(); // should be same as level_name...
 
     // generate levels for all portals that branch off from here
-    if (_generate_portal_levels())
+    int portal_level_count = _generate_portal_levels();
+    if (portal_level_count == -1)
+        return false; // something failed, bail immediately
+    else if (portal_level_count > 0)
     {
-        // if portals were generated, we're currently elsewhere.
+        // if portals were generated, we're currently elsewhere. Switch back to
+        // the level generated before the portals.
         ASSERT(you.save->has_chunk(save_name));
         dprf("Reloading new level '%s'.", save_name.c_str());
         _restore_tagged_chunk(you.save, save_name, TAG_LEVEL,
             "Level file is invalid.");
     }
-    // ensure that there is a way of checking whether the generation process
-    // effectively left us in an excursion. This shouldn't happen normally, but
-    // is needed for sanity checking.
+    // Did the generation process actually manage to place the player? This is
+    // a useful sanity check, and also is necessary for the initial loading
+    // process.
     you.on_current_level = (you_depth.original_value() == l.depth
                             && you_branch.original_value() == l.branch);
     return true;
@@ -1656,14 +1687,21 @@ bool generate_level(const level_id &l)
 // bel's original proposal generated D to lair depth, then lair, then D
 // to orc depth, then orc, then the rest of D. I have simplified this to
 // just generate whole branches at a time -- I am not sure how much real
-// impact this has. One idea might be to shuffle this slightly based on
-// the seed.
-// TODO: probably need to do portal vaults too?
-// Should this use something like logical_branch_order?
+// impact this has, though it does mean a pregen popup when the player enters
+// lair, typically.
+//
+// Portals are handled via `portal_generation_order`, and generated as-needed
+// with the level they appear on.
+//
+// We generate temple first so as to save the player a popup when they find it
+// in mid-dungeon; it's fully decided in game setup and shouldn't interact with
+// rng for other branches anyways.
+//
+// How should this relate to logical_branch_order etc?
 static const vector<branch_type> branch_generation_order =
 {
-    BRANCH_DUNGEON,
     BRANCH_TEMPLE,
+    BRANCH_DUNGEON,
     BRANCH_LAIR,
     BRANCH_ORC,
     BRANCH_SPIDER,
@@ -1707,6 +1745,11 @@ static bool _branch_pregenerates(branch_type b)
 *
 * To generate all generatable levels, pass a level_id with NUM_BRANCHES as the
 * branch.
+*
+* @return whether stopping_point generated; if stopping_point is NUM_BRANCHES,
+* whether the full pregen list completed. This will return false if all needed
+* levels are already generated, so the caller should check whether false is an
+* error case or trivial success (using the save chunk).
 */
 bool pregen_dungeon(const level_id &stopping_point)
 {
@@ -1748,6 +1791,7 @@ bool pregen_dungeon(const level_id &stopping_point)
             for (int i = 1; i <= brdepth[br]; i++)
             {
                 level_id new_level = level_id(br, i);
+                // skip any levels that have already generated.
                 if (you.save->has_chunk(new_level.describe()))
                     continue;
                 to_generate.push_back(new_level);
@@ -1769,6 +1813,8 @@ bool pregen_dungeon(const level_id &stopping_point)
         dprf("levelgen: No valid levels to generate.");
         return false;
     }
+    // TODO: some levels are very slow (typically in depths), and a popup might
+    // be helpful to the player. But is there a good way to tell?
     else if (to_generate.size() == 1)
         return generate_level(to_generate[0]); // no popup for this case
     else
@@ -1778,10 +1824,6 @@ bool pregen_dungeon(const level_id &stopping_point)
 
         ui::progress_popup progress("Generating dungeon...\n\n", 35);
         progress.advance_progress();
-
-        // in normal usage if we get to here, something will generate. But it
-        // is possible to call this in a way that doesn't lead to generation.
-        bool generated = false;
 
         for (const level_id &new_level : to_generate)
         {
@@ -1805,10 +1847,13 @@ bool pregen_dungeon(const level_id &stopping_point)
             dprf("Pregenerating %s:%d",
                 branches[new_level.branch].abbrevname, new_level.depth);
             progress.advance_progress();
-            generated = generate_level(new_level) || generated;
+
+            // (save chunk existence is checked above, so isn't relevant here)
+            if (!generate_level(new_level))
+                return false; // level failed to generate -- bail immediately
         }
 
-        return generated;
+        return true;
     }
 }
 
@@ -1836,9 +1881,9 @@ static void _rescue_player_from_wall()
                 backup_clear_pos = *di;
             // TODO: in principle this should use env.map_forgotten if it
             // exists, but I'm not sure that is worth the trouble.
-            if (feat_is_stair(grd(*di)) && env.map_seen(*di))
+            if (feat_is_stair(env.grid(*di)) && env.map_seen(*di))
             {
-                const command_type dir = feat_stair_direction(grd(*di));
+                const command_type dir = feat_stair_direction(env.grid(*di));
                 if (dir == CMD_GO_UPSTAIRS)
                     upstairs.push_back(*di);
                 else if (dir == CMD_GO_DOWNSTAIRS)
@@ -1955,14 +2000,36 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (pregen_dungeon(level_id::current()))
     {
         // sanity check: did the pregenerator leave us on the requested level? If
-        // this happens via a bug, and this ASSERT isn't here, something incorrect
+        // this fails via a bug, and this ASSERT isn't here, something incorrect
         // will get saved under the chunk for the current level (typically the
         // last level in the pregen sequence, which is zig 27).
         ASSERT(you.on_current_level);
     }
     else
     {
-        ASSERT(you.save->has_chunk(level_name));
+        if (!you.save->has_chunk(level_name))
+        {
+            // The builder has failed somewhere along the way, and couldn't get
+            // to the stopping point. The most likely (only?) cause is that
+            // there were too many vetoes, which can occasionally happen in
+            // Depths. To deal with this we force save and crash.
+            //
+            // Basically this will ensure that the rng state after the
+            // attempt is saved, making resuming likely to be possible. Setting
+            // `you.on_current_level` means that the save has the player on a
+            // non-generated level. Reloading a save in this state triggers
+            // the levelgen sequence needed to put them there.
+            if (crawl_state.need_save)
+            {
+                you.on_current_level = true;
+                save_game(false);
+            }
+
+            die("Builder failure while trying to generate to '%s'! Last builder error: '%s'",
+                level_id::current().describe().c_str(),
+                crawl_state.last_builder_error.c_str());
+        }
+
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
         if (load_mode != LOAD_VISITOR)
@@ -2149,7 +2216,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.duration[DUR_REPEL_STAIRS_MOVE]
             || you.duration[DUR_REPEL_STAIRS_CLIMB])
         {
-            dungeon_feature_type feat = grd(you.pos());
+            dungeon_feature_type feat = env.grid(you.pos());
             if (feat != DNGN_ENTER_SHOP
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
@@ -2253,10 +2320,8 @@ static void _save_game_base()
     /* Stashes */
     SAVEFILE("st", "stashes", StashTrack.save);
 
-#ifdef CLUA_BINDINGS
     /* lua */
-    SAVEFILE("lua", "lua", clua.save);
-#endif
+    SAVEFILE("lua", "lua", clua.save); // what goes in here?
 
     /* kills */
     SAVEFILE("kil", "kills", you.kills.save);
@@ -2937,6 +3002,8 @@ static bool _restore_game(const string& filename)
         }
     }
 
+    you.on_current_level = false; // we aren't on the current level until
+                                  // everything is fully loaded
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
     _convert_obsolete_species();
@@ -2991,6 +3058,11 @@ static bool _restore_game(const string& filename)
         reader inf(you.save, CHUNK("msg", "messages"), minorVersion);
         load_messages(inf);
     }
+
+    // Handle somebody SIGHUP'ing out of the skill menu with every skill
+    // disabled. Doing this here rather in tags code because it can trigger
+    // UI, which may not be safe if everything isn't fully loaded.
+    check_selected_skills();
 
     return true;
 }

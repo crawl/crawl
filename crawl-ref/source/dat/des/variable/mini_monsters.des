@@ -135,7 +135,7 @@ TAGS:   uniq_beehive
 NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
 :   else
 TAGS:   uniq_hornetnest
-SUBST:  1 : 4 5:4
+SUBST:  1 : 4
 :   end
 : end
 COLOUR: x = yellow
@@ -741,7 +741,7 @@ ENDMAP
 
 # A plain guardian serpent vault. (nrook)
 NAME:  nrook_guardian_serpent_ordinary
-DEPTH: D:9-, Snake, Crypt
+DEPTH: D:11-, Snake, Crypt
 TAGS:  no_monster_gen no_item_gen transparent
 : if you.in_branch("Crypt") then
 TAGS:  extra
@@ -767,7 +767,7 @@ ENDMAP
 # A real vault behind a false one. (nrook)
 NAME:  nrook_guardian_serpent_double
 TAGS:  no_monster_gen transparent
-DEPTH: D:9-, Snake
+DEPTH: D:11-, Snake
 MONS:  patrolling guardian serpent
 KMASK: *| = opaque
 KPROP: *| = no_tele_into
@@ -927,7 +927,6 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&sting&wereblood&spider_form
-KMASK:  'f = opaque
 KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
@@ -951,6 +950,8 @@ SUBST:  ? = 6
 : if crawl.coinflip() then
 SHUFFLE: def
 : end
+# a bit inelegant but KMASK applies after the shuffle, if it happens:
+KMASK:  'def = opaque
 SUBST:  & = wwwW&1
 SUBST:  x : xxxcc
 MAP
@@ -1096,6 +1097,8 @@ KMONS: 2 = adder
 KMONS: 3 = plant
 ITEM:  any potion / gold / stone / nothing
 SUBST: - = wwwwwwWWW
+KMASK: W = opaque
+KPROP: W = no_tele_into
 SUBST: . = ........33
 SUBST: ? = ..wwwtt33%%d222
 : if you.absdepth() < 4 then
@@ -1361,7 +1364,7 @@ KMASK:   1>"% = opaque
 KFEAT:   " = floor
 DEPTH:   D:11-, Orc, Elf
 MONS:    deep elf mage
-SHUFFLE: ?_/bb, _'/ww
+SHUFFLE: _?/bb, _'/ww
 SUBST:   ?_' = .
 NSUBST:  1 = 2:% / 2 = 1% / *:1
 MAP
@@ -2365,7 +2368,11 @@ ENDMAP
 NAME:   roderic_carrion_pond
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  Lair:2-, !Lair:$, Swamp
+: if you.in_branch("Swamp") then
+MONS:   bloated husk / nothing
+: else
 MONS:   necrophage
+: end
 SUBST:  ' = 111.
 SUBST:  ? = %%.
 : dgn.delayed_decay(_G, '%', 'any corpse')
@@ -2639,7 +2646,8 @@ NAME:  minmay_statue_bubble
 TAGS:  transparent
 DEPTH: D:9-
 MONS:  obsidian statue / orange crystal statue / ice statue w:5
-SUBST: ? = bbb.
+NSUBST: ? = 1:. / *:?
+SUBST:  ? = bb.
 MAP
  .......
 ..bG?Gb..
@@ -2767,7 +2775,7 @@ DEPTH:   Lair:4-
 MONS:    plant, oklob plant, bush
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
-SUBST:   ' : w .:5
+SUBST:   ' : W .:5
 SUBST:   " = .
 SUBST:   1 = 113
 MAP
@@ -3577,7 +3585,7 @@ NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  D:9-, Depths
 : if you.absdepth() > 24 then
-MONS:   ancient lich w:50 / greater mummy
+MONS:   ancient lich w:50 / royal mummy
 ITEM:   any scroll w:6 / any book
 : elseif you.absdepth() > 20 then
 MONS:   lich w:60 / draconian annihilator w:20 / \
@@ -3883,7 +3891,8 @@ TAGS:    extra transparent allow_dup luniq_st_stairs
 DEPTH:   D, Depths, Zot, Snake, Elf, Crypt
 NSUBST:  . = 1:> / 2 = 0:19 .:1 / 2 = 0:1 .:4 / *:.
 SUBST:   > = }])
-SHUFFLE: abc / abc / abc / abc / abc / ab. / a.c / a.. / .bc / .b. / ..c
+SHUFFLE: abc
+SUBST:   b:b., c:c.
 SUBST:   a=x, b=x, c=x
 MAP
 .........
@@ -4357,6 +4366,8 @@ NAME:    minmay_surrounded
 TAGS:    transparent
 DEPTH:   D:1-4
 SUBST:   0 = 0.
+KMASK:   * = opaque
+KPROP:   * = no_tele_into
 MAP
 .........
 .x0xxx0x.
@@ -4808,7 +4819,7 @@ DEPTH:   D:2-, Depths, Zot, Snake, Elf, Crypt
 : grunt_ministairs_setup(_G, false)
 MAP
       @
-     xxx
+     x+x
      x.xx
 xxxxxx..xx
 x........xx
@@ -4985,6 +4996,8 @@ wwwccccccccccccc
 ww
 ENDMAP
 
+# TODO: this can be hard to place because the boundaries are not passable;
+# maybe add some dead space as a buffer?
 NAME:    kennysheep_island_fort
 TAGS:    no_pool_fixup
 DEPTH:   D:8-, Depths:2-, !D:$, !Depths:$

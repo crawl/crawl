@@ -45,7 +45,8 @@ enum status_type
     STATUS_SERPENTS_LASH,
     STATUS_HEAVENLY_STORM,
     STATUS_ZOT,
-    STATUS_LAST_STATUS = STATUS_ZOT
+    STATUS_CURL,
+    STATUS_LAST_STATUS = STATUS_CURL
 };
 
 struct status_info

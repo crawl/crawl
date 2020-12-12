@@ -19,12 +19,14 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "mpr.h"
 #include "randbook.h"
 #include "skills.h" // is_removed_skill
 #include "spl-book.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 
 static void _setup_fallback_randart(const int unrand_id,
                                     item_def &item,
@@ -840,13 +842,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_MAGIC_RESISTANCE,
+                             SPARM_WILLPOWER,
                              SPARM_STEALTH,
                              SPARM_PRESERVATION);
 
     case ARM_HAT:
         return random_choose_weighted(7, SPARM_NORMAL,
-                                      3, SPARM_MAGIC_RESISTANCE,
+                                      3, SPARM_WILLPOWER,
                                       2, SPARM_INTELLIGENCE,
                                       2, SPARM_SEE_INVISIBLE);
 
@@ -871,13 +873,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
                                       2, SPARM_POSITIVE_ENERGY,
-                                      4, SPARM_MAGIC_RESISTANCE);
+                                      4, SPARM_WILLPOWER);
 
     case ARM_PLATE_ARMOUR:
         return random_choose_weighted(26, SPARM_FIRE_RESISTANCE,
                                       26, SPARM_COLD_RESISTANCE,
                                       19, SPARM_POISON_RESISTANCE,
-                                      15, SPARM_MAGIC_RESISTANCE,
+                                      15, SPARM_WILLPOWER,
                                        7, SPARM_POSITIVE_ENERGY,
                                        7, SPARM_PONDEROUSNESS);
 
@@ -899,7 +901,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
     return random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
                                   7, SPARM_COLD_RESISTANCE,
                                   5, SPARM_POISON_RESISTANCE,
-                                  4, SPARM_MAGIC_RESISTANCE,
+                                  4, SPARM_WILLPOWER,
                                   2, SPARM_POSITIVE_ENERGY);
 }
 
@@ -993,7 +995,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         }
         return true; // in portal vaults, these can happen on every slot
 
-    case SPARM_MAGIC_RESISTANCE:
+    case SPARM_WILLPOWER:
         if (type == ARM_HAT)
             return true;
         // deliberate fall-through
@@ -1364,12 +1366,12 @@ static void _generate_potion_item(item_def& item, int force_type,
             // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
                                            105, POT_HEAL_WOUNDS,
-                                            73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
                                             73, POT_HASTE,
+                                            73, POT_LIGNIFY,
+                                            66, POT_ATTRACTION,
                                             66, POT_DEGENERATION,
                                             66, POT_MIGHT,
-                                            66, POT_STABBING,
                                             66, POT_BRILLIANCE,
                                             53, POT_MUTATION,
                                             35, POT_INVISIBILITY,
@@ -1734,7 +1736,7 @@ static void _generate_misc_item(item_def& item, int force_type)
  */
 void squash_plusses(int item_slot)
 {
-    item_def& item(mitm[item_slot]);
+    item_def& item(env.item[item_slot]);
 
     item.plus         = 0;
     item.plus2        = 0;
@@ -1876,7 +1878,7 @@ int items(bool allow_uniques,
     if (p == NON_ITEM)
         return NON_ITEM;
 
-    item_def& item(mitm[p]);
+    item_def& item(env.item[p]);
 
     const bool force_good = item_level >= ISPEC_GIFT;
 
@@ -1941,8 +1943,8 @@ int items(bool allow_uniques,
         const int unrand_id = -force_ego;
         if (get_unique_item_status(unrand_id) == UNIQ_NOT_EXISTS)
         {
-            make_item_unrandart(mitm[p], unrand_id);
-            ASSERT(mitm[p].is_valid());
+            make_item_unrandart(env.item[p], unrand_id);
+            ASSERT(env.item[p].is_valid());
             return p;
         }
 
@@ -2040,7 +2042,7 @@ int items(bool allow_uniques,
     item.link = NON_ITEM;
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERTM(mitm[p].is_valid(),
+    ASSERTM(env.item[p].is_valid(),
             "idx: %d, qty: %hd, base: %d, sub: %d, spe: %d, col: %d, rnd: %d",
             item.index(), item.quantity,
             (int)item.base_type, (int)item.sub_type, item.special,

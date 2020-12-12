@@ -291,7 +291,7 @@ mset(spec_fn(function ()
   local d = you.zigs_completed()
   local e = 20 + you.depth() * 4 + you.zigs_completed() * 2
   return "place:Tomb:$ 9 w:760 / bennu w:" .. d + 10 .. " / " ..
-         "mummy priest w:" .. d .. " / greater mummy w:" .. e
+         "mummy priest w:" .. d .. " / royal mummy w:" .. e
 end))
 
 mset(spec_fn(function ()

@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <cstdint>
+
+#include "macros.h"
+
 // In this case, an x86 CPU will use x87 math for floating point calculations,
 // which uses 80 bit intermediate results, andleads to difference from the
 // (much more common, in 2019) SSE-based calculations.
@@ -148,8 +152,8 @@ const int CHUNK_BASE_NUTRITION    = 1000;
 const int ICEMAIL_MAX  = 10;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 
-// This value is used to mark immune levels of MR
-const int MAG_IMMUNE = 5000;
+// This value is used to mark immune levels of WL
+const int WILL_INVULN = 5000;
 
 // This is the damage amount used to signal insta-death
 const int INSTANT_DEATH = -9999;
@@ -194,13 +198,6 @@ const int AGILITY_BONUS = 5;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
-
-// some shortcuts:
-#define menv   env.mons
-#define mitm   env.item
-#define grd    env.grid
-#define mgrd   env.mgrid
-#define igrd   env.igrid
 
 // colours, such pretty colours ...
 // The order is important (IRGB bit patterns).

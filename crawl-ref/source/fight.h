@@ -37,7 +37,7 @@ int apply_chunked_AC(int dam, int ac);
 
 int melee_confuse_chance(int HD);
 
-bool wielded_weapon_check(item_def *weapon);
+bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
 
 stab_type find_stab_type(const actor *attacker,
                          const actor &defender,
@@ -45,6 +45,8 @@ stab_type find_stab_type(const actor *attacker,
 
 int stab_bonus_denom(stab_type stab);
 
+bool force_player_cleave(coord_def target);
+bool attack_cleaves(const actor &attacker, int which_attack = -1);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,

@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include "los-def.h"
+
+using std::vector;
 
 void add_auto_excludes();
 

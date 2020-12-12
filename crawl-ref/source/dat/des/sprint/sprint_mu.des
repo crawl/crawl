@@ -1100,7 +1100,7 @@ ENDMAP
 # Tomb 1, spiral
 NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
-MONS: patrolling greater mummy, patrolling mummy priest
+MONS: patrolling royal mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
 KFEAT: - = dart trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
@@ -1362,7 +1362,7 @@ KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
 KITEM: ! = potion of resistance ident:all q:3, \
-           potion of stabbing ident:all q:3, potion of haste ident:all q:5
+           potion of attraction ident:all q:3, potion of haste ident:all q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1396,15 +1396,15 @@ KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
 KMONS: 3 = patrolling quasit
 KMONS: 4 = patrolling shadow
-KMONS: 5 = patrolling greater mummy
+KMONS: 5 = patrolling royal mummy
 KMONS: 6 = orange crystal statue
 KMONS: 7 = ghost moth
 KMONS: & = gloorx vloq
 NSUBST: & = 1:& / 1:.
 KITEM: 1 = bone rune of zot
-KMONS: % = patrolling greater mummy
+KMONS: % = patrolling royal mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
-KMONS: ? = patrolling greater mummy
+KMONS: ? = patrolling royal mummy
 KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey

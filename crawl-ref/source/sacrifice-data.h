@@ -1,3 +1,5 @@
+#pragma once
+
 struct sacrifice_def
 {
     ability_type  sacrifice;        // The ability that executes the sacrifice.

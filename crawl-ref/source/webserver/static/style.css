@@ -199,6 +199,14 @@ body {
     float: right;
 }
 
+#change_cur_password,#change_new_password,#change_repeat_password {
+    float: right;
+}
+
+#chpw_form label {
+    float: left;
+}
+
 .text {
     background-color: black;
     color: white;

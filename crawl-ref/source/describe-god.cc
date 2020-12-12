@@ -33,6 +33,7 @@
 #include "skills.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "unicode.h"
@@ -598,7 +599,7 @@ static formatted_string _beogh_extra_description()
             {
                 desc.cprintf(" (");
 
-                item_def &gift = mitm[mons->inv[slot]];
+                item_def &gift = env.item[mons->inv[slot]];
                 desc += formatted_string::parse_string(
                                     menu_colour_item_name(gift,DESC_PLAIN));
                 desc.cprintf(")");
@@ -772,6 +773,39 @@ static string _god_penance_message(god_type which_god)
                         uppercase_first(god_name(which_god)).c_str());
 }
 
+static int _lifesaving_chance(god_type which_god)
+{
+    const int default_prot_chance = 10 + you.piety/10; // chance * 100
+    if (which_god != GOD_ELYVILON)
+        return default_prot_chance;
+
+    switch (elyvilon_lifesaving())
+    {
+        case lifesaving_chance::sometimes:
+            return default_prot_chance + 100 - 3000/you.piety;
+        case lifesaving_chance::always:
+            return 100;
+        default:
+            return default_prot_chance;
+    }
+}
+
+static string _lifesave_desc(god_type which_god)
+{
+    if (which_god != you.religion)
+        return "";
+
+    switch (elyvilon_lifesaving())
+    {
+        case lifesaving_chance::sometimes:
+            return ", especially when called upon";
+        case lifesaving_chance::always:
+            return ", and always does so when called upon";
+        default:
+            return "";
+    }
+}
+
 /**
  * Print a description of the powers & abilities granted to the player by the
  * given god. If player worships the god, the currently available powers are
@@ -803,40 +837,27 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
-    // his life.
-    if (have_passive(passive_t::protect_from_harm))
+    // their life.
+    if (god_gives_passive(which_god, passive_t::protect_from_harm))
     {
         have_any = true;
 
-        int prot_chance = 10 + piety/10; // chance * 100
-        const char *when = "";
+        const char *how = "";
+        const string when = _lifesave_desc(which_god).c_str();
 
-        if (which_god == GOD_ELYVILON)
+        if (which_god == you.religion)
         {
-            switch (elyvilon_lifesaving())
-            {
-                case lifesaving_chance::sometimes:
-                    when = ", especially when called upon";
-                    prot_chance += 100 - 3000/piety;
-                    break;
-                case lifesaving_chance::always:
-                    when = ", and always does so when called upon";
-                    prot_chance = 100;
-                    break;
-                default:
-                    break;
-            }
+            const int prot_chance = _lifesaving_chance(which_god);
+            how = (prot_chance >= 85) ? "carefully " :
+                  (prot_chance >= 55) ? "often " :
+                  (prot_chance >= 25) ? "sometimes "
+                                      : "occasionally ";
         }
 
-        const char *how = (prot_chance >= 85) ? "carefully" :
-                          (prot_chance >= 55) ? "often" :
-                          (prot_chance >= 25) ? "sometimes"
-                                              : "occasionally";
-
-        desc.cprintf("%s %s watches over you%s.\n",
+        desc.cprintf("%s %sguards your life%s.\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 how,
-                when);
+                when.c_str());
     }
 
     switch (which_god)

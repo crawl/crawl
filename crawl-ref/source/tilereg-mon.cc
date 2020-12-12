@@ -9,6 +9,7 @@
 #include "cio.h"
 #include "directn.h"
 #include "env.h"
+#include "tile-env.h"
 #include "libutil.h"
 #include "monster.h"
 #include "output.h"
@@ -155,7 +156,7 @@ const monster_info* MonsterRegion::get_monster(unsigned int idx) const
 void MonsterRegion::pack_buffers()
 {
     update();
-    const int num_floor = tile_dngn_count(env.tile_default.floor);
+    const int num_floor = tile_dngn_count(tile_env.default_flavour.floor);
 
     unsigned int i = 0;
     for (int y = 0; y < my; y++)
@@ -174,9 +175,9 @@ void MonsterRegion::pack_buffers()
                 if (crawl_view.in_los_bounds_g(gc))
                 {
                     packed_cell cell;
-                    cell.fg = env.tile_fg(ep);
-                    cell.bg = env.tile_bg(ep);
-                    cell.flv = env.tile_flv(gc);
+                    cell.fg = tile_env.fg(ep);
+                    cell.bg = tile_env.bg(ep);
+                    cell.flv = tile_env.flv(gc);
                     tile_apply_properties(gc, cell);
 
                     m_buf.add(cell, x, y);
@@ -188,7 +189,7 @@ void MonsterRegion::pack_buffers()
             }
 
             // Fill the rest of the space with out of sight floor tiles.
-            int tileidx = env.tile_default.floor + i % num_floor;
+            int tileidx = tile_env.default_flavour.floor + i % num_floor;
             m_buf.add_dngn_tile(tileidx, x, y);
             m_buf.add_icons_tile(TILEI_MESH, x, y);
         }

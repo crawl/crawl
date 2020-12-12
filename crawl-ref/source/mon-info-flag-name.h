@@ -1,6 +1,11 @@
 #pragma once
 
+#include <vector>
+
 #include "mon-info.h"
+#include "tag-version.h"
+
+using std::vector;
 
 struct monster_info_flag_name
 {
@@ -54,7 +59,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},
-    { MB_RAISED_MR, "resisting magic", "resistant to hostile enchantments", "resisting magic"},
+    { MB_STRONG_WILLED, "strong-willed", "strong-willed", "strong-willedmr"},
     { MB_INJURY_BOND, "sheltered", "sheltered from injuries", "sheltered"},
     { MB_GOZAG_INCITED, "incited", "incited by Gozag", "incited"},
     { MB_CLOUD_RING_THUNDER, "clouds", "surrounded by thunder", "clouds" },
@@ -99,7 +104,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MAX_POISONED, "extremely poisoned", "extremely poisoned", "extremely poisoned"},
     { MB_SLOWED, "slow", "slow", "slow"},
     { MB_BREATH_WEAPON, "catching breath", "catching @possessive@ breath", "catching breath"},
-    { MB_VULN_MAGIC, "vulnerable", "susceptible to hostile enchantments", "vulnerable"},
+    { MB_LOWERED_WL, "weak-willed", "weak-willed", "weak-willed"},
     { MB_FIRE_VULN, "inflammable", "more vulnerable to fire", "inflammable"},
     { MB_POISON_VULN, "easily poisoned", "more vulnerable to poison", "easily poisoned"},
     { MB_WRETCHED, "misshapen", "misshapen and mutated", "misshapen"},

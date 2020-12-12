@@ -12,7 +12,10 @@
 #include "item-prop.h"
 #include "los.h"
 #include "message.h"
+#include "mon-project.h"
+#include "spl-damage.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "version.h"
 
 const coord_def MONSTER_PLACE(20, 20);
@@ -231,7 +234,7 @@ static void initialize_crawl()
 
     dgn_reset_level();
     for (rectangle_iterator ri(0); ri; ++ri)
-        grd(*ri) = DNGN_FLOOR;
+        env.grid(*ri) = DNGN_FLOOR;
 
     los_changed();
     you.hp = you.hp_max = PLAYER_MAXHP;
@@ -247,9 +250,8 @@ static string dice_def_string(dice_def dice)
 
 static dice_def mi_calc_iood_damage(monster* mons)
 {
-    const int power =
-        stepdown_value(6 * mons->get_experience_level(), 30, 30, 200, -1);
-    return dice_def(9, power / 4);
+    const int pow = mons_power_for_hd(SPELL_IOOD, mons->get_hit_dice());
+    return iood_damage(pow, INFINITE_DISTANCE);
 }
 
 static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
@@ -273,21 +275,9 @@ static string mi_calc_glaciate_damage(monster* mons)
 
 static string mi_calc_chain_lightning_damage(monster* mons)
 {
-    int pow = 4 * mons->get_experience_level();
-
-    // Damage is 5d(9.2 + pow / 30), but if lots of targets are around
-    // it can hit the player precisely once at very low (e.g. 1) power
-    // and deal 5 damage.
-    int min = 5;
-
-    // Max damage per bounce is 46 + pow / 6; in the worst case every other
-    // bounce hits the player, losing 8 pow on the bounce away and 8 on the
-    // bounce back for a total of 16; thus, for n bounces, it's:
-    // (46 + pow/6) * n less 16/6 times the (n - 1)th triangular number.
-    int n = (pow + 15) / 16;
-    int max = (46 + (pow / 6)) * n - 4 * n * (n - 1) / 3;
-
-    return make_stringf("%d-%d", min, max);
+    const int pow = mons_power_for_hd(SPELL_CHAIN_LIGHTNING,
+                                      mons->get_hit_dice());
+    return desc_chain_lightning_dam(pow);
 }
 
 static string mi_calc_vampiric_drain_damage(monster* mons)
@@ -315,8 +305,8 @@ static string mi_calc_major_healing(monster* mons)
 static string mons_human_readable_spell_damage_string(monster* monster,
                                                       spell_type sp)
 {
-    bolt spell_beam = mons_spell_beam(
-        monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp)), true);
+    const int pow = mons_power_for_hd(sp, monster->spell_hd(sp));
+    bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
         case SPELL_PORTAL_PROJECTILE:
@@ -330,8 +320,10 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return mi_calc_glaciate_damage(monster);
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
+        case SPELL_MARSHLIGHT:
+            return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_WATERSTRIKE:
-            spell_beam.damage = waterstrike_damage(*monster);
+            spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
             return dice_def_string(resonance_strike_base_damage(*monster))
@@ -623,7 +615,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
 
             bool this_spec = false;
 
-            monster* mp = &menv[index];
+            monster* mp = &env.mons[index];
 
             if (mp)
             {
@@ -782,7 +774,7 @@ int main(int argc, char* argv[])
     spell_damage_map damages;
     for (int i = 0; i < ntrials; ++i)
     {
-        monster* mp = &menv[index];
+        monster* mp = &env.mons[index];
         const string mname = mp->name(DESC_PLAIN, true);
         exper += exper_value(*mp);
         mac += mp->armour_class();
@@ -796,7 +788,7 @@ int main(int argc, char* argv[])
         // iterations as well.
         for (int obj : mp->inv)
             if (obj != NON_ITEM)
-                set_unique_item_status(mitm[obj], UNIQ_NOT_EXISTS);
+                set_unique_item_status(env.item[obj], UNIQ_NOT_EXISTS);
         // Destroy the monster.
         mp->reset();
         you.unique_creatures.set(spec_type, false);
@@ -815,7 +807,7 @@ int main(int argc, char* argv[])
     mac /= ntrials;
     mev /= ntrials;
 
-    monster& mon(menv[index]);
+    monster& mon(env.mons[index]);
 
     const string symbol(monster_symbol(mon));
 
@@ -915,12 +907,10 @@ int main(int argc, char* argv[])
                                                  orig_attk.flavour :
                                                  attk.flavour);
 
+                if (flavour_has_reach(flavour))
+                    monsterattacks += "(reach)";
                 switch (flavour)
                 {
-                case AF_REACH:
-                case AF_REACH_STING:
-                    monsterattacks += "(reach)";
-                    break;
                 case AF_KITE:
                     monsterattacks += "(kite)";
                     break;
@@ -928,6 +918,7 @@ int main(int argc, char* argv[])
                     monsterattacks += "(swoop)";
                     break;
                 case AF_ACID:
+                case AF_REACH_TONGUE:
                     monsterattacks +=
                         colour(YELLOW, damage_flavour("acid", "7d3"));
                     break;
@@ -1051,11 +1042,14 @@ int main(int argc, char* argv[])
                     break;
                 case AF_CRUSH:
                 case AF_PLAIN:
+                case AF_REACH:
+                case AF_REACH_STING:
                     break;
 #if TAG_MAJOR_VERSION == 34
                 case AF_DISEASE:
                 case AF_PLAGUE:
                 case AF_STEAL_FOOD:
+                case AF_HUNGER:
                 case AF_POISON_MEDIUM:
                 case AF_POISON_NASTY:
                 case AF_POISON_STR:
@@ -1152,33 +1146,33 @@ int main(int argc, char* argv[])
 
         printf("%s", monsterflags.c_str());
 
-        if (me->resist_magic == 5000)
+        if (me->willpower == 5000)
         {
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
-            monsterresistances += colour(LIGHTMAGENTA, "magic(immune)");
+            monsterresistances += colour(LIGHTMAGENTA, "will(invuln)");
         }
-        else if (me->resist_magic < 0)
+        else if (me->willpower < 0)
         {
-            const int res = (mbase) ? mbase->resist_magic : me->resist_magic;
+            const int res = (mbase) ? mbase->willpower : me->willpower;
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
             monsterresistances +=
                 colour(MAGENTA,
-                       "magic(" + to_string(hd * res * 4 / 3 * -1) + ")");
+                       "will(" + to_string(hd * res * 4 / 3 * -1) + ")");
         }
-        else if (me->resist_magic > 0)
+        else if (me->willpower > 0)
         {
             if (monsterresistances.empty())
                 monsterresistances = " | Res: ";
             else
                 monsterresistances += ", ";
             monsterresistances += colour(
-                MAGENTA, "magic(" + to_string(me->resist_magic) + ")");
+                MAGENTA, "magic(" + to_string(me->willpower) + ")");
         }
 
         const resists_t res(shapeshifter ? me->resists :

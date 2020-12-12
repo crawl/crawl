@@ -1,5 +1,7 @@
 #pragma once
 
+#include "enum.h"
+
 enum band_type
 {
     BAND_NO_BAND                = 0,

@@ -35,6 +35,7 @@
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();
@@ -446,6 +447,8 @@ static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
 // other places *cough* auto-butchering *cough*.    {gdl}
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 {
+    you.wield_change = true;
+    quiver::on_weapon_changed();
     int special = 0;
 
     const bool artefact     = is_artefact(item);
@@ -655,7 +658,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                                    bool meld)
 {
     you.wield_change = true;
-    you.m_quiver.on_weapon_changed();
+    quiver::on_weapon_changed();
 
     // Fragile artefacts may be destroyed, so make a copy
     item_def item = real_item;
@@ -870,8 +873,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
             break;
 
-        case SPARM_MAGIC_RESISTANCE:
-            mpr("You feel resistant to hostile enchantments.");
+        case SPARM_WILLPOWER:
+            mpr("You feel strong-willed.");
             break;
 
         case SPARM_PROTECTION:
@@ -1031,8 +1034,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_PONDEROUSNESS:
-        mpr("That put a bit of spring back into your step.");
+    {
+        const string verb = you.species == SP_NAGA ? "slither" : "step";
+            mprf("That put a bit of spring back into your %s.", verb.c_str());
         break;
+    }
 
     case SPARM_FLYING:
         // Save current flight status so we can restore it on reequip
@@ -1042,8 +1048,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         lose_permafly_source();
         break;
 
-    case SPARM_MAGIC_RESISTANCE:
-        mpr("You feel less resistant to hostile enchantments.");
+    case SPARM_WILLPOWER:
+        mpr("You feel less strong-willed.");
         break;
 
     case SPARM_PROTECTION:
@@ -1360,7 +1366,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_POISON_RESISTANCE:
     case RING_PROTECTION_FROM_COLD:
     case RING_PROTECTION_FROM_FIRE:
-    case RING_PROTECTION_FROM_MAGIC:
+    case RING_WILLPOWER:
     case RING_SLAYING:
     case RING_STEALTH:
     case RING_TELEPORTATION:

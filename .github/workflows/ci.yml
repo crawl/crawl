@@ -20,7 +20,7 @@ jobs:
         run: util/checkwhite -n
         working-directory: crawl-ref/source
   build_linux:
-    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} tag_upgrade=${{ matrix.tag_upgrade }}
+    name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,6 +37,8 @@ jobs:
           - FULLDEBUG=1
         tag_upgrade:
           - false
+        build_all:
+          - ""
         exclude:
           # Limit Clang jobs:
           # 1. Only build fulldebug
@@ -53,18 +55,37 @@ jobs:
             build_opts: ""
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
           - compiler: gcc
             build_opts: TILES=1
             debug: FULLDEBUG=1
             tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: FULLDEBUG=1
+            tag_upgrade: true
+            build_all: ""
+          - compiler: gcc
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
+          - compiler: clang
+            build_opts: TILES=1
+            debug: ""
+            tag_upgrade: false
+            build_all: BUILD_ALL=1
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history
+          submodules: true
       - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
@@ -82,15 +103,21 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
           restore-keys: |
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
+            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
             ccache-linux-${{ matrix.compiler }}-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - name: Run tag upgrade scripts
         if: matrix.tag_upgrade == true
         run: |
@@ -102,11 +129,11 @@ jobs:
           util/tag-major-upgrade -t 35
           util/tag-35-upgrade.py
         working-directory: crawl-ref/source
-      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }}
+      - run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }}
         working-directory: crawl-ref/source
       # Only run `make test` with TAG_MAJOR_VERSION 34 (it fails with 35).
       - if: matrix.debug == 'FULLDEBUG=1' && (matrix.build_opts == '' || matrix.build_opts == 'WEBTILES=1') && matrix.tag_upgrade == false
-        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} test
+        run: make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} test
         working-directory: crawl-ref/source
         env:
           TERM: dumb
@@ -147,12 +174,16 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-macos-clang-${{ matrix.build_type }}
+          key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-macos-clang-${{ matrix.build_type }}
-            ccache-macos-clang
+            ccache-macos-clang-${{ matrix.build_type }}-
+            ccache-macos-clang-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -202,12 +233,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-mingw64-${{ matrix.build_type }}
+          key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-mingw64-${{ matrix.build_type }}
-            ccache-mingw64
+            ccache-mingw64-${{ matrix.build_type }}-
+            ccache-mingw64-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -260,11 +297,17 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.ccache
-          key: ccache-catch2
+          key: ccache-catch2-${{ github.sha }}
           restore-keys: |
-            ccache-catch2
+            ccache-catch2-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
@@ -316,6 +359,61 @@ jobs:
     - name: Unit Tests (pytest)
       working-directory: crawl-ref/source/webserver
       run: pytest
+
+  build_headers:
+    name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler:
+          - gcc
+          - clang
+        build_opts:
+          - ""
+          - WEBTILES=1
+          - TILES=1
+        debug:
+          - ""
+          - FULLDEBUG=1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install requirements.txt
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
+        working-directory: crawl-ref/source
+      - name: Install dependencies
+        run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
+        working-directory: .github/workflows
+      - name: Cache compilation
+        uses: actions/cache@v1
+        with:
+          path: ~/.ccache
+          key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
+          restore-keys: |
+            ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
+            ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-
+            ccache-build-headers-${{ matrix.compiler }}-
+            ccache-build-headers-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
+      - run: make -j$(nproc) header-build-tests
+        working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
 
   notify_irc:
     name: "Notify ##crawl-dev of build failure"

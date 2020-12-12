@@ -17,6 +17,7 @@
 #include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
+#include "religion.h"
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
@@ -29,7 +30,7 @@
 static string _wallmsg(coord_def c)
 {
     ASSERT(map_bounds(c)); // there'd be an information leak
-    const char *wall = feat_type_name(grd(c));
+    const char *wall = feat_type_name(env.grid(c));
     return "There is " + article_a(wall) + " there.";
 }
 
@@ -142,7 +143,7 @@ bool targeter_charge::valid_aim(coord_def a)
                 return notify_fail(bad);
             return true;
         }
-        else if (is_feat_dangerous(grd(ray.pos())))
+        else if (is_feat_dangerous(env.grid(ray.pos())))
         {
             return notify_fail("There's "
                                + feature_description_at(ray.pos())
@@ -174,7 +175,7 @@ bool targeter_charge::set_aim(coord_def a)
 
         if (!can_charge_through_mons(ray.pos()))
             break;
-        if (is_feat_dangerous(grd(ray.pos())))
+        if (is_feat_dangerous(env.grid(ray.pos())))
             return false;
     }
     return true;
@@ -371,7 +372,7 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
 
     if (beam.is_enchantment() && beam.has_saving_throw()
-        && mon.res_magic() == MAG_IMMUNE)
+        && mon.willpower() == WILL_INVULN)
     {
         return false;
     }
@@ -790,7 +791,7 @@ bool targeter_reach::valid_aim(coord_def a)
     int dist = (origin - a).rdist();
 
     if (dist > range)
-        return notify_fail("You can't reach that far!");
+        return notify_fail("Your weapon can't reach that far!");
 
     return true;
 }
@@ -803,8 +804,11 @@ aff_type targeter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
-        && feat_is_reachable_past(grd(loc)))
+    // hacks: REACH_THREE entails smite targeting, because it exists entirely
+    // for the sake of UNRAND_RIFT. So, don't show the tracer.
+    if (range == REACH_TWO
+        && ((loc - origin) * 2 - (aim - origin)).abs() < 1
+        && feat_is_reachable_past(env.grid(loc)))
     {
         return AFF_TRACER;
     }
@@ -817,14 +821,29 @@ targeter_cleave::targeter_cleave(const actor* act, coord_def target)
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    set_aim(target);
+}
+
+bool targeter_cleave::valid_aim(coord_def a)
+{
+    if ((origin - a).rdist() > 1)
+        return notify_fail("Your weapon can't reach that far!");
+    return true;
+}
+
+
+bool targeter_cleave::set_aim(coord_def target)
+{
     aim = target;
+    targets.clear();
     list<actor*> act_targets;
-    get_cleave_targets(*act, target, act_targets);
+    get_cleave_targets(*agent, target, act_targets);
     while (!act_targets.empty())
     {
         targets.insert(act_targets.front()->pos());
         act_targets.pop_front();
     }
+    return true;
 }
 
 aff_type targeter_cleave::is_affected(coord_def loc)
@@ -1019,6 +1038,7 @@ targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
     agent = act;
     origin = act->pos();
     prev = _prev;
+    ASSERT(prev != origin);
     aim = prev.origin() ? origin : prev;
     ASSERT_RANGE(r, 1 + 1, you.current_vision + 1);
     range = r;
@@ -1605,7 +1625,7 @@ bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
     if (env.markers.property_at(p, MAT_ANY, "veto_destroy") == "veto")
         return false;
 
-    const dungeon_feature_type feat = grd(p);
+    const dungeon_feature_type feat = env.grid(p);
     if (feat_is_open_door(feat))
     {
         const monster* const mons = monster_at(p);
@@ -1663,4 +1683,138 @@ bool targeter_overgrow::set_aim(coord_def a)
     }
 
     return affected_positions.size();
+}
+
+targeter_multiposition::targeter_multiposition(const actor *a,
+            vector<coord_def> seeds, bool _hit_friends, aff_type _positive)
+    : targeter(), hit_friends(_hit_friends), positive(_positive)
+{
+    agent = a;
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+targeter_multiposition::targeter_multiposition(const actor *a,
+            vector<monster *> seeds, bool _hit_friends, aff_type _positive)
+    : targeter(), hit_friends(_hit_friends), positive(_positive)
+{
+    agent = a;
+    for (monster *m : seeds)
+        if (m)
+            add_position(m->pos());
+}
+
+// sigh, necessary to allow empty initializer lists with the above two
+// constructors
+targeter_multiposition::targeter_multiposition(const actor *a,
+            initializer_list<coord_def> seeds, bool _hit_friends, aff_type _positive)
+    : targeter_multiposition(a, vector<coord_def>(seeds.begin(), seeds.end()),
+        _hit_friends, _positive)
+{
+}
+
+
+void targeter_multiposition::add_position(const coord_def &loc)
+{
+    actor *act = actor_at(loc);
+    if (agent == &you && act == &you)
+        return; // any exceptions to this?
+
+    // Friendly creature, don't mark this square. This logic is only implemented
+    // for players, because this class is currently only used for ui
+    if (!hit_friends && act
+        && (act == agent
+            || (agent == &you && act->is_monster() // not yet implemented for monster agents
+                && act->as_monster()->wont_attack())))
+    {
+        return;
+    }
+
+    affected_positions.insert(loc);
+}
+
+aff_type targeter_multiposition::is_affected(coord_def loc)
+{
+    if (cell_is_solid(loc) && !can_affect_walls())
+        return AFF_NO;
+
+    // is this better with maybe or yes?
+    return affected_positions.count(loc) > 0 ? positive : AFF_NO;
+}
+
+targeter_absolute_zero::targeter_absolute_zero(int range)
+    : targeter_multiposition(&you, find_abszero_possibles(range))
+{
+    if (affected_positions.size() == 1)
+        positive = AFF_YES;
+}
+
+targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
+    : targeter_multiposition(a, seeds, false)
+{
+    for (auto &c : seeds)
+    {
+        if (affected_positions.count(c)) // did the parent constructor like this pos?
+            for (adjacent_iterator ai(c); ai; ++ai)
+                add_position(*ai);
+    }
+}
+
+targeter_ramparts::targeter_ramparts(const actor *a)
+    : targeter_multiposition(a, { }, false)
+{
+    auto seeds = find_ramparts_walls(a->pos());
+    for (auto &c : seeds)
+    {
+        add_position(c);
+        for (adjacent_iterator ai(c); ai; ++ai)
+            if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
+                add_position(*ai);
+    }
+}
+
+
+aff_type targeter_ramparts::is_affected(coord_def loc)
+{
+    if (!affected_positions.count(loc)
+        || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))
+    {
+        return AFF_NO;
+    }
+
+    return cell_is_solid(loc) ? AFF_YES : AFF_MAYBE;
+}
+
+// note: starburst is not in spell_to_zap
+targeter_starburst_beam::targeter_starburst_beam(const actor *a, int _range, int pow, const coord_def &offset)
+    : targeter_beam(a, _range, ZAP_BOLT_OF_FIRE, pow, 0, 0)
+{
+    set_aim(a->pos() + offset);
+}
+
+targeter_starburst::targeter_starburst(const actor *a, int range, int pow)
+    : targeter()
+{
+    agent = a ? a : &you;
+    // XX code duplication with cast_starburst
+    const vector<coord_def> offsets = { coord_def(range, 0),
+                                        coord_def(range, range),
+                                        coord_def(0, range),
+                                        coord_def(-range, range),
+                                        coord_def(-range, 0),
+                                        coord_def(-range, -range),
+                                        coord_def(0, -range),
+                                        coord_def(range, -range) };
+
+    // extremely brute force...
+    for (auto &o : offsets)
+        beams.push_back(targeter_starburst_beam(agent, range, pow, o));
+}
+
+aff_type targeter_starburst::is_affected(coord_def loc)
+{
+    for (auto &t : beams)
+        if (auto r = t.is_affected(loc))
+            return r;
+    return AFF_NO;
 }

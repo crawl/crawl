@@ -282,7 +282,7 @@ static int read_key_code(string s)
  *   \{x40} produces 64 (hexadecimal code)
  *   \{!more} or \{!m} disables -more- prompt until the end of the macro.
  */
-static keyseq parse_keyseq(string s)
+keyseq parse_keyseq(string s)
 {
     int state = 0;
     keyseq v;
@@ -1337,7 +1337,7 @@ void init_keybindings()
 
         // Only one command per key, but it's okay to have several
         // keys map to the same command.
-        ASSERT(!key_map.count(data.key));
+        ASSERTM(!key_map.count(data.key), "bad mapping for key '%c'", data.key);
 
         key_map[data.key] = data.cmd;
         cmd_map[data.cmd] = data.key;

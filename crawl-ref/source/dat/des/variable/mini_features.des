@@ -914,24 +914,25 @@ NAME:   minmay_stone_trees_large
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 1
-SUBST:  T = t.
+SHUFFLE: TR
+SUBST:  T = t., R = .
 MAP
 ...................
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctRtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....T.....T...
+...T.....R.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctRtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....T.....T...
+...T.....R.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctTtccct.
+.tccctTtccctRtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
 ...................
@@ -1609,8 +1610,9 @@ NAME:    hangedman_decor_clover_reticule
 TAGS:    transparent extra decor
 DEPTH:   D, Depths
 SHUFFLE: ABCDE
-SUBST:   A : z:9 .:1, B : z., C : z.., DE = '
+SUBST:   A : z:9 ':1, B : z', C : z'', DE = '
 KPROP:   ' = no_tele_into
+KMASK:   ' = opaque
 : init_hm_decor_walldepth(_G, "z")
 MAP
       .......
@@ -1859,7 +1861,7 @@ SUBST: w : wwl
 MAP
      .......
    ...wwwww.@.
-  ..www.xxxx...
+  ..wwwwxxxx...
  ..wwwxxx.x.xx..
  .wwwwx.x..xxww.
 ..wwwwx.....xww..
@@ -3399,15 +3401,15 @@ SUBST:  1 = l, 2 = l
 SUBST:  l = l w:20
 SUBST:  ? : w. , ! : w. , & : w.
 :  if you.in_branch("Geh") then
-TAGS:   transparent extra
+TAGS:   extra
 :  end
 MAP
 .......?.......
 ......&?.......
 .......??......
 ..&&&&???......
-&&&&?wwwww.....
-&&?wwwwwwwww&&.
+&&&&&wwwww.....
+&&&wwwwwwwww&&.
 .wwwwwlwwwwwww&
 ..&wwl1lwwwww&&
 ...wwwl2lwww&&.
@@ -3760,15 +3762,16 @@ ENDMAP
 NAME:  minivault_21
 TAGS:  transparent allow_dup extra
 DEPTH: D:8-, !D:$, Depths:2-, !Depths:$
+KMASK: |'<>* = opaque
 MAP
 ............
 ..xxxxxxxx..
 .x........x.
 .x.ccnccc.x.
-.x.c|..<c.x.
-.x.c.**.n.x.
-.x.n.**.c.x.
-.x.c>..|c.x.
+.x.c|''<c.x.
+.x.c'**'n.x.
+.x.n'**'c.x.
+.x.c>''|c.x.
 .x.cccncc.x.
 .x........x.
 ..xxxxxxxx..

@@ -46,6 +46,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 #include "ui.h"
@@ -1241,7 +1242,7 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
         }
 
-        item_def &acq_item(mitm[thing_created]);
+        item_def &acq_item(env.item[thing_created]);
         _adjust_brand(acq_item, divine, agent);
 
         // For plain armour, try to change the subtype to something
@@ -1406,16 +1407,16 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
-    item_set_appearance(mitm[thing_created]); // cleanup
+    item_set_appearance(env.item[thing_created]); // cleanup
 
     if (thing_created != NON_ITEM)
     {
-        ASSERT(mitm[thing_created].is_valid());
-        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
+        ASSERT(env.item[thing_created].is_valid());
+        env.item[thing_created].props[ACQUIRE_KEY].get_int() = agent;
     }
 
-    ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
-    ASSERT(!god_hates_item(mitm[thing_created]));
+    ASSERT(!is_useless_item(env.item[thing_created], false) || agent == GOD_XOM);
+    ASSERT(!god_hates_item(env.item[thing_created]));
 
     // If we have a zero coord_def, don't move the item to the grid. Used for
     // generating scroll of acquirement items.
@@ -1428,7 +1429,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_items(grd(pos))
+    if (feat_destroys_items(env.grid(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
@@ -1670,10 +1671,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 
     if (item_index != NON_ITEM)
     {
-        ASSERT(!god_hates_item(mitm[item_index]));
+        ASSERT(!god_hates_item(env.item[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
-        item = mitm[item_index];
+        item = env.item[item_index];
         set_ident_flags(item,
                 // Act as if we've recieved this item already to prevent notes.
                 ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
@@ -1740,7 +1741,6 @@ bool acquirement_menu()
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
-#ifdef CLUA_BINDINGS
     int index = 0;
     if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
@@ -1752,7 +1752,6 @@ bool acquirement_menu()
         _create_acquirement_item(acq_items[index - 1]);
         return true;
     }
-#endif
 
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();

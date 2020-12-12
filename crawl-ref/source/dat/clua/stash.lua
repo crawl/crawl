@@ -108,7 +108,7 @@ function ch_stash_search_annotate_item(it)
       ["troll"] = "Regen+",
       ["steam"] = "rSteam",
       ["acid"] = "rCorr",
-      ["quicksilver"] = "MR+",
+      ["quicksilver"] = "Will+",
       ["swamp"] = "rPois",
       ["fire"] = "rF++ rC-",
       ["ice"] = "rC++ rF-",
@@ -138,10 +138,13 @@ function ch_stash_search_annotate_item(it)
 
   if it.class(true) == "armour" then
       annot = annot .. " {" .. it.subtype() .. " armor}"
+      if it.subtype() ~= "body" then
+          annot = annot .. " {auxiliary armor} {auxiliary armour}"
+      end
   end
 
   local resistances = {
-    ["MR+"] = "magic",
+    ["Will+"] = "willpower",
     ["rC+"] = "cold",
     ["rCorr"] = "corrosion",
     ["rElec"] = "electricity",
@@ -154,6 +157,11 @@ function ch_stash_search_annotate_item(it)
     if annot:find(inscription, 1, true) then
       annot = annot .. " {resist " .. res .. "} {" .. res .. " resistance}"
     end
+  end
+
+  -- Tag Willpower items as MR for back-compat.
+  if annot:find("Will+", 1, true) then
+    annot = annot .. " {MR} {resist magic} {magic resistance}"
   end
 
   return annot

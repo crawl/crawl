@@ -23,7 +23,9 @@
 #include "equipment-type.h"
 #include "flush-reason-type.h"
 #include "game-chapter.h"
+#include "kill-method-type.h"
 #include "kills.h"
+#include "maybe-bool.h"
 #include "mon-holy-type.h"
 #include "mutation-type.h"
 #include "place-info.h"
@@ -52,6 +54,7 @@
 #define PETRIFIED_BY_KEY "petrified_by"
 #define NOXIOUS_BOG_KEY "noxious_bog_pow"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
+#define PALENTONGA_CURL_KEY "palentonga_curl"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -63,8 +66,8 @@
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
 static const int REGEN_PIP = 40;
-/// The standard unit of MR; one level in %/@ screens
-static const int MR_PIP = 40;
+/// The standard unit of WL; one level in %/@ screens
+static const int WL_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
@@ -197,7 +200,7 @@ public:
     int berserk_penalty;                // The penalty for moving while berserk
 
     FixedVector<int, NUM_ATTRIBUTES> attribute;
-    FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
+    FixedVector<uint8_t, quiver::NUM_LAUNCHERS> quiver; // default items for quiver
     FixedVector<int, NUM_TIMERS> last_timer_effect;
     FixedVector<int, NUM_TIMERS> next_timer_effect;
 
@@ -210,8 +213,10 @@ public:
     FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
     FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
     FixedBitVector<NUM_SKILLS> can_currently_train; ///< Is training this skill allowed?
+    FixedBitVector<NUM_SKILLS> should_show_skill; ///< Is this skill shown by default?
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
+    int experience_pool; ///< XP waiting to be applied.
 
     /// track skill points gained by crosstraining
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
@@ -220,8 +225,8 @@ public:
     bool auto_training;
     list<skill_type> exercises;     ///< recent practise events
     list<skill_type> exercises_all; ///< also include events for disabled skills
-    set<skill_type> stop_train;     ///< need to check if we can still train
-    set<skill_type> start_train;    ///< we can resume training
+    set<skill_type> skills_to_hide;     ///< need to check if it should still be shown in the skill menu
+    set<skill_type> skills_to_show;    ///< we can un-hide in the skill menu
 
     // Skill menu states
     skill_menu_state skill_menu_do;
@@ -318,7 +323,10 @@ public:
 
     LevelXPInfo global_xp_info;
 
-    player_quiver m_quiver;
+    quiver::ammo_history m_quiver_history;
+
+    quiver::action_cycler quiver_action;
+    quiver::launcher_action_cycler launcher_action;
 
     // monsters mesmerising player; should be protected, but needs to be saved
     // and restored.
@@ -701,7 +709,7 @@ public:
     bool malmutate(const string &reason) override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();
-    void banish(actor* /*agent*/, const string &who = "", const int power = 0,
+    void banish(const actor* /*agent*/, const string &who = "", const int power = 0,
                 bool force = false) override;
     void blink() override;
     void teleport(bool right_now = false,
@@ -714,14 +722,14 @@ public:
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;
     bool sicken(int amount) override;
-    void paralyse(actor *, int str, string source = "") override;
-    void petrify(actor *, bool force = false) override;
-    bool fully_petrify(actor *foe, bool quiet = false) override;
+    void paralyse(const actor *, int str, string source = "") override;
+    void petrify(const actor *, bool force = false) override;
+    bool fully_petrify(bool quiet = false) override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
-    bool drain_exp(actor *, bool quiet = false, int pow = 3) override;
+    bool drain_exp(const actor *, bool quiet = false, int pow = 3) override;
     bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
         override;
     void splash_with_acid(const actor* evildoer, int acid_strength,
@@ -767,7 +775,7 @@ public:
     bool res_tornado() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
-    int res_magic(bool /*calc_unid*/ = true) const override;
+    int willpower(bool /*calc_unid*/ = true) const override;
     bool no_tele(bool calc_unid = true, bool /*permit_id*/ = true,
                  bool blink = false) const override;
     string no_tele_reason(bool calc_unid = true, bool blink = false) const;
@@ -832,7 +840,7 @@ public:
     int shield_bonus() const override;
     int shield_block_penalty() const override;
     int shield_bypass_ability(int tohit) const override;
-    void shield_block_succeeded(actor *foe) override;
+    void shield_block_succeeded() override;
     bool missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods
@@ -1010,7 +1018,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
-int player_res_magic(bool calc_unid = true, bool temp = true);
+int player_willpower(bool calc_unid = true, bool temp = true);
 
 int player_shield_class();
 int player_displayed_shield_class();
@@ -1048,7 +1056,8 @@ void display_char_status();
 void forget_map(bool rot = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
+unsigned int gain_exp(unsigned int exp_gained);
+void apply_exp();
 
 int xp_to_level_diff(int xp, int scale=1);
 

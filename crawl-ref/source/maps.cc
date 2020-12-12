@@ -29,6 +29,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 #ifndef BYTE_ORDER
@@ -80,6 +81,15 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
     : mpar(map_parameters)
 {
     map_parameters = parameters;
+}
+
+static bool _debug_ignore_depth = false;
+
+// This is useful only in very unusual debugging cases; see e.g. the
+// placement.lua placement testing script
+void dgn_ignore_depth(bool b)
+{
+    _debug_ignore_depth = b;
 }
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
@@ -168,6 +178,7 @@ static bool _resolve_map_lua(map_def &map)
         if (crawl_state.map_stat_gen)
             mapstat_report_error(map, err);
 #endif
+        crawl_state.last_builder_error = err;
         mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
         return false;
     }
@@ -176,13 +187,16 @@ static bool _resolve_map_lua(map_def &map)
     err = map.resolve();
     if (!err.empty())
     {
+        crawl_state.last_builder_error = err;
         mprf(MSGCH_ERROR, "Error: %s", err.c_str());
         return false;
     }
 
     if (!map.test_lua_validate(false))
     {
-        dprf("Lua validation for map %s failed.", map.name.c_str());
+        crawl_state.last_builder_error = make_stringf(
+            "Lua validation for map %s failed.", map.name.c_str());
+        dprf("%s", crawl_state.last_builder_error.c_str());
         return false;
     }
 
@@ -365,7 +379,7 @@ static bool _may_overwrite_feature(const coord_def p,
     if (Vault_Placement_Mask && player_in_branch(BRANCH_ABYSS))
         return true;
 
-    const dungeon_feature_type grid = grd(p);
+    const dungeon_feature_type grid = env.grid(p);
 
     // Deep water grids may be overwritten if water_ok == true.
     if (grid == DNGN_DEEP_WATER)
@@ -447,7 +461,7 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
-        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
+        else if (env.grid(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
                                        || _is_transporter_place(cp))
         {
             // Don't place overwrite_floor_cell vaults on anything but floor or
@@ -464,7 +478,7 @@ static bool _map_safe_vault_place(const map_def &map,
             return false;
 
         // Don't overwrite monsters or items, either!
-        if (monster_at(cp) || igrd(cp) != NON_ITEM)
+        if (monster_at(cp) || env.igrid(cp) != NON_ITEM)
             return false;
 
         // If in Slime, don't let stairs end up next to minivaults,
@@ -473,7 +487,7 @@ static bool _map_safe_vault_place(const map_def &map,
         {
             for (adjacent_iterator ai(cp); ai; ++ai)
             {
-                if (map_bounds(*ai) && feat_is_stair(grd(*ai)))
+                if (map_bounds(*ai) && feat_is_stair(env.grid(*ai)))
                     return false;
             }
         }
@@ -520,8 +534,8 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
             if ((!check_place
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
-                && !feat_is_gate(grd(v1))
-                && !feat_is_branch_entrance(grd(v1)))
+                && !feat_is_gate(env.grid(v1))
+                && !feat_is_branch_entrance(env.grid(v1)))
             {
                 candidates.push_back(v1);
             }
@@ -736,7 +750,8 @@ mapref_vector find_maps_for_tag(const string &tag,
     {
         if (mapdef.has_all_tags(tag_set.begin(), tag_set.end())
             && !mapdef.has_tag("dummy")
-            && (!check_depth || !mapdef.has_depth()
+            && (!check_depth || _debug_ignore_depth
+                || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
             && (!check_used || !mapdef.map_already_used()))
         {
@@ -805,7 +820,8 @@ private:
                  bool _mini, maybe_bool _extra, bool _check_depth)
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
-          mini(_mini), extra(_extra), check_depth(_check_depth),
+          mini(_mini), extra(_extra),
+          check_depth(_check_depth),
           check_layout((sel == DEPTH || sel == DEPTH_AND_CHANCE)
                     && place == level_id::current())
     {
@@ -889,7 +905,7 @@ bool map_selector::accept(const map_def &mapdef) const
 
     case TAG:
         return mapdef.has_all_tags(tag) // allow multiple tags, for temple overflow vaults
-               && (!check_depth
+               && (!check_depth || _debug_ignore_depth
                    || !mapdef.has_depth()
                    || mapdef.is_usable_in(place))
                && _map_matches_species(mapdef)

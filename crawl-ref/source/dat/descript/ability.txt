@@ -342,9 +342,8 @@ to berserk again for a short time.
 Trog's Hand ability
 
 Invokes a powerful regeneration ability which stacks with all other sources and
-is effective even on those who would not otherwise be able to regenerate. While
-active, the user will also be granted significant protection from hostile
-enchantments.
+is effective even on those who would not otherwise be able to regenerate. It
+also fortifies the user's willpower, protecting against many magical effects.
 %%%%
 Brothers in Arms ability
 
@@ -571,11 +570,11 @@ landing on a random spot adjacent to the target.
 Shadow Form ability
 
 Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, torment, and
-hostile enchantments. All incoming damage will be halved, and you will bleed
-smoke on any incoming attack. However, your ability to deal damage in melee and
-with ranged attacks will be halved, your spellcasting power will be greatly
-hampered, and your skills will be further drained when taking damage.
+are permanently invisible and are immune to poison, draining, and torment.
+All incoming damage is halved, you bleed smoke on any incoming attack, and
+you have infinite willpower. However, your ability to deal damage in melee
+and with ranged attacks is halved, your spellcasting power is greatly
+hampered, and your skills are further drained when taking damage.
 Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag

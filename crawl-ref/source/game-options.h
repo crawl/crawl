@@ -8,10 +8,13 @@
 #include <functional>
 #include <string>
 #include <set>
+#include <vector>
 
 #include "colour.h"
 #include "stringutil.h"
 #include "maybe-bool.h"
+
+using std::vector;
 
 enum rc_line_type
 {

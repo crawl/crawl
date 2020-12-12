@@ -20,11 +20,13 @@
 #include "jobs.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
+#include "mpr.h"
 #include "ng-input.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unwind.h"
 
 #define MAX_GHOST_DAMAGE     50

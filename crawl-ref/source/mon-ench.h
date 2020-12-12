@@ -1,12 +1,15 @@
 #pragma once
 
 #include "enchant-type.h"
+#include "externs.h"
+#include "kill-category.h"
 
 #define INFINITE_DURATION  30000
 #define MAX_ENCH_DEGREE_DEFAULT  4
 #define MAX_ENCH_DEGREE_ABJURATION  6
 
 class actor;
+class monster;
 
 void update_mons_cloud_ring(monster* mons);
 

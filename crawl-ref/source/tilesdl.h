@@ -7,9 +7,13 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include <vector>
+
 #include "cursor-type.h"
 #include "text-tag-type.h"
 #include "tilereg.h"
+
+using std::vector;
 
 #ifndef PROPORTIONAL_FONT
 # error PROPORTIONAL_FONT not defined

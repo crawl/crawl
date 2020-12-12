@@ -120,6 +120,7 @@ death_scarab CORPSE_DEATH_SCARAB
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
+goliath_frog CORPSE_GOLIATH_FROG
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
@@ -181,6 +182,7 @@ mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
 %sdir mon/humanoids
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
+eleionoma CORPSE_ELEIONOMA
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
@@ -264,6 +266,7 @@ manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
+fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 mon/unique/arachne_staveless CORPSE_ARACHNE
@@ -295,8 +298,11 @@ deep_troll CORPSE_DEEP_TROLL
 ## Cephalopods ('x')
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
+%sdir mon/animals
+bunyip CORPSE_BUNYIP
 
 ## Draconians ('d')
+%sdir player
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black

@@ -46,6 +46,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "rltiles/tiledef-player.h"
@@ -574,7 +575,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     }
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
-    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature)
+    if (!monster_habitable_grid(montype, env.grid(mg_pos), mg.preferred_grid_feature)
         || (mg.behaviour != BEH_FRIENDLY
             && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))
@@ -593,7 +594,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     else if (mg.proximity == PROX_AWAY_FROM_STAIRS)
     {
         for (distance_iterator di(mg_pos, false, false, LOS_RADIUS); di; ++di)
-            if (feat_is_stone_stair(grd(*di)))
+            if (feat_is_stone_stair(env.grid(*di)))
                 return false;
     }
     // Check that the location is not proximal to an area where the player
@@ -606,9 +607,9 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
             // player is starting on D:1
             if (env.absdepth0 == 0)
             {
-                if (feat_is_branch_exit(grd(*di))
+                if (feat_is_branch_exit(env.grid(*di))
                     // We may be checking before branch exit cleanup.
-                    || feat_is_stone_stair_up(grd(*di)))
+                    || feat_is_stone_stair_up(env.grid(*di)))
                 {
                     return false;
                 }
@@ -616,7 +617,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
             else if (env.absdepth0 == starting_absdepth())
             {
                 // Delvers start on a (specific) D:5 downstairs.
-                if (grd(*di) == DNGN_STONE_STAIRS_DOWN_I)
+                if (env.grid(*di) == DNGN_STONE_STAIRS_DOWN_I)
                     return false;
             }
         }
@@ -632,11 +633,13 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
+    rng::subgenerator monster_rng;
+
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
 
-    const int mon_count = count_if(begin(menv), end(menv),
+    const int mon_count = count_if(begin(env.mons), end(env.mons),
                                    [] (const monster &mons) -> bool
                                    { return mons.type != MONS_NO_MONSTER; });
     // All monsters have been assigned? {dlb}
@@ -912,7 +915,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype)))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
-        && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
+        && (force_pos || monster_habitable_grid(montype, env.grid(mg.pos))))
     {
         fpos = mg.pos;
     }
@@ -1282,7 +1285,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->destroy_inventory();
             env.mid_cache.erase(mon->mid);
             mon->reset();
-            mgrd(fpos) = NON_MONSTER;
+            env.mgrid(fpos) = NON_MONSTER;
             return 0;
         }
         else
@@ -1307,7 +1310,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->max_hit_points *= mon->blob_size;
     }
 
-    if (monster_can_submerge(mon, grd(fpos)) && !summoned)
+    if (monster_can_submerge(mon, env.grid(fpos)) && !summoned)
         mon->add_ench(ENCH_SUBMERGED);
 
     // Set attitude, behaviour and target.
@@ -1476,6 +1479,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     tile_init_props(mon);
 
+    init_poly_set(mon);
+
 #ifndef DEBUG_DIAGNOSTICS
     // A rare case of a debug message NOT showing in the debug mode.
     if (mons_class_flag(mon->type, M_UNFINISHED))
@@ -1528,7 +1533,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
 
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
-    if (in_bounds(pos) && !monster_habitable_grid(base, grd(pos)))
+    if (in_bounds(pos) && !monster_habitable_grid(base, env.grid(pos)))
         return false;
 
     if (cs == MONS_NO_MONSTER)
@@ -2210,7 +2215,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_MERFOLK_IMPALER, 2}}}},
     { BAND_AZRAEL,              {{{MONS_FIRE_ELEMENTAL, 1},
                                   {MONS_HELL_HOUND, 1}}}},
-    { BAND_KHUFU,               {{{MONS_GREATER_MUMMY, 1},
+    { BAND_KHUFU,               {{{MONS_ROYAL_MUMMY, 1},
                                   {MONS_MUMMY, 1}}}},
     { BAND_MERFOLK_AQUAMANCER,  {{{MONS_MERFOLK, 4},
                                   {MONS_WATER_ELEMENTAL, 11}}}},
@@ -2722,9 +2727,9 @@ public:
         {
             return false;
         }
-        if (!_feat_compatible(feat_wanted, grd(dc)))
+        if (!_feat_compatible(feat_wanted, env.grid(dc)))
         {
-            if (passable.count(grd(dc)))
+            if (passable.count(env.grid(dc)))
                 good_square(dc);
             return false;
         }
@@ -2888,7 +2893,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
     if (!mg.force_place()
         || monster_at(mg.pos)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
-        || !mons_class_can_pass(montype, grd(mg.pos)))
+        || !mons_class_can_pass(montype, env.grid(mg.pos)))
     {
         // Gods other than Xom will try to avoid placing their monsters
         // directly in harm's way.
@@ -2950,7 +2955,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
         if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
-        success = monster_habitable_grid(mon_type, grd(*ri));
+        success = monster_habitable_grid(mon_type, env.grid(*ri));
         if (success && viable_mon)
             success = !mons_avoids_cloud(viable_mon, *ri, true);
 

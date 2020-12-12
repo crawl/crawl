@@ -43,7 +43,7 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     fail_check();
 
     int mtarg = !beam ? MHITNOT :
-                beam->target == you.pos() ? int{MHITYOU} : mgrd(beam->target);
+                beam->target == you.pos() ? int{MHITYOU} : env.mgrid(beam->target);
 
     monster *mon = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (is_player) ? BEH_FRIENDLY :
@@ -279,6 +279,14 @@ static bool _iood_shielded(monster& mon, actor &victim)
     return pro_block >= con_block;
 }
 
+dice_def iood_damage(int pow, int dist)
+{
+    pow = stepdown_value(pow, 30, 30, 200, -1);
+    if (dist < 4)
+        pow = pow * (dist*2+3) / 10;
+    return dice_def(9, pow / 4);
+}
+
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
@@ -314,13 +322,10 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.source_name = mon.props[IOOD_CASTER].get_string();
     beam.origin_spell = SPELL_IOOD;
 
-    int pow = mon.props[IOOD_POW].get_short();
-    pow = stepdown_value(pow, 30, 30, 200, -1);
+    const int pow = mon.props[IOOD_POW].get_short();
     const int dist = mon.props[IOOD_DIST].get_int();
     ASSERT(dist >= 0);
-    if (dist < 4)
-        pow = pow * (dist*2+3) / 10;
-    beam.damage = dice_def(9, pow / 4);
+    beam.damage = iood_damage(pow, dist);
 
     if (dist < 3)
         beam.name = "wavering " + beam.name;
@@ -522,7 +527,7 @@ move_again:
                     simple_monster_message(*mons, (" blocks "
                         + mon.name(DESC_THE, true) + ".").c_str());
                 }
-                victim->shield_block_succeeded(&mon);
+                victim->shield_block_succeeded();
                 _iood_stop(mon);
                 return true;
             }
@@ -572,7 +577,7 @@ move_again:
                          mon.name(DESC_THE, true).c_str());
                 }
             }
-            victim->shield_block_succeeded(&mon);
+            victim->shield_block_succeeded();
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;

@@ -12,6 +12,7 @@
 #include "deck-type.h"
 #include "ability-type.h"
 #include "enum.h"
+#include "tag-version.h"
 
 #define NEMELEX_TRIPLE_DRAW_KEY "nemelex_triple_draw"
 #define NEMELEX_STACK_KEY       deck_name(DECK_STACK)

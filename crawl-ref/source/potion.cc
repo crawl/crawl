@@ -300,25 +300,25 @@ public:
     }
 };
 
-class PotionStabbing : public PotionEffect
+class PotionAttraction : public PotionEffect
 {
 private:
-    PotionStabbing() : PotionEffect(POT_STABBING) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionStabbing);
+    PotionAttraction() : PotionEffect(POT_ATTRACTION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionAttraction);
 public:
-    static const PotionStabbing &instance()
+    static const PotionAttraction &instance()
     {
-        static PotionStabbing inst; return inst;
+        static PotionAttraction inst; return inst;
     }
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-        const bool was_stabbing = you.duration[DUR_STABBING] > 0;
+        const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sready to backstab.",
-             was_stabbing ? "more " : "");
+        mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
+             was_attractive ? "more " : "");
 
-        you.increase_duration(DUR_STABBING, 35 + random2(pow), 80);
+        you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);
         return true;
     }
 };
@@ -798,7 +798,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_HASTE, &PotionHaste::instance(), },
     { POT_MIGHT, &PotionMight::instance(), },
     { POT_BRILLIANCE, &PotionBrilliance::instance(), },
-    { POT_STABBING, &PotionStabbing::instance(), },
+    { POT_ATTRACTION, &PotionAttraction::instance(), },
     { POT_FLIGHT, &PotionFlight::instance(), },
     { POT_CANCELLATION, &PotionCancellation::instance(), },
     { POT_AMBROSIA, &PotionAmbrosia::instance(), },

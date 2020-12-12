@@ -204,7 +204,7 @@ sporulate SPORULATE
 sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
-strip_resistance STRIP_RESISTANCE
+strip_willpower STRIP_WILLPOWER
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
 summon_hell_beast SUMMON_HELL_BEAST

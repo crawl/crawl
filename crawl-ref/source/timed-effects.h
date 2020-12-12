@@ -24,6 +24,7 @@ int speed_to_duration(int speed);
 
 bool bezotted();
 bool bezotted_in(branch_type br);
+bool zot_clock_active();
 int bezotting_level();
 int turns_until_zot();
 void decr_zot_clock();

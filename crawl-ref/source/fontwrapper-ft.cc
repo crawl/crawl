@@ -534,6 +534,9 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
                    : max_str_width;
 }
 
+// Find the position in `text` that does not exceed max_str_width, a width
+// in pixels. Returns INT_MAX if the string doesn't exceed INT_MAX. Stops at
+// newlines.
 int FTFontWrapper::find_index_before_width(const char *text, int max_str_width)
 {
     int width = max(-m_min_offset, 0);
@@ -543,10 +546,8 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_str_width)
     for (char *itr = (char *)text; *itr; itr = next_glyph(itr))
     {
         if (*itr == '\n')
-        {
-            width = 0;
-            continue;
-        }
+            return INT_MAX;
+
         char32_t ch;
         utf8towc(&ch, itr);
         GlyphInfo &glyph = get_glyph_info(ch);
@@ -627,7 +628,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             ret += "..";
             return ret;
         }
-        else
+        else if (space_idx != nl)
         {
             line[space_idx] = '\n';
             ret[&line[space_idx] - &base[0]] = '\n';

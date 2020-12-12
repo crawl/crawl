@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
     ISFLAG_KNOW_CURSE        = 0x00000001,  // curse status

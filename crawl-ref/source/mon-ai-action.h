@@ -3,6 +3,13 @@
  * @brief Monster action goodness rating type and associated operations.
 **/
 
+#pragma once
+
+#include <climits>
+#include <map>
+
+using std::pair;
+
 namespace ai_action
 {
     /// Goodness values for actions.

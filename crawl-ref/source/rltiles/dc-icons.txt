@@ -17,6 +17,7 @@ cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
+travel_exclusion DISABLED
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB

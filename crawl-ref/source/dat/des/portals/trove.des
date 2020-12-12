@@ -449,6 +449,7 @@ NAME: nicolae_trove_entry_isolated
 TAGS: no_pool_fixup transparent
 CHANCE: 5%
 KPROP: .O = no_tele_into
+KMASK: .O = opaque
 KFEAT: ' = .
 : trove.portal(_G)
 MAP
@@ -577,8 +578,8 @@ KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
 KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
 KITEM:   B = acquire book / acquire:sif_muna book / any book
 KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
-             potion of might / potion of stabbing / potion of brilliance / \
-             potion of resistance / potion of magic / potion of haste
+             potion of might / potion of brilliance / potion of resistance / \
+             potion of magic / potion of haste
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)

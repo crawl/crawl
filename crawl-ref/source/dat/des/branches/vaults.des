@@ -35,7 +35,7 @@ end
 # Generic Vaults entry
 #
 NAME:    david_vaults_1
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    troll / two-headed ogre
 MONS:    necromancer / wizard / vampire w:4 / deep elf mage w:4
 SHUFFLE: !-
@@ -58,7 +58,7 @@ ENDMAP
 # Vault monsters near stair
 #
 NAME: david_vaults_2
-TAGS: vaults_entry
+TAGS: vaults_entry transparent
 MONS: yaktaur captain, yaktaur, ogre mage, two-headed ogre
 MONS: glowing shapeshifter, shapeshifter
 SHUFFLE: 12 / 34 / 56
@@ -79,7 +79,7 @@ ENDMAP
 # Vaults patterns 0: vanguard
 #
 NAME:    david_vaults_3
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    human
 KMONS:   2 = orc knight / Urug, orc knight
 KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
@@ -103,7 +103,7 @@ ENDMAP
 # Vaults patterns I
 #
 NAME:    david_vaults_4
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    fire dragon / ice dragon / hydra / lindwurm
 MONS:    freezing wraith / shadow wraith / wraith / phantasmal warrior
 MONS:    deep troll / iron troll / troll
@@ -153,7 +153,7 @@ ENDMAP
 # The Guard of Blades
 #
 NAME:   erik_vaults_1
-TAGS:   vaults_entry
+TAGS:   vaults_entry transparent
 MONS:   dancing weapon ; long sword good_item
 SUBST:  v : vcxxx
 KFEAT:  O = enter_vaults
@@ -173,7 +173,7 @@ ENDMAP
 # Above As Below
 #
 NAME:    erik_vaults_2
-TAGS:    vaults_entry
+TAGS:    vaults_entry transparent
 MONS:    vault guard
 SUBST:   v : vxx, b : bcc
 KFEAT:   O = enter_vaults
@@ -193,7 +193,7 @@ ENDMAP
 # HangedMan's map
 #
 NAME:    hangedman_vaults_entry_quadrant_bands
-TAGS:    vaults_entry no_monster_gen no_item_gen patrolling
+TAGS:    vaults_entry no_monster_gen no_item_gen patrolling transparent
 ORIENT:  float
 MONS:    centaur warrior, centaur / nothing w:5
 MONS:    ogre mage, two-headed ogre / ogre w:16
@@ -262,7 +262,7 @@ ENDMAP
 # A fortification!
 #
 NAME: grunt_vaults_entry_fortified
-TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling
+TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling transparent
 ORIENT: north
 MONS: human ; arbalest . bolt q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \

@@ -8,6 +8,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "ng-init.h"
 
 #include "branch.h"
@@ -22,6 +23,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS

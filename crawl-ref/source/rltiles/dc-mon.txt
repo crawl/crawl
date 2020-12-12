@@ -170,10 +170,10 @@ hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
-%rim 0
 
 ## Aquatics (';')
 %sdir mon/aquatic
+%rim 0
 electric_eel MONS_ELECTRIC_EEL
 %rim 1
 
@@ -196,6 +196,7 @@ prince_ribbit MONS_PRINCE_RIBBIT
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+goliath_frog MONS_GOLIATH_FROG
 %rim 1
 cane_toad MONS_CANE_TOAD
 
@@ -424,6 +425,8 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
+%sdir mon/animals
+bunyip MONS_BUNYIP
 
 ## Golems ('8')
 %rim 0
@@ -501,6 +504,7 @@ spectral_spear MONS_SPECTRAL_SPEAR
 # Unique humans, in alphabetical order
 donald MONS_DONALD
 edmund MONS_EDMUND
+edmund_weaponless MONS_EDMUND_WEAPONLESS
 erica MONS_ERICA
 erica_swordless MONS_ERICA_SWORDLESS
 eustachio MONS_EUSTACHIO
@@ -670,6 +674,9 @@ manticore MONS_MANTICORE
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
+%rim 0
+fenstrider_witch MONS_FENSTRIDER_WITCH
+%rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
@@ -782,7 +789,7 @@ khufu MONS_KHUFU
 %sdir mon/undead
 mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
-greater_mummy MONS_GREATER_MUMMY
+royal_mummy MONS_ROYAL_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
 %rim 1
 
@@ -1003,12 +1010,16 @@ merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
 %sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
+eleionoma MONS_ELEIONOMA
 %rim 1
 
 ## Rotting monsters ('n')
 %sdir mon/undead
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
+%rim 0
+bloated_husk MONS_BLOATED_HUSK
+%rim 1
 ghoul MONS_GHOUL
 
 %sdir mon/unique
@@ -1046,6 +1057,7 @@ flayed_ghost MONS_FLAYED_GHOST
 %sdir mon/nonliving
 %rim 1
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
+will_o_the_wisp MONS_WILL_O_THE_WISP
 
 ## Dwarves ('q')
 %sdir mon/humanoids

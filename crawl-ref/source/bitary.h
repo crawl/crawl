@@ -9,8 +9,13 @@
 #pragma once
 
 #include <bitset>
+#include <vector>
 
+#include "debug.h"
 #include "defines.h"
+
+using std::bitset;
+using std::vector;
 
 class bit_vector
 {

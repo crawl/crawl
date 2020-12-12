@@ -433,7 +433,7 @@ KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
 KMONS:  p = earth elemental
 SHUFFLE: fgiAC
-KMONS:  f = greater mummy
+KMONS:  f = royal mummy
 KMONS:  g = golden eye
 KMONS:  i = curse toe
 KMONS:  A = vampire knight

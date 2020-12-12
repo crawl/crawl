@@ -13,6 +13,8 @@
 
 #include "AppHdr.h"
 
+#include "feature.h"
+#include "mpr.h"
 #include "tags.h"
 
 #include <algorithm>
@@ -45,6 +47,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "end.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "ghost.h"
 #include "god-abil.h" // just for the Ru sac penalty key
@@ -76,6 +79,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-player.h"
@@ -692,7 +696,7 @@ static void _fix_missing_constrictions()
 {
     for (int i = -1; i < MAX_MONSTERS; ++i)
     {
-        const actor* m = i < 0 ? (actor*)&you : (actor*)&menv[i];
+        const actor* m = i < 0 ? (actor*)&you : (actor*)&env.mons[i];
         if (!m->alive())
             continue;
         if (!m->constricted_by)
@@ -1085,9 +1089,9 @@ static void _ensure_entry(branch_type br)
         if (orig_terrain(*ri) == DNGN_STONE_STAIRS_UP_I)
         {
             for (distance_iterator di(*ri); di; ++di)
-                if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
+                if (in_bounds(*di) && env.grid(*di) == DNGN_FLOOR)
                 {
-                    grd(*di) = entry; // No need to update LOS, etc.
+                    env.grid(*di) = entry; // No need to update LOS, etc.
                     // Announce the repair even in non-debug builds.
                     mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
                          dungeon_feature_name(entry));
@@ -1117,7 +1121,7 @@ static void _add_missing_branches()
     {
         for (rectangle_iterator ri(0); ri; ++ri)
         {
-            if (grd(*ri) == DNGN_STONE_ARCH)
+            if (env.grid(*ri) == DNGN_STONE_ARCH)
             {
                 map_marker *marker = env.markers.find(*ri, MAT_FEATURE);
                 if (marker)
@@ -1134,7 +1138,7 @@ static void _add_missing_branches()
                     case DNGN_ENTER_DIS:
                     case DNGN_ENTER_GEHENNA:
                     case DNGN_ENTER_TARTARUS:
-                        grd(*ri) = featm->feat;
+                        env.grid(*ri) = featm->feat;
                         dprf("opened %s", dungeon_feature_name(featm->feat));
                         env.markers.remove(marker);
                         break;
@@ -1203,9 +1207,9 @@ static void _shunt_monsters_out_of_walls()
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        monster &m(menv[i]);
+        monster &m(env.mons[i]);
         if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos())
-            && (grd(m.pos()) != DNGN_MALIGN_GATEWAY
+            && (env.grid(m.pos()) != DNGN_MALIGN_GATEWAY
                 || mons_genus(m.type) != MONS_ELDRITCH_TENTACLE))
         {
             for (distance_iterator di(m.pos()); di; ++di)
@@ -1217,7 +1221,7 @@ static void _shunt_monsters_out_of_walls()
 #endif
                     mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
                          m.name(DESC_PLAIN, true).c_str(),
-                         dungeon_feature_name(grd(m.pos())),
+                         dungeon_feature_name(env.grid(m.pos())),
                          m.pos().x, m.pos().y);
                     env.mgrid(m.pos()) = NON_MONSTER;
                     m.position = *di;
@@ -1269,7 +1273,6 @@ void tag_read(reader &inf, tag_type tag_id)
         // disabled. Doing this here rather in _tag_read_you() because
         // you.can_currently_train() requires the player's equipment be loaded.
         init_can_currently_train();
-        check_selected_skills();
         break;
     case TAG_LEVEL:
         _tag_read_level(th);
@@ -1277,7 +1280,7 @@ void tag_read(reader &inf, tag_type tag_id)
         _tag_read_level_items(th);
         // We have to do this here because _tag_read_level_monsters()
         // might kill an elsewhere Ilsuiw follower, which ends up calling
-        // terrain.cc:_dgn_check_terrain_items, which checks mitm.
+        // terrain.cc:_dgn_check_terrain_items, which checks env.item.
         link_items();
         EAT_CANARY;
         _tag_read_level_monsters(th);
@@ -1305,7 +1308,7 @@ void tag_read(reader &inf, tag_type tag_id)
                          == "gammafunk_gauntlet_branching")
             {
                 auto exit = DNGN_EXIT_GAUNTLET;
-                grd(you.pos()) = exit;
+                env.grid(you.pos()) = exit;
                 // Announce the repair even in non-debug builds.
                 mprf(MSGCH_ERROR, "Placing emergency exit: %s.",
                      dungeon_feature_name(exit));
@@ -1623,7 +1626,9 @@ static void _tag_construct_you(writer &th)
 
     marshallByte(th, you.piety_hysteresis);
 
-    you.m_quiver.save(th);
+    you.m_quiver_history.save(th);
+    you.quiver_action.save(QUIVER_MAIN_SAVE_KEY);
+    you.launcher_action.save(QUIVER_LAUNCHER_SAVE_KEY);
 
     CANARY;
 
@@ -3613,7 +3618,7 @@ static void _tag_read_you(reader &th)
 
     you.piety_hysteresis = unmarshallByte(th);
 
-    you.m_quiver.load(th);
+    you.m_quiver_history.load(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
@@ -4090,6 +4095,11 @@ static void _tag_read_you_items(reader &th)
     for (int i = 0; i < iclasses; i++)
         for (int j = 0; j < count2; j++)
             you.force_autopickup[i][j] = unmarshallInt(th);
+
+    // preconditions: need to have read items, and you (incl props).
+    you.quiver_action.load(QUIVER_MAIN_SAVE_KEY);
+    you.launcher_action.load(QUIVER_LAUNCHER_SAVE_KEY);
+
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
     {
@@ -4499,7 +4509,7 @@ static void _tag_construct_level(writer &th)
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallByte(th, grd[count_x][count_y]);
+            marshallByte(th, env.grid[count_x][count_y]);
             marshallMapCell(th, env.map_knowledge[count_x][count_y]);
             marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
@@ -4601,7 +4611,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     marshallShort(th, item.link);
     if (item.pos.x >= 0 && item.pos.y >= 0)
-        marshallShort(th, igrd(item.pos));  //  unused
+        marshallShort(th, env.igrid(item.pos));  //  unused
     else
         marshallShort(th, -1); // unused
 
@@ -4697,7 +4707,7 @@ void unmarshallItem(reader &th, item_def &item)
         item.link = ITEM_IN_SHOP;
 #endif
 
-    unmarshallShort(th);  // igrd[item.x][item.y] -- unused
+    unmarshallShort(th);  // env.igrid[item.x][item.y] -- unused
 
     item.slot        = unmarshallByte(th);
 
@@ -4797,7 +4807,7 @@ void unmarshallItem(reader &th, item_def &item)
                 item.sub_type = POT_MUTATION;
                 break;
             case POT_DUMMY_AGILITY:
-                item.sub_type = POT_STABBING;
+                item.sub_type = POT_ATTRACTION;
                 break;
             default:
                 break;
@@ -4881,19 +4891,19 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
-        && artefact_property(item, ARTP_MAGIC_RESISTANCE))
+        && artefact_property(item, ARTP_WILLPOWER))
     {
-        int prop_mr = artefact_property(item, ARTP_MAGIC_RESISTANCE);
+        int prop_mr = artefact_property(item, ARTP_WILLPOWER);
         if (prop_mr > 99)
-            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 3);
+            artefact_set_property(item, ARTP_WILLPOWER, 3);
         else if (prop_mr > 79)
-            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 2);
+            artefact_set_property(item, ARTP_WILLPOWER, 2);
         else if (prop_mr < -40)
-            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, -2);
+            artefact_set_property(item, ARTP_WILLPOWER, -2);
         else if (prop_mr < 0)
-            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, -1);
+            artefact_set_property(item, ARTP_WILLPOWER, -1);
         else
-            artefact_set_property(item, ARTP_MAGIC_RESISTANCE, 1);
+            artefact_set_property(item, ARTP_WILLPOWER, 1);
     }
 
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
@@ -5425,10 +5435,10 @@ static void _tag_construct_level_items(writer &th)
     }
 
     // how many items?
-    const int ni = _last_used_index(mitm, MAX_ITEMS);
+    const int ni = _last_used_index(env.item, MAX_ITEMS);
     marshallShort(th, ni);
     for (int i = 0; i < ni; ++i)
-        marshallItem(th, mitm[i]);
+        marshallItem(th, env.item[i]);
 }
 
 static void marshall_mon_enchant(writer &th, const mon_enchant &me)
@@ -5703,7 +5713,7 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
-    mi.mr = mons_class_res_magic(mi.type, mi.base_type);
+    mi.mr = mons_class_willpower(mi.type, mi.base_type);
     mi.can_see_invis = mons_class_sees_invis(mi.type, mi.base_type);
 
     mi.mresists = unmarshallInt(th);
@@ -5917,12 +5927,12 @@ static void _tag_construct_level_monsters(writer &th)
         marshallMonType(th, env.mons_alloc[i]);
 
     // how many monsters?
-    nm = _last_used_index(menv, MAX_MONSTERS);
+    nm = _last_used_index(env.mons, MAX_MONSTERS);
     marshallShort(th, nm);
 
     for (int i = 0; i < nm; i++)
     {
-        monster& m(menv[i]);
+        monster& m(env.mons[i]);
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (m.type != MONS_NO_MONSTER)
@@ -5953,8 +5963,8 @@ void _tag_construct_level_tiles(writer &th)
     // how many Y?
     marshallShort(th, GYM);
 
-    marshallShort(th, env.tile_names.size());
-    for (const string &name : env.tile_names)
+    marshallShort(th, tile_env.names.size());
+    for (const string &name : tile_env.names)
     {
         marshallString(th, name);
 #ifdef DEBUG_TILE_NAMES
@@ -5963,24 +5973,24 @@ void _tag_construct_level_tiles(writer &th)
     }
 
     // flavour
-    marshallShort(th, env.tile_default.wall_idx);
-    marshallShort(th, env.tile_default.floor_idx);
+    marshallShort(th, tile_env.default_flavour.wall_idx);
+    marshallShort(th, tile_env.default_flavour.floor_idx);
 
-    marshallShort(th, env.tile_default.wall);
-    marshallShort(th, env.tile_default.floor);
-    marshallShort(th, env.tile_default.special);
+    marshallShort(th, tile_env.default_flavour.wall);
+    marshallShort(th, tile_env.default_flavour.floor);
+    marshallShort(th, tile_env.default_flavour.special);
 
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallShort(th, env.tile_flv[count_x][count_y].wall_idx);
-            marshallShort(th, env.tile_flv[count_x][count_y].floor_idx);
-            marshallShort(th, env.tile_flv[count_x][count_y].feat_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].wall_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].floor_idx);
+            marshallShort(th, tile_env.flv[count_x][count_y].feat_idx);
 
-            marshallShort(th, env.tile_flv[count_x][count_y].wall);
-            marshallShort(th, env.tile_flv[count_x][count_y].floor);
-            marshallShort(th, env.tile_flv[count_x][count_y].feat);
-            marshallShort(th, env.tile_flv[count_x][count_y].special);
+            marshallShort(th, tile_env.flv[count_x][count_y].wall);
+            marshallShort(th, tile_env.flv[count_x][count_y].floor);
+            marshallShort(th, tile_env.flv[count_x][count_y].feat);
+            marshallShort(th, tile_env.flv[count_x][count_y].special);
         }
 
     marshallInt(th, TILE_WALL_MAX);
@@ -6020,12 +6030,12 @@ static void _tag_read_level(reader &th)
         for (int j = 0; j < gy; j++)
         {
             dungeon_feature_type feat = unmarshallFeatureType(th);
-            grd[i][j] = feat;
+            env.grid[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
 
 #if TAG_MAJOR_VERSION == 34
             // Save these for potential destination clean up.
-            if (grd[i][j] == DNGN_TRANSPORTER)
+            if (env.grid[i][j] == DNGN_TRANSPORTER)
                 transporters.push_back(coord_def(i, j));
 #endif
             unmarshallMapCell(th, env.map_knowledge[i][j]);
@@ -6040,7 +6050,7 @@ static void _tag_read_level(reader &th)
                 env.map_seen.set(i, j);
             env.pgrid[i][j].flags = unmarshallInt(th);
 
-            mgrd[i][j] = NON_MONSTER;
+            env.mgrid[i][j] = NON_MONSTER;
         }
 
 #if TAG_MAJOR_VERSION == 34
@@ -6133,12 +6143,12 @@ static void _tag_read_level(reader &th)
     {
         for (auto& tr : transporters)
         {
-            if (grd(tr) != DNGN_TRANSPORTER)
+            if (env.grid(tr) != DNGN_TRANSPORTER)
                 continue;
 
             const coord_def dest = get_transporter_dest(tr);
             if (dest != INVALID_COORD)
-                grd(dest) = DNGN_TRANSPORTER_LANDING;
+                env.grid(dest) = DNGN_TRANSPORTER_LANDING;
         }
     }
     if (th.getMinorVersion() < TAG_MINOR_VETO_DISINT)
@@ -6246,6 +6256,21 @@ static spell_type _fixup_soh_breath(monster_type mtyp)
             return SPELL_SERPENT_OF_HELL_TAR_BREATH;
     }
 }
+
+static bool _need_poly_refresh(const monster &mon)
+{
+    if (!mon.props.exists(POLY_SET_KEY))
+        return true;
+    const CrawlVector &set = mon.props[POLY_SET_KEY].get_vector();
+    for (int poly_mon : set)
+    {
+        const monster_type mc = (monster_type)poly_mon;
+        // removed monster
+        if (mc == MONS_PROGRAM_BUG || mons_species(mc) == MONS_PROGRAM_BUG)
+            return true;
+    }
+    return false;
+}
 #endif
 
 static void _tag_read_level_items(reader &th)
@@ -6270,7 +6295,7 @@ static void _tag_read_level_items(reader &th)
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap.type >= TRAP_TELEPORT)
             trap.type = (trap_type)(trap.type - 1);
         if (th.getMinorVersion() < TAG_MINOR_REVEAL_TRAPS)
-            grd(trap.pos) = trap.feature();
+            env.grid(trap.pos) = trap.feature();
         if (th.getMinorVersion() >= TAG_MINOR_TRAPS_DETERM
             && th.getMinorVersion() != TAG_MINOR_0_11
             && th.getMinorVersion() < TAG_MINOR_REVEALED_TRAPS)
@@ -6288,8 +6313,8 @@ static void _tag_read_level_items(reader &th)
         for (int j = 0; j < GYM; j++)
         {
             coord_def pos(i, j);
-            if (feat_is_trap(grd(pos)) && !map_find(env.trap, pos))
-                grd(pos) = DNGN_FLOOR;
+            if (feat_is_trap(env.grid(pos)) && !map_find(env.trap, pos))
+                env.grid(pos) = DNGN_FLOOR;
         }
 
 #endif
@@ -6298,20 +6323,20 @@ static void _tag_read_level_items(reader &th)
     const int item_count = unmarshallShort(th);
     ASSERT_RANGE(item_count, 0, MAX_ITEMS + 1);
     for (int i = 0; i < item_count; ++i)
-        unmarshallItem(th, mitm[i]);
+        unmarshallItem(th, env.item[i]);
     for (int i = item_count; i < MAX_ITEMS; ++i)
-        mitm[i].clear();
+        env.item[i].clear();
 
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
     for (int i = 0; i < item_count; ++i)
     {
-        if (mitm[i].defined() && mitm[i].pos.origin())
+        if (env.item[i].defined() && env.item[i].pos.origin())
         {
-            debug_dump_item(mitm[i].name(DESC_PLAIN).c_str(), i, mitm[i],
+            debug_dump_item(env.item[i].name(DESC_PLAIN).c_str(), i, env.item[i],
                                         "Fixing up unlinked temporary item:");
-            mitm[i].clear();
+            env.item[i].clear();
         }
     }
 #endif
@@ -6795,6 +6820,9 @@ void unmarshallMonster(reader &th, monster& m)
     {
         m.xp_tracking = XP_VAULT;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_SETPOLY || _need_poly_refresh(m))
+        init_poly_set(&m);
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -6832,7 +6860,7 @@ static void _tag_read_level_monsters(reader &th)
 
     for (int i = 0; i < count; i++)
     {
-        monster& m = menv[i];
+        monster& m = env.mons[i];
         unmarshallMonster(th, m);
 
         // place monster
@@ -6897,16 +6925,16 @@ static void _tag_read_level_monsters(reader &th)
                  i, m.name(DESC_PLAIN, true).c_str(),
                  m.pos().x, m.pos().y);
         }
-        int midx = mgrd(m.pos());
+        int midx = env.mgrid(m.pos());
         if (midx != NON_MONSTER)
         {
             mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
                  m.pos().x, m.pos().y,
                  m.name(DESC_PLAIN, true).c_str(),
-                 menv[midx].name(DESC_PLAIN, true).c_str());
+                 env.mons[midx].name(DESC_PLAIN, true).c_str());
         }
 #endif
-        mgrd(m.pos()) = i;
+        env.mgrid(m.pos()) = i;
     }
 #if TAG_MAJOR_VERSION == 34
     // This relies on TAG_YOU (including lost monsters) being unmarshalled
@@ -6926,7 +6954,7 @@ static void _tag_read_level_monsters(reader &th)
                 if (invalid_monster_index(old_midx))
                     mi->props["inwards"].get_int() = MID_NOBODY;
                 else
-                    mi->props["inwards"].get_int() = menv[old_midx].mid;
+                    mi->props["inwards"].get_int() = env.mons[old_midx].mid;
             }
             if (mi->props.exists("outwards"))
             {
@@ -6934,10 +6962,10 @@ static void _tag_read_level_monsters(reader &th)
                 if (invalid_monster_index(old_midx))
                     mi->props["outwards"].get_int() = MID_NOBODY;
                 else
-                    mi->props["outwards"].get_int() = menv[old_midx].mid;
+                    mi->props["outwards"].get_int() = env.mons[old_midx].mid;
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
-                mi->tentacle_connect = menv[mi->tentacle_connect].mid;
+                mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;
         }
     }
 #endif
@@ -6952,13 +6980,13 @@ static void _debug_count_tiles()
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
         {
-            t = env.tile_bk_bg[i][j];
+            t = tile_env.bk_bg[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
-            t = env.tile_bk_fg[i][j];
+            t = tile_env.bk_fg[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
-            t = env.tile_bk_cloud[i][j];
+            t = tile_env.bk_cloud[i][j];
             if (!found.count(t))
                 cnt++, found[t] = true;
         }
@@ -6975,38 +7003,38 @@ void _tag_read_level_tiles(reader &th)
     // how many Y?
     const int gy = unmarshallShort(th);
 
-    env.tile_names.clear();
+    tile_env.names.clear();
     unsigned int num_tilenames = unmarshallShort(th);
     for (unsigned int i = 0; i < num_tilenames; ++i)
     {
 #ifdef DEBUG_TILE_NAMES
         string temp = unmarshallString(th);
         mprf("Reading tile_names[%d] = %s", i, temp.c_str());
-        env.tile_names.push_back(temp);
+        tile_env.names.push_back(temp);
 #else
-        env.tile_names.push_back(unmarshallString(th));
+        tile_env.names.push_back(unmarshallString(th));
 #endif
     }
 
     // flavour
-    env.tile_default.wall_idx  = unmarshallShort(th);
-    env.tile_default.floor_idx = unmarshallShort(th);
-    env.tile_default.wall      = unmarshallShort(th);
-    env.tile_default.floor     = unmarshallShort(th);
-    env.tile_default.special   = unmarshallShort(th);
+    tile_env.default_flavour.wall_idx  = unmarshallShort(th);
+    tile_env.default_flavour.floor_idx = unmarshallShort(th);
+    tile_env.default_flavour.wall      = unmarshallShort(th);
+    tile_env.default_flavour.floor     = unmarshallShort(th);
+    tile_env.default_flavour.special   = unmarshallShort(th);
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
         {
-            env.tile_flv[x][y].wall_idx  = unmarshallShort(th);
-            env.tile_flv[x][y].floor_idx = unmarshallShort(th);
-            env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
+            tile_env.flv[x][y].wall_idx  = unmarshallShort(th);
+            tile_env.flv[x][y].floor_idx = unmarshallShort(th);
+            tile_env.flv[x][y].feat_idx  = unmarshallShort(th);
 
             // These get overwritten by _regenerate_tile_flavour
-            env.tile_flv[x][y].wall    = unmarshallShort(th);
-            env.tile_flv[x][y].floor   = unmarshallShort(th);
-            env.tile_flv[x][y].feat    = unmarshallShort(th);
-            env.tile_flv[x][y].special = unmarshallShort(th);
+            tile_env.flv[x][y].wall    = unmarshallShort(th);
+            tile_env.flv[x][y].floor   = unmarshallShort(th);
+            tile_env.flv[x][y].feat    = unmarshallShort(th);
+            tile_env.flv[x][y].special = unmarshallShort(th);
         }
 
     _debug_count_tiles();
@@ -7019,15 +7047,15 @@ void _tag_read_level_tiles(reader &th)
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
-    if (idx <= 0 || idx > env.tile_names.size())
+    if (idx <= 0 || idx > tile_env.names.size())
     {
 #ifdef DEBUG_TILE_NAMES
         mprf("Index out of bounds: idx = %d - 1, size(tile_names) = %d",
-            idx, env.tile_names.size());
+            idx, tile_env.names.size());
 #endif
         return 0;
     }
-    string tilename = env.tile_names[idx - 1];
+    string tilename = tile_env.names[idx - 1];
 
     tileidx_t tile;
     if (!tile_dngn_index(tilename.c_str(), &tile))
@@ -7050,16 +7078,16 @@ static void _regenerate_tile_flavour()
 {
     /* Remember the wall_idx and floor_idx; tile_init_default_flavour
        sets them to 0 */
-    tileidx_t default_wall_idx = env.tile_default.wall_idx;
-    tileidx_t default_floor_idx = env.tile_default.floor_idx;
+    tileidx_t default_wall_idx = tile_env.default_flavour.wall_idx;
+    tileidx_t default_floor_idx = tile_env.default_flavour.floor_idx;
     tile_init_default_flavour();
     if (default_wall_idx)
     {
         tileidx_t new_wall = _get_tile_from_vector(default_wall_idx);
         if (new_wall)
         {
-            env.tile_default.wall_idx = default_wall_idx;
-            env.tile_default.wall = new_wall;
+            tile_env.default_flavour.wall_idx = default_wall_idx;
+            tile_env.default_flavour.wall = new_wall;
         }
     }
     if (default_floor_idx)
@@ -7067,15 +7095,15 @@ static void _regenerate_tile_flavour()
         tileidx_t new_floor = _get_tile_from_vector(default_floor_idx);
         if (new_floor)
         {
-            env.tile_default.floor_idx = default_floor_idx;
-            env.tile_default.floor = new_floor;
+            tile_env.default_flavour.floor_idx = default_floor_idx;
+            tile_env.default_flavour.floor = new_floor;
         }
     }
 
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
-        tile_flavour &flv = env.tile_flv(*ri);
+        tile_flavour &flv = tile_env.flv(*ri);
         flv.wall = 0;
         flv.floor = 0;
         flv.feat = 0;

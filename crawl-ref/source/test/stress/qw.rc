@@ -313,8 +313,8 @@ function item_resist(str, it)
       else
         return 0
       end
-    elseif str == "MR" then
-      if ego == "magic resistance" or subtype == "ring of protection from magic"
+    elseif str == "Will" then
+      if ego == "willpower" or subtype == "ring of willpower"
          or name:find("quicksilver dragon") then
         return 1
       else
@@ -359,8 +359,8 @@ function intrinsic_resist(str)
     end
   elseif str == "rN" then
     return you.mutation("negative energy resistance")
-  elseif str == "MR" then
-    return you.mutation("magic resistance") + ((you.god() == "Trog") and 1 or 0)
+  elseif str == "Will" then
+    return you.mutation("strong-willed") + ((you.god() == "Trog") and 1 or 0)
   elseif str == "rCorr" then
     return 0
   elseif str == "SInv" then
@@ -386,7 +386,7 @@ function player_resist(str, it)
       other_res = other_res + item_resist(str, it2)
     end
   end
-  if str == "rF" or str == "rC" or str == "rN" or str == "MR" then
+  if str == "rF" or str == "rC" or str == "rN" or str == "WL" then
     return other_res
   else
     return ((other_res > 0) and 1 or 0)
@@ -435,7 +435,7 @@ function absolute_resist_value(str, n)
     return ((you.num_runes() < 2) and 225 or 75)
   elseif str == "rN" then
     return 25*n
-  elseif str == "MR" then
+  elseif str == "WL" then
     if n <= 2 then
       return 75*n
     else
@@ -475,7 +475,7 @@ function max_resist_value(str, d)
     return ((ires < 1) and ((you.num_runes() < 2) and 225 or 75) or 0)
   elseif str == "rN" then
     return ((ires < 3) and 25*d or 0)
-  elseif str == "MR" then
+  elseif str == "WL" then
     return 75*d
   elseif str == "rCorr" then
     return (ires < 1 and (SLIMY_RUNE and 400 or 25) or 0)
@@ -504,7 +504,7 @@ function min_resist_value(str, d)
     return -300
   elseif str == "rC" then
     return -150
-  elseif str == "MR" then
+  elseif str == "WL" then
     return 75*d
   end
   return 0
@@ -525,7 +525,7 @@ function resist_value(str, it, cur, it2)
 end
 
 function total_resist_value(it, cur, it2)
-  artproplist = { "rF", "rC", "rElec", "rPois", "rN", "MR", "rCorr", "SInv", "Spirit" }
+  artproplist = { "rF", "rC", "rElec", "rPois", "rN", "WL", "rCorr", "SInv", "Spirit" }
   local val1, val2 = 0,0,0
   for _,str in ipairs(artproplist) do
     local a,b = resist_value(str, it, cur, it2)

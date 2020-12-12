@@ -31,8 +31,8 @@ static bool _airtight(coord_def c)
 {
     // Broken by 6f473416 -- we should re-allow the wind through grates.
 
-    // return (feat_is_wall(grd(c)) || feat_is_opaque(grd(c))) && grd(c);
-    return !feat_is_reachable_past(grd(c));
+    // return (feat_is_wall(env.grid(c)) || feat_is_opaque(env.grid(c))) && env.grid(c);
+    return !feat_is_reachable_past(env.grid(c));
 }
 
 /* Explanation of the algorithm:
@@ -310,11 +310,11 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
             bool veto =
                 env.markers.property_at(*dam_i, MAT_ANY, "veto_destroy") == "veto";
 
-            if ((feat_is_tree(grd(*dam_i)) && !is_temp_terrain(*dam_i))
+            if ((feat_is_tree(env.grid(*dam_i)) && !is_temp_terrain(*dam_i))
                 && !veto && dur > 0
                 && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
-                grd(*dam_i) = DNGN_FLOOR;
+                env.grid(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
@@ -419,8 +419,8 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
             ASSERT(entry.second == act->pos());
 
             // Temporarily move to (0,0) to allow permutations.
-            if (mgrd(act->pos()) == act->mindex())
-                mgrd(act->pos()) = NON_MONSTER;
+            if (env.mgrid(act->pos()) == act->mindex())
+                env.mgrid(act->pos()) = NON_MONSTER;
             act->moveto(coord_def());
             if (act->is_player())
                 stop_delay(true);

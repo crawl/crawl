@@ -32,7 +32,7 @@ You are unnaturally agile, and gain a bonus to your evasion.
 Brill status
 
 You are unnaturally smart, and gain a bonus to the power of your spells as well
-as completely removing their metabolic cost.
+as halving their mana cost (rounding up).
 %%%%
 Might status
 
@@ -52,9 +52,9 @@ Touch status
 Your attacks deal no damage, but have a chance of confusing monsters that they
 hit.
 %%%%
-MR++ status
+Will++ status
 
-You are much more resistant to hostile enchantments.
+Your willpower is much stronger, protecting against many magical effects.
 %%%%
 Berserk status
 
@@ -144,6 +144,11 @@ or by breaking line of sight with them.
 -Tele status
 
 You are prevented from teleporting or blinking.
+%%%%
+-Move status
+
+You are prevented from moving, blinking, or teleporting. (You can still take
+other actions.)
 %%%%
 Mark status
 
@@ -237,9 +242,9 @@ You are surrounded by a ring of flame clouds, increasing the power of your fire
 magic and giving protection from fire but also making you much more susceptible
 to cold.
 %%%%
-MR/2 status
+Will/2 status
 
-You are more vulnerable to hostile enchantments.
+Your willpower is weaker, making you vulnerable to many magical effects.
 %%%%
 Stone status
 
@@ -749,15 +754,19 @@ Water status
 
 Your control over your magic has been sapped.
 %%%%
-Stab status
+Attr status
 
-You are better at attacking unaware enemies, giving attacks against distracted,
-confused or otherwise unaware creatures a chance to deal increased damage as if
-the target were completely helpless.
+Enemies are magically pulled toward you.
 %%%%
 Zot status
 
 You have spent too much time in one branch, allowing the malevolent entity Zot to
 notice you. If you spend the indicated number of turns in the branch without
 descending to a new floor, Zot will find and consume you.
+%%%%
+Curl status
+
+After being struck by an attack, you reflexively curled up, protecting yourself
+against subsequent strikes. You are now emerging from that defensive curl and
+will receive no further protection until after you are struck again.
 %%%%

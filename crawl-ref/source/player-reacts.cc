@@ -197,11 +197,21 @@ static void _decrement_petrification(int delay)
             // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
-            you.fully_petrify(nullptr);
+            you.fully_petrify();
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
     }
+}
+
+static void _decrement_attraction(int delay)
+{
+    if (!you.duration[DUR_ATTRACTIVE])
+        return;
+
+    attract_monsters();
+    if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
+        mpr("You feel less attractive to monsters.");
 }
 
 static void _decrement_paralysis(int delay)
@@ -425,6 +435,7 @@ void player_reacts_to_monsters()
         detect_items(-1);
     }
 
+    _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
@@ -576,7 +587,7 @@ static void _decrement_durations()
         || you.transform_uncancellable)
     {
         if (form_can_fly()
-            || form_likes_water() && feat_is_water(grd(you.pos())))
+            || form_likes_water() && feat_is_water(env.grid(you.pos())))
         {
             // Disable emergency flight if it was active
             you.props.erase(EMERGENCY_FLIGHT_KEY);
@@ -997,7 +1008,7 @@ void player_reacts()
         slime_wall_damage(&you, you.time_taken);
 
     // Icy shield and armour melt over lava.
-    if (grd(you.pos()) == DNGN_LAVA)
+    if (env.grid(you.pos()) == DNGN_LAVA)
         maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     _decrement_durations();

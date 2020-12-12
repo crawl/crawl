@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "options.h"
 #include "spl-book.h"
 #include "book-data.h"
 
@@ -1063,6 +1064,8 @@ bool learn_spell(spell_type specspell, bool wizard)
 
         did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
     }
+
+    quiver::on_actions_changed();
 
     return true;
 }

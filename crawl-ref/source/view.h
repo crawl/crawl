@@ -5,10 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "defines.h"
 #include "options.h"
 #include "player.h" // player_stealth()
 #include "viewgeom.h"
+
+using std::vector;
 
 bool mon_enemies_around(const monster* mons);
 void seen_monsters_react(int stealth = player_stealth());

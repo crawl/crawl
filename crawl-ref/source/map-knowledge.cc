@@ -123,7 +123,7 @@ void reautomap_level()
 
 void set_terrain_seen(const coord_def pos)
 {
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
     map_cell* cell = &env.map_knowledge(pos);
 
     // First time we've seen a notable feature.

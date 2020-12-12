@@ -46,6 +46,7 @@
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -332,8 +333,8 @@ static void _jiyva_effects(int /*time_delta*/)
             {
                 newpos = random_in_bounds();
             }
-            while (grd(newpos) != DNGN_FLOOR
-                       && grd(newpos) != DNGN_SHALLOW_WATER
+            while (env.grid(newpos) != DNGN_FLOOR
+                       && env.grid(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
@@ -573,7 +574,7 @@ static void _catchup_monster_move(monster* mon, int moves)
             break;
 
         const coord_def next(pos + inc);
-        const dungeon_feature_type feat = grd(next);
+        const dungeon_feature_type feat = env.grid(next);
         if (feat_is_solid(feat)
             || monster_at(next)
             || !monster_habitable_grid(mon, feat))
@@ -729,8 +730,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
-        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
-        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
+        case ENCH_LOWERED_WL: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
+        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
         case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
@@ -1083,7 +1084,7 @@ void timeout_tombs(int duration)
             _drop_tomb(cmark->pos, empty_tomb, zin);
 
             monster* mon_src =
-                !invalid_monster_index(cmark->source) ? &menv[cmark->source]
+                !invalid_monster_index(cmark->source) ? &env.mons[cmark->source]
                                                       : nullptr;
             // A monster's Tomb of Doroklohe spell.
             if (mon_src
@@ -1115,7 +1116,7 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration -= duration;
 
         if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-            && !feat_is_sealed(grd(marker->pos)))
+            && !feat_is_sealed(env.grid(marker->pos)))
         {
             // TODO: could this be done inside `revert_terrain_change`? The
             // two things to test are corrupting sealed doors, and destroying
@@ -1170,7 +1171,7 @@ void setup_environment_effects()
             if (!in_bounds(x, y))
                 continue;
 
-            const int grid = grd[x][y];
+            const int grid = env.grid[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
                         && player_in_branch(BRANCH_SWAMP)))
@@ -1185,7 +1186,7 @@ void setup_environment_effects()
 
 static void apply_environment_effect(const coord_def &c)
 {
-    const dungeon_feature_type grid = grd(c);
+    const dungeon_feature_type grid = env.grid(c);
     // Don't apply if if the feature doesn't want it.
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
@@ -1308,7 +1309,7 @@ static bool _zot_clock_active_in(branch_type br)
 }
 
 // Is the zot clock running, or is it paused or stopped altogether?
-static bool _zot_clock_active()
+bool zot_clock_active()
 {
     return _zot_clock_active_in(you.where_are_you);
 }
@@ -1366,7 +1367,7 @@ bool bezotted()
 // Decrease the zot clock when the player enters a new level.
 void decr_zot_clock()
 {
-    if (!_zot_clock_active())
+    if (!zot_clock_active())
         return;
     int &zot = _zot_clock();
     if (zot == -1)

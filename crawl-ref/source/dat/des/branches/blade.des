@@ -9,7 +9,7 @@
 
 # Main layout
 NAME:    hall_of_blades
-TAGS:    no_dump no_monster_gen
+TAGS:    no_dump no_monster_gen removed
 PLACE:   Blade
 ORIENT:  encompass
 : halls_of_blades_weapon(_G)

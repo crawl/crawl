@@ -37,7 +37,7 @@ The contents of this text are:
                 level_map_cursor_step
 3-e     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
-                view_lock_y, view_lock, center_on_scroll,
+                view_lock_y, view_lock, centre_on_scroll,
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
@@ -707,7 +707,7 @@ view_max_height = 21 (max 71)
 * Note that using large viewports can slow the game down.
 
 view_lock_x = true
-        Keeps the player character centered horizontally in the
+        Keeps the player character centred horizontally in the
         viewport, continuously scrolling the viewport to match the
         PC's movements. If this is not set, the player character can
         move horizontally within the viewport, and the viewport will
@@ -715,13 +715,13 @@ view_lock_x = true
         left or right edge.
 
 view_lock_y = true
-        Keeps the character centered vertically in the viewport.
+        Keeps the character centred vertically in the viewport.
 
 view_lock = true
         Aliased option that sets both view_lock_x and view_lock_y.
 
-center_on_scroll = false
-        If this is set, the viewport centers on the player character
+centre_on_scroll = false
+        If this is set, the viewport centres on the player character
         whenever it scrolls (this option is irrelevant if view_lock_x
         and view_lock_y are set).
 
@@ -730,7 +730,7 @@ symmetric_scroll = true
         with the character movement that caused the scroll.
 
         To illustrate, let's say the PC is at the lower edge of the
-        viewport, but is near the horizontal center. Now the PC moves
+        viewport, but is near the horizontal centre. Now the PC moves
         diagonally down and right, forcing the viewport to scroll up
         one line. If symmetric_scroll is set, the viewport will also
         scroll left one column to match the PC's diagonal movement. If
@@ -738,7 +738,7 @@ symmetric_scroll = true
         not horizontally. symmetric_scroll can be less disorienting
         than free scrolling.
 
-        This option is not relevant if view_lock or center_on_scroll
+        This option is not relevant if view_lock or centre_on_scroll
         are set.
 
 scroll_margin_x = 2
@@ -973,7 +973,7 @@ auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
         exploration that is included in this list, a travel exclusion is
-        automatically set centered on this monster, meaning autoexplore won't
+        automatically set centred on this monster, meaning autoexplore won't
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
 
@@ -1018,11 +1018,27 @@ simple_targeting = false
         If set to true, disables smart targeting for explosion and bouncing
         bolt spells, making them automatically target the closest monster in
         range rather than trying to find a spot that affects multiple monsters
-        while avoiding the player.
+        while avoiding the player. This applies to target selection when
+        zapping as well as autotarget selection for quivered spells.
 
-allow_self_target = (yes | no | prompt)
+always_use_static_targeters = false
+        A static targeter shows the possible area of effect for a spell that
+        does not have controllable targeting. If this option is set to true,
+        static targeters are shown when casting via `z` and `Z`. When false,
+        they are shown only via `Z` and via the fire interface. Targeters are
+        never shown when firing via AUTOFIRE (shift-tab, `p`) and other
+        autoattack commands.
+
+force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition
+        Force showing a targeter for the listed spells when casting normally
+        even if the spell isn't targeted. This for practical purposes only has
+        an effect on statically targeted spells, such as the ones in the
+        default value. It is overridden by `always_use_static_targeters = true`,
+        which amounts to listing every spell here.
+
+allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
-        or a wand of paralysis.)
+        or a wand of paralysis.) Values: (yes | no | prompt).
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),
         you will be required to confirm self-targeting. This option has no
@@ -1219,9 +1235,8 @@ ability_slot ^= <regex>:<ability letters>
 
 autofight_stop = 50
         Autofight will not act if your HP is at or lower than this
-        percentage of your max HP. For example, to remove this stop
-        you would want:
-            autofight_stop = 0
+        percentage of your max HP. Disabled when set to 0. This setting applies
+        both to autofight and to autofire.
 
 autofight_warning = 0
         Enforce a minimum time (in milliseconds) between autofight commands.
@@ -1232,9 +1247,14 @@ autofight_warning = 0
         or equal to zero disables this check.
 
 autofight_throw = false
-        If your quiver contains a throwable item, autofight will throw it
-        at enemies out of melee range. Without this option, only a wielded
-        launcher (a bow, crossbow or sling) will be considered.
+        If your quiver contains contains a fireable action that does direct
+        damage to the enemy, regular CMD_AUTOFIGHT (i.e., tab on the default
+        binding) will trigger it at enemies out of melee range. Without this
+        option, only a wielded launcher (a bow, crossbow or sling) will be
+        triggered by CMD_AUTOFIGHT. If an action that does direct damage is
+        quivered but out of range, you will move towards the enemy. If an
+        action is quivered that does not do direct damage, CMD_AUTOFIGHT will
+        ignore it entirely.
 
 autofight_throw_nomove = true
         This works same as above, except only for ===hit_closest_nomove rather
@@ -1262,24 +1282,27 @@ autofight_prompt_range = true
         to attack.
 
 automagic_enable = false
-        If true, the autofight function will resort to casting an assigned
-        spell at a target. Initial spell slot is a.
+        Option to enable the old automagic system; new players are recommended
+        to just use quivered spells. If true, autofight (i.e. tab on the
+        default bindings) will cast a spell in a designated slot at a target.
+        Initial spell slot is a. (deprecated)
 
 automagic_slot = a
-        Setting this changes the initial spell slot for automagic. Can be
-        changed for games in progress in-game by setting a macro to call
-        ===am_set_spell.
+        Setting this changes the initial spell slot for the old automagic
+        system. Can be changed for games in progress in-game by setting a macro
+        to call ===am_set_spell.
 
 automagic_fight = false
-        Setting this to true causes melee combat when trying to cast a spell
-        that you either do not have enough magic points for, or are below
+        With the old automagic system enabled, setting this to true causes
+        a fallback to regular autofight (e.g. melee) when trying to cast a
+        spell that you either do not have enough magic points for, or are below
         the set threshold. If false, a message will appear and no further
         action is taken.
 
 automagic_stop = 0
         Similar to autofight_stop, if magic points are below this number
-        (percentage of total), casting is prevented. What happens depends
-        on automagic_fight setting.
+        (percentage of total), casting via autofight/autofire is prevented.
+        Disabled when set to 0.
 
 fail_severity_to_confirm = 3
         Ask for confirmation when attempting to cast a spell where a miscast
@@ -1292,6 +1315,11 @@ fail_severity_to_confirm = 3
           1: yellow or higher
 
         If the value 0 or -1 is given, never prompt about miscasts.
+
+fail_severity_to_quiver = 2
+        Exclude spells with this miscast level or higher from quiver cycling
+        and automatic quivering. -1 can be used to exclude spells entirely from
+        automatic quivering.
 
 easy_door = true
         When (O)pening or (C)losing doors, do not prompt for a direction
@@ -1435,7 +1463,7 @@ mlist_allow_alternate_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centered coordinates in the ^x view description.
+        Display player-centred coordinates in the ^x view description.
 
 monster_item_view_features += <regex>, <regex>
         (List option)
@@ -1471,7 +1499,7 @@ msg_webtiles_height = -1
 
 messages_at_top = false
         Put the message window at the top of the screen. This moves
-        the last message close to the center of the view when not
+        the last message close to the centre of the view when not
         using clear_messages=true.
 
 msg_condense_repeats = true
@@ -1716,6 +1744,12 @@ fire_order += inscribed
         about inscriptions.
 
 (See also pickup_thrown in 3-a.)
+
+launcher_autoquiver = true
+        If set to true, change the main quiver to launcher ammo on wielding
+        that launcher; if set to false, the main quiver is unaffaceted by
+        wielding a launcher. (Firing via tab or `v` still work.). This also
+        affects rare artefacts that may be evoked.
 
 3-k     Message Channels.
 -------------------------
@@ -2127,7 +2161,9 @@ tile_layout_priority = minimap, inventory, command, spell, monster
         but it will have priority over it so the inventory might not be able to
         expand to its maximum size (6 lines). The minimap is always placed
         between the stat area and the tabs. The memorisation and skill tabs can
-        be added to the list too, but are not by default.
+        be added to the list too, but are not by default. The possible options
+        are: abilities, commands, inventory, memorisation, minimap, monsters,
+        navigation, skills, spells, system commands
 
 tile_display_mode = (tiles | glyphs | hybrid)
         Controls how the dungeon is rendered. You can use normal tiles (default)

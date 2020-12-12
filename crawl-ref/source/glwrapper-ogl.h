@@ -3,10 +3,15 @@
 #ifdef USE_TILE_LOCAL
 #ifdef USE_GL
 
+#include <vector>
+
 #include "glwrapper.h"
 #ifdef __ANDROID__
 #include <GLES/gl.h>
 #endif
+
+using std::vector;
+
 class OGLStateManager : public GLStateManager
 {
 public:

@@ -612,6 +612,11 @@ static int dgn_has_exit_from(lua_State *ls)
     return dgn_map_pathfind(ls, 3, &map_flood_finder::has_exit_from);
 }
 
+static int _dgn_count_disconnected_zones(lua_State *ls)
+{
+    PLUARET(number, dgn_count_disconnected_zones(false));
+}
+
 static void dlua_push_coordinates(lua_State *ls, const coord_def &c)
 {
     lua_pushnumber(ls, c.x);
@@ -1046,14 +1051,14 @@ static int dgn_floor_halo(lua_State *ls)
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) == target)
+        if (env.grid(*ri) == target)
         {
             for (adjacent_iterator ai(*ri, false); ai; ++ai)
             {
                 if (!map_bounds(*ai))
                     continue;
 
-                const dungeon_feature_type feat2 = grd(*ai);
+                const dungeon_feature_type feat2 = env.grid(*ai);
 
                 if (feat2 == DNGN_FLOOR)
                     env.grid_colours(*ai) = colour;
@@ -1440,7 +1445,7 @@ LUAFN(dgn_map_by_tag)
 {
     if (const char *tag = luaL_checkstring(ls, 1))
     {
-        const bool check_depth = _lua_boolean(ls, 3, true);
+        const bool check_depth = _lua_boolean(ls, 2, true);
         return _lua_push_map(ls, random_map_for_tag(tag, check_depth));
     }
     return 0;
@@ -1453,6 +1458,19 @@ LUAFN(dgn_map_by_name)
 
     return 0;
 }
+
+LUAFN(dgn_map_by_index)
+{
+    const int i = luaL_safe_checkint(ls, 1);
+    if (i >= 0 && i < map_count())
+        return _lua_push_map(ls, map_by_index(i));
+
+    return 0;
+}
+
+LUARET1(dgn_map_count, number, map_count())
+
+LUARET1(dgn_last_builder_error, string, crawl_state.last_builder_error.c_str())
 
 LUAFN(dgn_map_in_depth)
 {
@@ -1498,8 +1516,7 @@ LUAFN(_dgn_place_map)
             // do very bad things for the lua stack, if it isn't compiled with
             // c++ mode. (Which we don't do by default.)
             // Won't necessarily veto the level, but we want to report it still.
-            dprf(DIAG_DNGN, "<white>veto in dgn.place_maps</white>: %s: %s",
-                 level_id::current().describe().c_str(), e.what());
+            dgn_record_veto(e);
         }
     }
     lua_pushnil(ls);
@@ -1744,7 +1761,7 @@ LUAFN(dgn_fill_grd_area)
 
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
-            grd[x][y] = feat;
+            env.grid[x][y] = feat;
 
     return 0;
 }
@@ -1799,6 +1816,7 @@ const struct luaL_reg dgn_dlib[] =
 { "points_connected", dgn_points_connected },
 { "any_point_connected", dgn_any_point_connected },
 { "has_exit_from", dgn_has_exit_from },
+{ "count_disconnected_zones", _dgn_count_disconnected_zones },
 { "gly_point", dgn_gly_point },
 { "gly_points", dgn_gly_points },
 { "original_map", dgn_original_map },
@@ -1834,6 +1852,8 @@ const struct luaL_reg dgn_dlib[] =
 
 { "map_by_tag", dgn_map_by_tag },
 { "map_by_name", dgn_map_by_name },
+{ "map_by_index", dgn_map_by_index },
+{ "map_count", dgn_map_count },
 { "map_in_depth", dgn_map_in_depth },
 { "map_by_place", dgn_map_by_place },
 { "place_map", _dgn_place_map },
@@ -1843,6 +1863,7 @@ const struct luaL_reg dgn_dlib[] =
 { "in_vault", _dgn_in_vault },
 { "set_map_mask", _dgn_set_map_mask },
 { "unset_map_mask", _dgn_unset_map_mask },
+{ "last_builder_error", dgn_last_builder_error },
 
 { "map_parameters", _dgn_map_parameters },
 

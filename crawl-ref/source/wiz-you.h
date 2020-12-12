@@ -8,6 +8,7 @@
 #include "enum.h"
 #include "job-type.h"
 #include "species-type.h"
+#include "skill-type.h"
 
 #ifdef WIZARD
 #define FREEZE_TIME_KEY "freeze_time"

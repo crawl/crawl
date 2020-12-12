@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 struct monster_info;
 
 // various elemental colour schemes... used for abstracting random

@@ -1,7 +1,9 @@
 #include "AppHdr.h"
 
 #include "end.h"
+#include "game-type.h"
 #include "items.h"
+#include "newgame-def.h"
 #include "ng-setup.h"
 #include "player.h"
 #include "player-equip.h"

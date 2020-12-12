@@ -208,9 +208,8 @@ int zin_tithe(const item_def& item, int quant, bool converting)
 enum class jiyva_slurp_result
 {
     none = 0,
-    food = 1 << 0,
-    hp   = 1 << 1,
-    mp   = 1 << 2,
+    hp   = 1 << 0,
+    mp   = 1 << 1,
 };
 DEF_BITFIELD(jiyva_slurp_results, jiyva_slurp_result);
 
@@ -248,11 +247,6 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
         return gain;
 
     int item_value = div_rand_round(stepped, 50);
-    if (have_passive(passive_t::slime_feed)
-        && x_chance_in_y(you.piety, MAX_PIETY))
-    {
-        gain.jiyva_bonus |= jiyva_slurp_result::food;
-    }
 
     if (have_passive(passive_t::slime_mp)
         && x_chance_in_y(you.piety, MAX_PIETY)
@@ -290,8 +284,6 @@ void jiyva_slurp_item_stack(const item_def& item, int quantity)
 
     if (gain.piety_gain > PIETY_NONE)
         simple_god_message(" appreciates your sacrifice.");
-    if (gain.jiyva_bonus & jiyva_slurp_result::food)
-        mpr("You feel a little less hungry.");
     if (gain.jiyva_bonus & jiyva_slurp_result::mp)
         canned_msg(MSG_GAIN_MAGIC);
     if (gain.jiyva_bonus & jiyva_slurp_result::hp)

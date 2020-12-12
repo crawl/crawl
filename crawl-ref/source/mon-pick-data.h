@@ -1,3 +1,7 @@
+#pragma once
+
+#include "tag-version.h"
+
 static const pop_entry pop_d[] =
 { // Dungeon (OOD cap: 27)
   { -2,  8,  515, SEMI, MONS_GIANT_COCKROACH },
@@ -262,29 +266,55 @@ static const pop_entry pop_lair[] =
 
 static const pop_entry pop_swamp[] =
 { // Swamp
-  {  1,  4, 2000, FLAT, MONS_NO_MONSTER }, // was plant + fungus
-  { -6,  4,  480, RISE, MONS_SLIME_CREATURE },
-  { -2,  6,  245, SEMI, MONS_SHADOW },
-  {  0,  5,  480, SEMI, MONS_SPRIGGAN_RIDER },
-  {  0,  6,   40, PEAK, MONS_UGLY_THING },
-  {  1,  4, 1000, FLAT, MONS_ALLIGATOR },
-  {  1,  4, 1000, FLAT, MONS_CANE_TOAD },
-  {  1,  4,  925, FLAT, MONS_BOG_BODY },
-  {  1,  4,  925, FLAT, MONS_SWAMP_DRAKE },
-  {  1,  4,  915, FLAT, MONS_HYDRA },
-  {  1,  4,  825, FLAT, MONS_TYRANT_LEECH },
-  {  1,  4,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
-  {  1,  4,  500, FLAT, MONS_SWAMP_DRAGON },
-  {  1,  4,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
-  {  1,  4,  192, FLAT, MONS_HORNET },
-  {  1,  4,  100, FALL, MONS_KOMODO_DRAGON },
-  {  1,  4,   25, RISE, MONS_TENTACLED_MONSTROSITY },
-  {  1,  4,  435, RISE, MONS_THORN_HUNTER },
-  {  1,  4,  385, RISE, MONS_GHOST_CRAB },
-  {  1,  5,  425, SEMI, MONS_SHAMBLING_MANGROVE },
-  {  1,  7,  115, PEAK, MONS_BLINK_FROG },
-  {  1,  7,   52, SEMI, MONS_VERY_UGLY_THING },
-  {  2,  4,  525, RISE, MONS_SPRIGGAN_DRUID },
+  // Trying to keep total around 10000 on each floor, roughly.
+  // Easy enemies:
+  {  1,  4,   500, FALL, MONS_VAMPIRE_MOSQUITO },
+  {  1,  4,   500, FALL, MONS_SWAMP_DRAKE },
+  {  1,  4,   500, FALL, MONS_SPRIGGAN_RIDER },
+  {  1,  4,   500, FLAT, MONS_SPRIGGAN_RIDER },
+  {  1,  4,   600, FALL, MONS_TYRANT_LEECH },
+  {  1,  4,   500, FLAT, MONS_TYRANT_LEECH },
+  {  1,  4,   700, FALL, MONS_GOLIATH_FROG  },
+  {  1,  4,   500, FLAT, MONS_GOLIATH_FROG },
+  {  1,  4,   300, FALL, MONS_BLOATED_HUSK },
+  {  1,  4,   300, FLAT, MONS_BLOATED_HUSK },
+  {  1,  4,   800, FALL, MONS_BOG_BODY },
+  {  1,  4,   200, FLAT, MONS_BOG_BODY },
+  // Harder enemies:
+  {  1,  4,   400, FLAT, MONS_SPRIGGAN_DRUID },
+  {  1,  4,   500, RISE, MONS_SPRIGGAN_DRUID },
+  {  1,  4,   200, FLAT, MONS_GHOST_CRAB },
+  {  1,  4,   300, RISE, MONS_GHOST_CRAB },
+  {  1,  4,   500, FLAT, MONS_WILL_O_THE_WISP },
+  {  1,  4,   400, RISE, MONS_WILL_O_THE_WISP },
+  {  1,  4,   600, FLAT, MONS_ELEIONOMA },
+  {  1,  4,   400, RISE, MONS_ELEIONOMA },
+  {  1,  4,   800, FLAT, MONS_HYDRA },
+  {  1,  4,   500, RISE, MONS_HYDRA },
+  {  1,  4,   400, FLAT, MONS_SWAMP_DRAGON },
+  {  1,  4,   600, RISE, MONS_SWAMP_DRAGON },
+  {  1,  4,   600, FLAT, MONS_BUNYIP },
+  {  1,  4,   400, RISE, MONS_BUNYIP },
+  {  1,  4,   500, FLAT, MONS_ALLIGATOR },
+  {  1,  4,   400, RISE, MONS_ALLIGATOR },
+  // Top-tier threats:
+  {  1,  4,   33, FLAT, MONS_THORN_HUNTER },
+  {  1,  4,  133, RISE, MONS_THORN_HUNTER },
+  {  1,  4,   33, FLAT, MONS_SHAMBLING_MANGROVE },
+  {  1,  4,  133, RISE, MONS_SHAMBLING_MANGROVE },
+  {  1,  4,   29, FLAT, MONS_FENSTRIDER_WITCH },
+  {  1,  4,  129, RISE, MONS_FENSTRIDER_WITCH },
+  {  1,  4,    5, FLAT, MONS_TENTACLED_MONSTROSITY },
+  {  1,  4,    5, RISE, MONS_TENTACLED_MONSTROSITY },
+  // OODs
+  {  5,  7, 1000, FLAT, MONS_FENSTRIDER_WITCH },
+  {  5,  7, 1500, FLAT, MONS_SHAMBLING_MANGROVE },
+  {  5,  7, 1500, FLAT, MONS_THORN_HUNTER },
+  {  5,  7, 1500, FLAT, MONS_TENTACLED_MONSTROSITY },
+  {  5,  7, 1500, FLAT, MONS_GHOUL },
+  {  5,  7, 1000, FLAT, MONS_SPRIGGAN_AIR_MAGE },
+  {  5,  7, 1000, FLAT, MONS_SPRIGGAN_BERSERKER },
+  {  5,  7, 1000, FLAT, MONS_DEATH_DRAKE }, // not that bad but very mean
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -476,7 +506,7 @@ static const pop_entry pop_tomb[] =
   {  1,  5,  230, FLAT, MONS_FLYING_SKULL },
   {  1,  5,  600, FLAT, MONS_GUARDIAN_MUMMY },
   { -1,  9,  335, SEMI, MONS_MUMMY_PRIEST },
-  {  4,  5,    3, RISE, MONS_GREATER_MUMMY },
+  {  4,  5,    3, RISE, MONS_ROYAL_MUMMY },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
   {  1,  5,  250, FLAT, MONS_USHABTI },

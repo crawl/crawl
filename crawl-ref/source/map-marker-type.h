@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // Can't change this order without breaking saves.
 enum map_marker_type
 {

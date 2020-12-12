@@ -2,6 +2,7 @@
 
 #include "enum.h"
 #include "dungeon-feature-type.h"
+#include "tag-version.h"
 
 // same order as DCHAR_*
 enum show_item_type

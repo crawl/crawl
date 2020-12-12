@@ -53,6 +53,7 @@
 #include "env.h"
 #include "losglobal.h"
 #include "mon-act.h"
+#include "mpr.h"
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -728,7 +729,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     bool reached_target = false;
     while (dist++ <= max_dist)
     {
-        const dungeon_feature_type feat = grd(ray.pos());
+        const dungeon_feature_type feat = env.grid(ray.pos());
 
         if (ray.pos() == target)
             reached_target = true;

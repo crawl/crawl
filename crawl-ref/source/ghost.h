@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enchant-type.h"
 #include "enum.h"
 #include "god-type.h"
@@ -13,6 +15,8 @@
 #include "mon-enum.h"
 #include "mutant-beast.h"
 #include "species-type.h"
+
+using std::vector;
 
 #define MIRRORED_GHOST_KEY "mirrored_ghost"
 

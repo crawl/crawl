@@ -15,6 +15,7 @@
 #include "dlua.h"
 #include "end.h"
 #include "english.h"
+#include "evoke.h"
 #include "fight.h"
 #include "hints.h"
 #include "initfile.h"
@@ -32,6 +33,7 @@
 #include "state.h"
 #include "state.h"
 #include "stringutil.h"
+#include "throw.h"
 #include "tutorial.h"
 #include "unwind.h"
 #include "version.h"
@@ -409,6 +411,57 @@ static bool _check_can_do_command(lua_State *ls)
     }
 
     return true;
+}
+
+/****
+ * Handle any command that takes a target and no other parameters. This includes
+ * CMD_PRIMARY_ATTACK, CMD_EVOKE_WIELDED, and CMD_FIRE. If the target
+ * coordinates are out of bounds (the default), this enters interactive
+ * targeting.
+ *
+ * @tparam string command name
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @treturn boolean whether an action took place
+ * @function do_targeted_command
+ */
+static int crawl_do_targeted_command(lua_State *ls)
+{
+    if (!_check_can_do_command(ls))
+        return 0;
+
+    const string command = luaL_checkstring(ls, 1);
+
+    command_type cmd = name_to_command(command);
+    if (cmd == CMD_NO_CMD)
+    {
+        luaL_argerror(ls, 1, ("Invalid command: " + command).c_str());
+        return 0;
+    }
+
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+
+    switch (cmd)
+    {
+    case CMD_PRIMARY_ATTACK:
+        quiver::get_primary_action()->trigger(target);
+        break;
+    case CMD_EVOKE_WIELDED:
+        evoke_item(you.equip[EQ_WEAPON], &target);
+        break;
+    case CMD_FIRE:
+        quiver::get_secondary_action()->trigger(target);
+        break;
+    default:
+        luaL_argerror(ls, 1, ("Not a (supported) targeted command: " + command).c_str());
+        return 0;
+    }
+
+    PLUARET(boolean, you.turn_is_over);
 }
 
 /*** Process a string of input keys
@@ -1444,6 +1497,7 @@ static const struct luaL_reg crawl_clib[] =
     { "process_keys",       crawl_process_keys },
     { "set_sendkeys_errors", crawl_set_sendkeys_errors },
     { "do_commands",        crawl_do_commands },
+    { "do_targeted_command", crawl_do_targeted_command },
 #ifdef USE_SOUND
     { "playsound",          crawl_playsound },
 #endif
@@ -1754,6 +1808,9 @@ LUAFN(crawl_rng_wrap)
     return lua_gettop(ls);
 }
 
+LUAWRAP(crawl_clear_message_store, clear_message_store())
+
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1771,6 +1828,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "hints_type", crawl_hints_type },
 { "unavailable_god", _crawl_unavailable_god },
 { "rng_wrap", crawl_rng_wrap },
+{ "clear_message_store", crawl_clear_message_store },
 
 { nullptr, nullptr }
 };

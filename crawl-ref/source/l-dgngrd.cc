@@ -108,12 +108,12 @@ static int dgn_grid(lua_State *ls)
         if (feat)
         {
             if (crawl_state.generating_level)
-                grd(c) = feat;
+                env.grid(c) = feat;
             else
                 dungeon_terrain_changed(c, feat);
         }
     }
-    PLUARET(number, grd(c));
+    PLUARET(number, env.grid(c));
 }
 
 LUAFN(dgn_distance)

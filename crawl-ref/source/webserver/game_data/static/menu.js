@@ -579,7 +579,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         switch (chr)
         {
         case "-":
-            if (menu.tag == "inventory" || menu.tag == "stash")
+            if (menu.tag == "inventory" || menu.tag == "stash" || menu.tag == "actions")
                 break; // Don't capture - for wield prompts or stash search
 
         case "<":

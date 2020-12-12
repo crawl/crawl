@@ -116,7 +116,7 @@ Minor:
 - Your rate of level advancement
 - Occasional bonus points added to some primary attributes
 - The amount of magic points you get each level
-- Your innate resistance to hostile enchantments
+- Your innate willpower, your resistance to subtle magic
 - Your initial equipment (this also depends on background)
 
 .. note:: Humans are the average to which all other species are compared.
@@ -259,14 +259,14 @@ There are some additional stats that aren't as important on a turn to turn basis
 and thus aren't listed in the main stats area. They can easily be checked with
 the '@' or '%' commands, though.
 
-Magic Resistance
-  Affects your ability to resist the effects of enchantments and similar magic
-  directed at you. Has no effect on direct damage dealt by magic, just on more
-  subtle effects. Although your magic resistance increases with your level to
-  an extent determined by your character's species, the creatures you will meet
-  deeper in the dungeon are better at casting spells, and are more likely to be
-  able to affect you. You can get a rough idea of your current MR by pressing
-  '@' or '%'.
+Willpower
+  Affects your ability to resist the effects of enchantments and similar
+  magic directed at you. Has no effect on direct damage dealt by magic,
+  just on more subtle effects. Although your willpower increases with your
+  level to an extent determined by your character's species, the creatures
+  you will meet deeper in the dungeon are better at casting spells, and are
+  more likely to be able to affect you. You can get a rough idea of your
+  current WL by pressing '%'.
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
@@ -322,6 +322,29 @@ to just pressing the direction key several times.
 
 Another convenient method for moving long distances is described in the section
 on Automated Travel and Exploration below.
+
+Combat
+========================================
+
+The dungeon is a hostile place, and you will likely need to defend yourself. The
+basic case of combat involves melee attacks: if you are adjacent to a monster,
+moving towards that monster will cause you to attack it with a wielded melee
+weapon, or your fists. There are also a wide variety of ways to attack monsters
+that are further away, including polearms (which can reach a tile away), various
+bows, launchers, and throwable items, magical items that can be evoked such as
+wands, spells, and abilities. These are described throughout the rest of this
+document. These are triggered in a variety of ways, but one commonality is that
+all of these can be quivered: the quiver provides quick access to an action that
+can be fired.
+
+Both melee and ranged combat provide shortcuts that autotarget the nearest
+enemy, if there is one available. Your wielded weapon can be triggered by Tab
+("Autofight"), moving towards or attacking the nearest enemy depending on
+whether there is one in range for the weapon. Your quivered action can be
+triggered by Shift-Tab or 'p' ("Autofire"); if the action takes a target the
+nearest enemy will be selected, otherwise the action will be triggered. See
+`Attacking and firing`_ for the full key list related to attacking, quivers, and
+firing.
 
 Resting
 ========================================
@@ -438,8 +461,8 @@ commands and shortcuts in level-map mode, or press 'G?' or 'X?' within the game.
 
 Another use of autotravel is exploration: 'o' makes your character move to the
 nearest unexplored area. Note that this algorithm does not attempt any
-optimisation by default. By manual exploration you can save turns, but auto-explore
-will usually save real time.
+optimisation by default. By manual exploration you can save turns, but
+auto-explore will usually save real time.
 
 Stashes and Searching
 ========================================
@@ -642,8 +665,7 @@ The details screen shows:
   * EV: evasion; how well it avoids being hit (and your odds of hitting it
     with your current melee attack)
 
-  * MR: magic resistance; how well it resists most Hexes and similar
-    enchantments.
+  * WL: willpower; its resistance to most Hexes and similar effects.
 
 - Its difficulty level, speed (if different from average speed), size,
   resistances, and special attacks.
@@ -676,16 +698,16 @@ adventures, how they are displayed, and what commands there are to use them:
 
 =======  =============  ================================================
 )        weapons        (use 'w'ield)
-(        missiles       (use 'f'ire)
+(        missiles       (use 'f'ire or 'F'ire, 'Q' to quiver)
 [        armour         (use 'W'ear and 'T'ake off)
 ?        scrolls        (use 'r'ead)
 !        potions        (use 'q'uaff)
-/        wands          (use 'V' to evoke)
+/        wands          (use 'V' to evoke, 'Q' to quiver)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\|        staves         (use 'w'ield)
-:        spellbooks     (use 'M'emorise and 'z'ap)
-}        miscellaneous  (use 'V' for evoking from the inventory)
+\|       staves         (use 'w'ield)
+:        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
+}        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
 
@@ -800,23 +822,17 @@ require you to wield an appropriate device to inflict worthwhile damage. Upon
 impact, missiles may become destroyed. The chance for this to occur depends on
 the type of missile.
 
-The 'f' command fires or throws a missile. The default missile to be fired or
-thrown (your "quiver") is displayed on the main screen beneath your wielded
-weapon. The quivered item will always be what Crawl thinks is most likely to be
-what you want. Thus it will either be an item you previously chose and fired
-(with 'f') or directly quivered (with 'Q'), or the item in your inventory that
-ranks highest in fire_order - if there are several of similar order, the one
-with the lowest inventory slot is chosen.
+The 'F' and 'f' commands can be used to fire or throws a missile. For launchers,
+the default ammo to be fired is shown next to your launcher, or optionally in
+the main "quiver" display below your launcher. Ammo (as well as many other
+items, spells, and abilities) can fill this quiver as well.
 
 See Appendix `5. Inscriptions`_ for inscriptions which let you fine-tune the
 list of items to choose from. See also the Missiles section of
 options_guide.txt.
 
-The firing interface also allows you to manually select an item to throw with
-'i'; but it may not be very effective if you lack the correct launcher.
-
 Use the '(', ')' to cycle through your quiver without firing, and 'Q' to choose
-the quivered item from a list. If you would like to choose something to fire
+a quivered item from a list. If you would like to choose something to fire
 without inserting it into the quiver use 'F' instead.
 
 The interface for shooting or throwing things is also used for evoking wands and
@@ -889,6 +905,9 @@ it vanishes.
 Wands are aimed in the same way as missile weapons, and you can release the
 power of a wand by evoking it with 'V'. See section I for targeting.
 
+Wands can be 'Q'uivered in order to shoot via the autofire or 'f'ire
+interface, like spells and ammo
+
 =" Rings and Amulets
 ========================================
 
@@ -940,6 +959,9 @@ about having retrieved ten or even fifteen runes through their strength and
 cunning, but most scholars on the subject of Zot agree that such a thing is
 probably impossible in the first place, and secondly would be a meaningless
 achievement in any regard.
+
+Miscellany can often be 'Q'uivered in order to shoot via the autofire or 'f'ire
+interface, like spells and ammo
 
 $ Gold
 ========================================
@@ -1000,12 +1022,17 @@ number of levels of spells; type 'M' to find out how many. When you gain
 experience levels or advance the Spellcasting skill, your maximum increases; you
 will need to save up for several levels to memorise the more powerful spells.
 
-You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to display a
-list of all memorised spells without actually casting one. The spells available
-are labelled with letters; you are free to change this labelling with the '='
-command. You can assign both lowercase and uppercase letters to spells. Some
-spells, for example most damage dealing ones, require a target. See the next
-section for details on how to target.
+There are two ways to activate memorized spells: by "quivering" them and using
+the fire interface, or directlyby pressing 'z' (for Zap). To choose a spell
+for the quiver, use 'Q', or '(' and ')' to cycle among possible actions. Press
+'f' to enter the targeting interface, or shift-tab / 'p' to autofire a
+quivered spell at the nearest monster.
+
+Use 'I' to display a list of all memorised spells without actually casting one.
+The spells available are labelled with letters; you are free to change this
+labelling with the '=' command. You can assign both lowercase and uppercase
+letters to spells. Some spells, for example most damage dealing ones, require a
+target. See the next section for details on how to target.
 
 Most spells have caps on their effects: no matter how intelligent and proficient
 you are, there is a limit to the damage you can achieve with a Magic Dart. In
@@ -1077,7 +1104,9 @@ faith (use the 'a' command - but most gods resent being scorned). Further detail
 can be seen with '!' while in the '^' screen.
 
 To use any powers which your god deems you fit for, access the abilities menu
-via the 'a' command; god-given abilities are listed as invocations.
+via the 'a' command; god-given abilities are listed as invocations. Many god
+abilities can be 'Q'uivered in order to trigger via the 'f'ire or autofire
+interface.
 
 Depending on background, some characters start out religious; others have to
 pray at an altar to dedicate themselves to a life of servitude. There are altars
@@ -1445,7 +1474,7 @@ the species.
 .. note:: Humans are a useful reference point when considering other species:
           they have 0 for almost all aptitudes; have no special abilities,
           weakness, or constraints against using certain types of equipment;
-          move normally; and gain experience and magic resistance at a "typical"
+          move normally; and gain experience and willpower at a "typical"
           rate. However, you will see that they are categorized as an
           *Intermediate* species -- because they are decent, but not excellent,
           at nearly everything, a Human may need to make use of all sorts of
@@ -1756,10 +1785,7 @@ Vampires (Vp)
   may be mutated normally at all times.
 
 Demigods (Dg)
-  Demigods are mortals with some divine or angelic ancestry, however distant;
-  they can be created by a number of processes, including magical experiments
-  and the time-honoured practise of interplanar miscegenation.
-
+  Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but
   have excellent attributes (Str, Int, Dex) and are extremely robust; they can
   also draw on great supplies of magical energy. On the downside, they advance
@@ -1900,8 +1926,7 @@ Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes and charms in
   particular. They are a bit better at evoking things than most other
   Draconians. They can breathe dispelling energy which strips those it hits of
-  their enchantments, and are naturally more resistant to hostile enchantments
-  than other draconians.
+  their enchantments, and are naturally stronger-willed than other draconians.
 
 Pale Draconians
   are better at air and fire magic, and have no deficiencies in other schools.
@@ -2294,6 +2319,67 @@ Ctrl-W
   Set waypoint (a digit between 0 and 9). Check the option show_waypoints. You
   can go to a waypoint by pressing Ctrl-G or G and the digit.
 
+Attacking and firing
+----------------------------------------
+
+Several of these commands enter targeting mode; see `Targeting`_ for more
+information about this mode.
+
+direction
+  If a monster is in the target square, attack that monster.
+
+Tab
+  Autofight: Attack the nearest monster with your current weapon. If the
+  nearest monster is not in range, by default, this will move towards it.
+
+v
+  Targeted attacks with your primary weapon, including attacking non-adjacent
+  monsters with a polearm, or firing a wielded launcher (regardless of the
+  state of the main quiver).
+
+Q
+  Quiver an item, spell, or ability from a menu.
+
+( and )
+  Cycle quiver to next/previous suitable action (item, spell, ability).
+
+f
+  Fire currently quivered action, showing a targeter. If some monster is in
+  sight and the action takes a target, either the last target or the nearest
+  monster will be automatically highlighted. If the action does not take a
+  target, the display will typically show an area of effect. Pressing f again
+  triggers the action.
+
+Shift-tab, p
+  Autofire: Fire a quivered action, if needed selecting a target automatically;
+  typically fires at the nearest monster.
+
+F
+  Directly choose ammo to throw or fire. In contrast to 'f' this does not
+  interact with the quiver.
+
+V
+  Evoke an item directly from the inventory. This includes using wands.
+
+Spells and abilities
+----------------------------------------
+
+Spells and abilities may also be quivered; see `Attacking and firing`_. Many
+spells and abilities enter targeting mode on activation; see `Targeting`_ for
+more information about this mode.
+
+a
+  Show the ability menu, allowing you to activate an ability or read its
+  description.
+
+z
+  Cast a spell. Should the spell demand monsters as targets but there are none
+  within range, casting will be stopped. In this case, neither turns nor magic
+  are used. If you want to cast the spell nonetheless, use Z.
+
+Z
+  Cast a spell regardless of available targets.
+
 Resting
 ----------------------------------------
 
@@ -2382,10 +2468,6 @@ E
 A
   Show abilities/mutations.
 
-a
-  Show the ability menu, allowing you to activate an ability or read its
-  description.
-
 \\
   Show item knowledge. You can toggle autopickup exceptions for item types in
   this screen. The screen has its own help text.
@@ -2409,14 +2491,6 @@ I
 
 Other game-playing commands
 ----------------------------------------
-
-z
-  Cast a spell. Should the spell demand monsters as targets but there are none
-  within range, casting will be stopped. In this case, neither turns nor magic
-  are used. If you want to cast the spell nonetheless, use Z.
-
-Z
-  Cast a spell regardless of available targets.
 
 t
   Tell commands to allies, or shout (with tt).
@@ -2505,25 +2579,14 @@ Ctrl-F
 Item interaction (inventory)
 ========================================
 
+See also `Attacking and firing`_ for item interaction commands related to
+attacking and firing.
+
 {
   Inscribe item (check the autoinscribe option). An empty inscription or
   inscribing only space will remove prior inscriptions. See Appendix `5.
   Inscriptions`_. You can also inscribe items when viewing them by pressing
   their slot key in the inventory.
-
-f
-  Fire quivered missile. If some monster is in sight, either the last target or
-  the nearest monster will be automatically targeted. Pressing f again shoots.
-
-F
-  Directly choose an item and fire. Contrary to fi this does not change the
-  quiver.
-
-( and )
-  Cycle quiver to next/previous suitable missile, respectively.
-
-Q
-  Quiver item from a menu.
 
 q
   Quaff a potion.
@@ -2539,13 +2602,6 @@ w
 
 '
   Wield item a, or switch to b.
-
-v
-  Evoke power of wielded item. Also used to attack non-adjacent monsters with
-  a polearm.
-
-V
-  Evoke an item from the inventory. This includes using wands.
 
 W
   Wear armour.
@@ -2813,10 +2869,9 @@ f
   Toggle display of the beam path.
 
 ( and )
-  These two commands allow you to change ammunition while targeting. The choice
-  is subject to the fire_order option. Usually, you change missiles according
-  to your launcher; i.e. when wielding a bow, ( and ) will cycle through all
-  stacks of arrows in your inventory.
+  When 'f'iring, these two commands allow you to cycle between quiverable
+  actions (items, spells, abilities). When wielding a launcher, these options
+  will include ammo for that launcher.
 
 Shift-direction
   Fire straight in that direction.

@@ -80,17 +80,17 @@ bool actor::can_wield(const item_def* item, bool ignore_curse,
 
 bool actor::can_pass_through(int x, int y) const
 {
-    return can_pass_through_feat(grd[x][y]);
+    return can_pass_through_feat(env.grid[x][y]);
 }
 
 bool actor::can_pass_through(const coord_def &c) const
 {
-    return can_pass_through_feat(grd(c));
+    return can_pass_through_feat(env.grid(c));
 }
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
-    return is_habitable_feat(grd(_pos));
+    return is_habitable_feat(env.grid(_pos));
 }
 
 bool actor::handle_trap()
@@ -106,23 +106,23 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_res_magic(int power)
+int actor::check_willpower(int power)
 {
-    const int mrs = res_magic();
+    const int wl = willpower();
 
-    if (mrs == MAG_IMMUNE)
+    if (wl == WILL_INVULN)
         return 100;
 
     const int adj_pow = ench_power_stepdown(power);
 
-    const int mrchance = (100 + mrs) - adj_pow;
-    int mrch2 = random2(100);
-    mrch2 += random2(101);
+    const int wlchance = (100 + wl) - adj_pow;
+    int wlch2 = random2(100);
+    wlch2 += random2(101);
 
-    dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
-         adj_pow, power, mrs, mrchance, mrch2);
+    dprf("Power: %d (%d pre-stepdown), WL: %d, target: %d, roll: %d",
+         adj_pow, power, wl, wlchance, wlch2);
 
-    return mrchance - mrch2;
+    return wlchance - wlch2;
 }
 
 void actor::set_position(const coord_def &c)
@@ -173,7 +173,7 @@ bool actor::can_sleep(bool holi_only) const
     return true;
 }
 
-void actor::shield_block_succeeded(actor *foe)
+void actor::shield_block_succeeded()
 {
     item_def *sh = shield();
     const unrandart_entry *unrand_entry;
@@ -186,7 +186,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
-        unrand_entry->melee_effects(sh, this, foe, false, 0);
+        unrand_entry->melee_effects(sh, this, nullptr, false, 0);
     }
 }
 
@@ -583,7 +583,7 @@ bool actor::has_invalid_constrictor(bool move) const
     // Indirect constriction requires the defender not to move.
     return move
         // Indirect constriction requires reachable ground.
-        || !feat_has_solid_floor(grd(pos()))
+        || !feat_has_solid_floor(env.grid(pos()))
         // Constriction doesn't work out of LOS.
         || !ignoring_player && !attacker->see_cell(pos());
 }
@@ -683,7 +683,7 @@ bool actor::can_constrict(const actor* defender, bool direct) const
         && !defender->is_constricted()
         && defender->res_constrict() < 3
         // All current indrect forms of constriction require reachable ground.
-        && feat_has_solid_floor(grd(defender->pos()));
+        && feat_has_solid_floor(env.grid(defender->pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -900,7 +900,7 @@ bool actor::torpor_slowed() const
 
 string actor::resist_margin_phrase(int margin) const
 {
-    if (res_magic() == MAG_IMMUNE)
+    if (willpower() == WILL_INVULN)
         return " " + conj_verb("are") + " unaffected.";
 
     static const string resist_messages[][2] =
@@ -983,7 +983,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 
     if (you.can_see(*this))
     {
-        if (!can_pass_through_feat(grd(newpos)))
+        if (!can_pass_through_feat(env.grid(newpos)))
         {
             mprf("%s %s into %s!",
                  name(DESC_THE).c_str(), conj_verb("slam").c_str(),

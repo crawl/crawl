@@ -391,6 +391,8 @@ ghost_monster_weapons = {
                        ["broad axe"] = 10, ["morningstar"] = 10,
                        ["morningstar"] = 10, ["demon whip"] = 5,
                        ["quarterstaff"] = 10, ["lajatang"] = 5},
+    ["merfolk"] =     {["spear"] = 10, ["trident"] = 10, ["halberd"] = 5,
+                       ["glaive"] = 5},
     ["impaler"] =     {["trident"] = 15, ["demon trident"] = 5},
     ["elf knight"] =  {["long sword"] = 10, ["scimitar"] = 20,
                        ["demon blade"] = 5},

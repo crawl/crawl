@@ -18,7 +18,9 @@
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
+#include "mpr.h"
 #include "religion.h"
+#include "tag-version.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100
@@ -232,7 +234,7 @@ void follower::load_mons_items()
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         if (mons.inv[i] != NON_ITEM)
-            items[i] = mitm[ mons.inv[i] ];
+            items[i] = env.item[ mons.inv[i] ];
         else
             items[i].clear();
 }
@@ -289,7 +291,7 @@ void follower::restore_mons_items(monster& m)
             if (islot == NON_ITEM)
                 continue;
 
-            item_def &it = mitm[islot];
+            item_def &it = env.item[islot];
             it = items[i];
             it.set_holding_monster(m);
         }
@@ -336,7 +338,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
     if (within_level && !mons_class_can_use_transporter(mons.type)
-        || !within_level && !mons_can_use_stairs(mons, grd(from)))
+        || !within_level && !mons_can_use_stairs(mons, env.grid(from)))
     {
         if (_is_religious_follower(mons))
             return true;
@@ -406,8 +408,10 @@ void handle_followers(const coord_def &from,
     vector<coord_def> places[2];
     int place_set = 0;
 
+    bool visited[GXM][GYM];
+    memset(&visited, 0, sizeof(visited));
+
     places[place_set].push_back(from);
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
         for (const coord_def p : places[place_set])
@@ -415,11 +419,11 @@ void handle_followers(const coord_def &from,
             for (adjacent_iterator ai(p); ai; ++ai)
             {
                 if ((*ai - from).rdist() > radius
-                    || travel_point_distance[ai->x][ai->y])
+                    || visited[ai->x][ai->y])
                 {
                     continue;
                 }
-                travel_point_distance[ai->x][ai->y] = 1;
+                visited[ai->x][ai->y] = true;
 
                 bool real_follower = false;
                 if (handler(*ai, from, real_follower))

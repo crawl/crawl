@@ -5,6 +5,7 @@
 #include "attack.h"
 #include "fight.h"
 #include "random-var.h"
+#include "tag-version.h"
 
 enum unarmed_attack_type
 {

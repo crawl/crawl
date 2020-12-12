@@ -19,6 +19,7 @@
 #include "command.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "initfile.h"
@@ -41,9 +42,11 @@
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
+#include "tile-env.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
@@ -579,9 +582,9 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         {
             ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
-                ch = env.tile_flv(c).floor;
+                ch = tile_env.flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
-                ch = env.tile_flv(c).wall;
+                ch = tile_env.flv(c).wall;
 
             tileset.emplace_back(ch);
         }
@@ -1109,7 +1112,8 @@ bool item_is_selected(const item_def &i, int selector)
                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_EVOKABLE:
-        return item_is_evokable(i, true);
+        // assumes valid link...would break with evoking from floor?
+        return item_is_evokable(i, true) && item_is_evokable(i, true, false);//evoke_check(i.link, true);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -2125,7 +2129,8 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-        if (entry->evoke_func && item_type_known(item))
+        if ((entry->evoke_func || entry->targeted_evoke_func)
+            && item_type_known(item))
         {
             if (no_evocables)
             {
@@ -2172,11 +2177,15 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     case OBJ_WANDS:
         return true;
 
+    // TODO: move these out of evoke
     case OBJ_WEAPONS:
         if ((!wielded || !unskilled) && !msg)
             return false;
 
-        if (unskilled && weapon_reach(item) > REACH_NONE && item_type_known(item))
+        // XX code duplication with evoke_check
+        if (unskilled
+            && (weapon_reach(item) > REACH_NONE && item_type_known(item)
+                || you.weapon() && is_range_weapon(*you.weapon())))
         {
             if (!wielded)
             {

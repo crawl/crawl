@@ -1,7 +1,9 @@
 #pragma once
 
+#include "tag-version.h"
+
 // NOTE: Changing this order will break saves! Appending does not.
-enum monster_type                      // menv[].type
+enum monster_type                      // env.mons[].type
 {
     MONS_PROGRAM_BUG,
         MONS_0 = MONS_PROGRAM_BUG,
@@ -105,6 +107,7 @@ enum monster_type                      // menv[].type
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
     MONS_BARACHI,
+    MONS_GOLIATH_FROG,
     MONS_BEAR,                  // genus
 #endif
 #if TAG_MAJOR_VERSION == 34
@@ -311,7 +314,9 @@ enum monster_type                      // menv[].type
     MONS_FIRE_VORTEX,
     MONS_SPATIAL_VORTEX,
     MONS_INSUBSTANTIAL_WISP,
-#if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION > 34
+    MONS_WILL_O_THE_WISP,
+#else
     MONS_VAPOUR,
 
     // Mimics:
@@ -421,6 +426,7 @@ enum monster_type                      // menv[].type
     MONS_TENGU_WARRIOR,
     MONS_TENGU_CONJURER,
     MONS_TENGU_REAVER,
+    MONS_FENSTRIDER_WITCH,
 #endif
     MONS_MINOTAUR,
     MONS_NAGA,
@@ -629,9 +635,9 @@ enum monster_type                      // menv[].type
     MONS_RAKSHASA,
 #if TAG_MAJOR_VERSION == 34
     MONS_RAKSHASA_FAKE,
-#endif
-#if TAG_MAJOR_VERSION > 34
+#else
     MONS_DRYAD,
+    MONS_ELEIONOMA,
     MONS_SNAPLASHER_VINE,
     MONS_SNAPLASHER_VINE_SEGMENT,
 #endif
@@ -651,6 +657,7 @@ enum monster_type                      // menv[].type
     MONS_SPATIAL_MAELSTROM,
     MONS_WORLDBINDER,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
+    MONS_BUNYIP,
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
@@ -673,11 +680,13 @@ enum monster_type                      // menv[].type
     MONS_GHOUL,
 #if TAG_MAJOR_VERSION == 34
     MONS_FLAMING_CORPSE,
+#else
+    MONS_BLOATED_HUSK,
 #endif
     MONS_MUMMY,
     MONS_BOG_BODY,
     MONS_GUARDIAN_MUMMY,
-    MONS_GREATER_MUMMY,
+    MONS_ROYAL_MUMMY,
     MONS_MUMMY_PRIEST,
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,
@@ -882,6 +891,7 @@ enum monster_type                      // menv[].type
     MONS_TEST_SPAWNER,
 #if TAG_MAJOR_VERSION > 34
     MONS_TEST_STATUE,
+    MONS_TEST_BLOB,
     MONS_NAMELESS,              // summoning miscast
 #endif
 
@@ -1068,6 +1078,13 @@ enum monster_type                      // menv[].type
     MONS_MAGGIE,
     MONS_NAMELESS,
     MONS_PALENTONGA,
+    MONS_BLOATED_HUSK,
+    MONS_BUNYIP,
+    MONS_GOLIATH_FROG,
+    MONS_ELEIONOMA,
+    MONS_FENSTRIDER_WITCH,
+    MONS_WILL_O_THE_WISP,
+    MONS_TEST_BLOB,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -1081,6 +1098,7 @@ enum monster_type                      // menv[].type
     RANDOM_MOBILE_MONSTER, // used for monster generation (shadow creatures)
     RANDOM_COMPATIBLE_MONSTER, // used for player shadow creatures (prevents repulsing summons)
     RANDOM_BANDLESS_MONSTER,
+    RANDOM_POLYMORPH_MONSTER, // choose from a per-monster set
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,

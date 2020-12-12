@@ -49,10 +49,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 var label = " " + letter + " - "+spell.title;
                 $item.append("<span>" + label + "</span>");
 
-                if (spell.hex_chance !== undefined)
-                    $item.append("<span>("+spell.hex_chance+") </span>");
+                if (spell.effect !== undefined)
+                    $item.append("<span>" + util.formatted_string_to_html(spell.effect) + " </span>");
                 if (spell.range_string !== undefined)
-                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) +" </span>");
+                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) + " </span>");
 
                 $list.append($item);
                 if (colour)

@@ -15,6 +15,7 @@
 #include "files.h"
 #include "god-wrath.h"
 #include "los.h"
+#include "maps.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-cast.h"
@@ -121,11 +122,19 @@ LUAFN(debug_reveal_mimics)
 
 LUAWRAP(debug_los_changed, los_changed())
 
+LUAFN(debug_builder_ignore_depth)
+{
+    const bool b = lua_toboolean(ls, 1);
+    dgn_ignore_depth(b);
+    return 0;
+}
+
 LUAFN(debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
+    const bool builder_output = lua_toboolean(ls, pos + 1);
     if (lua_isstring(ls, pos))
-        dump_map(lua_tostring(ls, pos), true);
+        dump_map(lua_tostring(ls, pos), true, false, builder_output);
     return 0;
 }
 
@@ -183,19 +192,19 @@ LUAFN(debug_bouncy_beam)
     return 0;
 }
 
-// If menv[] is full, dismiss all monsters not near the player.
+// If env.mons[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
     UNUSED(ls);
 
-    // At least one empty space in menv
+    // At least one empty space in env.mons
     for (const auto &mons : menv_real)
         if (mons.type == MONS_NO_MONSTER)
             return 0;
 
-    mprf(MSGCH_DIAGNOSTICS, "menv[] is full, dismissing non-near monsters");
+    mprf(MSGCH_DIAGNOSTICS, "env.mons[] is full, dismissing non-near monsters");
 
-    // menv[] is full
+    // env.mons[] is full
     for (monster_iterator mi; mi; ++mi)
     {
         if (you.see_cell(mi->pos()))
@@ -532,6 +541,7 @@ const struct luaL_reg debug_dlib[] =
 { "down_stairs", debug_down_stairs },
 { "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
+{ "builder_ignore_depth", debug_builder_ignore_depth },
 { "generate_level", debug_generate_level },
 { "reveal_mimics", debug_reveal_mimics },
 { "los_changed", debug_los_changed },

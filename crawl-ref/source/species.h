@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "ability-type.h"
 #include "item-prop-enum.h"
@@ -8,6 +10,8 @@
 #include "size-type.h"
 #include "species-def.h"
 #include "species-type.h"
+
+using std::vector;
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
@@ -57,7 +61,7 @@ void give_level_mutations(species_type species, int xp_level);
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);
 int species_mp_modifier(species_type species);
-int species_mr_modifier(species_type species);
+int species_wl_modifier(species_type species);
 
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);

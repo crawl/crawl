@@ -38,6 +38,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "unicode.h"
 #include "xom.h"
@@ -187,7 +188,7 @@ static const int conflict[][3] =
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
-    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY,  -1},
+    { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
 };
@@ -1257,6 +1258,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Only nagas can get upgraded poison spit.
     if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
+        return true;
+
+    // Only Palentonga can go on a roll.
+    if (you.species != SP_PALENTONGA && mutat == MUT_ROLL)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.

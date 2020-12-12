@@ -13,6 +13,7 @@
 #include "deck-type.h"
 #include "enum.h"
 #include "mon-util.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
 struct monster_info;

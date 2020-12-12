@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "tag-version.h"
+
 #define HERD_COMFORT_RANGE 6
 
 // TODO: Unify this and a player_equivalent (if applicable)
@@ -131,6 +133,7 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
 #endif
+    AF_REACH_TONGUE,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

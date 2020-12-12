@@ -582,6 +582,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\melee-attack.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
+    <ClCompile Include="..\mon-explode.cc" />
     <ClCompile Include="..\movement.cc" />
     <ClCompile Include="..\ng-setup.cc" />
     <ClCompile Include="..\ng-wanderer.cc" />
@@ -1042,6 +1043,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-death.h" />
     <ClInclude Include="..\mon-ench.h" />
     <ClInclude Include="..\mon-enum.h" />
+    <ClInclude Include="..\mon-explode.h" />
     <ClInclude Include="..\mon-flags.h" />
     <ClInclude Include="..\mon-gear.h" />
     <ClInclude Include="..\mon-grow.h" />

@@ -940,7 +940,7 @@ STR:      -1
 INT:      -1
 DEX:      1
 LIFE:     1
-BOOL:     poison
+BOOL:     poison, evil
 
 NAME:     shield of the Gong
 OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
@@ -1064,9 +1064,8 @@ COLOUR:   ETC_ELECTRICITY
 BRAND:    SPARM_RUNNING
 BOOL:     elec
 
-# start TAG_MAJOR_VERSION == 34
 ENUM:     BLACK_KNIGHT_HORSE
-NAME:     Black Knight's horse barding
+NAME:     Black Knight's barding
 OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +10
 TILE:     urand_bk_barding
@@ -1074,8 +1073,7 @@ TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 LIFE:     1
-BOOL:     poison, evil, nogen
-# end TAG_MAJOR_VERSION
+BOOL:     poison, evil
 
 NAME:     amulet of Vitality
 OBJ:      OBJ_JEWELLERY/AMU_REGENERATION

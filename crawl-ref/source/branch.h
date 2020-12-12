@@ -5,12 +5,16 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "branch-type.h"
 #include "item-prop-enum.h"
 #include "player.h"
 
 #define BRANCH_NOISE_AMOUNT 6
+
+using std::vector;
 
 enum class brflag
 {

@@ -26,6 +26,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "evoke.h"
 #include "exclude.h"
 #include "fight.h"
@@ -66,6 +67,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -131,6 +133,7 @@ static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
 static void _setup_fake_beam(bolt& beam, const monster&, int = -1);
 static void _branch_summon(monster &caster, mon_spell_slot slot, bolt&);
 static void _branch_summon_helper(monster* mons, spell_type spell_cast);
+static void _cast_marshlight(monster &caster, mon_spell_slot slot, bolt&);
 static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam);
 static void _setup_ghostly_beam(bolt &beam, int power, int dice);
 static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
@@ -289,7 +292,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_TROGS_HAND, {
         [](const monster &caster) {
             return ai_action::good_or_impossible(
-                                       !caster.has_ench(ENCH_RAISED_MR)
+                                       !caster.has_ench(ENCH_STRONG_WILLED)
                                     && !caster.has_ench(ENCH_REGENERATION));
         },
         [](monster &caster, mon_spell_slot, bolt&) {
@@ -301,7 +304,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int dur = BASELINE_DELAY
                 * min(5 + roll_dice(2, (caster.get_hit_dice() * 10) / 3 + 1),
                       100);
-            caster.add_ench(mon_enchant(ENCH_RAISED_MR, 0, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_STRONG_WILLED, 0, &caster, dur));
             caster.add_ench(mon_enchant(ENCH_REGENERATION, 0, &caster, dur));
             dprf("Trog's Hand cast (dur: %d aut)", dur);
         },
@@ -338,6 +341,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _branch_summon,
         nullptr,
         MSPELL_NO_AUTO_NOISE,
+    } },
+    { SPELL_MARSHLIGHT, {
+       _always_worthwhile,
+       _cast_marshlight,
     } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
@@ -446,8 +453,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
         }, 6)
     },
-    { SPELL_STRIP_RESISTANCE,
-        _hex_logic(SPELL_STRIP_RESISTANCE, _foe_mr_lower_goodness, 6)
+    { SPELL_AGONY, _hex_logic(SPELL_AGONY, [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            return ai_action::good_or_impossible(_torment_vulnerable(foe));
+        }, 6)
+    },
+    { SPELL_STRIP_WILLPOWER,
+        _hex_logic(SPELL_STRIP_WILLPOWER, _foe_mr_lower_goodness, 6)
     },
     { SPELL_SENTINEL_MARK, _hex_logic(SPELL_SENTINEL_MARK, nullptr, 16) },
     { SPELL_SAP_MAGIC, {
@@ -581,7 +594,7 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster)
 
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster)
 {
-    return _foe_effect_viable(caster, DUR_LOWERED_MR, ENCH_LOWERED_MR);
+    return _foe_effect_viable(caster, DUR_LOWERED_WL, ENCH_LOWERED_WL);
 }
 
 /**
@@ -1105,6 +1118,31 @@ static int _mons_power_hd_factor(spell_type spell)
     }
 }
 
+/**
+ * Does this spell use spell_hd or just hit_dice for damage and accuracy?
+ *
+ * @param spell The spell in question.
+ * @return True iff the spell should use spell_hd.
+ */
+bool mons_spell_is_spell(spell_type spell)
+{
+    switch (spell)
+    {
+        case SPELL_HOLY_BREATH:
+        case SPELL_SPIT_ACID:
+        case SPELL_ACID_SPLASH:
+        case SPELL_CHAOS_BREATH:
+        case SPELL_COLD_BREATH:
+        case SPELL_CHILLING_BREATH:
+        case SPELL_FIRE_BREATH:
+        case SPELL_SEARING_BREATH:
+        case SPELL_ELECTRICAL_BOLT:
+        case SPELL_FLAMING_CLOUD:
+            return false;
+        default:
+            return true;
+    }
+}
 
 /**
  * What spellpower does a monster with the given spell_hd cast the given spell
@@ -1279,6 +1317,9 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.source_id = mons->mid;
     beam.source_name = mons->name(DESC_A, true);
 
+    if (!mons_spell_is_spell(real_spell))
+        power = mons_power_for_hd(real_spell, mons->get_hit_dice());
+
     const mons_spell_logic* logic = map_find(spell_to_logic, spell_cast);
     if (logic && logic->setup_beam)
         logic->setup_beam(beam, *mons, power);
@@ -1324,11 +1365,32 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SANDBLAST:
     case SPELL_HARPOON_SHOT:
     case SPELL_THROW_PIE:
+    case SPELL_NOXIOUS_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_THORN_VOLLEY:
+    case SPELL_CALL_DOWN_DAMNATION:
+    case SPELL_HURL_DAMNATION:
+    case SPELL_SPIT_POISON:
+    case SPELL_MIASMA_BREATH:      // death drake
+    case SPELL_GHOSTLY_FIREBALL:
+    case SPELL_FLASH_FREEZE:
+    case SPELL_CRYSTAL_BOLT:
+    case SPELL_SPIT_LAVA:
+    case SPELL_HURL_SLUDGE:
+    case SPELL_HOLY_BREATH:
+    case SPELL_SPIT_ACID:
+    case SPELL_ACID_SPLASH:
+    case SPELL_ELECTRICAL_BOLT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
     case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
+        break;
+
+    case SPELL_ENERGY_BOLT:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.short_name = "energy";
         break;
 
     case SPELL_DISPEL_UNDEAD_RANGE:
@@ -1345,75 +1407,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.foe_ratio = random_range(40, 55);
         break;
 
-    case SPELL_CALL_DOWN_DAMNATION:
-        beam.aux_source   = "damnation";
-        beam.name         = "damnation";
-        beam.ex_size      = 1;
-        beam.flavour      = BEAM_DAMNATION;
-        beam.is_explosion = true;
-        beam.colour       = LIGHTRED;
-        beam.aux_source.clear();
-        beam.is_tracer    = false;
-        beam.hit          = 20;
-        beam.damage       = dice_def(3, 15);
-        break;
-
-    case SPELL_NOXIOUS_CLOUD:
-        beam.name     = "noxious blast";
-        beam.damage   = dice_def(1, 0);
-        beam.colour   = GREEN;
-        beam.flavour  = BEAM_MEPHITIC;
-        beam.hit      = 18 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_POISONOUS_CLOUD:
-        beam.name     = "blast of poison";
-        beam.damage   = dice_def(3, 3 + power / 25);
-        beam.colour   = LIGHTGREEN;
-        beam.flavour  = BEAM_POISON;
-        beam.hit      = 18 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_ENERGY_BOLT:        // eye of devastation
-        beam.colour     = YELLOW;
-        beam.name       = "bolt of energy";
-        beam.short_name = "energy";
-        beam.damage     = dice_def(3, 20);
-        beam.hit        = 15 + power / 30;
-        beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
-        beam.pierce     = true;             // (except bloodier)
-        break;
-
-    case SPELL_SPIT_POISON:
-        beam.colour   = GREEN;
-        beam.name     = "splash of poison";
-        beam.damage   = dice_def(1, 4 + power / 10);
-        beam.hit      = 16 + power / 20;
-        beam.flavour  = BEAM_POISON;
-        break;
-
-    case SPELL_SPIT_ACID:
-        beam.colour   = YELLOW;
-        beam.name     = "splash of acid";
-        beam.damage   = dice_def(3, 7);
-
-        // Natural ability, so don't use spell_hd here
-        beam.hit      = 20 + (3 * mons->get_hit_dice());
-        beam.flavour  = BEAM_ACID;
-        break;
-
-    case SPELL_ACID_SPLASH:      // yellow draconian
-        beam.colour   = YELLOW;
-        beam.name     = "glob of acid";
-        beam.damage   = dice_def(3, 7);
-
-        // Natural ability, so don't use spell_hd here
-        beam.hit      = 20 + (3 * mons->get_hit_dice());
-        beam.flavour  = BEAM_ACID;
-        break;
-
     case SPELL_MEPHITIC_CLOUD:
         beam.name     = "stinking cloud";
         beam.damage   = dice_def(1, 0);
@@ -1423,34 +1416,14 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.is_explosion = true;
         break;
 
-    case SPELL_MIASMA_BREATH:      // death drake
-        beam.name     = "foul vapour";
-        beam.damage   = dice_def(3, 5 + power / 24);
-        beam.colour   = DARKGREY;
-        beam.flavour  = BEAM_MIASMA;
-        beam.hit      = 17 + power / 20;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_HURL_DAMNATION:           // fiend's damnation
-        beam.name         = "damnation";
-        beam.aux_source   = "damnation";
-        beam.colour       = LIGHTRED;
-        beam.damage       = dice_def(3, 20);
-        beam.hit          = 24;
-        beam.flavour      = BEAM_DAMNATION;
-        beam.pierce       = true; // needed?
-        beam.is_explosion = true;
-        break;
-
     case SPELL_METAL_SPLINTERS:
-        beam.name       = "spray of metal splinters";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.short_name = "metal splinters";
-        beam.damage     = dice_def(3, 20 + power / 20);
-        beam.colour     = CYAN;
-        beam.flavour    = BEAM_FRAG;
-        beam.hit        = 19 + power / 30;
-        beam.pierce     = true;
+        break;
+
+    case SPELL_SPLINTERSPRAY:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.short_name = "splinters";
         break;
 
     case SPELL_BLINK_OTHER:
@@ -1462,60 +1435,34 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FIRE_BREATH:
-    case SPELL_SEARING_BREATH:
-        beam.name       = "blast of flame";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source = "blast of fiery breath";
         beam.short_name = "flames";
-        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
-        beam.colour     = RED;
-        beam.hit        = 30;
-        beam.flavour    = BEAM_FIRE;
-        beam.pierce     = true;
-        if (real_spell == SPELL_SEARING_BREATH)
-        {
-            beam.name        = "searing blast";
-            beam.aux_source  = "blast of searing breath";
-            if (mons->type != MONS_XTAHUA)
-                beam.damage.size = 65 * beam.damage.size / 100;
-        }
+        break;
+
+    case SPELL_SEARING_BREATH:
+        if (mons && mons->type == MONS_XTAHUA)
+            power = power * 3/2;
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.aux_source  = "blast of searing breath";
         break;
 
     case SPELL_CHAOS_BREATH:
-        beam.name         = "blast of chaos";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source   = "blast of chaotic breath";
-        beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);
-        beam.colour       = ETC_RANDOM;
-        beam.hit          = 30;
-        beam.flavour      = BEAM_CHAOS;
-        beam.pierce       = true;
+        break;
+
+    case SPELL_COLD_BREATH:
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.aux_source = "blast of icy breath";
+        beam.short_name = "frost";
         break;
 
     case SPELL_CHILLING_BREATH:
-    case SPELL_COLD_BREATH:
-        beam.name       = "blast of cold";
-        beam.aux_source = "blast of icy breath";
-        beam.short_name = "frost";
-        beam.damage     = dice_def(3, (mons->get_hit_dice() * 2));
-        beam.colour     = WHITE;
-        beam.hit        = 30;
-        beam.flavour    = BEAM_COLD;
-        beam.pierce     = true;
-        if (real_spell == SPELL_CHILLING_BREATH)
-        {
-            beam.name        = "chilling blast";
-            beam.aux_source  = "blast of chilling breath";
-            beam.short_name  = "frost";
-            beam.damage.size = 65 * beam.damage.size / 100;
-        }
-        break;
-
-    case SPELL_HOLY_BREATH:
-        beam.name     = "blast of cleansing flame";
-        beam.damage   = dice_def(3, mons->get_hit_dice());
-        beam.colour   = ETC_HOLY;
-        beam.flavour  = BEAM_HOLY;
-        beam.hit      = 18 + power / 25;
-        beam.pierce   = true;
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.name = "chilling breath";
+        beam.aux_source  = "blast of chilling breath";
+        beam.short_name  = "frost";
         break;
 
     case SPELL_PORKALATOR:
@@ -1532,13 +1479,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_PETRIFYING_CLOUD:
-        beam.name     = "blast of calcifying dust";
-        beam.colour   = WHITE;
-        beam.damage   = dice_def(2, 6);
-        beam.hit      = AUTOMATIC_HIT;
-        beam.flavour  = BEAM_PETRIFYING_CLOUD;
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.foe_ratio = 30;
-        beam.pierce   = true;
         break;
 
     case SPELL_ENSNARE:
@@ -1558,20 +1500,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
-    case SPELL_GHOSTLY_FIREBALL:
-        _setup_ghostly_beam(beam, power, 3);
-        break;
-
     case SPELL_DIMENSION_ANCHOR:
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
-        break;
-
-    case SPELL_THORN_VOLLEY:
-        beam.colour   = BROWN;
-        beam.name     = "volley of thorns";
-        beam.damage   = dice_def(3, 5 + (power / 13));
-        beam.hit      = 20 + power / 15;
-        beam.flavour  = BEAM_MMISSILE;
         break;
 
     // XXX: This seems needed to give proper spellcasting messages, even though
@@ -1583,14 +1513,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_MALIGN_OFFERING:
         beam.flavour    = BEAM_MALIGN_OFFERING;
         beam.damage     = dice_def(2, 7 + (power / 13));
-        break;
-
-    case SPELL_FLASH_FREEZE:
-        beam.name     = "flash freeze";
-        beam.damage   = dice_def(3, 7 + (power / 12));
-        beam.colour   = WHITE;
-        beam.flavour  = BEAM_ICE;
-        beam.hit      = 5 + power / 3;
         break;
 
     case SPELL_SHADOW_BOLT:
@@ -1606,54 +1528,15 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.hit      = 17 + power / 25;
         break;
 
-    case SPELL_CRYSTAL_BOLT:
-        beam.name     = "crystal bolt";
-        beam.damage   = dice_def(3, 8 + power / 11);
-        beam.colour   = GREEN;
-        beam.flavour  = BEAM_CRYSTAL;
-        beam.hit      = 17 + power / 25;
-        beam.pierce   = true;
-        break;
-
-    case SPELL_SPIT_LAVA:
-        beam.name        = "glob of lava";
-        beam.damage      = dice_def(3, 10);
-        beam.hit         = 20;
-        beam.colour      = RED;
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.flavour     = BEAM_LAVA;
-        break;
-
-    case SPELL_ELECTRICAL_BOLT:
-        beam.name        = "bolt of electricity";
-        beam.damage      = dice_def(3, 3 + mons->get_hit_dice());
-        beam.hit         = 35;
-        beam.colour      = LIGHTCYAN;
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
-        beam.flavour     = BEAM_ELECTRICITY;
-        beam.pierce      = true;
-        break;
-
     case SPELL_FLAMING_CLOUD:
-        beam.name         = "blast of flame";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source   = "blast of fiery breath";
         beam.short_name   = "flames";
-        beam.damage       = dice_def(1, 3 * mons->get_hit_dice() / 2);
-        beam.colour       = RED;
-        beam.hit          = 30;
-        beam.flavour      = BEAM_FIRE;
-        beam.pierce       = true;
         break;
 
     case SPELL_THROW_BARBS:
-        beam.name        = "volley of spikes";
-        beam.aux_source  = "volley of spikes";
+        zappy(spell_to_zap(real_spell), power, true, beam);
         beam.hit_verb    = "skewers";
-        beam.hit         = 27;
-        beam.damage      = dice_def(2, 13);
-        beam.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.colour      = LIGHTGREY;
-        beam.flavour     = BEAM_MISSILE;
         break;
 
     case SPELL_DEATH_RATTLE:
@@ -1734,6 +1617,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
     case SPELL_MAJOR_HEALING:
+    case SPELL_WOODWEAL:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
@@ -2188,7 +2072,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 {
     for (const auto &dc : door)
     {
-        grd(dc) = feat;
+        env.grid(dc) = feat;
         set_terrain_changed(dc);
     }
 }
@@ -2217,7 +2101,7 @@ static int _tension_door_closed(set<coord_def> door,
  */
 static bool _can_force_door_shut(const coord_def& door)
 {
-    if (!feat_is_open_door(grd(door)))
+    if (!feat_is_open_door(env.grid(door)))
         return false;
 
     set<coord_def> all_door;
@@ -2247,7 +2131,7 @@ static bool _can_force_door_shut(const coord_def& door)
         // If there are items in the way, see if there's room to push them
         // out of the way. Having push space for an actor doesn't guarantee
         // push space for items (e.g. with a flying actor over lava).
-        if (igrd(dc) != NON_ITEM)
+        if (env.igrid(dc) != NON_ITEM)
         {
             if (!has_push_spaces(dc, false, &door_spots))
                 return false;
@@ -2282,7 +2166,7 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
     {
         set<coord_def> all_door;
         find_connected_identical(pos, all_door);
-        dungeon_feature_type old_feat = grd(pos);
+        dungeon_feature_type old_feat = env.grid(pos);
 
         act->move_to_pos(c);
         int new_tension = _tension_door_closed(all_door, old_feat);
@@ -2310,10 +2194,10 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
  */
 static bool _should_force_door_shut(const coord_def& door)
 {
-    if (!feat_is_open_door(grd(door)))
+    if (!feat_is_open_door(env.grid(door)))
         return false;
 
-    dungeon_feature_type old_feat = grd(door);
+    dungeon_feature_type old_feat = env.grid(door);
 
     set<coord_def> all_door;
     find_connected_identical(door, all_door);
@@ -2370,7 +2254,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE);
                  ri; ++ri)
     {
-        if (feat_is_open_door(grd(*ri)))
+        if (feat_is_open_door(env.grid(*ri)))
         {
             if (!_can_force_door_shut(*ri))
                 continue;
@@ -2418,7 +2302,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
             vector<coord_def> excludes;
             for (const auto &dc : all_door)
             {
-                grd(dc) = DNGN_CLOSED_DOOR;
+                env.grid(dc) = DNGN_CLOSED_DOOR;
                 set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
@@ -2439,7 +2323,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     {
                         env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
-                        env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+                        tile_env.bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif
                     }
                 }
@@ -2450,7 +2334,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
         }
 
         // Try to seal the door
-        if (feat_is_closed_door(grd(*ri)) && !feat_is_sealed(grd(*ri)))
+        if (feat_is_closed_door(env.grid(*ri)) && !feat_is_sealed(env.grid(*ri)))
         {
             if (check_only)
                 return true;
@@ -2467,13 +2351,13 @@ static bool _seal_doors_and_stairs(const monster* warden,
                 had_effect = true;
             }
         }
-        else if (feat_is_travelable_stair(grd(*ri)))
+        else if (feat_is_travelable_stair(env.grid(*ri)))
         {
             if (check_only)
                 return true;
 
             dungeon_feature_type stype;
-            if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
+            if (feat_stair_direction(env.grid(*ri)) == CMD_GO_UPSTAIRS)
                 stype = DNGN_SEALED_STAIRS_UP;
             else
                 stype = DNGN_SEALED_STAIRS_DOWN;
@@ -2562,7 +2446,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ, bool actual)
         victim = you.pos();
     else if (targ->foe != MHITNOT)
     {
-        const monster* vmons = &menv[targ->foe];
+        const monster* vmons = &env.mons[targ->foe];
         if (!vmons->alive())
             return false;
         victim = vmons->pos();
@@ -2750,14 +2634,14 @@ bool mons_word_of_recall(monster* mons, int recall_target)
 
 static bool _valid_vine_spot(coord_def p)
 {
-    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
+    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, env.grid(p)))
         return false;
 
     int num_trees = 0;
     bool valid_trees = false;
     for (adjacent_iterator ai(p); ai; ++ai)
     {
-        if (feat_is_tree(grd(*ai)))
+        if (feat_is_tree(env.grid(*ai)))
         {
             // Make sure this spot is not on a diagonal to its only adjacent
             // tree (so that the vines can pull back against the tree properly)
@@ -3321,7 +3205,7 @@ static coord_def _mons_awaken_earth_target(const monster &mon)
 
         // We can target solid cells, which themselves will awaken, so count
         // those as well.
-        if (_feat_is_awakenable(grd(candidate)))
+        if (_feat_is_awakenable(env.grid(candidate)))
             neighbours++;
 
         if (neighbours > 0)
@@ -3446,7 +3330,7 @@ static function<ai_action::goodness(const monster&)> _setup_hex_check(spell_type
  * @param caster    The monster casting the hex.
  * @param spell     The spell to cast; e.g. SPELL_DIMENSIONAL_ANCHOR.
  * @return          Whether the monster thinks it's worth trying to beat the
- *                  defender's magic resistance.
+ *                  defender's willpower.
  */
 static ai_action::goodness _hexing_goodness(const monster &caster, spell_type spell)
 {
@@ -3461,13 +3345,13 @@ static ai_action::goodness _hexing_goodness(const monster &caster, spell_type sp
     if (mons_intel(caster) < I_HUMAN)
         return ai_action::good();
 
-    // Simulate Strip Resistance's 1/3 chance of ignoring MR
-    if (spell == SPELL_STRIP_RESISTANCE && one_chance_in(3))
+    // Simulate Strip Willpower's 1/3 chance of ignoring WL
+    if (spell == SPELL_STRIP_WILLPOWER && one_chance_in(3))
         return ai_action::good();
 
     // We'll estimate the target's resistance to magic, by first getting
     // the actual value and then randomising it.
-    const int est_magic_resist = foe->res_magic() + random2(60) - 30; // +-30
+    const int est_magic_resist = foe->willpower() + random2(60) - 30; // +-30
     const int power = ench_power_stepdown(mons_spellpower(caster, spell));
 
     // Determine the amount of chance allowed by the benefit from
@@ -3650,7 +3534,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
             || spell == SPELL_BLINK_ALLIES_AWAY))
     {
         for (auto ri = radius_iterator(mons.pos(), LOS_NO_TRANS); ri; ++ri)
-            if (feat_is_trap(grd(*ri)) && you.see_cell(*ri))
+            if (feat_is_trap(env.grid(*ri)) && you.see_cell(*ri))
                 return false;
     }
 
@@ -3892,7 +3776,7 @@ bool handle_mon_spell(monster* mons)
         if (interference == DO_BLOCK_ATTACK)
         {
             const string message
-                = make_stringf(" begins to %s, but is stunned by your will!",
+                = make_stringf(" begins to %s, but is stunned by your conviction!",
                                _ru_spell_stop_desc(*mons).c_str());
             simple_monster_message(*mons, message.c_str(), MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
@@ -4427,11 +4311,11 @@ static int _mons_mesmerise(monster* mons, bool actual)
     }
 
     const int pow = _ench_power(SPELL_MESMERISE, *mons);
-    const int res_magic = you.check_res_magic(pow);
+    const int will_check = you.check_willpower(pow);
 
-    // Don't mesmerise if you pass an MR check or have clarity.
+    // Don't mesmerise if you pass an WL check or have clarity.
     // If you're already mesmerised, you cannot resist further.
-    if ((res_magic > 0 || you.clarity()
+    if ((will_check > 0 || you.clarity()
          || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
     {
         if (actual)
@@ -4441,7 +4325,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
             else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
                 canned_msg(MSG_YOU_RESIST);
             else
-                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+                mprf("You%s", you.resist_margin_phrase(will_check).c_str());
         }
 
         return 0;
@@ -4484,7 +4368,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             retval = 0;
         else
         {
-            const int res_margin = you.check_res_magic(pow);
+            const int res_margin = you.check_willpower(pow);
             if (you.clarity())
                 canned_msg(MSG_YOU_UNAFFECTED);
             else if (res_margin > 0)
@@ -4506,11 +4390,11 @@ static int _mons_cause_fear(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        // Magic-immune, unnatural and "firewood" monsters are
+        // Invulnerable-willed, unnatural and "firewood" monsters are
         // immune to being scared. Same-aligned monsters are
         // never affected, even though they aren't immune.
         // Will not further scare a monster that is already afraid.
-        if (mons_immune_magic(**mi)
+        if (mons_invuln_will(**mi)
             || !(mi->holiness() & MH_NATURAL)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
@@ -4526,7 +4410,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
         // It's possible to scare this monster. If its magic
         // resistance fails, do so.
-        int res_margin = mi->check_res_magic(pow);
+        int res_margin = mi->check_willpower(pow);
         if (res_margin > 0)
         {
             simple_monster_message(**mi,
@@ -4568,9 +4452,9 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         if (actual)
         {
-            const int res_magic = you.check_res_magic(pow);
-            if (res_magic > 0)
-                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+            const int willpower = you.check_willpower(pow);
+            if (willpower > 0)
+                mprf("You%s", you.resist_margin_phrase(willpower).c_str());
             else
             {
                 you.confuse(mons, 5 + random2(3));
@@ -4584,7 +4468,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (*mi == mons)
             continue;
 
-        if (mons_immune_magic(**mi)
+        if (mons_invuln_will(**mi)
             || mons_is_firewood(**mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mons->has_ench(ENCH_HEXED))
@@ -4594,7 +4478,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
         retval = max(retval, 0);
 
-        int res_margin = mi->check_res_magic(pow);
+        int res_margin = mi->check_willpower(pow);
         if (res_margin > 0)
         {
             if (actual)
@@ -4758,7 +4642,7 @@ static const pop_entry _invitation_spider[] =
 static const pop_entry _invitation_swamp[] =
 { // Swamp enemies
   {  1,   1,   80, FLAT, MONS_VAMPIRE_MOSQUITO },
-  {  1,   1,   60, FLAT, MONS_INSUBSTANTIAL_WISP },
+  {  1,   1,   60, FLAT, MONS_BOG_BODY },
   {  1,   1,   40, FLAT, MONS_SWAMP_DRAKE },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -4981,6 +4865,12 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
     }
 }
 
+static void _cast_marshlight(monster &mons, mon_spell_slot, bolt&)
+{
+    const int pow = mons_spellpower(mons, SPELL_MARSHLIGHT);
+    cast_foxfire(mons, pow, GOD_NO_GOD, false);
+}
+
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
 {
     actor* defender = caster.get_foe();
@@ -5198,9 +5088,9 @@ static bool _spell_charged(monster *mons)
 }
 
 /// How much damage does the given monster do when casting Waterstrike?
-dice_def waterstrike_damage(const monster &mons)
+dice_def waterstrike_damage(int spell_hd)
 {
-    return dice_def(3, 7 + mons.spell_hd(SPELL_WATERSTRIKE));
+    return dice_def(3, 7 + spell_hd);
 }
 
 /**
@@ -5381,7 +5271,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (grd(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
@@ -5394,12 +5284,12 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/)
                     place_cloud(CLOUD_STORM, pos, random2(7), &mons);
                 break;
             case BEAM_FRAG:
-                if (((grd(pos) == DNGN_ROCK_WALL
-                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
-                     || grd(pos) == DNGN_SLIMY_WALL)
+                if (((env.grid(pos) == DNGN_ROCK_WALL
+                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
+                     || env.grid(pos) == DNGN_SLIMY_WALL)
                      && x_chance_in_y(1, 4)
-                     || feat_is_door(grd(pos))
-                     || grd(pos) == DNGN_GRATE))
+                     || feat_is_door(env.grid(pos))
+                     || env.grid(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
                     destroy_wall(pos);
@@ -5561,7 +5451,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         pbolt.flavour    = BEAM_WATER;
 
         ASSERT(foe);
-        int damage_taken = waterstrike_damage(*mons).roll();
+        int damage_taken = waterstrike_damage(mons->spell_hd(spell_cast)).roll();
         damage_taken = foe->beam_resists(pbolt, damage_taken, false);
         damage_taken = foe->apply_ac(damage_taken);
 
@@ -5653,7 +5543,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_CONFUSION_GAZE:
     {
         ASSERT(foe);
-        const int res_margin = foe->check_res_magic(splpow / ENCH_POW_FACTOR);
+        const int res_margin = foe->check_willpower(splpow / ENCH_POW_FACTOR);
         if (res_margin > 0)
         {
             if (you.can_see(*foe))
@@ -5668,6 +5558,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         foe->confuse(mons, 5 + random2(3));
         return;
     }
+
+    case SPELL_WOODWEAL:
+        if (mons->heal(35 + random2(mons->spell_hd(spell_cast) * 3)))
+            simple_monster_message(*mons, " is healed.");
+        break;
 
     case SPELL_MAJOR_HEALING:
         if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
@@ -5712,7 +5607,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_INK_CLOUD:
-        if (!feat_is_watery(grd(mons->pos())))
+        if (!feat_is_watery(env.grid(mons->pos())))
             return;
 
         big_cloud(CLOUD_INK, mons, mons->pos(), 30, 30);
@@ -6098,8 +5993,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            if (!safe_tiles.count(grd(*ai)) && !feat_is_trap(grd(*ai))
-                && feat_is_reachable_past(grd(*ai)))
+            if (!safe_tiles.count(env.grid(*ai)) && !feat_is_trap(env.grid(*ai))
+                && feat_is_reachable_past(env.grid(*ai)))
             {
                 sumcount++;
             }
@@ -6126,10 +6021,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            if (safe_tiles.count(grd(*ai)) || feat_is_trap(grd(*ai)))
+            if (safe_tiles.count(env.grid(*ai)) || feat_is_trap(env.grid(*ai)))
             {
                 // All items are moved inside.
-                if (igrd(*ai) != NON_ITEM)
+                if (env.igrid(*ai) != NON_ITEM)
                     move_items(*ai, mons->pos());
 
                 // All clouds are destroyed.
@@ -6191,7 +6086,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_IOOD:
-        cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
+        cast_iood(mons, splpow, &pbolt);
         return;
 
     case SPELL_AWAKEN_FOREST:
@@ -6758,7 +6653,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
-             && menv[mons->foe].type == MONS_NO_MONSTER)
+             && env.mons[mons->foe].type == MONS_NO_MONSTER)
     {
         target = "DEAD FOE";
     }
@@ -6797,9 +6692,9 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
             if (targ_prep == "at")
             {
-                if (grd(pbolt.target) != DNGN_FLOOR)
+                if (env.grid(pbolt.target) != DNGN_FLOOR)
                 {
-                    target = feature_description(grd(pbolt.target),
+                    target = feature_description(env.grid(pbolt.target),
                                                  NUM_TRAPS, "", DESC_THE);
                 }
                 else
@@ -7281,7 +7176,7 @@ static void _mons_awaken_earth(monster &mon, const coord_def &target)
 
     for (fair_adjacent_iterator ai(target, false); ai; ++ai)
     {
-        if (!_feat_is_awakenable(grd(*ai))
+        if (!_feat_is_awakenable(env.grid(*ai))
             || env.markers.property_at(*ai, MAT_ANY, "veto_destroy")
                == "veto")
         {
@@ -7356,19 +7251,19 @@ static void _siren_sing(monster* mons, bool avatar)
 
     // power is the same for siren & avatar song, so just use siren
     const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
-    const int res_magic = you.check_res_magic(pow);
+    const int willpower = you.check_willpower(pow);
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
     if (you.duration[DUR_MESMERISE_IMMUNE]
         || !already_mesmerised
-           && (res_magic > 0 || you.clarity()))
+           && (willpower > 0 || you.clarity()))
     {
         if (you.clarity())
             canned_msg(MSG_YOU_UNAFFECTED);
         else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
             canned_msg(MSG_YOU_RESIST);
         else
-            mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+            mprf("You%s", you.resist_margin_phrase(willpower).c_str());
         return;
     }
 
@@ -7431,8 +7326,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CALL_TIDE:
         if (!player_in_branch(BRANCH_SHOALS) || mon->has_ench(ENCH_TIDE))
             return ai_action::impossible();
-        else if (!foe || (grd(mon->pos()) == DNGN_DEEP_WATER
-                     && grd(foe->pos()) == DNGN_DEEP_WATER))
+        else if (!foe || (env.grid(mon->pos()) == DNGN_DEEP_WATER
+                     && env.grid(foe->pos()) == DNGN_DEEP_WATER))
         {
             return ai_action::bad();
         }
@@ -7472,6 +7367,28 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_MAJOR_HEALING:
         return ai_action::good_or_bad(mon->hit_points <= mon->max_hit_points / 2);
 
+    case SPELL_WOODWEAL:
+    {
+        bool touch_wood = false;
+        for (adjacent_iterator ai(mon->pos()); ai; ai++)
+        {
+            if (env.grid(*ai) == DNGN_TREE)
+            {
+                touch_wood = true;
+                break;
+            }
+            const monster *adj_mons = monster_at(*ai);
+            if (adj_mons && mons_genus(adj_mons->type) == MONS_SHAMBLING_MANGROVE)
+            {
+                touch_wood = true;
+                break;
+            }
+        }
+        if (!touch_wood)
+            return ai_action::impossible();
+        return ai_action::good_or_bad(mon->hit_points <= mon->max_hit_points / 2);
+    }
+
     case SPELL_BLINK_CLOSE:
         ASSERT(foe);
         if (adjacent(mon->pos(), foe->pos()))
@@ -7502,7 +7419,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_AWAKEN_FOREST:
         if (mon->has_ench(ENCH_AWAKEN_FOREST)
-               || env.forest_awoken_until <= you.elapsed_time)
+               || env.forest_awoken_until > you.elapsed_time)
         {
             return ai_action::impossible();
         }
@@ -7546,7 +7463,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_WATERSTRIKE:
         ASSERT(foe);
-        return ai_action::good_or_impossible(feat_is_watery(grd(foe->pos())));
+        return ai_action::good_or_impossible(feat_is_watery(env.grid(foe->pos())));
 
     // Don't use unless our foe is close to us and there are no allies already
     // between the two of us

@@ -19,6 +19,7 @@
  #include "tilebuf.h"
 #endif
 #include "rltiles/tiledef-player.h"
+#include "tag-version.h"
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"

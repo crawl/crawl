@@ -5,8 +5,12 @@
 
 #pragma once
 
+#include <vector>
+
 #include "god-type.h"
 #include "score-format-type.h"
+
+using std::vector;
 
 class scorefile_entry;
 

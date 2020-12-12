@@ -6,6 +6,7 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "enum.h"
 #include "gender-type.h"
@@ -13,6 +14,8 @@
 #include "mon-enum.h"
 #include "mon-inv-type.h"
 #include "player.h"
+
+using std::vector;
 
 struct bolt;
 struct mgen_data;
@@ -139,7 +142,7 @@ struct monsterentry
 
     mon_holy_type holiness;
 
-    short resist_magic;  // (positive sets value, negative is relative to hd)
+    short willpower;  // (positive sets value, negative is relative to hd)
 
     // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
@@ -240,16 +243,17 @@ int exper_value(const monster& mon, bool real = true);
 int hit_points(int avg_hp, int scale = 10);
 
 int mons_class_hit_dice(monster_type mc);
-int mons_class_res_magic(monster_type type, monster_type base);
+int mons_class_willpower(monster_type type, monster_type base);
 bool mons_class_sees_invis(monster_type type, monster_type base);
 
-bool mons_immune_magic(const monster& mon);
+bool mons_invuln_will(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = true);
 string mon_attack_name(attack_type attack, bool with_object = true);
 bool is_plain_attack_type(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
 int flavour_damage(attack_flavour flavour, int HD, bool random = true);
+bool flavour_has_reach(attack_flavour flavour);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);
 
@@ -302,6 +306,9 @@ mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster& mon);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster& mon, bool known = false);
+
+bool monster_class_flies(monster_type mc);
+bool monster_inherently_flies(const monster &mons);
 
 bool mons_class_can_regenerate(monster_type mc);
 bool mons_can_regenerate(const monster& mon);
@@ -405,6 +412,7 @@ void mons_stop_fleeing_from_sanctuary(monster& mons);
 
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
+bool mons_class_is_test(monster_type mc);
 bool mons_is_firewood(const monster& mon);
 bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);

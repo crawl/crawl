@@ -58,6 +58,9 @@
    density in the source code, at the expense of slower
    computation. The book lists the details of this tuning.  */
 #pragma once
+
+#include <cstdint>
+
 namespace worley
 {
 struct noise_datum

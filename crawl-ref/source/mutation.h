@@ -6,9 +6,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "equipment-type.h"
 #include "mutation-type.h"
+
+using std::vector;
 
 class formatted_string;
 

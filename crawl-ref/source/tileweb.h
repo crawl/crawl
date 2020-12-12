@@ -9,6 +9,8 @@
 
 #include <bitset>
 #include <map>
+#include <vector>
+
 #include <sys/un.h>
 
 #include "cursor-type.h"
@@ -21,6 +23,8 @@
 #include "tilemcache.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
+
+using std::vector;
 
 class Menu;
 
@@ -78,6 +82,8 @@ struct player_info
     FixedVector<item_info, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
+    int8_t launcher_item;
+    string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
     bool quiver_available;

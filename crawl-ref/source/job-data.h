@@ -1,3 +1,11 @@
+#pragma once
+
+#include <vector>
+
+#include "tag-version.h"
+
+using std::vector;
+
 enum weapon_choice
 {
     WCHOICE_NONE,   ///< No weapon choice

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "tag-version.h"
+
 struct mutation_def
 {
     mutation_type mutation;
@@ -307,20 +311,20 @@ static const mutation_def mut_data[] =
    "You feel stable."},
 },
 
-{ MUT_MAGIC_RESISTANCE, 5, 3, mutflag::good, false,
-  "magic resistance",
+{ MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
+  "strong-willed",
 
-  {"You are resistant to hostile enchantments. (MR+)",
-   "You are highly resistant to hostile enchantments. (MR++)",
-   "You are extremely resistant to the effects of hostile enchantments. (MR+++)"},
+  {"You are strong-willed. (Will+)",
+   "You are highly strong-willed. (Will++)",
+   "You are extremely strong-willed. (Will+++)"},
 
-  {"You feel resistant to hostile enchantments.",
-   "You feel more resistant to hostile enchantments.",
-   "You feel almost impervious to the effects of hostile enchantments."},
+  {"You feel strong-willed.",
+   "You feel more strong-willed.",
+   "You feel your will become almost unbreakable."},
 
-  {"You feel less resistant to hostile enchantments.",
-   "You feel less resistant to hostile enchantments.",
-   "You feel vulnerable to hostile enchantments."},
+  {"You feel no longer feel strong-willed.",
+   "You feel less strong-willed.",
+   "You feel less strong-willed."},
 },
 
 { MUT_FAST, 0, 3, mutflag::good, true,
@@ -888,12 +892,20 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLL, 0, 1, mutflag::good, true,
+{ MUT_ROLL, 8, 3, mutflag::good, true,
   "roll",
 
-  {"You can roll at foes to attack.", "", ""},
-  {"", "", ""},
-  {"", "", ""},
+  {"You can roll at nearby foes to attack.",
+   "You can roll at foes to attack.",
+   "You can roll a great distance at foes to attack."},
+
+  {"",
+   "You feel you can roll further.",
+   "You feel you can roll even further."},
+
+  {"",
+   "You can no longer roll as far.",
+   "You can no longer roll as far."},
 },
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
@@ -901,6 +913,14 @@ static const mutation_def mut_data[] =
 
   {"You have a long armoured tail.", "", ""},
   {"", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_CURL, 0, 1, mutflag::good, true,
+  "reflexive curl",
+
+  {"You curl defensively after being hit.", "", ""},
+  {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
 
@@ -1855,18 +1875,18 @@ static const mutation_def mut_data[] =
     "You reflexes speed back up."},
 },
 
-{ MUT_MAGICAL_VULNERABILITY, 0, 3, mutflag::bad, false,
-  "magic vulnerability",
+{ MUT_WEAK_WILLED, 0, 3, mutflag::bad, false,
+  "weak-willed",
 
-  {"You are slightly vulnerable to magic. (MR-)",
-    "You are vulnerable to magic. (MR--)",
-    "You are extremely vulnerable to magic. (MR---)"},
-  {"You feel vulnerable to magic.",
-    "You feel more vulnerable to magic.",
-    "You feel more vulnerable to magic."},
-  {"You no longer feel vulnerable to magic.",
-    "You feel less vulnerable to magic.",
-    "You feel less vulnerable to magic."},
+  {"You are slightly weak-willed. (Will-)",
+    "You are weak-willed. (Will--)",
+    "You are extremely weak-willed. (Will---)"},
+  {"You feel weak-willed.",
+    "You feel more weak-willed.",
+    "You feel more weak-willed."},
+  {"You no longer feel weak-willed.",
+    "You feel less weak-willed.",
+    "You feel less weak-willed."},
 },
 
 { MUT_ANTI_WIZARDRY, 0, 3, mutflag::bad, false,

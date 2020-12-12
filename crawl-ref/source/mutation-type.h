@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum mutation_type
 {
     // body slot facets
@@ -92,7 +94,7 @@ enum mutation_type
     MUT_ICEMAIL,
     MUT_IGNITE_BLOOD,
     MUT_LOW_MAGIC,
-    MUT_MAGIC_RESISTANCE,
+    MUT_STRONG_WILLED,
     MUT_MUTATION_RESISTANCE,
     MUT_NEGATIVE_ENERGY_RESISTANCE,
     MUT_NIGHTSTALKER,
@@ -200,7 +202,7 @@ enum mutation_type
     MUT_NO_TRANSMUTATION_MAGIC,
     MUT_PHYSICAL_VULNERABILITY,
     MUT_SLOW_REFLEXES,
-    MUT_MAGICAL_VULNERABILITY,
+    MUT_WEAK_WILLED,
     MUT_ANTI_WIZARDRY,
 
 #if TAG_MAJOR_VERSION == 34
@@ -234,6 +236,7 @@ enum mutation_type
     MUT_BIG_BRAIN,
     MUT_SHARP_SCALES,
 #endif
+    MUT_CURL,
     NUM_MUTATIONS,
     CATEGORY_MUTATIONS,
     RANDOM_MUTATION = CATEGORY_MUTATIONS,

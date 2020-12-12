@@ -16,7 +16,7 @@
 
 const char * const standard_plural_qualifiers[] =
 {
-    " of ", " labeled ", nullptr
+    " of ", " labelled ", nullptr
 };
 
 bool is_vowel(const char32_t chr)
@@ -63,7 +63,7 @@ string pluralise(const string &name, const char * const qualifiers[],
             return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "antenna")
-             || ends_with(name, "hypha"))
+             || ends_with(name, "hypha") || ends_with(name, "noma"))
     {
         return name + "e";
     }

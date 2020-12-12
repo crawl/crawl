@@ -121,14 +121,14 @@ void wizard_create_spec_monster_name()
     // ghost's stats, brand or level, among other things.
     if (mspec.type == MONS_PLAYER_GHOST)
     {
-        unsigned short idx = mgrd(place);
+        unsigned short idx = env.mgrid(place);
 
-        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_PLAYER_GHOST)
+        if (idx >= MAX_MONSTERS || env.mons[idx].type != MONS_PLAYER_GHOST)
         {
             for (idx = 0; idx < MAX_MONSTERS; idx++)
             {
-                if (menv[idx].type == MONS_PLAYER_GHOST
-                    && menv[idx].alive())
+                if (env.mons[idx].type == MONS_PLAYER_GHOST
+                    && env.mons[idx].alive())
                 {
                     break;
                 }
@@ -142,7 +142,7 @@ void wizard_create_spec_monster_name()
             return;
         }
 
-        monster    &mon = menv[idx];
+        monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
         ghost.name = "John Doe";
@@ -185,8 +185,8 @@ void wizard_create_spec_monster_name()
 
 static bool _sort_monster_list(int a, int b)
 {
-    const monster* m1 = &menv[a];
-    const monster* m2 = &menv[b];
+    const monster* m1 = &env.mons[a];
+    const monster* m2 = &env.mons[b];
 
     if (m1->alive() != m2->alive())
         return m1->alive();
@@ -232,7 +232,7 @@ void debug_list_monsters()
         if (invalid_monster_index(idx))
             continue;
 
-        const monster* mi(&menv[idx]);
+        const monster* mi(&env.mons[idx]);
         if (!mi->alive())
             continue;
 
@@ -403,14 +403,14 @@ void debug_stethoscope(int mon)
 
         if (!monster_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos));
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", env.igrid(stethpos));
             return;
         }
 
-        i = mgrd(stethpos);
+        i = env.mgrid(stethpos);
     }
 
-    monster& mons(menv[i]);
+    monster& mons(env.mons[i]);
 
     // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
@@ -425,7 +425,7 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) MR=%d XP=%d SP=%d "
+         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
@@ -433,7 +433,7 @@ void debug_stethoscope(int mon)
          mons.hit_points, mons.max_hit_points,
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
-         mons.res_magic(),
+         mons.willpower(),
          exper_value(mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
@@ -469,8 +469,8 @@ void debug_stethoscope(int mon)
          mons.behaviour,
          mons.foe == MHITYOU                      ? "you"
          : mons.foe == MHITNOT                    ? "none"
-         : menv[mons.foe].type == MONS_NO_MONSTER ? "unassigned monster"
-         : menv[mons.foe].name(DESC_PLAIN, true).c_str(),
+         : env.mons[mons.foe].type == MONS_NO_MONSTER ? "unassigned monster"
+         : env.mons[mons.foe].name(DESC_PLAIN, true).c_str(),
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
@@ -741,9 +741,9 @@ void wizard_give_monster_item(monster* mon)
 
 static void _move_player(const coord_def& where)
 {
-    if (!you.can_pass_through_feat(grd(where)))
+    if (!you.can_pass_through_feat(env.grid(where)))
     {
-        grd(where) = DNGN_FLOOR;
+        env.grid(where) = DNGN_FLOOR;
         set_terrain_changed(where);
     }
     move_player_to_grid(where, false);
@@ -764,16 +764,16 @@ static void _move_monster(const coord_def& where, int idx1)
     if (!moves.isValid || !in_bounds(moves.target))
         return;
 
-    monster* mon1 = &menv[idx1];
+    monster* mon1 = &env.mons[idx1];
 
-    const int idx2 = mgrd(moves.target);
+    const int idx2 = env.mgrid(moves.target);
     monster* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
-    mgrd(moves.target) = idx1;
+    env.mgrid(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
-    mgrd(where) = idx2;
+    env.mgrid(where) = idx2;
 
     if (mon2 != nullptr)
     {
@@ -802,7 +802,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 
     already_moving = true;
 
-    int idx = mgrd(where);
+    int idx = env.mgrid(where);
 
     if (idx == NON_MONSTER)
     {
@@ -974,7 +974,7 @@ void debug_pathfind(int idx)
         return;
     }
 
-    monster& mon = menv[idx];
+    monster& mon = env.mons[idx];
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;
@@ -1027,7 +1027,7 @@ void debug_miscast(int target_index)
     if (target_index == NON_MONSTER)
         target = &you;
     else
-        target = &menv[target_index];
+        target = &env.mons[target_index];
 
     if (!target->alive())
     {

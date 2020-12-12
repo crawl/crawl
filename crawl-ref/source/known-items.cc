@@ -14,6 +14,7 @@
 #include "known-items.h"
 #include "libutil.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "unicode.h"
 
 class KnownMenu : public InvMenu

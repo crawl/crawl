@@ -2464,7 +2464,7 @@ NAME:    minmay_the_grid_prize_diamond_cup
 TAGS:    the_grid_prize unrand
 SUBST:   b : xcvbnTG|
 MAP
-   . .
+   ...
   .   .
  .  8  .
 .  |||  .
@@ -2472,7 +2472,7 @@ MAP
 .  |||  .
  .  8  .
   .   .
-   . .
+   ...
 ENDMAP
 
 ################################################################################
@@ -3456,15 +3456,15 @@ KITEM: 9 = *
 SUBST: 0 = 0.
 MAP
    .0 ..
-  .0   ..
+  .0 . ..
  .0     ..
 .0 0 *   ..
 0   0c0   .
-   *cbc*
+ . *cbc* .
 .   0c0   .
 ..   *   ..
  ..     ..
-  ..   ..
+  .. . ..
    .. ..
 ENDMAP
 
@@ -3723,7 +3723,7 @@ TAGS: the_grid_octo_prize unrand allow_dup
 SUBST: 9 = 9.
 SUBST: b = xcvbnGTUV*
 MAP
-   .. ..
+   .....
   .     .
  .  *|*  .
 .  99*99  .
@@ -3733,7 +3733,7 @@ MAP
 .  99*99  .
  .  *|*  .
   .     .
-   .. ..
+   .....
 ENDMAP
 
 NAME: minmay_the_grid_octo_prize_single_spiral

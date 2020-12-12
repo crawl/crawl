@@ -218,6 +218,16 @@ bool fill_status_info(int status, status_info& inf)
         _describe_zot(inf);
         break;
 
+    case STATUS_CURL:
+        if (you.props[PALENTONGA_CURL_KEY].get_bool())
+        {
+            inf.light_text = "Curl";
+            inf.light_colour = BLUE;
+            inf.short_text = "curled up";
+            inf.long_text = "You are defensively curled.";
+        }
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
@@ -709,12 +719,14 @@ bool fill_status_info(int status, status_info& inf)
 static void _describe_zot(status_info& inf)
 {
     const int lvl = bezotting_level();
-    if (lvl <= 0 && !Options.always_show_zot)
+    if (lvl > 0)
+    {
+        inf.short_text = "bezotted";
+        inf.long_text = "Zot is approaching!";
+    } else if (!Options.always_show_zot || !zot_clock_active())
         return;
 
     inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
-    inf.short_text = "bezotted";
-    inf.long_text = "Zot is approaching!";
     switch (lvl)
     {
         case 0:
@@ -779,7 +791,7 @@ static void _describe_regen(status_info& inf)
     {
         inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_TROGS_HAND));
         inf.light_text   = "Regen";
-        inf.light_text += " MR++";
+        inf.light_text += " Will++";
     }
 
     if (no_heal || (you.disease && !trogs_hand))
@@ -929,7 +941,7 @@ static void _describe_stat_zero(status_info& inf, stat_type st)
 
 static void _describe_terrain(status_info& inf)
 {
-    switch (grd(you.pos()))
+    switch (env.grid(you.pos()))
     {
     case DNGN_SHALLOW_WATER:
         inf.light_colour = LIGHTBLUE;

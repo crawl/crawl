@@ -14,6 +14,7 @@
 
 #include "act-iter.h"
 #include "artefact.h"
+#include "attack.h"
 #include "colour.h"
 #include "coordit.h"
 #include "english.h"
@@ -35,6 +36,7 @@
 #include "spl-goditem.h" // dispellable_enchantments
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #endif
@@ -58,13 +60,13 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STICKY_FLAME,    MB_BURNING },
     { ENCH_PETRIFIED,       MB_PETRIFIED },
     { ENCH_PETRIFYING,      MB_PETRIFYING },
-    { ENCH_LOWERED_MR,      MB_VULN_MAGIC },
+    { ENCH_LOWERED_WL,      MB_LOWERED_WL },
     { ENCH_SWIFT,           MB_SWIFT },
     { ENCH_SILENCE,         MB_SILENCING },
     { ENCH_PARALYSIS,       MB_PARALYSED },
     { ENCH_SOUL_RIPE,       MB_POSSESSABLE },
     { ENCH_REGENERATION,    MB_REGENERATION },
-    { ENCH_RAISED_MR,       MB_RAISED_MR },
+    { ENCH_STRONG_WILLED,   MB_STRONG_WILLED },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
     { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
     { ENCH_DAZED,           MB_DAZED },
@@ -117,7 +119,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
     { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
-
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -214,7 +215,8 @@ static bool _is_public_key(string key)
      || key == MON_GENDER_KEY
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
-     || key == VAULT_HD_KEY )
+     || key == VAULT_HD_KEY
+     || key == POLY_SET_KEY)
     {
         return true;
     }
@@ -254,7 +256,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 
         // If there's an adjacent deep water tile, the segment
         // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
+        if (env.grid(*ai) == DNGN_DEEP_WATER)
         {
             const monster *mon = monster_at(*ai);
             if (mon && you.can_see(*mon))
@@ -269,7 +271,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
             return true;
         }
 
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
         {
             const monster *mon = monster_at(*ai);
 
@@ -345,7 +347,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     ac = get_mons_class_ac(type);
     ev = base_ev = get_mons_class_ev(type);
     mresists = get_mons_class_resists(type);
-    mr = mons_class_res_magic(type, base_type);
+    mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
 
     mitemuse = mons_class_itemuse(type);
@@ -549,7 +551,7 @@ monster_info::monster_info(const monster* m, int milev)
             && m->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             inv[MSLOT_WEAPON].reset(
-                new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+                new item_def(get_item_info(env.item[m->inv[MSLOT_WEAPON]])));
         }
         return;
     }
@@ -561,7 +563,7 @@ monster_info::monster_info(const monster* m, int milev)
     ac = m->armour_class(false);
     ev = m->evasion(ev_ignore::unided);
     base_ev = m->base_evasion();
-    mr = m->res_magic(false);
+    mr = m->willpower(false);
     can_see_invis = m->can_see_invisible(false);
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
@@ -712,7 +714,7 @@ monster_info::monster_info(const monster* m, int milev)
         else
             ok = true;
         if (ok)
-            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
+            inv[i].reset(new item_def(get_item_info(env.item[m->inv[i]])));
     }
 
     fire_blocker = DNGN_UNSEEN;
@@ -800,6 +802,24 @@ string monster_info::get_max_hp_desc() const
         mhp *= slime_size;
 
     return make_stringf("about %d", mhp);
+}
+
+/**
+ * Calculate some defender-specific effects on an attacker's to-hit.
+ */
+int monster_info::lighting_modifiers() const
+{
+    // Lighting effects.
+    if (is(MB_GLOWING)       // corona, silver corona (!)
+        || is(MB_BURNING)    // sticky flame
+        || is(MB_HALOED))
+    {
+        return BACKLIGHT_TO_HIT_BONUS;
+    }
+    if (is(MB_UMBRAED) && !you.nightvision())
+        return UMBRA_TO_HIT_MALUS;
+
+    return 0;
 }
 
 
@@ -1450,7 +1470,7 @@ bool monster_info::can_see_invisible() const
     return can_see_invis;
 }
 
-int monster_info::res_magic() const
+int monster_info::willpower() const
 {
     return mr;
 }
@@ -1488,9 +1508,8 @@ reach_type monster_info::reach_range() const
                                              ? base_type : type);
     ASSERT(e);
 
-    reach_type range = e->attack[0].flavour == AF_REACH
-                       || e->attack[0].flavour == AF_REACH_STING
-                          ? REACH_TWO : REACH_NONE;
+    const attack_flavour fl = e->attack[0].flavour;
+    reach_type range = flavour_has_reach(fl) ? REACH_TWO : REACH_NONE;
 
     const item_def *weapon = inv[MSLOT_WEAPON].get();
     if (weapon)

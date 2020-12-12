@@ -6,8 +6,11 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "spl-util.h"
+
+using std::vector;
 
 typedef function<bool(spschool discipline_1,
                       spschool discipline_2,

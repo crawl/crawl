@@ -29,6 +29,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tiles-build-specific.h"
+#include "tag-version.h"
 #include "unwind.h"
 #include "view.h"
 
@@ -1010,10 +1011,16 @@ namespace msg
         current_message_tees.insert(this);
     }
 
-    tee::~tee()
+    void tee::force_update()
     {
         if (target)
             *target += get_store();
+        store.clear();
+    }
+
+    tee::~tee()
+    {
+        force_update();
         current_message_tees.erase(this);
     }
 
@@ -1458,6 +1465,19 @@ void msgwin_set_temporary(bool temp)
     }
 }
 
+msgwin_temporary_mode::msgwin_temporary_mode()
+    : previous(_temporary)
+{
+    msgwin_set_temporary(true);
+}
+
+msgwin_temporary_mode::~msgwin_temporary_mode()
+{
+    // RAII behaviour: embedding instances of this class within each other
+    // will only reset the mode once they are all cleared.
+    msgwin_set_temporary(previous);
+}
+
 void msgwin_clear_temporary()
 {
     buffer.roll_back();
@@ -1472,7 +1492,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     rng::generator rng(rng::UI);
 
     if (_msg_dump_file != nullptr)
-        fprintf(_msg_dump_file, "%s\n", text.c_str());
+        fprintf(_msg_dump_file, "%s\n", text.c_str()); // should this strip color tags?
 
     if (crawl_state.game_crashed)
         return;
@@ -1482,11 +1502,11 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
-        die_noline("%s", text.c_str());
+        die_noline("%s", formatted_string::parse_string(text).tostring().c_str());
 #endif
 
     if (msg::uses_stderr(channel))
-        fprintf(stderr, "%s\n", text.c_str());
+        fprintf(stderr, "%s\n", formatted_string::parse_string(text).tostring().c_str());
 
     // Flush out any "comes into view" monster announcements before the
     // monster has a chance to give any other messages.
@@ -1929,7 +1949,7 @@ void canned_msg(canned_message_type which_message)
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_TOO_CONFUSED:
-            mpr("You're too confused!");
+            mpr("You are too confused!");
             break;
         case MSG_PRESENT_FORM:
             mpr("You can't do that in your present form.");

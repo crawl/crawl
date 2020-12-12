@@ -15,6 +15,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "tile-env.h"
 #include "files.h"
 #include "libutil.h"
 #include "maps.h"
@@ -26,6 +27,7 @@
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "tiles-build-specific.h"
@@ -85,6 +87,8 @@ void wizard_place_stairs(bool down)
     dungeon_terrain_changed(you.pos(), stairs);
 }
 
+static level_id _wizard_level_target = level_id();
+
 void wizard_level_travel(bool down)
 {
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
@@ -101,10 +105,19 @@ void wizard_level_travel(bool down)
         down = !down;
     }
 
+    _wizard_level_target = stair_destination(stairs, "", false);
+
     if (down)
         down_stairs(stairs, false, false);
     else
         up_stairs(stairs, false);
+
+    _wizard_level_target = level_id();
+}
+
+bool is_wizard_travel_target(const level_id l)
+{
+    return _wizard_level_target.is_valid() && l == _wizard_level_target;
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -137,6 +150,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.depth         = pos.id.depth;
+    _wizard_level_target = pos.id;
 
     leaving_level_now(stair_taken);
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
@@ -150,6 +164,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level();
+    _wizard_level_target = level_id();
 }
 
 void wizard_interlevel_travel()
@@ -246,19 +261,19 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat_is_trap(feat))
         return debug_make_trap(pos);
 
-    env.tile_flv(pos).feat = 0;
-    env.tile_flv(pos).special = 0;
+    tile_env.flv(pos).feat = 0;
+    tile_env.flv(pos).special = 0;
     env.grid_colours(pos) = 0;
-    const dungeon_feature_type old_feat = grd(pos);
+    const dungeon_feature_type old_feat = env.grid(pos);
     dungeon_terrain_changed(pos, feat, false, false, false, true);
     // Update gate tiles, if existing.
     if (feat_is_door(old_feat) || feat_is_door(feat))
     {
         const coord_def left  = pos - coord_def(1, 0);
         const coord_def right = pos + coord_def(1, 0);
-        if (map_bounds(left) && feat_is_door(grd(left)))
+        if (map_bounds(left) && feat_is_door(env.grid(left)))
             tile_init_flavour(left);
-        if (map_bounds(right) && feat_is_door(grd(right)))
+        if (map_bounds(right) && feat_is_door(env.grid(right)))
             tile_init_flavour(right);
     }
     if (pos == you.pos() && cell_is_solid(pos))
@@ -374,7 +389,7 @@ bool debug_make_trap(const coord_def& pos)
 {
     char requested_trap[80];
     trap_type trap = TRAP_UNASSIGNED;
-    int gridch     = grd(pos);
+    int gridch     = env.grid(pos);
 
     if (gridch != DNGN_FLOOR)
     {
@@ -453,7 +468,7 @@ bool debug_make_trap(const coord_def& pos)
 
 bool debug_make_shop(const coord_def& pos)
 {
-    if (grd(pos) != DNGN_FLOOR)
+    if (env.grid(pos) != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
         return false;
@@ -607,7 +622,10 @@ static void debug_load_map_by_name(string name, bool primary)
             dgn_make_transporters_from_markers();
         }
         else
-            mprf("Failed to place %s.", toplace->name.c_str());
+        {
+            mprf("Failed to place %s; last builder error: %s",
+                toplace->name.c_str(), crawl_state.last_builder_error.c_str());
+        }
     }
 }
 
@@ -640,7 +658,7 @@ void debug_place_map(bool primary)
 static void _debug_kill_traps()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (feat_is_trap(grd(*ri)))
+        if (feat_is_trap(env.grid(*ri)))
             destroy_trap(*ri);
 }
 
@@ -680,9 +698,9 @@ static void _debug_destroy_doors()
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
-            const dungeon_feature_type feat = grd[x][y];
+            const dungeon_feature_type feat = env.grid[x][y];
             if (feat_is_closed_door(feat))
-                grd[x][y] = DNGN_FLOOR;
+                env.grid[x][y] = DNGN_FLOOR;
         }
 }
 
@@ -761,7 +779,9 @@ void wizard_recreate_level()
     mpr("Regenerating level.");
 
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
+    #ifndef DEBUG_VETO_RESUME
     _free_all_vaults();
+    #endif
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -774,6 +794,7 @@ void wizard_recreate_level()
     }
 
     level_id lev = level_id::current();
+    _wizard_level_target = lev;
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
     if (lev.depth == 1 && lev != BRANCH_DUNGEON)

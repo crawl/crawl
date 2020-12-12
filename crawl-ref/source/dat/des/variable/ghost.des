@@ -44,20 +44,14 @@ end
 
 function wrathful_weapon(class, quality)
     local egos
+    -- Only the egos Trog gifts, using equal weights for good_item but giving
+    -- the more desireable antimagic brand for randarts, which are trying to be
+    -- better quality.
     if quality == "good_item" then
-        -- No egos that Trog hates (pain) or that don't occur on mundane
-        -- weapons, like chaos.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
-                ["flaming"] = 10, ["venom"] = 10, ["protection"] = 10,
-                ["electrocution"] = 5, ["vampirism"] = 5, ["holy_wrath"] = 5,
-                ["draining"] = 5, ["distortion"] = 5, ["speed"] = 2}
+        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["flaming"] = 10}
     elseif quality == "randart" then
-        -- Allow chaos and make weights more favourable for better brands.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
-                ["flaming"] = 10, ["vampirism"] = 10, ["draining"] = 10,
-                ["electrocution"] = 10, ["protection"] = 5, ["venom"] = 5,
-                ["holy_wrath"] = 5, ["distortion"] = 5, ["speed"] = 4,
-                ["chaos"] = 4}
+        -- Increased chance for antimagic.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["flaming"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end
@@ -106,6 +100,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
+TAGS:   transparent
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -203,25 +198,27 @@ MARKER: P = lua:transp_loc("ghost_arena_entry")
 MARKER: Q = lua:transp_dest_loc("ghost_arena_entry")
 MARKER: R = lua:transp_loc("ghost_arena_exit")
 MARKER: S = lua:transp_dest_loc("ghost_arena_exit")
+KMASK: - = !opaque
 : ghost_setup(_G)
 MAP
-  ...........
- ..nnnnnnnnn..
- .nnRD...DRnn.
- .nG.rsDsrDGn.
- .nD.sr.rsqgn.
-..n.D..D.Djen..
+  -----------
+ --nnnnnnnnn--
+ -nnRD...DRnn-
+ -nG.rsDsrDGn-
+ -nD.sr.rsqgn-
+--n.D..D.Djen--
 @Pn.O.DQD.idnS@
-..n.D..D.Dkfn..
- .nD.sr.rsphn.
- .nG.rsDsrDGn.
- .nnRD...DRnn.
- ..nnnnnnnnn..
-  ...........
+--n.D..D.Dkfn--
+ -nD.sr.rsphn-
+ -nG.rsDsrDGn-
+ -nnRD...DRnn-
+ --nnnnnnnnn--
+  -----------
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
 ORIENT:  float
+KMASK:   . = !opaque
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
@@ -687,7 +684,7 @@ SUBST:  f = |*, g = *, h = %$, ij = -
 NSUBST: D = 4=1 / 4=1- / 2 / 2=2- / -
 :     end
 : elseif you.in_branch("Swamp") then
-MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / shadow / \
+MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / bloated husk / \
         bog body / vampire mosquito band / tyrant leech
 MONS:   ghost crab / hydra spectre / hydra simulacrum
 SUBST:  fg = |*, h = *%, i = %$--, j = -
@@ -1197,6 +1194,7 @@ ENDMAP
 
 NAME:   maelrawn_ghost_gauntlet_escape
 # Same depths where Gauntlets can place
+TAGS:   transparent
 DEPTH:  D:11-, Lair, Orc:$
 ORIENT: float
 KPROP:  x = bloody
@@ -1241,6 +1239,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
+TAGS:   transparent
 WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
@@ -1260,6 +1259,7 @@ ENDMAP
 
 # based on sewer_entry_d
 NAME:   ebering_ghost_sewer_d
+TAGS:   transparent
 ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
@@ -1386,33 +1386,59 @@ ORIENT:  float
 TAGS:    water_ok
 KMONS:   O = player_ghost
 KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
-KMONS:   1 = kraken
-KMONS:   2 = kraken simulacrum / spectral kraken
-SHUFFLE: 1D / D2
-KFEAT:   Od = W
-KFEAT:   12D = w
-SUBST:   u = wW, s=W.
-NSUBST:  d = 3=|* / *%
-TILE:    G = dngn_statue_mermaid
+KMONS:   1 = snapping turtle / sea snake / alligator snapping turtle w:2
+KMONS:   2 = spectral snapping turtle / spectral sea snake \
+             / spectral alligator snapping turtle w:2
+KMONS:   E = water elemental
 {{
-dgn.delayed_decay(_G,"'","minotaur skeleton / halfling skeleton" ..
+kmons("F = merfolk ; " .. ghost_monster_weapon("merfolk", {["draining"] = 1}) ..
+      "    . throwing net w:3 | nothing w:9")
+local quality = crawl.one_chance_in(3) and "randart" or "good_item"
+kmons("3 = merfolk aquamancer ; " ..
+           ghost_monster_weapon("blademaster", {["electrocution"] = 1},
+               quality) ..
+      "    . robe good_item")
+kmons("4 = merfolk impaler ; " ..
+           ghost_monster_weapon("impaler", {["draining"] = 1}, quality) ..
+      "    . robe good_item | leather armour good_item")
+}}
+KMONS:   5 = kraken
+KMONS:   6 = spectral kraken
+KFEAT:   O = W
+KFEAT:   123456EF = w
+# Place 2-6 corpses around the perimiter. Place monsters on D, excluding the
+# merfolk leader's band, which goes on the E.
+NSUBST:  - = 2=- / 4=-s / s, D = 2=1 / 4=1w / 2=E / 3=Ew / 3 / w
+# Either the normal or spectral set. Also randomize wall patterns.
+SHUFFLE: 1E35 / 2F46, pq
+SUBST:   d = |*, r = wW, p = x, q = s, s = W.
+TILE:    G = dngn_statue_mermaid
+MARKER:  P = lua:transp_loc("davey_jones_entry")
+MARKER:  Q = lua:transp_dest_loc("davey_jones_entry")
+MARKER:  R = lua:transp_loc("davey_jones_exit")
+MARKER:  S = lua:transp_dest_loc("davey_jones_exit")
+{{
+dgn.delayed_decay(_G, "-", "minotaur skeleton / halfling skeleton" ..
   " / dwarf skeleton / human skeleton / kobold skeleton" ..
   " / felid skeleton / orc skeleton / centaur skeleton")
+ghost_setup(_G)
 }}
-: ghost_setup(_G)
 MAP
- WWWWWWWWWWWWW
+ WWssssSssssWW
 WWcccccccccccWW
-WccGwwwwwwwGccW
-WcWuwwwwwdwuWcW
-WcWWWdDwDwWWWcW
-Wns'Www1wwWWWnW
-Wn.sWwwwwwW'snW
-Wc'sWduOudWs.cW
-Wc..'sWsWWs..cW
-WccG.....'.GccW
-WWcnnn===nnncWW
- WW....@....WW
+WccG---Q---GccW
+WcGspqpqpqpsGcW
+Wc-sqqrprqqs-cW
+Wc-srDDDDDrs-cW
+Wn-prDDDDDrp-nW
+Wn-qpDD5DDpq-nW
+Wn-prDDDDDrp-nW
+Wc-srDDDDDrs-cW
+Wc-sqqrprqqs-cW
+WcGspqpOpqpsGcW
+WccG-ddRdd-GccW
+WWccccnnnccccWW
+ WWssssPssssWW
 ENDMAP
 
 NAME:   gammafunk_ghost_stat_death
@@ -1912,9 +1938,9 @@ MONS:   torpor snail / ghost moth
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Swamp") then
-MONS:   cane toad / komodo dragon / hornet / ugly thing
+MONS:   goliath frog / tyrant leech
 MONS:   hydra / alligator / swamp dragon
-MONS:   very ugly thing
+MONS:   bunyip
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Elf") then

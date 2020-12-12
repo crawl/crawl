@@ -5,8 +5,10 @@
 
 #pragma once
 
+#include "killer-type.h"
 #include "mon-poly.h"
 
+class actor;
 class monster;
 struct bolt;
 

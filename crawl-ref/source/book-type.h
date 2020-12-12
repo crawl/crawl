@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum book_type
 {
     BOOK_MINOR_MAGIC,

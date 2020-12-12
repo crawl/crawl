@@ -567,7 +567,7 @@ ENDMAP
 NAME: nicolae_shoals_arrival_archipelago
 DEPTH: Shoals
 SHUFFLE: {[(<, abc, def
-SUBST: ade:@, bcf:W
+SUBST: a:@, de:., bcf:W
 MAP
      wwwwb
     www...b

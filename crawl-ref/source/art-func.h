@@ -3,6 +3,8 @@
  * @brief Functions non-standard unrandarts uses.
 **/
 
+#pragma once
+
 /*
  * util/art-data.pl scans through this file to grab the functions
  * non-standard unrandarts use and put them into the unranddata structs
@@ -48,6 +50,7 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
 
@@ -179,7 +182,7 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 /////////////////////////////////////////////////////
 
-static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
+static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
     if (!enough_hp(14, true))
     {
@@ -197,7 +200,7 @@ static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HURL_DAMNATION, power, false) == spret::abort)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target) == spret::abort)
     {
         *unevokable = true;
         return false;
@@ -254,7 +257,9 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
 }
 
-static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
+// this isn't targeted, but using the targeted version lets the olgreb static
+// targeter work
+static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
     if (!enough_mp(4, false))
     {
@@ -270,7 +275,8 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == spret::abort)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
+        target) == spret::abort)
     {
         *unevokable = true;
         return false;
@@ -776,14 +782,12 @@ static void _DRAGONSKIN_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
 }
 
-#if TAG_MAJOR_VERSION == 34
 ///////////////////////////////////////////////////
 static void _BLACK_KNIGHT_HORSE_world_reacts(item_def */*item*/)
 {
     if (one_chance_in(10))
         did_god_conduct(DID_EVIL, 1);
 }
-#endif
 
 ///////////////////////////////////////////////////
 static void _NIGHT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
