@@ -346,7 +346,7 @@ bool zap_explodes(zap_type ztype);
 bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);
 int zap_to_hit(zap_type z_type, int power, bool is_monster);
-dice_def zap_damage(zap_type z_type, int power, bool is_monster);
+dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);
 
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);

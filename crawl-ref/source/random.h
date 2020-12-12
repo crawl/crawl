@@ -222,7 +222,7 @@ struct dice_def
 
 constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
-dice_def calc_dice(int num_dice, int max_damage);
+dice_def calc_dice(int num_dice, int max_damage, bool random = true);
 
 // I must be a random-access iterator.
 template <typename I>

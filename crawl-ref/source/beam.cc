@@ -357,7 +357,7 @@ template<typename T>
 class power_deducer
 {
 public:
-    virtual T operator()(int pow) const = 0;
+    virtual T operator()(int pow, bool random = true) const = 0;
     virtual ~power_deducer() {}
 };
 
@@ -367,7 +367,7 @@ template<int adder, int mult_num = 0, int mult_denom = 1>
 class tohit_calculator : public tohit_deducer
 {
 public:
-    int operator()(int pow) const override
+    int operator()(int pow, bool /*random*/) const override
     {
         return adder + pow * mult_num / mult_denom;
     }
@@ -379,7 +379,7 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class dicedef_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const override
+    dice_def operator()(int pow, bool /*random*/) const override
     {
         return dice_def(numdice, adder + pow * mult_num / mult_denom);
     }
@@ -389,9 +389,9 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class calcdice_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const override
+    dice_def operator()(int pow, bool random) const override
     {
-        return calc_dice(numdice, adder + pow * mult_num / mult_denom);
+        return calc_dice(numdice, adder + pow * mult_num / mult_denom, random);
     }
 };
 
@@ -463,14 +463,14 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster)
     return hit;
 }
 
-dice_def zap_damage(zap_type z_type, int power, bool is_monster)
+dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random)
 {
     const zap_info* zinfo = _seek_zap(z_type);
     if (!zinfo)
         return dice_def(0,0);
     const dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
                                              : zinfo->player_damage;
-    return dam_calc ? (*dam_calc)(power) : dice_def(0,0);
+    return dam_calc ? (*dam_calc)(power, random) : dice_def(0,0);
 }
 
 colour_t zap_colour(zap_type z_type)

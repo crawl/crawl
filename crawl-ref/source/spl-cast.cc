@@ -2502,7 +2502,7 @@ static dice_def _spell_damage(spell_type spell)
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE);
         case SPELL_IRRADIATE:
-            return irradiate_damage(power);
+            return irradiate_damage(power, false);
         case SPELL_SHATTER:
             return shatter_damage(power);
         case SPELL_BATTLESPHERE:
@@ -2513,7 +2513,7 @@ static dice_def _spell_damage(spell_type spell)
     const zap_type zap = spell_to_zap(spell);
     if (zap == NUM_ZAPS)
         return dice_def(0,0);
-    return zap_damage(zap, power, false);
+    return zap_damage(zap, power, false, false);
 }
 
 string spell_damage_string(spell_type spell)

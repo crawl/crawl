@@ -504,7 +504,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
     if (zap == NUM_ZAPS)
         return dice_def(0,0);
 
-    return zap_damage(zap, pow, true);
+    return zap_damage(zap, pow, true, false);
 }
 
 static int _spell_hd(spell_type spell, const monster_info &mon_owner)
