@@ -3646,6 +3646,7 @@ void join_religion(god_type which_god)
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
+    set_god_ability_slots();    // remove old god's slots, reserve new god's
 
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
@@ -3658,8 +3659,6 @@ void join_religion(god_type which_god)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
-
-    set_god_ability_slots();    // remove old god's slots, reserve new god's
 
     _set_initial_god_piety();
 
