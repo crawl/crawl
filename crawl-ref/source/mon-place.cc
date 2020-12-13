@@ -204,8 +204,6 @@ bool monster_habitable_grid(monster_type mt,
 // Returns true if the monster can submerge in the given grid.
 bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
 {
-    if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
-        return false;
     if (!mon->is_habitable_feat(feat))
         return false;
     if (mons_class_flag(mon->type, M_SUBMERGES))

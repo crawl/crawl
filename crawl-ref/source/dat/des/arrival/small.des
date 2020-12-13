@@ -2238,7 +2238,6 @@ KMASK:   Z = no_monster_gen
 SHUFFLE: TTV
 WEIGHT:  5
 KMASK:   T = no_monster_gen
-KPROP:   wZ = no_submerge
 KPROP:   wZ = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -2261,7 +2260,6 @@ KMASK:  w = no_monster_gen
 KMONS:  Z = electric eel
 KFEAT:  Z = w
 KMASK:  Z = no_monster_gen
-KPROP:  wZ = no_submerge
 KPROP:  wZ = no_tele_into
 WEIGHT: 5
 MAP
