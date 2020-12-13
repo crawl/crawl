@@ -254,7 +254,7 @@ static const cloud_data clouds[] = {
       ETC_DARK,                                 // colour
       { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
-      {12, 12},         // fake damage - used only for monster pathing
+      {12, 12},
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
@@ -1347,7 +1347,7 @@ int actor_apply_cloud(actor *act)
 
     const cloud_struct &cloud(*cl);
     const bool player = act->is_player();
-    monster *mons = !player? act->as_monster() : nullptr;
+    monster *mons = act->as_monster();
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(*act, cloud))

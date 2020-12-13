@@ -2870,13 +2870,11 @@ void define_monster(monster& mons)
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         mons.props[MON_SPEED_KEY] = 7 + random2avg(9, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
         mons.props[MON_SPEED_KEY] = 6 + random2avg(7, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_SLIME_CREATURE:
