@@ -265,6 +265,7 @@ static branch_type single_portals[] =
     BRANCH_LABYRINTH,
 #endif
     BRANCH_GOLEM,
+    BRANCH_HIVE,
 };
 
 static void _sdump_visits(dump_params &par)

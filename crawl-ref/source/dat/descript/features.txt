@@ -1024,6 +1024,11 @@ A strange container
 A transparent container with complex mechanism, glowing with strange light.
 It seems empty, but you can feel something is inside it...
 %%%%
+# the Hive
+A gateway to a hive
+
+You hear an angry and manifold buzzing.
+%%%%
 ########################################################################
 ### Sprint
 ########################################################################

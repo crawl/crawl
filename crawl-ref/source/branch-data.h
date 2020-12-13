@@ -370,4 +370,12 @@ const Branch branches[NUM_BRANCHES] =
       "You enter the forge of golems!",
       LIGHTBLUE, BLACK,
       '@', {}, branch_noise::normal },
+
+    { BRANCH_HIVE, NUM_BRANCHES, -1, -1, 1, 14,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_HIVE, DNGN_EXIT_HIVE, DNGN_EXIT_THROUGH_ABYSS,
+      "Hive", "the Hive", "Hive",
+      "You hear a buzzing sound coming from all directions.",
+      YELLOW, BROWN,
+      '#', {}, branch_noise::normal },
 };

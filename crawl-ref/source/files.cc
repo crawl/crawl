@@ -1347,6 +1347,7 @@ static const vector<branch_type> portal_generation_order =
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
     BRANCH_GOLEM,
+    BRANCH_HIVE
 };
 
 void update_portal_entrances()

@@ -297,6 +297,8 @@ enum dungeon_feature_type
     DNGN_TEMPORAL_FLOOR,
     DNGN_ENTER_GOLEM,
     DNGN_EXIT_GOLEM,
+    DNGN_ENTER_HIVE,
+    DNGN_EXIT_HIVE,
 
     NUM_FEATURES
 };

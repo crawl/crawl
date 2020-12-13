@@ -60,6 +60,7 @@ msc += $warning:slides
 msc += $warning:settles down
 msc += $warning:sound of hammering
 msc += $warning:ringing. *sound of hammering
+msc += $warning:sound of buzzing
 
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return

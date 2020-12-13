@@ -364,6 +364,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PORTAL_DESOLATION;
     case DNGN_ENTER_GOLEM:
         return TILE_DNGN_PORTAL_GOLEM;
+    case DNGN_ENTER_HIVE:
+        return TILE_DNGN_PORTAL_HIVE;
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
@@ -409,6 +411,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_BAILEY:
     case DNGN_EXIT_DESOLATION:
     case DNGN_EXIT_GOLEM:
+    case DNGN_EXIT_HIVE:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
@@ -3996,6 +3999,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_DESOLATION;
     case BRANCH_GOLEM:
         return TILE_DNGN_PORTAL_GOLEM;
+    case BRANCH_HIVE:
+        return TILE_DNGN_PORTAL_HIVE;
 
     default:
         return TILEG_ERROR;
