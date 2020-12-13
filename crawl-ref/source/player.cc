@@ -1493,8 +1493,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     {
         case US_ALIVE:
             break;
-        case US_HUNGRY_DEAD: //ghouls
-        case US_UNDEAD: // mummies & lichform
+        case US_UNDEAD: // ghouls, mummies, and lichform
             return 3;
         case US_SEMI_UNDEAD: // vampire
             if (!you.vampire_alive) // XXX: && temp?
@@ -6204,9 +6203,6 @@ rot_resistance player::res_rotting(bool temp) const
     default:
     case US_ALIVE:
         return base_res;
-
-    case US_HUNGRY_DEAD:
-        return ROT_RESIST_MUNDANE; // rottable by Zin, not by necromancy
 
     case US_SEMI_UNDEAD:
         if (temp && !you.vampire_alive)

@@ -1,9 +1,8 @@
 #pragma once
 
-enum undead_state_type                // you.is_undead
+enum undead_state_type
 {
     US_ALIVE = 0,
-    US_HUNGRY_DEAD,     // Ghouls
-    US_UNDEAD,          // Mummies
+    US_UNDEAD,          // Ghouls and Mummies
     US_SEMI_UNDEAD,     // Vampires
 };
