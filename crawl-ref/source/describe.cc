@@ -1867,13 +1867,16 @@ static string _describe_armour(const item_def &item, bool verbose)
     else
     {
         const int max_ench = armour_max_enchant(item);
-        if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (max_ench > 0)
         {
-            description += "\n\nIt can be maximally enchanted to +"
-                           + to_string(max_ench) + ".";
+            if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+            {
+                description += "\n\nIt can be maximally enchanted to +"
+                               + to_string(max_ench) + ".";
+            }
+            else
+                description += "\n\nIt cannot be enchanted further.";
         }
-        else
-            description += "\n\nIt cannot be enchanted further.";
 
     }
 
