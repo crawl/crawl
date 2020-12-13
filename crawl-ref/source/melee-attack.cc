@@ -605,10 +605,12 @@ static void _hydra_consider_devouring(monster &defender)
 
     dprf("shifter ok");
 
-    // or food that would incur divine penance... (cannibalism is still bad
-    // even when transformed!)
-    if (god_hates_eating(you.religion, defender.type))
+    // Don't eat orcs, even heretics might be worth a miracle
+    if (you_worship(GOD_BEOGH)
+        && mons_genus(mons_species(defender.type)) == MONS_ORC)
+    {
         return;
+    }
 
     dprf("god ok");
 

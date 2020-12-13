@@ -3873,20 +3873,6 @@ bool god_hates_killing(god_type god, const monster& mon)
     return retval;
 }
 
-/**
- * Will the given god object if you eat a monster of this type?
- *
- * @param god       The god in question.
- * @param mc        The monster type to be eaten.
- * @return          Whether eating this monster will incur penance.
- */
-bool god_hates_eating(god_type god, monster_type mc)
-{
-    if (god_hates_cannibalism(god) && is_player_same_genus(mc))
-        return true;
-    return false;
-}
-
 bool god_likes_spell(spell_type spell, god_type god)
 {
     switch (god)
