@@ -100,7 +100,6 @@ enum hints_event_type
     HINT_YOU_SICK,
 #endif
     HINT_YOU_POISON,
-    HINT_YOU_ROTTING,
     HINT_YOU_CURSED,
     HINT_YOU_HUNGRY,
     HINT_YOU_STARVING,

@@ -94,8 +94,8 @@ private:
     string      mapdesc;            // DESC: of the vault the player is in.
     string      killer_map;         // the vault (if any) that placed the killer
     int         final_hp;           // actual current HPs (probably <= 0)
-    int         final_max_hp;       // net HPs after rot
-    int         final_max_max_hp;   // gross HPs before rot
+    int         final_max_hp;       // net HPs after drain
+    int         final_max_max_hp;   // gross HPs before drain
     int         final_mp;           // actual current MP
     int         final_max_mp;       // max MP
     int         final_base_max_mp;  // max MP ignoring equipped items

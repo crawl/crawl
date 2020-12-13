@@ -816,7 +816,7 @@ static string _display_vampire_attributes()
 
         {"Negative resistance  ", "           ", "+++   "},
 
-        {"Rotting resistance   ", "           ", "+     "},
+        {"Miasma  resistance   ", "           ", "+     "},
 
         {"Torment resistance   ", "           ", "+     "},
 
@@ -1431,7 +1431,8 @@ bool undead_mutation_rot()
  *
  * If the mutation conflicts with an existing one it may fail. See `_handle_conflicting_mutations`.
  *
- * If the player is undead, this may rot instead. Rotting counts as success.
+ * If the player is undead, this may stat drain instead. Stat draincounts as
+ * success.
  *
  * @param which_mutation    the mutation to use.
  * @param reason            the explanation for how the player got mutated.
@@ -2384,7 +2385,7 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
       { -33, 0, 0 } },
-    { 2, { MUT_ROT_IMMUNITY, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+    { 2, { MUT_MIASMA_IMMUNITY, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
       { -33, 0, 0 } },
     { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
@@ -2483,7 +2484,7 @@ try_again:
                 if (m == MUT_HEAT_RESISTANCE)
                     fire_elemental++;
 
-                if (m == MUT_ROT_IMMUNITY || m == MUT_IGNITE_BLOOD)
+                if (m == MUT_MIASMA_IMMUNITY || m == MUT_IGNITE_BLOOD)
                     cloud_producing++;
             }
 

@@ -94,7 +94,7 @@ enum class abflag
     conf_ok             = 0x00000040, // can use even if confused
     variable_mp         = 0x00000080, // costs a variable amount of MP
     remove_curse_scroll = 0x00000100, // Uses ?rc
-    skill_drain         = 0x00000200, // drains skill levels
+    max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
     hostile             = 0x00001000, // failure summons a hostile (Makhleb)
@@ -334,7 +334,7 @@ static const ability_def Ability_List[] =
         0, 0, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-        2, 0, 0, {fail_basis::evo, 60, 2}, abflag::skill_drain },
+        2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
 #if TAG_MAJOR_VERSION == 34
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
         0, 0, 0, {}, abflag::none },
@@ -526,15 +526,15 @@ static const ability_def Ability_List[] =
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
         4, 80, 5, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
-        9, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::skill_drain },
+        9, 0, 12, {fail_basis::invo, 80, 4, 25}, abflag::max_hp_drain },
 
     // Ru
     { ABIL_RU_DRAW_OUT_POWER, "Draw Out Power", 0, 0, 0,
-        {fail_basis::invo}, abflag::exhaustion|abflag::skill_drain|abflag::conf_ok },
+        {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain|abflag::conf_ok },
     { ABIL_RU_POWER_LEAP, "Power Leap",
         5, 0, 0, {fail_basis::invo}, abflag::exhaustion },
     { ABIL_RU_APOCALYPSE, "Apocalypse",
-        8, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::skill_drain },
+        8, 0, 0, {fail_basis::invo}, abflag::exhaustion|abflag::max_hp_drain },
 
     { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
         0, 0, 0, {fail_basis::invo}, abflag::sacrifice },
@@ -787,10 +787,10 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::skill_drain
+    if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret += ", Skill drain";
+        ret += ", Max HP drain";
     }
 
     if (abil.flags & abflag::remove_curse_scroll)
@@ -912,10 +912,10 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::conf_ok)
         ret << "\nYou can use this ability even if confused.";
 
-    if (abil.flags & abflag::skill_drain
+    if (abil.flags & abflag::max_hp_drain
         && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
     {
-        ret << "\nThis ability will temporarily drain your skills when used";
+        ret << "\nThis ability will temporarily drain your maximum hit points when used";
         if (ability == ABIL_EVOKE_TURN_INVISIBLE)
             ret << ", even unsuccessfully";
         ret << ".";
@@ -1498,7 +1498,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             && you.strength(false) == you.max_strength()
             && you.intel(false) == you.max_intel()
             && you.dex(false) == you.max_dex()
-            && !player_rotted()
+            && !player_drained()
             && !you.duration[DUR_WEAK])
         {
             if (!quiet)

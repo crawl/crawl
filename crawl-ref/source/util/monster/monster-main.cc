@@ -938,7 +938,7 @@ int main(int argc, char* argv[])
                 case AF_DRAIN_STR:
                     monsterattacks += colour(RED, "(drain strength)");
                     break;
-                case AF_DRAIN_XP:
+                case AF_DRAIN:
                     monsterattacks += colour(LIGHTMAGENTA, "(drain)");
                     break;
                 case AF_CHAOTIC:
@@ -976,9 +976,6 @@ int main(int argc, char* argv[])
                     monsterattacks += colour(
                         LIGHTRED, damage_flavour("strong poison", hd * 11 / 3,
                                                  hd * 13 / 2));
-                    break;
-                case AF_ROT:
-                    monsterattacks += colour(LIGHTRED, "(rot)");
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1203,7 +1200,7 @@ int main(int argc, char* argv[])
             res2(YELLOW, blind, 1);
 
         res2(LIGHTBLUE, drown, mon.res_water_drowning());
-        res2(LIGHTRED, rot, mon.res_rotting());
+        res2(LIGHTRED, miasma, mon.res_miasma());
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
         res2(YELLOW, holy, mon.res_holy_energy());
         res2(LIGHTMAGENTA, torm, mon.res_torment());

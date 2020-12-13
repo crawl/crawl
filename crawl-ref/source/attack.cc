@@ -792,7 +792,7 @@ static const vector<chaos_attack_type> chaos_types = {
           return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
-    { AF_DRAIN_XP,  SPWPN_DRAINING,      5,
+    { AF_DRAIN,  SPWPN_DRAINING,      5,
       [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
@@ -868,7 +868,7 @@ void attack::drain_defender()
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
                                           (1 + random2(damage_done)) / 2);
 
-    if (defender->drain_exp(attacker, true, 20 + min(35, damage_done)))
+    if (defender->drain(attacker, true, 1 + damage_done))
     {
         if (defender->is_player())
             obvious_effect = true;

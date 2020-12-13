@@ -139,7 +139,7 @@ public:
 
     int hp;
     int hp_max;
-    int hp_max_adj_temp;        // temporary max HP loss (rotting)
+    int hp_max_adj_temp;        // temporary max HP loss (draining)
     int hp_max_adj_perm;        // base HPs from background (and permanent loss)
 
     int magic_points;
@@ -194,7 +194,6 @@ public:
     unsigned short pet_target;
 
     durations_t duration;
-    int rotting;
     bool apply_berserk_penalty;         // Whether to apply the berserk penalty at
     // end of the turn.
     int berserk_penalty;                // The penalty for moving while berserk
@@ -729,9 +728,7 @@ public:
     void confuse(actor *, int strength) override;
     void weaken(actor *attacker, int pow) override;
     bool heal(int amount) override;
-    bool drain_exp(const actor *, bool quiet = false, int pow = 3) override;
-    bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
-        override;
+    bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr) override;
@@ -754,7 +751,7 @@ public:
 
     mon_holy_type holiness(bool temp = true) const override;
     bool undead_or_demonic() const override;
-    bool is_holy(bool spells = true) const override;
+    bool is_holy() const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
@@ -766,7 +763,7 @@ public:
     int res_cold() const override;
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
-    rot_resistance res_rotting(bool temp = true) const override;
+    bool res_miasma(bool temp = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
@@ -852,9 +849,8 @@ public:
     int shield_tohit_penalty(bool random_factor, int scale = 1) const override;
 
     bool wearing_light_armour(bool with_skill = false) const;
-    int  skill(skill_type skill, int scale =1,
-               bool real = false, bool drained = true,
-               bool temp=true) const override;
+    int  skill(skill_type skill, int scale = 1, bool real = false,
+               bool temp = true) const override;
 
     bool do_shaft() override;
 
@@ -1085,10 +1081,10 @@ void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
 void flush_mp();
 
-void rot_hp(int hp_loss);
-// Unrot the player and return excess HP if any.
-int unrot_hp(int hp_recovered);
-int player_rotted();
+void drain_hp(int hp_loss);
+// Undrain the player's HP and return excess HP if any.
+int undrain_hp(int hp_recovered);
+int player_drained();
 void rot_mp(int mp_loss);
 
 void inc_max_hp(int hp_gain);
@@ -1096,7 +1092,7 @@ void dec_max_hp(int hp_loss);
 
 void set_hp(int new_amount);
 
-int get_real_hp(bool trans, bool rotted = true);
+int get_real_hp(bool trans, bool drained = true);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();

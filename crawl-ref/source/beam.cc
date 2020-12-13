@@ -1527,7 +1527,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            mons->drain_exp(pbolt.agent());
+            mons->drain(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
@@ -1535,7 +1535,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (mons->res_rotting())
+        if (mons->res_miasma())
         {
             if (doFlavouredEffects)
                 simple_monster_message(*mons, " completely resists.");
@@ -1927,14 +1927,14 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     return new_pois.duration > old_pois.duration;
 }
 
-// Actually poisons, rots, and/or slows a monster with miasma (with
+// Actually poisons, drains, and/or slows a monster with miasma (with
 // message).
 bool miasma_monster(monster* mons, const actor* who)
 {
     if (!mons->alive())
         return false;
 
-    if (mons->res_rotting())
+    if (mons->res_miasma())
         return false;
 
     bool success = poison_monster(mons, who);
@@ -1944,13 +1944,6 @@ bool miasma_monster(monster* mons, const actor* who)
         && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
     {
         did_god_conduct(DID_EVIL, 5 + random2(3));
-    }
-
-    if (mons->max_hit_points > 4 && coinflip())
-    {
-        mons->max_hit_points--;
-        mons->hit_points = min(mons->max_hit_points, mons->hit_points);
-        success = true;
     }
 
     if (one_chance_in(3))
@@ -2842,7 +2835,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_cold() >= 3;
 
     case BEAM_MIASMA:
-        return mon->res_rotting();
+        return mon->res_miasma();
 
     case BEAM_NEG:
         return mon->res_negative_energy() == 3;
@@ -2893,7 +2886,7 @@ bool bolt::harmless_to_player() const
         return you.res_holy_energy() >= 3;
 
     case BEAM_MIASMA:
-        return you.res_rotting();
+        return you.res_miasma();
 
     case BEAM_NEG:
         return player_prot_life(false) >= 3;

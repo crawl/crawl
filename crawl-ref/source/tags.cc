@@ -3125,13 +3125,13 @@ static void _tag_read_you(reader &th)
         {
             you.mutation[MUT_NO_POTION_HEAL] =
                     you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+            you.mutation[MUT_MIASMA_IMMUNITY] =
+                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 0;
         }
-
-        if (you.species == SP_VINE_STALKER
-            || you.species == SP_GARGOYLE)
+        else if (you.species == SP_GARGOYLE)
         {
-            you.mutation[MUT_ROT_IMMUNITY] =
-                    you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
+            you.mutation[MUT_MIASMA_IMMUNITY] =
+                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
         }
     }
 
@@ -3139,8 +3139,8 @@ static void _tag_read_you(reader &th)
         && you.species == SP_DEMONSPAWN
         && you.innate_mutation[MUT_SAPROVOROUS])
     {
-        you.mutation[MUT_ROT_IMMUNITY] =
-                you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
+        you.mutation[MUT_MIASMA_IMMUNITY] =
+                you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS

@@ -233,8 +233,8 @@ vicinity to be raised as spectral servants.
 Vit status
 
 You are divinely vitalised, providing protection from poison, confusion,
-petrification, rotting and sickness, and increasing and sustaining your
-strength, intelligence and dexterity.
+petrification, and sickness, and increasing and sustaining your strength,
+intelligence and dexterity.
 %%%%
 RoF status
 
@@ -505,7 +505,7 @@ Statue status
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is insulated from electricity and gains resistance to poison,
-rotting and negative energy.
+and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -556,8 +556,9 @@ Any equipped weapons and armour are melded.
 Lich status
 
 You have been transformed into a lich. You are resistant to cold and hostile
-enchantments and completely immune to poison, rotting, negative energy and
-torment for the duration of the transformation.
+enchantments and completely immune to poison, negative energy and torment for
+the duration of the transformation.
+
 Your necromancy spells are increased in power, and you gain a draining melee
 attack. However, you are also vulnerable to holy damage and Dispel Undead,
 and are unable to consume potions.
@@ -609,8 +610,7 @@ Wisp status
 
 You have been transformed into an insubstantial wisp of gas. You move quickly
 and are highly evasive, and you occasionally blink at random. You are resistant
-to fire, cold, electricity and acid, and immune to poison, rotting and
-negative energy.
+to fire, cold, electricity and acid, and immune to poison, and negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
 cast spells. The effectiveness of your melee attacks while in this form is based
@@ -701,7 +701,7 @@ Bloodless status
 Your body is entirely devoid of blood, reducing your maximum health and
 preventing you from regenerating health when monsters are visible. You are
 immune to poison and negative energy, significantly resist cold, and resist
-rotting and torment.
+torment.
 %%%%
 Bribe status
 

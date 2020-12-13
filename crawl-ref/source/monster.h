@@ -342,8 +342,7 @@ public:
 
     bool fumbles_attack() override;
 
-    int  skill(skill_type skill, int scale = 1,
-               bool real = false, bool drained = true,
+    int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
     void attacking(actor *other, bool ranged) override;
@@ -371,7 +370,7 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic() const override;
-    bool is_holy(bool check_spells = true) const override;
+    bool is_holy() const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
@@ -384,7 +383,7 @@ public:
     int res_cold() const override;
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
-    rot_resistance res_rotting(bool /*temp*/ = true) const override;
+    bool res_miasma(bool /*temp*/ = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
@@ -472,9 +471,7 @@ public:
     bool fully_petrify(bool quiet = false) override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
-    bool drain_exp(const actor *, bool quiet = false, int pow = 3) override;
-    bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
-        override;
+    bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr) override;

@@ -1409,7 +1409,7 @@ TILE:     urand_cigotuvi
 TILE_EQ:  bplate_green
 # XXX TODO: tiles
 LIFE:     1
-INSCRIP:  rRot
+INSCRIP:  rMiasma
 BOOL:     drain, evil, special, no_upgrade
 
 # This entry must always be last.

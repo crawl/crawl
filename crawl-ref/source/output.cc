@@ -743,7 +743,7 @@ static void _print_stats_mp(int x, int y)
 
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "MP: " : "Magic:  ");
+    CPRINTF(player_drained() ? "MP: " : "Magic:  ");
     textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
@@ -800,7 +800,7 @@ static void _print_stats_hp(int x, int y)
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    CPRINTF(player_drained() ? "HP: " : "Health: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -2123,7 +2123,7 @@ static vector<formatted_string> _get_overview_stats()
     int col2 = 10;
     int col3 = 11;
 
-    if (player_rotted())
+    if (player_drained())
         col1 += 1;
 
     if (_player_statrotted())
@@ -2132,7 +2132,7 @@ static vector<formatted_string> _get_overview_stats()
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("HP:   ");
     else
         entry.cprintf("Health: ");
@@ -2143,14 +2143,14 @@ static vector<formatted_string> _get_overview_stats()
         entry.textcolour(HUD_VALUE_COLOUR);
 
     entry.cprintf("%d/%d", you.hp, you.hp_max);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf(" (%d)", get_real_hp(true, false));
 
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("MP:   ");
     else
         entry.cprintf("Magic:  ");
@@ -2171,7 +2171,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("Gold: ");
     else
         entry.cprintf("Gold:   ");

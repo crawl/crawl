@@ -7346,7 +7346,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_DEATH_RATTLE:
     case SPELL_MIASMA_BREATH:
         ASSERT(foe);
-        return ai_action::good_or_bad(!foe->res_rotting() && !no_clouds);
+        return ai_action::good_or_bad(!foe->res_miasma() && !no_clouds);
 
     case SPELL_DISPEL_UNDEAD_RANGE:
         // [ds] How is dispel undead intended to interact with vampires?

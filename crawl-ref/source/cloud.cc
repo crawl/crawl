@@ -958,7 +958,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_STEAM:
             return act.res_steam() > 0;
         case CLOUD_MIASMA:
-            return act.res_rotting() > 0 || act.is_unbreathing();
+            return act.res_miasma() || act.is_unbreathing();
         case CLOUD_PETRIFY:
             return act.res_petrify();
         case CLOUD_SPECTRAL:
@@ -1192,7 +1192,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_NEGATIVE_ENERGY:
     {
         actor* agent = cloud.agent();
-        if (act->drain_exp(agent))
+        if (act->drain(agent, final_damage))
         {
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_EVIL, 5 + random2(3));

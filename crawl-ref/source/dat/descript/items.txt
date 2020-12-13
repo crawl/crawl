@@ -635,7 +635,6 @@ it. It also reduces magical contamination.
 potion of curing
 
 A potion which heals some wounds, clears the mind and cures poison and disease.
-It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
@@ -656,7 +655,7 @@ An enchanted beverage which speeds the actions of anyone who drinks it.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. It can also repair rotting.
+instantly.
 %%%%
 potion of invisibility
 

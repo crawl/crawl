@@ -451,7 +451,6 @@ void revive()
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_XP_DRAIN] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;
@@ -471,7 +470,7 @@ void revive()
     you.props["corrosion_amount"] = 0;
     you.props.erase(SAP_MAGIC_KEY);
 
-    unrot_hp(9999);
+    undrain_hp(9999);
     set_hp(9999);
     set_mp(9999);
     you.pending_revival = false;

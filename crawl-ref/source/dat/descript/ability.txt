@@ -171,9 +171,9 @@ is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
-Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your strength, intelligence and
-dexterity. The increases to your attributes are determined by Invocations skill.
+Temporarily provides protection from poison, confusion, petrification, and
+sickness, and increases and sustains your strength, intelligence and dexterity.
+The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -365,8 +365,8 @@ Heals a small amount of health, depending on Invocations skill.
 Purification ability
 
 Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost strength,
-dexterity or intelligence.
+petrification, and sickness, and fully restores any lost strength, dexterity or
+intelligence.
 %%%%
 Heal Other ability
 

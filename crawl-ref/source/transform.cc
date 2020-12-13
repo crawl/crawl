@@ -326,11 +326,11 @@ int Form::res_pois() const
 }
 
 /**
- * Does this form provide resistance to rotting?
+ * Does this form provide resistance to miasma?
  */
-bool Form::res_rot() const
+bool Form::res_miasma() const
 {
-    return get_resist(resists, MR_RES_ROTTING);
+    return get_resist(resists, MR_RES_MIASMA);
 }
 
 /**

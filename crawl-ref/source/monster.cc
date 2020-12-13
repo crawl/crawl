@@ -3519,7 +3519,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
         holi |= MH_EVIL;
 
-    if (has_attack_flavour(AF_DRAIN_XP)
+    if (has_attack_flavour(AF_DRAIN)
         || has_attack_flavour(AF_VAMPIRIC))
     {
         holi |= MH_EVIL;
@@ -3559,7 +3559,7 @@ int monster::how_unclean(bool check_god) const
 {
     int uncleanliness = 0;
 
-    if (has_attack_flavour(AF_ROT))
+    if (has_attack_flavour(AF_DRAIN))
         uncleanliness++;
     if (has_attack_flavour(AF_STEAL))
         uncleanliness++;
@@ -3882,42 +3882,19 @@ bool monster::res_sticky_flame() const
     return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
-static rot_resistance _base_rot_resistance(const monster &mons)
+bool monster::res_miasma(bool /*temp*/) const
 {
-    const mon_holy_type holi = mons.holiness();
+    if (holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+        return true;
 
-    // handle undead first so that multi-holiness undead get their due
-    if (holi & MH_UNDEAD)
-    {
-        if (mons_genus(mons.type) == MONS_GHOUL || mons.type == MONS_ZOMBIE)
-            return ROT_RESIST_MUNDANE;
-        return ROT_RESIST_FULL;
-    }
-    if (holi & (MH_NATURAL | MH_PLANT))
-        return ROT_RESIST_NONE; // was 1 for plants before. Gardening shows it should be -1
-    if (holi & (MH_HOLY | MH_DEMONIC))
-        return ROT_RESIST_MUNDANE;
-    if (mons.is_nonliving())
-        return ROT_RESIST_FULL;
-    if (mons.is_insubstantial())
-        return ROT_RESIST_FULL;
-    return ROT_RESIST_NONE;
-}
-
-rot_resistance monster::res_rotting(bool /*temp*/) const
-{
-    const rot_resistance res = _base_rot_resistance(*this);
-    if (res != ROT_RESIST_NONE)
-        return res;
-
-    if (get_mons_resist(*this, MR_RES_ROTTING))
-        return ROT_RESIST_MUNDANE;
+    if (get_mons_resist(*this, MR_RES_MIASMA))
+        return true;
 
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
-        return ROT_RESIST_MUNDANE;
+        return true;
 
-    return res;
+    return false;
 }
 
 int monster::res_holy_energy() const
@@ -4162,7 +4139,7 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*drained*/, bool /*temp*/) const
+int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
     if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))
@@ -4261,7 +4238,7 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(const actor *agent, bool quiet, int /*pow*/)
+bool monster::drain(const actor *agent, bool quiet, int /*pow*/)
 {
     if (res_negative_energy() >= 3)
         return false;
@@ -4283,30 +4260,6 @@ bool monster::drain_exp(const actor *agent, bool quiet, int /*pow*/)
         const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
                                                    dur);
         add_ench(drain_ench);
-    }
-
-    return true;
-}
-
-bool monster::rot(actor *agent, int amount, bool quiet, bool no_cleanup)
-{
-    if (res_rotting() || amount <= 0)
-        return false;
-
-    if (!quiet && you.can_see(*this))
-        mprf("%s looks less resilient!", name(DESC_THE).c_str());
-
-    // If requested, don't clean up the monster in order to credit properly.
-    hurt(agent, amount, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !no_cleanup);
-
-    if (alive())
-    {
-        max_hit_points -= amount * 2;
-        hit_points = min(max_hit_points, hit_points);
-
-        // Clean up the monster if that killed it (unless we shouldn't).
-        if (!no_cleanup && max_hit_points <= 0)
-            hurt(agent, 0, BEAM_MISSILE, KILLED_BY_BEAM);
     }
 
     return true;
@@ -5024,7 +4977,7 @@ kill_category monster::kill_alignment() const
 
 bool monster::sicken(int amount)
 {
-    if (res_rotting() || (amount /= 2) < 1)
+    if (res_miasma() || (amount /= 2) < 1)
         return false;
 
     if (!has_ench(ENCH_SICK) && you.can_see(*this))

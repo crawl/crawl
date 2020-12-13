@@ -1000,7 +1000,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
     const int target = min(_item_training_target(item), 270);
 
     return target && !is_useless_skill(skill)
-       && you.skill(skill, 10, false, false, false) < target
+       && you.skill(skill, 10, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
 
@@ -1026,8 +1026,8 @@ static string _your_skill_desc(skill_type skill, bool show_target_button, int sc
                                 min_scaled_target / 10, min_scaled_target % 10,
                                 skill_name(skill));
     }
-    int you_skill_temp = you.skill(skill, 10, false, true, true);
-    int you_skill = you.skill(skill, 10, false, false, false);
+    int you_skill_temp = you.skill(skill, 10);
+    int you_skill = you.skill(skill, 10, false, false);
 
     return make_stringf("Your %sskill: %d.%d%s",
                             (you_skill_temp != you_skill ? "(base) " : ""),
@@ -3592,8 +3592,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "cold";
     case MR_RES_ACID:
         return "acid";
-    case MR_RES_ROTTING:
-        return "rotting";
+    case MR_RES_MIASMA:
+        return "miasma";
     case MR_RES_NEG:
         return "negative energy";
     case MR_RES_DAMNATION:
@@ -3664,14 +3664,16 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
-        { AF_DRAIN_XP,          "drain skills" },
+        { AF_DRAIN,             "drain life" },
         { AF_ELEC,              "deal up to %d extra electric damage" },
         { AF_FIRE,              "deal up to %d extra fire damage" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
         { AF_POISON,            "cause poisoning" },
         { AF_POISON_STRONG,     "cause strong poisoning" },
+#if TAG_MAJOR_VERSION == 34
         { AF_ROT,               "cause rotting" },
+#endif
         { AF_VAMPIRIC,          "drain health from the living" },
 #if TAG_MAJOR_VERSION == 34
         { AF_KLOWN,             "cause random powerful effects" },
@@ -4185,7 +4187,7 @@ static string _monster_stat_description(const monster_info& mi)
     {
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_ROTTING, MR_RES_NEG,    MR_RES_DAMNATION,
+        MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
         MR_RES_TORNADO,
     };
 

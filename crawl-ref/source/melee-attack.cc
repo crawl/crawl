@@ -369,7 +369,7 @@ void melee_attack::apply_black_mark_effects()
                 defender->weaken(attacker, 6);
                 break;
             case 2:
-                defender->drain_exp(attacker, false, 10);
+                defender->drain(attacker, false, damage_done);
                 break;
         }
     }
@@ -1786,21 +1786,6 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-void melee_attack::rot_defender(int amount)
-{
-    // Keep the defender alive so that we credit kills properly.
-    if (defender->rot(attacker, amount, true, true))
-    {
-        if (needs_message)
-        {
-            if (defender->is_player())
-                mpr("You feel your flesh rotting away!");
-            else if (defender->is_monster() && defender_visible)
-                mprf("%s looks less resilient!", defender_name(false).c_str());
-        }
-    }
-}
-
 void melee_attack::handle_noise(const coord_def & pos)
 {
     // Successful stabs make no noise.
@@ -2547,11 +2532,6 @@ void melee_attack::mons_apply_attack_flavour()
             mons_do_poison();
         break;
 
-    case AF_ROT:
-        if (one_chance_in(3))
-            rot_defender(1);
-        break;
-
     case AF_FIRE:
         special_damage =
             resist_adjust_damage(defender,
@@ -2687,7 +2667,7 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_DRAIN_XP:
+    case AF_DRAIN:
         if (coinflip())
             drain_defender();
         break;

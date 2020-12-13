@@ -819,7 +819,6 @@ enum class zin_eff
     dumb,
     ignite_chaos,
     saltify,
-    rot,
     holy_word,
 };
 
@@ -955,49 +954,20 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case RECITE_CHAOTIC:
         if (check < 5)
-        {
-            // nastier -- fallthrough if immune
-            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
-                effect = zin_eff::rot;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::smite;
         else if (check < 10)
-        {
-            if (coinflip())
-                effect = zin_eff::silver_corona;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::silver_corona;
         else if (check < 15)
-        {
-            if (coinflip())
-                effect = zin_eff::ignite_chaos;
-            else
-                effect = zin_eff::silver_corona;
-        }
+            effect = zin_eff::ignite_chaos;
         else
             effect = zin_eff::saltify;
         break;
 
     case RECITE_IMPURE:
-        // Many creatures normally resistant to rotting are still affected,
-        // because this is divine punishment. Those with no real flesh are
-        // immune, of course.
         if (check < 5)
-        {
-            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
-                effect = zin_eff::rot;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::smite;
         else if (check < 10)
-        {
-            if (coinflip())
-                effect = zin_eff::smite;
-            else
-                effect = zin_eff::silver_corona;
-        }
+            effect = zin_eff::silver_corona;
         else if (check < 15)
         {
             if (mon->undead_or_demonic() && coinflip())
@@ -1183,34 +1153,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
         _zin_saltify(mon);
         break;
 
-    case zin_eff::rot:
-        // FIXME: no message (other than "You kill X!") is produced if the
-        // rotting kills the monster.
-        if (mon->res_rotting() <= 1
-            && mon->rot(&you, 1 + roll_dice(2, degree), true))
-        {
-            mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY));
-            switch (prayertype)
-            {
-            case RECITE_CHAOTIC:
-                simple_monster_message(*mon,
-                    minor ? "'s chaotic flesh is covered in bleeding sores."
-                          : "'s chaotic flesh erupts into weeping sores!");
-                break;
-            case RECITE_IMPURE:
-                simple_monster_message(*mon,
-                    minor ? "'s impure flesh rots away."
-                          : "'s impure flesh sloughs off!");
-                break;
-
-            default:
-                die("bad recite rot");
-            }
-            affected = true;
-        }
-        break;
-
     case zin_eff::holy_word:
         holy_word_monsters(where, spellpower, HOLY_WORD_ZIN, &you);
         affected = true;
@@ -1386,7 +1328,7 @@ void elyvilon_purification()
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
     restore_stat(STAT_ALL, 0, false);
-    unrot_hp(9999);
+    undrain_hp(9999);
     you.redraw_evasion = true;
 }
 

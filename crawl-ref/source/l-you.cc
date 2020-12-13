@@ -119,11 +119,11 @@ LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
  * @function base_mp
  */
 LUARET1(you_base_mp, number, get_real_mp(false))
-/*** How much rot.
+/*** How much drain.
  * @treturn int
- * @function rot
+ * @function drain
  */
-LUARET1(you_rot, number, player_rotted())
+LUARET1(you_drain, number, player_drained())
 /*** Minimum hp after poison wears off.
  * @treturn int
  * @function poison_survival
@@ -1228,7 +1228,7 @@ static const struct luaL_reg you_clib[] =
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
-    { "rot"         , you_rot },
+    { "drain"       , you_drain },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },

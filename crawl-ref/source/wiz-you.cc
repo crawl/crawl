@@ -198,11 +198,10 @@ void wizard_heal(bool super_heal)
     {
         mpr("Super healing.");
         // Clear more stuff.
-        unrot_hp(9999);
+        undrain_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        you.attribute[ATTR_XP_DRAIN] = 0;
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
@@ -754,7 +753,7 @@ static void debug_uptick_xl(int newxl, bool train)
 static void debug_downtick_xl(int newxl)
 {
     set_hp(you.hp_max);
-    // boost maxhp so we don't die if heavily rotted
+    // boost maxhp so we don't die if heavily drained
     you.hp_max_adj_perm += 1000;
     you.experience = exp_needed(newxl);
     level_change();

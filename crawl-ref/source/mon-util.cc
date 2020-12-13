@@ -1842,7 +1842,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
     else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
-        attk.flavour = AF_DRAIN_XP;
+        attk.flavour = AF_DRAIN;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
 

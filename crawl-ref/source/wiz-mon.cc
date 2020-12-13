@@ -484,7 +484,7 @@ void debug_stethoscope(int mon)
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
-                            "acid=%d sticky=%s rot=%s",
+                            "acid=%d sticky=%s miasma=%s",
          mons.res_fire(),
          mons.res_cold(),
          mons.res_elec(),
@@ -492,7 +492,7 @@ void debug_stethoscope(int mon)
          mons.res_negative_energy(),
          mons.res_acid(),
          mons.res_sticky_flame() ? "yes" : "no",
-         mons.res_rotting() ? "yes" : "no");
+         mons.res_miasma() ? "yes" : "no");
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
