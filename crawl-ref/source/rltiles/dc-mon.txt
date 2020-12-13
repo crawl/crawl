@@ -226,6 +226,11 @@ catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
+%rim 1
+ice_beast MONS_ICE_BEAST
+%rim 0
+sky_beast MONS_SKY_BEAST
+
 %sdir mon/unique
 nellie MONS_NELLIE
 %sdir mon/holy
@@ -735,13 +740,6 @@ sojobo MONS_SOJOBO
 arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 asterion MONS_ASTERION
-
-## Various beasts ('I')
-%sdir mon/animals
-ice_beast MONS_ICE_BEAST
-%rim 0
-sky_beast MONS_SKY_BEAST
-%rim 1
 
 ## Jellies ('J')
 %sdir mon/unique
