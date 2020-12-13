@@ -3538,7 +3538,7 @@ bool monster::undead_or_demonic() const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
-bool monster::is_holy(bool /*check_spells*/) const
+bool monster::is_holy() const
 {
     return bool(holiness() & MH_HOLY);
 }
