@@ -4511,7 +4511,7 @@ ENDMAP
 
 NAME:  grunt_potential
 TAGS:  no_pool_fixup
-DEPTH: D:6-
+DEPTH: D:6-, Depths
 : init_hm_decor_walldepth(_G, 'x')
 SHUFFLE: wlvbn
 : if you.absdepth() > 20 then
@@ -5590,7 +5590,7 @@ ENDMAP
 
 NAME:  kennysheep_nondecorative_pillar
 TAGS:  transparent
-DEPTH: Depths:2-, !D:$, !Depths:$
+DEPTH: Depths:2-, !Depths:$
 : ks_random_setup(_G, true)
 MAP
      ...xtx....

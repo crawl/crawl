@@ -1045,9 +1045,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 14 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -2547,9 +2545,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_yredelemnul
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 13 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
