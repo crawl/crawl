@@ -1441,7 +1441,6 @@ KPROP:    x = bloody
              the player ending up in a closet or an extremely dense monster
              array (like a hellion island); or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
-          * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 
