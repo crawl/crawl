@@ -1,4 +1,4 @@
-Stone Soup 0.26 (through 0.26-a0-1060-g086102a3f0)
+Stone Soup 0.26 (through 0.26-a0-1078-gd9a99272a7)
 --------------------------------------------------
 
 Highlights
@@ -31,16 +31,20 @@ Monsters
 * Monsters don't forget about the player while the player is off level.
 * Most plants, fungi, and other plant like things that don't attack now wither
   in 3-5 turns after they're hit. The exceptions are bushes and briars.
+* Monsters that formerly had rot-inducing melee attacks now have drain attacks.
 
 Character
 ---------
 * Hunger (and eating) are removed.
-* Ghouls heal on kill instead of by eating chunks.
+* Drain now temporarily reduces max HP instead of skills. Rot no longer exists
+  as a mechanic.
 * New species: Palentonga, six-limbed scaled mammals with a rolling charge.
-* Centaurs are removed.
 * Deep Elves' Bows aptitude is increased to +3.
 * Kobolds now have the Nightstalker 3 mutation, reducing LOS and providing
   bonus stealth. (Demonspawn can no longer gain Nightstalker.)
+* Ghouls heal on kill instead of by eating chunks. They also no longer rot
+  over time.
+* Centaurs are removed.
 * The Charms skill (and the Skald background) are removed.
 * New demonspawn mutations: sharp scales & big brain.
 * Transmuters no longer start with arrows, and Wereblood replaces Sticks to
