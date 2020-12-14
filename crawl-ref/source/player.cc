@@ -6453,8 +6453,7 @@ bool player::spellcasting_unholy() const
 
 /**
  * What is the player's (current) place on the Undead Spectrum?
- * (alive, hungry undead (ghoul), semi-undead (vampire), or very dead (mummy,
- * lich)
+ * (alive, semi-undead (vampire), or very dead (ghoul, mummy, lich)
  *
  * @param temp  Whether to consider temporary effects (lichform)
  * @return      The player's undead state.
