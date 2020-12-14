@@ -414,7 +414,7 @@ void handle_followers(const coord_def &from,
     places[place_set].push_back(from);
     while (!places[place_set].empty())
     {
-        for (const coord_def p : places[place_set])
+        for (const coord_def &p : places[place_set])
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {

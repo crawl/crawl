@@ -1233,7 +1233,7 @@ static void _grab_followers()
     int place_set = 0;
     while (!places[place_set].empty())
     {
-        for (const coord_def p : places[place_set])
+        for (const coord_def &p : places[place_set])
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {

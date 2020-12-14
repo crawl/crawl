@@ -6706,7 +6706,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
         bool mons_targ_aligned = false;
 
-        for (const coord_def pos : tracer.path_taken)
+        for (const coord_def &pos : tracer.path_taken)
         {
             if (pos == mons->pos())
                 continue;

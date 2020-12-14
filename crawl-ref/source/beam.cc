@@ -2404,7 +2404,7 @@ void bolt::affect_endpoint()
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
         if (is_player)
         {
-            for (const coord_def coord: splash_coords)
+            for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
                 if (mons && !mons->res_water_drowning())
@@ -5958,7 +5958,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         for (const auto &line : sweep)
         {
             bool pass_visible = false;
-            for (const coord_def delta : line)
+            for (const coord_def &delta : line)
             {
                 if (delta.origin() && hole_in_the_middle)
                     continue;
@@ -5979,7 +5979,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     int cells_seen = 0;
     for (const auto &line : sweep)
     {
-        for (const coord_def delta : line)
+        for (const coord_def &delta : line)
         {
             if (delta.origin() && hole_in_the_middle)
                 continue;

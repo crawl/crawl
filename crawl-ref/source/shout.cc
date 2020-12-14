@@ -957,7 +957,7 @@ void noise_grid::propagate_noise()
         const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
         vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
-        for (const coord_def p : perimeter)
+        for (const coord_def &p : perimeter)
         {
             const noise_cell &cell(cells(p));
 

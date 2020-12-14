@@ -659,7 +659,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     if (!list_features.empty())
     {
         desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
-        for (const coord_def c : list_features)
+        for (const coord_def &c : list_features)
         {
             ostringstream desc;
 #ifndef USE_TILE_LOCAL

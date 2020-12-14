@@ -259,7 +259,7 @@ static void _shoals_deepen_water()
         const int next_page = !current_page;
         vector<coord_def> &cpage(pages[current_page]);
         vector<coord_def> &npage(pages[next_page]);
-        for (const coord_def c : cpage)
+        for (const coord_def &c : cpage)
         {
             if (distance)
                 _shoals_deepen_water_at(c, distance);
@@ -384,7 +384,7 @@ static coord_def _shoals_region_center(
     const coord_def cgravity(static_cast<int>(cx), static_cast<int>(cy));
     coord_def closest_to_center;
     int closest_distance = 0;
-    for (const coord_def p : visit)
+    for (const coord_def &p : visit)
     {
         const int dist2 = (p - cgravity).abs();
         if (closest_to_center.origin() || closest_distance > dist2)
@@ -934,7 +934,7 @@ static void _shoals_apply_tide(int tide)
         vector<coord_def> &cpage(pages[current_page]);
         vector<coord_def> &npage(pages[next_page]);
 
-        for (const coord_def c : cpage)
+        for (const coord_def &c : cpage)
         {
             const dungeon_feature_type herefeat(env.grid(c));
             const bool was_wet = (_shoals_tide_passable_feat(herefeat)

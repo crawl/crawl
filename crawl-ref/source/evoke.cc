@@ -1126,7 +1126,7 @@ bool evoke_check(int slot, bool quiet)
     {
         // does the player have a zigfig? overrides sac artiface
         // this is ugly...this thing should probably be goldified
-        for (const auto s : you.inv)
+        for (const item_def &s : you.inv)
             if (s.defined() && s.base_type == OBJ_MISCELLANY
                                      && s.sub_type == MISC_ZIGGURAT)
             {

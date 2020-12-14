@@ -1836,7 +1836,7 @@ static void _tag_construct_you_dungeon(writer &th)
     vector<LevelXPInfo> xp_info_list = you.get_all_xp_info();
     // How many different levels do we have info on?
     marshallShort(th, xp_info_list.size());
-    for (const auto info: xp_info_list)
+    for (const LevelXPInfo &info : xp_info_list)
         marshallLevelXPInfo(th, info);
 
     _marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
