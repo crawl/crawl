@@ -1031,8 +1031,11 @@ void TilesFramework::_send_player(bool force_full)
             if (!status.light_text.empty())
             {
                 json_write_string("light", status.light_text);
-                json_write_string("desc",
-                        getLongDescription(status.light_text + " status"));
+                // split off any extra info, e.g. counts for things like Zot
+                // and Flay. (Status db descriptions never have spaces.)
+                const string dbname = split_string(" ", status.light_text, true, true, 1)[0];
+                const string dbdesc = getLongDescription(dbname + " status");
+                json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
             }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);
