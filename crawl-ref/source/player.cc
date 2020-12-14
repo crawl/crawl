@@ -2421,12 +2421,15 @@ static void _handle_hp_drain(int exp)
     dprf("Lost %d of %d draining points", loss, -you.hp_max_adj_temp);
 
     you.hp_max_adj_temp += loss;
-    calc_hp();
-    if (you.hp_max_adj_temp >= 0)
-    {
+
+    const bool drain_removed = you.hp_max_adj_temp >= 0;
+    if (drain_removed)
         you.hp_max_adj_temp = 0;
+
+    calc_hp();
+
+    if (drain_removed)
         mprf(MSGCH_RECOVERY, "Your life force feels restored.");
-    }
 }
 
 static void _handle_god_wrath(int exp)
