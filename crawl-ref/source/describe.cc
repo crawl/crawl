@@ -3282,7 +3282,7 @@ static void _get_spell_description(const spell_type spell,
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
-                : make_stringf("Chance to beat your WL: %d%%%s\n",
+                : make_stringf("Chance to defeat your Will: %d%%%s\n",
                                hex_chance(spell, hd),
                                wiz_info.c_str());
         }
@@ -3893,7 +3893,7 @@ static string _monster_spells_description(const monster_info& mi)
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("\nTo read a description, press the key listed above. "
         "(AdB) indicates damage (the sum of A B-sided dice), "
-        "(x%%) indicates the chance to beat your WL, "
+        "(x%%) indicates the chance to defeat your Will, "
         "and (y) indicates the spell range");
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
