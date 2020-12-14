@@ -2968,7 +2968,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_POTIONS:
     {
         // Mummies can't use potions.
-        if (you.undead_state(temp) == US_UNDEAD)
+        if (you.undead_state(temp) == US_UNDEAD && you.species != SP_GHOUL)
             return true;
 
         if (!ident && !item_type_known(item))
