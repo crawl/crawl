@@ -46,6 +46,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 #include "ui.h"
@@ -63,7 +64,7 @@ static armour_type _useless_armour_type();
  * @param skill     The skill in question; e.g. SK_ARMOUR.
  * @param mult      A multiplier to the skill, for higher precision.
  * @return          A rounded value of that skill; e.g. _skill_rdiv(SK_ARMOUR)
- *                  for a value of 10.1 will return 11 90% of the time &
+ *                  for a value of 10.9 will return 11 90% of the time &
  *                  10 the remainder.
  */
 static int _skill_rdiv(skill_type skill, int mult = 1)
@@ -447,11 +448,9 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh
-    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f. Pretend formicid
-    // shield skill is 0 so they always weight towards 2H.
-    const int shield_sk = you.species == SP_FORMICID
-        ? 0
-        : _skill_rdiv(SK_SHIELDS) * species_apt_factor(SK_SHIELDS);
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.
+    const int shield_sk = _skill_rdiv(SK_SHIELDS)
+                          * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -1241,7 +1240,7 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
         }
 
-        item_def &acq_item(mitm[thing_created]);
+        item_def &acq_item(env.item[thing_created]);
         _adjust_brand(acq_item, divine, agent);
 
         // For plain armour, try to change the subtype to something
@@ -1309,16 +1308,7 @@ int acquirement_create_item(object_class_type class_wanted,
         if (class_wanted == OBJ_WANDS)
             acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
         else if (class_wanted == OBJ_GOLD)
-        {
-            // New gold acquirement formula from dpeg.
-            // Min=220, Max=5520, Mean=1218, Std=911
-            int quantity_rnd = roll_dice(1, 8); // ensure rnd sequence points
-            quantity_rnd *= roll_dice(1, 8);
-            quantity_rnd *= roll_dice(1, 8);
-            acq_item.quantity = 10 * (20
-                                    + roll_dice(1, 20)
-                                    + quantity_rnd);
-        }
+            acq_item.quantity = random_range(200, 1400, 2);
         else if (class_wanted == OBJ_MISSILES && !divine)
             acq_item.quantity *= 5;
         else if (quant > 1)
@@ -1415,16 +1405,16 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
-    item_set_appearance(mitm[thing_created]); // cleanup
+    item_set_appearance(env.item[thing_created]); // cleanup
 
     if (thing_created != NON_ITEM)
     {
-        ASSERT(mitm[thing_created].is_valid());
-        mitm[thing_created].props[ACQUIRE_KEY].get_int() = agent;
+        ASSERT(env.item[thing_created].is_valid());
+        env.item[thing_created].props[ACQUIRE_KEY].get_int() = agent;
     }
 
-    ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
-    ASSERT(!god_hates_item(mitm[thing_created]));
+    ASSERT(!is_useless_item(env.item[thing_created], false) || agent == GOD_XOM);
+    ASSERT(!god_hates_item(env.item[thing_created]));
 
     // If we have a zero coord_def, don't move the item to the grid. Used for
     // generating scroll of acquirement items.
@@ -1437,7 +1427,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // If a god wants to give you something but the floor doesn't want it,
     // it counts as a failed acquirement - no piety, etc cost.
-    if (feat_destroys_items(grd(pos))
+    if (feat_destroys_items(env.grid(pos))
         && agent > GOD_NO_GOD
         && agent < NUM_GODS)
     {
@@ -1679,10 +1669,10 @@ static item_def _acquirement_item_def(object_class_type item_type)
 
     if (item_index != NON_ITEM)
     {
-        ASSERT(!god_hates_item(mitm[item_index]));
+        ASSERT(!god_hates_item(env.item[item_index]));
 
         // We make a copy of the item def, but we don't keep the real item.
-        item = mitm[item_index];
+        item = env.item[item_index];
         set_ident_flags(item,
                 // Act as if we've recieved this item already to prevent notes.
                 ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
@@ -1749,7 +1739,6 @@ bool acquirement_menu()
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 
-#ifdef CLUA_BINDINGS
     int index = 0;
     if (!clua.callfn("c_choose_acquirement", ">d", &index))
     {
@@ -1761,7 +1750,6 @@ bool acquirement_menu()
         _create_acquirement_item(acq_items[index - 1]);
         return true;
     }
-#endif
 
     AcquireMenu acq_menu(acq_items);
     acq_menu.show();

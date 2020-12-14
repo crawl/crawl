@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 coord_def random_in_bounds();
 
 static inline bool in_bounds_x(int x)

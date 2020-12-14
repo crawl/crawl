@@ -1,5 +1,11 @@
 #pragma once
 
+#include <vector>
+
+#include "tag-version.h"
+
+using std::vector;
+
 /* Don't change the order of any enums in this file unless you are breaking
  * save compatibility. See ../docs/develop/save_compatibility.txt for
  * more details, including how to schedule both the current and future
@@ -214,7 +220,7 @@ enum jewellery_type
     RING_MAGICAL_POWER,
     RING_FLIGHT,
     RING_LIFE_PROTECTION,
-    RING_PROTECTION_FROM_MAGIC,
+    RING_WILLPOWER,
     RING_FIRE,
     RING_ICE,
 #if TAG_MAJOR_VERSION == 34
@@ -450,7 +456,7 @@ enum special_armour_type
     SPARM_INTELLIGENCE,
     SPARM_PONDEROUSNESS,
     SPARM_FLYING,
-    SPARM_MAGIC_RESISTANCE,
+    SPARM_WILLPOWER,
     SPARM_PROTECTION,
     SPARM_STEALTH,
     SPARM_RESISTANCE,
@@ -511,7 +517,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };
 
-enum special_ring_type // jewellery mitm[].special values
+enum special_ring_type // jewellery env.item[].special values
 {
     SPRING_RANDART = 200,
     SPRING_UNRANDART = 201,

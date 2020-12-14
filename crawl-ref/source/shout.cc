@@ -528,7 +528,7 @@ static int _issue_orders_prompt()
         string previous;
         if (_can_target_prev())
         {
-            const monster* target = &menv[you.prev_targ];
+            const monster* target = &env.mons[you.prev_targ];
             if (target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }
@@ -852,7 +852,7 @@ bool fake_noisy(int loudness, const coord_def& where)
 // Permarock walls are assumed to completely kill noise.
 static int _noise_attenuation_millis(const coord_def &pos)
 {
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 
     if (feat_is_permarock(feat))
         return NOISE_ATTENUATION_COMPLETE;
@@ -957,7 +957,7 @@ void noise_grid::propagate_noise()
         const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
         vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
-        for (const coord_def p : perimeter)
+        for (const coord_def &p : perimeter)
         {
             const noise_cell &cell(cells(p));
 
@@ -1164,7 +1164,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
          "centroid (%d,%d) source (%d,%d) "
-         "heard at (%d,%d), distance: %d (traveled %d)",
+         "heard at (%d,%d), distance: %d (travelled %d)",
          act->name(DESC_PLAIN, true).c_str(),
          final_perceived_point.x, final_perceived_point.y,
          noise_centroid.x, noise_centroid.y,
@@ -1259,7 +1259,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
             if (you.pos() == coord_def(x, y))
                 write_cell(outf, p, '@');
             else
-                write_cell(outf, p, get_feature_def(grd[x][y]).symbol());
+                write_cell(outf, p, get_feature_def(env.grid[x][y]).symbol());
         }
         fprintf(outf, "<br>\n");
     }
@@ -1284,7 +1284,7 @@ static void _actor_apply_noise(actor *act,
 {
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
-         "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
+         "from (%d,%d), real source (%d,%d), distance: %d, noise travelled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,
          noise_intensity_millis,

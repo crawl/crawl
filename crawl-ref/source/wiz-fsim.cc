@@ -85,11 +85,13 @@ static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
+    const int missile = quiver::get_secondary_action()->get_item();
 
     if (iweap && is_weapon(*iweap))
         return item_attack_skill(*iweap);
 
-    if (!iweap && you.m_quiver.get_fire_item() != -1)
+    // TODO: could generalize this to handle non-ammo actions in fsim?
+    if (!iweap && missile >= 0 && you.inv[missile].base_type == OBJ_MISSILES)
         return SK_THROWING;
 
     return SK_UNARMED_COMBAT;
@@ -99,7 +101,7 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = quiver::get_secondary_action()->get_item();
 
     if (iweap)
     {
@@ -110,8 +112,11 @@ static string _equipped_weapon_name()
         return "Wielding: " + item_buf;
     }
 
-    if (missile != -1)
+    if (missile != -1 && you.inv[missile].defined()
+                && you.inv[missile].base_type == OBJ_MISSILES)
+    {
         return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
+    }
 
     return "Unarmed";
 }
@@ -247,7 +252,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
-                quiver_item(i);
+                you.quiver_action.set_from_slot(i);
                 you.redraw_quiver = true;
                 break;
             }
@@ -366,7 +371,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = you.m_quiver.get_fire_item();
+    const int missile = quiver::get_secondary_action()->get_item();
 
     mon.shield_blocks = 0;
     you.shield_blocks = 0;
@@ -376,9 +381,11 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     {
         // first, ranged weapons. note: this includes
         // being empty-handed but having a missile quivered
-        if ((iweap && iweap->base_type == OBJ_WEAPONS &&
-                    is_range_weapon(*iweap))
-            || (!iweap && missile != -1))
+        // TODO: handle non-missile quivered items?
+        if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
+            && (iweap && iweap->base_type == OBJ_WEAPONS &&
+                    is_range_weapon(*iweap)
+                || !iweap && missile != -1))
         {
             ranged_attack attk(&you, &mon, &you.inv[missile], false);
             attk.simu = true;

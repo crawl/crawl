@@ -32,7 +32,7 @@ You are unnaturally agile, and gain a bonus to your evasion.
 Brill status
 
 You are unnaturally smart, and gain a bonus to the power of your spells as well
-as completely removing their metabolic cost.
+as halving their mana cost (rounding up).
 %%%%
 Might status
 
@@ -52,9 +52,9 @@ Touch status
 Your attacks deal no damage, but have a chance of confusing monsters that they
 hit.
 %%%%
-MR++ status
+Will++ status
 
-You are much more resistant to hostile enchantments.
+Your willpower is much stronger, protecting against many magical effects.
 %%%%
 Berserk status
 
@@ -145,6 +145,11 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
+-Move status
+
+You are prevented from moving, blinking, or teleporting. (You can still take
+other actions.)
+%%%%
 Mark status
 
 Your location is marked due to the effects of a trap or a spell, and monsters
@@ -228,12 +233,12 @@ vicinity to be raised as spectral servants.
 Vit status
 
 You are divinely vitalised, providing protection from poison, confusion,
-petrification, rotting and sickness, and increasing and sustaining your
-strength, intelligence and dexterity.
+petrification, and sickness, and increasing and sustaining your strength,
+intelligence and dexterity.
 %%%%
-MR/2 status
+Will/2 status
 
-You are more vulnerable to hostile enchantments.
+Your willpower is weaker, making you vulnerable to many magical effects.
 %%%%
 Stone status
 
@@ -475,7 +480,7 @@ Statue status
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is insulated from electricity and gains resistance to poison,
-rotting and negative energy.
+and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -526,8 +531,9 @@ Any equipped weapons and armour are melded.
 Lich status
 
 You have been transformed into a lich. You are resistant to cold and hostile
-enchantments and completely immune to poison, rotting, negative energy and
-torment for the duration of the transformation.
+enchantments and completely immune to poison, negative energy and torment for
+the duration of the transformation.
+
 Your necromancy spells are increased in power, and you gain a draining melee
 attack. However, you are also vulnerable to holy damage and Dispel Undead,
 and are unable to consume potions.
@@ -579,8 +585,7 @@ Wisp status
 
 You have been transformed into an insubstantial wisp of gas. You move quickly
 and are highly evasive, and you occasionally blink at random. You are resistant
-to fire, cold, electricity and acid, and immune to poison, rotting and
-negative energy.
+to fire, cold, electricity and acid, and immune to poison, and negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
 cast spells. The effectiveness of your melee attacks while in this form is based
@@ -671,7 +676,7 @@ Bloodless status
 Your body is entirely devoid of blood, reducing your maximum health and
 preventing you from regenerating health when monsters are visible. You are
 immune to poison and negative energy, significantly resist cold, and resist
-rotting and torment.
+torment.
 %%%%
 Bribe status
 
@@ -724,15 +729,19 @@ Water status
 
 Your control over your magic has been sapped.
 %%%%
-Stab status
+Attr status
 
-You are better at attacking unaware enemies, giving attacks against distracted,
-confused or otherwise unaware creatures a chance to deal increased damage as if
-the target were completely helpless.
+Enemies are magically pulled toward you.
 %%%%
 Zot status
 
 You have spent too much time in one branch, allowing the malevolent entity Zot to
-notice you. You will be repeatedly drained as Zot brings its full attention to bear,
-after which it will kill you instantly. Travel to new floors first!
+notice you. If you spend the indicated number of turns in the branch without
+descending to a new floor, Zot will find and consume you.
+%%%%
+Curl status
+
+After being struck by an attack, you reflexively curled up, protecting yourself
+against subsequent strikes. You are now emerging from that defensive curl and
+will receive no further protection until after you are struck again.
 %%%%

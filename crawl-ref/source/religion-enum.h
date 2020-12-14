@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum piety_gain_t
 {
     PIETY_NONE, PIETY_SOME, PIETY_LOTS,

@@ -64,6 +64,7 @@
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "tag-version.h"
 #include "throw.h"
 #include "travel.h"
 #include "unwind.h"
@@ -190,7 +191,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
         new BoolGameOption(SIMPLE_NAME(view_lock_x), true),
         new BoolGameOption(SIMPLE_NAME(view_lock_y), true),
-        new BoolGameOption(SIMPLE_NAME(center_on_scroll), false),
+        new BoolGameOption(SIMPLE_NAME(centre_on_scroll), false),
         new BoolGameOption(SIMPLE_NAME(symmetric_scroll), true),
         new BoolGameOption(SIMPLE_NAME(always_show_exclusions), true),
         new BoolGameOption(SIMPLE_NAME(note_all_skill_levels), false),
@@ -223,6 +224,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
+        new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
@@ -230,6 +232,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
+        new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -274,6 +277,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1),
         new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY, 0),
         new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_quiver), 3, -1, 1),
         new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(rest_delay), USING_DGL ? -1 : 0,
@@ -996,6 +1000,7 @@ void game_options::reset_options()
 
 #ifdef DEBUG_DIAGNOSTICS
     quiet_debug_messages.reset();
+    quiet_debug_messages.set(DIAG_BEAM);
 #ifdef DEBUG_MONSPEAK
     quiet_debug_messages.set(DIAG_SPEECH);
 #endif
@@ -1095,6 +1100,12 @@ void game_options::reset_options()
                    "javelin / boomerang / stone / rock / net / dart, "
                    "inscribed",
                    false, false);
+
+    // TODO: what else?
+    force_targeter =
+        { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
+          SPELL_ABSOLUTE_ZERO, SPELL_IGNITION };
+    always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1301,6 +1312,34 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
         else
             fire_order.push_back(flags);
     }
+}
+
+void game_options::add_force_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = true;
+        return;
+    }
+    auto spell = spell_by_name(s, true);
+    if (is_valid_spell(spell))
+        force_targeter.insert(spell);
+    else
+        report_error("Unknown spell '%s'\n", s.c_str());
+}
+
+void game_options::remove_force_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = false;
+        return;
+    }
+    auto spell = spell_by_name(s, true);
+    if (is_valid_spell(spell))
+        force_targeter.erase(spell);
+    else
+        report_error("Unknown spell '%s'\n", s.c_str());
 }
 
 static monster_type _mons_class_by_string(const string &name)
@@ -1592,9 +1631,9 @@ static const char* config_defaults[] =
 void read_init_file(bool runscript)
 {
     Options.reset_options();
+    Options.read_option_line("center_on_scroll := centre_on_scroll"); // alias
 
     // Load Lua builtins.
-#ifdef CLUA_BINDINGS
     if (runscript)
     {
         for (const char *builtin : lua_builtins)
@@ -1608,10 +1647,6 @@ void read_init_file(bool runscript)
     // Load default options.
     for (const char *def_file : config_defaults)
         Options.include(datafile_path(def_file), false, runscript);
-#else
-    UNUSED(lua_builtins);
-    UNUSED(config_defaults);
-#endif
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
@@ -1831,10 +1866,17 @@ void game_options::read_options(LineInput &il, bool runscript,
     bool l_init        = false;
 
     if (clear_aliases)
+    {
         aliases.clear();
+        Options.add_alias("center_on_scroll", "centre_on_scroll"); // old name
+    }
 
     dlua_chunk luacond(filename);
     dlua_chunk luacode(filename);
+
+#ifndef CLUA_BINDINGS
+    bool clua_error_printed = false;
+#endif
 
     while (!il.eof())
     {
@@ -1859,7 +1901,7 @@ void game_options::read_options(LineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]])");
+                    luacond.add(line - 1, "]==])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -1885,7 +1927,7 @@ void game_options::read_options(LineInput &il, bool runscript,
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
                 {
-                    luacond.add(line - 1, "]])");
+                    luacond.add(line - 1, "]==])");
                     l_init = false;
                 }
                 luacond.add(line, str);
@@ -1937,6 +1979,12 @@ void game_options::read_options(LineInput &il, bool runscript,
                          luacode.orig_error().c_str());
                 }
                 luacode.clear();
+#else
+                if (!clua_error_printed)
+                {
+                    mprf(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
+                    clua_error_printed = true;
+                }
 #endif
             }
 
@@ -1954,6 +2002,12 @@ void game_options::read_options(LineInput &il, bool runscript,
                          luacode.orig_error().c_str());
                 }
             }
+#else
+            if (!clua_error_printed)
+            {
+                mprf(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
+                clua_error_printed = true;
+            }
 #endif
             luacode.clear();
             continue;
@@ -1968,7 +2022,7 @@ void game_options::read_options(LineInput &il, bool runscript,
         {
             if (!l_init)
             {
-                luacond.add(line, "crawl.setopt([[");
+                luacond.add(line, "crawl.setopt([==[");
                 l_init = true;
             }
 
@@ -1979,15 +2033,22 @@ void game_options::read_options(LineInput &il, bool runscript,
         read_option_line(str, runscript);
     }
 
-#ifdef CLUA_BINDINGS
     if (runscript && !luacond.empty())
     {
+#ifdef CLUA_BINDINGS
         if (l_init)
-            luacond.add(line, "]])");
+            luacond.add(line, "]==])");
         if (luacond.run(clua))
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
-    }
+#else
+        if (!clua_error_printed)
+        {
+            mprf(MSGCH_ERROR, "User lua is disabled in this build! (file: %s)", filename.c_str());
+            clua_error_printed = true;
+        }
 #endif
+    }
+
 }
 
 void game_options::fixup_options()
@@ -2452,6 +2513,17 @@ static void _bindkey(string field)
 
         key = CONTROL(wchars[1]);
     }
+    else if (wchars[0] == '\\')
+    {
+        // does this need to validate non-widechars?
+        keyseq ks = parse_keyseq(key_str);
+        if (ks.size() != 1)
+        {
+            mprf(MSGCH_ERROR, "Invalid keyseq '%s' in bindkey directive '%s'",
+                key_str.c_str(), field.c_str());
+        }
+        key = ks[0];
+    }
     else
     {
         mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
@@ -2703,6 +2775,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         clua.execfile(field.c_str(), false, false);
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+#else
+        mprf(MSGCH_ERROR, "lua_file failed: clua not enabled on this build!");
 #endif
     }
     else if (key == "terp_file" && runscript)
@@ -3122,6 +3196,24 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
+    else if (key == "force_targeter")
+    {
+        // first pass through the rc file happens before the spell name cache
+        // is initialized, just skip it
+        if (spell_data_initialized())
+        {
+            if (plain)
+            {
+                always_use_static_targeters = false;
+                force_targeter.clear();
+            }
+
+            if (minus_equal)
+                split_parse(field, ",", &game_options::remove_force_targeter);
+            else
+                split_parse(field, ",", &game_options::add_force_targeter);
+        }
+    }
     else if (key == "spell_slot"
              || key == "item_slot"
              || key == "ability_slot")
@@ -3507,7 +3599,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     // Catch-all else, copies option into map
     else if (runscript)
     {
-#ifdef CLUA_BINDINGS
         int setmode = 0;
         if (plus_equal)
             setmode = 1;
@@ -3518,12 +3609,9 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         if (!clua.callbooleanfn(false, "c_process_lua_option", "ssd",
                         key.c_str(), orig_field.c_str(), setmode))
-#endif
         {
-#ifdef CLUA_BINDINGS
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-#endif
             named_options[key] = orig_field;
         }
     }

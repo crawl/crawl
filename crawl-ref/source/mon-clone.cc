@@ -237,7 +237,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(mon, grd(*ai)))
+                && monster_habitable_grid(mon, env.grid(*ai)))
             {
                 square_found = true;
                 break;
@@ -277,7 +277,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                     mon_attitude_type mon_att)
 {
-    // Is there an open slot in menv?
+    // Is there an open slot in env.mons?
     monster* mons = get_free_monster();
     coord_def pos(0, 0);
 
@@ -288,7 +288,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         if (in_bounds(*ai)
             && !actor_at(*ai)
-            && monster_habitable_grid(orig, grd(*ai)))
+            && monster_habitable_grid(orig, env.grid(*ai)))
         {
             pos = *ai;
         }
@@ -320,14 +320,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(mitm[old_index], false, true);
+            mons->unequip(env.item[old_index], false, true);
             mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 
         mons->inv[ii.slot()] = new_index;
-        mitm[new_index] = mitm[old_index];
-        mitm[new_index].set_holding_monster(*mons);
+        env.item[new_index] = env.item[old_index];
+        env.item[new_index].set_holding_monster(*mons);
     }
 
     bool _obvious;

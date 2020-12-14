@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 
+#include "mpr.h"
 #include "uncancel.h"
 
 #include "acquire.h"
@@ -13,6 +14,7 @@
 #include "god-abil.h"
 #include "libutil.h"
 #include "state.h"
+#include "tag-version.h"
 #include "unwind.h"
 
 void add_uncancel(uncancellable_type kind, int arg)

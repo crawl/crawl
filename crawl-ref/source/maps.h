@@ -44,6 +44,8 @@ const map_def *random_map_for_tag(const string &tag,
 mapref_vector random_chance_maps_in_depth(const level_id &place,
                                           maybe_bool extra = MB_MAYBE);
 
+void dgn_ignore_depth(bool b);
+
 void dump_map(const map_def &map);
 void add_parsed_map(const map_def &md);
 

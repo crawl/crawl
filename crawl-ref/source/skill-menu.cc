@@ -110,8 +110,11 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_currently_train[sk] || you.skill(sk, 10, false, false)
-               || sk == you.transfer_from_skill || sk == you.transfer_to_skill;
+        return you.can_currently_train[sk] && (you.should_show_skill[sk]
+                                               || you.training[sk])
+            || you.skill(sk, 10, false, false)
+            || sk == you.transfer_from_skill
+            || sk == you.transfer_to_skill;
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
@@ -295,9 +298,7 @@ COLOURS SkillMenuEntry::get_colour() const
         return CYAN;
     }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && (you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false)
-                 // Drained a tiny but nonzero amount.
-                 || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
+             && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
     {
         if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
             return use_bright_colour ? LIGHTGREEN : GREEN;
@@ -366,7 +367,7 @@ void SkillMenuEntry::set_level()
     else
         level = you.skill(m_sk, 10, real);
 
-    if (mastered() && !you.attribute[ATTR_XP_DRAIN])
+    if (mastered())
         m_level->set_text(to_string(level / 10));
     else
         m_level->set_text(make_stringf("%4.1f", level / 10.0));
@@ -620,8 +621,6 @@ string SkillMenuSwitch::get_help()
         if (skm.is_set(SKMF_REDUCED))
         {
             vector<const char *> causes;
-            if (you.attribute[ATTR_XP_DRAIN])
-                causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
 
@@ -681,7 +680,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_MODE_MANUAL:    return "manual";
     case SKM_DO_PRACTISE:    return "train";
     case SKM_DO_FOCUS:       return "focus";
-    case SKM_SHOW_DEFAULT:   return "trainable";
+    case SKM_SHOW_DEFAULT:   return "useful";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
         return (skm.is_set(SKMF_ENHANCED)
@@ -1254,11 +1253,6 @@ void SkillMenu::init_flags()
         else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
-
-    // You might be drained by a small enough amount to not affect the
-    // rounded numbers.
-    if (you.attribute[ATTR_XP_DRAIN])
-        set_flag(SKMF_REDUCED);
 }
 
 void SkillMenu::init_title()
@@ -1816,9 +1810,8 @@ bool UISkillMenu::on_event(const Event& ev)
 void skill_menu(int flag, int exp)
 {
     // experience potion; you may elect to put experience in normally
-    // untrainable skills (skills where you aren't carrying the right item,
-    // or skills that your god hates). The only case where we abort is if all
-    // in-principle trainable skills are maxed.
+    // untrainable skills (e.g. skills that your god hates). The only
+    // case where we abort is if all in-principle trainable skills are maxed.
     if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
     {
         mpr("You feel omnipotent.");

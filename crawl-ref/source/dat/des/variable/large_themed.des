@@ -23,14 +23,14 @@ function grandhive_vaults(e, hivewallglyph)
     -- monster set, so specify some monsters for Lair. Also,
     -- avoid hornets and bears, because nature or whatever.
     if you.branch() == "Lair" then
-        e.kmons('0 = yak / hippogriff / wolf w:8 / \
-                     water moccasin w:8 / wyvern w:8 / basilisk w:8 / \
-                     crocodile / river rat w:2 / steam dragon w:2')
+        e.kmons('0 = yak / wolf w:8 / water moccasin w:8 / wyvern w:8 / \
+                     basilisk w:8 / river rat w:2 / \
+                     steam dragon w:2')
         e.kmons('9 = elephant / cane toad / rime drake / \
                      blink frog w:8 / manticore w:4 / hell rat w:4')
         e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
-                     catoblepas w:4')
+                     boulder beetle w:2 / catoblepas w:2')
     end
 end
 
@@ -781,23 +781,23 @@ MAP
   bbwwWW..WWwwwwwWW..WWwwbb
  bbwwWW..WWwwbWbwwWW..WWwwbb
 bbwwWW1.WWwwwW2WwwwWW.1WWwwbb
- bbwwWW..WWwwbWbwwWW..WWwwbb
-  bbwwWW..WWwwwwwWW..WWwwbb
-   bbwwWW..WWwwwWW..WWwwbb
-    bbwwWW..WWwWW..WWwwbb
-     bbwwWW..WWW..WWwwbb
-      bbwwWW..W..WWwwbb
-       bbwwWW...WWwwbb
-        bbwwWW.WWwwbb
-         bbwwW.Wwwbb
-          bbwW.Wwbb
-           bwW.Wwb
-           bwW.Wwb
-           bwW.Wwb
-        bbbbwW.Wwbbbb
-        bwwwwW.Wwwwwb
-        bwWWWW.WWWWwb
-        bwWb.....bWwb
+xbbwwWW..WWwwbWbwwWW..WWwwbb
+xxbbwwWW..WWwwwwwWW..WWwwbb
+xxxbbwwWW..WWwwwWW..WWwwbb
+xxxxbbwwWW..WWwWW..WWwwbb
+xxxxxbbwwWW..WWW..WWwwbb
+xxxxxxbbwwWW..W..WWwwbb
+xxxxxxxbbwwWW...WWwwbb
+xxxxxxxxbbwwWW.WWwwbb
+xxxxxxxxxbbwwW.Wwwbb
+xxxxxxxxxxbbwW.Wwbb
+xxxxxxxxxxxbwW.Wwb
+xxxxxxxxxxxbwW.Wwb
+xxxxxxxxxxxbwW.Wwb
+xxxxxxxxbbbbwW.Wwbbbb
+xxxxxxxxbwwwwW.Wwwwwb
+xxxxxxxxbwWWWW.WWWWwb
+xxxxxxxxbwWb.....bWwb
 bbbbbbbbbwW.......Wwbbbbbbbbb
 bwwwwwwwbwW.......Wwbwwwwwwwb
 bwWWWWWwbwW.......WwbwWWWWWwb
@@ -1512,7 +1512,7 @@ ENDMAP
 
 NAME:   kennysheep_seaside_town
 ORIENT: northeast
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 DEPTH:  D:7-14
 KFEAT:  W = open_sea
 MONS:   ogre, orc warrior, gnoll shaman, centaur, big kobold
@@ -1549,7 +1549,7 @@ xxxx.......8..ccccHHHc..........''wwW
 xxxxtp.p.pt..tc>zcHHH+..........'wwwW
 xxxxt.p.p.ptxxczz+HHH+..........'wwwW
 xxxxtpppptxxx!!!ccccccxxxppp....'wwwW
-xxxxttptpxx!!!!xxxxx xxxppppppp.''wwW
+xxxxttptpxx!!!!xxxxxxxxxppppppp.''wwW
 xcccc+tptx!!!xxxxxqxxxx.pptptppp''wwW
 xcHHHctttx!!xxxxxxxqqqqqxtptptpcmcwwW
 xcHHHcxxxx!xxxxxxxqxxxxxxxttttccHccwW
@@ -2264,10 +2264,13 @@ cccc==cccc
 ENDMAP
 
 NAME: cheibrodos_cascadia
+# this vault would be better as transparent, but the internal masking is very
+# complicated...
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 DEPTH: Depths
 ORIENT: northwest
 MONS: wizard, ice devil, ice dragon , frost giant, blizzard demon, lich
+KPROP: -Tp =  no_tele_into
 KMONS: I = ice statue
 KMONS: " = ancient lich
 KMONS: B = blizzard demon
@@ -2278,6 +2281,7 @@ KITEM: C = %
 NSUBST: q = 2:1 / 2=1.. / 2:2, p = 2=34 / 1=34...
 NSUBST: _ = 3:1 / 2=1. / 3:2 / 1=2. / 1:6, - = 6=34, q = 2=BBBC / *:`
 NSUBST: ` = 4:| / 2=|* / 4:* / 2=*% / 4:% / 10=%.
+KMASK: ' = !opaque
 MAP
 ccccccccccccccccccccccc
 cccccccccccccccwwww-ccc
@@ -2293,15 +2297,15 @@ ccWcwww_____wwwwnnWIccc
 ccWcww_______wwwwcccccc
 ccWcww___cw___Wwwwcccww
 ccWnwWWWccww_WWWwnnpTww
-ccWnnWWWcwwwWWWccnwwww.
-cwwWnn++nnwwwWc+.......
-cwwwWWWWWnnwwwc.....cc.
-cwwwwWWWwWncwnn.....cc.
-cwwwwwwwwwWccnw.......@
-c-wwwwwwwwIccpw........
-ccTwwwwwwTcccTw.cc.....
-ccc-wwww-cccwww.cc.....
-ccccccccccccww....@...@
+ccWnnWWWcwwwWWWccnwwww'
+cwwWnn++nnwwwWc+'''''''
+cwwwWWWWWnnwwwc'''''cc'
+cwwwwWWWwWncwnn'''''cc'
+cwwwwwwwwwWccnw'''''''@
+c-wwwwwwwwIccpw''''''''
+ccTwwwwwwTcccTw'cc'''''
+ccc-wwww-cccwww'cc'''''
+ccccccccccccww'''@'''@
 ENDMAP
 
 NAME:   cheibrodos_body_horror

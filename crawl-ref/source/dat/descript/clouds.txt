@@ -91,10 +91,9 @@ with undead and demonic creatures being greatly harmed.
 %%%%
 foul pestilence cloud
 
-# XXX: clarify vine stalkers, gargoyles
+# XXX: clarify gargoyles
 A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves poisoned, and may also find their movements slowing and
-their flesh rotting away.
+will find themselves poisoned, and may also find their movements slowed.
 %%%%
 thin mist cloud
 

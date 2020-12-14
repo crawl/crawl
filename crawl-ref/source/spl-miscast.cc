@@ -352,9 +352,15 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 int dam, string /*cause*/) {
 
                 if (target.is_player())
-                    you.increase_duration(DUR_DIMENSION_ANCHOR, dam, dam);
+                {
+                    // number arbitrarily chosen & needs more playtesting
+                    const int dur = div_rand_round(dam, 2);
+                    you.set_duration(DUR_LOCKED_DOWN, dur, dur,
+                                     "You are magically locked in place.");
+                }
                 else
                 {
+                    // TODO: monster version? something else?
                      target.as_monster()->add_ench(
                          mon_enchant(ENCH_DIMENSION_ANCHOR,
                                      0, source, dam * BASELINE_DELAY));

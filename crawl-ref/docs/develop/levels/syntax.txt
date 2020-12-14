@@ -452,6 +452,12 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              actual terrain of the vault affects its passability as seen by the
              dungeon builder. A disconnected region inside a transparent vault
              will cause a veto of the level (but see the "opaque" KMASK below).
+          * "passable": Rather than "transparent", which causes terrain checks
+             to be performed, this indicates that the entire vault should be
+             considered passable. This is primarily of use in rooms for Vaults
+             branch where normal opaqueness would invalid the layout, but the
+             room might contain internal geometry that we wish to ignore due
+             to features the map controls, such as transporters.
 
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
@@ -1435,7 +1441,6 @@ KPROP:    x = bloody
              the player ending up in a closet or an extremely dense monster
              array (like a hellion island); or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
-          * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 

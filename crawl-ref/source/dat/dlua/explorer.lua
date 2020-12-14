@@ -7,10 +7,10 @@ util.namespace('explorer')
 
 -- matches pregeneration order
 explorer.generation_order = {
+                "Temple",
                 "D:1",
                 "D:2", "D:3", "D:4", "D:5", "D:6", "D:7", "D:8", "D:9",
                 "D:10", "D:11", "D:12", "D:13", "D:14", "D:15",
-                "Temple",
                 "Lair:1", "Lair:2", "Lair:3", "Lair:4", "Lair:5", "Lair:6",
                 "Orc:1", "Orc:2",
                 "Spider:1", "Spider:2", "Spider:3", "Spider:4",
@@ -388,7 +388,7 @@ explorer.catalog_names =    {vaults    = "   Vaults: ",
 explorer.dangerous_monsters = {
         "ancient lich",
         "orb of fire",
-        "greater mummy",
+        "royal mummy",
         "Hell Sentinel",
         "Ice Fiend",
         "Brimstone Fiend",

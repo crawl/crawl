@@ -1,9 +1,11 @@
 #pragma once
 
+#include "cloud-type.h"
 #include "spl-cast.h"
 
 struct bolt;
 class dist;
+class actor;
 
 spret conjure_flame(int pow, bool fail);
 
@@ -19,7 +21,7 @@ spret cast_ring_of_flames(int power, bool fail);
 void manage_fire_shield();
 
 spret cast_corpse_rot(bool fail);
-spret corpse_rot(actor* caster);
+spret corpse_rot(actor* caster, bool actual=true);
 
 void holy_flames(monster* caster, actor* defender);
 

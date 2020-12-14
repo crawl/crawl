@@ -248,21 +248,27 @@ ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
-	NO_PKGCONFIG = Yes
-	BUILD_SQLITE = YesPlease
-	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo contrib/install/$(ARCH)/lib/libSDL2main.a
-		BUILD_FREETYPE = YesPlease
-		BUILD_SDL2 = YesPlease
-		BUILD_SDL2IMAGE = YesPlease
-		ifdef SOUND
-			ifndef WIN32
-				BUILD_SDL2MIXER = YesPlease
-			endif
-		endif
-		BUILD_LIBPNG = YesPlease
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo
 		COPY_FONTS = yes
+	endif
+	ifndef FORCE_PKGCONFIG
+		NO_PKGCONFIG = Yes
+		# is any of this stuff actually needed if NO_PKGCONFIG is set?
+		BUILD_SQLITE = YesPlease
+		BUILD_ZLIB = YesPlease
+		ifdef TILES
+			EXTRA_LIBS += contrib/install/$(ARCH)/lib/libSDL2main.a
+			BUILD_FREETYPE = YesPlease
+			BUILD_SDL2 = YesPlease
+			BUILD_SDL2IMAGE = YesPlease
+			ifdef SOUND
+				ifndef WIN32
+					BUILD_SDL2MIXER = YesPlease
+				endif
+			endif
+			BUILD_LIBPNG = YesPlease
+		endif
 	endif
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
@@ -1171,7 +1177,7 @@ RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
-GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
 # Headers that need to exist before attempting to compile cc files
 GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h
 # All other generated files will be created later
@@ -1364,6 +1370,11 @@ $(DOC_BASE)/aptitudes-wide.txt: $(DOC_TEMPLATES)/apt-tmpl-wide.txt species-data.
 $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 	$(QUIET_GEN)./util/FAQ2html.pl $< $@
 
+# Generate a .txt version because some servers need it
+# TODO: actually render this
+$(DOC_BASE)/quickstart.txt: $(DOC_BASE)/quickstart.md
+	$(QUIET_COPY)$(COPY) $< $@
+
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
 
@@ -1464,6 +1475,7 @@ endif
 	mkdir -p $(datadir_fp)/dat/dist_bones
 	$(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
+	$(COPY) ../docs/*.md $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
@@ -1632,6 +1644,21 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
+#
+# Header build rule: order before regular .o rule for backwards compatibility
+# with gnu make <3.82.
+#
+
+%.h.o: %.h | $(GENERATED_HEADERS)
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
+endif
+	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -x c++-header -c $< -o $@
+ifndef NO_INLINE_DEPGEN
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+endif
+
+
 # Plain old compilation
 #
 
@@ -1665,6 +1692,13 @@ icon.o: util/crawl.rc util/crawl.ico .cflags
 
 config.h: util/configure .cflags
 	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+
+#
+# Header build tests.
+#
+
+.PHONY: header-build-tests
+header-build-tests: $(HEADER_OBJECTS)
 
 #
 # Contribs

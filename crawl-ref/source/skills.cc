@@ -18,6 +18,7 @@
 #include "clua.h"
 #include "describe-god.h"
 #include "evoke.h"
+#include "files.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
@@ -33,6 +34,7 @@
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -68,7 +70,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
     {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician"},
     {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
     {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
-    {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
+    {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
@@ -419,30 +421,30 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
     ASSERT(queue.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
-static void _erase_from_stop_train(const skill_set &can_train)
+static void _erase_from_skills_to_hide(const skill_set &can_train)
 {
     for (skill_type sk : can_train)
-        you.stop_train.erase(sk);
+        you.skills_to_hide.erase(sk);
 }
 
 /*
- * Check the inventory to see what skills the player can train,
- * among the ones in you.stop_train.
- * Trainable skills are removed from the set.
+ * Check the inventory to see what skills are likely to be useful
+ * among the ones in you.skills_to_hide.
+ * Useful skills are removed from the set.
  */
 static void _check_inventory_skills()
 {
     for (const auto &item : you.inv)
     {
         // Exit early if there's no more skill to check.
-        if (you.stop_train.empty())
+        if (you.skills_to_hide.empty())
             return;
 
         skill_set skills;
         if (!item.defined() || !item_skills(item, skills))
             continue;
 
-        _erase_from_stop_train(skills);
+        _erase_from_skills_to_hide(skills);
     }
 }
 
@@ -451,7 +453,7 @@ static void _check_spell_skills()
     for (spell_type spell : you.spells)
     {
         // Exit early if there's no more skill to check.
-        if (you.stop_train.empty())
+        if (you.skills_to_hide.empty())
             return;
 
         if (spell == SPELL_NO_SPELL)
@@ -459,7 +461,7 @@ static void _check_spell_skills()
 
         skill_set skills;
         spell_skills(spell, skills);
-        _erase_from_stop_train(skills);
+        _erase_from_skills_to_hide(skills);
     }
 }
 
@@ -468,10 +470,10 @@ static void _check_abil_skills()
     for (ability_type abil : get_god_abilities())
     {
         // Exit early if there's no more skill to check.
-        if (you.stop_train.empty())
+        if (you.skills_to_hide.empty())
             return;
 
-        you.stop_train.erase(abil_skill(abil));
+        you.skills_to_hide.erase(abil_skill(abil));
     }
 }
 
@@ -480,32 +482,18 @@ string skill_names(const skill_set &skills)
     return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
-static void _check_start_train()
+static void _check_skills_to_show()
 {
-    skill_set skills;
-    for (skill_type sk : you.start_train)
+    for (skill_type sk : you.skills_to_show)
     {
         if (is_invalid_skill(sk) || is_useless_skill(sk))
             continue;
 
-        if (!you.can_currently_train[sk] && you.train[sk])
-            skills.insert(sk);
-        you.can_currently_train.set(sk);
+        you.should_show_skill.set(sk);
     }
 
     reset_training();
-
-    // We're careful of not invalidating the iterator when erasing.
-    for (auto it = skills.begin(); it != skills.end();)
-        if (!you.training[*it])
-            skills.erase(it++);
-        else
-            ++it;
-
-    if (!skills.empty())
-        mprf("You resume training %s.", skill_names(skills).c_str());
-
-    you.start_train.clear();
+    you.skills_to_show.clear();
 }
 
 static bool _player_is_gnoll()
@@ -513,7 +501,7 @@ static bool _player_is_gnoll()
     return you.species == SP_GNOLL;
 }
 
-static void _check_stop_train()
+static void _check_skills_to_hide()
 {
     // Gnolls can't stop training skills.
     if (_player_is_gnoll())
@@ -523,11 +511,11 @@ static void _check_stop_train()
     _check_spell_skills();
     _check_abil_skills();
 
-    if (you.stop_train.empty())
+    if (you.skills_to_hide.empty())
         return;
 
     skill_set skills;
-    for (skill_type sk : you.stop_train)
+    for (skill_type sk : you.skills_to_hide)
     {
         if (is_invalid_skill(sk))
             continue;
@@ -536,46 +524,38 @@ static void _check_stop_train()
 
         if (skill_trained(sk) && you.training[sk])
             skills.insert(sk);
-        you.can_currently_train.set(sk, false);
-    }
-
-    if (!skills.empty())
-    {
-        mprf("You stop training %s.", skill_names(skills).c_str());
-        check_selected_skills();
+        you.should_show_skill.set(sk, false);
     }
 
     reset_training();
-    you.stop_train.clear();
+    you.skills_to_hide.clear();
 }
 
 void update_can_currently_train()
 {
-    if (!you.start_train.empty())
-        _check_start_train();
+    if (!you.skills_to_show.empty())
+        _check_skills_to_show();
 
-    if (!you.stop_train.empty())
-        _check_stop_train();
+    if (!you.skills_to_hide.empty())
+        _check_skills_to_hide();
 }
 
-bool training_restricted(skill_type sk)
+bool skill_default_shown(skill_type sk)
 {
     if (_player_is_gnoll())
-        return false;
+        return true;
 
     switch (sk)
     {
     case SK_FIGHTING:
-    // Requiring missiles would mean disabling the skill when you run out.
-    case SK_THROWING:
     case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
-        return false;
-    default:
         return true;
+    default:
+        return false;
     }
 }
 
@@ -586,8 +566,8 @@ bool training_restricted(skill_type sk)
 void init_can_currently_train()
 {
     // Clear everything out, in case this isn't the first game.
-    you.start_train.clear();
-    you.stop_train.clear();
+    you.skills_to_show.clear();
+    you.skills_to_hide.clear();
     you.can_currently_train.reset();
 
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -598,11 +578,12 @@ void init_can_currently_train()
             continue;
 
         you.can_currently_train.set(sk);
-        if (training_restricted(sk))
-            you.stop_train.insert(sk);
+        you.should_show_skill.set(sk);
+        if (!skill_default_shown(sk))
+            you.skills_to_hide.insert(sk);
     }
 
-    _check_stop_train();
+    _check_skills_to_hide();
 }
 
 void init_train()
@@ -746,6 +727,12 @@ bool check_selected_skills()
         // did the callback do anything?
         if (skills_being_trained())
             return true;
+    }
+
+    if (crawl_state.seen_hups)
+    {
+        save_game(true, "Game saved, see you later!");
+        return false;
     }
 
     mpr("You need to enable at least one skill for training.");
@@ -1100,7 +1087,7 @@ bool skill_trained(int i)
  */
 bool target_met(skill_type sk, unsigned int target)
 {
-    return you.skill(sk, 10, false, false, false) >= (int) target;
+    return you.skill(sk, 10, false, false) >= (int) target;
 }
 
 bool target_met(skill_type sk)
@@ -1122,8 +1109,7 @@ bool check_training_target(skill_type sk)
 {
     if (you.training_targets[sk] && target_met(sk))
     {
-        bool base = (you.skill(sk, 10, false, false, false) !=
-                        you.skill(sk, 10, false, true, true));
+        bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
         mprf("%sraining target %d.%d for %s reached!",
             base ? "Base t" : "T",
             you.training_targets[sk] / 10,
@@ -1303,7 +1289,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         skill_inc = spending_limit / cost;
 
         int training_target = you.training_targets[exsk];
-        if (training_target > you.skill(exsk, 10, false, false, false))
+        if (training_target > you.skill(exsk, 10, false, false))
         {
             int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
             if (target_skill_point_diff > 0)

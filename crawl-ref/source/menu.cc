@@ -15,6 +15,7 @@
 #include "command.h"
 #include "coord.h"
 #include "env.h"
+#include "tile-env.h"
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
@@ -1471,7 +1472,7 @@ FeatureMenuEntry::FeatureMenuEntry(const string &str, const coord_def p,
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
     if (in_bounds(p))
-        feat = grd(p);
+        feat = env.grid(p);
     else
         feat = DNGN_UNSEEN;
     pos      = p;
@@ -1536,9 +1537,9 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     {
         ch = tileidx_feature(c);
         if (ch == TILE_FLOOR_NORMAL)
-            ch = env.tile_flv(c).floor;
+            ch = tile_env.flv(c).floor;
         else if (ch == TILE_WALL_NORMAL)
-            ch = env.tile_flv(c).wall;
+            ch = tile_env.flv(c).wall;
     }
 
     tileset.emplace_back(ch);

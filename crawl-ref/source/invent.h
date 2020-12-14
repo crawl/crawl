@@ -15,6 +15,7 @@
 #include "item-prop-enum.h"
 #include "menu.h"
 #include "operation-types.h"
+#include "tag-version.h"
 
 enum object_selector
 {

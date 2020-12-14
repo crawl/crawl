@@ -141,7 +141,7 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 
     if (cell_is_solid(beam.target))
     {
-        const char *feat = feat_type_name(grd(beam.target));
+        const char *feat = feat_type_name(env.grid(beam.target));
         mprf("You can't place clouds on %s.", article_a(feat).c_str());
         return spret::abort;
     }
@@ -242,7 +242,7 @@ spret cast_corpse_rot(bool fail)
     return corpse_rot(&you);
 }
 
-spret corpse_rot(actor* caster)
+spret corpse_rot(actor* caster, bool actual)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
@@ -255,6 +255,8 @@ spret corpse_rot(actor* caster)
             for (stack_iterator si(*ri); si; ++si)
                 if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
+                    if (!actual)
+                        return spret::success;
                     // Found a corpse. Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
                     {
@@ -273,6 +275,8 @@ spret corpse_rot(actor* caster)
                     break;
                 }
     }
+    if (!actual)
+        return spret::abort;
 
     for (fair_adjacent_iterator ai(center); ai; ++ai)
     {
@@ -286,14 +290,11 @@ spret corpse_rot(actor* caster)
         --did_rot;
     }
 
+    // Abort the spell for players; monsters and wrath fail silently
     if (saw_rot)
         mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-    else if (caster && caster->is_player())
-    {
-        // Abort the spell for players; monsters and wrath fail silently
-        mpr("There is nothing fresh enough to decay nearby.");
+    else if (!caster || caster->is_player())
         return spret::abort;
-    }
 
     return spret::success;
 }

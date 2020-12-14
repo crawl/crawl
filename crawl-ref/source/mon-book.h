@@ -9,6 +9,7 @@
 
 #include "defines.h"
 #include "enum.h"
+#include "externs.h"
 #include "mon-mst.h"
 
 struct mon_spellbook

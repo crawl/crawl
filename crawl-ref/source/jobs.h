@@ -1,8 +1,12 @@
 #pragma once
 
+#include <vector>
+
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
+
+using std::vector;
 
 const char *get_job_abbrev(job_type which_job);
 job_type get_job_by_abbrev(const char *abbrev);

@@ -133,7 +133,7 @@ ENDMAP
 
 NAME:   serial_bayou_shore_a
 #a shore of a small lake
-TAGS:   coolio_serial_bayou extra decor
+TAGS:   coolio_serial_bayou extra decor transparent
 ORIENT: east
 DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = Wt
@@ -154,13 +154,13 @@ MAP
  ..!WWWWWVwwwVWtttx
  ..!WWWWWVwwwVttttx
 @..WWWWWWWVVVWtttxx
-@..WWWWWWWWWtttttxx
+@..WWWWWWWWWWttttxx
  @@      tttttttxxx
 ENDMAP
 
 NAME:   serial_bayou_shore_b
 #a shore of a small pond, duplicable
-TAGS:   coolio_serial_bayou allow_dup extra decor
+TAGS:   coolio_serial_bayou allow_dup extra decor transparent
 ORIENT: east
 DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = Wt

@@ -27,6 +27,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "exclude.h"
 #include "feature.h"
 #include "files.h"
@@ -60,6 +61,7 @@
 #include "showsymb.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
 #include "tilemcache.h"
@@ -683,7 +685,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             // before.
             if (knowledge.seen())
             {
-                dungeon_feature_type newfeat = grd(pos);
+                dungeon_feature_type newfeat = env.grid(pos);
                 trap_type tr = feat_is_trap(newfeat) ? get_trap_type(pos) : TRAP_UNASSIGNED;
                 knowledge.set_feature(newfeat, env.grid_colours(pos), tr);
             }
@@ -701,7 +703,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!wizard_map && (knowledge.seen() || already_mapped))
             continue;
 
-        const dungeon_feature_type feat = grd(pos);
+        const dungeon_feature_type feat = env.grid(pos);
 
         bool open = true;
 
@@ -710,8 +712,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || feat_is_closed_door(grd(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(env.grid(*ai))
+                                        || feat_is_closed_door(env.grid(*ai))))
                 {
                     open = true;
                     break;
@@ -724,14 +726,14 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (wizard_map)
             {
                 knowledge.set_feature(feat, _feat_default_map_colour(feat),
-                    feat_is_trap(grd(pos)) ? get_trap_type(pos)
+                    feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                            : TRAP_UNASSIGNED);
             }
             else if (!knowledge.feat())
             {
                 auto base_feat = magic_map_base_feat(feat);
                 auto colour = _feat_default_map_colour(base_feat);
-                auto trap = feat_is_trap(grd(pos)) ? get_trap_type(pos)
+                auto trap = feat_is_trap(env.grid(pos)) ? get_trap_type(pos)
                                                    : TRAP_UNASSIGNED;
                 knowledge.set_feature(base_feat, colour, trap);
             }
@@ -800,17 +802,17 @@ void fully_map_level()
     {
         bool ok = false;
         for (adjacent_iterator ai(*ri, false); ai; ++ai)
-            if (!feat_is_opaque(grd(*ai)))
+            if (!feat_is_opaque(env.grid(*ai)))
                 ok = true;
         if (!ok)
             continue;
-        env.map_knowledge(*ri).set_feature(grd(*ri), 0,
-            feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
+        env.map_knowledge(*ri).set_feature(env.grid(*ri), 0,
+            feat_is_trap(env.grid(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
         set_terrain_seen(*ri);
 #ifdef USE_TILE
         tile_wizmap_terrain(*ri);
 #endif
-        if (igrd(*ri) != NON_ITEM)
+        if (env.igrid(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
     }
@@ -1049,9 +1051,9 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     // We remove any references to mcache when
     // writing to the background.
-    env.tile_bk_fg(gc) = env.tile_fg(ep);
-    env.tile_bk_bg(gc) = env.tile_bg(ep);
-    env.tile_bk_cloud(gc) = env.tile_cloud(ep);
+    tile_env.bk_fg(gc) = tile_env.fg(ep);
+    tile_env.bk_bg(gc) = tile_env.bg(ep);
+    tile_env.bk_cloud(gc) = tile_env.cloud(ep);
 #endif
 
     return ret;
@@ -1110,7 +1112,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
     if (in_bounds(gc))
-        cell->tile.bg = env.tile_bg(ep);
+        cell->tile.bg = tile_env.bg(ep);
 
     tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, &cell->tile.cloud, gc);
 #else
@@ -1128,7 +1130,7 @@ static void _draw_player(screen_cell_t *cell,
     cell->colour = mons_class_colour(you.symbol);
     if (you.swimming())
     {
-        if (grd(gc) == DNGN_DEEP_WATER)
+        if (env.grid(gc) == DNGN_DEEP_WATER)
             cell->colour = BLUE;
         else
             cell->colour = CYAN;
@@ -1140,11 +1142,11 @@ static void _draw_player(screen_cell_t *cell,
 #endif
 
 #ifdef USE_TILE
-    cell->tile.fg = env.tile_fg(ep) = tileidx_player();
-    cell->tile.bg = env.tile_bg(ep);
-    cell->tile.cloud = env.tile_cloud(ep);
+    cell->tile.fg = tile_env.fg(ep) = tileidx_player();
+    cell->tile.bg = tile_env.bg(ep);
+    cell->tile.cloud = tile_env.cloud(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
     UNUSED(ep, anim_updates);
 #endif
@@ -1161,11 +1163,11 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 
 #ifdef USE_TILE
-    cell->tile.fg = env.tile_fg(ep);
-    cell->tile.bg = env.tile_bg(ep);
-    cell->tile.cloud = env.tile_cloud(ep);
+    cell->tile.fg = tile_env.fg(ep);
+    cell->tile.bg = tile_env.bg(ep);
+    cell->tile.cloud = tile_env.cloud(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
     UNUSED(ep, anim_updates);
 #endif
@@ -1631,7 +1633,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                                && map_bounds(gc)
                                && you.on_current_level
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
-                               && !feat_is_solid(grd(gc)));
+                               && !feat_is_solid(env.grid(gc)));
 
     // Alter colour if flashing the characters vision.
     if (flash_colour)

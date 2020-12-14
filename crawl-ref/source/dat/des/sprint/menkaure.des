@@ -28,7 +28,7 @@ ORIENT: encompass
 SHUFFLE: 12
 SUBST:  ' = '......
 KFEAT:  ' = net trap / dart trap / bolt trap / spear trap / arrow trap
-MONS:   Menkaure, crocodile, kraken, flying skull
+MONS:   Menkaure, water moccasin, kraken, flying skull
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
              size = 2, walk_dist = 8, spread_rate= -1, \
@@ -39,7 +39,7 @@ MARKER: d = lua:fog_machine { \
              size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
 KFEAT:  dV = shallow_water
-KMONS:  V = crocodile
+KMONS:  V = water moccasin
 KMONS:  b = hell rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
@@ -178,7 +178,7 @@ ENDMAP
 
 NAME:   sprint2_early_7
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   tyrant leech
+MONS:   boulder beetle
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -189,7 +189,7 @@ ENDMAP
 
 NAME:   sprint2_early_8
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   hippogriff
+MONS:   wyvern
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -433,7 +433,7 @@ KMONS:  d = patrolling electric golem
 KITEM:  d = gold q:243
 KMONS:  p = earth elemental
 SHUFFLE: fgiAC
-KMONS:  f = greater mummy
+KMONS:  f = royal mummy
 KMONS:  g = golden eye
 KMONS:  i = curse toe
 KMONS:  A = vampire knight
@@ -644,7 +644,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_12
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   hippogriff
+MONS:   wyvern
 KITEM:  $ = gold q:81
 MAP
 11

@@ -5,9 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "item-prop-enum.h"
 #include "mon-flags.h"
 #include "random.h"
+#include "tag-version.h"
+
+using std::vector;
 
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"

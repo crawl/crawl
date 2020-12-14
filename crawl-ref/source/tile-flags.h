@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum tile_flags ENUM_INT64
 {
     //// Foreground flags

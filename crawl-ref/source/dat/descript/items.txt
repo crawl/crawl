@@ -591,8 +591,8 @@ phantom mirror
 
 A hand mirror which can create a reflection of a nearby creature, clouding
 in the process. The reflection's duration increases with Evocations skill and
-decreases with the magic resistance of the target. It is, invariably, slightly
-weaker than the creature it mirrors.
+decreases with the willpower of the target. It is, invariably, slightly weaker
+than the creature it mirrors.
 %%%%
 phial of floods
 
@@ -624,7 +624,8 @@ A potion containing the essence of life.
 %%%%
 potion of brilliance
 
-A potion which increases the power of the drinker's spells.
+A potion which increases the power of the drinker's spells and halves their
+mana cost (rounding up).
 %%%%
 potion of cancellation
 
@@ -634,7 +635,6 @@ it. It also reduces magical contamination.
 potion of curing
 
 A potion which heals some wounds, clears the mind and cures poison and disease.
-It can also slightly repair rotting.
 %%%%
 potion of degeneration
 
@@ -655,7 +655,7 @@ An enchanted beverage which speeds the actions of anyone who drinks it.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. It can also repair rotting.
+instantly.
 %%%%
 potion of invisibility
 
@@ -687,11 +687,9 @@ potion of resistance
 A potion which grants temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
-potion of stabbing
+potion of attraction
 
-A potion which makes the drinker better at attacking unaware enemies, giving
-attacks against distracted, confused or otherwise unaware creatures a chance to
-deal increased damage as if the target were completely helpless.
+A potion which makes the drinker attract enemies, pulling them quickly closer.
 %%%%
 quad damage
 
@@ -707,8 +705,8 @@ quicksilver dragon scales
 
 The scales of a quicksilver dragon. Although it does not provide its wearer
 with as much protection as the scales of some heavier dragons, it is somewhat
-lighter and less encumbering. It is excellent at repelling hostile enchantments
-– and also cannot be enchanted beyond its current form as a result.
+lighter and less encumbering. The armour repels both attacks on the wearer's
+willpower and magical modification of itself - it cannot be enchanted.
 %%%%
 quick blade
 
@@ -789,9 +787,10 @@ ring of protection from fire
 
 A ring that provides protection from fire.
 %%%%
-ring of protection from magic
+ring of willpower
 
-A ring that increases its wearer's resistance to hostile enchantments.
+A ring that increases its wearer's willpower, helping to protect against
+certain magical effects.
 %%%%
 ring of see invisible
 
@@ -961,9 +960,9 @@ living creatures, although it is never directly fatal.
 %%%%
 scroll of vulnerability
 
-A scroll that briefly halves the resistance to hostile enchantments of the
-reader and any nearby beings. The scroll cannot affect those fully immune to
-magic.
+A scroll that briefly halves the willpower of the reader and any nearby beings,
+rendering them vulnerable to many magical effects. The scroll cannot affect
+those fully immune to such effects.
 %%%%
 scythe
 
@@ -1119,7 +1118,8 @@ A magical device which drills tunnels through unworked rock.
 wand of disintegration
 
 A magical device which disrupts the physical structure of a target creature,
-dealing heavy damage and bypassing armour.
+dealing heavy damage and bypassing armour. Only strong-willed beings can hold
+themselves together.
 %%%%
 wand of enslavement
 

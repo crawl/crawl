@@ -207,7 +207,7 @@ static const vector<curse_effect> curse_effects = {
             if (target.is_player() && x_chance_in_y(severity, 27))
                 lose_stat(STAT_RANDOM, 1 + random2avg(severity / 3, 2));
             else
-                target.drain_exp(source, false, ( severity * 100 ) / 27);
+                target.drain(source, false, ( severity * 100 ) / 27);
         },
         0, 40,
     },

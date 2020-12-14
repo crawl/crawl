@@ -6,9 +6,12 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "enum.h"
 #include "mon-info.h"
+
+using std::vector;
 
 enum class spschool
 {
@@ -52,6 +55,7 @@ enum spell_highlight_colours
 bool is_valid_spell(spell_type spell);
 void init_spell_descs();
 void init_spell_name_cache();
+bool spell_data_initialized();
 spell_type spell_by_name(string name, bool partial_match = false);
 
 spschool school_by_name(string name);
@@ -64,7 +68,7 @@ bool add_spell_to_memory(spell_type spell);
 bool del_spell_from_memory_by_slot(int slot);
 bool del_spell_from_memory(spell_type spell);
 
-int spell_mana(spell_type which_spell);
+int spell_mana(spell_type which_spell, bool real_spell = true);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool allow_bonus = true);
@@ -77,6 +81,7 @@ tileidx_t get_spell_tile(spell_type which_spell);
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
+bool spell_is_direct_attack(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
 spell_flags get_spell_flags(spell_type which_spell);
@@ -121,6 +126,8 @@ bool cannot_use_schools(spschools_type schools);
 
 bool spell_is_form(spell_type spell) PURE;
 
+bool casting_is_useless(spell_type spell, bool temp);
+string casting_uselessness_reason(spell_type spell, bool temp);
 bool spell_is_useless(spell_type spell, bool temp = true,
                       bool prevent = false, bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,

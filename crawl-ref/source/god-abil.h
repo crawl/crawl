@@ -15,6 +15,8 @@
 #include "recite-type.h"
 #include "spl-cast.h"
 
+class dist;
+
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
 #define BEOGH_MELEE_WPN_GIFT_KEY "given beogh melee weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
@@ -127,7 +129,6 @@ void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
 
-int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
@@ -141,7 +142,7 @@ bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
-                           bool fail = false);
+                           bool fail = false, dist *player_target=nullptr);
 spret qazlal_elemental_force(bool fail);
 bool qazlal_disaster_area();
 
@@ -179,3 +180,6 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret);
 bool wu_jian_do_wall_jump(coord_def targ);
 spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
+
+void okawaru_remove_heroism();
+void okawaru_remove_finesse();

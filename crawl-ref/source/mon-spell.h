@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mon-book.h"
 
 /* *************************************************************************
@@ -411,7 +413,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('n') Rotting hulks.
+    // ('n') Undead corpses.
     {  MST_BOG_BODY,
       {
        { SPELL_BOLT_OF_COLD, 28, MON_SPELL_WIZARD },
@@ -702,6 +704,13 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('v') Vortices.
+    {  MST_WILL_O_THE_WISP,
+      {
+       { SPELL_MARSHLIGHT, 50, MON_SPELL_MAGICAL },
+       { SPELL_BLINK, 12, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_INSUBSTANTIAL_WISP,
       {
        { SPELL_BLINK, 18, MON_SPELL_MAGICAL },
@@ -726,6 +735,13 @@ static const mon_spellbook mspell_list[] =
     {  MST_WORLDBINDER,
       {
        { SPELL_FORCEFUL_INVITATION, 58, MON_SPELL_MAGICAL },
+      }
+    },
+
+    { MST_BUNYIP,
+      {
+        { SPELL_WARNING_CRY, 20, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                 | MON_SPELL_NO_SILENT },
       }
     },
 
@@ -814,6 +830,14 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_HOLIES, 50, MON_SPELL_MAGICAL },
        { SPELL_INJURY_BOND, 50, MON_SPELL_MAGICAL },
        { SPELL_CLEANSING_FLAME, 25, MON_SPELL_MAGICAL },
+      }
+    },
+
+    // ('B') Beetles and other insects
+    {  MST_BOULDER_BEETLE,
+      {
+       { SPELL_ROLL, 50, MON_SPELL_NATURAL},
+       { SPELL_BLINK_AWAY, 20, MON_SPELL_NATURAL},
       }
     },
 
@@ -994,6 +1018,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_FENSTRIDER_WITCH,
+      {
+       { SPELL_PARALYSE, 15, MON_SPELL_WIZARD },
+       { SPELL_AGONY, 30, MON_SPELL_WIZARD },
+       { SPELL_HURL_SLUDGE, 15, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_SPHINX,
       {
        { SPELL_CONFUSE, 11, MON_SPELL_WIZARD },
@@ -1081,7 +1113,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_I,
+    {  MST_ROYAL_MUMMY_I,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1090,7 +1122,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_II,
+    {  MST_ROYAL_MUMMY_II,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1099,7 +1131,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_III,
+    {  MST_ROYAL_MUMMY_III,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1108,7 +1140,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_GREATER_MUMMY_IV,
+    {  MST_ROYAL_MUMMY_IV,
       {
        { SPELL_SMITING, 13, MON_SPELL_WIZARD },
        { SPELL_SYMBOL_OF_TORMENT, 13, MON_SPELL_WIZARD },
@@ -1292,6 +1324,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_AWAKEN_VINES, 23, MON_SPELL_WIZARD },
        { SPELL_AWAKEN_FOREST, 23, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      }
+    },
+
+    {  MST_ELEIONOMA,
+      {
+       { SPELL_SPLINTERSPRAY, 50, MON_SPELL_MAGICAL },
+       { SPELL_WOODWEAL, 150, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1760,7 +1799,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_DIMENSION_ANCHOR, 11, MON_SPELL_WIZARD },
        { SPELL_MASS_CONFUSION, 11, MON_SPELL_WIZARD },
-       { SPELL_STRIP_RESISTANCE, 11, MON_SPELL_WIZARD },
+       { SPELL_STRIP_WILLPOWER, 11, MON_SPELL_WIZARD },
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },

@@ -16,10 +16,10 @@ end
 function tomb_1_mummy_priest_set(e, chamber)
   e.mons("mummy priest w:30 / revenant w:5 / lich w:5 / nothing w:30")
   if chamber then
-    e.mons("greater mummy / ancient lich w:1 / nothing w:11")
+    e.mons("royal mummy / ancient lich w:1 / nothing w:11")
     e.mons("obsidian statue / orange crystal statue")
   else
-    e.mons("greater mummy")
+    e.mons("royal mummy")
   end
 end
 
@@ -29,7 +29,7 @@ end
 
 function tomb_mummy_priest_set(e)
   e.mons("mummy priest w:20 / lich w:2 / revenant w:2")
-  e.mons("greater mummy / ancient lich w:1")
+  e.mons("royal mummy / ancient lich w:1")
 end
 
 function tomb_guardian_set(e, include_nothing)
@@ -146,12 +146,12 @@ function tomb_2_ambush_setup(e)
 end
 
 function tomb_3_khufu(e, glyph)
-  e.kmons(glyph ..  " = Khufu w:3 / greater mummy, greater mummy")
+  e.kmons(glyph ..  " = Khufu w:3 / royal mummy, royal mummy")
 end
 
 --[[
 Setup for Tomb:3 rune vaults. For monsters, it places a guardian monster set on
-'1', a mummy priest set on '2', and a greater mummy set on '3'. Places about 12
+'1', a mummy priest set on '2', and a royal mummy set on '3'. Places about 12
 appropriate traps on-average.
 
 Vaults should place an 'O' glyph for the golden rune and can optionally place a
@@ -467,7 +467,7 @@ TAGS:     no_dump
 SUBVAULT: A : tomb_1_centre
 SUBVAULT: B : tomb_1_hall_stairs
 : tomb_guardian_set(_G, true)
-MONS:     greater mummy / nothing
+MONS:     royal mummy / nothing
 MONS:     sphinx / nothing
 MONS:     obsidian statue / orange crystal statue
 NSUBST:   ( = 1:( / *:.
@@ -1406,7 +1406,7 @@ TAGS:  tomb_3_rune_stone_stairs unrand
 : tomb_mummy_priest_set(_G)
 KMASK: O = no_item_gen
 KITEM: O = golden rune of Zot
-KMONS: K = Khufu w:3 / greater mummy, greater mummy
+KMONS: K = Khufu w:3 / royal mummy, royal mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc.............................cccccc

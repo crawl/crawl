@@ -44,7 +44,8 @@ function get_overflow_altar_count(e)
     local tag = unpack(params)
     if tag ~= nil then
       -- temple_overflow_generic_ is 24 characters
-      return string.sub(tag, 25)
+      local result = string.sub(tag, 25)
+      if result ~= "" then return result end
     end
   end
 
@@ -310,6 +311,7 @@ KFEAT:   _ = altar_cheibriados
 MONS:    torpor snail
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
+KMASK: 1234 = opaque
 : interest_check(_G)
 MAP
 .......
@@ -1043,9 +1045,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 14 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -2390,9 +2390,11 @@ MAP
   wwwww
 ENDMAP
 
+# not guaranteed to be fully navigable, so not transparent. It would be better
+# for avoiding vetoes if this guaranteed a path somehow...
 NAME:    xom_redecorated
 DEPTH:   D:2-, !D:$
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor transparent
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor
 SUBST:   c = ccbbbv
 NSUBST:  . = 2=^ / .
 SUBST:   . = lWwtm_~......
@@ -2543,9 +2545,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_yredelemnul
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 13 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -3468,13 +3468,13 @@ NAME:     general_overflow_altar
 DEPTH:    D:2-
 WEIGHT:   10
 TAGS:     no_monster_gen no_pool_fixup temple_overflow_generic_1
-TAGS:     transparent
 SHUFFLE:  xXY / xXY / xXY / abc
 SHUFFLE:  XY
 SUBST:    X=+, Y=x, a=w, b=w, c=w
 SHUFFLE:  ABCD
-SUBST:    A=>, C=.GTU, D=.
+SUBST:    A=>, C='GTU, D='
 SHUFFLE:  wll
+KMASK:    . = !opaque
 : interest_check(_G)
 MAP
 ........
@@ -3941,11 +3941,9 @@ TAGS:  temple_overflow_generic_4 temple_overflow_generic_3
 TAGS:  temple_overflow_generic_2
 # The original vault had allow_dup; I think that's overkill.
 {{
-  local altarcount = 1
-  if is_validating() then
+  local altarcount = get_overflow_altar_count(_G)
+  if is_validating() or altarcount == nil then
     altarcount = 14
-  else
-    altarcount = get_overflow_altar_count(_G)
   end
   nsubst("B : " .. altarcount .. ":B / *:x")
 }}
@@ -4028,9 +4026,9 @@ NAME:  chequers_temple_overflow_minitemple
 TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
 TAGS:  temple_overflow_generic_3
 {{
-  local altarcount = 5
-  if not is_validating() then
-    altarcount = get_overflow_altar_count(_G)
+  local altarcount = get_overflow_altar_count(_G)
+  if is_validating() or altarcount == nil then
+    altarcount = 5
   end
   nsubst("O = " .. altarcount .. ":B / *:l")
 }}

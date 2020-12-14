@@ -35,7 +35,7 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
     // These include the base monster's name in their name, but we don't
     // want things in the auto_exclude option to match them.
     if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE
-        || mon->type == MONS_TEST_STATUE)
+        || mons_class_is_test(mon->type)) // don't autoexclude test statues/spawners
     {
         return false;
     }
@@ -444,7 +444,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
+        if (feat_is_door(env.grid(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;

@@ -732,7 +732,7 @@ DEPTH:  Crypt
 MONS:   mummy, guardian mummy, ushabti
 KMONS:  4 = guardian mummy
 KMONS:  5 = mummy priest
-KMONS:  6 = greater mummy
+KMONS:  6 = royal mummy
 SUBST:  1 = 2231
 KITEM:  345 = |
 MAP
@@ -1439,7 +1439,7 @@ MONS:   wraith / freezing wraith / shadow wraith / spectral thing / \
         w:20 shadow / nothing
 # mummy layout - rare
 : else
-MONS:   greater mummy
+MONS:   royal mummy
 MONS:   sphinx
 MONS:   mummy priest
 MONS:   mummy priest
@@ -1835,7 +1835,7 @@ MONS:   jumping spider / wolf spider / redback / w:19 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy
-MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
+MONS:   w:5 patrolling mummy priest / w:1 patrolling royal mummy
 KMONS:  z = patrolling curse skull
 SHUFFLE: 9H
 : if crawl.coinflip() then
@@ -1952,7 +1952,7 @@ ENDMAP
 #  skeletal ([ancient] liches, bone dragons, ancient champions)
 #  vampire (Jory, vampire [knight / mage], dancing weapons)
 #  ghostly (revenant, eidola, shadow dragon)
-#  mummy (greater mummy, mummy priests, sphinx)
+#  mummy (royal mummy, mummy priests, sphinx)
 #
 # Loot:
 #  roughly similar loot to evilmike's haunted forest
@@ -1996,7 +1996,7 @@ MONS:   generate_awake shadow dragon / generate_awake ghost moth
 SUBST:  2 = ., ' = 2, " = 4
 : else
 MONS:   patrolling guardian mummy w:7 / patrolling ushabti w:3
-MONS:   greater mummy
+MONS:   royal mummy
 MONS:   mummy priest / ushabti w:6
 MONS:   guardian mummy ; long sword | great sword | \
         battleaxe | war axe | broad axe . chain mail w:15 | plate armour w:1
@@ -2092,7 +2092,7 @@ KMONS:   Q = flayed ghost / shadow w:20
 
 # Boss tier monsters.
 : if crawl.one_chance_in(4) then
-KMONS:   R = Khufu, greater mummy
+KMONS:   R = Khufu, royal mummy
 KMONS:   S = mummy priest
 KMONS:   T = guardian mummy
 : elseif crawl.one_chance_in(3) then
@@ -2183,7 +2183,7 @@ PLACE:   Crypt:$
 ORIENT:  north
 MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
-         greater mummy w:2 / ancient lich w:2
+         royal mummy w:2 / ancient lich w:2
 MONS:    skeletal warrior ; halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25

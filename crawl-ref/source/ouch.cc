@@ -203,7 +203,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            drain_player(min(75, 35 + original * 2 / 3), true);
+            drain_player(1 + original, true);
         }
         break;
 
@@ -238,7 +238,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_MIASMA:
-        if (you.res_rotting())
+        if (you.res_miasma())
         {
             if (doEffects)
                 canned_msg(MSG_YOU_RESIST);
@@ -367,6 +367,22 @@ void lose_level()
     ouch(0, KILLED_BY_DRAINING);
 }
 
+static int _drain_power_max_hp(int power)
+{
+    if (power <= 6)
+        power = 6;
+
+    const int scaled_pow = div_rand_round(power, 6);
+    const int perc_pow = scaled_pow / 2;
+
+    int fuzzed_hp = 1 + random2avg((scaled_pow - perc_pow) * 2, 4);
+
+    const int perc_hp = div_rand_round(3 * perc_pow
+           * get_real_hp(false, false), 500);
+
+    return fuzzed_hp + perc_hp;
+}
+
 /**
  * Drain the player.
  *
@@ -402,12 +418,13 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
         mpr("You feel drained.");
         xom_is_stimulated(15);
 
-        you.attribute[ATTR_XP_DRAIN] += power;
-        // Losing skills may affect AC/EV.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
+        const int drain_mhp = _drain_power_max_hp(power);
+        you.hp_max_adj_temp -= drain_mhp;
+        you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
+                you.hp_max_adj_temp);
 
-        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
+        dprf("Drained by %d max hp (%d total)", drain_mhp, you.hp_max_adj_temp);
+        calc_hp();
 
         return true;
     }
@@ -737,7 +754,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp_max <= 0)
-        unrot_hp(9999);
+        undrain_hp(9999);
     while (you.hp_max <= 0)
         you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)
@@ -796,6 +813,38 @@ static bool _is_damage_threatening (int damage_fraction_of_hp)
                 || random2(100) < hp_fraction);
 }
 
+// Palentongas curl up after the first time they've been hit in a round.
+static void _consider_curling(kill_method_type death_type)
+{
+    if (!you.has_mutation(MUT_CURL)
+        || you.props[PALENTONGA_CURL_KEY].get_bool())
+    {
+        return;
+    }
+
+    switch (death_type)
+    {
+        case KILLED_BY_MONSTER:
+        case KILLED_BY_BEAM:
+        case KILLED_BY_SPORE:
+        case KILLED_BY_TRAP:
+        case KILLED_BY_BOUNCE:
+        case KILLED_BY_REFLECTION:
+        case KILLED_BY_DISINT:
+        case KILLED_BY_HEADBUTT:
+        case KILLED_BY_ROLLING:
+        case KILLED_BY_BEING_THROWN:
+        case KILLED_BY_COLLISION:
+            break;
+        default:
+            // stuff like poison, smiting, etc
+            return;
+    }
+
+    you.props[PALENTONGA_CURL_KEY] = true;
+    you.redraw_armour_class = true;
+}
+
 /** Hurt the player. Isn't it fun?
  *
  *  @param dam How much damage -- may be INSTANT_DEATH.
@@ -845,6 +894,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // Don't wake the player with fatal or poison damage.
     if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
+
+    _consider_curling(death_type);
 
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING

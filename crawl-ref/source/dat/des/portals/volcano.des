@@ -184,8 +184,7 @@ function setup_loot (e)
                                  "hat good_item w:2 / pair of boots good_item w:6 / " ..
                                  "fire dragon scales w:8")
     e.item([[potion of berserk rage w:14 / potion of might w:5 /
-             potion of brilliance w:5 / potion of stabbing w:5 /
-             potion of experience q:1 w:1 / potion of resistance]])
+             potion of brilliance w:5 / potion of experience q:1 w:1 / potion of resistance]])
     e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5", "eveningstar w:2",
                                  "demon whip w:2", "great mace w:16", "demon blade w:2",
                                  "great sword w:16", "triple sword w:2", "broad axe w:3",
@@ -1405,7 +1404,7 @@ WEIGHT:  10
 MONS:    patrolling fire dragon
 MONS:    salamander
 MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
-         crocodile / fire bat
+         komodo dragon / fire bat
 MONS:    patrolling fire bat band
 KMONS:   p = plant
 NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3
@@ -1433,8 +1432,8 @@ xxxxxxxxxxxxxxxxxxlllll.g.t.<.tllxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxllllll..t.$..$.g.llxxxxxxxxxxxxxx
 xxxxxxxxxxxxxlllMlll.t$.gp.t.p.t.lxxxxxxxxxxxxxx
 xxxxxxxxxxxxlllllllt.g.$..g$.g..tllxxxxxxxxxxxxx
-xxxxxxxxxxxllllllllt.gt.3.1.p.t..lllxxxxxxxxxxxx
-xxxxxxxxxxlllllJllltp..p.....$...lllxxxxxxxxxxxx
+xxxxxxxxxxxllllllllt.gt.3.1.p.t..lllxxxx<xxxxxxx
+xxxxxxxxxxlllllJllltp..p.....$...lllxxxxxpxxxxxx
 xxxxxxxxxlllKllllllt.......3...t.llxxxxxdCexxxxx
 xxxxxxxxlllllllllllttp...tttttt.llxxxxxxxf4xxxxx
 xxxxxxxxllllllllMlllttt..tt.ptttlxxxxxxxxx.xxxxx

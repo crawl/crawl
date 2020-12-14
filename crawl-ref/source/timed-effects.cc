@@ -46,6 +46,7 @@
 #include "spl-clouds.h"
 #include "spl-miscast.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -332,8 +333,8 @@ static void _jiyva_effects(int /*time_delta*/)
             {
                 newpos = random_in_bounds();
             }
-            while (grd(newpos) != DNGN_FLOOR
-                       && grd(newpos) != DNGN_SHALLOW_WATER
+            while (env.grid(newpos) != DNGN_FLOOR
+                       && env.grid(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
                    || cloud_at(newpos)
                    || testbits(env.pgrid(newpos), FPROP_NO_JIYVA));
@@ -573,7 +574,7 @@ static void _catchup_monster_move(monster* mon, int moves)
             break;
 
         const coord_def next(pos + inc);
-        const dungeon_feature_type feat = grd(next);
+        const dungeon_feature_type feat = env.grid(next);
         if (feat_is_solid(feat)
             || monster_at(next)
             || !monster_habitable_grid(mon, feat))
@@ -729,8 +730,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
-        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
-        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
+        case ENCH_LOWERED_WL: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
+        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
         case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
@@ -766,6 +767,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
+        case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
             del_ench(entry.first);
@@ -1082,7 +1084,7 @@ void timeout_tombs(int duration)
             _drop_tomb(cmark->pos, empty_tomb, zin);
 
             monster* mon_src =
-                !invalid_monster_index(cmark->source) ? &menv[cmark->source]
+                !invalid_monster_index(cmark->source) ? &env.mons[cmark->source]
                                                       : nullptr;
             // A monster's Tomb of Doroklohe spell.
             if (mon_src
@@ -1114,7 +1116,7 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration -= duration;
 
         if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-            && !feat_is_sealed(grd(marker->pos)))
+            && !feat_is_sealed(env.grid(marker->pos)))
         {
             // TODO: could this be done inside `revert_terrain_change`? The
             // two things to test are corrupting sealed doors, and destroying
@@ -1169,7 +1171,7 @@ void setup_environment_effects()
             if (!in_bounds(x, y))
                 continue;
 
-            const int grid = grd[x][y];
+            const int grid = env.grid[x][y];
             if (grid == DNGN_LAVA
                     || (grid == DNGN_SHALLOW_WATER
                         && player_in_branch(BRANCH_SWAMP)))
@@ -1184,7 +1186,7 @@ void setup_environment_effects()
 
 static void apply_environment_effect(const coord_def &c)
 {
-    const dungeon_feature_type grid = grd(c);
+    const dungeon_feature_type grid = env.grid(c);
     // Don't apply if if the feature doesn't want it.
     if (testbits(env.pgrid(c), FPROP_NO_CLOUD_GEN))
         return;
@@ -1256,15 +1258,37 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
+#if TAG_MAJOR_VERSION == 34
+static int _old_zot_clock(const string& branch_name) {
+    // The old clock was measured in turns (deca-auts), not aut.
+    static const string OLD_KEY = "ZOT_CLOCK";
+    if (!you.props.exists(OLD_KEY))
+        return -1;
+    CrawlHashTable &branch_clock = you.props[OLD_KEY];
+    if (!branch_clock.exists(branch_name))
+        return -1;
+    return branch_clock[branch_name].get_int();
+}
+#endif
+
 // Returns -1 if the player hasn't been in this branch before.
 static int& _zot_clock_for(branch_type br)
 {
-    CrawlHashTable &branch_clock = you.props["ZOT_CLOCK"];
-    const string branch_name = branches[br].abbrevname;
+    CrawlHashTable &branch_clock = you.props["ZOT_AUTS"];
+    const string branch_name = is_hell_branch(br) ? "Hells" : branches[br].abbrevname;
     // When entering a new branch, start with an empty clock.
     // (You'll get the usual time when you finish entering.)
     if (!branch_clock.exists(branch_name))
-        branch_clock[branch_name].get_int() = -1;
+    {
+#if TAG_MAJOR_VERSION == 34
+        // The old clock was measured in turns (deca-auts), not aut.
+        const int old_clock = _old_zot_clock(branch_name);
+        if (old_clock != -1)
+            branch_clock[branch_name].get_int() = old_clock;
+        else
+#endif
+            branch_clock[branch_name].get_int() = -1;
+    }
     return branch_clock[branch_name].get_int();
 }
 
@@ -1284,33 +1308,54 @@ bool zot_clock_active()
     return _zot_clock_active_in(you.where_are_you);
 }
 
-static bool _over_zot_threshold(branch_type br)
+static int _turns_until_zot_for(branch_type br)
 {
-    return _zot_clock_for(br) >= MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD;
+    return (MAX_ZOT_CLOCK - _zot_clock_for(br)) / BASELINE_DELAY;
 }
 
-// If the player was in the given branch, would they suffer penalties for
+// How many turns (deca-auts) does the player have until Zot finds them?
+int turns_until_zot()
+{
+    return _turns_until_zot_for(you.where_are_you);
+}
+
+// A scale from 0 to 4 of how much danger the player is in of
+// reaching the end of the zot clock. 0 is no danger, 4 is dead.
+static int _bezotting_level_in(branch_type br)
+{
+    if (!_zot_clock_active_in(br))
+        return 0;
+
+    const int remaining_turns = _turns_until_zot_for(br);
+    if (remaining_turns <= 0)
+        return 4;
+    if (remaining_turns < 100)
+        return 3;
+    if (remaining_turns < 500)
+        return 2;
+    if (remaining_turns < 1000)
+        return 1;
+    return 0;
+}
+
+// A scale from 0 to 4 of how much danger the player is in of
+// reaching the end of the zot clock in their current branch.
+int bezotting_level()
+{
+    return _bezotting_level_in(you.where_are_you);
+}
+
+// If the player was in the given branch, would they see warnings for
 // nearing the end of the zot clock?
 bool bezotted_in(branch_type br)
 {
-    return _zot_clock_active_in(br) && _over_zot_threshold(br);
+    return _bezotting_level_in(br) > 0;
 }
 
-// Is the player suffering penalties from nearing the end of the zot clock?
+// Is the player seeing warnings about nearing the end of the zot clock?
 bool bezotted()
 {
     return bezotted_in(you.where_are_you);
-}
-
-// How many times should the player have been drained by Zot?
-int bezotting_level()
-{
-    if (!bezotted())
-        return 0;
-    const int MAX_ZOTS = 5;
-    const int TURNS_PER_ZOT = BEZOTTING_THRESHOLD / MAX_ZOTS;
-    const int over_thresh = _zot_clock() - (MAX_ZOT_CLOCK - BEZOTTING_THRESHOLD);
-    return over_thresh / TURNS_PER_ZOT + 1;
 }
 
 // Decrease the zot clock when the player enters a new level.
@@ -1333,25 +1378,13 @@ void decr_zot_clock()
     }
 }
 
-// Odds of the zot clock incrementing every aut, expressed as odds
-// out of 1000 (aka 10x a percent chance).
-static unsigned _zot_clock_odds()
-{
-    const int base_odds = 100; // 10% per aut, aka on average 1/turn
-    if (have_passive(passive_t::slow_zot))
-    {
-        // down to 6.7% at full piety, aka once every 1.5 turns. (only movement
-        // (is slowed, not all actions, so we shouldn't give double clock!)
-        return base_odds - div_rand_round(you.piety, 6);
-    }
-    return base_odds;
-}
-
 void incr_zot_clock()
 {
-    const int clock_incr = binomial(you.time_taken, _zot_clock_odds(), 1000);
+    if (!zot_clock_active())
+        return;
+
     const int old_lvl = bezotting_level();
-    _zot_clock() += clock_incr;
+    _zot_clock() += you.time_taken;
     if (!bezotted())
         return;
 
@@ -1362,16 +1395,31 @@ void incr_zot_clock()
         return;
     }
 
-    if (!old_lvl)
+    const int lvl = bezotting_level();
+    if (old_lvl >= lvl)
+        return;
+
+    switch (lvl)
     {
-        mpr("You have lingered too long in familiar places. Zot approaches. Travel to new levels before you perish!");
-        drain_player(150, true, true);
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
+        case 1:
+            mpr("You have lingered too long. Zot senses you. Dive deeper or flee this place before you perish!");
+            break;
+        case 2:
+            mpr("Zot draws nearer. Dive deeper or flee this place before you perish!");
+            break;
+        case 3:
+            mpr("Zot has nearly found you. Death is approaching. Descend or flee!");
+            break;
     }
-    else if (bezotting_level() > old_lvl)
-    {
-        mpr("Zot draws near. Death is approaching...");
-        drain_player(75, true, true);
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
-    }
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
+}
+
+void set_turns_until_zot(int turns_left)
+{
+    if (turns_left < 0 || turns_left > MAX_ZOT_CLOCK / BASELINE_DELAY)
+        return;
+
+    int &clock = _zot_clock();
+    clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
 }

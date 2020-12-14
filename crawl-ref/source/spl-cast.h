@@ -5,7 +5,18 @@
 
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "enum.h"
+#include "item-def.h"
+#include "skill-type.h"
+#include "spell-type.h"
+
+using std::vector;
+
+struct monster_info;
+class dist;
 
 enum class spflag
 {
@@ -39,7 +50,7 @@ enum class spflag
     utility            = 0x01000000,      // usable no matter what foe is
     no_ghost           = 0x02000000,      // ghosts can't get this spell
     cloud              = 0x04000000,      // makes a cloud
-    MR_check           = 0x08000000,      // spell that checks monster MR
+    WL_check           = 0x08000000,      // spell that checks monster WL
     mons_abjure        = 0x10000000,      // monsters can cast abjuration
                                           // instead of this spell
     not_evil           = 0x20000000,      // not considered evil by the
@@ -88,7 +99,7 @@ int calc_spell_power(spell_type spell, bool apply_intel,
                      int scale = 1);
 int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true);
 
-bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
+bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL, dist *_target = nullptr);
 
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
@@ -99,10 +110,13 @@ void do_cast_spell_cmd(bool force);
 int hex_success_chance(const int mr, int powc, int scale,
                        bool round_up = false);
 class targeter;
+unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
+bool spell_has_targeter(spell_type spell);
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc);
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                  const item_def* const evoked_item = nullptr);
+                  const item_def* const evoked_item = nullptr,
+                  dist *_target = nullptr);
 
 extern const char *fail_severity_adjs[];
 
@@ -115,6 +129,8 @@ string failure_rate_to_string(int fail);
 int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell);
+string spell_damage_string(spell_type spell);
+int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);

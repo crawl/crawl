@@ -28,7 +28,6 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
-msc += $danger:rotting away
 
 # Less urgent, but still significant messages
 #
@@ -105,9 +104,11 @@ force_more_message += You don't have the energy to cast any spells
 force_more_message += This is a scroll of acquirement
 
 ## Zot is coming!
-force_more_message += You have lingered too long in familiar places
-force_more_message += Zot's attention fixes on you again
-force_more_message += Zot already knows this place too well
+force_more_message += You have lingered too long
+force_more_message += Zot draws nearer
+force_more_message += Zot has nearly found you
+force_more_message += Zot already knows
+force_more_message += Zot's attention fixes on you
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!

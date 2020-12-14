@@ -26,6 +26,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "env.h"
+#include "tile-env.h"
 #include "errors.h"
 #include "fight.h"
 #include "files.h"
@@ -44,6 +45,7 @@
 #include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h"
+#include "mon-explode.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
@@ -58,6 +60,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-player.h"
 #include "tilepick.h"
@@ -102,6 +105,20 @@ static int _mons_exp_mod(monster_type mclass);
     } while (false)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
+
+bool monster_class_flies(monster_type mc)
+{
+    return mons_class_flag(mc, M_FLIES);
+}
+
+bool monster_inherently_flies(const monster &mons)
+{
+    // check both so spectral humans and zombified dragons both fly
+    return monster_class_flies(mons.type)
+        || monster_class_flies(mons_base_type(mons))
+        || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
+        || mons.has_facet(BF_BAT);
+}
 
 static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
@@ -166,7 +183,7 @@ monster_type random_monster_at_grid(const coord_def& p, bool species)
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = _grid2habitat(grd(p));
+    const habitat_type ht = _grid2habitat(env.grid(p));
     const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
                                                      : monsters_by_habitat[ht];
 
@@ -409,12 +426,12 @@ monster* monster_at(const coord_def &pos)
     if (!in_bounds(pos))
         return nullptr;
 
-    const int mindex = mgrd(pos);
+    const int mindex = env.mgrid(pos);
     if (mindex == NON_MONSTER)
         return nullptr;
 
     ASSERT(mindex <= MAX_MONSTERS);
-    return &menv[mindex];
+    return &env.mons[mindex];
 }
 
 /// Are any of the bits set?
@@ -581,34 +598,34 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool /*calc_unid*/,
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[weap]))
+        if (weap != NON_ITEM && env.item[weap].base_type == OBJ_WEAPONS
+            && is_artefact(env.item[weap]))
         {
-            ret += artefact_property(mitm[weap], ra_prop);
+            ret += artefact_property(env.item[weap], ra_prop);
         }
 
-        if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]) && mons_wields_two_weapons(*this))
+        if (second != NON_ITEM && env.item[second].base_type == OBJ_WEAPONS
+            && is_artefact(env.item[second]) && mons_wields_two_weapons(*this))
         {
-            ret += artefact_property(mitm[second], ra_prop);
+            ret += artefact_property(env.item[second], ra_prop);
         }
 
-        if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[armour]))
+        if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[armour]))
         {
-            ret += artefact_property(mitm[armour], ra_prop);
+            ret += artefact_property(env.item[armour], ra_prop);
         }
 
-        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[shld]))
+        if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[shld]))
         {
-            ret += artefact_property(mitm[shld], ra_prop);
+            ret += artefact_property(env.item[shld], ra_prop);
         }
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && is_artefact(mitm[jewellery]))
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(env.item[jewellery]))
         {
-            ret += artefact_property(mitm[jewellery], ra_prop);
+            ret += artefact_property(env.item[jewellery], ra_prop);
         }
     }
 
@@ -759,9 +776,19 @@ bool mons_is_active_ballisto(const monster& mon)
 bool mons_class_is_firewood(monster_type mc)
 {
     return mons_class_is_stationary(mc)
-           && mc != MONS_TEST_STATUE
+           && !mons_class_is_test(mc)
            && mons_class_flag(mc, M_NO_THREAT)
            && !mons_is_tentacle_or_tentacle_segment(mc);
+}
+
+/**
+ * Is this a test monster? Mainly used for exempting these from various checks
+ * like firewood, etc.
+ */
+bool mons_class_is_test(monster_type mc)
+{
+    return mc == MONS_TEST_SPAWNER || mc == MONS_TEST_STATUE
+        || mc == MONS_TEST_BLOB;
 }
 
 /**
@@ -1087,11 +1114,11 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 static void _destroy_mimic_feature(const coord_def &pos)
 {
 #if TAG_MAJOR_VERSION == 34
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 #endif
 
     unnotice_feature(level_pos(level_id::current(), pos));
-    grd(pos) = DNGN_FLOOR;
+    env.grid(pos) = DNGN_FLOOR;
     env.level_map_mask(pos) &= ~MMT_MIMIC;
     set_terrain_changed(pos);
     remove_markers_and_listeners_at(pos);
@@ -1110,7 +1137,7 @@ void discover_mimic(const coord_def& pos)
     if (!item && !feature_mimic)
         return;
 
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
 
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
@@ -1126,7 +1153,7 @@ void discover_mimic(const coord_def& pos)
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
-    apply_variations(env.tile_flv(pos), &tile, pos);
+    apply_variations(tile_env.flv(pos), &tile, pos);
 #endif
 
     if (you.see_cell(pos))
@@ -1815,7 +1842,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
     else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
-        attk.flavour = AF_DRAIN_XP;
+        attk.flavour = AF_DRAIN;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
 
@@ -1987,6 +2014,13 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     if (mon.type == MONS_NAMELESS && attk_number == 0)
         attk.damage = mon.get_hit_dice() * 2;
 
+    // Boulder beetles get double attack damage and a normal 'hit' attack.
+    if (mon.has_ench(ENCH_ROLLING) && attk_number == 0)
+    {
+        attk.type = AT_HIT;
+        attk.damage *= 2;
+    }
+
     if (!base_flavour)
     {
         // TODO: randomization here is not the greatest way of doing any of
@@ -2155,9 +2189,28 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
     }
 }
 
-bool mons_immune_magic(const monster& mon)
+/**
+ * Does a monster attacking with this flavour reach as if using a polearm?
+ *
+ * @param flavour   The attack flavour in question; e.g. AF_COLD.
+ * @return          Whether the flavour grants inherent reach.
+ */
+bool flavour_has_reach(attack_flavour flavour)
 {
-    return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;
+    switch (flavour)
+    {
+        case AF_REACH:
+        case AF_REACH_STING:
+        case AF_REACH_TONGUE:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool mons_invuln_will(const monster& mon)
+{
+    return get_monster_data(mon.type)->willpower == WILL_INVULN;
 }
 
 bool mons_skeleton(monster_type mc)
@@ -2213,13 +2266,13 @@ int mons_class_hit_dice(monster_type mc)
 }
 
 /**
- * What base MR does a monster of the given type have?
+ * What base WL does a monster of the given type have?
  *
  * @param type    The monster type in question.
  * @param base    The base type of the monster. (For e.g. draconians.)
- * @return        The MR of a normal monster of that type.
+ * @return        The WL of a normal monster of that type.
  */
-int mons_class_res_magic(monster_type type, monster_type base)
+int mons_class_willpower(monster_type type, monster_type base)
 {
     const monster_type base_type =
         base != MONS_NO_MONSTER &&
@@ -2227,12 +2280,12 @@ int mons_class_res_magic(monster_type type, monster_type base)
             ? draco_or_demonspawn_subspecies(type, base)
             : type;
 
-    const int type_mr = (get_monster_data(base_type))->resist_magic;
+    const int type_wl = (get_monster_data(base_type))->willpower;
 
     // Negative values get multiplied with monster hit dice.
-    if (type_mr >= 0)
-        return type_mr;
-    return mons_class_hit_dice(base_type) * -type_mr * 4 / 3;
+    if (type_wl >= 0)
+        return type_wl;
+    return mons_class_hit_dice(base_type) * -type_wl * 4 / 3;
 }
 
 /**
@@ -2604,9 +2657,9 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
     case MONS_FAUN:
         return { MST_FAUN_I, MST_FAUN_II };
 
-    case MONS_GREATER_MUMMY:
-        return { MST_GREATER_MUMMY_I, MST_GREATER_MUMMY_II,
-                 MST_GREATER_MUMMY_III, MST_GREATER_MUMMY_IV };
+    case MONS_ROYAL_MUMMY:
+        return { MST_ROYAL_MUMMY_I, MST_ROYAL_MUMMY_II,
+                 MST_ROYAL_MUMMY_III, MST_ROYAL_MUMMY_IV };
 
     case MONS_DEEP_ELF_KNIGHT:
         return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II };
@@ -2817,13 +2870,11 @@ void define_monster(monster& mons)
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         mons.props[MON_SPEED_KEY] = 7 + random2avg(9, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
         mons.props[MON_SPEED_KEY] = 6 + random2avg(7, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -3430,19 +3481,21 @@ bool mons_wields_two_weapons(const monster& mon)
     return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
+// When this monster reaches its target, does it do impact damage
+// and then cease to exist?
 bool mons_destroyed_on_impact(const monster& m)
 {
     return mons_is_projectile(m) || m.type == MONS_FOXFIRE;
 }
 
+// When this monster reaches its target, does it explode and then
+// cease to exist?
 bool mons_blows_up(const monster& m)
 {
-    return m.type == MONS_BALLISTOMYCETE_SPORE
-        || m.type == MONS_BALL_LIGHTNING
-        || m.type == MONS_LURKING_HORROR
-        || m.type == MONS_FULMINANT_PRISM;
+    return mon_explodes_on_death(m.type) && m.type != MONS_BENNU;
 }
 
+// When this monster reaches its target, does it cease to exist?
 bool mons_self_destructs(const monster& m)
 {
     return mons_blows_up(m) || mons_destroyed_on_impact(m);
@@ -4181,7 +4234,7 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
         return false;
 
     // Includes sealed doors.
-    if (feat_is_closed_door(grd(p)) && _mons_can_pass_door(&mon, p))
+    if (feat_is_closed_door(env.grid(p)) && _mons_can_pass_door(&mon, p))
         return true;
 
     if (!mon.is_habitable(p))
@@ -4193,8 +4246,8 @@ bool mons_can_traverse(const monster& mon, const coord_def& p,
 void mons_remove_from_grid(const monster& mon)
 {
     const coord_def pos = mon.pos();
-    if (map_bounds(pos) && mgrd(pos) == mon.mindex())
-        mgrd(pos) = NON_MONSTER;
+    if (map_bounds(pos) && env.mgrid(pos) == mon.mindex())
+        env.mgrid(pos) = NON_MONSTER;
 }
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq)
@@ -4469,7 +4522,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     if (you.see_cell(mons.pos()))
     {
-        dungeon_feature_type feat = grd(mons.pos());
+        dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
@@ -4807,11 +4860,11 @@ int get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (!mons_is_threatening(*mon))
+        if ((!mons_is_threatening(*mon) || mon->wont_attack())
+            && !mons_class_is_test(mon->type))
+        {
             continue;
-
-        if (mon->wont_attack())
-            continue;
+        }
 
         int dist = grid_distance(you.pos(), *ri);
         if (dist < minRange)
@@ -4840,26 +4893,26 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     if (!require_valid)
     {
         if (m == MID_ANON_FRIEND)
-            return &menv[ANON_FRIENDLY_MONSTER];
+            return &env.mons[ANON_FRIENDLY_MONSTER];
         if (m == MID_YOU_FAULTLESS)
-            return &menv[YOU_FAULTLESS];
+            return &env.mons[YOU_FAULTLESS];
     }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
-        return &menv[*mc];
+        return &env.mons[*mc];
     return 0;
 }
 
 void init_anon()
 {
-    monster &mon = menv[ANON_FRIENDLY_MONSTER];
+    monster &mon = env.mons[ANON_FRIENDLY_MONSTER];
     mon.reset();
     mon.type = MONS_PROGRAM_BUG;
     mon.mid = MID_ANON_FRIEND;
     mon.attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
 
-    monster &yf = menv[YOU_FAULTLESS];
+    monster &yf = env.mons[YOU_FAULTLESS];
     yf.reset();
     yf.type = MONS_PROGRAM_BUG;
     yf.mid = MID_YOU_FAULTLESS;
@@ -4878,7 +4931,7 @@ actor *find_agent(mid_t m, kill_category kc)
         // shouldn't happen, there ought to be a valid mid
         return &you;
     case KC_FRIENDLY:
-        return &menv[ANON_FRIENDLY_MONSTER];
+        return &env.mons[ANON_FRIENDLY_MONSTER];
     case KC_OTHER:
         // currently hostile dead/gone monsters are no different from env
         return 0;
@@ -4951,11 +5004,11 @@ void debug_mondata()
 
         const monsterentry *md = get_monster_data(mc);
 
-        int MR = md->resist_magic;
-        if (MR < 0)
-            MR = md->HD * -MR * 4 / 3;
-        if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
-            fails += make_stringf("%s has MR %d > 200\n", name, MR);
+        int WL = md->willpower;
+        if (WL < 0)
+            WL = md->HD * -WL * 4 / 3;
+        if (md->willpower > 200 && md->willpower != WILL_INVULN)
+            fails += make_stringf("%s has WL %d > 200\n", name, WL);
         if (get_resist(md->resists, MR_RES_POISON) == 2)
             fails += make_stringf("%s has rPois++\n", name);
         if (get_resist(md->resists, MR_RES_ELEC) == 2)
@@ -5210,7 +5263,7 @@ vector<monster* > get_on_level_followers()
 // monsters, otherwise all of them
 int count_monsters(monster_type mtyp, bool friendly_only)
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [=] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.type == mtyp
@@ -5220,7 +5273,7 @@ int count_monsters(monster_type mtyp, bool friendly_only)
 
 int count_allies()
 {
-    return count_if(begin(menv), end(menv),
+    return count_if(begin(env.mons), end(env.mons),
                     [] (const monster &mons) -> bool
                     {
                         return mons.alive() && mons.friendly();

@@ -115,6 +115,8 @@ define(function() {
     }
 
     var shift_key_conversion = {
+        9: CK_SHIFT_TAB,
+
         // Numpad / Arrow keys
         45: CK_SHIFT_INSERT,
         35: CK_SHIFT_END,

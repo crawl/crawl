@@ -138,16 +138,17 @@ ORIENT: float
 MONS:  naga / nothing, plant
 KFEAT:  O = enter_snake_pit
 SUBST:  - = wW2t.
+SUBST:  " = W2.
 MAP
  xxxx@xxxx
 xx---.---xx
-x----.----x
-x--tt.tt--x
-x--t1.1t--x
+x--"".""--x
+x-"tt.tt"-x
+x-"t1.1t"-x
 @....O....@
-x--t1.1t--x
-x--tt.tt--x
-x----.----x
+x-"t1.1t"-x
+x-"tt.tt"-x
+x--"".""--x
 xx---.---xx
  xxxx@xxxx
 ENDMAP

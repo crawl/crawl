@@ -20,39 +20,11 @@
 
 #include "platform.h"
 #include <stdint.h>
-namespace std {}
-using namespace std;
-
-#ifndef SIZE_MAX
-# include <limits>
-# define SIZE_MAX (std::numeric_limits<std::size_t>::max())
-#endif
 
 // Define COMPILE_CHECK before including any of our headers, so even things
 // like externs.h can use it. platform.h a few lines up is standalone, so
 // doesn't count.
-#ifndef _lint
-# define COMPILE_CHECK(expr) static_assert((expr), #expr)
-#else
-# define COMPILE_CHECK(expr)
-#endif
-
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-    TypeName(const TypeName&) = delete;   \
-    void operator=(const TypeName&) = delete
-
-#ifdef TARGET_COMPILER_VC
-/* Disable warning about:
-   4290: the way VC handles the throw() specifier
-   4267: "possible loss of data" when switching data types without a cast
- */
-#pragma warning (disable: 4290 4267)
-/* Don't define min and max as macros, define them via STL */
-#define NOMINMAX
-#define ENUM_INT64 : unsigned long long
-#else
-#define ENUM_INT64
-#endif
+#include "macros.h"
 
 #ifdef __sun
 // Solaris libc has ambiguous overloads for float, double, long float, so
@@ -172,25 +144,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 # define _WIN32_WINNT 0x501
 #endif
 
-// See the GCC __attribute__ documentation for what these mean.
-// Note: clang does masquerade as GNUC.
-
-#if defined(__GNUC__)
-# define NORETURN __attribute__ ((noreturn))
-#elif defined(_MSC_VER)
-# define NORETURN __declspec(noreturn)
-#else
-# define NORETURN
-#endif
-
-#if defined(__GNUC__)
-# define PURE __attribute__ ((pure))
-# define IMMUTABLE __attribute__ ((const))
-#else
-# define PURE
-# define IMMUTABLE
-#endif
-
 // /usr/bin is not writable on OSX 10.11+ due to System Integrity Protection
 #ifdef TARGET_OS_MACOSX
 # define GDB_PATH "/usr/local/bin/gdb"
@@ -297,57 +250,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #error You can use either REGEX_POSIX or REGEX_PCRE, or neither, but not both.
 #endif
 
-// =========================================================================
-//  Debugging Defines
-// =========================================================================
-#ifdef FULLDEBUG
-    // Bounds checking and asserts
-    #ifndef DEBUG
-    #define DEBUG
-    #endif
-
-    // Outputs many "hidden" details, defaults to wizard on.
-    #define DEBUG_DIAGNOSTICS
-    #define DEBUG_MONINDEX
-
-    // Scan for bad items before every input (may be slow)
-    //
-    // This function might slow things down quite a bit
-    // on slow machines because it's going to go through
-    // every item on the level and do string comparisons
-    // against the name. Still, it is nice to know the
-    // turn in which "bad" items appear.
-    #define DEBUG_ITEM_SCAN
-    #define DEBUG_MONS_SCAN
-
-    #define DEBUG_BONES
-#endif
-
-// on by default (and has been for ~10 years)
-#define DEBUG_ITEM_SCAN
-
-#ifdef _DEBUG       // this is how MSVC signals a debug build
-    #ifndef DEBUG
-    #define DEBUG
-    #endif
-#endif
-
-#ifdef DEBUG
-    #ifdef __MWERKS__
-        #define MSIPL_DEBUG_MODE
-    #endif
-#else
-    #if !defined(NDEBUG)
-        #define NDEBUG                  // used by <assert.h>
-    #endif
-#endif
-
-#ifdef DEBUG_DIAGNOSTICS
-    #define DEBUG_TESTS
-    #define DEBUG_MONSPEAK
-    #define DEBUG_BLOOD_POTIONS
-    #define DEBUG_STATISTICS
-#endif
+#include "debug-defines.h"
 
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
@@ -402,50 +305,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
-
-#ifdef __cplusplus
-
-template < class T >
-static inline void UNUSED(const volatile T &)
-{
-}
-
-template <class... T>
-static inline void UNUSED(const volatile T &...)
-{
-}
-
-#endif // __cplusplus
-
-
-#ifdef __GNUC__
-// show warnings about the format string
-# ifdef TARGET_COMPILER_MINGW
-// Configure mingw32 / mingw-w64 printf format
-//
-// If __USE_MINGW_ANSI_STDIO is defined, mingw-w64 will try to use a C99 printf
-//  However, stdio.h must be included to have a C99 printf for use with
-//  __attribute__((format(...)).
-#  ifdef __cplusplus
-#   include <cstdio>
-#  else
-#   include <stdio.h>
-#  endif
-// If mingw defined a special format function to use, use this over 'printf'.
-#  ifdef __MINGW_PRINTF_FORMAT
-#   define CRAWL_PRINTF_FORMAT __MINGW_PRINTF_FORMAT
-#  else
-#   define CRAWL_PRINTF_FORMAT printf
-#  endif
-# else
-// standard GNU-compatible compiler (i.e., not mingw32/mingw-w64)
-#  define CRAWL_PRINTF_FORMAT printf
-# endif
-# define PRINTF(x, dfmt) const char *format dfmt, ...) \
-                   __attribute__((format (CRAWL_PRINTF_FORMAT, x+1, x+2))
-#else
-# define PRINTF(x, dfmt) const char *format dfmt, ...
-#endif
 
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC

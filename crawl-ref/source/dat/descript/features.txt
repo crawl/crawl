@@ -17,7 +17,7 @@ A glowing golden altar of the Shining One
 An altar to the Shining One, made from the purest gold and almost blinding in
 its radiance.
 %%%%
-A shattered altar of Ashenzari
+A broken altar of Ashenzari
 
 A crystal altar which shattered to pieces when Ashenzari was cursed. There is
 still a great power remaining within it: a dark aura holds the shards in
@@ -109,7 +109,7 @@ giants and covered with bloodstains.
 %%%%
 A hide-covered altar of Uskayaw
 
-An altar to Uskayaw the Reveler. It appears to be hollow and covered in a hide,
+An altar to Uskayaw the Reveller. It appears to be hollow and covered in a hide,
 giving it a resonant surface. Carvings on the side depict grouped figures that
 could be dancing or loving or fighting.
 %%%%
@@ -640,8 +640,8 @@ A mechanical contraption that shoots poisoned needles.
 %%%%
 A net trap
 
-A large concealed net hanging from the dungeon's ceiling, enchanted by the
-powers of Zot to land only on intruders.
+A large concealed net launcher hanging from the dungeon's ceiling, enchanted
+by the powers of Zot to land only on intruders.
 %%%%
 A pressure plate
 

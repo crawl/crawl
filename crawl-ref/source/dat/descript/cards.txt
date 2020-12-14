@@ -22,8 +22,8 @@ Exile card
 The card depicts ceaseless hands from a yawning portal overcoming a panicked
 figure.
 
-Drawing this card will banish one or more nearby creatures to the Abyss,
-possibly including the user.
+Drawing this card can banish nearby creatures to the abyss, with more being banished
+at higher power levels. It will never banish the user.
 %%%%
 the Shaft card
 

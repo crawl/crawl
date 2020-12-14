@@ -21,6 +21,7 @@
 #include "item-use.h"
 #include "libutil.h"
 #include "mon-util.h"
+#include "mpr.h"
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -78,9 +79,9 @@ void lua_push_floor_items(lua_State *ls, int link)
 {
     lua_newtable(ls);
     int index = 0;
-    for (; link != NON_ITEM; link = mitm[link].link)
+    for (; link != NON_ITEM; link = env.item[link].link)
     {
-        clua_push_item(ls, &mitm[link]);
+        clua_push_item(ls, &env.item[link]);
         lua_rawseti(ls, -2, ++index);
     }
 }
@@ -1371,18 +1372,22 @@ static int l_item_equipped_at(lua_State *ls)
     return 1;
 }
 
-/*** Get the Item we should fire by default.
- * @treturn Item|nil returns nil if there is no default quiver item
+/*** Get the ammo Item we should fire by default.
+ * @treturn Item|nil returns nil if something other than ammo is quivered
  * @function fired_item
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    int q = you.m_quiver.get_fire_item();
+    const auto a = quiver::get_primary_action();
+    if (!a->is_valid() || !a->is_enabled())
+        return 0;
+
+    const int q = a->get_item();
 
     if (q < 0 || q >= ENDOFPACK)
         return 0;
 
-    if (q != -1 && !fire_warn_if_impossible(true))
+    if (q != -1)
         clua_push_item(ls, &you.inv[q]);
     else
         lua_pushnil(ls);
@@ -1529,6 +1534,38 @@ static int l_item_acquirement_items(lua_State *ls)
     return 1;
 }
 
+/*** Fire an item in inventory at a target, either an evokable or a throwable
+ * ammo. This will work for launcher ammo, but only if the launcher is wielded.
+ * Some evokables (e.g. artefact weapons) may also need to be wielded.
+ *
+ * @tparam number the item's slot
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @tparam[opt=false] boolean whether to allow fumble throwing of non-activatable items
+ * @treturn boolean whether an action took place
+ */
+static int l_item_fire(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const int slot = luaL_safe_checkint(ls, 1);
+
+    if (slot < 0 || slot > ENDOFPACK || !you.inv[slot].defined())
+    {
+        luaL_argerror(ls, 1,
+                        make_stringf("Invalid item slot: %d", slot).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    const bool force = lua_toboolean(ls, 5); // can be nil
+    quiver::slot_to_action(slot, force)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
+}
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1628,6 +1665,7 @@ static const struct luaL_reg item_lib[] =
     { "shop_inventory",    l_item_shop_inventory },
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
+    { "fire",              l_item_fire },
     { nullptr, nullptr },
 };
 

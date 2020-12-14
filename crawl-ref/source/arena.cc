@@ -293,7 +293,7 @@ namespace arena
 
         for (int iidx : items)
         {
-            item_def &item = mitm[iidx];
+            item_def &item = env.item[iidx];
             fprintf(file, "        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
@@ -321,8 +321,8 @@ namespace arena
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) grd: %s",
-                            loc.x, loc.y, dungeon_feature_name(grd(loc))));
+                            "Failed to create monster at (%d,%d) env.grid: %s",
+                            loc.x, loc.y, dungeon_feature_name(env.grid(loc))));
                 }
                 list_eq(mon);
                 to_respawn[mon->mindex()] = i;
@@ -360,7 +360,7 @@ namespace arena
 
         for (int x = 0; x < GXM; ++x)
             for (int y = 0; y < GYM; ++y)
-                grd[x][y] = DNGN_ROCK_WALL;
+                env.grid[x][y] = DNGN_ROCK_WALL;
 
         unwind_bool gen(crawl_state.generating_level, true);
 
@@ -727,14 +727,14 @@ namespace arena
 
         for (int idx : a_spawners)
         {
-            menv[idx].speed_increment *= faction_b.active_members;
-            menv[idx].speed_increment /= faction_a.active_members;
+            env.mons[idx].speed_increment *= faction_b.active_members;
+            env.mons[idx].speed_increment /= faction_a.active_members;
         }
 
         for (int idx : b_spawners)
         {
-            menv[idx].speed_increment *= faction_a.active_members;
-            menv[idx].speed_increment /= faction_b.active_members;
+            env.mons[idx].speed_increment *= faction_a.active_members;
+            env.mons[idx].speed_increment /= faction_b.active_members;
         }
     }
 
@@ -893,7 +893,7 @@ namespace arena
 
         if (contest_cancelled)
         {
-            mpr("Canceled contest at user request");
+            mpr("Cancelled contest at user request");
             ui::delay(Options.view_delay);
             clear_messages();
             return;
@@ -1392,8 +1392,8 @@ int arena_cull_items()
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        // All items in mitm[] are valid when we're called.
-        const item_def &item(mitm[i]);
+        // All items in env.item[] are valid when we're called.
+        const item_def &item(env.item[i]);
 
         // We want floor items.
         if (!in_bounds(item.pos))
@@ -1412,7 +1412,7 @@ int arena_cull_items()
 
     for (int idx : items)
     {
-        const item_def &item(mitm[idx]);
+        const item_def &item(env.item[idx]);
 
         // If the drop time is 0 then this is probably thrown ammo.
         if (arena::item_drop_times[idx] == 0)

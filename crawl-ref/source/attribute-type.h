@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum attribute_type
 {
 #if TAG_MAJOR_VERSION == 34
@@ -51,7 +53,9 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
+#if TAG_MAJOR_VERSION == 34
     ATTR_XP_DRAIN,             // Severity of current skill drain
+#endif
     ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
@@ -88,7 +92,9 @@ enum attribute_type
     ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
 #endif
     ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
+#if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
+#endif
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
 #if TAG_MAJOR_VERSION == 34
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.

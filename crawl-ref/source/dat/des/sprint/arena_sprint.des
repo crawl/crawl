@@ -222,7 +222,7 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
                 "goblin / hobgoblin / kobold / big kobold / ijyb w:6 / pikel w:4",
-                "rat / quokka / river rat / porcupine / w:2 hell rat / w:6 purgy",
+                "rat / quokka / river rat / w:2 hell rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
@@ -241,14 +241,14 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
                 "w:2 place:Elf / w:24 deep elf mage",
-                "place:Lair / w:5 yak / w:5 crocodile / w:3 basilisk /\
-                    w:1 death yak / river rat / hell rat / porcupine /\
-                    w:2 dream sheep",
-                "w:20 merfolk / w:5 merfolk siren / hippogriff w:15 / centaur /\
+                "place:Lair / w:5 yak / w:3 komodo dragon / w:3 basilisk /\
+                    w:1 death yak / river rat / hell rat / w:2 dream sheep",
+                "w:20 merfolk / w:5 merfolk siren / wyvern w:15 / centaur /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
-                "w:5 bog body / w:5 tyrant leech / insubstantial wisp / w:5 swamp drake /\
-                    bullfrog / w:2 cane toad / w:2 hydra / w:2 vampire mosquito",
-                "w:20 scorpion / w:14 jumping spider /\
+                "w:5 bog body / w:5 tyrant leech / insubstantial wisp /\
+                    w:5 swamp drake / bullfrog / w:2 spiny frog / w:2 hydra /\
+                    w:2 vampire mosquito",
+                "w:20 scorpion / w:2 boulder beetle / w:12 jumping spider /\
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
@@ -263,8 +263,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 fire bat / fire elemental",
                 "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
-                "w:20 earth elemental / gargoyle / w:15 rust devil /\
-                     w:15 iron imp",
+                "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
+                    w:15 rust devil / w:15 iron imp",
                 "w:20 ice beast / w:20 simulacrum / rime drake / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
@@ -305,8 +305,8 @@ function arena_sprint_get_monster_set(round, boss)
                     w:5 sun demon / w:2 efreet / hell hound",
                 "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
-                "earth elemental w:20 / gargoyle / rust devil / iron imp /\
-                     w:5 iron troll",
+                "earth elemental w:15 / gargoyle w:5 / boulder beetle /\
+                    rust devil / iron imp / w:5 iron troll",
                 "ice beast / rime drake / ogre simulacrum / water elemental",
                 "wraith w:20 / w:5 eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
@@ -349,8 +349,9 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hog / w:5 fire crab",
                 "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
                     insubstantial wisp",
-                "earth elemental w:30 / rust devil / w:5 iron troll /\
-                    w:1 roxanne / w:2 iron dragon / w:3 iron elemental",
+                "earth elemental w:20 / boulder beetle /\
+                    rust devil / w:5 iron troll / w:1 roxanne /\
+                    w:2 iron dragon / w:3 iron elemental",
                 "ice beast w:5 / rime drake w:5 / hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental",
                 "wraith / eidolon / phantasmal warrior / w:2 nergalle",
@@ -368,7 +369,8 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec",
                 "moth of wrath / w:20 two-headed ogre", "ball lightning",
-                "orb spider", "redback / sea snake w:3", "shining eye"
+                "boulder beetle", "orb spider", "redback / sea snake w:3",
+                "shining eye"
             }
         elseif round <= 20 then
             mon_set = {
@@ -433,7 +435,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant", "ball lightning",
-                "orb spider", "shining eye", "tormentor",
+                "boulder beetle", "orb spider", "shining eye", "tormentor",
                 "skeletal warrior / w:5 skeletal warrior ; dart ego:atropa"
             }
         elseif round <= 26 then
@@ -463,7 +465,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
                 "any demon w:30 / pandemonium lord",
-                "place:Tomb:$ w:70 / sphinx w:20 / greater mummy",
+                "place:Tomb:$ w:70 / sphinx w:20 / royal mummy",
                 "place:Hell w:25 / geryon w:2 / nellie w:2",
                 -- Elements/hells, Holy
                 "place:Dis:$ w:20 / hell sentinel / iron dragon / quicksilver dragon /\
@@ -499,6 +501,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
+                "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; dart ego:atropa",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
@@ -535,7 +538,7 @@ function arena_sprint_get_monster_set(round, boss)
                     spriggan berserker / spriggan rider",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
-                "place:Tomb:$ w:30 / sphinx w:20 / greater mummy",
+                "place:Tomb:$ w:30 / sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / iron dragon / quicksilver dragon /\
@@ -566,6 +569,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
+                "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
@@ -575,7 +579,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghost moth / moth of wrath / vampire mosquito",
                 -- Aaaarggghhhhh!
                 "daeva / w:15 angel",
-                "greater mummy / mummy priest / guardian mummy",
+                "royal mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
@@ -606,7 +610,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "spriggan air mage",
                 "w:15 ancient lich / w:6 curse toe",
                 "greater demon / pandemonium lord",
-                "sphinx w:20 / greater mummy",
+                "sphinx w:20 / royal mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / quicksilver dragon w:20 / iron elemental / cacodemon",
@@ -636,6 +640,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
+                "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
@@ -644,7 +649,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!
                 "daeva",
-                "greater mummy / mummy priest",
+                "royal mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl w:5 / hell sentinel",
@@ -754,7 +759,7 @@ function arena_sprint_init_boss_table()
               "cerebov", "fiery rune of zot"}
     bs[13] = {"soul eater / lorocyproca / executioner / shadow wraith",
               "gloorx vloq", "dark rune of zot"}
-    bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
+    bs[14] = {"guardian mummy w:15 / mummy priest w:3 / royal mummy w:2",
                "khufu hp:500", "golden rune of zot"}
     -- Shuffle the above 9. We only wind up using 6 through 9
     for i = 14, 7, -1 do
@@ -1038,7 +1043,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
-             potion of stabbing q:6 | potion of might q:6 | potion of brilliance q:6 |\
+             potion of attraction q:6 | potion of might q:6 | potion of brilliance q:6 |\
              potion of mutation | potion of mutation q:2 | potion of mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
              potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5
@@ -1091,7 +1096,7 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
-            ring of protection from magic | amulet of regeneration |\
+            ring of willpower | amulet of regeneration |\
             amulet of reflection |\
             ring of see invisible
 SUBST:  b : cb

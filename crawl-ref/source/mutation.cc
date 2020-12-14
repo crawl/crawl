@@ -38,6 +38,7 @@
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "unicode.h"
 #include "xom.h"
@@ -187,7 +188,7 @@ static const int conflict[][3] =
     { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
-    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY,  -1},
+    { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
 };
@@ -815,7 +816,7 @@ static string _display_vampire_attributes()
 
         {"Negative resistance  ", "           ", "+++   "},
 
-        {"Rotting resistance   ", "           ", "+     "},
+        {"Miasma  resistance   ", "           ", "+     "},
 
         {"Torment resistance   ", "           ", "+     "},
 
@@ -1259,6 +1260,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
         return true;
 
+    // Only Palentonga can go on a roll.
+    if (you.species != SP_PALENTONGA && mutat == MUT_ROLL)
+        return true;
+
     // Only Draconians (and gargoyles) can get wings.
     if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
@@ -1426,7 +1431,8 @@ bool undead_mutation_rot()
  *
  * If the mutation conflicts with an existing one it may fail. See `_handle_conflicting_mutations`.
  *
- * If the player is undead, this may rot instead. Rotting counts as success.
+ * If the player is undead, this may stat drain instead. Stat draincounts as
+ * success.
  *
  * @param which_mutation    the mutation to use.
  * @param reason            the explanation for how the player got mutated.
@@ -2379,7 +2385,7 @@ static const facet_def _demon_facets[] =
       { -33, 0, 0 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
       { -33, 0, 0 } },
-    { 2, { MUT_ROT_IMMUNITY, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
+    { 2, { MUT_MIASMA_IMMUNITY, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
       { -33, 0, 0 } },
     { 2, { MUT_MANA_SHIELD, MUT_MANA_REGENERATION, MUT_MANA_LINK },
       { -33, 0, 0 } },
@@ -2478,7 +2484,7 @@ try_again:
                 if (m == MUT_HEAT_RESISTANCE)
                     fire_elemental++;
 
-                if (m == MUT_ROT_IMMUNITY || m == MUT_IGNITE_BLOOD)
+                if (m == MUT_MIASMA_IMMUNITY || m == MUT_IGNITE_BLOOD)
                     cloud_producing++;
             }
 

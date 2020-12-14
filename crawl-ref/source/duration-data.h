@@ -2,8 +2,11 @@
  * Status defaults for durations.
  */
 
+#pragma once
+
 #include "act-iter.h"
 #include "god-passive.h"
+#include "tag-version.h"
 
 static void _end_weapon_brand()
 {
@@ -219,11 +222,11 @@ static const duration_def duration_data[] =
       RED, "Fire",
       "liquid flames", "",
       "You are covered in liquid flames.", D_NO_FLAGS},
-    { DUR_LOWERED_MR,
-      RED, "MR/2",
-      "vulnerable", "lowered mr",
+    { DUR_LOWERED_WL,
+      RED, "Will/2",
+      "weak-willed", "lowered wp",
       "", D_DISPELLABLE,
-      {{ "You feel less vulnerable to hostile enchantments." }}},
+      {{ "You feel your willpower return." }}},
     { DUR_MIGHT,
       LIGHTBLUE, "Might",
       "mighty", "might",
@@ -331,17 +334,12 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Hero",
       "heroism", "",
       "You possess the skills of a mighty hero.", D_NO_FLAGS,
-      {{ "You feel like a meek peon again.", []() {
-          you.redraw_evasion      = true;
-          you.redraw_armour_class = true;
-      }}}},
+      {{"", okawaru_remove_heroism}}},
     { DUR_FINESSE,
       LIGHTBLUE, "Finesse",
       "finesse", "",
       "Your blows are lightning fast.", D_NO_FLAGS,
-      {{ "", []() {
-          mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
-      }}}},
+      {{"", okawaru_remove_finesse}}},
     { DUR_LIFESAVING,
       LIGHTGREY, "Prot",
       "protection", "lifesaving",
@@ -386,6 +384,11 @@ static const duration_def duration_data[] =
       "cannot translocate", "dimension anchor",
       "You are firmly anchored to this plane.", D_DISPELLABLE,
       {{ "You are no longer firmly anchored in space." }}},
+    { DUR_LOCKED_DOWN,
+      RED, "-Move",
+      "can't move", "lockdown",
+      "You are magically locked in place.", D_DISPELLABLE,
+      {{ "You are no longer locked in place." }}},
     { DUR_TOXIC_RADIANCE,
       MAGENTA, "Toxic",
       "radiating poison", "toxic radiance",
@@ -542,11 +545,10 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
-    { DUR_STABBING,
-      LIGHTBLUE, "Stab",
-      "stab", "stabbing",
-      "You are ready to backstab.", D_DISPELLABLE,
-      {{ "You feel less ready to backstab.", }}},
+    { DUR_ATTRACTIVE,
+      LIGHTBLUE, "Attr",
+      "attractive", "attract",
+      "You attract monsters toward you.", D_DISPELLABLE },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -649,5 +651,6 @@ static const duration_def duration_data[] =
     { DUR_SHROUD_OF_GOLUBRIA, 0, "", "", "old shroud", "", D_NO_FLAGS},
     { DUR_FIRE_SHIELD, 0, "", "", "old ring of flames", "", D_NO_FLAGS},
     { DUR_DARKNESS, 0, "", "", "old darkness", "", D_NO_FLAGS},
+    { DUR_STABBING, 0, "", "", "old stabbing", "", D_NO_FLAGS},
 #endif
 };

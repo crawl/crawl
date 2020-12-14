@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 #include <map>
 
+#include "mpr.h"
 #include "species.h"
 
 #include "item-prop.h"
@@ -12,6 +13,7 @@
 #include "random.h"
 #include "skills.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "tiledoll.h"
 
 #include "species-data.h"
@@ -324,9 +326,9 @@ int species_mp_modifier(species_type species)
     return get_species_def(species).mp_mod;
 }
 
-int species_mr_modifier(species_type species)
+int species_wl_modifier(species_type species)
 {
-    return get_species_def(species).mr_mod;
+    return get_species_def(species).wl_mod;
 }
 
 /**

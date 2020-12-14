@@ -18,6 +18,7 @@
 #include "dbg-util.h"
 #include "end.h"
 #include "env.h"
+#include "feature.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item-name.h"
@@ -34,6 +35,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "version.h"
 
 #ifdef DEBUG_STATISTICS

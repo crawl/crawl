@@ -39,11 +39,14 @@
 #include "cloud-type.h"
 #include "store.h"
 #include "rltiles/tiledef_defines.h"
+#include "tag-version.h"
 
 #include "coord-def.h"
 #include "item-def.h"
 #include "level-id.h"
 #include "monster-type.h"
+
+#include "ray.h"
 
 struct tile_flavour
 {
@@ -324,3 +327,40 @@ struct cglyph_t
 };
 
 typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
+
+namespace quiver
+{
+    struct action_cycler;
+}
+
+// input and output to targeting actions
+// TODO: rename, move to its own .h, remove camel case
+class dist
+{
+public:
+    dist();
+
+    bool isMe() const;
+    bool needs_targeting() const;
+
+    bool isValid;       // output: valid target chosen?
+    bool isTarget;      // output: target (true), or direction (false)?
+    bool isEndpoint;    // input: Does the player want the attack to stop at target?
+    bool isCancel;      // output: user cancelled (usually <ESC> key)
+    bool choseRay;      // output: user wants a specific beam
+    bool interactive;   // input and output: if true, forces an interactive targeter.
+                        // behavior when false depends on `target` and `find_target`.
+                        // on output, whether an interactive targeter was chosen.
+
+    coord_def target;   // input and output: target x,y or logical extension of beam to map edge
+    coord_def delta;    // input and output: delta x and y if direction - always -1,0,1
+    ray_def ray;        // output: ray chosen if necessary
+    bool find_target;   // input: use the targeter to find a target, possibly by modifying `target`.
+                        // forces non-interactive mode.
+    quiver::action_cycler *fire_context; // input: if triggered from the action system, what the
+                                         // quiver was that triggered it. May be nullptr.
+                                         // sort of ugly to have this here...
+    int cmd_result;     // output: a resulting command. See quiver::action_cycler::target for
+                        // which commands may be handled and how. This is an `int` for include
+                        // order reasons, unfortunately
+};

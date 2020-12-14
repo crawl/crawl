@@ -4,7 +4,7 @@
 #include "item-prop-enum.h"
 #include "item-status-flag-type.h"
 #include "mon-enum.h"
-#include "ouch.h"
+#include "kill-method-type.h"
 #include "pronoun-type.h"
 #include "spl-util.h" // spschool type definition
 

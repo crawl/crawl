@@ -1,9 +1,13 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "enchant-type.h"
 #include "mon-util.h"
+#include "tag-version.h"
+
+using std::vector;
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
 #define CLOUD_IMMUNE_MB_KEY "cloud_immune"
@@ -43,7 +47,7 @@ enum monster_info_flags
 #endif
     MB_PETRIFYING,
     MB_PETRIFIED,
-    MB_VULN_MAGIC,
+    MB_LOWERED_WL,
     MB_POSSESSABLE,
     MB_ENSLAVED,
     MB_SWIFT,
@@ -63,7 +67,7 @@ enum monster_info_flags
     MB_PREP_RESURRECT,
 #endif
     MB_REGENERATION,
-    MB_RAISED_MR,
+    MB_STRONG_WILLED,
     MB_MIRROR_DAMAGE,
     MB_SAFE,
     MB_UNSAFE,
@@ -105,8 +109,8 @@ enum monster_info_flags
     MB_NO_REGEN,
 #if TAG_MAJOR_VERSION == 34
     MB_SUPPRESSED,
-    MB_ROLLING,
 #endif
+    MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
@@ -349,7 +353,8 @@ struct monster_info : public monster_info_base
 
     int randarts(artefact_prop_type ra_prop) const;
     bool can_see_invisible() const;
-    int res_magic() const;
+    int willpower() const;
+    int lighting_modifiers() const;
 
     int base_speed() const
     {

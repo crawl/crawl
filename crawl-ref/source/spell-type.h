@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum spell_type : int
 {
     SPELL_NO_SPELL,
@@ -338,7 +340,7 @@ enum spell_type : int
     SPELL_HASTE_PLANTS,
 #endif
     SPELL_WIND_BLAST,
-    SPELL_STRIP_RESISTANCE,
+    SPELL_STRIP_WILLPOWER,
 #if TAG_MAJOR_VERSION == 34
     SPELL_INFUSION,
 #endif
@@ -493,5 +495,10 @@ enum spell_type : int
     SPELL_DISPEL_UNDEAD_RANGE,
     SPELL_FROZEN_RAMPARTS,
     SPELL_ABSOLUTE_ZERO,
+    SPELL_ROLL,
+    SPELL_SPLINTERSPRAY,
+    SPELL_WOODWEAL,
+    SPELL_HURL_SLUDGE,
+    SPELL_MARSHLIGHT,
     NUM_SPELLS
 };

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "tag-version.h"
+
 struct form_entry
 {
     // Row 1:
@@ -191,7 +195,7 @@ static const form_entry formdata[] =
              | MR_RES_PETRIFY,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     5, 0, 50, false, 0, true, 5,
-    SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "hit",
+    SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "touch",
                                                  "engulf", "engulf" },
     FC_ENABLE, FC_FORBID, FC_FORBID, false, false,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour"
@@ -224,7 +228,7 @@ static const form_entry formdata[] =
 {
     transformation::shadow, MONS_PLAYER_SHADOW, "Shadow", "shadow-form", "shadow",
     "a swirling mass of dark shadows.",
-    EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
+    EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_MIASMA
                                                          | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 0, false, 3,
@@ -237,7 +241,7 @@ static const form_entry formdata[] =
     transformation::hydra, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
     EQF_PHYSICAL, MR_RES_POISON,
-    FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_BIG, 13,
+    DEFAULT_DURATION, 0, 0, SIZE_BIG, 13,
     6, 5, 0, true, 0, true, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,

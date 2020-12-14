@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum killer_type                       // monster_die(), thing_thrown
 {
     KILL_NONE,                         // no killer

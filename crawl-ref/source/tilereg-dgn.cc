@@ -13,7 +13,9 @@
 #include "describe.h"
 #include "directn.h"
 #include "dgn-height.h"
+#include "dungeon.h"
 #include "env.h"
+#include "tile-env.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -35,6 +37,7 @@
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-main.h"
+#include "tag-version.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
@@ -592,8 +595,8 @@ static bool _have_appropriate_spell(const actor* target)
 
 static bool _can_fire_item()
 {
-    return you.species != SP_FELID
-           && you.m_quiver.get_fire_item() != -1;
+    // check is_enabled too?
+    return quiver::get_secondary_action()->is_valid();
 }
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
@@ -766,7 +769,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 if (o == NON_ITEM)
                 {
                     // if on stairs, travel them
-                    const dungeon_feature_type feat = grd(gc);
+                    const dungeon_feature_type feat = env.grid(gc);
                     switch (feat_stair_direction(feat))
                     {
                     case CMD_GO_DOWNSTAIRS:
@@ -794,7 +797,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 }
             }
 
-            const dungeon_feature_type feat = grd(gc);
+            const dungeon_feature_type feat = env.grid(gc);
             switch (feat_stair_direction(feat))
             {
             case CMD_GO_DOWNSTAIRS:
@@ -951,7 +954,7 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
+            tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
         }
         else
         {
@@ -961,7 +964,19 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += "\n";
         }
 
-        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
+        const int map_index = env.level_map_ids(gc);
+        if (map_index != INVALID_MAP_INDEX)
+        {
+            const vault_placement &vp(*env.level_vaults[map_index]);
+            const coord_def br = vp.pos + vp.size - 1;
+            tip += make_stringf("Vault: %s (%d,%d)-(%d,%d) (%dx%d)\n\n",
+                                 vp.map_name_at(gc).c_str(),
+                                 vp.pos.x, vp.pos.y,
+                                 br.x, br.y,
+                                 vp.size.x, vp.size.y);
+        }
+
+        tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc), 'B');
 
         if (!m_vbuf.empty())
         {
@@ -975,16 +990,16 @@ bool DungeonRegion::update_tip_text(string &tip)
                             "\n     wall:  %d (%s) (%d)"
                             "\n     feat:  %d (%s) (%d)"
                             "\n  special:  %d",
-                            env.tile_flv(gc).floor,
-                            tile_dngn_name(env.tile_flv(gc).floor),
-                            env.tile_flv(gc).floor_idx,
-                            env.tile_flv(gc).wall,
-                            tile_dngn_name(env.tile_flv(gc).wall),
-                            env.tile_flv(gc).wall_idx,
-                            env.tile_flv(gc).feat,
-                            tile_dngn_name(env.tile_flv(gc).feat),
-                            env.tile_flv(gc).feat_idx,
-                            env.tile_flv(gc).special);
+                            tile_env.flv(gc).floor,
+                            tile_dngn_name(tile_env.flv(gc).floor),
+                            tile_env.flv(gc).floor_idx,
+                            tile_env.flv(gc).wall,
+                            tile_dngn_name(tile_env.flv(gc).wall),
+                            tile_env.flv(gc).wall_idx,
+                            tile_env.flv(gc).feat,
+                            tile_dngn_name(tile_env.flv(gc).feat),
+                            tile_env.flv(gc).feat_idx,
+                            tile_env.flv(gc).special);
 
         ret = true;
     }
@@ -1068,9 +1083,8 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                 }
             }
 
-            if (you.species != SP_FELID
-                && you.see_cell_no_trans(target->pos())
-                && you.m_quiver.get_fire_item() != -1)
+            if (you.see_cell_no_trans(target->pos())
+                && quiver::get_secondary_action()->is_valid())
             {
                 _add_tip(tip, "[Shift + L-Click] Fire (%)");
                 cmd.push_back(CMD_FIRE);
@@ -1089,7 +1103,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                 _add_tip(tip, "[L-Click] Travel");
             }
         }
-        else if (feat_is_closed_door(grd(gc)))
+        else if (feat_is_closed_door(env.grid(gc)))
         {
             if (!adjacent(gc, you.pos()) && i_feel_safe())
                 _add_tip(tip, "[L-Click] Travel");
@@ -1141,7 +1155,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         if (o == NON_ITEM)
         {
             // if on stairs, travel them
-            const dungeon_feature_type feat = grd(gc);
+            const dungeon_feature_type feat = env.grid(gc);
             if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
                 || feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
             {

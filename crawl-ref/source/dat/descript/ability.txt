@@ -109,8 +109,8 @@ action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
-Sends you to a random position one to two floors down, as if you jumped into a
-shaft trap. It takes some time to dig the shaft.
+Sends you to a random position one to three floors down, as if you jumped into
+a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
@@ -163,9 +163,9 @@ is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
-Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your strength, intelligence and
-dexterity. The increases to your attributes are determined by Invocations skill.
+Temporarily provides protection from poison, confusion, petrification, and
+sickness, and increases and sustains your strength, intelligence and dexterity.
+The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -334,9 +334,8 @@ to berserk again for a short time.
 Trog's Hand ability
 
 Invokes a powerful regeneration ability which stacks with all other sources and
-is effective even on those who would not otherwise be able to regenerate. While
-active, the user will also be granted significant protection from hostile
-enchantments.
+is effective even on those who would not otherwise be able to regenerate. It
+also fortifies the user's willpower, protecting against many magical effects.
 %%%%
 Brothers in Arms ability
 
@@ -358,8 +357,8 @@ Heals a small amount of health, depending on Invocations skill.
 Purification ability
 
 Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost strength,
-dexterity or intelligence.
+petrification, and sickness, and fully restores any lost strength, dexterity or
+intelligence.
 %%%%
 Heal Other ability
 
@@ -563,11 +562,11 @@ landing on a random spot adjacent to the target.
 Shadow Form ability
 
 Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, torment, and
-hostile enchantments. All incoming damage will be halved, and you will bleed
-smoke on any incoming attack. However, your ability to deal damage in melee and
-with ranged attacks will be halved, your spellcasting power will be greatly
-hampered, and your skills will be further drained when taking damage.
+are permanently invisible and are immune to poison, draining, and torment.
+All incoming damage is halved, you bleed smoke on any incoming attack, and
+you have infinite willpower. However, your ability to deal damage in melee
+and with ranged attacks is halved, your spellcasting power is greatly
+hampered, and your skills are further drained when taking damage.
 Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag

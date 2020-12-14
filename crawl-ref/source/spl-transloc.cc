@@ -289,7 +289,7 @@ void wizard_blink()
     // Allow wizard blink to send player into walls, in case the
     // user wants to alter that grid to something else.
     if (cell_is_solid(beam.target))
-        grd(beam.target) = DNGN_FLOOR;
+        env.grid(beam.target) = DNGN_FLOOR;
 
     move_player_to_grid(beam.target, false);
 }
@@ -368,7 +368,7 @@ spret frog_hop(bool fail)
 
 static bool _check_charge_through(coord_def pos)
 {
-    if (!you.can_pass_through_feat(grd(pos)))
+    if (!you.can_pass_through_feat(env.grid(pos)))
     {
         clear_messages();
         mprf("You can't roll into that!");
@@ -379,12 +379,18 @@ static bool _check_charge_through(coord_def pos)
 }
 
 static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc)
+                                targeter *hitfunc, dist *target)
 {
     // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon()))
+    if (!wielded_weapon_check(you.weapon(), "roll"))
         return false;
 
+    const bool interactive = target && target->interactive;
+    dist targ_local;
+    if (!target)
+        target = &targ_local;
+
+    // TODO: can't this all be done within a single direction call?
     while (true)
     {
         // query for location {dlb}:
@@ -394,8 +400,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         args.prefer_farthest = true;
         args.top_prompt = "Roll where?";
         args.hitfunc = hitfunc;
-        dist beam;
-        direction(beam, args);
+        direction(*target, args);
 
         // TODO: deduplicate with _find_cblink_target
         if (crawl_state.seen_hups)
@@ -404,49 +409,64 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
             return false;
         }
 
-        if (!beam.isValid || beam.target == you.pos())
+        if (!target->isValid || target->target == you.pos())
         {
             canned_msg(MSG_OK);
             return false;
         }
 
-        const monster* beholder = you.get_beholder(beam.target);
+        const monster* beholder = you.get_beholder(target->target);
         if (beholder)
         {
             mprf("You cannot roll away from %s!",
                 beholder->name(DESC_THE, true).c_str());
-            continue;
+            if (interactive)
+                continue;
+            else
+                return false;
         }
 
-        const monster* fearmonger = you.get_fearmonger(beam.target);
+        const monster* fearmonger = you.get_fearmonger(target->target);
         if (fearmonger)
         {
             mprf("You cannot roll closer to %s!",
                 fearmonger->name(DESC_THE, true).c_str());
-            continue;
+            if (interactive)
+                continue;
+            else
+                return false;
         }
 
-        if (!you.see_cell_no_trans(beam.target))
+        if (!you.see_cell_no_trans(target->target))
         {
             clear_messages();
-            if (you.trans_wall_blocking(beam.target))
+            if (you.trans_wall_blocking(target->target))
                 canned_msg(MSG_SOMETHING_IN_WAY);
             else
                 canned_msg(MSG_CANNOT_SEE);
-            continue;
+            if (interactive)
+                continue;
+            else
+                return false;
         }
 
-        if (grid_distance(you.pos(), beam.target) > max_range)
+        if (grid_distance(you.pos(), target->target) > max_range)
         {
             mpr("That's out of range!"); // ! targeting
-            continue;
+            if (interactive)
+                continue;
+            else
+                return false;
         }
 
         ray_def ray;
-        if (!find_ray(you.pos(), beam.target, ray, opc_solid))
+        if (!find_ray(you.pos(), target->target, ray, opc_solid))
         {
             mpr("You can't roll through that!");
-            continue;
+            if (interactive)
+                continue;
+            else
+                return false;
         }
 
         // done with hard vetos; now we're on a mix of prompts and vetos.
@@ -461,11 +481,16 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
             if (!can_charge_through_mons(ray.pos()))
                 break;
             ok = _check_charge_through(ray.pos());
-            if (ray.pos() == beam.target || !ok)
+            if (ray.pos() == target->target || !ok)
                 break;
         }
         if (!ok)
-            continue;
+        {
+            if (interactive)
+                continue;
+            else
+                return false;
+        }
 
         // DON'T use beam.target here - we might have used ! targeting to
         // target something behind another known monster
@@ -508,6 +533,11 @@ static void _charge_cloud_trail(const coord_def pos)
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
+int palentonga_charge_range()
+{
+    return 3 + you.get_mutation_level(MUT_ROLL);
+}
+
 /**
  * Attempt to charge the player to a target of their choosing.
  *
@@ -515,7 +545,7 @@ static void _charge_cloud_trail(const coord_def pos)
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret palentonga_charge(bool fail)
+spret palentonga_charge(bool fail, dist *target)
 {
     const coord_def initial_pos = you.pos();
 
@@ -523,8 +553,8 @@ spret palentonga_charge(bool fail)
         return spret::abort;
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, PALENTONGA_CHARGE_RANGE);
-    if (!_find_charge_target(target_path, PALENTONGA_CHARGE_RANGE, &tgt))
+    targeter_charge tgt(&you, palentonga_charge_range());
+    if (!_find_charge_target(target_path, palentonga_charge_range(), &tgt, target))
         return spret::abort;
 
     fail_check();
@@ -532,13 +562,13 @@ spret palentonga_charge(bool fail)
     if (!you.attempt_escape(1)) // prints its own messages
         return spret::success;
 
-    const coord_def target = target_path.back();
-    monster* target_mons = monster_at(target);
+    const coord_def target_pos = target_path.back();
+    monster* target_mons = monster_at(target_pos);
     if (fedhas_passthrough(target_mons))
         target_mons = nullptr;
     ASSERT(target_mons != nullptr);
     // Are you actually moving forward?
-    if (grid_distance(you.pos(), target) > 1 || !target_mons)
+    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
         mpr("You roll forward with a clatter of scales!");
 
     crawl_state.cancel_cmd_again();
@@ -707,7 +737,7 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
     if (cell_is_solid(cell))
         return true;
 
-    return is_feat_dangerous(grd(cell), true) && !wizard_tele;
+    return is_feat_dangerous(env.grid(cell), true) && !wizard_tele;
 }
 
 static void _handle_teleport_update(bool large_change, const coord_def old_pos)
@@ -733,8 +763,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #ifdef USE_TILE
     if (you.species == SP_MERFOLK)
     {
-        const dungeon_feature_type new_grid = grd(you.pos());
-        const dungeon_feature_type old_grid = grd(old_pos);
+        const dungeon_feature_type new_grid = env.grid(you.pos());
+        const dungeon_feature_type old_grid = env.grid(old_pos);
         if (feat_is_water(old_grid) && !feat_is_water(new_grid)
             || !feat_is_water(old_grid) && feat_is_water(new_grid))
         {
@@ -1010,7 +1040,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
         return spret::abort;
     }
 
-    item_def& item = mitm[item_idx];
+    item_def& item = env.item[item_idx];
 
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))
@@ -1084,7 +1114,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
     // less than dist.
     while (location_on_path < dist)
     {
-        if (!feat_eliminates_items(grd(new_spot)))
+        if (!feat_eliminates_items(env.grid(new_spot)))
             break;
         location_on_path++;
         if (location_on_path == dist)
@@ -1134,7 +1164,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_where.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_where)
-            || grd(randomized_where) != DNGN_FLOOR
+            || env.grid(randomized_where) != DNGN_FLOOR
             || monster_at(randomized_where)
             || !you.see_cell(randomized_where)
             || you.trans_wall_blocking(randomized_where)
@@ -1149,7 +1179,7 @@ spret cast_golubrias_passage(const coord_def& where, bool fail)
         randomized_here.y += random_range(-range, range);
     }
     while ((!in_bounds(randomized_here)
-            || grd(randomized_here) != DNGN_FLOOR
+            || env.grid(randomized_here) != DNGN_FLOOR
             || monster_at(randomized_here)
             || !you.see_cell(randomized_here)
             || you.trans_wall_blocking(randomized_here)
@@ -1193,13 +1223,13 @@ static int _disperse_monster(monster& mon, int pow)
     if (mon.no_tele())
         return false;
 
-    if (mon.check_res_magic(pow) > 0)
+    if (mon.check_willpower(pow) > 0)
         monster_blink(&mon);
     else
         monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
-    if (mon.alive() && mon.check_res_magic(pow) <= 0)
+    if (mon.alive() && mon.check_willpower(pow) <= 0)
         mon.confuse(&you, 1 + random2avg(pow / 10, 2));
 
     return true;
@@ -1264,7 +1294,7 @@ static void _attract_actor(const actor* agent, actor* victim,
         ray.advance();
         const coord_def newpos = ray.pos();
 
-        if (!victim->can_pass_through_feat(grd(newpos)))
+        if (!victim->can_pass_through_feat(env.grid(newpos)))
         {
             victim->collide(newpos, agent, pow);
             break;
@@ -1333,13 +1363,19 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
 
     mprf("Gravity reorients around %s.",
          mons                      ? mons->name(DESC_THE).c_str() :
-         feat_is_solid(grd(where)) ? feature_description(grd(where),
+         feat_is_solid(env.grid(where)) ? feature_description(env.grid(where),
                                                          NUM_TRAPS, "",
                                                          DESC_THE)
                                                          .c_str()
                                    : "empty space");
     fatal_attraction(where, &you, pow);
     return spret::success;
+}
+
+static bool _can_beckon(const actor &beckoned)
+{
+    return !beckoned.is_stationary()  // don't move statues, etc
+        && !mons_is_tentacle_or_tentacle_segment(beckoned.type); // a mess...
 }
 
 /**
@@ -1353,11 +1389,8 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail)
  */
 static coord_def _beckon_destination(const actor &beckoned, const bolt &path)
 {
-    if (beckoned.is_stationary()  // don't move statues, etc
-        || mons_is_tentacle_or_tentacle_segment(beckoned.type)) // a mess...
-    {
+    if (!_can_beckon(beckoned))
         return beckoned.pos();
-    }
 
     for (coord_def pos : path.path_taken)
     {
@@ -1398,4 +1431,50 @@ bool beckon(actor &beckoned, const bolt &path)
         mons_relocated(beckoned.as_monster()); // cleanup tentacle segments
 
     return true;
+}
+
+static bool _can_move_mons_to(const monster &mons, coord_def pos)
+{
+    return mons.can_pass_through_feat(env.grid(pos))
+           && !actor_at(pos)
+           && mons.is_habitable(pos);
+}
+
+/**
+  * Attempt to pull nearby monsters toward the player.
+ */
+void attract_monsters()
+{
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!_can_beckon(**mi) || mi->friendly())
+            continue;
+
+        const int orig_dist = grid_distance(you.pos(), mi->pos());
+        if (orig_dist <= 1)
+            continue;
+
+        ray_def ray;
+        if (!find_ray(mi->pos(), you.pos(), ray, opc_solid))
+            continue;
+
+        const int max_move = 3;
+        for (int i = 0; i < max_move && i < orig_dist - 1; i++)
+            ray.advance();
+
+        while (!_can_move_mons_to(**mi, ray.pos()) && ray.pos() != mi->pos())
+            ray.regress();
+
+        if (ray.pos() == mi->pos())
+            continue;
+
+        const coord_def old_pos = mi->pos();
+        if (!mi->move_to_pos(ray.pos()))
+            continue;
+
+        mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
+
+        mi->apply_location_effects(old_pos);
+        mons_relocated(*mi);
+    }
 }

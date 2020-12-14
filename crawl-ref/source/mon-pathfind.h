@@ -1,5 +1,12 @@
 #pragma once
 
+#include "coord-def.h"
+#include "defines.h"
+#include "fixedvector.h"
+#include <vector>
+
+using std::vector;
+
 class monster;
 
 int mons_tracking_range(const monster* mon);

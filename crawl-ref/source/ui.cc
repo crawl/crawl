@@ -622,10 +622,24 @@ void Text::set_highlight_pattern(string pattern, bool line)
 
 void Text::wrap_text_to_size(int width, int height)
 {
-    Size wrapped_size = { width, height };
-    if (m_wrapped_size == wrapped_size)
-        return;
-    m_wrapped_size = wrapped_size;
+    // don't recalculate if the previous calculation imposed no constraints
+    // on the text, and the new calculation would be the same or greater in
+    // size. This can happen through a sequence of _get_preferred_size calls
+    // for example.
+    if (m_wrapped_size.is_valid())
+    {
+        const bool cached_width_max = m_wrapped_sizereq.width <= 0
+                        || m_wrapped_sizereq.width > m_wrapped_size.width;
+        const bool cached_height_max = m_wrapped_sizereq.height <= 0
+                        || m_wrapped_sizereq.height > m_wrapped_size.height;
+        if ((width == m_wrapped_size.width || cached_width_max && (width <= 0 || width >= m_wrapped_size.width))
+            && (height == m_wrapped_size.height || cached_height_max && (height <= 0 || height >= m_wrapped_size.height)))
+        {
+            return;
+        }
+    }
+
+    m_wrapped_sizereq = Size(width, height);
 
     height = height ? height : 0xfffffff;
 
@@ -652,6 +666,10 @@ void Text::wrap_text_to_size(int width, int height)
         acc += n;
         tally += n;
     }
+
+    // if the request was to figure out the height, record the height found
+    m_wrapped_size.height = m_font->string_height(m_text_wrapped);
+    m_wrapped_size.width = m_font->string_width(m_text_wrapped);
 #else
     m_wrapped_lines.clear();
     formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
@@ -667,6 +685,19 @@ void Text::wrap_text_to_size(int width, int height)
     }
     if (m_wrapped_lines.empty())
         m_wrapped_lines.emplace_back("");
+
+    m_wrapped_size.height = m_wrapped_lines.size();
+    if (width <= 0)
+    {
+        // only bother recalculating if there was no requested width --
+        // parse_string_to_multiple will exactly obey any explicit width value
+        int max_width = 0;
+        for (auto &fs : m_wrapped_lines)
+            max_width = max(max_width, fs.width());
+        m_wrapped_size.width = max_width;
+    }
+    else
+        m_wrapped_size.width = width;
 #endif
 }
 

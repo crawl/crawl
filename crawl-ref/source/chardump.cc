@@ -50,6 +50,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "transform.h"
 #include "travel.h"
 #include "unicode.h"
@@ -88,9 +89,7 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
-#ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
-#endif
 static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
@@ -150,11 +149,7 @@ static dump_section_handler dump_handlers[] =
     { "",               _sdump_newline       },
     { "-",              _sdump_separator     },
 
-#ifdef CLUA_BINDINGS
     { nullptr,          _sdump_lua           }
-#else
-    { nullptr,          nullptr              }
-#endif
 };
 
 static void dump_section(dump_params &par)
@@ -583,7 +578,6 @@ static void _sdump_separator(dump_params &par)
     par.text += string(79, '-') + "\n";
 }
 
-#ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
 static void _sdump_lua(dump_params &par)
@@ -597,7 +591,6 @@ static void _sdump_lua(dump_params &par)
     else
         par.text += luatext;
 }
-#endif
 
 string chardump_desc(const item_def& item)
 {
@@ -1534,7 +1527,7 @@ string morgue_directory()
     return dir;
 }
 
-void dump_map(FILE *fp, bool debug, bool dist)
+void dump_map(FILE *fp, bool debug, bool dist, bool log)
 {
     if (debug)
     {
@@ -1584,18 +1577,18 @@ void dump_map(FILE *fp, bool debug, bool dist)
                     fputc('@', fp);
                 else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
-                else if (dist && grd[x][y] == DNGN_FLOOR
+                else if (dist && env.grid[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0
                          && travel_point_distance[x][y] < 10)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
-                else if (grd[x][y] >= NUM_FEATURES)
+                else if (env.grid[x][y] >= NUM_FEATURES)
                     fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
-                               get_feature_def(grd[x][y]).symbol())), fp);
+                               get_feature_def(env.grid[x][y]).symbol())), fp);
                 }
             }
             fputc('\n', fp);
@@ -1632,15 +1625,22 @@ void dump_map(FILE *fp, bool debug, bool dist)
             fputc('\n', fp);
         }
     }
+
+    // for debug use in scripts, e.g. placement.lua
+    if (log)
+    {
+        string the_log = get_last_messages(NUM_STORED_MESSAGES, true);
+        fprintf(fp, "\n%s", the_log.c_str());
+    }
 }
 
-void dump_map(const char* fname, bool debug, bool dist)
+void dump_map(const char* fname, bool debug, bool dist, bool log)
 {
     FILE* fp = fopen_replace(fname);
     if (!fp)
         return;
 
-    dump_map(fp, debug, dist);
+    dump_map(fp, debug, dist, log);
 
     fclose(fp);
 }

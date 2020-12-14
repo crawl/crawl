@@ -93,10 +93,6 @@ plant
 Poche piante posso crescere negli ambienti sgradevoli delle segrete, ma alcune
 sono riuscite ad adattarsi e addirittura prosperare in assenza del sole.
 %%%%
-porcupine
-
-Un feroce roditore con un mantello di aculei affilati e un morso doloroso.
-%%%%
 quasit
 
 Un piccolo demone codardo, con una lunga coda appuntita. I suoi artigli

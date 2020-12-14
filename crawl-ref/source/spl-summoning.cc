@@ -296,7 +296,7 @@ static void _place_dragon()
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai))
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, env.grid(*ai))
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -391,7 +391,7 @@ void doom_howl(int time)
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(howlcalled, grd(*ai))
+            if (monster_habitable_grid(howlcalled, env.grid(*ai))
                 && !actor_at(*ai))
             {
                 spots.push_back(*ai);
@@ -729,10 +729,10 @@ static void _animate_weapon(int pow, actor* target)
         monster * const montarget = target->as_monster();
         const int primary_weap = montarget->inv[MSLOT_WEAPON];
         const mon_inv_type wp_slot = (primary_weap != NON_ITEM
-                                      && &mitm[primary_weap] == wpn) ?
+                                      && &env.item[primary_weap] == wpn) ?
                                          MSLOT_WEAPON : MSLOT_ALT_WEAPON;
         ASSERT(montarget->inv[wp_slot] != NON_ITEM);
-        ASSERT(&mitm[montarget->inv[wp_slot]] == wpn);
+        ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
 
         montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
         montarget->inv[wp_slot] = NON_ITEM;
@@ -766,6 +766,13 @@ void cast_tukimas_dance(int pow, actor* target)
     _animate_weapon(pow, target);
 }
 
+int ball_lightning_hd(int pow, bool random)
+{
+    if (random)
+        return max(1, div_rand_round(pow, 6) - 6);
+    return max(1, pow / 6 - 6);
+}
+
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -773,7 +780,7 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     mgen_data cbl =_pal_data(MONS_BALL_LIGHTNING, 0, god,
                              SPELL_CONJURE_BALL_LIGHTNING);
-    cbl.hd = max(1, div_rand_round(pow, 6) - 6);
+    cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
     {
@@ -1115,7 +1122,7 @@ coord_def find_gateway_location(actor* caster)
         for (int t = 0; t < 11; t++)
         {
             test = caster->pos() + (delta * (2+t));
-            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
+            if (!in_bounds(test) || !feat_is_malign_gateway_suitable(env.grid(test))
                 || actor_at(test)
                 || count_neighbours_with_func(test, &feat_is_solid) != 0
                 || !caster->see_cell_no_trans(test))
@@ -1231,7 +1238,7 @@ static bool _water_adjacent(coord_def p)
 {
     for (orth_adjacent_iterator ai(p); ai; ++ai)
     {
-        if (feat_is_water(grd(*ai)))
+        if (feat_is_water(env.grid(*ai)))
             return true;
     }
 
@@ -1275,9 +1282,9 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         for (distance_iterator di(caster->pos(), false, true,
                                   LOS_DEFAULT_RANGE); di; ++di)
         {
-            if ((feat_is_wall(grd(*di)) && !feat_is_permarock(grd(*di))
+            if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
                  && x_chance_in_y(pow, 150))
-                || (grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+                || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
                     && !actor_at(*di) && !plant_forbidden_at(*di, true)))
             {
                 temp_change_terrain(*di, DNGN_TREE, duration,
@@ -1294,7 +1301,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
             for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
             {
-                if (grd(*di) == DNGN_FLOOR
+                if (env.grid(*di) == DNGN_FLOOR
                     && (di.radius() == 0 || _water_adjacent(*di))
                     && x_chance_in_y(4, di.radius() + 3))
                 {
@@ -1431,7 +1438,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (raised)
         *raised = 0;
 
-    const item_def& item = mitm[corps];
+    const item_def& item = env.item[corps];
 
     if (!_animatable_remains(item))
         return false;
@@ -1587,7 +1594,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (is_sanctuary(a))
         return 0;
 
-    if (grd(a) == DNGN_DEEP_WATER)
+    if (env.grid(a) == DNGN_DEEP_WATER)
         return 0; // trapped in davy jones' locker...
 
     int number_found = 0;
@@ -1667,11 +1674,9 @@ int animate_dead(actor *caster, int pow, beh_type beha,
     return number_raised;
 }
 
-spret cast_animate_skeleton(int pow, god_type god, bool fail)
+coord_def find_animatable_skeleton(coord_def c)
 {
-    fail_check();
-    bool found = false;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri, true); si; ++si)
         {
@@ -1679,45 +1684,46 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
                 && mons_class_can_be_zombified(si->mon_type)
                 && mons_skeleton(si->mon_type))
             {
-                found = true;
-                break;
+                return *ri;
             }
         }
     }
-    if (!found)
-    {
-        mpr("There is nothing nearby to animate!");
+    return coord_def(-1,-1);
+}
+
+spret cast_animate_skeleton(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    coord_def skel_loc = find_animatable_skeleton(you.pos());
+    if (!in_bounds(skel_loc))
         return spret::abort;
-    }
 
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (stack_iterator si(skel_loc, true); si; ++si)
     {
-        for (stack_iterator si(*ri, true); si; ++si)
+        if (si->base_type == OBJ_CORPSES
+            && mons_class_can_be_zombified(si->mon_type)
+            && mons_skeleton(si->mon_type))
         {
-            if (si->base_type == OBJ_CORPSES
-                && mons_class_can_be_zombified(si->mon_type)
-                && mons_skeleton(si->mon_type))
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
-                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-                {
-                    butcher_corpse(*si);
-                    mpr("Before your eyes, flesh is ripped from the corpse!");
-                    request_autopickup();
-                    // Only convert the top one.
-                }
+                butcher_corpse(*si);
+                mpr("Before your eyes, flesh is ripped from the corpse!");
+                request_autopickup();
+                // Only convert the top one.
+            }
 
-                const int animate_skel_result =
-                    animate_remains(*ri, CORPSE_SKELETON, BEH_FRIENDLY,
-                                    pow, MHITYOU, &you, "", god);
+            const int animate_skel_result =
+                animate_remains(skel_loc, CORPSE_SKELETON, BEH_FRIENDLY,
+                                pow, MHITYOU, &you, "", god);
 
-                if (animate_skel_result != -1)
-                {
-                    if (animate_skel_result == 0)
-                        mpr("...but the skeleton had no space to rise!");
-                    return spret::success;
-                }
+            if (animate_skel_result != -1)
+            {
+                if (animate_skel_result == 0)
+                    mpr("...but the skeleton had no space to rise!");
+                return spret::success;
             }
         }
     }
@@ -1729,12 +1735,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
-    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god, false))
-    {
-        mpr("There is nothing nearby to animate!");
-        return spret::abort;
-    }
-
     fail_check();
     canned_msg(MSG_CALL_DEAD);
 
@@ -1742,6 +1742,21 @@ spret cast_animate_dead(int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
+
+// returns an item index, or -1 on failure
+int find_simulacrable_corpse(coord_def c)
+{
+    int co = -1;
+    for (stack_iterator si(c, true); si; ++si)
+    {
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+            && mons_class_can_be_zombified(si->mon_type))
+        {
+            co = si->index();
+        }
+    }
+    return co;
 }
 
 /**
@@ -1755,28 +1770,15 @@ spret cast_animate_dead(int pow, god_type god, bool fail)
  */
 spret cast_simulacrum(int pow, god_type god, bool fail)
 {
-    bool found = false;
-    int co = -1;
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_class_can_be_zombified(si->mon_type))
-        {
-            found = true;
-            co = si->index();
-        }
-    }
+    int co = find_simulacrable_corpse(you.pos());
 
-    if (!found)
-    {
-        mpr("There is nothing here that can be animated!");
+    if (co < 0)
         return spret::abort;
-    }
 
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    item_def& corpse = mitm[co];
+    item_def& corpse = env.item[co];
     // How many simulacra can this particular monster give at maximum.
     int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
@@ -2202,6 +2204,23 @@ monster* find_battlesphere(const actor* agent)
         return nullptr;
 }
 
+static int _battlesphere_hd(int pow, bool random = true)
+{
+    if (random)
+        return 1 + div_rand_round(pow, 11);
+    return 1 + pow / 11;
+}
+
+static dice_def _battlesphere_damage(int hd)
+{
+    return dice_def(2, 5 + hd);
+}
+
+dice_def battlesphere_damage(int pow)
+{
+    return _battlesphere_damage(_battlesphere_hd(pow, false));
+}
+
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
     fail_check();
@@ -2244,7 +2263,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                                          : SAME_ATTITUDE(agent->as_monster()),
                       agent->pos(), agent->mindex());
         mg.set_summoned(agent, 0, SPELL_BATTLESPHERE, god);
-        mg.hd = 1 + div_rand_round(pow, 11);
+        mg.hd = _battlesphere_hd(pow);
         battlesphere = create_monster(mg);
 
         if (battlesphere)
@@ -2460,8 +2479,8 @@ bool fire_battlesphere(monster* mons)
         beam.source_name = "battlesphere";
 
         // If we are locked onto a foe, use its current position
-        if (!invalid_monster_index(mons->foe) && menv[mons->foe].alive())
-            beam.target = menv[mons->foe].pos();
+        if (!invalid_monster_index(mons->foe) && env.mons[mons->foe].alive())
+            beam.target = env.mons[mons->foe].pos();
 
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
@@ -2475,7 +2494,7 @@ bool fire_battlesphere(monster* mons)
         beam.name       = "barrage of energy";
         beam.range      = LOS_RADIUS;
         beam.hit        = AUTOMATIC_HIT;
-        beam.damage     = dice_def(2, 5 + mons->get_hit_dice());
+        beam.damage     = _battlesphere_damage(mons->get_hit_dice());
         beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.colour     = MAGENTA;
         beam.flavour    = BEAM_MMISSILE;
@@ -2550,13 +2569,20 @@ bool fire_battlesphere(monster* mons)
     // following the player
     if ((mons->foe == MHITNOT || !mons->can_see(*agent)
          || (!invalid_monster_index(mons->foe)
-             && !agent->can_see(menv[mons->foe])))
+             && !agent->can_see(env.mons[mons->foe])))
         && !mons->props.exists("tracking"))
     {
         mons->foe = agent->mindex();
     }
 
     return used;
+}
+
+int prism_hd(int pow, bool random)
+{
+    if (random)
+        return div_rand_round(pow, 10);
+    return pow / 10;
 }
 
 spret cast_fulminating_prism(actor* caster, int pow,
@@ -2606,7 +2632,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
 
     fail_check();
 
-    int hd = div_rand_round(pow, 10);
+    const int hd = prism_hd(pow);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM,
                                      caster->is_player()
@@ -3075,7 +3101,7 @@ bool fedhas_wall_of_briars()
 
 static void _overgrow_wall(const coord_def &pos)
 {
-    const dungeon_feature_type feat = grd(pos);
+    const dungeon_feature_type feat = env.grid(pos);
     const string what = feature_description(feat, NUM_TRAPS, "", DESC_THE);
 
     if (monster_at(pos))
@@ -3145,7 +3171,7 @@ spret fedhas_grow_ballistomycete(bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, grd(beam.target)))
+    if (!monster_habitable_grid(MONS_BALLISTOMYCETE, env.grid(beam.target)))
     {
         mpr("You can't grow a ballistomycete there.");
         return spret::abort;
@@ -3202,7 +3228,7 @@ spret fedhas_grow_oklob(bool fail)
         return spret::abort;
     }
 
-    if (!monster_habitable_grid(MONS_OKLOB_PLANT, grd(beam.target)))
+    if (!monster_habitable_grid(MONS_OKLOB_PLANT, env.grid(beam.target)))
     {
         mpr("You can't grow an oklob plant there.");
         return spret::abort;
@@ -3242,16 +3268,18 @@ spret fedhas_grow_oklob(bool fail)
 
 }
 
-spret cast_foxfire(int pow, god_type god, bool fail)
+spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
     fail_check();
     int created = 0;
 
-    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        mgen_data fox(MONS_FOXFIRE, BEH_FRIENDLY,
+        const auto att = agent.is_player() ? BEH_FRIENDLY
+                                           : SAME_ATTITUDE(agent.as_monster());
+        mgen_data fox(MONS_FOXFIRE, att,
                       *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-        fox.set_summoned(&you, 0, SPELL_FOXFIRE, god);
+        fox.set_summoned(&agent, 0, SPELL_FOXFIRE, god);
         fox.hd = pow;
         monster *foxfire;
 
@@ -3263,8 +3291,11 @@ spret cast_foxfire(int pow, god_type god, bool fail)
             foxfire->steps_remaining = you.current_vision + 2;
 
             // Avoid foxfire without targets always moving towards (0,0)
-            if (!(foxfire->get_foe() && foxfire->get_foe()->is_monster()))
+            if (!foxfire->get_foe()
+                || !foxfire->get_foe()->is_monster() && !agent.is_monster())
+            {
                 set_random_target(foxfire);
+            }
         }
 
         if (created == 2)
@@ -3272,8 +3303,12 @@ spret cast_foxfire(int pow, god_type god, bool fail)
     }
 
     if (created)
-        mpr("You conjure some foxfire!");
-    else
+    {
+        mprf("%s conjure%s some foxfire!",
+             agent.name(DESC_THE).c_str(),
+             agent.is_monster() ? "s" : "");
+    }
+    else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;

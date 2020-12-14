@@ -396,7 +396,7 @@ static const char *targeting_help_wiz =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
-    "<w>(</w>: place a mimic\n"
+    "<w>Ctrl-(</w>: place a mimic\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
 ;
@@ -416,10 +416,10 @@ static const char *targeting_help_2 =
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
-    "<h>Firing or throwing a missile:\n"
-    "<w>(</w> : cycle to next suitable missile.\n"
-    "<w>)</w> : cycle to previous suitable missile.\n"
-    "<w>i</w> : choose from Inventory.\n"
+    "<h>Firing, throwing, spellcasting:\n"
+    "<w>(</w> : cycle to next suitable fire action\n"
+    "<w>)</w> : cycle to previous suitable fire action.\n"
+    "<w>Q</w> : choose fire action.\n"
 ;
 
 struct help_file
@@ -433,7 +433,7 @@ static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
     { "aptitudes.txt",     '%', false },
-    { "quickstart.txt",    '^', false },
+    { "quickstart.txt",     '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
 #ifdef USE_TILE_LOCAL
@@ -724,10 +724,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>Autofight:\n"
-            "<w>Tab</w>       : attack nearest monster,\n"
-            "            moving if necessary\n"
-            "<w>Shift-Tab</w> : attack nearest monster\n"
-            "            without moving\n");
+            "<w>Tab</w>          : attack nearest monster,\n"
+            "               moving if necessary\n"
+            "<w>Shift-Tab</w>, <w>p</w> : fire at nearest monster\n");
 
     cols.add_formatted(
             0,
@@ -901,9 +900,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Item Interaction:\n");
 
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
+    _add_command(cols, 1, CMD_FIRE, "Fire the currently quivered action", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be Quivered", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "select action to be Quivered", 2);
+    _add_command(cols, 1, CMD_SWAP_QUIVER_RECENT, "swap between most recent quiver actions", 2);
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
     _add_command(cols, 1, CMD_READ, "Read a scroll (or book on floor)", 2);
     _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
@@ -912,7 +912,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
                          { CMD_ADJUST_INVENTORY });
 
-    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
+    _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",

@@ -213,7 +213,8 @@ tutorial2 throwing
 You can fire your boomerangs at a monster with <input>$cmd[CMD_FIRE]</input>
 <localtiles> or by <input>clicking</input> on them in the inventory
 panel</localtiles>. To confirm the auto-targeted monster, press
-<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
+<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>. You can skip
+this and fire at the closest monster with <input>shift-tab</input> or <input>p</input>.
 %%%%
 tutorial2 wield_bow
 
@@ -258,7 +259,8 @@ tutorial2 exit
   <input>rightclick</input> read a more detailed description</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
   <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</nomouse>
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire ammunition at pre-targeted monster
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire quiver at pre-targeted monster
+  <input>shift-tab</input>, <input>p</input> fire quiver at closest monster
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> target another monster<localtiles>
   You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
 
@@ -495,7 +497,10 @@ tutorial4 spellcasting
 ##       the player on their own.
 You can cast spells with <input>$cmd[CMD_CAST_SPELL]</input><localtiles> or by
 <input>clicking</input> on the spell tile</localtiles>. Press
-<input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells.
+<input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells. Spells,
+like ammo, are shown in the quiver slot, and so you can also use
+<input>$cmd[FIRE]</input> or <input>shift-tab</input> to fire the currently
+quivered spell.
 
 Once you are out of magic points, retreat and rest to regain them with
 <input>$cmd[CMD_REST]</input><localtiles> or by <input>clicking</input> the

@@ -1,6 +1,10 @@
 #pragma once
 
-enum object_class_type : uint8_t           // mitm[].base_type
+#include <cstdint>
+
+#include "tag-version.h"
+
+enum object_class_type : uint8_t           // env.item[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,

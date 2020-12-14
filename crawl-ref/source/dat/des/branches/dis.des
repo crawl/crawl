@@ -68,7 +68,7 @@ default-depth: Dis, !Dis:$
 
 NAME:   lemuel_mystery_crypt
 ORIENT: float
-MONS:   guardian mummy w:6 / ushabti w:4 / mummy priest / greater mummy, lich
+MONS:   guardian mummy w:6 / ushabti w:4 / mummy priest / royal mummy, lich
 NSUBST: 1:1=}> / 1=)> / 1=]> / *=1
 # occasionally (12.5%), all downstairs are in this vault
 : dis_statues(_G)

@@ -6,6 +6,7 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "format.h"
 #include "KeymapContext.h"
@@ -24,6 +25,8 @@
 # include "tileweb.h"
 # include "json.h"
 #endif
+
+using std::vector;
 
 struct wm_keyboard_event;
 
@@ -119,6 +122,8 @@ public:
     constexpr Size() : width(0), height(0) {}
     explicit constexpr Size(int v) : width(v), height(v) {}
     constexpr Size(int w, int h) : width(w), height(h) {}
+
+    constexpr bool is_valid() const { return width >= 0 && height >= 0; }
 
     constexpr bool operator <= (const Size& other) const
     {
@@ -778,6 +783,7 @@ protected:
     COLOURS m_bg_colour = BLACK;
 #endif
     Size m_wrapped_size = Size{-1};
+    Size m_wrapped_sizereq = Size{-1};
     string hl_pat;
     bool hl_line;
 };

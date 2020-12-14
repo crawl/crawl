@@ -5,6 +5,13 @@
 
 #pragma once
 
+#include <map>
+
+#include "coord-def.h"
+
+using std::pair;
+
+class monster;
 struct bolt;
 
 class MonsterActionQueueCompare

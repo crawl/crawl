@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "artefact-prop-type.h"
 #include "beam-type.h"
 #include "conduct-type.h"
@@ -7,6 +9,7 @@
 #include "equipment-type.h"
 #include "god-type.h"
 #include "item-prop-enum.h"
+#include "kill-method-type.h"
 #include "mon-holy-type.h"
 #include "random-var.h"
 #include "ouch.h"
@@ -16,6 +19,8 @@
 #include "size-type.h"
 #include "stat-type.h"
 
+using std::vector;
+
 enum class ev_ignore
 {
     none       = 0,
@@ -23,13 +28,6 @@ enum class ev_ignore
     unided     = 1<<1,
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore);
-
-enum rot_resistance     // Resistance to HP rot.
-{
-    ROT_RESIST_NONE,    // No resistance to rotting.
-    ROT_RESIST_MUNDANE, // Immune to non-divine rotting. (Zin is special.)
-    ROT_RESIST_FULL,    // Immune to all forms of rot.
-};
 
 struct bolt;
 
@@ -61,7 +59,7 @@ public:
     virtual bool is_perm_summoned() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
-    // grids, such as mgrd.
+    // grids, such as env.mgrid.
     virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the
@@ -200,9 +198,8 @@ public:
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
-    virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
-    virtual bool rot(actor *agent, int amount, bool quiet = false,
-                     bool no_cleanup = false) = 0;
+    virtual bool drain(const actor *agent, bool quiet = false,
+                       int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -211,16 +208,17 @@ public:
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount) = 0;
-    virtual void banish(actor *agent, const string &who = "",
+    virtual void banish(const actor *agent, const string &who = "",
                         const int power = 0, bool force = false) = 0;
     virtual void blink() = 0;
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount) = 0;
-    virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
-    virtual void petrify(actor *attacker, bool force = false) = 0;
-    virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
+    virtual void paralyse(const actor *attacker, int strength,
+                          string source = "") = 0;
+    virtual void petrify(const actor *attacker, bool force = false) = 0;
+    virtual bool fully_petrify(bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength,
@@ -242,8 +240,7 @@ public:
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
 
-    virtual int  skill(skill_type sk, int scale = 1,
-                       bool real = false, bool drained = true,
+    virtual int  skill(skill_type sk, int scale = 1, bool real = false,
                        bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
@@ -270,7 +267,7 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
-    virtual void shield_block_succeeded(actor *foe);
+    virtual void shield_block_succeeded();
     virtual bool missile_repulsion() const = 0;
     virtual void ablate_repulsion()
     {
@@ -288,7 +285,7 @@ public:
     virtual mon_holy_type holiness(bool temp = true) const = 0;
     virtual bool undead_or_demonic() const = 0;
     virtual bool holy_wrath_susceptible() const;
-    virtual bool is_holy(bool spells = true) const = 0;
+    virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
     bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
@@ -301,7 +298,7 @@ public:
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
-    virtual rot_resistance res_rotting(bool temp = true) const = 0;
+    virtual bool res_miasma(bool temp = true) const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
@@ -310,8 +307,8 @@ public:
     virtual bool res_tornado() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int res_magic(bool calc_unid = true) const = 0;
-    virtual int check_res_magic(int power);
+    virtual int willpower(bool calc_unid = true) const = 0;
+    virtual int check_willpower(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
                          bool blink = false) const = 0;
     virtual int inaccuracy() const;

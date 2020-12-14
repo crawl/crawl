@@ -269,6 +269,10 @@ void TilesFramework::finish_message()
     m_msg_buf.clear();
     m_need_flush = true;
 #ifdef DEBUG_WEBSOCKETS
+    // should the game actually crash in this case?
+    if (m_controlled_from_web && m_dest_addrs.size() == 0)
+        fprintf(stderr, "No open websockets after finish_message!!\n");
+
     fprintf(stderr, "websocket: Sent %d bytes in %d fragments.\n",
                                                 initial_buf_size, fragments);
 #endif
@@ -326,6 +330,7 @@ wint_t TilesFramework::_receive_control_message()
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
+    memset(&srcaddr, 0, sizeof(struct sockaddr_un));
 
     srcaddr_len = sizeof(srcaddr);
 
@@ -1055,14 +1060,24 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
+    _update_int(force_full, c.launcher_item,
+                you.launcher_action.is_empty()
+                ? (int8_t) -1
+                : (int8_t) you.launcher_action.get()->get_item(), "launcher_item");
     _update_int(force_full, c.quiver_item,
-                (int8_t) you.m_quiver.get_fire_item(), "quiver_item");
+                (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
+
+    _update_string(force_full, c.quiver_desc,
+                you.quiver_action.get()->quiver_description().to_colour_string(),
+                "quiver_desc");
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
     _update_int(force_full, c.unarmed_attack_colour,
                 (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
-    _update_int(force_full, c.quiver_available, !fire_warn_if_impossible(true),
+    _update_int(force_full, c.quiver_available,
+                    you.quiver_action.get()->is_valid()
+                                && you.quiver_action.get()->is_enabled(),
                 "quiver_available");
 
     json_close_object(true);

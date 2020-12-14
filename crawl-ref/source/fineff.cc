@@ -8,6 +8,7 @@
 
 #include "fineff.h"
 
+#include "beam.h"
 #include "bloodspatter.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -17,6 +18,7 @@
 #include "env.h"
 #include "god-abil.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-abil.h"
 #include "mon-act.h"
@@ -459,8 +461,11 @@ void shock_serpent_discharge_fineff::fire()
         return;
 
     const int max_range = 3; // v0v
-    if (grid_distance(oppressor.pos(), position) > max_range)
+    if (grid_distance(oppressor.pos(), position) > max_range
+        || !cell_see_cell(position, oppressor.pos(), LOS_SOLID_SEE))
+    {
         return;
+    }
 
     const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))
@@ -485,6 +490,26 @@ void shock_serpent_discharge_fineff::fire()
                                         "a shock serpent", "electric aura");
     if (amount)
         oppressor.expose_to_element(beam.flavour, amount);
+}
+
+void explosion_fineff::fire()
+{
+    if (is_sanctuary(beam.target))
+    {
+        if (you.see_cell(beam.target))
+            mprf(MSGCH_GOD, "%s", sanctuary_message.c_str());
+        return;
+    }
+
+    if (you.see_cell(beam.target))
+        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+
+    if (inner_flame)
+        for (adjacent_iterator ai(beam.target, false); ai; ++ai)
+            if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
+                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
+
+    beam.explode();
 }
 
 void delayed_action_fineff::fire()

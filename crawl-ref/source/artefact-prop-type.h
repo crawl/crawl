@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // Be sure to update artefact_prop_data[] in artefact.cc. Also,
 // _randart_propnames() in describe.cc, but order doesn't matter there.
 enum artefact_prop_type
@@ -15,7 +17,7 @@ enum artefact_prop_type
     ARTP_ELECTRICITY,
     ARTP_POISON,
     ARTP_NEGATIVE_ENERGY,
-    ARTP_MAGIC_RESISTANCE,
+    ARTP_WILLPOWER,
     ARTP_SEE_INVISIBLE,
     ARTP_INVISIBLE,
     ARTP_FLY,

@@ -658,6 +658,12 @@ blizzard demon
 
 A greater demon, wreathed in snow and lightning.
 %%%%
+bloated husk
+
+A decaying undead corpse. When it reaches a victim (or if it's destroyed first),
+the gases trapped inside it are released and create a large, violent
+concussive blast.
+%%%%
 block of ice
 
 A block of ice shaped like a statue, but worked by no living hands.
@@ -681,6 +687,12 @@ bone dragon
 A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
+%%%%
+boulder beetle
+
+A grey beetle with an almost impenetrable rocky carapace. When at some distance
+from its foe, a boulder beetle is capable of rolling at high speed, attempting
+to crash into its target for heavy damage.
 %%%%
 briar patch
 
@@ -709,6 +721,12 @@ bullfrog
 An unusually aggressive amphibian that pursues its prey with rapid hops.
 Its croak is loud and distinctive, but unlike its smaller counterparts above
 ground, the dungeon bullfrog is as large as it sounds.
+%%%%
+bunyip
+
+A flesh-eating beast that uses its five long limbs interchangeably. It moves
+with alarming speed, but must pause to reorganize itself after each attack.
+Its distinctive screams carry far and wide.
 %%%%
 butterfly
 
@@ -771,10 +789,6 @@ crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
-%%%%
-crocodile
-
-A crocodilian with powerful jaws.
 %%%%
 crystal guardian
 
@@ -1038,6 +1052,12 @@ electric eel
 
 A type of fish capable of generating a powerful electric field.
 %%%%
+eleionoma
+
+Spirits of marshes and bogs. From the cypresses and willows of the fens stems the
+power of these fierce protective spirits. With the boughs and branches they flow,
+emerging from trees near their foes to strike.
+%%%%
 elemental wellspring
 
 A swirling conflux of elemental water streaming from the elemental plane into
@@ -1090,6 +1110,11 @@ felid
 
 A feline creature that has been granted sentience by magical means. It uses the
 gift of speech to demand milk, treats and catnip.
+%%%%
+fenstrider witch
+
+Followers of the ancient swamp ways, these witches rise above the muck and mire
+on a pair of stilt-like chicken legs. They are masters of pain and poison.
 %%%%
 fire bat
 
@@ -1242,16 +1267,16 @@ golden eye
 A tiny and shimmering floating eye, swift as the wind and glistening like gold.
 It has a peculiarly hypnotic look.
 %%%%
+goliath frog
+
+A frog of exceptional size, for a frog. It lashes its prey with its tongue
+from a distance to coat them in its acidic stomach juices.
+%%%%
 great orb of eyes
 
 A levitating ball, covered in malignant eyes and humming with eldritch
 energies. Many is the adventurer ripped limb from limb by its dreadful
 eyeteeth.
-%%%%
-greater mummy
-
-An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
-terrifying feats of magic.
 %%%%
 green death
 
@@ -1346,11 +1371,6 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
-%%%%
-hippogriff
-
-A hybrid with the hindquarters of a horse and the wings, head and talons of a
-great eagle.
 %%%%
 hobgoblin
 
@@ -1875,7 +1895,7 @@ phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle but recalled
 to this plane by unholy magic. The blade it wields is ethereal, rendering those
-it strikes more susceptible to magic.
+it strikes weak-willed and vulnerable to dark magic.
 %%%%
 phantom
 
@@ -2011,6 +2031,11 @@ the Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
+%%%%
+royal mummy
+
+An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
+terrifying feats of magic.
 %%%%
 rust devil
 
@@ -2540,6 +2565,12 @@ wight
 
 An ancient warrior, kept in a state of perpetual undeath by its desire to die
 with honour in battle.
+%%%%
+will-o-the-wisp
+
+A green-glowing gaseous entity, flickering and pulsing irregularly as it hovers
+through the air. Travelers have been known to confuse these for distant lanterns -
+a mistake rarely made twice.
 %%%%
 wind drake
 

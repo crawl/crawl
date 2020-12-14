@@ -6,7 +6,6 @@
 * [Compiling](#compiling)
   * [Ubuntu / Debian](#ubuntu--debian)
   * [Fedora](#fedora)
-  * [Void Linux](#void)
   * [Other Linux / Unix](#other-linux--unix)
   * [macOS](#macOS)
   * [Windows](#windows)

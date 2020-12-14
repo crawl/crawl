@@ -131,9 +131,9 @@ string IntGameOption::loadFromString(string field, rc_line_type) const
     if (!parse_int(field.c_str(), val))
         return make_stringf("Bad %s: \"%s\"", name().c_str(), field.c_str());
     if (val < min_value)
-        return make_stringf("Bad %s: %d < %d", name().c_str(), val, min_value);
+        return make_stringf("Bad %s: %d should be >= %d", name().c_str(), val, min_value);
     if (val > max_value)
-        return make_stringf("Bad %s: %d > %d", name().c_str(), val, max_value);
+        return make_stringf("Bad %s: %d should be <<= %d", name().c_str(), val, max_value);
     value = val;
     return "";
 }

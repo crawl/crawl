@@ -18,7 +18,9 @@
 #include "libutil.h"
 #include "l-libs.h"
 #include "map-marker-type.h"
+#include "mpr.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "unwind.h"
 
@@ -1369,7 +1371,7 @@ map_position_marker *get_position_marker_at(const coord_def &pos,
  **/
 coord_def get_transporter_dest(const coord_def &pos)
 {
-    ASSERT(grd(pos) == DNGN_TRANSPORTER);
+    ASSERT(env.grid(pos) == DNGN_TRANSPORTER);
 
     map_position_marker *marker
         = get_position_marker_at(pos, DNGN_TRANSPORTER);

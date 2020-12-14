@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
@@ -12,6 +14,8 @@
 #include "targeting-type.h"
 #include "trap-type.h"
 #include "view.h"
+
+using std::vector;
 
 struct describe_info;
 
@@ -46,6 +50,10 @@ public:
     // Update the prompt shown at top.
     virtual void update_top_prompt(string*) {}
 
+    virtual bool targeted() { return true; }
+
+    virtual string get_error() { return ""; }
+
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
 private:
@@ -54,25 +62,7 @@ private:
 public:
     bool just_looking;
     desc_filter get_desc_func; // Function to add relevant descriptions
-};
-
-// output from direction() function:
-class dist
-{
-public:
-    dist();
-
-    bool isMe() const;
-
-    bool isValid;       // valid target chosen?
-    bool isTarget;      // target (true), or direction (false)?
-    bool isEndpoint;    // Does the player want the attack to stop at target?
-    bool isCancel;      // user cancelled (usually <ESC> key)
-    bool choseRay;      // user wants a specific beam
-
-    coord_def target;   // target x,y or logical extension of beam to map edge
-    coord_def delta;    // delta x and y if direction - always -1,0,1
-    ray_def ray;        // ray chosen if necessary
+    maybe_bool needs_path;
 };
 
 struct direction_chooser_args
@@ -109,7 +99,9 @@ struct direction_chooser_args
         show_floor_desc(false),
         show_boring_feats(true),
         get_desc_func(nullptr),
-        default_place(0, 0) {}
+        default_place(0, 0)
+    { }
+
 };
 
 class direction_chooser;
@@ -131,9 +123,12 @@ class direction_chooser
     friend class UIDirectionChooserView;
 public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
+    bool noninteractive();
     bool choose_direction();
 
 private:
+    void update_validity();
+
     bool targets_objects() const;
     bool targets_enemies() const;
 

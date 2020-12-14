@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "config.h"
 #include "libutil.h" // always_true
 
@@ -13,6 +15,8 @@
 #else
 size_t strlcpy(char *dst, const char *src, size_t n);
 #endif
+
+using std::vector;
 
 string lowercase_string(const string &s);
 string &lowercase(string &s);

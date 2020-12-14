@@ -4,6 +4,7 @@
 
 #include "options.h"
 #include "unicode.h"
+#include "tag-version.h"
 
 // For order and meaning of symbols see dungeon_char_type in dungeon_char_type.h
 static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =

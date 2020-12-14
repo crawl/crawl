@@ -5,9 +5,13 @@
 
 #pragma once
 
+#include <vector>
+
 class PrecisionMenu;
 
 #include "cio.h"
+
+using std::vector;
 
 /**
  * @author Janne "felirx" Lahdenpera

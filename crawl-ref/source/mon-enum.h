@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "tag-version.h"
+
 #define HERD_COMFORT_RANGE 6
 
 // TODO: Unify this and a player_equivalent (if applicable)
@@ -70,7 +72,7 @@ enum attack_flavour
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
     AF_DRAIN_STAT,
-    AF_DRAIN_XP,
+    AF_DRAIN,
     AF_ELEC,
     AF_FIRE,
 #if TAG_MAJOR_VERSION == 34
@@ -89,8 +91,8 @@ enum attack_flavour
     AF_POISON_INT,
     AF_POISON_DEX,
     AF_POISON_STAT,
-#endif
     AF_ROT,
+#endif
     AF_VAMPIRIC,
 #if TAG_MAJOR_VERSION == 34
     AF_KLOWN,
@@ -131,6 +133,7 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
 #endif
+    AF_REACH_TONGUE,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -200,7 +203,7 @@ enum mon_resist_flags
     MR_RES_FIRE          = 1 << 6,
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
-    MR_RES_ROTTING       = 1 << 15,
+    MR_RES_MIASMA        = 1 << 15,
     MR_RES_ACID          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter

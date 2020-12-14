@@ -733,21 +733,22 @@ DEPTH: Elf:2-
 MONS:  deep elf mage
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
 MONS:  plant
-SUBST: - = wwWW333ttt..%
+SUBST: - = WW333..%
+SUBST: ' = wwWW333ttt..%
 MAP
 ................
 ................
 ..mmmmT..Tmmmm..
-..m----..----m..
-..m----..----m..
-..m----..----m..
+..m'---..---'m..
+..m-'--..--'-m..
+..m--'-..-'--m..
 ..3---t..t---3..
 .......21.......
 .......11.......
 ..3---t..t---3..
-..m----..----m..
-..m----..----m..
-..m----..----m..
+..m--'-..-'--m..
+..m-'--..--'-m..
+..m'---..---'m..
 ..mmmmT..Tmmmm..
 ................
 ................
@@ -1198,9 +1199,9 @@ MAP
     .@.xxxxxx
     @x.+...xx
     ..3x.A.xxxxx
-   xx+xx...xxxxxxxx
+   xxQxx...xxxxxxxx
    xx...EFE..*xxxxx.@.
-   xx.A.FMF.A2x...+.x@
+   xx.A.FMF.A2x...Q.x@
   xxx...EFE..*x.B.x3..
   xxxxxx.4.xxxx...xx+x
   xx*2*x.A.Q...IJI...x
@@ -1211,9 +1212,9 @@ x.D.LPL4D.+1..x.B.xxxx
 x...KLK...Q.C.x*2*xx
 x+xx...xxxx.4.xxxxxx
 ..3x.D.x*..GHG...xxx
-@x.+...x2C.HOH.C.xx
+@x.Q...x2C.HOH.C.xx
 .@.xxxxx*..GHG...xx
-   xxxxxxxx...xx+xx
+   xxxxxxxx...xxQxx
       xxxxx.C.x3..
          xx...+.x@
          xxxxxx.@.
@@ -1409,7 +1410,7 @@ COLOUR:   - = lightgrey
 SUBST:    - = .
 NSUBST:   . = 6:1 / 3:2 / 1:34 / 4 = 4 / 2 = 42 / 6 = 14...
 SUBVAULT: A : elf_blade_entry
-SUBST:    A : x"", ' = .
+SUBST:    A : x, ' = .
 CLEAR:    "
 MAP
                                   "

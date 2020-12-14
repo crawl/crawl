@@ -5,11 +5,21 @@
 
 #pragma once
 
+#include <vector>
+
 #include "conduct-type.h"
+#include "coord-def.h"
 #include "dungeon-char-type.h"
+#include "dungeon-feature-type.h"
+#include "level-id.h"
 #include "mgen-enum.h"
+#include "monster-type.h"
+#include "tag-version.h"
 #include "trap-type.h"
 
+using std::vector;
+
+class monster;
 class mons_spec;
 struct mgen_data;
 

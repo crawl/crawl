@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "actor.h"
 #include "spl-util.h"
 
 // scale miscast severity
@@ -25,7 +24,6 @@ enum class miscast_source
 };
 
 class actor;
-// class monster;
 
 struct miscast_source_info
 {

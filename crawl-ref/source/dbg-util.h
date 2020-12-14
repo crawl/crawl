@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 monster_type debug_prompt_for_monster();
 skill_type debug_prompt_for_skill(const char *prompt);
 skill_type skill_from_name(const char *name);

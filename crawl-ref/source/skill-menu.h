@@ -5,10 +5,14 @@
 
 #pragma once
 
+#include <vector>
+
 #include "enum.h"
 #include "menu.h"
 #include "precision-menu.h"
 #include "skills.h"
+
+using std::vector;
 
 // Skill Menu
 

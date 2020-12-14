@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum branch_type                // you.where_are_you
 {
     BRANCH_DUNGEON,

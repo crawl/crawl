@@ -10,6 +10,9 @@
 
 #include <numeric> // iota
 #include <queue>
+#include <vector>
+
+using std::vector;
 
 extern const struct coord_def Compass[9];
 

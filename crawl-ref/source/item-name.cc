@@ -46,6 +46,7 @@
 #include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "throw.h"
 #include "transform.h"
 #include "unicode.h"
@@ -300,7 +301,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
-        else if (item_is_quivered(*this))
+        else if (you.launcher_action.item_is_quivered(*this))
+            buff << " (quivered ammo)";
+        else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
 
@@ -548,7 +551,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PONDEROUSNESS:     return "ponderousness";
         case SPARM_FLYING:            return "flying";
 
-        case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
+        case SPARM_WILLPOWER:  return "willpower";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
         case SPARM_RESISTANCE:        return "resistance";
@@ -587,7 +590,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INTELLIGENCE:      return "Int+3";
         case SPARM_PONDEROUSNESS:     return "ponderous";
         case SPARM_FLYING:            return "Fly";
-        case SPARM_MAGIC_RESISTANCE:  return "MR+";
+        case SPARM_WILLPOWER:         return "Will+";
         case SPARM_PROTECTION:        return "AC+3";
         case SPARM_STEALTH:           return "Stlth+";
         case SPARM_RESISTANCE:        return "rC+ rF+";
@@ -660,7 +663,7 @@ const char* potion_type_name(int potiontype)
     case POT_HEAL_WOUNDS:       return "heal wounds";
     case POT_HASTE:             return "haste";
     case POT_MIGHT:             return "might";
-    case POT_STABBING:          return "stabbing";
+    case POT_ATTRACTION:        return "attraction";
     case POT_BRILLIANCE:        return "brilliance";
     case POT_FLIGHT:            return "flight";
     case POT_CANCELLATION:      return "cancellation";
@@ -754,7 +757,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "magical power";
         case RING_FLIGHT:                return "flight";
         case RING_LIFE_PROTECTION:       return "positive energy";
-        case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
+        case RING_WILLPOWER: return "willpower";
         case RING_FIRE:                  return "fire";
         case RING_ICE:                   return "ice";
 #if TAG_MAJOR_VERSION == 34
@@ -803,7 +806,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_MAGICAL_POWER:         return "MP+9";
         case RING_FLIGHT:                return "+Fly";
         case RING_LIFE_PROTECTION:       return "rN+";
-        case RING_PROTECTION_FROM_MAGIC: return "MR+";
+        case RING_WILLPOWER:             return "Will+";
         case AMU_REGENERATION:           return "Regen";
 #if TAG_MAJOR_VERSION == 34
         case AMU_RAGE:                   return "+Rage";
@@ -1728,7 +1731,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-            buff << "labeled " << make_name(subtype_rnd, MNAME_SCROLL);
+            buff << "labelled " << make_name(subtype_rnd, MNAME_SCROLL);
         break;
 
     case OBJ_JEWELLERY:
@@ -2033,7 +2036,7 @@ bool set_ident_type(item_def &item, bool identify)
     {
         shopping_list.cull_identical_items(item);
         if (identify)
-            item_skills(item, you.start_train);
+            item_skills(item, you.skills_to_show);
     }
 
     if (identify && notes_are_active()
@@ -2054,8 +2057,6 @@ bool set_ident_type(item_def &item, bool identify)
 
 bool set_ident_type(object_class_type basetype, int subtype, bool identify)
 {
-    preserve_quiver_slots p;
-
     if (!item_type_has_ids(basetype))
         return false;
 
@@ -2771,6 +2772,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
                 return false;
             // intentional fallthrough
         case POT_LIGNIFY:
+        case POT_ATTRACTION:
             return true;
         default:
             return false;
@@ -2999,8 +3001,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
-        case POT_STABBING:
-            return will_have_passive(passive_t::no_stabbing);
+        case POT_ATTRACTION:
+            return false;
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 

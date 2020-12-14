@@ -35,6 +35,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #include "rltiles/tiledef-main.h"
 #include "unwind.h"
@@ -253,7 +254,7 @@ static const cloud_data clouds[] = {
       ETC_DARK,                                 // colour
       { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
-      {12, 12},         // fake damage - used only for monster pathing
+      {12, 12},
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
@@ -405,7 +406,7 @@ static int _spread_cloud(const cloud_struct &cloud)
             continue;
         }
 
-        if (cloud.type == CLOUD_INK && !feat_is_watery(grd(*ai)))
+        if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(*ai)))
             continue;
 
         int newdecay = cloud.decay / 2 + 1;
@@ -447,7 +448,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
-        if (!feat_is_tree(grd(*ai)) || is_temp_terrain(*ai)
+        if (!feat_is_tree(env.grid(*ai)) || is_temp_terrain(*ai)
             || x_chance_in_y(19, 20))
         {
             continue;
@@ -479,7 +480,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
     {
         const coord_def p(*ai);
         if (in_bounds(p)
-            && feat_is_watery(grd(p))
+            && feat_is_watery(env.grid(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
             && one_chance_in(14))
@@ -544,7 +545,7 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
     }
 
     // Ink cloud shouldn't appear outside of water.
-    if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+    if (cloud.type == CLOUD_INK && !feat_is_watery(env.grid(cloud.pos)))
         return cloud.decay;
 
     return dissipate;
@@ -621,7 +622,7 @@ void manage_clouds()
         if (cell_is_solid(cloud.pos))
         {
             die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
-                dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+                dungeon_feature_name(env.grid(cloud.pos)), cloud.pos.x, cloud.pos.y);
         }
 #endif
 
@@ -661,18 +662,18 @@ static void _maybe_leave_water(const coord_def pos)
         return;
     }
 
-    dungeon_feature_type feat = grd(pos);
+    dungeon_feature_type feat = env.grid(pos);
 
-    if (grd(pos) == DNGN_FLOOR)
+    if (env.grid(pos) == DNGN_FLOOR)
         feat = DNGN_SHALLOW_WATER;
-    else if (grd(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
+    else if (env.grid(pos) == DNGN_SHALLOW_WATER && you.pos() != pos
              && one_chance_in(3) && !crawl_state.game_is_sprint())
     {
         // Don't drown the player!
         feat = DNGN_DEEP_WATER;
     }
 
-    if (grd(pos) != feat)
+    if (env.grid(pos) != feat)
     {
         if (you.pos() == pos && you.ground_level())
             mpr("The rain has left you waist-deep in water!");
@@ -786,7 +787,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
 
-    if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
+    if (cl_type == CLOUD_INK && !feat_is_watery(env.grid(ctarget)))
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS
@@ -953,11 +954,11 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_MEPHITIC:
             return act.res_poison() > 0 || act.is_unbreathing();
         case CLOUD_POISON:
-            return act.res_poison() > 0;
+            return act.res_poison() > 0 || act.is_unbreathing();
         case CLOUD_STEAM:
             return act.res_steam() > 0;
         case CLOUD_MIASMA:
-            return act.res_rotting() > 0;
+            return act.res_miasma() || act.is_unbreathing();
         case CLOUD_PETRIFY:
             return act.res_petrify();
         case CLOUD_SPECTRAL:
@@ -1013,15 +1014,15 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
 
 // Returns a numeric resistance value for the actor's resistance to
 // the cloud's effects. If the actor is immune to the cloud's damage,
-// returns MAG_IMMUNE.
+// returns WILL_INVULN.
 static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 {
     if (actor_cloud_immune(*act, cloud))
-        return MAG_IMMUNE;
+        return WILL_INVULN;
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        return act->is_fiery()? 0 : MAG_IMMUNE;
+        return act->is_fiery()? 0 : WILL_INVULN;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
@@ -1149,10 +1150,9 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_MIASMA:
         if (player)
-            miasma_player(cloud.agent(), cloud.cloud_name());
+            return miasma_player(cloud.agent(), cloud.cloud_name());
         else
-            miasma_monster(mons, cloud.agent());
-        break;
+            return miasma_monster(mons, cloud.agent());
 
     case CLOUD_MUTAGENIC:
         if (player)
@@ -1192,7 +1192,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_NEGATIVE_ENERGY:
     {
         actor* agent = cloud.agent();
-        if (act->drain_exp(agent))
+        if (act->drain(agent, final_damage))
         {
             if (cloud.whose == KC_YOU)
                 did_god_conduct(DID_EVIL, 5 + random2(3));
@@ -1217,7 +1217,7 @@ static int _actor_cloud_base_damage(const actor *act,
 
     const int cloud_raw_base_damage =
         _cloud_base_damage(act, cloud.type, maximum_damage);
-    const int cloud_base_damage = (resist == MAG_IMMUNE ?
+    const int cloud_base_damage = (resist == WILL_INVULN ?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
 }
@@ -1347,7 +1347,7 @@ int actor_apply_cloud(actor *act)
 
     const cloud_struct &cloud(*cl);
     const bool player = act->is_player();
-    monster *mons = !player? act->as_monster() : nullptr;
+    monster *mons = act->as_monster();
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(*act, cloud))
@@ -1496,7 +1496,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return false;
 
         // This position could become deep water, and they might drown.
-        if (grd(cloud.pos) == DNGN_SHALLOW_WATER
+        if (env.grid(cloud.pos) == DNGN_SHALLOW_WATER
             && mons_intel(*mons) > I_BRAINLESS)
         {
             return true;
@@ -1614,7 +1614,7 @@ coord_def random_walk(coord_def start, int dist)
         {
             const coord_def new_pos   = pos + Compass[j];
 
-            if (in_bounds(new_pos) && !feat_is_solid(grd(new_pos))
+            if (in_bounds(new_pos) && !feat_is_solid(env.grid(new_pos))
                 && one_chance_in(++okay_dirs))
             {
                 dir = j;

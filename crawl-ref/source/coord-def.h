@@ -5,6 +5,14 @@
 
 #pragma once
 
+#include <algorithm>
+#include <ostream>
+
+using std::min;
+using std::max;
+using std::pair;
+using std::ostream;
+
 // Constexpr sign.
 template <typename Z> static constexpr Z sgn(Z x)
 {

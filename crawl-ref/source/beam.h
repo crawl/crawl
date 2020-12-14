@@ -5,15 +5,20 @@
 
 #pragma once
 
+#include <vector>
+
 #include "ac-type.h"
 #include "beam-type.h"
 #include "enchant-type.h"
+#include "externs.h"
+#include "killer-type.h"
 #include "mon-attitude-type.h"
-#include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
 #include "zap-type.h"
+
+using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -48,6 +53,8 @@ struct tracer_info
 
 struct bolt
 {
+    bolt();
+
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
@@ -104,14 +111,16 @@ struct bolt
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
     // Do we draw animations?
-    bool   animate = bool(Options.use_animations & UA_BEAM);
+    bool   animate;
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.
 #endif
 
     // OUTPUT parameters (tracing, ID)
-    bool obvious_effect = false; // did an 'obvious' effect happen?
+    bool obvious_effect = false; // is this a non-enchantment, or did it already
+                                 // show some effect or message? (Otherwise, we'll
+                                 // print the canned 'nothing happened.)
 
     bool seen = false;          // Has player seen the beam?
     bool heard = false;         // Has the player heard the beam?
@@ -158,7 +167,7 @@ private:
     bool nightvision = false;
 
 public:
-    bool is_enchantment() const; // no block/dodge, use magic resist
+    bool is_enchantment() const; // no block/dodge, use willpower
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();
@@ -191,7 +200,7 @@ public:
     bool has_saving_throw() const;
 
     void draw(const coord_def& p, bool force_refresh=true);
-    void drop_object();
+    void drop_object(bool allow_mulch=true);
 
     // Various explosion-related stuff.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
@@ -227,6 +236,7 @@ private:
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool bush_immune(const monster &mons) const;
+    int apply_lighting(int base_hit, const actor &target) const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -332,7 +342,13 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
+bool zap_explodes(zap_type ztype);
+bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+int zap_to_hit(zap_type z_type, int power, bool is_monster);
+dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
+colour_t zap_colour(zap_type z_type);
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt);
 void bolt_parent_init(const bolt &parent, bolt &child);
 

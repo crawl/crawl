@@ -33,6 +33,7 @@
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"
@@ -269,7 +270,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
 
             bool found = false;
-            if (!monster_habitable_grid(mons, grd(hopspot)) ||
+            if (!monster_habitable_grid(mons, env.grid(hopspot)) ||
                 actor_at(hopspot))
             {
                 for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -278,7 +279,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                         continue;
                     else
                     {
-                        if (monster_habitable_grid(mons, grd(*ai))
+                        if (monster_habitable_grid(mons, env.grid(*ai))
                             && !actor_at(*ai))
                         {
                             hopspot = *ai;
@@ -440,7 +441,7 @@ static bool is_boolean_resist(beam_type flavour)
     switch (flavour)
     {
     case BEAM_ELECTRICITY:
-    case BEAM_MIASMA: // rotting
+    case BEAM_MIASMA:
     case BEAM_STICKY_FLAME:
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
@@ -603,7 +604,7 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool wielded_weapon_check(item_def *weapon)
+bool wielded_weapon_check(const item_def *weapon, string attack_verb)
 {
     bool penance = false;
     if (you.received_weapon_warning
@@ -628,10 +629,9 @@ bool wielded_weapon_check(item_def *weapon)
     }
 
     string prompt;
-    if (weapon)
-        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
-    else
-        prompt = "Really attack unarmed?";
+    prompt = make_stringf("Really %s while wielding %s?",
+        attack_verb.size() ? attack_verb.c_str() : "attack",
+        weapon ? weapon->name(DESC_YOUR).c_str() : "nothing");
     if (penance)
         prompt += " This could place you under penance!";
 
@@ -676,6 +676,42 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
 }
 
 /**
+ * Force cleave attacks. Used for melee actions that don't have targets, e.g.
+ * attacking empty space (otherwise, cleaving is handled in melee_attack).
+ *
+ * @param target the nominal target of the original attack.
+ * @return whether there were cleave targets relative to the player and `target`.
+ */
+bool force_player_cleave(coord_def target)
+{
+    list<actor*> cleave_targets;
+    get_cleave_targets(you, target, cleave_targets);
+
+    if (!cleave_targets.empty())
+    {
+        targeter_cleave hitfunc(&you, target);
+        if (stop_attack_prompt(hitfunc, "attack"))
+            return true;
+
+        if (!you.fumbles_attack())
+            attack_cleave_targets(you, cleave_targets);
+        return true;
+    }
+
+    return false;
+}
+
+bool attack_cleaves(const actor &attacker, int which_attack)
+{
+    const item_def* weap = attacker.weapon(which_attack);
+
+    return weap && item_attack_skill(*weap) == SK_AXES
+        || attacker.is_player()
+               && (you.form == transformation::hydra && you.heads() > 1
+                   || you.duration[DUR_CLEAVE]);
+}
+
+/**
  * List potential cleave targets (adjacent hostile creatures), including the
  * defender itself.
  *
@@ -695,12 +731,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    const item_def* weap = attacker.weapon(which_attack);
-
-    if (weap && item_attack_skill(*weap) == SK_AXES
-            || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
-                   || you.duration[DUR_CLEAVE]))
+    if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
@@ -716,6 +747,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         }
     }
 
+    // fake cleaving: gyre and gimble's extra attacks are implemented as
+    // cleaving attacks on enemies already in `targets`
+    const item_def* weap = attacker.weapon(which_attack);
     if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;

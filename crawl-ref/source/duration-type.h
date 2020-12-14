@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum duration_type
 {
     DUR_INVIS,
@@ -81,7 +83,7 @@ enum duration_type
     DUR_TELEPATHY,
 #endif
     DUR_PETRIFIED,
-    DUR_LOWERED_MR,
+    DUR_LOWERED_WL,
     DUR_REPEL_STAIRS_MOVE,
     DUR_REPEL_STAIRS_CLIMB,
     DUR_CLOUD_TRAIL,
@@ -209,6 +211,10 @@ enum duration_type
     DUR_SHAFT_IMMUNITY,
     DUR_NOXIOUS_BOG,
     DUR_FROZEN_RAMPARTS,
+#if TAG_MAJOR_VERSION == 34
     DUR_STABBING,
+#endif
+    DUR_ATTRACTIVE,
+    DUR_LOCKED_DOWN,
     NUM_DURATIONS
 };

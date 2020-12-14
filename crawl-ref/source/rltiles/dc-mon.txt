@@ -121,7 +121,6 @@ gastronok MONS_GASTRONOK
 rat MONS_RAT
 green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
-porcupine MONS_PORCUPINE
 %rim 1
 quokka MONS_QUOKKA
 %sdir mon/animals
@@ -140,10 +139,9 @@ demonic_crawler MONS_DEMONIC_CRAWLER
 %rim 0
 death_scarab MONS_DEATH_SCARAB
 
-## Turtles and crocodiles ('t')
+## Turtles and crabs ('t')
 %sdir mon/animals
 %rim 1
-crocodile MONS_CROCODILE
 alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
@@ -172,14 +170,22 @@ hornet MONS_HORNET
 spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
-%rim 0
 
 ## Aquatics (';')
 %sdir mon/aquatic
+%rim 0
 electric_eel MONS_ELECTRIC_EEL
 %rim 1
 
 %include dc-tentacles.txt
+
+## Beetles ('B')
+%sdir mon/animals
+boulder_beetle MONS_BOULDER_BEETLE
+boulder_beetle_rolling0 MONS_BOULDER_BEETLE_ROLLING
+boulder_beetle_rolling1
+boulder_beetle_rolling2
+boulder_beetle_rolling3
 
 ## Frogs ('F')
 %sdir mon/unique
@@ -190,6 +196,7 @@ prince_ribbit MONS_PRINCE_RIBBIT
 bullfrog MONS_BULLFROG
 %rim 0
 blink_frog MONS_BLINK_FROG
+goliath_frog MONS_GOLIATH_FROG
 %rim 1
 cane_toad MONS_CANE_TOAD
 
@@ -219,6 +226,11 @@ catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
+%rim 1
+ice_beast MONS_ICE_BEAST
+%rim 0
+sky_beast MONS_SKY_BEAST
+
 %sdir mon/unique
 nellie MONS_NELLIE
 %sdir mon/holy
@@ -418,6 +430,8 @@ abomination_small1
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
+%sdir mon/animals
+bunyip MONS_BUNYIP
 
 ## Golems ('8')
 %rim 0
@@ -495,6 +509,7 @@ spectral_spear MONS_SPECTRAL_SPEAR
 # Unique humans, in alphabetical order
 donald MONS_DONALD
 edmund MONS_EDMUND
+edmund_weaponless MONS_EDMUND_WEAPONLESS
 erica MONS_ERICA
 erica_swordless MONS_ERICA_SWORDLESS
 eustachio MONS_EUSTACHIO
@@ -659,12 +674,14 @@ ophan MONS_OPHAN
 
 ## Hybrids ('H')
 %sdir mon/animals
-hippogriff MONS_HIPPOGRIFF
 manticore MONS_MANTICORE
 %sdir mon/demihumanoids
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
+%rim 0
+fenstrider_witch MONS_FENSTRIDER_WITCH
+%rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
@@ -724,13 +741,6 @@ arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 asterion MONS_ASTERION
 
-## Various beasts ('I')
-%sdir mon/animals
-ice_beast MONS_ICE_BEAST
-%rim 0
-sky_beast MONS_SKY_BEAST
-%rim 1
-
 ## Jellies ('J')
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
@@ -777,7 +787,7 @@ khufu MONS_KHUFU
 %sdir mon/undead
 mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
-greater_mummy MONS_GREATER_MUMMY
+royal_mummy MONS_ROYAL_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
 %rim 1
 
@@ -998,12 +1008,16 @@ merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
 %sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
+eleionoma MONS_ELEIONOMA
 %rim 1
 
 ## Rotting monsters ('n')
 %sdir mon/undead
 bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
+%rim 0
+bloated_husk MONS_BLOATED_HUSK
+%rim 1
 ghoul MONS_GHOUL
 
 %sdir mon/unique
@@ -1039,6 +1053,7 @@ lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
 %sdir mon/nonliving
+will_o_the_wisp MONS_WILL_O_THE_WISP
 %rim 1
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 

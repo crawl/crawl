@@ -44,6 +44,7 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "throw.h"
 #include "tiles-build-specific.h"
 #include "transform.h"
@@ -611,9 +612,15 @@ static void _print_stats_equip(int x, int y)
  */
 static void _print_stats_noise(int x, int y)
 {
+    CGOTOXY(x, y, GOTO_STAT);
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
     bool silence = silenced(you.pos());
     int level = silence ? 0 : you.get_noise_perception(true);
-    CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     cprintf("Noise: ");
     colour_t noisecolour;
@@ -736,7 +743,7 @@ static void _print_stats_mp(int x, int y)
 
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "MP: " : "Magic:  ");
+    CPRINTF(player_drained() ? "MP: " : "Magic:  ");
     textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
@@ -793,7 +800,7 @@ static void _print_stats_hp(int x, int y)
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    CPRINTF(player_drained() ? "HP: " : "Health: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -924,6 +931,14 @@ static int _wpn_name_colour()
 static void _print_stats_wp(int y)
 {
     string text;
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
+    CGOTOXY(1, y, GOTO_STAT);
+
     if (you.weapon())
     {
         item_def wpn = *you.weapon(); // copy
@@ -936,7 +951,6 @@ static void _print_stats_wp(int y)
     else
         text = you.unarmed_attack_name();
 
-    CGOTOXY(1, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     const char slot_letter = you.weapon() ? index_to_letter(you.weapon()->link)
                                           : '-';
@@ -944,57 +958,52 @@ static void _print_stats_wp(int y)
     CPRINTF("%s", slot_name.c_str());
     textcolour(_wpn_name_colour());
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(text, max_name_width).c_str());
+
+    // If there is a launcher, but something unrelated is quivered, show the
+    // launcher's ammo in the line with the weapon
+    if (you.weapon() && is_range_weapon(*you.weapon())
+        && *you.launcher_action.get() != *you.quiver_action.get())
+    {
+        formatted_string lammo;
+        if (you.launcher_action.is_empty()
+            || !you.launcher_action.get()->is_valid())
+        {
+            // the player has no ammo for the wielded launcher, or has
+            // explicitly unquivered it
+            lammo = quiver::action().quiver_description(true);
+        }
+        else
+            lammo = you.launcher_action.get()->quiver_description(true);
+
+        const int trimmed_size = max_name_width - lammo.tostring().size() - 3;
+        CPRINTF("%s ", chop_string(text, trimmed_size).c_str());
+        textcolour(LIGHTGREY);
+        CPRINTF("(");
+        lammo.display();
+        textcolour(LIGHTGREY);
+        CPRINTF(")");
+    }
+    else
+        CPRINTF("%s", chop_string(text, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
 
 static void _print_stats_qv(int y)
 {
-    int col;
-    string text;
-
-    int q = you.m_quiver.get_fire_item();
-    ASSERT_RANGE(q, -1, ENDOFPACK);
-    char hud_letter = '-';
-    if (q != -1 && !fire_warn_if_impossible(true))
-    {
-        const item_def& quiver = you.inv[q];
-        if (quiver.link == NON_ITEM)
-            return; // don't crash if this is triggered during character setup
-        hud_letter = index_to_letter(quiver.link);
-        const string prefix = item_prefix(quiver);
-        const int prefcol =
-            menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
-        if (prefcol != -1)
-            col = prefcol;
-        else
-            col = LIGHTGREY;
-        text = quiver.name(DESC_PLAIN, true);
-    }
-    else
-    {
-        if (fire_warn_if_impossible(true))
-        {
-            col  = DARKGREY;
-            text = "Quiver unavailable";
-        }
-        else
-        {
-            col  = LIGHTGREY;
-            text = "Nothing quivered";
-        }
-    }
     CGOTOXY(1, y, GOTO_STAT);
-    textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("%c) ", hud_letter);
-    textcolour(col);
+    if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
+        && (you.running > 0 || you.running < 0 && Options.travel_delay == -1))
+    {
+        return;
+    }
+
+    formatted_string qdesc = quiver::get_secondary_action()->quiver_description();
 #ifdef USE_TILE_LOCAL
-    int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
-    CPRINTF("%s", chop_string(text, w).c_str());
+    const int max_width = crawl_view.hudsz.x - (tiles.is_using_small_layout() ? 0 : 4);
 #else
-    CPRINTF("%s", chop_string(text, crawl_view.hudsz.x-4).c_str());
+    const int max_width = crawl_view.hudsz.x - 4;
 #endif
-    textcolour(LIGHTGREY);
+    qdesc.chop(max_width, true).display();
 }
 
 struct status_light
@@ -1023,12 +1032,6 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // - blue, light blue           for good enchantments
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
-// Prints
-// pray, holy, teleport, regen, fly/lev, invis, silence,
-//   conf. touch, sage
-// confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
-//   fast, slow, breath
-//
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
 // using the '@' command. Things like confusion and sticky flame
@@ -1037,6 +1040,8 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 static void _get_status_lights(vector<status_light>& out)
 {
 #ifdef DEBUG_DIAGNOSTICS
+    if (mouse_control::current_mode() != MOUSE_MODE_NORMAL
+        || !(you.running > 0 || you.running < 0 && Options.travel_delay == -1))
     {
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
@@ -1050,7 +1055,7 @@ static void _get_status_lights(vector<status_light>& out)
     const unsigned int important_statuses[] =
     {
         STATUS_ORB,
-        STATUS_BEZOTTED,
+        STATUS_ZOT,
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         STATUS_ALIVE_STATE,
         DUR_PARALYSIS,
@@ -1371,29 +1376,11 @@ void print_stats()
     }
 
     if (you.wield_change)
-    {
-        // weapon_change is set in a billion places; probably not all
-        // of them actually mean the user changed their weapon. Calling
-        // on_weapon_changed redundantly is normally OK; but if the user
-        // is wielding a bow and throwing javelins, the on_weapon_changed
-        // will switch them back to arrows, which is annoying.
-        // Perhaps there should be another bool besides wield_change
-        // that's set in fewer places?
-        // Also, it's a little bogus to change simulation state in
-        // render code. We should find a better place for this.
-        you.m_quiver.on_weapon_changed();
         _print_stats_wp(9 + yhack);
-    }
+
     you.wield_change  = false;
 
-    if (you.species == SP_FELID)
-    {
-        // There are no circumstances under which Felids could quiver something.
-        // Reduce line counter for status display.
-        yhack -= 1;
-    }
-    else if (you.redraw_quiver || you.wield_change)
-        _print_stats_qv(10 + yhack);
+    _print_stats_qv(10 + yhack);
 
     you.redraw_quiver = false;
 
@@ -1889,16 +1876,10 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
-int stealth_breakpoint(int stealth)
+int stealth_pips()
 {
-    if (stealth == 0)
-        return 0;
-    else if (stealth >= 500)
-        return 10;
-    else if (stealth >= 450)
-        return 9;
-    else
-        return 1 + stealth / STEALTH_PIP;
+    // round up.
+    return (player_stealth() + STEALTH_PIP - 1) / STEALTH_PIP;
 }
 
 static string _stealth_bar(int sw)
@@ -1907,11 +1888,19 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth    ";
-    const int stealth_num = stealth_breakpoint(player_stealth());
-    for (int i = 0; i < stealth_num; i++)
-        bar += "+";
-    for (int i = 0; i < 10 - stealth_num; i++)
-        bar += ".";
+
+    const int unadjusted_pips = stealth_pips();
+    const int bar_len = 10;
+    const int num_high_pips = unadjusted_pips % bar_len;
+    static const vector<string> pip_tiers = { ".", "+", "*", "#", "!" };
+    const int max_tier = pip_tiers.size() - 1;
+    const int low_tier = min(unadjusted_pips / bar_len, max_tier);
+    const int high_tier = min(low_tier + 1, max_tier);
+
+    for (int i = 0; i < num_high_pips; i++)
+        bar += pip_tiers[high_tier];
+    for (int i = num_high_pips; i < bar_len; i++)
+        bar += pip_tiers[low_tier];
     bar += "\n";
     linebreak_string(bar, sw);
     return bar;
@@ -2134,7 +2123,7 @@ static vector<formatted_string> _get_overview_stats()
     int col2 = 10;
     int col3 = 11;
 
-    if (player_rotted())
+    if (player_drained())
         col1 += 1;
 
     if (_player_statrotted())
@@ -2143,7 +2132,7 @@ static vector<formatted_string> _get_overview_stats()
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("HP:   ");
     else
         entry.cprintf("Health: ");
@@ -2154,14 +2143,14 @@ static vector<formatted_string> _get_overview_stats()
         entry.textcolour(HUD_VALUE_COLOUR);
 
     entry.cprintf("%d/%d", you.hp, you.hp_max);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf(" (%d)", get_real_hp(true, false));
 
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("MP:   ");
     else
         entry.cprintf("Magic:  ");
@@ -2182,7 +2171,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_drained())
         entry.cprintf("Gold: ");
     else
         entry.cprintf("Gold:   ");
@@ -2392,8 +2381,8 @@ static vector<formatted_string> _get_overview_resistances(
     if (rmuta)
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
-    const int rmagi = player_res_magic(calc_unid) / MR_PIP;
-    out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
+    const int rmagi = player_willpower(calc_unid) / WL_PIP;
+    out += _resist_composer("Will", cwidth, rmagi, 5) + "\n";
 
     out += _stealth_bar(20) + "\n";
 

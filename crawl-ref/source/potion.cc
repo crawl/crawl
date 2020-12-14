@@ -85,8 +85,7 @@ public:
         // cure status effects
         if (you.duration[DUR_CONF]
             || you.duration[DUR_POISONING]
-            || you.disease
-            || player_rotted())
+            || you.disease)
         {
             return true;
         }
@@ -97,8 +96,7 @@ public:
                 *reason = "You can't heal while in death's door.";
             return false;
         }
-        if (!you.can_potion_heal()
-            || you.hp == you.hp_max && player_rotted() == 0)
+        if (!you.can_potion_heal())
         {
             if (reason)
                 *reason = "You have no ailments to cure.";
@@ -110,28 +108,13 @@ public:
     bool effect(bool=true, int=40, bool is_potion = true) const override
     {
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
-        bool unrotted = false;
 
-        if ((you.can_potion_heal() || !is_potion) && !ddoor || player_rotted())
+        if ((you.can_potion_heal() || !is_potion) && !ddoor)
         {
             int amount = 5 + random2(7);
-            if (is_potion && !you.can_potion_heal() && player_rotted())
-            {
-                // Treat the effectiveness of rot removal as if the player
-                // had two levels of MUT_NO_POTION_HEAL
-                unrot_hp(div_rand_round(amount,3));
-                unrotted = true;
-            }
-            else
-            {
-                if (is_potion)
-                    amount = you.scale_potion_healing(amount);
-                if (player_rotted())
-                    unrotted = true;
-                // Pay for rot right off the top.
-                amount = unrot_hp(amount);
-                inc_hp(amount);
-            }
+            if (is_potion)
+                amount = you.scale_potion_healing(amount);
+            inc_hp(amount);
         }
 
         if (ddoor)
@@ -139,8 +122,7 @@ public:
         else if (you.can_potion_heal()
                  || !is_potion
                  || you.duration[DUR_POISONING]
-                 || you.duration[DUR_CONF]
-                 || unrotted)
+                 || you.duration[DUR_CONF])
         {
             if (is_potion)
                 print_potion_heal_message();
@@ -183,7 +165,7 @@ public:
                 *reason = "You cannot heal while in death's door.";
             return false;
         }
-        if (you.hp == you.hp_max && player_rotted() == 0)
+        if (you.hp == you.hp_max)
         {
             if (reason)
                 *reason = "Your health is already full.";
@@ -208,8 +190,6 @@ public:
         int amount = 10 + random2avg(28, 3);
         if (is_potion)
             amount = you.scale_potion_healing(amount);
-        // Pay for rot right off the top.
-        amount = unrot_hp(amount);
         inc_hp(amount);
         if (is_potion)
             print_potion_heal_message();
@@ -300,25 +280,25 @@ public:
     }
 };
 
-class PotionStabbing : public PotionEffect
+class PotionAttraction : public PotionEffect
 {
 private:
-    PotionStabbing() : PotionEffect(POT_STABBING) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionStabbing);
+    PotionAttraction() : PotionEffect(POT_ATTRACTION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionAttraction);
 public:
-    static const PotionStabbing &instance()
+    static const PotionAttraction &instance()
     {
-        static PotionStabbing inst; return inst;
+        static PotionAttraction inst; return inst;
     }
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-        const bool was_stabbing = you.duration[DUR_STABBING] > 0;
+        const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sready to backstab.",
-             was_stabbing ? "more " : "");
+        mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
+             was_attractive ? "more " : "");
 
-        you.increase_duration(DUR_STABBING, 35 + random2(pow), 80);
+        you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);
         return true;
     }
 };
@@ -798,7 +778,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_HASTE, &PotionHaste::instance(), },
     { POT_MIGHT, &PotionMight::instance(), },
     { POT_BRILLIANCE, &PotionBrilliance::instance(), },
-    { POT_STABBING, &PotionStabbing::instance(), },
+    { POT_ATTRACTION, &PotionAttraction::instance(), },
     { POT_FLIGHT, &PotionFlight::instance(), },
     { POT_CANCELLATION, &PotionCancellation::instance(), },
     { POT_AMBROSIA, &PotionAmbrosia::instance(), },

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 // This list must match the enchant_names array in mon-ench.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
@@ -42,7 +44,7 @@ enum enchant_type
 #endif
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
-    ENCH_LOWERED_MR,
+    ENCH_LOWERED_WL,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
 #if TAG_MAJOR_VERSION == 34
@@ -70,7 +72,7 @@ enum enchant_type
     ENCH_PREPARING_RESURRECT,
 #endif
     ENCH_REGENERATION,
-    ENCH_RAISED_MR,
+    ENCH_STRONG_WILLED,
     ENCH_MIRROR_DAMAGE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_MAGIC_ARMOUR,
@@ -100,8 +102,8 @@ enum enchant_type
     ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
 #if TAG_MAJOR_VERSION == 34
     ENCH_DEATHS_DOOR,
-    ENCH_ROLLING,        // Boulder Beetle in ball form
 #endif
+    ENCH_ROLLING,        // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer

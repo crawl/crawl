@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "files.h"
 #include "perlin.h"
+#include "tag-version.h"
 #include "terrain.h"
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
@@ -233,7 +234,7 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
     }
     level_excursion le;
     le.go_to(id);
-    grid = feature_grid(grd);
+    grid = feature_grid(env.grid);
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         grid(*ri) = sanitize_feature(grid(*ri), true);

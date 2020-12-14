@@ -28,7 +28,7 @@ ENDMAP
 NAME: monster_plant_pathfind
 TAGS: monster_plant_pathfind
 ORIENT: encompass
-MONS: generate_awake hippogriff, nothing
+MONS: generate_awake wyvern, nothing
 KMONS: P = plant
 MAP
 xxxxx

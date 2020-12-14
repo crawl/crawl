@@ -39,6 +39,7 @@
 #include "spl-other.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "terrain.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"
@@ -67,14 +68,14 @@ bool check_annotation_exclusion_warning()
         crawl_state.level_annotation_shown = true;
     }
     else if (is_exclude_root(you.pos())
-             && feat_is_travelable_stair(grd(you.pos()))
+             && feat_is_travelable_stair(env.grid(you.pos()))
              && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
         mprf(MSGCH_WARN, "This staircase is marked as excluded!");
         might_be_dangerous = true;
     }
 
-    if (feat_is_travelable_stair(grd(you.pos())))
+    if (feat_is_travelable_stair(env.grid(you.pos())))
     {
         if (LevelInfo *li = travel_cache.find_level_info(level_id::current()))
         {
@@ -128,7 +129,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     if (crawl_state.prev_cmd == CMD_WIZARD)
         return false;
 
-    if (stair != grd(you.pos()))
+    if (stair != env.grid(you.pos()))
         return false;
 
     if (feat_stair_direction(stair) == CMD_NO_CMD)
@@ -794,9 +795,9 @@ void floor_transition(dungeon_feature_type how,
         if (bezotted())
         {
             if (was_bezotted)
-                mpr("Zot already knows this place too well. Flee this branch!");
+                mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
-                mpr("Zot's attention fixes on you again. Flee this branch!");
+                mpr("Zot's attention fixes on you again. Descend or flee this branch!");
         }
         else if (was_bezotted)
         {
@@ -1117,7 +1118,7 @@ static void _update_level_state()
 #endif
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (grd(*ri) == DNGN_SLIMY_WALL)
+        if (env.grid(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;
 
         if (is_icecovered(*ri))

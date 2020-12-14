@@ -126,6 +126,7 @@ public:
     bool res_rot() const;
     bool res_acid() const;
     bool res_sticky_flame() const;
+    bool res_miasma() const;
     bool res_petrify() const;
 
     /**

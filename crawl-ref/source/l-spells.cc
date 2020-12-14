@@ -306,6 +306,34 @@ LUAFN(l_spells_god_loathes)
     PLUARET(boolean, god_loathes_spell(spell, god));
 }
 
+/*** Cast a spell at a target. If the target is not provided, enters interactive
+ * targeting.
+ *
+ * @tparam string spell name
+ * @tparam[opt=0] number x coordinate
+ * @tparam[opt=0] number y coordinate
+ * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
+ * @treturn boolean whether an action took place
+ */
+static int l_spells_cast(lua_State *ls)
+{
+    if (you.turn_is_over)
+        return 0;
+    const string spell_name = luaL_checkstring(ls, 1);
+    spell_type spell = spell_by_name(spell_name, false);
+    if (!is_valid_spell(spell))
+    {
+        luaL_argerror(ls, 1, ("Invalid spell: " + spell_name).c_str());
+        return 0;
+    }
+    PLAYERCOORDS(c, 2, 3);
+    dist target;
+    target.target = c;
+    target.isEndpoint = lua_toboolean(ls, 4); // can be nil
+    quiver::spell_to_action(spell)->trigger(target);
+    PLUARET(boolean, you.turn_is_over);
+}
+
 static const struct luaL_reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
@@ -327,6 +355,7 @@ static const struct luaL_reg spells_clib[] =
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
     { "god_loathes"   , l_spells_god_loathes },
+    { "cast"          , l_spells_cast },
     { nullptr, nullptr }
 };
 

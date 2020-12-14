@@ -62,6 +62,7 @@
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
@@ -765,7 +766,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         you.time_taken /= 2;
 
     you.wield_change  = true;
-    you.m_quiver.on_weapon_changed();
+    quiver::on_weapon_changed();
     you.turn_is_over  = true;
 
     return true;
@@ -1600,7 +1601,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1);
 
-    const dungeon_feature_type feat = grd(you.pos());
+    const dungeon_feature_type feat = env.grid(you.pos());
 
     if (grants_flight && removing_ends_flight
         && is_feat_dangerous(feat, false, true))
@@ -2384,13 +2385,14 @@ static void _rebrand_weapon(item_def& wpn)
         else
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAMING,
-                                    30, SPWPN_FREEZING,
-                                    25, SPWPN_VORPAL,
-                                    20, SPWPN_VENOM,
-                                    15, SPWPN_DRAINING,
-                                    15, SPWPN_ELECTROCUTION,
-                                    12, SPWPN_PROTECTION,
+                                    28, SPWPN_FLAMING,
+                                    28, SPWPN_FREEZING,
+                                    23, SPWPN_VORPAL,
+                                    18, SPWPN_VENOM,
+                                    14, SPWPN_DRAINING,
+                                    14, SPWPN_ELECTROCUTION,
+                                    11, SPWPN_PROTECTION,
+                                    11, SPWPN_SPECTRAL,
                                     8, SPWPN_VAMPIRISM,
                                     3, SPWPN_CHAOS);
         }
@@ -2466,6 +2468,11 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_ACID:
         flash_colour = ETC_SLIME;
         mprf("%s oozes corrosive slime.", itname.c_str());
+        break;
+
+    case SPWPN_SPECTRAL:
+        flash_colour = BLUE;
+        mprf("%s acquires a faint afterimage.", itname.c_str());
         break;
 
     default:
@@ -2750,16 +2757,16 @@ void random_uselessness()
 
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {
-            // If relevant, monsters have their MR halved.
-            if (!mons_immune_magic(*mon))
-                mon->add_ench(lowered_mr);
+            // If relevant, monsters have their WL halved.
+            if (!mons_invuln_will(*mon))
+                mon->add_ench(lowered_wl);
 
             // Annoying but not enough to turn friendlies against you.
             if (!mon->wont_attack())
@@ -2767,7 +2774,7 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -3118,7 +3125,7 @@ void read_scroll(item_def& scroll)
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
 
-        if (feat_eliminates_items(grd(you.pos())))
+        if (feat_eliminates_items(env.grid(you.pos())))
         {
             mpr("Anything you acquired here would fall and be lost!");
             cancel_scroll = true;
@@ -3179,7 +3186,7 @@ void read_scroll(item_def& scroll)
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_immune_magic(**mi))
+            if (mons_invuln_will(**mi))
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
@@ -3385,7 +3392,7 @@ void read_scroll(item_def& scroll)
 
 void tile_item_pickup(int idx, bool part)
 {
-    if (item_is_stationary(mitm[idx]))
+    if (item_is_stationary(env.item[idx]))
     {
         mpr("You can't pick that up.");
         return;
@@ -3420,12 +3427,8 @@ void tile_item_use_secondary(int idx)
 {
     const item_def item = you.inv[idx];
 
-    if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
-    {
-        if (check_warning_inscriptions(item, OPER_FIRE))
-            fire_thing(idx); // fire weapons
-    }
-    else if (you.equip[EQ_WEAPON] == idx)
+    // TODO: add quiver stuff here?
+    if (you.equip[EQ_WEAPON] == idx)
         wield_weapon(true, SLOT_BARE_HANDS);
     else if (item_is_wieldable(item))
     {
@@ -3492,7 +3495,7 @@ void tile_item_use(int idx)
 
         case OBJ_MISSILES:
             if (check_warning_inscriptions(item, OPER_FIRE))
-                fire_thing(idx);
+                quiver::slot_to_action(idx)->trigger(); // TODO: anything more interesting?
             return;
 
         case OBJ_ARMOUR:

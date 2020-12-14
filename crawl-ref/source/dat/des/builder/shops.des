@@ -328,7 +328,7 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen transparent
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
+KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
@@ -390,7 +390,7 @@ SUBST: G : YlG
 :   book of necromancy | book of death | book of unlife | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
-:   black_knights_horse_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
+:   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
 :   sword_of_zonguldrok w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
@@ -610,6 +610,7 @@ TAGS:   transparent no_pool_fixup
 KPROP:  -1wP = no_tele_into
 KMASK:  -w = no_monster_gen
 KMASK:  -1wP = no_item_gen
+KMASK:  -1wP = opaque
 MONS:   hydra
 KMONS:  P = plant
 KFEAT:  P = shallow_water
@@ -680,7 +681,8 @@ local cpaEnchant = crawl.random2(6)
 
 -- Don't want to have the same items every time, but also don't want to pick
 -- the same unrandart twice. So build a custom list...
-local items = {"hat of pondering",
+local items = {"black knight's barding",
+               "hat of pondering",
                "crystal plate armour ego:ponderousness plus:" .. cpaEnchant,
                "plate armour ego:ponderousness plus:" .. plateEnchant}
 local itemCount = crawl.random2(2) + 1
@@ -785,7 +787,7 @@ ENDMAP
 
 # 3 shops
 NAME:    minmay_shop_grove
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
@@ -810,7 +812,7 @@ ENDMAP
 
 # 1 (33%) or 4 (66%) shops
 NAME:    minmay_shop_grid_forest
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 KFEAT:   A = any shop
 SHUFFLE: ABC
@@ -831,7 +833,7 @@ ENDMAP
 
 # 1 (25%), 2 (25%), or 3 (50%) shops
 NAME:    minmay_shop_star
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop
@@ -861,7 +863,7 @@ ENDMAP
 
 # 2 (50%) or 4 (50%) shops
 NAME:    minmay_shoptagon
-TAGS:    extra luniq_floating_shops
+TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 KFEAT:   A = any shop

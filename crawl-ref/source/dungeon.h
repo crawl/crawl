@@ -12,6 +12,7 @@
 
 #include "env.h"
 #include "mapdef.h"
+#include "tag-version.h"
 
 COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 
@@ -59,6 +60,7 @@ enum map_mask_type
     MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
 #endif
     MMT_TURNED_TO_FLOOR = 0x800, // This feature was dug, deconstructed or such.
+    MMT_PASSABLE        = 0x1000 // Passable for purposes of determining level connectivity
 };
 
 class dgn_region;
@@ -158,8 +160,8 @@ public:
     int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
     dungeon_feature_type feature_at(const coord_def &c);
-    bool is_exit(const coord_def &c);
-    bool is_space(const coord_def &c);
+    bool is_exit(const coord_def &c) const;
+    bool is_space(const coord_def &c) const;
 };
 
 class vault_place_iterator
@@ -168,6 +170,7 @@ public:
     vault_place_iterator(const vault_placement &vp);
     operator bool () const;
     coord_def operator * () const;
+    coord_def vault_pos() const;
     const coord_def *operator -> () const;
     vault_place_iterator &operator ++ ();
     vault_place_iterator operator ++ (int);
@@ -223,6 +226,8 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
                                           bool check_collision,
                                           bool make_no_exits,
                                           const coord_def &pos = INVALID_COORD);
+
+void dgn_record_veto(const dgn_veto_exception &e);
 
 void level_clear_vault_memory();
 void run_map_epilogues();

@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "options.h"
 #include "spl-book.h"
 #include "book-data.h"
 
@@ -1014,10 +1015,11 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
  * @param   specspell  The spell to be learned.
  * @param   wizard     Whether to memorise instantly and skip some checks for
  *                     wizmode memorisation.
+ * @param   interactive whether to do the interactive prompt
  * @return             true if the player learned the spell, false
  *                     otherwise.
 */
-bool learn_spell(spell_type specspell, bool wizard)
+bool learn_spell(spell_type specspell, bool wizard, bool interactive)
 {
     if (!_learn_spell_checks(specspell, wizard))
         return false;
@@ -1041,16 +1043,19 @@ bool learn_spell(spell_type specspell, bool wizard)
         }
     }
 
-    const string prompt = make_stringf(
-             "Memorise %s, consuming %d spell level%s and leaving %d?",
-             spell_title(specspell), spell_levels_required(specspell),
-             spell_levels_required(specspell) != 1 ? "s" : "",
-             player_spell_levels() - spell_levels_required(specspell));
-
-    if (!yesno(prompt.c_str(), true, 'n', false))
+    if (interactive)
     {
-        canned_msg(MSG_OK);
-        return false;
+        const string prompt = make_stringf(
+                 "Memorise %s, consuming %d spell level%s and leaving %d?",
+                 spell_title(specspell), spell_levels_required(specspell),
+                 spell_levels_required(specspell) != 1 ? "s" : "",
+                 player_spell_levels() - spell_levels_required(specspell));
+
+        if (!yesno(prompt.c_str(), true, 'n', false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
     }
 
     if (wizard)
@@ -1063,6 +1068,8 @@ bool learn_spell(spell_type specspell, bool wizard)
 
         did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
     }
+
+    quiver::on_actions_changed();
 
     return true;
 }

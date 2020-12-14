@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 typedef int (*weight_func)(int val);
 
 /*

@@ -390,14 +390,14 @@ vector<coord_def> monster_pathfind::calc_waypoints()
 
 bool monster_pathfind::traversable(const coord_def& p)
 {
-    if (!traverse_unmapped && grd(p) == DNGN_UNSEEN)
+    if (!traverse_unmapped && env.grid(p) == DNGN_UNSEEN)
         return false;
 
     // XXX: Hack to be somewhat consistent with uses of
     //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(grd(p)))
+    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(env.grid(p)))
     {
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.
@@ -421,7 +421,7 @@ bool monster_pathfind::traversable(const coord_def& p)
     if (mons)
         return mons_traversable(p);
 
-    return feat_has_solid_floor(grd(p));
+    return feat_has_solid_floor(env.grid(p));
 }
 
 // Checks whether a given monster can pass over a certain position, respecting
@@ -451,7 +451,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (feat_is_closed_door(grd(npos)))
+    if (feat_is_closed_door(env.grid(npos)))
         return 2;
 
     // Travelling through water, entering or leaving water is more expensive

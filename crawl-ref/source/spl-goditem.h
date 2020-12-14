@@ -5,7 +5,10 @@
 #include "holy-word-source-type.h"
 #include "spell-type.h"
 #include "spl-cast.h"
+#include "tag-version.h"
 #include "torment-source-type.h"
+
+class actor;
 
 spret cast_healing(int pow, bool fail);
 bool heal_monster(monster& patient, int amount);
@@ -76,7 +79,7 @@ void holy_word_player(holy_word_source_type source);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_cell(coord_def where, actor *attacker, torment_source_type taux);
-void torment_player(actor *attacker, torment_source_type taux);
+void torment_player(const actor *attacker, torment_source_type taux);
 
 void setup_cleansing_flame_beam(bolt &beam, int pow,
                                 cleansing_flame_source caster,

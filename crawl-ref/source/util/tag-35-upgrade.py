@@ -94,7 +94,6 @@ if __name__ == "__main__":
     _cleanup_textfile("dat/des/portals/trove.des", comment_prefix="--")
     _cleanup_textfile("dat/des/sprint/zigsprint.des", comment_prefix="--")
     _cleanup_textfile("dat/dlua/v_layouts.lua", comment_prefix="--")
-    _delete_file("dat/des/altar/pakellas_experiments.des")
     _delete_file("dat/des/branches/blade.des")
     _delete_file("dat/des/branches/temple_compat.des")
     _delete_file("dat/des/builder/layout_forest.des")

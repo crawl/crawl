@@ -140,14 +140,13 @@ ENDMAP
 
 NAME:    minmay_shoals_entry_beasts
 TAGS:    shoals_entry transparent
-MONS:    hippogriff, manticore, nothing, nothing, nothing, nothing, nothing
-KMONS:   8 = nothing
-SHUFFLE: 12345678
+MONS:    wind drake, manticore
+NSUBST:  1 = 1 / 2 / .
 KFEAT:   O = enter_shoals
 MAP
-123
-8O4
-765
+111
+1O1
+111
 ENDMAP
 
 NAME:   elwin_shoals_entry_rocks
@@ -485,7 +484,7 @@ TAGS: transparent
 DEPTH: Shoals
 SUBST: y = ..xx1
 NSUBST: . = 4:1 / *:.
-MONS: harpy zombie w:30 / hippogriff zombie / bat zombie w:5
+MONS: harpy zombie w:30 / manticore zombie / bat zombie w:5
 MAP
  .....
 ...y...
@@ -568,7 +567,7 @@ ENDMAP
 NAME: nicolae_shoals_arrival_archipelago
 DEPTH: Shoals
 SHUFFLE: {[(<, abc, def
-SUBST: ade:@, bcf:W
+SUBST: a:@, de:., bcf:W
 MAP
      wwwwb
     www...b
@@ -686,7 +685,7 @@ NAME: nicolae_shoals_siren_and_animal_friends
 DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
-KMONS: f = bat w:5 / harpy / hippogriff w:5 / \
+KMONS: f = bat w:5 / harpy / manticore w:5 / \
        kraken w:1 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
@@ -1239,7 +1238,7 @@ DEPTH: Shoals
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 KPROP: . = no_tide
-MONS: sea snake, wind drake, manticore / hippogriff, alligator snapping turtle
+MONS: sea snake, wind drake, manticore, alligator snapping turtle
 MONS: snapping turtle, merfolk impaler / merfolk aquamancer / merfolk javelineer
 SHUFFLE: -'"
 NSUBST: - = 2:1 / 2=1.., ' = 1:2 / 3=3., " = 1:4 / 2=5., ` = 1=|* / 2=*%

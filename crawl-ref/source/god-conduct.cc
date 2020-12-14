@@ -13,6 +13,7 @@
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h" // uppercase_first
+#include "tag-version.h"
 
 #include <functional>
 
@@ -220,12 +221,6 @@ struct dislike_response
     }
 };
 
-/// Good gods', and Beogh's, response to cannibalism.
-static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
-    "you perform cannibalism", true,
-    5, 3, nullptr, " expects more respect for your departed relatives."
-};
-
 /// Zin and Ely's responses to evil actions. TODO: parameterize & merge w/TSO
 static const dislike_response GOOD_EVIL_RESPONSE = {
     "you use evil magic or items", true,
@@ -273,7 +268,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_ZIN,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
@@ -303,7 +297,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_SHINING_ONE,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
             "you attack non-hostile holy beings", true,
             1, 2, nullptr, nullptr, _attacking_holy_matters
@@ -360,7 +353,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_ELYVILON,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_EVIL, GOOD_EVIL_RESPONSE },
@@ -381,7 +373,6 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_BEOGH,
     {
-        { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_DESECRATE_ORCISH_REMAINS, { "you desecrate orcish remains", true, 1 } },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allied orcs") },
     },
@@ -1105,11 +1096,6 @@ string get_god_likes(god_type which_god)
     }
 
     return text;
-}
-
-bool god_hates_cannibalism(god_type god)
-{
-    return divine_peeves[god].count(DID_CANNIBALISM);
 }
 
 conduct_type god_hates_item_handling(const item_def& item)

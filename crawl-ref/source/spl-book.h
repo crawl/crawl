@@ -5,9 +5,13 @@
 
 #pragma once
 
+#include <vector>
+
 #define RANDBOOK_SIZE 8
 #include "item-prop-enum.h"
 #include "spl-util.h" // spschool
+
+using std::vector;
 
 #define SPELL_LIST_KEY "spell_list"
 
@@ -30,7 +34,7 @@ bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();
 bool learn_spell();
-bool learn_spell(spell_type spell, bool wizard = false);
+bool learn_spell(spell_type spell, bool wizard = false, bool interactive = true);
 
 bool library_add_spells(vector<spell_type> spells);
 

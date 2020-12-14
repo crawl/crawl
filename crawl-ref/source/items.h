@@ -5,10 +5,15 @@
 
 #pragma once
 
+#include <vector>
+
 #include "equipment-type.h"
 #include "god-type.h"
 #include "mon-inv-type.h"
 #include "item-prop.h"
+#include "tag-version.h"
+
+using std::vector;
 
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.

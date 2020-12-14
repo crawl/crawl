@@ -1,3 +1,11 @@
+#pragma once
+
+#include <vector>
+
+#include "tag-version.h"
+
+using std::vector;
+
 // This needs to be re-ordered when TAG_MAJOR_VERSION changes!
 static const vector<spell_type> spellbook_templates[] =
 {
@@ -330,9 +338,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Necronomicon
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
-    SPELL_DEATHS_DOOR,
     SPELL_INFESTATION,
     SPELL_NECROMUTATION,
+    SPELL_DEATHS_DOOR,
 },
 
 };

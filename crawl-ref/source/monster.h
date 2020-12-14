@@ -1,10 +1,12 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "actor.h"
 #include "beh-type.h"
 #include "enchant-type.h"
+#include "kill-method-type.h"
 #include "mon-ench.h"
 #include "mon-poly.h"
 #include "montravel-target-type.h"
@@ -12,6 +14,8 @@
 #include "seen-context-type.h"
 #include "spl-util.h"
 #include "xp-tracking-type.h"
+
+using std::vector;
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -206,10 +210,7 @@ public:
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
-    void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
-    void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
-    void apply_enchantment(const mon_enchant &me);
 
     bool can_drink() const;
     bool can_drink_potion(potion_type ptype) const;
@@ -258,7 +259,6 @@ public:
     bool     alive() const override;
     bool     defined() const { return alive(); }
     bool     swimming() const override;
-    bool     wants_submerge() const;
 
     bool     submerged() const override;
     bool     can_drown() const;
@@ -342,8 +342,7 @@ public:
 
     bool fumbles_attack() override;
 
-    int  skill(skill_type skill, int scale = 1,
-               bool real = false, bool drained = true,
+    int  skill(skill_type skill, int scale = 1, bool real = false,
                bool temp = true) const override;
 
     void attacking(actor *other, bool ranged) override;
@@ -362,7 +361,7 @@ public:
     void corrupt();
     bool polymorph(int pow, bool allow_immobile = true) override;
     bool polymorph(poly_power_type power = PPT_SAME);
-    void banish(actor *agent, const string &who = "", const int power = 0,
+    void banish(const actor *agent, const string &who = "", const int power = 0,
                 bool force = false) override;
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;
@@ -371,7 +370,7 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic() const override;
-    bool is_holy(bool check_spells = true) const override;
+    bool is_holy() const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
@@ -384,7 +383,7 @@ public:
     int res_cold() const override;
     int res_elec() const override;
     int res_poison(bool temp = true) const override;
-    rot_resistance res_rotting(bool /*temp*/ = true) const override;
+    bool res_miasma(bool /*temp*/ = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
@@ -394,7 +393,7 @@ public:
     bool res_tornado() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
-    int res_magic(bool calc_unid = true) const override;
+    int willpower(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
@@ -467,14 +466,12 @@ public:
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;
     bool sicken(int strength) override;
-    void paralyse(actor *, int str, string source = "") override;
-    void petrify(actor *, bool force = false) override;
-    bool fully_petrify(actor *foe, bool quiet = false) override;
+    void paralyse(const actor *, int str, string source = "") override;
+    void petrify(const actor *, bool force = false) override;
+    bool fully_petrify(bool quiet = false) override;
     void slow_down(actor *, int str) override;
     void confuse(actor *, int strength) override;
-    bool drain_exp(actor *, bool quiet = false, int pow = 3) override;
-    bool rot(actor *, int amount, bool quiet = false, bool no_cleanup = false)
-        override;
+    bool drain(const actor *, bool quiet = false, int pow = 3) override;
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr) override;
@@ -510,7 +507,7 @@ public:
     bool    shielded() const override;
     int     shield_bonus() const override;
     int     shield_block_penalty() const override;
-    void    shield_block_succeeded(actor *foe) override;
+    void    shield_block_succeeded() override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
     void    ablate_repulsion() override;
@@ -615,4 +612,8 @@ private:
                               int &nvalid) const;
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
+
+    void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
+    void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
+    void apply_enchantment(const mon_enchant &me);
 };
