@@ -1596,10 +1596,9 @@ Trolls (Tr)
   slowly.
 
 Ghouls (Gh)
-  Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
-  sleep in their graves for years on end, when they rise to walk among the
-  living, they must eat the dead to survive. Slain foes heal Ghouls as they feast
-  on the macabre energies released.
+  Ghouls are horrible undead creatures that sleep in their graves for years on
+  end, only to rise and stalk the living. Slain foes heal these monstrous
+  beings as they feast on the macabre energies released.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
