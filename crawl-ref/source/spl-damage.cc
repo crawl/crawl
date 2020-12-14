@@ -1268,7 +1268,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 dice_def irradiate_damage(int pow, bool random)
 {
     const int dice = 6;
-    const int max_dam = 30 + random ? div_rand_round(pow, 2) : pow / 2;
+    const int max_dam = 30 + (random ? div_rand_round(pow, 2) : pow / 2);
     return calc_dice(dice, max_dam);
 }
 
