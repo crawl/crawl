@@ -3227,8 +3227,10 @@ static bool _convert_obsolete_species()
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
-        if (!yes_or_no("This <red>Lava Orc</red> save game cannot be loaded as-is. If you "
-                       "load it now, your character will be converted to a Hill Orc. Continue?"))
+        if (!yesno(
+            "This Lava Orc save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Hill Orc. Continue?",
+                       false, 'N'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
@@ -3239,7 +3241,8 @@ static bool _convert_obsolete_species()
         }
         change_species_to(SP_HILL_ORC);
         // No need for conservation
-        you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
+        you.innate_mutation[MUT_CONSERVE_SCROLLS]
+                                = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
         // This is not an elegant way to deal with lava, but at this point the
         // level isn't loaded so we can't check the grid features. In
         // addition, even if the player isn't over lava, they might still get
@@ -3249,8 +3252,10 @@ static bool _convert_obsolete_species()
     }
     if (you.species == SP_DJINNI)
     {
-        if (!yes_or_no("This <red>Djinni</red> save game cannot be loaded as-is. If you "
-                       "load it now, your character will be converted to a Vine Stalker. Continue?"))
+        if (!yesno(
+            "This Djinni save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Vine Stalker. Continue?",
+                       false, 'N'))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
