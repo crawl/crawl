@@ -461,62 +461,41 @@ a++++++++a
 aaaaaaaaaa
 ENDMAP
 
-NAME:    nzn_ghosts_randoct
+NAME:    nzn_ghost_randoct
 DEPTH:   D:7-, Depths, Lair, Crypt, Spider, Zot
 ORIENT:  float
-SHUFFLE: P/S, Q/R
-NSUBST:  Q = 1:Q / *:'
-NSUBST:  R = 1:R / *:'
-NSUBST:  x = 2:' / *:c
-SUBST:   ABCD = ':75 $:5
-SUBST:   E = ':50 W:30 0
-SUBST:   F = ':50 $ 0
+ITEM:    potion of haste / scroll of blinking
+ITEM:    potion of heal wounds / scroll of teleportation
 MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
 MONS:    caustic shrike / juggernaut / titan, orb of fire / ancient lich
 MONS:    ice statue / oklob plant, w:5 orange crystal statue / obsidian statue
-ITEM:    potion of haste / scroll of blinking
-ITEM:    potion of heal wounds / scroll of teleportation
+SHUFFLE: PS, QR
+NSUBST:  Q = Q / ', R = R / '
+NSUBST:  x = 2=' / c
+SUBST:   DEFH = ':75 $:5, J = ':50 W:30 0, K = ':50 $ 0
 : if you.in_branch("Zot") then
-NSUBST:  H = 2:1 / *:5
-SUBST:   G = ':30 9:20 d:20 8 |
-SUBST:   y = G:30 7
-SHUFFLE: c / c / c / c / b / b
-SHUFFLE: W / w / l
+NSUBST:  M = 2=1 / 5
+SUBST:   L = ':30 9:20 d:20 8 |
+SUBST:   y = G:30 7, c : ccb, W : Wwl
 : elseif you.in_branch("Depths") then
-NSUBST:  H = 2:1 / *:4
-SUBST:   G = ':30 9:20 d:20 8 *
-SUBST:   * = *|
-SUBST:   y = G:30 7
-SHUFFLE: c / c / v / v / b / b
-SHUFFLE: W / w / l
+NSUBST:  M = 2=1 / 4
+SUBST:   L = ':30 9:20 d:20 8 *, * = *|
+SUBST:   y = G:30 7, c : cvb, W : Wwl
 : elseif you.in_branch("Crypt") then
-NSUBST:  H = 2:1 / *:3
-SUBST:   G = ':30 9:20 d:20 8 *
-SUBST:   * = *|
-SUBST:   y = G
-SUBST:   W = '
+NSUBST:  M = 2=1 / 3
+SUBST:   L = ':30 9:20 d:20 8 *, * = *|
+SUBST:   y = G, W = '
 : elseif you.in_branch("Spider") then
-NSUBST:  H = 1:1 / 1:2 / *:H
-SUBST:   H = * 1:5 8:5
-SUBST:   G = ':40 %:30 9:20
-SUBST:   % = %**ee
-SUBST:   * = **|
-SUBST:   f = dde
-SUBST:   y = G:70 6
-SUBST:   ' = ':80 WW
+NSUBST:  M = 1 / 2 / M
+SUBST:   M = * 1:5 8:5, L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
+SUBST:   y = G:70 6, ' = ':80 WW
 : elseif you.absdepth() >= 13 then
-NSUBST:  H = 1:1 / 1:d / *:H
-SUBST:   H = * 9:6 1:2 8:2
-SUBST:   G = ':20 %:50 9:20
-SUBST:   % = %**ee
-SUBST:   * = **|
-SUBST:   f = dde
+NSUBST:  M = 1 / d / M
+SUBST:   M = * 9:6 1:2 8:2, L = ':20 %:50 9:20, % = %**ee, * = **|, f = dde
 SUBST:   y = G:30 6
 : else
-NSUBST:  H = 1:1 / 1:9 / 1:e / 1:%
-SUBST:   G = ':60 9 0 %
-SUBST:   % = %*
-SUBST:   * = **e|
+NSUBST:  M = 1 / 9 / e / %
+SUBST:   L = ':60 9 0 %, % = %*, * = **e|
 SUBST:   y = G:70 6
 : end
 MARKER:  P = lua:transp_loc("ghost_randoct_entry")
@@ -528,21 +507,21 @@ MAP
         .@.
        .@P@.
       .ncncn.
-     .cnBRBnc.
-    .ccBcncBcc.
-   .ncEFEFEFEcn.
-  .ccyEEFEFEEycc.
- .ccEEcFxnxFcEEcc.
-.nnAFEFxxHxxFEFDnn.
-.cAcEFxxGGGxxFEcDc.
-.nQnFEnHGGGHnEFnRn.
-.cAcEFxxGGGxxFEcDc.
-.nnAFEFxxHxxFEFDnn.
- .ccEEcFxnxFcEEcc.
-  .ccyEEFEFEEycc.
-   .ncEFEFEFEcn.
-    .ccCcncCcc.
-     .cnCQCnc.
+     .cnEREnc.
+    .ccEcncEcc.
+   .ncJKJKJKJcn.
+  .ccyJJKJKJJycc.
+ .ccJJcKxnxKcJJcc.
+.nnDKJKxxMxxKJKHnn.
+.cDcJKxxLLLxxKJcHc.
+.nQnKJnMLLLMnJKnRn.
+.cDcJKxxLLLxxKJcHc.
+.nnDKJKxxMxxKJKHnn.
+ .ccJJcKxnxKcJJcc.
+  .ccyJJKJKJJycc.
+   .ncJKJKJKJcn.
+    .ccFcncFcc.
+     .cnFQFnc.
       .ncncn.
        .@S@.
         .@.
