@@ -536,6 +536,8 @@ static void _setup_generic(const newgame_def& ng,
     set_mp(you.max_magic_points);
 
     // look for something fun to quiver
+    if (you.weapon())
+        you.launcher_action.set(quiver::find_action_from_launcher(you.weapon()));
     you.quiver_action.cycle();
 
     if (normal_dungeon_setup)
