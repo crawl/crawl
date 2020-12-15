@@ -371,7 +371,7 @@ public:
     targeter_multiposition(const actor *a, initializer_list<coord_def> seeds,
                         bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
 
-    void add_position(const coord_def &c);
+    void add_position(const coord_def &c, bool force=false);
     bool valid_aim(coord_def) override { return true; }
     aff_type is_affected(coord_def loc) override;
 

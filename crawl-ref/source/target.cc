@@ -1714,11 +1714,14 @@ targeter_multiposition::targeter_multiposition(const actor *a,
 }
 
 
-void targeter_multiposition::add_position(const coord_def &loc)
+void targeter_multiposition::add_position(const coord_def &loc, bool force)
 {
     actor *act = actor_at(loc);
     if (agent == &you && act == &you)
         return; // any exceptions to this?
+
+    if (!force && act && agent && !can_affect_unseen() && !agent->can_see(*act))
+        return;
 
     // Friendly creature, don't mark this square. This logic is only implemented
     // for players, because this class is currently only used for ui
@@ -1756,7 +1759,7 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
     {
         if (affected_positions.count(c)) // did the parent constructor like this pos?
             for (adjacent_iterator ai(c); ai; ++ai)
-                add_position(*ai);
+                add_position(*ai, true);
     }
 }
 
@@ -1767,12 +1770,12 @@ targeter_ramparts::targeter_ramparts(const actor *a)
     for (auto &c : seeds)
     {
         add_position(c);
-        for (adjacent_iterator ai(c); ai; ++ai)
-            if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
-                add_position(*ai);
+        if (affected_positions.count(c)) // don't add adjacent position in case add_position ignores c
+            for (adjacent_iterator ai(c); ai; ++ai)
+                if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
+                    add_position(*ai, true);
     }
 }
-
 
 aff_type targeter_ramparts::is_affected(coord_def loc)
 {

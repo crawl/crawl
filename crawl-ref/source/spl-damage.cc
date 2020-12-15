@@ -3459,7 +3459,7 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
 
     if (tracer)
     {
-        if (!mon)
+        if (!mon || !you.can_see(*mon))
             return spret::abort;
         else
             return spret::success;
