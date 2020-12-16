@@ -624,7 +624,7 @@ void floor_transition(dungeon_feature_type how,
     if (!forced)
     {
         apply_barbs_damage();
-        remove_ice_armour_movement();
+        remove_ice_movement();
     }
 
     // Magical level changes (which currently only exist "downwards") need this.

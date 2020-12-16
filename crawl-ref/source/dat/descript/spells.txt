@@ -605,12 +605,14 @@ Conjures up a large cloud of lethally cold vapour.
 %%%%
 Frozen Ramparts spell
 
-Encases surrounding walls with ice for a short time. Victims that wander near
-the icy walls will be damaged, and this may temporarily slow cold-blooded
-creatures. The damage dealt bypasses any armour the target may have. Each
-victim is only ever affected by one icy wall at a time.
+Encases surrounding walls with ice for a short time as long as the caster
+refrains from moving. Victims that wander near the icy walls will be damaged,
+and this may temporarily slow cold-blooded creatures. The damage dealt bypasses
+any armour the target may have. Each victim is only ever affected by one icy
+wall at a time.
 
-The caster and any allies can walk safely past icy walls.
+The caster and any allies can safely remain near icy walls. The ice will crack
+and fall away if the caster moves to a new position.
 %%%%
 Fulminant Prism spell
 

@@ -182,10 +182,21 @@ void apply_barbs_damage(bool rampaging)
 
 bool cancel_ice_move()
 {
+    vector<string> effects;
+
     if (you.duration[DUR_ICY_ARMOUR])
+        effects.push_back("icy armour");
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        effects.push_back("frozen ramparts");
+
+    if (!effects.empty())
     {
-        if (!yesno("Your icy armour will break if you move. Continue?",
-                   false, 'n'))
+        string prompt = "Your "
+                        + comma_separated_line(effects.begin(), effects.end())
+                        + " will break if you move. Continue?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             return true;
@@ -195,7 +206,7 @@ bool cancel_ice_move()
     return false;
 }
 
-void remove_ice_armour_movement()
+void remove_ice_movement()
 {
     if (you.duration[DUR_ICY_ARMOUR])
     {
@@ -203,6 +214,13 @@ void remove_ice_armour_movement()
                              "you move.");
         you.duration[DUR_ICY_ARMOUR] = 0;
         you.redraw_armour_class = true;
+    }
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+    {
+        you.duration[DUR_FROZEN_RAMPARTS] = 0;
+        end_frozen_ramparts();
+        mpr("The frozen ramparts melt away as you move.");
     }
 }
 
@@ -709,7 +727,7 @@ static spret _rampage_forward(coord_def move)
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_barbs_damage(true);
-    remove_ice_armour_movement();
+    remove_ice_movement();
     apply_noxious_bog(old_pos);
     apply_cloud_trail(old_pos);
 
@@ -1077,7 +1095,7 @@ void move_player_action(coord_def move)
             _clear_constriction_data();
             move_player_to_grid(targ, true);
             apply_barbs_damage();
-            remove_ice_armour_movement();
+            remove_ice_movement();
             apply_noxious_bog(old_pos);
             apply_cloud_trail(old_pos);
         }

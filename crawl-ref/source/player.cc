@@ -4618,21 +4618,7 @@ void dec_frozen_ramparts(int delay)
 
     if (!you.duration[DUR_FROZEN_RAMPARTS])
     {
-        ASSERT(you.props.exists(FROZEN_RAMPARTS_KEY));
-        const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
-        ASSERT(in_bounds(pos));
-
-        for (distance_iterator di(pos, false, false,
-                    spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; di++)
-        {
-            env.pgrid(*di) &= ~FPROP_ICY;
-            env.map_knowledge(*di).flags &= ~MAP_ICY;
-        }
-
-        you.props.erase(FROZEN_RAMPARTS_KEY);
-
-        env.level_state &= ~LSTATE_ICY_WALL;
-
+        end_frozen_ramparts();
         mpr("The frozen ramparts melt away.");
     }
 }

@@ -3410,6 +3410,26 @@ spret cast_frozen_ramparts(int pow, bool fail)
     return spret::success;
 }
 
+void end_frozen_ramparts()
+{
+    if (!you.props.exists(FROZEN_RAMPARTS_KEY))
+        return;
+
+    const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
+    ASSERT(in_bounds(pos));
+
+    for (distance_iterator di(pos, false, false,
+                spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; di++)
+    {
+        env.pgrid(*di) &= ~FPROP_ICY;
+        env.map_knowledge(*di).flags &= ~MAP_ICY;
+    }
+
+    you.props.erase(FROZEN_RAMPARTS_KEY);
+
+    env.level_state &= ~LSTATE_ICY_WALL;
+}
+
 static bool _abszero_target_check(monster &m)
 {
     return you.see_cell_no_trans(m.pos())
