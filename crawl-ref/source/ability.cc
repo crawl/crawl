@@ -3548,7 +3548,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
  *                         be excluded.
  * @return  A vector of talent structs.
  */
-vector<talent> your_talents(bool check_confused, bool include_unusable)
+vector<talent> your_talents(bool check_confused, bool include_unusable, bool ignore_piety)
 {
     vector<talent> talents;
 
@@ -3593,7 +3593,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
 
     // player_has_ability will just brute force these anyways (TODO)
-    for (ability_type abil : get_god_abilities(include_unusable, false,
+    for (ability_type abil : get_god_abilities(include_unusable, ignore_piety,
                                                include_unusable))
     {
         _add_talent(talents, abil, check_confused);
