@@ -1188,15 +1188,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (ability == ABIL_NON_ABILITY || ability == NUM_ABILITIES)
-                return false;
-            // it's quite something that this vector needs to be reconstructed
-            // every time...
-            vector<talent> talents = your_talents(false, true);
-            for (const auto &t : talents)
-                if (t.which == ability)
-                    return true;
-            return false;
+            return player_has_ability(ability, true);
         }
 
         bool is_enabled() const override

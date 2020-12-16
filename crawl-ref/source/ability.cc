@@ -932,6 +932,7 @@ static const string _detailed_cost_description(ability_type ability)
     return ret.str();
 }
 
+// TODO: consolidate with player_has_ability?
 ability_type fixup_ability(ability_type ability)
 {
     switch (ability)
@@ -3428,6 +3429,114 @@ static void _add_talent(vector<talent>& vec, const ability_type ability,
         vec.push_back(t);
 }
 
+bool is_religious_ability(ability_type abil)
+{
+    // ignores abandon religion / convert to beogh
+    return abil >= ABIL_FIRST_RELIGIOUS_ABILITY
+        && abil <= ABIL_LAST_RELIGIOUS_ABILITY;
+}
+
+bool player_has_ability(ability_type abil, bool include_unusable)
+{
+    // TODO: consolidate fixup checks into here?
+    abil = fixup_ability(abil);
+    if (abil == ABIL_NON_ABILITY || abil == NUM_ABILITIES)
+        return false;
+
+    if (is_religious_ability(abil))
+    {
+        // TODO: something less dumb than this?
+        auto god_abils = get_god_abilities(include_unusable, false,
+                                               include_unusable);
+        return count(god_abils.begin(), god_abils.end(), abil);
+    }
+
+    if (species_is_draconian(you.species)
+                                && draconian_breath(you.species) == abil)
+    {
+        return !form_changed_physiology() || you.form == transformation::dragon;
+    }
+
+    switch (abil)
+    {
+    case ABIL_HEAL_WOUNDS:
+        return you.species == SP_DEEP_DWARF;
+    case ABIL_SHAFT_SELF:
+        if (crawl_state.game_is_sprint() || brdepth[you.where_are_you] == 1)
+            return false;
+        // fallthrough
+    case ABIL_DIG:
+        return you.species == SP_FORMICID
+                            && (form_keeps_mutations() || include_unusable);
+    case ABIL_HOP:
+        return you.get_mutation_level(MUT_HOP);
+    case ABIL_ROLLING_CHARGE:
+        return you.get_mutation_level(MUT_ROLL);
+    case ABIL_BREATHE_POISON:
+        return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
+    case ABIL_SPIT_POISON:
+        return you.get_mutation_level(MUT_SPIT_POISON) == 1;
+    case ABIL_REVIVIFY:
+        return you.species == SP_VAMPIRE && !you.vampire_alive;
+    case ABIL_EXSANGUINATE:
+        return you.species == SP_VAMPIRE && you.vampire_alive;
+    case ABIL_TRAN_BAT:
+        return you.species == SP_VAMPIRE && !you.vampire_alive
+            && you.experience_level >= 3 && you.form != transformation::bat;
+    case ABIL_FLY:
+        return you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT];
+    case ABIL_STOP_FLYING:
+        // handles both species and evoke flight
+        // if (you.racial_permanent_flight() && you.attribute[ATTR_PERM_FLIGHT])
+        //     return true;
+        // TODO: dbl check tengu flight
+        return you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE];
+
+    case ABIL_BREATHE_FIRE:
+        // red draconian handled before the switch
+        return you.form == transformation::dragon
+                            && dragon_form_dragon_type() == MONS_FIRE_DRAGON;
+    // mutations
+    case ABIL_DAMNATION:
+        return you.get_mutation_level(MUT_HURL_DAMNATION);
+    case ABIL_END_TRANSFORMATION:
+        return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
+    case ABIL_BLINK:
+        return you.get_mutation_level(MUT_BLINK);
+    // TODO: other god abilities
+    case ABIL_RENOUNCE_RELIGION:
+        return !you_worship(GOD_NO_GOD);
+    case ABIL_CONVERT_TO_BEOGH:
+        return env.level_state & LSTATE_BEOGH && can_convert_to_beogh();
+    case ABIL_CANCEL_PPROJ:
+        return you.duration[DUR_PORTAL_PROJECTILE];
+    // pseudo-evocations from equipped items
+    case ABIL_EVOKE_BLINK:
+        return you.scan_artefacts(ARTP_BLINK)
+                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+    case ABIL_EVOKE_THUNDER:
+        return player_equip_unrand(UNRAND_RCLOUDS)
+                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+    case ABIL_EVOKE_BERSERK:
+        return you.evokable_berserk()
+                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+    case ABIL_EVOKE_TURN_INVISIBLE:
+        return you.evokable_invis()
+                                && !you.get_mutation_level(MUT_NO_ARTIFICE);
+    case ABIL_EVOKE_FLIGHT:
+        return you.evokable_flight() && !you.get_mutation_level(MUT_NO_ARTIFICE)
+            // Has no effect on permanently flying species
+            && !you.racial_permanent_flight()
+            // you can still evoke perm flight if you have temporary flight
+            && (!you.airborne()
+                || !you.permanent_flight()
+                   && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING));
+    default:
+        // removed abilities handled here
+        return false;
+    }
+}
+
 /**
  * Return all relevant talents that the player has.
  *
@@ -3443,141 +3552,54 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
     vector<talent> talents;
 
-    // Species-based abilities.
-    if (you.species == SP_DEEP_DWARF)
-        _add_talent(talents, ABIL_HEAL_WOUNDS, check_confused);
+    // TODO: can we just iterate over ability_type?
+    vector<ability_type> check_order =
+        { ABIL_HEAL_WOUNDS,
+            ABIL_DIG,
+            ABIL_SHAFT_SELF,
+            ABIL_HOP,
+            ABIL_ROLLING_CHARGE,
+            ABIL_BREATHE_POISON,
+            ABIL_SPIT_POISON,
+            ABIL_BREATHE_FIRE,
+            ABIL_BREATHE_FROST,
+            ABIL_BREATHE_POISON,
+            ABIL_BREATHE_LIGHTNING,
+            ABIL_BREATHE_POWER,
+            ABIL_BREATHE_STEAM,
+            ABIL_BREATHE_MEPHITIC,
+            ABIL_BREATHE_ACID,
+            ABIL_TRAN_BAT,
+            ABIL_REVIVIFY,
+            ABIL_EXSANGUINATE,
+            ABIL_FLY,
+            ABIL_STOP_FLYING,
+            ABIL_DAMNATION,
+            ABIL_END_TRANSFORMATION,
+            ABIL_BLINK,
+            ABIL_RENOUNCE_RELIGION,
+            ABIL_CONVERT_TO_BEOGH,
+            ABIL_CANCEL_PPROJ,
+            ABIL_EVOKE_BLINK,
+            ABIL_EVOKE_THUNDER,
+            ABIL_EVOKE_BERSERK,
+            ABIL_EVOKE_TURN_INVISIBLE,
+            ABIL_EVOKE_FLIGHT
+        };
 
-    if (you.species == SP_FORMICID
-        && (form_keeps_mutations() || include_unusable))
-    {
-        _add_talent(talents, ABIL_DIG, check_confused);
-        if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
-            _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
-    }
+    for (auto a : check_order)
+        if (player_has_ability(a, include_unusable))
+            _add_talent(talents, a, check_confused);
 
-    if (you.get_mutation_level(MUT_HOP))
-        _add_talent(talents, ABIL_HOP, check_confused);
 
-    if (you.get_mutation_level(MUT_ROLL))
-        _add_talent(talents, ABIL_ROLLING_CHARGE, check_confused);
-
-    // Spit Poison, possibly upgraded to Breathe Poison.
-    if (you.get_mutation_level(MUT_SPIT_POISON) == 2)
-        _add_talent(talents, ABIL_BREATHE_POISON, check_confused);
-    else if (you.get_mutation_level(MUT_SPIT_POISON))
-        _add_talent(talents, ABIL_SPIT_POISON, check_confused);
-
-    if (species_is_draconian(you.species)
-        // Draconians don't maintain their original breath weapons
-        // if shapechanged into a non-dragon form.
-        && (!form_changed_physiology() || you.form == transformation::dragon)
-        && draconian_breath(you.species) != ABIL_NON_ABILITY)
-    {
-        _add_talent(talents, draconian_breath(you.species), check_confused);
-    }
-
-    if (you.species == SP_VAMPIRE)
-    {
-        if (!you.vampire_alive)
-        {
-            if (you.experience_level >= 3 && you.form != transformation::bat)
-                _add_talent(talents, ABIL_TRAN_BAT, check_confused);
-            _add_talent(talents, ABIL_REVIVIFY, check_confused);
-        }
-        else
-            _add_talent(talents, ABIL_EXSANGUINATE, check_confused);
-    }
-
-    if (you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
-    {
-        // Tengu can fly starting at XL 5
-        // Black draconians and gargoyles get permaflight at XL 14, but they
-        // don't get the tengu movement/evasion bonuses
-        // Other dracs can mutate big wings whenever as well.
-        _add_talent(talents, ABIL_FLY, check_confused);
-    }
-
-    if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
-        _add_talent(talents, ABIL_STOP_FLYING, check_confused);
-
-    // Mutations
-    if (you.get_mutation_level(MUT_HURL_DAMNATION))
-        _add_talent(talents, ABIL_DAMNATION, check_confused);
-
-    if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
-        _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
-
-    if (you.get_mutation_level(MUT_BLINK))
-        _add_talent(talents, ABIL_BLINK, check_confused);
-
-    // Religious abilities.
+    // player_has_ability will just brute force these anyways (TODO)
     for (ability_type abil : get_god_abilities(include_unusable, false,
                                                include_unusable))
     {
         _add_talent(talents, abil, check_confused);
     }
 
-    // And finally, the ability to opt-out of your faith {dlb}:
-    if (!you_worship(GOD_NO_GOD))
-        _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
-
-    if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
-        _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);
-
-    //jmf: Check for breath weapons - they're exclusive of each other, I hope!
-    //     Make better ones come first.
-    if (you.species != SP_RED_DRACONIAN && you.form == transformation::dragon
-         && dragon_form_dragon_type() == MONS_FIRE_DRAGON)
-    {
-        _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
-    }
-
-    if (you.duration[DUR_PORTAL_PROJECTILE])
-        _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
-
-    // Evocations from items.
-    if (you.scan_artefacts(ARTP_BLINK)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
-    }
-
-    if (player_equip_unrand(UNRAND_RCLOUDS)
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        _add_talent(talents, ABIL_EVOKE_THUNDER, check_confused);
-    }
-
-    if (you.evokable_berserk() && !you.get_mutation_level(MUT_NO_ARTIFICE))
-        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
-
-    if (you.evokable_invis() > 0
-        && !you.get_mutation_level(MUT_NO_ARTIFICE))
-        //&& !you.duration[DUR_INVIS])
-    {
-        _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
-    }
-
-    if (you.evokable_flight() && !you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        // Has no effect on permanently flying Tengu.
-        if (!you.permanent_flight() || !you.racial_permanent_flight())
-        {
-            // You can still evoke perm flight if you have temporary one.
-            if (!you.airborne()
-                || !you.attribute[ATTR_PERM_FLIGHT]
-                   && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-            {
-                _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
-            }
-            // Now you can only turn flight off if you have an
-            // activatable item. Potions and spells will have to time
-            // out.
-            if (you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
-                _add_talent(talents, ABIL_STOP_FLYING, check_confused);
-        }
-    }
-
+    // Side effect alert!
     // Find hotkeys for the non-hotkeyed talents.
     for (talent &tal : talents)
     {
