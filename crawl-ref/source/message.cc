@@ -1188,7 +1188,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
         case MSGCH_PLAIN:
         case MSGCH_FRIEND_ACTION:
-        case MSGCH_ROTTEN_MEAT:
         case MSGCH_EQUIPMENT:
         case MSGCH_EXAMINE:
         case MSGCH_EXAMINE_FILTER:
@@ -1396,7 +1395,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     case MSGCH_RECOVERY:
     case MSGCH_INTRINSIC_GAIN:
     case MSGCH_MUTATION:
-    case MSGCH_ROTTEN_MEAT:
     case MSGCH_EQUIPMENT:
     case MSGCH_FLOOR_ITEMS:
     case MSGCH_MULTITURN_ACTION:

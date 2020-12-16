@@ -510,9 +510,9 @@ static const string message_channel_names[] =
     "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
     "mutation", "monster_spell", "monster_enchant", "friend_spell",
     "friend_enchant", "monster_damage", "monster_target", "banishment",
-    "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal",
-    "hell_effect", "monster_warning", "dgl_message",
+    "equipment", "floor", "multiturn", "examine", "examine_filter", "diagnostic",
+    "error", "tutorial", "orb", "timed_portal", "hell_effect", "monster_warning",
+    "dgl_message",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
