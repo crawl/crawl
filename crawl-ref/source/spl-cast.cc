@@ -2567,6 +2567,15 @@ int spell_acc(spell_type spell)
     return acc;
 }
 
+int spell_power_percent(spell_type spell)
+{
+    const int pow = calc_spell_power(spell, true);
+    const int max_pow = spell_power_cap(spell);
+    if (max_pow == 0)
+        return -1; // should never happen for player spells
+    return pow * 100 / max_pow;
+}
+
 string spell_power_string(spell_type spell)
 {
 #ifdef WIZARD
@@ -2574,13 +2583,11 @@ string spell_power_string(spell_type spell)
         return _wizard_spell_power_numeric_string(spell);
 #endif
 
-    const int numbars = _spell_power_bars(spell);
-    const int capbars = power_to_barcount(spell_power_cap(spell));
-    ASSERT(numbars <= capbars);
-    if (numbars < 0)
+    const int percent = spell_power_percent(spell);
+    if (percent < 0)
         return "N/A";
     else
-        return string(numbars, '#') + string(capbars - numbars, '.');
+        return make_stringf("%d%%", percent);
 }
 
 int calc_spell_range(spell_type spell, int power, bool allow_bonus)
