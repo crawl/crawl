@@ -620,6 +620,13 @@ void floor_transition(dungeon_feature_type how,
     // Clean up fake blood.
     heal_flayed_effect(&you, true, true);
 
+    // We "stepped".
+    if (!forced)
+    {
+        apply_barbs_damage();
+        remove_ice_armour_movement();
+    }
+
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
@@ -628,15 +635,6 @@ void floor_transition(dungeon_feature_type how,
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
-
-    if (!forced)
-    {
-        // Break ice armour
-        remove_ice_armour_movement();
-
-        // Check for barbs and apply
-        apply_barbs_damage();
-    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -919,8 +917,12 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     if (!_level_transition_moves_player(whither, old_feat, going_up))
         return;
 
+    // The transition is "forced" for the purpose of floor_transition if
+    // a force_stair feature is specified and force_known_shaft is not set
+    // (in the latter case, the player 'moved').
     floor_transition(how, old_feat, whither,
-                     bool(force_stair), going_up, shaft, update_travel_cache);
+                     bool(force_stair) && !force_known_shaft,
+                     going_up, shaft, update_travel_cache);
 }
 
 void up_stairs(dungeon_feature_type force_stair, bool update_travel_cache)
