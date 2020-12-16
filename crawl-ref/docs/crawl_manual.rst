@@ -266,13 +266,13 @@ Willpower
   level to an extent determined by your character's species, the creatures
   you will meet deeper in the dungeon are better at casting spells, and are
   more likely to be able to affect you. You can get a rough idea of your
-  current WL by pressing '%'.
+  current Will by pressing '%'.
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and Centaurs
-  are large with a medium torso; all other species are medium-sized. Many
-  transmutations will change your size too. Size affects your evasion: the
+  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and
+  Palentongas are large with a medium torso; all other species are medium-sized.
+  Many transmutations will change your size too. Size affects your evasion: the
   smaller your character the more evasive it is. On the other hand, characters
   of larger than medium size do not suffer the usual attack penalties when
   standing in shallow water. Characters of smaller than medium size will have
@@ -376,9 +376,8 @@ Staircases and Portals
 You can make your way between levels by using staircases, which appear as ">"
 (down) and "<" (up), by pressing the '>' or '<' keys. It is important to know
 that most monsters adjacent to you will follow when you change levels; this
-holds both for hostile and allied monsters. Notable exceptions are zombies (and
-other mindless undead, who are too stupid to properly operate stairs) and ghosts
-(who feel they belong to their level).
+holds both for hostile and allied monsters. Notable exceptions are zombies and
+other mindless undead, who are too stupid to properly operate stairs.
 
 If you ascend an up staircase on level one, you will leave the dungeon forever;
 if you are carrying the magical Orb of Zot, you win the game by doing this.
@@ -410,8 +409,9 @@ If there is no door in the indicated space, both Ctrl-direction and
 is apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
-A variety of dangerous and irritating traps are hidden around the dungeon. Traps
-sometimes look like normal floor until discovered.
+A variety of dangerous and irritating traps are placed around the dungeon. Some
+traps are visible and can be avoided (or triggered on purpose), others are hidden
+until you stumble upon them.
 
 Shops
 ========================================
@@ -658,14 +658,16 @@ The details screen shows:
 
 - The monster's name and description.
 
-- Bars indicating its:
+- Bars or numbers indicating its:
+
+  * Max HP: hit points; how much damage it can take
 
   * AC: armour class; how well it ignores most damage
 
   * EV: evasion; how well it avoids being hit (and your odds of hitting it
     with your current melee attack)
 
-  * WL: willpower; its resistance to most Hexes and similar effects.
+  * Will: willpower; its resistance to most Hexes and similar effects.
 
 - Its difficulty level, speed (if different from average speed), size,
   resistances, and special attacks.
