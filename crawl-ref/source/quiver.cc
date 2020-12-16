@@ -2351,7 +2351,10 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
-              cur_quiver(_quiver), allow_empty(_allow_empty)
+              cur_quiver(_quiver), allow_empty(_allow_empty),
+              any_spells(you.spell_no),
+              any_abilities(your_talents(true, true).size() > 0),
+              any_items(inv_count() > 0)
         {
             set_tag("actions");
             action_cycle = Menu::CYCLE_TOGGLE;
@@ -2373,6 +2376,11 @@ namespace quiver
                 return true;
             }
             return false;
+        }
+
+        bool pointless()
+        {
+            return !(any_spells || any_abilities || any_items);
         }
 
     protected:
@@ -2427,9 +2435,9 @@ namespace quiver
                 mprf("Clearing quiver.");
                 return false;
             }
-            else if (key == '*')
-                return _choose_from_inv(); // TODO: fumble ammo
-            else if (key == '&')
+            else if (key == '*' && any_items)
+                return _choose_from_inv();
+            else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
                                                     "Select a spell to quiver");
@@ -2443,19 +2451,32 @@ namespace quiver
                 }
                 return false;
             }
-            else if (key == '^')
+            else if (key == '^' && any_abilities)
                 return _choose_from_abilities();
             return Menu::process_key(key);
         }
 
         virtual formatted_string calc_title() override
         {
-            string s = "Quiver which action? (";
+            string s = "Quiver which action?";
+            vector<string> extra_cmds;
+
             if (allow_empty)
-                s += "<w>-</w>: none, ";
-            s += "<w>*</w>: full inventory, <w>&</w>: spells, <w>^</w>: abilities)";
+                extra_cmds.push_back("<w>-</w>: none");
+            if (any_items)
+                extra_cmds.push_back("<w>*</w>: full inventory");
+            if (any_spells)
+                extra_cmds.push_back("<w>&</w>: spells");
+            if (any_abilities)
+                extra_cmds.push_back(", <w>^</w>: abilities");
+            if (extra_cmds.size())
+                s += "(" + join_strings(extra_cmds.begin(), extra_cmds.end(), ", ") + ")";
             return formatted_string::parse_string(s);
         }
+
+        bool any_spells;
+        bool any_abilities;
+        bool any_items;
     };
 
     /**
@@ -2566,6 +2587,12 @@ namespace quiver
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = ability_action(ABIL_NON_ABILITY).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
+
+        if (actions.size() == 0 && menu.pointless())
+        {
+            mpr("You have nothing to quiver.");
+            return;
+        }
 
         menu.set_title(new MenuEntry("", MEL_TITLE));
 
