@@ -5735,6 +5735,9 @@ spret wu_jian_wall_jump_ability()
     if (cancel_barbed_move())
         return spret::abort;
 
+    if (cancel_ice_move())
+        return spret::abort;
+
     if (you.digging)
     {
         you.digging = false;

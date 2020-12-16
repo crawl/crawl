@@ -180,6 +180,21 @@ void apply_barbs_damage(bool rampaging)
     }
 }
 
+bool cancel_ice_move()
+{
+    if (you.duration[DUR_ICY_ARMOUR])
+    {
+        if (!yesno("Your icy armour will break if you move. Continue?",
+                   false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void remove_ice_armour_movement()
 {
     if (you.duration[DUR_ICY_ARMOUR])
@@ -668,6 +683,10 @@ static spret _rampage_forward(coord_def move)
     if (cancel_barbed_move(true))
         return spret::abort;
 
+    // Abort if the player doesn't want to break ice spells
+    if (cancel_ice_move())
+        return spret::abort;
+
     // We've passed the validity checks, go ahead and rampage.
 
     // First, apply any necessary pre-move effects:
@@ -782,6 +801,9 @@ void move_player_action(coord_def move)
             return;
 
         if (cancel_barbed_move())
+            return;
+
+        if (cancel_ice_move())
             return;
 
         if (!one_chance_in(3))
@@ -1019,8 +1041,11 @@ void move_player_action(coord_def move)
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
         // If rampaging we've already been prompted.
-        if (!you.confused() && !rampaged && cancel_barbed_move())
+        if (!you.confused() && !rampaged
+            && (cancel_barbed_move() || cancel_ice_move()))
+        {
             return;
+        }
 
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;

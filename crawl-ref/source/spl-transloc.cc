@@ -552,6 +552,9 @@ spret palentonga_charge(bool fail, dist *target)
     if (cancel_barbed_move())
         return spret::abort;
 
+    if (cancel_ice_move())
+        return spret::abort;
+
     vector<coord_def> target_path;
     targeter_charge tgt(&you, palentonga_charge_range());
     if (!_find_charge_target(target_path, palentonga_charge_range(), &tgt, target))

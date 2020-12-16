@@ -7,6 +7,7 @@
 
 bool cancel_barbed_move(bool rampaging = false);
 void apply_barbs_damage(bool rampaging = false);
+bool cancel_ice_move();
 void remove_ice_armour_movement();
 void remove_water_hold();
 void apply_noxious_bog(const coord_def old_pos);
