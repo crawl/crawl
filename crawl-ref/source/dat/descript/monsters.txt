@@ -1630,6 +1630,12 @@ killer bee
 
 A giant bee, bearing a deadly barb which can sting repeatedly.
 %%%%
+killer bee larva
+
+A small, powerless larva of a killer bee. While almost completely
+harmless on its own, there are almost certainly adult killer bees nearby,
+ready to defend the hive's young against any intruder.
+%%%%
 Killer Klown
 
 A comical figure full of life and laughter. It looks very happy to see you...

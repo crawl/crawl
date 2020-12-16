@@ -102,6 +102,7 @@ spirit_fox MONS_SPIRIT_FOX
 ## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
+killer_bee_larva MONS_KILLER_BEE_LARVA
 %sdir mon/demihumanoids
 meliai MONS_MELIAI
 %sdir mon/animals
