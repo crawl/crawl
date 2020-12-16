@@ -312,7 +312,7 @@ void direction_chooser::print_key_hints() const
             prompt += moves.fire_context->fire_key_hints() + "\n";
         string direction_hint = "";
         if (!behaviour->targeted())
-            direction_hint = "Dir - look around";
+            direction_hint = "Dir - look around, f - activate";
         else
         {
             switch (restricts)
