@@ -940,7 +940,8 @@ namespace quiver
 
     struct spell_action : public action
     {
-        spell_action(spell_type s = SPELL_NO_SPELL) : spell(s), enabled_cache(false)
+        spell_action(spell_type s = SPELL_NO_SPELL)
+            : spell(s), enabled_cache(false), col_cache(COL_USELESS)
         {
             invalidate();
         };
@@ -961,8 +962,19 @@ namespace quiver
 
         void invalidate() override
         {
+            // we cache enabled status and color because these calls are
+            // extremely side-effect-y, and can crash if called at the wrong
+            // time.
             enabled_cache = can_cast_spells(true)
                                     && !spell_is_useless(spell, true, false);
+            // this imposes excommunication colors
+            if (!enabled_cache)
+                col_cache = COL_USELESS;
+            else
+            {
+                col_cache = spell_highlight_by_utility(spell,
+                                failure_rate_colour(spell), true, false);
+            }
         }
 
         bool is_enabled() const override
@@ -1052,12 +1064,7 @@ namespace quiver
 
         int quiver_color() const override
         {
-            int col = failure_rate_colour(spell);
-            // this imposes excommunication colors
-            col = spell_highlight_by_utility(spell, col, true, false);
-            if (!is_enabled())
-                col = COL_USELESS;
-            return col;
+            return col_cache;
         }
 
         vector<tile_def> get_tiles() const override
@@ -1118,6 +1125,7 @@ namespace quiver
     private:
         spell_type spell;
         bool enabled_cache;
+        int col_cache;
     };
 
     // stuff that is silly to quiver. Basically four (overlapping) cases:
