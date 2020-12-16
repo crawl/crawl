@@ -328,6 +328,9 @@ bool melee_attack::handle_phase_dodged()
         if (!attacker->alive())
             return false;
 
+        if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+            do_starlight();
+
         if (defender->is_player())
         {
             const bool using_lbl = defender->weapon()
@@ -3164,6 +3167,26 @@ void melee_attack::do_minotaur_retaliation()
         }
     }
 }
+
+/** For UNRAND_STARLIGHT's dazzle effect, only against monsters.
+ */
+void melee_attack::do_starlight()
+{
+    static const vector<string> dazzle_msgs = {
+        "@The_monster@ is blinded by the light from your cloak!",
+        "@The_monster@ is temporarily struck blind!",
+        "@The_monster@'s sight is seared by the starlight!",
+        "@The_monster@'s vision is obscured by starry radiance!",
+    };
+
+    if (one_chance_in(5) && dazzle_monster(attacker->as_monster(), 100))
+    {
+        string msg = *random_iterator(dazzle_msgs);
+        msg = do_mon_str_replacements(msg, *attacker->as_monster(), S_SILENT);
+        mpr(msg);
+    }
+}
+
 
 /**
  * Launch a long blade counterattack against the attacker. No sanity checks;

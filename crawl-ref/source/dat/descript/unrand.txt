@@ -423,7 +423,8 @@ any weapon, or to retaliate against most attacks when using a long blade.
 %%%%
 cloak of Starlight
 
-A phosphorescent cloak, woven of pure light beams.
+A phosphorescent cloak, woven of pure light beams. The ripple of its folds
+as the wearer leaps and swerves in combat can blind melee attackers.
 %%%%
 ratskin cloak
 

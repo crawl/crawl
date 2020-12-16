@@ -2592,6 +2592,21 @@ void forest_damage(const actor *mon)
     }
 }
 
+bool dazzle_monster(monster * mons, int pow)
+{
+    if (!mons || !mons_can_be_dazzled(mons->type))
+        return false;
+
+    if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
+    {
+        mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                       random_range(4, 8) * BASELINE_DELAY));
+        return true;
+    }
+
+    return false;
+}
+
 spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 {
     int range = spell_range(SPELL_DAZZLING_FLASH, pow);
@@ -2650,16 +2665,8 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
          ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-
-        if (!mons || !mons_can_be_dazzled(mons->type))
-            continue;
-
-        if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
-        {
+        if (mons && dazzle_monster(mons, pow))
             simple_monster_message(*mons, " is dazzled.");
-            mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
-                           random_range(4, 8) * BASELINE_DELAY));
-        }
     }
 
     return spret::success;

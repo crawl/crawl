@@ -925,9 +925,8 @@ COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
-COLD:     1
 STEALTH:  -2
-BOOL:     elec
+INSCRIP:  *Dazzle
 
 NAME:     ratskin cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK

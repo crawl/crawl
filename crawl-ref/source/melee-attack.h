@@ -101,6 +101,9 @@ private:
     /* Race Effects */
     void do_minotaur_retaliation();
 
+    /* Item Effects */
+    void do_starlight();
+
     /* Brand / Attack Effects */
     bool do_knockback(bool trample = true);
 
