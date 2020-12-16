@@ -3430,6 +3430,14 @@ void end_frozen_ramparts()
     env.level_state &= ~LSTATE_ICY_WALL;
 }
 
+dice_def ramparts_damage(int pow, bool random)
+{
+    int size = 2 + pow / 5;
+    if (random)
+        size = 2 + div_rand_round(pow, 5);
+    return dice_def(1, size);
+}
+
 static bool _abszero_target_check(monster &m)
 {
     return you.see_cell_no_trans(m.pos())

@@ -2502,6 +2502,8 @@ static dice_def _spell_damage(spell_type spell)
             return shatter_damage(power);
         case SPELL_BATTLESPHERE:
             return battlesphere_damage(power);
+        case SPELL_FROZEN_RAMPARTS:
+            return ramparts_damage(power, false);
         default:
             break;
     }
