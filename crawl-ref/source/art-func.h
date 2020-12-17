@@ -1556,3 +1556,15 @@ static void _SALAMANDER_world_reacts(item_def * /* item */)
 {
     _manage_fire_shield();
 }
+
+////////////////////////////////////////////////////
+
+static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
+{
+    monster *spectral_weapon = find_spectral_weapon(&you);
+    if (spectral_weapon)
+    {
+        _equip_mpr(show_msgs, "Your spectral weapon disappears as you unwield.");
+        end_spectral_weapon(spectral_weapon, false, true);
+    }
+}
