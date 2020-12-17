@@ -1888,14 +1888,6 @@ int prompt_invent_item(const char *prompt,
     const bool auto_list = !(flags & invprompt_flag::manual_list);
     const bool allow_easy_quit = !(flags & invprompt_flag::escape_only);
 
-    if (!any_items_of_type(type_expect)
-        && type_expect == OSEL_THROWABLE
-        && (oper == OPER_FIRE || oper == OPER_QUIVER)
-        && mtype == menu_type::invlist)
-    {
-        type_expect = OSEL_ANY;
-    }
-
     if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD)
     {
         mprf(MSGCH_PROMPT, "%s",

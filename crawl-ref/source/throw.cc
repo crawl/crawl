@@ -267,9 +267,19 @@ static int _fire_prompt_for_item()
     parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
-    int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
+    int slot = -1;
+    if (any_items_of_type(OSEL_THROWABLE))
+    {
+        slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    menu_type::invlist,
                                    OSEL_THROWABLE, OPER_FIRE);
+    }
+    else
+    {
+        slot = prompt_invent_item("Fire/throw which item? (Showing full inventory)",
+                                   menu_type::invlist,
+                                   OSEL_ANY, OPER_FIRE);
+    }
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
