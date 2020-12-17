@@ -64,18 +64,6 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                   || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
 }
 
-static bool _slot_is_pprojable(int slot)
-{
-    if (slot < 0 || slot >= ENDOFPACK)
-        return false;
-
-    item_def &ammo = you.inv[slot];
-    ASSERT(ammo.link != NON_ITEM);
-    auto l = is_launched(&you, you.weapon(), ammo);
-
-    return l == launch_retval::LAUNCHED || l == launch_retval::THROWN;
-}
-
 // TODO: how to handle custom targeters for different actions??
 class fire_target_behaviour : public targeting_behaviour
 {
@@ -92,7 +80,7 @@ public:
         if (!action->is_targeted())
             needs_path = MB_FALSE; // should !targeted() imply no path?
         else if (is_pproj_active())
-            needs_path = frombool(!_slot_is_pprojable(action->get_item()));
+            needs_path = frombool(action->affected_by_pproj());
     }
 
     // targeting_behaviour API
@@ -308,7 +296,7 @@ static bool _fire_validate_item(int slot, string &err)
 }
 
 // Returns true if warning is given.
-bool fire_warn_if_impossible(bool silent)
+bool fire_warn_if_impossible(bool silent, item_def *weapon)
 {
     // If you can't wield it, you can't throw it.
     if (!form_can_wield())
@@ -320,7 +308,6 @@ bool fire_warn_if_impossible(bool silent)
 
     if (you.attribute[ATTR_HELD])
     {
-        const item_def *weapon = you.weapon();
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
@@ -366,7 +353,7 @@ void throw_item_no_quiver(dist *target)
     if (!target)
         target = &targ_local;
 
-    if (fire_warn_if_impossible())
+    if (fire_warn_if_impossible(false, you.weapon()))
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
         return;
@@ -557,7 +544,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
 //
 // Return value is only relevant if dummy_target is non-nullptr, and returns
 // true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int throw_2, dist *target)
+bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
 {
     dist targ_local;
     if (!target)
@@ -606,7 +593,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     ASSERT(thrown.defined());
 
     // Figure out if we're thrown or launched.
-    const launch_retval projected = is_launched(&you, you.weapon(), thrown);
+    const launch_retval projected = is_launched(&you, launcher, thrown);
 
     const bool tossing = projected == launch_retval::FUMBLED;
 
@@ -713,7 +700,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         pbolt.set_target(*target);
 
     const int bow_brand = (projected == launch_retval::LAUNCHED)
-                          ? get_weapon_brand(*you.weapon())
+                          ? get_weapon_brand(*launcher)
                           : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
 
@@ -721,7 +708,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
     case launch_retval::LAUNCHED:
     {
-        const item_def *launcher = you.weapon();
         ASSERT(launcher);
         practise_launching(*launcher);
         if (is_unrandom_artefact(*launcher)
