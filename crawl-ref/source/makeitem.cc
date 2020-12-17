@@ -2148,19 +2148,6 @@ int items(bool allow_uniques,
         break;
     }
 
-    if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, get_weapon_brand(item), false)
-        || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, get_armour_ego_type(item), false)
-        || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.brand, false))
-    {
-        mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
-            item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES
-                      | ISFLAG_KNOW_CURSE).c_str());
-        item.brand = 0;
-    }
-
     // Colour the item.
     item_colour(item);
 
