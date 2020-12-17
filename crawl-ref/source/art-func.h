@@ -322,20 +322,27 @@ static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _power_pluses(item_def *item)
-{
-    item->plus = min(you.hp / 10, 27);
-}
-
-static void _POWER_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
+static void _POWER_equip(item_def * /* item */, bool *show_msgs,
+                         bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You sense an aura of extreme power.");
-    _power_pluses(item);
 }
 
-static void _POWER_world_reacts(item_def *item)
+static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                 actor* defender, bool mondied, int /*dam*/)
 {
-    _power_pluses(item);
+    if (!mondied && x_chance_in_y(min(attacker->stat_hp() / 10, 27), 27))
+    {
+        bolt beam;
+        beam.thrower   = attacker->is_player() ? KILL_YOU : KILL_MON;
+        beam.source    = attacker->pos();
+        beam.source_id = attacker->mid;
+        beam.attitude  = attacker->temp_attitude();
+        beam.range = 4;
+        beam.target = defender->pos();
+        zappy(ZAP_SWORD_BEAM, 100, false, beam);
+        beam.fire();
+    }
 }
 
 ////////////////////////////////////////////////////

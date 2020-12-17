@@ -114,5 +114,6 @@ enum zap_type
     ZAP_IGNITION,
     ZAP_HAILSTORM,
     ZAP_MYSTIC_BLAST,
+    ZAP_SWORD_BEAM,
     NUM_ZAPS
 };

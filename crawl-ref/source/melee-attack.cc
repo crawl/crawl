@@ -164,6 +164,24 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
+        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_POWER)
+                 && you.can_see(*defender))
+        {
+            targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+            hitfunc.beam.aimed_at_spot = false;
+            hitfunc.set_aim(defender->pos());
+
+            if (stop_attack_prompt(hitfunc, "attack",
+                                   [](const actor *act)
+                                   {
+                                       return !(you.deity() == GOD_FEDHAS
+                                       && fedhas_protects(act->as_monster()));
+                                   }, nullptr, defender->as_monster()))
+            {
+                cancel_attack = true;
+                return false;
+            }
+        }
         else if (!cleave_targets.empty())
         {
             targeter_cleave hitfunc(attacker, defender->pos());
