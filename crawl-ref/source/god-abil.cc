@@ -4568,31 +4568,31 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->antimagic_susceptible()))
     {
-        mprf(MSGCH_GOD, "You focus your will and drain %s's magic in "
+        mprf(MSGCH_GOD, "You focus your power and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
     }
     else if (power > 35)
     {
-        mprf(MSGCH_GOD, "You focus your will and paralyse %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your power and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        mprf(MSGCH_GOD, "You focus your will and slow %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your power and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
     else if (power > 10 && mons_can_be_blinded(mons->type))
     {
-        mprf(MSGCH_GOD, "You focus your will and blind %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        mprf(MSGCH_GOD, "You focus your will and illuminate %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your power and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
