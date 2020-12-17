@@ -46,7 +46,7 @@ end
 function hive_appearance(e)
   e.kfeat("< = exit_hive")
   e.kprop("w = no_tele_into")
-  e.ftile("(.'xwW<12345aAT = floor_swamp")
+  e.ftile("(.'xwW<12345aAT|*R = floor_swamp")
   e.tile("x = wall_lair")
   e.tile("a = wall_wax")
   e.colour("a = yellow")
