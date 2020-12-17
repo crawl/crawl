@@ -3,7 +3,7 @@ Singing Sword
 
 An enchanted blade which loves nothing more than to sing to its owner, whether
 they want it to or not. The sword may sing so intensely that it radiates
-damaging sonic waves as you strike, especially in combat involving dangerous or
+damaging sonic waves as it strikes, especially in combat involving dangerous or
 numerous foes.
 %%%%
 Sulking Sword
@@ -88,8 +88,8 @@ without draining the wielder's vitality in the process.
 sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
-Evoking it can summon fiery demons from their infernal home to do your bidding,
-although they will not remain enslaved for long.
+Evoking it can summon fiery demons from their infernal home to do the wielder's
+bidding, although they will not remain enslaved for long.
 %%%%
 faerie dragon scales
 
