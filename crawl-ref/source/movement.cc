@@ -32,6 +32,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "player.h"
 #include "player-reacts.h"
 #include "prompt.h"
@@ -183,6 +184,8 @@ void apply_barbs_damage(bool rampaging)
 bool cancel_ice_move()
 {
     vector<string> effects;
+    if (i_feel_safe(false, true, true))
+        return false;
 
     if (you.duration[DUR_ICY_ARMOUR])
         effects.push_back("icy armour");
