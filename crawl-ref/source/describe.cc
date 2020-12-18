@@ -977,12 +977,12 @@ static skill_type _item_training_skill(const item_def &item)
  * @param item the item to check.
  * @param ignore_current whether to ignore any current training targets (e.g. if there is a higher target, it might not make sense to set a lower one).
  */
-static bool _could_set_training_target(const item_def &item, bool ignore_current)
+static bool _could_set_training_target(const item_def &item, bool ignore_current, bool crystal_spear = false)
 {
     if (!crawl_state.need_save || is_useless_item(item) || you.species == SP_GNOLL)
         return false;
 
-    const skill_type skill = _item_training_skill(item);
+    const skill_type skill = crystal_spear? SK_THROWING : _item_training_skill(item);
     if (skill == SK_NONE)
         return false;
 
@@ -1567,7 +1567,7 @@ static string _describe_ammo(const item_def &item)
         const int target_skill = item.base_type == OBJ_WEAPONS ?
             (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10
             : _item_training_target(item);
-        const bool could_set_target = _could_set_training_target(item, true);
+        const bool could_set_target = _could_set_training_target(item, true, item.base_type == OBJ_WEAPONS);
 
         if (item.base_type == OBJ_WEAPONS) {
             description += "It can be used as a throwing weapon as well as a melee weapon.\n";
