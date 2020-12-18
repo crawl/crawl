@@ -1310,7 +1310,10 @@ bool zot_clock_active()
 
 static int _turns_until_zot_for(branch_type br)
 {
-    return (MAX_ZOT_CLOCK - _zot_clock_for(br)) / BASELINE_DELAY;
+    const int aut = (MAX_ZOT_CLOCK - _zot_clock_for(br));
+    if (have_passive(passive_t::slow_zot))
+        return aut * 3 / (2 * BASELINE_DELAY);
+    return aut / BASELINE_DELAY;
 }
 
 // How many turns (deca-auts) does the player have until Zot finds them?
@@ -1378,13 +1381,20 @@ void decr_zot_clock()
     }
 }
 
+int _added_zot_time()
+{
+    if (have_passive(passive_t::slow_zot))
+        return div_rand_round(you.time_taken * 2, 3);
+    return you.time_taken;
+}
+
 void incr_zot_clock()
 {
     if (!zot_clock_active())
         return;
 
     const int old_lvl = bezotting_level();
-    _zot_clock() += you.time_taken;
+    _zot_clock() += _added_zot_time();
     if (!bezotted())
         return;
 
