@@ -2229,11 +2229,11 @@ bool ring_has_stackable_effect(const item_def &item)
 
     return false;
 }
+#if TAG_MAJOR_VERSION == 34
 
 //
 // Food functions:
 //
-#if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type /*food*/)
 {
     return false;

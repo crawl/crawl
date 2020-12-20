@@ -325,7 +325,6 @@ For all others search the file, as necessary, for:
   * tileidx_cloud
   * tileidx_corpse
   * tileidx_feature
-  * tileidx_food
   * tileidx_misc
   * tileidx_missile
   * tileidx_monster_base

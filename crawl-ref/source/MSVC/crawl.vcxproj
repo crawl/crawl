@@ -518,7 +518,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\files.cc" />
     <ClCompile Include="..\fineff.cc" />
     <ClCompile Include="..\fontwrapper-ft.cc" />
-    <ClCompile Include="..\food.cc" />
     <ClCompile Include="..\format.cc" />
     <ClCompile Include="..\fprop.cc" />
     <ClCompile Include="..\game-options.cc" />
@@ -563,7 +562,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\l-dgntil.cc" />
     <ClCompile Include="..\l-feat.cc" />
     <ClCompile Include="..\l-file.cc" />
-    <ClCompile Include="..\l-food.cc" />
     <ClCompile Include="..\l-global.cc" />
     <ClCompile Include="..\l-item.cc" />
     <ClCompile Include="..\l-los.cc" />
@@ -948,7 +946,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\flood-find.h" />
     <ClInclude Include="..\flush-reason-type.h" />
     <ClInclude Include="..\fontwrapper-ft.h" />
-    <ClInclude Include="..\food.h" />
     <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />

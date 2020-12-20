@@ -41,7 +41,6 @@ unless ($db)
 $items{$_} = 1 for /MISC_[A-Z_]+: *return "([^"]+)";/g;
 $items{"book of $_"} = 1 for /BOOK_[A-Z_]+: *return "([^"]+)";/g;
 $items{"staff of $_"} = 1 for /STAFF_[A-Z_]+: *return "([^"]+)";/g;
-$items{$_} = 1 for /FOOD_[A-Z_]+: buff << "([^"]+)";/g;
 
 open IN, "util/cpp_version item-prop.cc|" or die "Can't read item-prop.cc\n";
 { undef local $/; $_ = <IN>; }
@@ -61,8 +60,6 @@ $data =~ s/.*all_decks =(.*?)};.*/$1/s or die "can't find all_decks\n";
 $items{"deck of $_"} = 1 for $data =~ /^\s+"([^"]+)"/mg;
 
 $items{$_} = 1 for (split /\n/, <<END);
-chunk of flesh
-inedible chunk of flesh
 corpse
 eggplant
 gold piece

@@ -58,8 +58,6 @@ evoc_rod=`process_cmd $item_file | grep "  ROD_" | wc -l` # the "  " here filter
 evoc_wand=`process_cmd $item_file | grep " WAND_" | wc -l`
 echo evocables: $(expr $evoc_misc + $evoc_rod + $evoc_wand)
 
-# are food types worth bothering with?
-
 if [ -e art-data.txt ]; then
     unrand_count=$(grep "^NAME: " art-data.txt | grep -v DUMMY | wc -l)
     # this is never validated, so assumes no typos...

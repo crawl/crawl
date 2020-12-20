@@ -14,7 +14,9 @@ enum show_item_type
     SHOW_ITEM_WEAPON,
     SHOW_ITEM_ARMOUR,
     SHOW_ITEM_WAND,
+#if TAG_MAJOR_VERSION == 34
     SHOW_ITEM_FOOD,
+#endif
     SHOW_ITEM_SCROLL,
     SHOW_ITEM_RING,
     SHOW_ITEM_POTION,

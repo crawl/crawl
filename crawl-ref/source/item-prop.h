@@ -193,9 +193,9 @@ int evoker_max_charges(int evoker_type);
 bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
+#if TAG_MAJOR_VERSION == 34
 
 // food functions:
-#if TAG_MAJOR_VERSION == 34
 bool is_real_food(food_type food) PURE;
 #endif
 

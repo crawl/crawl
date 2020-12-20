@@ -171,7 +171,7 @@ static bool _fill_out_corpse(const monster& mons, item_def& corpse)
 
 static bool _explode_corpse(item_def& corpse, const coord_def& where)
 {
-    // Don't want chunks to show up behind the player.
+    // Don't want results to show up behind the player.
     los_def ld(where, opc_no_actor);
 
     if (mons_class_leaves_hide(corpse.mon_type)
@@ -575,7 +575,7 @@ item_def* place_monster_corpse(const monster& mons, bool force)
 
     if ((mons.flags & MF_EXPLODE_KILL) && _explode_corpse(corpse, mons.pos()))
     {
-        // We already have a spray of chunks.
+        // The corpse itself shouldn't remain.
         item_was_destroyed(corpse);
         destroy_item(o);
         return nullptr;

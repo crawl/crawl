@@ -144,7 +144,6 @@
 		7B09F58A1133D6AB004F149D /* feature.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FB610BD494400A99626 /* feature.cc */; };
 		7B09F58B1133D6AB004F149D /* fight.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FB810BD494400A99626 /* fight.cc */; };
 		7B09F58C1133D6AB004F149D /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FBA10BD494400A99626 /* files.cc */; };
-		7B09F58D1133D6AB004F149D /* food.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FBE10BD494400A99626 /* food.cc */; };
 		7B09F58E1133D6AB004F149D /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC010BD494400A99626 /* format.cc */; };
 		7B09F58F1133D6AB004F149D /* fprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC210BD494400A99626 /* fprop.cc */; };
 		7B09F5901133D6AB004F149D /* geom2d.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC410BD494400A99626 /* geom2d.cc */; };
@@ -176,7 +175,6 @@
 		7B09F5AC1133D6AB004F149D /* l-dgntil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FEF10BD494400A99626 /* l-dgntil.cc */; };
 		7B09F5AD1133D6AB004F149D /* l-feat.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5411133D63E004F149D /* l-feat.cc */; };
 		7B09F5AE1133D6AB004F149D /* l-file.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF010BD494400A99626 /* l-file.cc */; };
-		7B09F5AF1133D6AB004F149D /* l-food.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF110BD494400A99626 /* l-food.cc */; };
 		7B09F5B01133D6AB004F149D /* l-global.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF210BD494400A99626 /* l-global.cc */; };
 		7B09F5B11133D6AB004F149D /* l-item.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF310BD494400A99626 /* l-item.cc */; };
 		7B09F5B21133D6AB004F149D /* l-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF510BD494400A99626 /* l-los.cc */; };
@@ -510,7 +508,6 @@
 		E5D640E710BD494500A99626 /* feature.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FB610BD494400A99626 /* feature.cc */; };
 		E5D640E810BD494500A99626 /* fight.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FB810BD494400A99626 /* fight.cc */; };
 		E5D640E910BD494500A99626 /* files.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FBA10BD494400A99626 /* files.cc */; };
-		E5D640EA10BD494500A99626 /* food.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FBE10BD494400A99626 /* food.cc */; };
 		E5D640EB10BD494500A99626 /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC010BD494400A99626 /* format.cc */; };
 		E5D640EC10BD494500A99626 /* fprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC210BD494400A99626 /* fprop.cc */; };
 		E5D640ED10BD494500A99626 /* geom2d.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC410BD494400A99626 /* geom2d.cc */; };
@@ -538,7 +535,6 @@
 		E5D6410510BD494500A99626 /* l-dgnmon.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FEE10BD494400A99626 /* l-dgnmon.cc */; };
 		E5D6410610BD494500A99626 /* l-dgntil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FEF10BD494400A99626 /* l-dgntil.cc */; };
 		E5D6410710BD494500A99626 /* l-file.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF010BD494400A99626 /* l-file.cc */; };
-		E5D6410810BD494500A99626 /* l-food.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF110BD494400A99626 /* l-food.cc */; };
 		E5D6410910BD494500A99626 /* l-global.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF210BD494400A99626 /* l-global.cc */; };
 		E5D6410A10BD494500A99626 /* l-item.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF310BD494400A99626 /* l-item.cc */; };
 		E5D6410B10BD494500A99626 /* l-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FF510BD494400A99626 /* l-los.cc */; };
@@ -1346,8 +1342,6 @@
 		E5D63FBB10BD494400A99626 /* files.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = files.h; sourceTree = "<group>"; };
 		E5D63FBC10BD494400A99626 /* fixedarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
 		E5D63FBD10BD494400A99626 /* fixedvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixedvector.h; sourceTree = "<group>"; };
-		E5D63FBE10BD494400A99626 /* food.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = food.cc; sourceTree = "<group>"; };
-		E5D63FBF10BD494400A99626 /* food.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = food.h; sourceTree = "<group>"; };
 		E5D63FC010BD494400A99626 /* format.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = format.cc; sourceTree = "<group>"; };
 		E5D63FC110BD494400A99626 /* format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; };
 		E5D63FC210BD494400A99626 /* fprop.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fprop.cc; sourceTree = "<group>"; };
@@ -1393,7 +1387,6 @@
 		E5D63FEE10BD494400A99626 /* l-dgnmon.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-dgnmon.cc; sourceTree = "<group>"; };
 		E5D63FEF10BD494400A99626 /* l-dgntil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-dgntil.cc; sourceTree = "<group>"; };
 		E5D63FF010BD494400A99626 /* l-file.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-file.cc; sourceTree = "<group>"; };
-		E5D63FF110BD494400A99626 /* l-food.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-food.cc; sourceTree = "<group>"; };
 		E5D63FF210BD494400A99626 /* l-global.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-global.cc; sourceTree = "<group>"; };
 		E5D63FF310BD494400A99626 /* l-item.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-item.cc; sourceTree = "<group>"; };
 		E5D63FF410BD494400A99626 /* l-libs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l-libs.h; sourceTree = "<group>"; };
@@ -1887,8 +1880,6 @@
 				7B51659B11859D30005B23ED /* flood-find.h */,
 				7B51659611859D1A005B23ED /* fontwrapper-ft.cc */,
 				7B51659711859D1A005B23ED /* fontwrapper-ft.h */,
-				E5D63FBE10BD494400A99626 /* food.cc */,
-				E5D63FBF10BD494400A99626 /* food.h */,
 				E5D63FC010BD494400A99626 /* format.cc */,
 				E5D63FC110BD494400A99626 /* format.h */,
 				E5D63FC210BD494400A99626 /* fprop.cc */,
@@ -1950,7 +1941,6 @@
 				E5D63FEF10BD494400A99626 /* l-dgntil.cc */,
 				7B09F5411133D63E004F149D /* l-feat.cc */,
 				E5D63FF010BD494400A99626 /* l-file.cc */,
-				E5D63FF110BD494400A99626 /* l-food.cc */,
 				E5D63FF210BD494400A99626 /* l-global.cc */,
 				E5D63FF310BD494400A99626 /* l-item.cc */,
 				E5D63FF410BD494400A99626 /* l-libs.h */,
@@ -2968,7 +2958,6 @@
 				7B09F58B1133D6AB004F149D /* fight.cc in Sources */,
 				7B09F58C1133D6AB004F149D /* files.cc in Sources */,
 				1F909BD1148B440800084E83 /* fineff.cc in Sources */,
-				7B09F58D1133D6AB004F149D /* food.cc in Sources */,
 				7B09F58E1133D6AB004F149D /* format.cc in Sources */,
 				7B09F58F1133D6AB004F149D /* fprop.cc in Sources */,
 				7B09F5901133D6AB004F149D /* geom2d.cc in Sources */,
@@ -3003,7 +2992,6 @@
 				7B09F5AC1133D6AB004F149D /* l-dgntil.cc in Sources */,
 				7B09F5AD1133D6AB004F149D /* l-feat.cc in Sources */,
 				7B09F5AE1133D6AB004F149D /* l-file.cc in Sources */,
-				7B09F5AF1133D6AB004F149D /* l-food.cc in Sources */,
 				7B09F5B01133D6AB004F149D /* l-global.cc in Sources */,
 				7B09F5B11133D6AB004F149D /* l-item.cc in Sources */,
 				7B09F5B21133D6AB004F149D /* l-los.cc in Sources */,
@@ -3212,7 +3200,6 @@
 				E5D640E910BD494500A99626 /* files.cc in Sources */,
 				1F909AED148B23BC00084E83 /* fineff.cc in Sources */,
 				7B51659811859D1A005B23ED /* fontwrapper-ft.cc in Sources */,
-				E5D640EA10BD494500A99626 /* food.cc in Sources */,
 				E5D640EB10BD494500A99626 /* format.cc in Sources */,
 				E5D640EC10BD494500A99626 /* fprop.cc in Sources */,
 				E5D640ED10BD494500A99626 /* geom2d.cc in Sources */,
@@ -3249,7 +3236,6 @@
 				E5D6410610BD494500A99626 /* l-dgntil.cc in Sources */,
 				7B09F5471133D63E004F149D /* l-feat.cc in Sources */,
 				E5D6410710BD494500A99626 /* l-file.cc in Sources */,
-				E5D6410810BD494500A99626 /* l-food.cc in Sources */,
 				E5D6410910BD494500A99626 /* l-global.cc in Sources */,
 				E5D6410A10BD494500A99626 /* l-item.cc in Sources */,
 				E5D6410B10BD494500A99626 /* l-los.cc in Sources */,

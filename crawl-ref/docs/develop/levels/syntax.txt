@@ -545,8 +545,7 @@ ITEM:     (list of items, separated by comma)
             A lone "|" may be used as an alias for "superb_item".
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
-            food, scroll, jewellery, potion, book, magical staff, orb, misc,
-            carrion.
+            scroll, jewellery, potion, book, magical staff, orb, misc, carrion.
             All of these are usable in map definitions, apart from "orb" and
             "carrion".
           * "ego:ego_name", where "ego_name" is something like "running" or

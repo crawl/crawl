@@ -76,9 +76,8 @@ static const mutation_def mut_data[] =
   {"You feel resistant to poisons.", "",  ""},
   {"You feel less resistant to poisons.", "", ""},
 },
-
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_CARNIVOROUS, 0, 1, mutflag::good, false,
   "carnivore",
 
@@ -223,8 +222,8 @@ static const mutation_def mut_data[] =
 
   {"You begin to regenerate regardless of the presence of monsters.", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_FAST_METABOLISM, 0, 3, mutflag::bad, false,
   "fast metabolism",
 
@@ -284,8 +283,8 @@ static const mutation_def mut_data[] =
   {"", "", ""},
   {"", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_TELEPORT_CONTROL, 0, 1, mutflag::good, false,
   "teleport control",
 
@@ -392,8 +391,8 @@ static const mutation_def mut_data[] =
    "You feel an ache in your throat.",
    ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_BREATHE_FLAMES, 0, 3, mutflag::good, false,
   "breathe flames",
 
@@ -426,6 +425,7 @@ static const mutation_def mut_data[] =
    "You feel less sure on your feet."},
 },
 #endif
+
 { MUT_BLINK, 3, 1, mutflag::good, false,
   "blink",
 
@@ -433,8 +433,8 @@ static const mutation_def mut_data[] =
   {"You feel jittery.", "", ""},
   {"You no longer feel jittery.", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_STRONG_STIFF, 0, 3, mutflag::good, false,
   "strong stiff",
 
@@ -634,8 +634,8 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_MUMMY_RESTORATION, 0, 1, mutflag::good, false,
   "restore body",
 
@@ -846,8 +846,8 @@ static const mutation_def mut_data[] =
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_SAPROVOROUS, 0, 3, mutflag::good, false,
   "saprovore",
 
@@ -861,8 +861,8 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
-
 #endif
+
 // species-dependent innate mutations
 { MUT_MIASMA_IMMUNITY, 0, 1, mutflag::good, false,
   "miasma immunity",
@@ -1004,8 +1004,8 @@ static const mutation_def mut_data[] =
    "Your connection to magic feels less subdued.",
    "Your connection to magic feels less subdued."},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
   "forlorn",
 
@@ -1046,8 +1046,8 @@ static const mutation_def mut_data[] =
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_CONSERVE_SCROLLS, 0, 1, mutflag::good, false,
   "conserve scrolls",
 
@@ -1237,8 +1237,8 @@ static const mutation_def mut_data[] =
    "Your pseudopods become smaller.",
    "Your pseudopods become smaller."},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_FOOD_JELLY, 0, 1, mutflag::good, false,
   "spawn jellies when eating",
 
@@ -1360,8 +1360,8 @@ static const mutation_def mut_data[] =
    "Your molten scales recede somewhat.",
    "Your molten scales recede somewhat."},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_ROUGH_BLACK_SCALES, 0, 3, mutflag::good, true,
   "rough black scales",
 
@@ -1592,8 +1592,8 @@ static const mutation_def mut_data[] =
   {"Your body vibrates.", "", ""},
   {"You briefly stop moving.", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_TRAMPLE_RESISTANCE, 0, 1, mutflag::good, false,
   "trample resistance",
 
@@ -1666,8 +1666,8 @@ static const mutation_def mut_data[] =
   {"You feel less concerned about cold.", "", ""},
   {"", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_SUSTAIN_ATTRIBUTES, 0, 1, mutflag::good, false,
     "sustain attributes",
 
@@ -1756,8 +1756,8 @@ static const mutation_def mut_data[] =
   {"You can no longer study or cast Air magic.", "", ""},
   {"You can once more study and cast Air magic.", "", ""},
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_NO_CHARM_MAGIC, 0, 1, mutflag::bad, false,
   "no charms magic",
 
