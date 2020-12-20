@@ -1527,7 +1527,9 @@ static const char *shop_types[] =
     "jewellery",
     "gadget",
     "book",
+#if TAG_MAJOR_VERSION == 34
     "food",
+#endif
     "distillery",
     "scroll",
     "general",

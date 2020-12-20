@@ -261,7 +261,9 @@ void check_item_knowledge(bool unknown_items)
 {
     vector<const item_def*> items;
     vector<const item_def*> items_missile; //List of missiles should go after normal items
+#if TAG_MAJOR_VERSION == 34
     vector<const item_def*> items_food;    //List of foods should come next
+#endif
     vector<const item_def*> items_misc;
     vector<const item_def*> items_other;   //List of other items should go after everything
     vector<SelItem> selected_items;
@@ -347,7 +349,9 @@ void check_item_knowledge(bool unknown_items)
 
     sort(items.begin(), items.end(), _identified_item_names);
     sort(items_missile.begin(), items_missile.end(), _identified_item_names);
+#if TAG_MAJOR_VERSION == 34
     sort(items_food.begin(), items_food.end(), _identified_item_names);
+#endif
     sort(items_misc.begin(), items_misc.end(), _identified_item_names);
 
     KnownMenu menu;
@@ -375,7 +379,9 @@ void check_item_knowledge(bool unknown_items)
                                               : known_item_mangle, 'a', false);
 
     ml = menu.load_items(items_missile, known_item_mangle, ml, false);
+#if TAG_MAJOR_VERSION == 34
     ml = menu.load_items(items_food, known_item_mangle, ml, false);
+#endif
     ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
@@ -390,7 +396,9 @@ void check_item_knowledge(bool unknown_items)
 
     deleteAll(items);
     deleteAll(items_missile);
+#if TAG_MAJOR_VERSION == 34
     deleteAll(items_food);
+#endif
     deleteAll(items_misc);
     deleteAll(items_other);
 

@@ -2635,16 +2635,6 @@ bool gozag_potion_petition()
 }
 
 /**
- * How many shop types are offered with each use of Call Merchant?
- */
-static int _gozag_max_shops()
-{
-    const int max_non_food_shops = 3;
-
-    return max_non_food_shops;
-}
-
-/**
  * The price to order a merchant from Gozag. Doesn't depend on the shop's
  * type or contents. The maximum possible price is used as the minimum amount
  * of gold you need to use the ability.
@@ -2699,7 +2689,7 @@ bool gozag_setup_call_merchant(bool quiet)
  */
 static bool _gozag_valid_shop_index(int index)
 {
-    return index >= 0 && index < _gozag_max_shops();
+    return index >= 0 && index < GOZAG_MAX_SHOPS;
 }
 
 /**
@@ -2800,12 +2790,12 @@ static int _gozag_choose_shop()
         return -1;
 
     clear_messages();
-    for (int i = 0; i < _gozag_max_shops(); i++)
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
 
     mprf(MSGCH_PROMPT, "Fund which merchant?");
     const int shop_index = toalower(get_ch()) - 'a';
-    if (shop_index < 0 || shop_index > _gozag_max_shops() - 1)
+    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
         return _gozag_choose_shop(); // tail recurse
 
     if (you.gold < _gozag_shop_price(shop_index))
@@ -2904,7 +2894,7 @@ bool gozag_call_merchant()
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
-    for (int i = 0; i < _gozag_max_shops(); i++)
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
             _setup_gozag_shop(i, valid_shops);
 
@@ -2912,7 +2902,7 @@ bool gozag_call_merchant()
     if (shop_index == -1) // hup!
         return false;
 
-    ASSERT(shop_index >= 0 && shop_index < _gozag_max_shops());
+    ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
 
     const int cost = _gozag_shop_price(shop_index);
     ASSERT(you.gold >= cost);
@@ -2925,7 +2915,7 @@ bool gozag_call_merchant()
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
-    for (int j = 0; j < _gozag_max_shops(); j++)
+    for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));

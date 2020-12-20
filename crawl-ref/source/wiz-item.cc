@@ -101,7 +101,7 @@ void wizard_create_spec_object()
     {
         mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
         mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
-        mprf(MSGCH_PROMPT, "X - corpses     %% - food      $ - gold    0  - the Orb");
+        mprf(MSGCH_PROMPT, "X - corpses     $ - gold    0  - the Orb");
         mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");

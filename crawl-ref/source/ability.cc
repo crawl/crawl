@@ -267,7 +267,7 @@ static int _scale_piety_cost(ability_type abil, int original_cost);
 // The description screen was way out of date with the actual costs.
 // This table puts all the information in one place... -- bwr
 //
-// The four numerical fields are: MP, HP, food, and piety.
+// The three numerical fields are: MP, HP, and piety.
 // Note:  piety_cost = val + random2((val + 1) / 2 + 1);
 //        hp cost is in per-mil of maxhp (i.e. 20 = 2% of hp, rounded up)
 static const ability_def Ability_List[] =

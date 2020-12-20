@@ -207,7 +207,7 @@ void link_items()
 
 static bool _item_ok_to_clean(int item)
 {
-    // Never clean food, zigfigs, Orbs, or runes.
+    // Never clean zigfigs, Orbs, or runes.
     if (env.item[item].base_type == OBJ_MISCELLANY
             && env.item[item].sub_type == MISC_ZIGGURAT
         || item_is_orb(env.item[item])
@@ -254,7 +254,7 @@ static int _cull_items()
     //  2. Don't cleanup shops
     //  3. Don't cleanup monster inventory
     //  4. Clean 15% of items
-    //  5. never remove food, orbs, runes
+    //  5. never remove orbs or runes
     //  7. uniques weapons are moved to the abyss
     //  8. randarts are simply lost
     //  9. unrandarts are 'destroyed', but may be generated again
