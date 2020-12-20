@@ -1381,7 +1381,7 @@ void decr_zot_clock()
     }
 }
 
-int _added_zot_time()
+static int _added_zot_time()
 {
     if (have_passive(passive_t::slow_zot))
         return div_rand_round(you.time_taken * 2, 3);
