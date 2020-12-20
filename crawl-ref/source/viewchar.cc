@@ -26,7 +26,11 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
          U'\x2206', //∆ // WGL4 and DEC
 #endif
          '0', U'\x3c6', //φ
-            ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(', ':',  '|',
+         ')',  '[',  '/',
+#if TAG_MAJOR_VERSION == 34
+         '%',
+#endif
+         '?',  '=',  '!',  '(', ':',  '|',
 #if TAG_MAJOR_VERSION == 34
          '\\',
 #endif
