@@ -477,7 +477,7 @@ wearer.
 %%%%
 Stone of Krohman
 
-The ring, old worn but still shining, has a large compressed amount of mana source
+This ring, old worn but still shining, has a large compressed amount of mana source
 and boosts the Conjuration power of the wearer.
 
 "Give me spells enough and mana on which to cast it, and I shall move the world" -Krohman the Conjurer
