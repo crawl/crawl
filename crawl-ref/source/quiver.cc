@@ -2215,9 +2215,12 @@ namespace quiver
             }
         }
 
+        shared_ptr<action> a = nullptr;
+        if (you.weapon() && is_range_weapon(*you.weapon()))
+            a = make_shared<launcher_ammo_action>(slot);
         // use ammo as the fallback -- may well end up invalid
-        auto a = you.weapon() ? make_shared<launcher_ammo_action>(slot)
-                              : make_shared<ammo_action>(slot);
+        if (!a || !a->is_valid())
+            a = make_shared<ammo_action>(slot);
         if (force && (!a || !a->is_valid()))
             return make_shared<fumble_action>(slot);
         return a;
