@@ -4901,6 +4901,13 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
     return CK_MOUSE_CMD;
 }
 
+bool click_travel_safe(const coord_def &gc)
+{
+    return (!is_excluded(gc) || is_stair_exclusion(gc))
+        && (!is_excluded(you.pos()) || is_stair_exclusion(you.pos()))
+        && i_feel_safe(false, false, false, false);
+}
+
 int click_travel(const coord_def &gc, bool force)
 {
     if (!in_bounds(gc))
@@ -4910,9 +4917,7 @@ int click_travel(const coord_def &gc, bool force)
     if (cmd != CK_MOUSE_CMD)
         return cmd;
 
-    if ((!is_excluded(gc) || is_stair_exclusion(gc))
-        && (!is_excluded(you.pos()) || is_stair_exclusion(you.pos()))
-        && i_feel_safe(false, false, false, false))
+    if (click_travel_safe(gc))
     {
         map_cell &cell(env.map_knowledge(gc));
         // If there's a monster that would block travel,

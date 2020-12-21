@@ -593,30 +593,35 @@ static bool _have_appropriate_spell(const actor* target)
     return false;
 }
 
-static bool _can_fire_item()
-{
-    // check is_enabled too?
-    return quiver::get_secondary_action()->is_valid();
-}
-
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const bool shift = (mod & TILES_MOD_SHIFT);
     const bool ctrl  = (mod & TILES_MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & TILES_MOD_ALT));
+
+    // TODO: is see_cell_no_trans too strong?
+    if (!mon || mon->friendly() || !you.see_cell_no_trans(mon->pos()))
+        return false;
+
+    // TODO: unify code with tooltip construction?
     const item_def* weapon = you.weapon();
+    const bool primary_ranged = !you.launcher_action.is_empty();
+    const int melee_dist = weapon ? weapon_reach(*weapon) : 1;
 
-    // Handle evoking items at monster.
-    if (alt && _have_appropriate_evokable(mon))
-        return _evoke_item_on_target(mon);
-
-    // Handle firing quivered items.
-    if (_can_fire_item() && !ctrl
-        && (shift || weapon && is_range_weapon(*weapon)
-                     && !mon->wont_attack()))
+    if (!ctrl && !shift && !alt
+        && (primary_ranged || (mon->pos() - you.pos()).rdist() <= melee_dist))
     {
-        macro_sendkeys_end_add_cmd(CMD_FIRE);
-        _add_targeting_commands(mon->pos());
+        dist t;
+        t.target = mon->pos();
+        quiver::get_primary_action()->trigger(t);
+        return true;
+    }
+
+    if (!ctrl && shift && quiver::get_secondary_action()->is_valid())
+    {
+        dist t;
+        t.target = mon->pos();
+        quiver::get_secondary_action()->trigger(t);
         return true;
     }
 
@@ -624,18 +629,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     if (ctrl && !shift && _have_appropriate_spell(mon))
         return _cast_spell_on_target(mon);
 
-    // Handle weapons of reaching.
-    if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
-    {
-        const int dist = (you.pos() - mon->pos()).rdist();
-
-        if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
-        {
-            macro_sendkeys_end_add_cmd(CMD_EVOKE_WIELDED);
-            _add_targeting_commands(mon->pos());
-            return true;
-        }
-    }
+    // Handle evoking items at monster.
+    if (alt && _have_appropriate_evokable(mon))
+        return _evoke_item_on_target(mon);
 
     return false;
 }
@@ -1044,8 +1040,11 @@ static void _add_tip(string &tip, string text)
 
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
-    const int attack_dist = you.weapon() ?
-        weapon_reach(*you.weapon()) : 1;
+    // TODO: these are not formatted very nicely
+    const bool primary_ranged = !you.launcher_action.is_empty();
+    const bool primary_is_secondary = primary_ranged &&
+        quiver::get_primary_action() == quiver::get_secondary_action();
+    const int melee_dist = you.weapon() ? weapon_reach(*you.weapon()) : 1;
 
     vector<command_type> cmd;
     tip = "";
@@ -1064,53 +1063,75 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     }
     else // non-player squares
     {
-        const actor* target = actor_at(gc);
-        if (target && you.can_see(*target))
+        const monster* mon = monster_at(gc);
+        if (mon && you.can_see(*mon))
         {
             has_monster = true;
-            if ((gc - you.pos()).rdist() <= attack_dist)
+            // TODO: is see_cell_no_trans too strong?
+            if (mon->friendly())
+                _add_tip(tip, "[L-Click] Move");
+            else if (you.see_cell_no_trans(mon->pos()))
             {
-                if (!cell_is_solid(gc))
+                tip = mon->name(DESC_A);
+                if (primary_ranged)
                 {
-                    const monster* mon = monster_at(gc);
-                    if (!mon || mon->friendly() || !mon->visible_to(&you))
-                        _add_tip(tip, "[L-Click] Move");
-                    else if (mon)
+                    if (!primary_is_secondary)
                     {
-                        tip = mon->name(DESC_A);
-                        _add_tip(tip, "[L-Click] Attack");
+                        _add_tip(tip, "[L-Click] "
+                            + quiver::get_primary_action()->quiver_description().tostring()
+                            + " (%)");
+                        cmd.push_back(CMD_PRIMARY_ATTACK);
                     }
+                    // else case: tip handled below
+                }
+                else if ((gc - you.pos()).rdist() <= melee_dist)
+                    _add_tip(tip, "[L-Click] Attack"); // show weapon?
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
+
+                if (quiver::get_secondary_action()->is_valid())
+                {
+                    // this doesn't show the CMD_PRIMARY_ATTACK key
+                    const string clickdesc = primary_is_secondary
+                        ? "[L-Click / Shift + L-Click] "
+                        : "[Shift + L-Click] ";
+                    _add_tip(tip, clickdesc
+                        + quiver::get_secondary_action()->quiver_description().tostring()
+                        + " (%)");
+                    cmd.push_back(CMD_FIRE);
                 }
             }
 
-            if (you.see_cell_no_trans(target->pos())
-                && quiver::get_secondary_action()->is_valid())
-            {
-                _add_tip(tip, "[Shift + L-Click] Fire (%)");
-                cmd.push_back(CMD_FIRE);
-            }
-            dprf("about to check spell evokable on %s", target->name(DESC_THE).c_str());
-
-            tip += _check_spell_evokable(target, cmd);
+            tip += _check_spell_evokable(mon, cmd);
         }
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
                 _add_tip(tip, "[L-Click] Move");
-            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN
-                     && i_feel_safe())
+            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
-                _add_tip(tip, "[L-Click] Travel");
+                if (click_travel_safe(gc))
+                    _add_tip(tip, "[L-Click] Travel");
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
             }
         }
         else if (feat_is_closed_door(env.grid(gc)))
         {
-            if (!adjacent(gc, you.pos()) && i_feel_safe())
-                _add_tip(tip, "[L-Click] Travel");
-
-            _add_tip(tip, "[L-Click] Open door (%)");
-            cmd.push_back(CMD_OPEN_DOOR);
+            if (!adjacent(gc, you.pos()))
+            {
+                if (click_travel_safe(gc))
+                    _add_tip(tip, "[L-Click] Travel");
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
+            }
+            else
+            {
+                _add_tip(tip, "[L-Click] Open door (%)");
+                cmd.push_back(CMD_OPEN_DOOR);
+            }
         }
+        // all other solid features prevent l-click actions
     }
 
     // These apply both on the same square as the player's and elsewhere.
