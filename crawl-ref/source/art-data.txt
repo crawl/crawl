@@ -1003,6 +1003,14 @@ TILE:    urand_mage
 INT:     3
 MAGIC:   2
 
+NAME:    stone of Krohman
+OBJ:     OBJ_JEWELLERY/RING_MAGICAL_POWER
+COLOUR:  ETC_ENCHANT
+TILE:    urand_Khroman
+INSCRIP: Conj+
+MP:       +9
+BOOL:    curse, blink
+
 NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_REFLECTION
 COLOUR:   ETC_MAGIC
