@@ -2591,14 +2591,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
     case OBJ_STAVES:
         if (_could_set_training_target(item, false))
             actions.push_back(CMD_SET_SKILL_TARGET);
-        // intentional fallthrough
-    case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
-            if (is_throwable(&you, item))
-                actions.push_back(CMD_QUIVER_ITEM);
         }
         break;
     case OBJ_MISSILES:
@@ -2636,7 +2632,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         actions.push_back(CMD_WIELD_WEAPON);
 
     if (item_is_evokable(item))
+    {
+        actions.push_back(CMD_QUIVER_ITEM);
         actions.push_back(CMD_EVOKE);
+    }
 
     actions.push_back(CMD_DROP);
 
