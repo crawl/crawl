@@ -1532,10 +1532,9 @@ namespace quiver
             ASSERT(is_valid());
             switch (you.inv[wand_slot].sub_type)
             {
-            case MISC_TIN_OF_TREMORSTONES:
-                return "Throw";
             case MISC_HORN_OF_GERYON:
                 return "Blow";
+            case MISC_TIN_OF_TREMORSTONES:
             case MISC_BOX_OF_BEASTS:
                 return "Open";
             default:
