@@ -2004,7 +2004,9 @@ int player_spec_conj()
 
     if (player_equip_unrand(UNRAND_BATTLE))
         sc++;
-
+    if (player_equip_unrand(UNRAND_Krohman))
+        sc++;
+	
     return sc;
 }
 
