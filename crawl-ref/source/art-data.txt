@@ -1003,10 +1003,10 @@ TILE:    urand_mage
 INT:     3
 MAGIC:   2
 
-NAME:    stone of Krohman
+NAME:    stone of krohman
 OBJ:     OBJ_JEWELLERY/RING_MAGICAL_POWER
 COLOUR:  ETC_ENCHANT
-TILE:    urand_Khroman
+TILE:    UNRAND_KROHMAN
 INSCRIP: Conj+
 MP:       +9
 BOOL:    curse, blink
