@@ -475,6 +475,13 @@ ring of the Mage
 An enchanted sapphire, inset into a ring. It aids the spellcasting of its
 wearer.
 %%%%
+Stone of Krohman
+
+The ring, old worn but still shining, has a large compressed amount of mana source
+and boosts the Conjuration power of the wearer.
+
+"Give me spells enough and mana on which to cast it, and I shall move the world" -Krohman the Conjurer
+%%%%
 brooch of Shielding
 
 A brooch with an intricate inlaid design, providing a range of magical
