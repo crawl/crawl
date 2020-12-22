@@ -508,7 +508,8 @@ ENDMAP
 NAME:   nzn_sisyphean_effort
 DEPTH:  D:9-12, Lair
 MONS:   patrolling boulder beetle
-ITEM:   never_decay human corpse, potion of attraction ident:all
+KITEM:  e = potion of attraction ident:all
+: dgn.delayed_decay(_G, 'd', 'human corpse')
 MAP
 xxxxxxxxx
 @.......@
@@ -2215,9 +2216,10 @@ ENDMAP
 NAME:   nzn_prometheus_bound
 PLACE:  Shoals
 MONS:   patrolling harpy
-ITEM:   never_decay demigod corpse, book of flames ident:all
-KPROP:  md = bloody
+KITEM:  e = book of fire ident:all
+KPROP:  nd = bloody
 KFEAT:  n = iron_grate
+: dgn.delayed_decay(_G, 'd', 'demigod corpse')
 MAP
  1e1
 xndnx
@@ -2678,11 +2680,10 @@ ENDMAP
 NAME:    nzn_life_drinkers
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   D:8-, Crypt, Vaults, Depths
-SHUFFLE: '/-
-NSUBST:  ' = 1:D / 1:E
-NSUBST:  1 = 1:1 / *:.
 KFEAT:   D = altar_makhleb
 KFEAT:   E = altar_the_shining_one
+SHUFFLE: '/-
+NSUBST:  ' = D / 1=E, 1 = 1 / .
 SUBST:   A = V:50 Y
 : if you.in_branch("Vaults") then
 SUBST:   c = v
