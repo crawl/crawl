@@ -2525,44 +2525,46 @@ NAME:   nzn_swamp_witches_coven
 PLACE:  Swamp:$
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-MONS:   fenstrider witch
-MONS:   green death / reaper / blizzard demon
-MONS:   neqoxec / soul eater / sixfirhy
-MONS:   orange demon / hellwing / chaos spawn
-MONS:   w:20 spriggan druid / orc sorcerer / ogre mage / w:5 wizard
 KITEM:  O = decaying rune of zot
+MONS:   fenstrider witch, green death / reaper / blizzard demon
+MONS:   neqoxec / soul eater / sixfirhy, orange demon / hellwing / chaos spawn
+MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf mage / wizard
+SUBST:  ' = W:55 .:15 4:5, 4 = 049
 KFEAT:  B = stone_arch
-MARKER: B = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
-                                pow_max = 10, delay = 10, size = 1, \
-                                walk_dist = 0, excl_rad = 0 }
-SUBST:  ' = WWWWWW. 4:5
-SUBST:  4 = 004499
+KFEAT:  a = c
+MARKER: B = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+TILE:   a = wall_stone_dark
+COLOUR: a = magenta
+TILE:   G = dngn_statue_demonic_bust / dngn_statue_imp / dngn_statue_cerebov \
+            / dngn_statue_ancient_evil
 MAP
          ccccccccc
        ccc''5t5''ccc
      ccct'''ttt'''tccc
     cc'''''''t'''''''cc
-   cc'cc'''''t'''''cc'cc
-  cc''cAcct''t''tccAc''cc
-  ct'''c'cc''t''cc'c'''tc
- cc''''c'3cct'tcc3'c''''cc
- ct''''cc'5cctcc5'cc''''tc
-@c'''''tc'''tct'''c''''''c@
-c'''''''cct'''''tcc'''''''c
-c''t''''5cc'''''cc5'''t'''c
-c'''''''cct''2''tcc'''''''c
-c''''tcccct''G''tcccct''''c
-c''tccc''c'''t'''c''ccct''c
-cttcc53'''ctttttc'''35ccttc
-ccccccccc'ccccccc'ccccccccc
- ct'''''''c'''''c'''''''tc
- ct''''tttcA'''Acttt''''tc
- cct''t''''c'''c''''t''tcc
-  ct5'1'''tc'1'ct'''1'5tc
-  cct'''''tc'2'ct'''''tcc
-   cct''''tccOcct''''tcc
-    cct'''''cBc'''''tcc
-     ccct'''ccc'''tccc
-       ccc'''c'''ccc
+   cc'aa'''''t'''''aa'cc
+  cc''aAaat''t''taaAa''cc
+  ct'''a'aa''t''aa'a'''tc
+ cc''''a'3aat'taa3'a''''cc
+ ct''''aa'5aataa5'aa''''tc
+@c'''''ta'''tat'''at'''''c@
+c'''''''aat'''''taa'''''''c
+c''t''''5aa'''''aa5'''t'''c
+c'''''''aat''2''taa'''''''c
+c''''taaaat''G''taaaat''''c
+c''taaa''a'''t'''a''aaat''c
+cttaa53'''attttta'''35aattc
+ccaaaaaaa'aaaaaaa'aaaaaaaac
+ ct'''''''a'''''a'''''''tc
+ ct''''tttaA'''Aattt''''tc
+ cct''t''''a'''a''''t''tcc
+  ct5'1'''ta'1'at'''1'5tc
+  cct'''''ta'2'at'''''tcc
+   cct''''taaOaat''''tcc
+    cct'''''aBa'''''tcc
+     ccct'''aaa'''tccc
+       ccc'''a'''ccc
          ccccccccc
 ENDMAP
