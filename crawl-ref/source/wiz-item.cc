@@ -748,7 +748,7 @@ void wizard_identify_pack()
     mpr("You feel a rush of knowledge.");
     identify_inventory();
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 static void _forget_item(item_def &item)
@@ -775,7 +775,7 @@ void wizard_unidentify_pack()
             _forget_item(item);
 
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targeting

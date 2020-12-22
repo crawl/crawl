@@ -2762,7 +2762,7 @@ void excommunication(bool voluntary, god_type new_god)
     // Renouncing may have changed the conducts on our wielded or
     // quivered weapons, so refresh the display.
     you.wield_change = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     mpr("You have lost your religion!");
     // included in default force_more_message
@@ -3214,7 +3214,7 @@ static void _god_welcome_handle_gear()
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 /* Make a CrawlStoreValue an empty vector with the requested item type.

@@ -2974,7 +2974,7 @@ void inscribe_item(item_def &item)
 
     mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 /**

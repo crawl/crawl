@@ -2729,6 +2729,12 @@ namespace quiver
         you.launcher_action.on_actions_changed();
     }
 
+    void set_needs_redraw()
+    {
+        you.quiver_action.set_needs_redraw();
+        you.launcher_action.set_needs_redraw();
+    }
+
     // Called when the player has switched weapons
     // Some cases of interest:
     // * player picks up a new weapon and wields it

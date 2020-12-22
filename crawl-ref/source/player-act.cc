@@ -734,7 +734,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     you.berserk_penalty = 0;
 
-    you.redraw_quiver = true; // Account for no firing.
+    quiver::set_needs_redraw();
 
     if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

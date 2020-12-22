@@ -1711,10 +1711,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         return true;
 
     // All checks done, transformation will take place now.
-    you.redraw_quiver       = true;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
     you.wield_change        = true;
+    quiver::set_needs_redraw();
+
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
@@ -1908,7 +1909,7 @@ void untransform(bool skip_move)
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation old_form = you.form;
 
-    you.redraw_quiver           = true;
+    quiver::set_needs_redraw();
     you.redraw_evasion          = true;
     you.redraw_armour_class     = true;
     you.wield_change            = true;

@@ -1689,7 +1689,7 @@ static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
     you.launcher_action.set(you.quiver_action.get());
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     if (!changed && you.quiver_action.get()->is_valid())
         mpr("No other quiver actions available. Use F to throw any item.");
@@ -2092,6 +2092,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         auto a = you.quiver_action.find_last_valid();
         if (a)
             you.quiver_action.set(a);
+        quiver::set_needs_redraw();
         break;
     }
 

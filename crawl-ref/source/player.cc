@@ -8128,7 +8128,7 @@ void player_end_berserk()
 
     learned_something_new(HINT_POSTBERSERK);
     Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
-    you.redraw_quiver = true; // Can throw again.
+    quiver::set_needs_redraw();
 }
 
 /**

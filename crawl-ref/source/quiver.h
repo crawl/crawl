@@ -118,6 +118,7 @@ namespace quiver
     shared_ptr<action> ability_to_action(ability_type abil);
     shared_ptr<action> get_primary_action();
     shared_ptr<action> get_secondary_action();
+    void set_needs_redraw();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
