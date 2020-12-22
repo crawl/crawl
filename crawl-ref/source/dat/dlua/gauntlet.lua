@@ -160,17 +160,25 @@ function gauntlet_arena_item_setup(e, custom_loot)
     -- easilly apply any custom replacement for those extra items.
     e.nsubst("d = d / X")
 
+    -- Redefine these item class glyphs to use no_pickup
+    e.kitem("* = star_item no_pickup")
+    e.kitem("| = superb_item no_pickup")
+    e.kitem("% = any no_pickup")
+    e.kitem("$ = gold no_pickup")
+
     -- Define item slot 'd' and first subst.
     local first_subst = "e*"
     if custom_loot then
-        e.item(custom_loot)
+        e.item(custom_loot .. " no_pickup")
         first_subst = "d"
     else
         e.item("nothing")
     end
 
     -- Define item slot 'e'
-    e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
+    local scrolls = dgn.loot_scrolls:gsub("scroll of", "no_pickup scroll of")
+    local potions = dgn.loot_potions:gsub("potion of", "no_pickup potion of")
+    e.item(scrolls .. " / " .. potions)
     -- Set exactly one loot item.
     e.subst("d = " .. first_subst)
 
@@ -179,22 +187,27 @@ function gauntlet_arena_item_setup(e, custom_loot)
         extra_nsubst = gauntlet_arena_extra_items_nsubst
     end
 
+    local good_aux = dgn.good_aux_armour:gsub("/", "no_pickup /")
+                           .. " no_pickup"
+    local randart_aux = dgn.randart_aux_armour:gsub("/", "no_pickup /")
+                           .. " no_pickup"
     if gauntlet_arena_tier == 1 then
-       -- Item slots 'f' and 'g' for tier 1.
-        e.item(dgn.good_aux_armour)
-        e.item("any jewellery good_item")
+        -- Item slots 'f' and 'g' for tier 1.
+        e.item(good_aux)
+        e.item("any jewellery good_item no_pickup")
 
         if extra_nsubst == nil then
             extra_nsubst = "fg|*|* / ."
         end
     else
-       -- Item slots 'f' and 'g' for tier 2.
+        -- Item slots 'f' and 'g' for tier 2.
         if crawl.one_chance_in(3) then
-            e.item(dgn.randart_aux_armour)
+            e.item(randart_aux)
         else
-            e.item(dgn.good_aux_armour)
+            e.item(good_aux)
         end
-        e.item("any jewellery good_item w:20 / any jewellery randart")
+        e.item("any jewellery good_item w:20 no_pickup " ..
+               "/ any jewellery randart no_pickup")
 
         if extra_nsubst == nil then
             extra_nsubst = "fg / |* / ."
