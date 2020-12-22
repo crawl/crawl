@@ -40,10 +40,12 @@
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "menu.h"
 #include "message.h"
 #include "misc.h" // erase_val
 #include "options.h"
 #include "output.h"
+#include "prompt.h"
 #include "state.h"
 #include "state.h"
 #include "stringutil.h"
@@ -942,15 +944,74 @@ static string _macro_type_name(bool keymap, KeymapContext keymc)
                         (keymap ? "keymap" : "macro"));
 }
 
+class MacroEditMenu : public Menu
+{
+public:
+    MacroEditMenu(macromap &_mapref, bool _keymap, KeymapContext _keymc)
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
+          selected_new_key(false),
+          mapref(_mapref), keymc(_keymc), is_keymap(_keymap)
+    {
+        set_tag("macros");
+        action_cycle = Menu::CYCLE_TOGGLE;
+        menu_action  = Menu::ACT_EXECUTE;
+    }
+
+    virtual formatted_string calc_title() override
+    {
+        return formatted_string::parse_string("Editing <w>"
+            + _macro_type_name(is_keymap, keymc) + "</w>. <w>[Enter]</w> to add/edit by key, <w>-</w> to clear all, other keys add");
+    }
+
+    bool process_key(int keyin) override
+    {
+        if (keyin == CK_ENTER || keyin == '-')
+        {
+            lastch = keyin;
+            return false;
+        }
+        switch (keyin)
+        {
+        case CK_REDRAW:
+        case CK_MOUSE_B2:
+        case CK_MOUSE_CMD:
+        CASE_ESCAPE
+        case ' ': case CK_PGDN: case '>': case '+':
+        case CK_MOUSE_B1:
+        case CK_MOUSE_CLICK:
+        case CK_PGUP: case '<':
+        case CK_UP:
+        case CK_DOWN:
+        case CK_HOME:
+        case CK_END:
+            return Menu::process_key(keyin);
+        default:
+            selected_new_key = true;
+            // fallthrough
+        case CK_ENTER:
+        case '-':
+            lastch = keyin;
+            return false;
+        }
+    }
+    bool selected_new_key;
+protected:
+    macromap &mapref;
+    KeymapContext keymc;
+    bool is_keymap;
+};
+
 void macro_add_query()
 {
     int input;
     bool keymap = false;
-    bool raw = false;
     KeymapContext keymc = KMC_DEFAULT;
 
+    // TODO: roll this all into a single menu with subsections
+
     clear_messages();
-    mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
+    // TODO: add a (r)eset option in case you mess up?
+    mprf(MSGCH_PROMPT, "(m)acro, keymap "
                        "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");
     input = getch_ck();
@@ -982,10 +1043,7 @@ void macro_add_query()
         keymc  = KMC_MENU;
     }
     else if (low == 'm')
-    {
         keymap = false;
-        raw = (input == 'M');
-    }
     else if (input == 's')
     {
         mpr("Saving macros.");
@@ -1000,48 +1058,107 @@ void macro_add_query()
 
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
-    const string macro_type = _macro_type_name(keymap, keymc);
-    const string trigger_prompt = make_stringf("Input %s trigger key: ",
-                                               macro_type.c_str());
-    msgwin_prompt(trigger_prompt);
+
+    MacroEditMenu menu(mapref, keymap, keymc);
+    menu.set_title(new MenuEntry("", MEL_TITLE));
+    for (auto &mapping : mapref)
+    {
+        // TODO: indicate if macro is from rc file somehow?
+        string action_str = vtostr(mapping.second);
+        action_str = replace_all(action_str, "<", "<<");
+        MenuEntry *me = new MenuEntry(action_str,
+                                                MEL_ITEM, 1,
+                                                (int) mapping.first[0]);
+        me->data = (void *) &mapping.first;
+        menu.add_entry(me);
+    }
+
+    keyseq *key_chosen = nullptr;
+    menu.on_single_selection = [&key_chosen](const MenuEntry& item)
+    {
+        key_chosen = static_cast<keyseq *>(item.data);
+        return false;
+    };
+    menu.show();
 
     keyseq key;
+
     mouse_control mc(MOUSE_MODE_MACRO);
-    key = _getch_mul();
+    const string macro_type = _macro_type_name(keymap, keymc);
+
+    if (!key_chosen)
+    {
+        if (menu.getkey() == CK_ENTER)
+        {
+            const string trigger_prompt = make_stringf("Input %s trigger key: ",
+                                                       macro_type.c_str());
+            msgwin_prompt(trigger_prompt);
+            key = _getch_mul();
+            msgwin_reply(vtostr(key));
+        }
+        else if (menu.getkey() == '-')
+        {
+            const string clear_prompt = make_stringf("Really clear all %ss?",
+                macro_type.c_str());
+            if (yesno(clear_prompt.c_str(), false, 'N'))
+            {
+                mapref = macromap();
+                mprf("All %ss cleared!", macro_type.c_str());
+                crawl_state.unsaved_macros = true;
+            }
+            else
+                canned_msg(MSG_OK);
+            return;
+        }
+        else if (menu.selected_new_key)
+            key.push_back(menu.getkey());
+        else
+            return;
+    }
+    else
+        key = *key_chosen;
+
+    // TODO: menu-ify (or at least do in a popup) the rest of this stuff:
+
     string key_str = vtostr(key);
     key_str = replace_all(key_str, "<", "<<");
 
-    msgwin_reply(vtostr(key));
-
-    if (mapref.count(key) && !mapref[key].empty())
+    const bool starts_empty = !mapref.count(key) || mapref[key].empty();
+    string action_str;
+    if (!starts_empty)
     {
-        string action_str = vtostr(mapref[key]);
+        action_str = vtostr(mapref[key]);
         action_str = replace_all(action_str, "<", "<<");
-        mprf(MSGCH_WARN, "Current Action: %s", action_str.c_str());
-        mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
+    }
+    else
+        action_str = "<red>[none]</red>";
+        
+    mprf(MSGCH_WARN, "Current Action for %s: %s", key_str.c_str(), action_str.c_str());
+    mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, %s%sor (a)bort? ",
+        keymap ? "" : "redefine (R)aw, ",
+        starts_empty ? "" : "(c)lear, ");
 
-        input = getch_ck();
+    input = getch_ck();
 
-        input = toalower(input);
-        if (input == 'c')
-        {
-            mprf("Cleared %s '%s' => '%s'.",
-                 macro_type.c_str(),
-                 key_str.c_str(),
-                 action_str.c_str());
-            macro_del(mapref, key);
-            crawl_state.unsaved_macros = true;
-            return;
-        }
-        else if (input != 'r')
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
+    input = toalower(input);
+    if (!starts_empty && input == 'c')
+    {
+        mprf("Cleared %s '%s' => '%s'.",
+             macro_type.c_str(),
+             key_str.c_str(),
+             action_str.c_str());
+        macro_del(mapref, key);
+        crawl_state.unsaved_macros = true;
+        return;
+    }
+    else if (input != 'r' && input != 'R')
+    {
+        canned_msg(MSG_OK);
+        return;
     }
 
     keyseq action;
-    if (raw)
+    if (input == 'R' && !keymap) // why isn't raw input mode used for keymaps?
         _input_action_raw(macro_type, &action);
     else
         _input_action_text(macro_type, &action);
@@ -1060,11 +1177,11 @@ void macro_add_query()
     }
     else
     {
-        string action_str = vtostr(action);
-        action_str = replace_all(action_str, "<", "<<");
+        string new_action_str = vtostr(action);
+        new_action_str = replace_all(new_action_str, "<", "<<");
         macro_add(mapref, key, action);
         mprf("Created %s '%s' => '%s'.",
-             macro_type.c_str(), key_str.c_str(), action_str.c_str());
+             macro_type.c_str(), key_str.c_str(), new_action_str.c_str());
     }
 
     crawl_state.unsaved_macros = true;
