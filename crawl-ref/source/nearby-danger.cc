@@ -109,7 +109,8 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
-        && mons_has_ranged_attack(*mon))
+        && (mons_has_ranged_attack(*mon)
+            || mons_has_ranged_spell(*mon, false, true)))
     {
         return true;
     }
