@@ -6828,9 +6828,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     int noise = _noise_level(mons, spell_cast, silent, slot_flags);
 
     const spell_flags spflags = get_spell_flags(spell_cast);
-    const bool targeted = (spflags & spflag::targeting_mask)
-                           && (pbolt.target != mons->pos()
-                               || pbolt.visible());
+    const bool targeted = bool(spflags & spflag::targeting_mask);
 
     vector<string> key_list;
     _speech_keys(key_list, mons, pbolt, spell_cast, slot_flags, targeted);
