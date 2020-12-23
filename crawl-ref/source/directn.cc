@@ -1894,7 +1894,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-        cursorxy(crawl_view.grid2screen(target()));
+        ui::show_cursor_at(crawl_view.grid2screen(target()));
 #ifdef USE_TILE_WEB
         // cursorxy doesn't place the cursor in Webtiles, we do it manually here
         // This is by design, since we don't want to use the mouse cursor for
@@ -2245,6 +2245,8 @@ public:
 
     void process_command(command_type cmd)
     {
+        // the chooser needs a cursor, but we need to hide it here
+        cursor_control cc(false);
         bool loop_done = m_dc.process_command(cmd);
 
         // Don't allow going out of bounds.

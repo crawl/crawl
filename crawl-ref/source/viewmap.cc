@@ -355,7 +355,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
     puttext(region.x + 1, region.y + 1, vbuf);
 }
-#endif // USE_TILE_LOCAL
+#endif // !USE_TILE_LOCAL
 
 static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 {
@@ -658,7 +658,7 @@ public:
         const ui::Region map_region = {0, 1, m_region.width, m_region.height - 1};
         _draw_level_map(view.start.x, view.start.y, m_state.travel_mode,
                         m_state.on_level, map_region);
-        cursorxy(view.cursor.x, view.cursor.y + 1);
+        ui::show_cursor_at(view.cursor.x, view.cursor.y + 1);
 #endif
     }
 
@@ -804,6 +804,7 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
     unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
 #endif
 
+    cursor_control cc(!Options.use_fake_cursor);
     ui::push_layout(map_view);
     while (map_view->is_alive() && !crawl_state.seen_hups)
         ui::pump_events();
@@ -822,6 +823,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
 {
+    // the map needs a cursor, but we need to hide it here
+    cursor_control cc(false);
     map_control_state state = prev_state;
     state.map_alive = true;
     state.chose = false;
