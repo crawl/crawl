@@ -329,7 +329,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
         new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), ""),
-        new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/%=([)x}:|\\"),
+        new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
         new BoolGameOption(SIMPLE_NAME(tile_misc_anim), true),

@@ -492,7 +492,7 @@ one_SDL_sound_channel = false
 3-a     Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!+"/%
+autopickup = $?!+"/
         The above is the default list. The valid symbols are
         )       Weapons
         (       Missiles
@@ -1442,7 +1442,7 @@ item_stack_summary_minimum = 4
         it, the first description line will contain a summary of all the
         items in the stack (up to 50 items), in a format which looks
         like this:
-          Items here: !! """ % ( )))))) [[[
+          Items here: !! """ ( )))))) [[[
         Known artefacts will be coloured in yellow; glowing or runed
         items will be in white, unless you already know that they are
         not ego items.
@@ -1899,7 +1899,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order of items in the tiles
-        inventory. By default, its value is: !?/%=([)X}:|\
+        inventory. By default, its value is: !?/=([)}:|
         Items with glyphs not in the list will be shown last.
 
 tile_skip_title = false
@@ -2858,7 +2858,7 @@ Example:
 : if you.race() == "Mummy" then
 autopickup = $?+"/
 : else
-autopickup = $?+"/!%
+autopickup = $?+"/!
 : end
 
 Options can be referenced by lua via "options.option_name". For
