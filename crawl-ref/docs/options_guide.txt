@@ -84,8 +84,8 @@ The contents of this text are:
                 mutation, monster_spell, monster_enchant, monster_warning,
                 friend_spell, friend_enchant, friend_action, monster_damage,
                 monster_target, banishment, equipment, floor, multiturn,
-		examine, examine_filter, diagnostic, error, tutorial, orb,
-		hell_effect, dgl_message
+                examine, examine_filter, diagnostic, error, tutorial, orb,
+                hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -455,9 +455,9 @@ macro_dir = settings/
 sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
         (Ordered list option)
-        Plays the sound file if a message contains regex. In case of 
-        multiple matching regexes, only the sound of the last regex 
-        is played. The regex should not include commas or colons. 
+        Plays the sound file if a message contains regex. In case of
+        multiple matching regexes, only the sound of the last regex
+        is played. The regex should not include commas or colons.
         For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         There are certain pre-defined regexes, as well, which can be
@@ -590,7 +590,7 @@ drop_filter += <regex>, <regex>, ...
 
         drop_filter will match against the same keywords menu_colour uses,
         except that it lacks identification status. It defaults to
-	useless_item.
+        useless_item.
 
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
@@ -2473,9 +2473,9 @@ display_char = <dungeon_character_name : symbol>
            stairs_down, stairs_up, grate, altar, arch, fountain, wavy, statue,
            invis_exposed, item_detected, item_orb, item_rune, item_weapon,
            item_armour, item_wand, item_scroll, item_ring, item_potion,
-	   item_missile, item_book, item_staff, item_rod, item_miscellany,
-	   item_corpse, item_skeleton, item_gold, item_amulet, cloud,
-	   cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
+           item_missile, item_book, item_staff, item_rod, item_miscellany,
+           item_corpse, item_skeleton, item_gold, item_amulet, cloud,
+           cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,
            frame_vert, frame_top_left, frame_top_right, frame_bottom_left,
