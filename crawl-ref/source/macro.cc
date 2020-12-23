@@ -1132,7 +1132,7 @@ void macro_add_query()
     }
     else
         action_str = "<red>[none]</red>";
-        
+
     mprf(MSGCH_WARN, "Current Action for %s: %s", key_str.c_str(), action_str.c_str());
     mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, %s%sor (a)bort? ",
         keymap ? "" : "redefine (R)aw, ",
