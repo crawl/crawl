@@ -380,6 +380,7 @@ bool valid_cursor_pos(int x, int y, GotoRegion region)
     return x >= 1 && y >= 1 && x <= sz.x && y <= sz.y;
 }
 
+#ifndef TARGET_OS_WINDOWS
 static GotoRegion _find_correct_region()
 {
     for (int r = GOTO_MSG; r < GOTO_MLIST; r++)
@@ -393,6 +394,7 @@ static GotoRegion _find_correct_region()
     // should probably fail for entirely invalid coords somehow
     return GOTO_CRT;
 }
+#endif
 
 void assert_valid_cursor_pos()
 {
