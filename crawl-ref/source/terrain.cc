@@ -2380,7 +2380,7 @@ void ice_wall_damage(monster &mons, int delay)
     int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
     mprf("The wall freezes %s%s%s",
          you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
-         dam ? "" : " but do no damage",
+         dam ? "" : " but does no damage",
          attack_strength_punctuation(dam).c_str());
 
     if (dam > 0)
