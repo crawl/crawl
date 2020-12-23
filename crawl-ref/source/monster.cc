@@ -1693,8 +1693,11 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     switch (item.sub_type)
     {
     case ARM_BARDING:
-        if (genus == MONS_NAGA || genus == MONS_SALAMANDER)
+        if (genus == MONS_NAGA || genus == MONS_SALAMANDER
+            || genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
+        {
             eq = EQ_BODY_ARMOUR;
+        }
         break;
     // And another hack or two...
     case ARM_HAT:
