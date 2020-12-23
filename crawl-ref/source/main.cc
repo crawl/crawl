@@ -1511,7 +1511,7 @@ static void _take_stairs(bool down)
         return;
     }
 
-    if (!(!cancel_barbed_move()
+    if (!(!cancel_harmful_move()
           && _prompt_stairs(ygrd, down, shaft)
           && you.attempt_escape())) // false means constricted and don't escape
     {

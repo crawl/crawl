@@ -144,7 +144,7 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-bool cancel_barbed_move(bool rampaging)
+static bool _cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
@@ -181,7 +181,7 @@ void apply_barbs_damage(bool rampaging)
     }
 }
 
-bool cancel_ice_move()
+static bool _cancel_ice_move()
 {
     vector<string> effects;
     if (i_feel_safe(false, true, true))
@@ -207,6 +207,11 @@ bool cancel_ice_move()
     }
 
     return false;
+}
+
+bool cancel_harmful_move(bool rampaging)
+{
+    return _cancel_barbed_move(rampaging) || _cancel_ice_move();
 }
 
 void remove_ice_movement()
@@ -688,8 +693,11 @@ static spret _rampage_forward(coord_def move)
         return spret::fail;
     }
 
-    // Abort if the player answers no to a dangerous terrain/trap/cloud/
-    // exclusion prompt and weapon check prompts;
+    // Abort if the player answers no to
+    // * barbs damaging move prompt
+    // * breaking ice spells prompt
+    // * dangerous terrain/trap/cloud/exclusion prompt
+    // * weapon check prompts;
     // messaging for this is handled by check_moveto().
     if (!check_moveto(beam.target, "rampage")
         || attacking && !wielded_weapon_check(you.weapon(), "rampage")
@@ -699,14 +707,6 @@ static spret _rampage_forward(coord_def move)
         you.turn_is_over = false;
         return spret::abort;
     }
-
-    // Abort if the player answers no to a DUR_BARBS damaging move prompt.
-    if (cancel_barbed_move(true))
-        return spret::abort;
-
-    // Abort if the player doesn't want to break ice spells
-    if (cancel_ice_move())
-        return spret::abort;
 
     // We've passed the validity checks, go ahead and rampage.
 
@@ -821,10 +821,7 @@ void move_player_action(coord_def move)
         if (cancel_confused_move(false))
             return;
 
-        if (cancel_barbed_move())
-            return;
-
-        if (cancel_ice_move())
+        if (cancel_harmful_move())
             return;
 
         if (!one_chance_in(3))
@@ -1051,20 +1048,13 @@ void move_player_action(coord_def move)
             return;
         }
 
-        // Prompt already handled by rampage
+        // If confused, we've already been prompted (in case of stumbling into
+        // a monster and attacking instead).
+        // If rampaging we've already been prompted.
         if (!you.confused() && !rampaged && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
-            return;
-        }
-
-        // If confused, we've already been prompted (in case of stumbling into
-        // a monster and attacking instead).
-        // If rampaging we've already been prompted.
-        if (!you.confused() && !rampaged
-            && (cancel_barbed_move() || cancel_ice_move()))
-        {
             return;
         }
 

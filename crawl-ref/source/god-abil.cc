@@ -4711,7 +4711,7 @@ bool ru_power_leap()
             mpr("You can't leap into the sea of lava!");
             continue;
         }
-        else if (!check_moveto(beam.target, "leap"))
+        else if (!check_moveto(beam.target, "leap", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5106,7 +5106,7 @@ bool uskayaw_line_pass()
             mpr("You can't walk through walls!");
             continue;
         }
-        else if (!check_moveto(beam.target, "line pass"))
+        else if (!check_moveto(beam.target, "line pass", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5187,7 +5187,7 @@ spret uskayaw_grand_finale(bool fail)
             continue;
         }
 
-        if (!check_moveto(beam.target, "move"))
+        if (!check_moveto(beam.target, "move", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5448,7 +5448,7 @@ spret hepliaklqana_transference(bool fail)
     }
 
     const coord_def destination = ancestor->pos();
-    if (victim == &you && !check_moveto(destination, "transfer"))
+    if (victim == &you && !check_moveto(destination, "transfer", false))
         return spret::abort;
 
     const bool uninhabitable = victim && !victim->is_habitable(destination);
@@ -5721,12 +5721,6 @@ spret wu_jian_wall_jump_ability()
         crawl_state.cancel_cmd_repeat();
         return spret::abort;
     }
-
-    if (cancel_barbed_move())
-        return spret::abort;
-
-    if (cancel_ice_move())
-        return spret::abort;
 
     if (you.digging)
     {
