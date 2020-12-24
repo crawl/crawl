@@ -2213,19 +2213,6 @@ MAP
   .....
 ENDMAP
 
-NAME:   nzn_prometheus_bound
-PLACE:  Shoals
-MONS:   patrolling harpy
-KITEM:  e = book of fire ident:all
-KPROP:  nd = bloody
-KFEAT:  n = iron_grate
-: dgn.delayed_decay(_G, 'd', 'demigod corpse')
-MAP
- 1e1
-xndnx
- @1@
-ENDMAP
-
 ################################################################################
 #
 # <<4>> Demons and undead
