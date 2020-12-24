@@ -49,6 +49,8 @@ enum object_selector
     OSEL_DIVINE_RECHARGE         = -18,
 #endif
     OSEL_UNCURSED_WORN_RINGS     = -19,
+    OSEL_QUIVER_ACTION           = -20,
+    OSEL_QUIVER_ACTION_FORCE     = -21,
 };
 
 /// Behaviour flags for prompt_invent_item().
