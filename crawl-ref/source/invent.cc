@@ -1602,7 +1602,6 @@ static string _operation_verb(operation_types oper)
     case OPER_WIELD:          return "wield";
     case OPER_QUAFF:          return "quaff";
     case OPER_DROP:           return "drop";
-    case OPER_EAT:            return "eat";
     case OPER_TAKEOFF:        return "take off";
     case OPER_WEAR:           return "wear";
     case OPER_PUTON:          return "put on";
