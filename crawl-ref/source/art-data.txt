@@ -1003,14 +1003,6 @@ TILE:    urand_mage
 INT:     3
 MAGIC:   2
 
-NAME:    stone of krohman
-OBJ:     OBJ_JEWELLERY/RING_MAGICAL_POWER
-COLOUR:  ETC_ENCHANT
-TILE:    UNRAND_KROHMAN
-INSCRIP: Conj+
-MP:       +9
-BOOL:    curse, blink
-
 NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_REFLECTION
 COLOUR:   ETC_MAGIC
@@ -1490,6 +1482,14 @@ INSCRIP: virulence
 EV:      5
 MAGIC:   1
 VALUE:   600
+
+NAME:    stone of krohman
+OBJ:     OBJ_JEWELLERY/RING_MAGICAL_POWER
+COLOUR:  ETC_ENCHANT
+TILE:    urand_krohman
+INSCRIP: Conj+
+MP:       +9
+BOOL:    curse, blink
 
 # This entry must always be last.
 ENUM:   DUMMY2
