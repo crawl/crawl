@@ -800,10 +800,10 @@ Hurls a large and heavy metal shot.
 Irradiate spell
 
 Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
-into pure magical energy, blasting adjacent creatures and bypassing any armour
-they may have. It heavily deforms its targets, weakening them and reducing
-their armour. The caster is not left entirely unaffected; some of the magic
-lingers, enough to leave them dangerously contaminated after a few castings.
+into pure magical energy, blasting adjacent creatures. It heavily deforms
+its targets, weakening them and reducing their armour. The caster is not left
+entirely unaffected; some of the magic lingers, enough to leave them
+dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
