@@ -2071,19 +2071,52 @@ namespace quiver
                               && get()->get_item() == item_slot;
     }
 
-    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir, bool allow_disabled)
+    // convert fire_type bitfields to action types
+    static void _flag_to_action_types(vector<shared_ptr<action>> &action_types, int flag)
+    {
+        // what to do with inscribed?
+        if (flag & FIRE_LAUNCHER)
+            action_types.push_back(make_shared<launcher_ammo_action>(-1));
+        if (flag & FIRE_THROWING) // don't differentiate these, handled internal to ammo_action
+            action_types.push_back(make_shared<ammo_action>(-1));
+        if (flag & FIRE_SPELL)
+            action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
+        if (flag & FIRE_EVOKABLE)
+        {
+            action_types.push_back(make_shared<wand_action>(-1));
+            action_types.push_back(make_shared<misc_action>(-1));
+            action_types.push_back(make_shared<artefact_evoke_action>(-1));
+        }
+        if (flag & FIRE_ABILITY)
+            action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
+    }
+
+    static void _check_and_add_actions(vector<shared_ptr<action>> &action_types,
+        int f, int flag, int &done)
+    {
+        if ((f & flag) && !(flag & done))
+        {
+            _flag_to_action_types(action_types, flag);
+            done &= flag;
+        }
+    }
+
+    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a,
+        int dir, bool allow_disabled)
     {
         // this all seems a bit messy
 
-        // Construct the type order.
+        // Construct the type order from Options.fire_order:
         vector<shared_ptr<action>> action_types;
-        action_types.push_back(make_shared<ammo_action>(-1));
-        action_types.push_back(make_shared<launcher_ammo_action>(-1));
-        action_types.push_back(make_shared<wand_action>(-1));
-        action_types.push_back(make_shared<misc_action>(-1));
-        action_types.push_back(make_shared<artefact_evoke_action>(-1));
-        action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
-        action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
+        int done = 0x0;
+        // This doesn't support ordering ammo subtypes interleaved with anything
+        // else
+        vector<int> flags_to_check =
+            { FIRE_LAUNCHER, FIRE_THROWING, FIRE_SPELL, FIRE_EVOKABLE,
+                FIRE_ABILITY };
+        for (auto f : Options.fire_order)
+            for (auto flag : flags_to_check)
+                _check_and_add_actions(action_types, f, flag, done);
 
         if (dir < 0)
             reverse(action_types.begin(), action_types.end());
@@ -2783,11 +2816,13 @@ namespace quiver
 // Helpers
 // ----------------------------------------------------------------------
 
-// Helper for _get_fire_order.
+// Helper for ammo _get_fire_order. Ammo only.
 // Types may actually contain more than one fire_type.
 static bool _item_matches(const item_def &item, fire_type types,
                           const item_def* launcher, bool manual)
 {
+    // TODO: refactor into something less annoying? This is all a semi-duplicate
+    // of is_valid code...
     ASSERT(item.defined());
 
     if (types & FIRE_INSCRIBED)

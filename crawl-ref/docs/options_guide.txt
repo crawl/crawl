@@ -1313,11 +1313,6 @@ fail_severity_to_confirm = 3
 
         If the value 0 or -1 is given, never prompt about miscasts.
 
-fail_severity_to_quiver = 2
-        Exclude spells with this miscast level or higher from quiver cycling
-        and automatic quivering. -1 can be used to exclude spells entirely from
-        automatic quivering.
-
 easy_door = true
         When (O)pening or (C)losing doors, do not prompt for a direction
         if there is only one adjacent door. This option does not affect
@@ -1710,43 +1705,43 @@ message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         If you don't want to see a message at all, you can mute it:
              message_colour += mute:You start resting
 
-3-j     Missiles.
------------------
+3-j     Quivers, firing, and ammo.
+----------------------------------
 
 fire_items_start = a
         Sets the first inventory item to consider when selecting
         missiles to fire. The default is a.
 
-fire_order  = launcher
-fire_order += javelin / boomerang / stone / rock / net / dart
-fire_order += inscribed
+fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         (Ordered list option)
-        Controls the order of items autoselected for firing. Items
+        Controls the order of items when cycling the quiver. Types
         should be separated by commas and items that appear first get
-        higher priority.
+        higher priority. Absent action types are not used when cycling
+        the quiver. This option also affects autoquivering on game start.
 
-        Items in any position may be slash-separated to indicate that
-        these are of equal priority. If this is the case, the first item
-        in your inventory that fits one of these will be picked for
-        firing.
+        'launcher' refers to firing the appropriate missile for a
+        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
+        all throwing ammo. Specific throwing ammo types can be refered to
+        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
+        but order of these only affects order internal to throwing ammo
+        types; 'inscribed' can also be used to control the order of ammo
+        that has been inscribed with "+f". See the "Inscriptions" section of
+        Crawl's manual for more information about inscriptions. Ammo types
+        can be separated with a "/" to indicate that inventory order should
+        determine cycle order.
 
-        'launcher' refers to firing the appropriate missile for the
-        wielded weapon (i.e. crossbow, bow, sling). You'll almost
-        certainly want it first, as it'll be ignored when you're not
-        wielding a ranged weapon. 'return' refers to (identified)
-        weapons of returning.
-
-        'inscribed' refers to any item with the "+f" inscription. See
-        the "Inscriptions" section of Crawl's manual for more information
-        about inscriptions.
-
-(See also pickup_thrown in 3-a.)
+fail_severity_to_quiver = 2
+        Exclude spells with this miscast level or higher from quiver cycling
+        and automatic quivering. -1 can be used to exclude spells entirely from
+        automatic quivering.
 
 launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding
         that launcher; if set to false, the main quiver is unaffaceted by
         wielding a launcher. (Firing via tab or `v` still work.). This also
         affects rare artefacts that may be evoked.
+
+(See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
 
 3-k     Message Channels.
 -------------------------
