@@ -1483,6 +1483,14 @@ EV:      5
 MAGIC:   1
 VALUE:   600
 
+NAME:    stone of krohman
+OBJ:     OBJ_JEWELLERY/RING_MAGICAL_POWER
+COLOUR:  ETC_ENCHANT
+TILE:    urand_krohman
+INSCRIP: Conj+
+MP:       +9
+BOOL:    curse, blink
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
