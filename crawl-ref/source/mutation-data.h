@@ -321,7 +321,7 @@ static const mutation_def mut_data[] =
    "You feel more strong-willed.",
    "You feel your will become almost unbreakable."},
 
-  {"You feel no longer feel strong-willed.",
+  {"You no longer feel strong-willed.",
    "You feel less strong-willed.",
    "You feel less strong-willed."},
 },
