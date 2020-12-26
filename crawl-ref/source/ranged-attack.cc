@@ -288,15 +288,19 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon() || launch_type == launch_retval::THROWN)
+    if ((using_weapon() || launch_type == launch_retval::THROWN)
+        && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
         {
             return false;
         }
-        if (apply_missile_brand())
+        if ((!defender->is_player() || !you.pending_revival)
+            && apply_missile_brand())
+        {
             return false;
+        }
     }
 
     // XXX: unify this with melee_attack's code
