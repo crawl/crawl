@@ -302,6 +302,13 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+        new MultipleChoiceGameOption<travel_open_doors_type>(
+            SIMPLE_NAME(travel_open_doors), travel_open_doors_type::open,
+            {{"avoid", travel_open_doors_type::avoid},
+             {"approach", travel_open_doors_type::approach},
+             {"open", travel_open_doors_type::open},
+             {"false", travel_open_doors_type::_false},
+             {"true", travel_open_doors_type::_true}}),
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
@@ -1062,7 +1069,6 @@ void game_options::reset_options()
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
-    travel_open_doors      = travel_open_doors_type::_open;
 
     user_note_prefix       = "";
 
@@ -2698,18 +2704,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = confirm_butcher_type::never;
         else if (field == "auto")
             confirm_butcher = confirm_butcher_type::normal;
-    }
-
-    else if (key == "travel_open_doors")
-    {
-#define X(s, i) \
-        if (field == #s) \
-            travel_open_doors = travel_open_doors_type::_ ## s; \
-        else
-
-        TRAVEL_OPEN_DOORS_LIST // See travel-open-doors-type.h for options.
-        report_error("Bad travel_open_doors value: %s", field.c_str());
-#undef X
     }
     else if (key == "lua_file" && runscript)
     {

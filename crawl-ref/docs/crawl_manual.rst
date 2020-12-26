@@ -2282,8 +2282,8 @@ Shift-direction or / direction
 o
   Auto-explore. Setting the option explore_greedy to true makes auto-explore run
   to interesting items (those that get picked up automatically) or piles
-  (checking the contents). Autoexploration will open doors on its own except if
-  you set travel_open_doors to false.
+  (checking the contents). Autoexploration will open doors on its own unless
+  you set travel_open_doors to avoid or approach.
 
 G or Ctrl-G
   Interlevel travel (to arbitrary dungeon levels or waypoints). Remembers old

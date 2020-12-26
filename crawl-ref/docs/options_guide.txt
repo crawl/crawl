@@ -986,13 +986,13 @@ auto_switch = false
         wielding and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = (avoid | approach | open)
-        Change how autoexplore/travel interact with closed doors.
-           avoid = If they can explore (or reach their destination) without
-                   opening doors, they will do. If not, the stop by a closed
-                   door.
-        approach = They walk up to a door if it's on their route, and stop in
-                   front of it.
-            open = They open any closed doors in their path. (default)
+        Configure how autoexplore/travel interacts with doors.
+           avoid = Autoexplore/travel will treat closed doors like walls. If
+                   the only way for exploration or travel to continue is through
+                   a closed door, it will stop by a closed door.
+        approach = Autoexplore/travel will not open doors, instead stopping
+                   in front of any door in its path.
+            open = Autoexplore/travel will open doors. (default)
         This does not affect runed door, which they always avoid.
 
 easy_unequip = true

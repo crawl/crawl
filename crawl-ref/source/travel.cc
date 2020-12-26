@@ -130,7 +130,7 @@ static bool ignore_player_traversability = false;
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
 #ifdef DEBUG_DIAGNOSTICS
-//#define DEBUG_TRAVEL
+#define DEBUG_TRAVEL
 #endif
 
 /*
@@ -340,32 +340,36 @@ static bool _monster_blocks_travel(const monster_info *mons)
 // autoexplore/travel will not normally approach in order to go through it.
 static bool _feat_is_blocking_door(const dungeon_feature_type grid)
 {
-    if (Options.travel_open_doors == travel_open_doors_type::_avoid)
+    if (Options.travel_open_doors == travel_open_doors_type::avoid)
         return feat_is_closed_door(grid);
     else
         return feat_is_runed(grid);
 }
 
-// Returns true if the feature type "grid" is a closed door which autotravel
-// will not pass through. Print a message if no game time has passed since the
-// player pressed (say) "o", so that there is some response.
-// This should only be used for the choice to open the door itself.
-static bool _feat_is_blocking_door_strict(const dungeon_feature_type grid)
+// Returns {flag, barrier}.
+// "flag" is true if the feature type "grid" is a closed door which autotravel
+// will not pass through, false otherwise.
+// "barrier" is a description of "grid" if autotravel will not pass through it,
+// and no game time has passed since the player pressed (say) "o", "" otherwise.
+// This function should only be used for the choice to open the door itself.
+static pair<bool, string> _feat_is_blocking_door_strict(
+    const dungeon_feature_type grid)
 {
-    if (Options.travel_open_doors == travel_open_doors_type::_open
+    if (Options.travel_open_doors == travel_open_doors_type::open
         ? !feat_is_runed(grid) : !feat_is_closed_door(grid))
     {
-        return false;
+        return {false, ""};
     }
 
     if (you.elapsed_time == you.elapsed_time_at_last_input)
     {
         string barrier;
-        if (feat_is_runed(grid)) barrier = "unopened runed door";
-        else barrier = "unopened door";
-        mpr("Could not " + you.running.runmode_name() + ", " + barrier + ".");
+        if (feat_is_runed(grid))
+            return {true, "unopened runed door"};
+        else
+            return {true, "unopened door"};
     }
-    return true;
+    return {true, ""};
 }
 
 /*
@@ -775,7 +779,7 @@ static void _explore_find_target_square()
                 whereto.reset();
             }
             // use orig_terrain() as that's what cell_is_runed() does.
-            else if (Options.travel_open_doors == travel_open_doors_type::_avoid
+            else if (Options.travel_open_doors == travel_open_doors_type::avoid
                      && feat_is_closed_door(orig_terrain(whereto)))
             {
                 closed_door_pause = true;
@@ -1786,7 +1790,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
  * If move_x and move_y are given, pathfinding runs from you.running.pos to
  * youpos, and the move contains the next movement relative to youpos to move
  * closer to you.running.pos. If a runed door (or a closed door, if
- * travel_open_doors isn't _open) is encountered or a transporter needs to be
+ * travel_open_doors isn't open) is encountered or a transporter needs to be
  * taken, these are set to 0, and the caller checks for this.
  *
  * XXX The two modes of this function (with and without move_x/move_y) should
@@ -1821,14 +1825,20 @@ void find_travel_pos(const coord_def& youpos,
     // We'd either have to travel through a runed door, in which case we'll be
     // stopping, or a transporter, in which case we need to issue a command to
     // enter.
+    pair<bool, string> barrier;
     if (need_move
-        && (_feat_is_blocking_door_strict(env.grid(new_dest))
+        && ((barrier = _feat_is_blocking_door_strict(env.grid(new_dest))).first
             || env.grid(youpos) == DNGN_TRANSPORTER
                && env.grid(new_dest) == DNGN_TRANSPORTER_LANDING
                && youpos.distance_from(new_dest) > 1))
     {
         *move_x = 0;
         *move_y = 0;
+        if (!barrier.second.empty())
+        {
+            mpr("Could not " + you.running.runmode_name() + ", "
+                + barrier.second + ".");
+        }
         return;
     }
 
