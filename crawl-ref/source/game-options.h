@@ -202,5 +202,41 @@ private:
     vector<T> default_value;
 };
 
+// A template for an option which can take one of a fixed list of values.
+// Trying to set it to a value which isn't listed in _choices gives an error
+// message, and does not alter _val.
+template<typename T>
+class MultipleChoiceGameOption : public GameOption
+{
+public:
+    MultipleChoiceGameOption(T &_val, std::set<std::string> _names, T _default,
+                             map<string, T> _choices)
+        : GameOption(_names), value(_val), default_value(_default),
+          choices(_choices) { }
+    void reset() const override {value = default_value;}
+    string loadFromString(std::string field, rc_line_type) const override
+    {
+        const T *choice = map_find(choices, field);
+        if (choice == 0)
+        {
+            string all_choices = comma_separated_fn(choices.begin(),
+                choices.end(), [] (const pair<string, T> &p) {return p.first;},
+                " or ");
+            return make_stringf("Bad %s value: %s (should be %s)",
+                                name().c_str(), field.c_str(),
+                                all_choices.c_str());
+        }
+        else
+        {
+            value = *choice;
+            return "";
+        }
+    }
+
+private:
+    T &value, default_value;
+    map<string, T> choices;
+};
+
 bool read_bool(const std::string &field, bool def_value);
 maybe_bool read_maybe_bool(const std::string &field);
