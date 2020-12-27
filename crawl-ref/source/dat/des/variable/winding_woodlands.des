@@ -569,10 +569,10 @@ SUBST:  0 = 0..
 SUBST:  A = .:90 TUV9%*:10
 MAP
   ... ..
-  .  . 0  .
-.  0   A 0 . .
- . 0   0 0  .
-  ..   ...
+  .  . 0  ..
+.  0    A 0 . .
+ . 0    0 0  .
+  ..    ...
 ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_pool
@@ -861,7 +861,7 @@ MAP
  . 0......0 .
  .          .
  ............
-      .
+       .
 ENDMAP
 
 NAME:   nzn_winding_woodlands_15x15_five_gardens
