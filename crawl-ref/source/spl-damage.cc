@@ -3535,3 +3535,59 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
 
     return spret::success;
 }
+
+vector<coord_def> find_bog_locations(const coord_def &center, int pow)
+{
+    vector<coord_def> bog_locs;
+    const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
+
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
+            ri++)
+    {
+        if (!feat_has_solid_floor(env.grid(*ri)))
+            continue;
+
+        // If a candidate cell is next to a solid feature, we can't bog it.
+        // Additionally, if it's next to a cell we can't currently see, we
+        // can't bog it, regardless of what the cell contains. Don't want to
+        // leak information about out-of-los cells.
+        bool valid = true;
+        for (adjacent_iterator ai(*ri); ai; ai++)
+        {
+            if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
+            {
+                valid = false;
+                break;
+            }
+        }
+        if (valid)
+            bog_locs.push_back(*ri);
+    }
+
+    return bog_locs;
+}
+spret cast_noxious_bog(int pow, bool fail)
+{
+    vector <coord_def> bog_locs = find_bog_locations(you.pos(), pow);
+    if (bog_locs.empty())
+    {
+        mpr("There are no places for you to create a bog.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int turns = 5 + random2(pow / 10);
+    you.increase_duration(DUR_NOXIOUS_BOG, turns);
+
+    for (auto pos : bog_locs)
+    {
+        temp_change_terrain(pos, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
+                TERRAIN_CHANGE_BOG, you.as_monster());
+    }
+
+    flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);
+    mpr("You spew toxic sludge!");
+
+    return spret::success;
+}

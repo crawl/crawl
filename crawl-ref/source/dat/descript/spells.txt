@@ -525,12 +525,12 @@ Corrodes the target, with no direct line of fire required.
 %%%%
 Eringya's Noxious Bog spell
 
-Causes the caster to release a torrent of sludge, which transforms the dungeon
-into a toxic bog in the caster's wake. The sludge damages and poisons all
-monsters, even those resistant to poison. The sludge is temporary, cannot
-replace deep water or lava, and cannot be sustained out of the caster's sight.
-Spellpower will increase both the duration of the torrent and how long the
-sludge lingers.
+Causes the caster to release a torrent of sludge that transforms nearby areas
+into a toxic bog. The sludge damages and poisons all monsters, even those
+resistant to poison. The bog cannot form on areas adjacent to solid features,
+nor on areas that lack solid floor, like deep water or lava. The transformation
+is temporary and cannot be sustained out of the caster's sight. Spellpower will
+increase how long the bog lingers.
 %%%%
 Excruciating Wounds spell
 

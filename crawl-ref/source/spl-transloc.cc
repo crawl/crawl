@@ -588,13 +588,10 @@ spret palentonga_charge(bool fail, dist *target)
     noisy(12, you.pos());
     apply_barbs_damage();
     remove_ice_movement();
-    apply_noxious_bog(orig_pos);
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
-    {
-        apply_noxious_bog(*it);
         _charge_cloud_trail(*it);
-    }
+
     if (you.pos() != dest_pos) // tornado and trap nonsense
         return spret::success; // of a sort
 

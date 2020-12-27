@@ -42,7 +42,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-damage.h"
-#include "spl-selfench.h" // noxious_bog_cell
 #include "target-compass.h"
 #include "terrain.h"
 #include "traps.h"
@@ -247,17 +246,6 @@ static void _clear_constriction_data()
     you.stop_directly_constricting_all(true);
     if (you.is_directly_constricted())
         you.stop_being_constricted();
-}
-
-void apply_noxious_bog(const coord_def old_pos)
-{
-    if (you.duration[DUR_NOXIOUS_BOG])
-    {
-        if (cell_is_solid(old_pos))
-            ASSERT(you.wizmode_teleported_into_rock);
-        else
-            noxious_bog_cell(old_pos);
-    }
 }
 
 bool apply_cloud_trail(const coord_def old_pos)
@@ -731,7 +719,6 @@ static spret _rampage_forward(coord_def move)
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_barbs_damage(true);
     remove_ice_movement();
-    apply_noxious_bog(old_pos);
     apply_cloud_trail(old_pos);
 
     // If there is somehow an active run delay here, update the travel trail.
@@ -1089,7 +1076,6 @@ void move_player_action(coord_def move)
             move_player_to_grid(targ, true);
             apply_barbs_damage();
             remove_ice_movement();
-            apply_noxious_bog(old_pos);
             apply_cloud_trail(old_pos);
         }
 

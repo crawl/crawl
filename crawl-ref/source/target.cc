@@ -1821,3 +1821,11 @@ aff_type targeter_starburst::is_affected(coord_def loc)
             return r;
     return AFF_NO;
 }
+
+targeter_bog::targeter_bog(const actor *a, int pow)
+    : targeter_multiposition(a, { }, true)
+{
+    auto seeds = find_bog_locations(a->pos(), pow);
+    for (auto &c : seeds)
+        add_position(c);
+}

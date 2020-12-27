@@ -1355,6 +1355,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), true, AFF_YES);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
+    case SPELL_NOXIOUS_BOG:
+        return make_unique<targeter_bog>(&you, pow);
 
     default:
         break;

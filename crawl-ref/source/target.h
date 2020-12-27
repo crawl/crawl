@@ -425,3 +425,10 @@ public:
 private:
     vector<targeter_starburst_beam> beams;
 };
+
+// A targeter for Eringya's Noxious Bog that finds cells that can be bogged.
+class targeter_bog: public targeter_multiposition
+{
+public:
+    targeter_bog(const actor *a, int pow);
+};
