@@ -395,7 +395,7 @@ default-depth:
 #
 #   _5x5
 #
-#   These are small connector rooms. Average of one or less 0s.
+#   These are small connector rooms. Average of one and a half 0s.
 #
 ###############################################################################
 
@@ -411,7 +411,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_crossed_zero
 TAGS:   winding_woodlands unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
  ...
 0   0
@@ -422,7 +422,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_gyre
 TAGS:   winding_woodlands unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
   .
  .
@@ -433,7 +433,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_cross
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
   .
   0
@@ -445,7 +445,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_checkerboard
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
 . . .
  0 0
@@ -456,7 +456,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_open_star
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
   .
  0.0
@@ -467,7 +467,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_closed_star
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
   .
  0 0
@@ -478,7 +478,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_perimeter
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
 0...0
 .   .
@@ -489,7 +489,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x5_three
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
 00...
     .
@@ -500,7 +500,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_hourglass
 TAGS:   winding_woodlands_5x5 unrand
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
 .....
  0.0
@@ -525,7 +525,7 @@ ENDMAP
 #   _5x15
 #
 #   These are medium-sized connector rooms. Be light with rewards. Average of
-#   two 0 per chamber.
+#   three 0 per chamber.
 #
 ###############################################################################
 
@@ -565,7 +565,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_jagged
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 0.
 SUBST:  A = .:90 TUV9%*:10
 MAP
   ... ..
@@ -577,7 +577,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_pool
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 0.
 MAP
       ...
  . . 0WWW0 . .
@@ -588,7 +588,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_crooked
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 000..
 SUBST:  A = .:90 TUV9%*:10
 MAP
      ...
@@ -600,7 +600,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_split_checker
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 0.
 SUBST:  A = .:90 cTUV9%*:10
 MAP
 . . .  .  . . .
@@ -634,7 +634,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_sawtooth
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 00.
 SUBST:  A = .:90 TUV9%*:10
 MAP
   .    .    .
@@ -646,7 +646,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_pockets
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 000.
 MAP
   .............
  .  .. .    ..
@@ -657,7 +657,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_sidewinder
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0.
+SUBST:  0 = 000.
 MAP
   ... ... ...
   . . 0 0 . .
@@ -668,7 +668,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_eye
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 00.
 MAP
    .........
  ..    .    ..
@@ -679,7 +679,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_parted
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0..
+SUBST:  0 = 00.
 MAP
   .... . ....
  ...0 . . 0...
@@ -690,7 +690,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_zeroes
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0.
+SUBST:  0 = 000.
 MAP
  ...  ...  ...
 .   ..   ..   .
@@ -701,7 +701,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_longhouse
 TAGS:   winding_woodlands_5x15 unrand
-SUBST:  0 = 0.
+SUBST:  0 = 00.
 SUBST:  A = .:90 cTUV9%*:10
 MAP
   ...........
@@ -711,9 +711,9 @@ MAP
   ...........
 ENDMAP
 
-NAME:   nzn_winging_woodlands_5x15_pathside_ponds
+NAME:   nzn_winding_woodlands_5x15_pathside_ponds
 TAGS:   winding_woodlands_5x15 unrand no_pool_fixup
-SUBST:  0 = 0.
+SUBST:  0 = 000.
 SUBST:  A = .:90 TUV9%*:10
 MONS:   plant
 MAP
@@ -726,7 +726,7 @@ ENDMAP
 
 NAME:   nzn_winding_woodlands_5x15_river_crossing
 TAGS:   winding_woodlands_5x15 unrand no_pool_fixup
-SUBST:  0 = 0...
+SUBST:  0 = 00...
 MAP
   .00. . .00.
  .wwwwWwWwwww.
