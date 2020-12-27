@@ -1894,7 +1894,7 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-        ui::show_cursor_at(crawl_view.grid2screen(target()));
+        cursorxy(crawl_view.grid2screen(target()));
 #ifdef USE_TILE_WEB
         // cursorxy doesn't place the cursor in Webtiles, we do it manually here
         // This is by design, since we don't want to use the mouse cursor for
