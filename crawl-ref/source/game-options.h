@@ -214,7 +214,7 @@ public:
         : GameOption(_names), value(_val), default_value(_default),
           choices(_choices) { }
     void reset() const override {value = default_value;}
-    string loadFromString(std::string field, rc_line_type) const override
+    string loadFromString(const std::string &field, rc_line_type) const override
     {
         const T *choice = map_find(choices, field);
         if (choice == 0)
