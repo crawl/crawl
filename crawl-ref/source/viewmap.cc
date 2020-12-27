@@ -702,6 +702,8 @@ public:
             tiles.handle_mouse(wm_event);
             if (ev.type() == ui::Event::Type::MouseDown)
                 process_command(CMD_MAP_GOTO_TARGET);
+            else
+                _expose();
             return true;
         }
 #endif

@@ -143,15 +143,6 @@ void DungeonRegion::pack_buffers()
     pack_cursor(CURSOR_MAP, TILEI_CURSOR);
 }
 
-struct tag_def
-{
-    tag_def() { text = nullptr; left = right = 0; }
-
-    const char* text;
-    char left, right;
-    char type;
-};
-
 // #define DEBUG_TILES_REDRAW
 void DungeonRegion::render()
 {
@@ -171,64 +162,34 @@ void DungeonRegion::render()
     m_buf_flash.draw();
     glmanager->reset_scissor();
 
-    FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
-
-    int total_tags = 0;
+    unordered_set<coord_def> tag_coords;
 
     for (int t = TAG_MAX - 1; t >= 0; t--)
     {
         for (const TextTag &tag : m_tags[t])
         {
-            if (!crawl_view.in_los_bounds_g(tag.gc))
+            if (!crawl_view.in_los_bounds_g(tag.gc)
+                && !tiles.get_map_display())
+            {
                 continue;
-
-            const coord_def ep = grid2show(tag.gc);
-
-            if (tag_show(ep).text)
+            }
+            if (tag_coords.count(tag.gc))
                 continue;
+            tag_coords.insert(tag.gc);
 
-            const char *str = tag.tag.c_str();
-
-            int width    = m_tag_font->string_width(str);
-            tag_def &def = tag_show(ep);
-
-            const int buffer = 2;
-
-            def.left  = -width / 2 - buffer;
-            def.right =  width / 2 + buffer;
-            def.text  = str;
-            def.type  = t;
-
-            total_tags++;
-        }
-
-        if (total_tags)
-            break;
-    }
-
-    if (!total_tags)
-        return;
-
-    // Draw text tags.
-    // TODO enne - be more intelligent about not covering stuff up
-    for (int y = 0; y < ENV_SHOW_DIAMETER; y++)
-        for (int x = 0; x < ENV_SHOW_DIAMETER; x++)
-        {
-            coord_def ep(x, y);
-            tag_def &def = tag_show(ep);
-
-            if (!def.text)
-                continue;
-
-            const coord_def gc = show2grid(ep);
             coord_def pc;
-            to_screen_coords(gc, &pc);
+            to_screen_coords(tag.gc, &pc);
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
-            const auto text = formatted_string(def.text, WHITE);
+            const auto text = formatted_string(tag.tag.c_str(), WHITE);
             m_tag_font->render_hover_string(pc.x, pc.y, text);
         }
+
+        //XXX: Why hide unique monster tags when showing e'x'amine tags?
+        if (tag_coords.size())
+            break;
+    }
 }
 
 /**
