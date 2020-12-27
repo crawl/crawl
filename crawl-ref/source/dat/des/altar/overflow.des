@@ -108,6 +108,16 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
   end
 end
 
+function callback.five_deadly_venoms(data, triggerable, triggerer, marker, ev)
+  crawl.god_speaks("Wu Jian", "For a moment, you catch a glimpse of warriors who walked this path long ago.")
+  local positions = dgn.find_marker_positions_by_prop(
+    "positions", "five_deadly_venoms")
+  for i, pos in ipairs(positions) do
+    local x, y = pos:xy()
+    dgn.create_monster(x, y, "generate_awake dur:1 " .. data.venoms[i])
+  end
+end
+
 function species_mock(e)
   if you.race() == "Barachi" then
     return "cane toad"
@@ -2352,6 +2362,44 @@ x``t.'`'`"WWx
 x'`'`.``'`"Wx
 xxxxxx.xxxxxx
      x@x
+ENDMAP
+
+NAME:  pdpol_wu_jian_five_deadly_venoms
+DEPTH: D:2-, Lair
+TAGS:  no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
+KFEAT:  _ = altar_wu_jian
+MARKER: F = lua:fog_machine { \
+            cloud_type="thin mist", size = 1, \
+            pow_max = 3, pow_min = 3, delay = 10, \
+            start_clouds = 0 }
+{{
+  local trig_marker = TriggerableFunction:new {
+    func="callback.five_deadly_venoms",
+    repeated=false,
+    data={
+      venoms={
+        "spectral demonic crawler name:centipede name_species name_replace name_descriptor",
+        "spectral black mamba",
+        "spectral scorpion",
+        "spectral leopard gecko",
+        "spectral cane toad"
+      }
+    }
+  }
+  trig_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
+  lua_marker("_", trig_marker)
+  lua_marker("F", portal_desc { positions = "five_deadly_venoms" })
+}}
+MAP
+   ccc
+   cFc
+  ccncc
+ccc...ccc
+cFn._.nFc
+cccn.nccc
+ cFc.cFc
+ ccc.ccc
+   c@c
 ENDMAP
 
 ### Xom overflow altars #######################################################
