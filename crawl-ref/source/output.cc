@@ -773,6 +773,8 @@ static void _print_stats_mp(int x, int y)
     else
 #endif
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
+
+    you.redraw_magic_points = false;
 }
 
 static void _print_stats_hp(int x, int y)
@@ -821,6 +823,8 @@ static void _print_stats_hp(int x, int y)
     else
 #endif
         HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+
+    you.redraw_hit_points = false;
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -886,6 +890,8 @@ static void _print_stats_ac(int x, int y)
     textcolour(text_col);
     CGOTOXY(x+4, y+2, GOTO_STAT);
     CPRINTF("%-12s", sh.c_str());
+
+    you.redraw_armour_class = false;
 }
 
 static void _print_stats_ev(int x, int y)
@@ -896,6 +902,8 @@ static void _print_stats_ev(int x, int y)
                                     : _boosted_ev() ? LIGHTBLUE
                                                     : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", you.evasion());
+
+    you.redraw_evasion = false;
 }
 
 /**
@@ -986,6 +994,8 @@ static void _print_stats_wp(int y)
     else
         CPRINTF("%s", chop_string(text, max_name_width).c_str());
     textcolour(LIGHTGREY);
+
+    you.wield_change  = false;
 }
 
 static void _print_stats_qv(int y)
@@ -1004,6 +1014,8 @@ static void _print_stats_qv(int y)
     const int max_width = crawl_view.hudsz.x - 4;
 #endif
     qdesc.chop(max_width, true).display();
+
+    you.redraw_quiver = false;
 }
 
 struct status_light
@@ -1093,7 +1105,10 @@ static void _print_status_lights(int y)
     static int last_number_of_lights = 0;
     _get_status_lights(lights);
     if (lights.empty() && last_number_of_lights == 0)
+    {
+        you.redraw_status_lights = false;
         return;
+    }
     last_number_of_lights = lights.size();
 
     size_t line_cur = y;
@@ -1167,6 +1182,8 @@ static void _print_status_lights(int y)
         clear_to_end_of_line();
     }
 #endif
+
+    you.redraw_status_lights = false;
 }
 
 static void _draw_wizmode_flag(const char *word)
@@ -1274,6 +1291,8 @@ static void _redraw_title()
     }
 
     textcolour(LIGHTGREY);
+
+    you.redraw_title = false;
 }
 
 void print_stats()
@@ -1308,31 +1327,16 @@ void print_stats()
     }
 
     if (you.redraw_title)
-    {
-        you.redraw_title = false;
         _redraw_title();
-    }
     if (you.redraw_hit_points)
-    {
-        you.redraw_hit_points = false;
         _print_stats_hp(1, 3);
-    }
     if (you.redraw_magic_points)
-    {
-        you.redraw_magic_points = false;
         _print_stats_mp(1, 4);
-    }
 
     if (you.redraw_armour_class)
-    {
-        you.redraw_armour_class = false;
         _print_stats_ac(1, ac_pos);
-    }
     if (you.redraw_evasion)
-    {
-        you.redraw_evasion = false;
         _print_stats_ev(1, ev_pos);
-    }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
@@ -1378,17 +1382,10 @@ void print_stats()
     if (you.wield_change)
         _print_stats_wp(9 + yhack);
 
-    you.wield_change  = false;
-
     _print_stats_qv(10 + yhack);
 
-    you.redraw_quiver = false;
-
     if (you.redraw_status_lights)
-    {
-        you.redraw_status_lights = false;
         _print_status_lights(11 + yhack);
-    }
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
