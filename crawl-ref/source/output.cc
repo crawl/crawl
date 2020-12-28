@@ -1382,7 +1382,8 @@ void print_stats()
     if (you.wield_change)
         _print_stats_wp(9 + yhack);
 
-    _print_stats_qv(10 + yhack);
+    if (you.redraw_quiver)
+        _print_stats_qv(10 + yhack);
 
     if (you.redraw_status_lights)
         _print_status_lights(11 + yhack);
