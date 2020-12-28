@@ -738,6 +738,11 @@ You have spent too much time in one branch, allowing the malevolent entity Zot t
 notice you. If you spend the indicated number of turns in the branch without
 descending to a new floor, Zot will find and consume you.
 %%%%
+Zot count status
+
+If you spend the indicated number of turns in this branch without descending to
+a new floor, Zot will find and consume you.
+%%%%
 Curl status
 
 After being struck by an attack, you reflexively curled up, protecting yourself

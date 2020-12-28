@@ -1033,7 +1033,10 @@ void TilesFramework::_send_player(bool force_full)
                 json_write_string("light", status.light_text);
                 // split off any extra info, e.g. counts for things like Zot
                 // and Flay. (Status db descriptions never have spaces.)
-                const string dbname = split_string(" ", status.light_text, true, true, 1)[0];
+                string dbname = split_string(" ", status.light_text, true, true, 1)[0];
+                // Don't claim Zot is impending when it's not near.
+                if (dbname == "Zot" && status.light_colour == WHITE)
+                    dbname = "Zot count";
                 const string dbdesc = getLongDescription(dbname + " status");
                 json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
             }
