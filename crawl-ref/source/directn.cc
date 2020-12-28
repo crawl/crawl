@@ -2327,7 +2327,9 @@ bool direction_chooser::choose_direction()
     ui::cutoff_point ui_cutoff_point;
 #endif
 
+#ifndef USE_TILE_LOCAL
     cursor_control ccon(!Options.use_fake_cursor);
+#endif
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
     targeter_smite legacy_range(&you, range, 0, 0, true);

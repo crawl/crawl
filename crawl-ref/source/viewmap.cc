@@ -814,9 +814,10 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
 #ifdef USE_TILE_LOCAL
     unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
+#else
+    cursor_control cc(!Options.use_fake_cursor);
 #endif
 
-    cursor_control cc(!Options.use_fake_cursor);
     ui::push_layout(map_view);
     while (map_view->is_alive() && !crawl_state.seen_hups)
         ui::pump_events();
