@@ -701,9 +701,19 @@ public:
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
             tiles.handle_mouse(wm_event);
             if (ev.type() == ui::Event::Type::MouseDown)
-                process_command(CMD_MAP_GOTO_TARGET);
-            else
-                _expose();
+            {
+                if (tiles.get_cursor() == m_state.lpos.pos)
+                {
+                    process_command(CMD_MAP_GOTO_TARGET);
+                    return true;
+                }
+                else
+                {
+                    m_state.lpos.pos
+                        = tiles.get_cursor().clamped(known_map_bounds());
+                }
+            }
+            _expose();
             return true;
         }
 #endif
