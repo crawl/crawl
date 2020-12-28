@@ -180,6 +180,7 @@ ccccccccc
 ENDMAP
 
 NAME: nicolae_ossuary_entry_false_entrances
+TAGS: transparent
 NSUBST: O = O / >
 SHUFFLE: AB/AB/AB/BA
 SUBST: A = m, B = c
