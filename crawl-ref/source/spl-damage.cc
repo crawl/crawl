@@ -2025,6 +2025,11 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     return spret::success;
 }
 
+dice_def base_fragmentation_damage(int pow)
+{
+    return dice_def(3, 5 + pow / 5);
+}
+
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole)
@@ -2043,7 +2048,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.target = target;
 
     // Number of dice vary from 2-4.
-    beam.damage = dice_def(0, 5 + pow / 5);
+    beam.damage = base_fragmentation_damage(pow);
 
     monster* mon = monster_at(target);
     const dungeon_feature_type grid = env.grid(target);
@@ -2056,21 +2061,20 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == transformation::statue ? 3 : 2;
+            if (you.species == SP_GARGOYLE)
+                beam.damage.num = 2;
             return true;
         }
         else if (petrified)
         {
             beam.name       = "blast of petrified fragments";
             beam.colour     = mons_class_colour(player_mons(true));
-            beam.damage.num = 3;
             return true;
         }
         else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
             return true;
         }
@@ -2084,7 +2088,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_TOENAIL_GOLEM:
             beam.name       = "blast of toenail fragments";
             beam.colour     = RED;
-            beam.damage.num = 3;
             break;
 
         case MONS_IRON_ELEMENTAL:
@@ -2102,13 +2105,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_GARGOYLE:
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = 3;
             break;
 
         case MONS_SALTLING:
             beam.name       = "blast of salt crystal fragments";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             break;
 
         case MONS_OBSIDIAN_STATUE:
@@ -2148,14 +2149,12 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                 monster_info minfo(mon);
                 beam.name       = "blast of petrified fragments";
                 beam.colour     = minfo.colour();
-                beam.damage.num = 3;
                 break;
             }
             else if (mon->is_icy()) // blast of ice
             {
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
-                beam.damage.num = 3;
                 beam.flavour    = BEAM_ICE;
                 break;
             }
@@ -2163,7 +2162,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             {
                 beam.name   = "blast of bone shards";
                 beam.colour = LIGHTGREY;
-                beam.damage.num = 3;
                 break;
             }
             // Targeted monster not shatterable, try the terrain instead.
@@ -2197,7 +2195,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "statue";
 
         beam.name       = "blast of rock fragments";
-        beam.damage.num = 3;
         break;
 
     // Metal -- small but nasty explosion
@@ -2238,7 +2235,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
-        beam.damage.num = 3;
         break;
 
     default:

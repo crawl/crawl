@@ -41,6 +41,7 @@ spret cast_ignite_poison(actor *agent, int pow, bool fail,
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
+dice_def base_fragmentation_damage(int pow);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole);

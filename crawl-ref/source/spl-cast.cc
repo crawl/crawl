@@ -2515,6 +2515,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return battlesphere_damage(power);
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
+        case SPELL_LRD:
+            return base_fragmentation_damage(power);
         default:
             break;
     }
@@ -2556,7 +2558,10 @@ string spell_damage_string(spell_type spell, bool evoked)
         default:
             break;
     }
-    return make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+    if (spell == SPELL_LRD || spell == SPELL_SHATTER)
+        return dam_str + "*"; // many special cases of more/less damage
+    return dam_str;
 }
 
 int spell_acc(spell_type spell)
