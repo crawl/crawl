@@ -2059,19 +2059,27 @@ dice_def base_fragmentation_damage(int pow)
     return dice_def(3, 5 + pow / 5);
 }
 
+
+enum class frag_damage_type
+{
+    rock, // default
+    metal, // extra damage
+    crystal, // extra damage & radius
+    ice, // BEAM_ICE, not BEAM_FRAG
+    player_gargoyle, // weaker, because (?)
+};
+
 struct frag_effect {
+    frag_damage_type damage;
     colour_t colour;
-    beam_type flavour;
-    int dice;
     string name;
     const char* terrain_name;
     bool direct;
-    bool big_boom;
     bool hit_centre;
 };
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for blowing up the player. Return true iff you can be deconstructed.
+// explosion for blowing up the player. Returns true iff the player can be deconstructed.
 static bool _init_frag_player(frag_effect &effect)
 {
     if (you.form == transformation::statue || you.species == SP_GARGOYLE)
@@ -2079,7 +2087,7 @@ static bool _init_frag_player(frag_effect &effect)
         effect.name       = "blast of rock fragments";
         effect.colour     = BROWN;
         if (you.form != transformation::statue)
-            effect.dice = 2; // mercy!
+            effect.damage = frag_damage_type::player_gargoyle;
         return true;
     }
     if (you.petrified() || you.petrifying())
@@ -2092,7 +2100,7 @@ static bool _init_frag_player(frag_effect &effect)
     {
         effect.name       = "icy blast";
         effect.colour     = WHITE;
-        effect.flavour    = BEAM_ICE;
+        effect.damage     = frag_damage_type::ice;
         return true;
     }
     return false;
@@ -2101,8 +2109,7 @@ static bool _init_frag_player(frag_effect &effect)
 struct monster_frag {
     const char* type;
     colour_t colour;
-    bool extra_dice;
-    bool crystal;
+    frag_damage_type damage;
 };
 
 static const map<monster_type, monster_frag> fraggable_monsters = {
@@ -2115,14 +2122,14 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
-    { MONS_IRON_ELEMENTAL,    { "metal", CYAN, true } },
-    { MONS_IRON_GOLEM,        { "metal", CYAN, true } },
-    { MONS_PEACEKEEPER,       { "metal", CYAN, true } },
-    { MONS_WAR_GARGOYLE,      { "metal", CYAN, true } },
-    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY, true, true } },
-    { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED, true, true } },
-    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN, true, true } },
-    { MONS_ROXANNE,           { "sapphire", BLUE, true, true } },
+    { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY, frag_damage_type::crystal } },
+    { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED, frag_damage_type::crystal } },
+    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN, frag_damage_type::crystal } },
+    { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
 };
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
@@ -2133,11 +2140,10 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
     if (frag_f != fraggable_monsters.end())
     {
         const monster_frag &frag = frag_f->second;
-        effect.big_boom    = frag.crystal;
-        if (frag.extra_dice)
-            effect.dice = 4;
+        effect.damage = frag.damage;
+        const bool crystal = frag.damage == frag_damage_type::crystal;
         effect.name = make_stringf("blast of %s %s", frag.type,
-                                   frag.crystal ? "shards" : "fragments");
+                                   crystal ? "shards" : "fragments");
         effect.colour = frag.colour;
         return true;
     }
@@ -2154,7 +2160,7 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
     {
         effect.name       = "icy blast";
         effect.colour     = WHITE;
-        effect.flavour    = BEAM_ICE;
+        effect.damage     = frag_damage_type::ice;
         return true;
     }
     if (mon.is_skeletal()) // blast of bone
@@ -2170,8 +2176,7 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
 struct feature_frag {
     const char* type;
     const char* what;
-    bool extra_dice;
-    bool crystal;
+    frag_damage_type damage;
 };
 
 static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
@@ -2194,10 +2199,10 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
     { DNGN_STONE_ARCH, { "rock", "stone arch" } },
     // Metal -- small but nasty explosion
-    { DNGN_METAL_WALL, { "metal", "metal wall", true } },
-    { DNGN_GRATE, { "metal", "iron grate", true } },
+    { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
+    { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
     // Crystal -- large & nasty explosion
-    { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall", true, true } },
+    { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall", frag_damage_type::crystal } },
 };
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
@@ -2211,11 +2216,10 @@ static bool _init_frag_grid(frag_effect &effect, coord_def target, const char **
         return false;
     const feature_frag &frag = frag_f->second;
 
-    effect.big_boom    = frag.crystal;
-    if (frag.extra_dice)
-        effect.dice = 4;
+    effect.damage = frag.damage;
+    const bool crystal = frag.damage == frag_damage_type::crystal;
     effect.name = make_stringf("blast of %s %s", frag.type,
-                               frag.crystal ? "shards" : "fragments");
+                               crystal ? "shards" : "fragments");
     if (what)
         *what = frag.what;
 
@@ -2234,7 +2238,7 @@ static bool _init_frag_grid(frag_effect &effect, coord_def target, const char **
 }
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for the given target. Return true iff the target can be deconstructed.
+// explosion for the given target.
 static bool _init_frag_effect(frag_effect &effect, const actor &caster,
                               coord_def target, const char **what)
 {
@@ -2275,22 +2279,33 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
     beam.colour = effect.colour;
     beam.name = effect.name;
-    if (effect.direct)
-        beam.aux_source = "by Lee's Rapid Deconstruction"; // for direct attack
+    if (effect.direct) // cast on the player, not next to them
+        beam.aux_source = "by Lee's Rapid Deconstruction";
     else
         beam.aux_source = effect.name;
-    if (effect.flavour)
-        beam.flavour = effect.flavour;
-    else
-        beam.flavour     = BEAM_FRAG;
-    // Number of dice vary from 2-4.
-    beam.damage = base_fragmentation_damage(pow);
-    if (effect.dice)
-        beam.damage.num = effect.dice;
-    if (effect.big_boom)
-        beam.ex_size = 2;
-    else
-        beam.ex_size = 1;
+
+    beam.damage  = base_fragmentation_damage(pow);
+    beam.flavour = BEAM_FRAG;
+    beam.ex_size = 1;
+    switch (effect.damage)
+    {
+        case frag_damage_type::rock:
+        default:
+            break;
+        case frag_damage_type::metal:
+            beam.damage.num++;
+            break;
+        case frag_damage_type::crystal:
+            beam.damage.num++;
+            beam.ex_size++;
+            break;
+        case frag_damage_type::ice:
+            beam.flavour = BEAM_ICE;
+            break;
+        case frag_damage_type::player_gargoyle:
+            beam.damage.num--;
+            break;
+    }
 
     if (effect.hit_centre)
         hole = false;
