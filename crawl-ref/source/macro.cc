@@ -32,6 +32,7 @@
 #include <vector>
 
 #ifdef USE_TILE_LOCAL
+#include <SDL.h>
 #include <SDL_keycode.h>
 #endif
 
@@ -253,6 +254,37 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
+int function_keycode_fixup(int keycode)
+{
+    // is this harmless on windows console?
+#if !defined(USE_TILE_LOCAL) && TAG_MAJOR_VERSION == 34
+    // For many years, dcss has (accidentally, it seems) used these keycodes
+    // for function keys, because of a patch from 2009 that mapped some common
+    // terminal escape codes for F1-F4 to 1011-1014 under the belief (??) that
+    // these were used for some numpad keys. In webtiles code, these keycodes
+    // are even hardcoded in to the non-versioned part of the js code, so it's
+    // extremely hard to change. So we do this somewhat horrible fixup to deal
+    // with the complicated history. TODO: remove some day
+    switch (keycode)
+    {
+    case -1011: return CK_F1;
+    case -1012: return CK_F2;
+    case -1013: return CK_F3;
+    case -1014: return CK_F4;
+    case -1015: return CK_F5;
+    case -1016: return CK_F6;
+    case -1017: return CK_F7;
+    case -1018: return CK_F8;
+    case -1019: return CK_F9;
+    case -1020: return CK_F10;
+    default:
+        return keycode;
+    }
+#else
+    return keycode;
+#endif
+}
+
 static int read_key_code(string s)
 {
     if (s.empty())
@@ -286,6 +318,7 @@ static int read_key_code(string s)
  */
 keyseq parse_keyseq(string s)
 {
+    // TODO parse readable descriptions of special keys, e.g. \{F1} or something
     int state = 0;
     keyseq v;
 
@@ -334,7 +367,7 @@ keyseq parse_keyseq(string s)
             }
             else
             {
-                const int key = read_key_code(arg);
+                const int key = function_keycode_fixup(read_key_code(arg));
                 v.push_back(key);
             }
 
@@ -377,6 +410,8 @@ static string vtostr(const keyseq &seq)
             else
             {
                 char buff[20];
+                // TODO: get rid of negative values in user-facing uses of
+                // keycodes
                 snprintf(buff, sizeof(buff), "\\{%d}", key);
                 s << buff;
             }
@@ -1090,11 +1125,26 @@ void macro_add_query()
     {
         if (menu.getkey() == CK_ENTER)
         {
-            const string trigger_prompt = make_stringf("Input %s trigger key: ",
-                                                       macro_type.c_str());
+            const string trigger_prompt = make_stringf(
+                "Input %s trigger key (<white>\\</white> to enter by keycode): ",
+                macro_type.c_str());
             msgwin_prompt(trigger_prompt);
             key = _getch_mul();
-            msgwin_reply(vtostr(key));
+            if (key[0] == '\\')
+            {
+                msgwin_reply("keycode");
+                key.clear();
+                char buf[20];
+                msgwin_get_line("Input keycode: ", buf, sizeof(buf));
+                key.push_back(read_key_code(string(buf)));
+                if (key[0] == 0)
+                {
+                    canned_msg(MSG_OK);
+                    return;
+                }
+            }
+            else
+                msgwin_reply(vtostr(key));
         }
         else if (menu.getkey() == '-')
         {
@@ -1120,7 +1170,10 @@ void macro_add_query()
 
     // TODO: menu-ify (or at least do in a popup) the rest of this stuff:
 
-    string key_str = vtostr(key);
+    string key_str = keycode_is_printable(key[0])
+        ? keycode_to_name(key[0]).c_str()
+        : make_stringf("%s (%s)",
+                vtostr(key).c_str(), keycode_to_name(key[0]).c_str());
     key_str = replace_all(key_str, "<", "<<");
 
     const bool starts_empty = !mapref.count(key) || mapref[key].empty();
@@ -1133,7 +1186,8 @@ void macro_add_query()
     else
         action_str = "<red>[none]</red>";
 
-    mprf(MSGCH_WARN, "Current Action for %s: %s", key_str.c_str(), action_str.c_str());
+    mprf(MSGCH_WARN, "Current Action for %s: %s",
+                                key_str.c_str(), action_str.c_str());
     mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, %s%sor (a)bort? ",
         keymap ? "" : "redefine (R)aw, ",
         starts_empty ? "" : "(c)lear, ");
@@ -1326,6 +1380,111 @@ string keyseq_to_str(const keyseq &seq)
     }
     return s.size() == 0 ? s : s.substr(0, s.size() - 2);
 
+}
+
+bool keycode_is_printable(int keycode)
+{
+    switch (keycode)
+    {
+    case  0:
+    case  8:
+    case  9:
+    case 27:
+    case '\n':
+    case '\r':
+        return false;
+    default:
+#ifdef USE_TILE_LOCAL
+        // the upper bound here is based on a comment in
+        // windowmanager-sdl.cc:_translate_keysym. It could potentially be
+        // applied more generally but I'm concerned about non-US keyboard
+        // layouts etc. I'm also not sure how accurate it is for sdl...
+        return keycode >= 0 && keycode < 256;
+#else
+        return keycode >= 0;
+#endif
+    }
+}
+
+string keycode_to_name(int keycode)
+{
+    // TODO: handling of alt keys in SDL is generally a mess, including here
+    // (they are basically just ignored)
+    if (keycode_is_printable(keycode))
+        return string(1, keycode);
+
+    // placeholder
+    switch (keycode)
+    {
+    case  0: return "NULL";
+    case  8: return "Backspace"; // CK_BKSP
+    case  9: return "Tab";
+    case 27: return "Esc";
+    case '\n':
+    case '\r': // CK_ENTER
+        return "Enter";
+    case CK_DELETE: return "Del";
+    case CK_UP:     return "Up";
+    case CK_DOWN:   return "Down";
+    case CK_LEFT:   return "Left";
+    case CK_RIGHT:  return "Right";
+    case CK_INSERT: return "Ins";
+    case CK_HOME:   return "Home";
+    case CK_CLEAR:  return "Clear";
+    case CK_PGUP:   return "PgUp";
+    case CK_PGDN:   return "PgDn";
+    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
+    // console, and are somewhat spotty on webtiles.
+    case CK_SHIFT_UP:     return "Shift-Up";
+    case CK_SHIFT_DOWN:   return "Shift-Down";
+    case CK_SHIFT_LEFT:   return "Shift-Left";
+    case CK_SHIFT_RIGHT:  return "Shift-Right";
+    case CK_SHIFT_INSERT: return "Shift-Ins";
+    case CK_SHIFT_HOME:   return "Shift-Home";
+    case CK_SHIFT_CLEAR:  return "Shift-Clear";
+    case CK_SHIFT_PGUP:   return "Shift-PgUp";
+    case CK_SHIFT_PGDN:   return "Shift-PgDn";
+    case CK_SHIFT_TAB:    return "Shift-Tab";
+    case CK_CTRL_UP:      return "^Up";
+    case CK_CTRL_DOWN:    return "^Down";
+    case CK_CTRL_LEFT:    return "^Left";
+    case CK_CTRL_RIGHT:   return "^Right";
+    case CK_CTRL_INSERT:  return "^Ins";
+    case CK_CTRL_HOME:    return "^Home";
+    case CK_CTRL_CLEAR:   return "^Clear";
+    case CK_CTRL_PGUP:    return "^PgUp";
+    case CK_CTRL_PGDN:    return "^PgDn";
+    case CK_CTRL_TAB:     return "^Tab";
+    case CK_F0:     return "F0";
+    case CK_F1:     return "F1";
+    case CK_F2:     return "F2";
+    case CK_F3:     return "F3";
+    case CK_F4:     return "F4";
+    case CK_F5:     return "F5";
+    case CK_F6:     return "F6";
+    case CK_F7:     return "F7";
+    case CK_F8:     return "F8";
+    case CK_F9:     return "F9";
+    case CK_F10:    return "F10";
+    case CK_F11:    return "F11";
+    case CK_F12:    return "F12";
+    default:
+#ifdef USE_TILE_LOCAL
+        // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
+        // numbers; convert back to plain SDL form
+        if (keycode < 0)
+            keycode = -keycode;
+        // SDL_GetKeyName strips capitalization, so we don't want to use it for
+        // printable keys.
+        return string(SDL_GetKeyName(keycode));
+#else
+    {
+        keyseq v;
+        v.push_back(keycode);
+        return vtostr(v);
+    }
+#endif
+    }
 }
 
 void macro_init()

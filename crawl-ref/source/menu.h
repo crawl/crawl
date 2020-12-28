@@ -147,19 +147,7 @@ public:
         return hotkeys.size() && hotkeys[0] == key;
     }
 
-    virtual string get_text(const bool unused = false) const
-    {
-        UNUSED(unused);
-        if (level == MEL_ITEM && hotkeys.size())
-        {
-            char buf[300];
-            snprintf(buf, sizeof buf,
-                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
-                                 text.c_str());
-            return string(buf);
-        }
-        return text;
-    }
+    virtual string get_text(const bool unused = false) const;
 
     virtual int highlight_colour() const
     {

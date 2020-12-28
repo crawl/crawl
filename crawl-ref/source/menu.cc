@@ -19,6 +19,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
  #include "mon-util.h"
@@ -1457,6 +1458,18 @@ void Menu::select_items(int key, int qty)
             }
         }
     }
+}
+
+string MenuEntry::get_text(const bool) const
+{
+    if (level == MEL_ITEM && hotkeys.size())
+    {
+        return make_stringf(" %s %c %s",
+            keycode_to_name(hotkeys[0]).c_str(),
+            preselected ? '+' : '-',
+            text.c_str());
+    }
+    return text;
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
