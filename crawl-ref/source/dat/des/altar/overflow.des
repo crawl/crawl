@@ -2365,7 +2365,7 @@ xxxxxx.xxxxxx
 ENDMAP
 
 NAME:  pdpol_wu_jian_five_deadly_venoms
-DEPTH: D:2-, Lair
+DEPTH: D:2-9
 TAGS:  no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
 KFEAT:  _ = altar_wu_jian
 MARKER: F = lua:fog_machine { \
