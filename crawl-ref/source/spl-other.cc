@@ -426,7 +426,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
-        || mons->check_clarity()
+        || mons->clarity()
         || mons->res_poison() >= 3)
     {
         return 0;

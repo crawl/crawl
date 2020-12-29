@@ -5416,7 +5416,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
-        if (mon->check_clarity())
+        if (mon->clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;

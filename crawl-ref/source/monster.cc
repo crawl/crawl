@@ -4488,7 +4488,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
 void monster::confuse(actor *atk, int strength)
 {
-    if (!check_clarity())
+    if (!clarity())
         enchant_actor_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
@@ -6492,11 +6492,6 @@ void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
 
     if (item && item->is_type(base_type, sub_type))
         set_ident_type(*item, true);
-}
-
-bool monster::check_clarity() const
-{
-    return clarity();
 }
 
 bool monster::stasis() const

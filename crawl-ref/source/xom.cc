@@ -984,7 +984,7 @@ static void _xom_do_potion(int /*sever*/)
 
 static void _confuse_monster(monster* mons, int sever)
 {
-    if (mons->check_clarity())
+    if (mons->clarity())
         return;
     if (mons->holiness() & (MH_NONLIVING | MH_PLANT))
         return;
