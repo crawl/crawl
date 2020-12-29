@@ -1115,7 +1115,7 @@ bool evoke_check(int slot, bool quiet)
         if (!quiet)
         {
             // XX messaging should be unified with actual launching code
-            mprf("You do not have any ammo quivered for %s",
+            mprf("You do not have any ammo quivered for %s.",
                                     you.weapon()->name(DESC_YOUR).c_str());
         }
         return false;

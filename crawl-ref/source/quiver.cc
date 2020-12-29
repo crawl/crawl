@@ -420,7 +420,7 @@ namespace quiver
             // if this check isn't here, it is treated as a clumsy melee attack
             if (weapon && is_range_weapon(*weapon))
             {
-                mprf("You do not have any ammo quivered for %s",
+                mprf("You do not have any ammo quivered for %s.",
                                     you.weapon()->name(DESC_YOUR).c_str());
                 return;
             }
