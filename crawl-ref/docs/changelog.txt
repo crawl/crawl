@@ -92,7 +92,8 @@ Items
   - The Majin-Bo loses Archmagi, and instead gives a chance for any cast spell
     to be vampiric, healing the caster for damage done to living creatures.
   - The shield of Resistance is now a +2 kite shield {rF++ rC++ MR++}.
-  - Glaive of the Guard is now a +8 glaive with only the spectral weapon ego.
+  - Glaive of the Guard now has both the spectral weapon and electricity egos.
+    It no longer has sInv nor +Rage.
   - Cloak of Starlight gains *Dazzle, which sometimes dazzles foes like the
     Dazzling Flash spell on successful dodge. It no longer has rElec and rC+.
   - The Sword of Power is now +5, vorpal, and sometimes fires a powerful but
