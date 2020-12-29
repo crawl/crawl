@@ -976,16 +976,15 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
                                  friendly, false);
 }
 
-spret cast_summon_demon(int pow, god_type god, bool fail)
+spret cast_summon_demon(int pow)
 {
     // Chaos spawn, orange demons and sixfirhies are not rPois
     if (otr_stop_summoning_prompt())
         return spret::abort;
 
-    fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
+    if (!_summon_common_demon(pow, GOD_NO_GOD, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2849,10 +2848,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
     { SPELL_SUMMON_HYDRA,               { 3, 2 } },
     { SPELL_SUMMON_MANA_VIPER,          { 2, 2 } },
-    // Demons
-    { SPELL_CALL_IMP,                   { 3, 3 } },
-    { SPELL_SUMMON_DEMON,               { 3, 2 } },
     // General monsters
+    { SPELL_CALL_IMP,                   { 3, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,        { 3, 2 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
     { SPELL_SHADOW_CREATURES,           { 4, 2 } },
@@ -2887,6 +2884,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
+    { SPELL_SUMMON_DEMON,               { 3, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)

@@ -44,7 +44,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Summonings
-    SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SHADOW_CREATURES,

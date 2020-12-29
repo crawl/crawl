@@ -1341,8 +1341,7 @@ Summons one or more air elementals.
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants
-to serve the caster for a time. The demon's servitude is not guaranteed, but
-will be more likely with high power.
+to serve the caster for a time.
 %%%%
 Summon Dragon spell
 
