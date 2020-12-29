@@ -7751,9 +7751,17 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_ROLL:
-        // Don't start rolling if adjacent to your foe.
-        return ai_action::good_or_bad(!mon->get_foe()
-                || !adjacent(mon->pos(), mon->get_foe()->pos()));
+    {
+        const coord_def delta = mon->props["mmov"].get_coord();
+        // We can roll if we have a foe we're not already adjacent to and where
+        // we have a move that brings us closer.
+        return ai_action::good_or_bad(
+                mon->get_foe()
+                && !adjacent(mon->pos(), mon->get_foe()->pos())
+                && !delta.origin()
+                && mon_can_move_to_pos(mon, delta));
+    }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:

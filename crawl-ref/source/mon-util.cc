@@ -5283,7 +5283,8 @@ int count_allies()
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER
-           || mons.type == MONS_MERFOLK_AVATAR;
+           || mons.type == MONS_MERFOLK_AVATAR
+           || mons.type == MONS_BOULDER_BEETLE;
 }
 
 bool mons_is_beast(monster_type mc)

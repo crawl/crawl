@@ -3662,6 +3662,10 @@ static bool _monster_move(monster* mons)
 
         mmov.reset();
 
+        // Don't let boulder beetles roll in place.
+        if (mons->has_ench(ENCH_ROLLING))
+            mons->del_ench(ENCH_ROLLING);
+
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.
         make_mons_stop_fleeing(mons);
