@@ -786,7 +786,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::mons_abjure,
+    spflag::unholy | spflag::selfench
+    | spflag::mons_abjure  | spflag::monster,
     7,
     200,
     -1, -1,

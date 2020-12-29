@@ -329,14 +329,13 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Grand Grimoire
+    SPELL_HAUNT,
     SPELL_MONSTROUS_MENAGERIE,
-    SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,
 },
 
 {   // Necronomicon
-    SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_INFESTATION,
     SPELL_NECROMUTATION,

@@ -1383,14 +1383,6 @@ and the trees of the forest will be awakened to deal damage to nearby enemies.
 Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
-Demons summoned in this way have a chance to eventually break free from their
-summoner's control. With high power, the demon will be less likely to break
-free, but stronger demons are more likely to eventually turn against their
-summoner.
-
-Unlike other summons, demons which are only temporarily enslaved will not be
-dismissed when attacked by their summoner, but will instead become hostile
-immediately.
 %%%%
 Summon Guardian Golem spell
 
