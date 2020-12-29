@@ -1144,7 +1144,7 @@ static bool _handle_wand(monster& mons)
     const wand_type kind = (wand_type)wand->sub_type;
     switch (kind)
     {
-    case WAND_DISINTEGRATION:
+    case WAND_MINDBURST:
         // Dial down damage from wands of disintegration, since
         // disintegration beams can do large amounts of damage.
         beem.damage.size = beem.damage.size * 2 / 3;

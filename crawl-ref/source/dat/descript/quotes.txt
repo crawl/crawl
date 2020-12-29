@@ -3097,7 +3097,7 @@ wand of digging
 
 <Passwall spell>
 %%%%
-wand of disintegration
+wand of mindburst
 
 <wand>
 %%%%

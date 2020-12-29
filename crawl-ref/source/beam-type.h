@@ -48,7 +48,7 @@ enum beam_type                  // bolt::flavour
     BEAM_BANISH,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
-    BEAM_DISINTEGRATION,
+    BEAM_MINDBURST,
     BEAM_BLINK,
     BEAM_BLINK_CLOSE,
     BEAM_BECKONING,

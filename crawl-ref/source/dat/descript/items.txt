@@ -1115,12 +1115,6 @@ wand of digging
 
 A magical device which drills tunnels through unworked rock.
 %%%%
-wand of disintegration
-
-A magical device which disrupts the physical structure of a target creature,
-dealing heavy damage and bypassing armour. Only strong-willed beings can hold
-themselves together.
-%%%%
 wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
@@ -1133,6 +1127,13 @@ wand of iceblast
 
 A magical device which creates a loud explosion of ice shards, partially
 harming even creatures resistant to cold.
+%%%%
+wand of mindburst
+
+A magical device which launches a psychic attack on a target creature. If it
+overcomes their willpower, it 'blows their mind' in a violently literal fashion,
+dealing damage that bypasses their armour entirely. It is useless against
+mindless creatures.
 %%%%
 wand of paralysis
 

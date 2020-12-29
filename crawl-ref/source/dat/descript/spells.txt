@@ -395,11 +395,6 @@ Discord spell
 Drives nearby creatures into an insane frenzy, causing them to mercilessly
 attack anything and everything nearby with great strength and speed.
 %%%%
-Disintegrate spell
-
-Disrupts the physical structure of a target creature, dealing heavy damage and
-bypassing armour. Only strong-willed beings can hold themselves together.
-%%%%
 Disjunction spell
 
 Destabilizes the space in a sphere around the caster for a while, causing
@@ -935,6 +930,12 @@ Significantly increases a nearby ally's damage dealt in melee.
 Might spell
 
 Significantly increases the caster's damage in melee.
+%%%%
+Mindburst spell
+
+Launches a psychic attack. If it overcomes the victim's willpower, it
+'blows their mind' in a violently literal fashion, dealing damage that
+bypasses their armour entirely. It is useless against mindless creatures.
 %%%%
 Minor Healing spell
 

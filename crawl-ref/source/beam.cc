@@ -612,7 +612,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
           5, BEAM_ACID,
           5, BEAM_DAMNATION,
           5, BEAM_STICKY_FLAME,
-          5, BEAM_DISINTEGRATION,
+          5, BEAM_MINDBURST,
          // These are not actualy used by SPWPN_CHAOS, but are here to augment
          // the list of effects, since not every SPWN_CHAOS effect has an
          // analogous BEAM_ type.
@@ -2733,7 +2733,7 @@ void bolt::internal_ouch(int dam)
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
+    else if (flavour == BEAM_MINDBURST || flavour == BEAM_DEVASTATION)
     {
         ouch(dam, KILLED_BY_DISINT, source_id, what, true,
              source_name.empty() ? nullptr : source_name.c_str());
@@ -3348,11 +3348,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         break;
 
-    case BEAM_DISINTEGRATION:
-        mpr("You are blasted!");
+    case BEAM_MINDBURST:
+        mpr("Your mind is blasted!");
 
         if (aux_source.empty())
-            aux_source = "disintegration bolt";
+            aux_source = "mindburst bolt";
 
         {
             int amt = damage.roll();
@@ -3801,7 +3801,7 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);
 
-    if (flavour == BEAM_DEVASTATION) // DISINTEGRATION already handled
+    if (flavour == BEAM_DEVASTATION) // MINDBURST already handled
         blood_spray(you.pos(), MONS_PLAYER, final_dam / 5);
 
     // Confusion effect for spore explosions
@@ -5120,6 +5120,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
         break;
 
+    case BEAM_MINDBURST:
+        rc = mons_intel(*mon) > I_BRAINLESS;
+        break;
+
     default:
         break;
     }
@@ -5303,13 +5307,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         obvious_effect = true;
         return MON_AFFECTED;
 
-    case BEAM_DISINTEGRATION:   // disrupt/disintegrate
+    case BEAM_MINDBURST:
     {
         const int dam = damage.roll();
         if (you.see_cell(mon->pos()))
         {
-            mprf("%s is blasted%s",
-                 mon->name(DESC_THE).c_str(),
+            mprf("%s mind is blasted%s",
+                 mon->name(DESC_ITS).c_str(),
                  attack_strength_punctuation(dam).c_str());
             obvious_effect = true;
         }
@@ -6149,7 +6153,7 @@ bool bolt::nasty_to(const monster* mon) const
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
-    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
+    if (flavour == BEAM_DEVASTATION)
         return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
@@ -6179,6 +6183,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_PAIN:
         case BEAM_AGONY:
         case BEAM_HIBERNATION:
+        case BEAM_MINDBURST:
             return ench_flavour_affects_monster(flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
@@ -6414,7 +6419,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";
     case BEAM_DISPEL_UNDEAD:         return "dispel undead";
-    case BEAM_DISINTEGRATION:        return "disintegration";
+    case BEAM_MINDBURST:             return "mindburst";
     case BEAM_BLINK:                 return "blink";
     case BEAM_BLINK_CLOSE:           return "blink close";
     case BEAM_BECKONING:             return "beckoning";

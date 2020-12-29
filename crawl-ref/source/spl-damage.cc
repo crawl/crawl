@@ -2377,9 +2377,9 @@ spret cast_fragmentation(int pow, const actor *caster,
         }
 
         if (caster->is_player())
-            _player_hurt_monster(*mon, dam, BEAM_DISINTEGRATION);
+            _player_hurt_monster(*mon, dam, BEAM_MINDBURST);
         else if (dam)
-            mon->hurt(caster, dam, BEAM_DISINTEGRATION);
+            mon->hurt(caster, dam, BEAM_MINDBURST);
     }
 
     beam.explode(true, hole);

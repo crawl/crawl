@@ -885,7 +885,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DISINTEGRATE, "Disintegrate",
+    SPELL_MINDBURST, "Mindburst",
     spschool::conjuration,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,

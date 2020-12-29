@@ -1298,7 +1298,7 @@ static int _random_wand_subtype()
                                   8, WAND_POLYMORPH,
                                   8, WAND_PARALYSIS,
                                   8, WAND_ACID,
-                                  6, WAND_DISINTEGRATION,
+                                  6, WAND_MINDBURST,
                                   6, WAND_DIGGING,
                                   5, WAND_ENSLAVEMENT);
 }
@@ -1319,7 +1319,7 @@ bool is_high_tier_wand(int type)
     case WAND_PARALYSIS:
     case WAND_ACID:
     case WAND_ICEBLAST:
-    case WAND_DISINTEGRATION:
+    case WAND_MINDBURST:
         return true;
     default:
         return false;
