@@ -444,7 +444,7 @@ STR:     7
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
-PLUS:     +0
+PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
