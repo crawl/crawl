@@ -802,8 +802,7 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
     { AF_CONFUSE,   SPWPN_CONFUSE,       2,
-      [](const actor &d) {
-          return !(d.holiness() & (MH_NONLIVING | MH_PLANT)); } },
+      [](const actor &d) { return !d.clarity(); } },
     { AF_DISTORT,   SPWPN_DISTORTION,    2,
       nullptr },
 };
