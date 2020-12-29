@@ -1030,7 +1030,8 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition
+force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition,
+                 eringya's noxious bog
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -2020,7 +2021,8 @@ game_scale = 1
         all UI elements. This can be used to simulate high-dpi rendering on
         high resolution displays that don't directly support high-dpi, or adjust
         scaling for very large displays. For a 4k display, we recommend a value
-        of 3 or 4, and a 2k display will typically look best with 2. Local tiles only.
+        of 3 or 4, and a 2k display will typically look best with a value of 2.
+        Local tiles only.
 
 tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
@@ -2310,7 +2312,8 @@ dump_order += monlist,kills,notes,screenshots,skill_gains,action_counts
 --------------
 
 Crawl can automatically log certain events during play. You can read
-these in the dump or morgue files. Below are options for tweaking this behaviour.
+these in the dump or morgue files. Below are the options for tweaking this
+behaviour.
 The following events are logged:
         - Gaining or losing a level
         - Entering a dungeon level for the first time
