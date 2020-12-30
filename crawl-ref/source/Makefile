@@ -999,17 +999,15 @@ endif
 # Your ncurses library may include Unicode support, and you may not have a
 # separate libncursesw; this is the case on Mac OS/Darwin.
 ifdef LIBNCURSES_IS_UNICODE
-NC_LIB = ncurses
-NC_INCLUDE = $(NC_PREFIX)/include/ncurses
+NC_LIBS = $(shell $(PKGCONFIG) --libs ncurses 2>/dev/null || echo "-L$(NC_PREFIX)/lib -lncurses")
+NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncurses 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncurses")
 else
-NC_LIB = ncursesw
-NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
+NC_LIBS = $(shell $(PKGCONFIG) --libs ncursesw || echo "-L$(NC_PREFIX)/lib -lncursesw")
+NC_CFLAGS = $(shell $(PKGCONFIG) --cflags ncursesw 2>/dev/null || echo "-isystem $(NC_PREFIX)/include/ncursesw")
 endif
 
-INCLUDES_L += -isystem $(NC_INCLUDE)
-
 ifndef TILES
-LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
+LIBS += $(NC_LIBS)
 endif
 
 endif
@@ -1161,7 +1159,7 @@ CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
 else
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
 endif
-CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
+CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L) $(NC_CFLAGS)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
