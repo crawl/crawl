@@ -103,7 +103,7 @@ include Makefile.obj
 #
 
 
-CFOTHERS := -pipe $(EXTERNAL_FLAGS)
+CFOTHERS := $(EXTERNAL_FLAGS)
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
@@ -809,7 +809,6 @@ ifdef FULLDEBUG
 DEFINES += -DFULLDEBUG
 endif
 ifdef DEBUG
-CFOTHERS := -ggdb $(CFOTHERS)
 DEFINES += -DDEBUG
 endif
 ifndef NOWIZARD
@@ -1627,7 +1626,7 @@ ifdef ANDROID
         # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+	$(MAKE) -C $(RLTILES) all V=$(V) ARCH=$(ARCH) DEBUG=$(DEBUG) TILES=$(TILES)$(WEBTILES)
 endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles

@@ -1,7 +1,7 @@
 uname_S := $(shell uname -s)
 
 ifneq (,$(findstring MINGW,$(uname_S)))
-LDFLAGS += -lmingw32
+LIBS += -lmingw32
 endif
 
 # Note: since generation of tiles is done on the host, we don't care about
@@ -10,7 +10,7 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
-CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
+CXXFLAGS := -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
 ifdef ANDROID
   CXXFLAGS :=
@@ -27,24 +27,24 @@ ifdef TILES
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
   endif
 
-  CFLAGS += $(PNG_INCLUDE)
-  LDFLAGS += $(PNG_LIB)
+  CXXFLAGS += $(PNG_INCLUDE)
+  LIBS += $(PNG_LIB)
 
-  CFLAGS += -DUSE_TILE
+  CXXFLAGS += -DUSE_TILE
 endif
 
 ifdef DEBUG
-CFLAGS += -O0 -DDEBUG -ggdb
+CXXFLAGS += -DDEBUG
 endif
 
 ifneq (,$(findstring MINGW,$(uname_S)))
-LDFLAGS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid 
+LIBS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid 
 endif
 ifeq ($(uname_S),Darwin)
 LDFLAGS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL
 endif
 ifeq ($(uname_S),Linux)
-LDFLAGS += -ldl -lpthread
+LIBS += -ldl -lpthread
 endif
 
 # Attempt to use a full compiler name, to make
@@ -129,10 +129,10 @@ clean:
 
 distclean: clean
 
-%.o: %.cc .cflags
-	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -MMD -c $< -o $@
+%.o: %.cc
+	$(QUIET_HOSTLINK)$(HOSTCXX) $(CXXFLAGS) -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
+	$(QUIET_HOSTLINK)$(HOSTCXX) $(CXXFLAGS) $(OBJECTS) -o $@ $(LDFLAGS) $(LIBS)
 
 .PHONY: all clean distclean
