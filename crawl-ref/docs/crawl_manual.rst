@@ -2435,12 +2435,11 @@ Ctrl-O
   Show dungeon overview (branches, shops, etc.).
 
 !
-  Annotate current level. You can enter any text. This annotation is then listed
-  in the dungeon overview (Ctrl-O) and also shown whenever you enter that level
-  again. If you use this command when standing on a staircase, you may also
-  annotate the level that staircase leads to. Should your annotation contain an
-  exclamation mark (!), you will be prompted before entering the level. An empty
-  string clears annotations.
+  Annotate a level. You can annotate any level of a branch of which you have
+  found the entrance. You can enter any text. This annotation is then listed in
+  the dungeon overview (Ctrl-O) and also shown whenever you enter that level
+  again. Should your annotation contain an exclamation mark (!), you will be
+  prompted before entering the level. An empty string clears annotations.
 
 Character information
 --------------------------------------
