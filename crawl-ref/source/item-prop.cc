@@ -573,7 +573,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_PIERCING, 6, 10, 35, POLEARM_BRANDS },
     { WPN_CRYSTAL_SPEAR,     "crystal spear",      14, -2, 15,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 4, 10, 70, CRYSTAL_BRANDS },
+        DAMV_PIERCING, 2, 4, 70, CRYSTAL_BRANDS },
     { WPN_HALBERD,           "halberd",            13, -3, 15,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 5, 10, 40, POLEARM_BRANDS },
