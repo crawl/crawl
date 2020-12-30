@@ -1811,16 +1811,16 @@ void beogh_idol_revenge()
         return;
     }
 
-    const char *revenge;
+    string revenge;
 
     if (you_worship(GOD_BEOGH))
-        revenge = _get_beogh_speech("idol follower").c_str();
+        revenge = _get_beogh_speech("idol follower");
     else if (player_genus(GENPC_ORCISH))
-        revenge = _get_beogh_speech("idol orc").c_str();
+        revenge = _get_beogh_speech("idol orc");
     else
-        revenge = _get_beogh_speech("idol other").c_str();
+        revenge = _get_beogh_speech("idol other");
 
-    _god_smites_you(GOD_BEOGH, revenge);
+    _god_smites_you(GOD_BEOGH, revenge.c_str());
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)

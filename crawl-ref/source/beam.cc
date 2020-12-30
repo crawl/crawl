@@ -876,7 +876,7 @@ void bolt::burn_wall_effect()
 
 static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
 {
-    const char *msg = nullptr;
+    string msg = "";
     msg_channel_type chan = MSGCH_PLAIN;
     bool hear = player_can_hear(p);
     bool see = you.see_cell(p);
@@ -893,7 +893,7 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
         if (see)
         {
             msg = (feature_description_at(p, false, DESC_THE, false)
-                   + " explodes into countless fragments.").c_str();
+                   + " explodes into countless fragments.");
         }
         else if (hear)
         {
@@ -942,9 +942,9 @@ static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
     }
 
-    if (msg)
+    if (!msg.empty())
     {
-        mprf(chan, "%s", msg);
+        mprf(chan, "%s", msg.c_str());
         return true;
     }
     else

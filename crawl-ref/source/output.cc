@@ -1959,20 +1959,22 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
-            const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(col).c_str();
+            std::string colname  = melded ? "darkgrey"
+                                          : colour_to_str(col);
 
             const char equip_char = index_to_letter(item_idx);
 
+            std::string item_name =
+              chop_string(item.name(DESC_PLAIN, true),
+              melded ? sw - 43 : sw - 36, false);
             snprintf(buf, sizeof buf,
                      "%s<w>%c</w> - <%s>%s%s</%s>",
                      slot,
                      equip_char,
-                     colname,
+                     colname.c_str(),
                      melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true),
-                                 melded ? sw - 43 : sw - 36, false).c_str(),
-                     colname);
+                     item_name.c_str(),
+                     colname.c_str());
             equip_chars.push_back(equip_char);
         }
         else if (e_order[i] == EQ_WEAPON

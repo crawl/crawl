@@ -6207,11 +6207,11 @@ bool ru_do_sacrifice(ability_type sac)
         variable_sac = false;
         mut = sac_def.mutation;
         num_sacrifices = 1;
-        const char* handtxt = "";
+        string handtxt = "";
         if (sac == ABIL_RU_SACRIFICE_HAND)
-            handtxt = you.hand_name(true).c_str();
+            handtxt = you.hand_name(true);
 
-        offer_text = make_stringf("%s%s", sac_def.sacrifice_text, handtxt);
+        offer_text = sac_def.sacrifice_text + handtxt;
         mile_text = make_stringf("%s.", sac_def.milestone_text);
     }
 

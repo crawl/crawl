@@ -2910,7 +2910,7 @@ void read_scroll(int item_slot)
     set_ident_type(scroll, ID_KNOWN_TYPE);
     set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    string scroll_name = scroll.name(DESC_QUALNAME).c_str();
+    string scroll_name = scroll.name(DESC_QUALNAME);
 
     if (!cancel_scroll)
     {

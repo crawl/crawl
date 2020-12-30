@@ -3985,7 +3985,7 @@ bool player_angers_monster(monster* mon)
 
         if (you.can_see(mon))
         {
-            const string mname = mon->name(DESC_THE).c_str();
+            const string mname = mon->name(DESC_THE);
 
             switch (why)
             {

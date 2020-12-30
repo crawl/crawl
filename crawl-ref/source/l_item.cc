@@ -322,16 +322,16 @@ static int l_item_do_ego(lua_State *ls)
     if (lua_isboolean(ls, 1))
         terse = lua_toboolean(ls, 1);
 
-    const char *s = nullptr;
+    std::string ss;
 
     if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
          || item->base_type == OBJ_MISSILES) && item_ident(*item, ISFLAG_KNOW_TYPE))
     {
-        s = ego_type_string(*item, terse).c_str();
+        ss = ego_type_string(*item, terse);
     }
 
-    if (s && *s)
-        lua_pushstring(ls, s);
+    if (!ss.empty())
+        lua_pushstring(ls, ss.c_str());
     else
         lua_pushnil(ls);
 
