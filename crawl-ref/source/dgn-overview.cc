@@ -577,7 +577,7 @@ static string _get_notes(bool display)
         return disp;
 
     if (display)
-        return "\n<green>Annotations:</green> (press <white>!</white> to annotate current level)\n" + disp;
+        return "\n<green>Annotations:</green> (press <white>!</white> to add a new annotation)\n" + disp;
     return "\n<green>Annotations:</green>\n" + disp;
 }
 
