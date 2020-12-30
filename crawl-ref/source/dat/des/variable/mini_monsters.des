@@ -6523,7 +6523,7 @@ ENDMAP
 #          the second time), OOD monsters that can be easily
 #          escaped, and not using overpowered/useless unrandarts.
 ################################################################
-# Robustness
+# Ring of the Tortoise
 #
 NAME:   minmay_guarded_unrand_tortoise
 DEPTH:  D:$, Depths, Vaults
