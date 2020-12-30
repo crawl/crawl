@@ -1069,7 +1069,16 @@ bool learn_spell(spell_type specspell, bool wizard)
     string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
 
     if (!mem_spell_warning_string.empty())
-        mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
+    {
+        mem_spell_warning_string += " Do you really want to continue the memorization?";
+        if (!yesno(mem_spell_warning_string.c_str(), true, 'n', false))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    
 
     if (!wizard)
     {
