@@ -2170,7 +2170,7 @@ bool scroll_of_wish_menu()
         return false;
     }
     else if(you.religion == GOD_NO_GOD){
-        mpr("You should wish to God for this scroll.");
+        mpr("You should worship any God for reading this scroll.");
         return false;
     }
 
