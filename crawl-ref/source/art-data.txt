@@ -996,17 +996,17 @@ ANGRY:   5
 SLAY:    6
 BOOL:    curse, berserk
 
-NAME:    ring of Phasing
+NAME:    ring of the Hare
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_phasing
+TILE:    urand_hare
 
-NAME:    ring of Robustness
+NAME:    ring of the Tortoise
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
 PLUS:    +8
 COLOUR:  ETC_GOLD
-TILE:    urand_robustness
+TILE:    urand_tortoise
 
 NAME:    ring of the Mage
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY

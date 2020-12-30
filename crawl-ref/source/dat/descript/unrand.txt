@@ -466,15 +466,15 @@ necklace of Bloodlust
 A necklace made of bloodstained human and animal teeth, and something that
 appears to be a piece of spine.
 %%%%
-ring of Phasing
+ring of the Hare
 
-An unadorned jade ring. Its wearer may momentarily phase out of reality in order
-to evade attacks.
+An unadorned malachite ring, half of an ancient pair. Its wearer is
+exceptionally difficult to catch.
 %%%%
-ring of Robustness
+ring of the Tortoise
 
-A plain steel ring that causes its wearer to become substantially more
-resilient.
+A rough-hewn aquamarine ring, half of an ancient pair. Its wearer is
+exceptionally difficult to harm.
 %%%%
 ring of the Mage
 
