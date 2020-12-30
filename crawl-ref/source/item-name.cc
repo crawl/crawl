@@ -3791,12 +3791,12 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return false;
 
+        if (!jewellery_is_amulet(item) && !player_equip_unrand(UNRAND_FINGER_AMULET) && you.species == SP_HYDRA)
+            return true;
+            
         // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
-
-        if (!jewellery_is_amulet(item) && !player_equip_unrand(UNRAND_FINGER_AMULET) && you.species == SP_HYDRA)
-            return true;
 
         if (is_bad_item(item, temp))
             return true;
