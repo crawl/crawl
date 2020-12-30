@@ -51,45 +51,62 @@
 #include "view.h"
 #include "xom.h"
 
-bool check_annotation_exclusion_warning()
+static string _annotation_exclusion_warning(level_id next_level_id)
 {
-    level_id  next_level_id = level_id::get_next_level_id(you.pos());
-
-    crawl_state.level_annotation_shown = false;
-    bool might_be_dangerous = false;
-
     if (level_annotation_has("!", next_level_id)
         && next_level_id != level_id::current()
         && is_connected_branch(next_level_id))
     {
-        mprf(MSGCH_PROMPT, "Warning, next level annotated: <yellow>%s</yellow>",
-             get_level_annotation(next_level_id).c_str());
-        might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
+        return make_stringf("Warning, next level annotated: <yellow>%s</yellow>",
+                            get_level_annotation(next_level_id).c_str());
     }
-    else if (is_exclude_root(you.pos())
+
+    if (is_exclude_root(you.pos())
              && feat_is_travelable_stair(env.grid(you.pos()))
              && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
-        mprf(MSGCH_WARN, "This staircase is marked as excluded!");
-        might_be_dangerous = true;
+        return "This staircase is marked as excluded!";
     }
 
-    if (feat_is_travelable_stair(env.grid(you.pos())))
-    {
-        if (LevelInfo *li = travel_cache.find_level_info(level_id::current()))
-        {
-            if (const stair_info *si = li->get_stair(you.pos()))
-            {
-                if (stairs_destination_is_excluded(*si))
-                {
-                    mprf(MSGCH_WARN,
-                         "This staircase leads to a travel-excluded area!");
-                    might_be_dangerous = true;
-                }
-            }
-        }
-    }
+    return "";
+}
+
+static string _target_exclusion_warning()
+{
+    if (!feat_is_travelable_stair(env.grid(you.pos())))
+        return "";
+
+    LevelInfo *li = travel_cache.find_level_info(level_id::current());
+    if (!li)
+        return "";
+
+    const stair_info *si = li->get_stair(you.pos());
+    if (!si)
+        return "";
+
+    if (stairs_destination_is_excluded(*si))
+        return "This staircase leads to a travel-excluded area!";
+
+    return "";
+}
+
+bool check_next_floor_warning()
+{
+    level_id  next_level_id = level_id::get_next_level_id(you.pos());
+
+    crawl_state.level_annotation_shown = false;
+    const string annotation_warning = _annotation_exclusion_warning(next_level_id);
+
+    const string target_warning = _target_exclusion_warning();
+
+    if (annotation_warning != "")
+        mprf(MSGCH_PROMPT, "%s", annotation_warning.c_str());
+    if (target_warning != "")
+        mprf(MSGCH_PROMPT, "%s", target_warning.c_str());
+
+    const bool might_be_dangerous = annotation_warning != ""
+                                 || target_warning != "";
 
     if (might_be_dangerous
         && !yesno("Enter next level anyway?", true, 'n', true, false))

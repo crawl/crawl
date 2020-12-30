@@ -5,7 +5,7 @@
 
 #pragma once
 
-bool check_annotation_exclusion_warning();
+bool check_next_floor_warning();
 level_id stair_destination(dungeon_feature_type feat, const string &dst,
                            bool for_real = false);
 level_id stair_destination(coord_def pos, bool for_real = false);

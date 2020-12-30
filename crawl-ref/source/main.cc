@@ -1360,8 +1360,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         return false;
     }
 
-    // Does the next level have a warning annotation?
-    if (!check_annotation_exclusion_warning())
+    // Does the next level have a warning annotation, or would you be bezotted
+    // there?
+    if (!check_next_floor_warning())
         return false;
 
     // Prompt for entering excluded transporters.
