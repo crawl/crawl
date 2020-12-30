@@ -401,7 +401,7 @@ public:
     {
     }
 
-    static level_id parse_level_id(const string &s) throw (string);
+    static level_id parse_level_id(const string &s);
 #if TAG_MAJOR_VERSION == 34
     static level_id from_packed_place(const unsigned short place);
 #endif

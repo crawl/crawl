@@ -4063,7 +4063,6 @@ void game_options::set_fake_langs(const string &input)
 // If file can be resolved, returns the resolved path.
 string game_options::resolve_include(string parent_file, string included_file,
                                      const vector<string> *rcdirs)
-    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.

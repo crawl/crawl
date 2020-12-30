@@ -24,7 +24,7 @@ enum load_mode_type
 bool file_exists(const string &name);
 bool dir_exists(const string &dir);
 bool is_absolute_path(const string &path);
-void assert_read_safe_path(const string &path) throw (string);
+void assert_read_safe_path(const string &path);
 off_t file_size(FILE *handle);
 
 vector<string> get_dir_files(const string &dir);

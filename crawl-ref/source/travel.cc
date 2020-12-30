@@ -3180,7 +3180,7 @@ string level_id::describe(bool long_name, bool with_number) const
     return result;
 }
 
-level_id level_id::parse_level_id(const string &s) throw (string)
+level_id level_id::parse_level_id(const string &s)
 {
     string::size_type cpos = s.find(':');
     string brname  = (cpos != string::npos? s.substr(0, cpos)  : s);

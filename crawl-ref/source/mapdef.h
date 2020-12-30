@@ -96,7 +96,7 @@ public:
     level_range(branch_type br = BRANCH_DUNGEON, int s = -1, int d = -1);
 
     void set(int s, int d = -1);
-    void set(const string &branch, int s, int d) throw (string);
+    void set(const string &branch, int s, int d);
 
     void reset();
     bool matches(const level_id &) const;
@@ -107,7 +107,7 @@ public:
 
     bool valid() const;
 
-    static level_range parse(string lr) throw (string);
+    static level_range parse(string lr);
 
     string describe() const;
     string str_depth_range() const;
@@ -121,10 +121,8 @@ public:
     }
 
 private:
-    static void parse_partial(level_range &lr, const string &s)
-        throw (string);
-    static void parse_depth_range(const string &s, int *low, int *high)
-        throw (string);
+    static void parse_partial(level_range &lr, const string &s);
+    static void parse_depth_range(const string &s, int *low, int *high);
 };
 
 typedef pair<int,int> glyph_weighted_replacement_t;
@@ -854,7 +852,7 @@ struct map_flags
     map_flags &operator |= (const map_flags &o);
 
     static map_flags parse(const string flag_list[],
-                           const string &s) throw(string);
+                           const string &s);
 };
 
 struct keyed_mapspec

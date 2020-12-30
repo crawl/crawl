@@ -90,7 +90,7 @@ map_marker *map_marker::read_marker(reader &inf)
 }
 
 map_marker *map_marker::parse_marker(const string &s,
-                                     const string &ctx) throw (string)
+                                     const string &ctx)
 {
     for (int i = 0; i < NUM_MAP_MARKER_TYPES; ++i)
     {
@@ -144,7 +144,7 @@ map_marker *map_feature_marker::read(reader &inf, map_marker_type)
 }
 
 map_marker *map_feature_marker::parse(const string &s,
-                                      const string &) throw (string)
+                                      const string &)
 {
     if (s.find("feat:") != 0)
         return nullptr;
@@ -419,7 +419,7 @@ string map_lua_marker::debug_to_string() const
 }
 
 map_marker *map_lua_marker::parse(const string &s,
-                                  const string &ctx) throw (string)
+                                  const string &ctx)
 {
     string raw           = s;
     bool   mapdef_marker = true;
@@ -551,7 +551,6 @@ map_marker *map_wiz_props_marker::read(reader &inf, map_marker_type)
 }
 
 map_marker *map_wiz_props_marker::parse(const string &s, const string &)
-    throw (string)
 {
     throw make_stringf("map_wiz_props_marker::parse() not implemented");
 }

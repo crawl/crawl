@@ -49,7 +49,7 @@ public:
 
     static map_marker *read_marker(reader &);
     static map_marker *parse_marker(const string &text,
-                                    const string &ctx = "") throw (string);
+                                    const string &ctx = "");
 
 public:
     coord_def pos;
@@ -74,7 +74,7 @@ public:
     string debug_describe() const;
     map_marker *clone() const;
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    static map_marker *parse(const string &s, const string &);
 
 public:
     dungeon_feature_type feat;
@@ -263,7 +263,7 @@ public:
     bool notify_dgn_event(const dgn_event &e);
 
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    static map_marker *parse(const string &s, const string &);
 
     string debug_to_string() const;
 private:
@@ -290,7 +290,7 @@ public:
     string set_property(const string &key, const string &val);
     map_marker *clone() const;
     static map_marker *read(reader &, map_marker_type);
-    static map_marker *parse(const string &s, const string &) throw (string);
+    static map_marker *parse(const string &s, const string &);
 
 public:
     map<string, string> properties;

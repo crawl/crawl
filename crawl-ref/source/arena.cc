@@ -285,7 +285,6 @@ namespace arena
     }
 
     static void parse_faction(faction &fact, string spec)
-        throw (string)
     {
         fact.clear();
         fact.desc = spec;
@@ -300,7 +299,6 @@ namespace arena
     }
 
     static void parse_monster_spec()
-        throw (string)
     {
         string spec = find_monster_spec();
 
@@ -394,7 +392,6 @@ namespace arena
     }
 
     static void setup_monsters()
-        throw (string)
     {
         faction_a.reset();
         faction_b.reset();
@@ -493,7 +490,6 @@ namespace arena
     }
 
     static void setup_fight()
-        throw (string)
     {
         //no_messages mx;
         parse_monster_spec();

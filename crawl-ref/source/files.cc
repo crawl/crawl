@@ -343,7 +343,7 @@ static bool _create_dirs(const string &dir)
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const string &path) throw (string)
+void assert_read_safe_path(const string &path)
 {
     // Check for rank tomfoolery first:
     if (path.empty())

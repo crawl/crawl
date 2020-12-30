@@ -275,7 +275,7 @@ level_range::operator raw_range () const
     return r;
 }
 
-void level_range::set(const string &br, int s, int d) throw (string)
+void level_range::set(const string &br, int s, int d)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
@@ -292,7 +292,7 @@ void level_range::set(const string &br, int s, int d) throw (string)
     }
 }
 
-level_range level_range::parse(string s) throw (string)
+level_range level_range::parse(string s)
 {
     level_range lr;
     trim_string(s);
@@ -324,7 +324,7 @@ level_range level_range::parse(string s) throw (string)
     return lr;
 }
 
-void level_range::parse_partial(level_range &lr, const string &s) throw (string)
+void level_range::parse_partial(level_range &lr, const string &s)
 {
     if (isadigit(s[0]))
     {
@@ -336,7 +336,6 @@ void level_range::parse_partial(level_range &lr, const string &s) throw (string)
 }
 
 void level_range::parse_depth_range(const string &s, int *l, int *h)
-    throw (string)
 {
     if (s == "*")
     {
@@ -5779,7 +5778,7 @@ map_flags &map_flags::operator |= (const map_flags &o)
 typedef map<string, unsigned long> flag_map;
 
 map_flags map_flags::parse(const string flag_list[],
-                           const string &s) throw(string)
+                           const string &s)
 {
     map_flags mf;
 
