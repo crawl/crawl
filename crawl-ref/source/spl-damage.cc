@@ -2061,7 +2061,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            if (you.species == SP_GARGOYLE)
+            if (you.form != transformation::statue)
                 beam.damage.num = 2;
             return true;
         }
