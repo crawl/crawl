@@ -33,6 +33,7 @@ bool bezotted_in(branch_type br);
 bool zot_clock_active();
 int bezotting_level();
 int turns_until_zot();
+int turns_until_zot_in(branch_type br);
 void decr_zot_clock();
 void incr_zot_clock();
 void set_turns_until_zot(int turns_left);

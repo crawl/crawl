@@ -1308,7 +1308,7 @@ bool zot_clock_active()
     return _zot_clock_active_in(you.where_are_you);
 }
 
-static int _turns_until_zot_for(branch_type br)
+int turns_until_zot_in(branch_type br)
 {
     const int aut = (MAX_ZOT_CLOCK - _zot_clock_for(br));
     if (have_passive(passive_t::slow_zot))
@@ -1319,7 +1319,7 @@ static int _turns_until_zot_for(branch_type br)
 // How many turns (deca-auts) does the player have until Zot finds them?
 int turns_until_zot()
 {
-    return _turns_until_zot_for(you.where_are_you);
+    return turns_until_zot_in(you.where_are_you);
 }
 
 // A scale from 0 to 4 of how much danger the player is in of
@@ -1329,7 +1329,7 @@ static int _bezotting_level_in(branch_type br)
     if (!_zot_clock_active_in(br))
         return 0;
 
-    const int remaining_turns = _turns_until_zot_for(br);
+    const int remaining_turns = turns_until_zot_in(br);
     if (remaining_turns <= 0)
         return 4;
     if (remaining_turns < 100)

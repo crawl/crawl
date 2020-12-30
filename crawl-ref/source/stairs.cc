@@ -91,6 +91,16 @@ static string _target_exclusion_warning()
     return "";
 }
 
+static string _bezotting_warning(branch_type branch)
+{
+    if (branch == you.where_are_you || !bezotted_in(branch))
+        return "";
+
+    const int turns = turns_until_zot_in(branch);
+    return make_stringf("You have just %d turns in %s to find a new floor before Zot consumes you.",
+                        turns, branches[branch].longname);
+}
+
 bool check_next_floor_warning()
 {
     level_id  next_level_id = level_id::get_next_level_id(you.pos());
@@ -99,14 +109,18 @@ bool check_next_floor_warning()
     const string annotation_warning = _annotation_exclusion_warning(next_level_id);
 
     const string target_warning = _target_exclusion_warning();
+    const string bezotting_warning = _bezotting_warning(next_level_id.branch);
 
     if (annotation_warning != "")
         mprf(MSGCH_PROMPT, "%s", annotation_warning.c_str());
     if (target_warning != "")
         mprf(MSGCH_PROMPT, "%s", target_warning.c_str());
+    if (bezotting_warning != "")
+        mprf(MSGCH_PROMPT, "%s", bezotting_warning.c_str());
 
     const bool might_be_dangerous = annotation_warning != ""
-                                 || target_warning != "";
+                                 || target_warning != ""
+                                 || bezotting_warning != "";
 
     if (might_be_dangerous
         && !yesno("Enter next level anyway?", true, 'n', true, false))
