@@ -2229,7 +2229,7 @@ KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / book of spatial translocations ident:all \
             / book of the warp ident:all w:5 \
             / randbook owner:Lugonu disc:translocation ident:all w:5 \
-            / manual of translocations w:2 / rift w:2 / ring of phasing w:2
+            / manual of translocations w:2 / rift w:2 / ring of the hare w:2
 KMONS:  O = player ghost
 KFEAT:  O = enter_abyss
 KFEAT:  ^ = dispersal trap
