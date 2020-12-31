@@ -102,7 +102,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool affect_player = true,
                              bool preserve_features = false,
                              bool preserve_items = false,
-                             int colour = BLACK);
+                             int colour = BLACK,
+                             bool temporary = false);
 
 // Moves everything on the level at src to dst.
 void dgn_move_entities_at(coord_def src,

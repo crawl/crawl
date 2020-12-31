@@ -1125,7 +1125,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool affect_player,
                              bool preserve_features,
                              bool preserve_items,
-                             int colour)
+                             int colour,
+                             bool temporary)
 {
     if (grd(pos) == nfeat)
         return;
@@ -1137,7 +1138,8 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (preserve_features)
             _dgn_shift_feature(pos);
 
-        unnotice_feature(level_pos(level_id::current(), pos));
+        if (!temporary)
+            unnotice_feature(level_pos(level_id::current(), pos));
 
         grd(pos) = nfeat;
         env.grid_colours(pos) = colour;
@@ -1950,7 +1952,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       mon ? mon->mid : 0, col);
     env.markers.add(marker);
     env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, true, false, true);
+    dungeon_terrain_changed(pos, newfeat, true, false, true, true);
 }
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)

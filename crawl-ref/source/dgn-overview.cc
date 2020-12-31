@@ -634,9 +634,15 @@ static void _seen_staircase(const coord_def& pos)
 
     // If the branch has already been entered, then the new entry is obviously
     // a mimic, don't add it.
+
+    // correction: if a branch has already been entered and we've seen at least
+    // one other staircase, then it's a mimic.
+    // for additional robustness against bug #10101
+
     const branch_type branch = get_branch_at(pos);
-    if (!branch_entered(branch))
+    if (!branch_entered(branch) || !stair_level.count(branch)) {
         stair_level[branch].insert(level_id::current());
+    }
 }
 
 // If player has seen an altar; record it.
