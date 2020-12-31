@@ -2431,6 +2431,7 @@ void bolt::affect_endpoint()
         temp_change_terrain(pos(), DNGN_TOXIC_BOG, dur,
                             TERRAIN_CHANGE_FLOOD,
                             agent() ? agent()->as_monster() : nullptr);
+        break;
     }
     case SPELL_BLINKBOLT:
     {
