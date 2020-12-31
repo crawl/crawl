@@ -711,13 +711,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_INSUBSTANTIAL_WISP,
-      {
-       { SPELL_BLINK, 18, MON_SPELL_MAGICAL },
-       { SPELL_DISCHARGE, 32, MON_SPELL_MAGICAL },
-      }
-    },
-
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {
