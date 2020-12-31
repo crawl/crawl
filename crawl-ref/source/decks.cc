@@ -1368,7 +1368,7 @@ static void _summon_flying(int power)
 
     const monster_type flytypes[] =
     {
-        MONS_INSUBSTANTIAL_WISP, MONS_WYVERN, MONS_KILLER_BEE,
+        MONS_WYVERN, MONS_KILLER_BEE,
         MONS_VAMPIRE_MOSQUITO, MONS_HORNET
     };
     const int num_flytypes = ARRAYSZ(flytypes);

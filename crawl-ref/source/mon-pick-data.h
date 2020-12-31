@@ -826,7 +826,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    4, FALL, MONS_BASILISK },
   {  1,  5,    8, FLAT, MONS_MANA_VIPER },
   {  1,  5,   25, FLAT, MONS_GUARDIAN_SERPENT },
-  {  1,  8,   35, FALL, MONS_INSUBSTANTIAL_WISP },
+  {  1,  8,   35, FALL, MONS_WILL_O_THE_WISP },
   {  1,  5,    8, FLAT, MONS_ORB_SPIDER },
   {  1, 10,    4, SEMI, MONS_GHOST_MOTH },
   {  1,  5,   17, FLAT, MONS_EIDOLON },

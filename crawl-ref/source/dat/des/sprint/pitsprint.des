@@ -52,7 +52,7 @@ function base_monster_setup(e)
            harpy band w:5 / fire crab / redback band /\
            wind drake / deep elf mage w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
-           death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
+           death yak band w:5 / swamp dragon /\
            merfolk avatar / alligator snapping turtle / anaconda / nagaraja /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\

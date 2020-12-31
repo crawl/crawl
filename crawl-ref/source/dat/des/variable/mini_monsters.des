@@ -697,7 +697,7 @@ TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
 MONS:  bullfrog w:30 / water moccasin / river rat / swamp drake w:2
-MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
+MONS:  vampire mosquito / will-o-the-wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.
 SUBST: 2 : 23
@@ -1093,7 +1093,7 @@ NAME:    hangedman_misty_isle
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling
 DEPTH:   D:7-12
 KMONS:   123 = sky beast
-KMONS:   45 = insubstantial wisp
+KMONS:   45 = will-o-the-wisp
 KMONS:   6 = steam dragon
 KITEM:   15% = any / gold
 KITEM:   36 = gold, star_item
@@ -3226,7 +3226,7 @@ WEIGHT:  3
 MONS:    patrolling spriggan air mage ; staff of air ident:type . robe
 MONS:    patrolling spriggan rider ; spear ego:electrocution ident:type . buckler . robe
 MONS:    lightning spire, sky beast, electric eel
-KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
+KMONS:   E = ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               lightning rod
@@ -3606,7 +3606,7 @@ KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
 KMONS:   p = hornet
-KMONS:   q = insubstantial wisp
+KMONS:   q = will-o-the-wisp
 KMONS:   r = wolf spider
 KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
 SHUFFLE: bcdfghjklnopqr
