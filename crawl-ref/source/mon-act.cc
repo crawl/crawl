@@ -1355,10 +1355,22 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     if (mons->confused())
     {
-        beem.target = dgn_random_point_from(mons->pos(), LOS_RADIUS);
-        if (beem.target.origin())
+        // try twenty times to pick a target otherwise give up
+        zap = false;
+        for (int i = 0; i < 20; i++) {
+            beem.target = dgn_random_point_from(mons->pos(), LOS_RADIUS);
+            if (beem.target.origin()) {
+                continue;
+            }
+            if (!cell_see_cell(mons->pos(), beem.target, LOS_NO_TRANS)) {
+                continue;
+            }
+            zap = true;
+            break;
+        }
+        if (zap == false) {
             return false;
-        zap = true;
+        }
     }
     else if (mzap == SPELL_THUNDERBOLT)
         zap = _thunderbolt_tracer(mons, power, beem.target);
