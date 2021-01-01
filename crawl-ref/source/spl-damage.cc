@@ -3451,13 +3451,16 @@ static bool _abszero_target_check(monster &m)
 
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
-static monster* _find_abszero_target(int radius)
+static monster* _find_abszero_target(int radius, bool tracer)
 {
-    for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
+    for (distance_iterator di(you.pos(), !tracer, true, radius); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon && _abszero_target_check(*mon))
+        if (mon && _abszero_target_check(*mon)
+            && (!tracer || you.can_see(*mon)))
+        {
             return mon;
+        }
     }
 
     return nullptr;
@@ -3467,7 +3470,7 @@ static monster* _find_abszero_target(int radius)
 vector<monster *> find_abszero_possibles(int radius)
 {
     vector<monster *> result;
-    monster *seed = _find_abszero_target(radius);
+    monster *seed = _find_abszero_target(radius, true);
     if (seed)
     {
         const int distance = max(abs(you.pos().x - seed->pos().x),
@@ -3476,7 +3479,7 @@ vector<monster *> find_abszero_possibles(int radius)
         for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
         {
             monster *mon = monster_at(*di);
-            if (mon && _abszero_target_check(*mon))
+            if (mon && _abszero_target_check(*mon) && you.can_see(*mon))
                 result.push_back(mon);
         }
     }
@@ -3486,7 +3489,7 @@ vector<monster *> find_abszero_possibles(int radius)
 spret cast_absolute_zero(int pow, bool fail, bool tracer)
 {
     monster* const mon = _find_abszero_target(
-            spell_range(SPELL_ABSOLUTE_ZERO, pow));
+            spell_range(SPELL_ABSOLUTE_ZERO, pow), tracer);
 
     if (tracer)
     {
