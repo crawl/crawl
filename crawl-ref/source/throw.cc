@@ -551,7 +551,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
 //
 // Return value is only relevant if dummy_target is non-nullptr, and returns
 // true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
+bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
 {
     dist targ_local;
     if (!target)
@@ -574,7 +574,7 @@ bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
         // maybe move out of here? It's sort of silly to reconstruct this
         // given that there is always an action that triggers the function
         // now
-        fire_target_behaviour beh(quiver::slot_to_action(throw_2, true));
+        fire_target_behaviour beh(quiver::slot_to_action(ammo_slot, true));
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
@@ -596,7 +596,7 @@ bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
 
     pbolt.set_target(*target);
 
-    item_def& thrown = you.inv[throw_2];
+    item_def& thrown = you.inv[ammo_slot];
     ASSERT(thrown.defined());
 
     // Figure out if we're thrown or launched.
@@ -687,7 +687,7 @@ bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
     pbolt.is_tracer = false;
 
     bool unwielded = false;
-    if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
+    if (ammo_slot == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
             return false;
@@ -814,7 +814,7 @@ bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target)
     }
     else
     {
-        dec_inv_item_quantity(throw_2, 1);
+        dec_inv_item_quantity(ammo_slot, 1);
         if (unwielded)
             canned_msg(MSG_EMPTY_HANDED_NOW);
     }
