@@ -544,19 +544,10 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(level, act->pos(), msg, act->mid);
 }
 
-// throw_it - currently handles player throwing/firing only. Monster
-// throwing is handled in mon-act:_mons_throw()
-// Note: If teleport is true, assume that pbolt is already set up,
-// and teleport the projectile onto the square.
-//
-// Return value is only relevant if dummy_target is non-nullptr, and returns
-// true if dummy_target is hit.
-bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
+// throw_it - handles player throwing/firing only. Monster throwing is handled
+// in mons_throw().
+void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
 {
-    dist targ_local;
-    if (!target)
-        target = &targ_local;
-
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     const bool teleport = is_pproj_active();
@@ -584,7 +575,7 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
         direction(*target, args);
     }
     if (!target->isValid || target->isCancel)
-        return false;
+        return;
 
     if (teleport)
     {
@@ -598,7 +589,7 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
             const char *feat = feat_type_name(env.grid(target->target));
             mprf("There is %s there.", article_a(feat).c_str());
             target->isValid = false;
-            return false;
+            return;
         }
     }
 
@@ -622,7 +613,7 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
     if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
     {
         you.turn_is_over = false;
-        return false;
+        return;
     }
 
     // Get the ammo/weapon type. Convenience.
@@ -689,7 +680,7 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
     if (cancelled)
     {
         you.turn_is_over = false;
-        return false;
+        return;
     }
 
     pbolt.is_tracer = false;
@@ -698,10 +689,10 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
     if (ammo_slot == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
         if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
-            return false;
+            return;
 
         if (!thrown.quantity)
-            return false; // destroyed when unequipped (fragile)
+            return; // destroyed when unequipped (fragile)
 
         unwielded = true;
     }
@@ -847,7 +838,7 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
         dithmenos_shadow_throw(*target, item);
     }
 
-    return hit;
+    return;
 }
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)

@@ -41,7 +41,7 @@ bool is_pproj_active();
 void untargeted_fire(shared_ptr<quiver::action> a);
 void throw_item_no_quiver();
 
-bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target = nullptr);
+void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target);
 
 bool thrown_object_destroyed(item_def *item);
 
