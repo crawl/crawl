@@ -765,7 +765,6 @@ void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
     pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
                          : 0;
 
-    bool hit = false;
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
@@ -784,8 +783,6 @@ void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
 
         pbolt.drop_item = !returning && !tossing;
         pbolt.fire();
-
-        hit = !pbolt.hit_verb.empty();
 
         // For returning ammo, check for mulching before the return step
         if (tossing)
