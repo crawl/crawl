@@ -717,6 +717,8 @@ monster_info::monster_info(const monster* m, int milev)
         {
             inv[i].reset(
                 new item_def(get_item_known_info(env.item[m->inv[i]])));
+            if (i == MSLOT_MISSILE)
+                inv[i]->quantity = 1;
         }
     }
 

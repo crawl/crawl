@@ -899,9 +899,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
                     env.item[msl]);
 
-    if (projected == launch_retval::THROWN)
-        returning = returning && !teleport;
-
     // Identify before throwing, so we don't get different
     // messages for first and subsequent missiles.
     if (mons->observable())
@@ -943,7 +940,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     _throw_noise(mons, item);
 
-    beam.drop_item = !returning;
+    beam.drop_item = false;
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
@@ -954,43 +951,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         beam.use_target_as_pos = true;
         beam.affect_cell();
         beam.affect_endpoint();
-        if (!returning)
-            beam.drop_object();
     }
     else
-    {
         beam.fire();
-
-        // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item))
-            returning = false;
-    }
-
-    if (returning)
-    {
-        // Fire beam in reverse.
-        beam.setup_retrace();
-        viewwindow();
-        update_screen();
-        beam.fire();
-
-        // Only print a message if you can see the target or the thrower.
-        // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(beam.target) || you.can_see(*mons))
-        {
-            msg::stream << "The weapon returns "
-                        << (you.can_see(*mons)?
-                              ("to " + mons->name(DESC_THE))
-                            : "from whence it came")
-                        << "!" << endl;
-        }
-
-        // Player saw the item return.
-        if (!is_artefact(item))
-            set_ident_flags(env.item[msl], ISFLAG_KNOW_TYPE);
-    }
-    else if (dec_mitm_item_quantity(msl, 1))
-        mons->inv[slot] = NON_ITEM;
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
