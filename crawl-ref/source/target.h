@@ -365,18 +365,18 @@ class targeter_multiposition : public targeter
 {
 public:
     targeter_multiposition(const actor *a, vector<coord_def> seeds,
-                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
     targeter_multiposition(const actor *a, vector<monster *> seeds,
-                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
     targeter_multiposition(const actor *a, initializer_list<coord_def> seeds,
-                        bool _hit_friends=false, aff_type _positive=AFF_MAYBE);
+                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
 
     void add_position(const coord_def &c, bool force=false);
     bool valid_aim(coord_def) override { return true; }
     aff_type is_affected(coord_def loc) override;
 
 protected:
-    bool hit_friends;
+    bool check_monster; // also used for indicating corpses to raise
     set<coord_def> affected_positions;
     aff_type positive;
 };
@@ -393,6 +393,7 @@ class targeter_multifireball : public targeter_multiposition
 {
 public:
     targeter_multifireball(const actor *a, vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
 };
 
 // this is implemented a bit like multifireball, but with some tweaks
