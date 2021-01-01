@@ -578,20 +578,28 @@ bool throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
+        // Makes no sense to aim in a cardinal direction while teleporting
+        // projectiles.
+        args.allow_shift_dir = !teleport;
         direction(*target, args);
     }
     if (!target->isValid || target->isCancel)
         return false;
 
-    if (teleport
-        && in_bounds(target->target)
-        && cell_is_solid(target->target))
+    if (teleport)
     {
-        // why doesn't the targeter check this?
-        const char *feat = feat_type_name(env.grid(target->target));
-        mprf("There is %s there.", article_a(feat).c_str());
-        target->isValid = false;
-        return false;
+        if (!in_bounds(target->target))
+        {
+            // The player hit shift-dir. Boo! Bad player!
+        }
+        else if (cell_is_solid(target->target))
+        {
+            // why doesn't the targeter check this?
+            const char *feat = feat_type_name(env.grid(target->target));
+            mprf("There is %s there.", article_a(feat).c_str());
+            target->isValid = false;
+            return false;
+        }
     }
 
     pbolt.set_target(*target);

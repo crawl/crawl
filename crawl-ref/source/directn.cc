@@ -464,6 +464,7 @@ direction_chooser::direction_chooser(dist& moves_,
     range(args.range),
     just_looking(args.just_looking),
     prefer_farthest(args.prefer_farthest),
+    allow_shift_dir(args.allow_shift_dir),
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
@@ -1727,6 +1728,8 @@ void direction_chooser::handle_movement_key(command_type key_command,
         const bool unshifted = (shift_direction(key_command) != key_command);
         if (unshifted)
             set_target(target() + delta);
+        else if (!allow_shift_dir)
+            mpr("You can't do that.");
         else
             *loop_done = select_compass_direction(delta);
     }
