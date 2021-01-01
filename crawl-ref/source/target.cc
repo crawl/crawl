@@ -1686,8 +1686,8 @@ bool targeter_overgrow::set_aim(coord_def a)
 }
 
 targeter_multiposition::targeter_multiposition(const actor *a,
-            vector<coord_def> seeds, bool _hit_friends, aff_type _positive)
-    : targeter(), hit_friends(_hit_friends), positive(_positive)
+            vector<coord_def> seeds, bool _check_monster, aff_type _positive)
+    : targeter(), check_monster(_check_monster), positive(_positive)
 {
     agent = a;
     for (auto &c : seeds)
@@ -1695,8 +1695,8 @@ targeter_multiposition::targeter_multiposition(const actor *a,
 }
 
 targeter_multiposition::targeter_multiposition(const actor *a,
-            vector<monster *> seeds, bool _hit_friends, aff_type _positive)
-    : targeter(), hit_friends(_hit_friends), positive(_positive)
+            vector<monster *> seeds, bool _check_monster, aff_type _positive)
+    : targeter(), check_monster(_check_monster), positive(_positive)
 {
     agent = a;
     for (monster *m : seeds)
@@ -1707,39 +1707,47 @@ targeter_multiposition::targeter_multiposition(const actor *a,
 // sigh, necessary to allow empty initializer lists with the above two
 // constructors
 targeter_multiposition::targeter_multiposition(const actor *a,
-            initializer_list<coord_def> seeds, bool _hit_friends, aff_type _positive)
+            initializer_list<coord_def> seeds, bool _check_monster, aff_type _positive)
     : targeter_multiposition(a, vector<coord_def>(seeds.begin(), seeds.end()),
-        _hit_friends, _positive)
+        _check_monster, _positive)
 {
 }
 
 
 void targeter_multiposition::add_position(const coord_def &loc, bool force)
 {
-    actor *act = actor_at(loc);
-    if (agent == &you && act == &you)
-        return; // any exceptions to this?
-
-    if (!force && act && agent && !can_affect_unseen() && !agent->can_see(*act))
+    const actor *act = actor_at(loc);
+    if (agent == &you && act == &you && check_monster)
         return;
 
-    // Friendly creature, don't mark this square. This logic is only implemented
-    // for players, because this class is currently only used for ui
-    if (!hit_friends && act
-        && (act == agent
-            || (agent == &you && act->is_monster() // not yet implemented for monster agents
-                && act->as_monster()->wont_attack())))
-    {
+    // Targeting a monster requires looking at it.
+    // can_affect_unseen is a boolean condition about terrain out of sight,
+    // not checking invisibility.
+    // XXX: This check will leak out-of-los monster
+    // locations if this targeter is used for something that could both affect
+    // monsters and out-of-los terrain. Don't implement such a spell, it's not
+    // very Crawl -eb
+    if (!force && check_monster && agent && act && !agent->can_see(*act))
         return;
-    }
+
+    // Any special checks.
+    // Unlike visibility checks which can be overridden by force,
+    // we always check these. This weird logic is for the multifireball
+    // targeter
+    const monster_info *mon = env.map_knowledge(loc).monsterinfo();
+    if (check_monster && mon && !affects_monster(*mon))
+        return;
 
     affected_positions.insert(loc);
 }
 
 aff_type targeter_multiposition::is_affected(coord_def loc)
 {
-    if (cell_is_solid(loc) && !can_affect_walls())
+    if ((cell_is_solid(loc) && !can_affect_walls())
+        || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))
+    {
         return AFF_NO;
+    }
 
     // is this better with maybe or yes?
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
@@ -1753,14 +1761,26 @@ targeter_absolute_zero::targeter_absolute_zero(int range)
 }
 
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
-    : targeter_multiposition(a, seeds, false)
+    : targeter_multiposition(a, seeds, true)
 {
+    vector <coord_def> bursts;
     for (auto &c : seeds)
     {
         if (affected_positions.count(c)) // did the parent constructor like this pos?
             for (adjacent_iterator ai(c); ai; ++ai)
-                add_position(*ai, true);
+                bursts.push_back(*ai);
     }
+
+    // Must do this after the previous loop to avoid an information leak
+    // when a visible target is adjacent to an invisible one, becuase
+    // add_position alters affected_positions.
+    for (auto &c : bursts)
+        add_position(c, true);
+}
+
+bool targeter_multifireball::affects_monster(const monster_info& mon)
+{
+    return !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
 }
 
 targeter_ramparts::targeter_ramparts(const actor *a)
@@ -1823,7 +1843,7 @@ aff_type targeter_starburst::is_affected(coord_def loc)
 }
 
 targeter_bog::targeter_bog(const actor *a, int pow)
-    : targeter_multiposition(a, { }, true)
+    : targeter_multiposition(a, { }, false)
 {
     auto seeds = find_bog_locations(a->pos(), pow);
     for (auto &c : seeds)

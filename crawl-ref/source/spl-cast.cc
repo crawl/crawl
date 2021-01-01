@@ -1347,12 +1347,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // this spell seems (?) to pick the first corpse by radius_iterator, so
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), false, AFF_YES);
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), false, AFF_YES);
     case SPELL_SIMULACRUM:
-        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), false, AFF_YES);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
     case SPELL_NOXIOUS_BOG:
