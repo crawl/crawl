@@ -100,15 +100,15 @@ ENDMAP
 NAME:   minmay_swamp_entry_wisps
 TAGS:   swamp_entry transparent
 WEIGHT: 2
-MONS:   will-o-the-wisp / nothing
+KMONS:  O = will-o-the-wisp
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
-111
-1O1
-111
+W.W
+.O.
+W.W
 ENDMAP
 
 NAME:   minmay_swamp_entry_reptiles
