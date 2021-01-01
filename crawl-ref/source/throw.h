@@ -38,10 +38,10 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
 bool fire_warn_if_impossible(bool silent, item_def *weapon);
 shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
-void untargeted_fire(shared_ptr<quiver::action> a);
+void untargeted_fire(quiver::action &a);
 void throw_item_no_quiver();
 
-void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target);
+void throw_it(quiver::action &a);
 
 bool thrown_object_destroyed(item_def *item);
 
