@@ -1497,8 +1497,8 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
 }
 
 // Include success chance in targeter for spells checking monster WL.
-vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
-                                   targeter* hitfunc)
+vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
+                                      bool evoked, targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     const int wl = mi.willpower();
@@ -1660,7 +1660,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             const int eff_pow = zap == NUM_ZAPS ? powc
                                                 : zap_ench_power(zap, powc,
                                                                  false);
-            additional_desc = bind(desc_success_chance, placeholders::_1,
+            additional_desc = bind(desc_wl_success_chance, placeholders::_1,
                                    eff_pow, evoked_item, hitfunc.get());
         } else {
             targeter_beam* beam_hitf =
