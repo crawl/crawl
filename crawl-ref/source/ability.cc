@@ -2711,7 +2711,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
-        args.get_desc_func = bind(desc_success_chance, placeholders::_1,
+        args.get_desc_func = bind(desc_wl_success_chance, placeholders::_1,
                                   zap_ench_power(ZAP_BANISHMENT, pow, false),
                                   false, nullptr);
         if (!spell_direction(*target, beam, &args))
