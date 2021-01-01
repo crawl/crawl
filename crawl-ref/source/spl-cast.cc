@@ -1308,12 +1308,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
-    case SPELL_INTOXICATE: // for these, we just mark the monsters
     case SPELL_CAUSE_FEAR:
-    case SPELL_DRAIN_LIFE: // pseudo-spell. TODO: ignore undead for this one
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), false);
+        return make_unique<targeter_fear>(_simple_find_all_actors(&you));
+    case SPELL_INTOXICATE: // for these, we just mark the monsters
+        return make_unique<targeter_intoxicate>(_simple_find_all_actors(&you));
+    case SPELL_ENGLACIATION:
+        return make_unique<targeter_englaciate>(_simple_find_all_actors(&you));
+    case SPELL_DRAIN_LIFE:
+        return make_unique<targeter_drain_life>(_simple_find_all_actors(&you));
     case SPELL_DISCORD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), true, AFF_MAYBE);
+        return make_unique<targeter_discord>(_simple_find_all_actors(&you));
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
 
@@ -1391,6 +1395,13 @@ bool spell_has_targeter(spell_type spell)
 static int _triangular_number(int n)
 {
     return n * (n+1) / 2;
+}
+
+// _tetrahedral_number: returns the nth tetrahedral number.
+// This is the number of triples of nonnegative integers with sum < n.
+static int _tetrahedral_number(int n)
+{
+    return n * (n+1) * (n+2) / 6;
 }
 
 /**
@@ -1480,6 +1491,50 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     if (hit_pct == -1)
         return vector<string>{};
     return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
+}
+
+static vector<string> _desc_intoxicate_chance(const monster_info& mi,
+                                              targeter* hitfunc, int pow)
+{
+    if (hitfunc && !hitfunc->affects_monster(mi))
+        return vector<string>{"not susceptible"};
+
+    int conf_pct = 40 + pow / 3;
+
+    if (get_resist(mi.resists(), MR_RES_POISON) >=1)
+        conf_pct =  conf_pct / 3;
+
+    return vector<string>{make_stringf("chance to confuse: %d%%", conf_pct)};
+}
+
+static vector<string> _desc_englaciate_chance(const monster_info& mi,
+                                              targeter* hitfunc, int pow)
+{
+    if (hitfunc && !hitfunc->affects_monster(mi))
+        return vector<string>{"not susceptible"};
+
+    const int outcomes = pow * pow * pow;
+    const int target   = 3 * mi.hd - 2;
+    int fail_pct;
+
+    // Tetrahedral number calculation to find the chance
+    // 3 d pow < 3 * mi . hd + 1
+    if (target <= pow)
+        fail_pct = 100 * _tetrahedral_number(target) / outcomes;
+    else if (target <= 2 * pow)
+    {
+        fail_pct = 100 * (_tetrahedral_number(target)
+                       - 3 * _tetrahedral_number(target - pow)) / outcomes;
+    }
+    else if (target <= 3 * pow)
+    {
+        fail_pct = 100 * (outcomes
+                       - _tetrahedral_number(3 * pow - target)) / outcomes;
+    }
+    else
+        fail_pct = 100;
+
+    return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
 }
 
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
@@ -1651,18 +1706,31 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
         // Add success chance to targeted spells checking monster WL
         const bool mr_check = testbits(flags, spflag::WL_check)
-                              && testbits(flags, spflag::dir_or_target)
                               && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
         const zap_type zap = spell_to_zap(spell);
         if (mr_check)
         {
-            const int eff_pow = zap == NUM_ZAPS ? powc
-                                                : zap_ench_power(zap, powc,
-                                                                 false);
+            const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
+                                                                 false)
+                                                :
+                  testbits(flags, spflag::area) ? ( powc * 3 ) / 2
+                                                : powc;
             additional_desc = bind(desc_wl_success_chance, placeholders::_1,
                                    eff_pow, evoked_item, hitfunc.get());
-        } else {
+        }
+        else if (spell == SPELL_INTOXICATE)
+        {
+            additional_desc = bind(_desc_intoxicate_chance, placeholders::_1,
+                                   hitfunc.get(), powc);
+        }
+        else if (spell == SPELL_ENGLACIATION)
+        {
+            additional_desc = bind(_desc_englaciate_chance, placeholders::_1,
+                                   hitfunc.get(), powc);
+        }
+        else
+        {
             targeter_beam* beam_hitf =
                 dynamic_cast<targeter_beam*>(hitfunc.get());
             if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
@@ -2240,14 +2308,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     }
 
     return spret::none;
-}
-
-// _tetrahedral_number: returns the nth tetrahedral number.
-// This is the number of triples of nonnegative integers with sum < n.
-// Called only by get_true_fail_rate.
-static int _tetrahedral_number(int n)
-{
-    return n * (n+1) * (n+2) / 6;
 }
 
 // get_true_fail_rate: Takes the raw failure to-beat number
