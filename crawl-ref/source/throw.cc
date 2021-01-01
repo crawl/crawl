@@ -353,8 +353,12 @@ bool is_pproj_active()
 
 // Basically does what throwing used to do: throw/fire an item without changing
 // the quiver.
-void throw_item_no_quiver()
+void throw_item_no_quiver(dist *target)
 {
+    dist targ_local;
+    if (!target)
+        target = &targ_local;
+
     if (fire_warn_if_impossible(false, you.weapon()))
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -384,10 +388,10 @@ void throw_item_no_quiver()
         return;
     }
 
-    // causes interactive targeting unless target was provided
-    dist target;
-    a->trigger(target);
-    if (target.isCancel)
+    // forces interactive targeting if no target is provided, otherwise,
+    // depends on the contents of target
+    a->trigger(*target);
+    if (target->isCancel)
         canned_msg(MSG_OK);
 }
 
