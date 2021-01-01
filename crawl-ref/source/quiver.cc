@@ -188,10 +188,7 @@ namespace quiver
 
     shared_ptr<action> action_cycler::do_target()
     {
-        // this would be better as an action method, but it's tricky without
-        // moving untargeted_fire somewhere else
-        // should this reset()?
-
+        // this might be better as an action method
         shared_ptr<action> a = get();
         if (!a || !a->is_valid())
             return nullptr;
@@ -206,7 +203,7 @@ namespace quiver
             a->trigger(a->target);
         else
         {
-            untargeted_fire(a);
+            untargeted_fire(*a);
             if (!a->target.isCancel)
                 a->trigger();
         }
@@ -704,8 +701,8 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            bolt beam;
-            throw_it(beam, ammo_slot, get_launcher(), &target);
+            // TODO: refactor throw_it into here?
+            throw_it(*this);
 
             // TODO: eliminate this?
             you.m_quiver_history.on_item_fired(you.inv[ammo_slot], true);

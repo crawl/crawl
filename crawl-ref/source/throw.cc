@@ -64,23 +64,19 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                   || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
 }
 
-// TODO: how to handle custom targeters for different actions??
 class fire_target_behaviour : public targeting_behaviour
 {
 public:
-    fire_target_behaviour(shared_ptr<quiver::action> a)
+    fire_target_behaviour(quiver::action &a)
         : action(a),
           need_redraw(false)
     {
-        // ensure not null
-        if (!action)
-            action = make_shared<quiver::action>();
         set_prompt();
         need_redraw = false; // XX simplify
-        if (!action->is_targeted())
+        if (!action.is_targeted())
             needs_path = MB_FALSE; // should !targeted() imply no path?
         else if (is_pproj_active())
-            needs_path = frombool(action->affected_by_pproj());
+            needs_path = frombool(action.affected_by_pproj());
     }
 
     // targeting_behaviour API
@@ -106,18 +102,18 @@ private:
     void display_help();
     void set_prompt();
 
-    shared_ptr<quiver::action> action;
+    quiver::action &action;
     string prompt;
     string internal_prompt;
     bool need_redraw;
 };
 
-// maybe should be a method of action
-void untargeted_fire(shared_ptr<quiver::action> a)
+// This function handles a default "just looking" targeter for untargeted
+// spells/actions that don't have something custom
+// Maybe should be a method of action, it's in throw.cc for historical reasons;
+// could be moved out of here if fire_target_behaviour is exposed.
+void untargeted_fire(quiver::action &a)
 {
-    ASSERT(a);
-    // this function handles a default "just looking" targeter for untargeted
-    // spells/actions that don't have something custom
     fire_target_behaviour beh(a);
 
     direction_chooser_args args;
@@ -125,7 +121,7 @@ void untargeted_fire(shared_ptr<quiver::action> a)
     args.behaviour = &beh;
     args.default_place = you.pos();
 
-    direction(a->target, args);
+    direction(a.target, args);
 }
 
 void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
@@ -135,7 +131,7 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
 
 const item_def* fire_target_behaviour::active_item()
 {
-    const int slot = action->get_item();
+    const int slot = action.get_item();
     if (slot == -1)
         return nullptr;
     else
@@ -144,7 +140,7 @@ const item_def* fire_target_behaviour::active_item()
 
 bool fire_target_behaviour::targeted()
 {
-    return action->is_targeted();
+    return action.is_targeted();
 }
 
 void fire_target_behaviour::set_prompt()
@@ -155,13 +151,13 @@ void fire_target_behaviour::set_prompt()
     ostringstream msg;
 
 
-    if (*action == quiver::action())
+    if (action == quiver::action())
         internal_prompt = "No action selected";
     else
     {
         // TODO: might be nice to use colors here, but there's a wonky interaction
         // with the direction targeter's colors that would need to be fixed
-        internal_prompt = action->quiver_description().tostring();
+        internal_prompt = action.quiver_description().tostring();
 
         if (!targeted())
             internal_prompt = string("Non-targeted ") + lowercase_first(internal_prompt);
@@ -546,54 +542,58 @@ static void _throw_noise(actor* act, const item_def &ammo)
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
 // in mons_throw().
-void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
+// called only from ammo_action::trigger; this could probably be further
+// refactored to be a method of quiver::ammo_action.
+void throw_it(quiver::action &a)
 {
+    const int ammo_slot = a.get_item();
+    item_def *launcher = a.get_launcher();
+
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     const bool teleport = is_pproj_active();
 
     if (you.confused())
     {
-        target->target = you.pos();
-        target->target.x += random2(13) - 6;
-        target->target.y += random2(13) - 6;
-        target->isValid = true;
-        target->cmd_result = CMD_FIRE;
+        a.target.target = you.pos();
+        a.target.target.x += random2(13) - 6;
+        a.target.target.y += random2(13) - 6;
+        a.target.isValid = true;
+        a.target.cmd_result = CMD_FIRE;
     }
     else
     {
-        // maybe move out of here? It's sort of silly to reconstruct this
-        // given that there is always an action that triggers the function
-        // now
-        fire_target_behaviour beh(quiver::slot_to_action(ammo_slot, true));
+        // non-confused interactive or non-interactive firing
+        fire_target_behaviour beh(a);
         direction_chooser_args args;
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
         // Makes no sense to aim in a cardinal direction while teleporting
         // projectiles.
         args.allow_shift_dir = !teleport;
-        direction(*target, args);
+        direction(a.target, args);
     }
-    if (!target->isValid || target->isCancel)
+    if (!a.target.isValid || a.target.isCancel)
         return;
 
     if (teleport)
     {
-        if (!in_bounds(target->target))
+        if (!in_bounds(a.target.target))
         {
             // The player hit shift-dir. Boo! Bad player!
         }
-        else if (cell_is_solid(target->target))
+        else if (cell_is_solid(a.target.target))
         {
             // why doesn't the targeter check this?
-            const char *feat = feat_type_name(env.grid(target->target));
+            const char *feat = feat_type_name(env.grid(a.target.target));
             mprf("There is %s there.", article_a(feat).c_str());
-            target->isValid = false;
+            a.target.isValid = false;
             return;
         }
     }
 
-    pbolt.set_target(*target);
+    bolt pbolt;
+    pbolt.set_target(a.target);
 
     item_def& thrown = you.inv[ammo_slot];
     ASSERT(thrown.defined());
@@ -633,13 +633,13 @@ void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
         {
             // This block is roughly equivalent to bolt::affect_cell for
             // normal projectiles.
-            monster *m = monster_at(target->target);
+            monster *m = monster_at(a.target.target);
             if (m)
-                cancelled = stop_attack_prompt(m, false, target->target);
+                cancelled = stop_attack_prompt(m, false, a.target.target);
 
             if (!cancelled && (pbolt.is_explosion || pbolt.special_explosion))
             {
-                for (adjacent_iterator ai(target->target); ai; ++ai)
+                for (adjacent_iterator ai(a.target.target); ai; ++ai)
                 {
                     if (cancelled)
                         break;
@@ -703,7 +703,7 @@ void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
     // Even though direction is allowed, we're throwing so we
     // want to use tx, ty to make the missile fly to map edge.
     if (!teleport)
-        pbolt.set_target(*target);
+        pbolt.set_target(a.target);
 
     const int bow_brand = (projected == launch_retval::LAUNCHED)
                           ? get_weapon_brand(*launcher)
@@ -832,10 +832,8 @@ void throw_it(bolt &pbolt, int ammo_slot, item_def *launcher, dist *target)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_DART)
     {
-        dithmenos_shadow_throw(*target, item);
+        dithmenos_shadow_throw(a.target, item);
     }
-
-    return;
 }
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)
