@@ -39,7 +39,7 @@ bool fire_warn_if_impossible(bool silent, item_def *weapon);
 shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
 void untargeted_fire(shared_ptr<quiver::action> a);
-void throw_item_no_quiver(dist *target=nullptr);
+void throw_item_no_quiver();
 
 bool throw_it(bolt &pbolt, int throw_2, item_def *launcher, dist *target = nullptr);
 
