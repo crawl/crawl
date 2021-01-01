@@ -1753,6 +1753,81 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
+targeter_drain_life::targeter_drain_life(vector<coord_def> seeds)
+    : targeter_multiposition(&you, { }, true, AFF_YES)
+{
+    // add_position calls a virtual method, explicitly use the derived
+    // behavior
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+bool targeter_drain_life::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_NEG) < 3
+           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+}
+
+targeter_discord::targeter_discord(vector<coord_def> seeds)
+    : targeter_multiposition(&you, { }, true, AFF_YES)
+{
+    // add_position calls a virtual method, explicitly use the derived
+    // behavior
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+bool targeter_discord::affects_monster(const monster_info& mon)
+{
+    return mon.willpower() != WILL_INVULN && mon.can_go_frenzy;
+}
+
+targeter_englaciate::targeter_englaciate(vector<coord_def> seeds)
+    : targeter_multiposition(&you, { }, true, AFF_YES)
+{
+    // add_position calls a virtual method, explicitly use the derived
+    // behavior
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+bool targeter_englaciate::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_COLD) <= 0
+           && !mons_class_flag(mon.type, M_STATIONARY);
+}
+
+targeter_fear::targeter_fear(vector<coord_def> seeds)
+    : targeter_multiposition(&you, { }, true, AFF_YES)
+{
+    // add_position calls a virtual method, explicitly use the derived
+    // behavior
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+bool targeter_fear::affects_monster(const monster_info& mon)
+{
+    return mon.willpower() != WILL_INVULN
+           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+}
+
+targeter_intoxicate::targeter_intoxicate(vector<coord_def> seeds)
+    : targeter_multiposition(&you, { }, true, AFF_YES)
+{
+    // add_position calls a virtual method, explicitly use the derived
+    // behavior
+    for (auto &c : seeds)
+        add_position(c);
+}
+
+bool targeter_intoxicate::affects_monster(const monster_info& mon)
+{
+    return !(mon.mintel < I_HUMAN
+             || !(mon.holi & MH_NATURAL)
+             || get_resist(mon.resists(), MR_RES_POISON) >= 3);
+}
+
 targeter_absolute_zero::targeter_absolute_zero(int range)
     : targeter_multiposition(&you, find_abszero_possibles(range))
 {

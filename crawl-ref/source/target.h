@@ -381,6 +381,41 @@ protected:
     aff_type positive;
 };
 
+class targeter_drain_life : public targeter_multiposition
+{
+public:
+    targeter_drain_life(vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_discord : public targeter_multiposition
+{
+public:
+    targeter_discord(vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_englaciate : public targeter_multiposition
+{
+public:
+    targeter_englaciate(vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_fear : public targeter_multiposition
+{
+public:
+    targeter_fear(vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_intoxicate : public targeter_multiposition
+{
+public:
+    targeter_intoxicate(vector<coord_def> seeds);
+    bool affects_monster(const monster_info& mon) override;
+};
+
 // A static targeter for absolute zero that finds the closest monster using the
 // absolute zero code.
 class targeter_absolute_zero : public targeter_multiposition
