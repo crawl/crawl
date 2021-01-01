@@ -73,10 +73,11 @@ public:
     {
         set_prompt();
         need_redraw = false; // XX simplify
-        if (!action.is_targeted())
-            needs_path = MB_FALSE; // should !targeted() imply no path?
-        else if (is_pproj_active())
-            needs_path = frombool(action.affected_by_pproj());
+        if (!targeted()
+            || is_pproj_active() && action.affected_by_pproj())
+        {
+            needs_path = MB_FALSE;
+        }
     }
 
     // targeting_behaviour API
