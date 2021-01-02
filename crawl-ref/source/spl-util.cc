@@ -1493,6 +1493,7 @@ bool spell_no_hostile_in_range(spell_type spell)
                     // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_NOXIOUS_BOG:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
