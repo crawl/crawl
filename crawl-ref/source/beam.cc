@@ -4978,11 +4978,8 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // All kinds of beams go past orbs of destruction and friendly
     // battlespheres.
-    if (mons_is_projectile(*mon)
-        || (mons_is_avatar(mon->type) && mons_aligned(agent(), mon)))
-    {
+    if (always_shoot_through_monster(agent(), *mon))
         return true;
-    }
 
     // Missiles go past bushes and briar patches, unless aimed directly at them
     if (bush_immune(*mon))
@@ -6530,6 +6527,16 @@ int _ench_pow_to_dur(int pow)
 {
     // ~15 turns at 25 pow, ~21 turns at 50 pow, ~27 turns at 100 pow
     return stepdown(pow * BASELINE_DELAY, 70);
+}
+
+// Do all beams skip past a particular monster?
+// see also shoot_through_monsters
+// can these be consolidated? Some checks there don't need a bolt arg
+bool always_shoot_through_monster(const actor *originator, const monster &victim)
+{
+    return mons_is_projectile(victim)
+        || (mons_is_avatar(victim.type)
+            && originator && mons_aligned(originator, &victim));
 }
 
 // Can a particular beam go through a particular monster?
