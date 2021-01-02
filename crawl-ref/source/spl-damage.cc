@@ -1424,8 +1424,12 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
         return agent && agent->is_player() ? sgn(value) : value;
     }
 
-    place_cloud(CLOUD_FIRE, where,
-                30 + random2(20 + pow), agent);
+    // Tone down bog clouds
+    if (!one_chance_in(4))
+        return false;
+
+    place_cloud(CLOUD_FIRE, where, 2 + random2(pow / 30), agent);
+
     return true;
 }
 
