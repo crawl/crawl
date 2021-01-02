@@ -1537,6 +1537,16 @@ static vector<string> _desc_englaciate_chance(const monster_info& mi,
     return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
 }
 
+static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
+{
+    if (!mons_can_be_dazzled(mi.type))
+        return vector<string>{"not susceptible"};
+
+    const int dazzle_pct = max(100 * ( 95 - mi.hd * 4 ) / ( 150 - pow ), 0);
+
+    return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1729,6 +1739,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             additional_desc = bind(_desc_englaciate_chance, placeholders::_1,
                                    hitfunc.get(), powc);
         }
+        else if (spell == SPELL_DAZZLING_FLASH)
+            additional_desc = bind(_desc_dazzle_chance, placeholders::_1, powc);
         else
         {
             targeter_beam* beam_hitf =
