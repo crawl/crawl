@@ -8,6 +8,9 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "itemname.h" // make_name
+#include "initfile.h"
+#include "random.h"
 #include "libutil.h"
 #include "options.h"
 #include "stringutil.h"
@@ -62,7 +65,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name) ");
 
     textcolour(LIGHTGREY);
 }
@@ -70,9 +73,10 @@ static void _show_name_prompt(int where)
 bool is_good_name(const string& name, bool blankOK, bool verbose)
 {
     // verification begins here {dlb}:
-    if (name.empty())
+    // Disallow names that would result in a save named just ".cs".
+    if (strip_filename_unsafe_chars(name).empty())
     {
-        if (blankOK)
+        if (blankOK && name.empty())
             return true;
 
         if (verbose)
@@ -113,6 +117,26 @@ static bool _read_player_name(string &name)
     }
 }
 
+/**
+ * Attempt to generate a random name for a character that doesn't collide with
+ * an existing save name.
+ *
+ * @return  A random name, or the empty string if no good name could be
+ *          generated after several tries.
+ */
+static string _random_name()
+{
+    for (int i = 0; i < 100; ++i)
+    {
+        const string name = make_name(get_uint32(), false, kNameLen);
+        const string filename = get_save_filename(name);
+        if (!save_exists(filename))
+            return name;
+    }
+
+    return "";
+}
+
 // Reads a valid name from the player, writing it to ng.name.
 void enter_player_name(newgame_def *ng)
 {
@@ -127,6 +151,9 @@ void enter_player_name(newgame_def *ng)
         if (!_read_player_name(ng->name))
             end(0);
         trim_string(ng->name);
+
+        if (ng->name.empty())
+            ng->name = _random_name();
     }
     while (!is_good_name(ng->name, false, true));
 }
