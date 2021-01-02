@@ -15,6 +15,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "env.h"
 #include "files.h"
 #include "format.h"
@@ -1209,6 +1210,15 @@ bool show_map(level_pos &lpos,
             case CMD_NEXT_CMD:
                 break; // allow mouse clicks to move cursor without leaving map mode
 #endif
+            case CMD_MAP_DESCRIBE:
+                if (map_bounds(lpos.pos) && env.map_knowledge(lpos.pos).known())
+                {
+                    full_describe_square(lpos.pos);
+                    redraw_map = true;
+                }
+                break;
+
+
             default:
                 if (travel_mode)
                 {

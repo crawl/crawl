@@ -1058,6 +1058,8 @@ enum command_type
 
     CMD_MAP_WIZARD_TELEPORT,
 
+    CMD_MAP_DESCRIBE,
+
     CMD_MAP_HELP,
     CMD_MAP_FORGET,
     CMD_MAP_UNFORGET,
