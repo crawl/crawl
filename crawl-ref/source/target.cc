@@ -1818,6 +1818,14 @@ targeter_bog::targeter_bog(const actor *a, int pow)
         affected_positions.insert(c);
 }
 
+targeter_ignite_poison::targeter_ignite_poison(actor *a)
+    : targeter_multiposition(a, { })
+{
+    for (radius_iterator ri(a->pos(), LOS_SOLID_SEE); ri; ++ri)
+        if (ignite_poison_affects_cell(*ri, a))
+            affected_positions.insert(*ri);
+}
+
 targeter_multimonster::targeter_multimonster(const actor *a)
     : targeter()
 {

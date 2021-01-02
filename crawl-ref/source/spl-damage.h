@@ -36,6 +36,7 @@ dice_def shatter_damage(int pow, monster *mons = nullptr);
 spret cast_irradiate(int powc, actor* who, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects(const actor* act);
+bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);

@@ -427,10 +427,16 @@ private:
 };
 
 // A targeter for Eringya's Noxious Bog that finds cells that can be bogged.
-class targeter_bog: public targeter_multiposition
+class targeter_bog : public targeter_multiposition
 {
 public:
     targeter_bog(const actor *a, int pow);
+};
+
+class targeter_ignite_poison : public targeter_multiposition
+{
+public:
+    targeter_ignite_poison(actor *a);
 };
 
 class targeter_multimonster : public targeter

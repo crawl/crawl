@@ -1682,6 +1682,21 @@ bool ignite_poison_affects(const actor* act)
 }
 
 /**
+ * Does Ignite Poison do something to this cell?
+ *
+ * @param where       Where to look
+ * @param agent     Who's casting
+ * @return          If this cell will be affected
+ */
+bool ignite_poison_affects_cell(const coord_def where, actor* agent)
+{
+    return _ignite_poison_clouds(where, -1, agent)
+         + _ignite_poison_monsters(where, -1, agent)
+         + _ignite_poison_player(where, -1, agent)
+         + _ignite_poison_bog(where, -1, agent) != 0;
+}
+
+/**
  * Cast the spell Ignite Poison, burning poisoned creatures and poisonous
  * clouds in LOS.
  *
