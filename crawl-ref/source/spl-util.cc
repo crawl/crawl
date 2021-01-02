@@ -1201,7 +1201,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     if (!prevent && temp && spell_no_hostile_in_range(spell))
-        return "you can't see any targets that would be affected.";
+        return "you can't see any hostile targets that would be affected.";
 
     // other Ru spells not affected by the school check; handle these separately
     // since they may have other constraints
