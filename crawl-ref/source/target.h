@@ -359,61 +359,26 @@ public:
     bool can_affect_walls() override { return true; }
 };
 
-// A fixed targeter for multi-position attacks, i.e. los stuff that only
-// affects monsters
+// A fixed targeter for multi-position attacks, i.e. los stuff that
+// affects various squares, or monsters non-locally. For los stuff that
+// affects only monsters on a per-monster case basis see targeter_multimonster
 class targeter_multiposition : public targeter
 {
 public:
     targeter_multiposition(const actor *a, vector<coord_def> seeds,
-                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
+                           aff_type _positive=AFF_MAYBE);
     targeter_multiposition(const actor *a, vector<monster *> seeds,
-                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
+                           aff_type _positive=AFF_MAYBE);
     targeter_multiposition(const actor *a, initializer_list<coord_def> seeds,
-                       bool _check_monster=true, aff_type _positive=AFF_MAYBE);
+                           aff_type _positive=AFF_MAYBE);
 
     void add_position(const coord_def &c, bool force=false);
     bool valid_aim(coord_def) override { return true; }
     aff_type is_affected(coord_def loc) override;
 
 protected:
-    bool check_monster; // also used for indicating corpses to raise
     set<coord_def> affected_positions;
     aff_type positive;
-};
-
-class targeter_drain_life : public targeter_multiposition
-{
-public:
-    targeter_drain_life(vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
-};
-
-class targeter_discord : public targeter_multiposition
-{
-public:
-    targeter_discord(vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
-};
-
-class targeter_englaciate : public targeter_multiposition
-{
-public:
-    targeter_englaciate(vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
-};
-
-class targeter_fear : public targeter_multiposition
-{
-public:
-    targeter_fear(vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
-};
-
-class targeter_intoxicate : public targeter_multiposition
-{
-public:
-    targeter_intoxicate(vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
 };
 
 // A static targeter for absolute zero that finds the closest monster using the
@@ -428,7 +393,6 @@ class targeter_multifireball : public targeter_multiposition
 {
 public:
     targeter_multifireball(const actor *a, vector<coord_def> seeds);
-    bool affects_monster(const monster_info& mon) override;
 };
 
 // this is implemented a bit like multifireball, but with some tweaks
@@ -467,4 +431,50 @@ class targeter_bog: public targeter_multiposition
 {
 public:
     targeter_bog(const actor *a, int pow);
+};
+
+class targeter_multimonster : public targeter
+{
+public:
+    targeter_multimonster(const actor *a);
+
+    bool valid_aim(coord_def) override { return true; }
+    aff_type is_affected(coord_def loc) override;
+protected:
+    bool check_monster;
+};
+
+class targeter_drain_life : public targeter_multimonster
+{
+public:
+    targeter_drain_life();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_discord : public targeter_multimonster
+{
+public:
+    targeter_discord();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_englaciate : public targeter_multimonster
+{
+public:
+    targeter_englaciate();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_fear : public targeter_multimonster
+{
+public:
+    targeter_fear();
+    bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_intoxicate : public targeter_multimonster
+{
+public:
+    targeter_intoxicate();
+    bool affects_monster(const monster_info& mon) override;
 };

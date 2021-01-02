@@ -1156,10 +1156,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-// this is a crude approximation intended for UI-oriented targeters. Some day
-// it might be nice if the targeter code were actually unified with how
-// enemies are chosen for these various spells...
-// note that this is substantially filtered when used by targeter_multiposition
+// this is a crude approximation used for the convenience UI targeter of
+// Dragon's call
 static vector<coord_def> _simple_find_all_actors(actor *a)
 {
     vector<coord_def> result;
@@ -1308,16 +1306,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
-    case SPELL_CAUSE_FEAR:
-        return make_unique<targeter_fear>(_simple_find_all_actors(&you));
-    case SPELL_INTOXICATE: // for these, we just mark the monsters
-        return make_unique<targeter_intoxicate>(_simple_find_all_actors(&you));
+    case SPELL_CAUSE_FEAR: // for these, we just mark the eligible monsters
+        return make_unique<targeter_fear>();
+    case SPELL_INTOXICATE:
+        return make_unique<targeter_intoxicate>();
     case SPELL_ENGLACIATION:
-        return make_unique<targeter_englaciate>(_simple_find_all_actors(&you));
+        return make_unique<targeter_englaciate>();
     case SPELL_DRAIN_LIFE:
-        return make_unique<targeter_drain_life>(_simple_find_all_actors(&you));
+        return make_unique<targeter_drain_life>();
     case SPELL_DISCORD:
-        return make_unique<targeter_discord>(_simple_find_all_actors(&you));
+        return make_unique<targeter_discord>();
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
 
@@ -1351,12 +1349,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // this spell seems (?) to pick the first corpse by radius_iterator, so
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), false, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), false, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
-        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), false, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
     case SPELL_NOXIOUS_BOG:
