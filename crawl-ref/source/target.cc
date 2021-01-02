@@ -1686,59 +1686,31 @@ bool targeter_overgrow::set_aim(coord_def a)
 }
 
 targeter_multiposition::targeter_multiposition(const actor *a,
-            vector<coord_def> seeds, bool _check_monster, aff_type _positive)
-    : targeter(), check_monster(_check_monster), positive(_positive)
+            vector<coord_def> seeds, aff_type _positive)
+    : targeter(), positive(_positive)
 {
     agent = a;
     for (auto &c : seeds)
-        add_position(c);
+        affected_positions.insert(c);
 }
 
 targeter_multiposition::targeter_multiposition(const actor *a,
-            vector<monster *> seeds, bool _check_monster, aff_type _positive)
-    : targeter(), check_monster(_check_monster), positive(_positive)
+            vector<monster *> seeds, aff_type _positive)
+    : targeter(), positive(_positive)
 {
     agent = a;
     for (monster *m : seeds)
         if (m)
-            add_position(m->pos());
+            affected_positions.insert(m->pos());
 }
 
 // sigh, necessary to allow empty initializer lists with the above two
 // constructors
 targeter_multiposition::targeter_multiposition(const actor *a,
-            initializer_list<coord_def> seeds, bool _check_monster, aff_type _positive)
+            initializer_list<coord_def> seeds, aff_type _positive)
     : targeter_multiposition(a, vector<coord_def>(seeds.begin(), seeds.end()),
-        _check_monster, _positive)
+         _positive)
 {
-}
-
-
-void targeter_multiposition::add_position(const coord_def &loc, bool force)
-{
-    const actor *act = actor_at(loc);
-    if (agent == &you && act == &you && check_monster)
-        return;
-
-    // Targeting a monster requires looking at it.
-    // can_affect_unseen is a boolean condition about terrain out of sight,
-    // not checking invisibility.
-    // XXX: This check will leak out-of-los monster
-    // locations if this targeter is used for something that could both affect
-    // monsters and out-of-los terrain. Don't implement such a spell, it's not
-    // very Crawl -eb
-    if (!force && check_monster && agent && act && !agent->can_see(*act))
-        return;
-
-    // Any special checks.
-    // Unlike visibility checks which can be overridden by force,
-    // we always check these. This weird logic is for the multifireball
-    // targeter
-    const monster_info *mon = env.map_knowledge(loc).monsterinfo();
-    if (check_monster && mon && !affects_monster(*mon))
-        return;
-
-    affected_positions.insert(loc);
 }
 
 aff_type targeter_multiposition::is_affected(coord_def loc)
@@ -1753,81 +1725,6 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
-targeter_drain_life::targeter_drain_life(vector<coord_def> seeds)
-    : targeter_multiposition(&you, { }, true, AFF_YES)
-{
-    // add_position calls a virtual method, explicitly use the derived
-    // behavior
-    for (auto &c : seeds)
-        add_position(c);
-}
-
-bool targeter_drain_life::affects_monster(const monster_info& mon)
-{
-    return get_resist(mon.resists(), MR_RES_NEG) < 3
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
-}
-
-targeter_discord::targeter_discord(vector<coord_def> seeds)
-    : targeter_multiposition(&you, { }, true, AFF_YES)
-{
-    // add_position calls a virtual method, explicitly use the derived
-    // behavior
-    for (auto &c : seeds)
-        add_position(c);
-}
-
-bool targeter_discord::affects_monster(const monster_info& mon)
-{
-    return mon.willpower() != WILL_INVULN && mon.can_go_frenzy;
-}
-
-targeter_englaciate::targeter_englaciate(vector<coord_def> seeds)
-    : targeter_multiposition(&you, { }, true, AFF_YES)
-{
-    // add_position calls a virtual method, explicitly use the derived
-    // behavior
-    for (auto &c : seeds)
-        add_position(c);
-}
-
-bool targeter_englaciate::affects_monster(const monster_info& mon)
-{
-    return get_resist(mon.resists(), MR_RES_COLD) <= 0
-           && !mons_class_flag(mon.type, M_STATIONARY);
-}
-
-targeter_fear::targeter_fear(vector<coord_def> seeds)
-    : targeter_multiposition(&you, { }, true, AFF_YES)
-{
-    // add_position calls a virtual method, explicitly use the derived
-    // behavior
-    for (auto &c : seeds)
-        add_position(c);
-}
-
-bool targeter_fear::affects_monster(const monster_info& mon)
-{
-    return mon.willpower() != WILL_INVULN
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
-}
-
-targeter_intoxicate::targeter_intoxicate(vector<coord_def> seeds)
-    : targeter_multiposition(&you, { }, true, AFF_YES)
-{
-    // add_position calls a virtual method, explicitly use the derived
-    // behavior
-    for (auto &c : seeds)
-        add_position(c);
-}
-
-bool targeter_intoxicate::affects_monster(const monster_info& mon)
-{
-    return !(mon.mintel < I_HUMAN
-             || !(mon.holi & MH_NATURAL)
-             || get_resist(mon.resists(), MR_RES_POISON) >= 3);
-}
-
 targeter_absolute_zero::targeter_absolute_zero(int range)
     : targeter_multiposition(&you, find_abszero_possibles(range))
 {
@@ -1836,7 +1733,7 @@ targeter_absolute_zero::targeter_absolute_zero(int range)
 }
 
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
-    : targeter_multiposition(a, seeds, true)
+    : targeter_multiposition(a, seeds)
 {
     vector <coord_def> bursts;
     for (auto &c : seeds)
@@ -1846,29 +1743,25 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
                 bursts.push_back(*ai);
     }
 
-    // Must do this after the previous loop to avoid an information leak
-    // when a visible target is adjacent to an invisible one, becuase
-    // add_position alters affected_positions.
     for (auto &c : bursts)
-        add_position(c, true);
-}
-
-bool targeter_multifireball::affects_monster(const monster_info& mon)
-{
-    return !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+    {
+        actor * act = actor_at(c);
+        if (act && mons_aligned(agent, act))
+            continue;
+        affected_positions.insert(c);
+    }
 }
 
 targeter_ramparts::targeter_ramparts(const actor *a)
-    : targeter_multiposition(a, { }, false)
+    : targeter_multiposition(a, { })
 {
     auto seeds = find_ramparts_walls(a->pos());
     for (auto &c : seeds)
     {
-        add_position(c);
-        if (affected_positions.count(c)) // don't add adjacent position in case add_position ignores c
-            for (adjacent_iterator ai(c); ai; ++ai)
-                if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
-                    add_position(*ai, true);
+        affected_positions.insert(c);
+        for (adjacent_iterator ai(c); ai; ++ai)
+            if (!cell_is_solid(*ai)) // don't add any walls not in `seeds`
+                affected_positions.insert(*ai);
     }
 }
 
@@ -1918,9 +1811,89 @@ aff_type targeter_starburst::is_affected(coord_def loc)
 }
 
 targeter_bog::targeter_bog(const actor *a, int pow)
-    : targeter_multiposition(a, { }, false)
+    : targeter_multiposition(a, { })
 {
     auto seeds = find_bog_locations(a->pos(), pow);
     for (auto &c : seeds)
-        add_position(c);
+        affected_positions.insert(c);
+}
+
+targeter_multimonster::targeter_multimonster(const actor *a)
+    : targeter()
+{
+    agent = a;
+}
+
+aff_type targeter_multimonster::is_affected(coord_def loc)
+{
+    if ((cell_is_solid(loc) && !can_affect_walls())
+        || !cell_see_cell(agent->pos(), loc, LOS_NO_TRANS))
+    {
+        return AFF_NO;
+    }
+
+    //if (agent && act && !agent->can_see(*act))
+    //    return AFF_NO;
+
+    // Any special checks from our inheritors
+    const monster_info *mon = env.map_knowledge(loc).monsterinfo();
+    if (!mon || !affects_monster(*mon))
+        return AFF_NO;
+
+    return AFF_YES;
+}
+
+targeter_drain_life::targeter_drain_life()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_drain_life::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_NEG) < 3
+           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+}
+
+targeter_discord::targeter_discord()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_discord::affects_monster(const monster_info& mon)
+{
+    return mon.willpower() != WILL_INVULN && mon.can_go_frenzy;
+}
+
+targeter_englaciate::targeter_englaciate()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_englaciate::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_COLD) <= 0
+           && !mons_class_flag(mon.type, M_STATIONARY);
+}
+
+targeter_fear::targeter_fear()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_fear::affects_monster(const monster_info& mon)
+{
+    return mon.willpower() != WILL_INVULN
+           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+}
+
+targeter_intoxicate::targeter_intoxicate()
+    : targeter_multimonster(&you)
+{
+}
+
+bool targeter_intoxicate::affects_monster(const monster_info& mon)
+{
+    return !(mon.mintel < I_HUMAN
+             || !(mon.holi & MH_NATURAL)
+             || get_resist(mon.resists(), MR_RES_POISON) >= 3);
 }
