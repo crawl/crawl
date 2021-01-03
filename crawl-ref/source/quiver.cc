@@ -28,6 +28,7 @@
 #include "religion.h"
 #include "sound.h"
 #include "spl-damage.h"
+#include "spl-transloc.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
@@ -1175,8 +1176,22 @@ namespace quiver
 
         bool is_enabled() const override
         {
+            if (!is_valid())
+                return false;
+
+            // hacky: use a version of the palentonga charge check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up. We can't approach this like spells (which are marked
+            // as useless with butterflies in range), because there is no
+            // equivalent of `Z` to force-activate an ability that is indicating
+            // temporary uselessness. This way, the player can still activate
+            // it from the `a` menu, just not from the quiver. (Does this apply
+            // to any other abilities with a limited range?)
+            if (ability == ABIL_ROLLING_CHARGE && !palentonga_charge_possible(true, false))
+                return false;
+
             // TODO: _check_ability_dangerous?
-            return is_valid() && check_ability_possible(ability, true);
+            return check_ability_possible(ability, true);
         }
 
         bool is_targeted() const override
@@ -1274,7 +1289,7 @@ namespace quiver
 
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
-                mprf("No targets found!");
+                mprf("No targets found! target %d,%d", t.target.x, t.target.y);
 
             target = t;
 
