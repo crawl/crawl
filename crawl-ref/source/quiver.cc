@@ -622,11 +622,18 @@ namespace quiver
             return ammo_slot == static_cast<const ammo_action &>(other).ammo_slot;
         }
 
-        virtual bool launcher_check() const
+        virtual item_def *get_launcher() const override
+        {
+            return nullptr;
+        }
+
+        /// does the launch type match the action type and current weapon?
+        virtual bool launch_type_check() const
         {
             // will assert if ammo_slot is invalid
-            return _item_matches(you.inv[ammo_slot], (fire_type) 0xffff,
-                get_launcher(), false);
+            const launch_retval projected = is_launched(&you, get_launcher(),
+                                                        you.inv[ammo_slot]);
+            return projected == launch_retval::THROWN;
         }
 
         bool do_inscription_check() const override
@@ -666,7 +673,7 @@ namespace quiver
             if (!ammo.defined())
                 return false;
 
-            return launcher_check();
+            return launch_type_check();
         }
 
         bool is_targeted() const override
@@ -810,12 +817,11 @@ namespace quiver
 
         virtual void save(CrawlHashTable &save_target) const override; // defined below
 
-        bool launcher_check() const override
+        bool launch_type_check() const override
         {
             if (ammo_slot < 0 || !get_launcher())
                 return false;
-            return _item_matches(you.inv[ammo_slot], FIRE_LAUNCHER,
-                get_launcher(), false);
+            return you.inv[ammo_slot].launched_by(*get_launcher());
         }
 
         vector<shared_ptr<action>> get_fire_order(
@@ -848,7 +854,7 @@ namespace quiver
 
         // uses ammo_action fire order
 
-        bool launcher_check() const override
+        bool launch_type_check() const override
         {
             return true;
         }
@@ -1841,6 +1847,7 @@ namespace quiver
         {
             // if the right item type is currently present in the main quiver,
             // use that
+            // TODO: this logic may be slightly odd with throwing stones quivered?
             slot = cur_quiver_item;
         }
         else
@@ -1848,7 +1855,12 @@ namespace quiver
             // otherwise, find the last fired ammo for this launcher. (This is
             // an awful lot of effort to choose correctly between stones and
             // bullets...)
-            slot = you.m_quiver_history.get_last_ammo(item);
+            int last = you.m_quiver_history.get_last_ammo(item);
+            if (last >= 0 && you.inv[last].defined()
+                && _item_matches(you.inv[last], FIRE_LAUNCHER, item, false))
+            {
+                slot = last;
+            }
         }
 
         // Finally, try looking at the fire order.
@@ -1860,8 +1872,9 @@ namespace quiver
                 slot = order[0];
         }
 
-        auto result = item ? make_shared<launcher_ammo_action>(slot)
-                           : make_shared<ammo_action>(slot);
+        auto result = item && is_range_weapon(*item)
+                            ? make_shared<launcher_ammo_action>(slot)
+                            : make_shared<ammo_action>(slot);
 
         // if slot is still -1, we have failed, and the fire order is
         // empty for some reason. We should therefore populate the `error`
@@ -1894,8 +1907,14 @@ namespace quiver
         return result;
     }
 
-    // initialize as invalid, not empty
-    action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { }
+    // by default, initialize as invalid, not empty
+    action_cycler::action_cycler()
+        : current(make_shared<ammo_action>(-1))
+    { }
+
+    action_cycler::action_cycler(shared_ptr<action> init)
+        : current(init)
+    { }
 
     void action_cycler::save(const string key) const
     {
@@ -2002,11 +2021,13 @@ namespace quiver
 
     static bool _is_currently_launched_ammo(shared_ptr<action> a)
     {
-        const item_def *weapon = a->get_launcher();
-        const int slot = a->get_item();
-        return weapon && slot >= 0 && a->is_valid()
-            && you.inv[slot].defined() && you.inv[slot].launched_by(*weapon);
+        auto la = dynamic_pointer_cast<launcher_ammo_action>(a);
+        return la && la->is_valid();
     }
+
+    launcher_action_cycler::launcher_action_cycler()
+        : action_cycler(make_shared<launcher_ammo_action>(-1))
+    { }
 
     // only reacts to ammo launched by the current weapon, or empty quiver
     // note that the action may still be valid on its own terms when this
