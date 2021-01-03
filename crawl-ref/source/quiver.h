@@ -148,6 +148,8 @@ namespace quiver
         void target();
         shared_ptr<action> do_target();
         string fire_key_hints();
+    protected:
+        action_cycler(shared_ptr<action> init);
 
     private:
         shared_ptr<action> current;
@@ -158,7 +160,7 @@ namespace quiver
     {
         // some things about this class are not implemented to be launcher
         // specific because they aren't used, e.g. cycling
-        launcher_action_cycler() : action_cycler() { }
+        launcher_action_cycler();
 
         using action_cycler::set; // unhide the other signature
         bool set(const shared_ptr<action> n) override;
