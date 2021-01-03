@@ -203,7 +203,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            drain_player(1 + original, true);
+            drain_player(original, true);
         }
         break;
 
@@ -367,22 +367,6 @@ void lose_level()
     ouch(0, KILLED_BY_DRAINING);
 }
 
-static int _drain_power_max_hp(int power)
-{
-    if (power <= 6)
-        power = 6;
-
-    const int scaled_pow = div_rand_round(power, 6);
-    const int perc_pow = scaled_pow / 2;
-
-    int fuzzed_hp = 1 + random2avg((scaled_pow - perc_pow) * 2, 4);
-
-    const int perc_hp = div_rand_round(3 * perc_pow
-           * get_real_hp(false, false), 500);
-
-    return fuzzed_hp + perc_hp;
-}
-
 /**
  * Drain the player.
  *
@@ -415,17 +399,17 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (power > 0)
     {
-        mpr("You feel drained.");
-        xom_is_stimulated(15);
-
-        const int drain_mhp = _drain_power_max_hp(power);
-        you.hp_max_adj_temp -= drain_mhp;
+        const int mhp = 1 + div_rand_round(power * get_real_hp(false, false),
+                750);
+        you.hp_max_adj_temp -= mhp;
         you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
                 you.hp_max_adj_temp);
 
-        dprf("Drained by %d max hp (%d total)", drain_mhp, you.hp_max_adj_temp);
+        dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
         calc_hp();
 
+        mpr("You feel drained.");
+        xom_is_stimulated(15);
         return true;
     }
 
