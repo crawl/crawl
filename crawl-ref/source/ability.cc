@@ -1590,17 +1590,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_hop(quiet);
 
     case ABIL_ROLLING_CHARGE:
-    {
-        if (!_can_movement_ability(quiet))
-            return false;
-        targeter_charge tgt(&you, palentonga_charge_range());
-        for (monster_near_iterator mi(&you); mi; ++mi)
-            if (tgt.valid_aim(mi->pos()))
-                return true;
-        if (!quiet)
-            mpr("There's nothing you can charge at!");
-        return false;
-    }
+        return _can_movement_ability(quiet) &&
+                                palentonga_charge_possible(quiet, true);
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
