@@ -269,13 +269,15 @@ static int _fire_prompt_for_item()
     {
         slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    menu_type::invlist,
-                                   OSEL_THROWABLE, OPER_FIRE);
+                                   OSEL_THROWABLE, OPER_FIRE,
+                                   invprompt_flag::no_warning); // handled in quiver
     }
     else
     {
         slot = prompt_invent_item("Fire/throw which item? (Showing full inventory)",
                                    menu_type::invlist,
-                                   OSEL_ANY, OPER_FIRE);
+                                   OSEL_ANY, OPER_FIRE,
+                                   invprompt_flag::no_warning);
     }
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
