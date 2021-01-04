@@ -86,9 +86,16 @@ namespace quiver
         return MB_MAYBE;
     }
 
+    void action::set_target(const dist &t)
+    {
+        target = t;
+        if (!target.fire_context)
+            target.fire_context = default_fire_context;
+    }
+
     void action::reset()
     {
-        target = dist();
+        set_target(dist());
     }
 
     /**
@@ -217,7 +224,7 @@ namespace quiver
         return a;
     }
 
-    string action_cycler::fire_key_hints()
+    string action_cycler::fire_key_hints() const
     {
         const bool no_other_items = *get() == *next();
         string key_hint = no_other_items
@@ -387,7 +394,7 @@ namespace quiver
             // TODO: does it actually make sense to have this monster in
             // quiver.cc?
 
-            target = t;
+            set_target(t);
 
             if (you.confused() && target.needs_targeting())
             {
@@ -698,7 +705,7 @@ namespace quiver
 
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
             if (!is_enabled())
@@ -713,7 +720,8 @@ namespace quiver
             throw_it(*this);
 
             // TODO: eliminate this?
-            you.m_quiver_history.on_item_fired(you.inv[ammo_slot], true);
+            you.m_quiver_history.on_item_fired(you.inv[ammo_slot],
+                    !target.fire_context || !target.fire_context->autoswitched);
 
             t = target; // copy back, in case they are different
         }
@@ -1005,7 +1013,7 @@ namespace quiver
             if (!is_valid())
                 return;
 
-            target = t;
+            set_target(t);
 
             // TODO: how to handle these in the fire interface?
             if (_spell_needs_manual_targeting(spell))
@@ -1284,7 +1292,7 @@ namespace quiver
                 check_ability_possible(ability, false);
                 return;
             }
-            target = t;
+            set_target(t);
             target.find_target = true;
 
             if (autofight_check())
@@ -1296,8 +1304,6 @@ namespace quiver
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
                 mprf("No targets found! target %d,%d", t.target.x, t.target.y);
-
-            target = t;
 
             t = target; // copy back, in case they are different
         }
@@ -1407,7 +1413,7 @@ namespace quiver
 
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
 
@@ -1677,7 +1683,7 @@ namespace quiver
 
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
 
@@ -1897,13 +1903,13 @@ namespace quiver
         return result;
     }
 
-    // by default, initialize as invalid, not empty
-    action_cycler::action_cycler()
-        : current(make_shared<ammo_action>(-1))
+    action_cycler::action_cycler(shared_ptr<action> init)
+        : autoswitched(false), current(init)
     { }
 
-    action_cycler::action_cycler(shared_ptr<action> init)
-        : current(init)
+    // by default, initialize as invalid, not empty
+    action_cycler::action_cycler()
+        : action_cycler(make_shared<ammo_action>(-1))
     { }
 
     void action_cycler::save(const string key) const
@@ -1966,13 +1972,14 @@ namespace quiver
      * @param new_act the action to fill in. nullptr is safe.
      * @return whether the action changed as a result of the call.
      */
-    bool action_cycler::set(const shared_ptr<action> new_act)
+    bool action_cycler::set(const shared_ptr<action> new_act, bool _autoswitched)
     {
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
         auto old = move(current);
         current = move(n);
+        autoswitched = _autoswitched;
 
         if (diff)
         {
@@ -1989,17 +1996,20 @@ namespace quiver
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
-            const int item_slot = get()->get_item();
-            if (item_slot >= 0 && you.inv[item_slot].defined())
+            if (!autoswitched)
             {
-                const item_def item = you.inv[item_slot];
+                const int item_slot = get()->get_item();
+                if (item_slot >= 0 && you.inv[item_slot].defined())
+                {
+                    const item_def &item = you.inv[item_slot];
 
-                quiver::launcher t = quiver::AMMO_THROW;
-                const item_def *weapon = you.weapon();
-                if (weapon && item.launched_by(*weapon))
-                    t = quiver::_get_weapon_ammo_type(weapon);
+                    quiver::launcher t = quiver::AMMO_THROW;
+                    const item_def *weapon = you.weapon();
+                    if (weapon && item.launched_by(*weapon))
+                        t = quiver::_get_weapon_ammo_type(weapon);
 
-                you.m_quiver_history.set_quiver(you.inv[item_slot], t);
+                    you.m_quiver_history.set_quiver(you.inv[item_slot], t);
+                }
             }
 #ifdef USE_SOUND
             parse_sound(CHANGE_QUIVER_SOUND);
@@ -2029,13 +2039,13 @@ namespace quiver
         return !_is_currently_launched_ammo(get());
     }
 
-    bool launcher_action_cycler::set(const shared_ptr<action> new_act)
+    bool launcher_action_cycler::set(const shared_ptr<action> new_act, bool _autoswitched)
     {
         if (new_act
             && (_is_currently_launched_ammo(new_act)
                 || *new_act == action()))
         {
-            return action_cycler::set(new_act);
+            return action_cycler::set(new_act, _autoswitched);
         }
         else
             set_needs_redraw();
@@ -2060,6 +2070,7 @@ namespace quiver
         // don't use regular set: avoid all the side effects when importing
         // from another action cycler. (Used in targeting.)
         current = other.get();
+        autoswitched = false;
         set_needs_redraw();
         return diff;
     }
@@ -2072,6 +2083,8 @@ namespace quiver
     {
         ASSERT(current); // sanity check: `set` prevents nullptr
 
+        // ugh. (n.b. this is ok with const because the pointer itself isn't modified)
+        current->default_fire_context = this;
         return current;
     }
 
@@ -2200,7 +2213,7 @@ namespace quiver
      * @return the resulting action, which may be invalid or an empty quiver.
      *         Guaranteed to be not nullptr
      */
-    shared_ptr<action> action_cycler::next(int dir, bool allow_disabled)
+    shared_ptr<action> action_cycler::next(int dir, bool allow_disabled) const
     {
         // first try the next action of the same type
         shared_ptr<action> result = get()->find_next(dir, allow_disabled, false);
@@ -2232,6 +2245,12 @@ namespace quiver
         if (!get()->is_valid())
         {
             auto r = get()->find_replacement();
+            if (r && r->is_valid())
+                set(r, true);
+        }
+        else if (autoswitched)
+        {
+            auto r = ammo_to_action(you.m_quiver_history.get_last_ammo(get()->get_launcher()));
             if (r && r->is_valid())
                 set(r);
         }
@@ -2719,7 +2738,9 @@ namespace quiver
         if (!explicitly_chosen)
         {
             // If the item was not actively chosen, i.e. just automatically
-            // passed into the quiver, don't change any of the quiver settings.
+            // passed into the quiver, don't add it to the quiver history for
+            // this ammo type. This lets us revert back to an actively chosen
+            // ammo on pickup.
             you.redraw_quiver = true;
             return;
         }
@@ -2731,7 +2752,7 @@ namespace quiver
         if (weapon && item.launched_by(*weapon))
         {
             const quiver::launcher t = quiver::_get_weapon_ammo_type(weapon);
-            m_last_used_of_type[t] = item;
+            m_last_used_of_type[t] = item; // makes a copy
             m_last_used_of_type[t].quantity = 1;    // 0 makes it invalid :(
         }
         else
@@ -2903,7 +2924,7 @@ static int _get_pack_slot(const item_def& item)
         {
             // =f prevents item from being in fire order.
             if (quiver::_fireorder_inscription_ok(i, false) == MB_FALSE)
-                return -1;
+                continue;
 
             return i;
         }

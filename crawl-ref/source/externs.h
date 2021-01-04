@@ -357,9 +357,10 @@ public:
     ray_def ray;        // output: ray chosen if necessary
     bool find_target;   // input: use the targeter to find a target, possibly by modifying `target`.
                         // forces non-interactive mode.
-    quiver::action_cycler *fire_context; // input: if triggered from the action system, what the
-                                         // quiver was that triggered it. May be nullptr.
-                                         // sort of ugly to have this here...
+    const quiver::action_cycler *fire_context;
+                            // input: if triggered from the action system, what the
+                            // quiver was that triggered it. May be nullptr.
+                            // sort of ugly to have this here...
     int cmd_result;     // output: a resulting command. See quiver::action_cycler::target for
                         // which commands may be handled and how. This is an `int` for include
                         // order reasons, unfortunately
