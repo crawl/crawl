@@ -5074,7 +5074,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
             if (!rc_only)
+            {
                 Options.game.name = next_arg;
+                crawl_state.default_startup_name = Options.game.name;
+            }
             nextUsed = true;
             break;
 
