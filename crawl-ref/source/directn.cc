@@ -291,6 +291,12 @@ void direction_chooser::print_top_prompt() const
 {
     if (!top_prompt.empty())
         mprf(MSGCH_PROMPT, "%s", top_prompt.c_str());
+    else if (moves.fire_context)
+    {
+        // TODO: consolidate top prompt construction more
+        mprf(MSGCH_PROMPT, "%s",
+            moves.fire_context->get()->quiver_description().tostring().c_str());
+    }
 }
 
 void direction_chooser::print_key_hints() const
