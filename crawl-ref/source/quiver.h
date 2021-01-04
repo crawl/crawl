@@ -36,9 +36,12 @@ namespace quiver
 
     struct action : public enable_shared_from_this<action>
     {
-        action() : target(), error() { };
+        action()
+            : target(), error(), default_fire_context(nullptr)
+        { };
         virtual ~action() = default;
         void reset();
+        void set_target(const dist &t);
 
         virtual bool operator==(const action &other) const
         {
@@ -107,6 +110,7 @@ namespace quiver
 
         dist target;
         string error;
+        const action_cycler *default_fire_context;
     };
 
     shared_ptr<action> find_ammo_action();
@@ -134,9 +138,9 @@ namespace quiver
         bool item_is_quivered(const item_def &item);
         bool item_is_quivered(int item_slot) const;
 
-        shared_ptr<action> next(int dir = 0, bool allow_disabled=true);
+        shared_ptr<action> next(int dir = 0, bool allow_disabled=true) const;
 
-        virtual bool set(const shared_ptr<action> n);
+        virtual bool set(const shared_ptr<action> n, bool _autoswitched=false);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
@@ -147,7 +151,9 @@ namespace quiver
 
         void target();
         shared_ptr<action> do_target();
-        string fire_key_hints();
+        string fire_key_hints() const;
+
+        bool autoswitched;
     protected:
         action_cycler(shared_ptr<action> init);
 
@@ -163,7 +169,7 @@ namespace quiver
         launcher_action_cycler();
 
         using action_cycler::set; // unhide the other signature
-        bool set(const shared_ptr<action> n) override;
+        bool set(const shared_ptr<action> n, bool _autoswitched=false) override;
         bool is_empty() const override;
         void set_needs_redraw() override;
     };
