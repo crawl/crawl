@@ -638,7 +638,12 @@ namespace quiver
         virtual bool launch_type_check() const
         {
             // will assert if ammo_slot is invalid
-            const launch_retval projected = is_launched(&you, get_launcher(),
+            // intentionally uses you.weapon() instead of get_launcher(): this
+            // renders a throwing ammo invalid if the player is wielding a
+            // launcher for it. There's no in principle reason to disallow
+            // throwing stones while wielding a sling, but it's more confusing
+            // than helpful.
+            const launch_retval projected = is_launched(&you, you.weapon(),
                                                         you.inv[ammo_slot]);
             return projected == launch_retval::THROWN;
         }
