@@ -1735,7 +1735,8 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         that has been inscribed with "+f". See the "Inscriptions" section of
         Crawl's manual for more information about inscriptions. Ammo types
         can be separated with a "/" to indicate that inventory order should
-        determine cycle order.
+        determine cycle order. Order within types is determined by letter
+        order in the relevant submenu (e.g. inventory for throwing, etc).
 
 fail_severity_to_quiver = 2
         Exclude spells with this miscast level or higher from quiver cycling
