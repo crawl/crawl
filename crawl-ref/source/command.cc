@@ -416,10 +416,10 @@ static const char *targeting_help_2 =
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
-    "<h>Firing, throwing, spellcasting:\n"
-    "<w>(</w> : cycle to next suitable fire action\n"
-    "<w>)</w> : cycle to previous suitable fire action.\n"
+    "<h>Firing mode ('<w>f</w><h>' in main):\n"
     "<w>Q</w> : choose fire action.\n"
+    "<w>(</w> : cycle to previous suitable action\n"
+    "<w>)</w> : cycle to next suitable action.\n"
 ;
 
 struct help_file
