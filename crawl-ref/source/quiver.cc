@@ -1020,39 +1020,37 @@ namespace quiver
 
             set_target(t);
 
-            // TODO: how to handle these in the fire interface?
+            // don't do the range check check if doing manual firing.
+            const bool do_range_check = !target.needs_targeting();
+
             if (_spell_needs_manual_targeting(spell))
             {
+                // force interactive mode no matter what:
                 target.target = coord_def(-1,-1);
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
             }
             else if (_spell_no_autofight_targeting(spell))
             {
+                // use direction chooser find_target behavior unless interactive
+                // is set before the call:
                 target.target = coord_def(-1,-1);
                 target.find_target = true;
             }
             else if (!is_dynamic_targeted())
-                target.target = you.pos(); // hax -- never trigger static targeters
-                                           // unless interactive is set.
-                                           // will need to be fixed if `z` ever
-                                           // calls here
+            {
+                // this is a somewhat hacky way to allow non-interactive mode;
+                // the value of `target` doesn't matter for static targeters.
+                // Like the no-autofight case, if `interactive` is set
+                // before the call, will still pop up an interactive targeter.
+                target.target = you.pos();
+            }
 
-            // don't do the range check check if doing manual firing. (It's
-            // a bit hacky to condition this on whether there's a fire context...)
-            const bool do_range_check = !target.fire_context;
             if (autofight_check())
                 return;
 
             cast_a_spell(do_range_check, spell, &target);
-            if (target.find_target && !target.isValid && !target.fire_context)
-            {
-                // It would be entirely possible to force manual targeting for
-                // this case; I think it's not what players would expect so I'm
-                // not doing it for now.
-                // TODO: more consistency with autofight.lua messaging?
-                mpr("Can't find an automatic target! Use Z to cast.");
-            }
+
             t = target; // copy back, in case they are different
         }
 
