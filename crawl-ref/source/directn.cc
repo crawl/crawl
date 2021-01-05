@@ -184,11 +184,16 @@ bool dist::isMe() const
 
 /**
  * Does this dist object need `target` to be filled in somehow, e.g. with
- * manual/interactive targeting?
+ * manual/interactive targeting? Affected by the following three dist fields:
+ *
+ *  `interactive`: force interactive targeting, overrides the other two.
+ *  `find_target`: requests to use the direction chooser default target, allows
+ *                 non-interactive mode. Overrides a value supplied by `target`.
+ *  `target`: supplying a target coord directly allows non-interactive mode.
  */
 bool dist::needs_targeting() const
 {
-    return interactive || !(in_bounds(target) || find_target);
+    return interactive || !in_bounds(target) && !find_target;
 }
 
 static int _targeting_cmd_to_compass(command_type command)
