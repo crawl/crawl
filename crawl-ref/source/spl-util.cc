@@ -1489,8 +1489,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
-    case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
-                    // now that it doesn't destroy walls
+    // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
+    //                 // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
