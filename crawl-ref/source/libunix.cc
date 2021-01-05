@@ -613,10 +613,18 @@ static void unixcurses_defkeys()
 
     // non-arrow keypad keys (for macros)
     define_key("\033OM", 1010); // Enter
-    define_key("\033OP", 1011); // NumLock
-    define_key("\033OQ", 1012); // /
-    define_key("\033OR", 1013); // *
-    define_key("\033OS", 1014); // -
+
+    // TODO: I don't know under what context these are mapped to numpad keys,
+    // but they are *much* more commonly used for F1-F4. So don't
+    // unconditionally define these. I don't trust anything else in this
+    // function either, but most of it is a bit hard to test. Possibly the
+    // conditional define here should at least be generalized?
+#define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
+    check_define_key("\033OP", 1011); // NumLock
+    check_define_key("\033OQ", 1012); // /
+    check_define_key("\033OR", 1013); // *
+    check_define_key("\033OS", 1014); // -
+#undef check_define_key
     define_key("\033Oj", 1015); // *
     define_key("\033Ok", 1016); // +
     define_key("\033Ol", 1017); // +

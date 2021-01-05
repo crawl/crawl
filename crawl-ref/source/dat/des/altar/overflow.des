@@ -108,6 +108,16 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
   end
 end
 
+function callback.five_deadly_venoms(data, triggerable, triggerer, marker, ev)
+  crawl.god_speaks("Wu Jian", "For a moment, you catch a glimpse of warriors who walked this path long ago.")
+  local positions = dgn.find_marker_positions_by_prop(
+    "positions", "five_deadly_venoms")
+  for i, pos in ipairs(positions) do
+    local x, y = pos:xy()
+    dgn.create_monster(x, y, "generate_awake dur:1 " .. data.venoms[i])
+  end
+end
+
 function species_mock(e)
   if you.race() == "Barachi" then
     return "cane toad"
@@ -122,7 +132,7 @@ function species_mock(e)
   elseif you.race() == "Deep Dwarf" then
     return "deep dwarf zombie"
   elseif you.race() == "Deep Elf" then
-    return "insubstantial wisp"
+    return "will-o-the-wisp"
   elseif you.race() == "Gnoll" then
     return "jackal"
   elseif you.race() == "Halfling" then
@@ -1014,6 +1024,25 @@ xxt.txx
    @
 ENDMAP
 
+NAME:   nzn_hepliaklqana_mist_gate
+DEPTH:  D:2-, Lair, Depths
+TAGS:   temple_overflow_1 temple_overflow_hepliaklqana no_monster_gen
+KFEAT:  _ = altar_hepliaklqana
+MARKER: A = lua:fog_machine { cloud_type = "grey smoke", pow_min = 20, \
+                              pow_max = 40, delay = 10, size = 1, \
+                              spread_rate = -1 }
+: interest_check(_G)
+MAP
+xxxxx
+x...x
+x._.x
+x...x
+xx.xx
+ xAx
+ x.x
+  @
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -1045,9 +1074,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 14 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -1278,6 +1305,21 @@ x.w'w.x
 xx...xx
  xx+xx
    @
+ENDMAP
+
+NAME:   nzn_makhleb_speed_demon
+TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
+DEPTH:  D:7-11
+WEIGHT: 2
+KFEAT:  _ = altar_makhleb
+KMONS:  _ = sixfirhy
+: interest_check(_G)
+MAP
+.....
+.ccc.
+.c_c.
+.c=c.
+..@..
 ENDMAP
 
 ### Nemelex overflow altars ###################################################
@@ -2278,6 +2320,88 @@ MAP
 .......
 ENDMAP
 
+### Wu Jian overflow altars ###################################################
+
+NAME:   nzn_wu_jian_council_hall
+TAGS:   temple_overflow_1 temple_overflow_wu_jian no_monster_gen no_item_gen
+DEPTH:  D:2-9
+KFEAT:  _ = altar_wu_jian
+MAP
+    x@x
+  xxx.xxx
+ xxG...Gxx
+xx.......xx
+xG..._...Gx
+xx.......xx
+ xxG...Gxx
+  xxxGxxx
+    xxx
+ENDMAP
+
+NAME:    nzn_wu_jian_contemplation
+TAGS:    temple_overflow_1 temple_overflow_wu_jian no_monster_gen no_item_gen
+TAGS:    no_pool_fixup
+DEPTH:   D:2-9
+ITEM:    mundane spear / w:2 mundane quarterstaff / w:2 mundane trident, stone
+NSUBST:  ' = 3=e / ', " = 4=W / ', t = t / d / -
+SUBST:   ` = '
+KFEAT:   _ = altar_wu_jian
+FTILE:   e' = floor_sand
+FTILE:   td- = floor_grass
+COLOUR:  e' = yellow
+COLOUR:  d- = green
+MAP
+ x@x
+xx.xxxxxxxxxx
+x'`.```'``"Wx
+x```.`'``"WWx
+x'`.````"WWWx
+x`.t`'``"WWWx
+x`t_t`'`"WWWx
+x``t.'`'`"WWx
+x'`'`.``'`"Wx
+xxxxxx.xxxxxx
+     x@x
+ENDMAP
+
+NAME:  pdpol_wu_jian_five_deadly_venoms
+DEPTH: D:2-9
+TAGS:  no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
+KFEAT:  _ = altar_wu_jian
+MARKER: F = lua:fog_machine { \
+            cloud_type="thin mist", size = 1, \
+            pow_max = 3, pow_min = 3, delay = 10, \
+            start_clouds = 0 }
+{{
+  local trig_marker = TriggerableFunction:new {
+    func="callback.five_deadly_venoms",
+    repeated=false,
+    data={
+      venoms={
+        "spectral demonic crawler name:centipede name_species name_replace name_descriptor",
+        "spectral black mamba",
+        "spectral scorpion",
+        "spectral leopard gecko",
+        "spectral cane toad"
+      }
+    }
+  }
+  trig_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
+  lua_marker("_", trig_marker)
+  lua_marker("F", portal_desc { positions = "five_deadly_venoms" })
+}}
+MAP
+   ccc
+   cFc
+  ccncc
+ccc...ccc
+cFn._.nFc
+cccn.nccc
+ cFc.cFc
+ ccc.ccc
+   c@c
+ENDMAP
+
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
@@ -2547,9 +2671,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_yredelemnul
 KMONS:  _ = human zombie
-: if not you.in_branch("D") or you.absdepth() > 13 then
-TAGS:   extra
-: end
+: interest_check(_G)
 MAP
 ccccccccccccccc
 c?c?c?c?c?c?ccG
@@ -3452,6 +3574,83 @@ D--nA..Bn2-E
 DD-n....n--E
  DDD....n-EE
    cc@@cEEE
+ENDMAP
+
+NAME:   pdpol_temple_overflow_zin_treasury_gozag_greed
+TAGS:   temple_overflow_2 temple_overflow_zin temple_overflow_gozag
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:2-9
+KFEAT:  _ = altar_zin
+KFEAT:  O = altar_gozag
+KITEM:  O = wand of digging charges:1
+KFEAT:  m = iron_grate
+KPROP:  $ = no_tele_into
+KITEM:  $ = gold q:1 / gold q:2
+RTILE:  x = wall_sandstone
+COLOUR: x = yellow
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  _.m+c$ = floor_limestone
+: interest_check(_G)
+MAP
+  ccccccxxxxx
+ cc..mm$x...xx
+@+.._m$$x.O..+@
+ cc..mm$x...xx
+  ccccccxxxxx
+ENDMAP
+
+NAME:    nzn_overflow_gifts_of_might_and_magic
+TAGS:    temple_overflow_2 temple_overflow_trog temple_overflow_sif_muna
+TAGS:    no_item_gen no_monster_gen patrolling
+DEPTH:   D:2-10
+SHUFFLE: D1-/E2'
+COLOUR:  1- = red
+COLOUR:  2' = blue
+KFEAT:   D = altar_trog
+KFEAT:   E = altar_sif_muna
+: local egos = {["antimagic"] = 1, ["vorpal"] = 2, ["flaming"] = 2}
+: if you.absdepth() <= 3 then
+KMONS:   1 = gnoll ; animal skin / w:2 Terence
+KMONS:   2 = white imp / w:2 Jessica
+: local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)
+: local weapons = {["spear"] = 1, ["handaxe"] = 1, ["mace"] = 1,
+:                  ["falchion"] = 1}
+: kitem("1 = " .. random_item_def(weapons, nil, "ego:none plus:" .. enchant))
+KITEM:   2 = randbook owner:Sif_Muna numspells:1 slevels:1
+: elseif you.absdepth() <= 7 then
+:     if crawl.one_chance_in(5) then
+KMONS:   1 = duvessa
+KMONS:   2 = dowan
+:     else
+KMONS:   1 = orc warrior
+KMONS:   2 = orc wizard
+:     end
+: local weapons = {["trident"] = 1, ["war axe"] = 1, ["flail"] = 1,
+:                  ["long sword"] = 1}
+: kitem("1 = " .. random_item_def(weapons, egos, "plus:0"))
+KITEM:   2 = randbook owner:Sif_Muna numspells:2 slevels:2
+: else
+KMONS:   1 = troll
+KMONS:   2 = ynoxinul
+: local weapons = {["trident"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
+:                  ["scimitar"] = 1}
+: kitem("1 = " .. random_item_def(weapons, egos, "plus:0"))
+KITEM:   2 = randbook owner:Sif_Muna numspells:3 slevels:4
+: end
+: interest_check(_G)
+MAP
+     xx@@@x
+    xx...xx
+   xx...xxxxx
+  xx...xx-D-x
+ xx...xxx-1-x
+xx...xAx...xx
+x'2'xxx...xx
+x'E'xx...xx
+xxxxx...xx
+  xx...xx
+  x@@@xx
 ENDMAP
 
 ### Variable overflow altars ##################################################

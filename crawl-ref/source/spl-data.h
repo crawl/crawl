@@ -1020,7 +1020,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONFUSING_TOUCH, "Confusing Touch",
     spschool::hexes,
-    spflag::none,
+    spflag::selfench | spflag::WL_check, // Show success in the static targeter
     3,
     100,
     -1, -1,
@@ -2325,7 +2325,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DISCORD, "Discord",
     spschool::hexes,
-    spflag::area | spflag::hasty,
+    spflag::area | spflag::hasty | spflag::WL_check,
     8,
     200,
     -1, -1,
@@ -3275,11 +3275,11 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_NOXIOUS_BOG, "Eringya's Noxious Bog",
     spschool::poison | spschool::transmutation,
-    spflag::selfench,
+    spflag::area | spflag::no_ghost,
     6,
     200,
-    -1, -1,
-    2, 0,
+    4, 4,
+    6, 0,
     TILEG_NOXIOUS_BOG,
 },
 

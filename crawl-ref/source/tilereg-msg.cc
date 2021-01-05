@@ -47,9 +47,10 @@ bool MessageRegion::update_tip_text(string& tip)
     return true;
 }
 
-void MessageRegion::set_overlay(bool is_overlay)
+void MessageRegion::set_overlay(bool is_overlay, const VColour &col)
 {
     m_overlay = is_overlay;
+    m_overlay_col = col;
 }
 
 void MessageRegion::render()
@@ -112,8 +113,7 @@ void MessageRegion::render()
             glmanager->reset_transform();
 
             ShapeBuffer buff;
-            VColour col(100, 100, 100, 100);
-            buff.add(sx, sy, ex, sy + height, col);
+            buff.add(sx, sy, ex, sy + height, m_overlay_col);
             buff.draw();
         }
     }

@@ -1842,7 +1842,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
     else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
-        attk.flavour = AF_DRAIN_XP;
+        attk.flavour = AF_DRAIN;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
 
@@ -2870,13 +2870,11 @@ void define_monster(monster& mons)
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         mons.props[MON_SPEED_KEY] = 7 + random2avg(9, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_ABOMINATION_LARGE:
         hd = 8 + random2(4);
         mons.props[MON_SPEED_KEY] = 6 + random2avg(7, 2);
-        init_abomination(mons, hd);
         break;
 
     case MONS_SLIME_CREATURE:
@@ -5285,7 +5283,8 @@ int count_allies()
 bool mons_stores_tracking_data(const monster& mons)
 {
     return mons.type == MONS_THORN_HUNTER
-           || mons.type == MONS_MERFOLK_AVATAR;
+           || mons.type == MONS_MERFOLK_AVATAR
+           || mons.type == MONS_BOULDER_BEETLE;
 }
 
 bool mons_is_beast(monster_type mc)

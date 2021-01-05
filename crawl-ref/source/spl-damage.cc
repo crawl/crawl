@@ -1267,8 +1267,8 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
 dice_def irradiate_damage(int pow, bool random)
 {
-    const int dice = 6;
-    const int max_dam = 30 + random ? div_rand_round(pow, 2) : pow / 2;
+    const int dice = 3;
+    const int max_dam = 40 + (random ? div_rand_round(pow, 2) : pow / 2);
     return calc_dice(dice, max_dam);
 }
 
@@ -1286,11 +1286,11 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
         return 0; // XXX: handle damaging the player for mons casts...?
 
     const dice_def dam_dice = irradiate_damage(pow);
-    const int dam = dam_dice.roll();
+    const int base_dam = dam_dice.roll();
+    const int dam = mons->apply_ac(base_dam);
     mprf("%s is blasted with magical radiation%s",
          mons->name(DESC_THE).c_str(),
          attack_strength_punctuation(dam).c_str());
-    dprf("irr for %d (%d pow, %dd%d)", dam, pow, dam_dice.num, dam_dice.size);
 
     if (agent->deity() == GOD_FEDHAS && fedhas_protects(mons))
     {
@@ -1424,8 +1424,12 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
         return agent && agent->is_player() ? sgn(value) : value;
     }
 
-    place_cloud(CLOUD_FIRE, where,
-                30 + random2(20 + pow), agent);
+    // Tone down bog clouds
+    if (!one_chance_in(4))
+        return false;
+
+    place_cloud(CLOUD_FIRE, where, 2 + random2(pow / 30), agent);
+
     return true;
 }
 
@@ -1679,6 +1683,21 @@ bool ignite_poison_affects(const actor* act)
     if (act->is_player())
         return you.duration[DUR_POISONING];
     return act->as_monster()->has_ench(ENCH_POISON);
+}
+
+/**
+ * Does Ignite Poison do something to this cell?
+ *
+ * @param where       Where to look
+ * @param agent     Who's casting
+ * @return          If this cell will be affected
+ */
+bool ignite_poison_affects_cell(const coord_def where, actor* agent)
+{
+    return _ignite_poison_clouds(where, -1, agent)
+         + _ignite_poison_monsters(where, -1, agent)
+         + _ignite_poison_player(where, -1, agent)
+         + _ignite_poison_bog(where, -1, agent) != 0;
 }
 
 /**
@@ -2025,6 +2044,11 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     return spret::success;
 }
 
+dice_def base_fragmentation_damage(int pow)
+{
+    return dice_def(3, 5 + pow / 5);
+}
+
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole)
@@ -2043,7 +2067,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.target = target;
 
     // Number of dice vary from 2-4.
-    beam.damage = dice_def(0, 5 + pow / 5);
+    beam.damage = base_fragmentation_damage(pow);
 
     monster* mon = monster_at(target);
     const dungeon_feature_type grid = env.grid(target);
@@ -2056,21 +2080,20 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == transformation::statue ? 3 : 2;
+            if (you.form != transformation::statue)
+                beam.damage.num = 2;
             return true;
         }
         else if (petrified)
         {
             beam.name       = "blast of petrified fragments";
             beam.colour     = mons_class_colour(player_mons(true));
-            beam.damage.num = 3;
             return true;
         }
         else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
             return true;
         }
@@ -2084,7 +2107,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_TOENAIL_GOLEM:
             beam.name       = "blast of toenail fragments";
             beam.colour     = RED;
-            beam.damage.num = 3;
             break;
 
         case MONS_IRON_ELEMENTAL:
@@ -2102,13 +2124,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_GARGOYLE:
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = 3;
             break;
 
         case MONS_SALTLING:
             beam.name       = "blast of salt crystal fragments";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             break;
 
         case MONS_OBSIDIAN_STATUE:
@@ -2148,14 +2168,12 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                 monster_info minfo(mon);
                 beam.name       = "blast of petrified fragments";
                 beam.colour     = minfo.colour();
-                beam.damage.num = 3;
                 break;
             }
             else if (mon->is_icy()) // blast of ice
             {
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
-                beam.damage.num = 3;
                 beam.flavour    = BEAM_ICE;
                 break;
             }
@@ -2163,7 +2181,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             {
                 beam.name   = "blast of bone shards";
                 beam.colour = LIGHTGREY;
-                beam.damage.num = 3;
                 break;
             }
             // Targeted monster not shatterable, try the terrain instead.
@@ -2197,7 +2214,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "statue";
 
         beam.name       = "blast of rock fragments";
-        beam.damage.num = 3;
         break;
 
     // Metal -- small but nasty explosion
@@ -2238,7 +2254,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
-        beam.damage.num = 3;
         break;
 
     default:
@@ -2592,6 +2607,21 @@ void forest_damage(const actor *mon)
     }
 }
 
+bool dazzle_monster(monster * mons, int pow)
+{
+    if (!mons || !mons_can_be_dazzled(mons->type))
+        return false;
+
+    if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
+    {
+        mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
+                       random_range(4, 8) * BASELINE_DELAY));
+        return true;
+    }
+
+    return false;
+}
+
 spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 {
     int range = spell_range(SPELL_DAZZLING_FLASH, pow);
@@ -2650,16 +2680,8 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
          ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-
-        if (!mons || !mons_can_be_dazzled(mons->type))
-            continue;
-
-        if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
-        {
+        if (mons && dazzle_monster(mons, pow))
             simple_monster_message(*mons, " is dazzled.");
-            mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
-                           random_range(4, 8) * BASELINE_DELAY));
-        }
     }
 
     return spret::success;
@@ -3410,6 +3432,34 @@ spret cast_frozen_ramparts(int pow, bool fail)
     return spret::success;
 }
 
+void end_frozen_ramparts()
+{
+    if (!you.props.exists(FROZEN_RAMPARTS_KEY))
+        return;
+
+    const auto &pos = you.props[FROZEN_RAMPARTS_KEY].get_coord();
+    ASSERT(in_bounds(pos));
+
+    for (distance_iterator di(pos, false, false,
+                spell_range(SPELL_FROZEN_RAMPARTS, -1, false)); di; di++)
+    {
+        env.pgrid(*di) &= ~FPROP_ICY;
+        env.map_knowledge(*di).flags &= ~MAP_ICY;
+    }
+
+    you.props.erase(FROZEN_RAMPARTS_KEY);
+
+    env.level_state &= ~LSTATE_ICY_WALL;
+}
+
+dice_def ramparts_damage(int pow, bool random)
+{
+    int size = 2 + pow / 5;
+    if (random)
+        size = 2 + div_rand_round(pow, 5);
+    return dice_def(1, size);
+}
+
 static bool _abszero_target_check(monster &m)
 {
     return you.see_cell_no_trans(m.pos())
@@ -3420,13 +3470,16 @@ static bool _abszero_target_check(monster &m)
 
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
-static monster* _find_abszero_target(int radius)
+static monster* _find_abszero_target(int radius, bool tracer)
 {
-    for (distance_iterator di(you.pos(), true, true, radius); di; ++di)
+    for (distance_iterator di(you.pos(), !tracer, true, radius); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon && _abszero_target_check(*mon))
+        if (mon && _abszero_target_check(*mon)
+            && (!tracer || you.can_see(*mon)))
+        {
             return mon;
+        }
     }
 
     return nullptr;
@@ -3436,7 +3489,7 @@ static monster* _find_abszero_target(int radius)
 vector<monster *> find_abszero_possibles(int radius)
 {
     vector<monster *> result;
-    monster *seed = _find_abszero_target(radius);
+    monster *seed = _find_abszero_target(radius, true);
     if (seed)
     {
         const int distance = max(abs(you.pos().x - seed->pos().x),
@@ -3445,7 +3498,7 @@ vector<monster *> find_abszero_possibles(int radius)
         for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
         {
             monster *mon = monster_at(*di);
-            if (mon && _abszero_target_check(*mon))
+            if (mon && _abszero_target_check(*mon) && you.can_see(*mon))
                 result.push_back(mon);
         }
     }
@@ -3455,11 +3508,11 @@ vector<monster *> find_abszero_possibles(int radius)
 spret cast_absolute_zero(int pow, bool fail, bool tracer)
 {
     monster* const mon = _find_abszero_target(
-            spell_range(SPELL_ABSOLUTE_ZERO, pow));
+            spell_range(SPELL_ABSOLUTE_ZERO, pow), tracer);
 
     if (tracer)
     {
-        if (!mon)
+        if (!mon || !you.can_see(*mon))
             return spret::abort;
         else
             return spret::success;
@@ -3497,6 +3550,62 @@ spret cast_absolute_zero(int pow, bool fail, bool tracer)
         glaciate_freeze(mon, KILL_YOU, actor_to_death_source(&you));
         noisy(spell_effect_noise(SPELL_ABSOLUTE_ZERO), pos, you.mid);
     }
+
+    return spret::success;
+}
+
+vector<coord_def> find_bog_locations(const coord_def &center, int pow)
+{
+    vector<coord_def> bog_locs;
+    const int radius = spell_range(SPELL_NOXIOUS_BOG, pow, false);
+
+    for (radius_iterator ri(center, radius, C_SQUARE, LOS_NO_TRANS, true); ri;
+            ri++)
+    {
+        if (!feat_has_solid_floor(env.grid(*ri)))
+            continue;
+
+        // If a candidate cell is next to a solid feature, we can't bog it.
+        // Additionally, if it's next to a cell we can't currently see, we
+        // can't bog it, regardless of what the cell contains. Don't want to
+        // leak information about out-of-los cells.
+        bool valid = true;
+        for (adjacent_iterator ai(*ri); ai; ai++)
+        {
+            if (!you.see_cell(*ai) || feat_is_solid(env.grid(*ai)))
+            {
+                valid = false;
+                break;
+            }
+        }
+        if (valid)
+            bog_locs.push_back(*ri);
+    }
+
+    return bog_locs;
+}
+spret cast_noxious_bog(int pow, bool fail)
+{
+    vector <coord_def> bog_locs = find_bog_locations(you.pos(), pow);
+    if (bog_locs.empty())
+    {
+        mpr("There are no places for you to create a bog.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int turns = 5 + random2(pow / 10);
+    you.increase_duration(DUR_NOXIOUS_BOG, turns);
+
+    for (auto pos : bog_locs)
+    {
+        temp_change_terrain(pos, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
+                TERRAIN_CHANGE_BOG, you.as_monster());
+    }
+
+    flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);
+    mpr("You spew toxic sludge!");
 
     return spret::success;
 }

@@ -2130,7 +2130,7 @@ static void _ancient_zyme_sicken(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !mons->wont_attack()
-        && you.res_rotting() <= 0
+        && you.undead_state()
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
@@ -3661,6 +3661,10 @@ static bool _monster_move(monster* mons)
         }
 
         mmov.reset();
+
+        // Don't let boulder beetles roll in place.
+        if (mons->has_ench(ENCH_ROLLING))
+            mons->del_ench(ENCH_ROLLING);
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.

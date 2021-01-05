@@ -355,7 +355,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
     puttext(region.x + 1, region.y + 1, vbuf);
 }
-#endif // USE_TILE_LOCAL
+#endif // !USE_TILE_LOCAL
 
 static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 {
@@ -658,7 +658,7 @@ public:
         const ui::Region map_region = {0, 1, m_region.width, m_region.height - 1};
         _draw_level_map(view.start.x, view.start.y, m_state.travel_mode,
                         m_state.on_level, map_region);
-        cursorxy(view.cursor.x, view.cursor.y + 1);
+        ui::show_cursor_at(view.cursor.x, view.cursor.y + 1);
 #endif
     }
 
@@ -701,7 +701,19 @@ public:
             auto wm_event = to_wm_event(static_cast<const ui::MouseEvent&>(ev));
             tiles.handle_mouse(wm_event);
             if (ev.type() == ui::Event::Type::MouseDown)
-                process_command(CMD_MAP_GOTO_TARGET);
+            {
+                if (tiles.get_cursor() == m_state.lpos.pos)
+                {
+                    process_command(CMD_MAP_GOTO_TARGET);
+                    return true;
+                }
+                else
+                {
+                    m_state.lpos.pos
+                        = tiles.get_cursor().clamped(known_map_bounds());
+                }
+            }
+            _expose();
             return true;
         }
 #endif
@@ -802,6 +814,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
 #ifdef USE_TILE_LOCAL
     unwind_bool inhibit_rendering(ui::should_render_current_regions, false);
+#else
+    cursor_control cc(!Options.use_fake_cursor);
 #endif
 
     ui::push_layout(map_view);
@@ -822,6 +836,8 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 
 map_control_state process_map_command(command_type cmd, const map_control_state& prev_state)
 {
+    // the map needs a cursor, but we need to hide it here
+    cursor_control cc(false);
     map_control_state state = prev_state;
     state.map_alive = true;
     state.chose = false;
@@ -1154,7 +1170,7 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
 #ifdef USE_TILE_WEB
             tiles_ui_control msgwin(UI_NORMAL);
 #endif
-            do_annotate(state.lpos.id);
+            annotate_level(state.lpos.id);
         }
 
         state.redraw_map = true;

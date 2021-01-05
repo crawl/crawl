@@ -91,10 +91,9 @@ with undead and demonic creatures being greatly harmed.
 %%%%
 foul pestilence cloud
 
-# XXX: clarify vine stalkers, gargoyles
+# XXX: clarify gargoyles
 A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves poisoned, and may also find their movements slowing and
-their flesh rotting away.
+will find themselves poisoned, and may also find their movements slowed.
 %%%%
 thin mist cloud
 
@@ -114,7 +113,7 @@ to spending much time in the rain.
 %%%%
 mutagenic fog cloud
 
-A cloud of pure, unstructured magic, condensed into a scintilliating mist;
+A cloud of pure, unstructured magic, condensed into a scintillating mist;
 essentially toxic magical waste. Creatures venturing within will find
 themselves increasingly contaminated with magical radiation, sufficient amounts
 of which will inflict negative mutations when dissipating.

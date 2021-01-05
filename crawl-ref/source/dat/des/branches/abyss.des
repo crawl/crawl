@@ -1954,7 +1954,7 @@ x...x...x
 ENDMAP
 
 NAME:   evilmike_abyss_exit_kraken
-TAGS:   abyss_exit
+TAGS:   abyss_exit no_pool_fixup
 NSUBST: w = 1:m / *:w
 KFEAT:  m = w
 KMONS:  m = kraken

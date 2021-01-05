@@ -163,7 +163,6 @@ static const vector<string> monster_fields = {
     "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
     "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
     "MonsNumChunks", "TotalNutr", "TotalCarnNutr",
-    "TotalGhoulNutr",
 };
 
 static const vector<string> feature_fields = {

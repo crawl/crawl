@@ -1156,10 +1156,8 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-// this is a crude approximation intended for UI-oriented targeters. Some day
-// it might be nice if the targeter code were actually unified with how
-// enemies are chosen for these various spells...
-// note that this is substantially filtered when used by targeter_multiposition
+// this is a crude approximation used for the convenience UI targeter of
+// Dragon's call
 static vector<coord_def> _simple_find_all_actors(actor *a)
 {
     vector<coord_def> result;
@@ -1308,12 +1306,18 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
-    case SPELL_INTOXICATE: // for these, we just mark the monsters
-    case SPELL_CAUSE_FEAR:
-    case SPELL_DRAIN_LIFE: // pseudo-spell. TODO: ignore undead for this one
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), false);
+    case SPELL_IGNITE_POISON: // many cases
+        return make_unique<targeter_ignite_poison>(&you);
+    case SPELL_CAUSE_FEAR: // for these, we just mark the eligible monsters
+        return make_unique<targeter_fear>();
+    case SPELL_INTOXICATE:
+        return make_unique<targeter_intoxicate>();
+    case SPELL_ENGLACIATION:
+        return make_unique<targeter_englaciate>();
+    case SPELL_DRAIN_LIFE:
+        return make_unique<targeter_drain_life>();
     case SPELL_DISCORD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_all_actors(&you), true, AFF_MAYBE);
+        return make_unique<targeter_discord>();
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
 
@@ -1347,14 +1351,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // this spell seems (?) to pick the first corpse by radius_iterator, so
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
-        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
-        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), true, AFF_YES);
+        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
+    case SPELL_NOXIOUS_BOG:
+        return make_unique<targeter_bog>(&you, pow);
 
     default:
         break;
@@ -1389,6 +1395,13 @@ bool spell_has_targeter(spell_type spell)
 static int _triangular_number(int n)
 {
     return n * (n+1) / 2;
+}
+
+// _tetrahedral_number: returns the nth tetrahedral number.
+// This is the number of triples of nonnegative integers with sum < n.
+static int _tetrahedral_number(int n)
+{
+    return n * (n+1) * (n+2) / 6;
 }
 
 /**
@@ -1480,9 +1493,77 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
 }
 
+static vector<string> _desc_intoxicate_chance(const monster_info& mi,
+                                              targeter* hitfunc, int pow)
+{
+    if (hitfunc && !hitfunc->affects_monster(mi))
+        return vector<string>{"not susceptible"};
+
+    int conf_pct = 40 + pow / 3;
+
+    if (get_resist(mi.resists(), MR_RES_POISON) >=1)
+        conf_pct =  conf_pct / 3;
+
+    return vector<string>{make_stringf("chance to confuse: %d%%", conf_pct)};
+}
+
+static vector<string> _desc_englaciate_chance(const monster_info& mi,
+                                              targeter* hitfunc, int pow)
+{
+    if (hitfunc && !hitfunc->affects_monster(mi))
+        return vector<string>{"not susceptible"};
+
+    const int outcomes = pow * pow * pow;
+    const int target   = 3 * mi.hd - 2;
+    int fail_pct;
+
+    // Tetrahedral number calculation to find the chance
+    // 3 d pow < 3 * mi . hd + 1
+    if (target <= pow)
+        fail_pct = 100 * _tetrahedral_number(target) / outcomes;
+    else if (target <= 2 * pow)
+    {
+        fail_pct = 100 * (_tetrahedral_number(target)
+                       - 3 * _tetrahedral_number(target - pow)) / outcomes;
+    }
+    else if (target <= 3 * pow)
+    {
+        fail_pct = 100 * (outcomes
+                       - _tetrahedral_number(3 * pow - target)) / outcomes;
+    }
+    else
+        fail_pct = 100;
+
+    return vector<string>{make_stringf("chance to slow: %d%%", 100 - fail_pct)};
+}
+
+static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
+{
+    if (!mons_can_be_dazzled(mi.type))
+        return vector<string>{"not susceptible"};
+
+    const int dazzle_pct = max(100 * ( 95 - mi.hd * 4 ) / ( 150 - pow ), 0);
+
+    return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+}
+
+static string _mon_threat_string(const CrawlStoreValue &mon_store)
+{
+    monster dummy;
+    dummy.type = static_cast<monster_type>(mon_store.get_int());
+    define_monster(dummy);
+
+    int col;
+    string desc;
+    monster_info(&dummy).to_string(1, desc, col, true, nullptr, false);
+    const string col_name = colour_to_str(col);
+
+    return "<" + col_name + ">" + article_a(desc) + "</" + col_name + ">";
+}
+
 // Include success chance in targeter for spells checking monster WL.
-vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
-                                   targeter* hitfunc)
+vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
+                                      bool evoked, targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     const int wl = mi.willpower();
@@ -1508,16 +1589,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
         const CrawlVector &set = mi.props[POLY_SET_KEY].get_vector();
         if (set.size() <= 0)
             return vector<string>{"not susceptible"};
-        string target_names = "will become ";
-        // XXX: use comma_separated_line here?
-        for (int i = 0; i < set.size(); i++)
-        {
-            const monster_type mc = (monster_type)set[i].get_int();
-            if (i != 0)
-                target_names += (i == set.size() - 1) ? ", or " : ", ";
-            target_names += mons_type_name(mc, DESC_A);
-        }
-        descs.push_back(target_names);
+        descs.push_back("will become "
+                        + comma_separated_fn(set.begin(), set.end(),
+                                             _mon_threat_string, ", or "));
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1642,18 +1716,33 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
         // Add success chance to targeted spells checking monster WL
         const bool mr_check = testbits(flags, spflag::WL_check)
-                              && testbits(flags, spflag::dir_or_target)
                               && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
         const zap_type zap = spell_to_zap(spell);
         if (mr_check)
         {
-            const int eff_pow = zap == NUM_ZAPS ? powc
-                                                : zap_ench_power(zap, powc,
-                                                                 false);
-            additional_desc = bind(desc_success_chance, placeholders::_1,
+            const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
+                                                                 false)
+                                                :
+                  testbits(flags, spflag::area) ? ( powc * 3 ) / 2
+                                                : powc;
+            additional_desc = bind(desc_wl_success_chance, placeholders::_1,
                                    eff_pow, evoked_item, hitfunc.get());
-        } else {
+        }
+        else if (spell == SPELL_INTOXICATE)
+        {
+            additional_desc = bind(_desc_intoxicate_chance, placeholders::_1,
+                                   hitfunc.get(), powc);
+        }
+        else if (spell == SPELL_ENGLACIATION)
+        {
+            additional_desc = bind(_desc_englaciate_chance, placeholders::_1,
+                                   hitfunc.get(), powc);
+        }
+        else if (spell == SPELL_DAZZLING_FLASH)
+            additional_desc = bind(_desc_dazzle_chance, placeholders::_1, powc);
+        else
+        {
             targeter_beam* beam_hitf =
                 dynamic_cast<targeter_beam*>(hitfunc.get());
             if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
@@ -2233,14 +2322,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     return spret::none;
 }
 
-// _tetrahedral_number: returns the nth tetrahedral number.
-// This is the number of triples of nonnegative integers with sum < n.
-// Called only by get_true_fail_rate.
-static int _tetrahedral_number(int n)
-{
-    return n * (n+1) * (n+2) / 6;
-}
-
 // get_true_fail_rate: Takes the raw failure to-beat number
 // and converts it to the actual chance of failure:
 // the probability that random2avg(100,3) < raw_fail.
@@ -2462,17 +2543,14 @@ int power_to_barcount(int power)
     return breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1;
 }
 
-static int _spell_power(spell_type spell)
+static int _spell_power(spell_type spell, bool evoked)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
-    return min(calc_spell_power(spell, true, false, false), cap);
-}
-
-static int _spell_power_bars(spell_type spell)
-{
-    return power_to_barcount(_spell_power(spell));
+    const int pow = evoked ? wand_power()
+                           : calc_spell_power(spell, true, false, false);
+    return min(pow, cap);
 }
 
 #ifdef WIZARD
@@ -2486,9 +2564,9 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 }
 #endif
 
-static dice_def _spell_damage(spell_type spell)
+static dice_def _spell_damage(spell_type spell, bool evoked)
 {
-    const int power = _spell_power(spell);
+    const int power = _spell_power(spell, evoked);
     if (power < 0)
         return dice_def(0,0);
     switch (spell)
@@ -2507,6 +2585,10 @@ static dice_def _spell_damage(spell_type spell)
             return shatter_damage(power);
         case SPELL_BATTLESPHERE:
             return battlesphere_damage(power);
+        case SPELL_FROZEN_RAMPARTS:
+            return ramparts_damage(power, false);
+        case SPELL_LRD:
+            return base_fragmentation_damage(power);
         default:
             break;
     }
@@ -2516,13 +2598,13 @@ static dice_def _spell_damage(spell_type spell)
     return zap_damage(zap, power, false, false);
 }
 
-string spell_damage_string(spell_type spell)
+string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
         case SPELL_VAMPIRIC_DRAINING:
         {
-            const int power = _spell_power(spell);
+            const int power = _spell_power(spell, evoked);
             return make_stringf("2d5+1d%d", power / 7);
         }
         case SPELL_ABSOLUTE_ZERO:
@@ -2530,7 +2612,7 @@ string spell_damage_string(spell_type spell)
         default:
             break;
     }
-    const dice_def dam = _spell_damage(spell);
+    const dice_def dam = _spell_damage(spell, evoked);
     if (dam.num == 0 || dam.size == 0)
         return "";
     string mult = "";
@@ -2548,7 +2630,10 @@ string spell_damage_string(spell_type spell)
         default:
             break;
     }
-    return make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+    if (spell == SPELL_LRD || spell == SPELL_SHATTER)
+        return dam_str + "*"; // many special cases of more/less damage
+    return dam_str;
 }
 
 int spell_acc(spell_type spell)
@@ -2558,13 +2643,22 @@ int spell_acc(spell_type spell)
         return -1;
     if (zap_explodes(zap) || zap_is_enchantment(zap))
         return -1;
-    const int power = _spell_power(spell);
+    const int power = _spell_power(spell, false);
     if (power < 0)
         return -1;
     const int acc = zap_to_hit(zap, power, false);
     if (acc == AUTOMATIC_HIT)
         return -1;
     return acc;
+}
+
+int spell_power_percent(spell_type spell)
+{
+    const int pow = calc_spell_power(spell, true);
+    const int max_pow = spell_power_cap(spell);
+    if (max_pow == 0)
+        return -1; // should never happen for player spells
+    return pow * 100 / max_pow;
 }
 
 string spell_power_string(spell_type spell)
@@ -2574,13 +2668,11 @@ string spell_power_string(spell_type spell)
         return _wizard_spell_power_numeric_string(spell);
 #endif
 
-    const int numbars = _spell_power_bars(spell);
-    const int capbars = power_to_barcount(spell_power_cap(spell));
-    ASSERT(numbars <= capbars);
-    if (numbars < 0)
+    const int percent = spell_power_percent(spell);
+    if (percent < 0)
         return "N/A";
     else
-        return string(numbars, '#') + string(capbars - numbars, '.');
+        return make_stringf("%d%%", percent);
 }
 
 int calc_spell_range(spell_type spell, int power, bool allow_bonus)

@@ -146,6 +146,8 @@ static int _translate_keysym(SDL_Keysym &keysym)
         return 0;
 #endif
 
+    // XX: this comment isn't very accurate, for example many SDL keycodes are
+    //     |d with 1<<30, and the alt stuff here is just a mess.
     // This is arbitrary, but here's the current mappings.
     // 0-256: ASCII, Crawl arrow keys
     // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers

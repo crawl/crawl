@@ -1258,12 +1258,6 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-// How many auts does the clock roll back every time the player
-// enters a new floor?
-static const int ZOT_CLOCK_PER_FLOOR = 6000 * BASELINE_DELAY;
-// After how many auts without visiting new floors does the player die instantly?
-static const int MAX_ZOT_CLOCK = 27000 * BASELINE_DELAY;
-
 #if TAG_MAJOR_VERSION == 34
 static int _old_zot_clock(const string& branch_name) {
     // The old clock was measured in turns (deca-auts), not aut.
@@ -1314,15 +1308,18 @@ bool zot_clock_active()
     return _zot_clock_active_in(you.where_are_you);
 }
 
-static int _turns_until_zot_for(branch_type br)
+int turns_until_zot_in(branch_type br)
 {
-    return (MAX_ZOT_CLOCK - _zot_clock_for(br)) / BASELINE_DELAY;
+    const int aut = (MAX_ZOT_CLOCK - _zot_clock_for(br));
+    if (have_passive(passive_t::slow_zot))
+        return aut * 3 / (2 * BASELINE_DELAY);
+    return aut / BASELINE_DELAY;
 }
 
 // How many turns (deca-auts) does the player have until Zot finds them?
 int turns_until_zot()
 {
-    return _turns_until_zot_for(you.where_are_you);
+    return turns_until_zot_in(you.where_are_you);
 }
 
 // A scale from 0 to 4 of how much danger the player is in of
@@ -1332,7 +1329,7 @@ static int _bezotting_level_in(branch_type br)
     if (!_zot_clock_active_in(br))
         return 0;
 
-    const int remaining_turns = _turns_until_zot_for(br);
+    const int remaining_turns = turns_until_zot_in(br);
     if (remaining_turns <= 0)
         return 4;
     if (remaining_turns < 100)
@@ -1384,10 +1381,20 @@ void decr_zot_clock()
     }
 }
 
+static int _added_zot_time()
+{
+    if (have_passive(passive_t::slow_zot))
+        return div_rand_round(you.time_taken * 2, 3);
+    return you.time_taken;
+}
+
 void incr_zot_clock()
 {
+    if (!zot_clock_active())
+        return;
+
     const int old_lvl = bezotting_level();
-    _zot_clock() += you.time_taken;
+    _zot_clock() += _added_zot_time();
     if (!bezotted())
         return;
 
@@ -1405,15 +1412,24 @@ void incr_zot_clock()
     switch (lvl)
     {
         case 1:
-            mpr("You have lingered too long. Zot senses you. Dive deeper or flee this place before you perish!");
+            mpr("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you perish!");
             break;
         case 2:
-            mpr("Zot draws nearer. Dive deeper or flee this place before you perish!");
+            mpr("Zot draws nearer. Dive deeper or flee this branch before you perish!");
             break;
         case 3:
-            mpr("Zot has nearly found you. Death is approaching. Descend or flee!");
+            mpr("Zot has nearly found you. Death is approaching. Descend or flee this branch!");
             break;
     }
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
+}
+
+void set_turns_until_zot(int turns_left)
+{
+    if (turns_left < 0 || turns_left > MAX_ZOT_CLOCK / BASELINE_DELAY)
+        return;
+
+    int &clock = _zot_clock();
+    clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
 }

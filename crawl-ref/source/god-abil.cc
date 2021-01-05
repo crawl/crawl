@@ -819,7 +819,6 @@ enum class zin_eff
     dumb,
     ignite_chaos,
     saltify,
-    rot,
     holy_word,
 };
 
@@ -955,49 +954,20 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case RECITE_CHAOTIC:
         if (check < 5)
-        {
-            // nastier -- fallthrough if immune
-            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
-                effect = zin_eff::rot;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::smite;
         else if (check < 10)
-        {
-            if (coinflip())
-                effect = zin_eff::silver_corona;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::silver_corona;
         else if (check < 15)
-        {
-            if (coinflip())
-                effect = zin_eff::ignite_chaos;
-            else
-                effect = zin_eff::silver_corona;
-        }
+            effect = zin_eff::ignite_chaos;
         else
             effect = zin_eff::saltify;
         break;
 
     case RECITE_IMPURE:
-        // Many creatures normally resistant to rotting are still affected,
-        // because this is divine punishment. Those with no real flesh are
-        // immune, of course.
         if (check < 5)
-        {
-            if (coinflip() && mon->res_rotting() < ROT_RESIST_FULL)
-                effect = zin_eff::rot;
-            else
-                effect = zin_eff::smite;
-        }
+            effect = zin_eff::smite;
         else if (check < 10)
-        {
-            if (coinflip())
-                effect = zin_eff::smite;
-            else
-                effect = zin_eff::silver_corona;
-        }
+            effect = zin_eff::silver_corona;
         else if (check < 15)
         {
             if (mon->undead_or_demonic() && coinflip())
@@ -1057,7 +1027,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::confuse:
-        if (!mon->check_clarity()
+        if (!mon->clarity()
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1181,34 +1151,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case zin_eff::saltify:
         _zin_saltify(mon);
-        break;
-
-    case zin_eff::rot:
-        // FIXME: no message (other than "You kill X!") is produced if the
-        // rotting kills the monster.
-        if (mon->res_rotting() <= 1
-            && mon->rot(&you, 1 + roll_dice(2, degree), true))
-        {
-            mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY));
-            switch (prayertype)
-            {
-            case RECITE_CHAOTIC:
-                simple_monster_message(*mon,
-                    minor ? "'s chaotic flesh is covered in bleeding sores."
-                          : "'s chaotic flesh erupts into weeping sores!");
-                break;
-            case RECITE_IMPURE:
-                simple_monster_message(*mon,
-                    minor ? "'s impure flesh rots away."
-                          : "'s impure flesh sloughs off!");
-                break;
-
-            default:
-                die("bad recite rot");
-            }
-            affected = true;
-        }
         break;
 
     case zin_eff::holy_word:
@@ -1386,7 +1328,7 @@ void elyvilon_purification()
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
     restore_stat(STAT_ALL, 0, false);
-    unrot_hp(9999);
+    undrain_hp(9999);
     you.redraw_evasion = true;
 }
 
@@ -1455,7 +1397,8 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_INNER_FLAME
         || spell == SPELL_IGNITION
         || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_ABSOLUTE_ZERO)
+        || spell == SPELL_ABSOLUTE_ZERO
+        || spell == SPELL_NOXIOUS_BOG)
     {
         return true;
     }
@@ -2693,16 +2636,6 @@ bool gozag_potion_petition()
 }
 
 /**
- * How many shop types are offered with each use of Call Merchant?
- */
-static int _gozag_max_shops()
-{
-    const int max_non_food_shops = 3;
-
-    return max_non_food_shops;
-}
-
-/**
  * The price to order a merchant from Gozag. Doesn't depend on the shop's
  * type or contents. The maximum possible price is used as the minimum amount
  * of gold you need to use the ability.
@@ -2757,7 +2690,7 @@ bool gozag_setup_call_merchant(bool quiet)
  */
 static bool _gozag_valid_shop_index(int index)
 {
-    return index >= 0 && index < _gozag_max_shops();
+    return index >= 0 && index < GOZAG_MAX_SHOPS;
 }
 
 /**
@@ -2858,12 +2791,12 @@ static int _gozag_choose_shop()
         return -1;
 
     clear_messages();
-    for (int i = 0; i < _gozag_max_shops(); i++)
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
 
     mprf(MSGCH_PROMPT, "Fund which merchant?");
     const int shop_index = toalower(get_ch()) - 'a';
-    if (shop_index < 0 || shop_index > _gozag_max_shops() - 1)
+    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
         return _gozag_choose_shop(); // tail recurse
 
     if (you.gold < _gozag_shop_price(shop_index))
@@ -2962,7 +2895,7 @@ bool gozag_call_merchant()
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
-    for (int i = 0; i < _gozag_max_shops(); i++)
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
             _setup_gozag_shop(i, valid_shops);
 
@@ -2970,7 +2903,7 @@ bool gozag_call_merchant()
     if (shop_index == -1) // hup!
         return false;
 
-    ASSERT(shop_index >= 0 && shop_index < _gozag_max_shops());
+    ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
 
     const int cost = _gozag_shop_price(shop_index);
     ASSERT(you.gold >= cost);
@@ -2983,7 +2916,7 @@ bool gozag_call_merchant()
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
-    for (int j = 0; j < _gozag_max_shops(); j++)
+    for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
@@ -4626,31 +4559,31 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->antimagic_susceptible()))
     {
-        mprf(MSGCH_GOD, "You focus your will and drain %s's magic in "
+        mprf(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
     }
     else if (power > 35)
     {
-        mprf(MSGCH_GOD, "You focus your will and paralyse %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        mprf(MSGCH_GOD, "You focus your will and slow %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
     else if (power > 10 && mons_can_be_blinded(mons->type))
     {
-        mprf(MSGCH_GOD, "You focus your will and blind %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        mprf(MSGCH_GOD, "You focus your will and illuminate %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
@@ -4779,7 +4712,7 @@ bool ru_power_leap()
             mpr("You can't leap into the sea of lava!");
             continue;
         }
-        else if (!check_moveto(beam.target, "leap"))
+        else if (!check_moveto(beam.target, "leap", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5174,7 +5107,7 @@ bool uskayaw_line_pass()
             mpr("You can't walk through walls!");
             continue;
         }
-        else if (!check_moveto(beam.target, "line pass"))
+        else if (!check_moveto(beam.target, "line pass", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5255,7 +5188,7 @@ spret uskayaw_grand_finale(bool fail)
             continue;
         }
 
-        if (!check_moveto(beam.target, "move"))
+        if (!check_moveto(beam.target, "move", false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5516,7 +5449,7 @@ spret hepliaklqana_transference(bool fail)
     }
 
     const coord_def destination = ancestor->pos();
-    if (victim == &you && !check_moveto(destination, "transfer"))
+    if (victim == &you && !check_moveto(destination, "transfer", false))
         return spret::abort;
 
     const bool uninhabitable = victim && !victim->is_habitable(destination);
@@ -5790,9 +5723,6 @@ spret wu_jian_wall_jump_ability()
         return spret::abort;
     }
 
-    if (cancel_barbed_move())
-        return spret::abort;
-
     if (you.digging)
     {
         you.digging = false;
@@ -5873,7 +5803,7 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_repeat();
 
     apply_barbs_damage();
-    remove_ice_armour_movement();
+    remove_ice_movement();
     return spret::success;
 }
 

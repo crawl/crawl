@@ -185,6 +185,17 @@ LUAFN(l_spells_fail_severity)
     PLUARET(number, fail_severity(spell));
 }
 
+/*** The current spellpower (as an integer percentage 0-100).
+ * @tparam string name
+ * @treturn int
+ * @function power_perc
+ */
+LUAFN(l_spells_power_perc)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    PLUARET(number, spell_power_percent(spell));
+}
+
 /*** The current spellpower (in bars).
  * @tparam string name
  * @treturn int
@@ -348,6 +359,7 @@ static const struct luaL_reg spells_clib[] =
     { "fail_severity" , l_spells_fail_severity },
     { "power"         , l_spells_power },
     { "max_power"     , l_spells_max_power },
+    { "power_perc"    , l_spells_power_perc },
     { "dir_or_target" , l_spells_dir_or_target },
     { "target"        , l_spells_target },
     { "dir"           , l_spells_dir },

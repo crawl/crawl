@@ -181,7 +181,7 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'necromancy', 'transmutations', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
     'evocations')
-UNDEAD_TYPES = ('US_ALIVE', 'US_HUNGRY_DEAD', 'US_UNDEAD', 'US_SEMI_UNDEAD')
+UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
     'SIZE_BIG', 'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')

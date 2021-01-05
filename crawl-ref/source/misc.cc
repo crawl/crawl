@@ -97,7 +97,7 @@ void swap_with_monster(monster* mon_to_swap)
                 mpr("You become entangled in the net!");
             else
                 mpr("You get stuck in the web!");
-            you.redraw_quiver = true; // Account for being in a net.
+            quiver::set_needs_redraw();
             you.redraw_evasion = true;
         }
 

@@ -1201,7 +1201,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     if (!prevent && temp && spell_no_hostile_in_range(spell))
-        return "you can't see any targets that would be affected.";
+        return "you can't see any hostile targets that would be affected.";
 
     // other Ru spells not affected by the school check; handle these separately
     // since they may have other constraints
@@ -1263,11 +1263,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_HYDRA_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
-        if (you.undead_state(temp) == US_UNDEAD
-            || you.undead_state(temp) == US_HUNGRY_DEAD)
-        {
+        if (you.undead_state(temp) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
-        }
         if (temp && you.is_lifeless_undead())
             return "your current blood level is not sufficient.";
         break;
@@ -1415,7 +1412,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_WEREBLOOD:
         if (you.undead_state(temp) == US_UNDEAD
-            || you.undead_state(temp) == US_HUNGRY_DEAD
             || temp && you.is_lifeless_undead())
         {
             return "you lack blood to transform.";
@@ -1425,6 +1421,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SANDBLAST:
         if (temp && sandblast_find_ammo().first == 0)
             return "you don't have any stones to cast with.";
+        break;
+
+    case SPELL_NOXIOUS_BOG:
+        if (temp && you.duration[DUR_NOXIOUS_BOG])
+            return "you cannot sustain more bogs right now.";
         break;
 
     default:
@@ -1492,6 +1493,7 @@ bool spell_no_hostile_in_range(spell_type spell)
                     // now that it doesn't destroy walls
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_NOXIOUS_BOG:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:

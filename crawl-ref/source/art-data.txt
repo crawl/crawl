@@ -143,7 +143,7 @@
 # FIRE:     Fire resistance/vulnerability.
 # INT:      Intelligence modifier.
 # LIFE:     Negative energy resistance/vulnerability.
-# MAGIC:    Magic resistance/vulnerability.
+# WILL:     Willpower increase/decrease.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
 # REGEN:    Health regeneration, in units of HP healed every 25 aut
@@ -213,13 +213,12 @@ BRAND:   SPWPN_VORPAL
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
-FB_BRAND: SPWPN_VORPAL
-PLUS:    +0 # Set on wield
+BRAND:   SPWPN_VORPAL
+PLUS:    +5
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   800
-BOOL:    special, no_upgrade
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
@@ -349,7 +348,7 @@ BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
 BOOL:    poison, skip_ego, nogen
-MAGIC:   1
+WILL:    1
 # end TAG_MAJOR_VERSION
 
 # start TAG_MAJOR_VERSION == 34
@@ -388,7 +387,7 @@ TILE_EQ: chilly_death
 BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
-MAGIC:   1
+WILL:    1
 BOOL:    poison, skip_ego, nogen
 # end TAG_MAJOR_VERSION
 
@@ -400,7 +399,7 @@ TILE:     urand_morg
 TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
 INT:      5
-MAGIC:    1
+WILL:     1
 
 NAME:    scythe "Finisher"
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -451,7 +450,7 @@ TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
-BOOL:     seeinv, berserk
+INSCRIP:  spectral,
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
@@ -485,7 +484,7 @@ COLOUR:  BLUE
 TILE:    urand_doom_knight
 TILE_EQ: doom_knight
 BRAND:   SPWPN_PAIN
-MAGIC:   1
+WILL:    1
 BOOL:    nospell, nogen
 # end TAG_MAJOR_VERSION
 
@@ -526,7 +525,7 @@ TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
 BOOL:     elec, poison, no_upgrade
-MAGIC:    1
+WILL:     1
 
 NAME:    mithril axe "Arga"
 OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
@@ -535,7 +534,7 @@ COLOUR:  WHITE
 TILE:    urand_arga
 TILE_EQ: arga
 BRAND:   SPWPN_SPEED
-MAGIC:   1
+WILL:    1
 
 NAME:     Elemental Staff
 OBJ:      OBJ_WEAPONS/WPN_STAFF
@@ -547,7 +546,7 @@ TILE:     urand_elemental
 TILE_EQ:  elemental_staff
 FIRE:     2
 COLD:     2
-MAGIC:    2
+WILL:     2
 AC:       5
 BOOL:     elec
 
@@ -754,7 +753,7 @@ TILE_EQ:  bear
 # TODO: why isn't this brand working on the fallback?
 BRAND:    SPARM_SPIRIT_SHIELD
 BOOL:     berserk
-MAGIC:    2
+WILL:     2
 LIFE:     1
 
 NAME:     robe of Misfortune
@@ -843,7 +842,7 @@ TILE:    urand_resistance
 TILE_EQ: kite_shield_of_resistance
 FIRE:    2
 COLD:    2
-MAGIC:   2
+WILL:    2
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -853,7 +852,7 @@ TILE:    urand_folly
 TILE_EQ: robe_red2
 BRAND:   SPARM_ARCHMAGI
 INT:     5
-MAGIC:   -2
+WILL:    -2
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
@@ -862,7 +861,7 @@ PLUS:    +15
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
-MAGIC:   1
+WILL:    1
 BOOL:    nospell, notelep, elec, rCorr
 
 ENUM:    DRAGONMASK
@@ -871,7 +870,7 @@ OBJ:     OBJ_ARMOUR/ARM_HAT
 COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
-MAGIC:   1
+WILL:    1
 SLAY:    3
 BOOL:    seeinv
 
@@ -883,7 +882,7 @@ INSCRIP:  Dark
 COLOUR:   ETC_DARK
 TILE:     urand_night
 TILE_EQ:  robe_of_night
-MAGIC:    1
+WILL:     1
 BOOL:     seeinv
 VALUE:    600
 
@@ -893,7 +892,7 @@ PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
 TILE_EQ: dragonarm_gold
-MAGIC:   1
+WILL:    1
 
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT
@@ -903,7 +902,7 @@ TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
-MAGIC:   1
+WILL:    1
 LIFE:    1
 BOOL:    elec, poison, rMut, rCorr
 
@@ -925,9 +924,8 @@ COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
-COLD:     1
 STEALTH:  -2
-BOOL:     elec
+INSCRIP:  *Dazzle
 
 NAME:     ratskin cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -950,7 +948,7 @@ COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  kite_shield_gong
 EV:       -5
-MAGIC:    1
+WILL:     1
 LIFE:     1
 BOOL:     elec
 
@@ -985,7 +983,7 @@ OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds
 LIFE:    1
-MAGIC:   3
+WILL:    3
 BOOL:    clarity
 
 NAME:    necklace of Bloodlust
@@ -993,29 +991,29 @@ OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
-MAGIC:   2
+WILL:    2
 ANGRY:   5
 SLAY:    6
 BOOL:    curse, berserk
 
-NAME:    ring of Phasing
+NAME:    ring of the Hare
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_phasing
+TILE:    urand_hare
 
-NAME:    ring of Robustness
+NAME:    ring of the Tortoise
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
 PLUS:    +8
 COLOUR:  ETC_GOLD
-TILE:    urand_robustness
+TILE:    urand_tortoise
 
 NAME:    ring of the Mage
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY
 COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
 INT:     3
-MAGIC:   2
+WILL:    2
 
 NAME:     brooch of Shielding
 OBJ:      OBJ_JEWELLERY/AMU_GUARDIAN_SPIRIT
@@ -1042,7 +1040,7 @@ TILE_EQ:  wizard_bluegreen
 BRAND:    SPARM_PONDEROUSNESS
 INT:      +5
 MP:       +10
-MAGIC:    1
+WILL:     1
 
 ENUM:     DEMON_AXE
 NAME:     obsidian axe
@@ -1221,7 +1219,7 @@ PLUS:     +5
 COLOUR:   ETC_ENCHANT
 TILE:     urand_spellbinder
 TILE_EQ:  spellbinder
-MAGIC:    1
+WILL:     1
 
 NAME:    lajatang of Order
 INSCRIP: silver,
@@ -1409,7 +1407,7 @@ TILE:     urand_cigotuvi
 TILE_EQ:  bplate_green
 # XXX TODO: tiles
 LIFE:     1
-INSCRIP:  rRot
+INSCRIP:  rMiasma
 BOOL:     drain, evil, special, no_upgrade
 
 # This entry must always be last.

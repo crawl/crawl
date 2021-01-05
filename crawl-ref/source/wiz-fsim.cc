@@ -253,7 +253,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
                 you.quiver_action.set_from_slot(i);
-                you.redraw_quiver = true;
+                quiver::set_needs_redraw();
                 break;
             }
         }

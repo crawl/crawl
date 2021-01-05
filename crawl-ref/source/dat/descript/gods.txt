@@ -39,7 +39,7 @@ time and its needless disturbances.
 Dithmenos
 
 Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
-a strange and otherwordly affinity to the shadows of their environment. This
+a strange and otherworldly affinity to the shadows of their environment. This
 god despises the physical world and constantly seeks to encroach on it.
 Dithmenos therefore rewards those who wield death and destruction while
 gradually consuming them with darkness.
@@ -656,7 +656,7 @@ also afflict those stricken by Yredremnul's wrath.
 Zin wrath
 
 Those under Zin's wrath will find their beneficial mutations stripped away,
-their bellies emptied, their enemies alerted, and their senses confounded by the
+their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra

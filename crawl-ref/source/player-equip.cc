@@ -1457,7 +1457,7 @@ bool unwield_item(bool showMsgs)
     unequip_item(EQ_WEAPON, showMsgs);
 
     you.wield_change     = true;
-    you.redraw_quiver    = true;
+    quiver::set_needs_redraw();
 
     return true;
 }

@@ -1527,7 +1527,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            mons->drain_exp(pbolt.agent());
+            mons->drain(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
@@ -1535,7 +1535,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (mons->res_rotting())
+        if (mons->res_miasma())
         {
             if (doFlavouredEffects)
                 simple_monster_message(*mons, " completely resists.");
@@ -1927,14 +1927,14 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     return new_pois.duration > old_pois.duration;
 }
 
-// Actually poisons, rots, and/or slows a monster with miasma (with
+// Actually poisons, drains, and/or slows a monster with miasma (with
 // message).
 bool miasma_monster(monster* mons, const actor* who)
 {
     if (!mons->alive())
         return false;
 
-    if (mons->res_rotting())
+    if (mons->res_miasma())
         return false;
 
     bool success = poison_monster(mons, who);
@@ -1944,13 +1944,6 @@ bool miasma_monster(monster* mons, const actor* who)
         && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
     {
         did_god_conduct(DID_EVIL, 5 + random2(3));
-    }
-
-    if (mons->max_hit_points > 4 && coinflip())
-    {
-        mons->max_hit_points--;
-        mons->hit_points = min(mons->max_hit_points, mons->hit_points);
-        success = true;
     }
 
     if (one_chance_in(3))
@@ -2411,7 +2404,7 @@ void bolt::affect_endpoint()
         dprf(DIAG_BEAM, "Creating pool at %d,%d with %d tiles of water for %d auts.", pos().x, pos().y, num, dur);
         if (is_player)
         {
-            for (const coord_def coord: splash_coords)
+            for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
                 if (mons && !mons->res_water_drowning())
@@ -2438,6 +2431,7 @@ void bolt::affect_endpoint()
         temp_change_terrain(pos(), DNGN_TOXIC_BOG, dur,
                             TERRAIN_CHANGE_FLOOD,
                             agent() ? agent()->as_monster() : nullptr);
+        break;
     }
     case SPELL_BLINKBOLT:
     {
@@ -2842,7 +2836,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_cold() >= 3;
 
     case BEAM_MIASMA:
-        return mon->res_rotting();
+        return mon->res_miasma();
 
     case BEAM_NEG:
         return mon->res_negative_energy() == 3;
@@ -2893,7 +2887,7 @@ bool bolt::harmless_to_player() const
         return you.res_holy_energy() >= 3;
 
     case BEAM_MIASMA:
-        return you.res_rotting();
+        return you.res_miasma();
 
     case BEAM_NEG:
         return player_prot_life(false) >= 3;
@@ -4984,11 +4978,8 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // All kinds of beams go past orbs of destruction and friendly
     // battlespheres.
-    if (mons_is_projectile(*mon)
-        || (mons_is_avatar(mon->type) && mons_aligned(agent(), mon)))
-    {
+    if (always_shoot_through_monster(agent(), *mon))
         return true;
-    }
 
     // Missiles go past bushes and briar patches, unless aimed directly at them
     if (bush_immune(*mon))
@@ -5423,7 +5414,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_SPORE:
     case BEAM_CONFUSION:
     case BEAM_IRRESISTIBLE_CONFUSION:
-        if (mon->check_clarity())
+        if (mon->clarity())
         {
             if (you.can_see(*mon))
                 obvious_effect = true;
@@ -5965,7 +5956,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         for (const auto &line : sweep)
         {
             bool pass_visible = false;
-            for (const coord_def delta : line)
+            for (const coord_def &delta : line)
             {
                 if (delta.origin() && hole_in_the_middle)
                     continue;
@@ -5986,7 +5977,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     int cells_seen = 0;
     for (const auto &line : sweep)
     {
-        for (const coord_def delta : line)
+        for (const coord_def &delta : line)
         {
             if (delta.origin() && hole_in_the_middle)
                 continue;
@@ -6536,6 +6527,16 @@ int _ench_pow_to_dur(int pow)
 {
     // ~15 turns at 25 pow, ~21 turns at 50 pow, ~27 turns at 100 pow
     return stepdown(pow * BASELINE_DELAY, 70);
+}
+
+// Do all beams skip past a particular monster?
+// see also shoot_through_monsters
+// can these be consolidated? Some checks there don't need a bolt arg
+bool always_shoot_through_monster(const actor *originator, const monster &victim)
+{
+    return mons_is_projectile(victim)
+        || (mons_is_avatar(victim.type)
+            && originator && mons_aligned(originator, &victim));
 }
 
 // Can a particular beam go through a particular monster?

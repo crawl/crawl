@@ -45,7 +45,7 @@ my %field_type = (
     INV      => "bool",
     FLY      => "bool",
     LIFE     => "num",
-    MAGIC    => "num",
+    WILL     => "num",
     HP       => "num",
     MP       => "num",
     MUTATE   => "bool",
@@ -526,7 +526,7 @@ my @art_order = (
     # Remove five copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
-    "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
+    "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "CURSE", "STEALTH", "MP", "\n",
@@ -538,7 +538,7 @@ my @art_order = (
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
 #     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
-#     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
+#     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
 #     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
 #     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "\n",
 #     "MUTATE", "SLAY", "CURSE", "STEALTH", "MP", "\n",

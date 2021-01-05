@@ -243,11 +243,14 @@ function c_choose_spell()
     return ret
 end
 
---- Message internal hook
+--- Receive a message from the message window.
 --
--- Internal function for exposing messages to clua
+-- This hook can be re-defined to receive messages from the message window.
+-- It is called for each message after player configured mute settings are
+-- applied to the message.
 --
--- @local
+-- @tparam string The message text
+-- @tparam string The message channel name
 function c_message(text, channel) end
 
 -- The remainder of these hooks are called elsewhere in the codebase from

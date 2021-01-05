@@ -792,7 +792,7 @@ static const vector<chaos_attack_type> chaos_types = {
           return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
     { AF_CHAOTIC,   SPWPN_CHAOS,         10,
       nullptr },
-    { AF_DRAIN_XP,  SPWPN_DRAINING,      5,
+    { AF_DRAIN,  SPWPN_DRAINING,      5,
       [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
@@ -802,8 +802,7 @@ static const vector<chaos_attack_type> chaos_types = {
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
       [](const actor &d) { return d.antimagic_susceptible(); } },
     { AF_CONFUSE,   SPWPN_CONFUSE,       2,
-      [](const actor &d) {
-          return !(d.holiness() & (MH_NONLIVING | MH_PLANT)); } },
+      [](const actor &d) { return !d.clarity(); } },
     { AF_DISTORT,   SPWPN_DISTORTION,    2,
       nullptr },
 };
@@ -868,7 +867,7 @@ void attack::drain_defender()
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
                                           (1 + random2(damage_done)) / 2);
 
-    if (defender->drain_exp(attacker, true, 20 + min(35, damage_done)))
+    if (defender->drain(attacker, true, 1 + damage_done))
     {
         if (defender->is_player())
             obvious_effect = true;
@@ -1578,7 +1577,7 @@ bool attack::apply_damage_brand(const char *what)
         }
         else if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()),
                                                      100)
-                 || defender->as_monster()->check_clarity())
+                 || defender->as_monster()->clarity())
         {
             beam_temp.apply_enchantment_to_monster(defender->as_monster());
             obvious_effect = beam_temp.obvious_effect;
@@ -1636,6 +1635,15 @@ bool attack::apply_damage_brand(const char *what)
     // was always a bit of a hack.
     if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
         apply_poison_damage_brand();
+
+    // Use the Nessos hack to give the player glaive of the guard spectral too
+    if (attacker->is_player() && weapon
+        && is_unrandom_artefact(*weapon, UNRAND_GUARD))
+    {
+        const monster* mon = defender->as_monster();
+        if (mon && !mons_is_firewood(*mon))
+            handle_spectral_brand();
+    }
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);

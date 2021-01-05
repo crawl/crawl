@@ -1087,7 +1087,7 @@ bool skill_trained(int i)
  */
 bool target_met(skill_type sk, unsigned int target)
 {
-    return you.skill(sk, 10, false, false, false) >= (int) target;
+    return you.skill(sk, 10, false, false) >= (int) target;
 }
 
 bool target_met(skill_type sk)
@@ -1109,8 +1109,7 @@ bool check_training_target(skill_type sk)
 {
     if (you.training_targets[sk] && target_met(sk))
     {
-        bool base = (you.skill(sk, 10, false, false, false) !=
-                        you.skill(sk, 10, false, true, true));
+        bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
         mprf("%sraining target %d.%d for %s reached!",
             base ? "Base t" : "T",
             you.training_targets[sk] / 10,
@@ -1290,7 +1289,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         skill_inc = spending_limit / cost;
 
         int training_target = you.training_targets[exsk];
-        if (training_target > you.skill(exsk, 10, false, false, false))
+        if (training_target > you.skill(exsk, 10, false, false))
         {
             int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
             if (target_skill_point_diff > 0)

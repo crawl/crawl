@@ -18,6 +18,7 @@
 #include "env.h"
 #include "god-abil.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-abil.h"
 #include "mon-act.h"
@@ -460,8 +461,11 @@ void shock_serpent_discharge_fineff::fire()
         return;
 
     const int max_range = 3; // v0v
-    if (grid_distance(oppressor.pos(), position) > max_range)
+    if (grid_distance(oppressor.pos(), position) > max_range
+        || !cell_see_cell(position, oppressor.pos(), LOS_SOLID_SEE))
+    {
         return;
+    }
 
     const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))

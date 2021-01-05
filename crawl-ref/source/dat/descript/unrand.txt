@@ -3,7 +3,7 @@ Singing Sword
 
 An enchanted blade which loves nothing more than to sing to its owner, whether
 they want it to or not. The sword may sing so intensely that it radiates
-damaging sonic waves as you strike, especially in combat involving dangerous or
+damaging sonic waves as it strikes, especially in combat involving dangerous or
 numerous foes.
 %%%%
 Sulking Sword
@@ -37,7 +37,8 @@ purple skin and a few wrinkles.
 sword of Power
 
 A mighty sword which rewards the powerful with power and the meek with
-weakness.
+weakness. Particularly hale users will find that power directed into their foes
+in the form of devastating, though inaccurate, energy bolts.
 %%%%
 staff of Olgreb
 
@@ -88,8 +89,8 @@ without draining the wielder's vitality in the process.
 sceptre of Asmodeus
 
 A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
-Evoking it can summon fiery demons from their infernal home to do your bidding,
-although they will not remain enslaved for long.
+Evoking it can summon fiery demons from their infernal home to do the wielder's
+bidding, although they will not remain enslaved for long.
 %%%%
 faerie dragon scales
 
@@ -423,7 +424,8 @@ any weapon, or to retaliate against most attacks when using a long blade.
 %%%%
 cloak of Starlight
 
-A phosphorescent cloak, woven of pure light beams.
+A phosphorescent cloak, woven of pure light beams. The ripple of its folds
+as the wearer leaps and swerves in combat can blind melee attackers.
 %%%%
 ratskin cloak
 
@@ -464,15 +466,15 @@ necklace of Bloodlust
 A necklace made of bloodstained human and animal teeth, and something that
 appears to be a piece of spine.
 %%%%
-ring of Phasing
+ring of the Hare
 
-An unadorned jade ring. Its wearer may momentarily phase out of reality in order
-to evade attacks.
+An unadorned malachite ring, half of an ancient pair. Its wearer is
+exceptionally difficult to catch.
 %%%%
-ring of Robustness
+ring of the Tortoise
 
-A plain steel ring that causes its wearer to become substantially more
-resilient.
+A rough-hewn aquamarine ring, half of an ancient pair. Its wearer is
+exceptionally difficult to harm.
 %%%%
 ring of the Mage
 

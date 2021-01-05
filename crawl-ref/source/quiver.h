@@ -36,9 +36,12 @@ namespace quiver
 
     struct action : public enable_shared_from_this<action>
     {
-        action() : target(), error() { };
+        action()
+            : target(), error(), default_fire_context(nullptr)
+        { };
         virtual ~action() = default;
         void reset();
+        void set_target(const dist &t);
 
         virtual bool operator==(const action &other) const
         {
@@ -70,6 +73,8 @@ namespace quiver
         virtual bool allow_autofight() const { return false; }
         virtual bool uses_mp() const { return false; }
         virtual bool autofight_check() const;
+        virtual item_def *get_launcher() const { return nullptr; }
+        virtual bool affected_by_pproj() const { return false; }
 
         // main quiver color. In some cases used internally by
         // quiver_description, but also used in cases where for whatever reason
@@ -105,6 +110,7 @@ namespace quiver
 
         dist target;
         string error;
+        const action_cycler *default_fire_context;
     };
 
     shared_ptr<action> find_ammo_action();
@@ -116,6 +122,7 @@ namespace quiver
     shared_ptr<action> ability_to_action(ability_type abil);
     shared_ptr<action> get_primary_action();
     shared_ptr<action> get_secondary_action();
+    void set_needs_redraw();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
@@ -131,9 +138,9 @@ namespace quiver
         bool item_is_quivered(const item_def &item);
         bool item_is_quivered(int item_slot) const;
 
-        shared_ptr<action> next(int dir = 0, bool allow_disabled=true);
+        shared_ptr<action> next(int dir = 0, bool allow_disabled=true) const;
 
-        virtual bool set(const shared_ptr<action> n);
+        virtual bool set(const shared_ptr<action> n, bool _autoswitched=false);
         bool set(const action_cycler &other);
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
@@ -144,7 +151,11 @@ namespace quiver
 
         void target();
         shared_ptr<action> do_target();
-        string fire_key_hints();
+        string fire_key_hints() const;
+
+        bool autoswitched;
+    protected:
+        action_cycler(shared_ptr<action> init);
 
     private:
         shared_ptr<action> current;
@@ -155,10 +166,10 @@ namespace quiver
     {
         // some things about this class are not implemented to be launcher
         // specific because they aren't used, e.g. cycling
-        launcher_action_cycler() : action_cycler() { }
+        launcher_action_cycler();
 
         using action_cycler::set; // unhide the other signature
-        bool set(const shared_ptr<action> n) override;
+        bool set(const shared_ptr<action> n, bool _autoswitched=false) override;
         bool is_empty() const override;
         void set_needs_redraw() override;
     };

@@ -32,6 +32,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "player.h"
 #include "player-reacts.h"
 #include "prompt.h"
@@ -41,11 +42,11 @@
 #include "state.h"
 #include "stringutil.h"
 #include "spl-damage.h"
-#include "spl-selfench.h" // noxious_bog_cell
 #include "target-compass.h"
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
+#include "travel-open-doors-type.h"
 #include "transform.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
@@ -143,7 +144,7 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-bool cancel_barbed_move(bool rampaging)
+static bool _cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
@@ -180,7 +181,40 @@ void apply_barbs_damage(bool rampaging)
     }
 }
 
-void remove_ice_armour_movement()
+static bool _cancel_ice_move()
+{
+    vector<string> effects;
+    if (i_feel_safe(false, true, true))
+        return false;
+
+    if (you.duration[DUR_ICY_ARMOUR])
+        effects.push_back("icy armour");
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        effects.push_back("frozen ramparts");
+
+    if (!effects.empty())
+    {
+        string prompt = "Your "
+                        + comma_separated_line(effects.begin(), effects.end())
+                        + " will break if you move. Continue?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool cancel_harmful_move(bool rampaging)
+{
+    return _cancel_barbed_move(rampaging) || _cancel_ice_move();
+}
+
+void remove_ice_movement()
 {
     if (you.duration[DUR_ICY_ARMOUR])
     {
@@ -188,6 +222,13 @@ void remove_ice_armour_movement()
                              "you move.");
         you.duration[DUR_ICY_ARMOUR] = 0;
         you.redraw_armour_class = true;
+    }
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+    {
+        you.duration[DUR_FROZEN_RAMPARTS] = 0;
+        end_frozen_ramparts();
+        mpr("The frozen ramparts melt away as you move.");
     }
 }
 
@@ -206,17 +247,6 @@ static void _clear_constriction_data()
     you.stop_directly_constricting_all(true);
     if (you.is_directly_constricted())
         you.stop_being_constricted();
-}
-
-void apply_noxious_bog(const coord_def old_pos)
-{
-    if (you.duration[DUR_NOXIOUS_BOG])
-    {
-        if (cell_is_solid(old_pos))
-            ASSERT(you.wizmode_teleported_into_rock);
-        else
-            noxious_bog_cell(old_pos);
-    }
 }
 
 bool apply_cloud_trail(const coord_def old_pos)
@@ -652,8 +682,11 @@ static spret _rampage_forward(coord_def move)
         return spret::fail;
     }
 
-    // Abort if the player answers no to a dangerous terrain/trap/cloud/
-    // exclusion prompt and weapon check prompts;
+    // Abort if the player answers no to
+    // * barbs damaging move prompt
+    // * breaking ice spells prompt
+    // * dangerous terrain/trap/cloud/exclusion prompt
+    // * weapon check prompts;
     // messaging for this is handled by check_moveto().
     if (!check_moveto(beam.target, "rampage")
         || attacking && !wielded_weapon_check(you.weapon(), "rampage")
@@ -663,10 +696,6 @@ static spret _rampage_forward(coord_def move)
         you.turn_is_over = false;
         return spret::abort;
     }
-
-    // Abort if the player answers no to a DUR_BARBS damaging move prompt.
-    if (cancel_barbed_move(true))
-        return spret::abort;
 
     // We've passed the validity checks, go ahead and rampage.
 
@@ -690,8 +719,7 @@ static spret _rampage_forward(coord_def move)
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_barbs_damage(true);
-    remove_ice_armour_movement();
-    apply_noxious_bog(old_pos);
+    remove_ice_movement();
     apply_cloud_trail(old_pos);
 
     // If there is somehow an active run delay here, update the travel trail.
@@ -781,7 +809,7 @@ void move_player_action(coord_def move)
         if (cancel_confused_move(false))
             return;
 
-        if (cancel_barbed_move())
+        if (cancel_harmful_move())
             return;
 
         if (!one_chance_in(3))
@@ -1008,19 +1036,15 @@ void move_player_action(coord_def move)
             return;
         }
 
-        // Prompt already handled by rampage
+        // If confused, we've already been prompted (in case of stumbling into
+        // a monster and attacking instead).
+        // If rampaging we've already been prompted.
         if (!you.confused() && !rampaged && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
             return;
         }
-
-        // If confused, we've already been prompted (in case of stumbling into
-        // a monster and attacking instead).
-        // If rampaging we've already been prompted.
-        if (!you.confused() && !rampaged && cancel_barbed_move())
-            return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
@@ -1052,8 +1076,7 @@ void move_player_action(coord_def move)
             _clear_constriction_data();
             move_player_to_grid(targ, true);
             apply_barbs_damage();
-            remove_ice_armour_movement();
-            apply_noxious_bog(old_pos);
+            remove_ice_movement();
             apply_cloud_trail(old_pos);
         }
 
@@ -1074,9 +1097,9 @@ void move_player_action(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors || !you.running)
-        && !attacking
-        && feat_is_closed_door(env.grid(targ)))
+    if ((Options.travel_open_doors == travel_open_doors_type::open
+             || !you.running)
+        && !attacking && feat_is_closed_door(env.grid(targ)))
     {
         open_door_action(move);
         move.reset();

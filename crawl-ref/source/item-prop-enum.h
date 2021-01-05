@@ -755,16 +755,14 @@ enum wand_type
     NUM_WANDS
 };
 
+#if TAG_MAJOR_VERSION == 34
 enum food_type
 {
-#if TAG_MAJOR_VERSION == 34
     FOOD_RATION,
     FOOD_BREAD_RATION,
     FOOD_PEAR,
     FOOD_APPLE,
     FOOD_CHOKO,
-#endif
-#if TAG_MAJOR_VERSION == 34
     FOOD_ROYAL_JELLY,   // was: royal jelly
     FOOD_UNUSED, // was: royal jelly and/or pizza
     FOOD_FRUIT,  // was: snozzcumber
@@ -781,10 +779,8 @@ enum food_type
     FOOD_BEEF_JERKY,
     FOOD_CHEESE,
     FOOD_SAUSAGE,
-#endif
     FOOD_CHUNK,
-#if TAG_MAJOR_VERSION == 34
     FOOD_AMBROSIA,
-#endif
     NUM_FOODS
 };
+#endif

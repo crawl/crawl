@@ -424,7 +424,7 @@ string thing_do_grammar(description_level_type dtype, string desc)
     }
 }
 
-string get_desc_quantity(const int quant, const int total, string whose)
+string get_desc_quantity(const int quant, const int total, const string &whose)
 {
     if (total == quant)
         return uppercase_first(whose);

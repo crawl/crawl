@@ -16,7 +16,7 @@
 #   -> ??????? ice, ice beast, simulacrum, freezing clouds
 #   -> ??????? lava, fire vortex, lava snake, salamander
 #   -> ??????? lava, fire vortex, fire bat, fire elemental
-#   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond obelisk
+#   -> Elf     deep water, ball lightning, water elemental, air elemental, diamond obelisk
 #
 # Most of these vaults come in three sizes/shapes depending on
 #  which characters of w, D and E turn into water.
@@ -101,7 +101,7 @@ function init_aquarium(e)
     e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
-                 w:50 generate_awake insubstantial wisp /
+                 w:50 generate_awake ball lightning /
                  w:5  generate_awake water elemental /
                  w:4  generate_awake air elemental]] )
     -- I tried using [[ ]] here, but Crawl could not find the

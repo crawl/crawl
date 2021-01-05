@@ -721,6 +721,60 @@ dgn.good_aux_armour = "cloak good_item / scarf / helmet good_item " ..
 dgn.randart_aux_armour = "cloak randart / helmet randart / hat randart " ..
     "/ pair of gloves randart / pair of boots randart"
 
+-- Make an item definition that will randomly choose from combinations of the
+-- given tables of weighted item types and optional egos.
+--
+-- @param items     A table with weapon names as keys and weights as values.
+-- @param egos      An optional table with ego names as keys and weights as
+--                  values.
+-- @param args      An optional string of arguments to use on every item entry.
+--                  Should not have leading or trailing whitespace.
+-- @param separator An optional separator to use between the item entries.
+--                  Defaults to '/', which is appropriate for ITEM statements.
+--                  Use '|' if making item statements for use with MONS.
+-- @returns A string containing the item definition.
+function random_item_def(items, egos, args, separator)
+    args = args ~= nil and " " .. args or ""
+    separator = separator ~= nil and separator or '/'
+    local item_def
+    items_list = util.sorted_weight_table(items)
+
+    for i, item_pair in ipairs(items_list) do
+        iname = item_pair[1]
+        iweight = item_pair[2]
+        -- If we have egos, define an item spec with all item+ego
+        -- combinations, each with weight scaled by item rarity and ego
+        -- rarity.
+        if egos ~= nil then
+            egos_list = util.sorted_weight_table(egos)
+            for j, ego_pair in ipairs(egos_list) do
+                ename = ego_pair[1]
+                eweight = ego_pair[2]
+                if (not iname:find("demon") or ename ~= "holy_wrath")
+                   and (not iname:find("quick blade") or ename ~= "speed") then
+                    def = iname .. args .. " ego:" .. ename .. " w:" ..
+                          math.floor(iweight * eweight)
+                    if item_def == nil then
+                         item_def = def
+                    else
+                         item_def = item_def .. " " .. separator .. " " .. def
+                    end
+                end
+            end
+        -- No egos, so define item spec with all item combinations, each with
+        -- weight scaled by item rarity.
+        else
+            def = iname .. args .. " w:" .. iweight
+            if item_def == nil then
+                 item_def = def
+            else
+                 item_def = item_def .. " " .. separator .. " " .. def
+            end
+        end
+    end
+    return item_def
+end
+
 -- Returns true if point1 is inside radius(X, point2).
 function dgn.point_in_radius(point1, point2, radius)
   return dgn.distance(point1.x, point1.y, point2.x, point2.y) <=

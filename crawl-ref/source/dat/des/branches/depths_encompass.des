@@ -33,7 +33,6 @@
         e.mons("glowing shapeshifter")
         e.mons("very ugly thing / ugly thing w:5")
         e.mons("ball lightning")
-        e.mons("insubstantial wisp")
         e.mons("crystal guardian")
         e.kmons("8 = dancing weapon")
         e.kmons("9 = war gargoyle")
@@ -52,7 +51,6 @@
         e.shuffle("ghij")
         e.shuffle("JH")
         e.shuffle("34")
-        e.shuffle("m6")
         e.kitem("p = potion of mutation")
         e.kitem("P = any jewellery good_item")
         e.kitem("Q = potion of mutation")
@@ -67,7 +65,6 @@
         e.subst("u = ..$||")
         e.subst("3 = 3.")
         e.subst("5 = 5 .:4")
-        e.subst("6 = 6.")
         e.subst("g = E:30 3 .:30")
         e.subst("h = a:30 3 .:30")
         e.subst("K = r:20 f e:40 .:70")
@@ -1008,8 +1005,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxbb.................................bbxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxbb......................t............bbxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxbb.....5..666...t.........mmm.5......j.bbxxxxxxxxxxxxxx
-xxxxxxxxxxxxxbb.h..t....666.......5.....mmm....t....j.bbxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbb.....5..mmm...t.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxbb.h..t....mmm.......5.....mmm....t....j.bbxxxxxxxxxxxxx
 xxxxxxxxxxxxbb.h..5......t..5..........5........t..j.j.bbxxxxxxxxxxxx
 xxxxxxxxxxxbbww..h..n............t................n...wwbbxxxxxxxxxxx
 xxxxxxxxxxbbwwwwh...t.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx
@@ -1055,8 +1052,8 @@ xxxxxxxxxxxx.txxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx4.xxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
 xxxxxxxxxx..xxxxbb.................................bbxxxxxxxxxxxxxxxx
 xxxxxxxxx.t.xxxbb......................t............bbxxxxxxxxxxxxxxx
-xxxxxxxx.44xxxbb.....5..666...t.........mmm.5......j.bbxxxxxxxxxxxxxx
-xxxxxxx..4xxxbb.h..t....666.......5.....mmm....t....j.bbxxxxxxxxxxxxx
+xxxxxxxx.44xxxbb.....5..mmm...t.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxx..4xxxbb.h..t....mmm.......5.....mmm....t....j.bbxxxxxxxxxxxxx
 xxxxxx.3.xxxbb.h..5......t..5..........5........t..j.j.bbxxxxxxxxxxxx
 xxxxx.3.xxxbbww..h..n............t................n...wwbbxxxxxxxxxxx
 xxxxx..xxxbbwwwwh...t.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx

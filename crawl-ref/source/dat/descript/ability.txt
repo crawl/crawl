@@ -63,7 +63,7 @@ Transforms the user into a swift-moving vampire bat, increasing evasion but
 substantially weakening melee attacks. The transformation drains the user's
 attributes.
 
-While tranformed, any equipped weapons, armour and rings are melded, and the
+While transformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
 Exsanguinate ability
@@ -109,8 +109,8 @@ action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
-Sends you to a random position one to two floors down, as if you jumped into a
-shaft trap. It takes some time to dig the shaft.
+Sends you to a random position one to three floors down, as if you jumped into
+a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
@@ -140,14 +140,6 @@ Stop Flying ability
 
 Stops flying.
 %%%%
-Evoke Fog ability
-
-Releases a thick cloud of fog to obscure vision.
-%%%%
-Evoke Ratskin ability
-
-Summons up to two dungeon rats to serve their master for a brief time.
-%%%%
 Evoke Thunderclouds ability
 
 Create a mighty thunderclouds around the user.
@@ -171,9 +163,9 @@ is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
-Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your strength, intelligence and
-dexterity. The increases to your attributes are determined by Invocations skill.
+Temporarily provides protection from poison, confusion, petrification, and
+sickness, and increases and sustains your strength, intelligence and dexterity.
+The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -365,8 +357,8 @@ Heals a small amount of health, depending on Invocations skill.
 Purification ability
 
 Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost strength,
-dexterity or intelligence.
+petrification, and sickness, and fully restores any lost strength, dexterity or
+intelligence.
 %%%%
 Heal Other ability
 

@@ -45,7 +45,7 @@ class GameOption
     virtual ~GameOption() {};
 
     virtual void reset() const = 0;
-    virtual string loadFromString(std::string field, rc_line_type) const = 0;
+    virtual string loadFromString(const std::string &field, rc_line_type) const = 0;
 
     const std::set<std::string> &getNames() const { return names; }
     const std::string name() const { return *names.begin(); }
@@ -61,7 +61,7 @@ class BoolGameOption : public GameOption
                    bool _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
     private:
     bool &value;
@@ -76,7 +76,7 @@ public:
         : GameOption(_names), value(val), default_value(_default),
           elemental(_elemental) { }
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
 private:
     unsigned &value;
@@ -91,7 +91,7 @@ public:
                      unsigned _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
 private:
     unsigned &value;
@@ -106,7 +106,7 @@ public:
         : GameOption(_names), value(val), default_value(_default),
           min_value(min_val), max_value(max_val) { }
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
 private:
     int &value;
@@ -120,7 +120,7 @@ public:
                      string _default)
         : GameOption(_names), value(val), default_value(_default) { }
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
 private:
     string &value;
@@ -134,7 +134,7 @@ public:
     TileColGameOption(VColour &val, std::set<std::string> _names,
                       string _default);
     void reset() const override;
-    string loadFromString(std::string field, rc_line_type) const override;
+    string loadFromString(const std::string &field, rc_line_type) const override;
 
 private:
     VColour &value;
@@ -155,10 +155,10 @@ public:
         : GameOption(_names), value(val), ordering_function(ordering_func),
           default_value(parse_colour_thresholds(_default)) { }
     void reset() const override;
-    string loadFromString(string field, rc_line_type ltyp) const override;
+    string loadFromString(const string &field, rc_line_type ltyp) const override;
 
 private:
-    colour_thresholds parse_colour_thresholds(string field,
+    colour_thresholds parse_colour_thresholds(const string &field,
                                               string* error = nullptr) const;
 
 private:
@@ -177,7 +177,7 @@ class ListGameOption : public GameOption
         : GameOption(_names), value(list), default_value(_default) { }
 
     void reset() const override { value = default_value; }
-    string loadFromString(std::string field, rc_line_type ltyp) const override
+    string loadFromString(const std::string &field, rc_line_type ltyp) const override
     {
         if (ltyp == RCFILE_LINE_EQUALS)
             value.clear();
@@ -200,6 +200,42 @@ class ListGameOption : public GameOption
 private:
     vector<T> &value;
     vector<T> default_value;
+};
+
+// A template for an option which can take one of a fixed list of values.
+// Trying to set it to a value which isn't listed in _choices gives an error
+// message, and does not alter _val.
+template<typename T>
+class MultipleChoiceGameOption : public GameOption
+{
+public:
+    MultipleChoiceGameOption(T &_val, std::set<std::string> _names, T _default,
+                             map<string, T> _choices)
+        : GameOption(_names), value(_val), default_value(_default),
+          choices(_choices) { }
+    void reset() const override {value = default_value;}
+    string loadFromString(const std::string &field, rc_line_type) const override
+    {
+        const T *choice = map_find(choices, field);
+        if (choice == 0)
+        {
+            string all_choices = comma_separated_fn(choices.begin(),
+                choices.end(), [] (const pair<string, T> &p) {return p.first;},
+                " or ");
+            return make_stringf("Bad %s value: %s (should be %s)",
+                                name().c_str(), field.c_str(),
+                                all_choices.c_str());
+        }
+        else
+        {
+            value = *choice;
+            return "";
+        }
+    }
+
+private:
+    T &value, default_value;
+    map<string, T> choices;
 };
 
 bool read_bool(const std::string &field, bool def_value);

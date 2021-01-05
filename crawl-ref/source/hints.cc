@@ -1044,7 +1044,6 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
     case HINT_YOU_POISON:
-    case HINT_YOU_ROTTING:
     case HINT_YOU_CURSED:
     case HINT_GLOWING:
     case HINT_CAUGHT_IN_NET:
@@ -1088,9 +1087,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
-#if TAG_MAJOR_VERSION == 34
-    case HINT_MEMORISE_FAILURE:
-#endif
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_ANIMATE_CORPSE_SKELETON:
@@ -1757,21 +1753,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "with <w>%</w>, if you're in combat or lethally poisoned, "
                 "you'll probably want to quaff a potion of curing.";
         cmd.push_back(CMD_REST);
-        break;
-
-    case HINT_YOU_ROTTING:
-        // Hack: Reset hints_just_triggered, to force recursive calling of
-        //       learned_something_new().
-        Hints.hints_just_triggered = false;
-        learned_something_new(HINT_YOU_ENCHANTED);
-        Hints.hints_just_triggered = true;
-
-        text << "Ugh, your flesh has been rotted away! This reduces your"
-                "<w>maximum</w> health (your usual maximum health will be "
-                "indicated by a number in parentheses).\n"
-                "Whenever you drink potions of curing and heal wounds, "
-                "some rot will be cured, but you'll be healed less.";
-        cmd.push_back(CMD_QUAFF);
         break;
 
     case HINT_YOU_CURSED:
@@ -2631,10 +2612,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "to have a look at your skills and manage their training.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
-#if TAG_MAJOR_VERSION == 34
-    case HINT_MEMORISE_FAILURE: // lmao
-        break;
-#endif
     case HINT_FUMBLING_SHALLOW_WATER:
         text << "Fighting in shallow water will sometimes cause you to slip "
                 "and fumble your attack. If possible, try to fight on "

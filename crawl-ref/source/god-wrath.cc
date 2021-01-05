@@ -306,11 +306,8 @@ static bool _zin_retribution()
     // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    int punishment = random2(6);
-
     // If not mutated, do something else instead.
-    if (punishment > 7 && !you.how_mutated())
-        punishment = random2(6);
+    const int punishment = you.how_mutated() ? random2(6) : random2(4);
 
     switch (punishment)
     {

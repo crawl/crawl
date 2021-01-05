@@ -416,10 +416,10 @@ static const char *targeting_help_2 =
     "<w>:</w> : show/hide beam path\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
-    "<h>Firing, throwing, spellcasting:\n"
-    "<w>(</w> : cycle to next suitable fire action\n"
-    "<w>)</w> : cycle to previous suitable fire action.\n"
+    "<h>Firing mode ('<w>f</w><h>' in main):\n"
     "<w>Q</w> : choose fire action.\n"
+    "<w>(</w> : cycle to previous suitable action\n"
+    "<w>)</w> : cycle to next suitable action.\n"
 ;
 
 struct help_file
@@ -548,6 +548,11 @@ void show_interlevel_travel_depth_help()
 void show_interlevel_travel_altar_help()
 {
     show_specific_help("interlevel-travel.altar.prompt");
+}
+
+void show_annotate_help()
+{
+    show_specific_help("annotate.prompt");
 }
 
 void show_stash_search_help()

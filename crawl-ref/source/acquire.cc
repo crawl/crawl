@@ -64,7 +64,7 @@ static armour_type _useless_armour_type();
  * @param skill     The skill in question; e.g. SK_ARMOUR.
  * @param mult      A multiplier to the skill, for higher precision.
  * @return          A rounded value of that skill; e.g. _skill_rdiv(SK_ARMOUR)
- *                  for a value of 10.1 will return 11 90% of the time &
+ *                  for a value of 10.9 will return 11 90% of the time &
  *                  10 the remainder.
  */
 static int _skill_rdiv(skill_type skill, int mult = 1)
@@ -448,11 +448,9 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh
-    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f. Pretend formicid
-    // shield skill is 0 so they always weight towards 2H.
-    const int shield_sk = you.species == SP_FORMICID
-        ? 0
-        : _skill_rdiv(SK_SHIELDS) * species_apt_factor(SK_SHIELDS);
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.
+    const int shield_sk = _skill_rdiv(SK_SHIELDS)
+                          * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of

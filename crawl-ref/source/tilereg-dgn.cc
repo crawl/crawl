@@ -143,15 +143,6 @@ void DungeonRegion::pack_buffers()
     pack_cursor(CURSOR_MAP, TILEI_CURSOR);
 }
 
-struct tag_def
-{
-    tag_def() { text = nullptr; left = right = 0; }
-
-    const char* text;
-    char left, right;
-    char type;
-};
-
 // #define DEBUG_TILES_REDRAW
 void DungeonRegion::render()
 {
@@ -171,64 +162,34 @@ void DungeonRegion::render()
     m_buf_flash.draw();
     glmanager->reset_scissor();
 
-    FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
-
-    int total_tags = 0;
+    unordered_set<coord_def> tag_coords;
 
     for (int t = TAG_MAX - 1; t >= 0; t--)
     {
         for (const TextTag &tag : m_tags[t])
         {
-            if (!crawl_view.in_los_bounds_g(tag.gc))
+            if (!crawl_view.in_los_bounds_g(tag.gc)
+                && !tiles.get_map_display())
+            {
                 continue;
-
-            const coord_def ep = grid2show(tag.gc);
-
-            if (tag_show(ep).text)
+            }
+            if (tag_coords.count(tag.gc))
                 continue;
+            tag_coords.insert(tag.gc);
 
-            const char *str = tag.tag.c_str();
-
-            int width    = m_tag_font->string_width(str);
-            tag_def &def = tag_show(ep);
-
-            const int buffer = 2;
-
-            def.left  = -width / 2 - buffer;
-            def.right =  width / 2 + buffer;
-            def.text  = str;
-            def.type  = t;
-
-            total_tags++;
-        }
-
-        if (total_tags)
-            break;
-    }
-
-    if (!total_tags)
-        return;
-
-    // Draw text tags.
-    // TODO enne - be more intelligent about not covering stuff up
-    for (int y = 0; y < ENV_SHOW_DIAMETER; y++)
-        for (int x = 0; x < ENV_SHOW_DIAMETER; x++)
-        {
-            coord_def ep(x, y);
-            tag_def &def = tag_show(ep);
-
-            if (!def.text)
-                continue;
-
-            const coord_def gc = show2grid(ep);
             coord_def pc;
-            to_screen_coords(gc, &pc);
+            to_screen_coords(tag.gc, &pc);
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
-            const auto text = formatted_string(def.text, WHITE);
+            const auto text = formatted_string(tag.tag.c_str(), WHITE);
             m_tag_font->render_hover_string(pc.x, pc.y, text);
         }
+
+        //XXX: Why hide unique monster tags when showing e'x'amine tags?
+        if (tag_coords.size())
+            break;
+    }
 }
 
 /**
@@ -337,320 +298,37 @@ bool DungeonRegion::inside(int x, int y)
     return x >= 0 && y >= 0 && x <= tile_iw && y <= tile_ih;
 }
 
-// FIXME: If the player is targeted, the game asks the player to target
-// something with the mouse, then targets the player anyway and treats
-// mouse click as if it hadn't come during targeting (moves the player
-// to the clicked cell, whatever).
-static void _add_targeting_commands(const coord_def& pos)
-{
-    // Force targeting cursor back onto center to start off on a clean
-    // slate.
-    macro_sendkeys_end_add_cmd(CMD_TARGET_FIND_YOU);
-
-    const coord_def delta = pos - you.pos();
-
-    command_type cmd;
-
-    if (delta.x < 0)
-        cmd = CMD_TARGET_LEFT;
-    else
-        cmd = CMD_TARGET_RIGHT;
-
-    for (int i = 0; i < abs(delta.x); i++)
-        macro_sendkeys_end_add_cmd(cmd);
-
-    if (delta.y < 0)
-        cmd = CMD_TARGET_UP;
-    else
-        cmd = CMD_TARGET_DOWN;
-
-    for (int i = 0; i < abs(delta.y); i++)
-        macro_sendkeys_end_add_cmd(cmd);
-
-    macro_sendkeys_end_add_cmd(CMD_TARGET_MOUSE_SELECT);
-}
-
-static bool _is_appropriate_spell(spell_type spell, const actor* target)
-{
-    ASSERT(is_valid_spell(spell));
-
-    const spell_flags  flags    = get_spell_flags(spell);
-    const bool         targeted = testbits(flags, spflag::targeting_mask);
-
-    // All spells are blocked by transparent walls.
-    if (targeted && !you.see_cell_no_trans(target->pos()))
-        return false;
-
-    const bool helpful = testbits(flags, spflag::helpful);
-
-    if (target->is_player())
-    {
-        if (flags & spflag::not_self)
-            return false;
-
-        return (flags & (spflag::helpful | spflag::escape | spflag::recovery))
-               || !targeted;
-    }
-
-    if (!targeted)
-        return false;
-
-    if (flags & spflag::neutral)
-        return false;
-
-    bool friendly = target->as_monster()->wont_attack();
-
-    return friendly == helpful;
-}
-
-static bool _is_appropriate_evokable(const item_def& item,
-                                     const actor* target)
-{
-    if (!item_is_evokable(item, false))
-        return false;
-
-    // Only wands for now.
-    if (item.base_type != OBJ_WANDS)
-        return false;
-
-    // Aren't yet any wands that can go through transparent walls.
-    if (!you.see_cell_no_trans(target->pos()))
-        return false;
-
-    // We don't know what it is, so it *might* be appropriate.
-    if (!item_type_known(item))
-        return true;
-
-    // Random effects are always (in)appropriate for all targets.
-    if (item.sub_type == WAND_RANDOM_EFFECTS)
-        return true;
-
-    spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
-
-    return is_valid_spell(spell) && _is_appropriate_spell(spell, target);
-}
-
-static bool _have_appropriate_evokable(const actor* target)
-{
-    return any_of(begin(you.inv), end(you.inv),
-                  [target] (const item_def &item) -> bool
-                  {
-                      return item.defined()
-                          && _is_appropriate_evokable(item, target);
-                  });
-}
-
-static item_def* _get_evokable_item(const actor* target)
-{
-    vector<const item_def*> list;
-
-    for (const auto &item : you.inv)
-        if (item.defined() && _is_appropriate_evokable(item, target))
-            list.push_back(&item);
-
-    ASSERT(!list.empty());
-
-    InvMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                 | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
-    menu.set_type(menu_type::any);
-    menu.set_title("Wand to zap?");
-    menu.load_items(list);
-    menu.show();
-    vector<SelItem> sel = menu.get_selitems();
-
-    update_screen();
-    redraw_screen();
-    update_screen();
-
-    if (sel.empty())
-        return nullptr;
-
-    return const_cast<item_def*>(sel[0].item);
-}
-
-static bool _evoke_item_on_target(actor* target)
-{
-    item_def* item;
-    {
-        // Prevent the inventory letter from being recorded twice.
-        pause_all_key_recorders pause;
-
-        item = _get_evokable_item(target);
-    }
-
-    if (item == nullptr)
-        return false;
-#if TAG_MAJOR_VERSION == 34
-    if (is_known_empty_wand(*item))
-    {
-        mpr("That wand is empty.");
-        return false;
-    }
-#endif
-
-    macro_sendkeys_end_add_cmd(CMD_EVOKE);
-    macro_buf_add(index_to_letter(item->link)); // Inventory letter.
-    _add_targeting_commands(target->pos());
-    return true;
-}
-
-static bool _spell_in_range(spell_type spell, actor* target)
-{
-    if (!(get_spell_flags(spell) & spflag::targeting_mask))
-        return true;
-
-    int range = calc_spell_range(spell);
-
-    switch (spell)
-    {
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_FIREBALL:
-    case SPELL_FREEZING_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-        // Increase range by one due to cloud radius.
-        range++;
-        break;
-    default:
-        break;
-    }
-
-    return range >= grid_distance(you.pos(), target->pos());
-}
-
-static actor* _spell_target = nullptr;
-
-static bool _spell_selector(spell_type spell)
-{
-    return _is_appropriate_spell(spell, _spell_target);
-}
-
-// TODO: Cast spells which target a particular cell.
-static bool _cast_spell_on_target(actor* target)
-{
-    _spell_target = target;
-    spell_type spell;
-    int letter;
-
-    if (is_valid_spell(you.last_cast_spell)
-        && _is_appropriate_spell(you.last_cast_spell, target))
-    {
-        spell = you.last_cast_spell;
-        letter = get_spell_letter(spell);
-    }
-    else
-    {
-        {
-            // Prevent the spell letter from being recorded twice.
-            pause_all_key_recorders pause;
-
-            letter = list_spells(true, false, true, "Your Spells",
-                                 _spell_selector);
-        }
-
-        _spell_target = nullptr;
-
-        if (letter == 0)
-            return false;
-
-        spell = get_spell_by_letter(letter);
-    }
-
-    ASSERT(is_valid_spell(spell));
-    ASSERT(_is_appropriate_spell(spell, target));
-
-    if (!_spell_in_range(spell, target))
-    {
-        mprf("%s is out of range for that spell.",
-             target->name(DESC_THE).c_str());
-        return true;
-    }
-
-    if (spell_mana(spell) > you.magic_points)
-    {
-        mpr("You don't have enough magic to cast that spell.");
-        return true;
-    }
-
-    macro_sendkeys_end_add_cmd(CMD_FORCE_CAST_SPELL);
-    macro_buf_add(letter);
-
-    if (get_spell_flags(spell) & spflag::targeting_mask)
-        _add_targeting_commands(target->pos());
-
-    return true;
-}
-
-static bool _have_appropriate_spell(const actor* target)
-{
-    for (spell_type spell : you.spells)
-    {
-        if (!is_valid_spell(spell))
-            continue;
-
-        if (_is_appropriate_spell(spell, target))
-            return true;
-    }
-    return false;
-}
-
-static bool _can_fire_item()
-{
-    // check is_enabled too?
-    return quiver::get_secondary_action()->is_valid();
-}
-
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
     const bool shift = (mod & TILES_MOD_SHIFT);
     const bool ctrl  = (mod & TILES_MOD_CTRL);
     const bool alt   = (shift && ctrl || (mod & TILES_MOD_ALT));
+
+    // TODO: is see_cell_no_trans too strong?
+    if (!mon || mon->friendly() || !you.see_cell_no_trans(mon->pos()))
+        return false;
+
+    // TODO: unify code with tooltip construction?
     const item_def* weapon = you.weapon();
+    const bool primary_ranged = !you.launcher_action.is_empty();
+    const int melee_dist = weapon ? weapon_reach(*weapon) : 1;
 
-    // Handle evoking items at monster.
-    if (alt && _have_appropriate_evokable(mon))
-        return _evoke_item_on_target(mon);
-
-    // Handle firing quivered items.
-    if (_can_fire_item() && !ctrl
-        && (shift || weapon && is_range_weapon(*weapon)
-                     && !mon->wont_attack()))
+    if (!ctrl && !shift && !alt
+        && (primary_ranged || (mon->pos() - you.pos()).rdist() <= melee_dist))
     {
-        macro_sendkeys_end_add_cmd(CMD_FIRE);
-        _add_targeting_commands(mon->pos());
+        dist t;
+        t.target = mon->pos();
+        quiver::get_primary_action()->trigger(t);
         return true;
     }
 
-    // Handle casting spells at monster.
-    if (ctrl && !shift && _have_appropriate_spell(mon))
-        return _cast_spell_on_target(mon);
-
-    // Handle weapons of reaching.
-    if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
+    if (!ctrl && shift && quiver::get_secondary_action()->is_valid())
     {
-        const int dist = (you.pos() - mon->pos()).rdist();
-
-        if (dist > 1 && weapon && weapon_reach(*weapon) >= dist)
-        {
-            macro_sendkeys_end_add_cmd(CMD_EVOKE_WIELDED);
-            _add_targeting_commands(mon->pos());
-            return true;
-        }
+        dist t;
+        t.target = mon->pos();
+        quiver::get_secondary_action()->trigger(t);
+        return true;
     }
-
-    return false;
-}
-
-static bool _handle_zap_player(wm_mouse_event &event)
-{
-    const bool shift = (event.mod & TILES_MOD_SHIFT);
-    const bool ctrl  = (event.mod & TILES_MOD_CTRL);
-    const bool alt   = (shift && ctrl || (event.mod & TILES_MOD_ALT));
-
-    if (alt && _have_appropriate_evokable(&you))
-        return _evoke_item_on_target(&you);
-
-    if (ctrl && _have_appropriate_spell(&you))
-        return _cast_spell_on_target(&you);
 
     return false;
 }
@@ -753,15 +431,6 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
         {
         case wm_mouse_event::LEFT:
         {
-            if ((event.mod & (TILES_MOD_CTRL | TILES_MOD_ALT)))
-            {
-                _handle_zap_player(event);
-                // return either way -- everything else in this case
-                // needs non-ctrl (and we definitely don't want to
-                // trigger a wait in the next if)
-                return 0;
-            }
-
             // if there's an item, pick it up, otherwise wait 1 turn
             if (!(event.mod & TILES_MOD_SHIFT))
             {
@@ -860,6 +529,7 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     if (mod & (TILES_MOD_SHIFT | TILES_MOD_CTRL | TILES_MOD_ALT))
         return CK_MOUSE_CMD;
 
+    dprf("click_travel");
     const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
     if (cmd != CK_MOUSE_CMD)
         process_command((command_type) cmd);
@@ -1008,33 +678,6 @@ bool DungeonRegion::update_tip_text(string &tip)
     return ret;
 }
 
-static string _check_spell_evokable(const actor* target,
-                                    vector<command_type> &cmd)
-{
-    string str = "";
-    if (_have_appropriate_spell(target))
-    {
-        str += "\n[Ctrl + L-Click] Cast spell (%)";
-        cmd.push_back(CMD_CAST_SPELL);
-    }
-
-    if (_have_appropriate_evokable(target))
-    {
-        string key = "Alt";
-#ifdef UNIX
-        // On Unix systems the Alt key is already hogged by
-        // the application window, at least when we're not
-        // in fullscreen mode, so we use Ctrl-Shift instead.
-        if (!tiles.is_fullscreen())
-            key = "Ctrl-Shift";
-#endif
-        str += "\n[" + key + " + L-Click] Zap wand (%)";
-        cmd.push_back(CMD_EVOKE);
-    }
-
-    return str;
-}
-
 static void _add_tip(string &tip, string text)
 {
     if (!tip.empty())
@@ -1044,8 +687,11 @@ static void _add_tip(string &tip, string text)
 
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
-    const int attack_dist = you.weapon() ?
-        weapon_reach(*you.weapon()) : 1;
+    // TODO: these are not formatted very nicely
+    const bool primary_ranged = !you.launcher_action.is_empty();
+    const bool primary_is_secondary = primary_ranged &&
+        quiver::get_primary_action() == quiver::get_secondary_action();
+    const int melee_dist = you.weapon() ? weapon_reach(*you.weapon()) : 1;
 
     vector<command_type> cmd;
     tip = "";
@@ -1059,58 +705,76 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         tip += get_species_abbrev(you.species);
         tip += get_job_abbrev(you.char_class);
         tip += ")";
-
-        tip += _check_spell_evokable(&you, cmd);
     }
     else // non-player squares
     {
-        const actor* target = actor_at(gc);
-        if (target && you.can_see(*target))
+        const monster* mon = monster_at(gc);
+        if (mon && you.can_see(*mon))
         {
             has_monster = true;
-            if ((gc - you.pos()).rdist() <= attack_dist)
+            // TODO: is see_cell_no_trans too strong?
+            if (mon->friendly())
+                _add_tip(tip, "[L-Click] Move");
+            else if (you.see_cell_no_trans(mon->pos()))
             {
-                if (!cell_is_solid(gc))
+                tip = mon->name(DESC_A);
+                if (primary_ranged)
                 {
-                    const monster* mon = monster_at(gc);
-                    if (!mon || mon->friendly() || !mon->visible_to(&you))
-                        _add_tip(tip, "[L-Click] Move");
-                    else if (mon)
+                    if (!primary_is_secondary)
                     {
-                        tip = mon->name(DESC_A);
-                        _add_tip(tip, "[L-Click] Attack");
+                        _add_tip(tip, "[L-Click] "
+                            + quiver::get_primary_action()->quiver_description().tostring()
+                            + " (%)");
+                        cmd.push_back(CMD_PRIMARY_ATTACK);
                     }
+                    // else case: tip handled below
+                }
+                else if ((gc - you.pos()).rdist() <= melee_dist)
+                    _add_tip(tip, "[L-Click] Attack"); // show weapon?
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
+
+                if (quiver::get_secondary_action()->is_valid())
+                {
+                    // this doesn't show the CMD_PRIMARY_ATTACK key
+                    const string clickdesc = primary_is_secondary
+                        ? "[L-Click / Shift + L-Click] "
+                        : "[Shift + L-Click] ";
+                    _add_tip(tip, clickdesc
+                        + quiver::get_secondary_action()->quiver_description().tostring()
+                        + " (%)");
+                    cmd.push_back(CMD_FIRE);
                 }
             }
-
-            if (you.see_cell_no_trans(target->pos())
-                && quiver::get_secondary_action()->is_valid())
-            {
-                _add_tip(tip, "[Shift + L-Click] Fire (%)");
-                cmd.push_back(CMD_FIRE);
-            }
-            dprf("about to check spell evokable on %s", target->name(DESC_THE).c_str());
-
-            tip += _check_spell_evokable(target, cmd);
         }
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
                 _add_tip(tip, "[L-Click] Move");
-            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN
-                     && i_feel_safe())
+            else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
-                _add_tip(tip, "[L-Click] Travel");
+                if (click_travel_safe(gc))
+                    _add_tip(tip, "[L-Click] Travel");
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
             }
         }
         else if (feat_is_closed_door(env.grid(gc)))
         {
-            if (!adjacent(gc, you.pos()) && i_feel_safe())
-                _add_tip(tip, "[L-Click] Travel");
-
-            _add_tip(tip, "[L-Click] Open door (%)");
-            cmd.push_back(CMD_OPEN_DOOR);
+            if (!adjacent(gc, you.pos()))
+            {
+                if (click_travel_safe(gc))
+                    _add_tip(tip, "[L-Click] Travel");
+                else
+                    _add_tip(tip, "[L-Click] Move towards");
+            }
+            else
+            {
+                _add_tip(tip, "[L-Click] Open door (%)");
+                cmd.push_back(CMD_OPEN_DOOR);
+            }
         }
+        // all other solid features prevent l-click actions
     }
 
     // These apply both on the same square as the player's and elsewhere.

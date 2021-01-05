@@ -490,35 +490,38 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_DRAINED:
-        if (you.attribute[ATTR_XP_DRAIN] > 450)
+    {
+        const int drain_perc = 100 * -you.hp_max_adj_temp / get_real_hp(false, false);
+
+        if (drain_perc >= 50)
         {
             inf.light_colour = MAGENTA;
             inf.light_text   = "Drain";
             inf.short_text   = "extremely drained";
             inf.long_text    = "Your life force is extremely drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 250)
+        else if (drain_perc >= 25)
         {
             inf.light_colour = RED;
             inf.light_text   = "Drain";
             inf.short_text   = "very heavily drained";
             inf.long_text    = "Your life force is very heavily drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 100)
+        else if (drain_perc >= 10)
         {
             inf.light_colour = LIGHTRED;
             inf.light_text   = "Drain";
             inf.short_text   = "heavily drained";
             inf.long_text    = "Your life force is heavily drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN] > 50)
+        else if (drain_perc >= 5)
         {
             inf.light_colour = YELLOW;
             inf.light_text   = "Drain";
             inf.short_text   = "drained";
             inf.long_text    = "Your life force is drained.";
         }
-        else if (you.attribute[ATTR_XP_DRAIN])
+        else if (you.hp_max_adj_temp)
         {
             inf.light_colour = LIGHTGREY;
             inf.light_text   = "Drain";
@@ -527,6 +530,7 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    }
     case STATUS_RAY:
         if (you.attribute[ATTR_SEARING_RAY])
         {

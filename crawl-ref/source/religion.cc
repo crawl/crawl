@@ -1284,11 +1284,8 @@ static int _pakellas_high_misc()
 static bool _give_pakellas_gift()
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(env.grid(you.pos()))
-        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
-    {
+    if (feat_eliminates_items(env.grid(you.pos())))
         return false;
-    }
 
     bool success = false;
     object_class_type basetype = OBJ_UNASSIGNED;
@@ -1372,11 +1369,8 @@ static bool _give_pakellas_gift()
 static bool _give_trog_oka_gift(bool forced)
 {
     // Break early if giving a gift now means it would be lost.
-    if (!(feat_has_solid_floor(env.grid(you.pos()))
-        || feat_is_watery(env.grid(you.pos())) && species_likes_water(you.species)))
-    {
+    if (feat_eliminates_items(env.grid(you.pos())))
         return false;
-    }
 
     // Should gift catnip instead.
     if (you.species == SP_FELID)
@@ -1504,7 +1498,7 @@ static bool _gift_sif_kiku_gift(bool forced)
     bool success = false;
     book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
-    if (!feat_has_solid_floor(env.grid(you.pos())))
+    if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
     // Kikubaaqudgha gives the lesser Necromancy books in a quick
@@ -2768,7 +2762,7 @@ void excommunication(bool voluntary, god_type new_god)
     // Renouncing may have changed the conducts on our wielded or
     // quivered weapons, so refresh the display.
     you.wield_change = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     mpr("You have lost your religion!");
     // included in default force_more_message
@@ -3220,7 +3214,7 @@ static void _god_welcome_handle_gear()
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 /* Make a CrawlStoreValue an empty vector with the requested item type.
@@ -3646,6 +3640,7 @@ void join_religion(god_type which_god)
 
     // Welcome to the fold!
     you.religion = static_cast<god_type>(which_god);
+    set_god_ability_slots();    // remove old god's slots, reserve new god's
 
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
@@ -3658,8 +3653,6 @@ void join_religion(god_type which_god)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
-
-    set_god_ability_slots();    // remove old god's slots, reserve new god's
 
     _set_initial_god_piety();
 
@@ -3878,20 +3871,6 @@ bool god_hates_killing(god_type god, const monster& mon)
         retval = (fedhas_protects(&mon));
 
     return retval;
-}
-
-/**
- * Will the given god object if you eat a monster of this type?
- *
- * @param god       The god in question.
- * @param mc        The monster type to be eaten.
- * @return          Whether eating this monster will incur penance.
- */
-bool god_hates_eating(god_type god, monster_type mc)
-{
-    if (god_hates_cannibalism(god) && is_player_same_genus(mc))
-        return true;
-    return false;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)

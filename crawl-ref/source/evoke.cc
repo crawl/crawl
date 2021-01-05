@@ -198,6 +198,12 @@ int wand_mp_cost()
     return min(you.magic_points, you.get_mutation_level(MUT_MP_WANDS) * 3);
 }
 
+int wand_power()
+{
+    const int mp_cost = wand_mp_cost();
+    return (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+}
+
 void zap_wand(int slot, dist *_target)
 {
     if (inv_count() < 1)
@@ -208,8 +214,6 @@ void zap_wand(int slot, dist *_target)
 
     if (!evoke_check(slot))
         return;
-
-    const int mp_cost = wand_mp_cost();
 
     int item_slot;
     if (slot != -1)
@@ -239,7 +243,8 @@ void zap_wand(int slot, dist *_target)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    const int mp_cost = wand_mp_cost();
+    const int power = wand_power();
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -830,6 +835,14 @@ static spret _phantom_mirror(dist *target)
     return spret::success;
 }
 
+static bool _valid_tremorstone_target(const monster &m)
+{
+    return !mons_is_firewood(m)
+        && !(have_passive(passive_t::shoot_through_plants)
+                                && fedhas_protects(&m))
+        && !always_shoot_through_monster(&you, m);
+}
+
 /**
  * Find the cell at range 3 closest to the center of mass of monsters in range,
  * or a random range 3 cell if there are none.
@@ -846,7 +859,7 @@ static coord_def _find_tremorstone_target(bool& see_targets)
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (monster_at(*ri) && !mons_is_firewood(*monster_at(*ri)))
+        if (monster_at(*ri) && _valid_tremorstone_target(*monster_at(*ri)))
         {
             com += *ri;
             see_targets = see_targets || you.can_see(*monster_at(*ri));
@@ -948,8 +961,7 @@ static spret _tremorstone()
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
     auto vulnerable = [](const actor *act) -> bool
     {
-        return !(have_passive(passive_t::shoot_through_plants)
-                 && fedhas_protects(act->as_monster()));
+        return act && _valid_tremorstone_target(*act->as_monster());
     };
     if ((!see_target
         && !yesno("You can't see anything, throw a tremorstone anyway?",
@@ -1110,7 +1122,7 @@ bool evoke_check(int slot, bool quiet)
         if (!quiet)
         {
             // XX messaging should be unified with actual launching code
-            mprf("You do not have any ammo quivered for %s",
+            mprf("You do not have any ammo quivered for %s.",
                                     you.weapon()->name(DESC_YOUR).c_str());
         }
         return false;
@@ -1126,7 +1138,7 @@ bool evoke_check(int slot, bool quiet)
     {
         // does the player have a zigfig? overrides sac artiface
         // this is ugly...this thing should probably be goldified
-        for (const auto s : you.inv)
+        for (const item_def &s : you.inv)
             if (s.defined() && s.base_type == OBJ_MISCELLANY
                                      && s.sub_type == MISC_ZIGGURAT)
             {

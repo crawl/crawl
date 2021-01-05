@@ -153,11 +153,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
         new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
-        new BoolGameOption(SIMPLE_NAME(always_use_static_targeters), false),
         new BoolGameOption(easy_quit_item_prompts,
                            { "easy_quit_item_prompts", "easy_quit_item_lists" },
                            true),
-        new BoolGameOption(SIMPLE_NAME(travel_open_doors), true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -306,6 +304,13 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
         new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+        new MultipleChoiceGameOption<travel_open_doors_type>(
+            SIMPLE_NAME(travel_open_doors), travel_open_doors_type::open,
+            {{"avoid", travel_open_doors_type::avoid},
+             {"approach", travel_open_doors_type::approach},
+             {"open", travel_open_doors_type::open},
+             {"false", travel_open_doors_type::_false},
+             {"true", travel_open_doors_type::_true}}),
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
@@ -324,11 +329,13 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
         new BoolGameOption(SIMPLE_NAME(tile_filter_scaling), false),
         new BoolGameOption(SIMPLE_NAME(tile_force_overlay), false),
+        new TileColGameOption(SIMPLE_NAME(tile_overlay_col), "#646464"),
+        new IntGameOption(SIMPLE_NAME(tile_overlay_alpha_percent), 40, 0, 100),
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
         new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), ""),
-        new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/%=([)x}:|\\"),
+        new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
         new BoolGameOption(SIMPLE_NAME(tile_misc_anim), true),
@@ -509,9 +516,9 @@ static const string message_channel_names[] =
     "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
     "mutation", "monster_spell", "monster_enchant", "friend_spell",
     "friend_enchant", "monster_damage", "monster_target", "banishment",
-    "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal",
-    "hell_effect", "monster_warning", "dgl_message",
+    "equipment", "floor", "multiturn", "examine", "examine_filter", "diagnostic",
+    "error", "tutorial", "orb", "timed_portal", "hell_effect", "monster_warning",
+    "dgl_message",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -648,8 +655,18 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_DART;
     else if (str == "net")
         return FIRE_NET;
+    else if (str == "throwing")
+        return FIRE_THROWING;
+    else if (str == "ammo")
+        return FIRE_AMMO;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
+    else if (str == "spell")
+        return FIRE_SPELL;
+    else if (str == "evokable" || str == "evocable")
+        return FIRE_EVOKABLE;
+    else if (str == "ability")
+        return FIRE_ABILITY;
 
     return FIRE_NONE;
 }
@@ -1097,15 +1114,14 @@ void game_options::reset_options()
     fire_items_start       = 0;           // start at slot 'a'
 
     // Clear fire_order and set up the defaults.
-    set_fire_order("launcher,"
-                   "javelin / boomerang / stone / rock / net / dart, "
-                   "inscribed",
+    set_fire_order("launcher, throwing, inscribed, spell, evokable, ability",
                    false, false);
 
     // TODO: what else?
     force_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
-          SPELL_ABSOLUTE_ZERO, SPELL_IGNITION };
+          SPELL_ABSOLUTE_ZERO, SPELL_IGNITION, SPELL_NOXIOUS_BOG };
+    always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:
     // XXX: These need a better place.
@@ -1316,9 +1332,28 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
 
 void game_options::add_force_targeter(const string &s, bool)
 {
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = true;
+        return;
+    }
     auto spell = spell_by_name(s, true);
     if (is_valid_spell(spell))
         force_targeter.insert(spell);
+    else
+        report_error("Unknown spell '%s'\n", s.c_str());
+}
+
+void game_options::remove_force_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_targeters = false;
+        return;
+    }
+    auto spell = spell_by_name(s, true);
+    if (is_valid_spell(spell))
+        force_targeter.erase(spell);
     else
         report_error("Unknown spell '%s'\n", s.c_str());
 }
@@ -3184,9 +3219,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (spell_data_initialized())
         {
             if (plain)
+            {
+                always_use_static_targeters = false;
                 force_targeter.clear();
+            }
 
-            split_parse(field, ",", &game_options::add_force_targeter);
+            if (minus_equal)
+                split_parse(field, ",", &game_options::remove_force_targeter);
+            else
+                split_parse(field, ",", &game_options::add_force_targeter);
         }
     }
     else if (key == "spell_slot"
@@ -5033,7 +5074,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
             if (!rc_only)
+            {
                 Options.game.name = next_arg;
+                crawl_state.default_startup_name = Options.game.name;
+            }
             nextUsed = true;
             break;
 

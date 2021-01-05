@@ -29,13 +29,6 @@ enum class ev_ignore
 };
 DEF_BITFIELD(ev_ignore_type, ev_ignore);
 
-enum rot_resistance     // Resistance to HP rot.
-{
-    ROT_RESIST_NONE,    // No resistance to rotting.
-    ROT_RESIST_MUNDANE, // Immune to non-divine rotting. (Zin is special.)
-    ROT_RESIST_FULL,    // Immune to all forms of rot.
-};
-
 struct bolt;
 
 class actor
@@ -205,10 +198,8 @@ public:
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
-    virtual bool drain_exp(const actor *agent, bool quiet = false,
-                           int pow = 15) = 0;
-    virtual bool rot(actor *agent, int amount, bool quiet = false,
-                     bool no_cleanup = false) = 0;
+    virtual bool drain(const actor *agent, bool quiet = false,
+                       int pow = 3) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -249,8 +240,7 @@ public:
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
 
-    virtual int  skill(skill_type sk, int scale = 1,
-                       bool real = false, bool drained = true,
+    virtual int  skill(skill_type sk, int scale = 1, bool real = false,
                        bool temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
@@ -295,7 +285,7 @@ public:
     virtual mon_holy_type holiness(bool temp = true) const = 0;
     virtual bool undead_or_demonic() const = 0;
     virtual bool holy_wrath_susceptible() const;
-    virtual bool is_holy(bool spells = true) const = 0;
+    virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
     bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
@@ -308,7 +298,7 @@ public:
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
-    virtual rot_resistance res_rotting(bool temp = true) const = 0;
+    virtual bool res_miasma(bool temp = true) const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;

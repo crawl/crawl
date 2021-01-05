@@ -266,13 +266,13 @@ Willpower
   level to an extent determined by your character's species, the creatures
   you will meet deeper in the dungeon are better at casting spells, and are
   more likely to be able to affect you. You can get a rough idea of your
-  current WL by pressing '%'.
+  current Will by pressing '%'.
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and Centaurs
-  are large with a medium torso; all other species are medium-sized. Many
-  transmutations will change your size too. Size affects your evasion: the
+  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and
+  Palentongas are large with a medium torso; all other species are medium-sized.
+  Many transmutations will change your size too. Size affects your evasion: the
   smaller your character the more evasive it is. On the other hand, characters
   of larger than medium size do not suffer the usual attack penalties when
   standing in shallow water. Characters of smaller than medium size will have
@@ -376,9 +376,8 @@ Staircases and Portals
 You can make your way between levels by using staircases, which appear as ">"
 (down) and "<" (up), by pressing the '>' or '<' keys. It is important to know
 that most monsters adjacent to you will follow when you change levels; this
-holds both for hostile and allied monsters. Notable exceptions are zombies (and
-other mindless undead, who are too stupid to properly operate stairs) and ghosts
-(who feel they belong to their level).
+holds both for hostile and allied monsters. Notable exceptions are zombies and
+other mindless undead, who are too stupid to properly operate stairs.
 
 If you ascend an up staircase on level one, you will leave the dungeon forever;
 if you are carrying the magical Orb of Zot, you win the game by doing this.
@@ -410,8 +409,9 @@ If there is no door in the indicated space, both Ctrl-direction and
 is apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
-A variety of dangerous and irritating traps are hidden around the dungeon. Traps
-sometimes look like normal floor until discovered.
+A variety of dangerous and irritating traps are placed around the dungeon. Some
+traps are visible and can be avoided (or triggered on purpose), others are hidden
+until you stumble upon them.
 
 Shops
 ========================================
@@ -658,14 +658,16 @@ The details screen shows:
 
 - The monster's name and description.
 
-- Bars indicating its:
+- Bars or numbers indicating its:
+
+  * Max HP: hit points; how much damage it can take
 
   * AC: armour class; how well it ignores most damage
 
   * EV: evasion; how well it avoids being hit (and your odds of hitting it
     with your current melee attack)
 
-  * WL: willpower; its resistance to most Hexes and similar effects.
+  * Will: willpower; its resistance to most Hexes and similar effects.
 
 - Its difficulty level, speed (if different from average speed), size,
   resistances, and special attacks.
@@ -1596,10 +1598,9 @@ Trolls (Tr)
   slowly.
 
 Ghouls (Gh)
-  Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
-  sleep in their graves for years on end, when they rise to walk among the
-  living, they must eat the dead to survive. Slain foes heal Ghouls as they feast
-  on the macabre energies released.
+  Ghouls are horrible undead creatures that sleep in their graves for years on
+  end, only to rise and stalk the living. Slain foes heal these monstrous
+  beings as they feast on the macabre energies released.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
@@ -2307,8 +2308,8 @@ Shift-direction or / direction
 o
   Auto-explore. Setting the option explore_greedy to true makes auto-explore run
   to interesting items (those that get picked up automatically) or piles
-  (checking the contents). Autoexploration will open doors on its own except if
-  you set travel_open_doors to false.
+  (checking the contents). Autoexploration will open doors on its own unless
+  you set travel_open_doors to avoid or approach.
 
 G or Ctrl-G
   Interlevel travel (to arbitrary dungeon levels or waypoints). Remembers old
@@ -2434,12 +2435,11 @@ Ctrl-O
   Show dungeon overview (branches, shops, etc.).
 
 !
-  Annotate current level. You can enter any text. This annotation is then listed
-  in the dungeon overview (Ctrl-O) and also shown whenever you enter that level
-  again. If you use this command when standing on a staircase, you may also
-  annotate the level that staircase leads to. Should your annotation contain an
-  exclamation mark (!), you will be prompted before entering the level. An empty
-  string clears annotations.
+  Annotate a level. You can annotate any level of a branch of which you have
+  found the entrance. You can enter any text. This annotation is then listed in
+  the dungeon overview (Ctrl-O) and also shown whenever you enter that level
+  again. Should your annotation contain an exclamation mark (!), you will be
+  prompted before entering the level. An empty string clears annotations.
 
 Character information
 --------------------------------------

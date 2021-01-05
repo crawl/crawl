@@ -111,6 +111,9 @@ void init_keybindings();
 command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
+int function_keycode_fixup(int keycode);
+bool keycode_is_printable(int keycode);
+string keycode_to_name(int keycode);
 string keyseq_to_str(const keyseq &seq);
 keyseq parse_keyseq(string s);
 

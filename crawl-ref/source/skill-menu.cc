@@ -298,9 +298,7 @@ COLOURS SkillMenuEntry::get_colour() const
         return CYAN;
     }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && (you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false)
-                 // Drained a tiny but nonzero amount.
-                 || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
+             && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
     {
         if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
             return use_bright_colour ? LIGHTGREEN : GREEN;
@@ -369,7 +367,7 @@ void SkillMenuEntry::set_level()
     else
         level = you.skill(m_sk, 10, real);
 
-    if (mastered() && !you.attribute[ATTR_XP_DRAIN])
+    if (mastered())
         m_level->set_text(to_string(level / 10));
     else
         m_level->set_text(make_stringf("%4.1f", level / 10.0));
@@ -623,8 +621,6 @@ string SkillMenuSwitch::get_help()
         if (skm.is_set(SKMF_REDUCED))
         {
             vector<const char *> causes;
-            if (you.attribute[ATTR_XP_DRAIN])
-                causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
 
@@ -1257,11 +1253,6 @@ void SkillMenu::init_flags()
         else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
-
-    // You might be drained by a small enough amount to not affect the
-    // rounded numbers.
-    if (you.attribute[ATTR_XP_DRAIN])
-        set_flag(SKMF_REDUCED);
 }
 
 void SkillMenu::init_title()

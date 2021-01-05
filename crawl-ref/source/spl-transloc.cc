@@ -32,7 +32,7 @@
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // remove_ice_armour_movement for palentonga charge
+#include "movement.h" // remove_ice_movement for palentonga charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -225,7 +225,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
-        if (!check_moveto(beam.target, verb))
+        if (!check_moveto(beam.target, verb, false))
         {
             continue;
             // try again (messages handled by check_moveto)
@@ -280,7 +280,7 @@ void wizard_blink()
         return wizard_blink();
     }
 
-    if (!check_moveto(beam.target, "blink"))
+    if (!check_moveto(beam.target, "blink", false))
     {
         return wizard_blink();
         // try again (messages handled by check_moveto)
@@ -533,6 +533,21 @@ static void _charge_cloud_trail(const coord_def pos)
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
+bool palentonga_charge_possible(bool quiet, bool allow_safe_monsters)
+{
+    // general movement conditions are checked in ability.cc:_check_ability_possible
+    targeter_charge tgt(&you, palentonga_charge_range());
+    for (monster_near_iterator mi(&you); mi; ++mi)
+        if (tgt.valid_aim(mi->pos())
+            && (allow_safe_monsters || !mons_is_safe(*mi, false) || mons_class_is_test(mi->type)))
+        {
+            return true;
+        }
+    if (!quiet)
+        mpr("There's nothing you can charge at!");
+    return false;
+}
+
 int palentonga_charge_range()
 {
     return 3 + you.get_mutation_level(MUT_ROLL);
@@ -548,9 +563,6 @@ int palentonga_charge_range()
 spret palentonga_charge(bool fail, dist *target)
 {
     const coord_def initial_pos = you.pos();
-
-    if (cancel_barbed_move())
-        return spret::abort;
 
     vector<coord_def> target_path;
     targeter_charge tgt(&you, palentonga_charge_range());
@@ -590,14 +602,11 @@ spret palentonga_charge(bool fail, dist *target)
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
     apply_barbs_damage();
-    remove_ice_armour_movement();
-    apply_noxious_bog(orig_pos);
+    remove_ice_movement();
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
-    {
-        apply_noxious_bog(*it);
         _charge_cloud_trail(*it);
-    }
+
     if (you.pos() != dest_pos) // tornado and trap nonsense
         return spret::success; // of a sort
 

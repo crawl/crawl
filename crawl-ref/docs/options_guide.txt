@@ -83,9 +83,9 @@ The contents of this text are:
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
                 mutation, monster_spell, monster_enchant, monster_warning,
                 friend_spell, friend_enchant, friend_action, monster_damage,
-                monster_target, banishment, rotten_meat, equipment, floor,
-                multiturn, examine, examine_filter, diagnostic, error,
-                tutorial, orb, hell_effect, dgl_message
+                monster_target, banishment, equipment, floor, multiturn,
+                examine, examine_filter, diagnostic, error, tutorial, orb,
+                hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -107,9 +107,10 @@ The contents of this text are:
                 tile_tag_pref, tile_window_width, tile_window_height,
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
-                tile_full_screen, tile_single_column_menus,
-                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
-                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
+                tile_overlay_col, tile_overlay_alpha_percent, tile_full_screen,
+                tile_single_column_menus, tile_font_crt_file,
+                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_family,
                 tile_font_stat_family, tile_font_msg_family,
                 tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
@@ -120,7 +121,8 @@ The contents of this text are:
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
-                tile_weapon_offsets, tile_shield_offsets, tile_web_mouse_control
+                tile_weapon_offsets, tile_shield_offsets,
+                tile_web_mouse_control
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -450,11 +452,13 @@ macro_dir = settings/
         For tile games, wininit.txt will also be stored here.
         It should end with the path delimiter.
 
-sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
         (Ordered list option)
-        Plays the sound file if a message contains regex. The regex
-        should not include commas or colons. For example
+        Plays the sound file if a message contains regex. In case of
+        multiple matching regexes, only the sound of the last regex
+        is played. The regex should not include commas or colons.
+        For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         There are certain pre-defined regexes, as well, which can be
         used to get a sound to trigger for something that cannot
@@ -488,13 +492,12 @@ one_SDL_sound_channel = false
 3-a     Picking up and Dropping.
 --------------------------------
 
-autopickup = $?!+"/%
+autopickup = $?!+"/
         The above is the default list. The valid symbols are
         )       Weapons
         (       Missiles
         [       Armour
         /       Wands
-        %       Food
         ?       Scrolls
         " or =  Jewellery
         !       Potions
@@ -586,8 +589,8 @@ drop_filter += <regex>, <regex>, ...
              drop_filter += forbidden
 
         drop_filter will match against the same keywords menu_colour uses,
-        except that it lacks identification status and chunk information. It
-        defaults to useless_item.
+        except that it lacks identification status. It defaults to
+        useless_item.
 
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
@@ -982,12 +985,18 @@ auto_exclude += <monster name>, <monster name>, ...
 
 auto_switch = false
         This option will allow you to automatically switch to an appropriate
-        weapon when firing or attacking in melee, as long as the one you are
-        wielding and the one you switch to are both in slot 'a' or 'b'.
+        weapon when attacking in melee, as long as the one you are wielding
+        and the one you switch to are both in slot 'a' or 'b'.
 
-travel_open_doors = true
-        If this is set to false, autoexplore/travel will not open doors,
-        instead stopping in front of them.
+travel_open_doors = (avoid | approach | open)
+        Configure how autoexplore/travel interacts with doors.
+           avoid = Autoexplore/travel will treat closed doors like walls. If
+                   the only way for exploration or travel to continue is through
+                   a closed door, it will stop by a closed door.
+        approach = Autoexplore/travel will not open doors, instead stopping
+                   in front of any door in its path.
+            open = Autoexplore/travel will open doors. (default)
+        This does not affect runed doors, which are always avoided.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
@@ -1021,20 +1030,15 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-always_use_static_targeters = false
-        A static targeter shows the possible area of effect for a spell that
-        does not have controllable targeting. If this option is set to true,
-        static targeters are shown when casting via `z` and `Z`. When false,
-        they are shown only via `Z` and via the fire interface. Targeters are
-        never shown when firing via AUTOFIRE (shift-tab, `p`) and other
-        autoattack commands.
-
-force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition
-        Force showing a targeter for the listed spells when casting normally
+force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition,
+                 eringya's noxious bog
+        Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
-        default value. It is overridden by `always_use_static_targeters = true`,
-        which amounts to listing every spell here.
+        default value; it is particularly useful for spells with an unusual
+        targeting pattern. If "all" appears in the options list, the rest of
+        the list (however constructed) will be ignored, and targeters will
+        be shown with every spell.
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
@@ -1316,11 +1320,6 @@ fail_severity_to_confirm = 3
 
         If the value 0 or -1 is given, never prompt about miscasts.
 
-fail_severity_to_quiver = 2
-        Exclude spells with this miscast level or higher from quiver cycling
-        and automatic quivering. -1 can be used to exclude spells entirely from
-        automatic quivering.
-
 easy_door = true
         When (O)pening or (C)losing doors, do not prompt for a direction
         if there is only one adjacent door. This option does not affect
@@ -1445,7 +1444,7 @@ item_stack_summary_minimum = 4
         it, the first description line will contain a summary of all the
         items in the stack (up to 50 items), in a format which looks
         like this:
-          Items here: !! """ % ( )))))) [[[
+          Items here: !! """ ( )))))) [[[
         Known artefacts will be coloured in yellow; glowing or runed
         items will be in white, unless you already know that they are
         not ego items.
@@ -1713,43 +1712,44 @@ message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         If you don't want to see a message at all, you can mute it:
              message_colour += mute:You start resting
 
-3-j     Missiles.
------------------
+3-j     Quivers, firing, and ammo.
+----------------------------------
 
 fire_items_start = a
         Sets the first inventory item to consider when selecting
         missiles to fire. The default is a.
 
-fire_order  = launcher
-fire_order += javelin / boomerang / stone / rock / net / dart
-fire_order += inscribed
+fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         (Ordered list option)
-        Controls the order of items autoselected for firing. Items
+        Controls the order of items when cycling the quiver. Types
         should be separated by commas and items that appear first get
-        higher priority.
+        higher priority. Absent action types are not used when cycling
+        the quiver. This option also affects autoquivering on game start.
 
-        Items in any position may be slash-separated to indicate that
-        these are of equal priority. If this is the case, the first item
-        in your inventory that fits one of these will be picked for
-        firing.
+        'launcher' refers to firing the appropriate missile for a
+        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
+        all throwing ammo. Specific throwing ammo types can be refered to
+        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
+        but order of these only affects order internal to throwing ammo
+        types; 'inscribed' can also be used to control the order of ammo
+        that has been inscribed with "+f". See the "Inscriptions" section of
+        Crawl's manual for more information about inscriptions. Ammo types
+        can be separated with a "/" to indicate that inventory order should
+        determine cycle order. Order within types is determined by letter
+        order in the relevant submenu (e.g. inventory for throwing, etc).
 
-        'launcher' refers to firing the appropriate missile for the
-        wielded weapon (i.e. crossbow, bow, sling). You'll almost
-        certainly want it first, as it'll be ignored when you're not
-        wielding a ranged weapon. 'return' refers to (identified)
-        weapons of returning.
-
-        'inscribed' refers to any item with the "+f" inscription. See
-        the "Inscriptions" section of Crawl's manual for more information
-        about inscriptions.
-
-(See also pickup_thrown in 3-a.)
+fail_severity_to_quiver = 2
+        Exclude spells with this miscast level or higher from quiver cycling
+        and automatic quivering. -1 can be used to exclude spells entirely from
+        automatic quivering.
 
 launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding
         that launcher; if set to false, the main quiver is unaffaceted by
         wielding a launcher. (Firing via tab or `v` still work.). This also
         affects rare artefacts that may be evoked.
+
+(See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
 
 3-k     Message Channels.
 -------------------------
@@ -1783,7 +1783,6 @@ CHANNEL_NAME can currently be one of these:
    monster_damage  = messages telling how damaged a monster is
    monster_target  = messages marking the monster as a target (unused)
    banishment      = messages about banishing and being banished to the Abyss
-   rotten_meat     = messages about chunks/corpses rotting away
    equipment       = messages indicating worn/wielded equipment
    floor           = messages when looking at or walking over a floor item
    multiturn       = indicates long actions (wearing armour, dissecting etc.)
@@ -1903,7 +1902,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order of items in the tiles
-        inventory. By default, its value is: !?/%=([)X}:|\
+        inventory. By default, its value is: !?/=([)}:|
         Items with glyphs not in the list will be shown last.
 
 tile_skip_title = false
@@ -2023,7 +2022,8 @@ game_scale = 1
         all UI elements. This can be used to simulate high-dpi rendering on
         high resolution displays that don't directly support high-dpi, or adjust
         scaling for very large displays. For a 4k display, we recommend a value
-        of 3 or 4, and a 2k display will typically look best with 2. Local tiles only.
+        of 3 or 4, and a 2k display will typically look best with a value of 2.
+        Local tiles only.
 
 tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
@@ -2058,6 +2058,18 @@ tile_force_overlay = false
         tile_font_msg_size smaller will make the overlay smaller while retaining
         the same number of lines. Increase the view_max_height option if you
         find yourself with unused screen estate.
+
+tile_overlay_col = #646464
+        Background color of the message window overlay, as when
+        tile_force_overlay is set to true. Used in conjunction with
+        tile_overlay_alpha_percent.
+
+tile_overlay_alpha_percent = 40
+        Transparency value for the message window overlay background, as when
+        tile_force_overlay is set to true. Setting this option to 0 will cause
+        the message window to only display text without any background. And
+        setting this option to 100 will force an opaque backgroud to the
+        message window.
 
 tile_full_screen = auto
         Setting this option to true or false will force full screen mode to be
@@ -2301,7 +2313,8 @@ dump_order += monlist,kills,notes,screenshots,skill_gains,action_counts
 --------------
 
 Crawl can automatically log certain events during play. You can read
-these in the dump or morgue files. Below are options for tweaking this behaviour.
+these in the dump or morgue files. Below are the options for tweaking this
+behaviour.
 The following events are logged:
         - Gaining or losing a level
         - Entering a dungeon level for the first time
@@ -2464,10 +2477,10 @@ display_char = <dungeon_character_name : symbol>
            wall_magic, floor, floor_magic, door_open, door_closed, trap,
            stairs_down, stairs_up, grate, altar, arch, fountain, wavy, statue,
            invis_exposed, item_detected, item_orb, item_rune, item_weapon,
-           item_armour, item_wand, item_food, item_scroll, item_ring,
-           item_potion, item_missile, item_book, item_staff, item_rod,
-           item_miscellany, item_corpse, item_skeleton, item_gold, item_amulet,
-           cloud, cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
+           item_armour, item_wand, item_scroll, item_ring, item_potion,
+           item_missile, item_book, item_staff, item_rod, item_miscellany,
+           item_corpse, item_skeleton, item_gold, item_amulet, cloud,
+           cloud_weak, cloud_fading, cloud_terminal, tree, transporter,
            transporter_landing, space, fired_bolt, fired_zap, fired_burst,
            fired_debug, fired_missile, fired_missile, explosion, frame_horiz,
            frame_vert, frame_top_left, frame_top_right, frame_bottom_left,
@@ -2774,7 +2787,8 @@ use_fake_cursor = true
         targeting screens instead of relying on the term to draw the
         cursor. Use this if your term cannot show a cursor over
         darkgrey/black squares.
-        On non-Unix builds this option defaults to false.
+        On non-Unix builds this option defaults to false, and setting it to
+        to true may have unpredictable results.
 
 
 6-  Lua.
@@ -2849,7 +2863,7 @@ Example:
 : if you.race() == "Mummy" then
 autopickup = $?+"/
 : else
-autopickup = $?+"/!%
+autopickup = $?+"/!
 : end
 
 Options can be referenced by lua via "options.option_name". For

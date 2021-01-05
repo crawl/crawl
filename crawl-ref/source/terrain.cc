@@ -42,6 +42,7 @@
 #include "random.h"
 #include "religion.h"
 #include "species.h"
+#include "spl-damage.h" // ramparts_damage
 #include "spl-transloc.h"
 #include "state.h"
 #include "stringutil.h"
@@ -2370,8 +2371,8 @@ void ice_wall_damage(monster &mons, int delay)
         return;
 
     const int pow = calc_spell_power(SPELL_FROZEN_RAMPARTS, true);
-    const int orig_dam = div_rand_round(
-            delay * roll_dice(1, 2 + div_rand_round(pow, 5)), BASELINE_DELAY);
+    const int undelayed_dam = ramparts_damage(pow).roll();
+    const int orig_dam = div_rand_round(delay * undelayed_dam, BASELINE_DELAY);
 
     bolt beam;
     beam.flavour = BEAM_COLD;
@@ -2379,7 +2380,7 @@ void ice_wall_damage(monster &mons, int delay)
     int dam = mons_adjust_flavoured(&mons, beam, orig_dam);
     mprf("The wall freezes %s%s%s",
          you.can_see(mons) ? mons.name(DESC_THE).c_str() : "something",
-         dam ? "" : " but do no damage",
+         dam ? "" : " but does no damage",
          attack_strength_punctuation(dam).c_str());
 
     if (dam > 0)

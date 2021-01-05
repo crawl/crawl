@@ -488,6 +488,35 @@ MAP
   ....
 ENDMAP
 
+NAME:    nzn_masters_of_martial_movement
+TAGS:    no_pool_fixup no_monster_gen
+DEPTH:   D:9-12, Lair
+KFEAT:   D = altar_wu_jian
+KFEAT:   E = altar_uskayaw
+MONS:    patrolling boulder beetle
+SUBST:   W : W:50 w:40 l
+MAP
+ x...@...x
+xxW.W.W.Wxx
+.W.W.W.W.W.
+@.W.D1E.W.@
+.W.W.W.W.W.
+xxW.W.W.Wxx
+ x...@...x
+ENDMAP
+
+NAME:   nzn_sisyphean_effort
+DEPTH:  D:9-12, Lair
+MONS:   patrolling boulder beetle
+KITEM:  e = potion of attraction ident:all
+: dgn.delayed_decay(_G, 'd', 'human corpse')
+MAP
+xxxxxxxxx
+@.......@
+@..d1e..@
+@.......@
+xxxxxxxxx
+ENDMAP
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -668,7 +697,7 @@ TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
 MONS:  bullfrog w:30 / water moccasin / river rat / swamp drake w:2
-MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
+MONS:  vampire mosquito / will-o-the-wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.
 SUBST: 2 : 23
@@ -1064,7 +1093,7 @@ NAME:    hangedman_misty_isle
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling
 DEPTH:   D:7-12
 KMONS:   123 = sky beast
-KMONS:   45 = insubstantial wisp
+KMONS:   45 = will-o-the-wisp
 KMONS:   6 = steam dragon
 KITEM:   15% = any / gold
 KITEM:   36 = gold, star_item
@@ -2635,6 +2664,42 @@ xxxxxxxx.%..*..xxx
      xxxxxxxxxxx
 ENDMAP
 
+NAME:    nzn_life_drinkers
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:8-, Crypt, Vaults, Depths
+KFEAT:   D = altar_makhleb
+KFEAT:   E = altar_the_shining_one
+SHUFFLE: '/-
+NSUBST:  ' = D / 1=E, 1 = 1 / .
+SUBST:   A = V:50 Y
+: if you.in_branch("Vaults") then
+SUBST:   c = v
+: end
+: if you.absdepth() <= 12 then
+MONS:    vampire
+: elseif you.absdepth() <= 15 then
+MONS:    vampire mage
+: else
+MONS:    vampire knight
+: end
+MAP
+       @
+      c+c
+     cc.cc
+    cc...cc
+   cc.....cc
+  cc...1...cc
+ cc...'c-...cc
+ccA..1ccc1..Acc
+ cc...-c'...cc
+  cc...1...cc
+   cc.....cc
+    cc...cc
+     cc.cc
+      c+c
+       @
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -3161,7 +3226,7 @@ WEIGHT:  3
 MONS:    patrolling spriggan air mage ; staff of air ident:type . robe
 MONS:    patrolling spriggan rider ; spear ego:electrocution ident:type . buckler . robe
 MONS:    lightning spire, sky beast, electric eel
-KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
+KMONS:   E = ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               lightning rod
@@ -3541,7 +3606,7 @@ KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
 KMONS:   p = hornet
-KMONS:   q = insubstantial wisp
+KMONS:   q = will-o-the-wisp
 KMONS:   r = wolf spider
 KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
 SHUFFLE: bcdfghjklnopqr
@@ -4511,7 +4576,7 @@ ENDMAP
 
 NAME:  grunt_potential
 TAGS:  no_pool_fixup
-DEPTH: D:6-
+DEPTH: D:6-, Depths
 : init_hm_decor_walldepth(_G, 'x')
 SHUFFLE: wlvbn
 : if you.absdepth() > 20 then
@@ -5090,7 +5155,7 @@ MAP
 ENDMAP
 
 NAME:   kennysheep_underground_church
-TAGS:   no_pool_fixup misc_elf_vault
+TAGS:   no_pool_fixup misc_elf_vault transparent
 DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf mage
@@ -5105,6 +5170,7 @@ MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               walk_dist = 0, excl_rad = -1 }
 KPROP:  wF = no_tele_into
 SUBST:  F = w
+KMASK:  w = opaque
 MAP
  xxxxxxxxxxx
  xwwwwwwwwwx
@@ -5590,7 +5656,7 @@ ENDMAP
 
 NAME:  kennysheep_nondecorative_pillar
 TAGS:  transparent
-DEPTH: Depths:2-, !D:$, !Depths:$
+DEPTH: Depths:2-, !Depths:$
 : ks_random_setup(_G, true)
 MAP
      ...xtx....
@@ -6424,6 +6490,26 @@ c*c
 ccc
 ENDMAP
 
+NAME:   amcnicky_mini_pool_medium
+WEIGHT: 5
+DEPTH:  D:5-, Depths, Lair
+TAGS:   no_pool_fixup ruin_depths
+SUBST:  p:wwwWWl
+SUBST:  q=.0
+MAP
+  xx...xx
+ xx..p..xx
+xx.qpppq.xx
+x.qpppppq.x
+..ppppppp..
+.ppppppppp.
+..ppppppp..
+x.qpppppq.x
+xx.qpppq.xx
+ xx..p..xx
+  xx...xx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
@@ -6437,15 +6523,15 @@ ENDMAP
 #          the second time), OOD monsters that can be easily
 #          escaped, and not using overpowered/useless unrandarts.
 ################################################################
-# Robustness
+# Ring of the Tortoise
 #
-NAME:   minmay_guarded_unrand_robustness
+NAME:   minmay_guarded_unrand_tortoise
 DEPTH:  D:$, Depths, Vaults
 TAGS:   no_monster_gen no_item_gen transparent
 WEIGHT: 3, 1 (Vaults)
 MONS:   patrolling iron troll
 KMONS:  d = patrolling iron dragon
-KITEM:  d = ring_of_robustness no_pickup
+KITEM:  d = ring_of_the_tortoise no_pickup
 MAP
 ...............
 .vvvvv.@.vvvvv.

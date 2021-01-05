@@ -93,6 +93,21 @@ define(function() {
         121: -1020,
         //    122: -1021, // Don't occupy F11, it's used for fullscreen
         //    123: -1022, // used for chat
+
+        // TODO: the above keycodes for function keys are wrong, but have been
+        // wrong for a very long time. Some day, should be changed to:
+        // 112: -265, // F1
+        // 113: -266,
+        // 114: -267,
+        // 115: -268,
+        // 116: -269,
+        // 117: -270,
+        // 118: -271,
+        // 119: -272,
+        // 120: -273,
+        // 121: -274,
+        // //    122: -275, // Don't occupy F11, it's used for fullscreen
+        // //    123: -276, // used for chat
     };
 
     if (!$.browser.mozilla)

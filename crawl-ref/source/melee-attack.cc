@@ -92,7 +92,7 @@ bool melee_attack::handle_phase_attempted()
     // Skip invalid and dummy attacks.
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !can_reach())
-        || attk_type == AT_CONSTRICT
+        || attk_flavour == AF_CRUSH
            && (!attacker->can_constrict(defender, true)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
@@ -159,6 +159,24 @@ bool melee_attack::handle_phase_attempted()
         {
             vector<const actor *> exclude;
             if (!safe_discharge(defender->pos(), exclude))
+            {
+                cancel_attack = true;
+                return false;
+            }
+        }
+        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_POWER)
+                 && you.can_see(*defender))
+        {
+            targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+            hitfunc.beam.aimed_at_spot = false;
+            hitfunc.set_aim(defender->pos());
+
+            if (stop_attack_prompt(hitfunc, "attack",
+                                   [](const actor *act)
+                                   {
+                                       return !(you.deity() == GOD_FEDHAS
+                                       && fedhas_protects(act->as_monster()));
+                                   }, nullptr, defender->as_monster()))
             {
                 cancel_attack = true;
                 return false;
@@ -328,6 +346,9 @@ bool melee_attack::handle_phase_dodged()
         if (!attacker->alive())
             return false;
 
+        if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
+            do_starlight();
+
         if (defender->is_player())
         {
             const bool using_lbl = defender->weapon()
@@ -369,7 +390,7 @@ void melee_attack::apply_black_mark_effects()
                 defender->weaken(attacker, 6);
                 break;
             case 2:
-                defender->drain_exp(attacker, false, 10);
+                defender->drain(attacker, false, damage_done);
                 break;
         }
     }
@@ -605,10 +626,12 @@ static void _hydra_consider_devouring(monster &defender)
 
     dprf("shifter ok");
 
-    // or food that would incur divine penance... (cannibalism is still bad
-    // even when transformed!)
-    if (god_hates_eating(you.religion, defender.type))
+    // Don't eat orcs, even heretics might be worth a miracle
+    if (you_worship(GOD_BEOGH)
+        && mons_genus(mons_species(defender.type)) == MONS_ORC)
+    {
         return;
+    }
 
     dprf("god ok");
 
@@ -1784,21 +1807,6 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-void melee_attack::rot_defender(int amount)
-{
-    // Keep the defender alive so that we credit kills properly.
-    if (defender->rot(attacker, amount, true, true))
-    {
-        if (needs_message)
-        {
-            if (defender->is_player())
-                mpr("You feel your flesh rotting away!");
-            else if (defender->is_monster() && defender_visible)
-                mprf("%s looks less resilient!", defender_name(false).c_str());
-        }
-    }
-}
-
 void melee_attack::handle_noise(const coord_def & pos)
 {
     // Successful stabs make no noise.
@@ -2545,11 +2553,6 @@ void melee_attack::mons_apply_attack_flavour()
             mons_do_poison();
         break;
 
-    case AF_ROT:
-        if (one_chance_in(3))
-            rot_defender(1);
-        break;
-
     case AF_FIRE:
         special_damage =
             resist_adjust_damage(defender,
@@ -2685,7 +2688,7 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_DRAIN_XP:
+    case AF_DRAIN:
         if (coinflip())
             drain_defender();
         break;
@@ -3000,7 +3003,7 @@ void melee_attack::mons_do_eyeball_confusion()
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());
 
-            if (!mon->check_clarity())
+            if (!mon->clarity())
             {
                 mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you,
                                           30 + random2(100)));
@@ -3182,6 +3185,26 @@ void melee_attack::do_minotaur_retaliation()
         }
     }
 }
+
+/** For UNRAND_STARLIGHT's dazzle effect, only against monsters.
+ */
+void melee_attack::do_starlight()
+{
+    static const vector<string> dazzle_msgs = {
+        "@The_monster@ is blinded by the light from your cloak!",
+        "@The_monster@ is temporarily struck blind!",
+        "@The_monster@'s sight is seared by the starlight!",
+        "@The_monster@'s vision is obscured by starry radiance!",
+    };
+
+    if (one_chance_in(5) && dazzle_monster(attacker->as_monster(), 100))
+    {
+        string msg = *random_iterator(dazzle_msgs);
+        msg = do_mon_str_replacements(msg, *attacker->as_monster(), S_SILENT);
+        mpr(msg);
+    }
+}
+
 
 /**
  * Launch a long blade counterattack against the attacker. No sanity checks;

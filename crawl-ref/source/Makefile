@@ -248,21 +248,27 @@ ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
-	NO_PKGCONFIG = Yes
-	BUILD_SQLITE = YesPlease
-	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo contrib/install/$(ARCH)/lib/libSDL2main.a
-		BUILD_FREETYPE = YesPlease
-		BUILD_SDL2 = YesPlease
-		BUILD_SDL2IMAGE = YesPlease
-		ifdef SOUND
-			ifndef WIN32
-				BUILD_SDL2MIXER = YesPlease
-			endif
-		endif
-		BUILD_LIBPNG = YesPlease
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo
 		COPY_FONTS = yes
+	endif
+	ifndef FORCE_PKGCONFIG
+		NO_PKGCONFIG = Yes
+		# is any of this stuff actually needed if NO_PKGCONFIG is set?
+		BUILD_SQLITE = YesPlease
+		BUILD_ZLIB = YesPlease
+		ifdef TILES
+			EXTRA_LIBS += contrib/install/$(ARCH)/lib/libSDL2main.a
+			BUILD_FREETYPE = YesPlease
+			BUILD_SDL2 = YesPlease
+			BUILD_SDL2IMAGE = YesPlease
+			ifdef SOUND
+				ifndef WIN32
+					BUILD_SDL2MIXER = YesPlease
+				endif
+			endif
+			BUILD_LIBPNG = YesPlease
+		endif
 	endif
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))

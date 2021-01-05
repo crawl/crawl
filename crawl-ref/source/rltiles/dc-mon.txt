@@ -226,6 +226,11 @@ catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
+%rim 1
+ice_beast MONS_ICE_BEAST
+%rim 0
+sky_beast MONS_SKY_BEAST
+
 %sdir mon/unique
 nellie MONS_NELLIE
 %sdir mon/holy
@@ -736,13 +741,6 @@ arachne MONS_ARACHNE
 arachne_staveless MONS_ARACHNE_STAVELESS
 asterion MONS_ASTERION
 
-## Various beasts ('I')
-%sdir mon/animals
-ice_beast MONS_ICE_BEAST
-%rim 0
-sky_beast MONS_SKY_BEAST
-%rim 1
-
 ## Jellies ('J')
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
@@ -1055,9 +1053,9 @@ lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
 flayed_ghost MONS_FLAYED_GHOST
 %sdir mon/nonliving
+will_o_the_wisp MONS_WILL_O_THE_WISP
 %rim 1
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-will_o_the_wisp MONS_WILL_O_THE_WISP
 
 ## Dwarves ('q')
 %sdir mon/humanoids

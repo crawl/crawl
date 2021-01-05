@@ -203,7 +203,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            drain_player(min(75, 35 + original * 2 / 3), true);
+            drain_player(original, true);
         }
         break;
 
@@ -238,7 +238,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_MIASMA:
-        if (you.res_rotting())
+        if (you.res_miasma())
         {
             if (doEffects)
                 canned_msg(MSG_YOU_RESIST);
@@ -399,16 +399,17 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (power > 0)
     {
+        const int mhp = 1 + div_rand_round(power * get_real_hp(false, false),
+                750);
+        you.hp_max_adj_temp -= mhp;
+        you.hp_max_adj_temp = max(-(get_real_hp(false, false) - 1),
+                you.hp_max_adj_temp);
+
+        dprf("Drained by %d max hp (%d total)", mhp, you.hp_max_adj_temp);
+        calc_hp();
+
         mpr("You feel drained.");
         xom_is_stimulated(15);
-
-        you.attribute[ATTR_XP_DRAIN] += power;
-        // Losing skills may affect AC/EV.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-
-        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
-
         return true;
     }
 
@@ -737,7 +738,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp_max <= 0)
-        unrot_hp(9999);
+        undrain_hp(9999);
     while (you.hp_max <= 0)
         you.hp_max_adj_perm++, calc_hp();
     if (you.hp <= 0)

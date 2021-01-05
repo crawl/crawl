@@ -6706,7 +6706,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
         bool mons_targ_aligned = false;
 
-        for (const coord_def pos : tracer.path_taken)
+        for (const coord_def &pos : tracer.path_taken)
         {
             if (pos == mons->pos())
                 continue;
@@ -6828,9 +6828,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     int noise = _noise_level(mons, spell_cast, silent, slot_flags);
 
     const spell_flags spflags = get_spell_flags(spell_cast);
-    const bool targeted = (spflags & spflag::targeting_mask)
-                           && (pbolt.target != mons->pos()
-                               || pbolt.visible());
+    const bool targeted = bool(spflags & spflag::targeting_mask);
 
     vector<string> key_list;
     _speech_keys(key_list, mons, pbolt, spell_cast, slot_flags, targeted);
@@ -7346,7 +7344,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_DEATH_RATTLE:
     case SPELL_MIASMA_BREATH:
         ASSERT(foe);
-        return ai_action::good_or_bad(!foe->res_rotting() && !no_clouds);
+        return ai_action::good_or_bad(!foe->res_miasma() && !no_clouds);
 
     case SPELL_DISPEL_UNDEAD_RANGE:
         // [ds] How is dispel undead intended to interact with vampires?
@@ -7753,9 +7751,17 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         return ai_action::good_or_impossible(!no_clouds);
 
     case SPELL_ROLL:
-        // Don't start rolling if adjacent to your foe.
-        return ai_action::good_or_bad(!mon->get_foe()
-                || !adjacent(mon->pos(), mon->get_foe()->pos()));
+    {
+        const coord_def delta = mon->props["mmov"].get_coord();
+        // We can roll if we have a foe we're not already adjacent to and where
+        // we have a move that brings us closer.
+        return ai_action::good_or_bad(
+                mon->get_foe()
+                && !adjacent(mon->pos(), mon->get_foe()->pos())
+                && !delta.origin()
+                && mon_can_move_to_pos(mon, delta));
+    }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SWARM:
     case SPELL_INNER_FLAME:

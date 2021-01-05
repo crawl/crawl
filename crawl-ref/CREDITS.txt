@@ -124,6 +124,7 @@
     Edgar Carballo
     Cedor
     Cerol
+    Marcelo Cerri
     Rahul Chandra
     Joe Childers
     Thom Chiovoloni
@@ -263,6 +264,7 @@
     Mattias Nyberg
     nyra
     Dylan O'Donnell
+    Heinrich Ody
     Chris Oelmueller
     John Olender
     Aaron Olowin
@@ -278,6 +280,7 @@
     Arlen Phillips
     pikaro
     Lemuel Pitkin
+    Paul Pollack
     Poroing
     Iago Porto
     psywombats
@@ -304,6 +307,7 @@
     Sebastian Salman
     Sandman25
     Brett Scarborough
+    Roderick Schertler
     sdynet
     Roman Sêk
     Brennan Shacklett

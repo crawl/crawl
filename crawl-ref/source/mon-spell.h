@@ -413,7 +413,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // ('n') Rotting hulks.
+    // ('n') Undead corpses.
     {  MST_BOG_BODY,
       {
        { SPELL_BOLT_OF_COLD, 28, MON_SPELL_WIZARD },
@@ -708,13 +708,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_MARSHLIGHT, 50, MON_SPELL_MAGICAL },
        { SPELL_BLINK, 12, MON_SPELL_MAGICAL },
-      }
-    },
-
-    {  MST_INSUBSTANTIAL_WISP,
-      {
-       { SPELL_BLINK, 18, MON_SPELL_MAGICAL },
-       { SPELL_DISCHARGE, 32, MON_SPELL_MAGICAL },
       }
     },
 

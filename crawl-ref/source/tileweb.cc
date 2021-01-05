@@ -29,6 +29,7 @@
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "macro.h"
 #include "map-knowledge.h"
 #include "menu.h"
 #include "outer-menu.h"
@@ -380,7 +381,8 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper keycode = json_find_member(obj.node, "keycode");
         keycode.check(JSON_NUMBER);
 
-        c = (int) keycode->number_;
+        // TODO: remove this fixup call
+        c = function_keycode_fixup((int) keycode->number_);
     }
     else if (msgtype == "spectator_joined")
     {
@@ -1031,8 +1033,14 @@ void TilesFramework::_send_player(bool force_full)
             if (!status.light_text.empty())
             {
                 json_write_string("light", status.light_text);
-                json_write_string("desc",
-                        getLongDescription(status.light_text + " status"));
+                // split off any extra info, e.g. counts for things like Zot
+                // and Flay. (Status db descriptions never have spaces.)
+                string dbname = split_string(" ", status.light_text, true, true, 1)[0];
+                // Don't claim Zot is impending when it's not near.
+                if (dbname == "Zot" && status.light_colour == WHITE)
+                    dbname = "Zot count";
+                const string dbdesc = getLongDescription(dbname + " status");
+                json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
             }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);

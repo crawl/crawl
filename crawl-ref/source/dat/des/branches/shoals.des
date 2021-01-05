@@ -1402,6 +1402,19 @@ MAP
     .......
 ENDMAP
 
+NAME:   nzn_prometheus_bound
+DEPTH:  Shoals
+MONS:   patrolling harpy
+KITEM:  e = book of fire ident:all
+KPROP:  nd = bloody
+KFEAT:  n = iron_grate
+: dgn.delayed_decay(_G, 'd', 'demigod corpse')
+MAP
+ 1e1
+xndnx
+ @1@
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map, by placing many

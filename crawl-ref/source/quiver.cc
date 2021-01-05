@@ -25,8 +25,10 @@
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
+#include "religion.h"
 #include "sound.h"
 #include "spl-damage.h"
+#include "spl-transloc.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
@@ -84,9 +86,16 @@ namespace quiver
         return MB_MAYBE;
     }
 
+    void action::set_target(const dist &t)
+    {
+        target = t;
+        if (!target.fire_context)
+            target.fire_context = default_fire_context;
+    }
+
     void action::reset()
     {
-        target = dist();
+        set_target(dist());
     }
 
     /**
@@ -187,10 +196,7 @@ namespace quiver
 
     shared_ptr<action> action_cycler::do_target()
     {
-        // this would be better as an action method, but it's tricky without
-        // moving untargeted_fire somewhere else
-        // should this reset()?
-
+        // this might be better as an action method
         shared_ptr<action> a = get();
         if (!a || !a->is_valid())
             return nullptr;
@@ -205,7 +211,7 @@ namespace quiver
             a->trigger(a->target);
         else
         {
-            untargeted_fire(a);
+            untargeted_fire(*a);
             if (!a->target.isCancel)
                 a->trigger();
         }
@@ -218,7 +224,7 @@ namespace quiver
         return a;
     }
 
-    string action_cycler::fire_key_hints()
+    string action_cycler::fire_key_hints() const
     {
         const bool no_other_items = *get() == *next();
         string key_hint = no_other_items
@@ -229,51 +235,6 @@ namespace quiver
                           CMD_TARGET_CYCLE_QUIVER_BACKWARD,
                           CMD_TARGET_CYCLE_QUIVER_FORWARD });
         return key_hint;
-    }
-
-    static bool _autoswitch_active()
-    {
-        return Options.auto_switch
-                && (you.equip[EQ_WEAPON] == letter_to_index('a')
-                    || you.equip[EQ_WEAPON] == letter_to_index('b'));
-    }
-
-    static bool _autoswitch_ammo_check(const item_def &ammo)
-    {
-        if (!ammo.defined())
-            return false;
-        const item_def &w1 = you.inv[letter_to_index('a')];
-        const item_def &w2 = you.inv[letter_to_index('b')];
-        return w1.defined() && _item_matches(ammo, (fire_type) 0xffff, &w1, false)
-            || w2.defined() && _item_matches(ammo, (fire_type) 0xffff, &w2, false);
-    }
-
-
-    static bool _autoswitch_to_ranged(item_def &ammo)
-    {
-        // TODO: switching away from ranged weapons with autoswitch on is a bit
-        // wonky
-        if (!_autoswitch_active())
-            return false;
-
-        // validated above
-        const int item_slot = you.equip[EQ_WEAPON] == letter_to_index('a')
-                                ? letter_to_index('b') : letter_to_index('a');
-
-        const item_def& launcher = you.inv[item_slot];
-        if (!_autoswitch_ammo_check(ammo))
-            return false;
-        if (!ammo.launched_by(launcher))
-            return false;
-
-        if (!wield_weapon(true, item_slot))
-            return false;
-
-        you.turn_is_over = true;
-        // This just does the wield. The old implementation worked by
-        // additionally firing immediately, but it seems better to do it step
-        // by step to me. Will players dislike this?
-        return true;
     }
 
     // Get a sorted list of items to show in the fire interface.
@@ -321,11 +282,7 @@ namespace quiver
                  i_flags++)
             {
                 if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
-                                  launcher, manual)
-                    || (launcher && _autoswitch_active()
-                            && (launcher->link == letter_to_index('a')
-                                || launcher->link == letter_to_index('b'))
-                            && _autoswitch_ammo_check(item)))
+                                  launcher, manual))
                 {
                     // this approach to sorting is pretty wtf
                     order.push_back((i_flags<<16) | (i_inv & 0xffff));
@@ -437,7 +394,7 @@ namespace quiver
             // TODO: does it actually make sense to have this monster in
             // quiver.cc?
 
-            target = t;
+            set_target(t);
 
             if (you.confused() && target.needs_targeting())
             {
@@ -468,7 +425,7 @@ namespace quiver
             // if this check isn't here, it is treated as a clumsy melee attack
             if (weapon && is_range_weapon(*weapon))
             {
-                mprf("You do not have any ammo quivered for %s",
+                mprf("You do not have any ammo quivered for %s.",
                                     you.weapon()->name(DESC_YOUR).c_str());
                 return;
             }
@@ -653,7 +610,8 @@ namespace quiver
 
     /**
      * An ammo_action is an action that fires ammo from a slot in the
-     * inventory. This covers both launcher-based firing, and throwing.
+     * inventory. This covers throwing; tossing and launching are handled by
+     * a subclass.
      */
     struct ammo_action : public action
     {
@@ -663,7 +621,7 @@ namespace quiver
         {
         }
 
-        void save(CrawlHashTable &save_target) const override; // defined below
+        virtual void save(CrawlHashTable &save_target) const override; // defined below
 
         bool equals(const action &other) const override
         {
@@ -671,12 +629,23 @@ namespace quiver
             return ammo_slot == static_cast<const ammo_action &>(other).ammo_slot;
         }
 
-        virtual bool launcher_check() const
+        virtual item_def *get_launcher() const override
         {
-            if (ammo_slot < 0)
-                return false;
-            return _item_matches(you.inv[ammo_slot], (fire_type) 0xffff,
-                you.weapon(), false);
+            return nullptr;
+        }
+
+        /// does the launch type match the action type and current weapon?
+        virtual bool launch_type_check() const
+        {
+            // will assert if ammo_slot is invalid
+            // intentionally uses you.weapon() instead of get_launcher(): this
+            // renders a throwing ammo invalid if the player is wielding a
+            // launcher for it. There's no in principle reason to disallow
+            // throwing stones while wielding a sling, but it's more confusing
+            // than helpful.
+            const launch_retval projected = is_launched(&you, you.weapon(),
+                                                        you.inv[ammo_slot]);
+            return projected == launch_retval::THROWN;
         }
 
         bool do_inscription_check() const override
@@ -685,7 +654,7 @@ namespace quiver
             // to ammo
             if (!is_valid()) // sanity check
                 return true;
-            const item_def *weapon = you.weapon();
+            const item_def *weapon = get_launcher();
             const item_def& ammo = you.inv[ammo_slot];
             return action::do_inscription_check()
                 && (!weapon
@@ -698,10 +667,7 @@ namespace quiver
             if (!is_valid())
                 return false;
 
-            if (fire_warn_if_impossible(true))
-                return false;
-
-            if (!launcher_check())
+            if (fire_warn_if_impossible(true, get_launcher()))
                 return false;
 
             // TODO: check inscriptions here? That code would need to be
@@ -719,18 +685,7 @@ namespace quiver
             if (!ammo.defined())
                 return false;
 
-            if (_autoswitch_active())
-            {
-                // valid but potentially disabled. It seems like there could be
-                // better ways of doing this given generalized quivers?
-                return _autoswitch_ammo_check(ammo);
-            }
-            else
-            {
-                const item_def *weapon = you.weapon();
-                return _item_matches(ammo, (fire_type) 0xffff, // TODO: ...
-                                     weapon, false);
-            }
+            return launch_type_check();
         }
 
         bool is_targeted() const override
@@ -748,26 +703,30 @@ namespace quiver
             return is_pproj_active();
         }
 
+        bool affected_by_pproj() const override
+        {
+            return true;
+        }
+
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
             if (!is_enabled())
             {
-                // try autoswitching in case that's why it's disabled
-                if (!_autoswitch_to_ranged(you.inv[ammo_slot]))
-                    fire_warn_if_impossible(); // for messaging (TODO refactor; message about inscriptions?)
+                fire_warn_if_impossible(false, get_launcher()); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            bolt beam;
-            throw_it(beam, ammo_slot, &target);
+            // TODO: refactor throw_it into here?
+            throw_it(*this);
 
             // TODO: eliminate this?
-            you.m_quiver_history.on_item_fired(you.inv[ammo_slot], true);
+            you.m_quiver_history.on_item_fired(you.inv[ammo_slot],
+                    !target.fire_context || !target.fire_context->autoswitched);
 
             t = target; // copy back, in case they are different
         }
@@ -785,7 +744,7 @@ namespace quiver
             ASSERT(quiver.link != NON_ITEM);
             // TODO: or just lightgrey?
             qdesc.textcolour(Options.status_caption_colour);
-            const launch_retval projected = is_launched(&you, you.weapon(),
+            const launch_retval projected = is_launched(&you, get_launcher(),
                                                                     quiver);
             if (!short_desc)
             {
@@ -828,16 +787,16 @@ namespace quiver
             return ammo_slot;
         }
 
-        shared_ptr<action> find_replacement() const override
+        virtual shared_ptr<action> find_replacement() const override
         {
-            return find_action_from_launcher(you.weapon());
+            return find_action_from_launcher(get_launcher());
         }
 
         vector<shared_ptr<action>> get_fire_order(
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, you.weapon(), true);
+            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), true);
 
             vector<shared_ptr<action>> result;
 
@@ -856,6 +815,47 @@ namespace quiver
         int ammo_slot;
     };
 
+    struct launcher_ammo_action : public ammo_action
+    {
+        // it could be simpler to have a distinct type for launcher ammo and
+        // throwing ammo
+        launcher_ammo_action(int slot=-1) : ammo_action(slot)
+        {
+        }
+
+        item_def *get_launcher() const override
+        {
+            return you.weapon();
+        }
+
+        virtual void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool launch_type_check() const override
+        {
+            if (ammo_slot < 0 || !get_launcher())
+                return false;
+            return you.inv[ammo_slot].launched_by(*get_launcher());
+        }
+
+        vector<shared_ptr<action>> get_fire_order(
+            bool allow_disabled=true, bool ignore_inscription=false) const override
+        {
+            vector<int> fire_order;
+            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), true);
+
+            vector<shared_ptr<action>> result;
+
+            for (auto i : fire_order)
+            {
+                auto a = make_shared<launcher_ammo_action>(i);
+                if (a->is_valid() && (allow_disabled || a->is_enabled()))
+                    result.push_back(move(a));
+            }
+            return result;
+        }
+
+    };
+
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
@@ -867,7 +867,7 @@ namespace quiver
 
         // uses ammo_action fire order
 
-        bool launcher_check() const override
+        bool launch_type_check() const override
         {
             return true;
         }
@@ -882,12 +882,6 @@ namespace quiver
             if (!ammo.defined())
                 return false;
 
-            // slightly weird looking, but this ensures that only tossing
-            // is allowed with this class. (I guess in principle it could be
-            // doable to let this class toss anything, but I'm not going to
-            // do that.)
-            if (ammo_action::is_valid())
-                return false;
             return true;
         }
     };
@@ -940,7 +934,8 @@ namespace quiver
 
     struct spell_action : public action
     {
-        spell_action(spell_type s = SPELL_NO_SPELL) : spell(s), enabled_cache(false)
+        spell_action(spell_type s = SPELL_NO_SPELL)
+            : spell(s), enabled_cache(false), col_cache(COL_USELESS)
         {
             invalidate();
         };
@@ -961,8 +956,19 @@ namespace quiver
 
         void invalidate() override
         {
+            // we cache enabled status and color because these calls are
+            // extremely side-effect-y, and can crash if called at the wrong
+            // time.
             enabled_cache = can_cast_spells(true)
                                     && !spell_is_useless(spell, true, false);
+            // this imposes excommunication colors
+            if (!enabled_cache)
+                col_cache = COL_USELESS;
+            else
+            {
+                col_cache = spell_highlight_by_utility(spell,
+                                failure_rate_colour(spell), true, false);
+            }
         }
 
         bool is_enabled() const override
@@ -1012,7 +1018,7 @@ namespace quiver
             if (!is_valid())
                 return;
 
-            target = t;
+            set_target(t);
 
             // TODO: how to handle these in the fire interface?
             if (_spell_needs_manual_targeting(spell))
@@ -1052,12 +1058,7 @@ namespace quiver
 
         int quiver_color() const override
         {
-            int col = failure_rate_colour(spell);
-            // this imposes excommunication colors
-            col = spell_highlight_by_utility(spell, col, true, false);
-            if (!is_enabled())
-                col = COL_USELESS;
-            return col;
+            return col_cache;
         }
 
         vector<tile_def> get_tiles() const override
@@ -1118,6 +1119,7 @@ namespace quiver
     private:
         spell_type spell;
         bool enabled_cache;
+        int col_cache;
     };
 
     // stuff that is silly to quiver. Basically four (overlapping) cases:
@@ -1180,21 +1182,35 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (ability == ABIL_NON_ABILITY || ability == NUM_ABILITIES)
-                return false;
-            // it's quite something that this vector needs to be reconstructed
-            // every time...
-            vector<talent> talents = your_talents(false, true);
-            for (const auto &t : talents)
-                if (t.which == ability)
-                    return true;
-            return false;
+            // special case usk abilities to ignore piety: they come and go so
+            // rapidly that they are effectively unquiverable otherwise.
+            // Should any other god powers get this treatment?
+            if (is_religious_ability(ability) && you_worship(GOD_USKAYAW))
+            {
+                auto *p = god_power_from_ability(ability);
+                return p && god_power_usable(*p, true, false);
+            }
+            return player_has_ability(ability, true);
         }
 
         bool is_enabled() const override
         {
+            if (!is_valid())
+                return false;
+
+            // hacky: use a version of the palentonga charge check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up. We can't approach this like spells (which are marked
+            // as useless with butterflies in range), because there is no
+            // equivalent of `Z` to force-activate an ability that is indicating
+            // temporary uselessness. This way, the player can still activate
+            // it from the `a` menu, just not from the quiver. (Does this apply
+            // to any other abilities with a limited range?)
+            if (ability == ABIL_ROLLING_CHARGE && !palentonga_charge_possible(true, false))
+                return false;
+
             // TODO: _check_ability_dangerous?
-            return is_valid() && check_ability_possible(ability, true);
+            return check_ability_possible(ability, true);
         }
 
         bool is_targeted() const override
@@ -1281,7 +1297,7 @@ namespace quiver
                 check_ability_possible(ability, false);
                 return;
             }
-            target = t;
+            set_target(t);
             target.find_target = true;
 
             if (autofight_check())
@@ -1292,9 +1308,7 @@ namespace quiver
 
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
-                mprf("No targets found!");
-
-            target = t;
+                mprf("No targets found! target %d,%d", t.target.x, t.target.y);
 
             t = target; // copy back, in case they are different
         }
@@ -1323,11 +1337,10 @@ namespace quiver
         vector<shared_ptr<action>> get_fire_order(
             bool allow_disabled=true, bool=false) const override
         {
-            vector<talent> talents = your_talents(false, true);
+            vector<talent> talents = your_talents(false, true, true);
             // goes by letter order
             vector<shared_ptr<action>> result;
 
-            // TODO: all sorts of random chaff that shouldn't be in fire order
             for (const auto &tal : talents)
             {
                 if (_pseudoability(tal.which))
@@ -1405,7 +1418,7 @@ namespace quiver
 
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
 
@@ -1545,18 +1558,7 @@ namespace quiver
 
         string quiver_verb() const override
         {
-            ASSERT(is_valid());
-            switch (you.inv[wand_slot].sub_type)
-            {
-            case MISC_TIN_OF_TREMORSTONES:
-                return "Throw";
-            case MISC_HORN_OF_GERYON:
-                return "Blow";
-            case MISC_BOX_OF_BEASTS:
-                return "Open";
-            default:
-                return "Evoke";
-            }
+            return "Evoke";
         }
 
         bool is_targeted() const override
@@ -1686,7 +1688,7 @@ namespace quiver
 
         void trigger(dist &t) override
         {
-            target = t;
+            set_target(t);
             if (!is_valid())
                 return;
 
@@ -1731,6 +1733,12 @@ namespace quiver
     void ammo_action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "ammo_action";
+        save_target["param"] = ammo_slot;
+    }
+
+    void launcher_ammo_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "launcher_ammo_action";
         save_target["param"] = ammo_slot;
     }
 
@@ -1794,6 +1802,8 @@ namespace quiver
         // is there something more elegant than this?
         if (type == "ammo_action")
             return make_shared<ammo_action>(param);
+        else if (type == "launcher_ammo_action")
+            return make_shared<launcher_ammo_action>(param);
         else if (type == "spell_action")
             return make_shared<spell_action>(static_cast<spell_type>(param));
         else if (type == "ability_action")
@@ -1838,6 +1848,7 @@ namespace quiver
         {
             // if the right item type is currently present in the main quiver,
             // use that
+            // TODO: this logic may be slightly odd with throwing stones quivered?
             slot = cur_quiver_item;
         }
         else
@@ -1845,7 +1856,12 @@ namespace quiver
             // otherwise, find the last fired ammo for this launcher. (This is
             // an awful lot of effort to choose correctly between stones and
             // bullets...)
-            slot = you.m_quiver_history.get_last_ammo(item);
+            int last = you.m_quiver_history.get_last_ammo(item);
+            if (last >= 0 && you.inv[last].defined()
+                && _item_matches(you.inv[last], FIRE_LAUNCHER, item, false))
+            {
+                slot = last;
+            }
         }
 
         // Finally, try looking at the fire order.
@@ -1857,7 +1873,9 @@ namespace quiver
                 slot = order[0];
         }
 
-        auto result = make_shared<ammo_action>(slot);
+        auto result = item && is_range_weapon(*item)
+                            ? make_shared<launcher_ammo_action>(slot)
+                            : make_shared<ammo_action>(slot);
 
         // if slot is still -1, we have failed, and the fire order is
         // empty for some reason. We should therefore populate the `error`
@@ -1890,8 +1908,14 @@ namespace quiver
         return result;
     }
 
-    // initialize as invalid, not empty
-    action_cycler::action_cycler() : current(make_shared<ammo_action>(-1)) { }
+    action_cycler::action_cycler(shared_ptr<action> init)
+        : autoswitched(false), current(init)
+    { }
+
+    // by default, initialize as invalid, not empty
+    action_cycler::action_cycler()
+        : action_cycler(make_shared<ammo_action>(-1))
+    { }
 
     void action_cycler::save(const string key) const
     {
@@ -1953,13 +1977,14 @@ namespace quiver
      * @param new_act the action to fill in. nullptr is safe.
      * @return whether the action changed as a result of the call.
      */
-    bool action_cycler::set(const shared_ptr<action> new_act)
+    bool action_cycler::set(const shared_ptr<action> new_act, bool _autoswitched)
     {
         auto n = new_act ? new_act : make_shared<action>();
 
         const bool diff = *n != *get();
         auto old = move(current);
         current = move(n);
+        autoswitched = _autoswitched;
 
         if (diff)
         {
@@ -1976,17 +2001,20 @@ namespace quiver
             // side effects, ugh. Update the fire history, and play a sound
             // if needed. TODO: refactor so this is less side-effect-y
             // somehow?
-            const int item_slot = get()->get_item();
-            if (item_slot >= 0 && you.inv[item_slot].defined())
+            if (!autoswitched)
             {
-                const item_def item = you.inv[item_slot];
+                const int item_slot = get()->get_item();
+                if (item_slot >= 0 && you.inv[item_slot].defined())
+                {
+                    const item_def &item = you.inv[item_slot];
 
-                quiver::launcher t = quiver::AMMO_THROW;
-                const item_def *weapon = you.weapon();
-                if (weapon && item.launched_by(*weapon))
-                    t = quiver::_get_weapon_ammo_type(weapon);
+                    quiver::launcher t = quiver::AMMO_THROW;
+                    const item_def *weapon = you.weapon();
+                    if (weapon && item.launched_by(*weapon))
+                        t = quiver::_get_weapon_ammo_type(weapon);
 
-                you.m_quiver_history.set_quiver(you.inv[item_slot], t);
+                    you.m_quiver_history.set_quiver(you.inv[item_slot], t);
+                }
             }
 #ifdef USE_SOUND
             parse_sound(CHANGE_QUIVER_SOUND);
@@ -1996,12 +2024,15 @@ namespace quiver
         return diff;
     }
 
-    static bool _is_currently_launched_ammo(int slot)
+    static bool _is_currently_launched_ammo(shared_ptr<action> a)
     {
-        const item_def *weapon = you.weapon();
-        return weapon && slot >= 0 && you.inv[slot].defined()
-                                        && you.inv[slot].launched_by(*weapon);
+        auto la = dynamic_pointer_cast<launcher_ammo_action>(a);
+        return la && la->is_valid();
     }
+
+    launcher_action_cycler::launcher_action_cycler()
+        : action_cycler(make_shared<launcher_ammo_action>(-1))
+    { }
 
     // only reacts to ammo launched by the current weapon, or empty quiver
     // note that the action may still be valid on its own terms when this
@@ -2010,16 +2041,16 @@ namespace quiver
     {
         if (action_cycler::is_empty())
             return true;
-        return !_is_currently_launched_ammo(get()->get_item());
+        return !_is_currently_launched_ammo(get());
     }
 
-    bool launcher_action_cycler::set(const shared_ptr<action> new_act)
+    bool launcher_action_cycler::set(const shared_ptr<action> new_act, bool _autoswitched)
     {
-        if (new_act &&
-            (_is_currently_launched_ammo(new_act->get_item())
-            || *new_act == action()))
+        if (new_act
+            && (_is_currently_launched_ammo(new_act)
+                || *new_act == action()))
         {
-            return action_cycler::set(new_act);
+            return action_cycler::set(new_act, _autoswitched);
         }
         else
             set_needs_redraw();
@@ -2044,6 +2075,7 @@ namespace quiver
         // don't use regular set: avoid all the side effects when importing
         // from another action cycler. (Used in targeting.)
         current = other.get();
+        autoswitched = false;
         set_needs_redraw();
         return diff;
     }
@@ -2056,6 +2088,8 @@ namespace quiver
     {
         ASSERT(current); // sanity check: `set` prevents nullptr
 
+        // ugh. (n.b. this is ok with const because the pointer itself isn't modified)
+        current->default_fire_context = this;
         return current;
     }
 
@@ -2078,18 +2112,52 @@ namespace quiver
                               && get()->get_item() == item_slot;
     }
 
-    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a, int dir, bool allow_disabled)
+    // convert fire_type bitfields to action types
+    static void _flag_to_action_types(vector<shared_ptr<action>> &action_types, int flag)
+    {
+        // what to do with inscribed?
+        if (flag & FIRE_LAUNCHER)
+            action_types.push_back(make_shared<launcher_ammo_action>(-1));
+        if (flag & FIRE_THROWING) // don't differentiate these, handled internal to ammo_action
+            action_types.push_back(make_shared<ammo_action>(-1));
+        if (flag & FIRE_SPELL)
+            action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
+        if (flag & FIRE_EVOKABLE)
+        {
+            action_types.push_back(make_shared<wand_action>(-1));
+            action_types.push_back(make_shared<misc_action>(-1));
+            action_types.push_back(make_shared<artefact_evoke_action>(-1));
+        }
+        if (flag & FIRE_ABILITY)
+            action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
+    }
+
+    static void _check_and_add_actions(vector<shared_ptr<action>> &action_types,
+        int f, int flag, int &done)
+    {
+        if ((f & flag) && !(flag & done))
+        {
+            _flag_to_action_types(action_types, flag);
+            done &= flag;
+        }
+    }
+
+    static shared_ptr<action> _get_next_action_type(shared_ptr<action> a,
+        int dir, bool allow_disabled)
     {
         // this all seems a bit messy
 
-        // Construct the type order.
+        // Construct the type order from Options.fire_order:
         vector<shared_ptr<action>> action_types;
-        action_types.push_back(make_shared<ammo_action>(-1));
-        action_types.push_back(make_shared<wand_action>(-1));
-        action_types.push_back(make_shared<misc_action>(-1));
-        action_types.push_back(make_shared<artefact_evoke_action>(-1));
-        action_types.push_back(make_shared<spell_action>(SPELL_NO_SPELL));
-        action_types.push_back(make_shared<ability_action>(ABIL_NON_ABILITY));
+        int done = 0x0;
+        // This doesn't support ordering ammo subtypes interleaved with anything
+        // else
+        vector<int> flags_to_check =
+            { FIRE_LAUNCHER, FIRE_THROWING, FIRE_SPELL, FIRE_EVOKABLE,
+                FIRE_ABILITY };
+        for (auto f : Options.fire_order)
+            for (auto flag : flags_to_check)
+                _check_and_add_actions(action_types, f, flag, done);
 
         if (dir < 0)
             reverse(action_types.begin(), action_types.end());
@@ -2150,7 +2218,7 @@ namespace quiver
      * @return the resulting action, which may be invalid or an empty quiver.
      *         Guaranteed to be not nullptr
      */
-    shared_ptr<action> action_cycler::next(int dir, bool allow_disabled)
+    shared_ptr<action> action_cycler::next(int dir, bool allow_disabled) const
     {
         // first try the next action of the same type
         shared_ptr<action> result = get()->find_next(dir, allow_disabled, false);
@@ -2182,6 +2250,12 @@ namespace quiver
         if (!get()->is_valid())
         {
             auto r = get()->find_replacement();
+            if (r && r->is_valid())
+                set(r, true);
+        }
+        else if (autoswitched)
+        {
+            auto r = ammo_to_action(you.m_quiver_history.get_last_ammo(get()->get_launcher()));
             if (r && r->is_valid())
                 set(r);
         }
@@ -2215,13 +2289,18 @@ namespace quiver
         {
             if (you.equip[i] == slot)
             {
-                mpr("You can't toss equipped items.");
-                return make_shared<ammo_action>(-1);
+                auto a = make_shared<ammo_action>(-1);
+                a->error = "You can't toss equipped items.";
+                return a;
             }
         }
 
+        shared_ptr<action> a = nullptr;
+        if (you.weapon() && is_range_weapon(*you.weapon()))
+            a = make_shared<launcher_ammo_action>(slot);
         // use ammo as the fallback -- may well end up invalid
-        auto a = make_shared<ammo_action>(slot);
+        if (!a || !a->is_valid())
+            a = make_shared<ammo_action>(slot);
         if (force && (!a || !a->is_valid()))
             return make_shared<fumble_action>(slot);
         return a;
@@ -2343,7 +2422,15 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
-              cur_quiver(_quiver), allow_empty(_allow_empty)
+              cur_quiver(_quiver), allow_empty(_allow_empty),
+              any_spells(you.spell_no),
+              any_abilities(your_talents(true, true).size() > 0),
+              // regular species can force-quiver any (non-equipped) item, but
+              // felids have a more limited selection, so we need to directly
+              // calculate it.
+              any_items(you.species == SP_FELID
+                ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
+                : inv_count() > 0)
         {
             set_tag("actions");
             action_cycle = Menu::CYCLE_TOGGLE;
@@ -2367,13 +2454,18 @@ namespace quiver
             return false;
         }
 
+        bool pointless()
+        {
+            return !(any_spells || any_abilities || any_items);
+        }
+
     protected:
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
-                                            ? "Quiver which item? (- for none)"
-                                            : "Quiver which item?",
-                                          menu_type::invlist, OSEL_ANY,
+                                            ? "Quiver which item? (- for none, */% to toggle full inventory)"
+                                            : "Quiver which item? (*/% to toggle full inventory)",
+                                          menu_type::invlist, OSEL_QUIVER_ACTION,
                                           OPER_QUIVER, invprompt_flag::hide_known, '-');
 
             if (prompt_failed(slot))
@@ -2399,7 +2491,9 @@ namespace quiver
 
         bool _choose_from_abilities()
         {
-            vector<talent> talents = your_talents(false);
+            // currently doesn't show usk disabled abilities even though they
+            // are shown for Q, is this confusing?
+            vector<talent> talents = your_talents(false, true);
             // TODO: better handling for no abilities?
             int selected = choose_ability_menu(talents);
 
@@ -2417,9 +2511,9 @@ namespace quiver
                 mprf("Clearing quiver.");
                 return false;
             }
-            else if (key == '*')
-                return _choose_from_inv(); // TODO: fumble ammo
-            else if (key == '&')
+            else if ((key == '*' || key == '%') && any_items)
+                return _choose_from_inv();
+            else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
                                                     "Select a spell to quiver");
@@ -2433,19 +2527,32 @@ namespace quiver
                 }
                 return false;
             }
-            else if (key == '^')
+            else if (key == '^' && any_abilities)
                 return _choose_from_abilities();
             return Menu::process_key(key);
         }
 
         virtual formatted_string calc_title() override
         {
-            string s = "Quiver which action? (";
+            string s = "Quiver which action?";
+            vector<string> extra_cmds;
+
             if (allow_empty)
-                s += "<w>-</w>: none, ";
-            s += "<w>*</w>: full inventory, <w>&</w>: spells, <w>^</w>: abilities)";
+                extra_cmds.push_back("<w>-</w>: none");
+            if (any_items)
+                extra_cmds.push_back("<w>*</w>: inventory");
+            if (any_spells)
+                extra_cmds.push_back("<w>&</w>: spells");
+            if (any_abilities)
+                extra_cmds.push_back("<w>^</w>: abilities");
+            if (extra_cmds.size())
+                s += "(" + join_strings(extra_cmds.begin(), extra_cmds.end(), ", ") + ")";
             return formatted_string::parse_string(s);
         }
+
+        bool any_spells;
+        bool any_abilities;
+        bool any_items;
     };
 
     /**
@@ -2546,6 +2653,8 @@ namespace quiver
         vector<shared_ptr<action>> actions;
         auto tmp = ammo_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
+        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
@@ -2557,16 +2666,24 @@ namespace quiver
         tmp = ability_action(ABIL_NON_ABILITY).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
 
+        if (actions.size() == 0 && menu.pointless())
+        {
+            mpr("You have nothing to quiver.");
+            return;
+        }
+
         menu.set_title(new MenuEntry("", MEL_TITLE));
 
         menu_letter hotkey;
-        // What to do if everything is disabled?
+        if (actions.size() == 0)
+            menu.set_more(formatted_string::parse_string("<lightred>No regular actions available to quiver.</lightred>"));
+
         for (const auto &a : actions)
         {
             if (!a || !a->is_valid())
                 continue;
             string action_desc = a->quiver_description();
-            if (you.launcher_action.item_is_quivered(a->get_item()))
+            if (*you.launcher_action.get() == *a)
                 action_desc += " (quivered ammo)";
             else if (you.quiver_action.item_is_quivered(a->get_item()))
                 action_desc += " (quivered)";
@@ -2626,7 +2743,9 @@ namespace quiver
         if (!explicitly_chosen)
         {
             // If the item was not actively chosen, i.e. just automatically
-            // passed into the quiver, don't change any of the quiver settings.
+            // passed into the quiver, don't add it to the quiver history for
+            // this ammo type. This lets us revert back to an actively chosen
+            // ammo on pickup.
             you.redraw_quiver = true;
             return;
         }
@@ -2638,7 +2757,7 @@ namespace quiver
         if (weapon && item.launched_by(*weapon))
         {
             const quiver::launcher t = quiver::_get_weapon_ammo_type(weapon);
-            m_last_used_of_type[t] = item;
+            m_last_used_of_type[t] = item; // makes a copy
             m_last_used_of_type[t].quantity = 1;    // 0 makes it invalid :(
         }
         else
@@ -2700,6 +2819,12 @@ namespace quiver
         you.launcher_action.on_actions_changed();
     }
 
+    void set_needs_redraw()
+    {
+        you.quiver_action.set_needs_redraw();
+        you.launcher_action.set_needs_redraw();
+    }
+
     // Called when the player has switched weapons
     // Some cases of interest:
     // * player picks up a new weapon and wields it
@@ -2740,11 +2865,13 @@ namespace quiver
 // Helpers
 // ----------------------------------------------------------------------
 
-// Helper for _get_fire_order.
+// Helper for ammo _get_fire_order. Ammo only.
 // Types may actually contain more than one fire_type.
 static bool _item_matches(const item_def &item, fire_type types,
                           const item_def* launcher, bool manual)
 {
+    // TODO: refactor into something less annoying? This is all a semi-duplicate
+    // of is_valid code...
     ASSERT(item.defined());
 
     if (types & FIRE_INSCRIBED)
@@ -2802,7 +2929,7 @@ static int _get_pack_slot(const item_def& item)
         {
             // =f prevents item from being in fire order.
             if (quiver::_fireorder_inscription_ok(i, false) == MB_FALSE)
-                return -1;
+                continue;
 
             return i;
         }

@@ -73,7 +73,7 @@ void adjust_item(int from_slot)
 
     swap_inv_slots(from_slot, to_slot, true);
     you.wield_change = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 static void _adjust_spell()
@@ -224,7 +224,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         quiver::on_weapon_changed();
     }
     else // just to make sure
-        you.redraw_quiver = true;
+        quiver::set_needs_redraw();
 
     // Swap the moved items in last_pickup if they're there.
     if (!you.last_pickup.empty())

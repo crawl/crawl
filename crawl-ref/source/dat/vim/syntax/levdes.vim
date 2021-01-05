@@ -174,7 +174,7 @@ syn keyword desOrientation no_wall_fixup opaque no_trap_gen
 
 " KPROP
 syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into
-syn keyword desOrientation no_submerge no_tide no_jiyva
+syn keyword desOrientation no_tide no_jiyva
 
 syn match desComment "^\s*#.*$&"
 

@@ -36,11 +36,13 @@ dice_def shatter_damage(int pow, monster *mons = nullptr);
 spret cast_irradiate(int powc, actor* who, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects(const actor* act);
+bool ignite_poison_affects_cell(const coord_def where, actor* agent);
 spret cast_ignite_poison(actor *agent, int pow, bool fail,
                               bool tracer = false);
 bool safe_discharge(coord_def where, vector<const actor *> &exclude);
 spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
+dice_def base_fragmentation_damage(int pow);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &hole);
@@ -61,6 +63,7 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
+bool dazzle_monster(monster *mon, int pow);
 spret cast_dazzling_flash(int pow, bool fail, bool tracer = false);
 
 spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
@@ -91,6 +94,11 @@ void actor_apply_toxic_bog(actor *act);
 
 vector<coord_def> find_ramparts_walls(const coord_def &center);
 spret cast_frozen_ramparts(int pow, bool fail);
+void end_frozen_ramparts();
+dice_def ramparts_damage(int pow, bool random = true);
 
 vector<monster *> find_abszero_possibles(int radius);
 spret cast_absolute_zero(int pow, bool fail, bool tracer = false);
+
+spret cast_noxious_bog(int pow, bool fail);
+vector<coord_def> find_bog_locations(const coord_def &center, int pow);

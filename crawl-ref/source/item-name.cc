@@ -1954,7 +1954,6 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_MISSILES   < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_ARMOURS    < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_WANDS      < MAX_SUBTYPES);
-    COMPILE_CHECK(NUM_FOODS      < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_SCROLLS    < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_JEWELLERY  < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_POTIONS    < MAX_SUBTYPES);
@@ -1963,6 +1962,7 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_MISCELLANY < MAX_SUBTYPES);
 #if TAG_MAJOR_VERSION == 34
     COMPILE_CHECK(NUM_RODS       < MAX_SUBTYPES);
+    COMPILE_CHECK(NUM_FOODS      < MAX_SUBTYPES);
 #endif
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
@@ -2967,8 +2967,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_POTIONS:
     {
-        // Mummies can't use potions.
-        if (you.undead_state(temp) == US_UNDEAD)
+        // Mummies and liches can't use potions.
+        if (you.undead_state(temp) == US_UNDEAD && you.species != SP_GHOUL)
             return true;
 
         if (!ident && !item_type_known(item))

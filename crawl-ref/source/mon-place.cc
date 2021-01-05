@@ -204,8 +204,6 @@ bool monster_habitable_grid(monster_type mt,
 // Returns true if the monster can submerge in the given grid.
 bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
 {
-    if (testbits(env.pgrid(mon->pos()), FPROP_NO_SUBMERGE))
-        return false;
     if (!mon->is_habitable_feat(feat))
         return false;
     if (mons_class_flag(mon->type, M_SUBMERGES))
@@ -1543,7 +1541,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
     if (cs == MONS_SKELETON && !mons_skeleton(base))
         return false;
 
-    // If zombie, monster must have unrotted meat.
+    // If zombie, monster must have a corpse.
     if (cs == MONS_ZOMBIE && !mons_zombifiable(base))
         return false;
 
@@ -1827,7 +1825,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR_CAPTAIN, { {2}, {{ BAND_YAKTAURS, {2, 5}, true }}}},
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
-    { MONS_INSUBSTANTIAL_WISP, { {}, {{ BAND_INSUBSTANTIAL_WISPS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
     { MONS_BALRUG,          { {}, {{ BAND_BALRUG, {2, 5}, true }}}},
     { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},
@@ -2138,7 +2135,6 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_ANCIENT_CHAMPIONS,   {{{MONS_ANCIENT_CHAMPION, 1}}}},
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
-    { BAND_INSUBSTANTIAL_WISPS, {{{MONS_INSUBSTANTIAL_WISP, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_MAGE, 92},
                                   {MONS_DEEP_ELF_KNIGHT, 24},

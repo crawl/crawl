@@ -14,6 +14,7 @@ spret controlled_blink(bool safe_cancel = true);
 void wizard_blink();
 
 spret frog_hop(bool fail);
+bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
 spret palentonga_charge(bool fail, dist *target=nullptr);
 int palentonga_charge_range();
 

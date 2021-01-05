@@ -1000,7 +1000,7 @@ static bool _could_set_training_target(const item_def &item, bool ignore_current
     const int target = min(_item_training_target(item), 270);
 
     return target && !is_useless_skill(skill)
-       && you.skill(skill, 10, false, false, false) < target
+       && you.skill(skill, 10, false, false) < target
        && (ignore_current || you.get_training_target(skill) < target);
 }
 
@@ -1026,8 +1026,8 @@ static string _your_skill_desc(skill_type skill, bool show_target_button, int sc
                                 min_scaled_target / 10, min_scaled_target % 10,
                                 skill_name(skill));
     }
-    int you_skill_temp = you.skill(skill, 10, false, true, true);
-    int you_skill = you.skill(skill, 10, false, false, false);
+    int you_skill_temp = you.skill(skill, 10);
+    int you_skill = you.skill(skill, 10, false, false);
 
     return make_stringf("Your %sskill: %d.%d%s",
                             (you_skill_temp != you_skill ? "(base) " : ""),
@@ -1377,6 +1377,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
             "those struck by it, causing extra injury to most foes "
             "and up to half again as much damage against particularly "
             "susceptible opponents.";
+    }
+    else if (is_unrandom_artefact(item, UNRAND_GUARD))
+    {
+        description += "\n\nIt retains the spirit of the tree from which "
+                       "it was made. In the hands of one skilled in "
+                       "evocations this spirit is drawn out to fight "
+                       "along side the wielder.";
     }
     else if (is_unrandom_artefact(item, UNRAND_OLGREB))
         description += "\n\nIt grants immunity to poison.";
@@ -1867,13 +1874,16 @@ static string _describe_armour(const item_def &item, bool verbose)
     else
     {
         const int max_ench = armour_max_enchant(item);
-        if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (max_ench > 0)
         {
-            description += "\n\nIt can be maximally enchanted to +"
-                           + to_string(max_ench) + ".";
+            if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
+            {
+                description += "\n\nIt can be maximally enchanted to +"
+                               + to_string(max_ench) + ".";
+            }
+            else
+                description += "\n\nIt cannot be enchanted further.";
         }
-        else
-            description += "\n\nIt cannot be enchanted further.";
 
     }
 
@@ -2189,8 +2199,15 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_WANDS:
         if (item_type_known(item))
         {
-            spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
-            description << "\n\nNoise when evoked: " << spell_noise_string(spell);
+            description << "\n";
+
+            const spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+
+            const string damage_str = spell_damage_string(spell, true);
+            if (damage_str != "")
+                description << "\nDamage: " << damage_str;
+
+            description << "\nNoise: " << spell_noise_string(spell);
         }
         break;
 
@@ -2574,14 +2591,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
     case OBJ_STAVES:
         if (_could_set_training_target(item, false))
             actions.push_back(CMD_SET_SKILL_TARGET);
-        // intentional fallthrough
-    case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
             if (item_is_wieldable(item))
                 actions.push_back(CMD_WIELD_WEAPON);
-            if (is_throwable(&you, item))
-                actions.push_back(CMD_QUIVER_ITEM);
         }
         break;
     case OBJ_MISSILES:
@@ -2619,7 +2632,10 @@ static vector<command_type> _allowed_actions(const item_def& item)
         actions.push_back(CMD_WIELD_WEAPON);
 
     if (item_is_evokable(item))
+    {
+        actions.push_back(CMD_QUIVER_ITEM);
         actions.push_back(CMD_EVOKE);
+    }
 
     actions.push_back(CMD_DROP);
 
@@ -2958,7 +2974,7 @@ void inscribe_item(item_def &item)
 
     mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 }
 
 /**
@@ -2992,25 +3008,28 @@ static string _player_spell_stats(const spell_type spell)
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
 
-    description += "\n\nPower : ";
+    const string damage_string = spell_damage_string(spell);
+    const int acc = spell_acc(spell);
+    // TODO: generalize this pattern? It's very common in descriptions
+    const int padding = (acc != -1) ? 8 : damage_string.size() ? 6 : 5;
+    description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
-    const string damage_string = spell_damage_string(spell);
     if (damage_string != "") {
-        description += "\nDamage : ";
+        description += make_stringf("\n%*s: ", padding, "Damage");
         description += damage_string;
     }
-    const int acc = spell_acc(spell);
     if (acc != -1)
     {
         ostringstream acc_str;
         _print_bar(acc, 3, "", acc_str);
-        description += "\nAccuracy: :" + acc_str.str();
+        description += make_stringf("\n%*s: %s", padding, "Accuracy",
+                                                    acc_str.str().c_str());
     }
 
-    description += "\nRange : ";
+    description += make_stringf("\n%*s: ", padding, "Range");
     description += spell_range_string(spell);
-    description += "\nNoise : ";
+    description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
     description += "\n";
     return description;
@@ -3276,7 +3295,7 @@ static void _get_spell_description(const spell_type spell,
                 ? make_stringf("You cannot be affected by this "
                                "spell right now. %s\n",
                                wiz_info.c_str())
-                : make_stringf("Chance to beat your WL: %d%%%s\n",
+                : make_stringf("Chance to defeat your Will: %d%%%s\n",
                                hex_chance(spell, hd),
                                wiz_info.c_str());
         }
@@ -3586,8 +3605,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "cold";
     case MR_RES_ACID:
         return "acid";
-    case MR_RES_ROTTING:
-        return "rotting";
+    case MR_RES_MIASMA:
+        return "miasma";
     case MR_RES_NEG:
         return "negative energy";
     case MR_RES_DAMNATION:
@@ -3658,14 +3677,16 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
-        { AF_DRAIN_XP,          "drain skills" },
+        { AF_DRAIN,             "drain life" },
         { AF_ELEC,              "deal up to %d extra electric damage" },
         { AF_FIRE,              "deal up to %d extra fire damage" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
         { AF_POISON,            "cause poisoning" },
         { AF_POISON_STRONG,     "cause strong poisoning" },
+#if TAG_MAJOR_VERSION == 34
         { AF_ROT,               "cause rotting" },
+#endif
         { AF_VAMPIRIC,          "drain health from the living" },
 #if TAG_MAJOR_VERSION == 34
         { AF_KLOWN,             "cause random powerful effects" },
@@ -3884,7 +3905,8 @@ static string _monster_spells_description(const monster_info& mi)
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("\nTo read a description, press the key listed above. "
-        "(AdB) indicate damage dice, (x%%) indicates the chance to beat your WL, "
+        "(AdB) indicates damage (the sum of A B-sided dice), "
+        "(x%%) indicates the chance to defeat your Will, "
         "and (y) indicates the spell range");
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
@@ -4021,38 +4043,40 @@ static void _print_bar(int value, int scale, string name,
     if (base_value == INT_MAX)
         base_value = value;
 
-    result << name << " ";
+    if (name.size())
+        result << name << " ";
 
     const int display_max = value ? value : base_value;
     const bool currently_disabled = !value && base_value;
 
     if (currently_disabled)
-      result << "(";
+      result << "none (normally ";
 
-    for (int i = 0; i * scale < display_max; i++)
+    if (display_max == 0)
+        result <<  "none";
+    else
     {
-        result << "+";
-        if (i % 5 == 4)
-            result << " ";
+        for (int i = 0; i * scale < display_max; i++)
+        {
+            result << "+";
+            if (i % 5 == 4)
+                result << " ";
+        }
     }
 
     if (currently_disabled)
-      result << ")";
+        result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!you.suppress_wizard)
         result << " (" << value << ")";
 #endif
 
-    if (currently_disabled)
-    {
-        result << " (Normal " << name << ")";
-
 #ifdef DEBUG_DIAGNOSTICS
+    if (currently_disabled)
         if (!you.suppress_wizard)
-            result << " (" << base_value << ")";
+            result << " (base: " << base_value << ")";
 #endif
-    }
 }
 
 /**
@@ -4075,7 +4099,7 @@ static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
     // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
-    _print_bar(mi.ac, 5, "AC", result);
+    _print_bar(mi.ac, 5, "    AC:", result);
     result << "\n";
 }
 
@@ -4087,7 +4111,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
     _describe_to_hit(mi, result);
     result << "\n";
 }
@@ -4102,12 +4126,12 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
     if (mi.willpower() == WILL_INVULN)
     {
-        result << "Will ∞\n";
+        result << "  Will: ∞\n";
         return;
     }
 
     const int bar_scale = WL_PIP;
-    _print_bar(mi.willpower(), bar_scale, "Will", result);
+    _print_bar(mi.willpower(), bar_scale, "  Will:", result);
     result << "\n";
 }
 
@@ -4176,7 +4200,7 @@ static string _monster_stat_description(const monster_info& mi)
     {
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_ROTTING, MR_RES_NEG,    MR_RES_DAMNATION,
+        MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
         MR_RES_TORNADO,
     };
 

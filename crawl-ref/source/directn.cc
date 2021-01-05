@@ -291,6 +291,12 @@ void direction_chooser::print_top_prompt() const
 {
     if (!top_prompt.empty())
         mprf(MSGCH_PROMPT, "%s", top_prompt.c_str());
+    else if (moves.fire_context)
+    {
+        // TODO: consolidate top prompt construction more
+        mprf(MSGCH_PROMPT, "%s",
+            moves.fire_context->get()->quiver_description().tostring().c_str());
+    }
 }
 
 void direction_chooser::print_key_hints() const
@@ -312,7 +318,7 @@ void direction_chooser::print_key_hints() const
             prompt += moves.fire_context->fire_key_hints() + "\n";
         string direction_hint = "";
         if (!behaviour->targeted())
-            direction_hint = "Dir - look around";
+            direction_hint = "Dir - look around, f - activate";
         else
         {
             switch (restricts)
@@ -464,6 +470,7 @@ direction_chooser::direction_chooser(dist& moves_,
     range(args.range),
     just_looking(args.just_looking),
     prefer_farthest(args.prefer_farthest),
+    allow_shift_dir(args.allow_shift_dir),
     self(args.self),
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
@@ -659,7 +666,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     if (!list_features.empty())
     {
         desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
-        for (const coord_def c : list_features)
+        for (const coord_def &c : list_features)
         {
             ostringstream desc;
 #ifndef USE_TILE_LOCAL
@@ -1727,6 +1734,8 @@ void direction_chooser::handle_movement_key(command_type key_command,
         const bool unshifted = (shift_direction(key_command) != key_command);
         if (unshifted)
             set_target(target() + delta);
+        else if (!allow_shift_dir)
+            mpr("You can't do that.");
         else
             *loop_done = select_compass_direction(delta);
     }
@@ -2245,6 +2254,8 @@ public:
 
     void process_command(command_type cmd)
     {
+        // the chooser needs a cursor, but we need to hide it here
+        cursor_control cc(false);
         bool loop_done = m_dc.process_command(cmd);
 
         // Don't allow going out of bounds.
@@ -2325,7 +2336,9 @@ bool direction_chooser::choose_direction()
     ui::cutoff_point ui_cutoff_point;
 #endif
 
+#ifndef USE_TILE_LOCAL
     cursor_control ccon(!Options.use_fake_cursor);
+#endif
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
     targeter_smite legacy_range(&you, range, 0, 0, true);

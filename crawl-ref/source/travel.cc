@@ -56,6 +56,7 @@
 #include "terrain.h"
 #include "tiles-build-specific.h"
 #include "traps.h"
+#include "travel-open-doors-type.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
@@ -128,7 +129,9 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-//#define DEBUG_TRAVEL
+#ifdef DEBUG_DIAGNOSTICS
+#define DEBUG_TRAVEL
+#endif
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -333,6 +336,42 @@ static bool _monster_blocks_travel(const monster_info *mons)
            && !fedhas_passthrough(mons);
 }
 
+// Returns true if the feature type "grid" is a closed door which
+// autoexplore/travel will not normally approach in order to go through it.
+static bool _feat_is_blocking_door(const dungeon_feature_type grid)
+{
+    if (Options.travel_open_doors == travel_open_doors_type::avoid)
+        return feat_is_closed_door(grid);
+    else
+        return feat_is_runed(grid);
+}
+
+// Returns {flag, barrier}.
+// "flag" is true if the feature type "grid" is a closed door which autotravel
+// will not pass through, false otherwise.
+// "barrier" is a description of "grid" if autotravel will not pass through it,
+// and no game time has passed since the player pressed (say) "o", "" otherwise.
+// This function should only be used for the choice to open the door itself.
+static pair<bool, string> _feat_is_blocking_door_strict(
+    const dungeon_feature_type grid)
+{
+    if (Options.travel_open_doors == travel_open_doors_type::open
+        ? !feat_is_runed(grid) : !feat_is_closed_door(grid))
+    {
+        return {false, ""};
+    }
+
+    if (you.elapsed_time == you.elapsed_time_at_last_input)
+    {
+        string barrier;
+        if (feat_is_runed(grid))
+            return {true, "unopened runed door"};
+        else
+            return {true, "unopened door"};
+    }
+    return {true, ""};
+}
+
 /*
  * Returns true if the square at (x,y) is a dungeon feature the character
  * can't (under normal circumstances) safely cross.
@@ -357,7 +396,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 
     return feat_is_water(grid)
            || grid == DNGN_LAVA
-           || feat_is_runed(grid)
+           || _feat_is_blocking_door(grid)
            || is_trap(c)
            || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
            || g_Slime_Wall_Check && slime_wall_neighbour(c)
@@ -440,7 +479,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     // Only try pathing through temporary obstructions we remember, not
     // those we can actually see (since the latter are clearly still blockers)
     try_fallback = try_fallback
-                    && (!you.see_cell(c) || feat_is_runed(grid));
+                    && (!you.see_cell(c) || _feat_is_blocking_door(grid));
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
@@ -483,7 +522,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
-    if (feat_is_runed(levelmap_cell.feat()) && !try_fallback)
+    if (!try_fallback && _feat_is_blocking_door(levelmap_cell.feat()))
         return false;
 
     return feat_is_traversable_now(grid, try_fallback);
@@ -711,6 +750,7 @@ static void _set_target_square(const coord_def &target)
 static void _explore_find_target_square()
 {
     bool runed_door_pause = false;
+    bool closed_door_pause = false;
 
     travel_pathfind tp;
     tp.set_floodseed(you.pos(), true);
@@ -725,10 +765,20 @@ static void _explore_find_target_square()
         fallback_tp.set_floodseed(you.pos(), true);
         whereto = fallback_tp.pathfind(static_cast<run_mode_type>(you.running.runmode), true);
 
-        if (whereto.distance_from(you.pos()) == 1 && cell_is_runed(whereto))
+        if (whereto.distance_from(you.pos()) == 1)
         {
-            runed_door_pause = true;
-            whereto.reset();
+            if (cell_is_runed(whereto))
+            {
+                runed_door_pause = true;
+                whereto.reset();
+            }
+            // use orig_terrain() as that's what cell_is_runed() does.
+            else if (Options.travel_open_doors == travel_open_doors_type::avoid
+                     && feat_is_closed_door(orig_terrain(whereto)))
+            {
+                closed_door_pause = true;
+                whereto.reset();
+            }
         }
     }
 
@@ -773,11 +823,17 @@ static void _explore_find_target_square()
             if (unknown_trans)
                 reasons.push_back("unvisited transporter");
 
+            if (closed_door_pause)
+                reasons.push_back("unopened door");
+
             if (estatus & EST_GREED_UNFULFILLED)
                 inacc.push_back("items");
             // A runed door already implies an unexplored place.
-            if (!runed_door_pause && estatus & EST_PARTLY_EXPLORED)
+            if (!runed_door_pause && !closed_door_pause &&
+                estatus & EST_PARTLY_EXPLORED)
+            {
                 inacc.push_back("places");
+            }
 
             if (!inacc.empty())
             {
@@ -1425,6 +1481,7 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
 void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
+        && (!ignore_hostile || point_distance[c.x][c.y] > 0)
         && is_greed_inducing_square(c)
         && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
@@ -1716,6 +1773,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     return found_target;
 }
 
+
 /**
  * Run the travel_pathfind algorithm, either from the given position in
  * floodout mode to populate travel_point_distance relative to that starting
@@ -1725,8 +1783,9 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
  *
  * If move_x and move_y are given, pathfinding runs from you.running.pos to
  * youpos, and the move contains the next movement relative to youpos to move
- * closer to you.running.pos. If a runed door is encountered or a transporter
- * needs to be taken, these are set to 0, and the caller checks for this.
+ * closer to you.running.pos. If a runed door (or a closed door, if
+ * travel_open_doors isn't open) is encountered or a transporter needs to be
+ * taken, these are set to 0, and the caller checks for this.
  *
  * XXX The two modes of this function (with and without move_x/move_y) should
  * be split into two different functions, since they aren't really related.
@@ -1760,14 +1819,20 @@ void find_travel_pos(const coord_def& youpos,
     // We'd either have to travel through a runed door, in which case we'll be
     // stopping, or a transporter, in which case we need to issue a command to
     // enter.
+    pair<bool, string> barrier;
     if (need_move
-        && (cell_is_runed(new_dest)
+        && ((barrier = _feat_is_blocking_door_strict(env.grid(new_dest))).first
             || env.grid(youpos) == DNGN_TRANSPORTER
                && env.grid(new_dest) == DNGN_TRANSPORTER_LANDING
                && youpos.distance_from(new_dest) > 1))
     {
         *move_x = 0;
         *move_y = 0;
+        if (!barrier.second.empty())
+        {
+            mpr("Could not " + you.running.runmode_name() + ", "
+                + barrier.second + ".");
+        }
         return;
     }
 
@@ -4901,6 +4966,13 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
     return CK_MOUSE_CMD;
 }
 
+bool click_travel_safe(const coord_def &gc)
+{
+    return (!is_excluded(gc) || is_stair_exclusion(gc))
+        && (!is_excluded(you.pos()) || is_stair_exclusion(you.pos()))
+        && i_feel_safe(false, false, false, false);
+}
+
 int click_travel(const coord_def &gc, bool force)
 {
     if (!in_bounds(gc))
@@ -4910,9 +4982,7 @@ int click_travel(const coord_def &gc, bool force)
     if (cmd != CK_MOUSE_CMD)
         return cmd;
 
-    if ((!is_excluded(gc) || is_stair_exclusion(gc))
-        && (!is_excluded(you.pos()) || is_stair_exclusion(you.pos()))
-        && i_feel_safe(false, false, false, false))
+    if (click_travel_safe(gc))
     {
         map_cell &cell(env.map_knowledge(gc));
         // If there's a monster that would block travel,

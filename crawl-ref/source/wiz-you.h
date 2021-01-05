@@ -41,4 +41,5 @@ job_type find_job_from_string(const string &job_str);
 void wizard_change_job_to(job_type job);
 void wizard_xom_acts();
 void wizard_suppress();
+void wizard_set_zot_clock();
 #endif

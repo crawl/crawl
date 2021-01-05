@@ -1,5 +1,5 @@
-Stone Soup 0.26 (through 0.26-a0-755-g9e3f510199)
--------------------------------------------------
+Stone Soup 0.26 (through 0.26-a0-1210-gada54dbd18)
+--------------------------------------------------
 
 Highlights
 ----------
@@ -31,16 +31,20 @@ Monsters
 * Monsters don't forget about the player while the player is off level.
 * Most plants, fungi, and other plant like things that don't attack now wither
   in 3-5 turns after they're hit. The exceptions are bushes and briars.
+* Monsters that formerly had rot-inducing melee attacks now have drain attacks.
 
 Character
 ---------
 * Hunger (and eating) are removed.
-* Ghouls heal on kill instead of by eating chunks.
+* Drain now temporarily reduces max HP instead of skills. Rot no longer exists
+  as a mechanic.
 * New species: Palentonga, six-limbed scaled mammals with a rolling charge.
-* Centaurs are removed.
 * Deep Elves' Bows aptitude is increased to +3.
 * Kobolds now have the Nightstalker 3 mutation, reducing LOS and providing
   bonus stealth. (Demonspawn can no longer gain Nightstalker.)
+* Ghouls heal on kill instead of by eating chunks. They also no longer rot
+  over time.
+* Centaurs are removed.
 * The Charms skill (and the Skald background) are removed.
 * New demonspawn mutations: sharp scales & big brain.
 * Transmuters no longer start with arrows, and Wereblood replaces Sticks to
@@ -88,6 +92,12 @@ Items
   - The Majin-Bo loses Archmagi, and instead gives a chance for any cast spell
     to be vampiric, healing the caster for damage done to living creatures.
   - The shield of Resistance is now a +2 kite shield {rF++ rC++ MR++}.
+  - Glaive of the Guard now has both the spectral weapon and electricity egos.
+    It no longer has sInv nor +Rage.
+  - Cloak of Starlight gains *Dazzle, which sometimes dazzles foes like the
+    Dazzling Flash spell on successful dodge. It no longer has rElec and rC+.
+  - The Sword of Power is now +5, vorpal, and sometimes fires a powerful but
+    low-accuracy damage beam with a chance based on the player's current HP.
 * Phantom mirrors and boxes of beasts now recharge with XP.
 * Wands of polymorph now show what monsters might become when targeted.
 * Amulets are now slow to equip (like armour), and many amulets no longer have
@@ -110,7 +120,9 @@ Branches, Environment
 * Spider is now quiet.
 * The malevolent force of Zot will find players that tarry far too long in one
   place.
-* Gauntlet monsters now generate awake.
+* Gauntlet monsters now generate awake, and those other than the minotaur
+  don't pick up loot.
+* Net traps are now permanent and the nets always mulch.
 
 Spells
 ------
@@ -123,23 +135,29 @@ Spells
     to work with all Conjurations school spells other than Servitor.
   - Song of Slaying is now Transmutations and renamed Wereblood; the noise is
     reduced somewhat.
-* All temporary allies dismiss when you leave the level.
 * Animate Skeleton and Animate Dead creations now have strength scaling with
   spellpower; Animate Skeleton has a power cap. Both creations have a shorter
   lifespan. Additionally, these spells can't be cast if corpses are not nearby.
 * Animate Skeleton now animates the nearest skeleton, and does not require you
   to stand on the corpse.
+* Frozen Ramparts has its effect end upon player movement.
 * Death Channel spectral things have a shorter duration and fade if Death
   Channel expires.
 * Infestation scarabs have a shorter duration.
 * Vampiric Draining's damage is no longer limited by how much it heals.
+* Eringya's Toxic Bog now places bogs in all squares within a range of 4 where
+  there is no adjacent solid feature.
 * Beastly Appendage now melds helmets and boots, and gives two levels of both
   Horns and Talons (octopodes keep their tentacle spike) instead of randomly
   choosing.
+* Irradiate now checks monster AC but does slightly more damage.
 * Alistair's Intoxication prompts when nothing in view can be affected, always
   applies Vertigo when successful, and has a higher power cap.
 * Conjure Ball Lightning's scaling with spellpower has been simplified.
 * Beam spells and wands no longer have their range reduced by hitting things.
+* All temporary allies dismiss when you leave the level.
+* Translocations miscasts now inflict -Move which prevents walking in addition
+  to translocating.
 * Aura of Abjuration, Darkness, Infusion, Recall, Ring of Flames, Shroud of
   Golubria, Spectral Weapon, Sticks to Snakes, and Summon Butterflies are
   removed.
@@ -153,6 +171,12 @@ Gods
 
 Interface
 ---------
+* The "quiver" feature is generalized and can now quiver spells, wands, and
+  abilities to be quick-activated with shift+tab or f.
+* Static targeters are added for spells and abilities that indicate which cells
+  will be affected, along with options to configure.
+* Player wand damage, spell damage, and spell accuracy is now displayed in the
+  UI.
 * Viewing a monster with xv now shows to-hit chance with your current weapon.
 * Monsters' spell damage is shown in xv.
 * Examining cells with multiple interesting things now gives a selection menu.
@@ -168,11 +192,14 @@ Interface
   the player is always shown, rather than when there are only 1500 turns left.
 * The ^x view description is now available from all targeting prompts, and
   when used while targeting lists valid targets in range.
+* Spellpower is now displayed as a percentage of max spellpower.
 
 Lua
 ---
 * Two new hooks, chk_ability_choice and chk_spell_choice can be used to
   answer the ability and spell menu prompts.
+* A new api is introduced for targeted fire of spells, items, and abilities as
+  a less brittle alternative to sending keys.
 
 
 Stone Soup 0.25.0 (20200612)

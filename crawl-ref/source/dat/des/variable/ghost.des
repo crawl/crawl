@@ -461,6 +461,71 @@ a++++++++a
 aaaaaaaaaa
 ENDMAP
 
+NAME:    nzn_ghost_randoct
+DEPTH:   D:7-, Depths, Lair, Crypt, Spider, Zot
+ORIENT:  float
+ITEM:    potion of haste / scroll of blinking
+ITEM:    potion of heal wounds / scroll of teleportation
+MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
+MONS:    caustic shrike / juggernaut / titan, orb of fire / ancient lich
+MONS:    ice statue / oklob plant, w:5 orange crystal statue / obsidian statue
+SHUFFLE: PS, QR
+NSUBST:  Q = Q / ', R = R / '
+NSUBST:  x = 2=' / c
+SUBST:   DEFH = ':75 $:5, J = ':50 W:30 0, K = ':50 $ 0
+: if you.in_branch("Zot") then
+NSUBST:  M = 2=1 / 5
+SUBST:   L = ':30 9:20 d:20 8 |
+SUBST:   y = G:30 7, c : ccb, W : Wwl
+: elseif you.in_branch("Depths") then
+NSUBST:  M = 2=1 / 4
+SUBST:   L = ':30 9:20 d:20 8 *, * = *|
+SUBST:   y = G:30 7, c : cvb, W : Wwl
+: elseif you.in_branch("Crypt") then
+NSUBST:  M = 2=1 / 3
+SUBST:   L = ':30 9:20 d:20 8 *, * = *|
+SUBST:   y = G, W = '
+: elseif you.in_branch("Spider") then
+NSUBST:  M = 1 / 2 / M
+SUBST:   M = * 1:5 8:5, L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
+SUBST:   y = G:70 6, ' = ':80 WW
+: elseif you.absdepth() >= 13 then
+NSUBST:  M = 1 / d / M
+SUBST:   M = * 9:6 1:2 8:2, L = ':20 %:50 9:20, % = %**ee, * = **|, f = dde
+SUBST:   y = G:30 6
+: else
+NSUBST:  M = 1 / 9 / e / %
+SUBST:   L = ':60 9 0 %, % = %*, * = **e|
+SUBST:   y = G:70 6
+: end
+MARKER:  P = lua:transp_loc("ghost_randoct_entry")
+MARKER:  Q = lua:transp_dest_loc("ghost_randoct_entry")
+MARKER:  R = lua:transp_loc("ghost_randoct_exit")
+MARKER:  S = lua:transp_dest_loc("ghost_randoct_exit")
+: ghost_setup(_G)
+MAP
+        .@.
+       .@P@.
+      .ncncn.
+     .cnEREnc.
+    .ccEcncEcc.
+   .ncJKJKJKJcn.
+  .ccyJJKJKJJycc.
+ .ccJJcKxnxKcJJcc.
+.nnDKJKxxMxxKJKHnn.
+.cDcJKxxLLLxxKJcHc.
+.nQnKJnMLLLMnJKnRn.
+.cDcJKxxLLLxxKJcHc.
+.nnDKJKxxMxxKJKHnn.
+ .ccJJcKxnxKcJJcc.
+  .ccyJJKJKJJycc.
+   .ncJKJKJKJcn.
+    .ccFcncFcc.
+     .cnFQFnc.
+      .ncncn.
+       .@S@.
+        .@.
+ENDMAP
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
@@ -2164,7 +2229,7 @@ KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
             / book of spatial translocations ident:all \
             / book of the warp ident:all w:5 \
             / randbook owner:Lugonu disc:translocation ident:all w:5 \
-            / manual of translocations w:2 / rift w:2 / ring of phasing w:2
+            / manual of translocations w:2 / rift w:2 / ring of the hare w:2
 KMONS:  O = player ghost
 KFEAT:  O = enter_abyss
 KFEAT:  ^ = dispersal trap

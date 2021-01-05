@@ -112,7 +112,6 @@ this struct:
         const char *     name;
         unsigned int     mp_cost;        // magic cost of ability
         scaling_cost     hp_cost;        // hit point cost of ability
-        unsigned int     food_cost;      // + rand2avg(food_cost, 2)
         generic_cost     piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
         failure_info     failure;        // calculator for failure odds
         ability_flags    flags;          // used for additional cost notices
@@ -125,12 +124,11 @@ our own, similar to ABIL_SPIT_POISON:
     { ABIL_LASER_EYES, "Shoot Eye Lasers",
         1, 0, 50, 0, {FAIL_XL, 20, 1}, abflag::NONE },
 
-This ability will cost us about 50 food and 1 MP to use, and the success
-chance is only attached to our character level, not any skill. Farther
-down, in, the _do_ability function, we see the master switch() statement
-that handles ability use. We'll add ours in here, and order does not
-matter for this one, so we'll place it by similar abilities instead of
-at the end:
+This ability will cost us 1 MP to use, and the success chance is only attached
+to our character level, not any skill. Farther down, in, the _do_ability
+function, we see the master switch() statement that handles ability use. We'll
+add ours in here, and order does not matter for this one, so we'll place it by
+similar abilities instead of at the end:
 
     case ABIL_LASER_EYES:      // eye lasers
     {

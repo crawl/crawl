@@ -2580,9 +2580,9 @@ void UIRoot::render()
         update_screen();
     }
 
-    if (is_cursor_enabled() && !cursor_pos.origin())
+    if (!cursor_pos.origin())
     {
-        cgotoxy(cursor_pos.x, cursor_pos.y, GOTO_CRT);
+        cursorxy(cursor_pos.x, cursor_pos.y);
         cursor_pos.reset();
     }
 #endif

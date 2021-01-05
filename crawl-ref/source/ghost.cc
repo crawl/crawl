@@ -222,7 +222,6 @@ void ghost_demon::set_pan_lord_special_attack()
         4, _flavour_attack(AF_DRAIN_STR),
         4, _flavour_attack(AF_DRAIN_INT),
         2, _flavour_attack(AF_DRAIN_DEX),
-        10, _flavour_attack(AF_ROT),
         10, _flavour_attack(AF_DROWN),
         // Normal chance
         20, _brand_attack(SPWPN_FLAMING),
@@ -274,8 +273,6 @@ void ghost_demon::set_pan_lord_cloud_ring()
         cloud_ring_ench = ENCH_RING_OF_ACID;
     else if (brand == SPWPN_DRAINING)
         cloud_ring_ench = ENCH_RING_OF_DRAINING;
-    else if (att_flav == AF_ROT)
-        cloud_ring_ench = ENCH_RING_OF_MIASMA;
     else
     {
         cloud_ring_ench = random_choose_weighted(
@@ -439,7 +436,7 @@ void ghost_demon::init_player_ghost()
     // multi-level for players, boolean as an innate monster resistance
     set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
     set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
-    set_resist(resists, MR_RES_ROTTING, you.res_rotting());
+    set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
     move_energy = 10;

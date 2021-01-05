@@ -42,12 +42,8 @@ static bool _banned_combination(job_type job, species_type species)
         break;
     }
 
-    if (job == JOB_TRANSMUTER
-        && (species_undead_type(species) == US_UNDEAD
-           || species_undead_type(species) == US_HUNGRY_DEAD))
-    {
+    if (job == JOB_TRANSMUTER && species_undead_type(species) == US_UNDEAD)
         return true;
-    }
 
     return false;
 }

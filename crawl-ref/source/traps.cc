@@ -395,7 +395,7 @@ static bool _player_caught_in_web()
 
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
-    you.redraw_quiver       = true;
+    quiver::set_needs_redraw();
 
     // No longer stop_running() and stop_delay().
     return true;
@@ -931,7 +931,7 @@ trap_type get_trap_type(const coord_def& pos)
 void stop_being_held()
 {
     you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
     you.redraw_evasion = true;
 }
 

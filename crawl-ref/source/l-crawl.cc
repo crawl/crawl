@@ -456,6 +456,9 @@ static int crawl_do_targeted_command(lua_State *ls)
     case CMD_FIRE:
         quiver::get_secondary_action()->trigger(target);
         break;
+    case CMD_THROW_ITEM_NO_QUIVER:
+        throw_item_no_quiver(&target);
+        break;
     default:
         luaL_argerror(ls, 1, ("Not a (supported) targeted command: " + command).c_str());
         return 0;
@@ -730,8 +733,12 @@ static int crawl_take_note(lua_State *ls)
 }
 
 /*** Retrieve the message buffer.
+ *
+ * See also @{Hooks.c_message} for programmatically receiving messages
+ * as they are sent.
+ *
  * @tparam int num how many lines back to go
- * @treturn strong
+ * @treturn string
  * @function messages
  */
 static int crawl_messages(lua_State *ls)
@@ -1601,7 +1608,6 @@ LUAFN(_crawl_redraw_stats)
 
     you.wield_change         = true;
     you.redraw_title         = true;
-    you.redraw_quiver        = true;
     you.redraw_hit_points    = true;
     you.redraw_magic_points  = true;
     you.redraw_stats.init(true);
@@ -1609,6 +1615,8 @@ LUAFN(_crawl_redraw_stats)
     you.redraw_armour_class  = true;
     you.redraw_evasion       = true;
     you.redraw_status_lights = true;
+    quiver::set_needs_redraw();
+
 
     print_stats();
     update_screen();

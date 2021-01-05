@@ -14,6 +14,7 @@
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
+ #include <SDL_keycode.h>
 #endif
 
 enum keyfun_action
@@ -200,6 +201,28 @@ enum KEYS
     CK_NUMPAD_PLUS,
     CK_NUMPAD_MINUS,
 #endif
+
+// ugly...
+// TODO: should crawl just use one of these internally and convert?
+#ifdef USE_TILE_LOCAL
+    CK_F12 = -SDLK_F12,
+#elif defined(TARGET_OS_WINDOWS) // windows console
+    CK_F12 = -379, // -(VK_F12 | 256) // XX ...
+#else // ncurses console
+    CK_F12 = -276, // -KEY_F12 from ncurses
+#endif
+    CK_F11,
+    CK_F10,
+    CK_F9,
+    CK_F8,
+    CK_F7,
+    CK_F6,
+    CK_F5,
+    CK_F4,
+    CK_F3,
+    CK_F2,
+    CK_F1, // -265, aka -KEY_F1
+    CK_F0, // is this actually used?
 
     // Mouse codes.
     CK_MOUSE_MOVE  = -9999,

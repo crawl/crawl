@@ -545,8 +545,7 @@ ITEM:     (list of items, separated by comma)
             A lone "|" may be used as an alias for "superb_item".
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
-            food, scroll, jewellery, potion, book, magical staff, orb, misc,
-            carrion.
+            scroll, jewellery, potion, book, magical staff, orb, misc, carrion.
             All of these are usable in map definitions, apart from "orb" and
             "carrion".
           * "ego:ego_name", where "ego_name" is something like "running" or
@@ -1441,7 +1440,6 @@ KPROP:    x = bloody
              the player ending up in a closet or an extremely dense monster
              array (like a hellion island); or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
-          * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 

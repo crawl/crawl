@@ -51,45 +51,76 @@
 #include "view.h"
 #include "xom.h"
 
-bool check_annotation_exclusion_warning()
+static string _annotation_exclusion_warning(level_id next_level_id)
 {
-    level_id  next_level_id = level_id::get_next_level_id(you.pos());
-
-    crawl_state.level_annotation_shown = false;
-    bool might_be_dangerous = false;
-
     if (level_annotation_has("!", next_level_id)
         && next_level_id != level_id::current()
         && is_connected_branch(next_level_id))
     {
-        mprf(MSGCH_PROMPT, "Warning, next level annotated: <yellow>%s</yellow>",
-             get_level_annotation(next_level_id).c_str());
-        might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
+        return make_stringf("Warning, next level annotated: <yellow>%s</yellow>",
+                            get_level_annotation(next_level_id).c_str());
     }
-    else if (is_exclude_root(you.pos())
+
+    if (is_exclude_root(you.pos())
              && feat_is_travelable_stair(env.grid(you.pos()))
              && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
-        mprf(MSGCH_WARN, "This staircase is marked as excluded!");
-        might_be_dangerous = true;
+        return "This staircase is marked as excluded!";
     }
 
-    if (feat_is_travelable_stair(env.grid(you.pos())))
-    {
-        if (LevelInfo *li = travel_cache.find_level_info(level_id::current()))
-        {
-            if (const stair_info *si = li->get_stair(you.pos()))
-            {
-                if (stairs_destination_is_excluded(*si))
-                {
-                    mprf(MSGCH_WARN,
-                         "This staircase leads to a travel-excluded area!");
-                    might_be_dangerous = true;
-                }
-            }
-        }
-    }
+    return "";
+}
+
+static string _target_exclusion_warning()
+{
+    if (!feat_is_travelable_stair(env.grid(you.pos())))
+        return "";
+
+    LevelInfo *li = travel_cache.find_level_info(level_id::current());
+    if (!li)
+        return "";
+
+    const stair_info *si = li->get_stair(you.pos());
+    if (!si)
+        return "";
+
+    if (stairs_destination_is_excluded(*si))
+        return "This staircase leads to a travel-excluded area!";
+
+    return "";
+}
+
+static string _bezotting_warning(branch_type branch)
+{
+    if (branch == you.where_are_you || !bezotted_in(branch))
+        return "";
+
+    const int turns = turns_until_zot_in(branch);
+    return make_stringf("You have just %d turns in %s to find a new floor before Zot consumes you.",
+                        turns, branches[branch].longname);
+}
+
+bool check_next_floor_warning()
+{
+    level_id  next_level_id = level_id::get_next_level_id(you.pos());
+
+    crawl_state.level_annotation_shown = false;
+    const string annotation_warning = _annotation_exclusion_warning(next_level_id);
+
+    const string target_warning = _target_exclusion_warning();
+    const string bezotting_warning = _bezotting_warning(next_level_id.branch);
+
+    if (annotation_warning != "")
+        mprf(MSGCH_PROMPT, "%s", annotation_warning.c_str());
+    if (target_warning != "")
+        mprf(MSGCH_PROMPT, "%s", target_warning.c_str());
+    if (bezotting_warning != "")
+        mprf(MSGCH_PROMPT, "%s", bezotting_warning.c_str());
+
+    const bool might_be_dangerous = annotation_warning != ""
+                                 || target_warning != ""
+                                 || bezotting_warning != "";
 
     if (might_be_dangerous
         && !yesno("Enter next level anyway?", true, 'n', true, false))
@@ -620,6 +651,13 @@ void floor_transition(dungeon_feature_type how,
     // Clean up fake blood.
     heal_flayed_effect(&you, true, true);
 
+    // We "stepped".
+    if (!forced)
+    {
+        apply_barbs_damage();
+        remove_ice_movement();
+    }
+
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
@@ -628,15 +666,6 @@ void floor_transition(dungeon_feature_type how,
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
-
-    if (!forced)
-    {
-        // Break ice armour
-        remove_ice_armour_movement();
-
-        // Check for barbs and apply
-        apply_barbs_damage();
-    }
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -919,8 +948,12 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
     if (!_level_transition_moves_player(whither, old_feat, going_up))
         return;
 
+    // The transition is "forced" for the purpose of floor_transition if
+    // a force_stair feature is specified and force_known_shaft is not set
+    // (in the latter case, the player 'moved').
     floor_transition(how, old_feat, whither,
-                     bool(force_stair), going_up, shaft, update_travel_cache);
+                     bool(force_stair) && !force_known_shaft,
+                     going_up, shaft, update_travel_cache);
 }
 
 void up_stairs(dungeon_feature_type force_stair, bool update_travel_cache)

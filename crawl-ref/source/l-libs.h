@@ -13,7 +13,6 @@
 
 void cluaopen_crawl(lua_State *ls);
 void cluaopen_file(lua_State *ls);
-void cluaopen_food(lua_State *ls);
 void cluaopen_item(lua_State *ls);
 void cluaopen_kills(lua_State *ls);     // defined in kills.cc
 void cluaopen_moninf(lua_State *ls);

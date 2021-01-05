@@ -1360,8 +1360,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
         return false;
     }
 
-    // Does the next level have a warning annotation?
-    if (!check_annotation_exclusion_warning())
+    // Does the next level have a warning annotation, or would you be bezotted
+    // there?
+    if (!check_next_floor_warning())
         return false;
 
     // Prompt for entering excluded transporters.
@@ -1511,7 +1512,7 @@ static void _take_stairs(bool down)
         return;
     }
 
-    if (!(!cancel_barbed_move()
+    if (!(!cancel_harmful_move()
           && _prompt_stairs(ygrd, down, shaft)
           && you.attempt_escape())) // false means constricted and don't escape
     {
@@ -1588,10 +1589,23 @@ static void _experience_check()
     handle_real_time();
     msg::stream << "Play time: " << make_time_string(you.real_time())
                 << " (" << you.num_turns << " turns)."
-                << endl
-                << "Zot will find you in " << turns_until_zot() << " turns"
-                << " if you stay in this branch and explore no new floors."
                 << endl;
+
+    if (!crawl_state.game_is_sprint())
+    {
+        if (player_has_orb())
+            msg::stream << "You are forever immune to Zot's power.";
+        else if (player_in_branch(BRANCH_ABYSS))
+            msg::stream << "You have unlimited time to explore this branch.";
+        else
+        {
+            msg::stream << "Zot will find you in " << turns_until_zot()
+                        << " turns if you stay in this branch and explore no"
+                        << " new floors.";
+        }
+        msg::stream << endl;
+    }
+
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
@@ -1676,7 +1690,7 @@ static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
     you.launcher_action.set(you.quiver_action.get());
-    you.redraw_quiver = true;
+    quiver::set_needs_redraw();
 
     if (!changed && you.quiver_action.get()->is_valid())
         mpr("No other quiver actions available. Use F to throw any item.");
@@ -2033,7 +2047,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // Travel commands.
     case CMD_FIX_WAYPOINT:      travel_cache.add_waypoint(); break;
     case CMD_INTERLEVEL_TRAVEL: do_interlevel_travel();      break;
-    case CMD_ANNOTATE_LEVEL:    annotate_level();            break;
+    case CMD_ANNOTATE_LEVEL:    do_annotate();               break;
     case CMD_EXPLORE:           do_explore_cmd();            break;
 
         // Mouse commands.
@@ -2079,6 +2093,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         auto a = you.quiver_action.find_last_valid();
         if (a)
             you.quiver_action.set(a);
+        quiver::set_needs_redraw();
         break;
     }
 
