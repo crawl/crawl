@@ -4507,9 +4507,11 @@ void runrest::stop(bool clear_delays)
         tiles.set_need_redraw();
 #endif
 
+    quiver::set_needs_redraw();
     if (need_redraw)
     {
         viewwindow();
+        print_stats();
         update_screen();
     }
 }

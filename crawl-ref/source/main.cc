@@ -2212,7 +2212,7 @@ static void _prep_input()
     update_screen();
 
     viewwindow();
-    update_screen();
+    update_screen(); // ???
     maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
