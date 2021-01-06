@@ -624,4 +624,10 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
     FFT_NONE, MF_FLOOR,
 },
 
+{
+    DNGN_ICY_FLOOR, "icy floor", "icy_floor",
+    DCHAR_FLOOR, DCHAR_FLOOR_MAGIC,
+    COLOUR_IS(ETC_FLOOR),
+    FFT_NONE, MF_FLOOR,
+},
 };

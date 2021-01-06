@@ -793,6 +793,41 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
            || ct == CLOUD_TORNADO; // soon gone
 }
 
+
+static void _maybe_freeze_water(const coord_def pos)
+{
+    ASSERT_IN_BOUNDS(pos);
+
+    // Ice clouds can occasionally freeze shallow water or deepen it:
+    // If we're near lava, chance of freezig water is lower;
+    if (!one_chance_in((5 + count_neighbours(pos, DNGN_LAVA))))
+    {
+        return;
+    }
+
+    dungeon_feature_type feat = grd(pos);
+
+    if (grd(pos) == DNGN_SHALLOW_WATER)
+        feat = DNGN_ICY_FLOOR;
+    else if (grd(pos) == DNGN_DEEP_WATER && you.pos() != pos
+                && !crawl_state.game_is_sprint())
+    {
+        if (one_chance_in(3))
+            // Don't drown the player!
+            feat = DNGN_SHALLOW_WATER;
+        else if (one_chance_in(3))
+            feat = DNGN_ICY_FLOOR;
+    }
+
+    if (grd(pos) != feat)
+    {
+        if (you.pos() == pos && you.ground_level())
+            mpr("The cold temperatures freeze the water where you stand on!");
+        temp_change_terrain(pos, feat, random_range(500, 1000),
+                            TERRAIN_CHANGE_COLD);
+    }
+}
+
 //   Places a cloud with the given stats. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
@@ -832,6 +867,11 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     // There's already a cloud here. See if we can overwrite it.
     if (cloud_at(ctarget) && !_cloud_is_stronger(cl_type, *cloud_at(ctarget)))
         return;
+
+    if (cl_type == CLOUD_COLD)
+    {
+        _maybe_freeze_water(ctarget);
+    }
 
     // if the old cloud was opaque, may need to recalculate los.
     // It *is* possible to overwrite an opaque cloud with a non-opaque one; OOD will do this.

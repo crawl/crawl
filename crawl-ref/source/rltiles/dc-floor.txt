@@ -1192,6 +1192,13 @@ shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 shoals_shallow_water_disturbance2
 shoals_shallow_water_disturbance3
 
+%sdir dngn/water/ice
+icy_floor0 DNGN_ICY_FLOOR
+icy_floor1
+icy_floor2
+icy_floor3
+
+%sdir dngn/water
 %shrink 0
 ## deep water waves
 # corner waves (diagonals)
