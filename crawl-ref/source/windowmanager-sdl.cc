@@ -475,9 +475,6 @@ int SDLWrapper::init(coord_def *m_windowsz)
         return false;
     }
 
-    // this call may or may not have an effect depending on system:
-    SDL_SetWindowOpacity(m_window, 1.0);
-
     m_context = SDL_GL_CreateContext(m_window);
 
     // The following two lines are a part of the magical dance needed to get
