@@ -261,7 +261,7 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 do_explore_cmd();
                 return CK_MOUSE_CMD;
             }
-            else
+            else if (!tiles.get_map_display())
             {
                 const int cmd = click_travel(gc, event.mod & TILES_MOD_CTRL);
                 if (cmd != CK_MOUSE_CMD)
