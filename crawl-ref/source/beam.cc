@@ -5951,7 +5951,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     const coord_def centre(9,9);
 
     // Draw pass.
-    if (!is_tracer)
+    if (!is_tracer && animate)
     {
         for (const auto &line : sweep)
         {
@@ -5996,7 +5996,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
 
     // Delay after entire explosion has been drawn.
-    if (!is_tracer && cells_seen > 0 && show_more)
+    if (!is_tracer && cells_seen > 0 && show_more && animate)
         scaled_delay(explode_delay * 3);
 
     return cells_seen > 0;
