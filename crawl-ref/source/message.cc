@@ -529,8 +529,10 @@ public:
 
     void resize()
     {
+        // if this is resized to 0, bad crashes will happen. N.b. I have no idea
+        // if this issue is what the following note is about:
         // XXX: broken (why?)
-        lines.resize(height());
+        lines.resize(max(height(), 1));
     }
 
     unsigned int out_width() const
