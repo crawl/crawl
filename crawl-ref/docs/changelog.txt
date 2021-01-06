@@ -225,6 +225,29 @@ Lua
 * Other new functions: you.memorise (memorise a spell by name),
   spells.power_perc (get spellpower for a spell as a percentage)
 
+Stone Soup 0.25.1 (20200717)
+----------------------------
+
+Bugfix Release
+--------------
+* Artefacts from acquirement now leave a note in morgues.
+* Scarf of harm is fixed.
+* Foxfire will no longer attack out of LoS.
+* Stacking from empty Nemelex decks is no longer possible.
+* Wizlab entry now generates a milestone / note again.
+* Fix a bug where cloud generators triggered on load when no time had passed,
+  leading to a different cloud arrangement from saving + reloading.
+* Seeded play fixes for seed instability in a few cases, as well as crashes
+  related to seed stability and pregeneration code.
+* Several speedups for dungeon rendering, especially in zigs.
+* Sprint 3 cloud generators have been retuned.
+* Improvements to the behavior of restart_after_save (on by default in 0.25.0).
+* Using [] in map view from stairs to view other levels now correctly finds the
+  matching stairs.
+* Crashes to do with annotation, off-level map view, and custom flashes have
+  been fixed.
+* It is no longer possible for a bug to cause the player to drown or fall into
+  lava, emergency flight will be activated instead.
 
 Stone Soup 0.25.0 (20200612)
 ----------------------------
