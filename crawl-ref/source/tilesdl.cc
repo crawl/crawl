@@ -1012,6 +1012,16 @@ void TilesFramework::do_layout()
     crawl_view.viewsz.y = m_region_tile->my;
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
+    if (crawl_view.viewsz.x == 0 || crawl_view.viewsz.y == 0
+        || crawl_view.msgsz.y == 0)
+    {
+        // TODO: if game_scale is too large, it would be better to drop the
+        // bad scale first. Also, it is possible to get an unusable but valid
+        // layout -- this only really protects against cases that will crash.
+        end(1, false,
+            "Failed to find a valid window layout:"
+            " screen too small or game_scale too large?");
+    }
     crawl_view.hudsz.x = m_region_stat->mx;
     crawl_view.hudsz.y = m_region_stat->my;
     crawl_view.init_view();
