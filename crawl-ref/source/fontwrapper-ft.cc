@@ -114,9 +114,9 @@ bool FTFontWrapper::configure_font()
 
     charsz = coord_def(1,1);
     // Grow character size to power of 2
-    while (charsz.x < m_max_advance.x)
+    while (charsz.x <= m_max_advance.x)
         charsz.x *= 2;
-    while (charsz.y < m_max_advance.y)
+    while (charsz.y <= m_max_advance.y)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
