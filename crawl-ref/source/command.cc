@@ -731,7 +731,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Autofight:\n"
             "<w>Tab</w>          : attack nearest monster,\n"
             "               moving if necessary\n"
-            "<w>Shift-Tab</w>, <w>p</w> : fire at nearest monster\n");
+            "<w>Shift-Tab</w>, <w>p</w> : trigger quivered action;\n"
+            "               if targeted, aims at\n"
+            "               nearest monster\n");
 
     cols.add_formatted(
             0,
