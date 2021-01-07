@@ -3186,7 +3186,8 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
         else
             mprf(msg.c_str(), "Something");
 
-        beam.draw(where);
+        if (Options.use_animations & UA_BEAM)
+            beam.draw(where);
         return;
     }
 
