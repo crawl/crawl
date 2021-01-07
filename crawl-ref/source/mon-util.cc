@@ -2622,47 +2622,10 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 {
     switch (mon_type)
     {
-    case MONS_HELL_KNIGHT:
-        return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
-
-    case MONS_NECROMANCER:
-        return { MST_NECROMANCER_I, MST_NECROMANCER_II };
-
-    case MONS_ORC_WIZARD:
-        return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
-
-    case MONS_WIZARD:
-    case MONS_EROLCHA:
-        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III };
-
-    case MONS_OGRE_MAGE:
-        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III };
-
-    case MONS_ANCIENT_CHAMPION:
-        return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II };
-
-    case MONS_TENGU_CONJURER:
-        return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
-                 MST_TENGU_CONJURER_III, MST_TENGU_CONJURER_IV };
-
-    case MONS_TENGU_REAVER:
-        return { MST_TENGU_REAVER_I, MST_TENGU_REAVER_II,
-                 MST_TENGU_REAVER_III };
-
     case MONS_DEEP_ELF_MAGE:
         return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
                  MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
                  MST_DEEP_ELF_MAGE_V, MST_DEEP_ELF_MAGE_VI };
-
-    case MONS_FAUN:
-        return { MST_FAUN_I, MST_FAUN_II };
-
-    case MONS_ROYAL_MUMMY:
-        return { MST_ROYAL_MUMMY_I, MST_ROYAL_MUMMY_II,
-                 MST_ROYAL_MUMMY_III, MST_ROYAL_MUMMY_IV };
-
-    case MONS_DEEP_ELF_KNIGHT:
-        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II };
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:

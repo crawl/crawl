@@ -1731,6 +1731,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DREAM_DUST:
     case SPELL_SPORULATE:
     case SPELL_ROLL:
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6133,6 +6134,14 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HYDRA:
         cast_summon_hydra(mons, splpow, god);
         return;
+
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
+    {
+        monster* spire = _summon(*mons, MONS_LIGHTNING_SPIRE, 2, slot);
+        if (spire && !silenced(spire->pos()))
+            mpr("An electric hum fills the air.");
+        return;
+    }
 
     case SPELL_FIRE_SUMMON:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
