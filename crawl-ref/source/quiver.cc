@@ -1792,7 +1792,7 @@ namespace quiver
         // save compat (or bug compat): initialize to an invalid action if we
         // are missing the keys altogether
         if (!source.exists("type") || !source.exists("param"))
-            return make_shared<ammo_action>(-1);
+            return make_shared<launcher_ammo_action>(-1);
 
         const string &type = source["type"].get_string();
         const int param = source["param"].get_int();
@@ -1912,7 +1912,7 @@ namespace quiver
 
     // by default, initialize as invalid, not empty
     action_cycler::action_cycler()
-        : action_cycler(make_shared<ammo_action>(-1))
+        : action_cycler(make_shared<launcher_ammo_action>(-1))
     { }
 
     void action_cycler::save(const string key) const
@@ -2226,7 +2226,7 @@ namespace quiver
 
         // no valid actions, return an (invalid) empty-quiver action
         if (!result)
-            return make_shared<ammo_action>(-1);
+            return make_shared<launcher_ammo_action>(-1);
 
         return result;
     }
