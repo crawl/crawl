@@ -485,7 +485,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "pacify", "slug", "slime", "buggy-num", "acid",
+    "penet", "reap", "pacify", "slug", "slime", "spect", "buggy-num", "acid", 
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -510,7 +510,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "pacifing", "sluggish", "slimifying", "buggy-num", "acid",
+    "penetration", "reaping", "pacifing", "sluggish", "slimifying", "spectralizing", "buggy-num", "acid", 
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -535,7 +535,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "pacifing", "sluggish", "slimifying", "buggy-num", "acidic",
+    "penetrating", "reaping", "pacifing", "sluggish", "slimifying", "spectral", "buggy-num", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
@@ -544,7 +544,7 @@ static const char *weapon_brands_adj[] =
 
 // TODO: currently only for pghosts...expand?
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
 
 /**
  * What's the name of a type of vorpal brand?

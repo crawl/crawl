@@ -1349,7 +1349,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "hit. Natural abilities and divine invocations are not "
                     "affected.";
             break;
-
+        case SPWPN_SPECTRAL:
+            description += "It retains the spirit of materials from which it "
+                           "was made. It is known that wooden weapons are prone "
+                           "to retain and weapons need to be large enough. In "
+                           "the hands of one skilled in evocations this spirit "
+                           "is drawn out to fight along side the wielder.";
+            break;
         case SPWPN_PACIFING:
             description += "It causes on hostile monsters will "
                 "try to turn them neutral. This works best on animals, and "

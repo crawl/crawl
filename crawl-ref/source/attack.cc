@@ -1764,6 +1764,15 @@ bool attack::apply_damage_brand(const char *what)
         }
         break;
 
+    case SPWPN_SPECTRAL:
+        if (attacker->is_player())
+        {
+            const monster* mon = defender->as_monster();
+            if (mon && !mons_is_firewood(*mon))
+                handle_spectral_brand();
+        }
+        break;
+
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
             attacker->god_conduct(DID_EVIL, 2 + random2(3));

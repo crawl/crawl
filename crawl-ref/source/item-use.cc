@@ -3130,6 +3130,11 @@ static void _rebrand_weapon(item_def& wpn)
 
 
     const brand_type old_brand = get_weapon_brand(wpn);
+
+    monster * spect = find_spectral_weapon(&you);
+    if (&wpn == you.weapon() && old_brand == SPWPN_SPECTRAL && spect)
+        end_spectral_weapon(spect, false);
+
     brand_type new_brand = old_brand;
 
     // now try and find an appropriate brand
@@ -3148,13 +3153,14 @@ static void _rebrand_weapon(item_def& wpn)
         else
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAMING,
-                                    30, SPWPN_FREEZING,
-                                    25, SPWPN_VORPAL,
-                                    20, SPWPN_VENOM,
-                                    15, SPWPN_DRAINING,
-                                    15, SPWPN_ELECTROCUTION,
-                                    12, SPWPN_PROTECTION,
+                                    28, SPWPN_FLAMING,
+                                    28, SPWPN_FREEZING,
+                                    23, SPWPN_VORPAL,
+                                    18, SPWPN_VENOM,
+                                    14, SPWPN_DRAINING,
+                                    14, SPWPN_ELECTROCUTION,
+                                    11, SPWPN_PROTECTION,
+                                    11, SPWPN_SPECTRAL,
                                     8, SPWPN_VAMPIRISM,
                                     3, SPWPN_CHAOS);
         }
@@ -3250,6 +3256,11 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_SILVER:
         flash_colour = YELLOW;
         mprf("%s emits a brilliant flash of light!", itname.c_str());
+        break;
+    
+    case SPWPN_SPECTRAL:
+        flash_colour = BLUE;
+        mprf("%s acquires a faint afterimage.", itname.c_str());
         break;
         
     default:
