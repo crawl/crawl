@@ -1513,7 +1513,7 @@ static int l_item_shopping_list(lua_State *ls)
 /*** See the items offered by acquirement.
  * Only works when the acquirement menu is active.
  * @treturn array|nil An array of @{Item} objects or nil if not acquiring.
- * @function shop_inventory
+ * @function acquirement_items
  */
 static int l_item_acquirement_items(lua_State *ls)
 {
@@ -1544,6 +1544,7 @@ static int l_item_acquirement_items(lua_State *ls)
  * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
  * @tparam[opt=false] boolean whether to allow fumble throwing of non-activatable items
  * @treturn boolean whether an action took place
+ * @function fire
  */
 static int l_item_fire(lua_State *ls)
 {
