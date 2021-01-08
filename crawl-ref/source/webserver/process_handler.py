@@ -70,7 +70,15 @@ def handle_new_socket(path, event):
         process = CrawlProcessHandler(game_info, username,
                                       unowned_process_logger)
         processes[abspath] = process
-        process.connect(abspath)
+
+        try:
+            process.connect(abspath)
+        except ConnectionRefusedError:
+            self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
+                game_info["id"], abspath, exc_info=True)
+            del processes[abspath]
+            return
+
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
