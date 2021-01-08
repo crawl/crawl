@@ -887,9 +887,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                 exc_info=True)
 
     def flush_messages(self):
-        # type: () -> Optional[tornado.concurrent.Future[None]]
+        # type: () -> bool
         if self.client_closed or len(self.message_queue) == 0:
-            return None
+            return False
         msg = ("{\"msgs\":["
                 + ",".join(self.message_queue)
                 + "]}")
@@ -906,15 +906,40 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
                 compressed = compressed[:-4]
                 self.compressed_bytes_sent += len(compressed)
-                return self.write_message(compressed, binary=True)
+                f = self.write_message(compressed, binary=True)
             else:
                 self.uncompressed_bytes_sent += len(binmsg)
-                return self.write_message(binmsg)
+                f = self.write_message(binmsg)
+
+            # handle any exceptions lingering in the Future
+            # TODO: this whole call chain should be converted to use coroutines
+            def after_write_callback(f):
+                try:
+                    f.result()
+                except tornado.websocket.WebSocketClosedError as e:
+                    self.logger.warning("Connection closed during async write_message")
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
+                except Exception as e:
+                    self.logger.warning("Exception during async write_message")
+                    self.logger.warning(e, exc_info=True)
+                    if self.ws_connection is not None:
+                        self.ws_connection._abort()
+
+            # extreme back-compat try-except block, `f` should be None in
+            # ancient tornado versions
+            try:
+                f.add_done_callback(after_write_callback)
+            except:
+                pass
+            # true means that something was queued up to send, but it may be
+            # async
+            return True
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             if self.ws_connection is not None:
                 self.ws_connection._abort()
-        return None
+            return False
 
     # n.b. this looks a lot like superclass write_message, but has a static
     # type signature that is not compatible with it, so we do not override
@@ -923,22 +948,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                        msg,      # type: str
                        send=True # type: bool
                        ):
-        # type: (...) -> Optional[tornado.concurrent.Future[None]]
+        # type: (...) -> bool
         if self.client_closed:
-            return None
+            return False
         self.message_queue.append(msg)
         if send:
             return self.flush_messages()
-        return None
+        return False
 
     def send_message(self, msg, **data):
-        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
+        # type: (str, Any) -> bool
         """Sends a JSON message to the client."""
         data["msg"] = msg
         return self.append_message(json_encode(data), True)
 
     def queue_message(self, msg, **data):
-        # type: (str, Any) -> Optional[tornado.concurrent.Future[None]]
+        # type: (str, Any) -> bool
         data["msg"] = msg
         return self.append_message(json_encode(data), False)
 
