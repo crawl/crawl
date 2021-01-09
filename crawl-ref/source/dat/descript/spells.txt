@@ -397,8 +397,8 @@ attack anything and everything nearby with great strength and speed.
 %%%%
 Disintegrate spell
 
-Violently rends apart anything in a small volume of space. It can be used to
-cause severe damage, or remove a chunk of rock.
+Disrupts the physical structure of a target creature, dealing heavy damage and
+bypassing armour. Only strong-willed beings can hold themselves together.
 %%%%
 Disjunction spell
 
