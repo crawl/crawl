@@ -1093,8 +1093,7 @@ NAME:    hangedman_misty_isle
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling
 DEPTH:   D:7-12
 KMONS:   123 = sky beast
-KMONS:   45 = will-o-the-wisp
-KMONS:   6 = steam dragon
+KMONS:   56 = steam dragon
 KITEM:   15% = any / gold
 KITEM:   36 = gold, star_item
 KFEAT:   F = shallow_water
@@ -3606,7 +3605,7 @@ KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
 KMONS:   p = hornet
-KMONS:   q = will-o-the-wisp
+KMONS:   q = goliath frog
 KMONS:   r = wolf spider
 KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
 SHUFFLE: bcdfghjklnopqr
