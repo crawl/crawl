@@ -3120,10 +3120,10 @@ static string _miscast_damage_string(spell_type spell)
     };
 
     const map <spschool, string> special_flavor = {
-        { spschool::summoning, "summon a nameless horror" },
-        { spschool::transmutation, "further contaminate you" },
-        { spschool::translocation, "dimensionally anchor you" },
-        { spschool::hexes, "debuff and slow you" },
+        { spschool::summoning, "summons a nameless horror" },
+        { spschool::transmutation, "further contaminates you" },
+        { spschool::translocation, "dimensionally anchors you" },
+        { spschool::hexes, "debuffs and slows you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
@@ -3141,7 +3141,7 @@ static string _miscast_damage_string(spell_type spell)
 
     if (!dam_flavors.empty())
     {
-        descs.push_back(make_stringf("deal up to %d %s damage", dam,
+        descs.push_back(make_stringf("deals up to %d %s damage", dam,
                                      comma_separated_line(dam_flavors.begin(),
                                                          dam_flavors.end(),
                                                          " or ").c_str()));
