@@ -22,6 +22,7 @@
 #include "items.h"
 #include "macro.h"
 #include "message.h"
+#include "movement.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
@@ -396,10 +397,36 @@ namespace quiver
 
             set_target(t);
 
-            if (you.confused() && target.needs_targeting())
+            if (you.confused())
             {
-                mpr("You're too confused to aim your attacks!");
-                return;
+                if (you.is_stationary())
+                {
+                    // XX duplicate code with movement.cc:move_player_action
+                    if (cancel_confused_move(true))
+                        return;
+
+                    if (!one_chance_in(3))
+                    {
+                        coord_def move(random2(3) - 1, random2(3) - 1);
+                        if (move.origin())
+                        {
+                            mpr("You nearly hit yourself!");
+                            you.turn_is_over = true;
+                            return;
+                        }
+                        // replace input target with a confused one
+                        target.target = you.pos() + move;
+                    }
+                    // fallthrough
+                }
+                else
+                {
+                    if (target.needs_targeting())
+                        mpr("You're too confused to aim your attacks!");
+                    else
+                        mpr("You're too confused to attack without stumbling around!");
+                    return;
+                }
             }
 
             if (you.caught())
