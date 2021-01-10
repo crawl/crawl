@@ -1662,6 +1662,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_CLOSE:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
+    case SPELL_CHAIN_OF_CHAOS:
     case SPELL_SUMMON_EYEBALLS:
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
@@ -6075,6 +6076,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_chain_spell(spell_cast, splpow, mons);
         return;
 
+    case SPELL_CHAIN_OF_CHAOS:
+        cast_chain_spell(spell_cast, splpow, mons);
+        return;
+
     case SPELL_SUMMON_EYEBALLS:
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 7 + 1);
 
@@ -7635,6 +7640,12 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
             return ai_action::bad(); // don't zap player
         else
             return ai_action::good_or_bad(_trace_los(mon, _elec_vulnerable));
+
+    case SPELL_CHAIN_OF_CHAOS:
+        if (you.visible_to(mon) && friendly)
+            return ai_action::bad(); // don't zap player
+        return ai_action::good_or_bad(_trace_los(mon, [] (const actor * a)
+                                                          { return true; }));
 
     case SPELL_CORRUPTING_PULSE:
         if (you.visible_to(mon) && friendly)

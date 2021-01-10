@@ -2225,6 +2225,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },
       }
     },
+
+    {  MST_PSYCHE,
+      {
+       { SPELL_CANTRIP, 12, MON_SPELL_WIZARD },
+       { SPELL_POLYMORPH, 12, MON_SPELL_WIZARD },
+       { SPELL_CHAIN_OF_CHAOS, 24, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+      }
+    },
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
