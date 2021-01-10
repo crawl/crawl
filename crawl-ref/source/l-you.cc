@@ -814,6 +814,7 @@ static int l_you_abil_table(lua_State *ls)
  * @tparam[opt=0] number y coordinate
  * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
  * @treturn boolean whether an action took place
+ * @function activate_ability
  */
 static int you_activate_ability(lua_State *ls)
 {

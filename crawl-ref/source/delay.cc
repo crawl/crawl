@@ -1266,6 +1266,7 @@ bool interrupt_activity(activity_interrupt ai,
         _monster_warning(ai, at, delay, msgs_buf);
         // Teleport stops stair delays.
         stop_delay(ai == activity_interrupt::teleport);
+        quiver::set_needs_redraw();
 
         return true;
     }
@@ -1278,6 +1279,7 @@ bool interrupt_activity(activity_interrupt ai,
     {
         if (_should_stop_activity(you.delay_queue[i].get(), ai, at))
         {
+            quiver::set_needs_redraw();
             // Do we have a queued run delay? If we do, flush the delay queue
             // so that stop running Lua notifications happen.
             for (int j = i; j < size; ++j)

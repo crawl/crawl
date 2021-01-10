@@ -1585,8 +1585,8 @@ Halflings (Ha)
   innate resistance to mutagenic effects. They can use short blades and shields
   very well, are passable with long blades, and excel in ranged combat with
   slings. They are also very stealthy and dextrous, but are poor at magic
-  (except for charms, translocations, and air magic). They advance in levels as
-  rapidly as Humans. Halflings cannot wield large weapons.
+  (except for translocations and air magic). They advance in levels as rapidly
+  as Humans. Halflings cannot wield large weapons.
 
 Trolls (Tr)
   Trolls are monstrous creatures with powerful claws. They have thick, knobbly
@@ -1924,7 +1924,7 @@ Black Draconians
   with their natural skill with air magic.
 
 Purple Draconians
-  are highly adapted to all spellcasting in general, and to hexes and charms in
+  are highly adapted to all spellcasting in general, and to hexes in
   particular. They are a bit better at evoking things than most other
   Draconians. They can breathe dispelling energy which strips those it hits of
   their enchantments, and are naturally stronger-willed than other draconians.

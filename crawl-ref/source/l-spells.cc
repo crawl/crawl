@@ -325,6 +325,7 @@ LUAFN(l_spells_god_loathes)
  * @tparam[opt=0] number y coordinate
  * @tparam[opt=false] boolean if true, aim at the target; if false, shoot past it
  * @treturn boolean whether an action took place
+ * @function cast
  */
 static int l_spells_cast(lua_State *ls)
 {

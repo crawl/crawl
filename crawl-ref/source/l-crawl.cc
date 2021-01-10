@@ -965,7 +965,8 @@ static int crawl_split(lua_State *ls)
  *
  * @tparam string s1 the first string.
  * @tparam string s2 the second sring.
- * @treturn -1 if s1 < s2, 1 if s2 < s1, 0 if s1 == s2.
+ * @treturn number -1 if s1 < s2, 1 if s2 < s1, 0 if s1 == s2.
+ * @function string_compare
  */
 static int crawl_string_compare(lua_State *ls)
 {

@@ -1753,10 +1753,13 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
             return;
         }
 
+        const bool secondary_enabled = a->is_enabled();
+
         // Some quiver actions need to be triggered directly. Disabled quiver
         // actions are also triggered here for messaging purposes -- the errors
         // are more informative than what you'd get through autofight.
-        if (!a->use_autofight_targeting() || !a->is_enabled())
+        // TODO: this probably breaks autofight_wait for these cases?
+        if (!a->use_autofight_targeting() || !secondary_enabled)
         {
             dist target;
             // TODO is there a better way to handle this division of labor??
@@ -1766,6 +1769,10 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
                     mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
                 // just continue with the default value in this case
             }
+            // set this so that it prints appropriate error messages for
+            // autofiring
+            if (!secondary_enabled)
+                target.find_target = true;
             a->trigger(target);
             return;
         }
@@ -2205,7 +2212,7 @@ static void _prep_input()
     update_screen();
 
     viewwindow();
-    update_screen();
+    update_screen(); // ???
     maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();

@@ -22,6 +22,7 @@
 #include "items.h"
 #include "macro.h"
 #include "message.h"
+#include "movement.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
@@ -396,10 +397,36 @@ namespace quiver
 
             set_target(t);
 
-            if (you.confused() && target.needs_targeting())
+            if (you.confused())
             {
-                mpr("You're too confused to aim your attacks!");
-                return;
+                if (you.is_stationary())
+                {
+                    // XX duplicate code with movement.cc:move_player_action
+                    if (cancel_confused_move(true))
+                        return;
+
+                    if (!one_chance_in(3))
+                    {
+                        coord_def move(random2(3) - 1, random2(3) - 1);
+                        if (move.origin())
+                        {
+                            mpr("You nearly hit yourself!");
+                            you.turn_is_over = true;
+                            return;
+                        }
+                        // replace input target with a confused one
+                        target.target = you.pos() + move;
+                    }
+                    // fallthrough
+                }
+                else
+                {
+                    if (target.needs_targeting())
+                        mpr("You're too confused to aim your attacks!");
+                    else
+                        mpr("You're too confused to attack without stumbling around!");
+                    return;
+                }
             }
 
             if (you.caught())
@@ -1020,39 +1047,37 @@ namespace quiver
 
             set_target(t);
 
-            // TODO: how to handle these in the fire interface?
+            // don't do the range check check if doing manual firing.
+            const bool do_range_check = !target.needs_targeting();
+
             if (_spell_needs_manual_targeting(spell))
             {
+                // force interactive mode no matter what:
                 target.target = coord_def(-1,-1);
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
             }
             else if (_spell_no_autofight_targeting(spell))
             {
+                // use direction chooser find_target behavior unless interactive
+                // is set before the call:
                 target.target = coord_def(-1,-1);
                 target.find_target = true;
             }
             else if (!is_dynamic_targeted())
-                target.target = you.pos(); // hax -- never trigger static targeters
-                                           // unless interactive is set.
-                                           // will need to be fixed if `z` ever
-                                           // calls here
+            {
+                // this is a somewhat hacky way to allow non-interactive mode;
+                // the value of `target` doesn't matter for static targeters.
+                // Like the no-autofight case, if `interactive` is set
+                // before the call, will still pop up an interactive targeter.
+                target.target = you.pos();
+            }
 
-            // don't do the range check check if doing manual firing. (It's
-            // a bit hacky to condition this on whether there's a fire context...)
-            const bool do_range_check = !target.fire_context;
             if (autofight_check())
                 return;
 
             cast_a_spell(do_range_check, spell, &target);
-            if (target.find_target && !target.isValid && !target.fire_context)
-            {
-                // It would be entirely possible to force manual targeting for
-                // this case; I think it's not what players would expect so I'm
-                // not doing it for now.
-                // TODO: more consistency with autofight.lua messaging?
-                mpr("Can't find an automatic target! Use Z to cast.");
-            }
+
             t = target; // copy back, in case they are different
         }
 
@@ -1308,7 +1333,7 @@ namespace quiver
 
             // TODO: does non-targeted case come up?
             if (target.isCancel && !target.interactive && is_targeted())
-                mprf("No targets found! target %d,%d", t.target.x, t.target.y);
+                mprf("No targets found!");
 
             t = target; // copy back, in case they are different
         }
@@ -1794,7 +1819,7 @@ namespace quiver
         // save compat (or bug compat): initialize to an invalid action if we
         // are missing the keys altogether
         if (!source.exists("type") || !source.exists("param"))
-            return make_shared<ammo_action>(-1);
+            return make_shared<launcher_ammo_action>(-1);
 
         const string &type = source["type"].get_string();
         const int param = source["param"].get_int();
@@ -1914,7 +1939,7 @@ namespace quiver
 
     // by default, initialize as invalid, not empty
     action_cycler::action_cycler()
-        : action_cycler(make_shared<ammo_action>(-1))
+        : action_cycler(make_shared<launcher_ammo_action>(-1))
     { }
 
     void action_cycler::save(const string key) const
@@ -2228,7 +2253,7 @@ namespace quiver
 
         // no valid actions, return an (invalid) empty-quiver action
         if (!result)
-            return make_shared<ammo_action>(-1);
+            return make_shared<launcher_ammo_action>(-1);
 
         return result;
     }

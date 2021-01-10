@@ -134,6 +134,7 @@
     Nicholas Connelly
     Tom Conrad
     Vitor 'Baconkid' Costa
+    RJ Cunningham
     Aaron Curtis
     Simon Curtis
     cut1less
@@ -167,6 +168,7 @@
     Joshua Gelbard
     Peter Gerlagh
     Benoît Giannangeli
+    Gittourarmy
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
@@ -226,6 +228,7 @@
     Mark Lodato
     Matthew Ludivico
     Rob Lund
+    Sebastian Łużyński
     Lynn
     Michael Lynn
     Peter McLarnan
@@ -242,6 +245,7 @@
     James 'Eronarn' Meickle
     Jacob Meigs
     mgdelmonte
+    Midn8
     mikee
     Nathan Mills
     Andrew Minton
@@ -274,6 +278,7 @@
     Malwyn P
     palyth
     panicbit
+    Anders Papitto
     William Parker
     Pedro
     Pekkekke
@@ -286,6 +291,7 @@
     psywombats
     pubby
     Ashley Elizabeth Raine
+    randomMesh
     Edward Randtke
     Derek Ray
     RealzHS
@@ -305,6 +311,7 @@
     runrin
     Risto Saarelma
     Sebastian Salman
+    Petri Salminen
     Sandman25
     Brett Scarborough
     Roderick Schertler
@@ -346,6 +353,7 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
+    ukdong99
     Sean VanMeter
     Mikko Vepsäläinen
     vla22

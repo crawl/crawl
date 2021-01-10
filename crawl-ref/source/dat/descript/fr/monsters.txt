@@ -1163,11 +1163,6 @@ inept item mimic
 
 Apparemment un objet abandonné, mais en réalité, une bête déguisée.
 %%%%
-insubstantial wisp
-
-Une mince volute de gaz flottant, vacillante, se dissipant puis se reformant
-d'une manière aléatoire et déconcertante.
-%%%%
 iron devil
 
 Un humanoïde hideux recouvert d'une peau de métal. Alors qu'il manque d'attaque

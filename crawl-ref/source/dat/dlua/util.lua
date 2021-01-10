@@ -129,8 +129,8 @@ end
 
 --- A wrapper on `table.sort` that uses locale-insensitive comparison for
 --- strings by default. Like `table.sort`, this sorts an array in-place.
---- @tparam t an array to sort.
---- @tparam f an optional less-than function to use for determining sort order.
+--- @tparam array t an array to sort.
+--- @tparam function(a,b) f an optional less-than function to use for determining sort order.
 function util.sort(t, f)
   if f == nil then
     return table.sort(t, util.stable_lessthan)
@@ -391,6 +391,9 @@ function util.random_choose_weighted_i(list)
   -- not reachable
 end
 
+--- Given a list of pairs, where the second element of each pair is an integer
+-- weight, randomly choose from the list.
+-- @param list the list of pairs to choose from
 function util.random_choose_weighted(list)
   return list[util.random_choose_weighted_i(list)][1]
 end

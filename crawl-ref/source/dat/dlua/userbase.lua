@@ -249,8 +249,8 @@ end
 -- It is called for each message after player configured mute settings are
 -- applied to the message.
 --
--- @tparam string The message text
--- @tparam string The message channel name
+-- @tparam string text The message text
+-- @tparam string channel The message channel name
 function c_message(text, channel) end
 
 -- The remainder of these hooks are called elsewhere in the codebase from

@@ -231,8 +231,8 @@ Air Magic
 
 Air Magic provides spells to deal damage directly with the wind, as well as
 noisy but powerful lightning Conjurations. It also provides some utility
-spells, such as Charms to call the wind to assist your movement or protect you
-from projectile attacks.
+spells, such as a call to the wind to assist your movement or a Hex to prevent
+most use of magic in the area surrounding you.
 
 Being skilled in Air Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in

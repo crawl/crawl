@@ -1,5 +1,5 @@
-Stone Soup 0.26 (through 0.26-a0-1210-gada54dbd18)
---------------------------------------------------
+Stone Soup 0.26.0 (20210108)
+----------------------------
 
 Highlights
 ----------
@@ -7,6 +7,8 @@ Highlights
 * New background: Delver.
 * Food and hunger are removed.
 * Swamp has many new monsters and other changes.
+* Spells, wands, and abilities can be quivered, fired, and autotargeted with an
+  extension of the ranged quiver/autofight interface.
 
 Monsters
 --------
@@ -171,36 +173,81 @@ Gods
 
 Interface
 ---------
-* The "quiver" feature is generalized and can now quiver spells, wands, and
-  abilities to be quick-activated with shift+tab or f.
+* The "quiver" feature is generalized and can now hold spells, evokables, and
+  abilities. The `f`ire interface can be used to target any quiverable
+  action, and quiverable actions can be autofired via shift+tab/`p`. Existing
+  autofight ranged settings such as autofight_throw are generalized to handle
+  new quiverables. The `]` key swaps between the two most recent quivered
+  actions. See the options guide for more information on new and updated
+  options: autofight_throw, autofight_stop, automagic_stop,
+  fail_severity_to_quiver, launcher_autoquiver, fire_order. See the manual
+  section 4, subsection "Attacking and firing" for a summary of the relevant
+  key bindings.
+* Launchers can now be fired independently of the quiver; use `v` to target
+  (like reaching weapons) or regular autofight commands to autotarget.
 * Static targeters are added for spells and abilities that indicate which cells
-  will be affected, along with options to configure.
+  will be affected, along with a new option to configure which of these are
+  shown while casting, force_targeter.
 * Player wand damage, spell damage, and spell accuracy is now displayed in the
   UI.
-* Viewing a monster with xv now shows to-hit chance with your current weapon.
-* Monsters' spell damage is shown in xv.
+* Viewing a monster with `xv` now shows to-hit chance with your current weapon.
+* Monsters' spell damage is shown in `xv`.
 * Examining cells with multiple interesting things now gives a selection menu.
-* The "view stack/pickup key" ; can be pressed twice to force autopickup even
+* The "view stack/pickup key" `;` can be pressed twice to force autopickup even
   in unsafe situations.
+* The `^x` view description is now available from all targeting prompts, and
+  when used while targeting lists valid targets in range.
+* Any floor can be annotated from anywhere in the `!` interface.
+* Spellpower is now displayed as a percentage of max spellpower.
+* Macro updates: Macros/keybinds can be viewed via the `~` menu in-game. RC file
+  keybind settings support escape codes.
+* Updated uption: travel_open_doors now has a setting that tries to avoid
+  opening doors during autotravel.
 * New option: travel_one_unsafe_move. Setting this option to true causes
   auto-travel to make one move towards its goal before conducting the usual
   safety checks.
 * New option: monster_item_view_features. This is a regex list option, features
-  that match patterns on this list will be displayed in the ^x view
+  that match patterns on this list will be displayed in the `^x` view
   description.
 * New option: always_show_zot. When enabled, the remaining time until Zot finds
   the player is always shown, rather than when there are only 1500 turns left.
-* The ^x view description is now available from all targeting prompts, and
-  when used while targeting lists valid targets in range.
-* Spellpower is now displayed as a percentage of max spellpower.
+* New options: tile_overlay_col and tile_overlay_alpha_percent control the
+  appearance of the message window in local tiles.
 
 Lua
 ---
-* Two new hooks, chk_ability_choice and chk_spell_choice can be used to
-  answer the ability and spell menu prompts.
+* Three new hooks, chk_ability_choice, chk_spell_choice, and c_message can be
+  used to answer the ability and spell menu prompts and to react to messages.
 * A new api is introduced for targeted fire of spells, items, and abilities as
-  a less brittle alternative to sending keys.
+  a less brittle alternative to sending keys. See lua functions:
+  crawl.do_targeted_command, spells.cast, item.fire, you.activate_ability,
+  you.quiver_valid, and you.quiver_enabled.
+* Other new functions: you.memorise (memorise a spell by name),
+  spells.power_perc (get spellpower for a spell as a percentage)
 
+Stone Soup 0.25.1 (20200717)
+----------------------------
+
+Bugfix Release
+--------------
+* Artefacts from acquirement now leave a note in morgues.
+* Scarf of harm is fixed.
+* Foxfire will no longer attack out of LoS.
+* Stacking from empty Nemelex decks is no longer possible.
+* Wizlab entry now generates a milestone / note again.
+* Fix a bug where cloud generators triggered on load when no time had passed,
+  leading to a different cloud arrangement from saving + reloading.
+* Seeded play fixes for seed instability in a few cases, as well as crashes
+  related to seed stability and pregeneration code.
+* Several speedups for dungeon rendering, especially in zigs.
+* Sprint 3 cloud generators have been retuned.
+* Improvements to the behavior of restart_after_save (on by default in 0.25.0).
+* Using [] in map view from stairs to view other levels now correctly finds the
+  matching stairs.
+* Crashes to do with annotation, off-level map view, and custom flashes have
+  been fixed.
+* It is no longer possible for a bug to cause the player to drown or fall into
+  lava, emergency flight will be activated instead.
 
 Stone Soup 0.25.0 (20200612)
 ----------------------------

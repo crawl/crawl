@@ -1455,11 +1455,6 @@ infernal demonspawn
 
 <demonspawn>
 %%%%
-insubstantial wisp
-
-A thin wisp of floating gas, flickering, disappearing and reforming in a
-disconcertingly random fashion while building up an electrical charge.
-%%%%
 iron dragon
 
 A very heavy, slow and apparently flightless dragon. It is named for its

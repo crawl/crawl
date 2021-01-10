@@ -1867,13 +1867,18 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
                 }
 
                 blast_adjacents.push_back(*ai);
-                beam_visual.explosion_draw_cell(*ai);
+                if (Options.use_animations & UA_BEAM)
+                    beam_visual.explosion_draw_cell(*ai);
             }
-            beam_visual.explosion_draw_cell(pos);
+            if (Options.use_animations & UA_BEAM)
+                beam_visual.explosion_draw_cell(pos);
         }
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
+        if (Options.use_animations & UA_BEAM)
+        {
+            viewwindow(false);
+            update_screen();
+            scaled_delay(50);
+        }
 
         // Real explosions on each individual square.
         for (coord_def pos : blast_sources)
@@ -1907,8 +1912,11 @@ static int _discharge_monsters(const coord_def &where, int pow,
     beam.draw_delay = 0;
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
-    if (victim->is_player() || victim->res_elec() <= 0)
+    if ((Options.use_animations & UA_BEAM)
+        && (victim->is_player() || victim->res_elec() <= 0))
+    {
         beam.draw(where);
+    }
 
     if (victim->is_player())
     {
@@ -2027,7 +2035,10 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
     if (dam > 0)
-        scaled_delay(100);
+    {
+        if (Options.use_animations & UA_BEAM)
+            scaled_delay(100);
+    }
     else
     {
         if (coinflip())
@@ -2460,15 +2471,18 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (const auto &entry : hitfunc.zapped)
+    if (Options.use_animations & UA_BEAM)
     {
-        if (entry.second <= 0)
-            continue;
+        for (const auto &entry : hitfunc.zapped)
+        {
+            if (entry.second <= 0)
+                continue;
 
-        beam.draw(entry.first);
+            beam.draw(entry.first);
+        }
+
+        scaled_delay(200);
     }
-
-    scaled_delay(200);
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
@@ -2966,19 +2980,22 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (int i = 1; i <= range; i++)
+    if (Options.use_animations & UA_BEAM)
     {
-        for (const auto &entry : hitfunc.sweep[i])
+        for (int i = 1; i <= range; i++)
         {
-            if (entry.second <= 0)
-                continue;
+            for (const auto &entry : hitfunc.sweep[i])
+            {
+                if (entry.second <= 0)
+                    continue;
 
-            beam.draw(entry.first);
+                beam.draw(entry.first);
+            }
+            scaled_delay(25);
         }
-        scaled_delay(25);
-    }
 
-    scaled_delay(100);
+        scaled_delay(100);
+    }
 
     if (you.can_see(*caster) || caster->is_player())
     {
@@ -3169,7 +3186,8 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
         else
             mprf(msg.c_str(), "Something");
 
-        beam.draw(where);
+        if (Options.use_animations & UA_BEAM)
+            beam.draw(where);
         return;
     }
 
