@@ -645,14 +645,6 @@ Lightning Bolt electric golem cast
 
 @The_monster@ hurls @beam@ @at@ @target@.
 %%%%
-insubstantial wisp cast
-
-@The_monster@ thrums sharply.
-%%%%
-Blink insubstantial wisp cast
-
-__NONE
-%%%%
 unseen Warning Cry howler monkey cast
 
 You hear a tremendous hooting and howling!
