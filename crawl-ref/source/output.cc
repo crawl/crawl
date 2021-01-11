@@ -545,19 +545,18 @@ void update_turn_count()
         return;
     }
 
-    CGOTOXY(19+6, 9, GOTO_STAT);
+    const int turncount_start_x = 19 + 6;
+    CGOTOXY(turncount_start_x, 9, GOTO_STAT);
 
-    // Show the turn count starting from 1. You can still quit on turn 0.
     textcolour(HUD_VALUE_COLOUR);
-    if (Options.show_game_time)
-        CPRINTF("%.1f", you.elapsed_time / 10.0);
-    else
-        CPRINTF("%d", you.num_turns);
+    string time = Options.show_game_time
+        ? make_stringf("%.1f", you.elapsed_time / 10.0)
+        : make_stringf("%d", you.num_turns);
+    time += make_stringf(" (%.1f)",
+            (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0);
 
-    CPRINTF(" (%.1f)%s",
-            (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
-            // extra spaces to erase excess if previous output was longer
-            "    ");
+    CPRINTF("%s",
+        chop_string(time, crawl_view.hudsz.x - turncount_start_x + 1).c_str());
     textcolour(LIGHTGREY);
 }
 
