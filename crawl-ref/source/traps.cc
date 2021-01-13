@@ -678,6 +678,10 @@ void trap_def::trigger(actor& triggerer)
         // Nets need LOF to hit the player, no netting through glass.
         if (!you.see_cell_no_trans(pos))
             break;
+        // Don't try to re-net the player when they're already netted/webbed.
+        if (you.attribute[ATTR_HELD])
+            break;
+
         bool triggered = you_trigger;
         if (m)
         {
@@ -699,30 +703,31 @@ void trap_def::trigger(actor& triggerer)
             }
         }
 
-        if (triggered)
+        if (!triggered)
+            break;
+
+        if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
         {
-            if (random2avg(2 * you.evasion(), 2) > 18 + env.absdepth0 / 2)
-                mpr("You avoid being caught in a net.");
-            else
-            {
-                mpr("A large net falls onto you!");
-
-                item_def item = generate_trap_item();
-                copy_item_to_grid(item, you.pos());
-
-                if (player_caught_in_net())
-                {
-                    if (player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
-
-                    // Mark the item as trapping; after this it's
-                    // safe to update the view.
-                    _mark_net_trapping(you.pos());
-                }
-            }
+            mpr("You avoid being caught in a net.");
+            break;
         }
+
+        if (!player_caught_in_net())
+        {
+            mpr("The net is torn apart by your bulk.");
+            break;
         }
+
+        item_def item = generate_trap_item();
+        copy_item_to_grid(item, you.pos());
+        if (player_in_a_dangerous_place())
+            xom_is_stimulated(50);
+
+        // Mark the item as trapping; after this it's
+        // safe to update the view.
+        _mark_net_trapping(you.pos());
         break;
+        }
 
     case TRAP_WEB:
         if (triggerer.is_web_immune())

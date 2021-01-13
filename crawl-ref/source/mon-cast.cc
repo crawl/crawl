@@ -1368,7 +1368,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_NOXIOUS_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_THORN_VOLLEY:
-    case SPELL_CALL_DOWN_DAMNATION:
     case SPELL_HURL_DAMNATION:
     case SPELL_SPIT_POISON:
     case SPELL_MIASMA_BREATH:      // death drake
@@ -1405,6 +1404,11 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_FIRE_STORM:
         setup_fire_storm(mons, power / 2, beam);
         beam.foe_ratio = random_range(40, 55);
+        break;
+
+    case SPELL_CALL_DOWN_DAMNATION: // Set explosion size for tracer
+        zappy(spell_to_zap(real_spell), power, true, beam);
+        beam.ex_size = 1;
         break;
 
     case SPELL_MEPHITIC_CLOUD:

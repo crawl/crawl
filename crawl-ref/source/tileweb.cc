@@ -1849,7 +1849,6 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
     crawl_view.calc_vlos();
     viewwindow(false, true);
-    update_screen();
     place_cursor(CURSOR_MAP, cen);
 }
 
