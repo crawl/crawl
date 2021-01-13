@@ -863,14 +863,35 @@ int num_to_lines(int num)
     return num;
 }
 
+#ifdef DGAMELAUNCH
+static bool _suppress_dgl_clrscr = false;
+
+// TODO: this is not an ideal way to solve this problem. An alternative might
+// be to queue dgl clrscr and only send them at the same time as an actual
+// refresh?
+suppress_dgl_clrscr::suppress_dgl_clrscr()
+    : prev(_suppress_dgl_clrscr)
+{
+    _suppress_dgl_clrscr = true;
+}
+
+suppress_dgl_clrscr::~suppress_dgl_clrscr()
+{
+    _suppress_dgl_clrscr = prev;
+}
+#endif
+
 void clrscr_sys()
 {
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
-    printf("%s", DGL_CLEAR_SCREEN);
-    fflush(stdout);
+    if (!_suppress_dgl_clrscr)
+    {
+        printf("%s", DGL_CLEAR_SCREEN);
+        fflush(stdout);
+    }
 #endif
 
 }
