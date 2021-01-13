@@ -2183,6 +2183,8 @@ public:
 
 #ifndef USE_TILE_LOCAL
         // do_redraws() only calls viewwindow(); we must first draw the sidebar.
+        // TODO: why does this even clear the sidebar in the first place? I
+        // can't figure it out. -advil
         redraw_screen(false);
 #endif
 
@@ -2344,6 +2346,10 @@ bool direction_chooser::choose_direction()
 #ifndef USE_TILE_LOCAL
     cursor_control ccon(!Options.use_fake_cursor);
 #endif
+#ifdef DGAMELAUNCH
+    suppress_dgl_clrscr no_blinking;
+#endif
+
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
     targeter_smite legacy_range(&you, range, 0, 0, true);
