@@ -2172,9 +2172,9 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
         find_connected_identical(pos, all_door);
         dungeon_feature_type old_feat = env.grid(pos);
 
-        act->move_to_pos(c);
+        act->set_position(c);
         int new_tension = _tension_door_closed(all_door, old_feat);
-        act->move_to_pos(pos);
+        act->set_position(pos);
 
         if (new_tension == max_tension)
             best.push_back(c);
@@ -2224,13 +2224,13 @@ static bool _should_force_door_shut(const coord_def& door)
     {
         coord_def newpos =
                 _get_push_spaces_max_tension(you.pos(), &veto_spots).front();
-        you.move_to_pos(newpos);
+        you.set_position(newpos);
     }
 
     const int new_tension = _tension_door_closed(all_door, old_feat);
 
     if (player_in_door)
-        you.move_to_pos(oldpos);
+        you.set_position(oldpos);
 
     dprf("Considering sealing cur tension: %d, new tension: %d",
          cur_tension, new_tension);
