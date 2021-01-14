@@ -486,54 +486,14 @@ void cancel_tornado(bool tloc)
         }
         else
         {
+            // Tornado ended by using something stairslike, so the destination
+            // is safe
             you.duration[DUR_FLIGHT] = 0;
             you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             if (you.species == SP_TENGU)
                 you.redraw_evasion = true;
-            // NO checking for water, since this is called only during level
-            // change, and being, say, banished from above water shouldn't
-            // kill you.
         }
     }
     you.duration[DUR_TORNADO] = 0;
-    you.duration[DUR_TORNADO_COOLDOWN] = 0;
-}
-
-void tornado_move(const coord_def &p)
-{
-    if (!you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN])
-        return;
-
-    int age = _tornado_age(&you);
-    int dist = (you.pos() - p).rdist();
-    if (dist <= 1)
-        return;
-
-    if (!you.duration[DUR_TORNADO])
-    {
-        if (age < _age_needed(dist - TORNADO_RADIUS))
-            you.duration[DUR_TORNADO_COOLDOWN] = 0;
-        return;
-    }
-
-    if (age > _age_needed(dist))
-    {
-        // check for actual wind too, not just the radius
-        WindSystem winds(you.pos());
-        if (winds.has_wind(p))
-        {
-            // blinking/cTele inside an already windy area
-            dprf("Tloc penalty: reducing tornado by %d turns", dist - 1);
-            you.duration[DUR_TORNADO] = max(1,
-                         you.duration[DUR_TORNADO] - (dist - 1) * 10);
-            return;
-        }
-    }
-
-    cancel_tornado(true);
-
-    // there's an intersection between the area of the old tornado, and what
-    // a new one could possibly grow into
-    if (age > _age_needed(dist - TORNADO_RADIUS))
-        you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
+    you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
 }

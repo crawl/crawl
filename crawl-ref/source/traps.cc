@@ -38,6 +38,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-damage.h" // cancel_tornado
 #include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "stash.h"
@@ -539,7 +540,10 @@ void trap_def::trigger(actor& triggerer)
         if (search_result == passage_type::free)
         {
             if (you_trigger)
+            {
                 mpr("You enter the passage of Golubria.");
+                cancel_tornado();
+            }
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 

@@ -53,7 +53,6 @@ spret cast_sandblast(int powc, bolt &beam, bool fail);
 spret cast_tornado(int powc, bool fail);
 void tornado_damage(actor *caster, int dur, bool is_vortex = false);
 void cancel_tornado(bool tloc = false);
-void tornado_move(const coord_def &pos);
 coord_def get_thunderbolt_last_aim(actor *caster);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
