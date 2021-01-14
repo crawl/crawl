@@ -39,6 +39,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-damage.h" // cancel_tornado
 #include "spl-summoning.h" // trigger_spectral_weapon for palentonga charge
 #include "spl-util.h"
 #include "stash.h"
@@ -923,6 +924,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             large_change = true;
         }
 
+        cancel_tornado(true);
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 
