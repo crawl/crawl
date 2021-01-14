@@ -2232,12 +2232,19 @@ static bool _should_force_door_shut(const coord_def& door)
     if (player_in_door)
         you.move_to_pos(oldpos);
 
+    dprf("Considering sealing cur tension: %d, new tension: %d",
+         cur_tension, new_tension);
+
     // If closing the door would reduce player tension by too much, probably
     // it is scarier for the player to leave it open and thus it should be left
     // open
-
-    // Currently won't allow tension to be lowered by more than 33%
-    return ((cur_tension - new_tension) * 3) <= cur_tension;
+    //
+    // Currently won't allow tension to be lowered by more than 33%.
+    //
+    // Also, if there's 0 tension, we require the door closure to create
+    // tensiion, otherwise we'll probably just lock the player away from the
+    // warden.
+    return 1 + cur_tension * 66 <= new_tension * 100;
 }
 
 static bool _seal_doors_and_stairs(const monster* warden,
