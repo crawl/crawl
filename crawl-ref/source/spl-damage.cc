@@ -1360,7 +1360,6 @@ spret cast_irradiate(int powc, actor* who, bool fail)
     beam.source = you.pos();
     beam.target = you.pos();
     beam.hit = AUTOMATIC_HIT;
-    beam.loudness = 0;
     beam.explode(true, true);
 
     apply_random_around_square([powc, who] (coord_def where) {
