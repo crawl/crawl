@@ -77,6 +77,10 @@ bool attack::handle_phase_attempted()
 bool attack::handle_phase_blocked()
 {
     damage_done = 0;
+
+    if (attacker->is_player())
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+
     return true;
 }
 
