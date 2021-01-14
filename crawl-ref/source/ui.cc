@@ -2463,7 +2463,7 @@ void UIRoot::push_child(shared_ptr<Widget> ch, KeymapContext km)
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 1)
     {
-        clrscr();
+        clrscr(false);
         ui_root.resize(get_number_of_cols(), get_number_of_lines());
     }
 #endif
@@ -2483,7 +2483,7 @@ void UIRoot::pop_child()
 #endif
 #ifndef USE_TILE_LOCAL
     if (m_root.num_children() == 0)
-        clrscr();
+        clrscr(false);
 #endif
 }
 
@@ -3291,7 +3291,7 @@ void pump_events(int wait_event_timeout)
     {
         // This may be superfluous, since the resize handler may have already
         // resized the screen
-        clrscr();
+        clrscr(true);
         console_shutdown();
         console_startup();
         ui_root.resize(get_number_of_cols(), get_number_of_lines());

@@ -1427,7 +1427,7 @@ void print_stats_level()
 void draw_border()
 {
     textcolour(HUD_CAPTION_COLOUR);
-    clrscr();
+    clrscr(false);
 
     textcolour(Options.status_caption_colour);
 
@@ -1458,7 +1458,7 @@ void draw_border()
 #ifndef USE_TILE_LOCAL
 void smallterm_warning()
 {
-    clrscr();
+    clrscr(true);
     CGOTOXY(1,1, GOTO_CRT);
     CPRINTF("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
 }
@@ -1469,7 +1469,7 @@ void redraw_screen(bool show_updates)
     if (!crawl_state.need_save)
     {
         // If the game hasn't started, don't do much.
-        clrscr();
+        clrscr(true);
         return;
     }
 

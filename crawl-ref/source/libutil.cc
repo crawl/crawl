@@ -445,11 +445,17 @@ void set_cursor_region(GotoRegion region)
     _current_region = region;
 }
 
-void clrscr()
+/**
+ * Clear the screen.
+ * @param full_reset (ncurses-only) whether to fully reset the screen,
+ *                   possibly causing a visible flash. No effect for windows
+ *                   console.
+ */
+void clrscr(bool full_reset)
 {
     save_cursor_pos save; // is this generally correct? alternative, set region
                           // to GOTO_CRT.
-    clrscr_sys();
+    clrscr_sys(full_reset);
 
 #ifdef USE_TILE_WEB
     tiles.clrscr();

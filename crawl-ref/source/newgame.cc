@@ -978,7 +978,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     tiles.set_ui_state(UI_CRT);
 #endif
 
-    clrscr();
+    clrscr(true);
 
     textcolour(LIGHTGREY);
 

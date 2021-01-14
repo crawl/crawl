@@ -11,8 +11,8 @@ int get_number_of_lines();
 int get_number_of_cols();
 int num_to_lines(int num);
 
-void clrscr();
-void clrscr_sys();
+void clrscr(bool full_reset = true);
+void clrscr_sys(bool use_clear);
 void clear_to_end_of_line();
 void gotoxy_sys(int x, int y);
 void textcolour(int c);

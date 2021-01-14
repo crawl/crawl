@@ -2363,7 +2363,7 @@ static void _save_game_exit()
     if (!you.entering_level)
         _save_level(level_id::current());
 
-    clrscr();
+    clrscr(true);
 
 #ifdef DGL_WHEREIS
     whereis_record("saved");

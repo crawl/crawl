@@ -481,7 +481,7 @@ void clear_to_end_of_line()
         cprintf("%*s", cols - pos + 1, "");
 }
 
-void clrscr_sys()
+void clrscr_sys(bool)
 {
     int x,y;
     COORD source;

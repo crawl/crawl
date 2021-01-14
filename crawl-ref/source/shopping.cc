@@ -2241,7 +2241,7 @@ void ShoppingList::display(bool view_only)
                    make_stringf("You cannot afford %s; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
-                clrscr();
+                clrscr(false); // why is this here??
                 if (!yesno(prompt.c_str(), true, 'n'))
                     return true;
             }

@@ -173,7 +173,7 @@ static void _initialize()
     {
         if (!crawl_state.io_inited)
             cio_init();
-        clrscr();
+        clrscr(true);
     }
 
     if (crawl_state.test)

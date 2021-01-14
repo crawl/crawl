@@ -881,11 +881,14 @@ suppress_dgl_clrscr::~suppress_dgl_clrscr()
 }
 #endif
 
-void clrscr_sys()
+void clrscr_sys(bool use_clear)
 {
     textcolour(LIGHTGREY);
     textbackground(BLACK);
-    clear();
+    if (use_clear)
+        clear();
+    else
+        erase();
 #ifdef DGAMELAUNCH
     if (!_suppress_dgl_clrscr)
     {

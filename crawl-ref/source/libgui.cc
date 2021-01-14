@@ -138,7 +138,7 @@ int getch_ck()
     return tiles.getch_ck();
 }
 
-void clrscr()
+void clrscr(bool)
 {
     tiles.clrscr();
 }

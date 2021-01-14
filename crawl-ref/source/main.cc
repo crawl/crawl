@@ -345,7 +345,7 @@ int main(int argc, char *argv[])
 
 static void _reset_game()
 {
-    clrscr();
+    clrscr(true);
     // Unset by death, but not by saving with restart_after_save.
     crawl_state.reset_game();
     clear_message_store();
@@ -2120,7 +2120,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         // CTRL-Z suspend behaviour is implemented here,
         // because we want to have CTRL-Y available...
         // and unfortunately they tend to be stuck together.
-        clrscr();
+        clrscr(true);
 #if !defined(USE_TILE_LOCAL) && !defined(TARGET_OS_WINDOWS)
         console_shutdown();
         kill(0, SIGTSTP);
