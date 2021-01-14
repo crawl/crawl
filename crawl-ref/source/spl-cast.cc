@@ -871,11 +871,6 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         return false;
     }
 
-    // This needs more work: there are spells which are hated but allowed if
-    // they don't have a certain effect. You may use Poison Arrow on those
-    // immune, use Mephitic Cloud to shield yourself from other clouds, and
-    // thus we don't prompt for them. It would be nice to prompt for them
-    // during the targeting phase, perhaps.
     if (god_punishes_spell(spell, you.religion)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
