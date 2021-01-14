@@ -3234,6 +3234,7 @@ ORIENT: float
 TAGS: arrival no_monster_gen
 MONS: withered plant, plant
 KMASK: 12YUT = no_item_gen
+KPROP: 12YUT = no_tele_into
 MAP
 ......@......
 .ncncn+ncncn.
