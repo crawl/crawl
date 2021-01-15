@@ -780,11 +780,6 @@ corrupter
 
 <demonspawn>
 %%%%
-crawling corpse
-
-A corpse weakly animated by necromancy. It is easily destroyed, but capable of
-merging with others to form more potent horrors.
-%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
@@ -1611,12 +1606,6 @@ A formless mass of negative energy, bound to bring terrible torment once the
 forces holding it together dissolve. The alien presence of intruders to the
 Abyss is sure to unravel it, yet it seems perversely drawn toward them; still,
 it seems somehow reluctant to move while being observed.
-%%%%
-macabre mass
-
-A fused and twisted collection of body parts, weakly animated by necromancy. It
-is easily destroyed, but capable of merging with others to form more potent
-horrors.
 %%%%
 mana viper
 

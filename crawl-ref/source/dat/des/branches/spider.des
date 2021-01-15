@@ -494,7 +494,6 @@ KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
 KMONS:   6cCfF = wolf spider / emperor scorpion w:8
-KMONS:   0% = crawling corpse hd:3 / nothing
 KITEM:   fF = star_item w:8 / superb_item w:2
 KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
 KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
@@ -514,7 +513,7 @@ MAP
   .xx1x..x1xx.  ''xx5xxxx.....%xxxxx1xx''
  ''x1xx%%xx1x''  ''xx4x%.........xx1xx''
  ''xx1%%%%1xx''   ''xx...xxx1xxx..%xx''
-  ''xxx00xxx''    ''x...xx`x2x`xx%..x''
+  ''xxx..xxx''    ''x...xx`x2x`xx%..x''
    ''xx..xx''   '''xx.%x4xxxCxxx1x..xx''
 ''''xx..xx''  '''''x.1xxx5xxxxx1xxx..x''
 xxxxx..xx''   'xxx'x11x`xxFx'xAxx`x..x''
@@ -524,7 +523,7 @@ xxx....12x'''''xx42%%%24xxx''''x21....xxx
  ''x..x`xxax'xexx`x11x'xxx''  ''xx..xxxxx
  ''x..xxx1xxxxx5xxx1.x'''''  ''xx..xx''''
  ''xx..x1xxxcxxx4x%.xx''    ''xx..xx''
-  ''x..%xx`x2x`xx...x''    ''xxx00xxx''
+  ''x..%xx`x2x`xx...x''    ''xxx..xxx''
   ''xx%..xxx1xxx...xx''   ''xx1%%%%1xx''
  ''xx1x..........%x4xx''  ''x1xx%%xx1x''
 ''xx1xxxxx%......xxx5xx''  .xx1x..x1xx..

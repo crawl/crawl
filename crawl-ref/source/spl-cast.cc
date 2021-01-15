@@ -1347,7 +1347,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
         return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
-    case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:

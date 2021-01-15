@@ -714,17 +714,6 @@ static const struct spell_desc spelldata[] =
     TILEG_POISON_ARROW,
 },
 
-{
-    SPELL_TWISTED_RESURRECTION, "Twisted Resurrection",
-    spschool::necromancy,
-    spflag::chaotic | spflag::utility | spflag::monster,
-    5,
-    200,
-    -1, -1,
-    4, 0,
-    TILEG_TWISTED_RESURRECTION,
-},
-
 // Monster-only, players can use Lugonu's ability
 {
     SPELL_BANISHMENT, "Banishment",
@@ -3456,6 +3445,7 @@ AXED_SPELL(SPELL_SCATTERSHOT, "Scattershot")
 AXED_SPELL(SPELL_SUMMON_SWARM, "Summon swarm")
 AXED_SPELL(SPELL_CLOUD_CONE, "Cloud Cone")
 AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
+AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 #endif
 
 };

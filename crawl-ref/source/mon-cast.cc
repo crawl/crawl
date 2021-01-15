@@ -1629,9 +1629,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_ANIMATE_DEAD:
-#endif
     case SPELL_TWISTED_RESURRECTION:
-#if TAG_MAJOR_VERSION == 34
     case SPELL_SIMULACRUM:
 #endif
     case SPELL_CALL_IMP:
@@ -5708,13 +5706,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
 
-    case SPELL_TWISTED_RESURRECTION:
-        // Double efficiency compared to maxed out player spell: one
-        // elf corpse gives 4.5 HD.
-        twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
-                             mons->foe, god);
-        return;
-
     case SPELL_CALL_IMP:
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         create_monster(
@@ -7599,17 +7590,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_SEAL_DOORS:
         return ai_action::good_or_bad(!friendly && _seal_doors_and_stairs(mon, true));
-
-    case SPELL_TWISTED_RESURRECTION:
-        if (friendly && !_animate_dead_okay(monspell))
-            return ai_action::bad();
-
-        if (mon->is_summoned() || mons_enslaved_soul(*mon))
-            return ai_action::impossible();
-
-        return ai_action::good_or_bad(
-            twisted_resurrection(mon, 500, SAME_ATTITUDE(mon), mon->foe,
-                                     mon->god, false));
 
     //XXX: unify with the other SPELL_FOO_OTHER spells?
     case SPELL_BERSERK_OTHER:

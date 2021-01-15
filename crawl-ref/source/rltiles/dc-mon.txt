@@ -1078,8 +1078,6 @@ curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
 %rim 1
-crawling_corpse MONS_CRAWLING_CORPSE
-macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
 murray MONS_MURRAY
 

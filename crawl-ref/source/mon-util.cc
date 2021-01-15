@@ -2786,14 +2786,8 @@ colour_t random_monster_colour()
 
 bool init_abomination(monster& mon, int hd)
 {
-    if (mon.type == MONS_CRAWLING_CORPSE
-        || mon.type == MONS_MACABRE_MASS)
-    {
-        mon.set_hit_dice(mon.hit_points = mon.max_hit_points = hd);
-        return true;
-    }
-    else if (mon.type != MONS_ABOMINATION_LARGE
-             && mon.type != MONS_ABOMINATION_SMALL)
+    if (mon.type != MONS_ABOMINATION_LARGE
+        && mon.type != MONS_ABOMINATION_SMALL)
     {
         return false;
     }

@@ -65,7 +65,6 @@
   local sculptor =
     "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl " ..
     "n_des n_spe n_zom never_corpse col:red generate_awake " ..
-    "spells:twisted_resurrection.80.natural " ..
     "; ring of slaying plus:250 not_cursed ident:all " ..
     "no_pickup . great sword plus:9 not_cursed ego:none " ..
     "ident:all no_pickup"

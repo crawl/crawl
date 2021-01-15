@@ -664,8 +664,10 @@ enum monster_type                      // env.mons[].type
     MONS_TENTACLED_MONSTROSITY,
     MONS_ABOMINATION_SMALL,
     MONS_ABOMINATION_LARGE,
+#if TAG_MAJOR_VERSION == 34
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
+#endif
 
     // Undead:
 #if TAG_MAJOR_VERSION > 34
