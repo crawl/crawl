@@ -1385,7 +1385,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_TORMENTOR,
       {
-       { SPELL_PAIN, 28, MON_SPELL_MAGICAL },
        { SPELL_SYMBOL_OF_TORMENT, 29, MON_SPELL_MAGICAL },
       }
     },
@@ -1393,7 +1392,6 @@ static const mon_spellbook mspell_list[] =
     // ('1') Fiends and friends.
     {  MST_EXECUTIONER,
       {
-       { SPELL_PAIN, 21, MON_SPELL_MAGICAL },
        { SPELL_HASTE, 41, MON_SPELL_MAGICAL },
       }
     },
@@ -1851,7 +1849,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MARA,
       {
-       { SPELL_PAIN, 14, MON_SPELL_MAGICAL },
        { SPELL_BOLT_OF_FIRE, 14, MON_SPELL_MAGICAL },
        { SPELL_FAKE_MARA_SUMMON, 14, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_ILLUSION, 14, MON_SPELL_MAGICAL },
@@ -1980,7 +1977,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_LOUISE,
       {
-       { SPELL_STING, 10, MON_SPELL_WIZARD },
        { SPELL_STONE_ARROW, 10, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 10, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
@@ -2032,7 +2028,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NIKOLA,
       {
-       { SPELL_SHOCK, 11, MON_SPELL_WIZARD },
        { SPELL_LIGHTNING_BOLT, 11, MON_SPELL_WIZARD },
        { SPELL_CHAIN_LIGHTNING, 23, MON_SPELL_WIZARD },
        { SPELL_BLINK, 23, MON_SPELL_WIZARD },
