@@ -1088,6 +1088,7 @@ static void _input()
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
+            _uncurl();
             world_reacts();
         }
 
