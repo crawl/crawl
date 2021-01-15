@@ -211,7 +211,7 @@ w:20
 of the @_armour_animal_@
 
 w:1
-the @_adjective_@ @_armour_animal_@
+of the @_adjective_@ @_armour_animal_@
 
 w:3
 of @_flower_name_@
