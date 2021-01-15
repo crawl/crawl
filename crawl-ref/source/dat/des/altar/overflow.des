@@ -2368,6 +2368,7 @@ NAME:  pdpol_wu_jian_five_deadly_venoms
 DEPTH: D:2-9
 TAGS:  no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
 KFEAT:  _ = altar_wu_jian
+KPROP:  F = no_tele_into
 MARKER: F = lua:fog_machine { \
             cloud_type="thin mist", size = 1, \
             pow_max = 3, pow_min = 3, delay = 10, \

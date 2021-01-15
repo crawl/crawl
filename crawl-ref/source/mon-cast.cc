@@ -2172,9 +2172,9 @@ static vector<coord_def> _get_push_spaces_max_tension(const coord_def& pos,
         find_connected_identical(pos, all_door);
         dungeon_feature_type old_feat = env.grid(pos);
 
-        act->move_to_pos(c);
+        act->set_position(c);
         int new_tension = _tension_door_closed(all_door, old_feat);
-        act->move_to_pos(pos);
+        act->set_position(pos);
 
         if (new_tension == max_tension)
             best.push_back(c);
@@ -2224,20 +2224,27 @@ static bool _should_force_door_shut(const coord_def& door)
     {
         coord_def newpos =
                 _get_push_spaces_max_tension(you.pos(), &veto_spots).front();
-        you.move_to_pos(newpos);
+        you.set_position(newpos);
     }
 
     const int new_tension = _tension_door_closed(all_door, old_feat);
 
     if (player_in_door)
-        you.move_to_pos(oldpos);
+        you.set_position(oldpos);
+
+    dprf("Considering sealing cur tension: %d, new tension: %d",
+         cur_tension, new_tension);
 
     // If closing the door would reduce player tension by too much, probably
     // it is scarier for the player to leave it open and thus it should be left
     // open
-
-    // Currently won't allow tension to be lowered by more than 33%
-    return ((cur_tension - new_tension) * 3) <= cur_tension;
+    //
+    // Currently won't allow tension to be lowered by more than 33%.
+    //
+    // Also, if there's 0 tension, we require the door closure to create
+    // tensiion, otherwise we'll probably just lock the player away from the
+    // warden.
+    return 1 + cur_tension * 66 <= new_tension * 100;
 }
 
 static bool _seal_doors_and_stairs(const monster* warden,

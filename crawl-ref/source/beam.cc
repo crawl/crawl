@@ -5918,7 +5918,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
 #endif
 
-    if (!is_tracer)
+    if (!is_tracer && flavour != BEAM_VISUAL)
     {
         loudness = explosion_noise(r);
 

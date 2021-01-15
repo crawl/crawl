@@ -321,6 +321,14 @@ bool melee_attack::handle_phase_dodged()
                  attack_strength_punctuation(damage_done).c_str());
         }
     }
+
+    if (attacker->is_player())
+    {
+        // Upset only non-sleeping non-fleeing monsters if we missed.
+        if (!defender->asleep() && !mons_is_fleeing(*defender->as_monster()))
+            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+    }
+
     if (defender->is_player())
         count_action(CACT_DODGE, DODGE_EVASION);
 
@@ -1431,10 +1439,6 @@ void melee_attack::player_warn_miss()
     mprf("%s%s.",
          player_why_missed().c_str(),
          defender->name(DESC_THE).c_str());
-
-    // Upset only non-sleeping non-fleeing monsters if we missed.
-    if (!defender->asleep() && !mons_is_fleeing(*defender->as_monster()))
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 }
 
 // A couple additive modifiers that should be applied to both unarmed and
@@ -3247,14 +3251,24 @@ bool melee_attack::do_knockback(bool trample)
         // reaction here?
         || actor_at(new_pos)
         // Prevent trample/drown combo when flight is expiring
-        || defender->is_player() && need_expiration_warning(new_pos))
+        || defender->is_player() && need_expiration_warning(new_pos)
+        || defender->is_constricted())
     {
         if (needs_message)
         {
-            mprf("%s %s %s ground!",
-                 defender_name(false).c_str(),
-                 defender->conj_verb("hold").c_str(),
-                 defender->pronoun(PRONOUN_POSSESSIVE).c_str());
+            if (defender->is_constricted())
+            {
+                mprf("%s %s held in place!",
+                     defender_name(false).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+            else
+            {
+                mprf("%s %s %s ground!",
+                     defender_name(false).c_str(),
+                     defender->conj_verb("hold").c_str(),
+                     defender->pronoun(PRONOUN_POSSESSIVE).c_str());
+            }
         }
 
         return false;

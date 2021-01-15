@@ -1399,9 +1399,9 @@ bool keycode_is_printable(int keycode)
         // windowmanager-sdl.cc:_translate_keysym. It could potentially be
         // applied more generally but I'm concerned about non-US keyboard
         // layouts etc. I'm also not sure how accurate it is for sdl...
-        return keycode >= 0 && keycode < 256;
+        return keycode >= 32 && keycode < 256;
 #else
-        return keycode >= 0;
+        return keycode >= 32;
 #endif
     }
 }
@@ -1479,6 +1479,9 @@ string keycode_to_name(int keycode)
         return string(SDL_GetKeyName(keycode));
 #else
     {
+        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
+            return make_stringf("^%c", UNCONTROL(keycode));
+
         keyseq v;
         v.push_back(keycode);
         return vtostr(v);
