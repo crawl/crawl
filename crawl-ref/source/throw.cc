@@ -940,7 +940,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     _throw_noise(mons, item);
 
-    beam.drop_item = false;
+    beam.drop_item = item.sub_type == MI_THROWING_NET;
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
@@ -954,6 +954,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     }
     else
         beam.fire();
+
+    if (beam.drop_item && dec_mitm_item_quantity(msl, 1))
+        mons->inv[slot] = NON_ITEM;
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
