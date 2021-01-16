@@ -556,6 +556,13 @@ angel
 A divine warrior of the Shining One. It is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light.
 %%%%
+animated armour
+
+The sweat and toil of the armourer working leather and steel infuses a spirit
+into their creation, a unique spark within every cuirass, pauldron and vambrace.
+A skilled wizard can draw those those sparks together, allowing their armour to
+protect its wearer in a more aggressive fashion than armour customarily does.
+%%%%
 apis
 
 A placid, sacred bull of Elyvilon.

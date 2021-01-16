@@ -132,6 +132,51 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
+{
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (armour == nullptr)
+    {
+        // I don't think we can ever reach this line, but let's be safe.
+        mpr("You aren't wearing any armour!");
+        return spret::abort;
+    }
+
+    int mitm_slot = get_mitm_slot(10);
+    if (mitm_slot == NON_ITEM)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
+                             SPELL_ANIMATE_ARMOUR);
+    monster* spirit = create_monster(mg);
+    if (!spirit)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    item_def &fake_armour = env.item[mitm_slot];
+    fake_armour.clear();
+    fake_armour.base_type = OBJ_ARMOUR;
+    fake_armour.sub_type = armour->sub_type;
+    fake_armour.quantity = 1;
+    fake_armour.plus = pow / 10;
+    fake_armour.rnd = armour->rnd;
+    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
+    item_set_appearance(fake_armour);
+
+    spirit->pickup_item(fake_armour, false, true);
+
+    return spret::success;
+}
+
+
+
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -2667,6 +2712,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
     { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
     { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
+    { SPELL_ANIMATE_ARMOUR,       { 1, 2 } },
     // Monster spells
     { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
     { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },

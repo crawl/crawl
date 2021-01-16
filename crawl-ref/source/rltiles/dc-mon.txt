@@ -446,6 +446,7 @@ toenail_golem MONS_TOENAIL_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
+animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM

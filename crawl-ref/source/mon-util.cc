@@ -1979,46 +1979,57 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
 
-    if (mons_is_demonspawn(mon.type) && attk_number == 0)
+    if (attk_number == 0)
     {
-        const monsterentry* mbase =
-            get_monster_data (draco_or_demonspawn_subspecies(mon));
-        ASSERT(mbase);
-        attk.flavour = mbase->attack[0].flavour;
-        return attk;
-    }
+        if (mons_is_demonspawn(mon.type))
+        {
+            const monsterentry* mbase =
+                get_monster_data (draco_or_demonspawn_subspecies(mon));
+            ASSERT(mbase);
+            attk.flavour = mbase->attack[0].flavour;
+            return attk;
+        }
 
-    // Nonbase draconians inherit aux attacks from their base type.
-    // Implicit assumption: base draconian types only get one aux
-    // attack, and it's in their second attack slot.
-    // If that changes this code will need to be changed.
-    if (mons_species(mon.type) == MONS_DRACONIAN
-        && mon.type != MONS_DRACONIAN
-        && attk.type == AT_NONE
-        && attk_number > 0
-        && smc->attack[attk_number - 1].type != AT_NONE)
+        if (mon.type == MONS_PLAYER_SHADOW)
+        {
+            if (!you.weapon())
+                attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
+        }
+
+        // summoning miscast monster; hd scaled with miscast severity
+        if (mon.type == MONS_NAMELESS)
+            attk.damage = mon.get_hit_dice() * 2;
+
+        // Boulder beetles get double attack damage and a normal 'hit' attack.
+        if (mon.has_ench(ENCH_ROLLING))
+        {
+            attk.type = AT_HIT;
+            attk.damage *= 2;
+        }
+    } else if (mons_species(mon.type) == MONS_DRACONIAN
+            && mon.type != MONS_DRACONIAN
+            && attk.type == AT_NONE
+            && smc->attack[attk_number - 1].type != AT_NONE)
     {
+        // Nonbase draconians inherit aux attacks from their base type.
+        // Implicit assumption: base draconian types only get one aux
+        // attack, and it's in their second attack slot.
+        // If that changes this code will need to be changed.
         const monsterentry* mbase =
             get_monster_data (draco_or_demonspawn_subspecies(mon));
         ASSERT(mbase);
         return mbase->attack[1];
     }
 
-    if (mon.type == MONS_PLAYER_SHADOW && attk_number == 0)
+    if (mon.type == MONS_ANIMATED_ARMOUR)
     {
-        if (!you.weapon())
-            attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
-    }
-
-    // summoning miscast monster; hd scaled with miscast severity
-    if (mon.type == MONS_NAMELESS && attk_number == 0)
-        attk.damage = mon.get_hit_dice() * 2;
-
-    // Boulder beetles get double attack damage and a normal 'hit' attack.
-    if (mon.has_ench(ENCH_ROLLING) && attk_number == 0)
-    {
-        attk.type = AT_HIT;
-        attk.damage *= 2;
+        const int armour_slot = mon.inv[MSLOT_ARMOUR];
+        if (armour_slot != NON_ITEM)
+        {
+            const int typ = env.item[armour_slot].sub_type;
+            const int ac = armour_prop(typ, PARM_AC);
+            attk.damage = ac + ac * ac / 2;
+        }
     }
 
     if (!base_flavour)

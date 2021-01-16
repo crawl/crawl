@@ -37,6 +37,12 @@ poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
 %%%%
+Animate Armour spell
+
+Call upon the spirit of your worn armour to fight alongside you. The spirit moves
+slowly, but draws strength from the inherent protection of your own armour. At
+higher power, the spirit's protective enchantments grow stronger.
+%%%%
 Animate Dead spell
 
 Reanimates all corpses and skeletons in the vicinity as followers. This magic

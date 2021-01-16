@@ -3375,6 +3375,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ANIMATE_ARMOUR, "Animate Armour",
+    spschool::summoning | spschool::earth,
+    spflag::none,
+    4,
+    50,
+    -1, -1,
+    4, 0,
+    TILEG_ANIMATE_ARMOUR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

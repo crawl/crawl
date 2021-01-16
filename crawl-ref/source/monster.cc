@@ -3281,6 +3281,17 @@ int monster::base_armour_class() const
         return get_experience_level() / 2;
     }
 
+    if (type == MONS_ANIMATED_ARMOUR)
+    {
+        // Armour spirits get double AC from their armour.
+        const int armour_slot = inv[MSLOT_ARMOUR];
+        if (armour_slot != NON_ITEM)
+        {
+            const int typ = env.item[armour_slot].sub_type;
+            return armour_prop(typ, PARM_AC);
+        }
+    }
+
     const int base_ac = get_monster_data(type)->AC;
 
     // demonspawn & draconians combine base & class ac values.

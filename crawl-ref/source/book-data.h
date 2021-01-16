@@ -225,6 +225,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Earth
+    SPELL_ANIMATE_ARMOUR,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_BOLT_OF_MAGMA,
     SPELL_STATUE_FORM,
@@ -297,6 +298,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
+    SPELL_ANIMATE_ARMOUR,
     SPELL_BORGNJORS_VILE_CLUTCH,
     SPELL_SILENCE,
     SPELL_SHADOW_CREATURES,

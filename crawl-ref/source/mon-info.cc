@@ -934,6 +934,15 @@ string monster_info::_core_name() const
             }
             break;
 
+        case MONS_ANIMATED_ARMOUR:
+            if (inv[MSLOT_ARMOUR])
+            {
+                const item_def& item = *inv[MSLOT_ARMOUR];
+                s = "animated " + item.name(DESC_PLAIN, false, false, true, false,
+                                            ISFLAG_KNOW_CURSE);
+            }
+            break;
+
         case MONS_PLAYER_GHOST:
             s = apostrophise(mname) + " ghost";
             break;
@@ -1184,7 +1193,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
-    if (m1.type == MONS_DANCING_WEAPON)
+    if (m1.type == MONS_DANCING_WEAPON || m1.type == MONS_ANIMATED_ARMOUR)
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
@@ -1254,7 +1263,8 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-             || type == MONS_MUTANT_BEAST || !fullname)
+             || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+             || !fullname)
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
