@@ -34,6 +34,7 @@
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
+#include "ranged-attack.h"
 #include "religion.h"
 #include "shout.h"
 #include "showsymb.h"
@@ -97,7 +98,7 @@ public:
     }
 
 public:
-    const item_def* active_item();
+    item_def* active_item();
 
 private:
     void display_help();
@@ -130,7 +131,7 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
     *p_top_prompt = internal_prompt;
 }
 
-const item_def* fire_target_behaviour::active_item()
+item_def* fire_target_behaviour::active_item()
 {
     const int slot = action.get_item();
     if (slot == -1)
@@ -185,37 +186,41 @@ void fire_target_behaviour::display_help()
 vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
-    if (const item_def* item = active_item())
+    item_def* item = active_item();
+    if (!item)
+        return descs;
+
+    ranged_attack attk(&you, nullptr, item, is_pproj_active());
+    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+
+    if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
+        descs.emplace_back("chaotic");
+    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
+        && (mi.body_size() >= SIZE_GIANT
+            || mons_class_is_stationary(mi.type)
+            || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
     {
-        if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
-            descs.emplace_back("chaotic");
-        if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
-            && (mi.body_size() >= SIZE_GIANT
-                || mons_class_is_stationary(mi.type)
-                || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
+        descs.emplace_back("immune to nets");
+    }
+
+    // Display the chance for a dart of para/confuse/sleep/frenzy
+    // to affect monster
+    if (item->is_type(OBJ_MISSILES, MI_DART))
+    {
+        special_missile_type brand = get_ammo_brand(*item);
+        if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
         {
-            descs.emplace_back("immune to nets");
-        }
+            int chance = _get_dart_chance(mi.hd);
+            bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
+            if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
+                immune = true;
 
-        // Display the chance for a dart of para/confuse/sleep/frenzy
-        // to affect monster
-        if (item->is_type(OBJ_MISSILES, MI_DART))
-        {
-            special_missile_type brand = get_ammo_brand(*item);
-            if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
-            {
-                int chance = _get_dart_chance(mi.hd);
-                bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
-                if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
-                    immune = true;
+            string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
-                string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
-
-                string chance_string = immune ? "immune" :
-                                       make_stringf("chance to %s on hit: %d%%",
-                                                    verb.c_str(), chance);
-                descs.emplace_back(chance_string);
-            }
+            string chance_string = immune ? "immune" :
+                                   make_stringf("chance to %s on hit: %d%%",
+                                                verb.c_str(), chance);
+            descs.emplace_back(chance_string);
         }
     }
     return descs;
