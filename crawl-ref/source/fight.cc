@@ -63,6 +63,45 @@ int melee_confuse_chance(int HD)
 }
 
 /**
+ * Return the odds of an attack with the given to-hit bonus hitting a defender with the
+ * given EV, rounded to the nearest percent.
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
+{
+    const int to_land = atk.calc_pre_roll_to_hit(false);
+    int ev = mi.ev;
+    if (to_land >= AUTOMATIC_HIT)
+        return 100;
+
+    if (ev <= 0)
+        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+
+    int hits = 0;
+    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
+    {
+        // Apply post-roll manipulations:
+        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
+
+        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
+
+        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
+        if (!melee && mi.is(MB_REPEL_MSL))
+            adjusted_mhit -= (adjusted_mhit + 1) / 2;
+
+        if (adjusted_mhit >= ev)
+            hits++;
+    }
+
+    double hit_chance = ((double)hits) / to_land;
+    // Apply Bayes Theorem to account for auto hit and miss.
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+
+    return (int)(hit_chance*100);
+}
+
+/**
  * Switch from a bad weapon to melee.
  *
  * This function assumes some weapon is being wielded.

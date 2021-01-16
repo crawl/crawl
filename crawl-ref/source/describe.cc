@@ -3948,46 +3948,6 @@ static void _add_energy_to_string(int speed, int energy, string what,
         slow.push_back(what + " " + _speed_description(act_speed));
 }
 
-
-/**
- * Return the odds of an attack with the given to-hit bonus hitting a defender with the
- * given EV, rounded to the nearest percent.
- *
- * @return                  To-hit percent between 0 and 100 (inclusive).
- */
-static int _to_hit_pct(const monster_info& mi, attack &atk, bool melee)
-{
-    const int to_land = atk.calc_pre_roll_to_hit(false);
-    int ev = mi.ev;
-    if (to_land >= AUTOMATIC_HIT)
-        return 100;
-
-    if (ev <= 0)
-        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
-
-    int hits = 0;
-    for (int rolled_mhit = 0; rolled_mhit < to_land; rolled_mhit++)
-    {
-        // Apply post-roll manipulations:
-        int adjusted_mhit = rolled_mhit + mi.lighting_modifiers();
-
-        adjusted_mhit += atk.post_roll_to_hit_modifiers(adjusted_mhit, false);
-
-        // Duplicates ranged_attack::post_roll_to_hit_modifiers().
-        if (!melee && mi.is(MB_REPEL_MSL))
-            adjusted_mhit -= (adjusted_mhit + 1) / 2;
-
-        if (adjusted_mhit >= ev)
-            hits++;
-    }
-
-    double hit_chance = ((double)hits) / to_land;
-    // Apply Bayes Theorem to account for auto hit and miss.
-    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0) + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
-
-    return (int)(hit_chance*100);
-}
-
 /**
  * Display the % chance of a player hitting the given monster.
  *
@@ -4003,11 +3963,11 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         return; // breadwielding
 
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
-    int to_hit_pct;
+    int acc_pct;
     if (melee)
     {
         melee_attack attk(&you, nullptr);
-        to_hit_pct = _to_hit_pct(mi, attk, true);
+        acc_pct = to_hit_pct(mi, attk, true);
     }
     else
     {
@@ -4016,10 +3976,10 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         if (missile < 0)
             return; // failure to launch
         ranged_attack attk(&you, nullptr, &you.inv[missile], is_pproj_active());
-        to_hit_pct = _to_hit_pct(mi, attk, false);
+        acc_pct = to_hit_pct(mi, attk, false);
     }
 
-    result << " (about " << (100 - to_hit_pct) << "% to evade ";
+    result << " (about " << (100 - acc_pct) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
     else
