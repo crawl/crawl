@@ -36,6 +36,7 @@
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
@@ -1285,12 +1286,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "you aren't wielding a brandable weapon.";
         }
-        // intentional fallthrough
+        // intentional fallthrough to portal projectile
     case SPELL_PORTAL_PROJECTILE:
         if (you.species == SP_FELID)
             return "this spell is useless without hands.";
         break;
-
     case SPELL_LEDAS_LIQUEFACTION:
         if (temp && you.duration[DUR_LIQUEFYING])
             return "you need to wait for the ground to become solid again.";
@@ -1562,6 +1562,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
      case SPELL_INTOXICATE:
          return cast_intoxicate(-1, false, true) == spret::abort;
+
+    case SPELL_MANIFOLD_ASSAULT:
+         return cast_manifold_assault(-1, false, false) == spret::abort;
 
     default:
         break;

@@ -53,7 +53,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0,
                            wu_jian_attack_type wu_jian_attack
-                               = WU_JIAN_ATTACK_NONE);
+                               = WU_JIAN_ATTACK_NONE,
+                           bool is_projected = false);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee);

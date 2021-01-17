@@ -887,7 +887,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  */
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number,
-                           wu_jian_attack_type wu_jian_attack)
+                           wu_jian_attack_type wu_jian_attack,
+                           bool is_projected)
 {
     if (attacker.is_player())
     {
@@ -908,12 +909,14 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     {
         actor* def = targets.front();
 
-        if (def && def->alive() && !_dont_harm(attacker, *def) && adjacent(attacker.pos(), def->pos()))
+        if (def && def->alive() && !_dont_harm(attacker, *def)
+            && (is_projected || adjacent(attacker.pos(), def->pos())))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
 
             attck.wu_jian_attack = wu_jian_attack;
+            attck.is_projected = is_projected;
             attck.attack();
         }
         targets.pop_front();

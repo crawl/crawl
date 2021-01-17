@@ -14,11 +14,14 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "god-abil.h" // fedhas_passthrough for palentonga charge
 #include "item-prop.h"
 #include "items.h"
@@ -1041,6 +1044,87 @@ spret cast_portal_projectile(int pow, bool fail)
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
     you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
+    return spret::success;
+}
+
+static bool _projectable_weapon()
+{
+    if (!you.weapon())
+        return true;
+    const item_def &it = *you.weapon();
+    // These all cause attack prompts, which are awkward to handle.
+    // TODO: support these!
+    static const vector<int> forbidden_unrands = {
+        UNRAND_POWER,
+        UNRAND_DEVASTATOR,
+        UNRAND_VARIABILITY,
+        UNRAND_SINGING_SWORD,
+        UNRAND_TORMENT,
+        UNRAND_ARC_BLADE,
+    };
+    for (int urand : forbidden_unrands)
+        if (is_unrandom_artefact(it, urand))
+            return false;
+    return true;
+}
+
+spret cast_manifold_assault(int pow, bool fail, bool real)
+{
+    vector<monster*> targets;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->wont_attack() || mi->neutral())
+            continue; // this should be enough to avoid penance?
+        if (!you.can_see(**mi))
+            continue;
+        targets.emplace_back(*mi);
+    }
+
+    if (targets.empty())
+    {
+        if (real)
+            mpr("You can't see anything to attack.");
+        return spret::abort;
+    }
+
+    if (!_projectable_weapon())
+    {
+        if (real)
+        {
+            mprf("%s would react catastrophically with paradoxical space!",
+                 you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+        }
+        return spret::abort;
+    }
+
+    if (!real)
+        return spret::success;
+
+    if (!wielded_weapon_check(you.weapon()))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("Space momentarily warps into an impossible shape!");
+
+    const int initial_time = you.time_taken;
+
+    shuffle_array(targets);
+    const size_t max_targets = 2 + div_rand_round(pow, 50);
+    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    {
+        // Somewhat hacky: reset attack delay before each attack so that only the final
+        // attack ends up actually setting time taken. (No quadratic effects.)
+        you.time_taken = initial_time;
+
+        melee_attack atk(&you, targets[i]);
+        atk.is_projected = true;
+        atk.attack();
+
+        if (you.hp <= 0 || you.pending_revival)
+            break;
+    }
+
     return spret::success;
 }
 

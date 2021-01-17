@@ -36,6 +36,7 @@ public:
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
+    bool         is_projected;    // projected weapon spell attack
     int          roll_dist;       // palentonga rolling charge distance
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
