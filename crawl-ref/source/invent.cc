@@ -184,7 +184,7 @@ bool InvEntry::has_star() const
 
 string InvEntry::get_filter_text() const
 {
-    return item_prefix(*item) + " " + get_text();
+    return item_prefix(*item, false) + " " + get_text();
 }
 
 string InvEntry::get_text(bool need_cursor) const
