@@ -62,20 +62,18 @@ def global_announce(text):
         socket.send_announcement(text)
 
 def write_dgl_status_file():
-    f = None
+    process_info = ["%s#%s#%s#0x0#%s#%s#" %
+                            (socket.username, socket.game_id,
+                             (socket.process.human_readable_where()),
+                             str(socket.process.idle_time()),
+                             str(socket.process.watcher_count()))
+                        for socket in list(sockets)
+                        if socket.username and socket.is_running()]
     try:
-        f = open(config.dgl_status_file, "w")
-        for socket in list(sockets):
-            if socket.username and socket.is_running():
-                f.write("%s#%s#%s#0x0#%s#%s#\n" %
-                        (socket.username, socket.game_id,
-                         (socket.process.human_readable_where()),
-                         str(socket.process.idle_time()),
-                         str(socket.process.watcher_count())))
+        with open(config.dgl_status_file, "w") as f:
+            f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
-    finally:
-        if f: f.close()
 
 def status_file_timeout():
     write_dgl_status_file()
