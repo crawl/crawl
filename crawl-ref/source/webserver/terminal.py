@@ -8,6 +8,7 @@ import sys
 import termios
 import time
 
+import tornado.gen
 import tornado.ioloop
 from tornado.escape import to_unicode
 from tornado.ioloop import IOLoop
@@ -63,6 +64,7 @@ class TerminalRecorder(object):
     def _spawn(self):
         self.errpipe_read, errpipe_write = os.pipe()
 
+        # TODO: I'm surprised this works at all in an asyncio context.
         self.pid, self.child_fd = pty.fork()
 
         if self.pid == 0:
@@ -111,6 +113,9 @@ class TerminalRecorder(object):
                                      self._handle_err_read,
                                      IOLoop.READ)
 
+    # we use @gen.coroutine here because handlers don't support async functions
+    # (tornado coroutines are started on being called)
+    @tornado.gen.coroutine
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             buf = os.read(fd, BUFSIZ)
@@ -119,38 +124,41 @@ class TerminalRecorder(object):
                 self.write_ttyrec_chunk(buf)
 
                 if self.activity_callback:
-                    self.activity_callback()
+                    yield self.activity_callback()
 
                 self.output_buffer += buf
-                self._do_output_callback()
+                yield self._do_output_callback()
 
-            self.poll()
+            yield self.poll()
 
         if events & IOLoop.ERROR:
-            self.poll()
+            yield self.poll()
 
+    @tornado.gen.coroutine
     def _handle_err_read(self, fd, events):
         if events & IOLoop.READ:
             buf = os.read(fd, BUFSIZ)
 
             if len(buf) > 0:
                 self.error_buffer += buf
-                self._log_error_output()
+                yield self._log_error_output()
 
-            self.poll()
+            yield self.poll()
 
     def write_ttyrec_header(self, sec, usec, l):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
     def write_ttyrec_chunk(self, data):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         t = time.time()
         self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
         self.ttyrec.write(data)
 
-    def _do_output_callback(self):
+    async def _do_output_callback(self):
         pos = self.output_buffer.find(b"\n")
         while pos >= 0:
             line = self.output_buffer[:pos]
@@ -160,11 +168,11 @@ class TerminalRecorder(object):
                 if line[-1] == b"\r": line = line[:-1]
 
                 if self.output_callback:
-                    self.output_callback(to_unicode(line))
+                    await self.output_callback(to_unicode(line))
 
             pos = self.output_buffer.find(b"\n")
 
-    def _log_error_output(self):
+    async def _log_error_output(self):
         pos = self.error_buffer.find(b"\n")
         while pos >= 0:
             line = self.error_buffer[:pos]
@@ -175,7 +183,7 @@ class TerminalRecorder(object):
 
                 self.logger.info("ERR: %s", to_unicode(line))
                 if self.error_callback:
-                    self.error_callback(to_unicode(line))
+                    await self.error_callback(to_unicode(line))
 
             pos = self.error_buffer.find(b"\n")
 
@@ -183,7 +191,7 @@ class TerminalRecorder(object):
     def send_signal(self, signal):
         os.kill(self.pid, signal)
 
-    def poll(self):
+    async def poll(self):
         if self.returncode is None:
             pid, status = os.waitpid(self.pid, os.WNOHANG)
             if pid == self.pid:
@@ -206,15 +214,16 @@ class TerminalRecorder(object):
                     self.ttyrec.close()
 
                 if self.end_callback:
-                    self.end_callback()
+                    await self.end_callback()
 
         return self.returncode
 
     def get_terminal_size(self):
         return self.termsize
 
-    def write_input(self, data):
-        if self.poll() is not None: return
+    async def write_input(self, data):
+        if await self.poll() is not None:
+            return
 
         while len(data) > 0:
             written = os.write(self.child_fd, data)

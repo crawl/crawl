@@ -1,3 +1,4 @@
+import asyncio
 import fcntl
 import os
 import os.path
@@ -8,6 +9,8 @@ import warnings
 from datetime import datetime
 from datetime import timedelta
 
+import tornado.gen
+
 from tornado.escape import json_encode
 from tornado.escape import to_unicode
 from tornado.escape import utf8
@@ -15,24 +18,23 @@ from tornado.ioloop import IOLoop
 
 from config import server_socket_path
 
-
 class WebtilesSocketConnection(object):
     def __init__(self, socketpath, logger):
         self.crawl_socketpath = socketpath
         self.logger = logger
         self.message_callback = None
         self.socket = None
+        self.wrapped_socket = None
         self.socketpath = None
         self.open = False
         self.close_callback = None
 
         self.msg_buffer = None
 
-    def connect(self, primary = True):
-        if not os.path.exists(self.crawl_socketpath):
+    async def connect(self, primary = True):
+        while not os.path.exists(self.crawl_socketpath):
             # Wait until the socket exists
-            IOLoop.current().add_timeout(time.time() + 1, self.connect)
-            return
+            await asyncio.sleep(0.5)
 
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
         self.socket.settimeout(10)
@@ -64,6 +66,9 @@ class WebtilesSocketConnection(object):
                                               prefix="crawl", suffix=".socket")
         self.socket.bind(self.socketpath)
 
+        # TODO: could try do use tornado.iostream.IOStream(socket=self.socket)
+        # or perhaps AbstractEventLoop.create_datagram_endpoint()?
+
         # Install handler
         IOLoop.current().add_handler(self.socket.fileno(),
                                      self._handle_read,
@@ -76,18 +81,21 @@ class WebtilesSocketConnection(object):
 
         self.open = True
 
-        self.send_message(utf8(msg))
+        await self.send_message(utf8(msg))
 
+    @tornado.gen.coroutine
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
+            # non-blocking in socket terms, blocking in asyncio terms -- should
+            # this use something else?
             data = self.socket.recv(128 * 1024, socket.MSG_DONTWAIT)
 
-            self._handle_data(data)
+            yield self._handle_data(data)
 
         if events & IOLoop.ERROR:
             pass
 
-    def _handle_data(self, data): # type: (bytes) -> None
+    async def _handle_data(self, data): # type: (bytes) -> None
         if self.msg_buffer is not None:
             data = self.msg_buffer + data
 
@@ -101,9 +109,16 @@ class WebtilesSocketConnection(object):
             self.msg_buffer = None
 
             if self.message_callback:
-                self.message_callback(to_unicode(data))
+                try:
+                    await self.message_callback(to_unicode(data))
+                except:
+                    self.logger.error("Unhandled exception during message callback!",
+                                    exc_info=True)
 
-    def send_message(self, data): # type: (str) -> None
+    async def send_message(self, data): # type: (str) -> None
+        # TODO: is there a non-blocking version of this??
+        # also, under some circumstances this gets EAGAIN -- how to handle?
+        # right now, the exception just percolates up and drops the command
         start = datetime.now()
         try:
             self.socket.sendto(utf8(data), self.crawl_socketpath)
@@ -115,11 +130,11 @@ class WebtilesSocketConnection(object):
         if end - start >= timedelta(seconds=1):
             self.logger.warning("Slow socket send: " + str(end - start))
 
-    def close(self):
+    async def close(self):
         if self.socket:
             IOLoop.current().remove_handler(self.socket.fileno())
             self.socket.close()
             os.remove(self.socketpath)
             self.socket = None
         if self.close_callback:
-            self.close_callback()
+            await self.close_callback()

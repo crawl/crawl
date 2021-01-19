@@ -9,8 +9,7 @@ BASE="$(dirname "$(dirname "$(realpath "$0")")")"
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
 
-function check_for_py_2_and_3() {
-    command -v python2 >/dev/null || { echo "No python 2 found"; exit 1; }
+function check_for_py_3() {
     command -v python3 >/dev/null || { echo "No python 3 found"; exit 1; }
 }
 
@@ -29,7 +28,6 @@ function compile_requirements() {
 }
 
 function make_venvs () {
-    python2 -m virtualenv "${TEMP_DIR}/venv2/"
     python3 -m venv "${TEMP_DIR}/venv3/"
 }
 
@@ -40,9 +38,8 @@ function compile_in_venv () (
 )
 
 function main() {
-    check_for_py_2_and_3
+    check_for_py_3
     make_venvs
-    compile_in_venv 2
     compile_in_venv 3
 }
 

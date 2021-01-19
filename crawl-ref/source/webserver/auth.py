@@ -4,6 +4,7 @@ import time
 
 import tornado.ioloop
 import tornado.websocket
+import tornado.gen
 from tornado.ioloop import IOLoop
 
 import config
@@ -23,10 +24,10 @@ def purge_login_tokens():
             del login_tokens[token]
 
 
-def purge_login_tokens_timeout():
-    purge_login_tokens()
-    IOLoop.current().add_timeout(time.time() + 60 * 60 * 1000,
-                                 purge_login_tokens_timeout)
+async def purge_login_tokens_timeout():
+    while True:
+        purge_login_tokens()
+        await tornado.gen.sleep(60 * 60 * 24) # 24 hours -- add to config?
 
 
 def log_in_as_user(request, username):

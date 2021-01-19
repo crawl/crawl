@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import errno
 import fcntl
@@ -25,9 +26,8 @@ from terminal import TerminalRecorder
 from util import DynamicTemplateLoader
 from util import dgl_format_str
 from util import parse_where_data
+import ws_handler
 from ws_handler import CrawlWebSocket
-from ws_handler import remove_in_lobbys
-from ws_handler import update_all_lobbys
 
 try:
     from typing import Dict, Set, Tuple, Any
@@ -55,13 +55,14 @@ def find_game_info(socket_dir, socket_file):
     game_info["id"] = game_id
     return game_info
 
-def handle_new_socket(path, event):
+async def handle_new_socket(path, event):
     dirname, filename = os.path.split(path)
     if ":" not in filename or not filename.endswith(".sock"): return
     username = filename[:filename.index(":")]
     abspath = os.path.abspath(path)
     if event == DirectoryWatcher.CREATE:
-        if abspath in processes: return # Created by us
+        if abspath in processes:
+            return # Created by us
 
         # Find a game_info with this socket path
         game_info = find_game_info(dirname, filename)
@@ -72,7 +73,7 @@ def handle_new_socket(path, event):
         processes[abspath] = process
 
         try:
-            process.connect(abspath)
+            await process.connect(abspath)
         except ConnectionRefusedError:
             self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
                 game_info["id"], abspath, exc_info=True)
@@ -83,14 +84,16 @@ def handle_new_socket(path, event):
 
         # Notify lobbys
         if config.dgl_mode:
-            update_all_lobbys(process)
+            asyncio.create_task(ws_handler.update_all_lobbys(process))
     elif event == DirectoryWatcher.DELETE:
-        if abspath not in processes: return
+        if abspath not in processes:
+            return
         process = processes[abspath]
-        if process.process: return # Handled by us, will be removed later
+        if process.process:
+            return # Handled by us, will be removed later
         process.handle_process_end()
         process.logger.info("Game ended.")
-        remove_in_lobbys(process)
+        await ws_handler.remove_in_lobbys(process)
         del processes[abspath]
 
 def watch_socket_dirs():
@@ -174,48 +177,48 @@ class CrawlProcessHandlerBase(object):
     def is_idle(self):
         return self.idle_time() > 30
 
-    def check_idle(self):
+    async def check_idle(self):
         if self.is_idle() != self._was_idle:
             self._was_idle = self.is_idle()
             if config.dgl_mode:
-                update_all_lobbys(self)
+                asyncio.create_task(ws_handler.update_all_lobbys(self))
 
-    def flush_messages_to_all(self):
+    async def flush_messages_to_all(self):
+        await asyncio.gather(*[receiver.flush_messages()
+                            for receiver in self._receivers])
+
+    def append_to_all(self, msg): # type: (str, bool) -> None
         for receiver in self._receivers:
-            receiver.flush_messages()
+            receiver.append_message(msg)
 
-    def write_to_all(self, msg, send): # type: (str, bool) -> None
-        for receiver in self._receivers:
-            receiver.append_message(msg, send)
+    async def send_to_all(self, msg, **data): # type: (str, Any) -> None
+        await asyncio.gather(*[receiver.send_message(msg, **data)
+                            for receiver in self._receivers])
 
-    def send_to_all(self, msg, **data): # type: (str, Any) -> None
-        for receiver in self._receivers:
-            receiver.send_message(msg, **data)
-
-    def chat_help_message(self, source, command, desc):
+    async def chat_help_message(self, source, command, desc):
         if len(command) == 0:
-            self.handle_notification_raw(source,
+            await self.handle_notification_raw(source,
                         "&nbsp;" * 8 + "<span>%s</span>" % (xhtml_escape(desc)))
         else:
-            self.handle_notification_raw(source,
+            await self.handle_notification_raw(source,
                         "&nbsp;" * 4 + "<span>%s: %s</span>" %
                                 (xhtml_escape(command), xhtml_escape(desc)))
 
-    def chat_command_help(self, source):
+    async def chat_command_help(self, source):
         # TODO: generalize
         # the chat window is basically fixed width, and these are calibrated
         # to not do a linewrap
-        self.handle_notification(source, "The following chat commands are available:")
-        self.chat_help_message(source, "/help", "show chat command help.")
-        self.chat_help_message(source, "/hide", "hide the chat window.")
+        await self.handle_notification(source, "The following chat commands are available:")
+        await self.chat_help_message(source, "/help", "show chat command help.")
+        await self.chat_help_message(source, "/hide", "hide the chat window.")
         if self.is_player(source):
-            self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
-            self.chat_help_message(source, "", "Must be present in channel.")
-            self.chat_help_message(source, "/mutelist", "show your entire mute list.")
-            self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
-            self.chat_help_message(source, "/unmute *", "clear your mute list.")
+            await self.chat_help_message(source, "/mute <name>", "add <name> to the mute list.")
+            await self.chat_help_message(source, "", "Must be present in channel.")
+            await self.chat_help_message(source, "/mutelist", "show your entire mute list.")
+            await self.chat_help_message(source, "/unmute <name>", "remove <name> from the mute list.")
+            await self.chat_help_message(source, "/unmute *", "clear your mute list.")
 
-    def handle_chat_command(self, source_ws, text):
+    async def handle_chat_command(self, source_ws, text):
         # type: (CrawlWebSocket, str) -> bool
         source = source_ws.username
         text = text.strip()
@@ -230,25 +233,25 @@ class CrawlProcessHandlerBase(object):
         command = command.lower()
         # TODO: generalize
         if command == "/mute":
-            self.mute(source, remainder)
+            await self.mute(source, remainder)
         elif command == "/unmute":
-            self.unmute(source, remainder)
+            await self.unmute(source, remainder)
         elif command == "/mutelist":
-            self.show_mute_list(source)
+            await self.show_mute_list(source)
         elif command == "/help":
-            self.chat_command_help(source)
+            await self.chat_command_help(source)
         elif command == "/hide":
-            self.hide_chat(source_ws, remainder.strip())
+            await self.hide_chat(source_ws, remainder.strip())
         else:
             return False
         return True
 
-    def handle_chat_message(self, username, text): # type: (str, str) -> None
+    async def handle_chat_message(self, username, text): # type: (str, str) -> None
         if username in self.muted: # TODO: message?
             return
         chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
                     (username, xhtml_escape(text)))
-        self.send_to_all("chat", content = chat_msg)
+        await self.send_to_all("chat", content = chat_msg)
 
     def get_receivers_by_username(self, username):
         result = list()
@@ -269,24 +272,24 @@ class CrawlProcessHandlerBase(object):
                 return r
         return None
 
-    def send_to_user(self, username, msg, **data):
+    async def send_to_user(self, username, msg, **data):
         # type: (str, str, Any) -> None
         # a single user may be viewing from multiple receivers
-        for receiver in self.get_receivers_by_username(username):
-            receiver.send_message(msg, **data)
+        await asyncio.gather(*[receiver.send_message(msg, **data)
+                    for receiver in self.get_receivers_by_username(username)])
 
     # obviously, don't use this for player/spectator-accessible data. But, it
     # is still partially sanitized in chat.js.
-    def handle_notification_raw(self, username, text):
+    async def handle_notification_raw(self, username, text):
         # type: (str, str) -> None
         msg = ("<span class='chat_msg'>%s</span>" % text)
-        self.send_to_user(username, "chat", content=msg)
+        await self.send_to_user(username, "chat", content=msg)
 
-    def handle_notification(self, username, text):
+    async def handle_notification(self, username, text):
         # type: (str, str) -> None
-        self.handle_notification_raw(username, xhtml_escape(text))
+        await self.handle_notification_raw(username, xhtml_escape(text))
 
-    def handle_process_end(self):
+    async def handle_process_end(self):
         if self.kill_timeout:
             IOLoop.current().remove_timeout(self.kill_timeout)
             self.kill_timeout = None
@@ -295,13 +298,14 @@ class CrawlProcessHandlerBase(object):
 
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
-                watcher.send_message("game_ended", reason = self.exit_reason,
+                await watcher.send_message("game_ended",
+                                     reason = self.exit_reason,
                                      message = self.exit_message,
                                      dump = self.exit_dump_url)
-                watcher.go_lobby()
+                await watcher.go_lobby()
 
         if self.end_callback:
-            self.end_callback()
+            await self.end_callback()
 
     def get_watchers(self, chatting_only=False):
         # TODO: I don't understand why this code didn't just use self.username,
@@ -327,100 +331,103 @@ class CrawlProcessHandlerBase(object):
         player_name, watchers = self.get_watchers()
         return (username == player_name)
 
-    def hide_chat(self, receiver, param):
+    async def hide_chat(self, receiver, param):
         if param == "forever":
-            receiver.send_message("super_hide_chat")
+            await receiver.send_message("super_hide_chat")
             receiver.chat_hidden = True # currently only for super hidden chat
-            self.update_watcher_description()
+            await self.update_watcher_description()
         else:
-            receiver.send_message("toggle_chat")
+            await receiver.send_message("toggle_chat")
 
-    def restore_mutelist(self, source, l):
+    async def restore_mutelist(self, source, l):
         if not self.is_player(source) or l is None:
             return
         if len(l) == 0:
             return
         self.muted = {u for u in l if u != source}
-        self.handle_notification(source, "Restoring mute list.")
-        self.show_mute_list(source)
+        await self.handle_notification(source, "Restoring mute list.")
+        await self.show_mute_list(source)
         self.logger.info("Player '%s' restoring mutelist %s" %
                                             (source, repr(list(self.muted))))
 
-    def save_mutelist(self, source):
+    async def save_mutelist(self, source):
         if not self.is_player(source):
             return
         receiver = self.get_primary_receiver()
         if receiver is not None:
-            receiver.save_mutelist(list(self.muted))
+            await receiver.save_mutelist(list(self.muted))
 
-    def mute(self, source, target):
+    async def mute(self, source, target):
         if not self.is_player(source):
-            self.handle_notification(source,
+            await self.handle_notification(source,
                             "You do not have permission to mute spectators.")
             return False
         if (source == target):
-            self.handle_notification(source, "You can't mute yourself!")
+            await self.handle_notification(source, "You can't mute yourself!")
             return False
         player_name, watchers = self.get_watchers()
         watchers = set(watchers)
         if not target in watchers:
-            self.handle_notification(source, "Mute who??")
+            await self.handle_notification(source, "Mute who??")
             return False
         self.logger.info("Player '%s' has muted '%s'" % (source, target))
-        self.handle_notification(source,
-                            "Spectator '%s' has now been muted." % target)
         self.muted |= {target}
-        self.save_mutelist(source)
-        self.update_watcher_description()
+        await asyncio.gather(
+            await self.handle_notification(source,
+                            "Spectator '%s' has now been muted." % target),
+            await self.save_mutelist(source),
+            await self.update_watcher_description())
         return True
 
-    def unmute(self, source, target):
+    async def unmute(self, source, target):
         if not self.is_player(source):
-            self.handle_notification(source,
+            await self.handle_notification(source,
                             "You do not have permission to unmute spectators.")
             return False
         if (source == target):
-            self.handle_notification(source,
+            await self.handle_notification(source,
                                     "You can't unmute (or mute) yourself!")
             return False
         if target == "*":
             if (len(self.muted) == 0):
-                self.handle_notification(source, "No one is muted!")
+                await self.handle_notification(source, "No one is muted!")
                 return False
             self.logger.info("Player '%s' has cleared their mute list." % (source))
-            self.handle_notification(source, "You have cleared your mute list.")
             self.muted = set()
-            self.save_mutelist(source)
-            self.update_watcher_description()
+            await asyncio.gather(
+                self.handle_notification(source, "You have cleared your mute list."),
+                self.save_mutelist(source),
+                self.update_watcher_description())
             return True
 
         if not target in self.muted:
-            self.handle_notification(source, "Unmute who??")
+            await self.handle_notification(source, "Unmute who??")
             return False
 
         self.logger.info("Player '%s' has unmuted '%s'" % (source, target))
-        self.handle_notification(source, "You have unmuted '%s'." % target)
         self.muted -= {target}
-        self.save_mutelist(source)
-        self.update_watcher_description()
+        await asyncio.gather(
+            self.handle_notification(source, "You have unmuted '%s'." % target),
+            self.save_mutelist(source),
+            self.update_watcher_description())
         return True
 
-    def show_mute_list(self, source):
+    async def show_mute_list(self, source):
         if not self.is_player(source):
             return False
         names = list(self.muted)
         names.sort(key=lambda s: s.lower())
         if len(names) == 0:
-            self.handle_notification(source, "No one is muted.")
+            await self.handle_notification(source, "No one is muted.")
         else:
-            self.handle_notification(source, "You have muted: " +
+            await self.handle_notification(source, "You have muted: " +
                                                             ", ".join(names))
         return True
 
     def get_anon(self):
         return [w for w in self._receivers if not w.username]
 
-    def update_watcher_description(self):
+    async def update_watcher_description(self):
         try:
             player_url_template = config.player_url
         except:
@@ -452,37 +459,37 @@ class CrawlProcessHandlerBase(object):
             s = s + " and %i Anon" % anon_count
         elif anon_count > 0:
             s = "%i Anon" % anon_count
-        self.send_to_all("update_spectators",
+        await self.send_to_all("update_spectators",
                          count = self.watcher_count(),
                          names = s)
 
         if config.dgl_mode:
-            update_all_lobbys(self)
+            asyncio.create_task(ws_handler.update_all_lobbys(self))
 
-    def add_watcher(self, watcher):
+    async def add_watcher(self, watcher):
         self.last_watcher_join = time.time()
         if self.client_path:
-            self._send_client(watcher)
+            await self._send_client(watcher)
             if watcher.watched_game == self:
-                watcher.send_json_options(self.game_params["id"], self.username)
+                await watcher.send_json_options(self.game_params["id"], self.username)
         self._receivers.add(watcher)
-        self.update_watcher_description()
+        await self.update_watcher_description()
 
-    def remove_watcher(self, watcher):
+    async def remove_watcher(self, watcher):
         self._receivers.remove(watcher)
-        self.update_watcher_description()
+        await self.update_watcher_description()
 
     def watcher_count(self):
         return len([w for w in self._receivers if w.watched_game and not w.chat_hidden])
 
-    def send_client_to_all(self):
+    async def send_client_to_all(self):
         for receiver in self._receivers:
-            self._send_client(receiver)
+            await self._send_client(receiver)
             if receiver.watched_game == self:
-                receiver.send_json_options(self.game_params["id"],
+                await receiver.send_json_options(self.game_params["id"],
                                            self.username)
 
-    def _send_client(self, watcher):
+    async def _send_client(self, watcher):
         h = hashlib.sha1(utf8(os.path.abspath(self.client_path)))
         if self.crawl_version:
             h.update(utf8(self.crawl_version))
@@ -494,13 +501,13 @@ class CrawlProcessHandlerBase(object):
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
         game_html = to_unicode(templ.generate(version = v))
-        watcher.send_message("game_client", version = v, content = game_html)
+        await watcher.send_message("game_client", version = v, content = game_html)
 
-    def stop(self):
+    async def stop(self):
         if self.process:
             self.process.send_signal(subprocess.signal.SIGHUP)
-            t = time.time() + config.kill_timeout
-            self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
+            self.kill_timeout = IOLoop.current().call_later(
+                                            config.kill_timeout, self.kill)
 
     def kill(self):
         if self.process:
@@ -509,16 +516,17 @@ class CrawlProcessHandlerBase(object):
             self.kill_timeout = None
 
     interesting_info = ("xl", "char", "place", "god", "title")
-    def set_where_info(self, newwhere):
+
+    async def set_where_info(self, newwhere):
         interesting = False
         for key in CrawlProcessHandlerBase.interesting_info:
             if self.where.get(key) != newwhere.get(key):
                 interesting = True
         self.where = newwhere
         if interesting:
-            update_all_lobbys(self)
+            asyncio.create_task(ws_handler.update_all_lobbys(self))
 
-    def check_where(self):
+    async def check_where(self):
         morgue_path = self.config_path("morgue_path")
         wherefile = os.path.join(morgue_path, self.username + ".where")
         try:
@@ -536,12 +544,14 @@ class CrawlProcessHandlerBase(object):
                                         exc_info=True)
                 else:
                     if (newwhere.get("status") == "active" or
-                        newwhere.get("status") == "saved"):
-                        self.set_where_info(newwhere)
+                                        newwhere.get("status") == "saved"):
+                        await self.set_where_info(newwhere)
         except (OSError, IOError):
             pass
 
     def lobby_entry(self):
+        if not self.process:
+            return None
         entry = {
             "id": self.id,
             "username": self.username,
@@ -562,12 +572,12 @@ class CrawlProcessHandlerBase(object):
         except KeyError:
             return ""
 
-    def log_milestone(self, milestone):
+    async def log_milestone(self, milestone):
         # Use the updated where info in the milestone
         self.where = milestone
 
         self.last_milestone = milestone
-        update_all_lobbys(self)
+        asyncio.create_task(ws_handler.update_all_lobbys(self))
 
     def _base_call(self):
         game = self.game_params
@@ -593,11 +603,11 @@ class CrawlProcessHandlerBase(object):
 
         return call
 
-    def note_activity(self):
+    async def note_activity(self):
         self.last_activity_time = time.time()
-        self.check_idle()
+        await self.check_idle()
 
-    def handle_input(self, msg):
+    async def handle_input(self, msg):
         raise NotImplementedError()
 
 class CrawlProcessHandler(CrawlProcessHandlerBase):
@@ -618,15 +628,17 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._purging_timer = None
         self._process_hup_timeout = None
 
-    def start(self):
-        self._purge_locks_and_start(True)
+    async def start(self):
+        await self._purge_locks_and_start(True)
 
-    def stop(self):
-        super(CrawlProcessHandler, self).stop()
-        self._stop_purging_stale_processes()
+    async def stop(self):
+        await super(CrawlProcessHandler, self).stop()
+        await self._stop_purging_stale_processes()
         self._stale_pid = None
 
-    def _purge_locks_and_start(self, firsttime=False):
+    # TODO: refactor all this lock stuff with async
+
+    async def _purge_locks_and_start(self, firsttime=False):
         # Purge stale locks
         lockfile = self._find_lock()
         if lockfile:
@@ -640,20 +652,20 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     # pidfile is empty or corrupted, can happen if the server
                     # crashed. Just clear it...
                     self.logger.error("Invalid PID from lockfile %s, clearing", lockfile)
-                    self._purge_stale_lock()
+                    await self._purge_stale_lock()
                     return
 
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
                 if firsttime:
                     hup_wait = 10
-                    self.send_to_all("stale_processes",
+                    await self.send_to_all("stale_processes",
                                      timeout=hup_wait, game=self.game_params["name"])
                     to = IOLoop.current().add_timeout(time.time() + hup_wait,
                                                       self._kill_stale_process)
                     self._process_hup_timeout = to
                 else:
-                    self._kill_stale_process()
+                    await self._kill_stale_process()
             except Exception:
                 self.logger.error("Error while handling lockfile %s.", lockfile,
                                   exc_info=True)
@@ -662,19 +674,20 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.exit_reason = "error"
                 self.exit_message = errmsg
                 self.exit_dump_url = None
-                self.handle_process_end()
+                await self.handle_process_end()
         else:
             # No more locks, can start
-            self._start_process()
+            await self._start_process()
 
-    def _stop_purging_stale_processes(self):
-        if not self._process_hup_timeout: return
+    async def _stop_purging_stale_processes(self):
+        if not self._process_hup_timeout:
+            return
         IOLoop.current().remove_timeout(self._process_hup_timeout)
         self._stale_pid = None
         self._stale_lockfile = None
         self._purging_timer = None
         self._process_hup_timeout = None
-        self.handle_process_end()
+        await self.handle_process_end()
 
     def _find_lock(self):
         for path in os.listdir(self.config_path("inprogress_path")):
@@ -684,7 +697,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
-    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
+    async def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
         self._process_hup_timeout = None
         if self._stale_pid == None: return
         if signal == subprocess.signal.SIGHUP:
@@ -698,7 +711,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         except OSError as e:
             if e.errno == errno.ESRCH:
                 # Process doesn't exist
-                self._purge_stale_lock()
+                await self._purge_stale_lock()
             else:
                 self.logger.error("Error while killing process %s.", self._stale_pid,
                                   exc_info=True)
@@ -707,11 +720,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.exit_reason = "error"
                 self.exit_message = errmsg
                 self.exit_dump_url = None
-                self.handle_process_end()
+                await self.handle_process_end()
                 return
         else:
             if signal == subprocess.signal.SIGABRT:
-                self._purge_stale_lock()
+                await self._purge_stale_lock()
             else:
                 if signal == subprocess.signal.SIGHUP:
                     self._purging_timer = 10
@@ -724,26 +737,26 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 else:
                     self.logger.warning("Couldn't terminate pid %s gracefully.",
                                         self._stale_pid)
-                    self.send_to_all("force_terminate?")
+                    await self.send_to_all("force_terminate?")
                 return
-        self.send_to_all("hide_dialog")
+        await self.send_to_all("hide_dialog")
 
-    def _check_stale_process(self):
-        self._kill_stale_process(0)
+    async def _check_stale_process(self):
+        await self._kill_stale_process(0)
 
-    def _do_force_terminate(self, answer):
+    async def _do_force_terminate(self, answer):
         if answer:
-            self._kill_stale_process(subprocess.signal.SIGABRT)
+            await self._kill_stale_process(subprocess.signal.SIGABRT)
         else:
-            self.handle_process_end()
+            await self.handle_process_end()
 
-    def _purge_stale_lock(self):
+    async def _purge_stale_lock(self):
         if os.path.exists(self._stale_lockfile):
             os.remove(self._stale_lockfile)
 
-        self._purge_locks_and_start(False)
+        await self._purge_locks_and_start(False)
 
-    def _start_process(self):
+    async def _start_process(self):
         self.socketpath = os.path.join(self.config_path("socket_path"),
                                        self.username + ":" +
                                        self.formatted_time + ".sock")
@@ -784,7 +797,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.gen_inprogress_lock()
 
-            self.connect(self.socketpath, True)
+            await self.connect(self.socketpath, True)
 
             self.logger.debug("Crawl FDs: fd%s, fd%s.",
                              self.process.child_fd,
@@ -792,20 +805,20 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.last_activity_time = time.time()
 
-            self.check_where()
+            asyncio.create_task(self.check_where())
         except Exception:
             self.logger.warning("Error while starting the Crawl process!", exc_info=True)
             if self.process:
-                self.stop()
+                await self.stop()
             else:
-                self._on_process_end()
+                await self._on_process_end()
 
-    def connect(self, socketpath, primary = False):
+    async def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
         self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
         self.conn.message_callback = self._on_socket_message
         self.conn.close_callback = self._on_socket_close
-        self.conn.connect(primary)
+        await self.conn.connect(primary)
 
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
@@ -840,8 +853,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
                  clrscr)
 
-    def _on_process_end(self):
-        self.logger.debug("Crawl PID %s terminated.", self.process.pid)
+    async def _on_process_end(self):
+        self.logger.info("Crawl PID %s terminated.", self.process.pid)
 
         self.remove_inprogress_lock()
 
@@ -852,28 +865,28 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.process = None
 
-        self.handle_process_end()
+        await self.handle_process_end()
 
-    def _on_socket_close(self):
+    async def _on_socket_close(self):
         self.conn = None
-        self.stop()
+        await self.stop()
 
-    def handle_process_end(self):
+    async def handle_process_end(self):
         if self.conn:
             self.conn.close_callback = None
-            self.conn.close()
+            await self.conn.close()
             self.conn = None
 
-        super(CrawlProcessHandler, self).handle_process_end()
+        await super(CrawlProcessHandler, self).handle_process_end()
 
 
-    def add_watcher(self, watcher):
-        super(CrawlProcessHandler, self).add_watcher(watcher)
+    async def add_watcher(self, watcher):
+        await super(CrawlProcessHandler, self).add_watcher(watcher)
 
         if self.conn and self.conn.open:
-            self.conn.send_message('{"msg":"spectator_joined"}')
+            await self.conn.send_message('{"msg":"spectator_joined"}')
 
-    def handle_input(self, msg): # type: (str) -> None
+    async def handle_input(self, msg): # type: (str) -> None
         obj = json_decode(msg)
 
         if obj["msg"] == "input" and self.process:
@@ -885,35 +898,35 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             data += obj.get("text", "")
 
-            self.process.write_input(utf8(data))
+            await self.process.write_input(utf8(data))
 
         elif obj["msg"] == "force_terminate":
-            self._do_force_terminate(obj["answer"])
+            await self._do_force_terminate(obj["answer"])
 
         elif obj["msg"] == "stop_stale_process_purge":
-            self._stop_purging_stale_processes()
+            await self._stop_purging_stale_processes()
 
         elif self.conn and self.conn.open:
-            self.conn.send_message(utf8(msg))
+            await self.conn.send_message(utf8(msg))
 
-    def handle_chat_message(self, username, text): # type: (str, str) -> None
+    async def handle_chat_message(self, username, text): # type: (str, str) -> None
         super(CrawlProcessHandler, self).handle_chat_message(username, text)
 
         if self.conn and self.conn.open:
-            self.conn.send_message(json_encode({
+            await self.conn.send_message(json_encode({
                         "msg": "note",
                         "content": "%s: %s" % (username, text)
                         }))
 
-    def handle_announcement(self, text):
+    async def handle_announcement(self, text):
         if self.conn and self.conn.open:
-            self.conn.send_message(json_encode({
+            await self.conn.send_message(json_encode({
                         "msg": "server_announcement",
                         "content": text
                         }))
 
-    def _on_process_output(self, line): # type: (str) -> None
-        self.check_where()
+    async def _on_process_output(self, line): # type: (str) -> None
+        asyncio.create_task(self.check_where())
 
         try:
             json_decode(line)
@@ -922,9 +935,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                 line)
 
         # send messages from wrapper scripts only to the player
-        for receiver in self._receivers:
-            if not receiver.watched_game:
-                receiver.append_message(line, True)
+        receivers = [r for r in self._receivers if not r.watched_game]
+        for r in receivers:
+            receiver.append_message(line)
+        await asyncio.gather(*[r.flush_messages for r in receivers])
 
     def _on_process_error(self, line): # type: (str) -> None
         if line.startswith("ERROR"):
@@ -949,7 +963,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 if url is not None:
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
 
-    def _on_socket_message(self, msg): # type: (str) -> None
+    async def _on_socket_message(self, msg): # type: (str) -> None
         # stdout data is only used for compatibility to wrapper
         # scripts -- so as soon as we receive something on the socket,
         # we stop using stdout
@@ -966,16 +980,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     if "version" in msgobj:
                         self.crawl_version = msgobj["version"]
                         self.logger.info("Crawl version: %s.", self.crawl_version)
-                    self.send_client_to_all()
+                    await self.send_client_to_all()
             elif msgobj["msg"] == "flush_messages":
                 # only queue, once we know the crawl process asks for flushes
                 self.queue_messages = True;
-                self.flush_messages_to_all()
+                await self.flush_messages_to_all()
             elif msgobj["msg"] == "dump":
                 if "morgue_url" in self.game_params and self.game_params["morgue_url"]:
                     url = self.game_params["morgue_url"].replace("%n", self.username) + msgobj["filename"]
                     if msgobj["type"] == "command":
-                        self.send_to_all("dump", url = url)
+                        await self.send_to_all("dump", url = url)
                     else:
                         self.exit_dump_url = url
             elif msgobj["msg"] == "exit_reason":
@@ -988,16 +1002,18 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])
         else:
-            self.check_where()
+            asyncio.create_task(self.check_where())
             if time.time() > self.last_watcher_join + 2:
                 # Treat socket messages as activity, since it's otherwise
                 # hard to determine activity for games found via
                 # watch_socket_dirs.
                 # But don't if a spectator just joined, since we don't
                 # want that to reset idle time.
-                self.note_activity()
+                await self.note_activity()
 
-            self.write_to_all(msg, not self.queue_messages)
+            self.append_to_all(msg)
+            if not self.queue_messages:
+                await self.flush_messages_to_all()
 
 
 
@@ -1016,5 +1032,5 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
     def _base_call(self):
         return ["./crawl"]
 
-    def check_where(self):
+    async def check_where(self):
         pass

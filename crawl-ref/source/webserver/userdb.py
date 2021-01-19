@@ -4,20 +4,14 @@ import logging
 import os.path
 import random
 import re
-import sqlite3
+import aiosqlite
 from base64 import urlsafe_b64encode
 
 from tornado.escape import to_unicode
 from tornado.escape import utf8
 
 import config
-from config import crypt_algorithm
-from config import crypt_salt_length
-from config import max_passwd_length
-from config import nick_regex
-from config import password_db
-from util import send_email
-from util import validate_email_address
+import util
 
 try:
     from typing import Any, Optional, Tuple, Union
@@ -31,71 +25,72 @@ class crawl_db(object):
     def __init__(self, name):  # type: (str) -> None
         self.name = name
 
-    def __enter__(self):  # type: () -> 'crawl_db'
-        self.conn = sqlite3.connect(self.name)
-        self.c = self.conn.cursor()
+    async def __aenter__(self):  # type: () -> 'crawl_db'
+        self.conn = await aiosqlite.connect(self.name)
+        self.c = await self.conn.cursor()
         return self
 
-    def __exit__(self, *_):  # type: (Any) -> None
+    async def __aexit__(self, *_):  # type: (Any) -> None
         if self.c:
-            self.c.close()
+            await self.c.close()
         if self.conn:
-            self.conn.close()
+            await self.conn.close()
 
 
 def setup_settings_path():  # type: () -> str
     try:
         return str(config.settings_db)  # type: ignore
     except AttributeError:
-        return os.path.join(os.path.dirname(password_db), "user_settings.db3")
+        return os.path.join(os.path.dirname(config.password_db),
+                            "user_settings.db3")
 
 
 settings_db = setup_settings_path()
 
 
-def ensure_settings_db_exists():  # type: () -> None
+async def ensure_settings_db_exists():  # type: () -> None
     if os.path.exists(settings_db):
         return
     logging.warn("User settings database didn't exist at '%s'; creating it now.",
                  settings_db)
-    create_settings_db()
+    await create_settings_db()
 
 
-def create_settings_db():  # type: () -> None
+async def create_settings_db():  # type: () -> None
     schema = """
         CREATE TABLE mutesettings (
             username TEXT PRIMARY KEY NOT NULL UNIQUE,
             mutelist TEXT DEFAULT ''
         );
     """
-    with crawl_db(settings_db) as db:
-        db.c.execute(schema)
-        db.conn.commit()
+    async with crawl_db(settings_db) as db:
+        await db.c.execute(schema)
+        await db.conn.commit()
 
 
-def get_mutelist(username):  # type: (str) -> Optional[str]
-    with crawl_db(settings_db) as db:
-        db.c.execute("select mutelist from mutesettings where username=? collate nocase",
+async def get_mutelist(username):  # type: (str) -> Optional[str]
+    async with crawl_db(settings_db) as db:
+        await db.c.execute("select mutelist from mutesettings where username=? collate nocase",
                      (username,))
-        result = db.c.fetchone()
+        result = await db.c.fetchone()
     return result[0] if result is not None else None
 
 
-def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
+async def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
     if mutelist is None:
         mutelist = ""
 
     # n.b. the following will wipe out any columns not mentioned, if there
     # ever are any...
-    with crawl_db(settings_db) as db:
+    async with crawl_db(settings_db) as db:
         query = """
             INSERT OR REPLACE INTO mutesettings
                 (username, mutelist)
             VALUES
                 (?,?);
         """
-        db.c.execute(query, (username, mutelist))
-        db.conn.commit()
+        await db.c.execute(query, (username, mutelist))
+        await db.conn.commit()
 
 
 # from dgamelaunch.h
@@ -115,36 +110,36 @@ def dgl_is_banned(flags):  # type: (int) -> bool
 # TODO: something with other lock flags?
 
 
-def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
+async def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
     """Returns user data in a tuple (userid, email)."""
-    with crawl_db(password_db) as db:
+    async with crawl_db(config.password_db) as db:
         query = """
             SELECT id, email, flags
             FROM dglusers
             WHERE username=?
             COLLATE NOCASE
         """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        await db.c.execute(query, (username,))
+        result = await db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
     if result:
         return (result[0], result[1], result[2])
     else:
         return None
 
 
-def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[str]
+async def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[str]
     """Returns the correctly cased username."""
-    passwd = passwd[0:max_passwd_length]
+    passwd = passwd[0:config.max_passwd_length]
 
-    with crawl_db(password_db) as db:
+    async with crawl_db(config.password_db) as db:
         query = """
             SELECT username, password
             FROM dglusers
             WHERE username=?
             COLLATE NOCASE
         """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[str, str]]
+        await db.c.execute(query, (username,))
+        result = await db.c.fetchone()  # type: Optional[Tuple[str, str]]
 
     if result and crypt.crypt(passwd, result[1]) == result[1]:
         return result[0]
@@ -152,39 +147,40 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[str]
         return None
 
 
-def ensure_user_db_exists():  # type: () -> None
-    if os.path.exists(password_db):
+async def ensure_user_db_exists():  # type: () -> None
+    if os.path.exists(config.password_db):
         return
     logging.warn("User database didn't exist; creating it now.")
-    create_user_db()
+    await create_user_db()
 
 
-def create_user_db():  # type: () -> None
-    with crawl_db(password_db) as db:
+async def create_user_db():  # type: () -> None
+    async with crawl_db(config.password_db) as db:
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
                   " password text, flags integer);")
-        db.c.execute(schema)
+        await db.c.execute(schema)
         schema = ("CREATE TABLE recovery_tokens (token text primary key,"
                   " token_time text, user_id integer not null,"
                   " foreign key(user_id) references dglusers(id));")
-        db.c.execute(schema)
-        db.conn.commit()
+        await db.c.execute(schema)
+        await db.conn.commit()
 
 
-def upgrade_user_db():  # type: () -> None
+async def upgrade_user_db():  # type: () -> None
     """Automatically upgrades the database."""
-    with crawl_db(password_db) as db:
+    async with crawl_db(config.password_db) as db:
         query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tables = [i[0] for i in db.c.execute(query)]
+        await db.c.execute(query)
+        tables = [i[0] async for i in db.c]
 
         if "recovery_tokens" not in tables:
             logging.warn("User database missing table 'recovery_tokens'; adding now")
             schema = ("CREATE TABLE recovery_tokens (token text primary key,"
                       " token_time text, user_id integer not null,"
                       " foreign key(user_id) references dglusers(id));")
-            db.c.execute(schema)
-            db.conn.commit()
+            await db.c.execute(schema)
+            await db.conn.commit()
 
 
 _SALTCHARS = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -195,87 +191,88 @@ def make_salt(saltlen):  # type: (int) -> str
 
 
 def encrypt_pw(passwd):  # type: (str) -> str
-    passwd = passwd[0:max_passwd_length]
-    if crypt_algorithm == "broken":
+    passwd = passwd[0:config.max_passwd_length]
+    if config.crypt_algorithm == "broken":
         salt = passwd
     elif crypt_algorithm:
-        salt = "${}${}$".format(crypt_algorithm, make_salt(crypt_salt_length))
+        salt = "${}${}$".format(config.crypt_algorithm,
+                                make_salt(config.crypt_salt_length))
     else:
         salt = make_salt(2)
     return crypt.crypt(passwd, salt)
 
 
-def register_user(username, passwd, email):  # type: (str, str, str) -> Optional[str]
+async def register_user(username, passwd, email):  # type: (str, str, str) -> Optional[str]
     """Returns an error message or None on success."""
     if passwd == "":
         return "The password can't be empty!"
     if email:  # validate the email only if it is provided
-        result = validate_email_address(email)
+        result = util.validate_email_address(email)
         if result:
             return result
     username = username.strip()
-    if not re.match(nick_regex, username):
+    if not re.match(config.nick_regex, username):
         return "Invalid username!"
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(password_db) as db:
-        db.c.execute("select username from dglusers where username=? collate nocase",
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("select username from dglusers where username=? collate nocase",
                      (username,))
-        result = db.c.fetchone()
+        result = await db.c.fetchone()
 
     if result:
         return "User already exists!"
 
-    with crawl_db(password_db) as db:
+    async with crawl_db(config.password_db) as db:
         query = """
             INSERT INTO dglusers
                 (username, email, password, flags, env)
             VALUES
                 (?, ?, ?, 0, '')
         """
-        db.c.execute(query, (username, email, crypted_pw))
-        db.conn.commit()
+        await db.c.execute(query, (username, email, crypted_pw))
+        await db.conn.commit()
 
     return None
 
-def change_password(userid, passwd):
+async def change_password(userid, passwd):
     if passwd == "":
         return "The password can't be empty."
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(password_db) as db:
-        db.c.execute("update dglusers set password=? where id=?",
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("update dglusers set password=? where id=?",
                      (crypted_pw, userid))
         # invalidate any recovery tokens that might exist, even for normal
         # password changes:
-        db.c.execute("delete from recovery_tokens where user_id=?",
+        await db.c.execute("delete from recovery_tokens where user_id=?",
                      (userid,))
-        db.conn.commit()
+        await db.conn.commit()
 
     return None
 
-def change_email(user_id, email):  # type: (str, str) -> Optional[str]
+async def change_email(user_id, email):  # type: (str, str) -> Optional[str]
     """Returns an error message or None on success."""
-    result = validate_email_address(email)
+    result = util.validate_email_address(email)
     if result:
         return result
 
-    with crawl_db(password_db) as db:
-        db.c.execute("update dglusers set email=? where id=?", (email, user_id))
-        db.conn.commit()
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("update dglusers set email=? where id=?", (email, user_id))
+        await db.conn.commit()
 
     return None
 
 
-def find_recovery_token(token):
+async def find_recovery_token(token):
     # type: (str) -> Union[Tuple[None, None, str], Tuple[int, str, Optional[str]]]
     """Returns tuple (userid, username, error)"""
     token_hash_obj = hashlib.sha256(utf8(token))
     token_hash = token_hash_obj.hexdigest()
 
-    with crawl_db(password_db) as db:
+    async with crawl_db(config.password_db) as db:
         query = """
             SELECT
                 u.id,
@@ -289,8 +286,8 @@ def find_recovery_token(token):
             WHERE t.token = ?
             COLLATE RTRIM
         """
-        db.c.execute(query, (token_hash,))
-        result = db.c.fetchone()
+        await db.c.execute(query, (token_hash,))
+        result = await db.c.fetchone()
 
     if not result:
         return None, None, "Invalid token"
@@ -304,7 +301,7 @@ def find_recovery_token(token):
             return userid, username, None
 
 
-def update_user_password_from_token(token, passwd):
+async def update_user_password_from_token(token, passwd):
     # type: (str, str) -> Tuple[Optional[str], Optional[str]]
     """
     Returns:
@@ -316,33 +313,33 @@ def update_user_password_from_token(token, passwd):
         return None, "The password can't be empty!"
     crypted_pw = encrypt_pw(passwd)
 
-    userid, username, token_error = find_recovery_token(token)
+    userid, username, token_error = await find_recovery_token(token)
 
     if userid and not token_error:
-        with crawl_db(password_db) as db:
-            db.c.execute("update dglusers set password=? where id=?",
+        async with crawl_db(config.password_db) as db:
+            await db.c.execute("update dglusers set password=? where id=?",
                          (crypted_pw, userid))
-            db.c.execute("delete from recovery_tokens where user_id=?",
+            await db.c.execute("delete from recovery_tokens where user_id=?",
                          (userid,))
-            db.conn.commit()
+            await db.conn.commit()
 
     return username, token_error
 
-def clear_password_token(username):
+async def clear_password_token(username):
     if not username:
         return False, "Invalid username"
-    with crawl_db(password_db) as db:
-        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
-        result = db.c.fetchone()
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("select id from dglusers where username=? collate nocase", (username,))
+        result = await db.c.fetchone()
     if not result:
         return False, "Invalid username"
-    with crawl_db(password_db) as db:
-        db.c.execute("delete from recovery_tokens where user_id=?",
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("delete from recovery_tokens where user_id=?",
                      (result[0],))
-        db.conn.commit()
+        await db.conn.commit()
     return True, ""
 
-def create_password_token(userid):
+async def create_password_token(userid):
     # userid is not checked here
     token_bytes = os.urandom(32)
     token = urlsafe_b64encode(token_bytes)
@@ -350,10 +347,10 @@ def create_password_token(userid):
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()
     # store hash in db
-    with crawl_db(password_db) as db:
-        db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
                      "values (?,datetime('now'),?)", (token_hash, userid))
-        db.conn.commit()
+        await db.conn.commit()
     return token
 
 def generate_token_email(token):
@@ -385,43 +382,47 @@ If you did not ask to reset your password, feel free to ignore this email.
 
     return msg_body_plaintext, msg_body_html
 
-def generate_forgot_password(username):
+async def generate_forgot_password(username):
     if not username:
         return False, "Empty username"
 
-    with crawl_db(password_db) as db:
-        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
-        result = db.c.fetchone()
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute(
+            "select id from dglusers where username=? collate nocase",
+            (username,))
+        result = await db.c.fetchone()
     if not result:
         return False, "Invalid username"
 
     userid = result[0]
-    token = create_password_token(userid)
+    token = await create_password_token(userid)
     msg_body_plaintext, msg_body_html = generate_token_email(token)
     return True, msg_body_plaintext
 
-def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
+async def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
     """
     Returns:
         (email_sent: bool, error: string)
     """
     if not email:
-        return False, "Email address can't be empty"
-    email_error = validate_email_address(email)
+        return "Email address can't be empty"
+    email_error = util.validate_email_address(email)
     if email_error:
-        return False, email_error
+        return email_error
 
-    with crawl_db(password_db) as db:
-        db.c.execute("select id from dglusers where email=? collate nocase", (email,))
-        result = db.c.fetchone()
+    async with crawl_db(config.password_db) as db:
+        await db.c.execute(
+            "select id from dglusers where email=? collate nocase", (email,))
+        result = await db.c.fetchone()
+
     if not result:
-        return False, None
+        return "Unknown email '%s' for password reset" % email
 
     userid = result[0]
-    token = create_password_token(userid)
+    token = await create_password_token(userid)
     msg_body_plaintext, msg_body_html = generate_token_email(token)
 
-    send_email(email, 'Request to reset your password',
+    await util.send_email(email, 'Request to reset your password',
                msg_body_plaintext, msg_body_html)
 
-    return True, None
+    return None

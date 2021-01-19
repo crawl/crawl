@@ -1,2 +1,5 @@
 tornado
 PyYAML
+aiofile
+aiosqlite
+aiosmtplib

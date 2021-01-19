@@ -23,6 +23,7 @@ import config
 from config import *  # TODO: remove
 from game_data_handler import GameDataHandler
 from util import *
+import ws_handler
 from ws_handler import *
 
 
@@ -124,27 +125,20 @@ def shed_privileges():
     if getattr(config, 'uid', None) is not None:
         os.setuid(config.uid)
 
-def stop_everything():
-    for server in servers:
-        server.stop()
-    shutdown()
-    # TODO: shouldn't this actually wait for everything to close??
-    if len(sockets) == 0:
-        IOLoop.current().stop()
-    else:
-        IOLoop.current().add_timeout(time.time() + 2, IOLoop.current().stop)
+async def stop_everything():
+    try:
+        for server in servers:
+            server.stop()
+        # this should already trigger a stop(), but for some reason it doesn't
+        # work when called from here.
+        await ws_handler.shutdown()
+    except:
+        logging.error("Unclean shutdown!", exc_info=True)
+    IOLoop.current().stop()
 
 def signal_handler(signum, frame):
     logging.info("Received signal %i, shutting down.", signum)
-    try:
-        IOLoop.current().add_callback_from_signal(stop_everything)
-    except AttributeError:
-        # This is for compatibility with ancient versions < Tornado 3. It
-        # probably won't shutdown correctly and is *definitely* incorrect for
-        # modern versions of Tornado; but this is how it was done on the
-        # original implementation of webtiles + Tornado 2.4 that was in use
-        # through about 2020.
-        stop_everything()
+    IOLoop.current().add_callback_from_signal(stop_everything)
 
 def bind_server():
     settings = {
@@ -405,13 +399,31 @@ def reset_token_commands(args):
             print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
 
 
+async def server_setup():
+    if config.dgl_mode:
+        await userdb.ensure_user_db_exists()
+        await userdb.upgrade_user_db()
+    await userdb.ensure_settings_db_exists()
+
+    # TODO: are these tasks guaranteed to survive an ioloop start/stop?
+    if config.dgl_mode:
+        asyncio.create_task(status_file_timeout())
+        asyncio.create_task(auth.purge_login_tokens_timeout())
+        start_reading_milestones()
+
+        if config.watch_socket_dirs:
+            process_handler.watch_socket_dirs()
+
+
 def server_main():
     args = parse_args()
     if config.chroot:
         os.chroot(config.chroot)
 
     if args.reset_password or args.clear_reset_password:
-        reset_token_commands(args)
+        async def c():
+            await reset_token_commands(args)
+        IOLoop.run_sync(c)
         return
 
     if getattr(config, 'live_debug', False):
@@ -455,28 +467,9 @@ def server_main():
     ensure_tornado_current()
 
     shed_privileges()
-
-    if config.dgl_mode:
-        userdb.ensure_user_db_exists()
-        userdb.upgrade_user_db()
-    userdb.ensure_settings_db_exists()
-
     signal.signal(signal.SIGUSR1, usr1_handler)
 
-    try:
-        IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
-        logging.info("Blocking call timeout: 500ms.")
-    except:
-        # this is the new normal; still not sure of a way to deal with this.
-        logging.info("Webserver running without a blocking call timeout.")
-
-    if config.dgl_mode:
-        status_file_timeout()
-        auth.purge_login_tokens_timeout()
-        start_reading_milestones()
-
-        if config.watch_socket_dirs:
-            process_handler.watch_socket_dirs()
+    IOLoop.current().run_sync(server_setup)
 
     logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
                                                 (tornado.version, os.getpid()))

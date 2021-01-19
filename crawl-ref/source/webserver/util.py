@@ -1,14 +1,16 @@
+import asyncio
 import errno
 import logging
 import os.path
 import re
-import smtplib
+import aiosmtplib
 import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import tornado.ioloop
 import tornado.template
+import tornado.escape
 
 import config
 
@@ -17,6 +19,15 @@ try:
     from typing.IO import TextIO
 except ImportError:
     pass
+
+
+"""A non-blocking version of subprocess.check_output."""
+async def check_output(call):
+    proc = await asyncio.create_subprocess_exec(
+                                *call, stdout=asyncio.subprocess.PIPE)
+    data = await proc.communicate()
+    # return returncode and stdout. Does this ever need stderr?
+    return (proc.returncode, tornado.escape.to_unicode(data[0]))
 
 
 class TornadoFilter(logging.Filter):
@@ -116,46 +127,33 @@ def parse_where_data(data):  # type: (str) -> Dict[str, str]
     return where
 
 
-def send_email(to_address, subject, body_plaintext, body_html):
+async def send_email(to_address, subject, body_plaintext, body_html):
     # type: (str, str, str, str) -> None
     if not to_address:
         return
 
     logging.info("Sending email to '%s' with subject '%s'", to_address, subject)
-    connected = False
-    try:
-        # establish connection
-        # TODO: this should not be a blocking call at all...
-        if config.smtp_use_ssl:
-            email_server = smtplib.SMTP_SSL(
-                config.smtp_host, config.smtp_port)  # type: smtplib.SMTP
-        else:
-            email_server = smtplib.SMTP(config.smtp_host, config.smtp_port)
-        connected = True
+    # build multipart message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = config.smtp_from_addr
+    msg['To'] = to_address
 
-        # authenticate
-        if config.smtp_user:
-            email_server.login(config.smtp_user, config.smtp_password)
+    part1 = MIMEText(body_plaintext, 'plain')
+    part2 = MIMEText(body_html, 'html')
 
-        # build multipart message
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = config.smtp_from_addr
-        msg['To'] = to_address
+    msg.attach(part1)
+    msg.attach(part2)
 
-        part1 = MIMEText(body_plaintext, 'plain')
-        part2 = MIMEText(body_html, 'html')
+    # start_tls support?
+    send_params = {"hostname": config.smtp_host,
+                   "port": config.smtp_port,
+                   "use_tls": config.smtp_use_ssl}
+    if config.smtp_user:
+        send_params["username"] = config.smtp_user,
+        send_params["password"] = config.smtp_password
 
-        msg.attach(part1)
-        msg.attach(part2)
-
-        # send
-        email_server.sendmail(config.smtp_from_addr, to_address, msg.as_string())
-    finally:
-        # end connection
-        if connected:
-            email_server.quit()
-
+    await aiosmtplib.send(msg, **send_params)
 
 def validate_email_address(address):  # type: (str) -> Optional[str]
     # Returns an error string describing the problem, or None.
