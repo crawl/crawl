@@ -780,9 +780,20 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     m_ui_state = state;
 }
 
-void TilesFramework::update_input_mode(mouse_mode mode)
+void TilesFramework::update_input_mode(mouse_mode mode, bool force)
 {
-    redraw();
+    auto prev_mode = mouse_control::current_mode();
+    if (prev_mode == mode && !force)
+        return;
+
+    // we skip redrawing in this case because it happens on every key input,
+    // and is very heavy on held down keys
+    if (force
+        || !(prev_mode == MOUSE_MODE_COMMAND && mode == MOUSE_MODE_NORMAL
+             || prev_mode == MOUSE_MODE_NORMAL && mode == MOUSE_MODE_COMMAND))
+    {
+        redraw();
+    }
 
     json_open_object();
     json_write_string("msg", "input_mode");
@@ -1928,7 +1939,7 @@ void TilesFramework::_send_everything()
 
     _send_messages();
 
-    update_input_mode(mouse_control::current_mode());
+    update_input_mode(mouse_control::current_mode(), true);
 
     m_text_menu.send(true);
 
