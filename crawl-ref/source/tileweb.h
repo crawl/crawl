@@ -206,7 +206,7 @@ public:
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
     void dump();
-    void update_input_mode(mouse_mode mode);
+    void update_input_mode(mouse_mode mode, bool force=false);
 
     void send_mcache(mcache_entry *entry, bool submerged,
                      bool send = true);
