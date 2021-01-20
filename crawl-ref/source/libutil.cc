@@ -488,8 +488,8 @@ mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
 mouse_control::mouse_control(mouse_mode mode)
 {
 #ifdef USE_TILE_WEB
-    if (m_previous_mode != ms_current_mode)
-        tiles.update_input_mode(mode);
+    // relies on being called before ms_current_mode is updated
+    tiles.update_input_mode(mode);
 #endif
 
     m_previous_mode = ms_current_mode;
@@ -499,8 +499,7 @@ mouse_control::mouse_control(mouse_mode mode)
 mouse_control::~mouse_control()
 {
 #ifdef USE_TILE_WEB
-    if (m_previous_mode != ms_current_mode)
-        tiles.update_input_mode(m_previous_mode);
+    tiles.update_input_mode(m_previous_mode);
 #endif
     ms_current_mode = m_previous_mode;
 }
