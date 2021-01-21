@@ -1397,7 +1397,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
 bool direction_chooser::pickup_item()
 {
-    item_info *ii = 0;
+    item_def *ii = nullptr;
     if (in_bounds(target()))
         ii = env.map_knowledge(target()).item();
     if (!ii || !ii->is_valid(true))
@@ -2469,7 +2469,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         bool temp = false;
         get_monster_db_desc(*mi, inf, temp);
     }
-    else if (const item_info *obj = env.map_knowledge(c).item())
+    else if (const item_def *obj = env.map_knowledge(c).item())
     {
         // Second priority: objects.
         get_item_desc(*obj, inf);

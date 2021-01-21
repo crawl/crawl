@@ -1587,7 +1587,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
 // player to fall to their death.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
-    item_info inf = get_item_info(item);
+    item_def inf = get_item_known_info(item);
 
     const bool grants_flight =
          inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)

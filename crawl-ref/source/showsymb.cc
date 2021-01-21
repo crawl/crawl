@@ -515,7 +515,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
     case SH_ITEM:
     {
-        const item_info* eitem = cell.item();
+        const item_def* eitem = cell.item();
         ASSERT(eitem);
         show = *eitem;
 

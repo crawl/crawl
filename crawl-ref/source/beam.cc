@@ -1152,7 +1152,8 @@ void bolt::do_fire()
                                || flavour == BEAM_VISUAL))
     {
         const coord_def diff = target - source;
-        tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
+        tile_beam = tileidx_item_throw(
+                                get_item_known_info(*item), diff.x, diff.y);
     }
 #endif
 
