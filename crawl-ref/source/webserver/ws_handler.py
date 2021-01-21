@@ -344,6 +344,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # this code would be much simpler refactored using async
         def build_callback(game_key, call, next_callback):
             def update_save_info(data, returncode):
+                global sockets
+                if not self in sockets:
+                    return
                 if returncode == 0:
                     try:
                         save_dict = json_decode(data)[load_games.game_modes[game_key]]
@@ -405,14 +408,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         def disable_check(s):
             return s == "[slot full]"
         def send_game_links():
+            global sockets
+            if not self in sockets:
+                return # socket closed by the time this info was collected
             self.queue_message("html", id = "banner", content = banner_html)
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
-            play_html = to_unicode(self.render_string("game_links.html",
+            try:
+                play_html = to_unicode(self.render_string("game_links.html",
                                                   games = config.games,
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
-            self.send_message("set_game_links", content = play_html)
+                self.send_message("set_game_links", content = play_html)
+            except:
+                self.logger.warning("Error on send_game_links callback",
+                                                                exc_info=True)
         # if no game links at all have been sent, immediately render the
         # empty version. This is so that if the server takes a while on
         # initial connect, the player sees something immediately.
