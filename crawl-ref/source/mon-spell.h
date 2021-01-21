@@ -1329,7 +1329,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_MALMUTATE, 19, MON_SPELL_MAGICAL },
        { SPELL_BRAIN_FEED, 19, MON_SPELL_MAGICAL },
-       { SPELL_SUMMON_MINOR_DEMON, 19, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1337,7 +1336,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_SHADOW_DEMON,
       {
        { SPELL_SHADOW_CREATURES, 30, MON_SPELL_MAGICAL },
-       { SPELL_SUMMON_DEMON, 30, MON_SPELL_MAGICAL },
       }
     },
 
