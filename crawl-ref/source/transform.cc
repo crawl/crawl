@@ -1357,7 +1357,7 @@ static bool _flying_in_new_form(transformation which_trans)
         item_def *item = you.slot_item(eq, true);
         if (item == nullptr)
             continue;
-        item_info inf = get_item_info(*item);
+        item_def inf = get_item_known_info(*item);
 
         //similar code to safe_to_remove from item-use.cc
         if (inf.is_type(OBJ_JEWELLERY, RING_FLIGHT))

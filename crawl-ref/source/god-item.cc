@@ -33,7 +33,7 @@ static bool _is_book_type(const item_def& item,
     if (!item.defined())
         return false;
 
-    // Return false for item_infos of unknown subtype
+    // Return false for item_defs of unknown subtype
     // (== NUM_BOOKS in most cases, OBJ_RANDOM for acquirement)
     if (item.sub_type == get_max_subtype(item.base_type)
         || item.sub_type == OBJ_RANDOM)

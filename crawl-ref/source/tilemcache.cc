@@ -230,11 +230,11 @@ mcache_monster::mcache_monster(const monster_info& mon)
     mtype = mon.type;
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
-    const item_info* mon_weapon = mon.inv[MSLOT_WEAPON].get();
+    const item_def* mon_weapon = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_weapon != nullptr) ? tilep_equ_weapon(*mon_weapon) : 0;
     if (mons_class_wields_two_weapons(mon.type))
     {
-        const item_info* mon_weapon2 = mon.inv[MSLOT_ALT_WEAPON].get();
+        const item_def* mon_weapon2 = mon.inv[MSLOT_ALT_WEAPON].get();
         if (mon_weapon2)
         {
             switch (tilep_equ_weapon(*mon_weapon2))
@@ -292,7 +292,7 @@ mcache_monster::mcache_monster(const monster_info& mon)
     }
     else
     {
-        const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
+        const item_def* mon_shield = mon.inv[MSLOT_SHIELD].get();
         m_shd_tile = (mon_shield != nullptr) ? tilep_equ_shield(*mon_shield) : 0;
     }
 }
@@ -1296,7 +1296,7 @@ mcache_draco::mcache_draco(const monster_info& mon)
 
     m_mon_tile = draco ? tileidx_draco_base(mon)
                        : tileidx_demonspawn_base(mon);
-    const item_info* mon_wep = mon.inv[MSLOT_WEAPON].get();
+    const item_def* mon_wep = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_wep != nullptr) ? tilep_equ_weapon(*mon_wep) : 0;
     mon_wep = mon.inv[MSLOT_SHIELD].get();
     m_shd_tile = (mon_wep != nullptr) ? tilep_equ_shield(*mon_wep) : 0;

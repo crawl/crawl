@@ -2832,7 +2832,7 @@ static int _autopickup_subtype(const item_def &item)
 
     const int max_type = get_max_subtype(item.base_type);
 
-    // item_infos of unknown subtype.
+    // item_defs of unknown subtype.
     if (max_type > 0 && item.sub_type >= max_type)
         return max_type;
 
@@ -4402,9 +4402,9 @@ void move_items(const coord_def r, const coord_def p)
 }
 
 // erase everything the player doesn't know
-item_info get_item_info(const item_def& item)
+item_def get_item_known_info(const item_def& item)
 {
-    item_info ii;
+    item_def ii;
 
     ii.base_type = item.base_type;
     ii.quantity = item.quantity;

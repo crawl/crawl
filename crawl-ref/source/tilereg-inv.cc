@@ -570,7 +570,7 @@ void InventoryRegion::activate()
     m_grid_page = 0;
 }
 
-static void _fill_item_info(InventoryTile &desc, const item_info &item)
+static void _fill_item_info(InventoryTile &desc, const item_def &item)
 {
     desc.tile = tileidx_item(item);
 
@@ -649,7 +649,7 @@ void InventoryRegion::update()
             }
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_info(you.inv[i]));
+            _fill_item_info(desc, get_item_known_info(you.inv[i]));
             desc.idx = i;
 
             for (int eq = EQ_FIRST_EQUIP; eq < NUM_EQUIP; ++eq)
@@ -747,7 +747,7 @@ void InventoryRegion::update()
                 continue;
 
             InventoryTile desc;
-            _fill_item_info(desc, get_item_info(env.item[i]));
+            _fill_item_info(desc, get_item_known_info(env.item[i]));
             desc.idx = i;
             ground_shown[i] = true;
 

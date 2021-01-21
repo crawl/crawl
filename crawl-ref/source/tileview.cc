@@ -915,7 +915,7 @@ void tile_forget_map(const coord_def &gc)
         tiles.update_minimap(*ai);
 }
 
-static void _tile_place_item(const coord_def &gc, const item_info &item,
+static void _tile_place_item(const coord_def &gc, const item_def &item,
                              bool more_items)
 {
     tileidx_t t = tileidx_item(item);
@@ -1367,7 +1367,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 // If the top tile is a corpse, don't draw blood underneath.
 static bool _top_item_is_corpse(const map_cell& mc)
 {
-    const item_info* item = mc.item();
+    const item_def* item = mc.item();
     return item && item->is_type(OBJ_CORPSES, CORPSE_BODY);
 }
 

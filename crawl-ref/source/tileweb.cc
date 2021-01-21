@@ -1066,7 +1066,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
+        _send_item(c.inv[i], get_item_known_info(you.inv[i]), force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1104,7 +1104,7 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
-void TilesFramework::_send_item(item_info& current, const item_info& next,
+void TilesFramework::_send_item(item_def& current, const item_def& next,
                                 bool force_full)
 {
     bool changed = false;
@@ -1505,12 +1505,14 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_WEAPON)));
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
                     if (you.slot_item(EQ_SHIELD))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_SHIELD)));
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
