@@ -1449,6 +1449,10 @@ Summon Spectral Orcs spell
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
 %%%%
+Summon Tzitzimitl spell
+
+Summons a tzitzimitl, a demon of disease and despair.
+%%%%
 Summon Ufetubus spell
 
 Summons multiple ufetubi; small, annoying demons.

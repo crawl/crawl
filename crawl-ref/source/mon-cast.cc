@@ -1730,6 +1730,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SPORULATE:
     case SPELL_ROLL:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_SUMMON_TZITZIMITL:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6150,6 +6151,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                 mgen_data(mon, SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, duration, spell_cast, god));
         }
+        return;
+
+    case SPELL_SUMMON_TZITZIMITL:
+        _summon(*mons, MONS_TZITZIMITL, 2, slot);
         return;
 
     case SPELL_OZOCUBUS_ARMOUR:
