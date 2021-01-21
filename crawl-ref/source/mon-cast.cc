@@ -6142,8 +6142,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             const monster_type mon = random_choose_weighted(
-                                       3, MONS_EFREET,
-                                       3, MONS_SUN_DEMON,
                                        3, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_BRIMSTONE_FIEND);
