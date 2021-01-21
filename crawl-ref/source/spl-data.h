@@ -3364,6 +3364,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_HELL_SENTINEL, "Summon Hell Sentinel",
+    spschool::summoning,
+    spflag::monster | spflag::mons_abjure,
+    8,
+    0,
+    -1, -1,
+    6, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
