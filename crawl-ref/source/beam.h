@@ -94,6 +94,7 @@ struct bolt
     bool   pierce = false;        // Can the beam pass through a target and
                                   // hit another target behind the first?
     bool   is_explosion = false;
+    bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
     string aux_source = "";       // source of KILL_MISC beams
 

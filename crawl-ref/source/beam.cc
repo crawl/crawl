@@ -2727,7 +2727,7 @@ void bolt::internal_ouch(int dam)
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (monst && mon_explodes_on_death(monst->type))
+    else if (is_death_effect)
     {
         ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
