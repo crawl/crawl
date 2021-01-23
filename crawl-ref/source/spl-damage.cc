@@ -2948,6 +2948,12 @@ static bool _player_glaciate_affects(const actor *victim)
             && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
 }
 
+dice_def glaciate_damage(int pow, int eff_range)
+{
+    // At or within range 3, this is equivalent to the old Ice Storm damage.
+    return calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+}
+
 spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
@@ -3014,12 +3020,7 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
             const int eff_range = max(3, (6 * i / LOS_DEFAULT_RANGE));
 
-            // At or within range 3, this is equivalent to the old Ice Storm
-            // damage.
-            beam.damage =
-                caster->is_player()
-                    ? calc_dice(7, (66 + 3 * pow) / eff_range)
-                    : calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+            beam.damage = glaciate_damage(pow, eff_range);
 
             if (actor_at(entry.first))
             {
