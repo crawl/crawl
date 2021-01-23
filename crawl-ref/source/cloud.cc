@@ -908,6 +908,20 @@ static int _cloud_damage_calc(int size, int n_average, int extra,
            : random2avg(size, n_average) + extra;
 }
 
+static int _base_dam(const cloud_damage &dam, bool vs_player)
+{
+    if (vs_player && dam.extra_player_dam)
+        return dam.base + 4;
+    return dam.base;
+}
+
+static int _rand_dam(const cloud_damage &dam, bool vs_player)
+{
+    if (vs_player && dam.extra_player_dam)
+        return dam.random + 7;
+    return dam.random;
+}
+
 // Calculates the base damage that the cloud does to an actor without
 // considering resistances and time spent in the cloud.
 static int _cloud_base_damage(const actor *act,
@@ -915,9 +929,9 @@ static int _cloud_base_damage(const actor *act,
                               bool maximum_damage)
 {
     const cloud_damage &dam = clouds[flavour].damage;
-    const bool extra_damage = dam.extra_player_dam && act->is_player();
-    const int random_dam = dam.random + (extra_damage ? 7 : 0);
-    const int base_dam = dam.base + (extra_damage ? 4 : 0);
+    const bool vs_player = act->is_player();
+    const int random_dam = _rand_dam(dam, vs_player);
+    const int base_dam = _base_dam(dam, vs_player);
     const int trials = dam.random/15 + 1;
 
     return _cloud_damage_calc(random_dam, trials, base_dam, maximum_damage);
@@ -1397,6 +1411,21 @@ int actor_apply_cloud(actor *act)
     }
 
     return final_damage;
+}
+
+// Describe cloud damage in the form "3-18". If vs_player is set,
+// extra anti-player damage is included.
+string desc_cloud_damage(cloud_type cl_type, bool vs_player)
+{
+    const cloud_damage &dam_info = clouds[cl_type].damage;
+    const int base = _base_dam(dam_info, vs_player);
+    const int rand = _rand_dam(dam_info, vs_player);
+    if (rand == 0) {
+        if (base == 0)
+            return "";
+        return make_stringf("%d", base);
+    }
+    return make_stringf("%d-%d", base, base + rand - 1);
 }
 
 static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
