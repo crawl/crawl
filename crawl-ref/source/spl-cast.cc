@@ -2614,6 +2614,10 @@ string spell_damage_string(spell_type spell, bool evoked)
         }
         case SPELL_ABSOLUTE_ZERO:
             return "∞";
+        case SPELL_CONJURE_FLAME:
+            return desc_cloud_damage(CLOUD_FIRE, false);
+        case SPELL_FREEZING_CLOUD:
+            return desc_cloud_damage(CLOUD_COLD, false);
         default:
             break;
     }
