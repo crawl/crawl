@@ -38,9 +38,9 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
-str: 10
-int: 10
-dex: 10
+str: 7
+int: 7
+dex: 7
 levelup_stat_frequency: 4
 mutations:
   1:
