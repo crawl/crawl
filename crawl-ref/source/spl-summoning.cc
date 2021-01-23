@@ -3302,7 +3302,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
             break;
     }
 
-    if (created)
+    if (created && you.see_cell(agent.pos()))
     {
         mprf("%s conjure%s some foxfire!",
              agent.name(DESC_THE).c_str(),
