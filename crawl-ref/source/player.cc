@@ -8179,13 +8179,12 @@ void refresh_weapon_protection()
 }
 
 /**
- * Refreshes a player's spectral weaapon on hit.
+ * Refreshes a player's spectral weapon on hit.
  */
 void handle_spectral_brand()
 {
-    const int pow = you.skill(SK_EVOCATIONS, 4);
-    if (you.skill(SK_EVOCATIONS) > 0 && !find_spectral_weapon(&you))
-        cast_spectral_weapon(&you, pow, you.religion);
+    if (!find_spectral_weapon(&you))
+        cast_spectral_weapon(&you, 50, you.religion);
 }
 
 // Is the player immune to a particular hex because of their

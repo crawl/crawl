@@ -1351,10 +1351,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "affected.";
             break;
         case SPWPN_SPECTRAL:
-            description += "It retains the spirit of the tree from which "
-                           "it was made. In the hands of one skilled in "
-                           "evocations this spirit is drawn out to fight "
-                           "along side the wielder.";
+            description += "When it strikes, its spirit leaps out and "
+                           " fights alongside the wielder.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
