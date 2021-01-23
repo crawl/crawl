@@ -658,7 +658,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_ooze
-DEPTH:  D:8, Lair, Depths
+DEPTH:  D:8-, Lair, Depths
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, death ooze
