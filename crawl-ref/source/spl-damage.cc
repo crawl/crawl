@@ -2147,7 +2147,7 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
         effect.colour = frag.colour;
         return true;
     }
-    
+
     // Petrifying or petrified monsters can be exploded.
     if (mon.petrified() || mon.petrifying())
     {
