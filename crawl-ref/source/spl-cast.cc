@@ -1640,17 +1640,18 @@ private:
  * @param allow_fail    true if it is a spell being cast normally.
  *                      false if the spell is evoked or from an innate or divine ability
  *
- * @param evoked_item   The wand the spell was evoked from if applicable, or
+ * @param evoked_wand   The wand the spell was evoked from if applicable, or
                         nullptr.
  * @return spret::success if spell is successfully cast for purposes of
  * exercising, spret::fail otherwise, or spret::abort if the player cancelled
  * the casting.
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item, dist *target)
+                       const item_def* const evoked_wand, dist *target)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT(!evoked_item || evoked_item->base_type == OBJ_WANDS);
+    ASSERT(!(allow_fail && evoked_wand));
+    ASSERT(!evoked_wand || evoked_wand->base_type == OBJ_WANDS);
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
 
@@ -1722,7 +1723,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                   testbits(flags, spflag::area) ? ( powc * 3 ) / 2
                                                 : powc;
             additional_desc = bind(desc_wl_success_chance, placeholders::_1,
-                                   eff_pow, evoked_item, hitfunc.get());
+                                   eff_pow, evoked_wand, hitfunc.get());
         }
         else if (spell == SPELL_INTOXICATE)
         {
@@ -1807,7 +1808,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             return spret::abort;
     }
 
-    if (evoked_item)
+    if (evoked_wand)
     {
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
@@ -1816,9 +1817,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 #endif
         powc = player_adjust_evoc_power(powc, surge);
 #if TAG_MAJOR_VERSION == 34
-        int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
-                              ? wand_mp_cost() : 0;
-        surge_power_wand(mp_cost_of_wand + surge * 3);
+        surge_power_wand(wand_mp_cost() + surge * 3);
 #endif
     }
 #if TAG_MAJOR_VERSION == 34
@@ -1844,7 +1843,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     }
     else
 #endif
-    if (evoked_item && evoked_item->charges == 0)
+    if (evoked_wand && evoked_wand->charges == 0)
         return spret::fail;
     else if (allow_fail)
     {
@@ -1916,7 +1915,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     {
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
-        if ((demonic_magic == 3 && evoked_item)
+        if ((demonic_magic == 3 && evoked_wand)
             || (demonic_magic > 0 && allow_fail))
         {
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
