@@ -292,10 +292,10 @@ void fill_doll_equipment(dolls_data &result)
         tileidx_t ch;
         switch (you.species)
         {
-        case SP_PALENTONGA: // placeholder
 #if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
+        case SP_CENTAUR:
 #endif
+        case SP_PALENTONGA: ch = TILEP_TRAN_STATUE_PALENTONGA;  break;
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
@@ -309,10 +309,10 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::lich:
         switch (you.species)
         {
-        case SP_PALENTONGA: // placeholder
 #if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
+        case SP_CENTAUR:
 #endif
+        case SP_PALENTONGA: ch = TILEP_TRAN_LICH_PALENTONGA;  break;
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
@@ -614,14 +614,14 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_CENTAUR);
+    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_PALENTONGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     // Set up mcache data based on equipment. We don't need this lookup if both
