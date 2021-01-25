@@ -2627,11 +2627,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
                  MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
                  MST_DEEP_ELF_MAGE_V, MST_DEEP_ELF_MAGE_VI };
 
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        return { MST_LICH_I, MST_LICH_II, MST_LICH_III,
-                 MST_LICH_IV, MST_LICH_V, };
-
     default:
         return { static_cast<mon_spellbook_type>(
                      get_monster_data(mon_type)->sec) };
