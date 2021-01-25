@@ -189,7 +189,7 @@ KMONS:   CD : vampire mage / mummy priest
 KMONS:   EF : shadow dragon w:5 / death drake
 KITEM:   | = nothing
 : else
-KMONS:   12 = patrolling lich w:5 / ancient lich
+KMONS:   12 = patrolling lich / ancient lich / dread lich
 KMONS:   34 = patrolling curse toe
 KMONS:   56 = patrolling bone dragon
 KMONS:   7 = death cob w:12 / zombie w:4 / skeleton w:4 / guardian mummy w:4
@@ -644,7 +644,8 @@ ENDMAP
 NAME:    tar_old
 ORIENT:  encompass
 MONS:    patrolling Ereshkigal, reaper, shadow demon, shadow
-MONS:    lich / ancient lich, shadow dragon / death drake w:1, tzitzimitl
+MONS:    lich / ancient lich / dread lich, shadow dragon / death drake w:1
+MONS:    tzitzimitl
 KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
@@ -1006,7 +1007,7 @@ ORIENT: encompass
 NAME:    tar_grunt_ereshkigal
 TAGS:    tar_grunt_ereshkigal unrand
 MONS:    patrolling Ereshkigal, Tzitzimitl, shadow demon / reaper
-MONS:    lich / ancient lich w:5
+MONS:    lich w:40 / ancient lich / dread lich
 KMASK:   O = no_item_gen
 KITEM:   O = bone rune of Zot
 : serpent_of_hell_setup(_G)
@@ -1056,7 +1057,7 @@ ENDMAP
 NAME: tar_grunt_big_loot
 TAGS: tar_grunt_big_loot unrand
 MONS: Tzitzimitl / shadow dragon, shadow demon / reaper
-MONS: lich / w:5 ancient lich
+MONS: lich w:40 / ancient lich / dread lich
 MAP
 ..................
 .cccccccccccccccc.
@@ -1253,7 +1254,8 @@ ENDMAP
 NAME:     tar_grunt_cathedral
 ORIENT:   encompass
 MONS:     patrolling Ereshkigal, patrolling tzitzimitl, reaper, shadow demon
-MONS:     lich / ancient lich w:5, shadow dragon, shadow wraith / soul eater
+MONS:     lich w:40 / ancient lich / dread lich, shadow dragon
+MONS:     shadow wraith / soul eater
 NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)
 NSUBST:   P = 1:O / *:|

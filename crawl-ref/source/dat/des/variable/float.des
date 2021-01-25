@@ -3358,7 +3358,7 @@ NAME:    minmay_guarded_unrand_majin_bo
 ORIENT:  float
 DEPTH:   Depths, Crypt
 MONS:    necromancer / vampire mage
-MONS:    lich / ancient lich w:5
+MONS:    lich w:40 / ancient lich / dread lich
 ITEM:    majin-bo no_pickup ident:type
 ITEM:    any magical staff / any book
 NSUBST:  d = 1:d / *:e
@@ -3988,7 +3988,7 @@ KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 broad axe ego:antimagic . plate armour \
                | plate armour ego:willpower
 KMONS: U = stone giant / iron troll / w:5 ettin
-KMONS: r = lich / w:5 ancient lich
+KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
 KFEAT: H = iron_grate
@@ -4047,7 +4047,7 @@ NSUBST:  ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
 MONS:    phantasmal warrior
 MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
          / eidolon
-MONS:    revenant / ancient champion / lich, ancient lich
+MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS:    eye of draining
@@ -4061,7 +4061,7 @@ MONS:    boggart / rakshasa / ogre mage / wizard / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
-MONS:    titan / ancient lich / glowing shapeshifter
+MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
 MONS:    floating eye / great orb of eyes / glowing orange brain \
          / phantasmal warrior
@@ -4070,7 +4070,7 @@ MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage \
          / spriggan air mage / vampire mage
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
-MONS:    titan / ancient lich / glowing shapeshifter
+MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Elf") then
 MONS:    water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
@@ -4084,7 +4084,7 @@ SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS:    ghost moth / death cob / curse toe
 MONS:    nonbase draconian
-MONS:    ancient lich, orb of fire
+MONS:    ancient lich / dread lich, orb of fire
 SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
 KFEAT:   _ = altar_sif_muna / altar_vehumet
@@ -6076,7 +6076,7 @@ SUBST:  ] = ]>
 # but use normal OOD for D.
 # Also remove the bits of loot for Hell branches and Zot.
 : if you.in_branch("Crypt") then
-KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
+KMONS:  8 = bone dragon / lich / ancient lich / dread lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
 : elseif you.in_branch("Dis") then
@@ -6090,7 +6090,7 @@ KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
 SUBST:  *% = .
 : elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / \
-            lich / ancient lich / w:15 place:Tar
+            lich / ancient lich / dread lich / w:15 place:Tar
 SUBST:  *% = .
 : elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
@@ -6098,7 +6098,8 @@ KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
 SUBST:  *% = .
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
-            killer klown / death cob / w:5 curse toe / w:5 ancient lich
+            killer klown / death cob / w:5 curse toe / w:5 ancient lich / \
+            w:5 dread lich
 SUBST:  *% = .
 :else
 KMONS:  8 = 8 band
@@ -9243,7 +9244,7 @@ SUBST:   FGH = ., JKLM = ", ' = ^., " = ^^., d = dd$
 # Supplement the 8s in Crypt and Zot since OOD defs in these branches aren't
 # very deep.
 : if you.in_branch("Crypt") then
-KMONS:   2 = ancient lich
+KMONS:   2 = ancient lich / dread lich
 NSUBST:  8 = 2 / 8
 : elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
@@ -9252,7 +9253,7 @@ KMONS:   3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:   8 = 39, 9 = 02
 : elseif you.in_branch("Zot") then
-KMONS:   2 = ancient lich / orb of fire / curse toe
+KMONS:   2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
 SUBST:   8 = 28
 : end
 KFEAT:   ^ = zot trap
@@ -9316,7 +9317,7 @@ TILE:   p = dngn_transparent_stone_blue
 : else
 KMONS:  1HK = cacodemon
 :   if you.in_branch("Crypt") then
-KMONS:  2 = ancient lich
+KMONS:  2 = ancient lich / dread lich
 NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
@@ -9325,7 +9326,7 @@ KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:  8 = 39, 9 = 02, H = K
 :   elseif you.in_branch("Zot") then
-KMONS:  2 = ancient lich / orb of fire / curse toe
+KMONS:  2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
 SUBST:  8 = 28
 :   end
 COLOUR: p = yellow
@@ -9488,13 +9489,13 @@ SHUFFLE: Ww / LL
 SUBST:   9 = 09, 1 = 98, r = $%, s = *|,  2G = ., bcv = x, } = }>, K = p
 KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Depths") then
-MONS:    juggernaut / ancient lich / golden dragon
+MONS:    juggernaut / ancient lich / dread lich / golden dragon
 MONS:    obsidian statue / orange crystal statue
 SHUFFLE: Ww / ll
 SUBST:   2 = G:50 2, r = $*, s = |
 KFEAT:   ^ = shaft trap / alarm trap / zot trap
 : elseif you.in_branch("Zot") then
-MONS:    ancient lich / orb of fire, orange crystal statue
+MONS:    ancient lich w:5 / dread lich w:5 / orb of fire, orange crystal statue
 SUBST:   2 = G:50 2, r = *:30 |, wW = l, K = ), s = ]
 KFEAT:   ^ = zot trap
 : end

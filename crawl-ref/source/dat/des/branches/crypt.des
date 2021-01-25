@@ -545,7 +545,7 @@ DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
-KMONS: Y = Boris / ancient lich, ancient lich
+KMONS: Y = Boris / ancient lich, ancient lich / dread lich
 MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
 MONS:  skeleton / zombie
 KFEAT: v = .
@@ -704,7 +704,7 @@ NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
 MONS:   flying skull band, lich
 KMONS:  3 = curse skull
-KMONS:  4 = lich / ancient lich
+KMONS:  4 = lich w:20 / ancient lich / dread lich
 KMONS:  P = withered plant
 KFEAT:  4 = |
 SUBST:  p = Pp, p = PP., o = P..
@@ -1311,7 +1311,7 @@ TAGS: no_item_gen no_monster_gen
 DEPTH: Crypt
 ORIENT: east
 MONS: freezing wraith, shadow wraith
-KMONS: | = ancient lich
+KMONS: | = ancient lich / dread lich
 KITEM: | = plate armour good_item ego:cold_resistance \
            / ice dragon scales good_item \
            / crystal plate armour good_item ego:cold_resistance w:5 \
@@ -1410,7 +1410,7 @@ PLACE:  Crypt:$
 # skeletal monsters
 : local brnd = crawl.random2(13)
 : if brnd > 8 then
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 MONS:   bone dragon
 MONS:   lich
 MONS:   ancient champion
@@ -1509,7 +1509,7 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
 PLACE:  Crypt:$
 KFEAT:  A = w
 KMONS:  A = flying skull
-KMONS:  B = ancient lich
+KMONS:  B = ancient lich / dread lich
 KMONS:  D = bone dragon
 KMONS:  V = vampire knight
 KMONS:  X = dancing weapon
@@ -1621,7 +1621,7 @@ PLACE:  Crypt:$
 MARKER: m = lua:portal_desc {wall_phase = 1}
 KFEAT:  m = iron_grate
 KMASK:  1 = opaque
-MONS:   patrolling lich / patrolling ancient lich
+MONS:   patrolling lich w:20 / patrolling ancient lich / patrolling dread lich
 MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / skeleton
 MONS:   ancient champion
@@ -1680,8 +1680,8 @@ KITEM:  b = any book
 SUBST:  u = U Y
 KMONS:  8 = gargoyle
 ####### NW monsters (chapel).
-KMONS:  A = ancient lich / w:2 mummy priest
-KMONS:  DL = lich / w:5 ancient lich
+KMONS:  A = ancient lich / dread lich / w:4 mummy priest
+KMONS:  DL = lich w:40 / ancient lich / dread lich
 KMONS:  E = war gargoyle
 KMONS:  G = shadow / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
@@ -1853,8 +1853,9 @@ KMONS:  F = patrolling bone dragon
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
 # him/her/it being demonic). Not as much undead in this set.
 KFEAT:  _ = altar_kikubaaqudgha
-KMONS:  9 = patrolling ancient lich
-KMONS:  H = w:20 patrolling lich / patrolling ancient lich
+KMONS:  9 = patrolling ancient lich / patrolling dread lich
+KMONS:  H = w:40 patrolling lich / patrolling ancient lich / \
+            patrolling dread lich
 KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
 KMONS:  B = necromancer
@@ -1971,7 +1972,7 @@ COLOUR: YsDdE = darkgrey
 : local brnd = crawl.random2(15)
 : if brnd > 10 then
 MONS:   patrolling skeletal warrior w:8 / patrolling wight
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 MONS:   bone dragon w:1 / ancient champion / lich w:1
 MONS:   caustic shrike skeleton / titan skeleton
 MONS:   w:50 skeleton / wight
@@ -2100,7 +2101,7 @@ KMONS:   R = Jory, vampire knight
 KMONS:   S = vampire knight / vampire mage
 KMONS:   T = vampire knight / jiangshi
 : elseif crawl.coinflip() then
-KMONS:   R = ancient lich
+KMONS:   R = ancient lich / dread lich
 KMONS:   S = flayed ghost
 KMONS:   T = phantasmal warrior
 : else
@@ -2183,7 +2184,7 @@ PLACE:   Crypt:$
 ORIENT:  north
 MONS:    ancient champion, lich / revenant, jiangshi / ghoul w:2
 MONS:    profane servitor / bone dragon / curse toe / \
-         royal mummy w:2 / ancient lich w:2
+         royal mummy w:2 / ancient lich w:1 / dread lich w:1
 MONS:    skeletal warrior ; halberd | glaive | bardiche w:5
 MONS:    freezing wraith w:20 / shadow wraith w:20 / flayed ghost
 MONS:    zombie w:20 / skeleton w:20 / simulacrum / nothing w:25

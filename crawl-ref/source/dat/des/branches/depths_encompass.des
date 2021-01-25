@@ -113,7 +113,7 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
          merfolk simulacrum w:2 / vampire / wraith / wight
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
-MONS:    ancient lich w:20 / tzitzimitl
+MONS:    ancient lich / dread lich / tzitzimitl
 KMONS:   89 = patrolling glowing orange brain
 KMONS:   0 = orange crystal statue
 KMONS:   B = floating eye
@@ -665,7 +665,7 @@ KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
 KMONS:    6 = deep elf master archer ; fire dragon scales | ice dragon scales . \
                                        longbow ego:flaming | longbow ego:freezing . \
                                        arrow . potion of haste | potion of resistance
-KMONS:    7 = lich / ancient lich w:5
+KMONS:    7 = lich w:40 / ancient lich / dread lich
 KMONS:    8 = titan / draconian annihilator w:5
 KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
               quicksilver dragon w:14 / \

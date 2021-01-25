@@ -977,6 +977,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_DREAD_LICH,
+      {
+       { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
+       { SPELL_PARALYSE, 18, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+      }
+    },
 
     // ('M') Mummies.
     {  MST_MUMMY_PRIEST,

@@ -683,7 +683,7 @@ KMONS:  B = orc sorcerer
 KMONS:  C = ogre mage
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich
-KMONS:  F = ancient lich / Boris w:2, ancient lich
+KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
 KFEAT:  yz = .
 COLOUR: y = yellow
 COLOUR: z = lightblue
@@ -949,7 +949,7 @@ MONS:   ogre mage / deep elf mage / wizard / necromancer / merfolk aquamancer / 
         spriggan air mage / orc sorcerer / kobold demonologist / deep elf mage
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
-MONS:   patrolling curse skull, ancient lich
+MONS:   patrolling curse skull, ancient lich / dread lich
 SUBST:  d = def
 NSUBST: D = 6 / *=33., 4 = 1 / 6=4 / 6=5 / 6=45.. / . , 7 = 7 / 75
 MARKER: n = lua:portal_desc {prison="wall"}
@@ -1082,11 +1082,11 @@ MONS:   w:25 orc sorcerer / w:50 deep elf sorcerer / w:25 lich
 : elseif you.absdepth() < 26 then
 MONS:   w:1 orc wizard / w:5 deep elf mage / w:4 naga mage / w:30 wizard / \
         w:4 vampire mage / w:55 ogre mage / w:1 lich
-MONS:   w:50 deep elf sorcerer / w:35 lich / w:15 ancient lich
+MONS:   w:50 deep elf sorcerer / w:35 lich / ancient lich / dread lich
 : else
 MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
         w:3 vampire mage / w:55 ogre mage / w:5 lich
-MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
+MONS:   w:25 deep elf sorcerer / w:50 lich / ancient lich / dread lich
 : end
 ITEM:   any book / w:20 any randbook
 ITEM:   w:18 any magical staff / any wand good_item w:5 / any jewellery
@@ -1288,7 +1288,8 @@ MONS:   soul eater / w:5 reaper, reaper, tzitzimitl / w:5 reaper
 : else
 MONS:   zombie / skeleton / w:5 simulacrum
 MONS:   necromancer / deep elf death mage, \
-        w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich
+        w:12 lich / w:4 ancient lich / w:4 dread lich / deep elf death mage, \
+        lich w:40 / ancient lich / dread lich
 MONS:   reaper / soul eater, reaper, tzitzimitl
 : end
 MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
@@ -2272,7 +2273,7 @@ ORIENT: northwest
 MONS: wizard, ice devil, ice dragon , frost giant, blizzard demon, lich
 KPROP: -Tp =  no_tele_into
 KMONS: I = ice statue
-KMONS: " = ancient lich
+KMONS: " = ancient lich / dread lich
 KMONS: B = blizzard demon
 KMONS: C = lich
 KITEM: " = %

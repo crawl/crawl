@@ -1321,7 +1321,7 @@ ENDMAP
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
 MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
-KMONS:  OL = lich / ancient lich w:1
+KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 NSUBST: L = 1:O / *:L
@@ -1603,7 +1603,7 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
          / very ugly thing / quicksilver dragon / shadow dragon
 MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
          / blizzard demon / executioner / angel / daeva
-KMONS:   R = hellephant / ancient lich / hell sentinel / profane servitor
+KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")

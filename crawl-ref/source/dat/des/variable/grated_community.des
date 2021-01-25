@@ -210,7 +210,7 @@ SUBST: * = "
 : end
 : local occupant = crawl.random2(3)
   : if occupant == 0 then
-MONS:  lich / w:8 ancient lich / w:5 royal mummy
+MONS:  lich / w:4 ancient lich / w:4 dread lich / w:5 royal mummy
 KFEAT: * = altar_kikubaaqudgha / w:4 altar_sif_muna / w:1 altar_yredelemnul
 KITEM: " = gold, any wand / w:15 nothing, any scroll / nothing
 KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor

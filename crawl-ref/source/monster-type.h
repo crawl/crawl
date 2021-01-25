@@ -711,6 +711,9 @@ enum monster_type                      // env.mons[].type
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
     MONS_ANCIENT_LICH,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DREAD_LICH,
+#endif
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
     MONS_CURSE_SKULL,
@@ -1087,6 +1090,7 @@ enum monster_type                      // env.mons[].type
     MONS_FENSTRIDER_WITCH,
     MONS_WILL_O_THE_WISP,
     MONS_TEST_BLOB,
+    MONS_DREAD_LICH,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

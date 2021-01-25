@@ -181,7 +181,7 @@ function sroom_morgue(e)
     end
 
     if you.absdepth() > 24 or crawl.x_chance_in_y(you.absdepth() - 20, 5) then
-        lord_mon = "ancient lich"
+        lord_mon = "ancient lich / dread lich"
     else
         lord_mon = "lich"
     end
@@ -305,10 +305,10 @@ function sroom_magic_class(e)
         mons[12] = "draconian annihilator w:5"
         lord_mon = "draconian shifter / ancient lich / Jory w:1 / " ..
                    "Frederick w:1 / Boris w:1, draconian shifter / " ..
-                   "ancient lich"
+                   "ancient lich / dread lich"
     elseif crawl.x_chance_in_y(absdepth - 20, 5) then
         lord_mon = "ancient lich / Jory w:1 / Frederick w:1 / Boris w:1" ..
-                   ", ancient lich"
+                   ", ancient lich / dread lich"
     else
         lord_mon = "lich / tengu reaver"
     end

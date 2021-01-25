@@ -1153,6 +1153,7 @@ local scary_monsters = {
   {100, "boggart"},
   {100, "lich"},
   {100, "ancient lich"},
+  {100, "dread lich"},
   {100, "desc", "'s ghost"},
   {100, "desc", "' ghost"},
   {100, "desc", "'s illusion"},

@@ -425,12 +425,12 @@ KITEM:   FJL = randbook owner:Kikubaaqudgha disc:necromancy numspells:6 \
 KITEM:   12 = superb_item / star_item
 KMONS:   DEF = player ghost
 KMONS:   HJ1 =  lich
-KMONS:   KL2 =  ancient lich
+KMONS:   KL2 =  ancient lich / dread lich
 # 1/7 chance for 3 ghosts, 2/7 chance for 2 ghosts, 4/7 chance for 1 ghost.
 # Any ghost that doesn't place will place a depth-appropriate lich instead.
 SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
 # For later branches, guarantee at least one ancient lich and upgrade ordinary
-# liches to ancient liches.
+# liches to ancient or dread liches.
 SUBST:   H = HHK, J = JJL
 NSUBST:  1 = 2 / 112
 # 1.5 loot items per ghost/lich total. Mix in good loot scrolls and potions.

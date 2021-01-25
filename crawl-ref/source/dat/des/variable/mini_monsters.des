@@ -3649,7 +3649,7 @@ NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 DEPTH:  D:9-, Depths
 : if you.absdepth() > 24 then
-MONS:   ancient lich w:50 / royal mummy
+MONS:   ancient lich w:25 / dread lich w:25 / royal mummy
 ITEM:   any scroll w:6 / any book
 : elseif you.absdepth() > 20 then
 MONS:   lich w:60 / draconian annihilator w:20 / \
@@ -6656,7 +6656,7 @@ TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  Depths
 WEIGHT: 3
 MONS:   wizard, orange crystal statue / obsidian statue
-KMONS:  3 = lich / ancient lich
+KMONS:  3 = lich w:40 / ancient lich / dread lich
 KITEM:  3 = ring_of_the_mage no_pickup
 KPROP:  32'+ = no_tele_into
 KFEAT:  ' = floor
@@ -7458,24 +7458,26 @@ KMONS:  1 = dancing weapon / deep elf annihilator / deep elf blademaster / \
             deep elf high priest / place:Elf:$ w:27
 : elseif you.in_branch("Crypt") then
 KMONS:  1 = reaper / ancient champion / vampire knight / flayed ghost / \
-            eidolon / revenant / ancient lich w:15 / curse skull w:15 / \
-            place:Crypt:$ w:30
+            eidolon / revenant / ancient lich / dread lich / \
+            curse skull w:15 / \ place:Crypt:$ w:30
 : elseif you.in_branch("Dis") then
 KMONS:  1 = tormentor / hellion / shadow demon / tzitzimitl / \
             ice fiend / brimstone fiend / hell sentinel w:15 / \
             iron giant w:15 / place:Dis:$ w:30
 : elseif you.in_branch("Geh") then
 KMONS:  1 = tormentor / hellion / balrug / brimstone fiend w:15 / \
-            hell sentinel / ancient lich / place:Geh:$ w:20
+            hell sentinel / ancient lich / dread lich / place:Geh:$ w:20
 : elseif you.in_branch("Tar") then
 KMONS:  1 = doom hound w:15 / death drake / bone dragon / tormentor / \
-            shadow demon / tzitzimitl w:15 / ancient lich / place:Tar:$ w:27
+            shadow demon / tzitzimitl w:15 / ancient lich / dread lich / \
+            place:Tar:$ w:27
 : elseif you.in_branch("Coc") then
 KMONS:  1 = shard shrike w:15 / titan / blizzard demon / tormentor / \
-            ice fiend w:15 / ancient lich / place:Coc:$ w:24
+            ice fiend w:15 / ancient lich / dread lich / place:Coc:$ w:24
 : elseif you.in_branch("Zot") then
 KMONS:  1 = nonbase draconian / orb of fire / electric golem / \
-            killer klown /  ancient lich / curse toe / place:Zot:$ w:20
+            killer klown /  ancient lich / dread lich / curse toe / \
+            place:Zot:$ w:20
 # Dungeon and Depths get 8 spawns.
 : else
 KMONS:  1 = 8

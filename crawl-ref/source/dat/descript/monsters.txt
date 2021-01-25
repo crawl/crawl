@@ -993,6 +993,11 @@ draconian stormcaller
 A draconian deriving its thunderous powers and draconic allies from the worship
 of Qazlal.
 %%%%
+dread lich
+
+A lich who has made terrible pacts with demonic forces to augment its dark
+magic.
+%%%%
 dream sheep
 
 A drowsy, fluffy ovine whose coat sparkles with motes of dream dust. It gathers

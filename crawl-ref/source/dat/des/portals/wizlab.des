@@ -730,7 +730,7 @@ KMONS:      | = hell sentinel / brimstone fiend / tzitzimitl /\
 :           else
 KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
 KMONS:      * = zombie / mummy priest w:6
-KMONS:      | = ancient lich / royal mummy
+KMONS:      | = ancient lich / dread lich / royal mummy w:20
 :           set_random_mon_list("place:Depths:1 zombie / zombie / guardian mummy")
 :           end
 #           Loot.

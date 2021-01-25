@@ -467,7 +467,8 @@ ORIENT:  float
 ITEM:    potion of haste / scroll of blinking
 ITEM:    potion of heal wounds / scroll of teleportation
 MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
-MONS:    caustic shrike / juggernaut / titan, orb of fire / ancient lich
+MONS:    caustic shrike / juggernaut / titan
+MONS:    orb of fire / ancient lich w:5 / dread lich w:5
 MONS:    ice statue / oklob plant, w:5 orange crystal statue / obsidian statue
 SHUFFLE: PS, QR
 NSUBST:  Q = Q / ', R = R / '
@@ -583,11 +584,11 @@ MONS: revenant / curse skull
 SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: 1 = 12 / 1, - = 3=1 / 6=1- / -
 :     elseif you.in_branch("Depths") then
-MONS: ancient lich
+MONS: ancient lich / dread lich
 SUBST:  fgh = |*, i = *%, j = %$--
 NSUBST: 1 = 2=12 / 1, - = 3=1 / 8=1- / -
 :     elseif you.in_branch("Zot") then
-MONS: ancient lich, curse toe
+MONS: ancient lich / dread lich, curse toe
 SUBST:  fghij = |*
 NSUBST: 1 = 12 / 123 / 1, - = 4=1 / 8=1- / -
 # Lair branches
@@ -762,7 +763,7 @@ MONS:   spectre place:Depths:5 / simulacrum place:Depths:5 / \
         necromancer / vampire knight / vampire mage / sphinx / flayed ghost w:5
 MONS:   lich / deep elf death mage / juggernaut simulacrum / \
         juggernaut spectre / caustic shrike simulacrum / caustic shrike spectre
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 SUBST:  fgh = |*, i = *, j = %$
 NSUBST: D = 5=0 / 6=0- / 2 / 4=2- / 3- / -
 : elseif you.in_branch("Zot") then
@@ -770,7 +771,8 @@ MONS:   simulacrum place:Zot:5 / spectre place:Zot:5 / shadow dragon / \
         death cob
 MONS:   golden dragon simulacrum / golden dragon spectre / \
         quicksilver dragon simulacrum / quicksilver dragon spectre / \
-        killer klown simulacrum / killer klown spectre / ancient lich
+        killer klown simulacrum / killer klown spectre / \
+        ancient lich / dread lich
 MONS:   curse toe
 SUBST:  fghij = |*, 2 = 12
 NSUBST: D = 5=0 / 7=0- / 2=2 / 2=2- / 3- / -
@@ -948,7 +950,7 @@ MONS:   lich
 MONS:   vampire knight / vampire mage
 MONS:   flayed ghost / juggernaut simulacrum
 MONS:   deep elf death mage
-MONS:   ancient lich
+MONS:   ancient lich / dread lich
 : end
 : ghost_good_loot(_G)
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / 3 / -
@@ -1909,12 +1911,12 @@ KITEM:   FJL = randbook owner:Kikubaaqudgha disc:necromancy numspells:6 \
 KITEM:   12 = superb_item / star_item
 KMONS:   DEF = player ghost
 KMONS:   HJ1 =  lich
-KMONS:   KL2 =  ancient lich
+KMONS:   KL2 =  ancient lich / dread lich
 # 1/7 chance for 3 ghosts, 2/7 chance for 2 ghosts, 4/7 chance for 1 ghost.
 # Any ghost that doesn't place will place a depth-appropriate lich instead.
 SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
-# For later branches, guarantee at least one ancient lich and upgrade ordinary
-# liches to ancient liches by depth.
+# For later branches, guarantee at least one ancient or dread lich and
+# upgrade ordinary liches by depth.
 : if you.in_branch("Crypt") then
 SUBST:   H = HHK, J = JJL
 NSUBST:  1 = 2 / 112
@@ -2434,7 +2436,7 @@ MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
         / daeva god:Xom / executioner / profane servitor
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel
 SUBST:  fgh = |*, i = *, j= %$
 NSUBST: - = Hqr / 4=1 / 4=1. / 2=2 / 2=2. / 3 / 3. / 4 / 4. / .
 : elseif you.in_branch("Zot") then
@@ -2451,7 +2453,7 @@ MONS:   draconian shifter / daeva god:Xom / executioner / profane servitor \
         / killer klown
 MONS:   lurking horror / wretched star / hellion / apocalypse crab \
         / starcursed mass
-MONS:   ancient lich / hellephant / hell sentinel
+MONS:   ancient lich / dread lich / hellephant / hell sentinel
 SUBST:  fghij = |*
 NSUBST: - = qr / 4=1 / 4=1. / 2=2 / 3=2. / 3 / 3. / 4 / 2=4. / .
 : end

@@ -203,7 +203,7 @@ KMONS:   89 = killer klown
 KMONS:   AB = curse toe
 KMONS:   CD = electric golem
 KMONS:   E = orb of fire
-KMONS:   F = ancient lich
+KMONS:   F = ancient lich / dread lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
              fire dragon / ice dragon / storm dragon / bone dragon w:5

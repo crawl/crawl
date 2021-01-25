@@ -467,6 +467,7 @@ static const pop_entry pop_vaults[] =
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_ELEMENTALIST },
   { 12, 12,   16, FLAT, MONS_ANCIENT_LICH },
+  { 12, 12,   16, FLAT, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -494,6 +495,7 @@ static const pop_entry pop_crypt[] =
   {  2,  7,   40, SEMI, MONS_REAPER },
   {  2,  7,   55, PEAK, MONS_LICH },
   {  3,  7,   15, PEAK, MONS_ANCIENT_LICH },
+  {  3,  7,   15, PEAK, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -509,6 +511,7 @@ static const pop_entry pop_tomb[] =
   {  4,  5,    3, RISE, MONS_ROYAL_MUMMY },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
+  {  3,  5,    3, SEMI, MONS_DREAD_LICH },
   {  1,  5,  250, FLAT, MONS_USHABTI },
   {  1,  5,  150, FLAT, MONS_DEATH_SCARAB },
   {  3,  5,   12, SEMI, MONS_BENNU },
@@ -816,6 +819,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    9, FLAT, MONS_REVENANT },
   {  1,  5,   46, FLAT, MONS_LICH },
   {  1,  5,    8, FLAT, MONS_ANCIENT_LICH },
+  {  1,  5,    8, FLAT, MONS_DREAD_LICH },
   // Thematic branch representatives, outsiders
   {  1,  5,    8, FLAT, MONS_ORC_SORCERER },
   {  1,  5,    4, FLAT, MONS_DEEP_ELF_MAGE },
@@ -1082,6 +1086,7 @@ static const pop_entry pop_depths[] =
   {  5, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
   {  6, 14,   50, FLAT, MONS_TITAN },
   { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },
+  { 10, 14,   10, FLAT, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
