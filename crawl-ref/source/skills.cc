@@ -96,7 +96,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 #if TAG_MAJOR_VERSION == 34
     {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
 #endif
-    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
+    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
     {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
@@ -1671,16 +1671,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
-        case SK_SUMMONINGS:
-            // don't call good disciples hellbinders or demonologists
-            if (is_good_god(god))
-            {
-                if (skill_rank == 4)
-                    result = "Worldbinder";
-                else if (skill_rank == 5)
-                    result = "Planerender";
-            }
-            break;
 
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
