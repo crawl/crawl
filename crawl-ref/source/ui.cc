@@ -2387,12 +2387,12 @@ void PlayerDoll::_pack_doll()
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
     if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)

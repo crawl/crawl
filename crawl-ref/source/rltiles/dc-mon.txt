@@ -1141,7 +1141,7 @@ pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_centaur TRAN_STATUE_CENTAUR
+statue_form_palentonga TRAN_STATUE_PALENTONGA
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
@@ -1157,7 +1157,7 @@ dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_centaur TRAN_LICH_CENTAUR
+lich_form_palentonga TRAN_LICH_PALENTONGA
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
