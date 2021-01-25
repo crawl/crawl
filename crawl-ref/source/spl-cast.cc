@@ -2765,7 +2765,7 @@ void do_demonic_magic(int pow, int rank)
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
-        if (mons->check_res_magic(pow) <= 0)
+        if (mons->check_willpower(pow) <= 0)
             mons->paralyse(&you, 1 + roll_dice(1,4));
     }
 }
