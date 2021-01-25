@@ -1010,11 +1010,11 @@ static const mutation_def mut_data[] =
 
   {"Spells you cast may paralyse adjacent enemies.",
    "Spells you cast may paralyse nearby enemies.",
-   "Spells you cast and evocables you use may paralyse nearby enemies."},
+   "Spells you cast and wands you use may paralyse nearby enemies."},
 
   {"A menacing aura infuses your magic.",
    "Your magic grows more menacing.",
-   "Your evocations become infused with your menacing aura."},
+   "Your wands become infused with your menacing aura."},
 
   {"","",""},
 },
