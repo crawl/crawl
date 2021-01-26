@@ -895,20 +895,25 @@ deep elf knight
 
 A battle-hardened deep elf fighter.
 %%%%
-deep elf mage
-
-A deep elf learned in the ways of murderous magic. It is capable of casting a
-wide array of harmful spells.
-%%%%
 deep elf master archer
 
 A deep elf archer who has devoted a lifetime to the mastery of archery,
 dismissing magic as a frivolous distraction.
 %%%%
+deep elf pyromancer
+
+A deep elf learned in the ways of fiery magic. It is capable of casting a
+wide array of scorching spells.
+%%%%
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal
 arcane abilities.
+%%%%
+deep elf zephyrmancer
+
+An elf with a singular focus on the magic of the air, leaving little time to
+study anything else.
 %%%%
 deep dwarf
 

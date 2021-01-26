@@ -392,8 +392,9 @@ enum monster_type                      // env.mons[].type
     MONS_DEEP_ELF_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEEP_ELF_ARCHER,
+    MONS_DEEP_ELF_AIR_MAGE,
 #endif
-    MONS_DEEP_ELF_MAGE,
+    MONS_DEEP_ELF_FIRE_MAGE,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
@@ -1091,6 +1092,7 @@ enum monster_type                      // env.mons[].type
     MONS_WILL_O_THE_WISP,
     MONS_TEST_BLOB,
     MONS_DREAD_LICH,
+    MONS_DEEP_ELF_AIR_MAGE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

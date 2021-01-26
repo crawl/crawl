@@ -240,7 +240,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 psyche / w:1 joseph",
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
-                "w:2 place:Elf / w:24 deep elf mage",
+                "w:2 place:Elf / w:12 deep elf pyromancer / w:12 deep elf zephyrmancer",
                 "place:Lair / w:5 yak / w:3 komodo dragon / w:3 basilisk /\
                     w:1 death yak / river rat / hell rat / w:2 dream sheep",
                 "w:20 merfolk / w:5 merfolk siren / wyvern w:15 / centaur /\
@@ -358,7 +358,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
                 "w:15 ugly thing / w:1 very ugly thing",
                 "vampire mosquito / hornet",
-                "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
+                "ogre mage / w:2 deep elf pyromancer / w:2 deep elf zephyrmancer / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
                 "rime drake w:5 / swamp drake / swamp dragon /\
                     acid dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
@@ -413,7 +413,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",
                 "ugly thing w:14 / w:1 very ugly thing / w:1 wretched star",
-                "ogre mage / w:5 deep elf mage / vampire mage / naga mage /\
+                "ogre mage / w:2 deep elf pyromancer / w:2 deep elf zephyrmancer / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
                 "cyclops / stone giant / w:5 frost giant / w:5 fire giant /\
                     w:1 titan",

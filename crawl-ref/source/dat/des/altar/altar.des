@@ -216,7 +216,7 @@ ENDMAP
 # to Beogh. Only one of these can come up.
 NAME:  david_defended_altar_elf
 DEPTH: D:7-14, Elf
-MONS:  patrolling deep elf mage / w:30 nothing
+MONS:  patrolling deep elf pyromancer / w:30 nothing
 TAGS:  uniq_defended_altar transparent
 MAP
 ccccc...

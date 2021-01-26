@@ -16,7 +16,7 @@ function base_monster_setup(e)
            floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast / deep elf mage /\
+           necrophage / quasit / zombie / sky beast /\
            bullfrog / mummy / orc warrior band / wight band /\
            big kobold band / warg / wolf / black bear / river rat /\
            flying skull / iron imp / white imp / ufetubus / fire bat")
@@ -27,7 +27,7 @@ function base_monster_setup(e)
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
-           deep elf mage / boulder beetle /\
+           deep elf pyromancer / deep elf zephyrmancer / boulder beetle /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            redback w:20 / phantasmal warrior / cane toad / hell rat /\
@@ -46,11 +46,10 @@ function base_monster_setup(e)
            simulacrum / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
-           deep elf mage band w:6 /\
            great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
            necromancer band w:5 / orc knight band w:5 /\
            harpy band w:5 / fire crab / redback band /\
-           wind drake / deep elf mage w:3 / shapeshifter / zombie /\
+           wind drake / deep elf pyromancer w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / swamp dragon /\
            merfolk avatar / alligator snapping turtle / anaconda / nagaraja /\
@@ -116,7 +115,7 @@ function base_monster_setup(e)
   e.kmons("M = stone giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
-  e.kmons("O = deep elf mage w:30 /\
+  e.kmons("O = deep elf pyromancer w:15 / deep elf zephyrmancer w:15 /\
            deep elf annihilator / deep elf knight band / deep elf death mage /\
            deep elf high priest / deep elf knight / deep elf sorcerer /\
            deep elf demonologist /\

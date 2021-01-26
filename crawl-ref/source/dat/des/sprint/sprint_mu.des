@@ -230,7 +230,7 @@ TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
-KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
+KMONS: e = patrolling deep elf pyromancer ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds
 KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
@@ -411,10 +411,11 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf mage w:30
+MONS: deep elf knight / deep elf pyromancer w:15 / deep elf zephyrmancer w:15
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:2 deep elf pyromancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      w:2 deep elf zephyrmancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\

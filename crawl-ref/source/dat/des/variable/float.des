@@ -2381,9 +2381,9 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
-         rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
-         vampire / deep elf mage w:5
+         deep elf pyromancer / deep elf zephyrmancer / deep troll / \
+         boggart w:5 / efreet w:5 / rakshasa w:5 / wizard / necromancer / \
+         spriggan rider w:5 / vampire
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
@@ -2514,7 +2514,7 @@ KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
 KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
            deep elf annihilator w:5 / deep elf death mage / \
-           deep elf mage / deep elf sorcerer
+           deep elf pyromancer / deep elf zephyrmancer / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2574,7 +2574,7 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / deep elf archer
 MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
@@ -3067,7 +3067,7 @@ MONS:    necromancer ; \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, efreet, deep elf mage
+MONS:    ettin simulacrum, efreet, deep elf pyromancer / deep elf zephyrmancer
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -4051,7 +4051,8 @@ MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS:    eye of draining
-MONS:    boggart / kobold demonologist / deep elf mage / tengu conjurer
+MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
+         deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage
 MONS:    deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
 SUBST:   4 = 23, 5 = 4
@@ -4072,7 +4073,8 @@ MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
 MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Elf") then
-MONS:    water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
+MONS:    water elemental / shapeshifter
+MONS:    deep elf pyromancer / deep elf zephyrmancer / w:2 orc sorcerer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf death mage
 MONS:    glowing shapeshifter
@@ -8093,7 +8095,7 @@ DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.in_branch("D") then
-MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
+MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, wizard
 : else
 MONS: wizard w:5 / fire elemental w:5 / nothing, lich
 : end
@@ -9398,15 +9400,17 @@ KPROP:   .$*def123456 = bloody w:5 / nothing
 : if you.in_branch("D") then
 MONS:    patrolling ettin / patrolling iron troll
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
-MONS:    ogre mage / wizard / deep elf mage / boggart / necromancer
+MONS:    ogre mage / wizard / deep elf pyromancer / deep elf zephyrmancer / \
+         boggart / necromancer
 : elseif you.in_branch("Orc") then
 MONS:    patrolling stone giant / patrolling ettin
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
          / orc knight
 # The orcs mostly offer naughty elves to Trog's Sanctum, with a few naughty
 # orcs and ogres thrown in.
-MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf mage w:60 \
-         / deep elf sorcerer / deep elf demonologist / deep elf annihilator
+MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf pyromancer w:30 / \
+         deep elf zephyrmancer w:30 / deep elf sorcerer / \
+         deep elf demonologist / deep elf annihilator
 KMONS:   7 = deep elf elementalist
 SUBST:   5 = 7, " = m
 : elseif you.in_branch("Vaults") then

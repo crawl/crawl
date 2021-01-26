@@ -132,7 +132,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :     [65 - you.absdepth() * 3] =
 :         { "cyclops", "tengu warrior", "centaur warrior", },
 :     [42 - you.absdepth() * 2] =
-:         { "kobold demonologist", "tengu conjurer", "deep elf mage",
+:         { "kobold demonologist", "tengu conjurer", "deep elf pyromancer", "deep elf zephyrmancer",
 :           "necromancer", "yaktaur", "Azrael", "Kirke", },
 :     [26 - you.absdepth()] =
 :         { "boggart", "orc knight", "ogre mage", "skeletal warrior",

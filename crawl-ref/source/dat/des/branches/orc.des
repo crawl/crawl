@@ -680,8 +680,8 @@ MONS:    patrolling orc warlord
 MONS:    patrolling orc sorcerer
 MONS:    patrolling orc high priest
 MONS:    deep elf knight / deep elf archer
-MONS:    deep elf mage / nothing
-MONS:    deep elf mage / nothing w:20
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:40
 ITEM:    good_item scimitar / good_item chain mail
 SUBST:   = : +x
 MAP

@@ -307,8 +307,9 @@ NAME:   minmay_elf_outpost
 TAGS:   no_rotate
 ORIENT: northwest
 DEPTH:  D:12-
-MONS:   deep elf mage / nothing, deep elf knight / deep elf archer
-MONS:   deep elf mage w:30 / nothing
+MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:20
+MONS:   deep elf knight / deep elf archer
+MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 x..3..............|x1...
@@ -945,8 +946,9 @@ KPROP:  -47 = no_tele_into
 ITEM:   any jewellery randart, scroll of acquirement
 : item(dgn.randart_aux_armour)
 MONS:   human att:neutral, silent spectre, patrolling soul eater
-MONS:   ogre mage / deep elf mage / wizard / necromancer / merfolk aquamancer / \
-        spriggan air mage / orc sorcerer / kobold demonologist / deep elf mage
+MONS:   ogre mage / deep elf pyromancer / deep elf zephyrmancer / wizard / \
+         necromancer / merfolk aquamancer / \
+        spriggan air mage / orc sorcerer / kobold demonologist
 MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
 MONS:   patrolling curse skull, ancient lich / dread lich
@@ -1073,18 +1075,22 @@ FTILE:  "_ = FLOOR_MARBLE
 KFEAT:  _ = altar_sif_muna
 SUBST:  Y = U, U = U:4 V:1 T:1
 : if you.absdepth() < 16 then
-MONS:   w:20 orc wizard / w:40 deep elf mage / w:30 naga mage / w:10 vampire mage
+MONS:   w:20 orc wizard / w:20 deep elf pyromancer / \
+        w:20 deep elf zephyrmancer / w:30 naga mage / w:10 vampire mage
 MONS:   w:2 orc sorcerer / w:1 deep elf sorcerer
 : elseif you.absdepth() < 21 then
-MONS:   w:5 orc wizard / w:25 deep elf mage / w:15 naga mage / w:25 wizard / \
+MONS:   w:5 orc wizard / w:15 deep elf pyromancer / deep elf zephyrmancer / \
+        w:15 naga mage / w:25 wizard / \
         w:10 vampire mage / w:20 ogre mage
 MONS:   w:25 orc sorcerer / w:50 deep elf sorcerer / w:25 lich
 : elseif you.absdepth() < 26 then
-MONS:   w:1 orc wizard / w:5 deep elf mage / w:4 naga mage / w:30 wizard / \
+MONS:   w:1 orc wizard / w:1 deep elf pyromancer / w:5 deep elf zephyrmancer / \
+        w:4 naga mage / w:30 wizard / \
         w:4 vampire mage / w:55 ogre mage / w:1 lich
 MONS:   w:50 deep elf sorcerer / w:35 lich / ancient lich / dread lich
 : else
-MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
+MONS:   w:2 deep elf pyromancer / w:2 deep elf zephyrmancer / \
+        w:2 naga mage / w:30 wizard / \
         w:3 vampire mage / w:55 ogre mage / w:5 lich
 MONS:   w:25 deep elf sorcerer / w:50 lich / ancient lich / dread lich
 : end
@@ -1213,11 +1219,13 @@ KFEAT:  _ = altar_vehumet
 MONS:   statue hd:12 spells:orb_of_destruction.62.magical \
         tile:mons_statue_mage col:vehumet name:conjurer n_adj
 : if you.absdepth() < 22 then
-MONS:   w:6 deep elf mage / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
-MONS:   w:3 deep elf annihilator / w:1 deep elf mage
+MONS:   w:3 deep elf pyromancer / w:3 deep elf zephyrmancer / w:2 wizard / \
+        w:1 spriggan air mage / w:1 deep elf annihilator
+MONS:   w:3 deep elf annihilator / w:1 deep elf zephyrmancer
 KMONS:  5 = nikola, deep elf annihilator
 : else
-MONS:   w:4 deep elf mage / w:2 wizard / w:2 spriggan air mage / w:2 deep elf annihilator
+MONS:   deep elf pyromancer / deep elf zephyrmancer / wizard / \
+        spriggan air mage / deep elf annihilator
 MONS:   w:2 deep elf annihilator / w:1 draconian annihilator
 KMONS:  5 = frederick, boris, draconian annihilator
 : end
@@ -1369,7 +1377,7 @@ SUBST:   BDFHJLNPR = .
     mons = add_mons(mons, "lich", peak(depth, 22, 30, 66))
     mons = add_mons(mons, "hell knight band", peak(depth, 23, 29, 25))
     mons = add_mons(mons, "storm dragon", peak(depth, 23, 31, 89))
-    mons = add_mons(mons, "deep elf mage", flat(depth, 26, 28, 6))
+    mons = add_mons(mons, "deep elf pyromancer / deep elf zephyrmancer", flat(depth, 26, 28, 6))
     mons = add_mons(mons, "golden dragon", peak(depth, 29, 33, 8))
     mons = add_mons(mons, "titan", peak(depth, 28, 34, 25))
     mons = add_mons(mons, "deep elf annihilator", peak(depth, 30, 31, 4))

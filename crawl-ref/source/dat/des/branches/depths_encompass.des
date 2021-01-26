@@ -204,7 +204,8 @@ ORIENT:  encompass
 : local brnd = crawl.random2(3)
 : if brnd == 0 then
 MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
-        deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5 / nothing
+        deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / \
+        deep elf archer w:5 / nothing
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
 MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
@@ -633,7 +634,8 @@ default-depth: Depths:2-, !Depths:$
 NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
-MONS:     deep elf mage w:12 / naga mage / hell knight / efreet w:5 / \
+MONS:     deep elf pyromancer w:6 / deep elf zephyrmancer w:6 / naga mage / \
+          hell knight / efreet w:5 / \
           rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
           centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . \

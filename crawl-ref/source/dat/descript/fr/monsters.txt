@@ -668,11 +668,6 @@ deep elf knight
 
 Un combattant elfe profond aguerri.
 %%%%
-deep elf mage
-
-Un elfe profond ayant appris la magie meurtrière. Les mages elfes profonds
-connaissent tout un large panel de sorts nocifs.
-%%%%
 deep elf master archer
 
 Un elfe profond archer qui a dévoué sa vie à la maîtrise de l'archerie,

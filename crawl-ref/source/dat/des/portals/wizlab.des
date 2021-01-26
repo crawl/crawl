@@ -981,9 +981,7 @@ ENDMAP
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
-MONS:       deep elf mage spells:magic_dart.11.wizard;\
-                                 force_lance.22.wizard;\
-                                 iskenderun's_battlesphere.22.wizard
+MONS:       tengu conjurer
 MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
             tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
@@ -1005,7 +1003,7 @@ LROCKTILE:  wall_zot_magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-:           set_random_mon_list("purple draconian / deep elf mage")
+:           set_random_mon_list("purple draconian / tengu conjurer")
 :           wizlab_setup(_G)
 epilogue{{
             wizlab_milestone(_G, "Iskenderun's Mystic Tower")
@@ -1303,7 +1301,7 @@ ENDMAP
 NAME:    wizlab_golubria
 TAGS:    no_pool_fixup
 KMONS:   1 = spatial vortex w:7 / blink frog / nothing w:5
-KMONS:   2 = deep elf mage w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
+KMONS:   2 = deep elf knight w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
              rakshasa w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
              boggart ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing /  \
              wizard ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing
@@ -1400,7 +1398,7 @@ for i = 1, #trans_glyph do
                transp_dest_loc("loc_" .. tostring(i)))
 end
 
-set_random_mon_list([[rakshasa w:15 / deep elf mage w:15 / wizard w:15 / spatial vortex w:15 /
+set_random_mon_list([[rakshasa w:15 / deep elf knight w:15 / wizard w:15 / spatial vortex w:15 /
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / glowing orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /

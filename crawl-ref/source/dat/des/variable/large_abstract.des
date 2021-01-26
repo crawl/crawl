@@ -1029,8 +1029,8 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:300 / deep elf mage w:120 / orc wizard / \
-        orc sorcerer w:35 / ogre mage w:35 / nothing w:500
+MONS:   wizard w:300 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
+        orc wizard / orc sorcerer w:35 / ogre mage w:35 / nothing w:500
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \

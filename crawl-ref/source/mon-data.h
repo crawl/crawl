@@ -717,7 +717,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEEP_ELF_KNIGHT, 'e', CYAN, "deep elf knight",
+    MONS_DEEP_ELF_KNIGHT, 'e', BLUE, "deep elf knight",
     M_WARM_BLOOD | M_FIGHTER | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_ELF, MONS_ELF, MH_NATURAL, 80,
@@ -770,13 +770,26 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEEP_ELF_MAGE, 'e', MAGENTA, "deep elf mage",
+    MONS_DEEP_ELF_AIR_MAGE, 'e', CYAN, "deep elf zephyrmancer",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     12, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     9, 405,
-    0, 13, MST_NO_SPELLS, true, S_SHOUT,
+    0, 13, MST_DEEP_ELF_AIR_MAGE, true, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
+    {TILEP_MONS_DEEP_ELF_MAGE}, TILE_ERROR
+},
+
+{
+    MONS_DEEP_ELF_FIRE_MAGE, 'e', RED, "deep elf pyromancer",
+    M_WARM_BLOOD | M_SPEAKS,
+    MR_NO_FLAGS,
+    12, MONS_ELF, MONS_ELF, MH_NATURAL, 40,
+    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    9, 405,
+    0, 13, MST_DEEP_ELF_FIRE_MAGE, true, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
     {TILEP_MONS_DEEP_ELF_MAGE}, TILE_ERROR

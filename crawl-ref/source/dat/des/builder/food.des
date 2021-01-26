@@ -149,7 +149,7 @@ TAGS:    extra patrolling no_rotate no_vmirror
 # D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
 KMONS:   A = kobold
 KMONS:   B = orc
-KMONS:   C = deep elf mage
+KMONS:   C = deep elf pyromancer / deep elf zephyrmancer
 KMONS:   D = spriggan
 KMONS:   E = merfolk
 KMONS:   F = human

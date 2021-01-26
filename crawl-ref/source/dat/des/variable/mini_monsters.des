@@ -1391,7 +1391,7 @@ TAGS:    transparent
 KMASK:   1>"% = opaque
 KFEAT:   " = floor
 DEPTH:   D:11-, Orc, Elf
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 SHUFFLE: _?/bb, _'/ww
 SUBST:   ?_' = .
 NSUBST:  1 = 2:% / 2 = 1% / *:1
@@ -1543,7 +1543,7 @@ ENDMAP
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
-MONS:    wizard / deep elf mage
+MONS:    wizard / deep elf pyromancer / deep elf zephyrmancer
 ITEM:    any potion
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
@@ -1573,7 +1573,7 @@ DEPTH:  D:4-, Elf
 WEIGHT: 7
 NSUBST: 1 = 2:1 / *:.
 : if you.in_branch("Elf") then
-MONS:   deep elf mage
+MONS:   deep elf pyromancer / deep elf zephyrmancer
 : else
 MONS:   goblin / hobgoblin / kobold / orc
 : end
@@ -1594,7 +1594,7 @@ SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
 : if you.in_branch("Elf") then
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 : else
 MONS:    goblin / hobgoblin / kobold / orc
 : end
@@ -1681,7 +1681,7 @@ ENDMAP
 NAME:    billiards_dpeg
 TAGS:    transparent
 DEPTH:   D:9-, Elf
-MONS:    orc wizard, deep elf mage
+MONS:    orc wizard, deep elf pyromancer / deep elf zephyrmancer
 NSUBST:  X = 1:+ / *:x
 : if you.absdepth() > 11 then
 SUBST:   1 = 2, * = * |
@@ -1828,7 +1828,7 @@ ENDMAP
 NAME:    hangedman_summoners_spam
 TAGS:    no_monster_gen patrolling
 DEPTH:   Depths, Elf, Crypt, Abyss
-MONS:    boggart, orc high priest, kobold demonologist, deep elf mage
+MONS:    boggart, orc high priest, kobold demonologist
 MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings w:20 / grand grimoire w:5 / \
@@ -1872,7 +1872,7 @@ MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
 KMONS:   0 = orc ; robe . wand of enslavement | wand of flame . \
                    potion of invisibility | potion of haste | nothing w:980
-KMONS:   89 = deep elf mage
+KMONS:   89 = deep elf pyromancer / deep elf zephyrmancer
 KITEM:   8d = robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
@@ -1908,7 +1908,7 @@ ENDMAP
 NAME:  guppyfry_early_elven_hall
 DEPTH: D:6-9
 TAGS:  patrolling no_monster_gen transparent
-MONS:  deep elf mage, plant
+MONS:  deep elf pyromancer / deep elf zephyrmancer, plant
 ITEM:  any scroll / any potion / any book
 SUBST: - = 2....GTd$%
 MARKER: H = lua:props_marker { stop_explore = "statue" }
@@ -1963,7 +1963,9 @@ SUBST:   ? = 123d
 : if you.in_branch("Snake") then
 MONS:    naga, naga warrior, naga mage w:9 / nagaraja w:1
 : elseif you.in_branch("Elf") then
-MONS:    deep elf mage, deep elf knight / deep elf archer, deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
+MONS:    deep elf knight / deep elf archer
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 : elseif you.in_branch("Orc") then
 MONS:    orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else
@@ -2083,8 +2085,8 @@ NAME:  grunt_absolute_annihilation
 DEPTH: Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
-MONS:    deep elf mage / tengu conjurer / wizard / orc sorcerer / \
-         naga mage / ogre mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer / tengu conjurer / \
+         wizard / orc sorcerer / naga mage / ogre mage
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
@@ -3660,9 +3662,9 @@ MONS:   deep elf annihilator w:30 / deep elf sorcerer w:20 / \
         deep elf demonologist / deep elf death mage
 ITEM:   any scroll / any book w:6
 : else
-MONS:   wizard w:50 / necromancer w:20 / deep elf mage w:40 / \
-        orc sorcerer / ogre mage / naga mage / vampire mage / \
-        kobold demonologist w:5
+MONS:   wizard w:50 / necromancer w:20 / deep elf pyromancer w:20 / \
+        deep elf zephyrmancer w:20 / orc sorcerer / ogre mage / naga mage / \
+        vampire mage / kobold demonologist w:5
 ITEM:   any scroll / any book w:3
 : end
 MAP
@@ -5157,7 +5159,7 @@ NAME:   kennysheep_underground_church
 TAGS:   no_pool_fixup misc_elf_vault transparent
 DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
-MONS:   deep elf high priest, deep elf mage
+MONS:   deep elf high priest, deep elf pyromancer / deep elf zephyrmancer
 :else
 MONS:   draconian stormcaller, base draconian
 :end
@@ -6834,7 +6836,7 @@ ENDMAP
 NAME:    minmay_guarded_unrand_prune
 TAGS:    transparent no_monster_gen
 DEPTH:   D:12-
-MONS:    deep elf mage / ogre mage / wizard / \
+MONS:    deep elf pyromancer / deep elf zephyrmancer / ogre mage / wizard / \
          kobold demonologist w:2 / vampire mage w:2 / naga mage w:2
 NSUBST:  1 = 6:1 / 10=1.... / .
 ITEM:    glaive_of_prune no_pickup

@@ -2610,27 +2610,10 @@ monster_type random_demonspawn_job()
 //
 //     (is_unclean_spell() || is_chaotic_spell())
 //
-// FIXME: This is not true for one set of spellbooks; MST_WIZARD_I
-// contains the unholy and chaotic Banishment spell, but the other
-// MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
-// chaotic spells.
-//
-// If a monster has only one spellbook, it is specified in mon-data.h.
-// If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
-// and the books are accounted for here.
 static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 {
-    switch (mon_type)
-    {
-    case MONS_DEEP_ELF_MAGE:
-        return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
-                 MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
-                 MST_DEEP_ELF_MAGE_V, MST_DEEP_ELF_MAGE_VI };
-
-    default:
-        return { static_cast<mon_spellbook_type>(
-                     get_monster_data(mon_type)->sec) };
-    }
+    return { static_cast<mon_spellbook_type>(
+                 get_monster_data(mon_type)->sec) };
 }
 
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)

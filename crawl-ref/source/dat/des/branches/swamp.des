@@ -2528,7 +2528,8 @@ TAGS:   no_monster_gen no_rotate no_vmirror
 KITEM:  O = decaying rune of zot
 MONS:   fenstrider witch, green death / reaper / blizzard demon
 MONS:   neqoxec / soul eater / sixfirhy, orange demon / hellwing / chaos spawn
-MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf mage / wizard
+MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
+        deep elf zephyrmancer w:5 / wizard
 SUBST:  ' = W:55 .:15 4:5, 4 = 049
 KFEAT:  B = stone_arch
 KFEAT:  a = c
