@@ -3755,7 +3755,7 @@ TAGS: no_item_gen no_monster_gen
 ORIENT: float
 KPROP: w;W = no_tele_into
 MONS: kobold ; club / kobold ; dagger, hobgoblin ; club
-MONS: big kobold ; club | w:3 dagger ego:venom | w:3 dagger ego:draining \
+MONS: kobold brigand ; club | w:3 dagger ego:venom | w:3 dagger ego:draining \
                    | w:3 dagger ego:speed
 NSUBST: - = 2:1 / 2=12., " = 3:1 / 3=12., ' = 1:3 / 1=3. / 1=1., ` = 1=*% / *:%
 SUBST: ; = WWWw
@@ -3776,7 +3776,7 @@ TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
-MONS: kobold / big kobold w:6, ooze / jelly, slime creature
+MONS: kobold / kobold brigand w:6, ooze / jelly, slime creature
 : else
 MONS: kobold, ooze, jelly
 : end
@@ -4582,7 +4582,7 @@ DEPTH:  D:8-12
 ORIENT: float
 KMONS:  1 = kobold demonologist
 KMONS:  2 = shadow imp
-KMONS:  k = kobold / big kobold w:3
+KMONS:  k = kobold / kobold brigand w:3
 KMONS:  u = kobold skeleton / kobold zombie
 KITEM:  ?1 = kobold skeleton
 : dgn.delayed_decay(_G, '?1', 'kobold skeleton')

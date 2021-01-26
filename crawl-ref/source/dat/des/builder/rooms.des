@@ -53,7 +53,7 @@ function sroom_kobold_lair(e)
 
     local big_freq   = 3 + level_mons
     local small_freq = 12 - big_freq
-    local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
+    local mon = "kobold w:" .. small_freq .. " / kobold brigand w:" .. big_freq
 
     lord_mon = "kobold demonologist"
 

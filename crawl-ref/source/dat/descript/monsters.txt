@@ -634,10 +634,6 @@ A sacred, self-created sunbird, representative of rebirth. It has ascended
 past the cycles of life and death, and calls upon aspects of both, rising forth
 from death in a burst of unholy flame.
 %%%%
-big kobold
-
-A kobold that is bigger and tougher than the ordinary kobold, and often armed.
-%%%%
 black bear
 
 A small black bear. Like all ursines, it will become enraged if badly hurt or
@@ -1550,6 +1546,11 @@ kobold
 A small, greyish creature with the look and temperament of a feral dog. No one
 knows for sure where kobolds come from, but ancient demon-gods, evil spirits,
 and meddling wizards have all been suggested as culprits.
+%%%%
+kobold brigand
+
+A kobold that is bigger and tougher than the ordinary kobold, with a penchant
+for underhanded tactics.
 %%%%
 kobold demonologist
 

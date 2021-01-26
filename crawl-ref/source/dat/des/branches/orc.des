@@ -527,7 +527,7 @@ NAME:   kennysheep_orc_monster_closet_entryway
 TAGS:   orc_entry
 KFEAT:  O = enter_orcish_mines
 MONS:   gnoll / gnoll sergeant / orc warrior / orc w:15 /\
-                big kobold / ogre
+                kobold brigand / ogre
 MONS:   troll
 MAP
 xxxxxxx

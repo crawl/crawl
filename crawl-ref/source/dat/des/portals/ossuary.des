@@ -325,7 +325,7 @@ ITEM:    any scroll w:2 / any scroll q:2 w:3 / \
          any potion w:4 / any potion q:2 w:6
 MONS:    mummy
 MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
-         hobgoblin zombie / kobold zombie / big kobold zombie / \
+         hobgoblin zombie / kobold zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
 : ossuary_setup_features(_G)
@@ -383,7 +383,7 @@ NSUBST:  K = 1:+ / *:c
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
-MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
+MONS:    water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
 MAP
@@ -418,7 +418,7 @@ TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
          generate_awake hobgoblin zombie / generate_awake gnoll zombie
 MONS:    mummy
-MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
+MONS:    orc zombie / kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
 : ossuary_setup_features(_G)
 MAP
@@ -465,7 +465,7 @@ ITEM:    any scroll, any potion
 MONS:    mummy
 MONS:    rat zombie / jackal zombie / quokka zombie / adder zombie / \
          goblin zombie / hobgoblin zombie / kobold zombie
-MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
+MONS:    gnoll zombie / orc zombie / hound zombie / \
          human zombie / elf zombie / centaur zombie
 : ossuary_setup_features(_G)
 MAP
@@ -500,7 +500,7 @@ TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    mummy
 MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
-         big kobold zombie / centaur zombie
+         centaur zombie
 # mix of good items with useless ones
 ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
          scroll of identify / scroll of remove curse / \
@@ -555,7 +555,7 @@ MONS:   scorpion
 MONS:   mummy
 MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
         human zombie / kobold zombie / goblin zombie / \
-        big kobold zombie / centaur zombie / scorpion zombie w:20
+        centaur zombie / scorpion zombie w:20
 ITEM:   any scroll / any potion / any jewellery w:1 / nothing
 KFEAT:  ~ = dart trap / arrow trap / spear trap w:5
 SUBST:  1 = 1.
@@ -596,7 +596,7 @@ ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
          adder zombie / gnoll zombie / orc zombie / kobold zombie / \
-         big kobold zombie / hound zombie / human zombie / elf zombie
+         hound zombie / human zombie / elf zombie
 MONS:    mummy
 ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
 SHUFFLE: $de*
@@ -738,7 +738,7 @@ ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen
 NSUBST: 1 = 2:1 / *:2
 MONS:   mummy
-MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / big kobold zombie / \
+MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / \
         orc zombie / human zombie w:2 / elf zombie w:2 / centaur zombie w:2
 : ossuary_setup_features(_G)
 MAP
@@ -770,7 +770,7 @@ ITEM:    potion of curing / potion of heal wounds / potion of haste / \
          scroll of random uselessness
 SUBST:   M = 111.
 MONS:    mummy
-MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
+MONS:    centaur zombie / hobgoblin zombie / nothing w:20
 KFEAT:   ~ = net trap / alarm trap / dispersal trap w:5 / floor w:100
 KFEAT:   ^ = net trap w:20 / dispersal trap w:5 / floor w:25
 : ossuary_setup_features(_G)
@@ -950,7 +950,7 @@ TAGS:   no_item_gen no_monster_gen no_rotate
 #
 # Standard monsters: small zombies, large zombies, boss:
 MONS:   kobold zombie / goblin zombie / orc zombie / hobgoblin zombie
-MONS:   big kobold zombie / gnoll zombie
+MONS:   gnoll zombie
 MONS:   mummy
 #
 KFEAT:  F = floor
@@ -1102,13 +1102,15 @@ ENDMAP
 
 # The intent is that the mummies chase the player through the whole ossuary,
 # forcing the player to either move quickly or soak up some death curses.
+#
+# rip -- PF
 NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen
 MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
-        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
+        human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
 KFEAT:  ~ = arrow trap / dart trap
@@ -1147,7 +1149,7 @@ TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
-        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
+        human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   mummy
 MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
 KMONS:  N  = mummy
@@ -1212,8 +1214,7 @@ TAGS:   no_item_gen no_monster_gen
 KMONS:  1W = wraith
 KMONS:  2 = mummy
 KMONS:  3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
-        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1 /\
-                nothing w:36
+        human zombie w:1 / elf zombie w:1 / orc zombie w:1 / nothing w:36
 KITEM:  12d = any potion / any scroll / any jewellery w:1
 KFEAT:  . = dart trap / arrow trap / spear trap w:5 / floor w:600
 NSUBST: d = 1:1 / 3:2 / 4:. / *:d

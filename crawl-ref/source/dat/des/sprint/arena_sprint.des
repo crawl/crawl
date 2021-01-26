@@ -221,7 +221,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 2 then
             mon_set = {
                 "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
-                "goblin / hobgoblin / kobold / big kobold / ijyb w:6 / pikel w:4",
+                "goblin / hobgoblin / kobold / kobold brigand / ijyb w:6 / pikel w:4",
                 "rat / quokka / river rat / w:2 hell rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
@@ -268,7 +268,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 ice beast / w:20 simulacrum / rime drake / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
-                "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
+                "kobold / kobold brigand / w:3 kobold demonologist / w:2 sonja",
                 "jackal w:1 / hound w:5 / wolf w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "bullfrog w:20 / blink frog w:6 / cane toad w:6 / prince ribbit w:2",

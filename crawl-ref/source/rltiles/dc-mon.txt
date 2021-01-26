@@ -765,7 +765,7 @@ sonja MONS_SONJA
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
-big_kobold MONS_BIG_KOBOLD
+kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')

@@ -2106,7 +2106,7 @@ KMONS:  2 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club
         ogre god:trog ; giant spiked club ego:antimagic ident:type | w:5 giant spiked club / \
         orc warrior god:trog ; halberd ego:antimagic ident:type | war axe ego:antimagic ident:type | \
         flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
-        big kobold god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
+        kobold brigand god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
         rapier ego:antimagic ident:type | rapier
 : else
 KMONS:  2 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \

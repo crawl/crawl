@@ -277,7 +277,6 @@ base3 CORPSE_MUTANT_BEAST
 %sdir mon/humanoids
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
-big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
 %sdir mon/demihumanoids

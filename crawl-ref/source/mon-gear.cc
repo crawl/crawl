@@ -1020,7 +1020,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     switch (type)
     {
     case MONS_KOBOLD:
-    case MONS_BIG_KOBOLD:
+    case MONS_KOBOLD_BRIGAND:
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
@@ -1396,15 +1396,25 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             {
                 weap_type  = MI_DART;
                 qty = random_range(2, 8);
-                brand = got_curare_roll(level) ? SPMSL_CURARE : SPMSL_POISONED;
+                brand = SPMSL_POISONED;
                 break;
             }
-            // intentional fallthrough
-        case MONS_BIG_KOBOLD:
             if (x_chance_in_y(2, 5))
             {
                 weap_type  = MI_STONE;
                 qty = 1 + random2(5);
+            }
+            break;
+        case MONS_KOBOLD_BRIGAND:
+            weap_type  = MI_DART;
+            if (one_chance_in(3)) {
+                // Avoid increasing total amount of generated curare
+                // too much.
+                brand = SPMSL_CURARE;
+                qty = 1;
+            } else {
+                qty = random_range(2, 8);
+                brand = SPMSL_POISONED;
             }
             break;
 

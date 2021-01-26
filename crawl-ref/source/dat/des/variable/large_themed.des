@@ -61,12 +61,12 @@ MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
          bullet / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
-MONS:    kobold; club / big kobold w:1; club | short sword w:2 / nothing
+MONS:    kobold; club / kobold brigand w:1; club | short sword w:2 / nothing
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
 SUBST:   5 = 2 1:2 .:24
 SHUFFLE: ABCD
 KITEM:   D = gold
-KMONS:   D = hobgoblin / kobold / gnoll / big kobold
+KMONS:   D = hobgoblin / kobold / gnoll
 SUBST:   ABC = 2
 SHUFFLE: 12 / 34
 MAP
@@ -1524,7 +1524,7 @@ ORIENT: northeast
 TAGS:   no_monster_gen transparent
 DEPTH:  D:7-14
 KFEAT:  W = open_sea
-MONS:   ogre, orc warrior, gnoll shaman, centaur, big kobold
+MONS:   ogre, orc warrior, gnoll shaman, centaur, kobold brigand
 KMONS:  8 = orc warrior band
 KMONS:  9 = gnoll shaman band
 KMONS:  p = plant
@@ -1573,7 +1573,7 @@ NAME:   kennysheep_kobold_camp
 ORIENT: north
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-9
-MONS:   big kobold, kobold
+MONS:   kobold brigand, kobold
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
@@ -1729,7 +1729,7 @@ ORIENT: north
 TAGS:   no_monster_gen
 DEPTH:  D:6-9
 MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
-        big kobold / orc warrior w:5 / ogre / gnoll sergeant, \
+        kobold brigand / orc warrior w:5 / ogre / gnoll sergeant, \
         orc priest / orc wizard / gnoll shaman / centaur
 NSUBST: . = 4:2 / 20:1 / 5:3
 NSUBST: . = 8:% / 2:* / 10:$
@@ -1800,7 +1800,7 @@ NAME:    kennysheep_kobold_grotto
 DEPTH:   D:13-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
-MONS:    big kobold, patrolling kobold demonologist, kobold, plant
+MONS:    kobold brigand, patrolling kobold demonologist, kobold, plant
 MONS:    lesser demon, obsidian statue
 KMONS:   g = bush
 SHUFFLE: !'
