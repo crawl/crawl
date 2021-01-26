@@ -619,7 +619,7 @@ static const struct spell_desc spelldata[] =
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
     spschool::ice,
     spflag::area,
-    6,
+    7,
     200,
     -1, -1,
     5, 0,
