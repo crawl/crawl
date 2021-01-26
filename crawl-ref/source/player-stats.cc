@@ -453,6 +453,7 @@ static int _int_modifier(bool innate_only)
     // mutations
     result += 2 * (_mut_level(MUT_CLEVER, innate_only)
                    - _mut_level(MUT_DOPEY, innate_only));
+    result += 2 * _mut_level(MUT_BIG_BRAIN, innate_only);
 
     return result;
 }

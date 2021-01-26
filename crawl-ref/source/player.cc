@@ -2511,7 +2511,8 @@ int player_armour_shield_spell_penalty()
 int player_wizardry(spell_type /*spell*/)
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
-           + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
+           + you.wearing(EQ_STAFF, STAFF_WIZARDRY)
+           + (you.get_mutation_level(MUT_BIG_BRAIN) == 3) ? 1 : 0;
 }
 
 /**
@@ -4028,6 +4029,7 @@ int slaying_bonus(bool ranged)
         ret += 4;
 
     ret += 3 * augmentation_amount();
+    ret += you.get_mutation_level(MUT_SHARP_SCALES);
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         ret += you.props[SONG_OF_SLAYING_KEY].get_int();
@@ -6607,6 +6609,8 @@ int player::base_ac_with_specific_items(int scale,
     AC += get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL)
           ? 100 + get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
+    AC += get_mutation_level(MUT_SHARP_SCALES, mutation_activity_type::FULL) * 100;
+              // +1, +2, +3
     AC -= get_mutation_level(MUT_PHYSICAL_VULNERABILITY)
           ? get_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
               // +3, +6, +9
