@@ -1125,6 +1125,7 @@ static void _regenerate_hp_and_mp(int delay)
     update_mana_regen_amulet_attunement();
 }
 
+/*
 void _handle_spectral_brand()
 {
     const int pow = you.skill(SK_EVOCATIONS, 4);
@@ -1136,6 +1137,7 @@ void _handle_spectral_brand()
         cast_spectral_weapon(&you, pow, you.religion, false);
     }
 }
+*/
 
 void player_reacts()
 {
@@ -1170,7 +1172,7 @@ void player_reacts()
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
-    _handle_spectral_brand();
+    //_handle_spectral_brand();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
