@@ -1671,6 +1671,16 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
+        case SK_SUMMONINGS:
+            // retro goody-bag for decidedly non-goodies
+            if (is_evil_god(god))
+            {
+                if (skill_rank == 4)
+                    result = "Demonologist";
+                else if (skill_rank == 5)
+                    result = "Hellbinder";
+            }
+            break;
 
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
