@@ -1235,14 +1235,14 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_CENTAUR);
+    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_PALENTONGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     tiles.json_open_array("doll");
