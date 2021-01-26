@@ -96,6 +96,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
@@ -1124,6 +1125,18 @@ static void _regenerate_hp_and_mp(int delay)
     update_mana_regen_amulet_attunement();
 }
 
+void _handle_spectral_brand()
+{
+    const int pow = you.skill(SK_EVOCATIONS, 4);
+    if (you.damage_brand() == SPWPN_SPECTRAL
+        && you.skill(SK_EVOCATIONS) > 0
+        && !find_spectral_weapon(&you)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        cast_spectral_weapon(&you, pow, you.religion, false);
+    }
+}
+
 void player_reacts()
 {
     //XXX: does this _need_ to be calculated up here?
@@ -1156,6 +1169,8 @@ void player_reacts()
     // Singing makes a continuous noise
     if (you.duration[DUR_SONG_OF_SLAYING])
         noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
+
+    _handle_spectral_brand();
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {

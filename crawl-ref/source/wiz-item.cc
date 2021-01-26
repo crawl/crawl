@@ -1178,6 +1178,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "pacifing",
             "sluggish",
             "slimifying",
+            "spectral",
             "INVALID",
             "acid",
 #if TAG_MAJOR_VERSION > 34

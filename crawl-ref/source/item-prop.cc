@@ -282,6 +282,12 @@ static const vector<brand_weight_tuple> M_AND_F_BRANDS = {
     { SPWPN_PAIN,            1 },
 };
 
+/// brand weights for club-type weapons
+static const vector<brand_weight_tuple> CLUB_BRANDS = {
+    { SPWPN_NORMAL,          9 },
+    { SPWPN_SPECTRAL,        1 },
+};
+
 /// brand weights for demon weapons (whip, blade, trident)
 static const vector<brand_weight_tuple> DEMON_BRANDS = {
     { SPWPN_NORMAL,         27 },
@@ -343,17 +349,6 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
     { SPWPN_HOLY_WRATH,  1 },
 };
 
-/// brand weights for crystal spear.
-static const vector<brand_weight_tuple> CRYSTAL_BRANDS = {
-    { SPWPN_NORMAL,          15 },
-    { SPWPN_PROTECTION,      25 },
-    { SPWPN_VORPAL,          25 },
-    { SPWPN_FLAMING,         10 },
-    { SPWPN_FREEZING,        10 },
-    { SPWPN_ELECTROCUTION,   10 },
-    { SPWPN_DISTORTION,       5 },
-};
-
 /// brand weights for most ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
     { SPWPN_NORMAL,   58 },
@@ -367,14 +362,13 @@ static const vector<brand_weight_tuple> HOLY_BRANDS = {
     { SPWPN_HOLY_WRATH, 100 },
 };
 
-
 static int Weapon_index[NUM_WEAPONS];
 static const weapon_def Weapon_prop[] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_CRUSHING, 10, 0, 10, {} },
+        DAMV_CRUSHING, 10, 0, 10, CLUB_BRANDS },
 #if TAG_MAJOR_VERSION == 34
     { WPN_SPIKED_FLAIL,      "spiked flail",        5,  3, 13,
         SK_MACES_FLAILS, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
@@ -452,10 +446,10 @@ static const weapon_def Weapon_prop[] =
         DAMV_CRUSHING, 3, 10, 65, M_AND_F_BRANDS },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 16,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CRUSHING, 1, 10, 17, {} },
+        DAMV_CRUSHING, 1, 10, 17, CLUB_BRANDS },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_CRUSHING | DAM_PIERCE, 1, 10, 19, {} },
+        DAMV_CRUSHING | DAM_PIERCE, 1, 10, 19, CLUB_BRANDS },
 
     // Short Blades
     { WPN_DAGGER,            "dagger",              4,  6, 10,
@@ -544,7 +538,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_WAR_AXE,           "war axe",            11,  0, 15,
         SK_AXES,       SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_CHOPPING, 7, 10, 35, AXE_BRANDS },
-    { WPN_BROAD_AXE,         "broad axe",          13, -2, 16,
+    { WPN_BROAD_AXE,         "broad axe",          13, -2, 17,
         SK_AXES,       SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_CHOPPING, 4, 10, 40, AXE_BRANDS },
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
@@ -573,7 +567,19 @@ static const weapon_def Weapon_prop[] =
         DAMV_PIERCING, 6, 10, 35, POLEARM_BRANDS },
     { WPN_CRYSTAL_SPEAR,     "crystal spear",      14, -2, 15,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
-        DAMV_PIERCING, 2, 4, 70, CRYSTAL_BRANDS },
+        DAMV_PIERCING, 2, 4, 70, {
+            { SPWPN_NORMAL,     46 },
+            { SPWPN_VENOM,      17 },
+            { SPWPN_VORPAL,      9 },
+            { SPWPN_FLAMING,     7 },
+            { SPWPN_FREEZING,    7 },
+            { SPWPN_VAMPIRISM,   5 },
+            { SPWPN_PROTECTION,  5 },
+            { SPWPN_SPECTRAL,    5 }, //Tree and Crystal
+            { SPWPN_DISTORTION,  2 },
+            { SPWPN_PAIN,        2 },
+            { SPWPN_ANTIMAGIC,   2 },
+        }},
     { WPN_HALBERD,           "halberd",            13, -3, 15,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 5, 10, 40, POLEARM_BRANDS },
@@ -602,7 +608,7 @@ static const weapon_def Weapon_prop[] =
         SK_STAVES,       SIZE_LITTLE, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CRUSHING, 8, 10, 40, {
             { SPWPN_NORMAL,     50 },
-            { SPWPN_PROTECTION, 18 },
+            { SPWPN_SPECTRAL,   18 },
             { SPWPN_DRAINING,    8 },
             { SPWPN_VORPAL,      8 },
             { SPWPN_SPEED,       8 },
@@ -618,7 +624,7 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_SPEED,          12 },
             { SPWPN_ELECTROCUTION,  12 },
             { SPWPN_VAMPIRISM,      12 },
-            { SPWPN_PROTECTION,      9 },
+            { SPWPN_SPECTRAL,        9 },
             { SPWPN_VENOM,           7 },
             { SPWPN_PAIN,            7 },
             { SPWPN_ANTIMAGIC,       4 },
@@ -2035,9 +2041,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (!you.could_wield(item, true, true))
         return !skills.empty();
 
-    if (item_is_evokable(item, false, false, false, false)
+    if (item_is_evokable(item, false, false, false)
         || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item))
+        || item.base_type == OBJ_WEAPONS && gives_ability(item)
+        || item.base_type == OBJ_WEAPONS
+           && get_weapon_brand(item) == SPWPN_SPECTRAL)
     {
         skills.insert(SK_EVOCATIONS);
     }

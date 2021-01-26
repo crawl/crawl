@@ -305,8 +305,8 @@ public:
 
     int magic_contamination;
 
-    FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
-    FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
+    FixedVector<uint64_t, NUM_WEAPONS> seen_weapon;
+    FixedVector<uint64_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
     uint8_t                            octopus_king_rings;
 
@@ -1161,6 +1161,7 @@ bool sanguine_armour_valid();
 void activate_sanguine_armour();
 
 void refresh_weapon_protection();
+void handle_spectral_brand();
 
 void set_mp(int new_amount);
 

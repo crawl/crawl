@@ -119,7 +119,7 @@ enum armour_property_type
 
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
-const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
+const int SP_UNKNOWN_BRAND = 63; // seen_weapon/armour is a 32-bit bitfield
 
 // Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
@@ -167,6 +167,7 @@ enum brand_type // item_def.special
     SPWPN_PACIFING,
     SPWPN_SLUGGISH,
     SPWPN_SLIMIFYING,
+    SPWPN_SPECTRAL,
 
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,

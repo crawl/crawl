@@ -19,6 +19,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 
 /** End your weapon branding spell.
  *
@@ -213,6 +214,9 @@ spret cast_excruciating_wounds(int power, bool fail)
         }
         if (orig_brand == SPWPN_ANTIMAGIC)
             calc_mp();
+        monster * spectral = find_spectral_weapon(&you);
+        if (orig_brand == SPWPN_SPECTRAL && spectral)
+            end_spectral_weapon(spectral, false);
     }
 
     you.increase_duration(DUR_EXCRUCIATING_WOUNDS, 8 + roll_dice(2, power), 50);

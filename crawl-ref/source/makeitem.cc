@@ -331,6 +331,16 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
             return false;
         break;
 
+    case SPWPN_SPECTRAL:
+        if (is_range_weapon(item)
+            || (basic_hands_reqd(item, SIZE_MEDIUM) == HANDS_ONE
+                && type != WPN_CLUB))
+        {
+            // only on two-handers and clubs
+            return false;
+        }
+        break;
+
     // Ranged-only brands.
     case SPWPN_PENETRATION:
     //case SPWPN_ACID: // Only exists on Punk
