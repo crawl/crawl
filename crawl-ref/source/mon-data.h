@@ -61,10 +61,7 @@
    avg_hp_10x: average hp for the monster, * 10 for precision
                (see hit_points() for details)
 
-   sec: if the monster has only one possible spellbook, sec is set to that book.
-     If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
-     the function _mons_spellbook_list in mon-util.cc handles the books.
-   TODO: replace this system ^
+   sec: the monster's spellbook. If a monster has no spells, MST_NO_SPELLS.
 
    corpse: whether the monster leaves a corpse or not
 

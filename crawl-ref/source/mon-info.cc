@@ -1566,9 +1566,6 @@ bool monster_info::has_spells() const
     if (props.exists(CUSTOM_SPELLS_KEY))
         return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
-    if (props.exists(SEEN_SPELLS_KEY))
-        return true;
-
     // Almost all draconians have breath spells.
     if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN
         && draco_or_demonspawn_subspecies() != MONS_GREY_DRACONIAN
@@ -1577,13 +1574,13 @@ bool monster_info::has_spells() const
         return true;
     }
 
-    const vector<mon_spellbook_type> books = get_spellbooks(*this);
+    const mon_spellbook_type book = get_spellbook(*this);
 
-    if (books.size() == 0 || books[0] == MST_NO_SPELLS)
+    if (book == MST_NO_SPELLS)
         return false;
 
     // Ghosts / pan lords may have custom spell lists, so check spells directly
-    if (books[0] == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
+    if (book == MST_GHOST || type == MONS_PANDEMONIUM_LORD)
         return spells.size() > 0;
 
     return true;

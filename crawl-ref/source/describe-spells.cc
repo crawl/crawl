@@ -93,118 +93,36 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
 }
 
 /**
- * Produces a portion of the spellbook description: the portion indicating
- * whether the list of spellbooks has been filtered based on which spells you
- * have seen the monster cast already.
- *
- * @param type    The type of ability set / spellbook we're decribing.
- * @param pronoun The monster pronoun to use (should be derived from PRONOUN_OBJECTIVE).
- * @return        A string to include in the spellbook description.
- */
-static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pronoun)
-{
-    const bool is_spell = type = MON_SPELL_WIZARD;
-    return make_stringf(" (judging by the %s you have seen %s %s)",
-                        is_spell ? "spells" : "abilities",
-                        pronoun,
-                        is_spell ? "cast" : "use");
-}
-
-/**
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
  * @param type              The type of book(s); e.g. MON_SPELL_MAGICAL.
- * @param num_books         The number of books in the set.
  * @param has_silencable    Whether any of the spells are subject to Silence
  *                          despite being non-wizardly and non-priestly.
- * @param has_filtered      Whether any spellbooks have been filtered out due
- *                          to the spells you've seen the monster cast.
- * @param pronoun           The pronoun to use in describing which spells
- *                          the monster has been seen casting.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
-static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable, bool has_filtered,
-                               const char* pronoun, bool pronoun_plural)
+static string _booktype_header(mon_spell_slot_flag type,
+                               bool has_silencable, bool pronoun_plural)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
-    const string spell_filter_desc =
-        has_filtered ? _describe_spell_filtering(type, pronoun) : "";
 
     if (type == MON_SPELL_WIZARD)
     {
-        return make_stringf("%s mastered %s%s%s:",
+        return make_stringf("%s mastered %s%s:",
                             conjugate_verb("have", pronoun_plural).c_str(),
-                            num_books > 1 ? "one of the following spellbooks"
-                                          : "the following spells",
-                            spell_filter_desc.c_str(),
+                            "the following spells",
                             vulnerabilities.c_str());
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
-    return make_stringf("%s the following %s abilities%s%s:",
+    return make_stringf("%s the following %s abilities%s:",
                         conjugate_verb("possess", pronoun_plural).c_str(),
                         descriptor.c_str(),
-                        spell_filter_desc.c_str(),
                         vulnerabilities.c_str());
-}
-
-static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
-{
-    return any_of(book.begin(), book.end(),
-                  [=](mon_spell_slot slot){return slot.spell == spell;});
-}
-
-/**
- * Is it possible that the given monster could be using the given book, from
- * what the player knows about each?
- *
- * @param book          A list of spells.
- * @param mon_owner     The monster being examined.
- * @return              Whether it's possible for the given monster to
- */
-static bool _book_valid(const vector<mon_spell_slot> &book,
-                        const monster_info &mi)
-{
-    if (!mi.props.exists(SEEN_SPELLS_KEY))
-        return true;
-
-    auto seen_spells = mi.props[SEEN_SPELLS_KEY].get_vector();
-
-    // assumption: any monster with multiple true spellbooks will only ever
-    // use one of them
-    return all_of(seen_spells.begin(), seen_spells.end(),
-                  [&](int spell){return _spell_in_book((spell_type)spell, book);});
-}
-
-static void _split_by_silflag(unique_books &books)
-{
-    unique_books result;
-
-    for (auto book : books)
-    {
-        vector<mon_spell_slot> silflag;
-        vector<mon_spell_slot> no_silflag;
-
-        for (auto i : book)
-        {
-            if (i.flags & MON_SPELL_NO_SILENT)
-                silflag.push_back(i);
-            else no_silflag.push_back(i);
-        }
-
-        if (!no_silflag.empty())
-            result.push_back(no_silflag);
-        if (!silflag.empty())
-            result.push_back(silflag);
-    }
-
-    books = result;
 }
 
 /**
@@ -220,87 +138,51 @@ static void _monster_spellbooks(const monster_info &mi,
                                 mon_spell_slot_flag type,
                                 spellset &all_books)
 {
-    unique_books books = get_unique_spells(mi, type);
+    vector<mon_spell_slot> book_slots = get_unique_spells(mi, type);
 
-    // Books of natural abilities get special treatment, because there should
-    // be information about silence in the label(s).
-    const bool ability_case =
-        (bool) (type & (MON_SPELL_MAGICAL | MON_SPELL_NATURAL));
-    // We must split them now; later we'll label them separately.
-    if (ability_case)
-        _split_by_silflag(books);
-
-    const size_t num_books = books.size();
-
-    if (num_books == 0)
+    if (book_slots.empty())
         return;
 
     const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
 
-    // filter out books we know this monster can't cast (conflicting books)
-    std::vector<size_t> valid_books;
-    bool filtered_books = false;
-    for (size_t i = 0; i < num_books; ++i)
+    spellbook_contents output_book;
+
+    const bool has_silencable = any_of(begin(book_slots), end(book_slots),
+        [](const mon_spell_slot& slot)
+        {
+            return slot.flags & MON_SPELL_NO_SILENT;
+        });
+
+    output_book.label +=
+        "\n" +
+        uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
+        " " +
+        _booktype_header(type, has_silencable, mi.pronoun_plurality());
+
+    // Does the monster have a spell that allows them to cast Abjuration?
+    bool mons_abjure = false;
+
+    for (const auto& slot : book_slots)
     {
-        if (num_books <= 1 || _book_valid(books[i], mi))
-            valid_books.emplace_back(i);
-        else if (!_book_valid(books[i], mi))
-            filtered_books = true;
+        const spell_type spell = slot.spell;
+        if (!spell_is_soh_breath(spell))
+        {
+            output_book.spells.emplace_back(spell);
+            if (get_spell_flags(spell) & spflag::mons_abjure)
+                mons_abjure = true;
+            continue;
+        }
+
+        const vector<spell_type> *breaths = soh_breath_spells(spell);
+        ASSERT(breaths);
+        for (auto breath : *breaths)
+            output_book.spells.emplace_back(breath);
     }
 
-    // Loop through books and display spells/abilities for each of them
-    for (size_t i = 0; i < valid_books.size(); ++i)
-    {
-        const vector<mon_spell_slot> &book_slots = books[valid_books[i]];
-        spellbook_contents output_book;
+    if (mons_abjure)
+        output_book.spells.emplace_back(SPELL_ABJURATION);
 
-        const bool has_silencable = any_of(begin(book_slots), end(book_slots),
-            [](const mon_spell_slot& slot)
-            {
-                return slot.flags & MON_SPELL_NO_SILENT;
-            });
-
-        if (i == 0 || ability_case)
-        {
-            output_book.label +=
-                "\n" +
-                uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
-                " " +
-                _booktype_header(type, valid_books.size(), has_silencable,
-                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE),
-                                 mi.pronoun_plurality());
-        }
-        else
-        {
-            output_book.label += make_stringf("\n%s %d:",
-                                              set_name.c_str(), (int) i + 1);
-        }
-
-        // Does the monster have a spell that allows them to cast Abjuration?
-        bool mons_abjure = false;
-
-        for (const auto& slot : book_slots)
-        {
-            const spell_type spell = slot.spell;
-            if (!spell_is_soh_breath(spell))
-            {
-                output_book.spells.emplace_back(spell);
-                if (get_spell_flags(spell) & spflag::mons_abjure)
-                    mons_abjure = true;
-                continue;
-            }
-
-            const vector<spell_type> *breaths = soh_breath_spells(spell);
-            ASSERT(breaths);
-            for (auto breath : *breaths)
-                output_book.spells.emplace_back(breath);
-        }
-
-        if (mons_abjure)
-            output_book.spells.emplace_back(SPELL_ABJURATION);
-
-        all_books.emplace_back(output_book);
-    }
+    all_books.emplace_back(output_book);
 }
 
 /**

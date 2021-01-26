@@ -428,8 +428,8 @@ LUAFN(moninf_get_is)
     return 1;
 }
 
-/*** Get the monster's possible spells.
- * Returns a list of the monster's possible spellbooks. Each spellbook is given
+/*** Get the monster's spells.
+ * Returns a the monster's spellbook. The spellbook is given
  * as a list of spell names.
  * @treturn array
  * @function spells
@@ -443,20 +443,14 @@ LUAFN(moninf_get_spells)
     if (!mi->has_spells())
         return 1;
 
-    unique_books books = get_unique_spells(*mi);
-    const size_t num_books = books.size();
+    const vector<mon_spell_slot> &unique_slots = get_unique_spells(*mi);
+    vector<string> spell_titles;
 
-    for (size_t i = 0; i < num_books; ++i)
-    {
-        const vector<mon_spell_slot> &unique_slots = books[i];
-        vector<string> spell_titles;
+    for (const auto& slot : unique_slots)
+        spell_titles.emplace_back(spell_title(slot.spell));
 
-        for (const auto& slot : unique_slots)
-            spell_titles.emplace_back(spell_title(slot.spell));
-
-        clua_stringtable(ls, spell_titles);
-        lua_rawseti(ls, -2, i+1);
-    }
+    clua_stringtable(ls, spell_titles);
+    lua_rawseti(ls, -2, 1);
 
     return 1;
 }

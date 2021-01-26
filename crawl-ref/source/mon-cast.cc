@@ -3882,10 +3882,7 @@ bool handle_mon_spell(monster* mons)
 
         if (battlesphere)
             aim_battlesphere(mons, spell_cast);
-        const bool was_visible = you.can_see(*mons);
         mons_cast(mons, beem, spell_cast, flags);
-        if ((was_visible || you.can_see(*mons)) && mons->alive())
-            mons->note_spell_cast(spell_cast);
         if (battlesphere)
             trigger_battlesphere(mons);
         if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
