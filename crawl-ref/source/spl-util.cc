@@ -1458,6 +1458,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "You are already immune to electricity.";
         break;
 
+    case SPELL_NOXIOUS_BOG:
+        if (temp && you.duration[DUR_NOXIOUS_BOG])
+            return "you cannot sustain more bogs right now.";
+        break;
     default:
         break;
     }

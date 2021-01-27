@@ -95,3 +95,6 @@ spret cast_hailstorm(int pow, bool fail, bool tracer = false);
 spret cast_starburst(int pow, bool fail, bool tracer=false);
 
 spret cast_flame_strike_shot(const actor* caster, const actor* defender, int damage, int hit, bool fail);
+
+spret cast_noxious_bog(int pow, bool fail);
+vector<coord_def> find_bog_locations(const coord_def& center, int pow);

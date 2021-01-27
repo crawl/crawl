@@ -63,7 +63,6 @@
 #define PLAYER_TENTACLE_CONNECT "player_tentacle_connect"
 #define PLAYER_TENTACLE_DELAY "player_tentacle_delay"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
-#define NOXIOUS_BOG_KEY "noxious_bog_pow"
 #define HOMUNCULUS_WILD_MAGIC "homunculus_wild_magic"
 #define STONESKIN_KEY "stoneskin_pow"
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"

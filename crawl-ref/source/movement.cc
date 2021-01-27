@@ -48,7 +48,6 @@
 #include "shout.h"
 #include "state.h"
 #include "stringutil.h"
-#include "spl-selfench.h" // noxious_bog_cell
 #include "spl-summoning.h"
 #include "terrain.h"
 #include "traps.h"
@@ -1081,14 +1080,6 @@ void move_player_action(coord_def move)
             targ_monst->apply_location_effects(targ);
         else
         {
-
-            if (you.duration[DUR_NOXIOUS_BOG])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                    noxious_bog_cell(old_pos);
-            }
 
             if (you.duration[DUR_CLOUD_TRAIL])
             {

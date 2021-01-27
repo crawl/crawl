@@ -4310,11 +4310,11 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_NOXIOUS_BOG, "Eringya's Noxious Bog",
     spschool::poison | spschool::transmutation,
-    spflag::selfench,
+    spflag::area | spflag::no_ghost,
     6,
     200,
-    -1, -1,
-    2, 0,
+    4, 4,
+    6, 0,
     TILEG_NOXIOUS_BOG,
 },
 {
