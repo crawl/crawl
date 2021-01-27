@@ -226,7 +226,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     }
 }
 
-void update_item_at(const coord_def &gp, bool detected, bool wizard)
+void update_item_at(const coord_def &gp, bool wizard)
 {
     if (!in_bounds(gp))
         return;
@@ -252,15 +252,12 @@ void update_item_at(const coord_def &gp, bool detected, bool wizard)
     }
     else
     {
-        if (detected)
-            StashTrack.add_stash(gp);
-
         const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
         eitem = stash[0];
-        if (!detected && stash.size() > 1)
+        if (stash.size() > 1)
             more_items = true;
     }
     env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
