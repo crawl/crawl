@@ -317,7 +317,7 @@ G.O.G
 ENDMAP
 
 NAME:   enter_trove_3
-TAGS:   uniq_trove no_monster_gen no_wall_fixup
+TAGS:   uniq_trove no_monster_gen no_wall_fixup transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: c = blue
@@ -331,6 +331,7 @@ ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: e = blue
@@ -358,6 +359,7 @@ ENDMAP
 
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 KFEAT:  X = +
@@ -374,6 +376,7 @@ ccc+ccc
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -402,6 +405,7 @@ cc@cc
 ENDMAP
 
 NAME: nicolae_trove_entry_crystal
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 FTILE: b = floor_marble
@@ -416,6 +420,7 @@ ccccccccccc
 ENDMAP
 
 NAME: nicolae_trove_entry_diagonal
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -463,6 +468,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_path_of_doom
+TAGS: transparent
 CHANCE: 5%
 KMONS: O = patrolling guardian mummy
 KMONS: m = patrolling guardian mummy / nothing w:20
@@ -482,6 +488,7 @@ cc.....cc
 ENDMAP
 
 NAME: trove_entry_hex_spiral
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
