@@ -1223,16 +1223,31 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             return false;
     }
 
-    // If the attack needs a launcher that we can't wield, bail out.
+    if (prefer_ranged_attack && mons->is_archer())
+    {
+        // Master archers are always quite likely to shoot you, if they can.
+        if (one_chance_in(10))
+            return false;
+    } else if (launcher)
+    {
+        // Fellas with ranged weapons are likely to use them, though slightly
+        // less likely than master archers. XXX: this is a bit silly and we
+        // could probably collapse this chance and master archers' together.
+        if (one_chance_in(5))
+            return false;
+    } else if (!one_chance_in(3))
+    {
+        // Monsters with throwing weapons only use them one turn in three
+        // if they're not master archers.
+        return false;
+    }
+
     if (launcher)
     {
+        // If the attack needs a launcher that we can't wield, bail out.
         weapon = mons->mslot_item(MSLOT_WEAPON);
         if (weapon && weapon != launcher && weapon->cursed())
             return false;
-    } else if (!prefer_ranged_attack && !one_chance_in(3)) {
-        // Non-archers with throwing items shouldn't throw them
-        // every single turn. 1/3 turns seems plenty.
-        return false;
     }
 
     // Ok, we'll try it.
