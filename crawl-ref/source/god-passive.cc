@@ -1093,22 +1093,17 @@ void gozag_detect_level_gold(bool count)
     {
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
-            bool detected = false;
             int dummy = gold_piles[i]->index();
             coord_def &pos = gold_places[i];
             unlink_item(dummy);
             move_item_to_grid(&dummy, pos, true);
-            if (!env.map_knowledge(pos).item()
-                || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
+            if ((!env.map_knowledge(pos).item()
+                 || env.map_knowledge(pos).item()->base_type != OBJ_GOLD
+                 && you.visible_igrd(pos) != NON_ITEM))
             {
-                detected = true;
-                update_item_at(pos, true);
-            }
-            // the pile can still remain undetected if it is not in
-            // you.visible_igrd, for example if it is under deep water and the
-            // player will not be able to see it.
-            if (detected && env.map_knowledge(pos).item())
-            {
+                env.map_knowledge(pos).set_item(
+                        get_item_known_info(*gold_piles[i]),
+                        !!env.map_knowledge(pos).item());
                 env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
 #ifdef USE_TILE
                 // force an update for gold generated during Abyss shifts
