@@ -1229,6 +1229,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         weapon = mons->mslot_item(MSLOT_WEAPON);
         if (weapon && weapon != launcher && weapon->cursed())
             return false;
+    } else if (!prefer_ranged_attack && !one_chance_in(3)) {
+        // Non-archers with throwing items shouldn't throw them
+        // every single turn. 1/3 turns seems plenty.
+        return false;
     }
 
     // Ok, we'll try it.
