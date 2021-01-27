@@ -251,7 +251,7 @@ spret corpse_rot(actor* caster, bool actual)
 
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
-        if (!is_sanctuary(*ri) && !cloud_at(*ri))
+        if (!is_sanctuary(*ri))
             for (stack_iterator si(*ri); si; ++si)
                 if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
