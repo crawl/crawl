@@ -1178,15 +1178,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    const bool prefer_ranged_attack = mons_class_flag(mons->type,
-                                                            M_PREFER_RANGED);
-    const bool master_archer = prefer_ranged_attack && mons->is_archer();
-    // archers in general get a to-hit bonus and a damage bonus to ranged
-    // attacks (determined elsewhere).
-    // master archers will fire when adjacent, and are more likely to fire
-    // over other actions.
-
-    const bool liquefied = mons->liquefied_ground();
+    const bool prefer_ranged_attack
+        = mons_class_flag(mons->type, M_PREFER_RANGED);
 
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
@@ -1195,26 +1188,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Most monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule, though most archers
     // lack the M_PREFER_RANGED flag.
-    if (adjacent(beem.target, mons->pos()))
-    {
-        if (!prefer_ranged_attack)
-            return false;
-        // Monsters who only can attack with ranged still should. Keep in mind
-        // that M_PREFER_RANGED only applies if the monster has ammo.
-    }
-    else if (!teleport &&
-                    (liquefied && !master_archer && one_chance_in(9)
-                     || !liquefied && one_chance_in(master_archer ? 9 : 5)))
-    {
-        // Do we fire, or do something else?
-        // Monsters that are about to teleport will always try to fire.
-        // If we're standing on liquified ground, try to stand and fire.
-        //    regular monsters: 8/9 chance to fire. Master archers: always.
-        // Otherwise, a lower chance of firing vs doing something else.
-        //    regular monsters: 4/5 chance to fire. Master archers: 8/9 chance.
-        // TODO: this seems overly complicated, is 4/5 vs 8/9 even noticeable?
+    // Monsters who only can attack with ranged still should. Keep in mind
+    // that M_PREFER_RANGED only applies if the monster has ammo.
+    if (adjacent(beem.target, mons->pos()) && !prefer_ranged_attack)
         return false;
-    }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
     if (mons_is_fleeing(*mons) || mons->pacified())
