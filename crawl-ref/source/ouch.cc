@@ -558,8 +558,10 @@ static void _maybe_spawn_rats(int dam, kill_method_type death_type)
     }
 }
 
-static void _maybe_summon_demonic_guardian(int dam)
+static void _maybe_summon_demonic_guardian(int dam, kill_method_type death_type)
 {
+    if (death_type == KILLED_BY_POISON)
+        return;
     // low chance to summon on any hit that dealt damage
     // always tries to summon if the hit did 50% max hp or if we're about to die
     if (you.has_mutation(MUT_DEMONIC_GUARDIAN)
@@ -1029,7 +1031,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, death_type, source);
             _maybe_spawn_rats(dam, death_type);
-            _maybe_summon_demonic_guardian(dam);
+            _maybe_summon_demonic_guardian(dam, death_type);
             _maybe_fog(dam);
             _powered_by_pain(dam);
             if (sanguine_armour_valid())

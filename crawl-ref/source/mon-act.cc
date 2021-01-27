@@ -1007,20 +1007,16 @@ static bool _handle_scroll(monster& mons)
     switch (scroll_type)
     {
     case SCR_TELEPORTATION:
-        if (!mons.has_ench(ENCH_TP) && !mons.no_tele(true, false))
+        if (!mons.has_ench(ENCH_TP) && !mons.no_tele(true, false) && mons.pacified())
         {
-            if (mons.caught() || mons_is_fleeing(mons) || mons.pacified())
-            {
-                simple_monster_message(mons, " reads a scroll.");
-                read = true;
-                monster_teleport(&mons, false);
-            }
+            simple_monster_message(mons, " reads a scroll.");
+            read = true;
+            monster_teleport(&mons, false);
         }
         break;
 
     case SCR_BLINKING:
-        if ((mons.caught() || mons_is_fleeing(mons) || mons.pacified())
-            && mons.can_see(you) && !mons.no_tele(true, false))
+        if (mons.pacified() && mons.can_see(you) && !mons.no_tele(true, false))
         {
             simple_monster_message(mons, " reads a scroll.");
             read = true;
@@ -1182,15 +1178,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    const bool prefer_ranged_attack = mons_class_flag(mons->type,
-                                                            M_PREFER_RANGED);
-    const bool master_archer = prefer_ranged_attack && mons->is_archer();
-    // archers in general get a to-hit bonus and a damage bonus to ranged
-    // attacks (determined elsewhere).
-    // master archers will fire when adjacent, and are more likely to fire
-    // over other actions.
-
-    const bool liquefied = mons->liquefied_ground();
+    const bool prefer_ranged_attack
+        = mons_class_flag(mons->type, M_PREFER_RANGED);
 
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !you.see_cell(mons->pos()))
@@ -1199,26 +1188,10 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     // Most monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule, though most archers
     // lack the M_PREFER_RANGED flag.
-    if (adjacent(beem.target, mons->pos()))
-    {
-        if (!prefer_ranged_attack)
-            return false;
-        // Monsters who only can attack with ranged still should. Keep in mind
-        // that M_PREFER_RANGED only applies if the monster has ammo.
-    }
-    else if (!teleport &&
-                    (liquefied && !master_archer && one_chance_in(9)
-                     || !liquefied && one_chance_in(master_archer ? 9 : 5)))
-    {
-        // Do we fire, or do something else?
-        // Monsters that are about to teleport will always try to fire.
-        // If we're standing on liquified ground, try to stand and fire.
-        //    regular monsters: 8/9 chance to fire. Master archers: always.
-        // Otherwise, a lower chance of firing vs doing something else.
-        //    regular monsters: 4/5 chance to fire. Master archers: 8/9 chance.
-        // TODO: this seems overly complicated, is 4/5 vs 8/9 even noticeable?
+    // Monsters who only can attack with ranged still should. Keep in mind
+    // that M_PREFER_RANGED only applies if the monster has ammo.
+    if (adjacent(beem.target, mons->pos()) && !prefer_ranged_attack)
         return false;
-    }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
     if (mons_is_fleeing(*mons) || mons->pacified())
@@ -1250,9 +1223,28 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             return false;
     }
 
-    // If the attack needs a launcher that we can't wield, bail out.
+    if (prefer_ranged_attack && mons->is_archer())
+    {
+        // Master archers are always quite likely to shoot you, if they can.
+        if (one_chance_in(10))
+            return false;
+    } else if (launcher)
+    {
+        // Fellas with ranged weapons are likely to use them, though slightly
+        // less likely than master archers. XXX: this is a bit silly and we
+        // could probably collapse this chance and master archers' together.
+        if (one_chance_in(5))
+            return false;
+    } else if (!one_chance_in(3))
+    {
+        // Monsters with throwing weapons only use them one turn in three
+        // if they're not master archers.
+        return false;
+    }
+
     if (launcher)
     {
+        // If the attack needs a launcher that we can't wield, bail out.
         weapon = mons->mslot_item(MSLOT_WEAPON);
         if (weapon && weapon != launcher && weapon->cursed())
             return false;

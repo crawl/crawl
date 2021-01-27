@@ -60,9 +60,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Ice
     SPELL_ICE_FORM,
     SPELL_ENGLACIATION,
-    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
+    SPELL_OZOCUBUS_REFRIGERATION,
 },
 
 {   // Book of Spatial Translocations

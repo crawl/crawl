@@ -1671,6 +1671,16 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     {
         switch (best_skill)
         {
+        case SK_SUMMONINGS:
+            // retro goody-bag for decidedly non-goodies
+            if (is_evil_god(god))
+            {
+                if (skill_rank == 4)
+                    result = "Demonologist";
+                else if (skill_rank == 5)
+                    result = "Hellbinder";
+            }
+            break;
 
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
@@ -1873,6 +1883,8 @@ bool is_useless_skill(skill_type skill)
         || (skill == SK_DODGING && you.get_mutation_level(MUT_NO_DODGING))
         || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR))
         || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
+        || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
+            && you.species != SP_FORMICID)
         || (skill == SK_EVOCATIONS && you.get_mutation_level(MUT_NO_ARTIFICE))
         || (skill == SK_STEALTH && you.get_mutation_level(MUT_NO_STEALTH))
     )

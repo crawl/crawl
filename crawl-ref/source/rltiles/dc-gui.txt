@@ -230,10 +230,9 @@ VM JOB_VENOM_MAGE
 %texture none
 felids/cat3 SP_RECOMMENDED_FELID
 %start
-%compose base/centaur_lightgrey_f
+%compose base/palentonga_red_f
 %compose body/animal_skin
 %compose hair/short_black
-%compose boots/hooves
 %finish SP_RECOMMENDED_PALENTONGA
 %start
 %compose base/deep_dwarf_m
