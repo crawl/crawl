@@ -671,15 +671,6 @@ void EquipOnDelay::finish()
 #endif
     mprf("You finish putting on %s.", equip.name(DESC_YOUR).c_str());
 
-    if (eq_slot == EQ_BODY_ARMOUR)
-    {
-        if (you.duration[DUR_ICY_ARMOUR] != 0
-            && !is_effectively_light_armour(&equip))
-        {
-            remove_ice_armour();
-        }
-    }
-
     equip_item(eq_slot, equip.link);
 
     check_item_hint(equip, old_talents);
