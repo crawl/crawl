@@ -6107,6 +6107,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 }
 
 // Extra range used on hit.
+/*
 int bolt::range_used_on_hit() const
 {
     int used = 0;
@@ -6140,6 +6141,7 @@ int bolt::range_used_on_hit() const
 
     return used;
 }
+*/
 
 // Information for how various explosions look & sound.
 struct explosion_sfx
