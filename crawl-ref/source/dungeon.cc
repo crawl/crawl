@@ -1115,6 +1115,17 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 {
                     for (auto c : coords)
                     {
+                        // For normal builder scenarios items shouldn't be
+                        // placed yet, but it could (if not careful) happen
+                        // in weirder cases, such as the abyss.
+                        if (env.igrid(c) != NON_ITEM
+                            && (!feat_is_traversable(fill)
+                                || feat_destroys_items(fill)))
+                        {
+                            // Alternatively, could place floor instead?
+                            dprf("Nuke item stack at (%d, %d)", c.x, c.y);
+                            lose_item_stack(c);
+                        }
                         _set_grd(c, fill);
                         if (env.mgrid(c) != NON_MONSTER
                             && !env.mons[env.mgrid(c)].is_habitable_feat(fill))
@@ -2139,7 +2150,8 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     // disconnected.
     if (dgn_zones && nvaults != env.level_vaults.size())
     {
-        _fill_small_disconnected_zones();
+        if (!player_in_branch(BRANCH_ABYSS))
+            _fill_small_disconnected_zones();
 
         const int newzones = dgn_count_disconnected_zones(false);
 

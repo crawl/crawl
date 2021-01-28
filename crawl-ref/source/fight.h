@@ -76,4 +76,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
+class attack;
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
+
 bool otr_stop_summoning_prompt(string verb = "summon");

@@ -34,6 +34,7 @@
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
+#include "ranged-attack.h"
 #include "religion.h"
 #include "shout.h"
 #include "showsymb.h"
@@ -97,7 +98,7 @@ public:
     }
 
 public:
-    const item_def* active_item();
+    item_def* active_item();
 
 private:
     void display_help();
@@ -130,7 +131,7 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
     *p_top_prompt = internal_prompt;
 }
 
-const item_def* fire_target_behaviour::active_item()
+item_def* fire_target_behaviour::active_item()
 {
     const int slot = action.get_item();
     if (slot == -1)
@@ -185,37 +186,41 @@ void fire_target_behaviour::display_help()
 vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
-    if (const item_def* item = active_item())
+    item_def* item = active_item();
+    if (!item)
+        return descs;
+
+    ranged_attack attk(&you, nullptr, item, is_pproj_active());
+    descs.emplace_back(make_stringf("%d%% to hit", to_hit_pct(mi, attk, false)));
+
+    if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
+        descs.emplace_back("chaotic");
+    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
+        && (mi.body_size() >= SIZE_GIANT
+            || mons_class_is_stationary(mi.type)
+            || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
     {
-        if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
-            descs.emplace_back("chaotic");
-        if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
-            && (mi.body_size() >= SIZE_GIANT
-                || mons_class_is_stationary(mi.type)
-                || mons_class_flag(mi.type, M_INSUBSTANTIAL)))
+        descs.emplace_back("immune to nets");
+    }
+
+    // Display the chance for a dart of para/confuse/sleep/frenzy
+    // to affect monster
+    if (item->is_type(OBJ_MISSILES, MI_DART))
+    {
+        special_missile_type brand = get_ammo_brand(*item);
+        if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
         {
-            descs.emplace_back("immune to nets");
-        }
+            int chance = _get_dart_chance(mi.hd);
+            bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
+            if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
+                immune = true;
 
-        // Display the chance for a dart of para/confuse/sleep/frenzy
-        // to affect monster
-        if (item->is_type(OBJ_MISSILES, MI_DART))
-        {
-            special_missile_type brand = get_ammo_brand(*item);
-            if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
-            {
-                int chance = _get_dart_chance(mi.hd);
-                bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
-                if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
-                    immune = true;
+            string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
-                string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
-
-                string chance_string = immune ? "immune" :
-                                       make_stringf("chance to %s on hit: %d%%",
-                                                    verb.c_str(), chance);
-                descs.emplace_back(chance_string);
-            }
+            string chance_string = immune ? "immune" :
+                                   make_stringf("chance to %s on hit: %d%%",
+                                                verb.c_str(), chance);
+            descs.emplace_back(chance_string);
         }
     }
     return descs;
@@ -894,9 +899,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
                     env.item[msl]);
 
-    if (projected == launch_retval::THROWN)
-        returning = returning && !teleport;
-
     // Identify before throwing, so we don't get different
     // messages for first and subsequent missiles.
     if (mons->observable())
@@ -938,7 +940,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     _throw_noise(mons, item);
 
-    beam.drop_item = !returning;
+    beam.drop_item = item.sub_type == MI_THROWING_NET;
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
@@ -949,42 +951,11 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         beam.use_target_as_pos = true;
         beam.affect_cell();
         beam.affect_endpoint();
-        if (!returning)
-            beam.drop_object();
     }
     else
-    {
         beam.fire();
 
-        // The item can be destroyed before returning.
-        if (returning && thrown_object_destroyed(&item))
-            returning = false;
-    }
-
-    if (returning)
-    {
-        // Fire beam in reverse.
-        beam.setup_retrace();
-        viewwindow();
-        update_screen();
-        beam.fire();
-
-        // Only print a message if you can see the target or the thrower.
-        // Otherwise we get "The weapon returns whence it came from!" regardless.
-        if (you.see_cell(beam.target) || you.can_see(*mons))
-        {
-            msg::stream << "The weapon returns "
-                        << (you.can_see(*mons)?
-                              ("to " + mons->name(DESC_THE))
-                            : "from whence it came")
-                        << "!" << endl;
-        }
-
-        // Player saw the item return.
-        if (!is_artefact(item))
-            set_ident_flags(env.item[msl], ISFLAG_KNOW_TYPE);
-    }
-    else if (dec_mitm_item_quantity(msl, 1))
+    if (beam.drop_item && dec_mitm_item_quantity(msl, 1))
         mons->inv[slot] = NON_ITEM;
 
     if (beam.special_explosion != nullptr)

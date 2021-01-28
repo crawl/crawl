@@ -251,29 +251,28 @@ spret corpse_rot(actor* caster, bool actual)
 
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
-        if (!is_sanctuary(*ri) && !cloud_at(*ri))
-            for (stack_iterator si(*ri); si; ++si)
-                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+        for (stack_iterator si(*ri); si; ++si)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+            {
+                if (!actual)
+                    return spret::success;
+                // Found a corpse. Skeletonise it if possible.
+                if (!mons_skeleton(si->mon_type))
                 {
-                    if (!actual)
-                        return spret::success;
-                    // Found a corpse. Skeletonise it if possible.
-                    if (!mons_skeleton(si->mon_type))
-                    {
-                        item_was_destroyed(*si);
-                        destroy_item(si->index());
-                    }
-                    else
-                        turn_corpse_into_skeleton(*si);
-
-                    if (!saw_rot && you.see_cell(*ri))
-                        saw_rot = true;
-
-                    ++did_rot;
-
-                    // Don't look for more corpses here.
-                    break;
+                    item_was_destroyed(*si);
+                    destroy_item(si->index());
                 }
+                else
+                    turn_corpse_into_skeleton(*si);
+
+                if (!saw_rot && you.see_cell(*ri))
+                    saw_rot = true;
+
+                ++did_rot;
+
+                // Don't look for more corpses here.
+                break;
+            }
     }
     if (!actual)
         return spret::abort;

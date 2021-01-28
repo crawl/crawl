@@ -619,7 +619,7 @@ static const struct spell_desc spelldata[] =
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
     spschool::ice,
     spflag::area,
-    6,
+    7,
     200,
     -1, -1,
     5, 0,
@@ -775,7 +775,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::mons_abjure,
+    spflag::unholy | spflag::selfench
+    | spflag::mons_abjure | spflag::monster,
     5,
     200,
     -1, -1,
@@ -786,7 +787,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
     spschool::summoning,
-    spflag::unholy | spflag::selfench | spflag::mons_abjure,
+    spflag::unholy | spflag::selfench
+    | spflag::mons_abjure  | spflag::monster,
     7,
     200,
     -1, -1,
@@ -884,7 +886,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_DISINTEGRATE, "Disintegrate",
+    SPELL_MINDBURST, "Mindburst",
     spschool::conjuration,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,
@@ -3347,7 +3349,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     5, 0,
-    TILEG_ERROR
+    TILEG_GENERIC_MONSTER_SPELL
 },
 
 {

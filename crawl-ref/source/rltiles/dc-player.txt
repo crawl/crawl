@@ -110,16 +110,12 @@ draconian_red_m
 draconian_white_f DRACONIAN_WHITE
 draconian_white_m DRACONIAN_LAST
 
-centaur_lightgrey_f CENTAUR
-centaur_lightgrey_m
-centaur_darkgrey_f
-centaur_darkgrey_m
-centaur_darkbrown_f
-centaur_darkbrown_m
-centaur_brown_f
-centaur_brown_m
-centaur_lightbrown_f
-centaur_lightbrown_m
+palentonga_red_f PALENTONGA
+palentonga_red_m
+palentonga_f
+palentonga_m
+palentonga_green_f
+palentonga_green_m
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN

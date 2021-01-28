@@ -658,7 +658,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_ooze
-DEPTH:  D:8, Lair, Depths
+DEPTH:  D:8-, Lair, Depths
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, death ooze
@@ -1644,10 +1644,10 @@ KMONS:  E = big kobold ; dart ego:curare | \
                 dart ego:poisoned w:5 . dagger | short sword | whip
 KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
                 wand of enslavement | wand of paralysis | \
-                wand of disintegration . dagger
+                wand of mindburst . dagger
 KMONS:  H = big kobold ; wand of flame | wand of acid | wand of polymorph | \
                 wand of enslavement | wand of paralysis | \
-                wand of disintegration . dagger | short sword | whip
+                wand of mindburst . dagger | short sword | whip
 KMONS:  J = kobold ; dagger ego:distortion
 KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
                 whip ego:distortion
@@ -1767,7 +1767,7 @@ KMONS:   O = player ghost
 MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
 KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
                 wand of enslavement | wand of paralysis | \
-                wand of disintegration \
+                wand of mindburst \
             . spear w:20 | halberd | club | whip | flail | nothing w:15
 # Define some gnolls with reach weapons.
 {{

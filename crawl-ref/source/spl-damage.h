@@ -73,6 +73,7 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail);
 void handle_searing_ray();
 void end_searing_ray();
 
+dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 

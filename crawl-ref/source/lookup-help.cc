@@ -623,7 +623,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     item_kind kind = item_kind_by_name(key);
     get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
-    tileidx_t idx = tileidx_item(get_item_info(item));
+    tileidx_t idx = tileidx_item(get_item_known_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
     if (base_item)
         me->add_tile(tile_def(base_item));

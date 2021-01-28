@@ -1397,7 +1397,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
 bool direction_chooser::pickup_item()
 {
-    item_info *ii = 0;
+    item_def *ii = nullptr;
     if (in_bounds(target()))
         ii = env.map_knowledge(target()).item();
     if (!ii || !ii->is_valid(true))
@@ -2469,7 +2469,7 @@ void get_square_desc(const coord_def &c, describe_info &inf)
         bool temp = false;
         get_monster_db_desc(*mi, inf, temp);
     }
-    else if (const item_info *obj = env.map_knowledge(c).item())
+    else if (const item_def *obj = env.map_knowledge(c).item())
     {
         // Second priority: objects.
         get_item_desc(*obj, inf);
@@ -3741,9 +3741,10 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     if (mon_qvr)
     {
-        const string qvr_desc = make_stringf("quivering %s",
-                                             mon_qvr->name(DESC_A).c_str());
-        item_descriptions.push_back(qvr_desc);
+        const bool net = mon_qvr->sub_type == MI_THROWING_NET;
+        const string qvr_desc = net ? mon_qvr->name(DESC_A)
+                                    : pluralise(mon_qvr->name(DESC_PLAIN));
+        item_descriptions.push_back(make_stringf("quivering %s", qvr_desc.c_str()));
     }
 
     if (mon_carry)

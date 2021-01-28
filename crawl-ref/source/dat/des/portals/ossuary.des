@@ -161,6 +161,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_ossuary_entry_catacombs
+TAGS:   transparent
 FTILE: O1s+ABC = floor_sandstone
 COLOUR: 1s = yellow
 NSUBST: A = + / c, B = + / c, C = + / c, s = 1:O / 4:1 / *:1.....

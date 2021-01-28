@@ -432,7 +432,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             // why does this check rTorment, not rN?
             return ai_action::good_or_impossible(_torment_vulnerable(foe));
     }) },
-    { SPELL_DISINTEGRATE, _hex_logic(SPELL_DISINTEGRATE) },
+    { SPELL_MINDBURST, _hex_logic(SPELL_MINDBURST) },
     { SPELL_CORONA, _hex_logic(SPELL_CORONA, [](const monster& caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);

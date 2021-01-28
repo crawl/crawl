@@ -184,7 +184,7 @@ bool InvEntry::has_star() const
 
 string InvEntry::get_filter_text() const
 {
-    return item_prefix(*item) + " " + get_text();
+    return item_prefix(*item, false) + " " + get_text();
 }
 
 string InvEntry::get_text(bool need_cursor) const
@@ -549,7 +549,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 
 bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool show_background)
 {
-    tileidx_t idx = tileidx_item(get_item_info(item));
+    tileidx_t idx = tileidx_item(get_item_known_info(item));
     if (!idx)
         return false;
 

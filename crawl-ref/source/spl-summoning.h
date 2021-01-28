@@ -47,9 +47,7 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail);
 spret cast_call_imp(int pow, god_type god, bool fail);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
                        int spell = 0, bool friendly = true);
-spret cast_summon_demon(int pow, god_type god = GOD_NO_GOD,
-                             bool fail = false);
-spret cast_summon_greater_demon(int pow, god_type god, bool fail);
+spret cast_summon_demon(int pow);
 spret cast_shadow_creatures(int st = SPELL_SHADOW_CREATURES,
                                  god_type god = GOD_NO_GOD,
                                  level_id place = level_id::current(),

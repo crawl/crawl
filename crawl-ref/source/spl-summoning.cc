@@ -968,17 +968,6 @@ static bool _summon_common_demon(int pow, god_type god, int spell)
                                  random2(pow) > 3, false);
 }
 
-static bool _summon_greater_demon(int pow, god_type god, int spell)
-{
-    monster_type mon = summon_any_demon(RANDOM_DEMON_GREATER);
-
-    const bool high_tier = mons_demon_tier(mon) == 1;
-    const bool friendly = (random2(pow) > (high_tier ? 15 : 10));
-
-    return _summon_demon_wrapper(pow, god, spell, mon,
-                                 4, friendly, !friendly);
-}
-
 bool summon_demon_type(monster_type mon, int pow, god_type god,
                        int spell, bool friendly)
 {
@@ -987,30 +976,15 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
                                  friendly, false);
 }
 
-spret cast_summon_demon(int pow, god_type god, bool fail)
+spret cast_summon_demon(int pow)
 {
     // Chaos spawn, orange demons and sixfirhies are not rPois
     if (otr_stop_summoning_prompt())
         return spret::abort;
 
-    fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
-spret cast_summon_greater_demon(int pow, god_type god, bool fail)
-{
-    if (otr_stop_summoning_prompt())
-        return spret::abort;
-
-    fail_check();
-    mpr("You open a gate to Pandemonium!");
-
-    if (!_summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON))
+    if (!_summon_common_demon(pow, GOD_NO_GOD, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
@@ -2874,11 +2848,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
     { SPELL_SUMMON_HYDRA,               { 3, 2 } },
     { SPELL_SUMMON_MANA_VIPER,          { 2, 2 } },
-    // Demons
-    { SPELL_CALL_IMP,                   { 3, 3 } },
-    { SPELL_SUMMON_DEMON,               { 3, 2 } },
-    { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
     // General monsters
+    { SPELL_CALL_IMP,                   { 3, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,        { 3, 2 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
     { SPELL_SHADOW_CREATURES,           { 4, 2 } },
@@ -2912,6 +2883,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
+    { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
+    { SPELL_SUMMON_DEMON,               { 3, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -3302,7 +3275,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
             break;
     }
 
-    if (created)
+    if (created && you.see_cell(agent.pos()))
     {
         mprf("%s conjure%s some foxfire!",
              agent.name(DESC_THE).c_str(),

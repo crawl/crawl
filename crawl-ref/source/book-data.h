@@ -44,7 +44,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Summonings
-    SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_SHADOW_CREATURES,
@@ -61,9 +60,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Ice
     SPELL_ICE_FORM,
     SPELL_ENGLACIATION,
-    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
+    SPELL_OZOCUBUS_REFRIGERATION,
 },
 
 {   // Book of Spatial Translocations
@@ -329,14 +328,13 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Grand Grimoire
+    SPELL_HAUNT,
     SPELL_MONSTROUS_MENAGERIE,
-    SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,
 },
 
 {   // Necronomicon
-    SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_INFESTATION,
     SPELL_NECROMUTATION,

@@ -605,16 +605,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_ACID:
                     mprf("%s begins to ooze corrosive slime!", item_name.c_str());
                     break;
+
                 case SPWPN_SPECTRAL:
-                    if (you.skill(SK_EVOCATIONS) == 0)
-                        mpr("You have a feeling of ineptitude.");
-                    else if (you.skill(SK_EVOCATIONS) <= 6)
-                        mprf("You feel a bond with your %s.", item_name.c_str());
-                    else
-                    {
-                        mprf("You feel a deep bond with your %s!",
-                             item_name.c_str());
-                    }
+                    mprf("You feel a bond with your %s.", item_name.c_str());
                     break;
 
                 default:

@@ -982,6 +982,7 @@ int player_armour_shield_spell_penalty();
 int player_movement_speed();
 
 int player_icemail_armour_class();
+int player_condensation_shield_class();
 int sanguine_armour_bonus();
 
 int player_wizardry(spell_type spell);

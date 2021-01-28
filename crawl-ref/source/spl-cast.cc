@@ -522,9 +522,6 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & spschool::air)
         enhanced += player_spec_air();
 
-    if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
-        enhanced -= 1;
-
     if (you.form == transformation::shadow)
         enhanced -= 2;
 
@@ -1331,8 +1328,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_GUARDIAN_GOLEM:
     case SPELL_CALL_IMP:
-    case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
@@ -1645,17 +1640,18 @@ private:
  * @param allow_fail    true if it is a spell being cast normally.
  *                      false if the spell is evoked or from an innate or divine ability
  *
- * @param evoked_item   The wand the spell was evoked from if applicable, or
+ * @param evoked_wand   The wand the spell was evoked from if applicable, or
                         nullptr.
  * @return spret::success if spell is successfully cast for purposes of
  * exercising, spret::fail otherwise, or spret::abort if the player cancelled
  * the casting.
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item, dist *target)
+                       const item_def* const evoked_wand, dist *target)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT(!evoked_item || evoked_item->base_type == OBJ_WANDS);
+    ASSERT(!(allow_fail && evoked_wand));
+    ASSERT(!evoked_wand || evoked_wand->base_type == OBJ_WANDS);
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
 
@@ -1727,7 +1723,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                   testbits(flags, spflag::area) ? ( powc * 3 ) / 2
                                                 : powc;
             additional_desc = bind(desc_wl_success_chance, placeholders::_1,
-                                   eff_pow, evoked_item, hitfunc.get());
+                                   eff_pow, evoked_wand, hitfunc.get());
         }
         else if (spell == SPELL_INTOXICATE)
         {
@@ -1812,7 +1808,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             return spret::abort;
     }
 
-    if (evoked_item)
+    if (evoked_wand)
     {
 #if TAG_MAJOR_VERSION == 34
         const int surge = pakellas_surge_devices();
@@ -1821,9 +1817,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 #endif
         powc = player_adjust_evoc_power(powc, surge);
 #if TAG_MAJOR_VERSION == 34
-        int mp_cost_of_wand = evoked_item->base_type == OBJ_WANDS
-                              ? wand_mp_cost() : 0;
-        surge_power_wand(mp_cost_of_wand + surge * 3);
+        surge_power_wand(wand_mp_cost() + surge * 3);
 #endif
     }
 #if TAG_MAJOR_VERSION == 34
@@ -1849,7 +1843,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     }
     else
 #endif
-    if (evoked_item && evoked_item->charges == 0)
+    if (evoked_wand && evoked_wand->charges == 0)
         return spret::fail;
     else if (allow_fail)
     {
@@ -1919,6 +1913,14 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     {
     case spret::success:
     {
+        const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
+
+        if ((demonic_magic == 3 && evoked_wand)
+            || (demonic_magic > 0 && allow_fail))
+        {
+            do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
+        }
+
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you);
 
@@ -2127,12 +2129,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
-
-    case SPELL_SUMMON_DEMON:
-        return cast_summon_demon(powc, god, fail);
-
-    case SPELL_SUMMON_GREATER_DEMON:
-        return cast_summon_greater_demon(powc, god, fail);
 
     case SPELL_SHADOW_CREATURES:
         return cast_shadow_creatures(spell, god, level_id::current(), fail);
@@ -2609,6 +2605,10 @@ string spell_damage_string(spell_type spell, bool evoked)
         }
         case SPELL_ABSOLUTE_ZERO:
             return "∞";
+        case SPELL_CONJURE_FLAME:
+            return desc_cloud_damage(CLOUD_FIRE, false);
+        case SPELL_FREEZING_CLOUD:
+            return desc_cloud_damage(CLOUD_COLD, false);
         default:
             break;
     }
@@ -2749,4 +2749,23 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
+}
+
+void do_demonic_magic(int pow, int rank)
+{
+    if (rank < 1)
+        return;
+
+    mprf("Malevolent energies surge around you.");
+
+    for (radius_iterator ri(you.pos(), rank, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster *mons = monster_at(*ri);
+
+        if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
+            continue;
+
+        if (mons->check_willpower(pow) <= 0)
+            mons->paralyse(&you, 1 + roll_dice(1,4));
+    }
 }

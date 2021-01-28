@@ -292,8 +292,11 @@ int manual_slot_for_skill(skill_type skill)
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
     {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL
+            || is_useless_item(*iter))
+        {
             continue;
+        }
 
         if (iter->skill != skill || iter->skill_points == 0)
             continue;
@@ -310,6 +313,10 @@ int manual_slot_for_skill(skill_type skill)
 
 int get_all_manual_charges_for_skill(skill_type skill)
 {
+    // Gnolls can't focus well enough to use manuals
+    if (you.species == SP_GNOLL)
+        return 0;
+
     int charges = 0;
 
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();

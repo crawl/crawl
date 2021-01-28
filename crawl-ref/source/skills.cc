@@ -96,7 +96,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 #if TAG_MAJOR_VERSION == 34
     {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
 #endif
-    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
+    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
     {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
@@ -1672,13 +1672,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         switch (best_skill)
         {
         case SK_SUMMONINGS:
-            // don't call good disciples hellbinders or demonologists
-            if (is_good_god(god))
+            // retro goody-bag for decidedly non-goodies
+            if (is_evil_god(god))
             {
                 if (skill_rank == 4)
-                    result = "Worldbinder";
+                    result = "Demonologist";
                 else if (skill_rank == 5)
-                    result = "Planerender";
+                    result = "Hellbinder";
             }
             break;
 
@@ -1883,6 +1883,8 @@ bool is_useless_skill(skill_type skill)
         || (skill == SK_DODGING && you.get_mutation_level(MUT_NO_DODGING))
         || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR))
         || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
+        || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
+            && you.species != SP_FORMICID)
         || (skill == SK_EVOCATIONS && you.get_mutation_level(MUT_NO_ARTIFICE))
         || (skill == SK_STEALTH && you.get_mutation_level(MUT_NO_STEALTH))
     )

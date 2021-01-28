@@ -104,9 +104,9 @@ void item_colour(item_def &item)
     // it in appearance at some point, since sub_type isn't public information
     // for un-id'd items, and therefore can't be used to do a lookup at the
     // time item names/colours are calculated.
-    // it would probably be better to store this at the time that item_info is
-    // generated (get_item_info), but that requires some save compat work (and
-    // would be wrong if we ever try to get item colour/names directly...?)
+    // it would probably be better to store this at the time that item_def is
+    // generated (get_item_known_info), but that requires some save compat work
+    // (and would be wrong if we ever try to get item colour/names directly...?)
     // possibly a todo for a later date.
 
     if (auto idesc = map_find(_type_to_idesc, item.base_type))
@@ -1298,7 +1298,7 @@ static int _random_wand_subtype()
                                   8, WAND_POLYMORPH,
                                   8, WAND_PARALYSIS,
                                   8, WAND_ACID,
-                                  6, WAND_DISINTEGRATION,
+                                  6, WAND_MINDBURST,
                                   6, WAND_DIGGING,
                                   5, WAND_ENSLAVEMENT);
 }
@@ -1319,7 +1319,7 @@ bool is_high_tier_wand(int type)
     case WAND_PARALYSIS:
     case WAND_ACID:
     case WAND_ICEBLAST:
-    case WAND_DISINTEGRATION:
+    case WAND_MINDBURST:
         return true;
     default:
         return false;

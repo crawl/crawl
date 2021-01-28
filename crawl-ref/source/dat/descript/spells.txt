@@ -395,11 +395,6 @@ Discord spell
 Drives nearby creatures into an insane frenzy, causing them to mercilessly
 attack anything and everything nearby with great strength and speed.
 %%%%
-Disintegrate spell
-
-Disrupts the physical structure of a target creature, dealing heavy damage and
-bypassing armour. Only strong-willed beings can hold themselves together.
-%%%%
 Disjunction spell
 
 Destabilizes the space in a sphere around the caster for a while, causing
@@ -936,6 +931,12 @@ Might spell
 
 Significantly increases the caster's damage in melee.
 %%%%
+Mindburst spell
+
+Launches a psychic attack. If it overcomes the victim's willpower, it
+'blows their mind' in a violently literal fashion, dealing damage that
+bypasses their armour entirely. It is useless against mindless creatures.
+%%%%
 Minor Healing spell
 
 Heals a small amount of damage to the caster's body.
@@ -1340,8 +1341,7 @@ Summons one or more air elementals.
 Summon Demon spell
 
 Opens a gate to the realm of Pandemonium and draws forth one of its inhabitants
-to serve the caster for a time. The demon's servitude is not guaranteed, but
-will be more likely with high power.
+to serve the caster for a time.
 %%%%
 Summon Dragon spell
 
@@ -1383,14 +1383,6 @@ and the trees of the forest will be awakened to deal damage to nearby enemies.
 Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
-Demons summoned in this way have a chance to eventually break free from their
-summoner's control. With high power, the demon will be less likely to break
-free, but stronger demons are more likely to eventually turn against their
-summoner.
-
-Unlike other summons, demons which are only temporarily enslaved will not be
-dismissed when attacked by their summoner, but will instead become hostile
-immediately.
 %%%%
 Summon Guardian Golem spell
 

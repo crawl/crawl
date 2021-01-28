@@ -970,9 +970,6 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
-        check_demonic_guardian();
-
     if (you.unrand_reacts.any())
         unrand_reacts();
 
@@ -1006,10 +1003,6 @@ void player_reacts()
 
     if (env.level_state & LSTATE_SLIMY_WALL)
         slime_wall_damage(&you, you.time_taken);
-
-    // Icy shield and armour melt over lava.
-    if (env.grid(you.pos()) == DNGN_LAVA)
-        maybe_melt_player_enchantments(BEAM_FIRE, you.time_taken);
 
     _decrement_durations();
 

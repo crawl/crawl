@@ -238,7 +238,6 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
-    const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
     if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
     {
@@ -278,16 +277,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // At the moment it never gets this low anyway.
     attk_delay = rv::max(attk_delay, random_var(3));
 
-    if (base_shield_penalty)
-    {
-        // Calculate this separately to avoid overflowing the weights in
-        // the random_var.
-        random_var shield_penalty =
-            div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
-                                   rv::roll_dice(1, base_shield_penalty)),
-                           DELAY_SCALE);
-        attk_delay += shield_penalty;
-    }
+    attk_delay +=
+        div_rand_round(random_var(adjusted_shield_penalty(DELAY_SCALE)),
+                       DELAY_SCALE);
 
     if (you.duration[DUR_FINESSE])
     {

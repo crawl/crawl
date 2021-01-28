@@ -780,9 +780,20 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     m_ui_state = state;
 }
 
-void TilesFramework::update_input_mode(mouse_mode mode)
+void TilesFramework::update_input_mode(mouse_mode mode, bool force)
 {
-    redraw();
+    auto prev_mode = mouse_control::current_mode();
+    if (prev_mode == mode && !force)
+        return;
+
+    // we skip redrawing in this case because it happens on every key input,
+    // and is very heavy on held down keys
+    if (force
+        || !(prev_mode == MOUSE_MODE_COMMAND && mode == MOUSE_MODE_NORMAL
+             || prev_mode == MOUSE_MODE_NORMAL && mode == MOUSE_MODE_COMMAND))
+    {
+        redraw();
+    }
 
     json_open_object();
     json_write_string("msg", "input_mode");
@@ -1055,7 +1066,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
+        _send_item(c.inv[i], get_item_known_info(you.inv[i]), force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1093,7 +1104,7 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
-void TilesFramework::_send_item(item_info& current, const item_info& next,
+void TilesFramework::_send_item(item_def& current, const item_def& next,
                                 bool force_full)
 {
     bool changed = false;
@@ -1224,14 +1235,14 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_CENTAUR);
+    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_PALENTONGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     tiles.json_open_array("doll");
@@ -1494,12 +1505,14 @@ void TilesFramework::_send_cell(const coord_def &gc,
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_WEAPON)));
                         minfo.inv[MSLOT_WEAPON].reset(item);
                     }
                     if (you.slot_item(EQ_SHIELD))
                     {
-                        item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+                        item = new item_def(
+                            get_item_known_info(*you.slot_item(EQ_SHIELD)));
                         minfo.inv[MSLOT_SHIELD].reset(item);
                     }
                     tileidx_t mcache_idx = mcache.register_monster(minfo);
@@ -1928,7 +1941,7 @@ void TilesFramework::_send_everything()
 
     _send_messages();
 
-    update_input_mode(mouse_control::current_mode());
+    update_input_mode(mouse_control::current_mode(), true);
 
     m_text_menu.send(true);
 

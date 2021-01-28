@@ -170,6 +170,4 @@ private:
     colour_t corpse_colour() const;
 };
 
-typedef item_def item_info;
-
-item_info get_item_info(const item_def& info);
+item_def get_item_known_info(const item_def& info);

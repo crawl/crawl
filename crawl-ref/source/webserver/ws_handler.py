@@ -62,20 +62,18 @@ def global_announce(text):
         socket.send_announcement(text)
 
 def write_dgl_status_file():
-    f = None
+    process_info = ["%s#%s#%s#0x0#%s#%s#" %
+                            (socket.username, socket.game_id,
+                             (socket.process.human_readable_where()),
+                             str(socket.process.idle_time()),
+                             str(socket.process.watcher_count()))
+                        for socket in list(sockets)
+                        if socket.username and socket.is_running()]
     try:
-        f = open(config.dgl_status_file, "w")
-        for socket in list(sockets):
-            if socket.username and socket.is_running():
-                f.write("%s#%s#%s#0x0#%s#%s#\n" %
-                        (socket.username, socket.game_id,
-                         (socket.process.human_readable_where()),
-                         str(socket.process.idle_time()),
-                         str(socket.process.watcher_count())))
+        with open(config.dgl_status_file, "w") as f:
+            f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
-    finally:
-        if f: f.close()
 
 def status_file_timeout():
     write_dgl_status_file()
@@ -346,6 +344,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # this code would be much simpler refactored using async
         def build_callback(game_key, call, next_callback):
             def update_save_info(data, returncode):
+                global sockets
+                if not self in sockets:
+                    return
                 if returncode == 0:
                     try:
                         save_dict = json_decode(data)[load_games.game_modes[game_key]]
@@ -407,14 +408,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         def disable_check(s):
             return s == "[slot full]"
         def send_game_links():
+            global sockets
+            if not self in sockets:
+                return # socket closed by the time this info was collected
             self.queue_message("html", id = "banner", content = banner_html)
             # TODO: dynamically send this info as it comes in, rather than
             # rendering it all at the end?
-            play_html = to_unicode(self.render_string("game_links.html",
+            try:
+                play_html = to_unicode(self.render_string("game_links.html",
                                                   games = config.games,
                                                   save_info = self.save_info,
                                                   disabled = disable_check))
-            self.send_message("set_game_links", content = play_html)
+                self.send_message("set_game_links", content = play_html)
+            except:
+                self.logger.warning("Error on send_game_links callback",
+                                                                exc_info=True)
         # if no game links at all have been sent, immediately render the
         # empty version. This is so that if the server takes a while on
         # initial connect, the player sees something immediately.
@@ -879,6 +887,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.warning("Didn't know how to handle msg (user %s): %s",
                                     self.username and self.username or "[Anon]",
                                     obj["msg"])
+        except OSError as e:
+            # maybe should throw a custom exception from the socket call rather
+            # than rely on these cases?
+            excerpt = message[:50] if len(message) > 50 else message
+            trunc = "..." if len(message) > 50 else ""
+            if e.errno == errno.EAGAIN or e.errno == errno.ENOBUFS:
+                # errno is different on mac vs linux, maybe also depending on
+                # python version
+                self.logger.warning(
+                    "Socket buffer full; skipping JSON message ('%r%s')!",
+                                excerpt, trunc)
+            else:
+                self.logger.warning(
+                                "Error while handling JSON message ('%r%s')!",
+                                excerpt, trunc,
+                                exc_info=True)
         except Exception:
             excerpt = message[:50] if len(message) > 50 else message
             trunc = "..." if len(message) > 50 else ""

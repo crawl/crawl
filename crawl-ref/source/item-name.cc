@@ -627,7 +627,7 @@ static const char* _wand_type_name(int wandtype)
     case WAND_ENSLAVEMENT:     return "enslavement";
     case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
-    case WAND_DISINTEGRATION:  return "disintegration";
+    case WAND_MINDBURST:       return "mindburst";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -2928,7 +2928,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_TELEPORTATION:
             return you.species == SP_FORMICID
                    || crawl_state.game_is_sprint()
-                   || player_in_branch(BRANCH_GAUNTLET);
+                   || temp && player_in_branch(BRANCH_GAUNTLET);
         case SCR_BLINKING:
             return you.species == SP_FORMICID;
         case SCR_AMNESIA:
@@ -3136,7 +3136,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_BOOKS:
         if (!ident && !item_type_known(item))
             return false;
-        if (item_type_known(item) && item.sub_type != BOOK_MANUAL)
+        if ((ident || item_type_known(item)) && item.sub_type != BOOK_MANUAL)
         {
             // Spellbooks are useless if all spells are either in the library
             // already or are uncastable.
@@ -3151,7 +3151,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
         if (is_useless_skill((skill_type)item.plus))
             return true;
-        return false;
+        return you.species == SP_GNOLL;
 
     default:
         return false;

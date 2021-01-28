@@ -1677,7 +1677,7 @@ KFEAT: _ = altar_xom / altar_lugonu / altar_zin / altar_the_shining_one / \
 SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook numspells:4 spells:summon_demon&fireball&animate_dead&airstrike title:the_Zealot
+KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike title:the_Zealot
 KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta

@@ -1753,12 +1753,12 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
+                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
     if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {
-        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     for (int i = 0; i < TILEP_PART_MAX; ++i)

@@ -685,6 +685,9 @@ void trap_def::trigger(actor& triggerer)
         // Don't try to re-net the player when they're already netted/webbed.
         if (you.attribute[ATTR_HELD])
             break;
+        // Reduce brutality of traps.
+        if (!you_trigger && !one_chance_in(3))
+            break;
 
         bool triggered = you_trigger;
         if (m)
