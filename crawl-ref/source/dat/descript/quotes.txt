@@ -124,7 +124,7 @@ A faded altar of an unknown god
  perceive that in all things ye are too superstitious. For as I passed by, and
  beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
  GOD.”
-    -KJV Bible, Acts 17:23-24.
+    -KJV Bible, Acts 17:22-23.
 %%%%
 A flagged portal
 
@@ -554,11 +554,15 @@ And Samson called unto the LORD, and said, O Lord GOD, remember me, I pray
 thee, and strengthen me, I pray thee, only this once, O God, that I may be at
 once avenged of the Philistines for my two eyes.
 
+And Samson took hold of the two middle pillars upon which the house stood, and
+on which it was borne up, of the one with his right hand, and of the other with
+his left.
+
 And Samson said, Let me die with the Philistines. And he bowed himself with all
 his might; and the house fell upon the lords, and upon all the people that were
 therein. So the dead which he slew at his death were more than they which he
 slew in his life.”
-    -KJV Bible, Judges 16:28-30.
+    -KJV Bible, Judges 16:27-30.
 %%%%
 Mara
 
@@ -674,11 +678,13 @@ Psyche
 %%%%
 Shatter spell
 
-“And it happened when the people heard the sound of the trumpet, and the people
-shouted with a great shout, that the wall fell down flat. Then the people went
-up into the city, every man straight before him, and they took the city. And
-they utterly destroyed all that was in the city, both man and woman, young and
-old, ox and sheep and donkey, with the edge of the sword.”
+“So the people shouted when the priests blew with the trumpets: and it came to
+pass, when the people heard the sound of the trumpet, and the people shouted
+with a great shout, that the wall fell down flat, so that the people went up
+into the city, every man straight before him, and they took the city.
+
+And they utterly destroyed all that was in the city, both man and woman, young
+and old, and ox, and sheep, and ass, with the edge of the sword.”
     -KJV Bible, Joshua 6:20-21.
 %%%%
 Shoals
@@ -2029,7 +2035,7 @@ pillar of salt
 LORD out of heaven; And he overthrew those cities, and all the plain, and all
 the inhabitants of the cities, and that which grew upon the ground. But [Lot's]
 wife looked back from behind him, and she became a pillar of salt.”
-    -KJV Bible, Genesis 19:24-6.
+    -KJV Bible, Genesis 19:24-26.
 %%%%
 player ghost
 
