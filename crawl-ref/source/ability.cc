@@ -2688,11 +2688,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         lugonu_bend_space();
         break;
@@ -2729,6 +2733,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_LUGONU_ABYSS_ENTER:
     {
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         // Deflate HP.
         dec_hp(random2avg(you.hp, 2), false);
@@ -2973,7 +2979,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_DITHMENOS_SHADOW_STEP:
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move(false))
             return spret::abort;
         fail_check();
         if (!dithmenos_shadow_step()) // TODO dist arg
@@ -3076,7 +3082,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         }
 
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move())
             return spret::abort;
 
         fail_check();
@@ -3122,7 +3128,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_USKAYAW_LINE_PASS:
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move())
             return spret::abort;
         fail_check();
         if (!uskayaw_line_pass()) // TODO dist arg
@@ -3130,6 +3136,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         return uskayaw_grand_finale(fail); // TODO dist arg
 
     case ABIL_HEPLIAKLQANA_IDEALISE:
