@@ -32,7 +32,7 @@
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // remove_ice_movement for palentonga charge
+#include "movement.h" // palentonga charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -603,7 +603,6 @@ spret palentonga_charge(bool fail, dist *target)
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
     apply_barbs_damage();
-    remove_ice_movement();
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
