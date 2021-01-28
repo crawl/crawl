@@ -4744,6 +4744,7 @@ bool ru_power_leap()
     }
 
     move_player_to_grid(beam.target, false);
+    apply_barbs_damage();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5135,6 +5136,7 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
+        apply_barbs_damage();
     }
 
     crawl_state.cancel_cmd_again();
@@ -5472,6 +5474,8 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim->is_player())
     {
+        if (cancel_harmful_move(false))
+            return spret::abort;
         ancestor->move_to_pos(target, true, true);
         victim->move_to_pos(destination, true, true);
     }

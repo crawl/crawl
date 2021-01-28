@@ -349,7 +349,7 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
  */
 bool check_moveto(const coord_def& p, const string &move_verb, bool physically)
 {
-    return !(physically && cancel_harmful_move(move_verb == "rampage"))
+    return !(physically && cancel_harmful_move(physically, move_verb == "rampage"))
            && check_moveto_terrain(p, move_verb, "")
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)

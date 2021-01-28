@@ -653,9 +653,7 @@ void floor_transition(dungeon_feature_type how,
 
     // We "stepped".
     if (!forced)
-    {
         apply_barbs_damage();
-    }
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
