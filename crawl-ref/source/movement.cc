@@ -228,7 +228,7 @@ void remove_ice_movement()
     {
         you.duration[DUR_FROZEN_RAMPARTS] = 0;
         end_frozen_ramparts();
-        mpr("The frozen ramparts melt away as you move.");
+        mprf(MSGCH_DURATION, "The frozen ramparts melt away as you move.");
     }
 }
 
