@@ -242,6 +242,12 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
+        if (cancel_harmful_move(false))
+        {
+            clear_messages();
+            continue;
+        }
+
         target = beam.target; // Grid in los, no problem.
         return true;
     }
@@ -330,6 +336,10 @@ spret frog_hop(bool fail)
     coord_def target;
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
+
+    if (cancel_harmful_move())
+        return spret::abort;
+
     while (true)
     {
         if (!_find_cblink_target(target, true, "hop", &tgt))
@@ -363,6 +373,7 @@ spret frog_hop(bool fail)
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
+    apply_barbs_damage();
 
     return spret::success; // TODO
 }
@@ -693,6 +704,9 @@ spret cast_blink(bool fail)
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
         return fail ? spret::fail : spret::success; // probably always SUCCESS
+
+    if (cancel_harmful_move(false))
+        return spret::abort;
 
     fail_check();
     uncontrolled_blink();

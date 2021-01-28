@@ -209,9 +209,10 @@ static bool _cancel_ice_move()
     return false;
 }
 
-bool cancel_harmful_move(bool rampaging)
+bool cancel_harmful_move(bool physically, bool rampaging)
 {
-    return _cancel_barbed_move(rampaging) || _cancel_ice_move();
+    return physically ? (_cancel_barbed_move(rampaging) || _cancel_ice_move())
+        : _cancel_ice_move();
 }
 
 void remove_ice_movement()
