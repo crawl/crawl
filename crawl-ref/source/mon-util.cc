@@ -5025,7 +5025,6 @@ void debug_monspells()
         }
         else
         {
-            const mon_spellbook_type mons_book = _get_mc_spellbook(sample_mons);
             const char * const mons_name = get_monster_data(sample_mons)->name;
             book_name = mons_name;
         }

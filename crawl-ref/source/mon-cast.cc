@@ -1781,23 +1781,6 @@ static bool _mons_can_bind_soul(monster* binder, monster* bound)
             && mons_aligned(binder, bound);
 }
 
-// Function should return false if friendlies shouldn't animate any dead.
-// Only applies to friendly corpse animators. {due}
-static bool _animate_dead_okay(spell_type spell)
-{
-    // It's always okay in the arena.
-    if (crawl_state.game_is_arena())
-        return true;
-
-    if (god_hates_spell(spell, you.religion)
-        || will_have_passive(passive_t::convert_orcs))
-    {
-        return false;
-    }
-
-    return true;
-}
-
 // Returns true if the spell is something you wouldn't want done if
 // you had a friendly target... only returns a meaningful value for
 // non-beam spells.
