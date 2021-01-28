@@ -742,7 +742,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     }
 
     // special movement code for ioods
-    if (mons_is_projectile(*mon))
+    if (mons_is_projectile(*mon) || mons_is_boulder(*mon))
     {
         iood_catchup(mon, turns);
         return;
@@ -874,6 +874,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
+        case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
         case ENCH_CIGOTUVIS_PLAGUE:

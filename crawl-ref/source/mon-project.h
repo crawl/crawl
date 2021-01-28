@@ -18,3 +18,5 @@ void iood_catchup(monster* mon, int turns);
 
 spret cast_foxfire(actor *caster, int pow, god_type god, bool fail = false);
 void foxfire_attack(const monster* foxfire, const actor* target);
+
+void boulder_start(monster *mon, bolt *beam);

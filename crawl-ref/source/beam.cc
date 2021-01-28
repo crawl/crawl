@@ -5376,7 +5376,8 @@ bool bolt::ignores_monster(const monster* mon) const
         return false;
 
     // All kinds of beams go past orbs of destruction and friendly
-    // battlespheres.
+    // battlespheres. We don't check mon->is_projectile() because that
+    // check includes boulder beetles which should be hit.
     if (mons_is_projectile(*mon)
         || (mons_is_avatar(mon->type) && mons_aligned(agent(), mon)))
     {
@@ -6142,6 +6143,34 @@ int bolt::range_used_on_hit() const
     return used;
 }
 */
+
+
+// Extra range used on hit.
+int bolt::range_used_on_hit() const
+{
+    if (is_tracer && source_id == MID_PLAYER && hit < AUTOMATIC_HIT)
+        return 0;
+
+    // Non-beams can only affect one thing (player/monster).
+    if (!pierce)
+        return BEAM_STOP;
+    // These beams fully penetrate regardless of anything else.
+    if (flavour == BEAM_DAMNATION
+        || flavour == BEAM_DIGGING
+        || flavour == BEAM_VILE_CLUTCH)
+    {
+        return 0;
+    }
+    // explosions/clouds and enchants that aren't Line Pass stop.
+    if (is_enchantment() && name != "line pass"
+        || is_explosion
+        || is_big_cloud())
+    {
+        return BEAM_STOP;
+    }
+    // Lightning that isn't an explosion goes through things.
+    return 0;
+}
 
 // Information for how various explosions look & sound.
 struct explosion_sfx

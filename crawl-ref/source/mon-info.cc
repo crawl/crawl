@@ -79,6 +79,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
     { ENCH_DEATHS_DOOR,     MB_DEATHS_DOOR },
+    { ENCH_ROLLING,         MB_ROLLING },
     { ENCH_STONESKIN,       MB_STONESKIN },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
@@ -1278,6 +1279,8 @@ static string _verbose_info0(const monster_info& mi)
         return "mad";
     if (mi.is(MB_DEATHS_DOOR))
         return "deaths door";
+    if (mi.is(MB_ROLLING))
+        return "rolling";
     if (mi.is(MB_CONFUSED))
         return "confused";
     if (mi.is(MB_FLEEING))
