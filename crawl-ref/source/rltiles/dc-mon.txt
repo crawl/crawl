@@ -921,7 +921,8 @@ fannar MONS_FANNAR
 elf MONS_ELF
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
 deep_elf_archer MONS_DEEP_ELF_ARCHER
-deep_elf_mage MONS_DEEP_ELF_MAGE
+deep_elf_zephyrmancer MONS_DEEP_ELF_AIR_MAGE
+deep_elf_pyromancer MONS_DEEP_ELF_FIRE_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
 deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST
