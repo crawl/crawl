@@ -94,8 +94,6 @@ static bool _evoke_sceptre_of_asmodeus()
         return false;
 
     const monster_type mon = random_choose_weighted(
-                                   3, MONS_EFREET,
-                                   3, MONS_SUN_DEMON,
                                    3, MONS_BALRUG,
                                    2, MONS_HELLION,
                                    1, MONS_BRIMSTONE_FIEND);
