@@ -1408,6 +1408,10 @@ bool keycode_is_printable(int keycode)
 
 string keycode_to_name(int keycode)
 {
+    // this is printable, but it's very confusing to try to use ' ' to print it
+    // in circumstances where a name is called for
+    if (keycode == ' ')
+        return "Space";
     // TODO: handling of alt keys in SDL is generally a mess, including here
     // (they are basically just ignored)
     if (keycode_is_printable(keycode))
