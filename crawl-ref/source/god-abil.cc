@@ -5803,7 +5803,6 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_repeat();
 
     apply_barbs_damage();
-    remove_ice_movement();
     return spret::success;
 }
 

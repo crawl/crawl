@@ -26,6 +26,7 @@
 #include "item-prop.h"
 #include "item-use.h"
 #include "message.h"
+#include "movement.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -77,6 +78,8 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     clear_invalid_constrictions();
     end_searing_ray();
+    // Remove spells that break upon movement
+    remove_ice_movement();
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
