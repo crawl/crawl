@@ -2412,6 +2412,13 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         long_desc += " and to sufficiently intense sources of fire.";
     }
 
+    // mention that diggable walls are
+    if (feat_is_diggable(feat)
+        && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
+    {
+        long_desc += "\nIt can be dug through.";
+    }
+
     inf.body << long_desc;
 
     if (include_extra)
