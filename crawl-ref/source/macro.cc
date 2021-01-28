@@ -1400,6 +1400,8 @@ bool keycode_is_printable(int keycode)
         // applied more generally but I'm concerned about non-US keyboard
         // layouts etc. I'm also not sure how accurate it is for sdl...
         return keycode >= 32 && keycode < 256;
+#elif defined(USE_TILE_WEB)
+        return keycode >= 32 && keycode < 128;
 #else
         return keycode >= 32;
 #endif
