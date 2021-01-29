@@ -146,7 +146,9 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    if (is_useless_item(item, false, true))
+    // However, wanderer randbooks aren't yet initialized and all other
+    // starting books are guaranteed to be useful at game start.
+    if (item.base_type != OBJ_BOOKS && is_useless_item(item, false, true))
     {
         item = item_def();
         return nullptr;
