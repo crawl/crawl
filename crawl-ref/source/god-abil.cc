@@ -723,12 +723,11 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
 int zin_recite_power()
 {
     // Resistance is now based on HD.
-    // Anything at or above (30+30)/2 = 30 'power' (HD) is completely immune.
+    // Anything at or above 30 'power' (HD) is completely immune.
     const int power_mult = 10;
     const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
                            + 3 * power_mult;
-    const int piety_power = you.piety * 3 / 2;
-    return (invo_power + piety_power) / 2 / power_mult;
+    return (invo_power) / power_mult;
 }
 
 bool zin_check_able_to_recite(bool quiet)
