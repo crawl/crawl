@@ -96,11 +96,12 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
         glyph_mode_font_name: function ()
         {
-            var glyph_scale = window.devicePixelRatio;
+            var glyph_scale;
             if (this.ui_state == enums.ui.VIEW_MAP)
-                glyph_scale *= options.get("tile_map_scale");
+                glyph_scale = options.get("tile_map_scale");
             else
-                glyph_scale *= options.get("tile_viewport_scale");
+                glyph_scale = options.get("tile_viewport_scale");
+            glyph_scale = ((glyph_scale - 100) / 2 + 100) * window.devicePixelRatio;
 
             return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
                 + "px " + this.glyph_mode_font);
