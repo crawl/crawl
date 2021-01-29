@@ -4371,7 +4371,7 @@ void runrest::initialise(int dir, int mode)
         set_run_check(2, right);
     }
 
-    if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT_DURATION)
+    if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT)
         start_delay<RestDelay>();
     else
         start_delay<RunDelay>();

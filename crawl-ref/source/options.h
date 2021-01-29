@@ -472,6 +472,8 @@ public:
     int         rest_wait_percent; // Stop resting after restoring this
                                    // fraction of HP or MP
 
+    int         rest_wait_turns; // Stop resting after this number of turns
+
     bool        regex_search; // whether to default to regex search for ^F
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status

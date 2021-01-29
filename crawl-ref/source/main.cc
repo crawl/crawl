@@ -1655,7 +1655,7 @@ static void _do_rest()
             && ancestor_full_hp())
         {
             mpr("You start waiting.");
-            _start_running(RDIR_REST, RMODE_WAIT_DURATION);
+            _start_running(RDIR_REST, Options.rest_wait_turns);
             return;
         }
         else

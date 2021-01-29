@@ -48,7 +48,8 @@ The contents of this text are:
                 tc_exclude_circle, runrest_ignore_message,
                 runrest_stop_message, interrupt_<delay>, delay_safe_poison,
                 runrest_ignore_monster, rest_wait_both, rest_wait_ancestor,
-                rest_wait_percent, explore_auto_rest, auto_exclude
+                rest_wait_percent, rest_wait_turns, explore_auto_rest,
+                auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, simple_targeting,
@@ -967,6 +968,9 @@ rest_wait_percent = 100
         When resting, if your HP or MP is below this percentage of being full,
         it will stop resting when this percent of maximum HP or MP is refilled.
         Resting after this point will still rest up to 100%.
+
+rest_wait_turns = 100
+        The number of turns to rest (wait) when both HP and MP are full.
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
