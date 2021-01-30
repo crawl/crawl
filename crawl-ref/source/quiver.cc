@@ -1194,6 +1194,40 @@ namespace quiver
         }
     }
 
+    bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
+    {
+        // Hacky: do some quiver-specific range checks for the sake of
+        // autofight. We can't approach this like spells (which are marked
+        // as useless with butterflies in range), because there is no
+        // equivalent of `Z` to force-activate an ability that is indicating
+        // temporary uselessness. This way, the player can still activate
+        // it from the `a` menu, just not from the quiver.
+        // (What abilities are missing here?)
+
+        switch (abil)
+        {
+        case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+        {
+            // can this be consolidated with spell range checks?
+            // n.b. the range value here is used differently than in spell range
+            // checks (for consistency with the ability implementation)
+            const int range = min((int)you.current_vision, 5);
+            if (get_dist_to_nearest_monster() <= range)
+                return true;
+            if (!quiet)
+                mpr("You can't see any hostile targets that would be affected.");
+            return false;
+        }
+        case ABIL_ROLLING_CHARGE:
+            // Use a version of the palentonga charge check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up.
+            return palentonga_charge_possible(quiet, false);
+        default:
+            return true;
+        }
+    }
+
     struct ability_action : public action
     {
         ability_action(ability_type a = ABIL_NON_ABILITY) : ability(a) { };
@@ -1223,15 +1257,7 @@ namespace quiver
             if (!is_valid())
                 return false;
 
-            // hacky: use a version of the palentonga charge check that
-            // ignores things like butterflies, so that autofight doesn't get
-            // tripped up. We can't approach this like spells (which are marked
-            // as useless with butterflies in range), because there is no
-            // equivalent of `Z` to force-activate an ability that is indicating
-            // temporary uselessness. This way, the player can still activate
-            // it from the `a` menu, just not from the quiver. (Does this apply
-            // to any other abilities with a limited range?)
-            if (ability == ABIL_ROLLING_CHARGE && !palentonga_charge_possible(true, false))
+            if (!_ability_quiver_range_check(ability))
                 return false;
 
             // TODO: _check_ability_dangerous?
@@ -1319,7 +1345,9 @@ namespace quiver
 
             if (!is_enabled())
             {
-                check_ability_possible(ability, false);
+                // do some messaging
+                if (_ability_quiver_range_check(ability, false))
+                    check_ability_possible(ability, false);
                 return;
             }
             set_target(t);
