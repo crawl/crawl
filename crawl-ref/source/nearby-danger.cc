@@ -34,15 +34,9 @@
 #include "traps.h"
 #include "travel.h"
 
-
-// HACK ALERT: In the following several functions, want_move is true if the
-// player is travelling. If that is the case, things must be considered one
-// square closer to the player, since we don't yet know where the player will
-// be next turn.
-
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
+static bool _mons_has_path_to_player(const monster* mon)
 {
     // Short-cut if it's already adjacent.
     if (grid_distance(mon->pos(), you.pos()) <= 1)
@@ -94,7 +88,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     return false;
 }
 
-bool mons_can_hurt_player(const monster* mon, const bool want_move)
+bool mons_can_hurt_player(const monster* mon)
 {
     // FIXME: This takes into account whether the player knows the map!
     //        It should, for the purposes of i_feel_safe. [rob]
@@ -104,7 +98,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // This also doesn't account for explosion radii, which is a false positive
     // for a player waiting near (but not in range of) their own fulminant
     // prism
-    if (_mons_has_path_to_player(mon, want_move) || mons_blows_up(*mon))
+    if (_mons_has_path_to_player(mon) || mons_blows_up(*mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
@@ -129,6 +123,10 @@ static bool _mons_is_always_safe(const monster *mon)
                && !mons_is_active_ballisto(*mon));
 }
 
+// HACK ALERT: In the following several functions, want_move is true if the
+// player is travelling. If that is the case, things must be considered one
+// square closer to the player, since we don't yet know where the player will
+// be next turn.
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
@@ -146,7 +144,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // Only seen through glass walls or within water?
                            // Assuming that there are no water-only/lava-only
                            // monsters capable of throwing or zapping wands.
-                           || !mons_can_hurt_player(mon, want_move)));
+                           || !mons_can_hurt_player(mon)));
 
     if (consider_user_options)
     {
