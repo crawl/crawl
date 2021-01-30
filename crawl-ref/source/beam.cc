@@ -4129,7 +4129,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     else if (flavour == BEAM_CHARM && you.duration[DUR_TOXIC_RADIANCE]
              && mon->res_poison() <= 0)
     {
-        string verb = make_stringf("enslave %s", mon->name(DESC_THE).c_str());
+        string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
         if (otr_stop_summoning_prompt(verb))
         {
             beam_cancelled = true;
@@ -5476,7 +5476,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                 obvious_effect = mon->del_ench(bad);
                 return MON_AFFECTED;
             }
-            if (simple_monster_message(*mon, " is enslaved!"))
+            if (simple_monster_message(*mon, " is charmed!"))
                 obvious_effect = true;
             mon->add_ench(mon_enchant(good, 0, agent()));
             if (!obvious_effect && could_see && !you.can_see(*mon))
@@ -6414,7 +6414,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
     case BEAM_MALMUTATE:             return "malmutation";
-    case BEAM_CHARM:               return "enslave";
+    case BEAM_CHARM:                 return "charming";
     case BEAM_BANISH:                return "banishment";
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";
