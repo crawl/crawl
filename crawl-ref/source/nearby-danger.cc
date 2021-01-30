@@ -44,18 +44,19 @@
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
-    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
-    {
-        int dist = grid_distance(you.pos(), mon->pos());
-        if (want_move)
-            dist--;
-        if (dist >= 2)
-            return false;
-    }
-
     // Short-cut if it's already adjacent.
     if (grid_distance(mon->pos(), you.pos()) <= 1)
         return true;
+
+    // Non-adjacent non-tentacle stationary monsters are only threatening
+    // because of any ranged attack they might posess, which is handled
+    // elsewhere in the safety checks. Presently all stationary monsters
+    // have a ranged attack, but if a melee stationary monster is introduced
+    // this will fail. Don't add a melee stationary monster it's not a good
+    // monster.
+    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
+        return false;
+
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
