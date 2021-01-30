@@ -3116,6 +3116,10 @@ wand of acid
 
 <wand>
 %%%%
+wand of charming
+
+<Enslavement spell>
+%%%%
 wand of digging
 
 <Passwall spell>
@@ -3123,10 +3127,6 @@ wand of digging
 wand of mindburst
 
 <wand>
-%%%%
-wand of enslavement
-
-<Enslavement spell>
 %%%%
 wand of flame
 
