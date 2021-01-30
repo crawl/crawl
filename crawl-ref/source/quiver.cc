@@ -1430,7 +1430,7 @@ namespace quiver
             {
             case WAND_DIGGING:     // non-damaging wands
             case WAND_POLYMORPH:
-            case WAND_ENSLAVEMENT:
+            case WAND_CHARMING:
             case WAND_PARALYSIS:
                 return false;
             default:

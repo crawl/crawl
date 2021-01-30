@@ -1111,13 +1111,14 @@ wand of acid
 
 A magical device which throws bolts of corrosive acid.
 %%%%
+wand of charming
+
+A magical device which causes a creature to become fiercely, but briefly,
+loyal to the user.
+%%%%
 wand of digging
 
 A magical device which drills tunnels through unworked rock.
-%%%%
-wand of enslavement
-
-A magical device which causes slavish obedience in a creature.
 %%%%
 wand of flame
 

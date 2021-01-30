@@ -1356,7 +1356,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_HIBERNATION:
     case SPELL_SLEEP:
     case SPELL_DIG:
-    case SPELL_ENSLAVEMENT:
+    case SPELL_CHARMING:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_PRIMAL_WAVE:
     case SPELL_BLINKBOLT:
@@ -3608,7 +3608,7 @@ static bool _target_and_justify_spell(monster &mons,
 
     switch (spell)
     {
-        case SPELL_ENSLAVEMENT:
+        case SPELL_CHARMING:
             // Try to find an ally of the player to hex if we are
             // hexing the player.
             if (mons.foe == MHITYOU && !_set_hex_target(&mons, beem))

@@ -1494,7 +1494,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     if (orig_beam->target.origin()
         || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
-        || orig_beam->flavour == BEAM_ENSLAVE
+        || orig_beam->flavour == BEAM_CHARM
            && monster_at(target) && monster_at(target)->friendly()
         || !_shadow_acts(true))
     {

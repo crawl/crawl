@@ -600,7 +600,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_ENSLAVED ? "enslaved" :
+           killer == KILL_CHARMD ? "enslaved" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -772,7 +772,7 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
-        record_monster_defeat(mons, KILL_ENSLAVED);
+        record_monster_defeat(mons, KILL_CHARMD);
         yred_make_enslaved_soul(mons, player_under_penance());
         return true;
     }
@@ -1117,7 +1117,7 @@ static string _killer_type_name(killer_type killer)
 #endif
     case KILL_PACIFIED:
         return "pacified";
-    case KILL_ENSLAVED:
+    case KILL_CHARMD:
         return "enslaved";
     case KILL_SLIMIFIED:
         return "slimified";

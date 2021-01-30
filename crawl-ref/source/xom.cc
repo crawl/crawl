@@ -1791,7 +1791,7 @@ static void _xom_enchant_monster(bool helpful)
             BEAM_PETRIFY,
             BEAM_SLOW,
             BEAM_PARALYSIS,
-            BEAM_ENSLAVE,
+            BEAM_CHARM,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }

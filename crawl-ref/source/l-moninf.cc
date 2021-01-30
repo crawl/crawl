@@ -82,7 +82,7 @@ MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
  * - 1 neutral
  * - 2 strict neutral (neutral but won't attack the player)
  * - 3 good neutral (neutral but won't attack friendlies)
- * - 4 friendly (created friendly, not enslavement)
+ * - 4 friendly (created friendly, not charmed)
  *
  * @treturn int
  * @function attitude

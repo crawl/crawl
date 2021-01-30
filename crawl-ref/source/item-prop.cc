@@ -1552,7 +1552,7 @@ int wand_charge_value(int type)
 
     case WAND_ICEBLAST:
     case WAND_ACID:
-    case WAND_ENSLAVEMENT:
+    case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
         return 15;
@@ -1603,7 +1603,7 @@ bool is_offensive_wand(const item_def& item)
 
     case WAND_ACID:
     case WAND_MINDBURST:
-    case WAND_ENSLAVEMENT:
+    case WAND_CHARMING:
     case WAND_FLAME:
     case WAND_ICEBLAST:
     case WAND_PARALYSIS:

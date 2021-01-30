@@ -526,7 +526,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ENSLAVEMENT, "Enslavement",
+    SPELL_CHARMING, "Enslavement",
     spschool::hexes,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,
@@ -534,7 +534,7 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
-    TILEG_ENSLAVEMENT,
+    TILEG_CHARMING,
 },
 
 {

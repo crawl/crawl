@@ -1645,10 +1645,10 @@ KMONS:  D = kobold ; dart ego:curare | dart ego:poisoned . dagger
 KMONS:  E = big kobold ; dart ego:curare | \
                 dart ego:poisoned w:5 . dagger | short sword | whip
 KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
-                wand of enslavement | wand of paralysis | \
+                wand of charming | wand of paralysis | \
                 wand of mindburst . dagger
 KMONS:  H = big kobold ; wand of flame | wand of acid | wand of polymorph | \
-                wand of enslavement | wand of paralysis | \
+                wand of charming | wand of paralysis | \
                 wand of mindburst . dagger | short sword | whip
 KMONS:  J = kobold ; dagger ego:distortion
 KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
@@ -1768,7 +1768,7 @@ KMONS:   p = plant
 KMONS:   O = player ghost
 MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
 KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
-                wand of enslavement | wand of paralysis | \
+                wand of charming | wand of paralysis | \
                 wand of mindburst \
             . spear w:20 | halberd | club | whip | flail | nothing w:15
 # Define some gnolls with reach weapons.

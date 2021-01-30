@@ -1870,7 +1870,7 @@ TAGS:    no_monster_gen transparent
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe . wand of enslavement | wand of flame . \
+KMONS:   0 = orc ; robe . wand of charming | wand of flame . \
                    potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf pyromancer / deep elf zephyrmancer
 KITEM:   8d = robe, hat w:40 / hat good_item, \

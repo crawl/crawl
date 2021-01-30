@@ -76,7 +76,7 @@
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "book of clouds", "staff of cold", "staff of conjuration",
        "manual of crossbows", "manual of conjurations",
-       "potion of curing", "condenser vane" }
+       "potion of curing", "condenser vane", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "demon blade",
@@ -87,8 +87,7 @@
       elseif s == "E" then i = { "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",
        "potion of experience q:1", "scroll of enchant armour", "staff of earth",
-       "wand of enslavement", "book of the earth", "scroll of enchant weapon",
-       "manual of earth magic" }
+       "book of the earth", "scroll of enchant weapon", "manual of earth magic" }
 
       elseif s == "F" then i = { "book of fire", "book of flames", "flail",
        "book of frost", "falchion", "fire dragon scales", "potion of flight",

@@ -40,7 +40,7 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 discord DISCORD
-enslavement ENSLAVEMENT
+charming CHARMING
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION

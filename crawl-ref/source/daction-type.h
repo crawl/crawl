@@ -18,7 +18,7 @@ enum daction_type
     NUM_DACTION_COUNTERS,
 
     // Leave space for new counters, as they need to be at the start.
-    DACT_OLD_ENSLAVED_SOULS_POOF = 16,
+    DACT_OLD_CHARMD_SOULS_POOF = 16,
 #if TAG_MAJOR_VERSION == 34
     DACT_HOLY_NEW_ATTEMPT,
 #else

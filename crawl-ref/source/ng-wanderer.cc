@@ -453,7 +453,7 @@ static void _wanderer_random_evokable()
     else
     {
         wand_type selected_wand =
-              random_choose(WAND_ENSLAVEMENT, WAND_PARALYSIS, WAND_FLAME);
+              random_choose(WAND_CHARMING, WAND_PARALYSIS, WAND_FLAME);
         newgame_make_item(OBJ_WANDS, selected_wand, 1, 15);
     }
 }

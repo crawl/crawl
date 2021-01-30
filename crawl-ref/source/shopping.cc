@@ -421,7 +421,7 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_ENSLAVEMENT:
+            case WAND_CHARMING:
             case WAND_POLYMORPH:
             case WAND_PARALYSIS:
                 valued += 20;

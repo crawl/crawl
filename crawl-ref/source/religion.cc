@@ -1257,7 +1257,7 @@ static int _pakellas_high_wand()
         WAND_ACID,
     };
     if (!you.get_mutation_level(MUT_NO_LOVE))
-        high_wands.emplace_back(WAND_ENSLAVEMENT);
+        high_wands.emplace_back(WAND_CHARMING);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
 }

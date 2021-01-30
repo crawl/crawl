@@ -1728,7 +1728,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     ASSERT(mon); // XXX: change to monster &mon
     ASSERT(mons_enslaved_body_and_soul(*mon));
 
-    add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_enslaved_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))

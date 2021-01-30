@@ -569,7 +569,7 @@ i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
 # end TAG_MAJOR_VERSION
 i-polymorph WAND_POLYMORPH
-i-enslavement WAND_ENSLAVEMENT
+i-charming WAND_CHARMING
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 # start TAG_MAJOR_VERSION == 34

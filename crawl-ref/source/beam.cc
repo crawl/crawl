@@ -3293,11 +3293,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = beckon(you, *this);
         break;
 
-    case BEAM_ENSLAVE:
+    case BEAM_CHARM:
         mprf(MSGCH_WARN, "Your will is overpowered!");
         confuse_player(5 + random2(3));
         obvious_effect = true;
-        break;     // enslavement - confusion?
+        break;     // charming - confusion?
 
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
@@ -4126,7 +4126,7 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     }
     // Handle enslaving monsters when OTR is up: give a prompt for attempting
     // to enslave monsters that don't have rPois with Toxic status.
-    else if (flavour == BEAM_ENSLAVE && you.duration[DUR_TOXIC_RADIANCE]
+    else if (flavour == BEAM_CHARM && you.duration[DUR_TOXIC_RADIANCE]
              && mon->res_poison() <= 0)
     {
         string verb = make_stringf("enslave %s", mon->name(DESC_THE).c_str());
@@ -5115,7 +5115,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     // These are special allies whose loyalty can't be so easily bent
-    case BEAM_ENSLAVE:
+    case BEAM_CHARM:
         rc = !(mons_is_hepliaklqana_ancestor(mon->type)
                || testbits(mon->flags, MF_DEMONIC_GUARDIAN));
         break;
@@ -5462,7 +5462,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
-    case BEAM_ENSLAVE:
+    case BEAM_CHARM:
         if (agent() && agent()->is_monster())
         {
             enchant_type good = (agent()->wont_attack()) ? ENCH_CHARM
@@ -6414,7 +6414,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_TELEPORT:              return "teleportation";
     case BEAM_POLYMORPH:             return "polymorph";
     case BEAM_MALMUTATE:             return "malmutation";
-    case BEAM_ENSLAVE:               return "enslave";
+    case BEAM_CHARM:               return "enslave";
     case BEAM_BANISH:                return "banishment";
     case BEAM_PAIN:                  return "pain";
     case BEAM_AGONY:                 return "agony";

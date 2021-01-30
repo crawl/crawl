@@ -757,7 +757,7 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     8
 },
 
-_mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
+_mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
 
 {
     ZAP_PAIN,
