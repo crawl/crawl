@@ -943,10 +943,9 @@ Heals a small amount of damage to the caster's body.
 %%%%
 Monstrous Menagerie spell
 
-Summons a powerful exotic creature to the caster's aid. It may call forth a
-harpy, manticore or lindwurm, and at high power may summon a sphinx, or an
-entire pack of harpies. With high power the individual creatures will also gain
-increased strength.
+Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
+or, at high power, even a sphinx. Casting the spell at higher power also
+increases the strength of the beasts themselves.
 %%%%
 Necromutation spell
 

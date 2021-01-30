@@ -160,12 +160,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     if (random2(pow) > 60 && coinflip())
         type = MONS_SPHINX;
     else
-        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
-
-    int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
-                                      + x_chance_in_y(pow - 75, 100)
-                                  : 1);
-    const bool plural = (num > 1);
+        type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
     mgen_data mdata = _summon_data(*caster, type, 4, god,
                                    SPELL_MONSTROUS_MENAGERIE);
@@ -173,41 +168,20 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
-    bool seen = false;
-    bool first = true;
-    int mid = -1;
-    while (num-- > 0)
+    monster* beast = create_monster(mdata);
+    if (!beast)
     {
-        if (monster* beast = create_monster(mdata))
-        {
-            if (you.can_see(*beast))
-                seen = true;
-
-            // Link the harpies together as one entity as far as the summon
-            // cap is concerned.
-            if (type == MONS_HARPY)
-            {
-                if (mid == -1)
-                    mid = beast->mid;
-
-                beast->props["summon_id"].get_int() = mid;
-            }
-
-            // Handle cap only for the first of the batch being summoned
-            if (first)
-                summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
-
-            first = false;
-        }
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
     }
 
-    if (seen)
+    summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
+
+    if (you.can_see(*beast))
     {
-        mprf("%s %s %s %s!", caster->name(DESC_THE).c_str(),
-                             caster->conj_verb("summon").c_str(),
-                             plural ? "some" : "a",
-                             plural ? pluralise_monster(mons_type_name(type, DESC_PLAIN)).c_str()
-                                    : mons_type_name(type, DESC_PLAIN).c_str());
+        mprf("%s %s %s!", caster->name(DESC_THE).c_str(),
+                          caster->conj_verb("summon").c_str(),
+                          mons_type_name(type, DESC_A).c_str());
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
