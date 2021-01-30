@@ -7622,7 +7622,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CHAIN_OF_CHAOS:
         if (you.visible_to(mon) && friendly)
             return ai_action::bad(); // don't zap player
-        return ai_action::good_or_bad(_trace_los(mon, [] (const actor * a)
+        return ai_action::good_or_bad(_trace_los(mon, [] (const actor * /*a*/)
                                                           { return true; }));
 
     case SPELL_CORRUPTING_PULSE:
