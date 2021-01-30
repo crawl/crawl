@@ -2526,6 +2526,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
+        // TODO: range check duplicated for UI/messaging purposes in quiver.cc,
+        // _ability_quiver_range_check
         beam.range = min((int)you.current_vision, 5);
 
         if (!spell_direction(*target, beam))
