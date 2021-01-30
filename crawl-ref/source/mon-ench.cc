@@ -288,7 +288,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
         if (is_patrolling())
         {
-            // Enslaved monsters stop patrolling and forget their patrol
+            // Charmed monsters stop patrolling and forget their patrol
             // point; they're supposed to follow you now.
             patrol_point.reset();
             firing_pos.reset();
@@ -671,7 +671,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (is_patrolling())
         {
-            // Enslaved monsters stop patrolling and forget their patrol point,
+            // Charmed monsters stop patrolling and forget their patrol point,
             // in case they were on order to wait.
             patrol_point.reset();
         }

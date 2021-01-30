@@ -273,6 +273,10 @@ Releases a massive electrical discharge that arcs from target to target until
 it grounds out. It may ground out harmlessly if there are no targets
 sufficiently close to the caster. Its damage partially bypasses armour.
 %%%%
+Charm spell
+
+Causes an otherwise hostile creature to fight on the caster's side for a while.
+%%%%
 Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
@@ -500,10 +504,6 @@ Throws a bolt of electricity at the target, with high accuracy.
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
-%%%%
-Enslavement spell
-
-Causes an otherwise hostile creature to fight on the caster's side for a while.
 %%%%
 Ensnare spell
 

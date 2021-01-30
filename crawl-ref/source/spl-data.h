@@ -526,7 +526,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CHARMING, "Enslavement",
+    SPELL_CHARMING, "Charm",
     spschool::hexes,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
         | spflag::WL_check,
