@@ -1186,7 +1186,7 @@ static const mutation_def mut_data[] =
   "magic regeneration",
 
   {"You regenerate magic rapidly.", "", ""},
-  {"You feel your magic shroud grow more resilient.", "", ""},
+  {"Your magic begins to regenerate rapidly.", "", ""},
   {"", "", ""},
 },
 
