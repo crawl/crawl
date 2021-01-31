@@ -2596,7 +2596,7 @@ namespace quiver
 
         virtual formatted_string calc_title() override
         {
-            string s = "Quiver which action?";
+            string s = "Quiver which action? ";
             vector<string> extra_cmds;
 
             if (allow_empty)
