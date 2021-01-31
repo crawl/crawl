@@ -614,6 +614,10 @@ static const duration_def duration_data[] =
       "Stones began to float around you.", D_DISPELLABLE | D_EXPIRES,
       {{ "The stones around you fall away." },
         { "The stones around you begin to lose power." }}, 6 },
+    { DUR_ATTRACTIVE,
+      LIGHTBLUE, "Attr",
+      "attractive", "attract",
+      "You attract monsters toward you.", D_DISPELLABLE},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 

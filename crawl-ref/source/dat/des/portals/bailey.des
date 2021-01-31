@@ -1076,8 +1076,8 @@ KITEM:  D = any weapon good_item
 KITEM:  e = any armour
 KITEM:  E = any armour good_item
 KITEM:  f = potion of curing / potion of might / potion of brilliance / \
-            potion of agility / potion of mutation w:30 / potion of flight w:20 / \
-            potion of lignification  / \
+            potion of agility / potion of attraction / potion of mutation w:30 / \
+            potion of flight w:20 / potion of lignification  / \
             scroll of teleportation / scroll of identify w:30 / \
             scroll of fear / scroll of noise w:30 / scroll of magic mapping / \
             scroll of remove curse

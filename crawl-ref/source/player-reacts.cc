@@ -251,6 +251,16 @@ static void _decrement_petrification(int delay)
     }
 }
 
+static void _decrement_attraction(int delay)
+{
+    if (!you.duration[DUR_ATTRACTIVE])
+        return;
+
+    attract_monsters();
+    if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
+        mpr("You feel less attractive to monsters.");
+}
+
 static void _decrement_paralysis(int delay)
 {
     _decrement_a_duration(DUR_PARALYSIS_IMMUNITY, delay);
@@ -566,6 +576,7 @@ void player_reacts_to_monsters()
         detect_items(-1);
     }
 
+    _decrement_attraction(you.time_taken);
     _decrement_paralysis(you.time_taken);
     _decrement_aftershock(you.time_taken);
     _decrement_petrification(you.time_taken);

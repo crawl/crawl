@@ -411,6 +411,27 @@ public:
     }
 };
 
+class PotionAttraction : public PotionEffect
+{
+private:
+    PotionAttraction() : PotionEffect(POT_ATTRACTION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionAttraction);
+public:
+    static const PotionAttraction &instance()
+    {
+        static PotionAttraction inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
+
+        mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
+             was_attractive ? "more " : "");
+
+        you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);        return true;
+    }
+};
 
 class PotionFlight : public PotionEffect
 {
@@ -1734,6 +1755,7 @@ public:
     }
 };
 
+// TODO : follows the style of main crawl fork which uses unordered map.
 static const PotionEffect* potion_effects[] =
 {
     &PotionCuring::instance(),
@@ -1794,7 +1816,8 @@ static const PotionEffect* potion_effects[] =
     &PotionCitrinitas::instance(),
     &PotionViriditas::instance(),
     &PotionRubedo::instance(),
-    &PotionStale::instance()
+    &PotionAttraction::instance(),
+    &PotionStale::instance(), // buggy potion
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)

@@ -39,3 +39,4 @@ void singularity_pull(const monster *singularity);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
+void attract_monsters();

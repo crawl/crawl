@@ -231,5 +231,6 @@ enum duration_type
     DUR_ENCHANT_POISON,
     DUR_POISON_WEAPON,
     DUR_SPECTRUM,
+    DUR_ATTRACTIVE,
     NUM_DURATIONS
 };

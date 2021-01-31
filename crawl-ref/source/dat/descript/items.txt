@@ -784,6 +784,10 @@ potion of resistance
 A potion which grants temporary resistance to a variety of harmful effects:
 fire, cold, electricity, poison, and acid.
 %%%%
+potion of attraction
+
+A potion which makes the drinker attract foes, pulling them quickly closer.
+%%%%
 potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.

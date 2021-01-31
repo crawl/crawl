@@ -761,6 +761,7 @@ const char* potion_type_name(int potiontype)
     case POT_HEAL_WOUNDS:       return "heal wounds";
     case POT_HASTE:             return "haste";
     case POT_MIGHT:             return "might";
+    case POT_ATTRACTION:        return "attraction";
     case POT_AGILITY:           return "agility";
     case POT_BRILLIANCE:        return "brilliance";
 #if TAG_MAJOR_VERSION == 34
@@ -3484,6 +3485,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
             // intentional fallthrough
         case POT_UNSTABLE_MUTATION:
         case POT_LIGNIFY:
+        case POT_ATTRACTION:
             return true;
         case POT_STRONG_POISON:
         case POT_POISON:

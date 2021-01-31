@@ -797,9 +797,13 @@ Water status
 
 Your control over your magic has been sapped.
 %%%%
+Attr status
+
+Foes are magically pulled toward you.
+%%%%
 CigoPlg status
 
-You are infected by Cigotuvi's plague. Your body is often mutated.
+You are infected by Cigotuvi's plague. Your body is oftenly mutated.
 %%%%
 Golem status
 

@@ -60,5 +60,6 @@ enum potion_type
     POT_CITRINITAS,
     POT_VIRIDITAS,
     POT_RUBEDO,
+    POT_ATTRACTION,
     NUM_POTIONS
 };

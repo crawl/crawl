@@ -851,6 +851,7 @@ i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-agility POT_AGILITY
+i-attraction POT_ATTRACTION
 # please remove these 3 when TAG_MAJOR_VERSION is bumped
 i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3

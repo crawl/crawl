@@ -522,6 +522,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_CURING:
             case POT_LIGNIFY:
+            case POT_ATTRACTION:
             case POT_FLIGHT:
                 valued += 30;
                 break;
