@@ -2075,20 +2075,17 @@ static int _player_evasion(ev_ignore_type evit)
 
     const int vertigo_penalty = you.duration[DUR_VERTIGO] ? 5 * scale : 0;
 
-    const int prestepdown_evasion =
+    const int natural_evasion =
         size_base_ev
         + _player_armour_adjusted_dodge_bonus(scale)
         - _player_adjusted_evasion_penalty(scale)
         - you.adjusted_shield_penalty(scale)
         - vertigo_penalty;
 
-    const int poststepdown_evasion =
-        stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
-
     const int evasion_bonuses = _player_evasion_bonuses() * scale;
 
     const int final_evasion =
-        _player_scale_evasion(poststepdown_evasion, scale) + evasion_bonuses;
+        _player_scale_evasion(natural_evasion, scale) + evasion_bonuses;
 
     return unscale_round_up(final_evasion, scale);
 }
