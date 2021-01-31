@@ -2525,8 +2525,8 @@ namespace quiver
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
-                                            ? "Quiver which item? (- for none, */% to toggle full inventory)"
-                                            : "Quiver which item? (*/% to toggle full inventory)",
+                                            ? "Quiver which item? (- for none, * to toggle full inventory)"
+                                            : "Quiver which item? (* to toggle full inventory)",
                                           menu_type::invlist, OSEL_QUIVER_ACTION,
                                           OPER_QUIVER, invprompt_flag::hide_known, '-');
 
@@ -2602,7 +2602,7 @@ namespace quiver
             if (allow_empty)
                 extra_cmds.push_back("<w>-</w>: none");
             if (any_items)
-                extra_cmds.push_back("<w>*</w>: inventory");
+                extra_cmds.push_back("<w>*/%</w>: inventory");
             if (any_spells)
                 extra_cmds.push_back("<w>&</w>: spells");
             if (any_abilities)
