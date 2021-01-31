@@ -76,13 +76,23 @@ namespace quiver
         }
     }
 
-    static maybe_bool _fireorder_inscription_ok(int slot, bool manual = false)
+    static bool _quiver_inscription_ok(int slot)
+    {
+        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
+            return true;
+        return !strstr(you.inv[slot].inscription.c_str(), "!Q");
+    }
+
+    static maybe_bool _fireorder_inscription_ok(int slot, bool cycling = false)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return MB_MAYBE;
-        if (strstr(you.inv[slot].inscription.c_str(), manual ? "=F" : "=f"))
+        if (strstr(you.inv[slot].inscription.c_str(), cycling ? "=F" : "=f")
+            || !_quiver_inscription_ok(slot))
+        {
             return MB_FALSE;
-        if (strstr(you.inv[slot].inscription.c_str(), manual ? "+F" : "+f"))
+        }
+        if (strstr(you.inv[slot].inscription.c_str(), cycling ? "+F" : "+f"))
             return MB_TRUE;
         return MB_MAYBE;
     }
@@ -272,9 +282,9 @@ namespace quiver
                 continue;
             }
 
-            // =f prevents item from being in fire order.
+            // =F prevents item from being in fire order.
             if (!ignore_inscription_etc
-                    && _fireorder_inscription_ok(i_inv, manual) == MB_FALSE)
+                    && _fireorder_inscription_ok(i_inv, true) == MB_FALSE)
             {
                 continue;
             }
@@ -835,7 +845,7 @@ namespace quiver
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), true);
+            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), false);
 
             vector<shared_ptr<action>> result;
 
@@ -892,7 +902,7 @@ namespace quiver
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), true);
+            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), false);
 
             vector<shared_ptr<action>> result;
 
@@ -1556,8 +1566,9 @@ namespace quiver
                 auto w = make_shared<wand_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
-                    // for fire order, treat =f inscription as disabling
-                    && (ignore_inscription || _fireorder_inscription_ok(slot) != MB_FALSE)
+                    // for fire order, treat =F inscription as disabling
+                    && (ignore_inscription
+                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
                     // skip digging for fire cycling, it seems kind of
                     // non-useful? Can still be force-quivered from inv.
                     // (Maybe do this with autoinscribe?)
@@ -1666,7 +1677,8 @@ namespace quiver
                 auto w = make_shared<misc_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
-                    && (ignore_inscription || _fireorder_inscription_ok(slot) != MB_FALSE)
+                    && (ignore_inscription
+                        || _fireorder_inscription_ok(slot, true) != MB_FALSE)
                     // TODO: autoinscribe =f?
                     && you.inv[slot].sub_type != MISC_ZIGGURAT)
                 {
@@ -1795,7 +1807,8 @@ namespace quiver
                 auto w = make_shared<artefact_evoke_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
-                    && (ignore_inscription || _fireorder_inscription_ok(slot) != MB_FALSE))
+                    && (ignore_inscription
+                        || _fireorder_inscription_ok(slot, true) != MB_FALSE))
                 {
                     result.push_back(move(w));
                 }
@@ -2525,6 +2538,13 @@ namespace quiver
             if (s && s->is_valid()
                 && (allow_empty || *s != quiver::action()))
             {
+                if (!_quiver_inscription_ok(s->get_item()))
+                {
+                    const string prompt = make_stringf("Really quiver %s?",
+                        you.inv[s->get_item()].name(DESC_INVENTORY).c_str());
+                    if (!yesno(prompt.c_str(), true, 'n'))
+                        return false;
+                }
                 cur_quiver.set(s);
                 // a bit hacky:
                 if (&cur_quiver == &you.quiver_action)
@@ -3007,7 +3027,7 @@ static int _get_pack_slot(const item_def& item)
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, true))
         {
-            // =f prevents item from being in fire order.
+            // =f prevents item from being autoquivered.
             if (quiver::_fireorder_inscription_ok(i, false) == MB_FALSE)
                 continue;
 
