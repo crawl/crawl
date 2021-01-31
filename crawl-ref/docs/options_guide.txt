@@ -1716,8 +1716,8 @@ message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
 ----------------------------------
 
 fire_items_start = a
-        Sets the first inventory item to consider when selecting
-        missiles to fire. The default is a.
+        Sets the first inventory item to consider when cycling through missiles
+        to fire via the quiver. The default is a.
 
 fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         (Ordered list option)
