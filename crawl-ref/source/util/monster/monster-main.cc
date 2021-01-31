@@ -1169,7 +1169,7 @@ int main(int argc, char* argv[])
             else
                 monsterresistances += ", ";
             monsterresistances += colour(
-                MAGENTA, "magic(" + to_string(me->willpower) + ")");
+                MAGENTA, "will(" + to_string(me->willpower) + ")");
         }
 
         const resists_t res(shapeshifter ? me->resists :
