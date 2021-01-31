@@ -246,7 +246,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 merfolk / w:5 merfolk siren / wyvern w:15 / centaur /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 tyrant leech / will-o-the-wisp w:2 /\
-                    w:5 swamp drake / bullfrog / w:2 spiny frog / w:2 hydra /\
+                    w:5 swamp drake / bullfrog / w:2 cane toad / w:2 hydra /\
                     w:2 vampire mosquito",
                 "w:20 scorpion / w:2 boulder beetle / w:12 jumping spider /\
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
