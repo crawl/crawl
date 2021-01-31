@@ -2022,7 +2022,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  * What is the player's bonus to EV from dodging when not paralysed, after
  * accounting for size & body armour penalties?
  *
- * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
+ * First, calculate base dodge bonus (linear with dodging * dex),
  * and armour dodge penalty (base armour evp, increased for small races &
  * decreased for large, then with a magic "3" subtracted from it to make the
  * penalties not too harsh).
@@ -2044,10 +2044,8 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
  */
 static int _player_armour_adjusted_dodge_bonus(int scale)
 {
-    const int ev_dex = stepdown(you.dex(), 18, ROUND_CLOSE, MAX_STAT_VALUE);
-
     const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        (70 + you.skill(SK_DODGING, 10) * you.dex()) * scale
         / (20 - _player_evasion_size_factor()) / 10;
 
     const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
