@@ -971,9 +971,9 @@ static spret _tremorstone()
         return act && _valid_tremorstone_target(*act->as_monster());
     };
     if ((!see_target
-        && !yesno("You can't see anything, throw a tremorstone anyway?",
+        && !yesno("You can't see anything, release a tremorstone anyway?",
                  true, 'n'))
-        || stop_attack_prompt(hitfunc, "throw a tremorstone", vulnerable))
+        || stop_attack_prompt(hitfunc, "release a tremorstone", vulnerable))
     {
         return spret::abort;
     }
