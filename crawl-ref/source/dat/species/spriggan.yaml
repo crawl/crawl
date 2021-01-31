@@ -18,7 +18,7 @@ aptitudes:
   slings: 2
   bows: 2
   armour: -3
-  dodging: 4
+  dodging: 3
   stealth: 5
   shields: -3
   unarmed_combat: -2
@@ -37,7 +37,7 @@ aptitudes:
 size: little
 str: 4
 int: 9
-dex: 11
+dex: 10
 levelup_stat_frequency: 5
 levelup_stats:
   - int
