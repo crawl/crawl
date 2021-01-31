@@ -1919,11 +1919,7 @@ namespace quiver
     {
         // Felids have no use for launchers or ammo.
         if (you.species == SP_FELID)
-        {
-            auto result = make_shared<ammo_action>(-1);
-            result->error = "You can't grasp things well enough to shoot them.";
-            return result;
-        }
+            return make_shared<ammo_action>(-1);
 
         int slot = -1;
 
@@ -1969,34 +1965,6 @@ namespace quiver
         auto result = item && is_range_weapon(*item)
                             ? make_shared<launcher_ammo_action>(slot)
                             : make_shared<ammo_action>(slot);
-
-        // if slot is still -1, we have failed, and the fire order is
-        // empty for some reason. We should therefore populate the `error`
-        // field for result.
-        if (slot == -1)
-        {
-            vector<int> full_fire_order;
-            _get_item_fire_order(full_fire_order, true, item, false);
-
-            if (full_fire_order.empty())
-                result->error = "No suitable missiles.";
-            else
-            {
-                const int skipped_item = full_fire_order[0];
-                if (skipped_item < Options.fire_items_start)
-                {
-                    result->error = make_stringf(
-                        "Nothing suitable (fire_items_start = '%c').",
-                        index_to_letter(Options.fire_items_start));
-                }
-                else
-                {
-                    result->error = make_stringf(
-                        "Nothing suitable (ignored '=f'-inscribed item on '%c').",
-                        index_to_letter(skipped_item));
-                }
-            }
-        }
 
         return result;
     }
@@ -2379,14 +2347,8 @@ namespace quiver
 
         // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
-        {
             if (you.equip[i] == slot)
-            {
-                auto a = make_shared<ammo_action>(-1);
-                a->error = "You can't toss equipped items.";
-                return a;
-            }
-        }
+                return make_shared<ammo_action>(-1);
 
         shared_ptr<action> a = nullptr;
         if (you.weapon() && is_range_weapon(*you.weapon()))
@@ -2739,18 +2701,10 @@ namespace quiver
         }
     }
 
-    /**
-     * Presents an interface for the player to choose an action to quiver from
-     * a list of options.
-     * @param cur_quiver a quiver to use for context
-     * @param allow_empty whether to allow the player to set the empty quiver
-     */
-    void choose(action_cycler &cur_quiver, bool allow_empty)
+    static vector<shared_ptr<action>> _menu_quiver_order()
     {
-        // should be action_cycler method?
-        // TODO: dividers or subtitles for each category?
-        ActionSelectMenu menu(cur_quiver, allow_empty);
         vector<shared_ptr<action>> actions;
+        // TODO: this is kind of ugly
         auto tmp = ammo_action(-1).get_menu_fire_order(true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = launcher_ammo_action(-1).get_menu_fire_order(true);
@@ -2765,6 +2719,27 @@ namespace quiver
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = ability_action(ABIL_NON_ABILITY).get_fire_order();
         actions.insert(actions.end(), tmp.begin(), tmp.end());
+        return actions;
+    }
+
+    int menu_size()
+    {
+        return _menu_quiver_order().size();
+    }
+
+    /**
+     * Presents an interface for the player to choose an action to quiver from
+     * a list of options.
+     * @param cur_quiver a quiver to use for context
+     * @param allow_empty whether to allow the player to set the empty quiver
+     */
+    void choose(action_cycler &cur_quiver, bool allow_empty)
+    {
+        // should be action_cycler method?
+        // TODO: dividers or subtitles for each category?
+        ActionSelectMenu menu(cur_quiver, allow_empty);
+
+        auto actions = _menu_quiver_order();
 
         if (actions.size() == 0 && menu.pointless())
         {
