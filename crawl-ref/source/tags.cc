@@ -1776,11 +1776,11 @@ static void tag_construct_you_items(writer &th)
 
     marshallShort(th, NUM_WEAPONS);
     for (int j = 0; j < NUM_WEAPONS; ++j)
-        marshallInt(th,you.seen_weapon[j]);
+        marshallUnsigned(th,you.seen_weapon[j]);
 
     marshallShort(th, NUM_ARMOURS);
     for (int j = 0; j < NUM_ARMOURS; ++j)
-        marshallInt(th,you.seen_armour[j]);
+        marshallUnsigned(th,you.seen_armour[j]);
 
     marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
@@ -4020,21 +4020,45 @@ static void tag_read_you_items(reader &th)
 
     count = unmarshallShort(th);
     ASSERT(count >= 0);
-    for (int j = 0; j < count && j < NUM_WEAPONS; ++j)
-        you.seen_weapon[j] = unmarshallInt(th);
-    for (int j = count; j < NUM_WEAPONS; ++j)
-        you.seen_weapon[j] = 0;
-    for (int j = NUM_WEAPONS; j < count; ++j)
-        unmarshallInt(th);
+
+    if (th.getMinorVersion() < TAG_MINOR_UPGRADE_SEEN_WEAPON) {
+        for (int j = 0; j < count && j < NUM_WEAPONS; ++j)
+            you.seen_weapon[j] = unmarshallInt(th);
+        for (int j = count; j < NUM_WEAPONS; ++j)
+            you.seen_weapon[j] = 0;
+        for (int j = NUM_WEAPONS; j < count; ++j)
+            unmarshallInt(th);
+    }
+    else {
+        for (int j = 0; j < count && j < NUM_WEAPONS; ++j)
+            you.seen_weapon[j] = unmarshallUnsigned(th);
+        for (int j = count; j < NUM_WEAPONS; ++j)
+            you.seen_weapon[j] = 0;
+        for (int j = NUM_WEAPONS; j < count; ++j)
+            unmarshallUnsigned(th);
+    }
+
 
     count = unmarshallShort(th);
     ASSERT(count >= 0);
-    for (int j = 0; j < count && j < NUM_ARMOURS; ++j)
-        you.seen_armour[j] = unmarshallInt(th);
-    for (int j = count; j < NUM_ARMOURS; ++j)
-        you.seen_armour[j] = 0;
-    for (int j = NUM_ARMOURS; j < count; ++j)
-        unmarshallInt(th);
+
+
+    if (th.getMinorVersion() < TAG_MINOR_UPGRADE_SEEN_WEAPON) {
+        for (int j = 0; j < count && j < NUM_ARMOURS; ++j)
+            you.seen_armour[j] = unmarshallInt(th);
+        for (int j = count; j < NUM_ARMOURS; ++j)
+            you.seen_armour[j] = 0;
+        for (int j = NUM_ARMOURS; j < count; ++j)
+            unmarshallInt(th);
+    }
+    else {
+        for (int j = 0; j < count && j < NUM_ARMOURS; ++j)
+            you.seen_armour[j] = unmarshallUnsigned(th);
+        for (int j = count; j < NUM_ARMOURS; ++j)
+            you.seen_armour[j] = 0;
+        for (int j = NUM_ARMOURS; j < count; ++j)
+            unmarshallUnsigned(th);
+    }
     unmarshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
     for (int i = 0; i < iclasses; i++)

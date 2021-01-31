@@ -246,6 +246,7 @@ enum tag_minor_version
     TAG_MINOR_VALOR,               // Add highst charm book
     TAG_MINOR_AID,                 // Add BOOK_AID
     TAG_MINOR_GOLEM_BUG,            // Add GOLEM_BUG
+    TAG_MINOR_UPGRADE_SEEN_WEAPON, // Upgrade Seen weapon 32bit to 64bit
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

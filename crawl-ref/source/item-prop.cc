@@ -1086,9 +1086,9 @@ void set_ident_flags(item_def &item, iflags_t flags)
         && _is_affordable(item))
     {
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << item.brand;
+            you.seen_weapon[item.sub_type] |= 1ULL << item.brand;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << item.brand;
+            you.seen_armour[item.sub_type] |= 1ULL << item.brand;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
@@ -3038,9 +3038,9 @@ void seen_item(const item_def &item)
     {
         // Known brands will be set in set_item_flags().
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] |= 1ULL << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] |= 1ULL << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_MISCELLANY)
             you.seen_misc.set(item.sub_type);
     }
