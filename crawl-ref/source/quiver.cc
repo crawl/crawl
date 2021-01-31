@@ -1198,7 +1198,7 @@ namespace quiver
     {
         // Hacky: do some quiver-specific range checks for the sake of
         // autofight. We can't approach this like spells (which are marked
-        // as useless with butterflies in range), because there is no
+        // as useless with no enemies in range), because there is no
         // equivalent of `Z` to force-activate an ability that is indicating
         // temporary uselessness. This way, the player can still activate
         // it from the `a` menu, just not from the quiver.
@@ -1219,7 +1219,7 @@ namespace quiver
             return false;
         }
         case ABIL_ROLLING_CHARGE:
-            // Use a version of the palentonga charge check that
+            // Use a version of the palentonga charge range check that
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
@@ -1343,6 +1343,9 @@ namespace quiver
             if (!is_valid())
                 return;
 
+            // TODO: for more uniform behavior with spells, this should skip the
+            // range check in firing mode. However, there's no clean way to
+            // do this right now, so I'm just leaving this comment.
             if (!is_enabled())
             {
                 // do some messaging
