@@ -2049,73 +2049,40 @@ int animate_dead(actor *caster, int /*pow*/, beh_type beha,
 
 spret cast_animate_skeleton(god_type god, bool fail)
 {
-    bool found = false;
-
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES
-            && mons_class_can_be_zombified(si->mon_type)
-            && mons_skeleton(si->mon_type))
-        {
-            found = true;
-        }
-    }
-
-    if (!found)
-    {
-        mpr("There is nothing here that can be animated!");
-        return spret::abort;
-    }
-
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
-    const char* no_space = "...but the skeleton had no space to rise!";
-
-    // First, we try to animate a skeleton if there is one.
-    const int animate_skel_result = animate_remains(you.pos(), CORPSE_SKELETON,
-                                                    BEH_FRIENDLY, MHITYOU,
-                                                    &you, "", god);
-    if (animate_skel_result != -1)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (animate_skel_result == 0)
-            mpr(no_space);
-        return spret::success;
-    }
-
-    // If not, look for a corpse and butcher it.
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_skeleton(si->mon_type)
-            && mons_class_can_be_zombified(si->mon_type))
+        for (stack_iterator si(*ri, true); si; ++si)
         {
-            butcher_corpse(*si, true);
-            mpr("Before your eyes, flesh is ripped from the corpse!");
-            request_autopickup();
-            // Only convert the top one.
-            break;
+            if (si->base_type == OBJ_CORPSES
+                && mons_class_can_be_zombified(si->mon_type)
+                && mons_skeleton(si->mon_type))
+            {
+                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                {
+                    butcher_corpse(*si, true);
+                    mpr("Before your eyes, flesh is ripped from the corpse!");
+                    request_autopickup();
+                    // Only convert the top one.
+                }
+
+                const int animate_skel_result = animate_remains(*ri, CORPSE_SKELETON,
+                    BEH_FRIENDLY, MHITYOU,
+                    &you, "", god);
+
+                if (animate_skel_result != -1)
+                {
+                    if (animate_skel_result == 0)
+                        mpr("...but the skeleton had no space to rise!");
+                    return spret::success;
+                }
+            }
         }
     }
 
-    // Now we try again to animate a skeleton.
-    // this return type is insanely stupid
-    const int animate_result = animate_remains(you.pos(), CORPSE_SKELETON,
-                                               BEH_FRIENDLY, MHITYOU, &you, "",
-                                               god);
-    dprf("result: %d", animate_result);
-    switch (animate_result)
-    {
-        case -1:
-            mpr("There is no skeleton here to animate!");
-            break;
-        case 0:
-            mpr(no_space);
-            break;
-        default:
-            // success, messages already printed
-            break;
-    }
+    canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
 }
