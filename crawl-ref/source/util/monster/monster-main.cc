@@ -901,9 +901,7 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                const attack_flavour flavour(orig_attk.flavour == AF_KLOWN
-                                                     || orig_attk.flavour
-                                                            == AF_DRAIN_STAT ?
+                const attack_flavour flavour(orig_attk.flavour == AF_DRAIN_STAT ?
                                                  orig_attk.flavour :
                                                  attk.flavour);
 
@@ -980,9 +978,6 @@ int main(int argc, char* argv[])
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
                     break;
-                case AF_KLOWN:
-                    monsterattacks += colour(LIGHTBLUE, "(klown)");
-                    break;
                 case AF_SCARAB:
                     monsterattacks += colour(LIGHTMAGENTA, "(scarab)");
                     break;
@@ -1055,6 +1050,8 @@ int main(int argc, char* argv[])
                 case AF_POISON_STAT:
                 case AF_FIREBRAND:
                 case AF_MIASMATA:
+                case AF_ROT:
+                case AF_KLOWN:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif

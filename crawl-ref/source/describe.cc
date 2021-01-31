@@ -3691,13 +3691,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
         { AF_POISON,            "cause poisoning" },
         { AF_POISON_STRONG,     "cause strong poisoning" },
-#if TAG_MAJOR_VERSION == 34
-        { AF_ROT,               "cause rotting" },
-#endif
         { AF_VAMPIRIC,          "drain health from the living" },
-#if TAG_MAJOR_VERSION == 34
-        { AF_KLOWN,             "cause random powerful effects" },
-#endif
         { AF_DISTORT,           "cause wild translocation effects" },
         { AF_RAGE,              "cause berserking" },
         { AF_STICKY_FLAME,      "apply sticky flame" },
