@@ -1694,10 +1694,18 @@ static void _do_cycle_quiver(int dir)
     you.launcher_action.set(you.quiver_action.get());
     quiver::set_needs_redraw();
 
-    if (!changed && you.quiver_action.get()->is_valid())
-        mpr("No other quiver actions available. Use F to throw any item.");
-    else if (!you.quiver_action.get()->is_valid())
-        mpr("No quiver actions available. Use F to throw any item.");
+    const bool valid = you.quiver_action.get()->is_valid();
+
+    if (!changed || !valid)
+    {
+        const bool others = quiver::menu_size() > (valid ? 1 : 0);
+        // Things could be excluded from this via inscriptions, custom
+        // fire_order, or setting fire_items_start.
+        mprf("No %squiver actions available for cycling.%s",
+            valid ? "other " : "",
+            others ? " Use <white>Q</white> to select from all actions."
+                   : "");
+    }
 }
 
 static void _do_list_gold()

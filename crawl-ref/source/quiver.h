@@ -37,7 +37,7 @@ namespace quiver
     struct action : public enable_shared_from_this<action>
     {
         action()
-            : target(), error(), default_fire_context(nullptr)
+            : target(), default_fire_context(nullptr)
         { };
         virtual ~action() = default;
         void reset();
@@ -109,7 +109,6 @@ namespace quiver
         }
 
         dist target;
-        string error;
         const action_cycler *default_fire_context;
     };
 
@@ -123,6 +122,8 @@ namespace quiver
     shared_ptr<action> get_primary_action();
     shared_ptr<action> get_secondary_action();
     void set_needs_redraw();
+
+    int menu_size();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
