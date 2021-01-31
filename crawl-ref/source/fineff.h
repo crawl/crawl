@@ -101,13 +101,13 @@ public:
     bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule(const actor *blinker)
+    static void schedule(const actor *blinker, const actor *other = nullptr)
     {
-        final_effect::schedule(new blink_fineff(blinker));
+        final_effect::schedule(new blink_fineff(blinker, other));
     }
 protected:
-    blink_fineff(const actor *blinker)
-        : final_effect(0, blinker, coord_def())
+    blink_fineff(const actor *blinker, const actor *o)
+        : final_effect(o, blinker, coord_def())
     {
     }
 };

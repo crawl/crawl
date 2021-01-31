@@ -1818,8 +1818,7 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
 
 monster_type pick_random_wraith()
 {
-    return random_choose_weighted(2, MONS_PHANTOM,
-                                  1, MONS_SHADOW_WRAITH,
+    return random_choose_weighted(1, MONS_SHADOW_WRAITH,
                                   5, MONS_WRAITH,
                                   2, MONS_FREEZING_WRAITH,
                                   2, MONS_PHANTASMAL_WARRIOR);

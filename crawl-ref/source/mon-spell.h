@@ -27,7 +27,7 @@
 static const mon_spellbook mspell_list[] =
 {
 
-    /* Crimson imp, phantom, blink frog, and killer klown. */
+    /* Crimson imp, blink frog, and killer klown. */
     {  MST_BLINKER,
       {
        { SPELL_BLINK, 29, MON_SPELL_MAGICAL },

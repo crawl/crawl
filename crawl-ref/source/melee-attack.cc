@@ -2666,6 +2666,11 @@ void melee_attack::mons_apply_attack_flavour()
             blink_fineff::schedule(attacker);
         break;
 
+    case AF_BLINK_WITH:
+        if (coinflip())
+            blink_fineff::schedule(attacker, defender);
+        break;
+
     case AF_CONFUSE:
         if (attk_type == AT_SPORE)
         {

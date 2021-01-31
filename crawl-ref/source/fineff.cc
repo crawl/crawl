@@ -72,7 +72,7 @@ bool trample_follow_fineff::mergeable(const final_effect &fe) const
 bool blink_fineff::mergeable(const final_effect &fe) const
 {
     const blink_fineff *o = dynamic_cast<const blink_fineff *>(&fe);
-    return o && def == o->def;
+    return o && def == o->def && att == o->att;
 }
 
 bool teleport_fineff::mergeable(const final_effect &fe) const
@@ -254,8 +254,33 @@ void trample_follow_fineff::fire()
 void blink_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive() && !defend->no_tele(true, false))
-        defend->blink();
+    if (!defend || !defend->alive() || defend->no_tele(true, false))
+        return;
+
+    defend->blink();
+    if (!defend->alive())
+        return;
+
+    // Is something else also getting blinked?
+    actor *pal = attacker();
+    if (!pal || !pal->alive() || pal->no_tele(true, false))
+        return;
+
+    int cells_seen = 0;
+    coord_def target;
+    for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
+    {
+        // XXX: allow fedhasites to be blinked into plants?
+        if (actor_at(*ai) || !pal->is_habitable(*ai))
+            continue;
+        cells_seen++;
+        if (one_chance_in(cells_seen))
+            target = *ai;
+    }
+    if (!cells_seen)
+        return;
+
+    pal->blink_to(target);
 }
 
 void teleport_fineff::fire()

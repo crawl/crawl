@@ -3676,6 +3676,7 @@ static string _flavour_base_desc(attack_flavour flavour)
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
         { AF_BLINK,             "blink itself" },
+        { AF_BLINK_WITH,        "blink together with the defender" },
         { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },

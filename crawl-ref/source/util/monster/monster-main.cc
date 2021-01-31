@@ -923,6 +923,9 @@ int main(int argc, char* argv[])
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
                     break;
+                case AF_BLINK_WITH:
+                    monsterattacks += colour(MAGENTA, "(blink together)");
+                    break;
                 case AF_COLD:
                     monsterattacks += colour(
                         LIGHTBLUE, damage_flavour("cold", hd, 3 * hd - 1));
