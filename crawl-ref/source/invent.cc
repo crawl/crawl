@@ -1913,6 +1913,7 @@ int prompt_invent_item(const char *prompt,
 
     if (auto_list)
     {
+        need_prompt = false;
         need_getch = false;
 
         if (any_items_of_type(type_expect))
