@@ -819,6 +819,18 @@ namespace quiver
             return find_action_from_launcher(get_launcher());
         }
 
+        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled)
+        {
+            vector<shared_ptr<action>> result;
+            for (int i_inv = 0; i_inv < ENDOFPACK; i_inv++)
+            {
+                auto a = make_shared<ammo_action>(i_inv);
+                if (a->is_valid() && (allow_disabled || a->is_enabled()))
+                    result.push_back(move(a));
+            }
+            return result;
+        }
+
         vector<shared_ptr<action>> get_fire_order(
             bool allow_disabled=true, bool ignore_inscription=false) const override
         {
@@ -862,6 +874,18 @@ namespace quiver
             if (ammo_slot < 0 || !get_launcher())
                 return false;
             return you.inv[ammo_slot].launched_by(*get_launcher());
+        }
+
+        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled)
+        {
+            vector<shared_ptr<action>> result;
+            for (int i_inv = 0; i_inv < ENDOFPACK; i_inv++)
+            {
+                auto a = make_shared<launcher_ammo_action>(i_inv);
+                if (a->is_valid() && (allow_disabled || a->is_enabled()))
+                    result.push_back(move(a));
+            }
+            return result;
         }
 
         vector<shared_ptr<action>> get_fire_order(
@@ -2704,12 +2728,12 @@ namespace quiver
     void choose(action_cycler &cur_quiver, bool allow_empty)
     {
         // should be action_cycler method?
-        // TODO: icons in tiles, dividers or subtitles for each category?
+        // TODO: dividers or subtitles for each category?
         ActionSelectMenu menu(cur_quiver, allow_empty);
         vector<shared_ptr<action>> actions;
-        auto tmp = ammo_action(-1).get_fire_order(true, true);
+        auto tmp = ammo_action(-1).get_menu_fire_order(true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
+        tmp = launcher_ammo_action(-1).get_menu_fire_order(true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
