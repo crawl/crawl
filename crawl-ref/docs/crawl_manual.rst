@@ -2940,9 +2940,6 @@ commands:
 !v
   Prompt before evoking this item.
 
-!Q
-  Prompt before explicitly quivering this item.
-
 =g
   Pick this item up automatically if autopickup is on.
 
@@ -2953,10 +2950,13 @@ commands:
   Include this item in automatic quivering.
 
 =F
-  Exclude this item when cycling ammunition.
+  Exclude this item when cycling quiver actions.
 
 \+F
-  Include this item when cycling ammunition.
+  Include this item when cycling quiver actions.
+
+!Q
+  Prompt before explicitly quivering this item. Entails =F,=f.
 
 =R
   Do not offer to swap out this ring if another one can be removed instead.
