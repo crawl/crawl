@@ -642,6 +642,34 @@ static string _randart_descrip(const item_def &item)
 }
 #undef known_proprt
 
+// If item is an unrandart with a DESCRIP field, return its contents.
+// Otherwise, return "".
+static string _unrandart_descrip(const item_def &item)
+{
+    if (!is_unrandom_artefact(item)) return "";
+    auto entry = get_unrand_entry(item.unrand_idx);
+    if (!entry->descrip) return "";
+    return string("\n")+entry->descrip;
+}
+
+// If item is an unrandart with a DESCRIP field, return its contents.
+// Otherwise, return "".
+static string _artefact_descrip(const item_def &item)
+{
+    if (!is_artefact(item)) return "";
+
+    string unrand_desc = _unrandart_descrip(item);
+    string rand_desc = _randart_descrip(item);
+
+    string out = unrand_desc + rand_desc;
+
+    // XXX: Can't happen, right?
+    if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
+        out += "\nThis weapon may have some hidden properties.";
+
+    return out;
+}
+
 static const char *trap_names[] =
 {
     "dart",
@@ -1363,29 +1391,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (is_unrandom_artefact(item, UNRAND_STORM_BOW))
-    {
-        description += "\n\nAmmo fired by it passes through the "
-            "targets it hits, potentially hitting all targets in "
-            "its path until it reaches maximum range.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_THERMIC_ENGINE))
-    {
-        description += "\n\nIt has been specially enchanted to freeze "
-            "those struck by it, causing extra injury to most foes "
-            "and up to half again as much damage against particularly "
-            "susceptible opponents.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_GUARD))
-    {
-        description += "\n\nIt retains the spirit of the tree from which "
-                       "it was made. In the hands of one skilled in "
-                       "evocations this spirit is drawn out to fight "
-                       "along side the wielder.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_OLGREB))
-        description += "\n\nIt grants immunity to poison.";
-
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually ";
@@ -1400,22 +1405,9 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
-
-        // XXX: Can't happen, right?
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
-            && item_type_known(item))
-        {
-            description += "\nThis weapon may have some hidden properties.";
-        }
-    }
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n" + art_desc;
 
     if (verbose)
     {

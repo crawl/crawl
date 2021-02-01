@@ -31,6 +31,7 @@ my %field_type = (
     CORRODE  => "bool",
     CURSE    => "bool",
     DEX      => "num",
+    DESCRIP  => "str",
     DRAIN    => "bool",
     ELEC     => "bool",
     EV       => "num",
@@ -516,7 +517,8 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "TYPE", "INSCRIP", "\n",
+    "NAME", "APPEAR", "TYPE", "\n",
+    "INSCRIP", "DESCRIP", "\n",
     "base_type", "sub_type", "\n",
     "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
     "plus", "plus2", "COLOUR", "VALUE", "\n",
@@ -604,7 +606,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= (($part eq "TYPE" || $part eq "INSCRIP") && $temp eq "")
+            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP)$/n)
                 ? "nullptr" : "\"$temp\"";
         }
         else

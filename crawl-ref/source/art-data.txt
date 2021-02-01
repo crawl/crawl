@@ -222,6 +222,7 @@ VALUE:   800
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
+DESCRIP: It grants immunity to poison.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_POISON
@@ -451,6 +452,9 @@ TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 INSCRIP:  spectral,
+DESCRIP:  It retains the spirit of the tree from which it was made. In the hands
+ of one skilled in evocations this spirit is drawn out to fight along side the
+ wielder.
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
@@ -691,6 +695,8 @@ TILE:     urand_storm_bow
 TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
 INSCRIP:  penet
+DESCRIP:  Ammo fired by it passes through the targets it hits, potentially
+ hitting all targets in its path until it reaches maximum range.
 
 NAME:    tower shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
@@ -1373,6 +1379,9 @@ ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
 OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP:  freeze,
+DESCRIP:  It has been specially enchanted to freeze those struck by it, causing
+ extra injury to most foes and up to half again as much damage against
+ particularly susceptible opponents.
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
