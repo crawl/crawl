@@ -103,6 +103,24 @@
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
 
+# DESCRIP: Description of powers of the artefact which are specific to this
+# artefact, not provided by the fields in this file. Use DBRAND for unusual
+# brands.
+#
+# The description of a power can be split across more than one line. The
+# subsequent lines should be just below the first one, and should start with
+# a space (with no header name).
+#
+# If there are multiple powers, subsequent powers can be added with a +.
+#
+# Example:
+# DESCRIP: It enhances your template magic.
+# + It gives you a regex malus.
+
+# DBRAND: Description of a brand which is specific to this artefact.
+#
+# The syntax for this is identical to DESCRIP.
+
 # ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO". The
 # default enumeration is determined as follows:
@@ -221,6 +239,11 @@ VALUE:   800
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
+DESCRIP: It enhances your poison magic.
++It grants immunity to poison.
++It can be evoked to poison those around you for a time.
+DBRAND: It may poison the flesh of those it strikes, and is more effective with
+ a high Evocations skill.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_POISON
@@ -450,6 +473,8 @@ TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 INSCRIP:  spectral,
+DBRAND:   When it strikes, its spirit leaps out and fights alongside the
+ wielder.
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
@@ -690,6 +715,8 @@ TILE:     urand_storm_bow
 TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
 INSCRIP:  penet
+DBRAND:   Ammo fired by it passes through the targets it hits, potentially
+ hitting all targets in its path until it reaches maximum range.
 
 NAME:    tower shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
@@ -824,6 +851,9 @@ FIRE:    2
 COLD:    -2
 BOOL:    special
 INSCRIP: Flames
+DESCRIP: It surrounds you with a cloud of flames.
++It grants immunity to clouds of flame.
++It enhances your fire magic.
 
 NAME:    gauntlets of War
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
@@ -1159,6 +1189,7 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
 VALUE:    400
+DESCRIP:  It enables you to equip an extra ring.
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1373,6 +1404,11 @@ ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
 OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP:  freeze,
+DBRAND:   It has been specially enchanted to freeze those struck by it, causing
+ extra injury to most foes and up to half again as much damage against
+ particularly susceptible opponents.
+DESCRIP:  It becomes more effective when it hits something. This effect fades
+ over time.
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine

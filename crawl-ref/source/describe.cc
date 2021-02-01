@@ -647,6 +647,31 @@ static string _randart_descrip(const item_def &item)
 }
 #undef known_proprt
 
+// If item is an unrandart with a DESCRIP field, return its contents.
+// Otherwise, return "".
+static string _artefact_descrip(const item_def &item)
+{
+    if (!is_artefact(item)) return "";
+
+    ostringstream out;
+    if (is_unrandom_artefact(item))
+    {
+        auto entry = get_unrand_entry(item.unrand_idx);
+        if (entry->dbrand)
+            out << entry->dbrand;
+        if (entry->descrip)
+            out << (entry->dbrand ? "\n\n" : "") << entry->descrip;
+    }
+
+    out << _randart_descrip(item);
+
+    // XXX: Can't happen, right?
+    if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
+        out << "\nIt may have some hidden properties.";
+
+    return out.str();
+}
+
 static const char *trap_names[] =
 {
     "dart",
@@ -1368,29 +1393,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (is_unrandom_artefact(item, UNRAND_STORM_BOW))
-    {
-        description += "\n\nAmmo fired by it passes through the "
-            "targets it hits, potentially hitting all targets in "
-            "its path until it reaches maximum range.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_THERMIC_ENGINE))
-    {
-        description += "\n\nIt has been specially enchanted to freeze "
-            "those struck by it, causing extra injury to most foes "
-            "and up to half again as much damage against particularly "
-            "susceptible opponents.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_GUARD))
-    {
-        description += "\n\nIt retains the spirit of the tree from which "
-                       "it was made. In the hands of one skilled in "
-                       "evocations this spirit is drawn out to fight "
-                       "along side the wielder.";
-    }
-    else if (is_unrandom_artefact(item, UNRAND_OLGREB))
-        description += "\n\nIt grants immunity to poison.";
-
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
     {
         description += "\nIt is temporarily rebranded; it is actually ";
@@ -1405,22 +1407,9 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
-
-        // XXX: Can't happen, right?
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
-            && item_type_known(item))
-        {
-            description += "\nThis weapon may have some hidden properties.";
-        }
-    }
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n\n" + art_desc;
 
     if (verbose)
     {
@@ -1855,20 +1844,11 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
     }
 
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n\n" + art_desc;
 
-        // Can't happen, right? (XXX)
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-            description += "\nThis armour may have some hidden properties.";
-    }
-    else
+    if (!is_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
         if (max_ench > 0)
@@ -1971,22 +1951,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     }
 
     // Artefact properties.
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
-            !item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            description += "\nThis ";
-            description += (jewellery_is_amulet(item) ? "amulet" : "ring");
-            description += " may have hidden properties.";
-        }
-    }
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n" + art_desc;
 
     return description;
 }
