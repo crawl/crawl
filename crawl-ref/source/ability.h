@@ -3,6 +3,7 @@
  * @brief Functions related to special abilities.
 **/
 
+// test comment
 #pragma once
 
 #include <string>
