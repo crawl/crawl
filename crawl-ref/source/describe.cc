@@ -1955,22 +1955,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     }
 
     // Artefact properties.
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
-            !item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            description += "\nThis ";
-            description += (jewellery_is_amulet(item) ? "amulet" : "ring");
-            description += " may have hidden properties.";
-        }
-    }
+	string art_desc = _artefact_descrip(item);
+	if (!art_desc.empty())
+		description += "\n" + art_desc;
 
     return description;
 }

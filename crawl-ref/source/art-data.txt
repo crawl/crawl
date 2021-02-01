@@ -1168,6 +1168,7 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
 VALUE:    400
+DESCRIP:  It enables you to equip an extra ring.
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
