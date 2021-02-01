@@ -3149,9 +3149,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         // If we're here, it's a manual.
         if (you.skills[item.plus] >= 27)
             return true;
-        if (is_useless_skill((skill_type)item.plus))
-            return true;
-        return you.species == SP_GNOLL;
+        return is_useless_skill((skill_type)item.plus);
 
     default:
         return false;

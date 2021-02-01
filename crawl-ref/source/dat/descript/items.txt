@@ -554,8 +554,7 @@ A short club with a metal head.
 %%%%
 manual
 
-A valuable book which allows one to practise a certain skill more efficiently
-when carried.
+A valuable book which allows one to learn a certain skill faster.
 %%%%
 morningstar
 

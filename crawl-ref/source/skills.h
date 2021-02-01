@@ -26,11 +26,11 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> training_targets;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
+    FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
     int skill_cost_level;
     unsigned int total_experience;
     bool auto_training;
     int exp_available;
-    vector<int> manual_charges;
 
     void save();
     bool state_saved() const;

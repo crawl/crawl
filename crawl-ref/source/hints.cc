@@ -3270,9 +3270,9 @@ string hints_describe_item(const item_def &item)
             if (item.sub_type == BOOK_MANUAL)
             {
                 ostr << "A manual can greatly help you in training a skill. "
-                        "As long as you are carrying it, the skill in "
-                        "question will be trained more efficiently and will "
-                        "level up faster.";
+                        "After you pick one up, the skill in question will be "
+                        "trained more efficiently and will level up faster "
+                        "until you exhaust the manual's contents.";
                 cmd.push_back(CMD_READ);
             }
             else // It's a spellbook!

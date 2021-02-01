@@ -220,6 +220,10 @@ public:
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
+    /// manuals
+    FixedVector<unsigned int, NUM_SKILLS>  skill_manual_points;
+
+
     bool auto_training;
     list<skill_type> exercises;     ///< recent practise events
     list<skill_type> exercises_all; ///< also include events for disabled skills

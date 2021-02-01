@@ -207,7 +207,7 @@ float scaled_skill_cost(skill_type sk)
         return 0;
     int baseline = skill_cost_baseline();
     int next_level = one_level_cost(sk);
-    if (skill_has_manual(sk))
+    if (you.skill_manual_points[sk])
         baseline *= 2;
 
     return (float)next_level / baseline;
@@ -519,7 +519,7 @@ static void _check_skills_to_hide()
     {
         if (is_invalid_skill(sk))
             continue;
-        if (skill_has_manual(sk))
+        if (you.skill_manual_points[sk])
             continue;
 
         if (skill_trained(sk) && you.training[sk])
@@ -1258,7 +1258,7 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
 
     int target_skill_point_diff = target_skill_points - you_skill_points;
 
-    int manual_charges = get_all_manual_charges_for_skill(exsk);
+    int manual_charges = you.skill_manual_points[exsk];
     if (manual_charges > 0)
         target_skill_point_diff -= min(manual_charges, target_skill_point_diff / 2);
 
@@ -1302,17 +1302,18 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         return 0;
 
     // Bonus from manual
-    int slot;
     int bonus_left = skill_inc;
-    while (bonus_left > 0 && (slot = manual_slot_for_skill(exsk)) != -1)
+    if (you.skill_manual_points[exsk])
     {
-        item_def& manual(you.inv[slot]);
-        const int bonus = min<int>(bonus_left, manual.skill_points);
+        const int bonus = min<int>(bonus_left, you.skill_manual_points[exsk]);
         skill_inc += bonus;
         bonus_left -= bonus;
-        manual.skill_points -= bonus;
-        if (!manual.skill_points && !simu && !crawl_state.simulating_xp_gain)
-            finish_manual(slot);
+        you.skill_manual_points[exsk] -= bonus;
+        if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
+        {
+            mprf("You have finished your manual of %s and toss it away.",
+                 skill_name(exsk));
+        }
     }
 
     const skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
@@ -1395,7 +1396,7 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         if (ash_has_skill_boost(skill))
             you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
 
-        if (skill_has_manual(skill))
+        if (you.skill_manual_points[skill])
             target = you_skill + (target - you_skill) / 2;
     }
 
@@ -2237,7 +2238,7 @@ void skill_state::save()
     auto_training       = you.auto_training;
     exp_available       = you.exp_available;
     total_experience    = you.total_experience;
-    get_all_manual_charges(manual_charges);
+    skill_manual_points = you.skill_manual_points;
     for (int i = 0; i < NUM_SKILLS; i++)
     {
         real_skills[i] = you.skill((skill_type)i, 10, true);
@@ -2260,7 +2261,7 @@ void skill_state::restore_levels()
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;
     you.total_experience            = total_experience;
-    set_all_manual_charges(manual_charges);
+    you.skill_manual_points         = skill_manual_points;
 }
 
 void skill_state::restore_training()

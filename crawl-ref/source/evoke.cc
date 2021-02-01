@@ -282,118 +282,12 @@ void zap_wand(int slot, dist *_target)
     you.turn_is_over = true;
 }
 
-// return a slot that has manual for given skill, or -1 if none exists
-// in case of multiple manuals the one with the fewest charges is returned
-int manual_slot_for_skill(skill_type skill)
-{
-    int slot = -1;
-    int charges = -1;
-
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-    {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL
-            || is_useless_item(*iter))
-        {
-            continue;
-        }
-
-        if (iter->skill != skill || iter->skill_points == 0)
-            continue;
-
-        if (slot != -1 && iter->skill_points > charges)
-            continue;
-
-        slot = iter - you.inv.begin();
-        charges = iter->skill_points;
-    }
-
-    return slot;
-}
-
-int get_all_manual_charges_for_skill(skill_type skill)
-{
-    // Gnolls can't focus well enough to use manuals
-    if (you.species == SP_GNOLL)
-        return 0;
-
-    int charges = 0;
-
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-    {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
-            continue;
-
-        if (iter->skill != skill || iter->skill_points == 0)
-            continue;
-
-        charges += iter->skill_points;
-    }
-
-    return charges;
-}
-
-bool skill_has_manual(skill_type skill)
-{
-    return manual_slot_for_skill(skill) != -1;
-}
-
-void finish_manual(int slot)
-{
-    item_def& manual(you.inv[slot]);
-    const skill_type skill = static_cast<skill_type>(manual.plus);
-
-    mprf("You have finished your manual of %s and toss it away.",
-         skill_name(skill));
-    dec_inv_item_quantity(slot, 1);
-}
-
-void get_all_manual_charges(vector<int> &charges)
-{
-    charges.clear();
-
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-    {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
-            continue;
-
-        charges.push_back(iter->skill_points);
-    }
-}
-
-void set_all_manual_charges(const vector<int> &charges)
-{
-    auto charge_iter = charges.begin();
-    for (item_def &item : you.inv)
-    {
-        if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
-            continue;
-
-        ASSERT(charge_iter != charges.end());
-        item.skill_points = *charge_iter;
-        charge_iter++;
-    }
-    ASSERT(charge_iter == charges.end());
-}
-
 string manual_skill_names(bool short_text)
 {
     skill_set skills;
-
-    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
-    {
-        if (iter->base_type != OBJ_BOOKS
-            || iter->sub_type != BOOK_MANUAL
-            || is_useless_item(*iter))
-        {
-            continue;
-        }
-
-        skills.insert(static_cast<skill_type>(iter->plus));
-    }
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; sk++)
+        if (you.skill_manual_points[sk])
+            skills.insert(sk);
 
     if (short_text && skills.size() > 1)
     {

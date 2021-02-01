@@ -1797,10 +1797,21 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
 
 static void _get_book(const item_def& it)
 {
-    mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+    if (it.sub_type != BOOK_MANUAL)
+    {
+        mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
-    if (!library_add_spells(spells_in_book(it)))
-        mpr("Unfortunately, you learned nothing new.");
+        if (!library_add_spells(spells_in_book(it)))
+            mpr("Unfortunately, you learned nothing new.");
+        return;
+    }
+
+    const skill_type sk = static_cast<skill_type>(it.plus);
+    if (you.skill_manual_points[sk])
+        mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
+    else
+        mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
+    you.skill_manual_points[sk] += it.skill_points;
 }
 
 // Adds all books in the player's inventory to library.
@@ -1810,7 +1821,7 @@ void add_held_books_to_library()
 {
     for (item_def& it : you.inv)
     {
-        if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+        if (it.base_type == OBJ_BOOKS)
         {
             _get_book(it);
             destroy_item(it);
@@ -2108,7 +2119,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         get_gold(it, quant_got, quiet);
         return true;
     }
-    if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+    if (it.base_type == OBJ_BOOKS)
     {
         _get_book(it);
         return true;

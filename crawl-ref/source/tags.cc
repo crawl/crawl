@@ -1487,6 +1487,7 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
         marshallInt(th, you.training_targets[j]);
+        marshallInt(th, you.skill_manual_points[j]);
     }
 
     marshallBoolean(th, you.auto_training);
@@ -2849,6 +2850,15 @@ static void _tag_read_you(reader &th)
         }
         else
             you.training_targets[j] = 0;
+
+        if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_MANUALS)
+        {
+#endif
+            you.skill_manual_points[j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        }
+        else
+            you.skill_manual_points[j] = 0;
 #endif
     }
 
@@ -4147,7 +4157,8 @@ static void _tag_read_you_items(reader &th)
         reset_training();
 
     // Move any books from inventory into the player's library.
-    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
+    // (Likewise for manuals.)
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_MANUALS)
         add_held_books_to_library();
 #endif
 }

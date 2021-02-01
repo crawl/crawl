@@ -309,7 +309,7 @@ COLOURS SkillMenuEntry::get_colour() const
         return YELLOW;
     else if (!you.training[m_sk])
         return DARKGREY;
-    else if (skill_has_manual(m_sk))
+    else if (you.skill_manual_points[m_sk])
         return LIGHTBLUE;
     else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
@@ -338,7 +338,7 @@ void SkillMenuEntry::set_aptitude()
 {
     string text = "<white>";
 
-    const bool manual = skill_has_manual(m_sk);
+    const bool manual = you.skill_manual_points[m_sk] > 0;
     const int apt = species_apt(m_sk, you.species);
 
     if (apt != 0)
@@ -529,7 +529,7 @@ void SkillMenuEntry::set_cost()
 
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
-    if (skill_has_manual(m_sk))
+    if (you.skill_manual_points[m_sk])
         m_progress->set_fg_colour(LIGHTRED);
     else
         m_progress->set_fg_colour(CYAN);
