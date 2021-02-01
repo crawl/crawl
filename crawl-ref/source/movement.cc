@@ -612,20 +612,20 @@ static spret _rampage_forward(coord_def move)
         if (!you.see_cell_no_trans(p))
             return spret::fail;
 
-        // Don't rampage if our tracer path is broken by something we can't
-        // safely pass through before it reaches a monster.
-        if (!you.can_pass_through(p) || is_feat_dangerous(env.grid(p)))
-            return spret::fail;
-
         const monster* mon = monster_at(p);
-        if (!mon)
+        // Check for a plausible target at this cell.
+        // If there's no monster, a Fedhas ally, or an invis monster,
+        // perform terrain checks and if they pass keep going.
+        if (!mon
+            || fedhas_passthrough(mon)
+            || !you.can_see(*mon))
+        {
+            // Don't rampage if our tracer path is broken by something we can't
+            // safely pass through before it reaches a monster.
+            if (!you.can_pass_through(p) || is_feat_dangerous(env.grid(p)))
+                return spret::fail;
             continue;
-        // Allow our tracer to passthrough Fedhas allies.
-        else if (mon && fedhas_passthrough(mon))
-            continue;
-        // Don't rampage at invis mons, but allow the tracer to keep going.
-        else if (mon && !you.can_see(*mon))
-            continue;
+        }
         // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
         else if (mon && (mon->friendly()
                          || mon->neutral()
@@ -634,6 +634,7 @@ static spret _rampage_forward(coord_def move)
             return spret::fail;
         }
         // Okay, the first mons along the tracer is a valid target.
+        // Don't need terrain checks because we'll attack the mons.
         else if (mon)
         {
             valid_target = mon;
