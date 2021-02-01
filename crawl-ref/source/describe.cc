@@ -665,7 +665,7 @@ static string _artefact_descrip(const item_def &item)
 
     // XXX: Can't happen, right?
     if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-        out += "\nThis weapon may have some hidden properties.";
+        out += "\nIt may have some hidden properties.";
 
     return out;
 }
@@ -1848,20 +1848,11 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
     }
 
-    if (is_artefact(item))
-    {
-        string rand_desc = _randart_descrip(item);
-        if (!rand_desc.empty())
-        {
-            description += "\n";
-            description += rand_desc;
-        }
+	string art_desc = _artefact_descrip(item);
+	if (!art_desc.empty())
+		description += "\n" + art_desc;
 
-        // Can't happen, right? (XXX)
-        if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-            description += "\nThis armour may have some hidden properties.";
-    }
-    else
+    if (!is_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
         if (max_ench > 0)

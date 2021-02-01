@@ -831,6 +831,9 @@ FIRE:    2
 COLD:    -2
 BOOL:    special
 INSCRIP: Flames
+DESCRIP: It surrounds you with a cloud of flames.\nIt
+ grants immunity to clouds of flame.\nIt
+ enhances your fire magic.
 
 NAME:    gauntlets of War
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
