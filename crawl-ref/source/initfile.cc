@@ -320,7 +320,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
         new StringGameOption(SIMPLE_NAME(map_file_name), ""),
-        new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/")),
 #endif
@@ -1029,8 +1028,8 @@ void game_options::reset_options()
 
     macro_dir = SysEnv.macro_dir;
 
-#ifdef DGAMELAUNCH
     save_dir = _get_save_path("saves/");
+#ifdef DGAMELAUNCH
     morgue_dir = _get_save_path("morgue/");
 #else
     if (macro_dir.empty())
@@ -2971,6 +2970,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
         SysEnv.crawl_dir = field;
+    }
+#endif
+#ifndef SAVE_DIR_PATH
+    else if (key == "save_dir")
+    {
+        save_dir = field;
+#ifndef SHARED_DIR_PATH
+        shared_dir = save_dir;
+#endif
     }
     else if (key == "macro_dir")
         macro_dir = field;
