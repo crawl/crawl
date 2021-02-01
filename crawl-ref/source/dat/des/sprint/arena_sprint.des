@@ -367,7 +367,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec",
-                "moth of wrath / w:20 two-headed ogre", "ball lightning",
+                "moth of wrath / w:20 two-headed ogre",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "shining eye"
             }
@@ -433,7 +433,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "vampire / vampire knight / vampire mage / w:1 jory",
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
-                "moth of wrath / w:20 stone giant", "ball lightning",
+                "moth of wrath / w:20 stone giant",
                 "boulder beetle", "orb spider", "shining eye", "tormentor",
                 "skeletal warrior / w:5 skeletal warrior ; dart ego:atropa"
             }
@@ -473,7 +473,7 @@ function arena_sprint_get_monster_set(round, boss)
                     fire giant / sun demon / fire vortex",
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / wind drake /\
-                    air elemental / ball lightning / storm dragon",
+                    air elemental / storm dragon",
                 "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
                     death knight w:5 / place:Tar:$ w:40",
@@ -546,8 +546,7 @@ function arena_sprint_get_monster_set(round, boss)
                     fire giant / sun demon",
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil /\
                     white draconian",
-                "spriggan air mage / titan / electric golem / ball lightning /\
-                    storm dragon",
+                "spriggan air mage / titan / electric golem / storm dragon",
                 "tzitzimitl / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     death knight w:5 / place:Tar:$ w:40",
