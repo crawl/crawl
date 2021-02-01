@@ -4665,11 +4665,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         has_stat_desc = true;
     }
 
-    bool stair_use = false;
+    bool did_stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
         inf.body << It << " " << is << " incapable of using stairs.\n";
-        stair_use = true;
+        did_stair_use = true;
     }
 
     if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
@@ -4691,11 +4691,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "Killing " << it_o << " yields ";
         inf.body << "no experience or items";
 
-        if (!stair_use)
-            inf.body << "; " << it << " " << is << " incapable of using stairs";
+        if (!did_stair_use && !mi.is(MB_PERM_SUMMON))
+            inf.body << " and " << it << " " << is << " incapable of using stairs";
 
         if (mi.is(MB_PERM_SUMMON))
-            inf.body << ", and " << it << " cannot be abjured";
+            inf.body << " and " << it << " cannot be abjured";
 
         inf.body << ".\n";
     }
