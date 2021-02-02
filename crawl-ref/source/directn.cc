@@ -2167,7 +2167,12 @@ void direction_chooser::finalize_moves()
 #endif
 }
 
-class UIDirectionChooserView : public ui::Widget
+class UIDirectionChooserView
+#ifdef USE_TILE_LOCAL
+    : public ui::Widget
+#else
+    : public ui::OverlayWidget
+#endif
 {
 public:
     UIDirectionChooserView(direction_chooser& dc) :
@@ -2182,15 +2187,18 @@ public:
             return;
 
 #ifndef USE_TILE_LOCAL
-        // do_redraws() only calls viewwindow(); we must first draw the sidebar.
-        // TODO: why does this even clear the sidebar in the first place? I
-        // can't figure it out. -advil
-        redraw_screen(false);
+        // This call ensures that the hud will get redrawn in console any time
+        // need_all_redraw is set. Minimally, this needs to happen on the
+        // initial call, as well as after any popups on top of this widget.
+        if (m_dc.need_all_redraw)
+            redraw_screen(false);
 #endif
 
+#ifdef USE_TILE_LOCAL
         // We always have to redraw the viewport, because ui::redraw() will call
         // redraw_screen in case the window has been resized.
         m_dc.need_viewport_redraw = true;
+#endif
         m_dc.do_redraws();
 
 #ifdef USE_TILE_LOCAL
@@ -2201,6 +2209,7 @@ public:
 
     void _allocate_region() override
     {
+        m_dc.need_all_redraw = true;
         _expose();
     }
 
