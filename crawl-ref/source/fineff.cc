@@ -256,13 +256,17 @@ void blink_fineff::fire()
     actor *defend = defender();
     if (!defend || !defend->alive() || defend->no_tele(true, false))
         return;
+    
+    // if we're doing 'blink with', only blink if we have a partner
+    actor *pal = attacker();
+    if (pal && (!pal->alive() || pal->no_tele(true, false)))
+        return;
 
     defend->blink();
     if (!defend->alive())
         return;
 
     // Is something else also getting blinked?
-    actor *pal = attacker();
     if (!pal || !pal->alive() || pal->no_tele(true, false))
         return;
 
