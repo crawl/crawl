@@ -1848,9 +1848,9 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
     }
 
-	string art_desc = _artefact_descrip(item);
-	if (!art_desc.empty())
-		description += "\n" + art_desc;
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n" + art_desc;
 
     if (!is_artefact(item))
     {
@@ -1955,9 +1955,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     }
 
     // Artefact properties.
-	string art_desc = _artefact_descrip(item);
-	if (!art_desc.empty())
-		description += "\n" + art_desc;
+    string art_desc = _artefact_descrip(item);
+    if (!art_desc.empty())
+        description += "\n" + art_desc;
 
     return description;
 }
