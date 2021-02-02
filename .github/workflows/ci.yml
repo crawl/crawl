@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Unbrace
-        run: util/unbrace -n
-        working-directory: crawl-ref/source
       - name: Checkwhite
         run: util/checkwhite -n
+        working-directory: crawl-ref/source
+      - name: Unbrace
+        run: util/unbrace -n
         working-directory: crawl-ref/source
   build_linux:
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
