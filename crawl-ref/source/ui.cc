@@ -210,6 +210,21 @@ bool Widget::on_event(const Event& event)
     return Widget::slots.event.emit(this, event);
 }
 
+void OverlayWidget::allocate_region(Region)
+{
+    // Occupies 0 space, and therefore will never clear the screen.
+    m_region = {0, 0, 0, 0};
+    _allocate_region();
+}
+
+void OverlayWidget::_expose()
+{
+    // forcibly ensure that renders will be called. This sidesteps the region
+    // based code for deciding whether anything should be rendered, and leaves
+    // it up to the OverlayWidget.
+    ui_root.needs_paint = true;
+}
+
 shared_ptr<Widget> ContainerVec::get_child_at_offset(int x, int y)
 {
     for (shared_ptr<Widget>& child : m_children)
