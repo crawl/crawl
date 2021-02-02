@@ -1630,6 +1630,42 @@ private:
     string err;
 };
 
+static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
+                                       bool evoked_wand, targeter *hitfunc)
+{
+    // Add success chance to targeted spells checking monster WL
+    const bool wl_check = testbits(flags, spflag::WL_check)
+                          && !testbits(flags, spflag::helpful);
+    if (wl_check)
+    {
+        const zap_type zap = spell_to_zap(spell);
+        const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
+                                                             false)
+                                            :
+              testbits(flags, spflag::area) ? ( powc * 3 ) / 2
+                                            : powc;
+        return bind(desc_wl_success_chance, placeholders::_1,
+                    eff_pow, evoked_wand, hitfunc);
+    }
+    switch (spell)
+    {
+        case SPELL_INTOXICATE:
+            return bind(_desc_intoxicate_chance, placeholders::_1,
+                        hitfunc, powc);
+        case SPELL_ENGLACIATION:
+            return bind(_desc_englaciate_chance, placeholders::_1,
+                        hitfunc, powc);
+        case SPELL_DAZZLING_FLASH:
+            return bind(_desc_dazzle_chance, placeholders::_1, powc);
+        default:
+            break;
+    }
+    targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
+    if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
+        return bind(_desc_hit_chance, placeholders::_1, hitfunc);
+    return nullptr;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1712,43 +1748,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
 
-        // Add success chance to targeted spells checking monster WL
-        const bool wl_check = testbits(flags, spflag::WL_check)
-                              && !testbits(flags, spflag::helpful);
-        desc_filter additional_desc = nullptr;
-        const zap_type zap = spell_to_zap(spell);
-        if (wl_check)
-        {
-            const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
-                                                                 false)
-                                                :
-                  testbits(flags, spflag::area) ? ( powc * 3 ) / 2
-                                                : powc;
-            additional_desc = bind(desc_wl_success_chance, placeholders::_1,
-                                   eff_pow, evoked_wand, hitfunc.get());
-        }
-        else if (spell == SPELL_INTOXICATE)
-        {
-            additional_desc = bind(_desc_intoxicate_chance, placeholders::_1,
-                                   hitfunc.get(), powc);
-        }
-        else if (spell == SPELL_ENGLACIATION)
-        {
-            additional_desc = bind(_desc_englaciate_chance, placeholders::_1,
-                                   hitfunc.get(), powc);
-        }
-        else if (spell == SPELL_DAZZLING_FLASH)
-            additional_desc = bind(_desc_dazzle_chance, placeholders::_1, powc);
-        else
-        {
-            targeter_beam* beam_hitf =
-                dynamic_cast<targeter_beam*>(hitfunc.get());
-            if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
-            {
-                additional_desc = bind(_desc_hit_chance, placeholders::_1,
-                                       hitfunc.get());
-            }
-        }
+        desc_filter additional_desc
+            = _targeter_addl_desc(spell, powc, flags, evoked_wand, hitfunc.get());
 
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out
