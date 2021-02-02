@@ -52,6 +52,8 @@ struct cloud_tile_info
     cloud_tile_variation variation;  ///< How (and if) the tile should vary.
 };
 
+#define MEPH_HD_CAP 21
+
 cloud_struct* cloud_at(coord_def pos);
 
 cloud_type cloud_type_at(const coord_def &pos);

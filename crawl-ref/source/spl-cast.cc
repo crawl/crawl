@@ -16,6 +16,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
@@ -1544,6 +1545,17 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
     return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
 }
 
+static vector<string> _desc_meph_chance(const monster_info& mi)
+{
+    if (!mi.mresists & MR_RES_POISON || mons_is_unbreathing(mi.type))
+        return vector<string>{"not susceptible"};
+
+    int pct_chance = 2;
+    if (mi.hd < MEPH_HD_CAP)
+        pct_chance = 100 - (100 * mi.hd / MEPH_HD_CAP);
+    return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1657,6 +1669,8 @@ static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags f
                         hitfunc, powc);
         case SPELL_DAZZLING_FLASH:
             return bind(_desc_dazzle_chance, placeholders::_1, powc);
+        case SPELL_MEPHITIC_CLOUD:
+            return bind(_desc_meph_chance, placeholders::_1);
         default:
             break;
     }
