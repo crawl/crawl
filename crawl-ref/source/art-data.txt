@@ -230,7 +230,7 @@ TILE_EQ: olgreb
 VALUE:   1000
 
 NAME:    staff of Wucad Mu
-INSCRIP: channel
+INSCRIP: *channel
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_MAGIC
