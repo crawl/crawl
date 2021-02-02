@@ -622,16 +622,45 @@ sub art_to_str
     return ($str);
 }
 
+# Write $text to $filename unless it's already there.
+# Checking this first may reduce the number of files make attempts to rebuild.
+sub write_to_file($$)
+{
+	my ($filename, $text) = @_;
+	my $old_text = "!$text";
+
+	if (open(_, '<', $filename))
+	{
+		local $/;
+		$old_text = <_>;
+		if ($text eq $old_text)
+		{
+			unless (close _)
+			{
+				die "Couldn't close '$filename' after reading";
+			}
+			return
+		}
+	}
+
+	unless (open(_, '>', $filename))
+	{
+		die "Couldn't open '$filename' for writing";
+	}
+	print _ $text;
+
+	unless (close _)
+	{
+		die "Couldn't close '$filename' after writing";
+	}
+}
+
+
 sub write_data
 {
     print "    Generating $ART_DATA\n";
 
-    unless (open(HEADER, ">", $ART_DATA))
-    {
-        die "Couldn't open '$ART_DATA' for writing: $!\n";
-    }
-
-    print HEADER <<"ENDofTEXT";
+    my $text = <<"ENDofTEXT";
 /* Definitions for unrandom artefacts. */
 
 /**********************************************************************
@@ -659,14 +688,14 @@ ENDofTEXT
     my $artefact;
     foreach $artefact (@all_artefacts)
     {
-        print HEADER "/* UNRAND_$artefact->{_ENUM} */\n";
-        print HEADER art_to_str($artefact);
+        $text .= "/* UNRAND_$artefact->{_ENUM} */\n";
+        $text .= art_to_str($artefact);
     }
 
-    print HEADER <<FOOTER;
+    $text .= <<FOOTER;
 FOOTER
 
-    close(HEADER);
+	write_to_file $ART_DATA, $text;
 }
 
 sub unrand_enum_constants()
@@ -710,9 +739,7 @@ sub write_enums
 
     my $unrand_enum = unrand_enum_constants();
 
-    open my $artenum, '>', $ART_ENUM or die "Can't write $ART_ENUM: $!\n";
-
-    print $artenum <<ARTENUM;
+    my $text = <<ARTENUM;
 #pragma once
 
 /**********************************************************************
@@ -734,7 +761,7 @@ enum unrand_type
 $unrand_enum
 };
 ARTENUM
-    close $artenum;
+	write_to_file $ART_ENUM, $text;
 }
 
 sub write_tiles
@@ -743,10 +770,6 @@ sub write_tiles
     print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
-    unless (open(TILES, ">$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for writing: $!\n";
-    }
 
     my %art_by_type = ();
     foreach my $artefact (@all_artefacts)
@@ -805,7 +828,7 @@ sub write_tiles
         }
     }
 
-    print TILES << "HEADER_END";
+	my $text = << "HEADER_END";
 
 # WARNING!
 #
@@ -820,20 +843,20 @@ HEADER_END
     # Output the tile definitions sorted by type (and thus path).
     foreach my $type (sort keys %art_by_type)
     {
-        print TILES "%sdir item/$type/artefact\n";
+        $text .= "%sdir item/$type/artefact\n";
 
         foreach my $needrim (sort keys %{$art_by_type{$type}})
         {
-            print TILES "%rim 1\n" if ($needrim);
+            $text .= "%rim 1\n" if ($needrim);
             foreach my $def (@{$art_by_type{$type}{$needrim}})
             {
-                print TILES "$def\n";
+                $text .= "$def\n";
             }
-            print TILES "%rim 0\n" if ($needrim);
+            $text .= "%rim 0\n" if ($needrim);
         }
-        print TILES "\n";
+        $text .= "\n";
     }
-    close(TILES);
+	write_to_file $tilefile, $text;
 
     my %parts;
     foreach my $artefact (@all_artefacts)
@@ -932,12 +955,8 @@ HEADER_END
     print "    Generating $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
-    unless (open(TILES, ">$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for writing: $!\n";
-    }
 
-    print TILES << "HEADER_END";
+    $text = << "HEADER_END";
 /**********************************************************************
  * WARNING!
  *
@@ -977,19 +996,19 @@ HEADER_END
         next if ($artefact->{TILE} eq "");
 
         my $enum = "UNRAND_$artefact->{_ENUM}";
-        print TILES (" " x 4) . "case $enum:"
+        $text .= (" " x 4) . "case $enum:"
             . " " x ($longest_enum - length($enum) + 2) . "return TILE_$enum;\n";
     }
-    print TILES (" " x 4) . "default: return 0;\n";
-    print TILES (" " x 4) . "}\n";
-    print TILES "}\n\n";
+    $text .= (" " x 4) . "default: return 0;\n";
+    $text .= (" " x 4) . "}\n";
+    $text .= "}\n\n";
 
-    print TILES "int unrandart_to_doll_tile(int unrand)\n{\n";
-    print TILES (" " x 4) . "switch (unrand)\n";
-    print TILES (" " x 4) . "{\n";
+    $text .= "int unrandart_to_doll_tile(int unrand)\n{\n";
+    $text .= (" " x 4) . "switch (unrand)\n";
+    $text .= (" " x 4) . "{\n";
     foreach my $part (sort keys %parts)
     {
-        print TILES (" " x 4) . "// $part\n";
+        $text .= (" " x 4) . "// $part\n";
         foreach my $artefact (@{$parts{$part}})
         {
             if (not defined $artefact->{TILE_EQ_ENUM})
@@ -1000,14 +1019,14 @@ HEADER_END
             }
             my $enum   = "UNRAND_$artefact->{_ENUM}";
             my $t_enum = $artefact->{TILE_EQ_ENUM};
-            print TILES (" " x 4) . "case $enum:"
+            $text .= (" " x 4) . "case $enum:"
                 . " " x ($longest_enum - length($enum) + 2) . "return $t_enum;\n";
         }
     }
-    print TILES (" " x 4) . "default: return 0;\n";
-    print TILES (" " x 4) . "}\n";
-    print TILES "}\n\n";
-    close(TILES);
+    $text .= (" " x 4) . "default: return 0;\n";
+    $text .= (" " x 4) . "}\n";
+    $text .= "}\n\n";
+	write_to_file $tilefile, $text;
 }
 
 my %valid_func = (
