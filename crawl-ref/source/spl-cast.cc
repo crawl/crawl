@@ -1537,7 +1537,9 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
     if (!mons_can_be_dazzled(mi.type))
         return vector<string>{"not susceptible"};
 
-    const int dazzle_pct = max(100 * ( 95 - mi.hd * 4 ) / ( 150 - pow ), 0);
+    const int numerator = dazzle_chance_numerator(mi.hd);
+    const int denom = dazzle_chance_denom(pow);
+    const int dazzle_pct = max(100 * numerator / denom, 0);
 
     return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
 }

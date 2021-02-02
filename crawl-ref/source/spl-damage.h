@@ -62,6 +62,8 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
+int dazzle_chance_numerator(int hd);
+int dazzle_chance_denom(int pow);
 bool dazzle_monster(monster *mon, int pow);
 spret cast_dazzling_flash(int pow, bool fail, bool tracer = false);
 

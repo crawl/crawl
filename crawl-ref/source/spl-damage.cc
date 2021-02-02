@@ -2645,12 +2645,23 @@ void forest_damage(const actor *mon)
     }
 }
 
+int dazzle_chance_numerator(int hd)
+{
+    return 95 - hd * 4;
+}
+
+int dazzle_chance_denom(int pow)
+{
+    return 150 - pow;
+}
+
 bool dazzle_monster(monster * mons, int pow)
 {
     if (!mons || !mons_can_be_dazzled(mons->type))
         return false;
 
-    if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
+    const int numerator = dazzle_chance_numerator(mons->get_hit_dice());
+    if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
     {
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
                        random_range(4, 8) * BASELINE_DELAY));
