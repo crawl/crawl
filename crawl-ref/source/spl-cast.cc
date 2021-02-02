@@ -1713,11 +1713,11 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 || spell == SPELL_APPORTATION;
 
         // Add success chance to targeted spells checking monster WL
-        const bool mr_check = testbits(flags, spflag::WL_check)
+        const bool wl_check = testbits(flags, spflag::WL_check)
                               && !testbits(flags, spflag::helpful);
         desc_filter additional_desc = nullptr;
         const zap_type zap = spell_to_zap(spell);
-        if (mr_check)
+        if (wl_check)
         {
             const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
                                                                  false)
