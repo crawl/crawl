@@ -4,6 +4,7 @@
 **/
 
 #include <cmath>
+#include <clocale>
 
 #include "AppHdr.h"
 
@@ -34,6 +35,8 @@ using namespace ui;
 
 menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;
+
+static string _format_skill_target(int target);
 
 #ifdef USE_TILE_LOCAL
 bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
@@ -449,7 +452,7 @@ void SkillMenuEntry::set_targets()
     }
     else
     {
-        m_progress->set_text(make_stringf("%d.%d", target / 10, target % 10));
+        m_progress->set_text(_format_skill_target(target));
         if (target_met(m_sk))
             m_progress->set_fg_colour(DARKGREY); // mainly comes up in wizmode
         else
@@ -902,15 +905,30 @@ void SkillMenu::init(int flag, int region_height)
     do_skill_enabled_check();
 }
 
+static string _format_skill_target(int target)
+{
+    // Use locale-sensitive decimal marker for consistency with other parts of
+    // this menu.
+    std::lconv *locale_data = std::localeconv();
+    return make_stringf("%d%s%d", target / 10,
+                            locale_data->decimal_point, target % 10);
+}
+
 static keyfun_action _keyfun_target_input(int &ch)
 {
     if (ch == '-')
         return KEYFUN_BREAK; // reset to 0
+    // Use the locale decimal point, because atof (used in read_skill_target)
+    // is locale-sensitive, as is the output of printf code.
+    // `decimal_point` on the result is guaranteed to be non-empty by the
+    // standard.
+    std::lconv *locale_data = std::localeconv();
+
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
             ch == CK_ENTER || ch == CK_BKSP || ch == CK_ESCAPE ||
             ch < 0 || // this should get all other special keys
-            ch == '.' || isadigit(ch))
+            ch == *locale_data->decimal_point || isadigit(ch))
     {
         return KEYFUN_PROCESS;
     }
@@ -926,7 +944,7 @@ int SkillMenu::read_skill_target(skill_type sk)
 
     const int old_target = you.get_training_target(sk);
     const string prefill = old_target <= 0 ? "0"
-                    : make_stringf("%d.%d", old_target / 10, old_target % 10);
+                                           : _format_skill_target(old_target);
 
     progress->set_editable(true, 5);
     progress->set_highlight_colour(RED);
