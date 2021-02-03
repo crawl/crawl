@@ -210,7 +210,7 @@ Interface
   that match patterns on this list will be displayed in the `^x` view
   description.
 * New option: always_show_zot. When enabled, the remaining time until Zot finds
-  the player is always shown, rather than when there are only 1500 turns left.
+  the player is always shown, rather than when there are only 1000 turns left.
 * New options: tile_overlay_col and tile_overlay_alpha_percent control the
   appearance of the message window in local tiles.
 
