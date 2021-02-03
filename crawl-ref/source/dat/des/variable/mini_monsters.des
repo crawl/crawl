@@ -695,27 +695,45 @@ ENDMAP
 NAME:  pond
 TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
-MONS:  plant w:30 / fungus
-MONS:  bullfrog w:30 / water moccasin / river rat / swamp drake w:2
-MONS:  vampire mosquito / will-o-the-wisp w:5 / swamp drake w:1
-KMONS: ? = plant
-SUBST: ! : w.
-SUBST: 2 : 23
-SUBST: 2 = 2.
-SUBST: 3 = 3.
-SUBST: . = . 1:1
-KFEAT: ? = *
+KMONS: p = plant w:30 / fungus
+: if you.in_branch("D") then
+:     if you.depth() < 13 then
+MONS:  bullfrog / water moccasin / river rat / cane toad w:2 \
+       / blink frog w:2 / komodo dragon w:2
+MONS:  vampire mosquito / swamp drake w:3
+# For earlier Dungeon and Lair, 50% chance of a Lair set or a Swamp set.
+SUBST: 1 : 12
+:     else
+# For post-Lair Dungeon, always use the Swamp set.
+MONS:  vampire mosquito / swamp drake w:2 / swamp dragon w:3 / hydra w:3 \
+       / will-o-the-wisp w:2
+:     end
+# Lair
+: else
+:     if you.depth() < 4 then
+MONS:  bullfrog / water moccasin / river rat / blink frog / cane toad \
+       / komodo dragon
+MONS:  vampire mosquito / swamp drake w:3 / swamp dragon w:1 / hydra w:1
+:     else
+MONS:  blink frog / cane toad / komodo dragon / torpor snail w:5
+MONS:  vampire mosquito / swamp drake w:3 / swamp dragon w:2 / hydra w:2 \
+       / will-o-the-wisp w:1
+:     end
+SUBST: 1 : 12
+: end
+SUBST: ! : w., 1 = 1., 2 = 2., . = . p:1
+KFEAT: p = W
 MAP
 ..wwwww...
-.wwwwwwww2
+.wwwwwwww1
 .wwwwwwwww
-.2wwwwwwww
-..ww222ww.
-.wwww222w.
-wwww!!22ww
-www!!!?ww.
-.ww!!!w1w.
-.2w!!!ww2.
+.1wwwwwwww
+..ww111ww.
+.wwww111w.
+wwww!p11ww
+www!!!*ww.
+.ww!!!wpw.
+.1w!!!ww1.
 ....!!w...
 ENDMAP
 
