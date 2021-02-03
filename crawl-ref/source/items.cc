@@ -1812,6 +1812,7 @@ static void _get_book(const item_def& it)
     else
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
     you.skill_manual_points[sk] += it.skill_points;
+    you.skills_to_show.insert(sk);
 }
 
 // Adds all books in the player's inventory to library.
