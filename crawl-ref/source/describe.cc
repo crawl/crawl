@@ -1878,6 +1878,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_BUNKER:
             description += "It can be fixed to the ground and used as a barrier.";
             break;
+
+        case SPARM_LUNGING:
+            description += "It allows its wearer to lunge towards enemies.";
+            break;
         }
     }
 
