@@ -456,9 +456,8 @@ TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 INSCRIP:  spectral,
-DESCRIP:  It retains the spirit of the tree from which it was made. In the hands
- of one skilled in evocations this spirit is drawn out to fight along side the
- wielder.
+DESCRIP:  When it strikes, its spirit leaps out and fights alongside the
+ wielder.\n
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
