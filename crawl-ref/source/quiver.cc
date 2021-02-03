@@ -732,7 +732,15 @@ namespace quiver
 
         bool allow_autofight() const override
         {
-            return is_enabled();
+            if (!is_enabled())
+                return false;
+
+            // nets shouldn't be autofired with autofight_throw, only with
+            // autofire.
+            if (you.inv[ammo_slot].sub_type == MI_THROWING_NET)
+                return false;
+
+            return true;
         }
 
         bool uses_mp() const override
