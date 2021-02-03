@@ -29,6 +29,7 @@
 #include "fprop.h"
 #include "item-prop.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-act.h"
@@ -786,6 +787,9 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
         const int dist = grid_distance(target, *di);
         if (dist > closest)
             break;
+
+        if (!cell_see_cell(target, *di, LOS_NO_TRANS))
+            continue; // there might be a better iterator for this
 
         const dungeon_feature_type grid = env.grid(*di);
         if (grid != DNGN_TREE)
