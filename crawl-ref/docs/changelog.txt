@@ -1,3 +1,15 @@
+Stone Soup 0.26.1 (20210203)
+----------------------------
+
+Bugfix Release
+--------------
+
+* ctrl-attack again no longer works while confused.
+* Console display flickering is reduced.
+* It is no longer possible to obtain infinite nets from net traps.
+* Various vault placement balance adjustments and teleport closet fixes.
+* 95 other fixes, tweaks, copy-edits, and interface improvements.
+
 Stone Soup 0.26.0 (20210108)
 ----------------------------
 
