@@ -539,7 +539,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_WAR_AXE,           "war axe",            11,  0, 15,
         SK_AXES,       SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_CHOPPING, 7, 10, 35, AXE_BRANDS },
-    { WPN_BROAD_AXE,         "broad axe",          13, -2, 17,
+    { WPN_BROAD_AXE,         "broad axe",          13, -2, 16,
         SK_AXES,       SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_CHOPPING, 4, 10, 40, AXE_BRANDS },
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
