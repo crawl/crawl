@@ -1228,7 +1228,7 @@ namespace quiver
         }
     }
 
-    bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
+    static bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
     {
         // Hacky: do some quiver-specific range checks for the sake of
         // autofight. We can't approach this like spells (which are marked
