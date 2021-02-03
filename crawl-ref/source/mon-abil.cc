@@ -965,6 +965,9 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
         if (!cell_see_cell(target, *di, LOS_NO_TRANS))
             continue; // there might be a better iterator for this
 
+        if (is_temp_terrain(*di))
+            continue; // no treeporting into summoned forests
+
         const dungeon_feature_type grid = env.grid(*di);
         if (grid != DNGN_TREE)
             continue;
