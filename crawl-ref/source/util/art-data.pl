@@ -626,33 +626,33 @@ sub art_to_str
 # Checking this first may reduce the number of files make attempts to rebuild.
 sub write_to_file($$)
 {
-	my ($filename, $text) = @_;
-	my $old_text = "!$text";
+    my ($filename, $text) = @_;
+    my $old_text = "!$text";
 
-	if (open(_, '<', $filename))
-	{
-		local $/;
-		$old_text = <_>;
-		if ($text eq $old_text)
-		{
-			unless (close _)
-			{
-				die "Couldn't close '$filename' after reading";
-			}
-			return
-		}
-	}
+    if (open(_, '<', $filename))
+    {
+        local $/;
+        $old_text = <_>;
+        if ($text eq $old_text)
+        {
+            unless (close _)
+            {
+                die "Couldn't close '$filename' after reading";
+            }
+            return
+        }
+    }
 
-	unless (open(_, '>', $filename))
-	{
-		die "Couldn't open '$filename' for writing";
-	}
-	print _ $text;
+    unless (open(_, '>', $filename))
+    {
+        die "Couldn't open '$filename' for writing";
+    }
+    print _ $text;
 
-	unless (close _)
-	{
-		die "Couldn't close '$filename' after writing";
-	}
+    unless (close _)
+    {
+        die "Couldn't close '$filename' after writing";
+    }
 }
 
 
@@ -695,7 +695,7 @@ ENDofTEXT
     $text .= <<FOOTER;
 FOOTER
 
-	write_to_file $ART_DATA, $text;
+    write_to_file $ART_DATA, $text;
 }
 
 sub unrand_enum_constants()
@@ -761,7 +761,7 @@ enum unrand_type
 $unrand_enum
 };
 ARTENUM
-	write_to_file $ART_ENUM, $text;
+    write_to_file $ART_ENUM, $text;
 }
 
 sub write_tiles
@@ -828,7 +828,7 @@ sub write_tiles
         }
     }
 
-	my $text = << "HEADER_END";
+        my $text = << "HEADER_END";
 
 # WARNING!
 #
@@ -856,7 +856,7 @@ HEADER_END
         }
         $text .= "\n";
     }
-	write_to_file $tilefile, $text;
+    write_to_file $tilefile, $text;
 
     my %parts;
     foreach my $artefact (@all_artefacts)
@@ -1026,7 +1026,7 @@ HEADER_END
     $text .= (" " x 4) . "default: return 0;\n";
     $text .= (" " x 4) . "}\n";
     $text .= "}\n\n";
-	write_to_file $tilefile, $text;
+    write_to_file $tilefile, $text;
 }
 
 my %valid_func = (
