@@ -2275,7 +2275,7 @@ KFEAT:   ?Y = deep_water
 KFEAT:   O* = shallow_water
 SHUFFLE: O*
 SUBST:   1 = 113, ? = ??w, " = tc, ' = .w
-NSUBST:  6 = 5:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
+NSUBST:  6 = 1:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, walk_dist = 1, excl_rad = 0}
