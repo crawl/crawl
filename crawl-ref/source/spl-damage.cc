@@ -150,6 +150,23 @@ bool cast_smitey_damnation(int pow, bolt &beam)
     return true;
 }
 
+string desc_chain_lightning_dam(int pow)
+{
+    // Damage is 5d(9.2 + pow / 30), but if lots of targets are around
+    // it can hit the player precisely once at very low (e.g. 1) power
+    // and deal 5 damage.
+    int min = 5;
+
+    // Max damage per bounce is 46 + pow / 6; in the worst case every other
+    // bounce hits the player, losing 8 pow on the bounce away and 8 on the
+    // bounce back for a total of 16; thus, for n bounces, it's:
+    // (46 + pow/6) * n less 16/6 times the (n - 1)th triangular number.
+    int n = (pow + 15) / 16;
+    int max = (46 + (pow / 6)) * n - 4 * n * (n - 1) / 3;
+
+    return make_stringf("%d-%d", min, max);
+}
+
 // XXX no friendly check
 spret cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail)
@@ -779,6 +796,7 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
+    // If you update this, also update spell_damage_string().
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
     hp_gain = min(mons->hit_points, hp_gain);
@@ -803,6 +821,11 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     return spret::success;
+}
+
+dice_def freeze_damage(int pow)
+{
+    return dice_def(1, 3 + pow / 3);
 }
 
 spret cast_freeze(int pow, monster* mons, bool fail)
@@ -835,7 +858,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
-    const int orig_hurted = roll_dice(1, 3 + pow / 3);
+    const int orig_hurted = freeze_damage(pow).roll();
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
     mprf("You freeze %s%s%s",
          mons->name(DESC_THE).c_str(),
@@ -923,8 +946,9 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 // Here begin the actual spells:
 static int _shatter_mon_dice(const monster *mon)
 {
+    const int DEFAULT_DICE = 3;
     if (!mon)
-        return 0;
+        return DEFAULT_DICE;
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
@@ -945,32 +969,37 @@ static int _shatter_mon_dice(const monster *mon)
     case MONS_OBSIDIAN_STATUE:
     case MONS_ORANGE_STATUE:
     case MONS_ROXANNE:
-        return 6;
+        return DEFAULT_DICE * 2;
 
     default:
         if (mon->is_insubstantial())
             return 1;
         if (mon->petrifying() || mon->petrified())
-            return 6; // reduced later by petrification's damage reduction
+            return DEFAULT_DICE * 2;
+        // reduced later by petrification's damage reduction
         else if (mon->is_skeletal() || mon->is_icy())
-            return 6;
+            return DEFAULT_DICE * 2;
         else if (mon->airborne() || mons_is_slime(*mon))
             return 1;
         // Normal damage to everything else.
         else
-            return 3;
+            return DEFAULT_DICE;
     }
+}
+
+dice_def shatter_damage(int pow, monster* mon)
+{
+    return dice_def(_shatter_mon_dice(mon), 5 + pow / 3);
 }
 
 static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
-    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
     if (!mon || !mon->alive() || mon == agent)
         return 0;
 
-    dam_dice.num = _shatter_mon_dice(mon);
+    const dice_def dam_dice = shatter_damage(pow, mon);
     int damage = max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (agent->is_player())
@@ -1265,6 +1294,13 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         _shatter_player(pow, wielder, true);
 }
 
+dice_def irradiate_damage(int pow, bool random)
+{
+    const int dice = 6;
+    const int max_dam = 30 + random ? div_rand_round(pow, 2) : pow / 2;
+    return calc_dice(dice, max_dam);
+}
+
 /**
  * Irradiate the given cell. (Per the spell.)
  *
@@ -1278,14 +1314,12 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (!mons || !mons->alive())
         return 0; // XXX: handle damaging the player for mons casts...?
 
-    const int dice = 6;
-    const int max_dam = 30 + div_rand_round(pow, 2);
-    const dice_def dam_dice = calc_dice(dice, max_dam);
+    const dice_def dam_dice = irradiate_damage(pow);
     const int dam = dam_dice.roll();
     mprf("%s is blasted with magical radiation%s",
          mons->name(DESC_THE).c_str(),
          attack_strength_punctuation(dam).c_str());
-    dprf("irr for %d (%d pow, max %d)", dam, pow, max_dam);
+    dprf("irr for %d (%d pow, %dd%d)", dam, pow, dam_dice.num, dam_dice.size);
 
     if (agent->deity() == GOD_FEDHAS && fedhas_protects(*mons))
     {
@@ -2130,6 +2164,11 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     return spret::success;
 }
 
+dice_def base_fragmentation_damage(int pow)
+{
+    return dice_def(3, 5 + pow / 5);
+}
+
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
                               const char **what, bool &should_destroy_wall, bool &hole)
@@ -2148,7 +2187,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.target = target;
 
     // Number of dice vary from 2-4.
-    beam.damage = dice_def(0, 5 + pow / 5);
+    beam.damage = base_fragmentation_damage(pow);
 
     monster* mon = monster_at(target);
     const dungeon_feature_type grid = grd(target);
@@ -2161,21 +2200,20 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == transformation::statue ? 3 : 2;
+            if (you.species == SP_GARGOYLE)
+                beam.damage.num = 2;
             return true;
         }
         else if (petrified)
         {
             beam.name       = "blast of petrified fragments";
             beam.colour     = mons_class_colour(player_mons(true));
-            beam.damage.num = 3;
             return true;
         }
         else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
             return true;
         }
@@ -2183,7 +2221,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.name       = "blast of armour fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == transformation::golem ? 3 : 2;
             return true;
         }
     }
@@ -2194,7 +2231,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_TOENAIL_GOLEM:
             beam.name       = "blast of toenail fragments";
             beam.colour     = RED;
-            beam.damage.num = 3;
             break;
 
         case MONS_IRON_ELEMENTAL:
@@ -2212,13 +2248,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_GARGOYLE:
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = 3;
             break;
 
         case MONS_SALTLING:
             beam.name       = "blast of salt crystal fragments";
             beam.colour     = WHITE;
-            beam.damage.num = 3;
             break;
 
         case MONS_OBSIDIAN_STATUE:
@@ -2258,14 +2292,12 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                 monster_info minfo(mon);
                 beam.name       = "blast of petrified fragments";
                 beam.colour     = minfo.colour();
-                beam.damage.num = 3;
                 break;
             }
             else if (mon->is_icy()) // blast of ice
             {
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
-                beam.damage.num = 3;
                 beam.flavour    = BEAM_ICE;
                 break;
             }
@@ -2273,7 +2305,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             {
                 beam.name   = "blast of bone shards";
                 beam.colour = LIGHTGREY;
-                beam.damage.num = 3;
                 break;
             }
             // Targeted monster not shatterable, try the terrain instead.
@@ -3092,6 +3123,12 @@ static bool _player_glaciate_affects(const actor *victim)
             && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
 }
 
+dice_def glaciate_damage(int pow, int eff_range)
+{
+    // At or within range 3, this is equivalent to the old Ice Storm damage.
+    return calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+}
+
 spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
@@ -3155,12 +3192,7 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
             const int eff_range = max(3, (6 * i / LOS_DEFAULT_RANGE));
 
-            // At or within range 3, this is equivalent to the old Ice Storm
-            // damage.
-            beam.damage =
-                caster->is_player()
-                    ? calc_dice(7, (66 + 3 * pow) / eff_range)
-                    : calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+            beam.damage = glaciate_damage(pow, eff_range);
 
             if (actor_at(entry.first))
             {
@@ -3917,6 +3949,14 @@ spret cast_frozen_ramparts(int pow, bool fail)
     you.duration[DUR_FROZEN_RAMPARTS] = random_range(40 + pow,
         80 + pow * 3 / 2);
     return spret::success;
+}
+
+dice_def ramparts_damage(int pow, bool random)
+{
+    int size = 2 + pow / 5;
+    if (random)
+        size = 2 + div_rand_round(pow, 5);
+    return dice_def(1, size);
 }
 
 

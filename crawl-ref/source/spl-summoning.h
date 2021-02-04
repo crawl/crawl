@@ -47,7 +47,9 @@ bool summon_holy_warrior(int pow, bool punish);
 
 bool tukima_affects(const actor &target);
 void cast_tukimas_dance(int pow, actor *target);
+int ball_lightning_hd(int pow, bool random = true);
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail);
+dice_def ball_lightning_damage(int hd);
 spret cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail);
 
 spret cast_call_imp(int pow, god_type god, bool fail);
@@ -115,11 +117,14 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam, bool
 bool trigger_battlesphere(actor* agent, bolt& beam, bool imus_mirror = false);
 bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
+dice_def battlesphere_damage(int pow);
 
 spret cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
+int prism_hd(int pow, bool random = true);
 spret cast_prismatic_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
+dice_def prism_damage(int hd, bool fully_powered);
 
 monster* find_spectral_weapon(const actor* agent);
 bool weapon_can_be_spectral(const item_def *weapon);

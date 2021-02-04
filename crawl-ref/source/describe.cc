@@ -86,6 +86,9 @@
 
 using namespace ui;
 
+static void _print_bar(int value, int scale, string name,
+    ostringstream& result, int base_value = INT_MAX);
+
 int count_desc_lines(const string &_desc, const int width)
 {
     string desc = get_linebreak_string(_desc, width);
@@ -2320,11 +2323,24 @@ string get_item_description(const item_def &item, bool verbose,
                 << ".";
         }
         break;
+    case OBJ_WANDS:
+        if (item_type_known(item))
+        {
+            description << "\n";
+
+            const spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
+
+            const string damage_str = spell_damage_string(spell, true);
+            if (damage_str != "")
+                description << "\nDamage: " << damage_str;
+
+            description << "\nNoise: " << spell_noise_string(spell);
+        }
+        break;
     case OBJ_SCROLLS:
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
-    case OBJ_WANDS:
         // No extra processing needed for these item types.
         break;
 
@@ -3158,14 +3174,30 @@ static string _player_spell_stats(const spell_type spell, bool rod)
         description += make_stringf("        Fail: %s", failure.c_str());
     }
 
-
-    description += "\n\nPower : ";
+    const string damage_string = spell_damage_string(spell);
+    const int acc = spell_acc(spell);
+    // TODO: generalize this pattern? It's very common in descriptions
+    const int padding = (acc != -1) ? 8 : damage_string.size() ? 6 : 5;
+    description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell, rod);
-    description += "\nRange : ";
+
+    if (damage_string != "") {
+        description += make_stringf("\n%*s: ", padding, "Damage");
+        description += damage_string;
+    }
+    if (acc != -1)
+    {
+        ostringstream acc_str;
+        _print_bar(acc, 3, "", acc_str);
+        description += make_stringf("\n%*s: %s", padding, "Accuracy",
+            acc_str.str().c_str());
+    }
+
+    description += make_stringf("\n%*s: ", padding, "Range");
     description += spell_range_string(spell, rod);
-    description += "\nHunger: ";
+    description += make_stringf("\n%*s: ", padding, "Hunger");
     description += spell_hunger_string(spell, rod);
-    description += "\nNoise : ";
+    description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
     description += "\n";
     return description;
@@ -4004,7 +4036,7 @@ static string _monster_spells_description(const monster_info& mi)
     formatted_string description;
     describe_spellset(monster_spellset(mi), nullptr, description, &mi);
     description.cprintf("\nTo read a description, press the key listed above. "
-        "(x%%) indicates the chance to beat your MR, "
+        "(AdB) indicate damage dice, (x%%) indicates the chance to beat your MR, "
         "and (y) indicates the spell range");
     description.cprintf(crawl_state.need_save
         ? "; shown in red if you are in range.\n"
@@ -4058,43 +4090,45 @@ static void _add_energy_to_string(int speed, int energy, string what,
  *                          INT_MAX, is ignored.
  */
 static void _print_bar(int value, int scale, string name,
-                       ostringstream &result, int base_value = INT_MAX)
+                       ostringstream &result, int base_value)
 {
     if (base_value == INT_MAX)
         base_value = value;
 
-    result << name << " ";
+    if (name.size())
+        result << name << " ";
 
     const int display_max = value ? value : base_value;
     const bool currently_disabled = !value && base_value;
 
     if (currently_disabled)
-      result << "(";
+      result << "none (normally ";
 
-    for (int i = 0; i * scale < display_max; i++)
+    if (display_max == 0)
+        result << "none";
+    else
     {
-        result << "+";
-        if (i % 5 == 4)
-            result << " ";
+        for (int i = 0; i * scale < display_max; i++)
+        {
+            result << "+";
+            if (i % 5 == 4)
+                result << " ";
+        }
     }
 
     if (currently_disabled)
-      result << ")";
+        result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!you.suppress_wizard)
         result << " (" << value << ")";
 #endif
 
-    if (currently_disabled)
-    {
-        result << " (Normal " << name << ")";
-
 #ifdef DEBUG_DIAGNOSTICS
+    if (currently_disabled)
         if (!you.suppress_wizard)
-            result << " (" << base_value << ")";
+            result << " (base: " << base_value << ")";
 #endif
-    }
 }
 
 /**
@@ -4117,7 +4151,7 @@ static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 {
     // MAX_GHOST_EVASION + two pips (so with EV in parens it's the same)
-    _print_bar(mi.ac, 5, "AC", result);
+    _print_bar(mi.ac, 5, "    AC:", result);
     result << "\n";
 }
 
@@ -4129,7 +4163,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
  */
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
-    _print_bar(mi.ev, 5, "EV", result, mi.base_ev);
+    _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
     result << "\n";
 }
 
@@ -4143,12 +4177,12 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 {
     if (mi.res_magic() == MAG_IMMUNE)
     {
-        result << "MR ∞\n";
+        result << "    MR: ∞\n";
         return;
     }
 
     const int bar_scale = MR_PIP;
-    _print_bar(mi.res_magic(), bar_scale, "MR", result);
+    _print_bar(mi.res_magic(), bar_scale, "    MR:", result);
     result << "\n";
 }
 

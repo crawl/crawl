@@ -454,6 +454,12 @@ int wand_mp_cost()
     return min(you.magic_points, you.get_mutation_level(MUT_MP_WANDS) * 3);
 }
 
+int wand_power()
+{
+    const int mp_cost = wand_mp_cost();
+    return (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+}
+
 void zap_wand(int slot)
 {
     if (inv_count() < 1)
@@ -491,8 +497,6 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = wand_mp_cost();
-
     int item_slot;
     if (slot != -1)
         item_slot = slot;
@@ -528,7 +532,8 @@ void zap_wand(int slot)
         return;
     }
 
-    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    const int mp_cost = wand_mp_cost();
+    const int power = wand_power();
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));

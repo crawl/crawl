@@ -32,6 +32,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "spl-damage.h"
 #include "syscalls.h"
 #include "artefact.h"
 #include <sstream>
@@ -277,9 +278,8 @@ static string dice_def_string(dice_def dice)
 
 static dice_def mi_calc_iood_damage(monster* mons)
 {
-    const int power =
-        stepdown_value(6 * mons->get_experience_level(), 30, 30, 200, -1);
-    return dice_def(9, power / 4);
+    const int pow = mons_power_for_hd(SPELL_IOOD, mons->get_hit_dice());
+    return iood_damage(pow, INFINITE_DISTANCE);
 }
 
 static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
@@ -303,21 +303,9 @@ static string mi_calc_glaciate_damage(monster* mons)
 
 static string mi_calc_chain_lightning_damage(monster* mons)
 {
-    int pow = 4 * mons->get_experience_level();
-
-    // Damage is 5d(9.2 + pow / 30), but if lots of targets are around
-    // it can hit the player precisely once at very low (e.g. 1) power
-    // and deal 5 damage.
-    int min = 5;
-
-    // Max damage per bounce is 46 + pow / 6; in the worst case every other
-    // bounce hits the player, losing 8 pow on the bounce away and 8 on the
-    // bounce back for a total of 16; thus, for n bounces, it's:
-    // (46 + pow/6) * n less 16/6 times the (n - 1)th triangular number.
-    int n = (pow + 15) / 16;
-    int max = (46 + (pow / 6)) * n - 4 * n * (n - 1) / 3;
-
-    return make_stringf("%d-%d", min, max);
+    const int pow = mons_power_for_hd(SPELL_CHAIN_LIGHTNING,
+        mons->get_hit_dice());
+    return desc_chain_lightning_dam(pow);
 }
 
 static string mi_calc_vampiric_drain_damage(monster* mons)
@@ -361,7 +349,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
         case SPELL_WATERSTRIKE:
-            spell_beam.damage = waterstrike_damage(*monster);
+            spell_beam.damage = waterstrike_damage(*monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
             return dice_def_string(resonance_strike_base_damage(*monster))

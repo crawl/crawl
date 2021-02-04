@@ -362,7 +362,7 @@ template<typename T>
 class power_deducer
 {
 public:
-    virtual T operator()(int pow) const = 0;
+    virtual T operator()(int pow, bool random = true) const = 0;
     virtual ~power_deducer() {}
 };
 
@@ -372,7 +372,7 @@ template<int adder, int mult_num = 0, int mult_denom = 1>
 class tohit_calculator : public tohit_deducer
 {
 public:
-    int operator()(int pow) const override
+    int operator()(int pow, bool /*random*/) const override
     {
         return adder + pow * mult_num / mult_denom;
     }
@@ -384,7 +384,7 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class dicedef_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const override
+    dice_def operator()(int pow, bool /*random*/) const override
     {
         return dice_def(numdice, adder + pow * mult_num / mult_denom);
     }
@@ -394,9 +394,9 @@ template<int numdice, int adder, int mult_num, int mult_denom>
 class calcdice_calculator : public dam_deducer
 {
 public:
-    dice_def operator()(int pow) const override
+    dice_def operator()(int pow, bool random) const override
     {
-        return calc_dice(numdice, adder + pow * mult_num / mult_denom);
+        return calc_dice(numdice, adder + pow * mult_num / mult_denom, random);
     }
 };
 
@@ -440,6 +440,52 @@ static const zap_info* _seek_zap(zap_type z_type)
     else
         return &zap_data[zap_index[z_type]];
 }
+
+bool zap_explodes(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    return zinfo && zinfo->is_explosion;
+}
+
+bool zap_is_enchantment(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    return zinfo && zinfo->is_enchantment;
+}
+
+int zap_to_hit(zap_type z_type, int power, bool is_monster)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return 0;
+    const tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
+        : zinfo->player_tohit;
+    if (!zinfo->is_enchantment)
+        ASSERT(hit_calc);
+    const int hit = hit_calc ? (*hit_calc)(power) : 0;
+    if (hit != AUTOMATIC_HIT && !is_monster && crawl_state.need_save)
+        return max(0, hit - 5 * you.inaccuracy());
+    return hit;
+}
+
+dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return dice_def(0, 0);
+    const dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
+        : zinfo->player_damage;
+    return dam_calc ? (*dam_calc)(power, random) : dice_def(0, 0);
+}
+
+colour_t zap_colour(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return BLACK;
+    return zinfo->colour;
+}
+
 
 int zap_power_cap(zap_type z_type)
 {
@@ -496,19 +542,9 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
     else
-    {
-        tohit_deducer* hit_calc = is_monster ? zinfo->monster_tohit
-                                             : zinfo->player_tohit;
-        ASSERT(hit_calc);
-        pbolt.hit = (*hit_calc)(power);
-        if (pbolt.hit != AUTOMATIC_HIT && !is_monster)
-            pbolt.hit = max(0, pbolt.hit - 5 * you.inaccuracy());
-    }
+        pbolt.hit = zap_to_hit(z_type, power, is_monster);
 
-    dam_deducer* dam_calc = is_monster ? zinfo->monster_damage
-                                       : zinfo->player_damage;
-    if (dam_calc)
-        pbolt.damage = (*dam_calc)(power);
+    pbolt.damage = zap_damage(z_type, power, is_monster);
 
     if (pbolt.origin_spell == SPELL_NO_SPELL)
         pbolt.origin_spell = zap_to_spell(z_type);

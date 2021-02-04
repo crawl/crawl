@@ -2493,13 +2493,27 @@ int power_to_barcount(int power)
     return breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1;
 }
 
-static int _spell_power_bars(spell_type spell, bool rod)
+static int _wand_power(spell_type spell)
+{
+    const int cap = spell_power_cap(spell);
+    if (cap == 0)
+        return -1;
+    const int pow = wand_power();
+    return min(pow, cap);
+}
+
+static int _spell_power(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
     const int power = min(calc_spell_power(spell, true, false, false, 1, rod), cap);
-    return power_to_barcount(power);
+    return power;
+}
+
+static int _spell_power_bars(spell_type spell, bool rod)
+{
+    return power_to_barcount(_spell_power(spell, rod));
 }
 
 #ifdef WIZARD
@@ -2512,6 +2526,96 @@ static string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
     return make_stringf("%d (%d)", power, cap);
 }
 #endif
+
+static dice_def _spell_damage(spell_type spell, bool evoked)
+{
+    const int power = evoked ? _wand_power(spell) :_spell_power(spell, false);
+    if (power < 0)
+        return dice_def(0, 0);
+    switch (spell)
+    {
+    case SPELL_FREEZE:
+        return freeze_damage(power);
+    case SPELL_FULMINANT_PRISM:
+        return prism_damage(prism_hd(power, false), true);
+    case SPELL_CONJURE_BALL_LIGHTNING:
+        return ball_lightning_damage(ball_lightning_hd(power, false));
+    case SPELL_IOOD:
+        return iood_damage(power, INFINITE_DISTANCE);
+    case SPELL_IRRADIATE:
+        return irradiate_damage(power, false);
+    case SPELL_SHATTER:
+        return shatter_damage(power);
+    case SPELL_BATTLESPHERE:
+        return battlesphere_damage(power);
+    case SPELL_FROZEN_RAMPARTS:
+        return ramparts_damage(power, false);
+    case SPELL_LRD:
+        return base_fragmentation_damage(power);
+    default:
+        break;
+    }
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return dice_def(0, 0);
+    return zap_damage(zap, power, false, false);
+}
+
+string spell_damage_string(spell_type spell, bool evoked)
+{
+    switch (spell)
+    {
+    case SPELL_VAMPIRIC_DRAINING:
+    {
+        const int power = _spell_power(spell, false);
+        return make_stringf("2d5+1d%d", power / 7);
+    }        
+    case SPELL_CONJURE_FLAME:
+        return desc_cloud_damage(CLOUD_FIRE, false);
+    case SPELL_FREEZING_CLOUD:
+        return desc_cloud_damage(CLOUD_COLD, false);
+    default:
+        break;
+    }
+    const dice_def dam = _spell_damage(spell, evoked);
+    if (dam.num == 0 || dam.size == 0)
+        return "";
+    string mult = "";
+    switch (spell)
+    {
+    case SPELL_FOXFIRE:
+        mult = "2x";
+        break;
+    case SPELL_CONJURE_BALL_LIGHTNING:
+        mult = "3x";
+        break;
+    case SPELL_STARBURST:
+        mult = "8x";
+        break;
+    default:
+        break;
+    }
+    const string dam_str = make_stringf("%s%dd%d", mult.c_str(), dam.num, dam.size);
+    if (spell == SPELL_LRD || spell == SPELL_SHATTER)
+        return dam_str + "*"; // many special cases of more/less damage
+    return dam_str;
+}
+
+int spell_acc(spell_type spell)
+{
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return -1;
+    if (zap_explodes(zap) || zap_is_enchantment(zap))
+        return -1;
+    const int power = _spell_power(spell, false);
+    if (power < 0)
+        return -1;
+    const int acc = zap_to_hit(zap, power, false);
+    if (acc == AUTOMATIC_HIT)
+        return -1;
+    return acc;
+}
 
 string spell_power_string(spell_type spell, bool rod)
 {

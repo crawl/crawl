@@ -27,6 +27,7 @@ bool evoke_check(int slot, bool quiet = false);
 bool evoke_item(int slot = -1);
 bool evoke_auto_item();
 int wand_mp_cost();
+int wand_power();
 void zap_wand(int slot = -1);
 
 bool disc_of_storms();

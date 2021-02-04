@@ -8,6 +8,7 @@
 #include "describe-spells.h"
 
 #include "cio.h"
+#include "colour.h"
 #include "delay.h"
 #include "describe.h"
 #include "english.h"
@@ -19,13 +20,16 @@
 #include "menu.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-project.h" // iood_damage
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "pakellas.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
+#include "spl-damage.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "stringutil.h"
 #include "state.h"
 #include "tileweb.h"
@@ -404,6 +408,104 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
 }
 
+static colour_t _spell_colour(spell_type spell)
+{
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return COL_UNKNOWN;
+    return zap_colour(zap);
+}
+
+static string _colourize(string base, colour_t col)
+{
+    if (col < NUM_TERM_COLOURS)
+    {
+        const string col_name = colour_to_str(col);
+        return make_stringf("<%s>%s</%s>",
+            col_name.c_str(), base.c_str(), col_name.c_str());
+    }
+    string out = make_stringf("%c", base[0]);
+    for (int i = 1; i < (int)base.length() - 1; i++)
+    {
+        const int term_col = element_colour(col, false, you.pos());
+        const string col_name = colour_to_str(term_col);
+        out += "<" + col_name + ">" + base[i] + "</" + col_name + ">";
+    }
+    out += base[base.length() - 1];
+    return out;
+}
+
+static dice_def _spell_damage(spell_type spell, int hd)
+{
+    const int pow = mons_power_for_hd(spell, hd);
+
+    switch (spell)
+    {
+    case SPELL_WATERSTRIKE:
+        return waterstrike_damage(hd);
+    case SPELL_IOOD:
+        return iood_damage(pow, INFINITE_DISTANCE);
+    case SPELL_GLACIATE:
+        return glaciate_damage(pow, 3);
+    default:
+        break;
+    }
+
+    const zap_type zap = spell_to_zap(spell);
+    if (zap == NUM_ZAPS)
+        return dice_def(0, 0);
+
+    return zap_damage(zap, pow, true, false);
+}
+
+static int _spell_hd(spell_type spell, const monster_info& mon_owner)
+{
+    if (spell == SPELL_SEARING_BREATH && mon_owner.type == MONS_XTAHUA)
+        return mon_owner.hd * 3 / 2;
+    if (mons_spell_is_spell(spell))
+        return mon_owner.spell_hd();
+    return mon_owner.hd;
+}
+
+static string _effect_string(spell_type spell, const monster_info* mon_owner)
+{
+
+    if (!mon_owner)
+        return "";
+
+    const int hd = _spell_hd(spell, *mon_owner);
+    if (!hd)
+        return "";
+
+    if (testbits(get_spell_flags(spell), spflag::MR_check))
+    {
+        // WL chances only make sense vs a player
+        if (!crawl_state.need_save
+#ifndef DEBUG_DIAGNOSTICS
+            || mon_owner->attitude == ATT_FRIENDLY
+#endif
+            )
+        {
+            return "";
+        }
+        if (you.immune_to_hex(spell))
+            return "(immune)";
+        return make_stringf("(%d%%)", hex_chance(spell, hd));
+    }
+
+    if (spell == SPELL_CHAIN_LIGHTNING)
+    {
+        const int pow = mons_power_for_hd(spell, hd);
+        return make_stringf("(%s)", desc_chain_lightning_dam(pow).c_str());
+    }
+
+    const dice_def dam = _spell_damage(spell, hd);
+    if (dam.num == 0 || dam.size == 0)
+        return "";
+    string mult = "";
+    return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
+}
+
 /**
  * List the name(s) of the school(s) the given spell is in.
  *
@@ -537,41 +639,40 @@ static void _describe_book(const spellbook_contents &book,
 
         // don't crash if we have more spells than letters.
         auto entry = find_if(spell_map.begin(), spell_map.end(),
-                [&spell](const pair<spell_type,char>& e)
-                {
-                    return e.first == spell;
-                });
+            [&spell](const pair<spell_type, char>& e)
+            {
+                return e.first == spell;
+            });
         const char spell_letter = entry != spell_map.end()
-                                            ? entry->second : ' ';
+            ? entry->second : ' ';
 
-        string range_str = _range_string(spell, mon_owner, hd);
+        const string range_str = _range_string(spell, mon_owner, hd);
+        string effect_str = _effect_string(spell, mon_owner);
 
-        string hex_str = "";
+        const int effect_len = effect_str.length();
+        const int range_len = range_str.empty() ? 0 : 3;
+        const int effect_range_space = effect_len && range_len ? 1 : 0;
+        const int chop_len = 29 - effect_len - range_len - effect_range_space;
 
-        if (hd > 0 && crawl_state.need_save
-#ifndef DEBUG_DIAGNOSTICS
-            && mon_owner->attitude != ATT_FRIENDLY
-#endif
-            && testbits(get_spell_flags(spell), spflag::MR_check))
+        if (effect_len && !testbits(get_spell_flags(spell), spflag::MR_check))
+            effect_str = _colourize(effect_str, _spell_colour(spell));
+
+        string spell_name = spell_title(spell);
+        if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR
+            && chop_len < (int)spell_name.length())
         {
-            if (you.immune_to_hex(spell))
-                hex_str = "(immune)";
-            else
-                hex_str = make_stringf("(%d%%)", hex_chance(spell, hd));
+            // looks nicer than Lehudib's Crystal S
+            spell_name = "Crystal Spear";
         }
 
-        int hex_len = hex_str.length(), range_len = range_str.empty() ? 0 : 3;
-        int hex_range_space = hex_len && range_len ? 1 : 0;
-
         description += formatted_string::parse_string(
-                make_stringf("%c - %s%s%s%s", spell_letter,
-                chop_string(spell_title(spell),
-                            29 - hex_len - range_len - hex_range_space).c_str(),
-                hex_str.c_str(),
-                hex_range_space ? " " : "",
+            make_stringf("%c - %s%s%s%s", spell_letter,
+                chop_string(spell_name, chop_len).c_str(),
+                effect_str.c_str(),
+                effect_range_space ? " " : "",
                 range_str.c_str()));
 
-        // only display type & level for book/rod spells
+        // only display type & level for book spells
         if (doublecolumn)
         {
             // print monster spells in two columns
@@ -586,9 +687,9 @@ static void _describe_book(const spellbook_contents &book,
         string schools =
 #if TAG_MAJOR_VERSION == 34
             source_item->base_type == OBJ_RODS ? "Evocations"
-                                               :
+            :
 #endif
-                         _spell_schools(spell);
+            _spell_schools(spell);
 
         string known = "";
         if (!mon_owner) {
@@ -596,9 +697,9 @@ static void _describe_book(const spellbook_contents &book,
         }
 
         description.cprintf("%s%d%s\n",
-                            chop_string(schools, 30).c_str(),
-                            spell_difficulty(spell),
-                            known.c_str());
+            chop_string(schools, 30).c_str(),
+            spell_difficulty(spell),
+            known.c_str());
     }
 
     // are we halfway through a column?
@@ -651,25 +752,21 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
+        string effect_str = _effect_string(spell, mon_owner);
+        if (!testbits(get_spell_flags(spell), spflag::WL_check))
+            effect_str = _colourize(effect_str, _spell_colour(spell));
+        tiles.json_write_string("effect", effect_str);
+
         string range_str = _range_string(spell, mon_owner, hd);
         if (range_str.size() > 0)
             tiles.json_write_string("range_string", range_str);
 
-        if (hd > 0 && crawl_state.need_save
-#ifndef DEBUG_DIAGNOSTICS
-            && mon_owner->attitude != ATT_FRIENDLY
-#endif
-            && (get_spell_flags(spell) & spflag::MR_check))
-        {
-            if (you.immune_to_hex(spell))
-                tiles.json_write_string("hex_chance", "immune");
-            else
-                tiles.json_write_string("hex_chance",
-                        make_stringf("%d%%", hex_chance(spell, hd)));
-        }
-
+#if TAG_MAJOR_VERSION == 34
         string schools = (source_item && source_item->base_type == OBJ_RODS) ?
-                "Evocations" : _spell_schools(spell);
+            "Evocations" : _spell_schools(spell);
+#else
+        string schools = _spell_schools(spell);
+#endif
         tiles.json_write_string("schools", schools);
         tiles.json_write_int("level", spell_difficulty(spell));
         tiles.json_close_object();

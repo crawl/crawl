@@ -199,6 +199,7 @@ LUAFN(l_spells_hunger)
     PLUARET(number, hunger_bars(spell_hunger(spell, false)));
 }
 
+
 /*** The current spellpower (in bars).
  * @tparam string name
  * @treturn int
