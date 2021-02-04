@@ -756,10 +756,6 @@ ring of resist corrosion
 
 A ring that provides partial protection from all sources of acid and corrosion.
 %%%%
-ring of attention
-
-A ring that makes the player less stealthy.
-%%%%
 ring of magical power
 
 A ring that increases its wearer's reserves of magical power.

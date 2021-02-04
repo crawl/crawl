@@ -735,6 +735,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         {
 #if TAG_MAJOR_VERSION == 34
         case RING_REGENERATION:          return "obsoleteness";
+        case RING_ATTENTION:             return "obsoleteness";
 #endif
         case RING_PROTECTION:            return "protection";
         case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
@@ -744,7 +745,6 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
         case RING_RESIST_CORROSION:      return "resist corrosion";
-        case RING_ATTENTION:             return "attention";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
 #if TAG_MAJOR_VERSION == 34
@@ -789,6 +789,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         {
 #if TAG_MAJOR_VERSION == 34
         case RING_REGENERATION:          return "obsoleteness";
+        case RING_ATTENTION:             return "obsoleteness";
 #endif
         case RING_PROTECTION:            return "AC";
         case RING_PROTECTION_FROM_FIRE:  return "rF+";
@@ -798,7 +799,6 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_SLAYING:               return "Slay";
         case RING_SEE_INVISIBLE:         return "sInv";
         case RING_RESIST_CORROSION:      return "rCorr";
-        case RING_ATTENTION:             return "Stlth-";
         case RING_EVASION:               return "EV";
         case RING_STEALTH:               return "Stlth+";
         case RING_DEXTERITY:             return "Dex";
@@ -2708,7 +2708,6 @@ bool is_bad_item(const item_def &item)
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
-        case RING_ATTENTION:
             return true;
         case RING_TELEPORTATION:
             return !(you.stasis() || crawl_state.game_is_sprint());

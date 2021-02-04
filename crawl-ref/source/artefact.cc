@@ -366,7 +366,6 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
-    { RING_ATTENTION, { { ARTP_STEALTH, -1 } } },
 
     { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
@@ -1540,10 +1539,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_ATTENTION:
-        conflicts = ARTP_STEALTH;
-        break;
-
     case RING_FIRE:
     case RING_ICE:
     case RING_WIZARDRY:

@@ -4941,13 +4941,9 @@ void unmarshallItem(reader &th, item_def &item)
         }
 
         // Make sure no weird fake-rap combinations are produced by the upgrade
-        // from rings of sustenance/hunger with {Stlth} to stealth/attention
-        if (item.base_type == OBJ_JEWELLERY
-            && (item.sub_type == RING_STEALTH
-                || item.sub_type == RING_ATTENTION))
-        {
+        // from rings of sustenance with {Stlth} to stealth
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_STEALTH)
             artefact_set_property(item, ARTP_STEALTH, 0);
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_NO_POT_FOOD)

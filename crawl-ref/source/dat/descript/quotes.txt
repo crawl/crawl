@@ -2231,10 +2231,6 @@ ring of flight
     -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
      trans. Gregory Rabassa. 1972
 %%%%
-ring of attention
-
-<ring>
-%%%%
 ring of ice
 
 “Some say the world will end in fire;
