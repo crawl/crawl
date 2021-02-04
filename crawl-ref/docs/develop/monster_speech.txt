@@ -853,20 +853,10 @@ adding a high weight value before it, e.g. w:5000, or equally
 temporarily push it into another channel (e.g. MSGCH_WARN) to make it
 more noticeable.
 
-If you successfully got Crawl compiled, you can easily enable more
-detailed debug information. All you need to do is add
-
-  #define DEBUG_MONSPEAK
-
-somewhere in AppHdr.h, for example at the beginning of the section
-entitled "Debugging Defines", and then compile the game anew, first
-using "make clean", then "make wizard".
-If you play with DEBUG_MONSPEAK compiled in, whenever the game is
+To get detailed information about monster speech generation, you can
+use a FULLDEBUG build of crawl (`make debug`); whenever the game is
 searching the monspeak database you'll get extensive information on
-all keys and prefixes tried. Once you're done testing don't forget to
-remove (or comment out) the DEBUG_MONSPEAK setting as trying to
-actually play that way would sure be annoying.
-
+all keys and prefixes tried.
 
 F. Publishing your changes
 ===========================
