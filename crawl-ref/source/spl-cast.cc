@@ -1555,6 +1555,21 @@ static vector<string> _desc_meph_chance(const monster_info& mi)
     return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
 }
 
+static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
+{
+    if (get_resist(mi.resists(), MR_RES_NEG) >= 3)
+        return vector<string>{"not susceptible"};
+    // Assumes these !actor_is_susceptible_to_vampirism() cases would have rN+++:
+    // - monster with MF_SPECTRALISED would be undead
+    // - monster without MH_NATURAL holiness would have rN+++
+    // Then these cases are inconvenient to check here but as of 0.26+ there are no practical examples:
+    // - monster with ENCH_FAKE_ABJURATION
+    // - monster with ENCH_PHANTOM_MIRROR may count as is_summoned() and not have MB_SUMMONED
+    if (mi.mb.get(MB_SUMMONED))
+        return vector<string>{"would not gain hp"};
+    return vector<string>{};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1670,6 +1685,8 @@ static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags f
             return bind(_desc_dazzle_chance, placeholders::_1, powc);
         case SPELL_MEPHITIC_CLOUD:
             return bind(_desc_meph_chance, placeholders::_1);
+        case SPELL_VAMPIRIC_DRAINING:
+            return bind(_desc_vampiric_draining_valid, placeholders::_1);
         default:
             break;
     }
