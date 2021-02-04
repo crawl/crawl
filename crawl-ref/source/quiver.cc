@@ -12,6 +12,7 @@
 #include "ability.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "describe.h" // describe_to_hit
 #include "directn.h"
 #include "env.h"
 #include "evoke.h"
@@ -47,6 +48,16 @@ static bool _items_similar(const item_def& a, const item_def& b,
                            bool force = true);
 
 // TODO: how should newquivers integrate with the local tiles UI?
+
+static vector<string> _desc_hit_chance(const monster_info &mi)
+{
+    ostringstream result;
+    describe_to_hit(mi, result);
+    string str = result.str();
+    if (str.empty())
+        return vector<string>{};
+    return vector<string>{str};
+}
 
 namespace quiver
 {
@@ -494,6 +505,7 @@ namespace quiver
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();
+            args.get_desc_func = bind(_desc_hit_chance, placeholders::_1);
 
             direction(target, args);
             t = target;

@@ -86,6 +86,8 @@ string get_skill_description(skill_type skill, bool need_title = false);
 void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const int hd);
+void describe_to_hit(const monster_info& mi, ostringstream &result,
+                     bool parenthesize = false);
 
 string get_command_description(const command_type cmd, bool terse);
 

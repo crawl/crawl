@@ -49,14 +49,14 @@
 #include "lang-fake.h"
 #include "libutil.h"
 #include "macro.h"
-#include "melee-attack.h" // _describe_to_hit
+#include "melee-attack.h" // describe_to_hit
 #include "message.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "output.h"
 #include "potion.h"
-#include "ranged-attack.h" // _describe_to_hit
+#include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
 #include "skills.h"
@@ -72,7 +72,7 @@
 #include "stringutil.h" // to_string on Cygwin
 #include "tag-version.h"
 #include "terrain.h"
-#include "throw.h" // is_pproj_active for _describe_to_hit
+#include "throw.h" // is_pproj_active for describe_to_hit
 #include "tile-flags.h"
 #include "tilepick.h"
 #ifdef USE_TILE_LOCAL
@@ -3954,7 +3954,8 @@ static void _add_energy_to_string(int speed, int energy, string what,
  * @param mi[in]            Player-visible info about the monster in question.
  * @param result[in,out]    The stringstream to append to.
  */
-static void _describe_to_hit(const monster_info& mi, ostringstream &result)
+void describe_to_hit(const monster_info& mi, ostringstream &result,
+                     bool parenthesize)
 {
     // TODO: don't do this if the player doesn't exist (main menu)
 
@@ -3979,12 +3980,15 @@ static void _describe_to_hit(const monster_info& mi, ostringstream &result)
         acc_pct = to_hit_pct(mi, attk, false);
     }
 
-    result << " (about " << (100 - acc_pct) << "% to evade ";
+    if (parenthesize)
+        result << " (";
+    result << "about " << (100 - acc_pct) << "% to evade ";
     if (weapon == nullptr)
         result << "your " << you.hand_name(true);
     else
         result << weapon->name(DESC_YOUR, false, false, false);
-    result << ")";
+    if (parenthesize)
+        result << ")";
 }
 
 /**
@@ -4072,7 +4076,7 @@ static void _describe_monster_ac(const monster_info& mi, ostringstream &result)
 static void _describe_monster_ev(const monster_info& mi, ostringstream &result)
 {
     _print_bar(mi.ev, 5, "    EV:", result, mi.base_ev);
-    _describe_to_hit(mi, result);
+    describe_to_hit(mi, result, true);
     result << "\n";
 }
 
