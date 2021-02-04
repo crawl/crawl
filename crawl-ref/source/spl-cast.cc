@@ -1373,7 +1373,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     if (get_spell_flags(spell) & spflag::selfench
         && !spell_typematch(spell, spschool::summoning) // all summoning spells are selfench
         && !spell_typematch(spell, spschool::translocation) // blink, passage
-        && spell != SPELL_VAMPIRIC_DRAINING
         && spell != SPELL_PHANTOM_MIRROR) // ??
     {
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
@@ -2013,7 +2012,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
-    if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
+    if (spell == SPELL_FREEZE)
     {
         if (!adjacent(you.pos(), target))
             return spret::abort;
@@ -2026,9 +2025,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SANDBLAST:
         return cast_sandblast(powc, beam, fail);
-
-    case SPELL_VAMPIRIC_DRAINING:
-        return vampiric_drain(powc, monster_at(target), fail);
 
     case SPELL_IOOD:
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
@@ -2618,11 +2614,6 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
-        case SPELL_VAMPIRIC_DRAINING:
-        {
-            const int power = _spell_power(spell, evoked);
-            return make_stringf("2d5+1d%d", power / 7);
-        }
         case SPELL_ABSOLUTE_ZERO:
             return "∞";
         case SPELL_CONJURE_FLAME:

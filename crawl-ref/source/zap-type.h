@@ -116,5 +116,6 @@ enum zap_type
     ZAP_MYSTIC_BLAST,
     ZAP_SWORD_BEAM,
     ZAP_MIGHT,
+    ZAP_VAMPIRIC_DRAINING,
     NUM_ZAPS
 };

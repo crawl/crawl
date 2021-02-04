@@ -206,6 +206,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_PAIN:
     case BEAM_AGONY:
     case BEAM_VILE_CLUTCH:
+    case BEAM_VAMPIRIC_DRAINING:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -2200,6 +2201,43 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
+static void _vampiric_draining_effect(actor* victim, actor* agent, int damage)
+{
+    if (damage < 1)
+        return;
+
+    mprf("%s %s life force from %s%s",
+         agent->name(DESC_THE).c_str(),
+         agent->conj_verb("draw").c_str(),
+         victim->name(DESC_THE).c_str(),
+         attack_strength_punctuation(damage).c_str());
+
+    // Check this value before victim dies, or getting holiness would crash.
+    const bool can_gain_hp = actor_is_susceptible_to_vampirism(*victim);
+    int drain_amount = victim->hurt(agent, damage, BEAM_VAMPIRIC_DRAINING, KILLED_BY_BEAM, "", "by vampiric draining");
+    if (!can_gain_hp)
+        drain_amount = 0;
+
+    if (agent->is_monster())
+    {
+        const int hp_gain = drain_amount * 2 / 3;
+        if (agent->heal(hp_gain))
+            simple_monster_message(*agent->as_monster(), " is healed by the life force!");
+    }
+    else
+    {
+        if (you.duration[DUR_DEATHS_DOOR])
+            drain_amount = 0;
+        const int hp_gain = div_rand_round(drain_amount, 2);
+        if (hp_gain)
+        {
+            mprf("You feel life coursing into your body%s",
+                 attack_strength_punctuation(hp_gain).c_str());
+            inc_hp(hp_gain);
+        }
+    }
+}
+
 /**
  * Turn a BEAM_UNRAVELLING beam into a BEAM_UNRAVELLED_MAGIC beam, and make
  * it explode appropriately.
@@ -3408,6 +3446,19 @@ void bolt::affect_player_enchantment(bool resistible)
         if (dam)
         {
             _malign_offering_effect(&you, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
+
+    case BEAM_VAMPIRIC_DRAINING:
+    {
+        const int dam = resist_adjust_damage(&you, flavour, damage.roll());
+        if (dam)
+        {
+            _vampiric_draining_effect(&you, agent(), dam);
             obvious_effect = true;
         }
         else
@@ -5025,6 +5076,7 @@ bool bolt::has_saving_throw() const
     case BEAM_INFESTATION:
     case BEAM_IRRESISTIBLE_CONFUSION:
     case BEAM_VILE_CLUTCH:
+    case BEAM_VAMPIRIC_DRAINING:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores HR 1/3 of the time
@@ -5083,6 +5135,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_MALIGN_OFFERING:
+    case BEAM_VAMPIRIC_DRAINING:
         rc = (mon->res_negative_energy(intrinsic_only) < 3);
         break;
 
@@ -5278,6 +5331,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         mon->hurt(agent(), dam);
         return MON_AFFECTED;
+    }
+
+    case BEAM_VAMPIRIC_DRAINING:
+    {
+        const int dam = resist_adjust_damage(mon, flavour, damage.roll());
+        if (dam)
+        {
+            _vampiric_draining_effect(mon, agent(), dam);
+            obvious_effect = true;
+            return MON_AFFECTED;
+        }
+        else
+            return MON_UNAFFECTED;
     }
 
     case BEAM_PAIN:
@@ -6180,6 +6246,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_AGONY:
         case BEAM_HIBERNATION:
         case BEAM_MINDBURST:
+        case BEAM_VAMPIRIC_DRAINING:
             return ench_flavour_affects_monster(flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
@@ -6450,6 +6517,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_IRRESISTIBLE_CONFUSION:return "confusion";
     case BEAM_INFESTATION:           return "infestation";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
+    case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

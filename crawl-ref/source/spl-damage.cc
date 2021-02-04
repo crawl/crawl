@@ -741,69 +741,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
     return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
 }
 
-spret vampiric_drain(int pow, monster* mons, bool fail)
-{
-    const bool observable = mons && mons->observable();
-    if (!mons
-        || mons->submerged()
-        || !observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        fail_check();
-
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // Cost to disallow freely locating invisible/submerged
-        // monsters.
-        return spret::success;
-    }
-
-    // TODO: check known rN instead of holiness
-    if (observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        mpr("You can't drain life from that!");
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
-    fail_check();
-
-    if (!mons->alive())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    // The practical maximum of this is about 25 (pow @ 100). - bwr
-    // If you update this, also update spell_damage_string().
-    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
-    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
-
-    if (!dam)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    int hp_gain = min(mons->hit_points, dam);
-    hp_gain = div_rand_round(hp_gain, 2);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    _player_hurt_monster(*mons, dam, BEAM_NEG);
-
-    if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
-    {
-        mprf("You feel life coursing into your body%s",
-             attack_strength_punctuation(hp_gain).c_str());
-        inc_hp(hp_gain);
-    }
-
-    return spret::success;
-}
-
 dice_def freeze_damage(int pow)
 {
     return dice_def(1, 3 + pow / 3);
