@@ -2874,12 +2874,10 @@ bool gozag_call_merchant()
     {
         shop_type type = static_cast<shop_type>(i);
 #if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD)
+        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
             continue;
 #endif
         if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
-            continue;
-        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
         if (you.species == SP_FELID &&
             (type == SHOP_ARMOUR

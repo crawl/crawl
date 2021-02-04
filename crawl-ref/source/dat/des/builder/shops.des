@@ -791,7 +791,7 @@ TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
-KFEAT:   B = gadget shop
+KFEAT:   B = book shop
 KFEAT:   C = jewellery shop
 SUBST:   1 : 1.
 SUBST:   1 = 1:9 .:1

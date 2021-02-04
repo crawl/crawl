@@ -1420,11 +1420,11 @@ string shop_type_name(shop_type type)
             return "Armour";
         case SHOP_JEWELLERY:
             return "Jewellery";
-        case SHOP_EVOKABLES:
-            return "Gadget";
         case SHOP_BOOK:
             return "Book";
 #if TAG_MAJOR_VERSION == 34
+        case SHOP_EVOKABLES:
+            return "Gadget";
         case SHOP_FOOD:
             return "Removed Food";
 #endif
