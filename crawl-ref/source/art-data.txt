@@ -73,7 +73,6 @@
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
 # * corrode:  Randomly causes corrosion when taking damage.
-# * curse:    Item curses itself on equip, and is generated cursed.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
@@ -257,7 +256,7 @@ TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
-BOOL:    curse
+BOOL:    drain
 
 NAME:    sceptre of Torment
 INSCRIP: torment
@@ -994,7 +993,7 @@ INT:     -3
 WILL:    2
 ANGRY:   5
 SLAY:    6
-BOOL:    curse, berserk
+BOOL:    berserk
 
 NAME:    ring of the Hare
 OBJ:     OBJ_JEWELLERY/RING_EVASION
@@ -1051,7 +1050,7 @@ TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 FB_BRAND: SPWPN_PAIN
-BOOL:     evil, seeinv, fly, curse
+BOOL:     evil, seeinv, fly, drain
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_BARDING
@@ -1302,7 +1301,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-BOOL:    evil, seeinv, nogen, curse
+BOOL:    evil, seeinv, nogen, drain
 # end TAG_MAJOR_VERSION
 
 ENUM:    VINES

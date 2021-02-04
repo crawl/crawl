@@ -78,8 +78,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_VAMPIRISM
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
-                 || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSE)))
+                 || is_demonic(item)))
     {
         return false;
     }
@@ -693,7 +692,9 @@ static const artefact_prop_data artp_data[] =
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
       []() { return -(2 + random2(5)); }, 3, 2 },
+#if TAG_MAJOR_VERSION == 34
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
+#endif
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
     { "MP", ARTP_VAL_ANY, 15,       // ARTP_MAGICAL_POWER,
@@ -976,15 +977,7 @@ static bool _init_artefact_properties(item_def &item)
     _get_randart_properties(item, prop);
 
     for (int i = 0; i < ART_PROPERTIES; i++)
-    {
-        if (i == ARTP_CURSE && prop[i])
-        {
-            do_curse_item(item);
-            continue;
-        }
         rap[i] = static_cast<short>(prop[i]);
-    }
-
 
     return true;
 }
@@ -1774,9 +1767,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     item.flags |= ISFLAG_UNRANDART;
     _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
-
-    if (unrand->prpty[ARTP_CURSE])
-        do_curse_item(item);
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));

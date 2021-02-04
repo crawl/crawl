@@ -267,9 +267,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
         mpr("You feel ready to rampage towards enemies.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
-        do_curse_item(item, !msg);
-
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you use an unknown random artefact and
@@ -473,7 +470,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
         const bool was_known      = item_type_known(item);
-              bool known_recurser = false;
 
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
@@ -491,8 +487,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
                                origin_desc(item)));
             }
-            else
-                known_recurser = artefact_known_property(item, ARTP_CURSE);
         }
 
         if (special != SPWPN_NORMAL)
@@ -639,7 +633,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             }
         }
 
-        _wield_cursed(item, known_cursed || known_recurser, unmeld);
+        _wield_cursed(item, known_cursed, unmeld);
         break;
     }
     default:

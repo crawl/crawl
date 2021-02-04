@@ -1527,7 +1527,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_ACCURACY",
 #endif
         "ARTP_SLAYING",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_CURSE",
+#endif
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
         "ARTP_BASE_DELAY",

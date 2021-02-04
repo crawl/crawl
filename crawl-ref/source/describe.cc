@@ -341,7 +341,6 @@ static vector<string> _randart_propnames(const item_def& item,
         // Qualitative attributes (and Stealth)
         { ARTP_SEE_INVISIBLE,         prop_note::plain },
         { ARTP_STEALTH,               prop_note::symbolic },
-        { ARTP_CURSE,                 prop_note::plain },
         { ARTP_CLARITY,               prop_note::plain },
         { ARTP_RMSL,                  prop_note::plain },
     };
@@ -562,7 +561,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
-        { ARTP_CURSE, "It curses itself when equipped.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
