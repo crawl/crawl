@@ -796,10 +796,6 @@ ring of slaying
 A ring that increases or decreases the wearer's effectiveness with ranged
 weapons and melee attacks, depending on its degree of enchantment.
 %%%%
-ring of stealth
-
-A ring that allows its wearer to move quietly, making them more stealthy.
-%%%%
 ring of strength
 
 A ring that increases or decreases the physical strength of its wearer,

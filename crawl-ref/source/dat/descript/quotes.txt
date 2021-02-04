@@ -2300,12 +2300,6 @@ ring of strength
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
 %%%%
-ring of stealth
-
-“No one ever approaches perfection except by stealth, and unknown to
- themselves.”
-    -William Hazlitt
-%%%%
 ring of teleportation
 
 <ring>
