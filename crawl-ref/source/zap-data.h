@@ -1120,6 +1120,23 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
+    ZAP_VAMPIRIC_DRAINING,
+    "",
+    200,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BLACK,
+    true,
+    BEAM_VAMPIRIC_DRAINING,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    0
+},
+
+{
     ZAP_MINDBURST,
     "",
     100,

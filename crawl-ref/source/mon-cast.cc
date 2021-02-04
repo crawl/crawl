@@ -121,7 +121,6 @@ static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
-static void _mons_vampiric_drain(monster &mons, mon_spell_slot, bolt&);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
@@ -227,11 +226,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             if (!adjacent(caster.pos(), foe->pos()))
                 return ai_action::impossible();
 
+            if (!actor_is_susceptible_to_vampirism(*foe))
+                return ai_action::impossible();
+
             return min(_negative_energy_spell_goodness(foe),
                        ai_action::good_or_bad(low_hp));
         },
-        _mons_vampiric_drain,
-        nullptr,
+        _fire_simple_beam,
+        _zap_setup(SPELL_VAMPIRIC_DRAINING),
         MSPELL_NO_AUTO_NOISE,
     } },
     { SPELL_CANTRIP, {
@@ -1622,7 +1624,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     switch (spell_cast)
     {
     case SPELL_SUMMON_SMALL_MAMMAL:
-    case SPELL_VAMPIRIC_DRAINING:
     case SPELL_MAJOR_HEALING:
     case SPELL_WOODWEAL:
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
@@ -4129,73 +4130,6 @@ static void _mons_cast_spectral_orcs(monster* mons)
             // set gear as summoned
             orc->mark_summoned(abj, true, SPELL_SUMMON_SPECTRAL_ORCS);
         }
-    }
-}
-
-static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
-{
-    actor *target = mons.get_foe();
-    if (!target)
-        return;
-    if (grid_distance(mons.pos(), target->pos()) > 1)
-        return;
-
-    const int pow = mons_spellpower(mons, slot.spell);
-    int hp_cost = 3 + random2avg(9, 2) + 1;
-    hp_cost += random2(pow) / 7; // force a sequence point between random calls
-
-    hp_cost = min(hp_cost, target->stat_hp());
-    hp_cost = min(hp_cost, mons.max_hit_points - mons.hit_points);
-
-    hp_cost = resist_adjust_damage(target, BEAM_NEG, hp_cost);
-
-    if (!hp_cost)
-    {
-        simple_monster_message(mons,
-                               " is infused with unholy energy, but nothing happens.",
-                               MSGCH_MONSTER_SPELL);
-        return;
-    }
-
-    dprf("vamp draining: %d damage, %d healing", hp_cost, hp_cost/2);
-
-    if (you.can_see(mons))
-    {
-        simple_monster_message(mons,
-                               " is infused with unholy energy.",
-                               MSGCH_MONSTER_SPELL);
-    }
-    else
-        mpr("Unholy energy fills the air.");
-
-    if (target->is_player())
-    {
-        ouch(hp_cost, KILLED_BY_BEAM, mons.mid, "by vampiric draining");
-        if (mons.heal(hp_cost * 2 / 3))
-        {
-            simple_monster_message(mons,
-                " draws life force from you and is healed!");
-        }
-    }
-    else
-    {
-        monster* mtarget = target->as_monster();
-        const string targname = mtarget->name(DESC_THE);
-        mtarget->hurt(&mons, hp_cost);
-        if (mtarget->is_summoned())
-        {
-            simple_monster_message(mons,
-                                   make_stringf(" draws life force from %s!",
-                                                targname.c_str()).c_str());
-        }
-        else if (mons.heal(hp_cost * 2 / 3))
-        {
-            simple_monster_message(mons,
-                make_stringf(" draws life force from %s and is healed!",
-                targname.c_str()).c_str());
-        }
-        if (mtarget->alive())
-            print_wounds(*mtarget);
     }
 }
 
