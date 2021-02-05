@@ -3208,15 +3208,7 @@ static void _god_welcome_handle_gear()
     }
 
     if (have_passive(passive_t::identify_items))
-    {
-        // Seemingly redundant with auto_id_inventory(), but we don't want to
-        // announce items where the only new information is their cursedness.
-        for (auto &item : you.inv)
-            if (item.defined())
-                item.flags |= ISFLAG_KNOW_CURSE;
-
         auto_id_inventory();
-    }
 
     if (have_passive(passive_t::detect_portals))
         ash_detect_portals(true);

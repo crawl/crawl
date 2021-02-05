@@ -2227,7 +2227,7 @@ string get_item_description(const item_def &item, bool verbose,
         die("Bad item class");
     }
 
-    if (!verbose && item_known_cursed(item))
+    if (!verbose && item.cursed())
         description << "\nIt has a curse placed upon it.";
     else
     {
@@ -2235,7 +2235,7 @@ string get_item_description(const item_def &item, bool verbose,
         {
             if (need_extra_line)
                 description << "\n";
-            if (item_known_cursed(item))
+            if (item.cursed())
                 description << "\nIt has a curse placed upon it.";
 
             if (is_artefact(item))
@@ -3893,7 +3893,7 @@ static string _monster_missiles_description(const monster_info& mi)
     string desc;
     desc += uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
     desc += mi.pronoun_plurality() ? " are quivering " : " is quivering ";
-    desc += missile->name(DESC_A, false, false, true, false, ISFLAG_KNOW_CURSE);
+    desc += missile->name(DESC_A, false, false, true, false);
     desc += ".\n";
     return desc;
 }

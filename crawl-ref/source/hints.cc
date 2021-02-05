@@ -1756,8 +1756,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_YOU_CURSED:
         text << "Cursed equipment, once worn or wielded, cannot be dropped or "
-                "removed. Scrolls of remove curse will remove all curses "
-                "from your current equipment.";
+                "removed. Ashenzari will allow you to remove curses.";
         break;
 
     case HINT_REMOVED_CURSE:
@@ -3005,11 +3004,10 @@ string hints_describe_item(const item_def &item)
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
-            if (item_known_cursed(item) && !long_text)
+            if (item.cursed() && !long_text)
             {
                 ostr << "\n\nOnce wielded, a cursed weapon can't be "
-                        "unwielded until the curse has been lifted by "
-                        "reading a scroll of remove curse.";
+                        "unwielded until the curse has been lifted.";
 
                 Hints.hints_events[HINT_YOU_CURSED] = false;
             }
@@ -3136,11 +3134,10 @@ string hints_describe_item(const item_def &item)
             }
             if (wearable)
             {
-                if (item_known_cursed(item))
+                if (item.cursed())
                 {
                     ostr << "\nA cursed piece of armour, once worn, cannot be "
-                            "removed again until the curse has been lifted by "
-                            "reading a scroll of remove curse.";
+                            "removed again until the curse has been lifted.";
                 }
                 if (gives_resistance(item))
                 {
@@ -3214,11 +3211,11 @@ string hints_describe_item(const item_def &item)
             cmd.push_back(CMD_WEAR_JEWELLERY);
             cmd.push_back(CMD_REMOVE_JEWELLERY);
 
-            if (item_known_cursed(item))
+            if (item.cursed())
             {
                 ostr << "\nA cursed piece of jewellery will stick to its "
                         "wearer when equipped, and cannot be removed until "
-                        "you read a scroll of remove curse.";
+                        "the curse is lifted.";
             }
             if (gives_resistance(item))
             {

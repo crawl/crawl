@@ -53,7 +53,6 @@ extern const set<pair<object_class_type, int> > removed_items;
 bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
-bool item_known_cursed(const item_def &item) PURE;
 bool item_is_cursable(const item_def &item);
 bool curse_an_item();
 void do_curse_item(item_def &item, bool quiet = true);

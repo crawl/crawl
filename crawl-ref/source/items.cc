@@ -2974,11 +2974,6 @@ static bool _similar_equip(const item_def& pickup_item,
     if (inv_slot == EQ_NONE)
         return false;
 
-    // If it's an unequipped cursed item the player might be looking
-    // for a replacement.
-    if (item_known_cursed(inv_item) && !item_is_equipped(inv_item))
-        return false;
-
     if (get_item_slot(pickup_item) != inv_slot)
         return false;
 
@@ -4542,9 +4537,6 @@ item_def get_item_known_info(const item_def& item)
         ii.sub_type = item.sub_type;
         break;
     }
-
-    if (item_ident(item, ISFLAG_KNOW_CURSE))
-        ii.flags |= (item.flags & ISFLAG_CURSED);
 
     if (item_type_known(item))
     {

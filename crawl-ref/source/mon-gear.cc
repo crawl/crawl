@@ -1268,10 +1268,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         item_set_appearance(i);
 
     if (force_uncursed)
-    {
         do_uncurse_item(i);
-        set_ident_flags(i, ISFLAG_KNOW_CURSE); // despoiler
-    }
 
     if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {

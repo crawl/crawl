@@ -859,7 +859,7 @@ string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON])
     {
-        iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+        iflags_t ignore_flags = ISFLAG_KNOW_PLUSES;
         bool     use_inscrip  = false;
         return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
                          ignore_flags);
@@ -929,8 +929,7 @@ string monster_info::_core_name() const
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
 
-                s = item.name(DESC_PLAIN, false, false, true, false,
-                               ISFLAG_KNOW_CURSE);
+                s = item.name(DESC_PLAIN, false, false, true, false);
             }
             break;
 
@@ -938,8 +937,7 @@ string monster_info::_core_name() const
             if (inv[MSLOT_ARMOUR])
             {
                 const item_def& item = *inv[MSLOT_ARMOUR];
-                s = "animated " + item.name(DESC_PLAIN, false, false, true, false,
-                                            ISFLAG_KNOW_CURSE);
+                s = "animated " + item.name(DESC_PLAIN, false, false, true, false);
             }
             break;
 

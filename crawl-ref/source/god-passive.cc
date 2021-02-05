@@ -807,8 +807,6 @@ bool god_id_item(item_def& item, bool silent)
         if (item.base_type == OBJ_RUNES || item_is_orb(item))
             return false;
 
-        ided = ISFLAG_KNOW_CURSE;
-
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
             && item_needs_autopickup(item))
         {

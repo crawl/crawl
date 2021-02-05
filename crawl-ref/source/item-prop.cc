@@ -832,19 +832,6 @@ bool item_type_removed(object_class_type base, int subtype)
     return removed_items.count({ base, subtype }) != 0;
 }
 
-// Some convenient functions to hide the bit operations and create
-// an interface layer between the code and the data in case this
-// gets changed again. - bwr
-
-//
-// Item cursed status functions:
-//
-bool item_known_cursed(const item_def &item)
-{
-    return _full_ident_mask(item) & ISFLAG_KNOW_CURSE
-           && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
-}
-
 // If item is a new unrand, takes a note of it and returns true.
 // Otherwise, takes no action and returns false.
 static bool _maybe_note_found_unrand(const item_def &item)
@@ -868,7 +855,7 @@ bool item_is_cursable(const item_def &item)
 {
     if (!item_type_has_curses(item.base_type))
         return false;
-    if (item_known_cursed(item))
+    if (item.cursed())
         return false;
     return true;
 }
@@ -933,9 +920,6 @@ void do_curse_item(item_def &item, bool quiet)
     {
         mprf("Your %s glows black for a moment.",
              item.name(DESC_PLAIN).c_str());
-
-        // If we get the message, we know the item is cursed now.
-        item.flags |= ISFLAG_KNOW_CURSE;
     }
 
     item.flags |= ISFLAG_CURSED;
@@ -975,20 +959,12 @@ void do_uncurse_item(item_def &item, bool check_bondage)
 {
     const bool in_inv = in_inventory(item);
     if (!item.cursed())
-    {
-        if (in_inv)
-            item.flags |= ISFLAG_KNOW_CURSE;
         return;
-    }
 
-    if (in_inv)
+    if (in_inv && you.equip[EQ_WEAPON] == item.link)
     {
-        if (you.equip[EQ_WEAPON] == item.link)
-        {
-            // Redraw the weapon.
-            you.wield_change = true;
-        }
-        item.flags |= ISFLAG_KNOW_CURSE;
+        // Redraw the weapon.
+        you.wield_change = true;
     }
     item.flags &= (~ISFLAG_CURSED);
 
@@ -1141,13 +1117,11 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
     case OBJ_WANDS:
+    case OBJ_STAVES:
         flagset = ISFLAG_KNOW_TYPE;
         break;
-    case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
-        break;
     case OBJ_JEWELLERY:
-        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
+        flagset = ISFLAG_KNOW_TYPE;
         if (jewellery_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
         break;
@@ -2899,8 +2873,6 @@ void seen_item(const item_def &item)
     item_def& malleable_item = const_cast<item_def &>(item);
 
     malleable_item.flags |= ISFLAG_SEEN;
-    if (have_passive(passive_t::identify_items))
-        malleable_item.flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
     {
         malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE

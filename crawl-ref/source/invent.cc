@@ -130,7 +130,7 @@ const string &InvEntry::get_dbname() const
 
 bool InvEntry::is_cursed() const
 {
-    return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
+    return item->cursed();
 }
 
 bool InvEntry::is_glowing() const
@@ -558,12 +558,12 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
-            if (item_known_cursed(item))
+            if (item.cursed())
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
             else
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP);
         }
-        else if (item_known_cursed(item))
+        else if (item.cursed())
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
@@ -1655,7 +1655,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
 
     // Curses first.
-    if (item_known_cursed(item)
+    if (item.cursed()
         && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
             || oper == OPER_PUTON || oper == OPER_WEAR))
     {

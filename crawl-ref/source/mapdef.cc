@@ -5278,9 +5278,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         int id = 0;
         for (const auto &is : ids)
         {
-            if (is == "curse")
-                id |= ISFLAG_KNOW_CURSE;
-            else if (is == "type")
+            if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
             else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;

@@ -1030,9 +1030,6 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     if (!force && item.cursed())
         return false;
 
-    if (!force && you.can_see(*this))
-        set_ident_flags(item, ISFLAG_KNOW_CURSE);
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2128,10 +2125,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     if (weap && !unequip(*weap, msg))
     {
         // Item was cursed.
-        // A centaur may randomly decide to not shoot you, but bashing
-        // people with a ranged weapon is a dead giveaway.
-        if (weap->cursed() && you.can_see(*this) && is_range_weapon(*weap))
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
 

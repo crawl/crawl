@@ -2186,7 +2186,6 @@ bool remove_ring(int slot, bool announce)
         else
             mpr("It's stuck to you!");
 
-        set_ident_flags(you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE);
         return false;
     }
 

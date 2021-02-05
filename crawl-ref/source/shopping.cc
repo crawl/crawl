@@ -270,9 +270,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
-        if (item_known_cursed(item))
-            valued -= 30;
-
         break;
 
     case OBJ_MISSILES:          // ammunition
@@ -392,9 +389,6 @@ unsigned int item_value(item_def item, bool ident)
         {
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
-
-        if (item_known_cursed(item))
-            valued -= 30;
 
         break;
 
@@ -555,9 +549,6 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_JEWELLERY:
-        if (item_known_cursed(item))
-            valued -= 30;
-
         if (!item_type_known(item))
             valued += 50;
         else
@@ -2465,9 +2456,8 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return desc;
 }
 
-// Item name without curse-status or inscription.
+// Item name without inscription.
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
-    return item.name(DESC_PLAIN, false, ident, false, false,
-                     ISFLAG_KNOW_CURSE);
+    return item.name(DESC_PLAIN, false, ident, false, false);
 }

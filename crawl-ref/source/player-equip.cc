@@ -420,18 +420,12 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a wizardly item like this.");
 }
 
-static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
+static void _wield_cursed(item_def& item, bool unmeld)
 {
     if (!item.cursed() || unmeld)
         return;
     mprf("It sticks to your %s!", you.hand_name(false).c_str());
     int amusement = 16;
-    if (!known_cursed)
-    {
-        amusement *= 2;
-        if (origin_as_god_gift(item) == GOD_XOM)
-            amusement *= 2;
-    }
     const int wpn_skill = item_attack_skill(item.base_type, item.sub_type);
     if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
         amusement *= 2;
@@ -449,7 +443,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     int special = 0;
 
     const bool artefact     = is_artefact(item);
-    const bool known_cursed = item_known_cursed(item);
 
     // And here we finally get to the special effects of wielding. {dlb}
     switch (item.base_type)
@@ -458,7 +451,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         set_ident_type(OBJ_STAVES, item.sub_type, true);
-        _wield_cursed(item, known_cursed, unmeld);
+        _wield_cursed(item, unmeld);
         break;
     }
 
@@ -633,7 +626,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             }
         }
 
-        _wield_cursed(item, known_cursed, unmeld);
+        _wield_cursed(item, unmeld);
         break;
     }
     default:
@@ -776,7 +769,6 @@ static void _spirit_shield_message(bool unmeld)
 static void _equip_armour_effect(item_def& arm, bool unmeld,
                                  equipment_type slot)
 {
-    const bool known_cursed = item_known_cursed(arm);
     int ego = get_armour_ego_type(arm);
     if (ego != SPARM_NORMAL)
     {
@@ -924,16 +916,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     {
         mpr("Oops, that feels deathly cold.");
         learned_something_new(HINT_YOU_CURSED);
-
-        if (!known_cursed)
-        {
-            int amusement = 64;
-
-            if (origin_as_god_gift(arm) == GOD_XOM)
-                amusement *= 2;
-
-            xom_is_stimulated(amusement);
-        }
     }
 
     you.redraw_armour_class = true;
@@ -1196,9 +1178,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                     equipment_type slot)
 {
     const bool artefact     = is_artefact(item);
-    const bool known_cursed = item_known_cursed(item);
-    const bool known_bad    = (item_type_known(item)
-                               && item_value(item) <= 2);
 
     switch (item.sub_type)
     {
@@ -1314,19 +1293,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
              jewellery_is_amulet(item)? "amulet" : "ring");
         learned_something_new(HINT_YOU_CURSED);
 
-        int amusement = 32;
-        if (!known_cursed && !known_bad)
-        {
-            amusement *= 2;
-
-            if (origin_as_god_gift(item) == GOD_XOM)
-                amusement *= 2;
-        }
-        xom_is_stimulated(amusement);
+        xom_is_stimulated(32);
     }
-
-    // Cursed or not, we know that since we've put the ring on.
-    set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
