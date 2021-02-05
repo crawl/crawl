@@ -1472,9 +1472,7 @@ void attract_monsters()
     //get list of near monsters
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
         targets.push_back(*mi);
-    }
     //sort them in order of distance to you
     dist_sorter sorter = {you.pos()};
     sort(targets.begin(), targets.end(), sorter);
