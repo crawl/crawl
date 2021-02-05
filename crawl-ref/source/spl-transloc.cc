@@ -1480,7 +1480,7 @@ void attract_monsters()
     sort(targets.begin(), targets.end(), sorter);
 
     //now operate on the sorted list
-    for(monster *mi : targets) {
+    for (monster *mi : targets) {
         if (!_can_beckon(*mi) || mi->friendly())
             continue;
 
