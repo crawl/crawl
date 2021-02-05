@@ -861,13 +861,13 @@ ORIENT: float
 KFEAT:  OP = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
-KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
-        animal skin cursed ident:all / robe cursed ident:all / \
-        leather armour cursed ident:all / whip cursed ident:all / \
-        spear cursed ident:all / short sword cursed ident:all / \
-        dagger cursed ident:all / hand axe cursed ident:all / \
-        scythe cursed ident:all / club cursed ident:all / \
-        hunting sling cursed ident:all
+KITEM:  O = hat plus:-3 ident:all / cloak plus:-3 ident:all / \
+        animal skin plus:-2 ident:all / robe plus:-2 ident:all / \
+        leather armour plus:-3 ident:all / whip plus:-3 ident:all / \
+        spear plus:-4 ident:all / short sword plus:-4 ident:all / \
+        dagger plus:-3 ident:all / hand axe plus:-4 ident:all / \
+        scythe plus:-4 ident:all / club plus:-2 ident:all / \
+        hunting sling plus:-5 ident:all
 KITEM:  P = robe cursed plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
