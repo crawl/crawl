@@ -71,3 +71,18 @@ protected:
     int i;
     void advance();
 };
+
+// Actor sorters for combination with the above
+// Compare two actors, sorting farthest to nearest from {pos}
+struct far_to_near_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b);
+};
+
+// Compare two actors, sorting nearest to farthest from {pos}
+struct near_to_far_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b);
+};

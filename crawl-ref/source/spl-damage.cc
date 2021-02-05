@@ -3308,15 +3308,6 @@ static void _imb_actor(actor * act, int pow, coord_def source)
     beam.affect_actor(act);
 }
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 spret cast_imb(int pow, bool fail)
 {
     int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
@@ -3351,7 +3342,7 @@ spret cast_imb(int pow, bool fail)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = { source };
+    far_to_near_sorter sorter = { source };
     sort(act_list.begin(), act_list.end(), sorter);
 
     for (actor *act : act_list)

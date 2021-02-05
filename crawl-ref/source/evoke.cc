@@ -365,15 +365,6 @@ static bool _make_zig(item_def &zig)
     return true;
 }
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 {
     int dist = 1 + random2(pow / 20);
@@ -427,7 +418,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = {agent->pos()};
+    far_to_near_sorter sorter = {agent->pos()};
     sort(act_list.begin(), act_list.end(), sorter);
 
     bolt wind_beam;

@@ -1469,11 +1469,15 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
  */
 void attract_monsters()
 {
+    vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!_can_beckon(**mi) || mi->friendly())
-            continue;
+        if (!mi->friendly() && _can_beckon(**mi))
+            targets.push_back(*mi);
 
+    near_to_far_sorter sorter = {you.pos()};
+    sort(targets.begin(), targets.end(), sorter);
+
+    for (monster *mi : targets) {
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;
@@ -1486,7 +1490,7 @@ void attract_monsters()
         for (int i = 0; i < max_move && i < orig_dist - 1; i++)
             ray.advance();
 
-        while (!_can_move_mons_to(**mi, ray.pos()) && ray.pos() != mi->pos())
+        while (!_can_move_mons_to(*mi, ray.pos()) && ray.pos() != mi->pos())
             ray.regress();
 
         if (ray.pos() == mi->pos())
@@ -1499,6 +1503,6 @@ void attract_monsters()
         mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
 
         mi->apply_location_effects(old_pos);
-        mons_relocated(*mi);
+        mons_relocated(mi);
     }
 }
