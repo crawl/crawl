@@ -648,24 +648,24 @@ static string _artefact_descrip(const item_def &item)
 {
     if (!is_artefact(item)) return "";
 
-	string unrand_desc, dbrand;
+    string unrand_desc, dbrand;
     if (is_unrandom_artefact(item))
-	{
-	    auto entry = get_unrand_entry(item.unrand_idx);
-	    if (entry->descrip) unrand_desc = string("\n")+entry->descrip;
-	    if (entry->dbrand) dbrand = string("\n")+entry->dbrand;
-	}
+    {
+        auto entry = get_unrand_entry(item.unrand_idx);
+        if (entry->descrip) unrand_desc = string("\n")+entry->descrip;
+        if (entry->dbrand) dbrand = string("\n")+entry->dbrand;
+    }
 
     string rand_desc = _randart_descrip(item);
     string out = unrand_desc + rand_desc;
 
-	// Each brand is followed by a blank line.
-	// The returned string will also be followed by a blank line, so
-	// don't double up if only returning dbrand.
-	if (!dbrand.empty() && !out.empty())
-		out = dbrand + "\n" + out;
-	else
-		out = dbrand + out;
+    // Each brand is followed by a blank line.
+    // The returned string will also be followed by a blank line, so
+    // don't double up if only returning dbrand.
+    if (!dbrand.empty() && !out.empty())
+        out = dbrand + "\n" + out;
+    else
+        out = dbrand + out;
 
     // XXX: Can't happen, right?
     if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))

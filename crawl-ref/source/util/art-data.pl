@@ -217,11 +217,11 @@ sub finish_art
         $artefact->{"${func_name}_func"} = $val;
     }
 
-	# Put a blank line between a pair of brands.
+    # Put a blank line between a pair of brands.
     if ($artefact->{DBRAND})
-	{
-		$artefact->{DBRAND} =~ s/\\n/\\n\\n/g
-	}
+    {
+        $artefact->{DBRAND} =~ s/\\n/\\n\\n/g
+    }
 
     # Default values.
     my $field;
