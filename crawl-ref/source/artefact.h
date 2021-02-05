@@ -50,6 +50,7 @@ struct unrandart_entry
     const char *unid_name;   // un-id'd name of unrandart
     const char *type_name;   // custom item type
     const char *inscrip;     // extra inscription
+    const char *dbrand;      // description of extra brand
     const char *descrip;     // description of extra power
 
     object_class_type base_type;

@@ -30,6 +30,7 @@ my %field_type = (
     COLOUR   => "enum",
     CORRODE  => "bool",
     CURSE    => "bool",
+    DBRAND   => "str",
     DEX      => "num",
     DESCRIP  => "str",
     DRAIN    => "bool",
@@ -216,6 +217,12 @@ sub finish_art
         $artefact->{"${func_name}_func"} = $val;
     }
 
+	# Put a blank line between a pair of brands.
+    if ($artefact->{DBRAND})
+	{
+		$artefact->{DBRAND} =~ s/\\n/\\n\\n/g
+	}
+
     # Default values.
     my $field;
     foreach $field (@field_list)
@@ -286,19 +293,21 @@ sub process_line
 {
     my ($artefact, $line) = @_;
 
-    # A line can start with whitespace if it's a continuation of a field
-    # with a string value.
-    if ($line =~ /^\s/)
+    # A line can start with whitespace or a + if it's a continuation of a field
+    # with a string value. + at the start of the line becomes a newline before
+    # it is displayed, and any amount of whitespace becomes a single space.
+    if ($line =~ /^[\s+]/)
     {
         my $prev_field = $artefact->{_PREV_FIELD} || "";
         if ($field_type{$prev_field} eq "str")
         {
-            $line =~ s/^\s*//;
-            $artefact->{$prev_field} .= " " . $line;
+            my $sep = ($line =~ /^\+/) ? '\n' : ' ';
+            $line =~ s/^(\+|\s*)//;
+            $artefact->{$prev_field} .= $sep . $line;
         }
         else
         {
-            error($artefact, "line starts with whitespace");
+            error($artefact, "line starts with an invalid character");
         }
         return;
     }
@@ -518,7 +527,7 @@ sub process_line
 
 my @art_order = (
     "NAME", "APPEAR", "TYPE", "\n",
-    "INSCRIP", "DESCRIP", "\n",
+    "INSCRIP", "DBRAND", "DESCRIP", "\n",
     "base_type", "sub_type", "\n",
     "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
     "plus", "plus2", "COLOUR", "VALUE", "\n",
@@ -606,7 +615,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP)$/n)
+            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP|DBRAND)$/n)
                 ? "nullptr" : "\"$temp\"";
         }
         else
