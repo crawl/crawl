@@ -1653,8 +1653,6 @@ static short _determine_ring_plus(int subtype)
     if (!jewellery_type_has_plusses(subtype))
         return 0;
 
-    if (one_chance_in(5)) // 20% of such rings are cursed {dlb}
-        return BAD_RING_PLUS;
     return _good_jewellery_plus(subtype);
 }
 
