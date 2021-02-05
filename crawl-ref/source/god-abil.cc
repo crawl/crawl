@@ -2262,16 +2262,16 @@ bool ashenzari_end_transfer(bool finished, bool force)
  * Player can abort without penalty.
  * Player can curse any cursable item (not just worn ones).
  *
- * @param num_rc Number of remove curse scrolls available.
+ * @param num_id Number of identify scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item(int num_rc)
+bool ashenzari_curse_item(int num_id)
 {
-    ASSERT(num_rc > 0);
+    ASSERT(num_id > 0);
     const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
+            "Curse which item? (%d identify scroll%s left)"
             " (Esc to abort)",
-            num_rc, num_rc == 1 ? "" : "s");
+            num_id, num_id == 1 ? "" : "s");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,

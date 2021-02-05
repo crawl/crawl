@@ -19,8 +19,8 @@ enum class passive_t
     none = 0,
 
     /// The god prefers that items be cursed: acquirement grants cursed items,
-    /// enchant scrolls and miscasts preserve curse status, and remove curse
-    /// allows selecting a subset of items.
+    /// enchant scrolls and miscasts preserve curse status, and identify
+    /// allows selecting a subset of items to uncurse.
     want_curses,
 
     /// You detect the presence of portals.

@@ -94,7 +94,7 @@ enum class abflag
     instant             = 0x00000020, // doesn't take time to use
     conf_ok             = 0x00000040, // can use even if confused
     variable_mp         = 0x00000080, // costs a variable amount of MP
-    remove_curse_scroll = 0x00000100, // Uses ?rc
+    identify_scroll     = 0x00000100, // Uses ?id
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
@@ -517,7 +517,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
-        0, 0, 0, {fail_basis::invo}, abflag::remove_curse_scroll },
+        0, 0, 0, {fail_basis::invo}, abflag::identify_scroll },
     { ABIL_ASHENZARI_SCRYING, "Scrying",
         4, 0, 2, {fail_basis::invo}, abflag::instant },
     { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
@@ -796,8 +796,8 @@ const string make_cost_description(ability_type ability)
         ret += ", Max HP drain";
     }
 
-    if (abil.flags & abflag::remove_curse_scroll)
-        ret += ", Scroll of remove curse";
+    if (abil.flags & abflag::identify_scroll)
+        ret += ", Scroll of identify";
 
     if (abil.flags & abflag::gold)
     {
@@ -888,10 +888,10 @@ static const string _detailed_cost_description(ability_type ability)
             ret << "variable";
     }
 
-    if (abil.flags & abflag::remove_curse_scroll)
+    if (abil.flags & abflag::identify_scroll)
     {
         have_cost = true;
-        ret << "\nOne scroll of remove curse";
+        ret << "\nOne scroll of identify";
     }
 
     if (!have_cost)
@@ -2932,7 +2932,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                 [] (const item_def &it) -> bool
                 {
                     return it.defined()
-                           && it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE)
+                           && it.is_type(OBJ_SCROLLS, SCR_IDENTIFY)
                            && check_warning_inscriptions(it, OPER_DESTROY);
                 });
         if (iter != end(you.inv))
@@ -2944,7 +2944,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         else
         {
-            mpr("You need a scroll of remove curse to do this.");
+            mpr("You need a scroll of identify to do this.");
             return spret::abort;
         }
         break;
