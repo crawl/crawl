@@ -1210,10 +1210,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (Hints.hints_type == HINT_BERSERK_CHAR)
         {
             text << "\nYou should probably stick with axes. Checking other "
-                    "axes' enchantments can be worthwhile, but weapons can be "
-                    "cursed and difficult to remove, so unless you have a "
-                    "scroll of remove curse, only wield weapons you're ready "
-                    "to be stuck with!";
+                    "axes' enchantments can be worthwhile, though!";
         }
         break;
 
