@@ -365,15 +365,6 @@ static bool _make_zig(item_def &zig)
     return true;
 }
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 {
     int dist = 1 + random2(pow / 20);

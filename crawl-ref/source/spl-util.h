@@ -40,6 +40,7 @@ COMPILE_CHECK(static_cast<int>(spschool::LAST_SCHOOL) < SHRT_MAX);
 struct bolt;
 class dist;
 struct direction_chooser_args;
+struct dist_sorter;
 
 enum spell_highlight_colours
 {
