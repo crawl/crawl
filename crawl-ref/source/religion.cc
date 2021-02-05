@@ -2720,6 +2720,24 @@ int initial_wrath_penance_for(god_type god)
     }
 }
 
+static void _ash_uncurse()
+{
+    bool uncursed = false;
+    for (int eq_typ = EQ_FIRST_EQUIP; eq_typ < NUM_EQUIP; eq_typ++)
+    {
+        const int slot = you.equip[eq_typ];
+        if (slot == -1)
+            continue;
+        if (!uncursed)
+        {
+            mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses crumble away.");
+            uncursed = true;
+        }
+        item_def &item = you.inv[slot];
+        do_uncurse_item(item, false);
+    }
+}
+
 void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -2921,6 +2939,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        _ash_uncurse();
         break;
 
     case GOD_DITHMENOS:
