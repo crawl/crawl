@@ -56,7 +56,6 @@ menu += $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
 menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
-menu += green:uncursed
 
 
 # Colouring of autoinscribed god gifts

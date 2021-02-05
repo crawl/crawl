@@ -259,23 +259,14 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus -= biased_random2(7,2);
         item.plus -= biased_random2(7,2);
 
-        bool cursed = false;
         if (one_chance_in(5))
-        {
-            cursed = true;
-            item.plus = 3 - random2(6);
-        }
-        else if (item.plus < 0 && !one_chance_in(3))
-            cursed = true;
+            item.plus = 3 - random2(6); // not the best
 
         // On weapons, an enchantment of less than 0 is never viable.
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
         make_item_randart(item);
-
-        if (cursed)
-            do_curse_item(item);
 
         return true;
     }
@@ -498,9 +489,6 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
         item.plus -= 1 + random2(3);
-
-        if (item_level == ISPEC_BAD)
-            do_curse_item(item);
     }
     else if ((force_good || is_demonic(item) || forced_ego
                     || x_chance_in_y(51 + item_level, 200))
@@ -523,15 +511,11 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (!force_good && item.brand == SPWPN_NORMAL && item.plus < 3)
             item.plus = 0;
     }
-    else
+    else if (one_chance_in(12))
     {
-        if (one_chance_in(12))
-        {
-            // Make a cursed item.
-            do_curse_item(item);
-            item.plus  -= random2(4);
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
-        }
+        // Make a rather bad item.
+        item.plus  -= random2(4);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
     }
 }
 
@@ -771,12 +755,9 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         if (item.sub_type == ARM_BOOTS && one_chance_in(20))
             item.sub_type = ARM_BARDING;
 
-        // Determine enchantment and cursedness.
+        // Determine enchantment.
         if (one_chance_in(5))
-        {
-            do_curse_item(item);
             item.plus = 0;
-        }
         else
         {
             int max_plus = armour_max_enchant(item);
@@ -787,9 +768,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
             if (one_chance_in(6))
                 item.plus -= random2(max_plus + 6);
-
-            if (item.plus < 0 && !one_chance_in(3))
-                do_curse_item(item);
         }
 
         // On body armour, an enchantment of less than 0 is never viable.
@@ -1223,9 +1201,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         }
 
         item.plus -= 1 + random2(3);
-
-        if (item_level == ISPEC_BAD)
-            do_curse_item(item);
     }
     // Scarves always get an ego.
     else if (item.sub_type == ARM_SCARF)
@@ -1254,9 +1229,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
     else if (one_chance_in(12))
     {
-        // Make a bad (cursed) item.
-        do_curse_item(item);
-
+        // Make a bad item.
         if (one_chance_in(5))
             item.plus -= random2(3);
 
@@ -1579,9 +1552,6 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         item.sub_type = _get_random_stave_type();
     else
         item.sub_type = force_type;
-
-    if (one_chance_in(16))
-        do_curse_item(item);
 }
 
 static void _generate_rune_item(item_def& item, int force_type)
@@ -1694,21 +1664,12 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     item.plus = _determine_ring_plus(item.sub_type);
 
-    if (item.plus < 0)
-        do_curse_item(item);
-
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART
         || allow_uniques && item_level > 2
            && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
-    }
-    else if (item.sub_type == RING_TELEPORTATION
-             || one_chance_in(50))
-    {
-        // Bad jewellery is always cursed {dlb}:
-        do_curse_item(item);
     }
 }
 

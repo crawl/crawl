@@ -1025,7 +1025,7 @@ NAME:   skrybe_snakes_to_sticks
 TAGS:   no_item_gen transparent
 DEPTH:  Snake
 ORIENT: float
-ITEM:   club not_cursed mundane / spear not_cursed mundane / arrow mundane q:1
+ITEM:   club mundane / spear mundane / arrow mundane q:1
 KFEAT:  _ = altar_xom
 NSUBST: ' = 6:d / *:.
 MAP

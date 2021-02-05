@@ -172,8 +172,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
-    if (wpn.cursed())
-        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -1571,28 +1569,6 @@ bool beogh_gift_item()
                                     shield ? MSLOT_SHIELD :
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON;
-
-    // need to remove any curses so that drop_item won't fail
-    item_def* item_to_drop = mons->mslot_item(mslot);
-    if (item_to_drop && item_to_drop->cursed())
-    {
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                item_to_drop->name(DESC_THE).c_str());
-        do_uncurse_item(*item_to_drop);
-    }
-
-    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
-    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
-        && shield_slot
-        && mons->hands_reqd(gift) == HANDS_TWO
-        && shield_slot->cursed())
-    {
-        // TODO: this doesn't seem to describe the shield as uncursed to the
-        // player. The weapon case works properly.
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                shield_slot->name(DESC_THE).c_str());
-        do_uncurse_item(*shield_slot);
-    }
 
     item_def *floor_item = mons->take_item(item_slot, mslot);
     if (!floor_item)

@@ -860,43 +860,6 @@ bool item_is_cursable(const item_def &item)
     return true;
 }
 
-// Curses a random player inventory item.
-bool curse_an_item()
-{
-    // allowing these would enable mummy scumming
-    if (have_passive(passive_t::want_curses))
-    {
-        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(you.religion).c_str());
-        return false;
-    }
-
-    int count = 0;
-    item_def *found = nullptr;
-
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (!item_is_cursable(item))
-            continue;
-
-        // Item is valid for cursing, so we'll give it a chance.
-        count++;
-        if (one_chance_in(count))
-            found = &item;
-    }
-
-    // Any item to curse?
-    if (!found)
-        return false;
-
-    do_curse_item(*found, false);
-
-    return true;
-}
-
 void auto_id_inventory()
 {
     for (auto &item : you.inv)

@@ -172,13 +172,13 @@ TAGS:   vaults_orient_s
 KFEAT:  O = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
-KITEM:  O = hat plus:-3 ident:all / cloak plus:-3 ident:all / \
-        animal skin plus:-2 ident:all / robe plus:-2 ident:all / \
-        leather armour plus:-3 ident:all / whip plus:-3 ident:all / \
-        spear plus:-4 ident:all / short sword plus:-4 ident:all / \
-        dagger plus:-3 ident:all / hand axe plus:-4 ident:all / \
-        scythe plus:-4 ident:all / club plus:-2 ident:all / \
-        hunting sling plus:-5 ident:all
+KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
+        animal skin damaged ident:all / robe damaged ident:all / \
+        leather armour damaged ident:all / whip damaged ident:all / \
+        spear damaged ident:all / short sword damaged ident:all / \
+        dagger damaged ident:all / hand axe damaged ident:all / \
+        scythe damaged ident:all / club damaged ident:all / \
+        hunting sling damaged ident:all
 KITEM:  P = robe cursed plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \

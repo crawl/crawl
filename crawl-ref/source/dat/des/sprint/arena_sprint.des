@@ -1060,26 +1060,26 @@ KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour gre
             kite shield randart | cloak randart | cloak randart | robe randart | animal skin randart |\
             tower shield randart | robe randart | buckler randart | leather armour randart
 KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
-            mundane not_cursed storm dragon scales | mundane not_cursed fire dragon scales |\
-            mundane not_cursed shadow dragon scales | mundane not_cursed quicksilver dragon scales |\
-            mundane not_cursed ice dragon scales | mundane not_cursed gold dragon scales |\
-            mundane not_cursed steam dragon scales | mundane not_cursed swamp dragon scales |\
-            mundane not_cursed pearl dragon scales | mundane not_cursed acid dragon scales |\
-            mundane not_cursed troll leather armour | mundane not_cursed crystal plate armour |\
-            mundane not_cursed plate armour | mundane not_cursed barding |\
-            mundane not_cursed cloak | mundane not_cursed buckler |\
-            mundane not_cursed pair of gloves | mundane not_cursed helmet
+            mundane storm dragon scales | mundane fire dragon scales |\
+            mundane shadow dragon scales | mundane quicksilver dragon scales |\
+            mundane ice dragon scales | mundane gold dragon scales |\
+            mundane steam dragon scales | mundane swamp dragon scales |\
+            mundane pearl dragon scales | mundane acid dragon scales |\
+            mundane troll leather armour | mundane crystal plate armour |\
+            mundane plate armour | mundane barding |\
+            mundane cloak | mundane buckler |\
+            mundane pair of gloves | mundane helmet
 KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of fire | staff of air | staff of earth | staff of cold |\
             staff of poison | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
-            mundane not_cursed quick blade | mundane not_cursed demon blade |\
-            mundane not_cursed triple sword | mundane not_cursed broad axe |\
-            mundane not_cursed executioner's axe | mundane not_cursed demon whip |\
-            mundane not_cursed great mace | mundane not_cursed giant spiked club |\
-            mundane not_cursed demon trident | mundane not_cursed bardiche |\
-            mundane not_cursed lajatang | mundane not_cursed longbow |\
-            mundane not_cursed fustibalus | mundane not_cursed triple crossbow \
+            mundane quick blade | mundane demon blade |\
+            mundane triple sword | mundane broad axe |\
+            mundane executioner's axe | mundane demon whip |\
+            mundane great mace | mundane giant spiked club |\
+            mundane demon trident | mundane bardiche |\
+            mundane lajatang | mundane longbow |\
+            mundane fustibalus | mundane triple crossbow \
                 |\
             mundane bolt q:50 | mundane sling bullet q:50 |\
             mundane arrow q:50

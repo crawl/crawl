@@ -54,7 +54,6 @@ bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
 bool item_is_cursable(const item_def &item);
-bool curse_an_item();
 void do_curse_item(item_def &item, bool quiet = true);
 void do_uncurse_item(item_def &item, bool check_bondage = true);
 inline constexpr bool item_type_has_curses(object_class_type base_type)

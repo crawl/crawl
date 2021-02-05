@@ -992,7 +992,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     };
 
     bool force_item = false;
-    bool force_uncursed = false;
 
     string floor_tile = "";
     string equip_tile = "";
@@ -1054,17 +1053,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             if (one_chance_in(5))
                 set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         }
-
-        if (one_chance_in(3))
-            do_curse_item(item);
-        break;
-
-    case MONS_DEEP_ELF_ARCHER:
-    case MONS_VASHNIA:
-    case MONS_NAGA_SHARPSHOOTER:
-    case MONS_SATYR:
-    case MONS_SONJA:
-        force_uncursed = true;
         break;
 
     case MONS_JORGRUN:
@@ -1266,9 +1254,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     if (force_item)
         item_set_appearance(i);
-
-    if (force_uncursed)
-        do_uncurse_item(i);
 
     if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {

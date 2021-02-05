@@ -5320,8 +5320,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
-    if (strip_tag(s, "not_cursed"))
-        result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
     if (strip_tag(s, "unobtainable"))

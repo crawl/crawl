@@ -437,8 +437,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         return;
     item_def& item = env.item[o];
 
-    do_uncurse_item(item);
-
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))

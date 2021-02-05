@@ -44,10 +44,10 @@ KFEAT:   ABC = .
 COLOUR:  defgABC = lightblue
 FTILE:   defgABC = tutorial_pad
 # "useful" is for keeping the boots from turning into bardings
-ITEM:    pair of boots mundane not_cursed useful
+ITEM:    pair of boots mundane useful
 ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
-ITEM:    scimitar ego:venom not_cursed
+ITEM:    scimitar ego:venom
 MONS:    goblin ; nothing
 MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial3.msg("armour")
@@ -122,8 +122,8 @@ ITEM:    potion of curing q:1
 ITEM:    ratskin_cloak
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
-MONS:    goblin ; hunting sling ego:none not_cursed . stone q:30 . dagger \
-         ego:none not_cursed
+MONS:    goblin ; hunting sling ego:none . stone q:30 . dagger \
+         ego:none
 MONS:    gnoll ; spear mundane
 MARKER:  A = lua:tutorial3.msg("trap")
 MARKER:  d = lua:tutorial3.msg("potion")
@@ -178,7 +178,7 @@ FTILE:   .{)deS = floor_swamp, t = floor_grass
 FTILE:   ABCde = tutorial_pad
 FTILE:   c = wall_vines
 KFEAT:   S = general shop use_all ; \
-             ring of flight mundane not_cursed | potion of curing | \
+             ring of flight mundane | potion of curing | \
              potion of heal wounds | potion of heal wounds q:2 | \
              potion of might | wand of paralysis | ring mail | \
              buckler ego:none | ring of slaying | scroll of enchant weapon
