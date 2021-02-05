@@ -761,10 +761,6 @@ You can use the adjust command (the '=' key) to change the letters to which your
 possessions are assigned. This command can be used to change spell or ability
 letters, too.
 
-Some items can be sticky-cursed, in which case they weld themselves to your body
-when you use them. If you are lucky, you might find magic scrolls which can rid
-you of these curses.
-
 Items like scrolls, potions, and some other types each have a characteristic,
 like a label or a colour, which will let you tell them apart on the basis of
 their function. However, these characteristics change between each game, so
