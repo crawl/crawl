@@ -259,7 +259,9 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_GUARDIAN_SPIRIT:     return "Spirit";
     case AMU_FAITH:               return "Faith";
     case AMU_REFLECTION:          return "Reflect";
+#if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:          return "Inacc";
+#endif
     }
     return "";
 }
@@ -511,8 +513,10 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It allows you to gain divine favour quickly.";
     case AMU_REFLECTION:
         return "It shields you and reflects attacks.";
+#if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
+#endif
     }
     return "";
 }

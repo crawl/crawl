@@ -18,11 +18,6 @@ amulet of guardian spirit
 An amulet containing a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
 %%%%
-amulet of inaccuracy
-
-An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells.
-%%%%
 amulet of magic regeneration
 
 An amulet that substantially increases the wearer's normal rate of magic

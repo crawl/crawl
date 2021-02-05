@@ -1619,9 +1619,6 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
-    if (item.sub_type == AMU_INACCURACY)
-        return false;
-
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
@@ -1797,9 +1794,6 @@ static int _get_monster_jewellery_value(const monster *mon,
     {
         value += item.plus;
     }
-
-    if (item.sub_type == AMU_INACCURACY)
-        value -= 5;
 
     value += get_jewellery_res_fire(item, true);
     value += get_jewellery_res_cold(item, true);

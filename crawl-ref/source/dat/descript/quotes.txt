@@ -810,10 +810,6 @@ amulet of guardian spirit
 
 <amulet>
 %%%%
-amulet of inaccuracy
-
-<amulet>
-%%%%
 amulet of magic regeneration
 
 <amulet>

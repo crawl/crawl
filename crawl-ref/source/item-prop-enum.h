@@ -251,8 +251,8 @@ enum jewellery_type
     AMU_THE_GOURMAND,
     AMU_CONSERVATION,
     AMU_CONTROLLED_FLIGHT,
-#endif
     AMU_INACCURACY,
+#endif
     AMU_NOTHING,
     AMU_GUARDIAN_SPIRIT,
     AMU_FAITH,

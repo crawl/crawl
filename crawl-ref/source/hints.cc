@@ -1083,7 +1083,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_FLYING:
-    case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
@@ -2077,17 +2076,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "in the ability menu (<w>%</w>).";
             cmd.push_back(CMD_USE_ABILITY);
         }
-        break;
-
-    case HINT_INACCURACY:
-        text << "Not all items are useful, and some of them are outright "
-                "harmful. Press <w>%</w> ";
-#ifdef USE_TILE_LOCAL
-        text << "or <w>click</w> on your equipped amulet to remove it.";
-#else
-        text << "to remove your amulet.";
-#endif
-        cmd.push_back(CMD_REMOVE_JEWELLERY);
         break;
 
             // TODO: rethink this v

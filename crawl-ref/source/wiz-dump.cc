@@ -69,8 +69,10 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_REGENERATION;
 #endif
 
+#if TAG_MAJOR_VERSION == 34
     if (s == "Inacc")
         return AMU_INACCURACY;
+#endif
     if (s == "Spirit")
         return AMU_GUARDIAN_SPIRIT;
     if (s == "Faith")

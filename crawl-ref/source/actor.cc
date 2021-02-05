@@ -192,7 +192,8 @@ void actor::shield_block_succeeded()
 
 int actor::inaccuracy() const
 {
-    return wearing(EQ_AMULET, AMU_INACCURACY);
+    const item_def *amu = slot_item(EQ_AMULET);
+    return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
 }
 
 bool actor::res_corr(bool calc_unid, bool items) const

@@ -713,8 +713,7 @@ decreased by one. This will likely cause you to lose ranks in trained skills.
 %%%%
 Sacrifice an Eye ability
 
-Sacrifices an eye, causing you to have a much harder time hitting targets, as
-if wearing an amulet of inaccuracy.
+Sacrifices an eye, causing you to have a much harder time hitting targets.
 %%%%
 Sacrifice Resistance ability
 

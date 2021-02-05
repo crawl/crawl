@@ -381,24 +381,6 @@ A wand of digging can destroy rock walls. Use
 <input>mouseover</input>/<input>right click</input> </localtiles>to check wall
 types.
 %%%%
-tutorial3 amulet
-
-Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
-or with <input>mouseclick</input> in the inventory panel</localtiles>.
-%%%%
-tutorial3 scroll_remove_curse
-
-The amulet is cursed and will not come off on its own. This scroll will remove
-all curses that are placed upon you. Try reading it with
-<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
-the inventory panel</localtiles>.
-%%%%
-tutorial3 drop
-
-The amulet is useless; you may want to drop it with
-<input>$cmd[CMD_DROP]</input><localtiles> or by
-<input>Shift-leftclicking</input> it in the inventory panel</localtiles>.
-%%%%
 tutorial3 gold
 
 Gold can be spent in shops. It takes no inventory space and cannot be dropped.

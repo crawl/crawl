@@ -8092,7 +8092,7 @@ string player::hands_act(const string &plural_verb,
 int player::inaccuracy() const
 {
     int degree = 0;
-    if (wearing(EQ_AMULET, AMU_INACCURACY))
+    if (player_equip_unrand(UNRAND_AIR))
         degree++;
     if (get_mutation_level(MUT_MISSING_EYE))
         degree++;

@@ -952,7 +952,8 @@ LIFE:     1
 BOOL:     elec
 
 NAME:    amulet of the Air
-OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
+INSCRIP: Inacc
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
 EV:      5

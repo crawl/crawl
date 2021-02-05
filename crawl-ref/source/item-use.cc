@@ -2617,13 +2617,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (item.link == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item.link == you.equip[EQ_AMULET]
-            && !item_known_cursed(item))
-        {
-            learned_something_new(HINT_INACCURACY);
-        }
-
         const int target_link = item.link;
         item_def* moved_target = auto_assign_item_slot(item);
         if (moved_target != nullptr && moved_target->link == link)
