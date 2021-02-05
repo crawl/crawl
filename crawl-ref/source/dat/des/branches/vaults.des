@@ -2280,7 +2280,7 @@ TAGS:    vaults_end_quadrant_prize vaults_end_quadrant_prize_mall unrand
 SHUFFLE: AB, CD
 SUBST:   A=+, B:xx+, C:xxx+, D:xxxx+
 NSUBST:  S = 2:S / 1:O / *:RRU9
-KFEAT:   S = jewellery shop / antique armour shop / gadget shop
+KFEAT:   S = jewellery shop / antique armour shop / distillery shop
 KFEAT:   R = general shop / book shop / scroll shop / antique weapon shop / distillery shop
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:.

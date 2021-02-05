@@ -5912,7 +5912,7 @@ static shop_type _random_shop()
 {
     return random_choose(SHOP_WEAPON, SHOP_ARMOUR, SHOP_WEAPON_ANTIQUE,
                          SHOP_ARMOUR_ANTIQUE, SHOP_GENERAL_ANTIQUE,
-                         SHOP_JEWELLERY, SHOP_EVOKABLES, SHOP_BOOK,
+                         SHOP_JEWELLERY, SHOP_BOOK,
                          SHOP_DISTILLERY, SHOP_SCROLL, SHOP_GENERAL);
 }
 
@@ -5981,9 +5981,6 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_JEWELLERY:
         return OBJ_JEWELLERY;
-
-    case SHOP_EVOKABLES:
-        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
