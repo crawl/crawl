@@ -2079,12 +2079,6 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item) || item.plus > 0)
         return true;
 
-    if (item.is_mundane())
-        return false;
-
-    if (item.flags & ISFLAG_CURSED && one_chance_in(3))
-        return true;
-
     return false;
 }
 
@@ -2097,12 +2091,6 @@ static bool _armour_is_visibly_special(const item_def &item)
         return false;
 
     if (visibly_branded || is_artefact(item) || item.plus > 0)
-        return true;
-
-    if (item.is_mundane())
-        return false;
-
-    if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
