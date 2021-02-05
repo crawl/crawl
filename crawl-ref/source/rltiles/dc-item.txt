@@ -642,8 +642,10 @@ i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 %back scroll-grey
 i-noise SCR_NOISE
+# start TAG_MAJOR_VERSION == 34
 %back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
+# end TAG_MAJOR_VERSION
 # aka scroll of summoning
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION

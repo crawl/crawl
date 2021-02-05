@@ -911,10 +911,6 @@ scroll of random uselessness
 
 A scroll with no apparent practical use.
 %%%%
-scroll of remove curse
-
-A scroll that removes any curses from the reader's equipped items.
-%%%%
 scroll of silence
 
 A scroll that eliminates all sound near the reader. This makes reading scrolls,
