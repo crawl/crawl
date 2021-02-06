@@ -3342,7 +3342,7 @@ spret cast_imb(int pow, bool fail)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = { source };
+    far_to_near_sorter sorter = { source };
     sort(act_list.begin(), act_list.end(), sorter);
 
     for (actor *act : act_list)

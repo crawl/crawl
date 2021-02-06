@@ -106,15 +106,6 @@ struct direction_chooser_args
 
 };
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 class direction_chooser;
 
 class direction_chooser_renderer : public view_renderer

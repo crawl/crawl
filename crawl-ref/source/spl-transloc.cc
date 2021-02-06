@@ -1472,16 +1472,15 @@ void attract_monsters()
     //get list of near monsters
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        targets.push_back(*mi);
+        if (!mi->friendly() && _can_beckon(**mi))
+            targets.push_back(*mi);
+
     //sort them in order of distance to you
-    dist_sorter sorter = {you.pos()};
+    near_to_far_sorter sorter = {you.pos()};
     sort(targets.begin(), targets.end(), sorter);
 
     //now operate on the sorted list
     for (monster *mi : targets) {
-        if (!_can_beckon(*mi) || mi->friendly())
-            continue;
-
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;

@@ -40,7 +40,26 @@ COMPILE_CHECK(static_cast<int>(spschool::LAST_SCHOOL) < SHRT_MAX);
 struct bolt;
 class dist;
 struct direction_chooser_args;
-struct dist_sorter;
+
+//compare two objects, sorting farthest to nearest from {pos}
+struct far_to_near_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b)
+    {
+        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
+    }
+};
+
+//compare two objects, sorting nearest to farthest from {pos}
+struct near_to_far_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b)
+    {
+        return a->pos().distance_from(pos) < b->pos().distance_from(pos);
+    }
+};
 
 enum spell_highlight_colours
 {

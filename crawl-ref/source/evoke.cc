@@ -418,7 +418,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = {agent->pos()};
+    far_to_near_sorter sorter = {agent->pos()};
     sort(act_list.begin(), act_list.end(), sorter);
 
     bolt wind_beam;
