@@ -62,7 +62,7 @@
        "potion of agility", "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air", "ring of attention",
        "manual of axes", "manual of armour", "wand of acid",
-       "acid dragon scales" }
+       "acid dragon scales", "potion of attraction" }
 
       elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
        "book of battle", "book of beasts", "book of burglary", "box of beasts",

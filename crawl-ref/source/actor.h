@@ -340,6 +340,7 @@ public:
     virtual int evokable_flight(bool calc_unid = true) const;
     virtual bool evokable_pavise(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
+    virtual bool lunging(bool calc_unid = true, bool items = true) const;
 
     virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
