@@ -56,6 +56,8 @@
 #include "unwind.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
+static void _apply_move_time_taken(int additional_time_taken = 0, bool did_wall_jump = false);
+
 // Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
 // or apply location effects: the latter should happen after the
@@ -953,9 +955,13 @@ static spret _rampage_forward(coord_def move)
     return spret::success;
 }
 
-static void _apply_move_time_taken(int additional_time_taken)
+static void _apply_move_time_taken(int additional_time_taken, bool did_wall_jump)
 {
-    you.time_taken *= player_movement_speed();
+    // Serpent's Lash = 1 means half of the wall jump time is refunded, so
+    // the modifier is 2 * 1/2 = 1;
+    int wall_jump_modifier = (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
+
+    you.time_taken *= wall_jump_modifier * player_movement_speed();
     you.time_taken = div_rand_round(you.time_taken, 10);
     you.time_taken += additional_time_taken;
 
@@ -1071,6 +1077,34 @@ void move_player_action(coord_def move)
             crawl_state.cancel_cmd_repeat();
 
             return;
+        }
+    }
+    
+        bool rampaged = false;
+
+    if (you.rampaging())
+    {
+        switch (_rampage_forward(move))
+        {
+            // Check the player's position again; rampage may have moved us.
+
+            // Cancel the move entirely if rampage was aborted from a prompt.
+            case spret::abort:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                return;
+
+            case spret::success:
+                rampaged = true;
+                // If we've rampaged, reset initial_position for the second
+                // move.
+                initial_position = you.pos();
+                // intentional fallthrough
+            default:
+            case spret::fail:
+                ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+                       || you.wizmode_teleported_into_rock);
+                break;
         }
     }
 
@@ -1198,7 +1232,7 @@ void move_player_action(coord_def move)
     if (!you.confused())
         fmonger = you.get_fearmonger(targ);
 
-    if (you.running.check_stop_running())
+    if (!rampaged && you.running.check_stop_running())
     {
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
@@ -1231,11 +1265,22 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst)
+            // Rampaging forcibly initiates the attack, but the attack
+            // can still be cancelled.
+            if (!rampaged && !you.can_see(*targ_monst)
                 && !you.confused()
-                && !check_moveto(targ, walkverb))
+                && !check_moveto(targ, walkverb)
+                // Attack cancelled by fight_melee
+                || !fight_melee(&you, targ_monst))
             {
                 stop_running();
+                // If we cancel this move after rampaging, we end the turn.
+                if (rampaged)
+                {
+                    move.reset();
+                    _finalize_cancelled_rampage_move();
+                    return;
+                }
                 you.turn_is_over = false;
                 return;
             }
@@ -1260,6 +1305,7 @@ void move_player_action(coord_def move)
 
     monster* mantis_attack_target_mon = nullptr;
     const bool running = you_are_delayed() && current_delay()->is_run();
+    bool dug = false;
 
     if (!attacking && (targ_pass || can_wall_jump)
         && moving && !beholder && !fmonger)
@@ -1276,7 +1322,7 @@ void move_player_action(coord_def move)
         // can_wall_jump means `targ` is solid and can be walljumped off of,
         // so the player will never enter `targ`. Therefore, we don't want to
         // check exclusions at `targ`.
-        if (!you.confused() && !can_wall_jump && !check_moveto(targ, walkverb))
+        if (!you.confused() && !can_wall_jump && !rampaged && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
@@ -1306,6 +1352,7 @@ void move_player_action(coord_def move)
             noisy(6, you.pos());
             make_hungry(50, true);
             additional_time_taken += BASELINE_DELAY / 5;
+            dug = true;
         }
 
         if (swap)
@@ -1335,7 +1382,14 @@ void move_player_action(coord_def move)
 
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)
+        {
+            remove_water_hold();
+            _clear_constriction_data();
             move_player_to_grid(targ, true);
+            apply_barbs_damage();
+            //remove_ice_movement();
+            apply_cloud_trail(old_pos);
+        }
         else if (can_wall_jump && !running)
         {
             if (!wu_jian_do_wall_jump(targ, false))
@@ -1351,7 +1405,6 @@ void move_player_action(coord_def move)
             targ_monst->apply_location_effects(targ);
         else
         {
-
             if (you.duration[DUR_CLOUD_TRAIL])
             {
                 if (cell_is_solid(old_pos))
@@ -1366,8 +1419,6 @@ void move_player_action(coord_def move)
                 }
             }
         }
-
-        apply_barbs_damage();
 
         if (monster * pavise = find_pavise_shield(&you)) {
             int item_ = pavise->inv[MSLOT_SHIELD];
@@ -1394,23 +1445,7 @@ void move_player_action(coord_def move)
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());
 
-        // Serpent's Lash = 1 means half of the wall jump time is refunded, so
-        // the modifier is 2 * 1/2 = 1;
-        int wall_jump_modifier =
-            (did_wall_jump && you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2 : 1;
-
-        you.time_taken *= wall_jump_modifier * player_movement_speed();
-        you.time_taken = div_rand_round(you.time_taken, 10);
-        you.time_taken += additional_time_taken;
-
-        if (you.running && you.running.travel_speed)
-        {
-            you.time_taken = max(you.time_taken,
-                                 div_round_up(100, you.running.travel_speed));
-        }
-
-        if (you.duration[DUR_NO_HOP])
-            you.duration[DUR_NO_HOP] += you.time_taken;
+        _apply_move_time_taken(additional_time_taken, did_wall_jump);
 
         move.reset();
         you.turn_is_over = true;
@@ -1427,7 +1462,8 @@ void move_player_action(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors || !you.running)
+    if ((Options.travel_open_doors == travel_open_doors_type::open
+             || !you.running)
         && !attacking
         && feat_is_closed_door(grd(targ)))
     {
@@ -1441,6 +1477,8 @@ void move_player_action(coord_def move)
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !prompt_dangerous_portal(grd(targ)))
         {
+            // No rampage check because the portal blocks the
+            // rampage tracer
             return;
         }
 
@@ -1472,6 +1510,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move();
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
     else if (fmonger && !attacking && !can_wall_jump)
@@ -1479,6 +1525,14 @@ void move_player_action(coord_def move)
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
         stop_running();
+        // If this would have been the move after rampaging, we end the turn.
+        if (rampaged)
+        {
+            move.reset();
+            _finalize_cancelled_rampage_move();
+            return;
+        }
+        you.turn_is_over = false;
         return;
     }
 
@@ -1490,18 +1544,17 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking && mantis_attack_target_mon == nullptr;
 
-    if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
-        && you.run())
+    if (!attacking
+        && you_worship(GOD_CHEIBRIADOS)
+        && ((one_chance_in(10) && you.run())
+             || (one_chance_in(2) && rampaged)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
 
     bool did_wu_jian_attack = false;
-    if (!mantis_attack_target_mon && you_worship(GOD_WU_JIAN) && !attacking)
-    {
-        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump,
-                                                       initial_position);
-    }
+    if (!mantis_attack_target_mon && you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)
+        did_wu_jian_attack = wu_jian_post_move_effects(did_wall_jump, initial_position);
 
     if (mantis_attack_target_mon != nullptr) {
         _mantis_leap_attack_doing(mantis_attack_target_mon);
