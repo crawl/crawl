@@ -1029,10 +1029,6 @@ bool bolt::need_regress() const
 
 void bolt::affect_cell()
 {
-    // Shooting through clouds affects accuracy.
-    if (cloud_at(pos()) && hit != AUTOMATIC_HIT)
-        hit = max(hit - 2, 0);
-
     fake_flavour();
 
     // Note that this can change the solidity of the wall.
