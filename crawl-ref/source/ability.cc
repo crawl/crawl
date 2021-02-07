@@ -365,6 +365,8 @@ static const ability_def Ability_List[] =
     { ABIL_MELIAI_SMITE, "Invoke Smite", 0, 0, 100, 0, {fail_basis::xl, 30, 1},
         abflag::skill_drain },
 
+    { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, 0, {}, abflag::none },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -1561,13 +1563,24 @@ bool activate_ability()
     return activate_talent(talents[selected]);
 }
 
-static bool _can_hop(bool quiet)
+static bool _can_movement_ability(bool quiet)
 {
-    if (!you.duration[DUR_NO_HOP])
+    if (!you.attribute[ATTR_HELD])
         return true;
     if (!quiet)
-        mpr("Your legs are too worn out to hop.");
+        mprf("You cannot do that while %s.", held_status());
     return false;
+}
+
+static bool _can_hop(bool quiet)
+{
+    if (you.duration[DUR_NO_HOP])
+    {
+        if (!quiet)
+            mpr("Your legs are too worn out to hop.");
+        return false;
+    }
+    return _can_movement_ability(quiet);
 }
 
 // Check prerequisites for a number of abilities.
@@ -1923,6 +1936,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_HOP:
         return _can_hop(quiet);
+
+    case ABIL_ROLLING_CHARGE:
+        return _can_movement_ability(quiet) &&
+            palentonga_charge_possible(quiet, true);
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
@@ -2473,6 +2490,12 @@ static spret _do_ability(const ability_def& abil, bool fail)
         }
         drain_player(10, false, true);
         break;
+
+    case ABIL_ROLLING_CHARGE:
+        if (_can_movement_ability(false))
+            return palentonga_charge(fail);
+        else
+            return spret::abort;
 
     case ABIL_CARAVAN_GIFT_ITEM:
     {
@@ -4996,6 +5019,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_MELIAI)
         _add_talent(talents, ABIL_MELIAI_SMITE, check_confused);
+
+    if (you.get_mutation_level(MUT_ROLL))
+        _add_talent(talents, ABIL_ROLLING_CHARGE, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)

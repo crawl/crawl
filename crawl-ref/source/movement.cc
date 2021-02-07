@@ -759,6 +759,35 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+void remove_water_hold()
+{
+    if (you.duration[DUR_WATER_HOLD])
+    {
+        mpr("You slip free of the water engulfing you.");
+        you.props.erase("water_holder");
+        you.clear_far_engulf();
+    }
+}
+
+bool apply_cloud_trail(const coord_def old_pos)
+{
+    if (you.duration[DUR_CLOUD_TRAIL])
+    {
+        if (cell_is_solid(old_pos))
+            ASSERT(you.wizmode_teleported_into_rock);
+        else
+        {
+            auto cloud = static_cast<cloud_type>(
+                you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
+            ASSERT(cloud != CLOUD_NONE);
+            check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
+                0, -1);
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Rampages the player toward a hostile monster, if one exists in the direction
  * of the move input. Invalid things along the rampage path cancel the rampage.
@@ -1337,13 +1366,6 @@ void move_player_action(coord_def move)
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
 
-        if (you.duration[DUR_WATER_HOLD])
-        {
-            mpr("You slip free of the water engulfing you.");
-            you.props.erase("water_holder");
-            you.clear_far_engulf();
-        }
-
         if (you.digging)
         {
             mprf("You dig through %s.", feature_description_at(targ, false,
@@ -1403,23 +1425,6 @@ void move_player_action(coord_def move)
         // put a monster at the player's location.
         if (swap)
             targ_monst->apply_location_effects(targ);
-        else
-        {
-            if (you.duration[DUR_CLOUD_TRAIL])
-            {
-                if (cell_is_solid(old_pos))
-                    ASSERT(you.wizmode_teleported_into_rock);
-                else
-                {
-                    auto cloud = static_cast<cloud_type>(
-                        you.props[XOM_CLOUD_TRAIL_TYPE_KEY].get_int());
-                    ASSERT(cloud != CLOUD_NONE);
-                    check_place_cloud(cloud, old_pos, random_range(3, 10), &you,
-                                      0, -1);
-                }
-            }
-        }
-
         if (monster * pavise = find_pavise_shield(&you)) {
             int item_ = pavise->inv[MSLOT_SHIELD];
             if (item_ != NON_ITEM) {

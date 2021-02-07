@@ -72,7 +72,9 @@ enum ability_type
     ABIL_BURIALIZE,
     // Meliai
     ABIL_MELIAI_SMITE,
-    ABIL_MAX_INTRINSIC = ABIL_MELIAI_SMITE,
+    // Palentongas
+    ABIL_ROLLING_CHARGE,
+    ABIL_MAX_INTRINSIC = ABIL_ROLLING_CHARGE,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 100,

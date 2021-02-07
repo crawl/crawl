@@ -76,7 +76,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_double_attack(false), quiet(quiet_),
+    cleaving(is_cleaving), is_riposte(false), is_double_attack(false), roll_dist(0), quiet(quiet_),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -1492,7 +1492,8 @@ public:
 
     int get_damage() const override
     {
-        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1);
+        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
+            + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4;
     }
 
     int get_brand() const override
@@ -1966,6 +1967,13 @@ int melee_attack::player_apply_final_multipliers(int damage)
 
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
+
+    // Palentonga rolling charge bonus
+    if (roll_dist > 0) {
+        // + 1/3rd base per distance rolled, up to double at dist 3.
+        const int extra_dam = damage * roll_dist / 3;
+        damage += extra_dam > damage ? damage : extra_dam;
+    }
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons

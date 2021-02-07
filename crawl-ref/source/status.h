@@ -60,7 +60,8 @@ enum status_type
     STATUS_WALL_DAMAGE,
     STATUS_SAGE,
     STATUS_IMUS,
-    STATUS_LAST_STATUS = STATUS_IMUS
+    STATUS_CURL,
+    STATUS_LAST_STATUS = STATUS_CURL
 };
 
 struct status_info

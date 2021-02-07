@@ -130,6 +130,10 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 They are not merely brutes, as they are comfortable with spellcasting.
 %%%%
+Palentonga
+
+Scaled mammals the size of horses, Palentongas launch powerful rolling charges.
+%%%%
 Sludge Elf
 
 A depraved type of elf, who prefers cunning to fair fighting, and dark magic

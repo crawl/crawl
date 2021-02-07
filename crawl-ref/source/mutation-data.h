@@ -884,6 +884,38 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+   { MUT_ROLL, 8, 3, mutflag::good, true,
+     "roll",
+
+     {"You can roll at nearby foes to attack.",
+      "You can roll at foes to attack.",
+      "You can roll a great distance at foes to attack."},
+
+     {"",
+      "You feel you can roll further.",
+      "You feel you can roll even further."},
+
+     {"",
+      "You can no longer roll as far.",
+      "You can no longer roll as far."},
+   },
+
+   { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
+     "armoured tail",
+
+     {"You have a long armoured tail.", "", ""},
+     {"", "", ""},
+     {"", "", ""},
+   },
+
+   { MUT_CURL, 0, 1, mutflag::good, true,
+     "reflexive curl",
+
+     {"You curl defensively after being hit.", "", ""},
+     {"You now curl defensively after being hit.", "", ""},
+     {"", "", ""},
+   },
+
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
   "shaggy fur",

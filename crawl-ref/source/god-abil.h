@@ -193,3 +193,6 @@ void angel_good_god_help(bool closed_enemy);
 
 int slouch_damage(monster* mon);
 bool slouchable(coord_def where);
+
+bool find_charge_target(vector<coord_def>& target_path, int max_range,
+    targeter* hitfunc, bool rolling);

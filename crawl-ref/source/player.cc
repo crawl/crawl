@@ -6684,6 +6684,12 @@ int player::armour_class_with_specific_items(vector<item_def> items) const
 
     AC += sanguine_armour_bonus();
 
+    if (you.has_mutation(MUT_CURL)
+        && you.props[PALENTONGA_CURL_KEY].get_bool())
+    {
+        AC += 7 * scale;
+    }
+
     return AC / scale;
 }
 
@@ -7762,6 +7768,7 @@ int player::has_tail(bool allow_tran) const
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
         || fishtail
+        || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
         || get_mutation_level(MUT_STINGER, allow_tran))
     {
         return 1;
@@ -8593,6 +8600,23 @@ bool player::form_uses_xl() const
     return form == transformation::wisp || form == transformation::fungus
         || form == transformation::pig || form == transformation::holy_swine
         || form == transformation::bat && you.species != SP_VAMPIRE;
+}
+
+bool player::wear_barding(const int subtype) const {
+    switch (you.species) {
+    case SP_NAGA:
+    case SP_PALENTONGA:
+        if (subtype == ARM_NAGA_BARDING)
+            return true;
+        break;
+    case SP_CENTAUR:
+        if (subtype == ARM_CENTAUR_BARDING)
+            return true;
+        break;
+    default:
+        return false;
+    }
+    return false;
 }
 
 static int _get_device_heal_factor()

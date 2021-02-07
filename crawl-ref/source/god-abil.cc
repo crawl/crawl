@@ -1656,11 +1656,11 @@ static bool _check_charge_through(coord_def pos)
     return true;
 }
 
-static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc)
+bool find_charge_target(vector<coord_def>& target_path, int max_range,
+    targeter* hitfunc, bool rolling)
 {
     // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon()))
+    if (!wielded_weapon_check(you.weapon(), rolling?"roll":""))
         return false;
 
     while (true)
@@ -1670,7 +1670,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
         args.prefer_farthest = true;
-        args.top_prompt = "Choose target to charge.";
+        args.top_prompt = rolling?"Roll where?":"Choose target to charge.";
         args.hitfunc = hitfunc;
         dist beam;
         direction(beam, args);
@@ -1678,7 +1678,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         // TODO: deduplicate with _find_cblink_target
         if (crawl_state.seen_hups)
         {
-            mpr("Cancelling furious charge due to HUP.");
+            mprf("Cancelling %s charge due to HUP.",rolling?"rolling":"furious");
             return false;
         }
 
@@ -1691,16 +1691,16 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         const monster* beholder = you.get_beholder(beam.target);
         if (beholder)
         {
-            mprf("You cannot charge away from %s!",
-                beholder->name(DESC_THE, true).c_str());
+            mprf("You cannot %s away from %s!",
+                rolling?"roll":"charge",beholder->name(DESC_THE, true).c_str());
             continue;
         }
 
         const monster* fearmonger = you.get_fearmonger(beam.target);
         if (fearmonger)
         {
-            mprf("You cannot charge closer to %s!",
-                fearmonger->name(DESC_THE, true).c_str());
+            mprf("You cannot %s closer to %s!",
+                rolling?"roll":"charge",fearmonger->name(DESC_THE, true).c_str());
             continue;
         }
 
@@ -1723,7 +1723,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         ray_def ray;
         if (!find_ray(you.pos(), beam.target, ray, opc_solid))
         {
-            mpr("You can't charge through that!");
+            mprf("You can't %s through that!", rolling?"roll":"charge");
             continue;
         }
 
@@ -1749,17 +1749,16 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         // target something behind another known monster
         const monster* target_mons = monster_at(ray.pos());
         const string bad_charge = bad_charge_target(ray.pos());
-        
-        if (adjacent(you.pos(), ray.pos()))
-        {
-            mprf("You're already next to %s!",
-                 target_mons->name(DESC_THE).c_str());
-            return false;
-        }
-
         if (bad_charge != "")
         {
             mpr(bad_charge.c_str());
+            return false;
+        }
+
+        if (adjacent(you.pos(), ray.pos()))
+        {
+            mprf("You're already next to %s!",
+                target_mons->name(DESC_THE).c_str());
             return false;
         }
 
@@ -1805,7 +1804,7 @@ spret furious_charge(bool fail)
     vector<coord_def> target_path;
     targeter_charge tgt(&you, charge_range);
     tgt.obeys_mesmerise = true;
-    if (_find_charge_target(target_path, charge_range, &tgt) == false)
+    if (find_charge_target(target_path, charge_range, &tgt, false) == false)
         return spret::abort;
 
     fail_check();
@@ -1879,6 +1878,8 @@ spret furious_charge(bool fail)
 
     melee_attack charge_atk(&you, target_mons);
     charge_atk.attack();
+    if (you.props.exists("spectral_weapon"))
+        trigger_spectral_weapon(&you, target_mons);
 
     // Normally this is 10 aut (times haste, etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
@@ -5678,7 +5679,10 @@ bool ru_power_leap()
         return true;
     }
 
+    remove_water_hold();
     move_player_to_grid(beam.target, false);
+    noisy(12, you.pos());
+    apply_barbs_damage();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();

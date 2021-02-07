@@ -80,7 +80,7 @@ bool targeter::affects_monster(const monster_info& /*mon*/)
     return true; //TODO: false
 }
 
-// Is the given location a valid endpoint for a Trog's furious charge?
+// Is the given location a valid endpoint for a Palentonga charge?
 // That is, is there an enemy there which is visible to the player and
 // is not firewood? If not, why not?
 // Note that this does NOT handle checking the intervening path for
@@ -91,7 +91,7 @@ string bad_charge_target(coord_def a)
     // You can only charge at monsters.
     // Specifically, monsters you can see. (No guessing!)
     // You can't charge at plants you walk right through.
-    if (!mons || !you.can_see(*mons))
+    if (!mons || !you.can_see(*mons) || fedhas_passthrough(mons))
         return "You can't see anything there to charge at!";
 
     // You can't charge at friends. (Also, rude.)
@@ -113,11 +113,11 @@ bool can_charge_through_mons(coord_def a)
 {
     const monster* mons = monster_at(a);
     return !mons
-           || !you.can_see(*mons)
-           || fedhas_passthrough(mons);
+        || !you.can_see(*mons)
+        || fedhas_passthrough(mons);
 }
 
-targeter_charge::targeter_charge(const actor *act, int r)
+targeter_charge::targeter_charge(const actor* act, int r)
 {
     ASSERT(act);
     ASSERT(r > 0);

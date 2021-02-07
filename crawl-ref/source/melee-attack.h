@@ -34,6 +34,7 @@ public:
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
     bool         is_double_attack;// is double attack
+    int          roll_dist;       // palentonga rolling charge distance
     bool         quiet;           // whether message is shown or not.
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
