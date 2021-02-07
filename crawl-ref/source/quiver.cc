@@ -2207,7 +2207,7 @@ namespace quiver
         if ((f & flag) && !(flag & done))
         {
             _flag_to_action_types(action_types, flag);
-            done &= flag;
+            done |= flag;
         }
     }
 
@@ -2219,6 +2219,10 @@ namespace quiver
         // Construct the type order from Options.fire_order:
         vector<shared_ptr<action>> action_types;
         int done = 0x0;
+        // Produce an ordering of the broad classes, each corresponding to one
+        // or more subtypes of ammo_action. Classes are responsible for ordering
+        // within this, though currently only launchers and throwing implement
+        // sub-ordering.
         // This doesn't support ordering ammo subtypes interleaved with anything
         // else
         vector<int> flags_to_check =
