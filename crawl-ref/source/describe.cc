@@ -304,6 +304,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CAUSE_TELEPORTATION,   prop_note::plain },
         { ARTP_NOISE,                 prop_note::plain },
         { ARTP_HARM,                  prop_note::plain },
+        { ARTP_RAMPAGING,             prop_note::plain },
         { ARTP_CORRODE,               prop_note::plain },
         { ARTP_DRAIN,                 prop_note::plain },
         { ARTP_SLOW,                  prop_note::plain },
@@ -575,6 +576,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
         { ARTP_HARM, "It increases damage dealt and taken.", false},
+        { ARTP_RAMPAGING, "It bestows one free step when moving towards enemies.",
+            false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -1880,6 +1883,10 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         case SPARM_BUNKER:
             description += "It can be fixed to the ground and used as a barrier.";
+            break;
+
+        case SPARM_RAMPAGING:
+            description += "Its wearer takes one free step when moving towards enemies.";
             break;
         }
     }

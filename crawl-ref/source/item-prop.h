@@ -219,6 +219,7 @@ int get_armour_res_corr(const item_def &arm) PURE;
 int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 int get_armour_cloud_immunity(const item_def &arm) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
+bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_res_cold(const item_def &ring, bool check_artp) PURE;

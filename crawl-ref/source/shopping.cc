@@ -374,6 +374,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_PROTECTION:
             case SPARM_ARCHERY:
             case SPARM_REPULSION:
+            case SPARM_RAMPAGING:
                 valued += 50;
                 break;
 

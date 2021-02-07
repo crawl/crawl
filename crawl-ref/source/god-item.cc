@@ -317,7 +317,8 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     case OBJ_ARMOUR:
         {
         const int item_brand = get_armour_ego_type(item);
-        retval = (item_brand == SPARM_RUNNING);
+        retval = (item_brand == SPARM_RUNNING
+                  || get_armour_rampaging(item, true));
         }
         break;
     case OBJ_JEWELLERY:

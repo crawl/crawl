@@ -293,6 +293,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                                   : MSG_MANA_DECREASE);
     }
 
+    if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
+        mpr("You feel ready to rampage towards enemies.");
+
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
                        !(msg && proprt[ARTP_STRENGTH] && !unmeld));
@@ -414,6 +417,9 @@ static void _unequip_artefact_effect(item_def &item,
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
+
+    if (proprt[ARTP_RAMPAGING] && !you.rampaging() && msg && !meld)
+        mpr("You no longer feel able to rampage towards enemies.");
 
     if (proprt[ARTP_DRAIN] && !meld)
         drain_player(150, true, true);
@@ -1027,7 +1033,12 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             else
                 mpr("You feel immune to the effects of clouds.");
             break;
+
         case SPARM_BUNKER:
+            break;
+
+        case SPARM_RAMPAGING:
+            mpr("You feel ready to rampage towards enemies.");
             break;
         }
     }
@@ -1196,7 +1207,13 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (!you.cloud_immune())
             mpr("You feel vulnerable to the effects of clouds.");
         break;
+
     case SPARM_BUNKER:
+        break;
+    
+    case SPARM_RAMPAGING:
+        if (!you.rampaging())
+            mpr("You no longer feel able to rampage towards enemies.");
         break;
 
     default:

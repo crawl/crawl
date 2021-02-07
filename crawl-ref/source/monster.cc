@@ -1685,6 +1685,10 @@ static int _get_monster_armour_value(const monster *mon,
     if (get_armour_ego_type(item) == SPARM_RUNNING)
         value += 5;
 
+    // Another sizable bonus for rampaging.
+    if (get_armour_rampaging(item, true))
+        value += 5;
+        
     return value;
 }
 
