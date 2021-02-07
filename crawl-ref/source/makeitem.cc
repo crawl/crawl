@@ -848,11 +848,11 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
 
     case ARM_BOOTS:
         return random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH,
-                             SPARM_LUNGING);
+                             SPARM_RAMPAGING);
 
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
-        return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_LUNGING,
+        return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING,
                              SPARM_COLD_RESISTANCE, SPARM_FIRE_RESISTANCE);
 
     case ARM_ROBE:
@@ -932,7 +932,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return true;
         // deliberate fall-through
     case SPARM_RUNNING:
-    case SPARM_LUNGING:
+    case SPARM_RAMPAGING:
 #if TAG_MAJOR_VERSION == 34
     case SPARM_JUMPING:
 #endif

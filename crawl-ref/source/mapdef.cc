@@ -25,7 +25,7 @@
 #include "dungeon.h"
 #include "end.h"
 #include "mpr.h"
-#include "tile-env.h"
+#include "env.h"
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
@@ -44,7 +44,7 @@
 #include "shopping.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "stringutil.h
+#include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -4963,7 +4963,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "repulsion",
         "cloud_immunity",
         "bunker",
-        "lunging", 
+        "rampaging", 
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);

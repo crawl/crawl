@@ -149,7 +149,7 @@ static void _entered_malign_portal(actor* act)
               "", "entering a malign gateway");
 }
 
-static bool _cancel_barbed_move(bool rampaging)
+bool cancel_barbed_move(bool rampaging)
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
@@ -1022,7 +1022,7 @@ void move_player_action(coord_def move)
         return;
     }
 
-    const coord_def initial_position = you.pos();
+    coord_def initial_position = you.pos();
 
     // When confused, sometimes make a random move.
     if (you.confused())
@@ -1331,7 +1331,7 @@ void move_player_action(coord_def move)
 
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
-        if (!you.confused() && cancel_barbed_move())
+        if (!you.confused() && cancel_barbed_move(rampaged))
             return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
@@ -1462,8 +1462,7 @@ void move_player_action(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors == travel_open_doors_type::open
-             || !you.running)
+    if ((Options.travel_open_doors || !you.running)
         && !attacking
         && feat_is_closed_door(grd(targ)))
     {

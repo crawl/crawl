@@ -1236,7 +1236,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "repulsion",
             "cloud immunity",
-            "bunker"
+            "bunker",
+            "rampaging",
         };
 
         const int non_art = acq_calls - num_arts;
@@ -1583,6 +1584,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
         "ARTP_HARM",
+        "ARTP_RAMPAGING",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

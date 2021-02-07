@@ -668,7 +668,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REPULSION:         return "repulsion";
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
         case SPARM_BUNKER:            return "bunker";
-        case SPARM_LUNGING:           return "lunging";
+        case SPARM_RAMPAGING:           return "rampaging";
         default:                      return "bugginess";
         }
     }
@@ -704,7 +704,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REPULSION:         return "repulsion";
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
         case SPARM_BUNKER:            return "bunker";
-        case SPARM_LUNGING:           return "lunging";
+        case SPARM_RAMPAGING:           return "rampaging";
         default:                      return "buggy";
         }
     }
@@ -3517,6 +3517,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
             break;
         }
         return false;
+
+    case OBJ_ARMOUR:
+        // Tilting at windmills can be dangerous.
+        return get_armour_ego_type(item) == SPARM_RAMPAGING;
 
     default:
         return false;
