@@ -148,7 +148,7 @@ bool attribute_increase()
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
+    const int statgain = you.species == SP_DEMIGOD ? 4 : 1;
 
     bool tried_lua = false;
     int keyin;
