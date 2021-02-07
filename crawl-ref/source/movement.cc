@@ -1286,8 +1286,6 @@ void move_player_action(coord_def move)
             }
 
             you.turn_is_over = true;
-            fight_melee(&you, targ_monst);
-
             you.berserk_penalty = 0;
             attacking = true;
         }
