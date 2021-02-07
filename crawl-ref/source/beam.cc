@@ -1630,16 +1630,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             hurted = 0;
         break;
 
-    case BEAM_AIR:
-        if (mons->airborne())
-            hurted += hurted / 2;
-        if (original < hurted)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(*mons, " gets badly buffeted.");
-        }
-        break;
-
     case BEAM_ENSNARE:
         if (doFlavouredEffects)
             ensnare(mons);

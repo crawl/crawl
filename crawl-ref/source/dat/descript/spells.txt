@@ -27,7 +27,6 @@ Airstrike spell
 
 Causes the air around a creature to twist itself into a whirling vortex of
 meteorological fury. It does more damage to targets surrounded by empty space.
-It is especially effective against flying enemies.
 %%%%
 Alistair's Intoxication spell
 

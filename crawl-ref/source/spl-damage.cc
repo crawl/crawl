@@ -899,8 +899,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
 
-    mprf("The air twists around and %sstrikes %s%s%s",
-         mons->airborne() ? "violently " : "",
+    mprf("The air twists around and strikes %s%s%s",
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());

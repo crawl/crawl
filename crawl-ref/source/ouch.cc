@@ -264,14 +264,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
-    case BEAM_AIR:
-    {
-        // Airstrike.
-        if (you.airborne())
-            hurted += hurted / 2;
-        break;
-    }
-
     default:
         break;
     }                           // end switch
