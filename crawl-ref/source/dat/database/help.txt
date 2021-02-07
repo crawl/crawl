@@ -252,8 +252,7 @@ skill-menu
 
 You gain experience for killing monsters (and very few other activities). This
 experience is used to train skills. The skill screen allows you to select which
-skills to train. A skill can only be trained if there's some available means of
-exercising it; see "Training restrictions" below for details.
+skills to train.
 
 By pressing its letter, you can cycle if and how a skill is trained:
   <darkgrey>- deselected</darkgrey>    Skill will not be trained.
@@ -276,28 +275,18 @@ How fast you train a skill is governed by the following factors:
   - skill manuals: Rare books giving an aptitude bonus of <lightred>+4</lightred> in one skill.
 
 On top of that, there are some effects which directly modify a skill, for
-example draining, having trained a related skill (crosstraining), or certain
-god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
+example having trained a related skill (crosstraining), or certain god powers.
+Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
 which will be used to train this skill.
 
 Apart from (de)selecting skills, you also have the following toggles:
   <w>/</w> :  Switch between automatic and manual training modes.
-  <w>*</w> :  Display all skills, even those you can't train yet.
+  <w>*</w> :  Display all skills, even those which aren't currently useful.
   <w>?</w> :  Allows you to read the descriptions of skills.
-  <w>_</w> :  Show or hide skill level modifications (drain, god powers, crosstraining).
+  <w>_</w> :  Show or hide skill level modifications (god powers, crosstraining).
   <w>!</w> :  Switch between displaying training percentage, skill cost, or training
        targets.
-
-                        <h>Training restrictions</h>
-Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
-can always be trained. For the rest:
-  - Weapon skills require carrying a weapon of the appropriate type.
-  - Shields requires that you be carrying a shield.
-  - Evocations requires carrying an evocable item.
-  - Spell schools require knowing a spell of the school.
-  - Necromancy can also be trained when worshipping Kikubaaqudgha.
-  - Invocations requires worshipping a god whose abilities require it.
 %%%%
 spell-library
 <h>Spell Library</h>
