@@ -2,7 +2,9 @@
 
 # Copyright © 2021 randomMesh@github.com
 #
-# This is a script to de-interlace, compress and fix all the PNG images of DSCC (https://github.com/crawl/crawl/)
+# This is a script to de-interlace, compress and fix all the PNG images of
+# Dungeon Crawl Stone Soup (DCSS) (https://github.com/crawl/crawl/)
+#
 # Hint: This script is able to convert images in any project, not just crawl
 #
 # It uses the OptiPNG command line tool which you need to install first
@@ -29,8 +31,8 @@
 #    LOG_FILE    [ the log file to use if parameter -l is given ]
 #
 # The script has the following parameters which are optional:
-#    -n [no change, only report]
-#    -m [only check modified files in the git index] (not working yet)
+#    -n [ no change, only report ]
+#    -m [ only check modified files in the git index ] (not working yet)
 #    -l [ write standard out to a logfile ]
 #
 # In order to run the script you need to set the executable bit
@@ -74,8 +76,8 @@ WRITELOG=false
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -n|--report) REPORTONLY=true ;;
-        -m|--git)    GITONLY=true  ;;
-        -l|--log)    WRITELOG=true  ;;
+        -m|--git)    GITONLY=true ;;
+        -l|--log)    WRITELOG=true ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
