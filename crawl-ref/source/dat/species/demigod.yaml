@@ -6,7 +6,7 @@ adjective: "Divine"
 difficulty: Advanced
 difficulty_priority: 80
 aptitudes:
-  xp: -2
+  xp: -1
   hp: 1
   mp_mod: 2
   mr: 4
@@ -39,10 +39,10 @@ aptitudes:
   poison_magic: -1
   invocations: False
   evocations: -1
-str: 11
-int: 12
-dex: 11
-# No natural stat gain (double chosen instead)
+str: 9
+int: 10
+dex: 9
+# No natural stat gain (quadruple chosen instead)
 levelup_stats: []
 levelup_stat_frequency: 28
 mutations:
