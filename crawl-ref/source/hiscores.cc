@@ -83,7 +83,7 @@ static string _score_file_name()
     if (!SysEnv.scorefile.empty())
         ret = SysEnv.scorefile;
     else
-        ret = Options.shared_dir + "scores";
+        ret = catpath(Options.shared_dir, "scores");
 
     ret += crawl_state.game_type_qualifier();
     if (crawl_state.game_is_sprint() && !crawl_state.map.empty())
@@ -94,7 +94,8 @@ static string _score_file_name()
 
 static string _log_file_name()
 {
-    return Options.shared_dir + "logfile" + crawl_state.game_type_qualifier();
+    return catpath(Options.shared_dir,
+        "logfile" + crawl_state.game_type_qualifier());
 }
 
 int hiscores_new_entry(const scorefile_entry &ne)
@@ -339,8 +340,8 @@ static void _show_morgue(scorefile_entry& se)
     morgue_file.set_more();
 
     string morgue_base = morgue_name(se.get_name(), se.get_death_time());
-    string morgue_path = morgue_directory()
-                         + strip_filename_unsafe_chars(morgue_base) + ".txt";
+    string morgue_path = catpath(morgue_directory(),
+                            strip_filename_unsafe_chars(morgue_base) + ".txt");
     FILE* morgue = lk_open("r", morgue_path);
 
     if (!morgue) // TODO: add an error message
@@ -2971,8 +2972,8 @@ void mark_milestone(const string &type, const string &milestone,
     lastmilestone = milestone;
     lastturn      = you.num_turns;
 
-    const string milestone_file =
-        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
+    const string milestone_file = catpath(
+        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
