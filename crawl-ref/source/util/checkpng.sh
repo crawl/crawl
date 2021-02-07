@@ -35,7 +35,7 @@
 #
 # In order to run the script you need to set the executable bit
 # chmod +x ./checkpng.sh
-# once and the run it
+# once and then run it
 #
 # Examples:
 #
@@ -97,7 +97,7 @@ fi
 if [[ "${WRITELOG}" = true ]] ; then
 
 	# Open standard out at `$LOG_FILE` for write.
-	exec 1>$LOG_FILE
+	exec 1>${LOG_FILE}
 
 	# Redirect standard error to standard out such that 
 	# standard error ends up going to wherever standard
@@ -111,4 +111,3 @@ for img in `find ${CRAWLDIR} -type f -name "*.png"`; do
 done
 
 exit 0
-
