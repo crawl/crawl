@@ -1641,30 +1641,30 @@ KMONS:  pq = plant / fungus
 KFEAT:  q = W
 KMONS:  O = player ghost
 MONS:   kobold, kobold brigand, kobold demonologist
-KMONS:  D = kobold ; dart ego:curare | dart ego:poisoned . dagger
-KMONS:  E = kobold brigand ; dart ego:curare | \
-                dart ego:poisoned w:5 . dagger | short sword | whip
-KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
-                wand of charming | wand of paralysis | \
-                wand of mindburst . dagger
-KMONS:  H = kobold brigand ; wand of flame | wand of acid | wand of polymorph | \
-                wand of charming | wand of paralysis | \
-                wand of mindburst . dagger | short sword | whip
-KMONS:  J = kobold ; dagger ego:distortion
-KMONS:  K = kobold brigand ; dagger ego:distortion | short sword ego:distortion | \
-                whip ego:distortion
+KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
+KMONS:  E = kobold ; wand of flame | wand of acid | wand of iceblast \
+                | wand of mindburst | wand of polymorph | wand of charming \
+                | wand of paralysis . dagger | short sword | whip
+KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
+                . wand of flame | wand of acid | wand of iceblast \
+                | wand of mindburst | wand of polymorph | wand of charming \
+                | wand of paralysis . dagger | short sword | whip
 # Define some kobolds with more general nasty ego weapons.
 {{
-    local weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
+    kmons("H = kobold ; " .. disto_weapon("kobold"))
+    kmons("J = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+          disto_weapon("kobold"))
+
     local egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
-                  ["pain"] = 5, ["electrocution"] = 5}
-    local basic_def = random_item_def(weapons, egos, "", "|")
-    local quality = crawl.coinflip() and "randart" or "good_item"
-    good_def = random_item_def(weapons, egos, quality, "|")
-    kmons("L = kobold ; " .. basic_def)
-    kmons("M = kobold brigand ; " .. basic_def)
-    kmons("N = kobold ; " .. good_def)
-    kmons("P = kobold brigand ; " .. good_def)
+                  ["pain"] = 5, ["electrocution"] = 5, ["distortion"] = 5}
+    local basic_def = ghost_monster_weapon("kobold", egos)
+    local good_def = ghost_monster_weapon("kobold", egos,
+        crawl.coinflip() and "randart" or "good_item")
+    kmons("K = kobold ; " .. basic_def)
+    kmons("L = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+          basic_def)
+    kmons("M = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
+          good_def)
 }}
 # 50% of time put statue/tree/fountain with plants and vertical wall, otherwise
 # add some diagonal wall instead. The second shuffle makes any statue sometimes
@@ -1674,16 +1674,16 @@ SUBST: r = -, Z = T, s = x, G : GGt, T : TTUV, x : xcbv
 : ghost_good_loot(_G)
 : if you.depth() < 6 then
 SUBST:  d = *%, e = %$, fg = -
-NSUBST: - = 2=1 / 4=1. / DEFH / DF.. / NP / JK / 2=JL.. / .
+NSUBST: - = 2=1 / 4=1. / DE / DE.. / H / 2=K. / M / .
 : elseif you.depth() < 9 then
 SUBST:  d = *, e = *%, f = %$--, g = -
-NSUBST: - = 2=2 / 4=2. / EH / EH.. / P / K / 3=KM.. / 3. / .
+NSUBST: - = 2=2 / 4=2. / F / F. / J / 3=L. / M / 3. / .
 : elseif you.depth() < 12 then
 SUBST:  e = *, f = %$, g = -
-NSUBST: - = 2=2 / 2=2. / EH / 2=EH.. / P / K / 3=KM.. / 3 / 2=3. / .
+NSUBST: - = 2=2 / 2=2. / F / 2=F. / J / 3=L. / M / 3 / 2=3. / .
 : else
 SUBST:  f = *, g = %$
-NSUBST: - = E / H / 2=EH.. / 2=P / 2=K / 3=KM.. / 2=3 / 4=3. / .
+NSUBST: - = 2 / F / 2=F. / 2=M / 2=J / 3=L. / 2=3 / 4=3. / .
 : end
 : ghost_setup(_G)
 MAP
