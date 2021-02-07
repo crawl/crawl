@@ -24,14 +24,14 @@
 #
 # Before you run this script, you need to set the variables to point to the correct directories and files:
 #
-#	CRAWLDIR    [ the directory containing the crawl images ]
-#	OPTIPNG     [ the path to the binary of OptiPNG ]
-#	LOG_FILE    [ the log file to use if parameter -l is given ]
+#    CRAWLDIR    [ the directory containing the crawl images ]
+#    OPTIPNG     [ the path to the binary of OptiPNG ]
+#    LOG_FILE    [ the log file to use if parameter -l is given ]
 #
 # The script has the following parameters which are optional:
-#	-n [no change, only report]
-#	-m [only check modified files in the git index] (not working yet)
-#	-l [ write standard out to a logfile ]
+#    -n [no change, only report]
+#    -m [only check modified files in the git index] (not working yet)
+#    -l [ write standard out to a logfile ]
 #
 # In order to run the script you need to set the executable bit
 # chmod +x ./checkpng.sh
@@ -39,10 +39,10 @@
 #
 # Examples:
 #
-#	./checkpng.sh -l     - Run the real thing, logged to LOG_FILE (recommended)
-#	./checkpng.sh -n -l  - Run reports only, logged to LOG_FILE
-#	./checkpng.sh -n     - Run reports only with thousands of lines flying by
-#	./checkpng.sh        - Run the real thing with thousands of lines flying by
+#    ./checkpng.sh -l     - Run the real thing, logged to LOG_FILE (recommended)
+#    ./checkpng.sh -n -l  - Run reports only, logged to LOG_FILE
+#    ./checkpng.sh -n     - Run reports only with thousands of lines flying by
+#    ./checkpng.sh        - Run the real thing with thousands of lines flying by
 #
 # Licence: The zlib/libpng License (Zlib)
 #
@@ -73,9 +73,9 @@ WRITELOG=false
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-		-n|--report) REPORTONLY=true ;;
-		-m|--git)    GITONLY=true  ;;
-		-l|--log)    WRITELOG=true  ;;
+        -n|--report) REPORTONLY=true ;;
+        -m|--git)    GITONLY=true  ;;
+        -l|--log)    WRITELOG=true  ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -86,28 +86,28 @@ OPTIPNGPARAMS="-fix -i=0 -o=7 -strip=all"
 
 # manipulate parameters to OptiPNG based on command line parameters
 if [[ "${REPORTONLY}" = true ]] ; then
-	OPTIPNGPARAMS="${OPTIPNGPARAMS} -simulate"
+    OPTIPNGPARAMS="${OPTIPNGPARAMS} -simulate"
 fi
 
 if [[ "${GITONLY}" = true ]] ; then
-	: # TODO: implement only checking modified files in the git index
+    : # TODO: implement only checking modified files in the git index
 fi
 
 # should we write the output to a log file?
 if [[ "${WRITELOG}" = true ]] ; then
 
-	# Open standard out at `$LOG_FILE` for write.
-	exec 1>${LOG_FILE}
+    # Open standard out at `$LOG_FILE` for write.
+    exec 1>${LOG_FILE}
 
-	# Redirect standard error to standard out such that
-	# standard error ends up going to wherever standard
-	# out goes (the file).
-	exec 2>&1
+    # Redirect standard error to standard out such that
+    # standard error ends up going to wherever standard
+    # out goes (the file).
+    exec 2>&1
 fi
 
 # and go...
 for img in `find ${CRAWLDIR} -type f -name "*.png"`; do
-	`${OPTIPNG} ${OPTIPNGPARAMS} ${img}`
+    `${OPTIPNG} ${OPTIPNGPARAMS} ${img}`
 done
 
 exit 0
