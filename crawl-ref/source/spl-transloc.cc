@@ -1354,7 +1354,8 @@ static void _attract_actor(const actor* agent, actor* victim,
 
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 {
-    bool affected = false;
+    vector <actor *> victims;
+
     for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
     {
         if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
@@ -1364,13 +1365,24 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
         if (range > gravitas_range(pow))
             continue;
 
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        affected = true;
-        _attract_actor(agent, *ai, pos, pow, strength);
+        victims.push_back(*ai);
     }
 
-    return affected;
+    if (victims.empty())
+        return false;
+
+    near_to_far_sorter sorter = {you.pos()};
+    sort(victims.begin(), victims.end(), sorter);
+
+    for (actor * ai : victims)
+    {
+        const int range = (pos - ai->pos()).rdist();
+        const int strength = ((pow + 100) / 20) / (range*range);
+
+        _attract_actor(agent, ai, pos, pow, strength);
+    }
+
+    return true;
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
