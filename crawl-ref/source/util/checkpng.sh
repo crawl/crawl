@@ -52,7 +52,7 @@
 # Permission is granted to anyone to use this software for any purpose,
 # including commercial applications, and to alter it and redistribute it freely,
 # including subject to the following restrictions:
-# 
+#
 #  1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software.
 #     If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 #  2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
@@ -99,7 +99,7 @@ if [[ "${WRITELOG}" = true ]] ; then
 	# Open standard out at `$LOG_FILE` for write.
 	exec 1>${LOG_FILE}
 
-	# Redirect standard error to standard out such that 
+	# Redirect standard error to standard out such that
 	# standard error ends up going to wherever standard
 	# out goes (the file).
 	exec 2>&1
