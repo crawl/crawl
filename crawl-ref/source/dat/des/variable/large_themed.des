@@ -61,7 +61,7 @@ MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
          bullet / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
-MONS:    kobold; club / kobold brigand w:1; club | short sword w:2 / nothing
+MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
 SUBST:   5 = 2 1:2 .:24
 SHUFFLE: ABCD

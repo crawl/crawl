@@ -2069,9 +2069,11 @@ MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KMONS:  1 = kobold brigand w:80 ; short sword | rapier | quick blade w:3 /\
-            kobold brigand w:10 ; quick blade ego:distortion w:6 | \
-                              rapier ego:distortion | short sword ego:distortion
+KMONS:  1 = kobold brigand w:80 ; dart ego:poisoned | dart ego:curare w:5 \
+                . short sword | rapier | quick blade w:3 \
+            / kobold brigand w:10 ; dart ego:poisoned | dart ego:curare w:5 \
+                . quick blade ego:distortion w:6 | rapier ego:distortion \
+                    | short sword ego:distortion
 : init_abyss_exit(_G, "P")
 MAP
   ccccc

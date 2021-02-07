@@ -44,8 +44,10 @@ DEPTH:    D:8-14
 WEIGHT: 15
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p =  potion of degeneration w:5 / potion of ambrosia w:1 / nothing
-MONS:     kobold brigand ; wand of flame ident:type . short sword
+KITEM:    p =  potion of degeneration w:5 ident:all \
+               / potion of ambrosia w:1 ident:all / nothing
+MONS:     kobold brigand ; wand of flame ident:type . short sword \
+              . dart ego:poisoned | dart ego:curare w:5
 MAP
 XXXXX..WWWWW
 XXXXX..WWWWW
