@@ -25,7 +25,7 @@
 # Before you run this script, you need to set the variables to point to the correct directories and files:
 #
 #	CRAWLDIR    [ the directory containing the crawl images ]
-#	OPTIPNG     [ the directory containing the binary of OptiPNG ]
+#	OPTIPNG     [ the path to the binary of OptiPNG ]
 #	LOG_FILE    [ the log file to use if parameter -l is given ]
 #
 # The script has the following parameters which are optional:
@@ -73,8 +73,8 @@ WRITELOG=false
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -n|--report) REPORTONLY=true ;;
-        -m|--git)    GITONLY=true  ;;
+		-n|--report) REPORTONLY=true ;;
+		-m|--git)    GITONLY=true  ;;
 		-l|--log)    WRITELOG=true  ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
