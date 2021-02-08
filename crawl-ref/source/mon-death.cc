@@ -2773,7 +2773,7 @@ void pikel_band_neutralise()
         }
     }
     string final_msg;
-    if (visible_minions > 0)
+    if (visible_minions > 0 && you.num_turns > 0)
     {
         if (you.get_mutation_level(MUT_NO_LOVE))
         {
@@ -2831,7 +2831,7 @@ void hogs_to_humans()
     }
 
     string final_msg;
-    if (any > 0)
+    if (any > 0 && you.num_turns > 0)
     {
         final_msg = make_stringf("No longer under Kirke's spell, the %s %s %s!",
                                  any > 1 ? "hogs return to their"
