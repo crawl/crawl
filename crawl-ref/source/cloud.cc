@@ -626,18 +626,7 @@ void manage_clouds()
         }
 #endif
 
-        // This was initially 40, but that was far too spammy.
-        if (cloud.type == CLOUD_STORM
-            && x_chance_in_y(you.time_taken, 400) && !actor_at(cloud.pos))
-        {
-            const bool you_see = you.see_cell(cloud.pos);
-            if (you_see && !you_worship(GOD_QAZLAL))
-                mpr("Lightning arcs down from a storm cloud!");
-            noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
-                  you_see || you_worship(GOD_QAZLAL) ? nullptr
-                  : "You hear a mighty clap of thunder!");
-        }
-        else if (cloud.type == CLOUD_SPECTRAL)
+        if (cloud.type == CLOUD_SPECTRAL)
             _handle_spectral_cloud(cloud);
 
         _cloud_interacts_with_terrain(cloud);
@@ -1335,11 +1324,6 @@ static int _actor_cloud_damage(const actor *act,
             mpr("Lightning from the thunderstorm strikes something you cannot "
                 "see.");
         }
-        noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), act->pos(),
-              act->is_player() || you.see_cell(act->pos())
-              || you_worship(GOD_QAZLAL)
-                ? nullptr
-                : "You hear a clap of thunder!");
 
         return lightning_dam;
 
