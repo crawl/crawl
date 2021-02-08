@@ -1220,14 +1220,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
                 item.plus += 3 + random2(8);
         }
     }
-    else if (one_chance_in(12))
-    {
-        // Make a bad item.
-        if (one_chance_in(5))
-            item.plus -= random2(3);
-
-        set_item_ego_type(item, OBJ_ARMOUR, SPARM_NORMAL);
-    }
 
     // Don't overenchant items.
     if (item.plus > armour_max_enchant(item))
