@@ -510,12 +510,6 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (!force_good && item.brand == SPWPN_NORMAL && item.plus < 3)
             item.plus = 0;
     }
-    else if (one_chance_in(12))
-    {
-        // Make a rather bad item.
-        item.plus  -= random2(4);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
-    }
 }
 
 // Remember to update the code in is_missile_brand_ok if adding or altering
