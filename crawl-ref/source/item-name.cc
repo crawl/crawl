@@ -3115,6 +3115,15 @@ string item_prefix(const item_def &item, bool temp)
     if (item_is_stationary(item))
         prefixes.push_back("stationary");
 
+    if (!is_artefact(item) && (item.base_type == OBJ_WEAPONS
+                               || item.base_type == OBJ_ARMOUR))
+    {
+        if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus > 0)
+            prefixes.push_back("enchanted");
+        if (item_ident(item, ISFLAG_KNOW_TYPE) && item.brand)
+            prefixes.push_back("ego");
+    }
+
     switch (item.base_type)
     {
     case OBJ_STAVES:
