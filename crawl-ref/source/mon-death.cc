@@ -2896,6 +2896,9 @@ monster* mons_find_elven_twin_of(const monster* mons)
 **/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
+    if (killer == KILL_DISMISSED || killer == KILL_RESET)
+        return;
+
     // Sometimes, if you pacify one twin near a staircase, they leave
     // in the same turn. Convert, in those instances. The strict_neutral check
     // is intended to cover the slimify case, we don't want to pacify the other
