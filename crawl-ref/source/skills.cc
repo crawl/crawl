@@ -1937,13 +1937,17 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    const int exp[28] =
-          { 0, 50, 150, 300, 500, 750,          // 0-5
-            1050, 1400, 1800, 2250, 2800,       // 6-10
-            3450, 4200, 5050, 6000, 7050,       // 11-15
-            8200, 9450, 10800, 12300, 13950,    // 16-20
-            15750, 17700, 19800, 22050, 24450,  // 21-25
-            27000, 29750 };
+    int exp[28];
+    for (int skill_level = 0; skill_level < 28; skill_level++)
+    {
+        exp[skill_level] = 25 * skill_level * (skill_level + 1);
+        if (skill_level > 9)
+            exp[skill_level] += 25 * (skill_level - 8) * (skill_level - 9) / 2;
+        if (skill_level > 18)
+            exp[skill_level] += 25 * (skill_level - 17) * (skill_level - 18) / 2;
+        if (skill_level > 26)
+            exp[skill_level] += 25 * (skill_level - 25) * (skill_level - 26) / 2;
+    }
 
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
     return exp[lev] * species_apt_factor(sk, sp);
