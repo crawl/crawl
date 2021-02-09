@@ -2023,18 +2023,38 @@ float apt_to_factor(int apt)
     return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
 
+static int _modulo_skill_cost(int modulo_level)
+{
+    return 25 * modulo_level * (modulo_level + 1);
+}
+
+static bool exp_costs_initialized = false;
+static int _get_skill_cost_for(int level)
+{
+    static int skill_cost_table[28];
+    const int breakpoints[3] = { 9, 18, 26 };
+    if (!exp_costs_initialized)
+    {
+        for (int skill_level = 0; skill_level < 28; skill_level++)
+        {
+            skill_cost_table[skill_level] = _modulo_skill_cost(skill_level);
+            for (int break_idx = 0; break_idx < (int)ARRAYSZ(breakpoints); ++break_idx)
+            {
+                const int breakpoint = breakpoints[break_idx];
+                if (skill_level <= breakpoint)
+                    break;
+                skill_cost_table[skill_level] += _modulo_skill_cost(skill_level - breakpoint) / 2;
+            }
+        }
+        exp_costs_initialized = true;
+    }
+    return skill_cost_table[level];
+}
+
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    const int exp[28] =
-          { 0, 50, 150, 300, 500, 750,          // 0-5
-            1050, 1400, 1800, 2250, 2800,       // 6-10
-            3450, 4200, 5050, 6000, 7050,       // 11-15
-            8200, 9450, 10800, 12300, 13950,    // 16-20
-            15750, 17700, 19800, 22050, 24450,  // 21-25
-            27000, 29750 };
-
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    return exp[lev] * species_apt_factor(sk, sp);
+    return _get_skill_cost_for(lev) * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
