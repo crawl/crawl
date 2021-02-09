@@ -357,7 +357,7 @@ namespace quiver
                     // bit here and only use this for unarmed/forms. See
                     // melee_attack::set_attack_verb for the real thing.
                     const int dt = you.damage_type();
-                    if (dt | DVORP_CLAWING || dt | DVORP_TENTACLE)
+                    if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
                         return "attack";
                 }
                 return "punch";
