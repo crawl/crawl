@@ -2043,26 +2043,22 @@ static bool _armour_is_visibly_special(const item_def &item)
 
 jewellery_type get_random_amulet_type()
 {
-    int res;
-    do
-    {
-        res = random_range(AMU_FIRST_AMULET, NUM_JEWELLERY - 1);
-    }
-    // Do not generate removed item types.
-    while (item_type_removed(OBJ_JEWELLERY, res));
-
-    return jewellery_type(res);
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
 }
 
 static jewellery_type _get_raw_random_ring_type()
 {
-    jewellery_type ring;
-    do
-    {
-        ring = (jewellery_type)(random_range(RING_FIRST_RING, NUM_RINGS - 1));
-    }
-    while (item_type_removed(OBJ_JEWELLERY, ring));
-    return ring;
+    static vector<jewellery_type> valid_types;
+    if (valid_types.empty())
+        for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
+            if (!item_type_removed(OBJ_JEWELLERY, (jewellery_type)i))
+                valid_types.push_back((jewellery_type)i);
+    return *random_iterator(valid_types);
 }
 
 jewellery_type get_random_ring_type()
