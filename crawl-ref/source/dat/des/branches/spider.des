@@ -385,10 +385,11 @@ DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 # Water etc.
 SUBST:   w = z
-SUBST:   W = W w:15 x:4
-SUBST:   . = .:6 W
-SUBST:   z = W:5 w:50 .:2
+SUBST:   W = W w:5 ^:3 x:2
+SUBST:   . = . W:4
+SUBST:   z = W. ^:5
 SUBST:   X = w x
+KFEAT:   ^ = web
 # Monster sets, and some items
 NSUBST:  1 = 2:t / *:w
 SUBST:   2 = 2 *:4
@@ -412,7 +413,7 @@ MAP
    ...xxxxW.Wxxwwx4xxxxxxxxxxwW.Wxx..
   .3xxxxxW.2xxxxxwwxxxxxxxxxwxxW.Wxx...
   .xxxxx7.WxxxxxxxxwwxxxxxxwxxxxW7Wxxx.
-  .x4xx.WWxxxxxxx2>..w.22.wxxxxxxW.www.
+  .x4xx.WWxxxxxxx2...w.22.wxxxxxxW.www.
   .xxw.WXxxxxxx2..2|x2w..w.xxxxwwwW.Wx.
  ..xx7WXxxxxx2..2.x2www.w..2wwwxxxW7Wx.
 ..xxW.Wxxxxx2.x...ww11wwxwww2xxxxxXW.x.
