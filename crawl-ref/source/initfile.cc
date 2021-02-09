@@ -289,7 +289,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
-        new IntGameOption(SIMPLE_NAME(dump_message_count), 20),
+        new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
