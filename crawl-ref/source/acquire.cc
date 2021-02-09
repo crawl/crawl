@@ -1344,12 +1344,6 @@ int acquirement_create_item(object_class_type class_wanted,
                 acq_item.plus = GOOD_RING_PLUS;
                 break;
 
-            case RING_TELEPORTATION:
-                // This is the only generally bad piece of jewellery.
-                if (!one_chance_in(9))
-                    make_item_randart(acq_item);
-                break;
-
             default:
                 break;
             }

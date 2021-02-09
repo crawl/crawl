@@ -1461,10 +1461,6 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_STEALTH;
         break;
 
-    case RING_TELEPORTATION:
-        provides = ARTP_CAUSE_TELEPORTATION;
-        break;
-
     case RING_EVASION:
         provides = ARTP_EVASION;
         break;
@@ -1544,13 +1540,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     case RING_RESIST_CORROSION:
         conflicts = ARTP_CORRODE;
-        break;
-
-    case RING_TELEPORTATION:
-#if TAG_MAJOR_VERSION == 34
-    case RING_TELEPORT_CONTROL:
-#endif
-        conflicts = ARTP_PREVENT_TELEPORTATION;
         break;
     }
 

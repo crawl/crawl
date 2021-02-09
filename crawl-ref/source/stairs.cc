@@ -445,12 +445,8 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (you.has_mutation(MUT_TELEPORT, true)
-        || you.wearing(EQ_RINGS, RING_TELEPORTATION, true)
-        || you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, true))
-    {
+    if (player_teleport(false))
         mpr("You feel stable on this floor.");
-    }
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,

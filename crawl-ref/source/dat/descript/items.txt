@@ -796,11 +796,6 @@ ring of strength
 A ring that increases or decreases the physical strength of its wearer,
 depending on its degree of enchantment.
 %%%%
-ring of teleportation
-
-A ring that occasionally exerts its power to teleport its wearer next to
-monsters.
-%%%%
 ring of wizardry
 
 A ring that increases the ability of its wearer to use magical spells.

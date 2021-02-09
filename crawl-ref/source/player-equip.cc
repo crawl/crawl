@@ -1219,15 +1219,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         calc_mp();
         break;
 
-    case RING_TELEPORTATION:
-        if (you.no_tele())
-            mpr("You feel a slight, muted jump rush through you.");
-        else
-            // keep in sync with player_teleport
-            mprf("You feel slightly %sjumpy.",
-                 (player_teleport(false) > 8) ? "more " : "");
-        break;
-
     case AMU_FAITH:
         if (you.species == SP_DEMIGOD)
             mpr("You feel a surge of self-confidence.");
@@ -1323,7 +1314,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_WILLPOWER:
     case RING_SLAYING:
     case RING_STEALTH:
-    case RING_TELEPORTATION:
     case RING_WIZARDRY:
         break;
 

@@ -739,7 +739,6 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_SLAYING:               return "slaying";
         case RING_SEE_INVISIBLE:         return "see invisible";
         case RING_RESIST_CORROSION:      return "resist corrosion";
-        case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
 #if TAG_MAJOR_VERSION == 34
         case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
@@ -755,6 +754,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_FIRE:                  return "fire";
         case RING_ICE:                   return "ice";
 #if TAG_MAJOR_VERSION == 34
+        case RING_TELEPORTATION:         return "teleportation";
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
         case AMU_MANA_REGENERATION: return "magic regeneration";
@@ -2631,8 +2631,6 @@ bool is_bad_item(const item_def &item)
 
         switch (item.sub_type)
         {
-        case RING_TELEPORTATION:
-            return !(you.stasis() || crawl_state.game_is_sprint());
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -2977,9 +2975,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
-
-        case RING_TELEPORTATION:
-            return !is_bad_item(item);
 
         case RING_FLIGHT:
             return you.permanent_flight()

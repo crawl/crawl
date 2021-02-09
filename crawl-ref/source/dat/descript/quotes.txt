@@ -2296,10 +2296,6 @@ ring of strength
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
 %%%%
-ring of teleportation
-
-<ring>
-%%%%
 ring of wizardry
 
 <ring>

@@ -1080,9 +1080,6 @@ int player_teleport(bool calc_unid)
 
     int tp = 0;
 
-    // rings (keep in sync with _equip_jewellery_effect)
-    tp += 8 * you.wearing(EQ_RINGS, RING_TELEPORTATION, calc_unid);
-
     // artefacts
     tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
