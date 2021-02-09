@@ -258,9 +258,6 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         item.plus -= biased_random2(7,2);
         item.plus -= biased_random2(7,2);
 
-        if (one_chance_in(5))
-            item.plus = 3 - random2(6); // not the best
-
         // On weapons, an enchantment of less than 0 is never viable.
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
