@@ -363,10 +363,6 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
             update_player_symbol();
         }
     }
-
-    // Identify weapon pluses.
-    if (exsk <= SK_THROWING)
-        auto_id_inventory();
 }
 
 int calc_skill_level_change(skill_type sk, int starting_level, int sk_points)

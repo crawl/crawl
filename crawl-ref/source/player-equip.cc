@@ -63,8 +63,6 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 
     equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
-    if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        auto_id_inventory();
     you.gear_change = true;
 }
 
