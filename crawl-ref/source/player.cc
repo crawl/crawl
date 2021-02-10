@@ -2362,32 +2362,6 @@ static void _handle_xp_penance(int exp)
     }
 }
 
-/// update transfer knowledge
-static void _transfer_knowledge(int exp)
-{
-    if (!(you.transfer_skill_points > 0))
-        return;
-
-    // Can happen if the game got interrupted during target skill choice.
-    if (is_invalid_skill(you.transfer_to_skill))
-    {
-        you.transfer_from_skill = SK_NONE;
-        you.transfer_skill_points = 0;
-        you.transfer_total_skill_points = 0;
-    }
-    else
-    {
-        int amount = exp * 20
-        / calc_skill_cost(you.skill_cost_level);
-        if (amount >= 20 || one_chance_in(20 - amount))
-        {
-            amount = max(20, amount);
-            transfer_skill_points(you.transfer_from_skill,
-                                  you.transfer_to_skill, amount, false);
-        }
-    }
-}
-
 /// update temporary mutations
 static void _handle_temp_mutation(int exp)
 {
@@ -2483,7 +2457,6 @@ void apply_exp()
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
     _handle_god_wrath(exp_gained);
-    _transfer_knowledge(exp_gained);
 
     // evolution mutation timer
     you.attribute[ATTR_EVOL_XP] += exp_gained;
@@ -4946,11 +4919,6 @@ player::player()
 
     skill_menu_do = SKM_NONE;
     skill_menu_view = SKM_NONE;
-
-    transfer_from_skill = SK_NONE;
-    transfer_to_skill = SK_NONE;
-    transfer_skill_points = 0;
-    transfer_total_skill_points = 0;
 
     skill_cost_level = 1;
     exp_available = 0;

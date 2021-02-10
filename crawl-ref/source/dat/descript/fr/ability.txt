@@ -535,20 +535,6 @@ Cure Bad Mutation ability
 
 Annule une mutation négative choisie au hasard.
 %%%%
-Scrying ability
-
-Obtenez une vision astrale vous permettant de voir au travers les murs. Ce
-n'est pas suffisant pour cibler via des sorts ou des aptitudes, même celles
-fonctionnant au travers du verre.
-%%%%
-Transfer Knowledge ability
-
-Sacrifie une partie d'une de vos compétences pour en améliorer une autre.
-%%%%
-End Transfer Knowledge ability
-
-Abandon d'un transfert de compétence en cours.
-%%%%
 Shadow Step ability
 
 Si vous pouvez vous concentrer suffisement sur l'ombre d'une creature présente

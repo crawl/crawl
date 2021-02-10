@@ -1502,11 +1502,6 @@ static void _tag_construct_you(writer &th)
     marshallByte(th, you.skill_menu_do);
     marshallByte(th, you.skill_menu_view);
 
-    marshallInt(th, you.transfer_from_skill);
-    marshallInt(th, you.transfer_to_skill);
-    marshallInt(th, you.transfer_skill_points);
-    marshallInt(th, you.transfer_total_skill_points);
-
     CANARY;
 
     // how many durations?
@@ -2874,12 +2869,15 @@ static void _tag_read_you(reader &th)
 
     you.skill_menu_do = static_cast<skill_menu_state>(unmarshallByte(th));
     you.skill_menu_view = static_cast<skill_menu_state>(unmarshallByte(th));
-    you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
-    ASSERT(you.transfer_from_skill == SK_NONE || you.transfer_from_skill < NUM_SKILLS);
-    you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
-    ASSERT(you.transfer_to_skill == SK_NONE || you.transfer_to_skill < NUM_SKILLS);
-    you.transfer_skill_points = unmarshallInt(th);
-    you.transfer_total_skill_points = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (you.skill_menu_view == SKM_VIEW_TRANSFER)
+        you.skill_menu_view = SKM_NONE;
+    // Was Ashenzari skill transfer information
+    // Four ints to discard
+    if (th.getMinorVersion() < TAG_MINOR_NEW_ASHENZARI)
+        for (int j = 0; j < 4; ++j)
+            unmarshallInt(th);
+#endif
 
     // Set up you.skill_cost_level.
     you.skill_cost_level = 0;

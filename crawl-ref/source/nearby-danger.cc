@@ -456,8 +456,6 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    if (you.duration[DUR_SCRYING])
-        you.xray_vision = false;
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 

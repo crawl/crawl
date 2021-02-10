@@ -234,12 +234,6 @@ public:
     skill_menu_state skill_menu_do;
     skill_menu_state skill_menu_view;
 
-    //Ashenzari transfer knowledge
-    skill_type    transfer_from_skill;
-    skill_type    transfer_to_skill;
-    unsigned int  transfer_skill_points;
-    unsigned int  transfer_total_skill_points;
-
     int  skill_cost_level;
     int  exp_available; // xp pool, scaled by 10 from you.experience
 

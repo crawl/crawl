@@ -96,7 +96,9 @@ enum duration_type
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
+#if TAG_MAJOR_VERSION == 34
     DUR_SCRYING,
+#endif
     DUR_TORNADO,
     DUR_LIQUEFYING,
     DUR_HEROISM,

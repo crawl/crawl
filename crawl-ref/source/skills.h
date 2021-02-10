@@ -129,9 +129,6 @@ int elemental_preference(spell_type spell, int scale = 1);
 
 void skill_menu(int flag = 0, int exp = 0);
 void dump_skills(string &text);
-int skill_transfer_amount(skill_type sk);
-int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
-                          bool simu, bool boost = false);
 int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
 

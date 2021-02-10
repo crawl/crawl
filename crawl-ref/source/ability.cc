@@ -518,12 +518,6 @@ static const ability_def Ability_List[] =
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
         0, 0, 0, {fail_basis::invo}, abflag::identify_scroll },
-    { ABIL_ASHENZARI_SCRYING, "Scrying",
-        4, 0, 2, {fail_basis::invo}, abflag::instant },
-    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
-        0, 0, 10, {fail_basis::invo}, abflag::none },
-    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
@@ -990,12 +984,6 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         if (you.get_mutation_level(MUT_NO_LOVE))
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        if (you.species == SP_GNOLL)
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1543,15 +1531,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return can_cast_spells(quiet, true);
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        if (!trainable_skills(true))
-        {
-            if (!quiet)
-                mpr("You have nothing more to learn.");
-            return false;
-        }
-        return true;
 
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
@@ -2950,36 +2929,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
     }
 
-    case ABIL_ASHENZARI_SCRYING:
-        fail_check();
-        if (you.duration[DUR_SCRYING])
-            mpr("You extend your astral sight.");
-        else
-            mpr("You gain astral sight.");
-        you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
-        you.xray_vision = true;
-        viewwindow(true);
-        update_screen();
-        break;
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        fail_check();
-        if (!ashenzari_transfer_knowledge())
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-        break;
-
-    case ABIL_ASHENZARI_END_TRANSFER:
-        fail_check();
-        if (!ashenzari_end_transfer())
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-        break;
-
     case ABIL_DITHMENOS_SHADOW_STEP:
         if (_abort_if_stationary() || cancel_harmful_move(false))
             return spret::abort;
@@ -3820,8 +3769,6 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
     }
-    if (you.transfer_skill_points > 0)
-        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
     if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
         abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
 

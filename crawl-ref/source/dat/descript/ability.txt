@@ -544,19 +544,6 @@ Curse Item ability
 
 Curses a chosen item, at the cost of a scroll of identify.
 %%%%
-Scrying ability
-
-Provides astral sight, allowing you to see through walls.
-%%%%
-Transfer Knowledge ability
-
-Sacrifices part of one of your skills to improve another. The transfer will
-take place gradually as you gain experience.
-%%%%
-End Transfer Knowledge ability
-
-Aborts an ongoing skill transfer.
-%%%%
 # Dithmenos
 Shadow Step ability
 

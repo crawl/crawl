@@ -280,7 +280,6 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Ashenzari
     {   { 0, ABIL_ASHENZARI_CURSE, "curse your items" },
-        { 1, ABIL_ASHENZARI_SCRYING, "scry through walls" },
         { 2, "The more cursed you are, the more Ashenzari will now support your skills.",
              "Ashenzari will no longer support your skills.",
              "The more cursed you are, the more Ashenzari supports your skills." },
@@ -290,9 +289,6 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 4, "Ashenzari will now keep your mind clear.",
              "Ashenzari will no longer keep your mind clear.",
              "Ashenzari keeps your mind clear." },
-        { 5, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
-             "Ashenzari will help you to reconsider your skills.",
-             "Ashenzari will no longer help you to reconsider your skills." },
     },
 
     // Dithmenos
@@ -2771,9 +2767,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.previous_good_god = GOD_NO_GOD;
     }
 
-    if (old_god == GOD_ASHENZARI)
-        ash_init_bondage(&you);
-
     you.num_current_gifts[old_god] = 0;
 
     you.religion = GOD_NO_GOD;
@@ -2932,10 +2925,6 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ASHENZARI:
-        if (you.transfer_skill_points > 0)
-            ashenzari_end_transfer(false, true);
-        you.duration[DUR_SCRYING] = 0;
-        you.xray_vision = false;
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];

@@ -115,9 +115,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     case SKM_SHOW_DEFAULT:
         return you.can_currently_train[sk] && (you.should_show_skill[sk]
                                                || you.training[sk])
-            || you.skill(sk, 10, false, false)
-            || sk == you.transfer_from_skill
-            || sk == you.transfer_to_skill;
+            || you.skill(sk, 10, false, false);
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
@@ -137,36 +135,8 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
         return false;
 
-    if (is_set(SKMF_RESKILL_TO) && you.transfer_from_skill == m_sk)
-    {
-        if (!keep_hotkey)
-            ++m_letter;
-        return false;
-    }
-
-    if (is_set(SKMF_RESKILL_TO) && is_useless_skill(m_sk))
-        return false;
-
-    if (is_set(SKMF_RESKILL_FROM) && !you.skill_points[m_sk])
-    {
-        if (!keep_hotkey)
-            ++m_letter;
-        return false;
-    }
-
-    if (!you.can_currently_train[m_sk] && !is_set(SKMF_RESKILL_TO)
-        && !is_set(SKMF_RESKILL_FROM))
-    {
-        return false;
-    }
-
     if (mastered())
-    {
-        if (is_set(SKMF_RESKILL_TO) && !keep_hotkey)
-            ++m_letter;
-        if (!is_set(SKMF_RESKILL_FROM))
-            return false;
-    }
+        return false;
 
     return true;
 }
@@ -211,7 +181,6 @@ void SkillMenuEntry::set_display()
     case SKM_VIEW_COST:      set_cost();             break;
     case SKM_VIEW_TARGETS:   set_targets();          break;
     case SKM_VIEW_PROGRESS:  set_progress();         break;
-    case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
     case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
     case SKM_VIEW_POINTS:    set_points();           break;
     default: die("Invalid view state.");
@@ -292,14 +261,6 @@ COLOURS SkillMenuEntry::get_colour() const
 
     if (is_set(SKMF_HELP))
         return LIGHTGRAY;
-    else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
-        return BROWN;
-    else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TRANSFER
-             && (m_sk == you.transfer_from_skill
-                 || m_sk == you.transfer_to_skill))
-    {
-        return CYAN;
-    }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
              && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
     {
@@ -394,23 +355,7 @@ void SkillMenuEntry::set_new_level()
         return;
     }
 
-    if (you.skills[m_sk] > 0 && is_set(SKMF_RESKILL_FROM)
-        || m_sk == you.transfer_from_skill)
-    {
-        new_level = transfer_skill_points(m_sk, m_sk,
-                                          skill_transfer_amount(m_sk), true,
-                                          !real);
-        m_progress->set_fg_colour(BROWN);
-    }
-    else if (is_set(SKMF_RESKILL_TO))
-    {
-        new_level = transfer_skill_points(you.transfer_from_skill, m_sk,
-                                          you.transfer_skill_points, true,
-                                          !real);
-        m_progress->set_fg_colour(CYAN);
-    }
-
-    if (is_selectable() || m_sk == you.transfer_from_skill)
+    if (is_selectable())
         m_progress->set_text(make_stringf("> %4.1f", new_level / 10.0));
     else
         m_progress->set_text("");
@@ -461,25 +406,6 @@ void SkillMenuEntry::set_targets()
     m_progress->set_editable(true, 4);
 }
 
-void SkillMenuEntry::set_reskill_progress()
-{
-    string text;
-    if (m_sk == you.transfer_from_skill)
-        text = "  *  ";
-    else if (m_sk == you.transfer_to_skill)
-    {
-        text += make_stringf(" %2d%%",
-                             (you.transfer_total_skill_points
-                             - you.transfer_skill_points)
-                                 * 100 / you.transfer_total_skill_points);
-    }
-    else
-        text = "";
-
-    m_progress->set_text(text);
-    m_progress->set_fg_colour(CYAN);
-}
-
 void SkillMenuEntry::set_title()
 {
     m_name->allow_highlight(false);
@@ -493,21 +419,11 @@ void SkillMenuEntry::set_title()
     if (is_set(SKMF_APTITUDE))
         m_aptitude->set_text("<blue>Apt </blue>");
 
-    if (is_set(SKMF_RESKILLING))
-    {
-        if (is_set(SKMF_RESKILL_FROM))
-            m_progress->set_text("Source");
-        else
-            m_progress->set_text("Target");
-        return;
-    }
-
     switch (skm.get_state(SKM_VIEW))
     {
     case SKM_VIEW_TRAINING:  m_progress->set_text("Train"); break;
     case SKM_VIEW_TARGETS:   m_progress->set_text("Target"); break;
     case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
-    case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
     case SKM_VIEW_POINTS:    m_progress->set_text("Points");break;
     case SKM_VIEW_COST:      m_progress->set_text("Cost");  break;
     case SKM_VIEW_NEW_LEVEL: m_progress->set_text("> New"); break;
@@ -651,10 +567,6 @@ string SkillMenuSwitch::get_help()
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
-    case SKM_VIEW_TRANSFER:
-        return "The progress of the knowledge transfer is displayed in "
-               "<cyan>cyan</cyan> in front of the skill receiving the "
-               "knowledge. The donating skill is marked with <cyan>*</cyan>.";
     case SKM_VIEW_COST:
     {
         if (skm.is_set(SKMF_SIMPLE))
@@ -694,7 +606,6 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_VIEW_TRAINING:  return "training";
     case SKM_VIEW_TARGETS:   return "targets";
     case SKM_VIEW_PROGRESS:  return "progress";
-    case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
     case SKM_VIEW_NEW_LEVEL: return "new level";
     case SKM_VIEW_COST:      return "cost";
@@ -1183,10 +1094,6 @@ void SkillMenu::select(skill_type sk, int keyn)
 {
     if (is_set(SKMF_HELP))
         show_description(sk);
-    else if (is_set(SKMF_RESKILL_FROM))
-        you.transfer_from_skill = sk;
-    else if (is_set(SKMF_RESKILL_TO))
-        you.transfer_to_skill = sk;
     else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TARGETS
                                             && skm.is_set(SKMF_SET_TARGET))
     {
@@ -1352,11 +1259,9 @@ void SkillMenu::init_switches()
         {
             sw->add(SKM_DO_PRACTISE);
         }
-        if (!is_set(SKMF_RESKILLING) && !is_set(SKMF_SIMPLE)
-            && Options.skill_focus != SKM_FOCUS_OFF)
-        {
+        if (!is_set(SKMF_SIMPLE) && Options.skill_focus != SKM_FOCUS_OFF)
             sw->add(SKM_DO_FOCUS);
-        }
+
         sw->set_state(you.skill_menu_do);
         sw->add_hotkey('\t');
         sw->update();
@@ -1390,16 +1295,9 @@ void SkillMenu::init_switches()
 
     sw = new SkillMenuSwitch("", '!');
     m_switches[SKM_VIEW] = sw;
-    const bool transferring = !is_invalid_skill(you.transfer_to_skill);
     if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
         sw->add(SKM_VIEW_TRAINING);
-
-        if (transferring)
-        {
-            sw->add(SKM_VIEW_TRANSFER);
-            sw->set_state(SKM_VIEW_TRANSFER);
-        }
 
         sw->add(SKM_VIEW_COST);
 
@@ -1507,19 +1405,7 @@ void SkillMenu::refresh_names()
 void SkillMenu::set_default_help()
 {
     string text;
-    if (is_set(SKMF_RESKILL_FROM))
-    {
-        text = "Select a skill as the source of the knowledge transfer. The "
-               "chosen skill will be reduced to the level shown in "
-               "<brown>brown</brown>.";
-    }
-    else if (is_set(SKMF_RESKILL_TO))
-    {
-        text = "Select a skill as the destination of the knowledge transfer. "
-               "The chosen skill will be raised to the level shown in "
-               "<cyan>cyan</cyan>.";
-    }
-    else if (is_set(SKMF_EXPERIENCE))
+    if (is_set(SKMF_EXPERIENCE))
     {
         text = "Select the skills you want to be trained. "
                "The chosen skills will be raised to the level shown in "
@@ -1540,10 +1426,6 @@ void SkillMenu::set_default_help()
         if (is_set(SKMF_MANUAL))
             text += "Bonus from skill manuals is in <lightred>red</lightred>. ";
     }
-
-    // This one takes priority.
-    if (get_state(SKM_VIEW) == SKM_VIEW_TRANSFER)
-        text = m_switches[SKM_VIEW]->get_help();
 
     m_help->set_text(text);
 }
@@ -1641,16 +1523,12 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 
 void SkillMenu::set_title()
 {
-    const char* format = is_set(SKMF_RESKILLING)
-                                ? "Transfer Knowledge: select the %s skill"
-                                : "You have %s. Select the skills to train.";
     string t;
-    if (is_set(SKMF_RESKILL_FROM))
-        t = make_stringf(format, "source");
-    else if (is_set(SKMF_RESKILL_TO))
-        t = make_stringf(format, "destination");
-    else if (is_set(SKMF_EXPERIENCE))
-        t = make_stringf(format, "quaffed a potion of experience");
+    if (is_set(SKMF_EXPERIENCE))
+    {
+        t = "You have quaffed a potion of experience. "
+            "Select the skills to train.";
+    }
 
     m_title->set_text(t);
 }
@@ -1919,11 +1797,6 @@ void skill_menu(int flag, int exp)
                 ASSERT(!is_invalid_skill(sk));
                 skm.select(sk, keyn);
                 skill_menu_ui->_expose();
-                if (skm.is_set(SKMF_RESKILLING))
-                {
-                    skm.clear();
-                    return done = true;
-                }
             }
         }
 
