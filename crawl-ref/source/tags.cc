@@ -4169,6 +4169,10 @@ static void _tag_read_you_items(reader &th)
     // (Likewise for manuals.)
     if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_MANUALS)
         add_held_books_to_library();
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+        if (you.inv[i].defined())
+            god_id_item(you.inv[i], true);
 #endif
 }
 
