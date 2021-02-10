@@ -3750,6 +3750,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
     case SPELL_BLINK_CLOSE:
+    case SPELL_VAMPIRIC_DRAINING:
         return false;
 
     default:
