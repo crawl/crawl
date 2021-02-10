@@ -630,9 +630,6 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_NOTHING:
                     valued += 75;
                     break;
-                    // got to do delusion!
-                    // ^ the above comment is >15yrs old and completely
-                    // mystifying. which is appropriate, i suppose
                 }
             }
 
