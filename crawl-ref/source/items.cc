@@ -1795,7 +1795,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
-static void _get_book(const item_def& it)
+static void _get_book(item_def& it)
 {
     if (it.sub_type != BOOK_MANUAL)
     {
@@ -1805,6 +1805,9 @@ static void _get_book(const item_def& it)
             mpr("Unfortunately, you learned nothing new.");
         return;
     }
+    // This is mainly for save compat: if a manual generated somehow that is not
+    // id'd, the following message is completely useless
+    set_ident_flags(it, ISFLAG_IDENT_MASK);
 
     const skill_type sk = static_cast<skill_type>(it.plus);
     if (you.skill_manual_points[sk])

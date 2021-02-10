@@ -917,6 +917,8 @@ static bool _acquire_manual(item_def &book)
                     choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
+    // Preidentify.
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return true;
 }
