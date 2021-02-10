@@ -3223,6 +3223,14 @@ static string _player_spell_desc(spell_type spell)
                     << desc_cannot_memorise_reason(spell)
                     << "\n";
     }
+    else if (casting_is_useless(spell, true))
+    {
+        // this preempts the more general uselessness call below, for the sake
+        // of applying slightly different formatting.
+        description << "\n<red>"
+                    << uppercase_first(casting_uselessness_reason(spell, true))
+                    << "<red>\n";
+    }
     else if (spell_is_useless(spell, true, false))
     {
         description << "\nThis spell would have no effect right now because "

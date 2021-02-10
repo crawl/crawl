@@ -1119,9 +1119,9 @@ bool casting_is_useless(spell_type spell, bool temp)
 }
 
 /**
- * Casting-specific checks that are involved when casting any spell. Includes
- * MP (which does use the spell level if provided), confusion state, banned
- * schools.
+ * Casting-specific checks that are involved when casting any spell or larger
+ * groups of spells (e.g. entire schools). Includes MP (which does use the
+ * spell level if provided), confusion state, banned schools.
  *
  * @param spell      The spell in question.
  * @param temp       Include checks for volatile or temporary states
@@ -1136,12 +1136,37 @@ string casting_uselessness_reason(spell_type spell, bool temp)
             return "you're too confused to cast spells.";
 
         if (!enough_mp(spell_mana(spell), true, false))
-            return "you don't have enough magic to cast that spell.";
+            return "you don't have enough magic to cast this spell.";
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
     if (cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
+
+    // TODO: these checks were in separate places, but is this already covered
+    // by cannot_use_schools?
+    if (get_spell_disciplines(spell) & spschool::summoning
+        && you.get_mutation_level(MUT_NO_LOVE))
+    {
+        return "you cannot coerce anything to answer your summons.";
+    }
+
+    // other Ru spells not affected by the school checks
+    switch (spell)
+    {
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_DEATH_CHANNEL:
+    case SPELL_SIMULACRUM:
+    case SPELL_INFESTATION:
+    case SPELL_TUKIMAS_DANCE:
+        if (you.get_mutation_level(MUT_NO_LOVE))
+            return "you cannot coerce anything to obey you.";
+        break;
+    default:
+        break;
+    }
+
 
     return "";
 }
@@ -1202,23 +1227,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (!prevent && temp && spell_no_hostile_in_range(spell))
         return "you can't see any hostile targets that would be affected.";
-
-    // other Ru spells not affected by the school check; handle these separately
-    // since they may have other constraints
-    switch (spell)
-    {
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
-    case SPELL_DEATH_CHANNEL:
-    case SPELL_SIMULACRUM:
-    case SPELL_INFESTATION:
-    case SPELL_TUKIMAS_DANCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to obey you.";
-        break;
-    default:
-        break;
-    }
 
     switch (spell)
     {
@@ -1437,12 +1445,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     default:
         break;
-    }
-
-    if (get_spell_disciplines(spell) & spschool::summoning
-        && you.get_mutation_level(MUT_NO_LOVE))
-    {
-        return "you cannot coerce anything to answer your summons.";
     }
 
     return "";
