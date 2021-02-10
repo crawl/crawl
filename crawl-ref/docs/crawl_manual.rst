@@ -1784,7 +1784,7 @@ Vampires (Vp)
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but
-  have excellent attributes (Str, Int, Dex) and are extremely robust; they can
+  have excellent attributes (Str, Int, Dex) and are extremely robust. They can
   also draw on great supplies of magical energy. On the downside, they advance
   more slowly in experience than any other race, gain skills slightly less
   quickly than Humans and, due to their status, cannot worship the various gods
