@@ -1355,16 +1355,16 @@ spret cast_random_effects(int pow, bolt& beam, bool fail)
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting
-    zap_type zap = random_choose(ZAP_HASTE,
-                                 ZAP_INVISIBILITY,
-                                 ZAP_MIGHT,
-                                 ZAP_CORONA,
-                                 ZAP_SLOW,
-                                 ZAP_PARALYSE,
-                                 ZAP_CONFUSE,
-                                 ZAP_MALMUTATE,
-                                 ZAP_PETRIFY,
-                                 ZAP_SLEEP);
+    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
+                                          5, ZAP_INVISIBILITY,
+                                          5, ZAP_MIGHT,
+                                          10, ZAP_CORONA,
+                                          15, ZAP_SLOW,
+                                          15, ZAP_MALMUTATE,
+                                          15, ZAP_PETRIFY,
+                                          10, ZAP_PARALYSE,
+                                          10, ZAP_CONFUSE,
+                                          10, ZAP_SLEEP);
     beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
     zapping(zap, pow, beam, false);
