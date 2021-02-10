@@ -1105,9 +1105,6 @@ coord_def find_gateway_location(actor* caster)
 {
     vector<coord_def> points;
 
-    bool xray = you.xray_vision;
-    you.xray_vision = false;
-
     for (coord_def delta : Compass)
     {
         coord_def test = coord_def(-1, -1);
@@ -1126,8 +1123,6 @@ coord_def find_gateway_location(actor* caster)
             points.push_back(test);
         }
     }
-
-    you.xray_vision = xray;
 
     if (points.empty())
         return coord_def(0, 0);

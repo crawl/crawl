@@ -193,8 +193,12 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    // Uses LOS_NONE to respect Ash variable scrying
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NONE); ri; ++ri)
     {
+        if (!you.see_cell(*ri))
+            continue;
+
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()

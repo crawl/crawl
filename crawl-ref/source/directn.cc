@@ -788,13 +788,12 @@ static void _get_nearby_items(vector<item_def> &list_items,
                                 bool need_path, int range, targeter *hitfunc)
 {
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (!you.see_cell(*ri) || need_path && _blocked_ray(*ri))
             continue;
 
         const int oid = you.visible_igrd(*ri);
@@ -813,13 +812,12 @@ static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
     vector <text_pattern> &filters = Options.monster_item_view_features;
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (!you.see_cell(*ri) || need_path && _blocked_ray(*ri))
             continue;
 
         // Do we want to aim at this because its the feature, not because

@@ -828,8 +828,8 @@ void wizard_get_god_gift()
 
 void wizard_toggle_xray_vision()
 {
-    you.xray_vision = !you.xray_vision;
-    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
+    you.wizard_vision = !you.wizard_vision;
+    mprf("X-ray vision %s.", you.wizard_vision ? "enabled" : "disabled");
     viewwindow(true);
     update_screen();
 }

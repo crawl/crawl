@@ -1079,8 +1079,11 @@ static void player_view_update()
     vector<coord_def> update_excludes;
     bool need_update = false;
 
-    for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
     {
+        if (!you.see_cell(*ri))
+            continue;
+
         update_flags flags = player_view_update_at(*ri);
         if (flags & update_flag::affect_excludes)
             update_excludes.push_back(*ri);

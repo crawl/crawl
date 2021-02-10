@@ -1071,9 +1071,11 @@ void StashTracker::load(reader& inf)
 void StashTracker::update_visible_stashes()
 {
     LevelStashes *lev = find_current_level();
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
     {
+        // checks xray vision
+        if (!you.see_cell(*ri))
+            continue;
         const dungeon_feature_type feat = env.grid(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
