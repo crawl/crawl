@@ -783,7 +783,6 @@ string ash_describe_bondage(int flags, bool level)
 bool god_id_item(item_def& item, bool silent)
 {
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
-    iflags_t ided = 0;
 
     if (have_passive(passive_t::identify_items))
     {
@@ -797,15 +796,14 @@ bool god_id_item(item_def& item, bool silent)
         {
             item.props["needs_autopickup"] = true;
         }
-        set_ident_type(item, ISFLAG_IDENT_MASK);
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
+
+    iflags_t ided = item.flags & ISFLAG_IDENT_MASK;
 
     if (ided & ~old_ided)
     {
-        if (ided & ISFLAG_KNOW_TYPE)
-            set_ident_type(item, true);
-        set_ident_flags(item, ided);
-
         if (item.props.exists("needs_autopickup") && is_useless_item(item))
             item.props.erase("needs_autopickup");
 
