@@ -1769,7 +1769,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_HEXES:
             if (species_is_draconian(species) && skill_rank == 5)
-                result = "Fairy Dragon";
+                result = "Faerie Dragon";
             break;
 
         case SK_TRANSLOCATIONS:
