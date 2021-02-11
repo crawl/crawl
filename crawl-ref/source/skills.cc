@@ -1708,6 +1708,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_INVOCATIONS:
             if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";
+            else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
+                result = "Rolling Thunder";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1763,6 +1765,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_POISON_MAGIC:
             if (species_is_draconian(species) && skill_rank == 5)
                 result = "Swamp Dragon";
+            break;
+
+        case SK_HEXES:
+            if (species_is_draconian(species) && skill_rank == 5)
+                result = "Fairy Dragon";
             break;
 
         case SK_TRANSLOCATIONS:
