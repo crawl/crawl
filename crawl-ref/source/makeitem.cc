@@ -825,6 +825,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type)
         return random_choose_weighted(1, SPARM_SPIRIT_SHIELD,
                                       1, SPARM_RESISTANCE,
                                       1, SPARM_REPULSION,
+                                      1, SPARM_SHADOWS,
                                       1, SPARM_CLOUD_IMMUNE);
 
     case ARM_CLOAK:
@@ -1007,6 +1008,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return slot == EQ_SHIELD && type == ARM_LARGE_SHIELD;
     case SPARM_REPULSION:
     case SPARM_CLOUD_IMMUNE:
+    case SPARM_SHADOWS:
         return type == ARM_SCARF;
 
     case NUM_SPECIAL_ARMOURS:

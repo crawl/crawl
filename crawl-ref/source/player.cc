@@ -727,6 +727,11 @@ void update_vision_range()
     if (you.duration[DUR_DARKNESS])
         nom *= 3, denom *= 4;
 
+    // scarf of shadows
+    if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
+        nom *= 3, denom *= 4;
+        
+
     // robe of Night.
     if (player_equip_unrand(UNRAND_NIGHT))
         nom *= 3, denom *= 4;

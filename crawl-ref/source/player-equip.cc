@@ -13,6 +13,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -1040,6 +1041,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_RAMPAGING:
             mpr("You feel ready to rampage towards enemies.");
             break;
+
+        case SPARM_SHADOWS:
+            mpr("It gets dark.");
+            update_vision_range();
+            break;
         }
     }
 
@@ -1214,6 +1220,11 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_RAMPAGING:
         if (!you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
+        break;
+    
+    case SPARM_SHADOWS:
+        mpr("The dungeon's light returns to normal.");
+        update_vision_range();
         break;
 
     default:

@@ -669,6 +669,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
         case SPARM_BUNKER:            return "bunker";
         case SPARM_RAMPAGING:           return "rampaging";
+        case SPARM_SHADOWS:           return "shadows";
         default:                      return "bugginess";
         }
     }
@@ -705,6 +706,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
         case SPARM_BUNKER:            return "bunker";
         case SPARM_RAMPAGING:           return "rampaging";
+        case SPARM_SHADOWS:           return "shadows";
         default:                      return "buggy";
         }
     }

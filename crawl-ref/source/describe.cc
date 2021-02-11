@@ -1888,6 +1888,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_RAMPAGING:
             description += "Its wearer takes one free step when moving towards enemies.";
             break;
+
+        case SPARM_SHADOWS:
+            description += "It shortens the distance the wearer can be seen at "
+                           "and can see. It makes you hard to cast spells";
         }
     }
 
