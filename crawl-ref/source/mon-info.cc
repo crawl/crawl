@@ -25,6 +25,7 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-info-flag-name.h"
@@ -771,6 +772,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (mons_has_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
+
+    if (is_ally_target(*m))
+        mb.set(MB_ALLY_TARGET);
 
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)

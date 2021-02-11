@@ -51,6 +51,7 @@
 #include "macro.h"
 #include "melee-attack.h" // describe_to_hit
 #include "message.h"
+#include "mon-behv.h"
 #include "mon-cast.h" // mons_spell_range
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -4152,6 +4153,33 @@ const char* get_size_adj(const size_type size, bool ignore_medium)
     return size_adj[size];
 }
 
+string _monster_currently_description(const monster_info &mi)
+{
+    // is it morally wrong to use pos to get the actual monster? Possibly...
+    if (!in_bounds(mi.pos) || !monster_at(mi.pos))
+        return "";
+    const monster *m = monster_at(mi.pos);
+    ostringstream result;
+    if (mi.is(MB_ALLY_TARGET))
+    {
+        auto allies = find_allies_targeting(*m);
+        if (allies.size() == 1)
+            result << "It is currently targeted by " << allies[0]->name(DESC_YOUR) << ".\n";
+        else
+        {
+            result << "It is currently targeted by allies:\n";
+            for (auto *a : allies)
+                result << "  " << a->name(DESC_YOUR) << "\n";
+        }
+    }
+
+    // TODO: this might be ambiguous, give a relative position?
+    if (mi.attitude == ATT_FRIENDLY && m->get_foe())
+        result << "It is currently targeting " << m->get_foe()->name(DESC_THE) << ".\n";
+
+    return result.str();
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
@@ -4678,6 +4706,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << It << " " << is << " incapable of using stairs.\n";
         did_stair_use = true;
     }
+
+    result = _monster_currently_description(mi);
+    if (!result.empty())
+        inf.body << "\n" << result;
 
     if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
     {
