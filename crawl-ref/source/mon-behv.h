@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "beh-type.h"
 #include "coord-def.h"
 #include "enum.h"
