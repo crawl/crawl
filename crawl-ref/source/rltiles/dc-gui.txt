@@ -242,6 +242,11 @@ WM JOB_WEAPON_MASTER
 %texture none
 felids/cat3 SP_RECOMMENDED_FELID
 %start
+%compose base/palentonga_red_f
+%compose body/animal_skin
+%compose hair/short_black
+%finish SP_RECOMMENDED_PALENTONGA
+%start
 %compose base/centaur_lightgrey_f
 %compose body/animal_skin
 %compose hair/short_black
@@ -427,6 +432,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %sdir gui/backgrounds
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
+enum:SP_RECOMMENDED_PALENTONGA SP_PALENTONGA
 enum:SP_RECOMMENDED_CENTAUR SP_CENTAUR
 enum:SP_RECOMMENDED_DEEP_DWARF SP_DEEP_DWARF
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF

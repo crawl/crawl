@@ -208,6 +208,7 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
+static void _uncurl();
 static void _wall_invisible();
 static void _input();
 
@@ -1071,6 +1072,7 @@ static void _input()
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
+            _uncurl();
             world_reacts();
         }
 
@@ -1182,6 +1184,7 @@ static void _input()
             _do_berserk_no_combat_penalty();
 
         _do_searing_ray();
+        _uncurl();
         _wall_invisible();
 
         world_reacts();
@@ -2571,6 +2574,15 @@ static void _wall_invisible()
     }
 }
 
+// palentongas uncurl at the start of the turn
+static void _uncurl()
+{
+    if (you.props[PALENTONGA_CURL_KEY].get_bool())
+    {
+        you.props[PALENTONGA_CURL_KEY] = false;
+        you.redraw_armour_class = true;
+    }
+}
 
 static void _safe_move_player(coord_def move)
 {

@@ -21,6 +21,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
+#include "god-abil.h"
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -46,6 +47,7 @@
 #include "prompt.h"
 #include "shout.h"
 #include "spl-util.h"
+#include "spl-summoning.h" // trigger_spectral_weapon for palentonga charge
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
@@ -392,6 +394,13 @@ static coord_def _fuzz_hop_destination(coord_def target)
     return chosen;
 }
 
+static void _charge_cloud_trail(const coord_def pos)
+{
+    if (!apply_cloud_trail(pos))
+        place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
+}
+
+
 /**
  * Attempt to hop the player to a space near a tile of their choosing.
  *
@@ -440,6 +449,108 @@ spret frog_hop(bool fail)
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
 
     return spret::success; // TODO
+}
+
+bool palentonga_charge_possible(bool quiet, bool allow_safe_monsters)
+{
+    // general movement conditions are checked in ability.cc:_check_ability_possible
+    targeter_charge tgt(&you, palentonga_charge_range());
+    for (monster_near_iterator mi(&you); mi; ++mi)
+        if (tgt.valid_aim(mi->pos())
+            && (allow_safe_monsters || !mons_is_safe(*mi, false) || mi->type != MONS_TEST_STATUE))
+        {
+            return true;
+        }
+    if (!quiet)
+        mpr("There's nothing you can charge at!");
+    return false;
+}
+
+int palentonga_charge_range()
+{
+    return 3 + you.get_mutation_level(MUT_ROLL);
+}
+
+/**
+ * Attempt to charge the player to a target of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the charge succeeded, aborted, or was miscast.
+ */
+spret palentonga_charge(bool fail)
+{
+    const coord_def initial_pos = you.pos();
+
+    vector<coord_def> target_path;
+    targeter_charge tgt(&you, palentonga_charge_range());
+    if (!find_charge_target(target_path, palentonga_charge_range(), &tgt, true))
+        return spret::abort;
+
+    fail_check();
+
+    if (!you.attempt_escape(1)) // prints its own messages
+        return spret::success;
+
+    const coord_def target = target_path.back();
+    monster* target_mons = monster_at(target);
+    if (fedhas_passthrough(target_mons))
+        target_mons = nullptr;
+    ASSERT(target_mons != nullptr);
+    // Are you actually moving forward?
+    if (grid_distance(you.pos(), target) > 1 || !target_mons)
+        mpr("You roll forward with a clatter of scales!");
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    const coord_def orig_pos = you.pos();
+    for (coord_def pos : target_path)
+    {
+        monster* sneaky_mons = monster_at(pos);
+        if (sneaky_mons && !fedhas_passthrough(sneaky_mons))
+        {
+            target_mons = sneaky_mons;
+            break;
+        }
+    }
+    const coord_def dest_pos = target_path.at(target_path.size() - 2);
+
+    remove_water_hold();
+    move_player_to_grid(dest_pos, true);
+    noisy(12, you.pos());
+    apply_barbs_damage();
+    _charge_cloud_trail(orig_pos);
+    for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
+        _charge_cloud_trail(*it);
+
+    if (you.pos() != dest_pos) // tornado and trap nonsense
+        return spret::success; // of a sort
+
+    // Maybe we hit a trap and something weird happened.
+    if (!target_mons->alive() || !adjacent(you.pos(), target_mons->pos()))
+        return spret::success;
+
+    // manually apply noise
+    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+
+    // We got webbed/netted at the destination, bail on the attack.
+    if (you.attribute[ATTR_HELD])
+        return spret::success;
+
+    const int base_delay = you.time_taken;
+
+    melee_attack charge_atk(&you, target_mons);
+    charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
+    charge_atk.attack();
+    if (you.props.exists("spectral_weapon"))
+        trigger_spectral_weapon(&you, target_mons);
+
+    // Normally this is 10 aut (times haste, etc), but slow weapons
+    // take longer. Most relevant for low-skill players and Dark Maul.
+    you.time_taken = max(you.time_taken, base_delay);
+
+    return spret::success;
 }
 
 /**

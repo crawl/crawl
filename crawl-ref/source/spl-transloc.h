@@ -2,6 +2,8 @@
 
 #include "spl-cast.h"
 
+class dist;
+
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
@@ -12,7 +14,10 @@ spret semicontrolled_blink(int pow = 100, bool fail = false,
     bool safe_cancel = true,
     bool end_ctele = true);
 spret controlled_blink(bool fail, bool safe_cancel = true, int range = -1);
-spret frog_hop(bool fail);
+spret frog_hop(bool fail); 
+bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
+spret palentonga_charge(bool fail);
+int palentonga_charge_range();
 spret crab_walk();
 spret cast_player_blinkbolt();
 spret player_blinkbolt();

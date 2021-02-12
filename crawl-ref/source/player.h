@@ -69,6 +69,7 @@
 #define ELEMENTAL_ENCHANT_KEY "elemenatal enchant"
 #define COMBAT_MANA_KEY "combat_mana"
 #define CARAVAN_MERCENARY "caravan_mercenary"
+#define PALENTONGA_CURL_KEY "palentonga_curl"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -703,6 +704,7 @@ public:
                           bool ignore_brand = false,
                           bool ignore_transform = false,
                           bool quiet = true) const override;
+    bool wear_barding(const int subtype) const;
 
     string name(description_level_type type, bool force_visible = false,
                 bool force_article = false) const override;

@@ -155,6 +155,11 @@ Shaft Self ability
 Sends you to a random position one to two floors down, as if you jumped into a
 shaft trap. It takes some time to dig the shaft.
 %%%%
+Rolling Charge ability
+
+Roll at a foe with a clatter of scales, uncurl, and strike! The further you go,
+the more momentum will be added to the force of your strike.
+%%%%
 Evoke Blink ability
 
 <Blink ability>

@@ -821,3 +821,9 @@ torment cannot be protected even with the barrier. If the barrier breaks down
 before it fades away naturally, it will cause an aftershock, leaving you stunned
 and unable to teleport for a while.
 %%%%
+Curl status
+
+After being struck by an attack, you reflexively curled up, protecting yourself
+against subsequent strikes. You are now emerging from that defensive curl and
+will receive no further protection until after you are struck again.
+%%%%

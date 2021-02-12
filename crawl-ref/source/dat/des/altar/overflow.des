@@ -161,6 +161,8 @@ function species_mock(e)
     e.kmons("1 = deep dwarf zombie")
   elseif you.race() == "Deep Elf" then
     e.kmons("1 = insubstantial wisp")
+  elseif you.race() == "Gnoll" then
+    return "jackal"
   elseif you.race() == "Halfling" then
     e.kmons("1 = hobgoblin ; mundane hunting sling")
   elseif you.race() == "Hill Orc" then
@@ -189,6 +191,8 @@ function species_mock(e)
     e.kmons("1 = tentacled monstrosity")
   elseif you.race() == "Ogre" then
     e.kmons("1 = ettin skeleton")
+  elseif you.race() == "Palentonga" then
+    return "rat"
   elseif you.race() == "Spriggan" then
     e.kmons("1 = unseen horror")
   elseif you.race() == "Tengu" then
