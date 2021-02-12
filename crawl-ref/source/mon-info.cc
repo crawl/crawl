@@ -1731,12 +1731,12 @@ static bool _has_wand(const monster_info& mi)
 static string _condition_string(int num, int count,
                                 const monster_info_flag_name& name)
 {
-    if (1 < num && num < count)
-        return make_stringf("%d %s", num, name.plural.c_str());
-    else if (1 < num)
+    if (1 == count)
+        return name.short_singular;
+    else if (count == num)
         return name.plural;
     else
-        return name.short_singular;
+        return make_stringf("%d %s", num, name.plural.c_str());
 }
 
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
