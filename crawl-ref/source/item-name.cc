@@ -1377,7 +1377,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const bool know_pluses = _know_pluses(weap, desc, ident, ignore_flags);
     const bool know_ego =    _know_ego(weap, desc, ident, ignore_flags);
 
-    const string curse_prefix = weap.cursed() ? "cursed " : "";
+    const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
     const string plus_text = know_pluses ? _plus_prefix(weap) : "";
 
     if (is_artefact(weap) && !dbname)
@@ -1434,7 +1434,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const string name_with_ego
         = know_ego ? weapon_brand_desc(base_name.c_str(), weap, terse)
         : base_name;
-    const string curse_suffix = weap.cursed() && terse ? " (curse)" :  "";
+    const string curse_suffix = weap.cursed() && terse && !dbname ? " (curse)" :  "";
     return curse_prefix + plus_text + cosmetic_text
            + name_with_ego + curse_suffix;
 }
