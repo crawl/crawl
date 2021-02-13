@@ -506,9 +506,9 @@ for it has ways of taking its wielder under its command...
 %%%%
 lightning scales
 
-A set of scales fashioned into armour for a Naga or Palentonga's lower body.
-Faintly crackling with electricity, they have been enchanted to allow their
-wearer to move faster than normal.
+A set of armoured plates assembled to protect a creature with a long, scaly
+lower body. Faintly crackling with electricity, they supercharge their wearer's
+ability to cover distance.
 %%%%
 Black Knight's barding
 
