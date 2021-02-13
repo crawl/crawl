@@ -492,7 +492,9 @@ boots4_green
 # The order of armour brands must be identical to the one defined
 # in item-prop-enum.h.
 %sdir item/armour/brands
+# start TAG_MAJOR_VERSION == 34
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
+# end TAG_MAJOR_VERSION
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
 i-cold-res BRAND_ARM_COLD_RESISTANCE
 i-poison-res BRAND_ARM_POISON_RESISTANCE
