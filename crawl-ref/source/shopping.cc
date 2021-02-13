@@ -333,7 +333,6 @@ unsigned int item_value(item_def item, bool ident)
             const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
-            case SPARM_RUNNING:
             case SPARM_ARCHMAGI:
             case SPARM_RESISTANCE:
                 valued += 250;

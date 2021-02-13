@@ -772,11 +772,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     {
         switch (ego)
         {
-        case SPARM_RUNNING:
-            if (!you.fishtail)
-                mpr("You feel quick.");
-            break;
-
         case SPARM_FIRE_RESISTANCE:
             mpr("You feel resistant to fire.");
             break;
@@ -958,11 +953,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     switch (get_armour_ego_type(item))
     {
-    case SPARM_RUNNING:
-        if (!you.fishtail)
-            mpr("You feel rather sluggish.");
-        break;
-
     case SPARM_FIRE_RESISTANCE:
         mpr("You feel less resistant to fire.");
         break;

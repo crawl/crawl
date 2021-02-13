@@ -144,10 +144,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_CHEIBRIADOS:
         // Slow god: no speed, no berserking.
-        if (brand == SPWPN_SPEED)
-            return false;
-
-        if (ego == SPARM_RUNNING)
+        if (brand == SPWPN_SPEED || ego == SPARM_RAMPAGING)
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)

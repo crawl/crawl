@@ -225,12 +225,6 @@ bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) c
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
 }
 
-// permaswift effects like boots of running and lightning scales
-bool actor::run(bool calc_unid, bool items) const
-{
-    return items && wearing_ego(EQ_BOOTS, SPARM_RUNNING, calc_unid);
-}
-
 bool actor::angry(bool calc_unid, bool items) const
 {
     return items && scan_artefacts(ARTP_ANGRY, calc_unid);

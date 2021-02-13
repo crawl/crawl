@@ -1783,7 +1783,7 @@ int player_movement_speed()
         mv += 3;
 
     // armour
-    if (you.run())
+    if (player_equip_unrand(UNRAND_LIGHTNING_SCALES))
         mv -= 1;
 
     mv += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);

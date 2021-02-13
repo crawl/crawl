@@ -268,8 +268,6 @@ static bool _is_potentially_hasty_item(const item_def& item)
 
 bool is_hasty_item(const item_def& item, bool calc_unid)
 {
-    bool retval = false;
-
     if (item.base_type == OBJ_WEAPONS)
     {
         if (item.sub_type == WPN_QUICK_BLADE)
@@ -284,24 +282,18 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        {
-        const int item_brand = get_armour_ego_type(item);
-        retval = (item_brand == SPARM_RUNNING
-                  || get_armour_rampaging(item, true));
-        }
-        break;
+        return get_armour_rampaging(item, true)
+               || is_unrandom_artefact(item, UNRAND_LIGHTNING_SCALES);
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_HASTE
-                  || item.sub_type == POT_BERSERK_RAGE);
-        break;
+        return item.sub_type == POT_HASTE
+               || item.sub_type == POT_BERSERK_RAGE;
     case OBJ_BOOKS:
-        retval = _is_book_type(item, is_hasty_spell);
-        break;
+        return _is_book_type(item, is_hasty_spell);
     default:
         break;
     }
 
-    return retval;
+    return false;
 }
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)

@@ -1742,12 +1742,6 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         switch (ego)
         {
-        case SPARM_RUNNING:
-            if (item.sub_type == ARM_BARDING && you.species == SP_NAGA)
-                description += "It allows its wearer to slither at a great speed.";
-            else
-                description += "It allows its wearer to run at a great speed.";
-            break;
         case SPARM_FIRE_RESISTANCE:
             description += "It protects its wearer from heat.";
             break;

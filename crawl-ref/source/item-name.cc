@@ -527,6 +527,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
+#if TAG_MAJOR_VERSION == 34
         case SPARM_RUNNING:
             // "naga barding of running" doesn't make any sense, and yes,
             // they are possible. The terse ego name for these is {run}
@@ -535,6 +536,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
                                       return "speedy slithering";
             else
                                       return "running";
+#endif
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
         case SPARM_POISON_RESISTANCE: return "poison resistance";
@@ -574,7 +576,9 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:           return "run";
+#if TAG_MAJOR_VERSION == 34
+        case SPARM_RUNNING:           return "obsolete";
+#endif
         case SPARM_FIRE_RESISTANCE:   return "rF+";
         case SPARM_COLD_RESISTANCE:   return "rC+";
         case SPARM_POISON_RESISTANCE: return "rPois";

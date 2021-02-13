@@ -464,6 +464,18 @@ static void _PRUNE_world_reacts(item_def */*item*/)
 
 ////////////////////////////////////////////////////
 
+static void _LIGHTNING_SCALES_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel lightning quick.");
+}
+
+static void _LIGHTNING_SCALES_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You feel rather sluggish.");
+}
+
+////////////////////////////////////////////////////
+
 static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");

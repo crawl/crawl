@@ -1653,10 +1653,6 @@ static int _get_monster_armour_value(const monster *mon,
     if (get_armour_ego_type(item) == SPARM_REFLECTION)
         value += 3;
 
-    // And an even more sizable bonus for boots/bardings of running.
-    if (get_armour_ego_type(item) == SPARM_RUNNING)
-        value += 5;
-
     // Another sizable bonus for rampaging.
     if (get_armour_rampaging(item, true))
         value += 5;
@@ -5688,9 +5684,6 @@ int monster::action_energy(energy_use_type et) const
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
-
-    if (run())
-        move_cost -= 1;
 
     // Shadows move more quickly when blended with the darkness.
     // Change _monster_stat_description in describe.cc if you change this.

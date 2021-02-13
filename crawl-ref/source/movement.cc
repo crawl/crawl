@@ -13,6 +13,7 @@
 #include "movement.h"
 
 #include "abyss.h"
+#include "art-enum.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "coord.h"
@@ -1183,8 +1184,8 @@ void move_player_action(coord_def move)
 
     if (!attacking
         && you_worship(GOD_CHEIBRIADOS)
-        && ((one_chance_in(10) && you.run())
-             || (one_chance_in(2) && rampaged)))
+        && ((one_chance_in(10) && player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+             || (coinflip() && rampaged)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
