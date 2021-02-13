@@ -575,12 +575,14 @@ static bool _two_handed()
     return wep_type == HANDS_TWO;
 }
 
+// Checks bondage and sets ash piety
 void ash_check_bondage(bool msg)
 {
     if (!will_have_passive(passive_t::bondage_skill_boost))
         return;
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
+    int num_cursed = 0, num_slots = 0;
 
     for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
     {
@@ -625,6 +627,7 @@ void ash_check_bondage(bool msg)
         if (you_can_wear(i))
         {
             slots[s]++;
+            num_slots++;
             if (you.equip[i] != -1)
             {
                 const item_def& item = you.inv[you.equip[i]];
@@ -636,12 +639,17 @@ void ash_check_bondage(bool msg)
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;
+                        num_cursed += 2;
                     }
                     else
                     {
                         cursed[s]++;
+                        num_cursed++;
                         if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
+                        {
                             cursed[s] += 3;
+                            num_cursed += 3;
+                        }
                     }
                 }
             }
@@ -710,6 +718,9 @@ void ash_check_bondage(bool msg)
         if (!desc.empty())
             mprf(MSGCH_GOD, "%s", desc.c_str());
     }
+
+    set_piety(ASHENZARI_BASE_PIETY
+              + (num_cursed * ASHENZARI_PIETY_SCALE) / num_slots);
 }
 
 string ash_describe_bondage(int flags, bool level)

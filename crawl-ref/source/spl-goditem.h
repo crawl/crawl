@@ -55,10 +55,6 @@ void debuff_monster(monster &mon);
 
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
-bool remove_curse(bool alreadyknown = true, const string &pre_msg = "");
-#if TAG_MAJOR_VERSION == 34
-bool curse_item(bool armour, const string &pre_msg = "");
-#endif
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);

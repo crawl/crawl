@@ -517,7 +517,7 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
-        0, 0, 0, {fail_basis::invo}, abflag::identify_scroll },
+        0, 0, 0, {fail_basis::invo}, abflag::none },
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
@@ -2907,25 +2907,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_ASHENZARI_CURSE:
     {
         fail_check();
-        auto iter = find_if(begin(you.inv), end(you.inv),
-                [] (const item_def &it) -> bool
-                {
-                    return it.defined()
-                           && it.is_type(OBJ_SCROLLS, SCR_IDENTIFY)
-                           && check_warning_inscriptions(it, OPER_DESTROY);
-                });
-        if (iter != end(you.inv))
-        {
-            if (ashenzari_curse_item(iter->quantity))
-                dec_inv_item_quantity(iter - begin(you.inv), 1);
-            else
-                return spret::abort;
-        }
-        else
-        {
-            mpr("You need a scroll of identify to do this.");
+        if (!ashenzari_curse_item())
             return spret::abort;
-        }
         break;
     }
 
@@ -3758,6 +3741,8 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
     }
+    if (you_worship(GOD_ASHENZARI) && you.props.exists(AVAILABLE_CURSE_KEY))
+        abilities.push_back(ABIL_ASHENZARI_CURSE);
     // XXX: should we check ignore_piety?
     if (you_worship(GOD_HEPLIAKLQANA)
         && piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))

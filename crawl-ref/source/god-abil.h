@@ -60,6 +60,12 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define WU_JIAN_HEAVENLY_STORM_INITIAL 5
 #define WU_JIAN_HEAVENLY_STORM_MAX 15
 
+#define AVAILABLE_CURSE_KEY "available_curses"
+#define ASHENZARI_CURSE_PROGRESS_KEY "ashenzari_progress_to_next_curse"
+#define ASHENZARI_CURSE_DELAY_KEY "ashenzari_curse_delay"
+#define ASHENZARI_BASE_PIETY 2
+#define ASHENZARI_PIETY_SCALE 160
+
 struct bolt;
 class stack_iterator;
 
@@ -121,7 +127,9 @@ void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
 bool cheibriados_slouch();
 void cheibriados_time_step(int pow);
-bool ashenzari_curse_item(int num_rc);
+
+void ashenzari_offer_new_curse();
+bool ashenzari_curse_item();
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();

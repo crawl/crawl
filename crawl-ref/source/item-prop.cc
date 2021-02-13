@@ -889,15 +889,10 @@ void do_curse_item(item_def &item, bool quiet)
 
     item.flags |= ISFLAG_CURSED;
 
-    // Xom is amused by the player's items being cursed, especially if
-    // they're worn/equipped.
     if (in_inventory(item))
     {
-        int amusement = 50;
-
         if (item_is_equipped(item))
         {
-            amusement *= 2;
 
             if (you.equip[EQ_WEAPON] == item.link)
             {
@@ -905,11 +900,9 @@ void do_curse_item(item_def &item, bool quiet)
                 you.wield_change = true;
             }
 
-            ash_check_bondage();
         }
-
-        xom_is_stimulated(amusement);
     }
+    ash_check_bondage();
 }
 
 /**

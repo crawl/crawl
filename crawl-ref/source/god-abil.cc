@@ -2167,22 +2167,31 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 }
 
 /**
+ * Offer a new curse to the player, letting them know their new curse is
+ * available.
+ */
+void ashenzari_offer_new_curse()
+{
+    // No curse at full piety, since shattering resets the curse timer anyway
+    if (piety_rank() > 5)
+        return;
+
+    you.props[AVAILABLE_CURSE_KEY] = true;
+    simple_god_message(" invites you to partake of a vision and a curse.");
+}
+
+/**
  * Give a prompt to curse an item.
  *
  * This is the core logic behind Ash's Curse Item ability.
  * Player can abort without penalty.
- * Player can curse any cursable item (not just worn ones).
+ * Player can curse only worn items.
  *
- * @param num_id Number of identify scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item(int num_id)
+bool ashenzari_curse_item()
 {
-    ASSERT(num_id > 0);
-    const string prompt_msg = make_stringf(
-            "Curse which item? (%d identify scroll%s left)"
-            " (Esc to abort)",
-            num_id, num_id == 1 ? "" : "s");
+    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
@@ -2200,6 +2209,9 @@ bool ashenzari_curse_item(int num_id)
 
     do_curse_item(item, false);
     learned_something_new(HINT_YOU_CURSED);
+    you.props.erase(AVAILABLE_CURSE_KEY);
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+
     return true;
 }
 

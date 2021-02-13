@@ -1316,10 +1316,6 @@ int acquirement_create_item(object_class_type class_wanted,
         else if (quant > 1)
             acq_item.quantity = quant;
 
-        // Remove curse flag from item, unless worshipping Ashenzari.
-        if (have_passive(passive_t::want_curses))
-            do_curse_item(acq_item, true);
-
         if (acq_item.base_type == OBJ_BOOKS)
         {
             if (!_do_book_acquirement(acq_item, agent))

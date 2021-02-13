@@ -699,10 +699,6 @@ void wizard_make_object_randart()
         return;
     }
 
-    // Remove curse flag from item, unless worshipping Ashenzari.
-    if (have_passive(passive_t::want_curses))
-        do_curse_item(item, true);
-
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
         equip_item(eq, invslot);

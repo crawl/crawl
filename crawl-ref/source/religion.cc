@@ -279,8 +279,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    {   { 0, ABIL_ASHENZARI_CURSE, "curse your items" },
-        { 1, "The more cursed you are, the more Ashenzari will now support your skills.",
+    {   { 1, "The more cursed you are, the more Ashenzari will now support your skills.",
              "Ashenzari will no longer support your skills.",
              "The more cursed you are, the more Ashenzari supports your skills." },
         { 2, "Ashenzari will now reveal the unseen.",
@@ -3311,6 +3310,8 @@ static void _apply_monk_bonus()
     // monks get bonus piety for first god
     if (you_worship(GOD_RU))
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+    else if (you_worship(GOD_ASHENZARI))
+        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false); // of value with this god and looks weird.
     else
@@ -3413,6 +3414,20 @@ static void _set_initial_god_piety()
         // Xom uses piety and gift_timeout differently.
         you.piety = HALF_MAX_PIETY;
         you.gift_timeout = random2(40) + random2(40);
+        break;
+
+    case GOD_ASHENZARI:
+        you.piety = 15; // piety level is set directly by curses
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+
+        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+        {
+            int delay = 50;
+            if (crawl_state.game_is_sprint())
+                delay /= SPRINT_MULTIPLIER;
+            you.props[ASHENZARI_CURSE_DELAY_KEY] = delay;
+        }
         break;
 
     case GOD_RU:
@@ -3597,7 +3612,6 @@ static void _join_cheibriados()
 
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
-    { GOD_ASHENZARI, []() { ash_check_bondage(); }},
     { GOD_BEOGH, update_player_symbol },
     { GOD_CHEIBRIADOS, _join_cheibriados },
     { GOD_FEDHAS, []() {
@@ -4076,7 +4090,6 @@ void handle_god_time(int /*time_delta*/)
                 lose_piety(1);
             break;
 
-        case GOD_ASHENZARI:
         case GOD_ELYVILON:
         case GOD_HEPLIAKLQANA:
         case GOD_FEDHAS:
@@ -4085,6 +4098,17 @@ void handle_god_time(int /*time_delta*/)
         case GOD_NEMELEX_XOBEH:
             if (one_chance_in(35))
                 lose_piety(1);
+            break;
+
+        case GOD_ASHENZARI:
+            ASSERT(you.props.exists(ASHENZARI_CURSE_PROGRESS_KEY));
+            ASSERT(you.props.exists(ASHENZARI_CURSE_DELAY_KEY));
+
+            if (you.props[ASHENZARI_CURSE_PROGRESS_KEY].get_int()
+                >= you.props[ASHENZARI_CURSE_DELAY_KEY].get_int())
+            {
+                ashenzari_offer_new_curse();
+            }
             break;
 
         case GOD_RU:

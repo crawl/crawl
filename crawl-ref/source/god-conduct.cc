@@ -853,15 +853,16 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
-            "you explore the world (preferably while bound by curses)", false,
-            0, 0, 0, nullptr,
+            nullptr, false, 0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                const int level = denom; // also = piety
-                const int base_gain = 8; // base gain per dungeon level
-                // levels: x1, x1.25, x1.5, x1.75, x2
-                piety = base_gain + base_gain * you.bondage_level / 4;
-                denom = level;
+                piety = 0;
+                denom = 1;
+
+                ASSERT(you.props.exists(ASHENZARI_CURSE_PROGRESS_KEY));
+
+                if (one_chance_in(100))
+                    you.props[ASHENZARI_CURSE_PROGRESS_KEY].get_int()++;
             }
         } },
     },
@@ -1070,6 +1071,8 @@ string get_god_likes(god_type which_god)
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
+    case GOD_ASHENZARI:
+        likes.emplace_back("you bind yourself with curses");
     default:
         break;
     }

@@ -822,6 +822,12 @@ void wizard_get_god_gift()
         return;
     }
 
+    if (you_worship(GOD_ASHENZARI))
+    {
+        ashenzari_offer_new_curse();
+        return;
+    }
+
     if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
