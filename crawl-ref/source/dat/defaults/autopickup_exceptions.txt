@@ -21,9 +21,6 @@ ae += dangerous_item
 # Exclude items which your god disapproves of.
 ae += forbidden
 
-# Ignore books that you have already seen
-ae += [^n]identified.*spellbook
-
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
 :  if it.class(true) ~= "misc" then
