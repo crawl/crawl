@@ -1261,7 +1261,7 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
             && !you.spell_library[spell]
-            && is_player_spell(spell)
+            && is_player_book_spell(spell)
             && spell_difficulty(spell) <= max_level
             && spell_difficulty(spell) >= min_level)
         {

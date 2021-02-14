@@ -402,10 +402,22 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
                           // least uses the enum value
     SPELL_SONIC_WAVE,
+    SPELL_PAVISE,
+    SPELL_AURA_OF_HEALING,
     // religion
     SPELL_SMITING,
     // Ds powers
     SPELL_HURL_DAMNATION,
+    // Pakellas
+    SPELL_PAKELLAS_ROD,
+    SPELL_PAKELLAS_ROD_SUMMON,
+    SPELL_PAKELLAS_ROD_SELFBUFF,
+    SPELL_PAKELLAS_ROD_BLINKTELE,
+    SPELL_PAKELLAS_ROD_SWAP_BOLT,
+    SPELL_PAKELLAS_ROD_CONTROLL_BLINK,
+    SPELL_PAKELLAS_ROD_BARRIAR,
+    SPELL_PAKELLAS_ROD_REGEN,
+    SPELL_PAKELLAS_ROD_CLOUD,
 };
 
 bool is_player_spell(spell_type which_spell)
