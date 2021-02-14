@@ -3111,7 +3111,7 @@ int monster::shield_bonus() const
     if (incapacitated())
         return -100;
 
-    int sh = -100;
+    int sh = 0;
     const item_def *shld = shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
@@ -3126,7 +3126,7 @@ int monster::shield_bonus() const
     if (amulet && amulet->sub_type == AMU_REFLECTION)
         sh += AMU_REFLECT_SH;
 
-    return sh;
+    return sh ? sh : -100;
 }
 
 int monster::shield_block_penalty() const
