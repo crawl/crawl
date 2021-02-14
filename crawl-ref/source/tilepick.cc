@@ -2661,6 +2661,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_TIN_OF_TREMORSTONES:
         return TILE_MISC_TIN_OF_TREMORSTONES;
+    
+    case MISC_CONDENSER_VANE:
+        return TILE_MISC_CONDENSER_VANE;
 
     case MISC_MERCENARY:
         return _tileidx_mercenary(item);

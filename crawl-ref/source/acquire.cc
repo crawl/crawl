@@ -680,10 +680,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     const vector<pair<int, int> > choices =
     {
         // These have charges, so give them a constant weight.
-        {MISC_BOX_OF_BEASTS,
-                                       (NO_LOVE ?     0 :  7)},
-        {MISC_SACK_OF_SPIDERS,
-                                       (NO_LOVE ?     0 :  7)},
+        {MISC_CONDENSER_VANE,
+            (you.seen_misc[MISC_CONDENSER_VANE] ?      0 : 20)},
         {MISC_PHANTOM_MIRROR,
                                        (NO_LOVE ?     0 :  7)},
         // The player never needs more than one of the rest.
@@ -704,6 +702,11 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
             (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
         {MISC_HEALING_MIST,
             (you.seen_misc[MISC_HEALING_MIST] ?       0 : 17)},
+        {MISC_BOX_OF_BEASTS,
+            (NO_LOVE || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 17)},
+        {MISC_SACK_OF_SPIDERS,
+            (NO_LOVE || you.seen_misc[MISC_SACK_OF_SPIDERS] ? 0 : 17)},
+
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -711,9 +714,12 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     // Possible for everything to be 0 weight - if so just give a random spare.
     if (choice == nullptr)
     {
-        return random_choose(MISC_TIN_OF_TREMORSTONES,
+        return random_choose(MISC_BOX_OF_BEASTS,
+                             MISC_PHANTOM_MIRROR,
+                             MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
-                             MISC_PHIAL_OF_FLOODS);
+                             MISC_PHIAL_OF_FLOODS,
+                             MISC_CONDENSER_VANE);
     }
 
     // Could be nullptr if all the weights were 0.
@@ -2193,8 +2199,8 @@ bool scroll_of_wish_menu()
         if (strcmp(buf, "random") == 0) {
             int max_try = 1000;
             while (max_try-- > 0) {
-                //╥ё╢Щ ╬фюлеш ╩Щ╪╨го╠Б
-                //д║фц╬фюлеш, ╫еюл ╫х╬Нго╢б ╬фюлеш╣Н а╕©э
+                //О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫о╠О©╫
+                //д║О©╫ц╬О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫ О©╫х╬О©╫О©╫о╢О©╫ О©╫О©╫О©╫О©╫О©╫ш╣О©╫ О©╫О©╫О©╫О©╫
                 int random_select = random2(NUM_UNRANDARTS);
 
                 const int              index = random_select + UNRAND_START;

@@ -1036,6 +1036,8 @@ misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 misc_healing_mist MISC_HEALING_MIST
 misc_healing_mist_inert MISC_HEALING_MIST_INERT
 misc_tremorstones MISC_TIN_OF_TREMORSTONES
+misc_vane MISC_CONDENSER_VANE
+misc_vane_inert MISC_CONDENSER_VANE_INERT
 %rim 1
 # Remove when TAG_MAJOR_VERSION > 34
 misc_lantern MISC_LANTERN_OF_SHADOWS

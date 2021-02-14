@@ -137,6 +137,8 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
             return true;
         }
         break;
+    case OBJ_MISCELLANY:
+        return item.sub_type == MISC_CONDENSER_VANE;
     default:
         break;
     }
