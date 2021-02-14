@@ -124,6 +124,14 @@ spell_type spell_in_wand(wand_type wand)
     die("Unknown wand: %d", wand);
 }
 
+bool is_wand_spell(spell_type spell)
+{
+    for (auto p : _wand_spells)
+        if (spell == p.second)
+            return true;
+    return false;
+}
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
@@ -375,13 +383,37 @@ void init_spell_rarities()
     }
 }
 
-bool is_player_spell(spell_type which_spell)
+bool is_player_book_spell(spell_type which_spell)
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
         for (spell_type spell : spellbook_template(static_cast<book_type>(i)))
             if (spell == which_spell)
                 return true;
     return false;
+}
+
+// Needs to be castable by the player somehow, but via idiosyncratic means.
+// Religion reusing a spell enum, or something weirder like sonic wave.
+// A spell doesn't need to be here if it just the beam type that is used.
+static unordered_set<int> _player_nonbook_spells =
+{
+    // items
+    SPELL_THUNDERBOLT,
+    SPELL_PHANTOM_MIRROR, // this isn't cast directly, but the player code at
+                          // least uses the enum value
+    SPELL_SONIC_WAVE,
+    // religion
+    SPELL_SMITING,
+    // Ds powers
+    SPELL_HURL_DAMNATION,
+};
+
+bool is_player_spell(spell_type which_spell)
+{
+    return !spell_removed(which_spell)
+        && (is_player_book_spell(which_spell)
+            || is_wand_spell(which_spell)
+            || _player_nonbook_spells.count(which_spell) > 0);
 }
 
 int spell_rarity(spell_type which_spell)

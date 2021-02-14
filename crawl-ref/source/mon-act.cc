@@ -2632,6 +2632,8 @@ static void _post_monster_move(monster* mons)
             monster_die(*mons, KILL_MISC, NON_MONSTER);
     }
 
+    update_mons_cloud_ring(mons);
+
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
         && !mons_is_avatar(mons->type)

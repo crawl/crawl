@@ -29,6 +29,7 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
+#include "mon-info-flag-name.h"
 #include "mon-tentacle.h"
 #include "nearby-danger.h"
 #include "options.h"
@@ -126,6 +127,14 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_CITRINITAS,      MB_CITRINITAS },
     { ENCH_VIRIDITAS,       MB_VIRIDITAS },
     { ENCH_HOLD_POSITION,   MB_HOLD_POSITION },
+    { ENCH_RING_OF_THUNDER, MB_CLOUD_RING_THUNDER },
+    { ENCH_RING_OF_FLAMES,  MB_CLOUD_RING_FLAMES },
+    { ENCH_RING_OF_CHAOS,   MB_CLOUD_RING_CHAOS },
+    { ENCH_RING_OF_MUTATION,MB_CLOUD_RING_MUTATION },
+    { ENCH_RING_OF_FOG,     MB_CLOUD_RING_FOG },
+    { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
+    { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
+    { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -1253,69 +1262,13 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     return false;
 }
 
-static string _verbose_info0(const monster_info& mi)
-{
-    if (mi.is(MB_BERSERK))
-        return "berserk";
-    if (mi.is(MB_INSANE))
-        return "insane";
-    if (mi.is(MB_INNER_FLAME))
-        return "inner flame";
-    if (mi.is(MB_DUMB))
-        return "stupefied";
-    if (mi.is(MB_PARALYSED))
-        return "paralysed";
-    if (mi.is(MB_CAUGHT))
-        return "caught";
-    if (mi.is(MB_WEBBED))
-        return "webbed";
-    if (mi.is(MB_PETRIFIED))
-        return "petrified";
-    if (mi.is(MB_PINNED))
-        return "pinned";
-    if (mi.is(MB_PETRIFYING))
-        return "petrifying";
-    if (mi.is(MB_MAD))
-        return "mad";
-    if (mi.is(MB_DEATHS_DOOR))
-        return "deaths door";
-    if (mi.is(MB_ROLLING))
-        return "rolling";
-    if (mi.is(MB_CONFUSED))
-        return "confused";
-    if (mi.is(MB_FLEEING))
-        return "fleeing";
-    if (mi.is(MB_DORMANT))
-        return "dormant";
-    if (mi.is(MB_SLEEPING))
-        return "sleeping";
-    if (mi.is(MB_UNAWARE))
-        return "unaware";
-    if (mi.is(MB_DAZED))
-        return "dazed";
-    if (mi.is(MB_MUTE))
-        return "mute";
-    if (mi.is(MB_BLIND))
-        return "blind";
-    // avoid jelly (wandering) (fellow slime)
-    if (mi.is(MB_WANDERING) && mi.attitude != ATT_STRICT_NEUTRAL)
-        return "wandering";
-    if (mi.is(MB_BURNING))
-        return "burning";
-    if (mi.is(MB_INVISIBLE))
-        return "invisible";
-    if (mi.is(MB_HOLD_POSITION))
-        return "holding position";
-
-    return "";
-}
-
 static string _verbose_info(const monster_info& mi)
 {
-    string inf = _verbose_info0(mi);
-    if (!inf.empty())
-        inf = " (" + inf + ")";
-    return inf;
+    string desc= "";
+    vector<monster_info> miv;
+    miv.push_back(mi);
+    mons_conditions_string(desc, miv, 0, 1, false);
+    return desc;
 }
 
 string monster_info::pluralised_name(bool fullname) const
@@ -1379,7 +1332,8 @@ void clear_monster_list_colours()
 }
 
 void monster_info::to_string(int count, string& desc, int& desc_colour,
-                             bool fullname, const char *adj) const
+                             bool fullname, const char *adj,
+                             bool verbose) const
 {
     ostringstream out;
     _monster_list_colour_type colour_type = _NUM_MLC;
@@ -1401,7 +1355,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     out << " av" << mons_avg_hp(type);
 #endif
 
-    if (count == 1)
+    if (count == 1 && verbose)
        out << _verbose_info(*this);
 
     // Friendliness
@@ -1449,195 +1403,17 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
-
-    if (is(MB_BERSERK))
-        v.emplace_back("berserk");
-    if (is(MB_HASTED) || is(MB_BERSERK))
+    for (auto& name : monster_info_flag_names)
     {
-        if (!is(MB_SLOWED))
-            v.emplace_back("fast");
-        else
-            v.emplace_back("fast+slow");
+        if (is(name.flag))
+        {
+            // TODO: just use `do_mon_str_replacements`?
+            v.push_back(replace_all(name.long_singular,
+                                    "@possessive@",
+                                    pronoun(PRONOUN_POSSESSIVE)));
+        }
     }
-    else if (is(MB_SLOWED))
-        v.emplace_back("slow");
-    if (is(MB_STRONG) || is(MB_BERSERK))
-        v.emplace_back("unusually strong");
-
-    if (is(MB_POISONED))
-        v.emplace_back("poisoned");
-    else if (is(MB_MORE_POISONED))
-        v.emplace_back("very poisoned");
-    else if (is(MB_MAX_POISONED))
-        v.emplace_back("extremely poisoned");
-
-    if (is(MB_SICK))
-        v.emplace_back("sick");
-    if (is(MB_GLOWING))
-        v.emplace_back("softly glowing");
-    if (is(MB_INSANE))
-        v.emplace_back("frenzied and insane");
-    if (is(MB_CONFUSED))
-        v.emplace_back("confused");
-    if (is(MB_PINNED))
-        v.emplace_back("pinned by a whirlwind");
-    if (is(MB_INVISIBLE))
-        v.emplace_back("slightly transparent");
-    if (is(MB_CHARMED))
-        v.emplace_back("in your thrall");
-    if (is(MB_BURNING))
-        v.emplace_back("covered in liquid flames");
-    if (is(MB_CAUGHT))
-        v.emplace_back("entangled in a net");
-    if (is(MB_WEBBED))
-        v.emplace_back("entangled in a web");
-    if (is(MB_PETRIFIED))
-        v.emplace_back("petrified");
-    if (is(MB_PETRIFYING))
-        v.emplace_back("slowly petrifying");
-    if (is(MB_VULN_MAGIC))
-        v.emplace_back("susceptible to hostile enchantments");
-    if (is(MB_SWIFT))
-        v.emplace_back("covering ground quickly");
-    if (is(MB_SILENCING))
-        v.emplace_back("radiating silence");
-    if (is(MB_PARALYSED))
-        v.emplace_back("paralysed");
-    if (is(MB_REPEL_MSL))
-        v.emplace_back("repelling missiles");
-    if (is(MB_DEFLECT_MSL))
-        v.emplace_back("deflecting missiles");
-    if (is(MB_FEAR_INSPIRING))
-        v.emplace_back("inspiring fear");
-    if (is(MB_BREATH_WEAPON))
-    {
-        v.push_back(string("catching ")
-            + pronoun(PRONOUN_POSSESSIVE) + " breath");
-    }
-    if (is(MB_DAZED))
-        v.emplace_back("dazed");
-    if (is(MB_MUTE))
-        v.emplace_back("mute");
-    if (is(MB_BLIND))
-        v.emplace_back("blind");
-    if (is(MB_DUMB))
-        v.emplace_back("stupefied");
-    if (is(MB_MAD))
-        v.emplace_back("lost in madness");
-    if (is(MB_DEATHS_DOOR))
-       v.push_back("standing in death's doorway");
-    if (is(MB_REGENERATION))
-        v.emplace_back("regenerating");
-    if (is(MB_STONESKIN))
-        v.emplace_back("stone skin");
-    if (is(MB_RAISED_MR))
-        v.emplace_back("resistant to hostile enchantments");
-    if (is(MB_OZOCUBUS_ARMOUR))
-        v.emplace_back("covered in an icy film");
-    if (is(MB_WRETCHED))
-        v.emplace_back("misshapen and mutated");
-    if (is(MB_WORD_OF_RECALL))
-        v.emplace_back("chanting recall");
-    if (is(MB_INJURY_BOND))
-        v.emplace_back("sheltered from injuries");
-    if (is(MB_WATER_HOLD))
-        v.emplace_back("engulfed in water");
-    if (is(MB_WATER_HOLD_DROWN))
-    {
-        v.emplace_back("engulfed in water");
-        v.emplace_back("unable to breathe");
-    }
-    if (is(MB_FLAYED))
-        v.emplace_back("covered in terrible wounds");
-    if (is(MB_WEAK))
-        v.emplace_back("weak");
-    if (is(MB_DIMENSION_ANCHOR))
-        v.emplace_back("unable to translocate");
-    if (is(MB_TOXIC_RADIANCE))
-        v.emplace_back("radiating toxic energy");
-    if (is(MB_GRASPING_ROOTS))
-        v.emplace_back("constricted by roots");
-    if (is(MB_FIRE_VULN))
-        v.emplace_back("more vulnerable to fire");
-    if (is(MB_TORNADO))
-        v.emplace_back("surrounded by raging winds");
-    if (is(MB_TORNADO_COOLDOWN))
-        v.emplace_back("surrounded by restless winds");
-    if (is(MB_BARBS))
-        v.emplace_back("skewered by barbs");
-    if (is(MB_POISON_VULN))
-        v.emplace_back("vulnerable to poison");
-    if (is(MB_MORE_POISON_VULN))
-        v.emplace_back("more vulnerable to poison");
-    if (is(MB_ICEMAIL))
-        v.emplace_back("surrounded by an icy envelope");
-    if (is(MB_AGILE))
-        v.emplace_back("unusually agile");
-    if (is(MB_FROZEN))
-        v.emplace_back("encased in ice");
-    if (is(MB_BLACK_MARK))
-        v.emplace_back("absorbing vital energies");
-    if (is(MB_SAP_MAGIC))
-        v.emplace_back("magic-sapped");
-    if (is(MB_SHROUD))
-        v.emplace_back("shrouded");
-    if (is(MB_CORROSION))
-        v.emplace_back("covered in acid");
-    if (is(MB_SLOW_MOVEMENT))
-        v.emplace_back("covering ground slowly");
-    if (is(MB_LIGHTLY_DRAINED))
-        v.emplace_back("lightly drained");
-    if (is(MB_HEAVILY_DRAINED))
-        v.emplace_back("heavily drained");
-    if (is(MB_CONDENSATION_SHIELD))
-        v.emplace_back("protected by a disc of dense vapour");
-    if (is(MB_RESISTANCE))
-        v.emplace_back("unusually resistant");
-    if (is(MB_HEXED))
-        v.emplace_back("control wrested from you");
-    if (is(MB_BRILLIANCE_AURA))
-        v.emplace_back("aura of brilliance");
-    if (is(MB_EMPOWERED_SPELLS))
-        v.emplace_back("spells empowered");
-    if (is(MB_HEALING_AURA))
-        v.emplace_back("aura of healing");
-    if (is(MB_READY_TO_HOWL))
-        v.emplace_back("ready to howl");
-    if (is(MB_PARTIALLY_CHARGED))
-        v.emplace_back("partially charged");
-    if (is(MB_FULLY_CHARGED))
-        v.emplace_back("fully charged");
-    if (is(MB_GOZAG_INCITED))
-        v.emplace_back("incited by Gozag");
-    if (is(MB_PAIN_BOND))
-    {
-        v.push_back(string("sharing ")
-                    + pronoun(PRONOUN_POSSESSIVE) + " pain");
-    }
-    if (is(MB_IDEALISED))
-        v.emplace_back("idealised");
-    if (is(MB_BOUND_SOUL))
-        v.emplace_back("bound soul");
-    if (is(MB_INFESTATION))
-        v.emplace_back("infested");
-    if (is(MB_CIGOTUVIS_PLAGUE))
-        v.emplace_back("infected by Cigotuvi's virus");
-    if (is(MB_STILL_WINDS))
-        v.emplace_back("stilling the winds");
-    if (is(MB_VILE_CLUTCH))
-        v.emplace_back("constricted by zombie hands");
-    if (is(MB_NIGREDO))
-        v.emplace_back("infused by decaying essence of Nigredo");
-    if (is(MB_ALBEDO))
-        v.emplace_back("infused by purging essence of Albedo");
-    if (is(MB_CITRINITAS))
-        v.emplace_back("infused by empowering essence of Cirtintas");
-    if (is(MB_VIRIDITAS))
-        v.emplace_back("infused by restorative essence of Viriditas");
-    if (is(MB_HOLD_POSITION))
-        v.emplace_back("holding position");
-    if (is(MB_ERINGYAS_ROOTSPIKE))
-        v.emplace_back("constricted by eringyas rootspike");
+    
     return v;
 }
 
@@ -1943,6 +1719,139 @@ void get_monster_info(vector<monster_info>& mons)
         }
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
+}
+
+void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
+                         const vector<monster_info>& mi, int start,
+                         int count)
+{
+    mi[start].to_string(count, desc, desc_colour, fullname, nullptr, false);
+    mons_conditions_string(desc, mi, start, count, true);
+}
+
+static bool _has_polearm(const monster_info& mi)
+{
+    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+        return weapon && weapon_reach(*weapon) == REACH_TWO;
+    }
+    else
+        return mi.type == MONS_DANCING_WEAPON && mi.reach_range() == REACH_TWO;
+}
+
+static bool _has_launcher(const monster_info& mi)
+{
+    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
+        return weapon && missile && missile->launched_by(*weapon);
+    }
+    else
+        return false;
+}
+
+static bool _has_missile(const monster_info& mi)
+{
+    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
+        // Assume that if the monster don't pick up items they can't use.
+        return missile && is_throwable(nullptr, *missile);
+    }
+    else
+        return false;
+}
+static bool _has_wand(const monster_info& mi)
+{
+     if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
+         return mi.inv[MSLOT_WAND].get();
+     return false;
+}
+
+static string _condition_string(int num, int count,
+                                const monster_info_flag_name& name)
+{
+    if (1 < num && num < count)
+        return make_stringf("%d %s", num, name.plural.c_str());
+    else if (1 < num)
+        return name.plural;
+    else
+        return name.short_singular;
+}
+
+void mons_conditions_string(string& desc, const vector<monster_info>& mi,
+                            int start, int count, bool equipment)
+{
+    vector<string> conditions;
+
+    if (equipment)
+    {
+        int wand_count = 0;
+        int polearm_count = 0;
+        int launcher_count = 0;
+        int missile_count = 0;
+
+        for (int j = start; j < start + count; ++j)
+        {
+            if (_has_wand(mi[j]))
+                wand_count++;
+            if (_has_polearm(mi[j]))
+                polearm_count++;
+            if (_has_launcher(mi[j]))
+                launcher_count++;
+            else if (_has_missile(mi[j]))
+                missile_count++;
+        }
+
+        if (wand_count)
+        {
+            conditions.push_back(_condition_string(wand_count, count,
+                                                   {MB_UNSAFE, "wand",
+                                                    "wand", "with wands"}));
+        }
+
+        if (polearm_count)
+        {
+            conditions.push_back(_condition_string(polearm_count, count,
+                                                   {MB_UNSAFE, "polearm",
+                                                    "polearm", "polearms"}));
+        }
+
+        if (launcher_count)
+        {
+            conditions.push_back(_condition_string(launcher_count, count,
+                                                   {MB_UNSAFE, "launcher",
+                                                    "launcher", "launchers"}));
+        }
+
+        if (missile_count)
+        {
+            conditions.push_back(_condition_string(launcher_count, count,
+                                                   {MB_UNSAFE, "missile",
+                                                    "missile", "missiles"}));
+        }
+    }
+
+    for (auto& name : monster_info_flag_names)
+    {
+        int num = 0;
+        for (int j = start; j < start+count; j++)
+        {
+            if (mi[j].is(name.flag))
+                num++;
+        }
+        if (num && !name.short_singular.empty())
+            conditions.push_back(_condition_string(num, count, name));
+    }
+
+
+    if (conditions.empty())
+        return;
+
+    desc += " ("
+         + join_strings(conditions.begin(), conditions.end(), ", ") + ")";
 }
 
 monster_type monster_info::draco_or_demonspawn_subspecies() const

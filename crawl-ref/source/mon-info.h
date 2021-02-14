@@ -187,6 +187,15 @@ enum monster_info_flags
     MB_BARRIER,
     MB_BARRIER_BROKEN,
     MB_ERINGYAS_ROOTSPIKE,
+    MB_CLOUD_RING_THUNDER,
+    MB_CLOUD_RING_FLAMES,
+    MB_CLOUD_RING_CHAOS,
+    MB_CLOUD_RING_MUTATION,
+    MB_CLOUD_RING_FOG,
+    MB_CLOUD_RING_ICE,
+    MB_CLOUD_RING_DRAINING,
+    MB_CLOUD_RING_ACID,
+    MB_CLOUD_RING_MIASMA,
     NUM_MB_FLAGS
 };
 
@@ -274,7 +283,8 @@ struct monster_info : public monster_info_base
     }
 
     void to_string(int count, string& desc, int& desc_colour,
-                   bool fullname = true, const char *adjective = nullptr) const;
+                   bool fullname = true, const char *adjective = nullptr,
+                   bool verbose = true) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
@@ -398,5 +408,11 @@ bool set_monster_list_colour(string key, int colour);
 void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);
+
+void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
+                           const vector<monster_info>& mi, int start,
+                           int count);
+void mons_conditions_string(string& desc, const vector<monster_info>& mi,
+                            int start, int count, bool equipment);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);

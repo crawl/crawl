@@ -1955,9 +1955,17 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         {
             int desc_colour;
             string desc;
-            mons[start].to_string(count, desc, desc_colour, zombified);
+            mons_to_string_pane(desc, desc_colour, zombified,
+                                mons, start, count);
             textcolour(desc_colour);
-            desc.resize(crawl_view.mlistsz.x-printed, ' ');
+            if (static_cast<int>(desc.length()) > crawl_view.mlistsz.x - printed)
+            {
+                ASSERT(crawl_view.mlistsz.x - 2 - printed >= 0);
+                desc.resize(crawl_view.mlistsz.x - 2 - printed, ' ');
+                desc += "…)";
+            }
+            else
+                desc.resize(crawl_view.mlistsz.x - printed, ' ');
             CPRINTF("%s", desc.c_str());
         }
     }

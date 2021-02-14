@@ -2128,3 +2128,30 @@ void end_still_winds()
     env.level_state &= ~LSTATE_STILL_WINDS;
     mpr("The air resumes its normal movements.");
 }
+
+/**
+ * Surround a monster with clouds of a certain type (excepting squares with an
+ * allied monster). This also deletes the same cloud if it's on top of the
+ * monster (which will happen as they walk around).
+ */
+void surround_actor_with_cloud(const actor* a, cloud_type cloud)
+{
+    const coord_def pos = a->pos();
+    const cloud_struct* overhead = cloud_at(pos);
+    if (overhead && overhead->type == cloud)
+        delete_cloud(pos);
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        const cloud_struct* existing = cloud_at(*ai);
+        // dprf("surround_actor_with_cloud x:%d y:%d solid:%d cloud_at:%s",
+        //      ai->x, ai->y, cell_is_solid(*ai), existing ? "y" : "n");
+        if (cell_is_solid(*ai))
+            continue;
+        if (existing && existing->type != cloud)
+            continue;
+        const monster* mons = monster_at(*ai);
+        if (mons && mons->alive() && mons_aligned(a, mons))
+            continue;
+        place_cloud(cloud, *ai, 2 + random2(6), a);
+    }
+}

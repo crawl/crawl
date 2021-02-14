@@ -4789,7 +4789,8 @@ void monster::ghost_demon_init()
     speed_increment = 70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
-
+    if (ghost->cloud_ring_ench != ENCH_NONE)
+        add_ench(ghost->cloud_ring_ench);
     load_ghost_spells();
 }
 

@@ -64,3 +64,5 @@ const cloud_tile_info& cloud_type_tile_info(cloud_type type);
 
 void start_still_winds();
 void end_still_winds();
+
+ void surround_actor_with_cloud(const actor* a, cloud_type cloud);
