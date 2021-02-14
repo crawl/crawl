@@ -755,12 +755,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
 
 spret vampiric_drain(int pow, monster* mons, bool fail)
 {
-    if (you.hp == you.hp_max)
-    {
-        canned_msg(MSG_FULL_HEALTH);
-        return spret::abort;
-    }
-
     const bool observable = mons && mons->observable();
     if (!mons
         || mons->submerged()
@@ -797,26 +791,26 @@ spret vampiric_drain(int pow, monster* mons, bool fail)
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     // If you update this, also update spell_damage_string().
-    int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
+    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
+    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
 
-    hp_gain = min(mons->hit_points, hp_gain);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    hp_gain = resist_adjust_damage(mons, BEAM_NEG, hp_gain);
-
-    if (!hp_gain)
+    if (!dam)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::success;
     }
 
-    _player_hurt_monster(*mons, hp_gain, BEAM_NEG);
+    int hp_gain = min(mons->hit_points, dam);
 
     hp_gain = div_rand_round(hp_gain, 2);
+    hp_gain = min(you.hp_max - you.hp, hp_gain);
+
+    _player_hurt_monster(*mons, dam, BEAM_NEG);
 
     if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
     {
-        mpr("You feel life coursing into your body.");
+        mprf("You feel life coursing into your body%s",
+             attack_strength_punctuation(hp_gain).c_str());
         inc_hp(hp_gain);
     }
 
