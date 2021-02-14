@@ -116,7 +116,7 @@ void init_spell_descs()
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
-        ASSERTM(!(data.flags & spflag::monster && is_player_spell(data.id)),
+        ASSERTM(!(data.flags & spflag::monster && is_player_book_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
