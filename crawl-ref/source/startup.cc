@@ -278,7 +278,7 @@ static void _post_init(bool newc)
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
-        you.depth = starting_absdepth();
+        you.depth = starting_absdepth() + 1;
         // Abyssal Knights start out in the Abyss.
         if (you.chapter == CHAPTER_POCKET_ABYSS)
             you.where_are_you = BRANCH_ABYSS;
