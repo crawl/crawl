@@ -818,7 +818,7 @@ static bool _trog_retribution()
         }
 
         _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls firey rage upon you!");
+                           god, " hurls fiery rage upon you!");
         _reset_avatar(*avatar);
     }
 
