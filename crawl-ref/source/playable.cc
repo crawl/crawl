@@ -18,6 +18,7 @@
 #include "ng-restr.h"
 #include "species.h"
 #include "skills.h"
+#include "state.h"
 #include "stringutil.h" // to_string on Cygwin
 
 string combo_type::abbr() const

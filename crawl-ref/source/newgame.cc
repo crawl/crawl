@@ -144,6 +144,12 @@ static bool _char_defined(const newgame_def& ng)
     return ng.species != SP_UNKNOWN && ng.job != JOB_UNKNOWN;
 }
 
+static char_choice_restriction _job_allowed(species_type sp, job_type job) {
+    if (job == JOB_DELVER && crawl_state.game_is_sprint())
+        return CC_BANNED;
+    return job_allowed(sp, job);
+}
+
 string newgame_char_description(const newgame_def& ng)
 {
     if (_is_random_viable_choice(ng))
@@ -375,7 +381,7 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
         _resolve_species_job(ng, ng_choice);
     }
 
-    if (!job_allowed(ng.species, ng.job))
+    if (!_job_allowed(ng.species, ng.job))
     {
         // Either an invalid combination was passed in through options,
         // or we messed up.
@@ -1075,7 +1081,7 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
         end(1, false, "No player name specified.");
 
     ASSERT(is_good_name(ng.name, false)
-           && job_allowed(ng.species, ng.job)
+           && _job_allowed(ng.species, ng.job)
            && ng.type != NUM_GAME_TYPE);
 
     write_newgame_options_file(choice);
@@ -1149,7 +1155,7 @@ static job_group jobs_order[] =
     {
         "Adventurer",
         coord_def(0, 7), 20,
-        { JOB_ARTIFICER, JOB_CARAVAN, JOB_WANDERER, JOB_COLLECTOR }
+        { JOB_ARTIFICER, JOB_CARAVAN, JOB_WANDERER, JOB_COLLECTOR, JOB_DELVER }
     },
     {
         "Zealot",
@@ -1185,7 +1191,7 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
     {
         if (ng.species == SP_UNKNOWN
             || any_of(begin(group.jobs), end(group.jobs), [&ng](job_type job)
-                      { return job_allowed(ng.species, job) != CC_BANNED; }))
+                      { return _job_allowed(ng.species, job) != CC_BANNED; }))
         {
             group.attach(ng, defaults, ng_menu, letter);
         }
@@ -1541,7 +1547,7 @@ void UINewGameMenu::menu_item_activated(int id)
         {
             job_type job = static_cast<job_type> (id);
             if (m_ng.species == SP_UNKNOWN
-                || job_allowed(m_ng.species, job) != CC_BANNED)
+                || _job_allowed(m_ng.species, job) != CC_BANNED)
             {
                 m_ng_choice.job = job;
                 done = true;
@@ -1574,7 +1580,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             break;
 
         if (ng.species != SP_UNKNOWN
-            && job_allowed(ng.species, job) == CC_BANNED)
+            && _job_allowed(ng.species, job) == CC_BANNED)
         {
             continue;
         }
@@ -1582,7 +1588,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
         int item_status;
         if (ng.species == SP_UNKNOWN)
             item_status = ITEM_STATUS_UNKNOWN;
-        else if (job_allowed(ng.species, job) == CC_RESTRICTED)
+        else if (_job_allowed(ng.species, job) == CC_RESTRICTED)
             item_status = ITEM_STATUS_RESTRICTED;
         else
             item_status = ITEM_STATUS_ALLOWED;

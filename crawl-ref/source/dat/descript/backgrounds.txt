@@ -53,6 +53,11 @@ Collector
 Collectors start with a unique scroll which grants a single artefact of
 their desire, but that's all.
 %%%%
+Delver
+
+Delvers start their quest five levels below the surface. A set of powerful magic
+items helps them survive the dangerous journey upward.
+%%%%
 Earth Elementalist
 
 Earth Elementalists know the Sandblast spell, and carry stones to fuel the

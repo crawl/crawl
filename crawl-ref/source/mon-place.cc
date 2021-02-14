@@ -611,6 +611,31 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
             if (feat_is_stone_stair(grd(*di)))
                 return false;
     }
+    // Check that the location is not proximal to an area where the player
+    // begins the game.
+    else if (mg.proximity == PROX_AWAY_FROM_ENTRANCE)
+    {
+        for (distance_iterator di(mg_pos, false, false, LOS_RADIUS); di; ++di)
+        {
+            // for consistency, this should happen regardless of whether the
+            // player is starting on D:1
+            if (env.absdepth0 == 0)
+            {
+                if (feat_is_branch_exit(grd(*di))
+                    // We may be checking before branch exit cleanup.
+                    || feat_is_stone_stair_up(grd(*di)))
+                {
+                    return false;
+                }
+            }
+            else if (env.absdepth0 == starting_absdepth())
+            {
+                // Delvers start on a (specific) D:5 downstairs.
+                if (grd(*di) == DNGN_STONE_STAIRS_DOWN_I)
+                    return false;
+            }
+        }
+    }
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)

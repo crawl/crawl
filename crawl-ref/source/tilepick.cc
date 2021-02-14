@@ -4072,6 +4072,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_WANDERER;
         case JOB_ARTIFICER:
             return TILEG_JOB_ARTIFICER;
+        case JOB_DELVER:
+            return TILEG_JOB_DELVER;
         case JOB_ARCANE_MARKSMAN:
             return TILEG_JOB_ARCANE_MARKSMAN;
         case JOB_ABYSSAL_KNIGHT:
