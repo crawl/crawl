@@ -214,13 +214,12 @@ BRAND:   SPWPN_VORPAL
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
-FB_BRAND: SPWPN_VORPAL
-PLUS:    +0 # Set on wield
+BRAND: SPWPN_VORPAL
+PLUS:    +5
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   800
-BOOL:    special, no_upgrade
 
 NAME:    staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
