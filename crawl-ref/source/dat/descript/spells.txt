@@ -1808,7 +1808,6 @@ or rubble.
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
-Life will not be drained in excess of what the caster can capably absorb.
 %%%%
 Venom Bolt spell
 

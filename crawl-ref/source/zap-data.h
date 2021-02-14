@@ -1715,4 +1715,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     5 // XXX: Quieter because it's poison?
 },
+
+{
+    ZAP_SWORD_BEAM,
+    "bolt of energy",
+    200,
+    new calcdice_calculator<1, 40, 0, 1>,
+    new tohit_calculator<5>,
+    new calcdice_calculator<1, 40, 0, 1>,
+    new tohit_calculator<5>,
+    RED,
+    false,
+    BEAM_DEVASTATION,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0
+},
 };
