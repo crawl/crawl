@@ -34,6 +34,7 @@
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "nearby-danger.h" // For Zhor
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
@@ -190,31 +191,40 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static bool _DISPATER_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
 {
-    if (!enough_hp(14, true))
+    const int hp_cost = 14;
+    const int mp_cost = 4;
+
+    if (!enough_hp(hp_cost, true))
     {
         mpr("You're too close to death to use this item.");
         *unevokable = true;
         return true;
     }
 
-    if (!enough_mp(4, false))
+    if (!enough_mp(mp_cost, false))
     {
         *unevokable = true;
         return true;
     }
 
     *did_work = true;
+    dec_hp(hp_cost, false);
+    dec_mp(mp_cost);
+
     int power = you.skill(SK_EVOCATIONS, 8);
 
     if (your_spells(SPELL_HURL_DAMNATION, power, false) == spret::abort)
     {
         *unevokable = true;
+        inc_hp(hp_cost);
+        inc_mp(mp_cost, true);
+
+        redraw_screen();
+        update_screen();
         return false;
     }
 
     mpr("You feel the staff feeding on your energy!");
-    dec_hp(14, false);
-    dec_mp(4);
     make_hungry(100, false, true);
     practise_evoking(random_range(1, 2));
 
@@ -266,7 +276,9 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
 
 static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
 {
-    if (!enough_mp(4, false))
+    const int mp_cost = 4;
+
+    if (!enough_mp(mp_cost, false))
     {
         *unevokable = true;
         return true;
@@ -276,20 +288,23 @@ static bool _OLGREB_evoke(item_def */*item*/, bool* did_work, bool* unevokable)
         return false;
 
     *did_work = true;
-
+    dec_mp(mp_cost);
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
     if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == spret::abort)
     {
         *unevokable = true;
+        inc_mp(mp_cost, true);
+
+        redraw_screen();
+        update_screen();
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
         your_spells(SPELL_VENOM_BOLT, power, false);
 
-    dec_mp(4);
     make_hungry(50, false, true);
     practise_evoking(1);
 

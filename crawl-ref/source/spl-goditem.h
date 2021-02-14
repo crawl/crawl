@@ -108,3 +108,4 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
 
 spret cast_random_effects(int pow, bolt& beam, bool fail);
 spret try_to_pacify(monster& mon, int healed, int pow, bool fail);
+void majin_bo_vampirism(monster &mon, int damage);

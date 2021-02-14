@@ -49,6 +49,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -411,8 +412,11 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
     // cleanup at the end to cover cases where we've done no damage and the
     // monster is dead from previous effects.
     if (damage)
-        mon.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
-
+    {
+        const int damage_done = mon.hurt(&you, damage, flavour, KILLED_BY_BEAM);
+        majin_bo_vampirism(mon, damage_done);
+    }
+    
     if (mon.alive())
     {
         behaviour_event(&mon, ME_WHACK, &you);

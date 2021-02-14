@@ -590,7 +590,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
 
     enhanced += you.archmagi();
-    enhanced += player_equip_unrand(UNRAND_MAJIN);
 
     if (you_worship(GOD_AGRAPHEDE)
         && !you.penance[GOD_AGRAPHEDE]
@@ -741,6 +740,29 @@ void do_cast_spell_cmd(bool force)
 }
 
 /**
+ * Let the Majin-Bo congratulate you on casting a spell while using it.
+ *
+ * @param spell     The spell just successfully cast.
+ */
+static void _majin_speak(spell_type spell)
+{
+    // since this isn't obviously mental communication, let it be silenced
+    if (silenced(you.pos()))
+        return;
+
+    const int level = spell_difficulty(spell);
+    const bool weak = level <= 4;
+    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
+    const string msg = "A voice whispers, \"" + getSpeakString(lookup) + "\"";
+    mprf(MSGCH_TALK, "%s", msg.c_str());
+}
+
+static bool _majin_charge_hp()
+{
+    return player_equip_unrand(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
+}
+
+/**
  * Cast a spell.
  *
  * Handles general preconditions & costs.
@@ -866,6 +888,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     int cost = spell_mana(spell);
+    // Majin Bo HP cost taken at the same time
+    const int hp_cost = min(spell_mana(spell), you.hp - 1);
     if (!enough_mp(cost, true))
     {
         mpr("You don't have enough magic to cast that spell.");
@@ -923,6 +947,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     dec_mp(cost, true);
+    if (_majin_charge_hp())
+        dec_hp(hp_cost, false);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr);
@@ -931,6 +957,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
         inc_mp(cost, true);
+        if (_majin_charge_hp())
+            inc_hp(hp_cost);
         redraw_screen();
         return false;
     }
@@ -938,6 +966,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     practise_casting(spell, cast_result == spret::success);
     if (cast_result == spret::success)
     {
+        if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
+            _majin_speak(spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
@@ -1013,24 +1043,6 @@ static void _spellcasting_god_conduct(spell_type spell)
 }
 
 /**
- * Let the Majin-Bo congratulate you on casting a spell while using it.
- *
- * @param spell     The spell just successfully cast.
- */
-static void _majin_speak(spell_type spell)
-{
-    // since this isn't obviously mental communication, let it be silenced
-    if (silenced(you.pos()))
-        return;
-
-    const int level = spell_difficulty(spell);
-    const bool weak = level <= 4;
-    const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
-    const string msg = "A voice whispers, \"" + getSpeakString(lookup) + "\"";
-    mprf(MSGCH_TALK, "%s", msg.c_str());
-}
-
-/**
  * Handles side effects of successfully casting a spell.
  *
  * Spell noise, magic 'sap' effects, and god conducts.
@@ -1080,15 +1092,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
-
-        if (real_spell && player_equip_unrand(UNRAND_MAJIN))
-        {
-            // never kill the player (directly)
-            int hp_cost = min(spell_mana(spell), you.hp - 1);
-            ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, "the Majin-Bo");
-            if (one_chance_in(500))
-                _majin_speak(spell);
-        }
     }
 
     alert_nearby_monsters();

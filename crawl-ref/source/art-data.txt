@@ -827,9 +827,9 @@ PLUS:    +2
 COLOUR:  LIGHTRED
 TILE:    urand_resistance
 TILE_EQ: shield_of_resistance
-FIRE:    1
-COLD:    1
-MAGIC:   1
+FIRE:    2
+COLD:    2
+MAGIC:   2
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -1242,7 +1242,6 @@ BOOL:     clarity
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
-INSCRIP: Archmagi
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 PLUS:    +6
