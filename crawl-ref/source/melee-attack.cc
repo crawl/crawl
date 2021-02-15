@@ -3470,8 +3470,7 @@ int melee_attack::calc_mon_to_hit_base()
 {
     const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
-    const int hd_mult = fighter ? 25 : 15;
-    return 18 + attacker->get_hit_dice() * hd_mult / 10;
+    return mon_to_hit_base(attacker->get_hit_dice(), fighter, false);
 }
 
 /**

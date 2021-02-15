@@ -44,6 +44,7 @@
 #include "traps.h"
 
 #define SPELL_HD_KEY "spell_hd"
+#define NIGHTVISION_KEY "nightvision"
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
@@ -566,6 +567,8 @@ monster_info::monster_info(const monster* m, int milev)
     base_ev = m->base_evasion();
     mr = m->willpower(false);
     can_see_invis = m->can_see_invisible(false);
+    if (m->nightvision())
+        props[NIGHTVISION_KEY] = true;
     mresists = get_mons_resists(*m);
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
@@ -1485,6 +1488,14 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
 bool monster_info::can_see_invisible() const
 {
     return can_see_invis;
+}
+
+/**
+ * Does the monster described by this monster_info ignore umbra acc penalties?
+ */
+bool monster_info::nightvision() const
+{
+    return props.exists(NIGHTVISION_KEY);
 }
 
 int monster_info::willpower() const

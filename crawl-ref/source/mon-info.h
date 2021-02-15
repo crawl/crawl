@@ -354,6 +354,7 @@ struct monster_info : public monster_info_base
 
     int randarts(artefact_prop_type ra_prop) const;
     bool can_see_invisible() const;
+    bool nightvision() const;
     int willpower() const;
     int lighting_modifiers() const;
 

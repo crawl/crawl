@@ -269,7 +269,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        modifiers -= 5;
+        modifiers += CONFUSION_TO_HIT_MALUS;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -288,7 +288,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            modifiers -= 2 * how_transparent;
+            modifiers += TRANSLUCENT_SKIN_TO_HIT_MALUS * how_transparent;
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))

@@ -3143,7 +3143,7 @@ void monster::shield_block_succeeded()
 
 int monster::shield_bypass_ability(int) const
 {
-    return 15 + get_hit_dice() * 2 / 3;
+    return mon_shield_bypass(get_hit_dice());
 }
 
 bool monster::missile_repulsion() const

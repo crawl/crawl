@@ -102,6 +102,82 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
 }
 
 /**
+ * Return the base to-hit bonus that a monster with the given HD gets.
+ * @param hd               The hit dice (level) of the monster.
+ * @param skilled    Does the monster have bonus to-hit from the fighter or archer flag?
+ * @param ranged      Is this attack ranged or melee?
+ *
+ * @return         A base to-hit value, before equipment, statuses, etc.
+ */
+int mon_to_hit_base(int hd, bool skilled, bool ranged)
+{
+    if (ranged)
+    {
+        const int hd_mult = skilled ? 15 : 9;
+        return 18 + hd * hd_mult / 6;
+    }
+    const int hd_mult = skilled ? 25 : 15;
+    return 18 + hd * hd_mult / 10;
+}
+
+int mon_shield_bypass(int hd)
+{
+    return 15 + hd * 2 / 3;
+}
+
+/**
+ * Return the odds of a monster attack with the given to-hit bonus hitting the given ev with the
+ * given EV, rounded to the nearest percent.
+ *
+ * TODO: deduplicate with to_hit_pct().
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int mon_to_hit_pct(int to_land, int ev)
+{
+    if (to_land >= AUTOMATIC_HIT)
+        return 100;
+
+    if (ev <= 0)
+        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+
+    ++to_land; // per calc_to_hit()
+
+    int hits = 0;
+    for (int ev1 = 0; ev1 < ev; ev1++)
+        for (int ev2 = 0; ev2 < ev; ev2++)
+            hits += max(0, to_land - (ev1 + ev2));
+
+    double hit_chance = ((double)hits) / (to_land * ev * ev);
+
+    // Apply Bayes Theorem to account for auto hit and miss.
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
+              + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+
+    return (int)(hit_chance*100);
+}
+
+int mon_beat_sh_pct(int bypass, int sh)
+{
+    if (sh <= 0)
+        return 100;
+
+    sh *= 2; // per shield_bonus()
+
+    int hits = 0;
+    for (int sh1 = 0; sh1 < sh; sh1++)
+    {
+        for (int sh2 = 0; sh2 < sh; sh2++)
+        {
+            int adj_sh = (sh1 + sh2) / (3*2) - 1;
+            hits += max(0, bypass - adj_sh);
+        }
+    }
+    const int denom = sh * sh * bypass;
+    return hits * 100 / denom;
+}
+
+/**
  * Switch from a bad weapon to melee.
  *
  * This function assumes some weapon is being wielded.
