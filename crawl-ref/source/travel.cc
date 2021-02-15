@@ -917,11 +917,9 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
 
     tp.set_src_dst(youpos, you.running.pos);
 
-    run_mode_type rmode = RMODE_TRAVEL;
-
-    coord_def dest = tp.pathfind(rmode, false);
+    coord_def dest = tp.pathfind(RMODE_TRAVEL, false);
     if (dest.origin())
-        dest = tp.pathfind(rmode, true);
+        dest = tp.pathfind(RMODE_TRAVEL, true);
     coord_def new_dest = dest;
 
     // We'd either have to travel through a runed door, in which case we'll be
@@ -949,8 +947,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     // .tx      Moving onto t puts us adjacent to an unseen grid.
     // ?#@      --> Pick x instead.
     // Only applies to diagonal moves.
-    if (rmode == RMODE_TRAVEL && !dest.origin() && dest.x != youpos.x
-        && dest.y != youpos.y)
+    if (!dest.origin() && dest.x != youpos.x && dest.y != youpos.y)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
