@@ -1264,8 +1264,6 @@ bool melee_attack::attack()
 
         if (ev_margin >= 0)
         {
-            if (attacker->is_player() && you.has_hydra_multi_attack() && x_chance_in_y(1,3) && cleaving)
-                handle_phase_dodged();
             bool cont = handle_phase_hit();
 
             attacker_sustain_passive_damage();
