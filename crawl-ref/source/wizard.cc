@@ -424,28 +424,21 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>=</w>      show info about skill points\n"
                        "<w>n</w>      set Zot clock to a value\n"
                        "\n"
-                       "<yellow>Create level features</yellow>\n"
-                       "<w>L</w>      place a vault by name\n"
+                       "<yellow>Dungeon features</yellow>\n"
                        "<w>T</w>      make a trap\n"
                        "<w>,</w>/<w>.</w>    create up/down staircase\n"
                        "<w>(</w>      turn cell into feature\n"
                        "<w>\\</w>      make a shop\n"
-                       "<w>K</w>      mark all vaults as unused\n"
                        "\n"
-                       "<yellow>Other level related commands</yellow>\n"
+                       "<yellow>Builder debugging</yellow>\n"
+                       "<w>L</w>      place a vault by name\n"
+                       "<w>P</w>      create a level based on a vault\n"
+                       "<w>Ctrl-R</w> regenerate current level\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
-                       "<w>b</w>      controlled blink\n"
-                       "<w>B</w>      controlled teleport\n"
-                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
-                       "<w>R</w>      change monster spawn rate\n"
-                       "<w>Ctrl-S</w> change Abyss speed\n"
-                       "<w>u</w>/<w>d</w>    shift up/down one level\n"
-                       "<w>~</w>      go to a specific level\n"
+                       "<w>K</w>      mark all vaults as unused\n"
                        "<w>:</w>      find branches and overflow\n"
                        "       temples in the dungeon\n"
                        "<w>;</w>      list known levels and counters\n"
-                       "<w>{</w>      magic mapping\n"
-                       "<w>Ctrl-W</w> change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> dump level builder information\n"
 #ifdef DEBUG
                        // might be present in any save, but only generated
@@ -453,8 +446,17 @@ int list_wizard_commands(bool do_redraw_screen)
                        // to not confuse non-devs. The command will still work.
                        "<w>Ctrl-L</w> show builder logs for level\n"
 #endif
-                       "<w>Ctrl-R</w> regenerate current level\n"
-                       "<w>P</w>      create a level based on a vault\n",
+                       "\n"
+                       "<yellow>Other level related commands</yellow>\n"
+                       "<w>{</w>      magic mapping\n"
+                       "<w>b</w>      controlled blink\n"
+                       "<w>B</w>      controlled teleport\n"
+                       "<w>~</w>      go to a specific level\n"
+                       "<w>u</w>/<w>d</w>    shift up/down one level\n"
+                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
+                       "<w>Ctrl-S</w> change Abyss speed\n"
+                       "<w>R</w>      change monster spawn rate\n"
+                       "<w>Ctrl-W</w> change Shoals' tide speed\n",
                        true);
 
     cols.add_formatted(1,
