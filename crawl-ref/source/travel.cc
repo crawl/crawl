@@ -726,22 +726,6 @@ static bool _level_has_unknown_transporters()
     return false;
 }
 
-// Determines if the level is fully explored.
-static int _find_explore_status(const travel_pathfind &tp)
-{
-    int explore_status = 0;
-
-    const coord_def greed = tp.greedy_square();
-    if (greed.x || greed.y)
-        explore_status |= EST_GREED_UNFULFILLED;
-
-    const coord_def unexplored = tp.unexplored_square();
-    if (unexplored.x || unexplored.y || !tp.get_unreachables().empty())
-        explore_status |= EST_PARTLY_EXPLORED;
-
-    return explore_status;
-}
-
 static void _set_target_square(const coord_def &target)
 {
     you.running.pos = target;
@@ -804,7 +788,7 @@ static void _explore_find_target_square()
     else
     {
         // No place to go? Report to the player.
-        const int estatus = _find_explore_status(tp);
+        const int estatus = tp.explore_status();
         const bool unknown_trans = _level_has_unknown_transporters();
         if (!estatus && !unknown_trans)
         {
@@ -1170,16 +1154,6 @@ void travel_pathfind::set_floodseed(const coord_def &seed, bool dblflood)
     double_flood = dblflood;
 }
 
-void travel_pathfind::set_annotate_map(bool annotate)
-{
-    annotate_map = annotate;
-}
-
-void travel_pathfind::set_distance_grid(travel_distance_grid_t grid)
-{
-    point_distance = grid;
-}
-
 void travel_pathfind::set_feature_vector(vector<coord_def> *feats)
 {
     features = feats;
@@ -1189,11 +1163,6 @@ void travel_pathfind::set_feature_vector(vector<coord_def> *feats)
         double_flood = true;
         annotate_map = true;
     }
-}
-
-const coord_def travel_pathfind::travel_move() const
-{
-    return next_travel_move;
 }
 
 const coord_def travel_pathfind::explore_target() const
@@ -1209,16 +1178,6 @@ const coord_def travel_pathfind::explore_target() const
         return greedy_place;
 
     return coord_def(0, 0);
-}
-
-const coord_def travel_pathfind::greedy_square() const
-{
-    return greedy_place;
-}
-
-const coord_def travel_pathfind::unexplored_square() const
-{
-    return unexplored_place;
 }
 
 // The travel algorithm is based on the NetHack travel code written by Warwick
@@ -1344,7 +1303,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
             if (path_examine_point(circumference[circ_index][i]))
             {
                 if (runmode == RMODE_TRAVEL)
-                    return travel_move();
+                    return next_travel_move;
                 else if (runmode == RMODE_CONNECTIVITY
                          || !Options.explore_wall_bias)
                 {
@@ -1407,7 +1366,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
         }
     }
 
-    return runmode == RMODE_TRAVEL ? travel_move()
+    return runmode == RMODE_TRAVEL ? next_travel_move
                                    : explore_target();
 }
 
@@ -1447,11 +1406,6 @@ void travel_pathfind::get_features()
 
         _fill_exclude_radius(exc);
     }
-}
-
-const set<coord_def> travel_pathfind::get_unreachables() const
-{
-    return unreachables;
 }
 
 bool travel_pathfind::square_slows_movement(const coord_def &c)
@@ -1771,6 +1725,23 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     }
 
     return found_target;
+}
+
+// Determines if the level is fully explored.
+// This uses data provided by pathfind(), so that needs to be called first.
+int travel_pathfind::explore_status()
+{
+    int explore_status = 0;
+
+    const coord_def greed = greedy_place;
+    if (greed.x || greed.y)
+        explore_status |= EST_GREED_UNFULFILLED;
+
+    const coord_def unexplored = unexplored_place;
+    if (unexplored.x || unexplored.y || !unreachables.empty())
+        explore_status |= EST_PARTLY_EXPLORED;
+
+    return explore_status;
 }
 
 
