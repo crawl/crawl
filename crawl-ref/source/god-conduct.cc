@@ -647,6 +647,22 @@ static like_response okawaru_kill(const char* desc)
     };
 }
 
+static const like_response _fedhas_kill_living_response()
+{
+    return
+    {
+        "you kill living beings", false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &, int &, const monster* victim)
+        {
+            if (victim && mons_class_can_leave_corpse(mons_species(victim->type)))
+                simple_god_message(" appreciates your contribution to the ecosystem.");
+            else
+                simple_god_message(" accepts your kill.");
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -805,7 +821,7 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_FEDHAS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_LIVING, _fedhas_kill_living_response() },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
