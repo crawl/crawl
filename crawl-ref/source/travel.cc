@@ -1115,7 +1115,7 @@ travel_pathfind::travel_pathfind()
       need_for_greed(false), autopickup(false),
       unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
       refdist(nullptr), reseed_points(), features(nullptr), unreachables(),
-      point_distance(travel_point_distance), points(0), next_iter_points(0),
+      point_distance(travel_point_distance), next_iter_points(0),
       traveled_distance(0), circ_index(0)
 {
 }
@@ -1260,10 +1260,6 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
                                  !actor_slime_wall_immune(&you));
     unwind_slime_wall_precomputer slime_neighbours(g_Slime_Wall_Check);
 
-    // How many points are we currently considering? We start off with just one
-    // point, and spread outwards like a flood-filler.
-    points = 1;
-
     // How many points we'll consider next iteration.
     next_iter_points = 0;
 
@@ -1292,8 +1288,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     bool found_target = false;
 
-    for (; points > 0; ++traveled_distance, circ_index = !circ_index,
-                        points = next_iter_points, next_iter_points = 0)
+    for (int points = 1; points > 0; ++traveled_distance,
+        circ_index = !circ_index, points = next_iter_points,
+        next_iter_points = 0)
     {
         for (int i = 0; i < points; ++i)
         {

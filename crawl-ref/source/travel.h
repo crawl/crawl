@@ -593,10 +593,6 @@ protected:
 
     travel_distance_col *point_distance;
 
-    // How many points are we currently considering? We start off with just one
-    // point, and spread outwards like a flood-filler.
-    int points;
-
     // How many points we'll consider next iteration.
     int next_iter_points;
 
