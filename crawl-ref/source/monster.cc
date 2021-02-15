@@ -1033,6 +1033,8 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (!force && mons_class_is_animated_weapon(type))
+            return false;
         unequip_weapon(item, msg);
         break;
 
