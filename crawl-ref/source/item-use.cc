@@ -1383,16 +1383,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.form == transformation::appendage
-        && ignore_temporary
-        && slot == beastly_slot(you.attribute[ATTR_APPENDAGE])
-        && you.has_mutation(static_cast<mutation_type>(you.attribute[ATTR_APPENDAGE])))
-    {
-        unwind_var<uint8_t> mutv(you.mutation[you.attribute[ATTR_APPENDAGE]], 0);
-        // disable the mutation then check again
-        return can_wear_armour(item, verbose, ignore_temporary);
-    }
-
     if (sub_type == ARM_GLOVES)
     {
         if (you.has_claws(false) == 3)

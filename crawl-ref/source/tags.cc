@@ -3827,6 +3827,23 @@ static void tag_read_you(reader &th)
         if (you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int() == GENDER_NEUTER)
             you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = GENDER_NEUTRAL;
     }
+
+    // Appendage changed to meld, so let's untransform players who were using
+    // the old one
+    if (th.getMinorVersion() < TAG_MINOR_APPENDAGE
+        && you.form == transformation::appendage)
+    {
+        you.form = transformation::none;
+        you.duration[DUR_TRANSFORMATION] = 0;
+        const mutation_type app = static_cast<mutation_type>(you.attribute[ATTR_UNUSED3]);
+        const int levels = you.get_base_mutation_level(app);
+        const int beast_levels = app == MUT_HORNS ? 2 : 3;
+        // Preserve extra mutation levels acquired after transforming.
+        const int extra = max(0, levels - you.get_innate_mutation_level(app)
+                                        - beast_levels);
+        you.mutation[app] = you.get_innate_mutation_level(app) + extra;
+        you.attribute[ATTR_UNUSED3] = 0;
+    }
 #endif
 
     //no minor version need

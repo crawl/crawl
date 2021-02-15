@@ -36,7 +36,9 @@ enum attribute_type
     ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
-    ATTR_APPENDAGE,            // eq slot of Beastly Appendage
+#if TAG_MAJOR_VERSION == 34
+    ATTR_UNUSED3,            // old Beastly Appendage
+#endif
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.

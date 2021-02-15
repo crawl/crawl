@@ -2052,6 +2052,14 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     return true;
 }
 
+static bool _is_appendage_mutation(mutation_type mut)
+{
+    for (auto app : you.props[APPENDAGE_KEY].get_vector())
+        if (mut == static_cast<mutation_type>(app.get_int()))
+            return true;
+    return false;
+}
+
 /*
  * Delete a mutation level, accepting random mutation types and checking mutation resistance.
  * This will not delete temporary or innate mutations.
@@ -2129,7 +2137,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                 continue;
 
             // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
-            if (mutat && mutat == you.attribute[ATTR_APPENDAGE])
+            if (mutat && _is_appendage_mutation(mutat))
                 continue;
 
             const mutation_def& mdef = _get_mutation_def(mutat);
@@ -2446,7 +2454,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             colourname = "darkgrey";
         else if (partially_active)
             colourname = "brown";
-        else if (you.form == transformation::appendage && you.attribute[ATTR_APPENDAGE] == mut)
+        else if (_is_appendage_mutation(mut) && you.form == transformation::appendage)
             colourname = "lightgreen";
         else if (is_slime_mutation(mut))
             colourname = "green";
