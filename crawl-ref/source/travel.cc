@@ -1889,9 +1889,12 @@ void fill_travel_point_distance(const coord_def& youpos,
     travel_pathfind tp;
     tp.set_floodseed(youpos);
     tp.set_feature_vector(features);
-    coord_def dest = tp.pathfind(RMODE_NOT_RUNNING, false);
-    if (dest.origin())
-        dest = tp.pathfind(RMODE_NOT_RUNNING, true);
+
+    // Calling pathfind() twice like this changes the order of *features, but
+    // has no effect on travel_point_distance.
+    if (features)
+        tp.pathfind(RMODE_NOT_RUNNING, false);
+    tp.pathfind(RMODE_NOT_RUNNING, true);
 }
 
 extern map<branch_type, set<level_id> > stair_level;
