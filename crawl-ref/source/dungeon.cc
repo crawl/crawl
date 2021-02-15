@@ -34,7 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
-#include "tile-env.h"
+#include "fight.h"
 #include "files.h"
 #include "flood-find.h"
 #include "ghost.h"
@@ -49,6 +49,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -65,6 +66,7 @@
 #include "stringutil.h"
 #include "rltiles/tiledef-dngn.h"
 #include "tag-version.h"
+#include "tile-env.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
@@ -4796,6 +4798,24 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     dgn_place_item(spec, where);
 }
 
+static void _give_animated_weapon_ammo(monster &mon)
+{
+    const item_def *launcher = mon.launcher();
+    if (!launcher)
+        return;
+
+    const item_def *missiles = mon.missiles();
+    if (missiles && missiles->launched_by(*launcher))
+        return;
+
+    const int ammo_type = fires_ammo_type(*launcher);
+    const int thing_created = items(false, OBJ_MISSILES, ammo_type, 1);
+    if (thing_created == NON_ITEM)
+        return;
+
+    give_specific_item(&mon, thing_created);
+}
+
 static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
 {
     ASSERT(mspec.place.is_valid());
@@ -4893,6 +4913,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     {
         mon->swap_weapons(MB_FALSE);
     }
+
+    // Make dancing launchers less pathetic.
+    if (mons_class_is_animated_weapon(mon->type))
+        _give_animated_weapon_ammo(*mon);
 }
 
 static bool _monster_type_is_already_spawned_unique(monster_type type)
