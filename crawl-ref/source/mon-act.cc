@@ -1173,7 +1173,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && mons->type != MONS_SPECTRAL_THING)
+        && mons->type != MONS_SPECTRAL_THING
+        && !mons_class_is_animated_weapon(mons->type))
     {
         return false;
     }
