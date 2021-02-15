@@ -146,7 +146,7 @@ namespace quiver
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
-        void on_actions_changed();
+        void on_actions_changed(bool check_autoswitch=false);
         virtual void set_needs_redraw();
         shared_ptr<action> find_last_valid();
 
@@ -176,7 +176,7 @@ namespace quiver
     };
 
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
-    void on_actions_changed();
+    void on_actions_changed(bool check_autoswitch=false);
     void on_weapon_changed();
 
     // TODO: perhaps this should be rolled into action_cycler?

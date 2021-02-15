@@ -438,11 +438,10 @@ bool dec_inv_item_quantity(int obj, int amount)
         // the next stack.
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
+        quiver::on_actions_changed();
     }
     else
         you.inv[obj].quantity -= amount;
-
-    quiver::on_actions_changed();
 
     return ret;
 }
@@ -477,7 +476,8 @@ void inc_inv_item_quantity(int obj, int amount)
         you.wield_change = true;
 
     you.inv[obj].quantity += amount;
-    quiver::on_actions_changed();
+    if (you.inv[obj].quantity == amount) // not currently possible?
+        quiver::on_actions_changed(true);
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -2080,7 +2080,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     }
 
     you.last_pickup[item.link] = quant_got;
-    quiver::on_actions_changed();
+    quiver::on_actions_changed(true);
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))

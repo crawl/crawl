@@ -2330,7 +2330,7 @@ namespace quiver
         return set(next(dir, allow_disabled));
     }
 
-    void action_cycler::on_actions_changed()
+    void action_cycler::on_actions_changed(bool check_autoswitch)
     {
         if (!get()->is_valid())
         {
@@ -2338,7 +2338,7 @@ namespace quiver
             if (r && r->is_valid())
                 set(r, true);
         }
-        else if (autoswitched)
+        else if (check_autoswitch && autoswitched)
         {
             auto r = ammo_to_action(you.m_quiver_history.get_last_ammo(get()->get_launcher()));
             if (r && r->is_valid())
@@ -2912,10 +2912,10 @@ namespace quiver
             unmarshallItem(inf, m_last_used_of_type[i]);
     }
 
-    void on_actions_changed()
+    void on_actions_changed(bool check_autoswitch)
     {
-        you.quiver_action.on_actions_changed();
-        you.launcher_action.on_actions_changed();
+        you.quiver_action.on_actions_changed(check_autoswitch);
+        you.launcher_action.on_actions_changed(check_autoswitch);
     }
 
     void set_needs_redraw()
