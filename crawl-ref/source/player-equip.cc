@@ -62,7 +62,6 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     you.equip[slot] = item_slot;
 
     equip_effect(slot, item_slot, false, msg);
-    ash_check_bondage();
     you.gear_change = true;
 }
 
@@ -198,6 +197,9 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
+
+    if (item.cursed() && !meld)
+        destroy_item(item);
 }
 
 ///////////////////////////////////////////////////////////

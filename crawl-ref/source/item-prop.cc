@@ -906,30 +906,6 @@ void do_curse_item(item_def &item, bool quiet)
 }
 
 /**
- * Attempt to un-curse the given item.
- *
- * @param item      The item in question.
- * @param check_bondage     Whether to update the player's Ash bondage status.
- *                          (Ash ?rc delays this until later.)
- */
-void do_uncurse_item(item_def &item, bool check_bondage)
-{
-    const bool in_inv = in_inventory(item);
-    if (!item.cursed())
-        return;
-
-    if (in_inv && you.equip[EQ_WEAPON] == item.link)
-    {
-        // Redraw the weapon.
-        you.wield_change = true;
-    }
-    item.flags &= (~ISFLAG_CURSED);
-
-    if (check_bondage && in_inv)
-        ash_check_bondage();
-}
-
-/**
  * Make a net stationary (because it currently traps a victim).
  *
  * @param item The net item.

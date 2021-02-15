@@ -16,11 +16,7 @@ Ashenzari provides worshippers with a bounty of knowledge about their
 surroundings. Followers are able to glimpse the shape of the dungeon around
 them, and can sense portals to other realms. They can detect nearby items and
 traps, and can sense monsters and gain an indication of how dangerous they
-are. While equipped with cursed equipment, they can also identify on sight the
-properties of other items of that type that are found.
-
-Ashenzari's followers can use scrolls of identification to remove curses on
-their items, channeling the immense power of their deity's incomparable vision.
+are.
 %%%%
 Beogh
 

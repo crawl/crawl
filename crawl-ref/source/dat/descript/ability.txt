@@ -542,7 +542,12 @@ Removes a randomly selected bad mutation.
 # Ashenzari
 Curse Item ability
 
-Curses a chosen item, at the cost of a scroll of identify.
+Curses a chosen equipped item, binding it to the wearer until the curse
+and the item both are broken.
+%%%%
+Shatter The Chains ability
+
+Destroys a chosen cursed equipped item, relieving the wearer of the curse.
 %%%%
 # Dithmenos
 Shadow Step ability

@@ -3222,10 +3222,7 @@ void read_scroll(item_def& scroll)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, true);
         }
-        if (have_passive(passive_t::want_curses))
-            cancel_scroll = !remove_curse(alreadyknown, alreadyknown ? pre_succ_msg : "");
-        else
-            cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+        cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
         break;
 
     case SCR_ENCHANT_ARMOUR:

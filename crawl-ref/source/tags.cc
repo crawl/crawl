@@ -5178,7 +5178,7 @@ void unmarshallItem(reader &th, item_def &item)
         item.charges = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_UNCURSE && item.cursed())
-        do_uncurse_item(item, false);
+        item.flags &= (~ISFLAG_CURSED);
 
     // turn old hides into the corresponding armour
     static const map<int, armour_type> hide_to_armour = {

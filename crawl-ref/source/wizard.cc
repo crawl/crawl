@@ -75,7 +75,6 @@ static void _do_wizard_command(int wiz_command)
         break;
 
     case 'c': wizard_draw_card(); break;
-    case 'C': wizard_uncurse_item(); break;
     case CONTROL('C'): die("Intentional crash");
 
     case 'd': wizard_level_travel(true); break;
@@ -483,7 +482,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
                        "<w>a</w>      acquirement\n"
-                       "<w>C</w>      (un)curse item\n"
                        "<w>i</w>/<w>I</w>    identify/unidentify inventory\n"
                        "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
                        "<w>o</w>/<w>%</w>    create an object\n"

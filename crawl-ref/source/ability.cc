@@ -94,7 +94,7 @@ enum class abflag
     instant             = 0x00000020, // doesn't take time to use
     conf_ok             = 0x00000040, // can use even if confused
     variable_mp         = 0x00000080, // costs a variable amount of MP
-    identify_scroll     = 0x00000100, // Uses ?id
+    curse               = 0x00000100, // Destroys a cursed item
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
@@ -518,6 +518,8 @@ static const ability_def Ability_List[] =
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
         0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_ASHENZARI_UNCURSE, "Shatter the Chains",
+        0, 0, 0, {fail_basis::invo}, abflag::curse },
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
@@ -790,8 +792,8 @@ const string make_cost_description(ability_type ability)
         ret += ", Max HP drain";
     }
 
-    if (abil.flags & abflag::identify_scroll)
-        ret += ", Scroll of identify";
+    if (abil.flags & abflag::curse)
+        ret += ", Cursed item";
 
     if (abil.flags & abflag::gold)
     {
@@ -882,10 +884,10 @@ static const string _detailed_cost_description(ability_type ability)
             ret << "variable";
     }
 
-    if (abil.flags & abflag::identify_scroll)
+    if (abil.flags & abflag::curse)
     {
         have_cost = true;
-        ret << "\nOne scroll of identify";
+        ret << "\nOne cursed item";
     }
 
     if (!have_cost)
@@ -2912,6 +2914,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
     }
 
+    case ABIL_ASHENZARI_UNCURSE:
+        fail_check();
+        if (!ashenzari_uncurse_item())
+            return spret::abort;
+        break;
+
     case ABIL_DITHMENOS_SHADOW_STEP:
         if (_abort_if_stationary() || cancel_harmful_move(false))
             return spret::abort;
@@ -3741,8 +3749,13 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
     }
-    if (you_worship(GOD_ASHENZARI) && you.props.exists(AVAILABLE_CURSE_KEY))
-        abilities.push_back(ABIL_ASHENZARI_CURSE);
+    if (you_worship(GOD_ASHENZARI))
+    {
+        if (you.props.exists(AVAILABLE_CURSE_KEY))
+            abilities.push_back(ABIL_ASHENZARI_CURSE);
+        if (ignore_piety || you.piety > ASHENZARI_BASE_PIETY )
+            abilities.push_back(ABIL_ASHENZARI_UNCURSE);
+    }
     // XXX: should we check ignore_piety?
     if (you_worship(GOD_HEPLIAKLQANA)
         && piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))

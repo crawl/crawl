@@ -1185,10 +1185,18 @@ static void _remove_equipment(const set<equipment_type>& removed,
                 unequip = true;
         }
 
-        mprf("%s %s%s %s", equip->name(DESC_YOUR).c_str(),
+        const string msg = make_stringf("%s %s%s %s",
+             equip->name(DESC_YOUR).c_str(),
              unequip ? "fall" : "meld",
              equip->quantity > 1 ? "" : "s",
-             unequip ? "away!" : "into your body.");
+             unequip ? "away" : "into your body.");
+
+        if (you_worship(GOD_ASHENZARI) && unequip)
+            mprf(MSGCH_GOD, "%s, shattering the curse!", msg.c_str());
+        else if (unequip)
+            mprf("%s!", msg.c_str());
+        else
+            mpr(msg);
 
         if (unequip)
         {

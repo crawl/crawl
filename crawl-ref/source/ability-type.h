@@ -194,6 +194,7 @@ enum ability_type
 #else
     ABIL_ASHENZARI_CURSE = 1160,
 #endif
+    ABIL_ASHENZARI_UNCURSE,
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
