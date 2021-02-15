@@ -68,7 +68,7 @@ bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
 
-void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
+void fill_travel_point_distance(const coord_def& youpos,
                      vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);

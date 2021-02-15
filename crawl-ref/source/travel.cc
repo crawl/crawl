@@ -895,6 +895,108 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
+/**
+ * Run the travel_pathfind algorithm with a destination with the aim of
+ * determining the next travel move. Try to avoid to let travel (including
+ * autoexplore) move the player right next to a lurking (previously unseen)
+ * monster.
+ *
+ * Pathfinding runs from you.running.pos to youpos, and the move contains the
+ * next movement relative to youpos to move closer to you.running.pos. If a
+ * runed door (or a closed door, if travel_open_doors isn't open) is encountered
+ * or a transporter needs to be taken, these are set to 0, and the caller checks
+ * for this.
+ *
+ * @param      youpos The starting position.
+ * @param[out] move_x If we want a travel move, the x coordinate.
+ * @param[out] move_y If we want a travel move, the y coordinate.
+ */
+static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
+{
+    travel_pathfind tp;
+
+    tp.set_src_dst(youpos, you.running.pos);
+
+    run_mode_type rmode = RMODE_TRAVEL;
+
+    coord_def dest = tp.pathfind(rmode, false);
+    if (dest.origin())
+        dest = tp.pathfind(rmode, true);
+    coord_def new_dest = dest;
+
+    // We'd either have to travel through a runed door, in which case we'll be
+    // stopping, or a transporter, in which case we need to issue a command to
+    // enter.
+    pair<bool, string> barrier;
+    if ((barrier = _feat_is_blocking_door_strict(env.grid(new_dest))).first
+            || env.grid(youpos) == DNGN_TRANSPORTER
+               && env.grid(new_dest) == DNGN_TRANSPORTER_LANDING
+               && youpos.distance_from(new_dest) > 1)
+    {
+        *move_x = 0;
+        *move_y = 0;
+        if (!barrier.second.empty())
+        {
+            mpr("Could not " + you.running.runmode_name() + ", "
+                + barrier.second + ".");
+        }
+        return;
+    }
+
+    // Check whether this step puts us adjacent to any grid we haven't ever
+    // seen or any non-wall grid we cannot currently see.
+    //
+    // .tx      Moving onto t puts us adjacent to an unseen grid.
+    // ?#@      --> Pick x instead.
+    // Only applies to diagonal moves.
+    if (rmode == RMODE_TRAVEL && !dest.origin() && dest.x != youpos.x
+        && dest.y != youpos.y)
+    {
+        coord_def unseen = coord_def();
+        for (adjacent_iterator ai(dest); ai; ++ai)
+            if (!you.see_cell(*ai)
+                && (!env.map_knowledge(*ai).seen()
+                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
+            {
+                unseen = *ai;
+                break;
+            }
+
+        if (unseen != coord_def())
+        {
+            // If so, try to use an orthogonally adjacent grid that is safe to
+            // enter.
+            if (youpos.x == unseen.x)
+                new_dest.y = youpos.y;
+            else if (youpos.y == unseen.y)
+                new_dest.x = youpos.x;
+
+            // If the new grid cannot be entered, reset to dest. This means
+            // that autoexplore will still sometimes move you next to a
+            // previously unseen monster but the same would happen by manual
+            // movement, so I don't think we need to worry about this. (jpeg)
+            if (!_is_travelsafe_square(new_dest)
+                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
+            {
+                new_dest = dest;
+            }
+#ifdef DEBUG_SAFE_EXPLORE
+            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), "
+                     "unseen: (%d, %d), new_dest: (%d, %d)",
+                 youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
+                 new_dest.x, new_dest.y);
+            more();
+#endif
+        }
+    }
+
+    if (new_dest.origin())
+        you.running = RMODE_NOT_RUNNING;
+
+    *move_x = new_dest.x - youpos.x;
+    *move_y = new_dest.y - youpos.y;
+}
+
 // Determine the necessary command when find_travel_pos() indicates that we
 // shouldn't move.
 static command_type _get_non_move_command()
@@ -1026,7 +1128,7 @@ command_type travel()
 
         // Get the next step to make. If the travel command can't find a route,
         // we turn off travel (find_travel_pos does that automatically).
-        find_travel_pos(you.pos(), move_x, move_y);
+        _find_travel_pos(you.pos(), move_x, move_y);
 
         // Stop greedy explore when visiting a stash for the first time.
         if ((*move_x || *move_y)
@@ -1775,125 +1877,21 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 
 
 /**
- * Run the travel_pathfind algorithm, either from the given position in
- * floodout mode to populate travel_point_distance relative to that starting
- * point, or with a destination with the aim of determining the next travel
- * move. In the latter case, try to avoid to let travel (including autoexplore)
- * move the player right next to a lurking (previously unseen) monster.
- *
- * If move_x and move_y are given, pathfinding runs from you.running.pos to
- * youpos, and the move contains the next movement relative to youpos to move
- * closer to you.running.pos. If a runed door (or a closed door, if
- * travel_open_doors isn't open) is encountered or a transporter needs to be
- * taken, these are set to 0, and the caller checks for this.
- *
- * XXX The two modes of this function (with and without move_x/move_y) should
- * be split into two different functions, since they aren't really related.
+ * Run the travel_pathfind algorithm, from the given position in floodout mode
+ * to populate travel_point_distance relative to that starting point.
  *
  * @param      youpos The starting position.
- * @param[out] move_x If we want a travel move, the x coordinate.
- * @param[out] move_y If we want a travel move, the y coordinate.
  * @param[in]  features A vector of features to give to travel_pathfind.
  */
-void find_travel_pos(const coord_def& youpos,
-                     int *move_x, int *move_y,
-                     vector<coord_def>* features)
+void fill_travel_point_distance(const coord_def& youpos,
+                                vector<coord_def>* features)
 {
-    const bool need_move = move_x && move_y;
     travel_pathfind tp;
-
-    if (need_move)
-        tp.set_src_dst(youpos, you.running.pos);
-    else
-        tp.set_floodseed(youpos);
-
+    tp.set_floodseed(youpos);
     tp.set_feature_vector(features);
-
-    run_mode_type rmode = (need_move) ? RMODE_TRAVEL : RMODE_NOT_RUNNING;
-
-    coord_def dest = tp.pathfind(rmode, false);
+    coord_def dest = tp.pathfind(RMODE_NOT_RUNNING, false);
     if (dest.origin())
-        dest = tp.pathfind(rmode, true);
-    coord_def new_dest = dest;
-
-    // We'd either have to travel through a runed door, in which case we'll be
-    // stopping, or a transporter, in which case we need to issue a command to
-    // enter.
-    pair<bool, string> barrier;
-    if (need_move
-        && ((barrier = _feat_is_blocking_door_strict(env.grid(new_dest))).first
-            || env.grid(youpos) == DNGN_TRANSPORTER
-               && env.grid(new_dest) == DNGN_TRANSPORTER_LANDING
-               && youpos.distance_from(new_dest) > 1))
-    {
-        *move_x = 0;
-        *move_y = 0;
-        if (!barrier.second.empty())
-        {
-            mpr("Could not " + you.running.runmode_name() + ", "
-                + barrier.second + ".");
-        }
-        return;
-    }
-
-    // Check whether this step puts us adjacent to any grid we haven't ever
-    // seen or any non-wall grid we cannot currently see.
-    //
-    // .tx      Moving onto t puts us adjacent to an unseen grid.
-    // ?#@      --> Pick x instead.
-    // Only applies to diagonal moves.
-    if (rmode == RMODE_TRAVEL && !dest.origin() && dest.x != youpos.x
-        && dest.y != youpos.y)
-    {
-        coord_def unseen = coord_def();
-        for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!you.see_cell(*ai)
-                && (!env.map_knowledge(*ai).seen()
-                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
-            {
-                unseen = *ai;
-                break;
-            }
-
-        if (unseen != coord_def())
-        {
-            // If so, try to use an orthogonally adjacent grid that is safe to
-            // enter.
-            if (youpos.x == unseen.x)
-                new_dest.y = youpos.y;
-            else if (youpos.y == unseen.y)
-                new_dest.x = youpos.x;
-
-            // If the new grid cannot be entered, reset to dest. This means
-            // that autoexplore will still sometimes move you next to a
-            // previously unseen monster but the same would happen by manual
-            // movement, so I don't think we need to worry about this. (jpeg)
-            if (!_is_travelsafe_square(new_dest)
-                || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
-            {
-                new_dest = dest;
-            }
-#ifdef DEBUG_SAFE_EXPLORE
-            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), "
-                     "unseen: (%d, %d), new_dest: (%d, %d)",
-                 youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
-                 new_dest.x, new_dest.y);
-            more();
-#endif
-        }
-    }
-
-    if (new_dest.origin())
-    {
-        if (need_move)
-            you.running = RMODE_NOT_RUNNING;
-    }
-
-    if (need_move)
-    {
-        *move_x = new_dest.x - youpos.x;
-        *move_y = new_dest.y - youpos.y;
-    }
+        dest = tp.pathfind(RMODE_NOT_RUNNING, true);
 }
 
 extern map<branch_type, set<level_id> > stair_level;
@@ -3072,7 +3070,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target)
 static void _populate_stair_distances(const level_pos &target)
 {
     // Populate travel_point_distance.
-    find_travel_pos(target.pos, nullptr, nullptr, nullptr);
+    fill_travel_point_distance(target.pos);
 
     curr_stairs.clear();
     for (stair_info si : travel_cache.get_level_info(target.id).get_stairs())
@@ -3099,7 +3097,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     int best_level_distance = -1;
     travel_cache.clear_distances();
 
-    find_travel_pos(you.pos(), nullptr, nullptr, nullptr);
+    fill_travel_point_distance(you.pos());
 
     // either off-level, or traversable and on-level
     // TODO: actually check this when the square is off-level? The current
@@ -3491,7 +3489,7 @@ void LevelInfo::update_stair_distances()
 
         // For each stair, we need to ask travel to populate the distance
         // array.
-        find_travel_pos(stairs[s].position, nullptr, nullptr, nullptr);
+        fill_travel_point_distance(stairs[s].position);
 
         // Assume movement distance between stairs is commutative,
         // i.e. going from a->b is the same distance as b->a.
