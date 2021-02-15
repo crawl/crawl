@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "ability-type.h"
+#include "command-type.h"
 #include "format.h"
 #include "spell-type.h"
 #include "tiles.h" // for tile_def
@@ -152,7 +153,8 @@ namespace quiver
 
         void target();
         shared_ptr<action> do_target();
-        string fire_key_hints() const;
+        virtual string fire_key_hints() const;
+        virtual bool targeter_handles_key(command_type c) const;
 
         bool autoswitched;
     protected:

@@ -320,7 +320,11 @@ void direction_chooser::print_key_hints() const
     else
     {
         if (moves.fire_context)
-            prompt += moves.fire_context->fire_key_hints() + "\n";
+        {
+            const string hint = moves.fire_context->fire_key_hints();
+            if (!hint.empty())
+                prompt += hint + "\n";
+        }
         string direction_hint = "";
         if (!behaviour->targeted())
             direction_hint = "Dir - look around, f - activate";
@@ -2127,23 +2131,20 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_DESCRIBE: describe_target(); break;
     case CMD_TARGET_HELP:     show_help();       break;
 
-    case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
-    case CMD_TARGET_CYCLE_QUIVER_FORWARD:
-    case CMD_TARGET_SELECT_ACTION:
-        if (moves.fire_context)
+    default:
+        if (moves.fire_context
+            && moves.fire_context->targeter_handles_key(command))
         {
             // because of the somewhat convoluted way in which action selection
-            // is handled, this can only be handled if the direction chooser
-            // has been called via a quiver::action. Otherwise, we ignore these
-            // commands.
+            // is handled, some commands can only be handled if the direction
+            // chooser has been called via a quiver::action. Otherwise, we
+            // ignore these commands.
             moves.isValid = false;
             moves.isCancel = true;
             moves.cmd_result = static_cast<int>(command);
             loop_done = true;
+            break;
         }
-        break; // otherwise, ignore
-
-    default:
         // Some blocks of keys with similar handling.
         handle_movement_key(command, &loop_done);
         handle_wizard_command(command, &loop_done);

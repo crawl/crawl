@@ -259,6 +259,20 @@ namespace quiver
         return key_hint;
     }
 
+    bool action_cycler::targeter_handles_key(command_type c) const
+    {
+        // TODO: factor these out of the menu code into methods on this class?
+        switch (c)
+        {
+        case CMD_TARGET_SELECT_ACTION:
+        case CMD_TARGET_CYCLE_QUIVER_FORWARD:
+        case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     // Get a sorted list of items to show in the fire interface.
     //
     // If ignore_inscription_etc, ignore =f and Options.fire_items_start.
@@ -781,7 +795,9 @@ namespace quiver
             // TODO: refactor throw_it into here?
             throw_it(*this);
 
-            // TODO: eliminate this?
+            // Update the legacy quiver history data structure
+            // TODO: eliminate this? History should be stored per quiver, not
+            // globally
             you.m_quiver_history.on_item_fired(you.inv[ammo_slot],
                     !target.fire_context || !target.fire_context->autoswitched);
 
@@ -2687,8 +2703,11 @@ namespace quiver
             if (!a || !a->is_valid())
                 force_restore_initial = true;
 
-            what_happened = a ? static_cast<command_type>(a->target.cmd_result)
-                              : CMD_NO_CMD;
+            what_happened =
+                a && targeter_handles_key(
+                                static_cast<command_type>(a->target.cmd_result))
+                        ? static_cast<command_type>(a->target.cmd_result)
+                        : CMD_NO_CMD;
 
             switch (what_happened)
             {

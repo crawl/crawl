@@ -259,6 +259,7 @@ static int _get_dart_chance(const int hd)
 // Bring up an inventory screen and have user choose an item.
 // Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
+// TODO: consolidate with menu code in quiver.cc?
 static int _fire_prompt_for_item()
 {
     if (inv_count() < 1)
@@ -359,6 +360,31 @@ bool is_pproj_active()
            && enough_mp(1, true, false);
 }
 
+class ammo_only_action_cycler : public quiver::action_cycler
+{
+public:
+    // TODO: this could be much fancier, and perhaps allow reselecting an item
+    // once you are already in this interface. As it is, this class exists to
+    // keep the general quiver ui from appearing under throw_item_no_quiver.
+    // Possibly refactor most of throw_item_no_quiver into this class?
+
+    ammo_only_action_cycler()
+        : quiver::action_cycler::action_cycler()
+    {
+
+    }
+
+    string fire_key_hints() const override
+    {
+        return "";
+    }
+
+    bool targeter_handles_key(command_type) const override
+    {
+        return false;
+    }
+};
+
 // Basically does what throwing used to do: throw/fire an item without changing
 // the quiver.
 void throw_item_no_quiver(dist *target)
@@ -395,10 +421,17 @@ void throw_item_no_quiver(dist *target)
         mpr(warn);
         return;
     }
+    // This is kind of inelegant, but the following has two effects:
+    // * For interactive targeting, use the action_cycler interface, which is
+    //   more general (though right now this generality is mostly unused).
+    // * Ensure that the regular fire history isn't affected by this call.
+    ammo_only_action_cycler q;
+    q.set(a, true);
+    if (target->needs_targeting())
+        q.target();
+    else
+        q.get()->trigger(*target);
 
-    // forces interactive targeting if no target is provided, otherwise,
-    // depends on the contents of target
-    a->trigger(*target);
     if (target->isCancel)
         canned_msg(MSG_OK);
 }
