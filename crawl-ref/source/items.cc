@@ -1517,10 +1517,7 @@ bool is_stackable_item(const item_def &item)
         case OBJ_MISCELLANY:
             switch (item.sub_type) 
             {
-                case MISC_PHANTOM_MIRROR:
                 case MISC_ZIGGURAT:
-                case MISC_SACK_OF_SPIDERS:
-                case MISC_BOX_OF_BEASTS:
                     return true;
                 default: break;
             }

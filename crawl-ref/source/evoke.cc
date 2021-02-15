@@ -702,7 +702,7 @@ static const pop_entry pop_spiders[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static bool _box_of_beasts(item_def &box)
+static bool _box_of_beasts()
 {
 #if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
@@ -741,14 +741,6 @@ static bool _box_of_beasts(item_def &box)
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
-    // After unboxing a beast, chance to break.
-    if (one_chance_in(3))
-    {
-        mpr("The now-empty box falls apart.");
-        ASSERT(in_inventory(box));
-        dec_inv_item_quantity(box.link, 1);
-    }
-
     return true;
 }
 
@@ -776,7 +768,7 @@ bool sack_of_spiders(int power, int count, coord_def pos)
     return success;
 }
 
-static bool _sack_of_spiders(item_def &sack)
+static bool _sack_of_spiders()
 {
 #if TAG_MAJOR_VERSION == 34
     const int surge = pakellas_surge_devices();
@@ -838,13 +830,6 @@ static bool _sack_of_spiders(item_def &sack)
                 trap->trigger(**mi);
             }
 
-        }
-        // After gettin' some bugs, check for destruction.
-        if (one_chance_in(3))
-        {
-            mpr("The now-empty bag unravels in your hand.");
-            ASSERT(in_inventory(sack));
-            dec_inv_item_quantity(sack.link, 1);
         }
     }
     else
@@ -2218,6 +2203,10 @@ static spret _condenser()
 
 bool evoke_check(int slot, bool quiet)
 {
+    item_def *i = nullptr;
+    if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
+        i = &you.inv[slot];
+
     const bool reaching = slot != -1 && ((slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE)
@@ -2233,6 +2222,14 @@ bool evoke_check(int slot, bool quiet)
     {
         if (!quiet)
             canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (i && is_xp_evoker(*i) && evoker_charges(i->sub_type) <= 0)
+    {
+        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
+        if (!quiet)
+            mprf("The %s is presently inert.", i->name(DESC_DBNAME).c_str());
         return false;
     }
     return true;
@@ -2264,7 +2261,7 @@ bool evoke_item(int slot)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, true))
+    if (!item_is_evokable(item, true, false, true) || !evoke_check(slot))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
@@ -2407,12 +2404,6 @@ bool evoke_item(int slot)
 
         case MISC_FAN_OF_GALES:
         {
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-
 #if TAG_MAJOR_VERSION == 34
             const int surge = pakellas_surge_devices();
             surge_power(you.spec_evoke() + surge);
@@ -2429,11 +2420,6 @@ bool evoke_item(int slot)
         }
 
         case MISC_LAMP_OF_FIRE:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_lamp_of_fire())
             {
                 expend_xp_evoker(item.sub_type);
@@ -2451,11 +2437,6 @@ bool evoke_item(int slot)
 #endif
 
         case MISC_PHIAL_OF_FLOODS:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_phial_of_floods())
             {
                 expend_xp_evoker(item.sub_type);
@@ -2466,11 +2447,6 @@ bool evoke_item(int slot)
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_evoke_horn_of_geryon())
             {
                 expend_xp_evoker(item.sub_type);
@@ -2481,13 +2457,23 @@ bool evoke_item(int slot)
             break;
 
         case MISC_BOX_OF_BEASTS:
-            if (_box_of_beasts(item))
+            if (_box_of_beasts())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The box is emptied!");
                 practise_evoking(1);
+            }
             break;
 
         case MISC_SACK_OF_SPIDERS:
-            if (_sack_of_spiders(item))
+            if (_sack_of_spiders())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The box is emptied!");
                 practise_evoking(1);
+            }
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
@@ -2501,11 +2487,6 @@ bool evoke_item(int slot)
                 practise_evoking(1);
             break;
         case MISC_LIGHTNING_ROD:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             if (_lightning_rod())
             {
                 practise_evoking(1);
@@ -2533,8 +2514,9 @@ bool evoke_item(int slot)
                     return false;
 
                 case spret::success:
-                    ASSERT(in_inventory(item));
-                    dec_inv_item_quantity(item.link, 1);
+                    expend_xp_evoker(item.sub_type);
+                    if (!evoker_charges(item.sub_type))
+                        mpr("The mirror clouds!");
                     // deliberate fall-through
                 case spret::fail:
                     practise_evoking(1);
@@ -2548,11 +2530,6 @@ bool evoke_item(int slot)
             break;
 
         case MISC_TIN_OF_TREMORSTONES:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             switch (_tremorstone())
             {
                 default:
@@ -2590,12 +2567,6 @@ bool evoke_item(int slot)
             break;
 
         case MISC_HEALING_MIST:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
-            else
             {
                 if (you.confused())
                 {
@@ -2618,11 +2589,6 @@ bool evoke_item(int slot)
             break;
 
         case MISC_CONDENSER_VANE:
-            if (!evoker_charges(item.sub_type))
-            {
-                mpr("That is presently inert.");
-                return false;
-            }
             switch (_condenser())
             {
                 default:

@@ -24,13 +24,7 @@ ae += [^n]identified.*spellbook
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
 :  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
-:  if string.find(itname, "lamp of fire")
-:  or string.find(itname, "phial of floods")
-:  or string.find(itname, "fan of gales")
-:  or string.find(itname, "tin of tremorstones")
-:  or string.find(itname, "lightning rod")
-:  or string.find(itname, "disc of storms")
-:  or string.find(itname, "crystal ball of energy") then
+:  if not string.find(itname, "ziggurat") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if itname == inv.name() then
 :        return false
