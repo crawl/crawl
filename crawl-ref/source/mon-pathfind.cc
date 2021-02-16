@@ -201,7 +201,7 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!in_bounds(npos))
             continue;
 
-        if (!traversable(npos) && npos != target)
+        if (!traversable_memoized(npos) && npos != target)
             continue;
 
         // Ignore this grid if it takes us above the allowed distance
@@ -386,6 +386,13 @@ vector<coord_def> monster_pathfind::calc_waypoints()
         waypoints.push_back(path[path.size() - 1]);
 
     return waypoints;
+}
+
+bool monster_pathfind::traversable_memoized(const coord_def& p)
+{
+    if (traversable_cache.count(p) == 0)
+        traversable_cache[p] = traversable(p);
+    return traversable_cache[p];
 }
 
 bool monster_pathfind::traversable(const coord_def& p)
