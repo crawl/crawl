@@ -449,7 +449,8 @@ public:
 
 bool is_stair_exclusion(const coord_def &p)
 {
-    if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
+    const auto f = env.map_knowledge(p).feat();
+    if (!feat_is_stair(f) || feat_stair_direction(f) == CMD_NO_CMD)
         return false;
 
     return get_exclusion_radius(p) == 1;
