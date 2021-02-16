@@ -1073,8 +1073,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     vector<monster*> targets;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->wont_attack() || mi->neutral())
+        if (mi->friendly() || mi->neutral())
             continue; // this should be enough to avoid penance?
+        if (mons_is_firewood(**mi))
+            continue;
         if (!you.can_see(**mi))
             continue;
         targets.emplace_back(*mi);
