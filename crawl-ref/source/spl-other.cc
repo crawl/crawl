@@ -846,7 +846,7 @@ spret create_wall(bool fail)
 
     
     int power = you.props[WILL_OF_EARTH_POWER_KEY].get_int();
-    temp_change_terrain(target, make_floor_? DNGN_TEMPORAL_FLOOR : DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
+    temp_change_terrain(target, make_floor_? DNGN_TEMPORARY_FLOOR : DNGN_ROCK_WALL, 50 + power + random2(power), TERRAIN_CHANGE_WALL_CREATE);
 
     mpr("The wall rise from the ground!");
 

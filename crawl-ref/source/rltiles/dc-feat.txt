@@ -274,7 +274,7 @@ teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
-temporal_floor DNGN_TEMPORAL_FLOOR
+temporary_floor DNGN_TEMPORARY_FLOOR
 
 # order matters (tilepick.c tileidx_feature())
 cobweb_none_0 DNGN_TRAP_WEB

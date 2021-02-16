@@ -54,7 +54,7 @@ static bool _is_bookrod_type(const item_def& item, bool (*matches)(spell_type sp
     if (!item_is_spellbook(item))
         return false;
 
-    //temporal fixed code...
+    //temporary fixed code...
     item_def* tempfixer = const_cast<item_def*>(&item);
     if(tempfixer->sub_type == BOOK_RANDART_THEME) {
         const CrawlHashTable &props = item.props;
