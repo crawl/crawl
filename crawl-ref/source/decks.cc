@@ -1173,16 +1173,12 @@ static void _elixir_card(int power)
     switch (power_level)
     {
     case 0:
-        if (coinflip())
-            you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
+        you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
+        you.set_duration(DUR_ELIXIR_MAGIC, 1 + random2(3));
         break;
     case 1:
-        if (you.hp * 2 < you.hp_max)
-            you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 10);
+        you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
+        you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(3));
         break;
     default:
         you.set_duration(DUR_ELIXIR_HEALTH, 10);
@@ -1191,10 +1187,6 @@ static void _elixir_card(int power)
 
     if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
         mpr("You begin rapidly regenerating health and magic.");
-    else if (you.duration[DUR_ELIXIR_HEALTH])
-        mpr("You begin rapidly regenerating.");
-    else
-        mpr("You begin rapidly regenerating magic.");
 
     apply_visible_monsters([=](monster& mon)
     {
