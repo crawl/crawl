@@ -1681,10 +1681,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_POLEARMS:
             if (species == SP_PALENTONGA && skill_rank == 5)
-            {
                 result = "Prickly Pangolin";
-                break;
-            }
+            break;
 
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
