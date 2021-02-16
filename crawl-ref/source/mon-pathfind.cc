@@ -5,6 +5,7 @@
 #include "directn.h"
 #include "env.h"
 #include "los.h"
+#include "misc.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
 #include "religion.h"
@@ -63,7 +64,7 @@ int mons_tracking_range(const monster* mon)
 monster_pathfind::monster_pathfind()
     : mons(nullptr), start(), target(), pos(), allow_diagonals(true),
       traverse_unmapped(false), range(0), min_length(0), max_length(0),
-      dist(), prev(), hash()
+      dist(), prev(), hash(), traversable_cache()
 {
 }
 
@@ -137,7 +138,10 @@ bool monster_pathfind::start_pathfind(bool msg)
     max_length = min_length = grid_distance(pos, target);
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
+        {
             dist[i][j] = INFINITE_DISTANCE;
+            traversable_cache[i][j] = MB_MAYBE;
+        }
 
     dist[pos.x][pos.y] = 0;
 
@@ -390,9 +394,9 @@ vector<coord_def> monster_pathfind::calc_waypoints()
 
 bool monster_pathfind::traversable_memoized(const coord_def& p)
 {
-    if (traversable_cache.count(p) == 0)
-        traversable_cache[p] = traversable(p);
-    return traversable_cache[p];
+    if (traversable_cache[p.x][p.y] == MB_MAYBE)
+        traversable_cache[p.x][p.y] = frombool(traversable(p));
+    return tobool(traversable_cache[p.x][p.y], false);
 }
 
 bool monster_pathfind::traversable(const coord_def& p)
