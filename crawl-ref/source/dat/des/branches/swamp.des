@@ -1263,7 +1263,7 @@ www.cc+c.www
 ENDMAP
 
 NAME: grunt_witch_cave
-MONS: wizard
+MONS: fenstrider witch
 MONS: hydra
 {{
   dgn.delayed_decay(_G, 'd',
@@ -1600,7 +1600,7 @@ WEIGHT: 2
 MONS:  fenstrider witch
 ITEM:  book of callings, book of summonings
 SUBST: ' = %:20 d:1 e:1
-SUBST: 1 = 1:1 .:1
+NSUBST: 1 = 1:1 / 1:.
 MAP
         WWW
        WxxxW
