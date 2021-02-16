@@ -1346,7 +1346,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              potion of haste w:5 / \
              scroll of fog / \
              any potion w:1 / any scroll w:1
-KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
+KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:rampaging w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
 KITEM:   i = wand of digging / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
@@ -1507,7 +1507,7 @@ ITEM:       scarf ego:repulsion / book of clouds / condenser vane \
 # about flight.
 ITEM:       any w:20 / star_item / superb_item / any book w:5
 ITEM:       randart ring of flight / pair of boots ego:flying \
-            / pair of boots ego:running / good_item quick blade \
+            / pair of boots ego:rampaging / good_item quick blade \
             / good_item ring of evasion
 ITEM:       randbook disc:air
 KFEAT:      #6 = deep_water
