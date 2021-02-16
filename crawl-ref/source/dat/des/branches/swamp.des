@@ -1542,9 +1542,9 @@ tttt....t.Wt     t.WtW...tttt
 ENDMAP
 
 NAME:    cheibrodos_swamp_mausoleum
-TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   Swamp:2-, !Swamp:$
 ORIENT:  south
+TAGS:    no_monster_gen no_pool_fixup
 WEIGHT:  5
 MONS:    spectral hydra / spectral swamp dragon, death drake, necromancer
 MONS:    bog body w:8 / w:5 wraith / w:3 phantasmal warrior / w:1 freezing wraith
@@ -1593,41 +1593,37 @@ xxx%%xxxxxxxx%.....%xxxxxxxx..xxx
             ttttttttt
 ENDMAP
 
-NAME:  cheibrodos_swamp_witchery
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
-WEIGHT: 2
-MONS:  fenstrider witch
-ITEM:  book of callings, book of summonings
-SUBST: ' = %:20 d:1 e:1
-NSUBST: 1 = 1:1 / 1:.
+NAME:   cheibrodos_swamp_witchery
+TAGS:   no_monster_gen
+ITEM:   book of hexes
+MONS:   fenstrider witch
+SUBST:  ' = %:20 d:1
+NSUBST: 1 = 1 / .
 MAP
         WWW
        WxxxW
       Wxx'xxW
       Wx.1'xW
     WWWx+.xxW
-  WWWW..xxxW
+  WWWW..xmxW
  Wxxx..WWWWW
 Wxx.+xW..WW
-Wx'1.xWWW@
+Wx'1.mWWW@
 Wxx'xxWWW
  WxxxWW
   WWW
 ENDMAP
 
 NAME:  cheibrodos_swamp_pet_leeches
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
+TAGS:  no_monster_gen
 MONS:  vampire mage, tyrant leech
-KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
  ttttt
 tt''ett
-txxmxxt
+txx+xxt
 tx.1.xt
 tx2.2xt
 tx...xt
@@ -1636,10 +1632,9 @@ txx+xxt
 ENDMAP
 
 NAME:  cheibrodos_swamp_minitomb
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
-KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
+TAGS:  no_monster_gen
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
+KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
 SUBST: ' = .W
 MAP
   W@WWtW
