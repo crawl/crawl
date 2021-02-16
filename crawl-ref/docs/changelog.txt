@@ -1,3 +1,99 @@
+Stone Soup 0.27-a0 (through 0.27-a0-365-ged15d12)
+-------------------------------------------------
+
+Branches, Environment
+---------------------
+* Net traps trigger less often.
+* Gadget shops are removed.
+* Storm clouds no longer make noise.
+
+Character
+---------
+* Gnoll base stats are reduced to 7/7/7.
+* Demigods' base stats are reduced to 9/10/9, and now gain 4 of their chosen
+  stat on level-up.
+* Demonspawn mutation changes:
+  - Mana link is re-ordered, providing MP Regen in the first rank, spirit
+    shield in the second. The third level is unchanged.
+  - Foul stench provides stench at every rank as well as misasma immunity.
+  - The damage curve of the spiny facet is rescaled.
+  - Ignite blood ignites blood at every rank, with power scaling with rank.
+  - Demonic Guardian now summons a guardian when the player takes damage; the
+    tier of the guardian scales partially with experience level.
+  - Icemail provides a condensation shield worth 4SH at the first rank, and
+    ice mail AC spread over the next two.
+  - New facet: Malevolent magic. This facet gives a chance to paralyse enemies
+      in a radius around the player equal to the mutation rank whenever a spell
+      is cast. At the highest rank this also applies to wands.
+* Trolls now get only one level of the thick-skin mutation.
+* The strength damage modifier is simplified and derandomized. At 10 strength,
+  a character does 100% of the damage their weapon and skill allow. Each point
+  of strength increases (or decreases) this by 2.5 percentage points.
+* Hidden stepdowns on dexterity and evasion are removed.
+* Spriggans' dodging apt is reduced to +3 and base dexterity reduced by one.
+
+Monsters
+--------
+* Monsters with ranged attacks now have unlimited ammunition. (Except nets.)
+* Psyche has a new spellbook with Polymorph, Chain of Chaos, Invisibility, and
+  Cantrip.
+* Every spellcasting monster now has a single set of spells, with many adjusted
+  spell sets.
+* New monster: Dread Lich, the demon summoning counterpart of Ancient Liches
+  (which have a non-summon spell set now).
+* Deep elf mages are removed, replaced with deep elf pyromancers (fire themed
+  spell set) and deep elf zephyrmancers (air themed spell set).
+* Pan and Hell lords that summon demons now summon specific demons instead of
+  using Summon Greater Demon.
+* Phantoms now blink their attack victims with them on hit, and have less HP.
+* Big kobolds are re-named kobold brigands. Kobold brigands always spawn with
+  darts, either poison or curare.
+* Launchers can now be dancing weapons, which will shoot!
+
+
+Interface
+---------
+* Ranged targeters now display accuracy.
+* Monster to-hit chance is now shown in xv.
+
+Items
+-----
+* Haunt moves from the Necronomicon to the Grand Grimoire.
+* Scarves of shadows are no longer spell de-enhancers.
+* Wands of disintigrate are now called wands of mindburst and no longer affect
+  mindless creatures.
+* Spectral brand no longer requires evocations training.
+* The shield melee penalty is more severe.
+* Wands of enslavement are now called wands of charming.
+* Once picked up, manuals do not require an inventory slot.
+* Broad axe's base delay is returned to 1.6.
+* The *Curse property on unrands is removed. the Scythe of Curses and obsidian
+  axe now have *Drain. The property is removed from the Necklace of Bloodlust
+* Hats and gloves can now get the stealth ego.
+* Wands of random effects now only apply buff or debuff effects (15% chance of
+  a buff), not damaging effects.
+* Cursed items no longer generate. Ashenzari is the only source of curses.
+* Mundane negative-enchant items no longer generate. (Negative enchants are
+  still possible on randarts)
+* Amulets of regeneration and the Regen+ property now regenerate 1 HP per 10
+  aut.
+* Rings of attention, rings of stealth, rings of teleportation, amulets of
+  inaccuracy, scrolls of remove curse, and boots of running are removed.
+
+Spells
+------
+* Ozocubu's armour and Frozen Ramparts now end under any location change.
+* Ozocubu's Refridgeration is now level 7.
+* Stone arrow damage is increased.
+* Monstrous Menagerie no longer summons harpies.
+* New spell: Animate Armour. A Level 4 Summon/Earth spell which draws out the
+  spirit of the caster's armour to fight along side them. Armour spirits are
+  very slow and their attack damage scales with the armour rating of the
+  caster's armour.
+* New spell: Manifold Assault. A level 5 translocations spell which attacks 2-4
+  random foes in sight with the attacker's wielded weapon.
+* Summon Demon and Summon Greater Demon are removed.
+
 Stone Soup 0.26.1 (20210203)
 ----------------------------
 
