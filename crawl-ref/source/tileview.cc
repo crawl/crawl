@@ -1155,30 +1155,6 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #endif
 }
 
-static bool _suppress_blood(const map_cell& mc)
-{
-    const dungeon_feature_type feat = mc.feat();
-    if (feat_is_tree(feat))
-        return true;
-
-    if (feat == DNGN_DRY_FOUNTAIN)
-        return true;
-
-    if (feat_is_altar(feat))
-        return true;
-
-    if (feat_stair_direction(feat) != CMD_NO_CMD)
-        return true;
-
-    if (feat == DNGN_MALIGN_GATEWAY)
-        return true;
-
-    if (mc.trap() == TRAP_SHAFT)
-        return true;
-
-    return false;
-}
-
 static bool _suppress_blood(tileidx_t bg_idx)
 {
     tileidx_t basetile = tile_dngn_basetile(bg_idx);
@@ -1411,7 +1387,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
-    else if (print_blood && (_suppress_blood(mc)
+    else if (print_blood && (feat_suppress_blood(mc.feat())
                              || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
     {
         print_blood = false;

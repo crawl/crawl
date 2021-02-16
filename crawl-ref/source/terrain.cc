@@ -586,7 +586,7 @@ dungeon_feature_type altar_for_god(god_type god)
 
 /** Is this feature an altar to any god?
  */
-bool feat_is_altar(dungeon_feature_type grid)
+FEATFN_MEMOIZED(feat_is_altar, grid)
 {
     return feat_altar_god(grid) != GOD_NO_GOD;
 }
@@ -654,7 +654,7 @@ bool feat_is_reachable_past(dungeon_feature_type feat)
  *  @param feat the feature.
  *  @returns true for altars, stairs/portals, and malign gateways (???).
  */
-bool feat_is_critical(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_critical, feat)
 {
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
@@ -923,6 +923,28 @@ void feat_splash_noise(dungeon_feature_type feat)
     default:
         return;
     }
+}
+
+FEATFN_MEMOIZED(feat_suppress_blood, feat)
+{
+    if (feat_is_tree(feat))
+        return true;
+
+    if (feat == DNGN_DRY_FOUNTAIN)
+        return true;
+
+    // covers shops and altars
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
+        return true;
+
+    if (feat == DNGN_MALIGN_GATEWAY)
+        return true;
+
+    if (feat == DNGN_TRAP_SHAFT)
+        return true;
+
+    return false;
+
 }
 
 /** Does this feature destroy any items that fall into it?
