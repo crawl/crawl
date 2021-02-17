@@ -272,6 +272,11 @@ KFEAT: H = altar_hepliaklqana
 KMONS: l = patrolling spatial vortex
 KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva
+KFEAT: I = altar_imus
+KFEAT: P = altar_pakellas
+KFEAT: 2 = altar_wyrm
+KFEAT: 3 = altar_legion
+KFEAT: 4 = altar_agraphede
 KMONS: m = shadow
 KMONS: j = patrolling jelly
 KITEM: * = ration
@@ -286,15 +291,15 @@ SUBST: x = c
 MAP
 xxxxxxxxxxx
 xE1ZxOToxDR
-xe..xUBtxyY
+xe34xUBtxyY
 xxx+x+xxx+x
 x..........
 #.f........
 x...xxxxxx+
 x.f.xJlxm..
-x...xNGx...
-x+xxxXHx...
-x.s5xMCx..*
+x+xxxNGx...
+xIP.xXHx...
+x2s5xMCx..*
 xVSKxQF+..j
 ENDMAP
 

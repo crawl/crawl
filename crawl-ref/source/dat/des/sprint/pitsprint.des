@@ -976,12 +976,14 @@ KFEAT:   e = altar_elyvilon
 KFEAT:   f = altar_fedhas
 KFEAT:   g = altar_gozag
 KFEAT:   h = altar_hepliaklqana
+KFEAT:   i = altar_imus
 KFEAT:   j = altar_jiyva
 KFEAT:   k = altar_kikubaaqudgha
 KFEAT:   l = altar_lugonu
 KFEAT:   m = altar_makhleb
 KFEAT:   n = altar_nemelex_xobeh
 KFEAT:   o = altar_okawaru
+KFEAT:   p = altar_pakellas
 KFEAT:   q = altar_qazlal
 KFEAT:   r = altar_ru
 KFEAT:   s = altar_sif_muna
@@ -993,13 +995,16 @@ KFEAT:   x = altar_xom
 KFEAT:   y = altar_yredelemnul
 KFEAT:   z = altar_zin
 KFEAT:   ' = altar_the_shining_one
+KFEAT:   7 = altar_wyrm
+KFEAT:   8 = altar_legion
+KFEAT:   9 = altar_agraphede
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-abcdefghj.
-klmnoqrst.
-uvwxyz'...
+abcdefghj7
+klmnoqrst8
+uvwxyz'ip9
 ENDMAP
 
 ################################################################################

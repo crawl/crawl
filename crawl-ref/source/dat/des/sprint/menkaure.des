@@ -218,12 +218,14 @@ KFEAT:  e = altar_elyvilon
 KFEAT:  f = altar_fedhas
 KFEAT:  g = altar_gozag
 KFEAT:  h = altar_hepliaklqana
+KFEAT:  i = altar_imus
 KFEAT:  j = altar_jiyva
 KFEAT:  k = altar_kikubaaqudgha
 KFEAT:  l = altar_lugonu
 KFEAT:  m = altar_makhleb
 KFEAT:  n = altar_nemelex_xobeh
 KFEAT:  o = altar_okawaru
+KFEAT:  p = altar_pakellas
 KFEAT:  q = altar_qazlal
 KFEAT:  r = altar_ru
 KFEAT:  s = altar_sif_muna
@@ -235,15 +237,18 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
+KFEAT:  2 = altar_wyrm
+KFEAT:  3 = altar_legion
+KFEAT:  4 = altar_agraphede
 MAP
 ..q.w.1.
-.h.r.x..
+.h.r.x.4
 b.j.s.y.
 .c.k.t.z
-..d.l.u.
-...e.m.v
-....f.n.
-.....g.o
+i.d.l.u.
+.p.e.m.v
+..2.f.n.
+...3.g.o
 ENDMAP
 
 NAME:   sprint2_shoproom

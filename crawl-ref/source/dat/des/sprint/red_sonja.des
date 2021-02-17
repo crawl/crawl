@@ -108,9 +108,11 @@ KFEAT: E = altar_elyvilon
 KFEAT: F = altar_fedhas
 KFEAT: G = altar_gozag
 KFEAT: H = altar_hepliaklqana
+KFEAT: I = altar_imus
 KFEAT: K = altar_kikubaaqudgha
 KFEAT: N = altar_nemelex_xobeh
 KFEAT: O = altar_okawaru
+KFEAT: P = altar_pakellas
 KFEAT: Q = altar_qazlal
 KFEAT: R = altar_ru
 KFEAT: S = altar_sif_muna
@@ -121,14 +123,17 @@ KFEAT: W = altar_wu_jian
 KFEAT: Y = altar_yredelemnul
 KFEAT: Z = altar_zin
 KFEAT: ' = altar_the_shining_one
+KFEAT: 7 = altar_wyrm
+KFEAT: 8 = altar_legion
+KFEAT: 9 = altar_agraphede
 KFEAT: s = any shop
 MAP
 xxxxx+xxxxx+x
 xxxx$$c$$$c*c
 xEZxxxc$$cc*c
-x'OTFQcc+cW.+
-xK.s..2+...Sc
-xY..UHccV1x+x
+x7OTFQcc+cW.+
+xKIs..2+..PSc
+xY89UHccV1x+x
 cDRCGNccx+x*x
 ccccccccx.xxx
 ENDMAP
