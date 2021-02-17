@@ -23,6 +23,9 @@ ae += [^n]identified.*spellbook
 
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
+:  if it.class(true) ~= "misc" then
+:    return
+:  end
 :  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
 :  if not string.find(itname, "ziggurat") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
