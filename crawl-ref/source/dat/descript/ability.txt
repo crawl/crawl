@@ -824,7 +824,7 @@ the landing spot and taking two turns to complete the motion.
 Serpent's Lash ability
 
 Allows you to move at supernatural speeds, making any normal movements up to a
-distance of two tiles instantly. Martial attacks performed under the effect of
+distance of two tiles instant. Martial attacks performed under the effect of
 Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability
