@@ -934,10 +934,20 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_LICH,
       {
+       { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+       { SPELL_IOOD, 12, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+       { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_ANCIENT_LICH,
+      {
        { SPELL_CORROSIVE_BOLT, 12, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-       { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+       { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
       }
     },
