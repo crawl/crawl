@@ -78,6 +78,19 @@ void draconian_change_colour(monster* drac)
     drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(*drac)));
 }
 
+void boris_covet_orb(monster* boris)
+{
+    if (boris->type != MONS_BORIS || !player_has_orb())
+        return;
+
+    if (boris->observable())
+        simple_monster_message(*boris, " is empowered by the presence of the orb!");
+
+    boris->add_ench(mon_enchant(ENCH_HASTE, 1, boris, INFINITE_DURATION));
+    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, boris,
+                    INFINITE_DURATION));
+}
+
 bool ugly_thing_mutate(monster& ugly, bool force)
 {
     if (!(one_chance_in(9) || force))

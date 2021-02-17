@@ -44,6 +44,7 @@
 #include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h" // boris_covet_orb
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-poly.h"
@@ -156,6 +157,12 @@ void seen_monsters_react(int stealth)
             {
                 mi->props.erase(ELVEN_ENERGIZE_KEY);
                 elven_twin_energize(*mi);
+            }
+            else if (mi->type == MONS_BORIS && player_has_orb()
+                     && !mi->props.exists(BORIS_ORB_KEY))
+            {
+                mi->props[BORIS_ORB_KEY] = true;
+                boris_covet_orb(*mi);
             }
 #if TAG_MAJOR_VERSION == 34
             else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
