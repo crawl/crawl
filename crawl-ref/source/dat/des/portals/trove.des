@@ -912,32 +912,37 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 # Misc items/evocations trove. 15 items.
-NAME:   trove_misc_throne_room
-WEIGHT: 15
+NAME:    trove_misc_throne_room
+WEIGHT:  15
 veto {{ return crawl.game_started()
           and (you.base_skill("Evocations") < 4 and not crawl.one_chance_in(3)
                or you.mutation("inability to use devices") == 1) }}
-COLOUR: x = blue
-COLOUR: ' = yellow
-SUBST:  d = dde
-FTILE:  ' : floor_limestone
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc
-ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
-ITEM:   manual of evocations
+COLOUR:  x = blue
+COLOUR:  ' = yellow
+SHUFFLE: efghij
+FTILE:   ' : floor_limestone
+ORIENT:  encompass
+TAGS:    no_item_gen no_monster_gen allow_dup
+ITEM:    manual of evocations
+ITEM:    tin of tremorstones
+ITEM:    lightning rod
+ITEM:    condenser vane
+ITEM:    phial of floods
+ITEM:    box of beasts
+ITEM:    phantom mirror
+ITEM:    acquire wand w:15 / acquire magical staff w:5
 : trove.setup_features(_G)
 MAP
    xxx
-   xfx
+   xdx
  xxx+xxx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
+ xk'''kx
+ xe'''fx
+ xk'''kx
+ xg'''hx
+ xk'''kx
+ xi'''jx
+ xk'''kx
 xxxx+xxxx
 x.......x
 x<..A..<x
