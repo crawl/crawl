@@ -444,7 +444,7 @@ bool mons_class_flag(monster_type mc, monclass_flags_t bits)
     return me && (me->bitfields & bits);
 }
 
-int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
+int monster::wearing(equipment_type slot, int sub_type, bool calc_unid, bool /*include_melded*/) const
 {
     int ret = 0;
     const item_def *item = 0;
@@ -516,7 +516,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     return ret;
 }
 
-int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
+int monster::wearing_ego(equipment_type slot, int special, bool calc_unid, bool /*include_melded*/) const
 {
     int ret = 0;
     const item_def *item = 0;
@@ -586,7 +586,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
 }
 
 int monster::scan_artefacts(artefact_prop_type ra_prop, bool /*calc_unid*/,
-                            vector<item_def> *matches) const
+                            vector<item_def> *matches, bool /*include_melded*/) const
 {
     UNUSED(matches); //TODO: implement this when it will be required somewhere
 

@@ -935,7 +935,7 @@ bool berserk_check_wielded_weapon()
 
 // Looks in equipment "slot" to see if there is an equipped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
-int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
+int player::wearing(equipment_type slot, int sub_type, bool calc_unid, bool include_melded) const
 {
     int ret = 0;
 
@@ -979,7 +979,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
                 && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots)) 
                 continue;
 
-            if ((item = slot_item(static_cast<equipment_type>(slots)))
+            if ((item = slot_item(static_cast<equipment_type>(slots), include_melded))
                 && item->sub_type == sub_type
                 && (calc_unid
                     || item_type_known(*item)))
@@ -996,7 +996,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
             || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
-            if ((item = slot_item(static_cast<equipment_type>(slots)))
+            if ((item = slot_item(static_cast<equipment_type>(slots), include_melded))
                 && item->sub_type == sub_type
                 && (calc_unid
                     || item_type_known(*item)))
@@ -1014,7 +1014,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     default:
         if (! (slot >= EQ_FIRST_EQUIP && slot < NUM_EQUIP))
             die("invalid slot");
-        if ((item = slot_item(slot))
+        if ((item = slot_item(slot, include_melded))
             && item->sub_type == sub_type
             && (calc_unid || item_type_known(*item)))
         {
@@ -1030,7 +1030,7 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
+int player::wearing_ego(equipment_type slot, int special, bool calc_unid, bool include_melded) const
 {
     int ret = 0;
 
@@ -1040,7 +1040,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_WEAPON:
     case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
-        if ((item = slot_item(EQ_WEAPON))
+        if ((item = slot_item(EQ_WEAPON, include_melded))
             && item->base_type == OBJ_WEAPONS
             && get_weapon_brand(*item) == special)
         {
@@ -1062,7 +1062,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
         // Check all armour slots:
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
-            if ((item = slot_item(static_cast<equipment_type>(i)))
+            if ((item = slot_item(static_cast<equipment_type>(i), include_melded))
                 && get_armour_ego_type(*item) == special
                 && (calc_unid || item_type_known(*item)))
             {
@@ -1075,7 +1075,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
         if (slot < EQ_MIN_ARMOUR || slot > EQ_MAX_ARMOUR)
             die("invalid slot: %d", slot);
         // Check a specific armour slot for an ego type:
-        if ((item = slot_item(static_cast<equipment_type>(slot)))
+        if ((item = slot_item(static_cast<equipment_type>(slot), include_melded))
             && get_armour_ego_type(*item) == special
             && (calc_unid || item_type_known(*item)))
         {
@@ -1090,7 +1090,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
 // Returns true if the indicated unrandart is equipped
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-bool player_equip_unrand(int unrand_index)
+bool player_equip_unrand(int unrand_index, bool include_melded)
 {
     const unrandart_entry* entry = get_unrand_entry(unrand_index);
     equipment_type   slot  = get_item_slot(entry->base_type,
@@ -1103,14 +1103,14 @@ bool player_equip_unrand(int unrand_index)
     case EQ_WEAPON:
     case EQ_SECOND_WEAPON:
         // Hands can have more than just weapons.
-        if ((item = you.slot_item(EQ_WEAPON))
+        if ((item = you.slot_item(EQ_WEAPON, include_melded))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
         {
             return true;
         }
-        if ((item = you.slot_item(EQ_SECOND_WEAPON))
+        if ((item = you.slot_item(EQ_SECOND_WEAPON, include_melded))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
@@ -1125,7 +1125,7 @@ bool player_equip_unrand(int unrand_index)
                 && !(EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), include_melded))
                 && is_unrandom_artefact(*item)
                 && item->unrand_idx == unrand_index)
             {
@@ -1141,7 +1141,7 @@ bool player_equip_unrand(int unrand_index)
                 || (EQ_AMULET_ONE <= slots && EQ_AMULET_NINE >= slots))
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), include_melded))
                 && is_unrandom_artefact(*item)
                 && item->unrand_idx == unrand_index)
             {
@@ -1163,7 +1163,7 @@ bool player_equip_unrand(int unrand_index)
         if (slot <= EQ_NONE || slot >= NUM_EQUIP)
             die("invalid slot: %d", slot);
         // Check a specific slot.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(slot, include_melded))
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
         {
@@ -1472,6 +1472,16 @@ bool player_likes_chunks(bool permanently)
            || you.get_mutation_level(MUT_CARNIVOROUS) > 0;
 }
 
+bool _has_dragon_scale()
+{
+    return you.slot_item(EQ_BODY_ARMOUR, true) ?
+                        (you.form == transformation::dragon 
+                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
+                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
+}
+
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {
@@ -1493,13 +1503,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += you.wearing(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
         if (body_armour)
             rf += armour_type_prop(body_armour->sub_type, ARMF_RES_FIRE);
 
@@ -1508,7 +1512,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
         // randart weapons:
-        rf += you.scan_artefacts(ARTP_FIRE, calc_unid);
+        rf += you.scan_artefacts(ARTP_FIRE, calc_unid, nullptr, _has_dragon_scale());
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN)
@@ -1573,13 +1577,7 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
-        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
         if (body_armour)
             res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
     }
@@ -1626,13 +1624,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += you.wearing(EQ_STAFF, STAFF_COLD, calc_unid);
 
         // body armour:
-        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
         if (body_armour)
             rc += armour_type_prop(body_armour->sub_type, ARMF_RES_COLD);
 
@@ -1641,7 +1633,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_RESISTANCE);
 
         // randart weapons:
-        rc += you.scan_artefacts(ARTP_COLD, calc_unid);
+        rc += you.scan_artefacts(ARTP_COLD, calc_unid, nullptr, _has_dragon_scale());
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -1681,6 +1673,12 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (get_form()->res_acid())
         return true;
 
+    // copy the similar code in res_corr @ actor.h
+    if (_has_dragon_scale()) 
+        return slot_item(EQ_BODY_ARMOUR, true) || 
+               scan_artefacts(ARTP_RCORR, calc_unid, nullptr, true);
+        
+
     if (you.duration[DUR_RESISTANCE])
         return true;
 
@@ -1709,18 +1707,12 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += you.wearing(EQ_STAFF, STAFF_AIR, calc_unid);
 
         // body armour:
-        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
         if (body_armour)
             re += armour_type_prop(body_armour->sub_type, ARMF_RES_ELEC);
 
         // randart weapons:
-        re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid);
+        re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid, nullptr, _has_dragon_scale());
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -1833,18 +1825,12 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
             // body armour:
-            bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-            const item_def* body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+            const item_def* body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
             if (body_armour)
                 rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
             // rPois+ artefacts
-            rp += you.scan_artefacts(ARTP_POISON, calc_unid);
+            rp += you.scan_artefacts(ARTP_POISON, calc_unid, nullptr, _has_dragon_scale());
 
             // dragonskin cloak: 0.5 to draconic resistances
             if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -2102,18 +2088,12 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
         // pearl dragon counts
-        bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
         if (body_armour)
             pl += armour_type_prop(body_armour->sub_type, ARMF_RES_NEG);
 
         // randart wpns
-        pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+        pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid, nullptr, _has_dragon_scale());
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -3553,13 +3533,7 @@ int player_stealth()
     if (you.confused())
         stealth /= 3;
 
-    bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
     
     if (arm)
@@ -4068,13 +4042,14 @@ int player::scan_artefact(artefact_prop_type which_property,
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
                            bool calc_unid,
-                           vector<item_def> *matches) const
+                           vector<item_def> *matches,
+                           bool include_melded) const
 {
     int retval = 0;
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
-        if (melded[i] || equip[i] == -1)
+        if ((!include_melded && melded[i]) || equip[i] == -1)
             continue;
 
         const int eq = equip[i];
@@ -7010,19 +6985,14 @@ int player_res_magic(bool calc_unid, bool temp)
 
     int rm = you.experience_level * species_mr_modifier(you.species);
 
-    // randarts
-    rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC_RESISTANCE, calc_unid);
 
     // body armour
-    bool dragon_scale = you.slot_item(EQ_BODY_ARMOUR, true) ?
-                        (you.form == transformation::dragon 
-                         && ARM_FIRST_DRAGON_ARMOUR <= you.slot_item(EQ_BODY_ARMOUR, true)->sub_type
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type <= ARM_LAST_DRAGON_ARMOUR
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_CENTAUR_BARDING
-                         && you.slot_item(EQ_BODY_ARMOUR, true)->sub_type != ARM_NAGA_BARDING) : false;
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, dragon_scale);
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, _has_dragon_scale());
     if (body_armour)
         rm += armour_type_prop(body_armour->sub_type, ARMF_RES_MAGIC) * MR_PIP;
+
+    // randarts
+    rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC_RESISTANCE, calc_unid, nullptr, _has_dragon_scale());
 
     // ego armours
     rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,

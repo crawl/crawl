@@ -680,13 +680,14 @@ public:
     int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
     int       how_jiyva_mutated() const;
 
-    int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const
+    int wearing(equipment_type slot, int sub_type, bool calc_unid = true, bool include_melded = false) const
         override;
-    int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const
+    int wearing_ego(equipment_type slot, int type, bool calc_unid = true, bool include_melded = false) const
         override;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *matches = nullptr) const override;
+                       vector<item_def> *matches = nullptr,
+                       bool include_melded = false) const override;
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *second_weapon(int which_attack = -1) const;
@@ -1011,7 +1012,7 @@ static inline bool player_in_branch(int branch)
 }
 
 bool berserk_check_wielded_weapon();
-bool player_equip_unrand(int unrand_index);
+bool player_equip_unrand(int unrand_index, bool include_melded=false);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged();
