@@ -105,12 +105,14 @@ KFEAT:  d = altar_dithmenos
 KFEAT:  e = altar_elyvilon
 KFEAT:  g = altar_gozag
 KFEAT:  h = altar_hepliaklqana
+KFEAT:  i = altar_imus
 KFEAT:  j = altar_jiyva
 KFEAT:  k = altar_kikubaaqudgha
 KFEAT:  l = altar_lugonu
 KFEAT:  m = altar_makhleb
 KFEAT:  n = altar_nemelex_xobeh
 KFEAT:  o = altar_okawaru
+KFEAT:  p = altar_pakellas
 KFEAT:  q = altar_qazlal
 KFEAT:  r = altar_ru
 KFEAT:  s = altar_sif_muna
@@ -122,12 +124,15 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
+KFEAT:  2 = altar_wyrm
+KFEAT:  3 = altar_legion
+KFEAT:  4 = altar_agraphede
 KMONS:  P = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 MAP
 .T.b.c.d.e.T.
-..g.h.j.k.l..
-...m.nPo.q...
-..r.s.t.u.v..
+i.g.h.j.k.l.4
+.p.m.nPo.q.3.
+2.r.s.t.u.v..
 .w.x.y.z.1.T.
 ENDMAP
