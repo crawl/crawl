@@ -1277,6 +1277,15 @@ void timeout_terrain_changes(int duration, bool force)
 
         if (marker->duration != INFINITE_DURATION)
             marker->duration -= duration;
+        
+        if (is_feat_dangerous(marker->old_feature) 
+            && actor_at(mark->pos)
+            && actor_at(mark->pos)->is_player())
+        {
+            if (marker->duration > 0 && marker->duration < 50)
+                mprf(MSGCH_WARN, "The ground starts to shake.");
+        }
+
 
         if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
             && !feat_is_sealed(grd(marker->pos)))
@@ -1288,12 +1297,6 @@ void timeout_terrain_changes(int duration, bool force)
             if (marker->duration <= 0)
                 env.markers.remove(marker); // deletes `marker`
             continue;
-        }
-
-        if (marker->change_type == TERRAIN_CHANGE_BOG
-            && !you.see_cell(marker->pos))
-        {
-            marker->duration = 0;
         }
 
         monster* mon_src = monster_by_mid(marker->mon_num);
