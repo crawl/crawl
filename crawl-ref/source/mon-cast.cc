@@ -1380,6 +1380,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SPIT_ACID:
     case SPELL_ACID_SPLASH:
     case SPELL_ELECTRICAL_BOLT:
+    case SPELL_DRAIN_LIFE:
+    case SPELL_OZOCUBUS_REFRIGERATION:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
