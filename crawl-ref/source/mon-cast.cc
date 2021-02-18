@@ -271,7 +271,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             if (damage > 0 && caster.heal(damage))
                 simple_monster_message(caster, " is healed.");
         },
-        nullptr,
+        _zap_setup(SPELL_DRAIN_LIFE),
         MSPELL_NO_AUTO_NOISE,
         1,
     } },
@@ -285,7 +285,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int splpow = mons_spellpower(caster, slot.spell);
             fire_los_attack_spell(slot.spell, splpow, &caster, false);
         },
-        nullptr,
+        _zap_setup(SPELL_OZOCUBUS_REFRIGERATION),
         MSPELL_LOGIC_NONE,
         5,
     } },
