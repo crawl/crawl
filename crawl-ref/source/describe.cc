@@ -4179,7 +4179,7 @@ const char* get_size_adj(const size_type size, bool ignore_medium)
     return size_adj[size];
 }
 
-string _monster_currently_description(const monster_info &mi)
+static string _monster_currently_description(const monster_info &mi)
 {
     // is it morally wrong to use pos to get the actual monster? Possibly...
     if (!in_bounds(mi.pos) || !monster_at(mi.pos))
