@@ -737,7 +737,7 @@ private:
         return true;
     }
 
-    colour_t entry_colour(const sortable_spell& entry)
+    int entry_colour(const sortable_spell& entry)
     {
         if (vehumet_is_offering(entry.spell))
             return LIGHTBLUE;
