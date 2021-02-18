@@ -228,6 +228,12 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     if (you.can_swim() && feat_is_water(env.grid(p))
         || you.airborne() || !is_feat_dangerous(env.grid(p)))
     {
+        if (is_feat_dangerous(orig_terrain(p)) && 
+            !yesno("Do you really want to enter the potentially dangerous place?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
         return true;
     }
 

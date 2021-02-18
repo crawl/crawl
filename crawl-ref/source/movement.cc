@@ -56,6 +56,13 @@
 #include "unwind.h"
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
+// See details in is_feat_dangerous @ player.h
+static bool _maybe_feat_dangerous(coord_def c, bool permanently = false,
+                       bool ignore_flight = false)
+{
+    return is_feat_dangerous(orig_terrain(c), permanently, ignore_flight);
+}
+
 static void _apply_move_time_taken(int additional_time_taken = 0, bool did_wall_jump = false);
 
 // Swap monster to this location. Player is swapped elsewhere.
@@ -273,7 +280,7 @@ static monster* _mantis_leap_attack(coord_def& new_pos)
                 else
                     can_jump = false;
                     
-                if (is_feat_dangerous(env.grid(iter))) {
+                if (_maybe_feat_dangerous(iter)) {
                     warning = true;
                 }
                 else {
@@ -460,7 +467,7 @@ bool cancel_confused_move(bool stationary)
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
         if (!stationary
-            && is_feat_dangerous(grd(*ai), true)
+            && _maybe_feat_dangerous(*ai, true)
             && need_expiration_warning(grd(*ai))
             && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
         {
@@ -846,7 +853,7 @@ static spret _rampage_forward(coord_def move)
         {
             // Don't rampage if our tracer path is broken by something we can't
             // safely pass through before it reaches a monster.
-            if (!you.can_pass_through(p) || is_feat_dangerous(env.grid(p)))
+            if (!you.can_pass_through(p) || _maybe_feat_dangerous(p))
                 return spret::fail;
             continue;
         }
@@ -1308,7 +1315,7 @@ void move_player_action(coord_def move)
     if (!attacking && (targ_pass || can_wall_jump)
         && moving && !beholder && !fmonger)
     {
-        if (you.confused() && is_feat_dangerous(env.grid(targ)))
+        if (you.confused() && _maybe_feat_dangerous(targ))
         {
             mprf("You nearly stumble into %s!",
                  feature_description_at(targ, false, DESC_THE, false).c_str());
