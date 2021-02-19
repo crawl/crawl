@@ -1742,12 +1742,12 @@ static bool _has_wand(const monster_info& mi)
 static string _condition_string(int num, int count,
                                 const monster_info_flag_name& name)
 {
-    if (1 == count)
-        return name.short_singular;
-    else if (count == num)
-        return name.plural;
+    const string& word = (1 == num) ? name.short_singular : name.plural;
+
+    if (count == num)
+        return word;
     else
-        return make_stringf("%d %s", num, name.plural.c_str());
+        return make_stringf("%d %s", num, word.c_str());
 }
 
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
@@ -1797,7 +1797,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
         if (missile_count)
         {
-            conditions.push_back(_condition_string(launcher_count, count,
+            conditions.push_back(_condition_string(missile_count, count,
                                                    {MB_UNSAFE, "missile",
                                                     "missile", "missiles"}));
         }
