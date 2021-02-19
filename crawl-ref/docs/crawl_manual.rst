@@ -1940,7 +1940,7 @@ definitely easier than others, at least to begin with. The best backgrounds for
 a beginner are probably Gladiators and Berserkers; if you really want to play a
 magician, try a Conjurer or a Hedge Wizard. However, not all species are equally
 well suited for all backgrounds. After you have selected a species, the background
-selection menu while show backgrounds generally considered to be more accessible
+selection menu will show backgrounds generally considered to be more accessible
 for a species in a brighter colour.
 
 Each background starts out with a different set of skills and items, but from
