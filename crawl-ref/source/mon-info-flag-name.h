@@ -59,7 +59,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_RESISTANCE, "resistant", "unusually resistant", "resistant"},
     { MB_INVISIBLE, "invisible", "slightly transparent", "invisible"},
     { MB_REGENERATION, "regenerating", "regenerating", "regenerating"},
-    { MB_STRONG_WILLED, "strong-willed", "strong-willed", "strong-willedmr"},
+    { MB_STRONG_WILLED, "strong-willed", "strong-willed", "strong-willed"},
     { MB_INJURY_BOND, "sheltered", "sheltered from injuries", "sheltered"},
     { MB_GOZAG_INCITED, "incited", "incited by Gozag", "incited"},
     { MB_CLOUD_RING_THUNDER, "clouds", "surrounded by thunder", "clouds" },
