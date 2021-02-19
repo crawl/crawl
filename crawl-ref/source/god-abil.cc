@@ -5602,11 +5602,10 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
 
-    monster* beholder = you.get_beholder(target);
+    monster* beholder = you.get_beholder(wall_jump_landing_spot);
     if (beholder)
     {
-        error_ret = make_stringf("You cannot move your %s away from %s to wall jump!",
-             you.foot_name(true).c_str(),
+        error_ret = make_stringf("You cannot wall jump away from %s!",
              beholder->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5614,7 +5613,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
     if (fearmonger)
     {
-        error_ret = make_stringf("You are too afraid to wall jump closer to %s!",
+        error_ret = make_stringf("You cannot wall jump closer to %s!",
              fearmonger->name(DESC_THE, true).c_str());
         return false;
     }
