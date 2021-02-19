@@ -7,7 +7,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function fmt_body_txt(txt)
     {
-        console.log(txt);
         return txt
             // preserve all leading spaces
             .split("\n")
