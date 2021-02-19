@@ -162,9 +162,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
             var canvas = $feat.find(".header > canvas");
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
+            util.init_canvas(canvas[0],
+                renderer.cell_width * describe_scale,
+                renderer.cell_height * describe_scale);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0, feat.tile.ymax, false);
+            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0,
+                feat.tile.ymax, false, describe_scale);
             $popup.append($feat);
         });
         var s = scroller($popup[0]);
