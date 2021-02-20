@@ -1341,7 +1341,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_DRAINING
             || death_type == KILLED_BY_BURNING
-            || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_EXPLOSION
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
@@ -1380,7 +1380,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
 
         const description_level_type desc =
-            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_A;
+            death_type == KILLED_BY_EXPLOSION ? DESC_PLAIN : DESC_A;
 
         death_source_name = mons->name(desc, death);
 
@@ -2461,7 +2461,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
-    case KILLED_BY_SPORE:
+    case KILLED_BY_EXPLOSION:
         if (terse)
         {
             if (death_source_name.empty())
@@ -2807,7 +2807,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         }
     }
 
-    if (death_type == KILLED_BY_SPORE && !terse && !auxkilldata.empty())
+    if (death_type == KILLED_BY_EXPLOSION && !terse && !auxkilldata.empty())
     {
         desc += "... ";
         desc += auxkilldata;

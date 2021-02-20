@@ -2715,7 +2715,7 @@ void bolt::internal_ouch(int dam)
     }
     else if (is_death_effect)
     {
-        ouch(dam, KILLED_BY_SPORE, source_id,
+        ouch(dam, KILLED_BY_EXPLOSION, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
