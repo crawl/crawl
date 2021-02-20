@@ -822,7 +822,7 @@ static void _consider_curling(kill_method_type death_type)
     {
         case KILLED_BY_MONSTER:
         case KILLED_BY_BEAM:
-        case KILLED_BY_SPORE:
+        case KILLED_BY_EXPLOSION:
         case KILLED_BY_TRAP:
         case KILLED_BY_BOUNCE:
         case KILLED_BY_REFLECTION:
