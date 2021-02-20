@@ -784,7 +784,8 @@ private:
                                 || current_action == action::cast &&
                                     spell_is_useless(spell.spell, true, true);
 
-            const int colour = unavailable ? DARKGRAY : entry_colour(spell);
+            const colour_t colour = unavailable ? (colour_t) DARKGRAY
+                                                : entry_colour(spell);
 
             ostringstream desc;
             desc << "<" << colour_to_str(colour) << ">";
