@@ -3958,7 +3958,6 @@ static void _tag_read_you_items(reader &th)
             {
                 you.equip[i] = -1;
                 you.melded.set(i, false);
-                // XXX: need to update ash bondage, or is this too early?
                 continue;
             }
             // likewise the boots of the Assassin before it became a hat
