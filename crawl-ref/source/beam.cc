@@ -2713,7 +2713,7 @@ void bolt::internal_ouch(int dam)
              aux_source.empty() ? nullptr : aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
     }
-    else if (is_death_effect)
+    else if (is_death_effect || aux_source == "ignited by their inner flame")
     {
         ouch(dam, KILLED_BY_EXPLOSION, source_id,
              aux_source.c_str(), true,
@@ -2738,7 +2738,7 @@ void bolt::internal_ouch(int dam)
                 ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
         }
     }
-    else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
+    else if (MON_KILL(thrower))
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
              source_name.empty() ? nullptr : source_name.c_str());
