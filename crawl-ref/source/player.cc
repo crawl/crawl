@@ -1229,10 +1229,16 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     {
         // rings of fire resistance/fire
         rf += you.wearing(EQ_RINGS, RING_PROTECTION_FROM_FIRE, calc_unid);
-        rf += you.wearing(EQ_RINGS, RING_FIRE, calc_unid);
+        int num_fire_rings = you.wearing(EQ_RINGS, RING_FIRE, calc_unid);
+        rf += num_fire_rings;
 
         // rings of ice
-        rf -= you.wearing(EQ_RINGS, RING_ICE, calc_unid);
+        int num_ice_rings = you.wearing(EQ_RINGS, RING_ICE, calc_unid);
+        rf -= num_ice_rings;
+
+        // combine ice and fire ring powers for a boost
+        if (num_ice_rings > 0 && num_fire_rings > 0)
+            rf += num_ice_rings;
 
         // Staves
         rf += you.wearing(EQ_STAFF, STAFF_FIRE, calc_unid);
@@ -1334,10 +1340,16 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     {
         // rings of cold resistance/ice
         rc += you.wearing(EQ_RINGS, RING_PROTECTION_FROM_COLD, calc_unid);
-        rc += you.wearing(EQ_RINGS, RING_ICE, calc_unid);
+        int num_ice_rings = you.wearing(EQ_RINGS, RING_ICE, calc_unid);
+        rc += num_ice_rings;
 
         // rings of fire
-        rc -= you.wearing(EQ_RINGS, RING_FIRE, calc_unid);
+        int num_fire_rings = you.wearing(EQ_RINGS, RING_FIRE, calc_unid);
+        rc -= num_fire_rings;
+
+        // combine ice and fire ring powers for a boost
+        if (num_ice_rings > 0 && num_fire_rings > 0)
+            rc += num_fire_rings;
 
         // Staves
         rc += you.wearing(EQ_STAFF, STAFF_COLD, calc_unid);

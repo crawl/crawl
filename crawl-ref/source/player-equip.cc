@@ -1171,10 +1171,14 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     {
     case RING_FIRE:
         mpr("You feel more attuned to fire.");
+        if (you.wearing(EQ_RINGS, RING_ICE) > 0)
+            mpr("Several drops of water fall from your ring of ice.");
         break;
 
     case RING_ICE:
         mpr("You feel more attuned to ice.");
+        if (you.wearing(EQ_RINGS, RING_FIRE) > 0)
+            mpr("A puff of steam emerges from your ring of fire.");
         break;
 
     case RING_SEE_INVISIBLE:
