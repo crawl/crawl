@@ -2064,7 +2064,8 @@ enum class frag_damage_type
     player_gargoyle, // weaker, because (?)
 };
 
-struct frag_effect {
+struct frag_effect
+{
     frag_damage_type damage;
     colour_t colour;
     string name;
@@ -2073,8 +2074,9 @@ struct frag_effect {
     bool hit_centre;
 };
 
-// Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for blowing up the player. Returns true iff the player can be deconstructed.
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for blowing up the player. Returns true iff the
+// player can be deconstructed.
 static bool _init_frag_player(frag_effect &effect)
 {
     if (you.form == transformation::statue || you.species == SP_GARGOYLE)
@@ -2101,7 +2103,8 @@ static bool _init_frag_player(frag_effect &effect)
     return false;
 }
 
-struct monster_frag {
+struct monster_frag
+{
     const char* type;
     colour_t colour;
     frag_damage_type damage;
@@ -2168,7 +2171,8 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
     return false;
 }
 
-struct feature_frag {
+struct feature_frag
+{
     const char* type;
     const char* what;
     frag_damage_type damage;
@@ -2218,7 +2222,7 @@ static bool _init_frag_grid(frag_effect &effect, coord_def target, const char **
     if (what)
         *what = frag.what;
 
-    if (feat_is_solid(grid))
+    if (!feat_is_solid(grid))
         effect.hit_centre = true; // to hit monsters standing on doors
 
    // If it was recoloured, use that colour instead.
