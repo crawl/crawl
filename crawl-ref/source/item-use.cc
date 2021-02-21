@@ -769,8 +769,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def *to_wield = &you.inv[0]; // default is 'a'
         // we'll set this to nullptr to indicate bare hands
+
+    // If we swap the weapon
     if (auto_wield)
     {
+        // and the target slot is not second weapon
         if (!second_weapon) {
             if (to_wield == you.weapon()
                 || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
@@ -794,6 +797,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 to_wield = &you.inv[slot];
         }
     }
+
+    // If you find something to wield
     if (to_wield)
     {
     // Prompt if not using the auto swap command
@@ -821,6 +826,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         else if (!to_wield->defined() || !item_is_wieldable(*to_wield))
             to_wield = nullptr;
     }
+
+    // Ignore already equipped
     if (to_wield && (to_wield == you.weapon() || to_wield == you.second_weapon()))
     {
         if (Options.equip_unequip)
@@ -834,18 +841,25 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
+    // If there is no natural weapon to wield(and so, tried to unwield), choose weapon manually
     if (!to_wield)
     {
         const item_def* wpn = you.weapon();
+        // If you wield second weapon,
         if (isDualWeapon && you.second_weapon()) {
+            // ..and if you don't wield a weapon,
             if (!wpn) {
                 wpn = you.second_weapon();
             }
+            // ..and if you wield a weapn,
             else {
+                // autoswap choose a slot by second_weapon option
                 if (auto_wield) {
                     wpn = !second_weapon ? you.weapon() : you.second_weapon();
                 }
+                // if not you choose weapon from slot
                 else {
+                    // choose first slot or second weapon slot (by player in game)
                     auto choosed_wpn = _choose_weapon_slot();
 
                     if (choosed_wpn == EQ_NONE)
@@ -854,14 +868,17 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                         return false;
                     }
                     wpn = you.slot_item(choosed_wpn, true);
-                    if (wpn->cursed())
-                    {
-                        mpr("you can't unwield your cursed weapon!");
-                        return false;
-                    }
                 }
             }
         }
+
+        // you cannot unwield cursed weapon!
+        if (wpn->cursed())
+        {
+            mpr("you can't unwield your cursed weapon!");
+            return false;
+        }
+
         if (wpn)
         {
             bool penance = false;
