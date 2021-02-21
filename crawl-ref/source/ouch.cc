@@ -151,7 +151,13 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_DAMNATION:
-        break; // sucks to be you (:
+        if (you.res_damnation())
+        {
+            hurted = 0;
+            if (doEffects)
+                mpr("You resist completely.");
+        }
+        break;
 
     case BEAM_COLD:
     case BEAM_ROD_COLD:

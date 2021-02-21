@@ -55,6 +55,8 @@ fake_mutations:
     short: cold vulnerability
   - long: "You need no food."
   - long: "You have no legs."
+  - long: "You are immune to damnation."
+    short: damnation immunity
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_ENCHANTER

@@ -791,7 +791,7 @@ public:
     bool is_insubstantial() const override;
     bool is_hydra() const;
     int res_acid(bool calc_unid = true) const override;
-    bool res_damnation() const override { return false; };
+    bool res_damnation() const override;
     int res_fire() const override;
     int res_steam() const override;
     int res_cold() const override;

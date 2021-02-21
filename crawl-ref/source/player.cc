@@ -6847,6 +6847,14 @@ int player::res_acid(bool calc_unid) const
     return player_res_acid(calc_unid);
 }
 
+bool player::res_damnation() const
+{
+    if (you.species == SP_DJINNI) {
+        return true;
+    }
+    return false;
+}
+
 int player::res_fire() const
 {
     return player_res_fire();
