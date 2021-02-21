@@ -412,6 +412,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
+        && player_equip_unrand(UNRAND_DEMON_AXE)
+        && you.beheld())
+    {
+        SAY(mpr("Your thirst for blood prevents you from unwielding your "
+                "weapon!"));
+        return false;
+    }
+
+    if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
