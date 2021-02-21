@@ -1852,11 +1852,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
     return item_attack_skill(wpn);
 }
 
-// True if item is a staff that deals extra damage based on Evocations skill.
+// True if item is a staff that deals extra damage based on Evocations skill,
+// or has an evocations-based passive effect (staff of Wucad Mu).
 bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-        || is_unrandom_artefact(item, UNRAND_OLGREB))
+        || is_unrandom_artefact(item, UNRAND_OLGREB)
+        || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
     {
         return true;
     }
@@ -1877,8 +1879,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // evokers allow training.
     if (item_is_evokable(item, false, false, true)
         || item.base_type == OBJ_JEWELLERY
-           && gives_ability(item)
-        || is_unrandom_artefact(item, UNRAND_SALAMANDER))
+           && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1900,12 +1901,13 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     if (item_is_evokable(item, false, false, false)
         || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item)
-        || item.base_type == OBJ_WEAPONS
-           && get_weapon_brand(item) == SPWPN_SPECTRAL)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
+
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
+        skills.insert(SK_NECROMANCY);
 
     const skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING)
