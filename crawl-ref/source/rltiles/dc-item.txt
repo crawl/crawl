@@ -853,7 +853,6 @@ i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-agility POT_AGILITY
-i-attraction POT_ATTRACTION
 # please remove these 3 when TAG_MAJOR_VERSION is bumped
 i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
@@ -898,7 +897,8 @@ i-nigredo POT_NIGREDO
 i-albedo POT_ALBEDO
 i-citrinitas POT_CITRINITAS
 i-viriditas POT_VIRIDITAS
-i-rubedo POT_RUBEDO POT_ID_LAST
+i-rubedo POT_RUBEDO
+i-attraction POT_ATTRACTION POT_ID_LAST
 %back none
 %rim 1
 
