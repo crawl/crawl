@@ -608,7 +608,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP|DBRAND)$/n)
+            $str .= ($temp eq "" && $part =~ /^(TYPE|INSCRIP|DESCRIP|DBRAND)$/)
                 ? "nullptr" : "\"$temp\"";
         }
         else
