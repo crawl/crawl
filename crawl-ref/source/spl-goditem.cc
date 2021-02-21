@@ -1207,7 +1207,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_LURKING_HORROR:
-        type = KILLED_BY_EXPLOSION;
+        type = KILLED_BY_DEATH_EXPLOSION;
         aux = "an exploding lurking horror";
         break;
 
