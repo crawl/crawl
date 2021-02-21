@@ -872,15 +872,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             }
         }
 
-        // you cannot unwield cursed weapon!
-        if (wpn->cursed())
-        {
-            mpr("you can't unwield your cursed weapon!");
-            return false;
-        }
-
         if (wpn)
         {
+            // you cannot unwield cursed weapon!
+            if (wpn->cursed())
+            {
+                mpr("you can't unwield your cursed weapon!");
+                return false;
+            }
+
             bool penance = false;
             // Can we safely unwield this item?
             if (needs_handle_warning(*wpn, OPER_WIELD, penance))
