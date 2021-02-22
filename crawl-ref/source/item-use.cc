@@ -760,8 +760,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
-    if (!isDualWeapon && !can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
-        return false;
+    if (!isDualWeapon)
+    {
+        if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
+            return false;
+    }
 
     if (isDualWeapon && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS)
                      && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true))
@@ -1032,8 +1035,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         }
         else if(twoweapons())
         {
-            auto choosed_wpn = second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
-            choosed_wpn = _choose_weapon_slot();
+            auto choosed_wpn = EQ_WEAPON;
+            if (!auto_wield)
+                choosed_wpn = _choose_weapon_slot();
             bool isSecond = false;
 
             if (choosed_wpn == EQ_NONE)
