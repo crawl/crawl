@@ -656,11 +656,6 @@ void JewelleryOnDelay::finish()
 void EquipOnDelay::finish()
 {
     const unsigned int old_talents = your_talents(false).size();
-
-    set_ident_flags(equip, ISFLAG_IDENT_MASK);
-    if (is_artefact(equip))
-        equip.flags |= ISFLAG_NOTED_ID;
-
     const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
     const equipment_type eq_slot = is_amulet ? EQ_AMULET :
                                                get_armour_slot(equip);

@@ -243,6 +243,12 @@ static inline bool is_weapon(const item_def &item)
     return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
 }
 
+inline constexpr bool item_type_is_equipment(object_class_type base_type)
+{
+        return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
+}
+
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
