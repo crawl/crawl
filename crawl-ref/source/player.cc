@@ -5020,7 +5020,7 @@ player::player()
     received_weapon_warning = false;
     received_noskill_warning = false;
     wizmode_teleported_into_rock = false;
-    ash_init_bondage(this);
+    skill_boost.clear();
     digging = false;
 
     delay_queue.clear();

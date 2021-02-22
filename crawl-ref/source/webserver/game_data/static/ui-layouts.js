@@ -356,13 +356,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     .addClass("fg"+desc.colour).html(desc.title);
         $panes.eq(0).find(".god-favour td.favour")
                     .addClass("fg"+desc.colour).html(desc.favour);
-        if (desc.bondage)
-        {
-            $panes.eq(0).find(".god-favour")
-                .after("<div class=tbl>"
-                        + util.formatted_string_to_html(desc.bondage)
-                        + "</div>");
-        }
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;

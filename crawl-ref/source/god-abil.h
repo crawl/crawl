@@ -61,6 +61,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define WU_JIAN_HEAVENLY_STORM_MAX 15
 
 #define AVAILABLE_CURSE_KEY "available_curses"
+#define CURSE_KNOWLEDGE_KEY "current_curse_skill_offer"
+
 #define ASHENZARI_CURSE_PROGRESS_KEY "ashenzari_progress_to_next_curse"
 #define ASHENZARI_CURSE_DELAY_KEY "ashenzari_curse_delay"
 #define ASHENZARI_BASE_PIETY 2
@@ -131,6 +133,7 @@ void cheibriados_time_step(int pow);
 void ashenzari_offer_new_curse();
 bool ashenzari_curse_item();
 bool ashenzari_uncurse_item();
+string ashenzari_curse_knowledge_list();
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();

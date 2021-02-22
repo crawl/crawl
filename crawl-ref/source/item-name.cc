@@ -142,6 +142,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                                     ignore_flags);
 
     const bool startvowel     = is_vowel(auxname[0]);
+    const bool qualname       = (descrip == DESC_QUALNAME);
 
     if (descrip == DESC_INVENTORY_EQUIP || descrip == DESC_INVENTORY)
     {
@@ -310,7 +311,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
     if (terse && descrip != DESC_DBNAME && descrip != DESC_BASENAME
-        && descrip != DESC_QUALNAME
+        && !qualname
         && is_artefact(*this) && cursed())
     {
         buff << " (curse)";
@@ -1438,7 +1439,8 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
     const string name_with_ego
         = know_ego ? weapon_brand_desc(base_name.c_str(), weap, terse)
         : base_name;
-    const string curse_suffix = weap.cursed() && terse && !dbname ? " (curse)" :  "";
+    const string curse_suffix
+        = weap.cursed() && terse && !dbname && !qualname ? " (curse)" :  "";
     return curse_prefix + plus_text + cosmetic_text
            + name_with_ego + curse_suffix;
 }
@@ -1590,7 +1592,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             }
         }
 
-        if (cursed() && terse && !dbname)
+        if (cursed() && terse && !qualname)
             buff << " (curse)";
         break;
 
@@ -1727,7 +1729,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                      << " ring";
             }
         }
-        if (cursed() && terse && !dbname)
+        if (cursed() && terse && !qualname)
             buff << " (curse)";
         break;
     }
@@ -1793,7 +1795,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         else
             buff << "staff of " << staff_type_name(item_typ);
 
-        if (cursed() && terse && !dbname)
+        if (cursed() && terse && !qualname)
             buff << " (curse)";
         break;
 

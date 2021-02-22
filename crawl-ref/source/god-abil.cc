@@ -24,6 +24,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -2168,6 +2169,67 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     mpr("You return to the normal time flow.");
 }
 
+static string _desc_curse_skill(const CrawlStoreValue& c)
+{
+    return lowercase_string(skill_name(static_cast<skill_type>(c.get_int())));
+}
+
+string ashenzari_curse_knowledge_list()
+{
+    if (!you_worship(GOD_ASHENZARI))
+        return "";
+
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    return comma_separated_fn(curses.begin(), curses.end(),
+                              _desc_curse_skill);
+}
+
+/**
+ * Choose skills to boost accompanying the current curse.
+ */
+static void _choose_curse_knowledge()
+{
+    // This loop choses two available skills without replacement,
+    // it is a two element version of a resivoir sampling algorithm.
+    //
+    // If Ashenzari curses need some fancier weighting this is the
+    // place to do that weighting.
+    skill_type first_choice = SK_NONE;
+    skill_type second_choice = SK_NONE;
+    int valid_skills = 0;
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        if (you.can_currently_train[sk] && sk != SK_INVOCATIONS)
+        {
+            ++valid_skills;
+            if (valid_skills == 1)
+                first_choice = sk;
+            else if (valid_skills == 2)
+            {
+                second_choice = sk;
+                if (coinflip())
+                    swap(first_choice, second_choice);
+            }
+            else if (one_chance_in(valid_skills))
+                first_choice = sk;
+            else if (one_chance_in(valid_skills - 1))
+                second_choice = sk;
+        }
+    }
+
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
+    CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (first_choice != SK_NONE)
+        curses.push_back(first_choice);
+    if (second_choice != SK_NONE)
+        curses.push_back(second_choice);
+
+    // It's not an error for this to be empty, curses are still useful for
+    // piety alone
+}
+
 /**
  * Offer a new curse to the player, letting them know their new curse is
  * available.
@@ -2178,8 +2240,36 @@ void ashenzari_offer_new_curse()
     if (piety_rank() > 5)
         return;
 
+    _choose_curse_knowledge();
+
     you.props[AVAILABLE_CURSE_KEY] = true;
-    simple_god_message(" invites you to partake of a vision and a curse.");
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    const string curse_skills = ashenzari_curse_knowledge_list();
+    const string offer_string = curse_skills.empty() ? "" :
+                                (" of " + curse_skills);
+
+    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+                    " and a curse%s.", offer_string.c_str());
+}
+
+static void _do_curse_item(item_def &item)
+{
+    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
+    item.flags |= ISFLAG_CURSED;
+
+    if (you.equip[EQ_WEAPON] == item.link)
+    {
+        // Redraw the weapon.
+        you.wield_change = true;
+    }
+
+    for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
+    {
+        add_inscription(item,
+            lowercase_string(
+                skill_name(static_cast<skill_type>(curse.get_int()))));
+        item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
+    }
 }
 
 /**
@@ -2209,8 +2299,10 @@ bool ashenzari_curse_item()
         return false;
     }
 
-    do_curse_item(item, false);
-    learned_something_new(HINT_YOU_CURSED);
+    _do_curse_item(item);
+    ash_check_bondage();
+
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
     you.props.erase(AVAILABLE_CURSE_KEY);
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
 

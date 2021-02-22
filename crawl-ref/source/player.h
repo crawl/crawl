@@ -396,8 +396,6 @@ public:
     chrono::time_point<chrono::system_clock> last_keypress_time;
 
     bool wizard_vision;
-    int8_t bondage_level;  // how much an Ash worshipper is into bondage
-    int8_t bondage[NUM_ET];
     map<skill_type, int8_t> skill_boost; // Skill bonuses.
     bool digging;
 

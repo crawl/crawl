@@ -1068,6 +1068,24 @@ vector<const char*> get_ability_names()
     return result;
 }
 
+static string _curse_desc()
+{
+    if (!you.props.exists(CURSE_KNOWLEDGE_KEY))
+        return "";
+
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (curses.empty())
+        return "";
+
+    const bool plural = curses.size() > 1;
+
+    return make_stringf("\nIf you bind an item with this curse Ashenzari will"
+                        " enhance your %s skill%s.\n",
+                        ashenzari_curse_knowledge_list().c_str(),
+                        plural ? "s" : "");
+}
+
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 {
     return mut_upgrade_summary(static_cast<mutation_type>(mut_store.get_int()));
@@ -1123,6 +1141,9 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
+
+    if (ability == ABIL_ASHENZARI_CURSE)
+        lookup += _curse_desc();
 
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
@@ -3344,6 +3365,7 @@ int choose_ability_menu(const vector<talent>& talents)
     }
     return ret;
 }
+
 
 string describe_talent(const talent& tal)
 {

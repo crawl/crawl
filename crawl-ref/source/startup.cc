@@ -352,7 +352,7 @@ static void _post_init(bool newc)
     update_turn_count();
     update_vision_range();
     init_exclusion_los();
-    ash_check_bondage(false);
+    ash_check_bondage();
 
     trackers_init_new_level();
 
