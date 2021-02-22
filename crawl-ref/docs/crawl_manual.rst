@@ -1820,7 +1820,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Centaurs, their body shape also prevents them from gaining full protection
+  Palentongas, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -1855,8 +1855,8 @@ Felids (Fe)
 
   Their agility and stealth are legendary, as is their ability to get to hard to
   reach places. They move faster than most races, but don't run as fast as
-  Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
-  with many forms of magic, though less so with raw elemental magic.
+  Spriggans. Felids advance in levels very slowly. They are skilled with many
+  forms of magic, though less so with raw elemental magic.
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
@@ -1881,8 +1881,7 @@ Mummies (Mu)
   levels, they become increasingly in touch with the powers of death, but cannot
   use some types of necromancy which only affect living creatures. The side
   effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also do not need
-  to eat or drink and, in any case, are incapable of doing so.
+  However, their desiccated bodies are highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -2041,14 +2040,13 @@ Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
-  They begin the game with the Book of Changes, some arrows to turn into snakes,
-  and a robe.
+  They begin the game with the Book of Changes and a robe.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, the Book of
-  Spatial Translocations, some dispersal tomahawks, a simple weapon of their
+  Spatial Translocations, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
 Arcane Marksmen
@@ -2193,7 +2191,7 @@ There are a number of individual weapon skills for missile weapons:
   * Crossbows
   * Slings
 
-Throwing is the skill for all things hurled without a launcher: tomahawks,
+Throwing is the skill for all things hurled without a launcher: boomerangs,
 javelins, nets, darts, etc. The other skills refer to various types of missiles
 shot with a launcher. Since stones can be thrown without launchers to some
 effect, these skills crosstrain:
@@ -2890,8 +2888,8 @@ You can use inscriptions to define shortcuts for easy access to items,
 regardless of their actual inventory letter. For example, if an item's
 inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
 the 9, any other digit works as well. And instead of 'w'ield, any other command
-used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire,
-etc. Using "@*9" will make any action command followed by '9' use this item.
+used for handling items can be used: 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
+Using "@*9" will make any action command followed by '9' use this item.
 
 Safety inscriptions
 ========================================
