@@ -752,17 +752,20 @@ static int _get_item_slot_maybe_with_move(const item_def &item)
  *      - -1 (default): meaning no particular weapon. We'll either prompt for a
  *        choice of weapon (if auto_wield is false) or choose one by default.
  *      - SLOT_BARE_HANDS: equip nothing (unwielding current weapon, if any)
+ * @param second_weapon It only uses in drop_item @ items.cc. You consider this
+ *      only for auto_wield option. Hence, we can't make autoswap in second weapon.
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool show_unwield_msg, bool show_wield_msg,
                   bool adjust_time_taken, bool second_weapon)
 {
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
-    
+    ASSERT(auto_wield || !second_weapon);
     bool first_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS);
     bool second_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true);
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
+
     if (!isDualWeapon)
     {
         if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
