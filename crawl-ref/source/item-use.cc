@@ -476,12 +476,15 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(const item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield, bool only_known)
+               bool ignore_temporary_disability, bool unwield, bool only_known, bool second_weapon)
 {
 #define SAY(x) {if (say_reason) { x; }}
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
+    ASSERT(isDualWeapon || !second_weapon);
+    
+    auto target = !second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
 
-    if (you.melded[EQ_WEAPON] && unwield)
+    if (you.melded[target] && unwield)
     {
         SAY(mpr("Your weapon is melded into your body!"));
         return false;
@@ -494,17 +497,10 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
-        && you.weapon()
-        && is_weapon(*you.weapon())
-        && you.weapon()->cursed()
-        && (!isDualWeapon
-        || (you.second_weapon()
-        && is_weapon(*you.second_weapon())
-        && you.second_weapon()->cursed()
-        )))
+        && (second_weapon || you.weapon() && is_weapon(*you.weapon()) && you.weapon()->cursed())
+        && (!second_weapon || (you.second_weapon() && is_weapon(*you.second_weapon()) && you.second_weapon()->cursed())))
     {
-        SAY(mprf("You can't unwield your weapon%s%s!",
-                 !isDualWeapon ? "" : "s",
+        SAY(mprf("You can't unwield your weapon%s!",
                  !unwield ? " to draw a new one" : ""));
         return false;
     }
@@ -764,8 +760,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
-    if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
+    if (!isDualWeapon && !can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
+
+    if (isDualWeapon && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS)
+                     && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true))
+    {
+        can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS); // just give a message
+        return false;
+    }
 
     item_def *to_wield = &you.inv[0]; // default is 'a'
         // we'll set this to nullptr to indicate bare hands
@@ -841,6 +844,58 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
+    auto notcursepenance = [](const item_def& wpn, bool quiet){
+            // you cannot unwield cursed weapon!
+            if (wpn.cursed())
+            {
+                if (quiet)
+                    return false;
+
+                mpr("you can't unwield your cursed weapon!");
+                return false;
+            }
+
+            bool penance = false;
+            // Can we safely unwield this item?
+            if (needs_handle_warning(wpn, OPER_WIELD, penance))
+            {
+                if (quiet)
+                    return false;
+                string prompt =
+                    "Really unwield " + wpn.name(DESC_INVENTORY) + "?";
+                if (penance)
+                    prompt += " This could place you under penance!";
+
+                if (!yesno(prompt.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+            }
+            return true;
+        };
+
+    auto _wieldable = [](const item_def& wpn, int slot = EQ_WEAPON){
+            bool isSecond = slot == EQ_SECOND_WEAPON;
+            // Ensure wieldable
+            if (!can_wield(&wpn, true, false, false, true, isSecond))
+                return false;
+
+            // Really ensure wieldable, even unknown brand
+            if (!can_wield(&wpn, true, false, false, false, isSecond))
+                return false;
+
+            // At this point, we know it's possible to equip this item. However, there
+            // might be reasons it's not advisable.
+            if (!check_warning_inscriptions(wpn, OPER_WIELD, isSecond)
+                || !_safe_to_remove_or_wear(wpn, false))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+            return true;
+        };
+
     // If there is no natural weapon to wield(and so, tried to unwield), choose weapon manually
     if (!to_wield)
     {
@@ -874,28 +929,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
         if (wpn)
         {
-            // you cannot unwield cursed weapon!
-            if (wpn->cursed())
-            {
-                mpr("you can't unwield your cursed weapon!");
+            if (!notcursepenance(*wpn, false))
                 return false;
-            }
-
-            bool penance = false;
-            // Can we safely unwield this item?
-            if (needs_handle_warning(*wpn, OPER_WIELD, penance))
-            {
-                string prompt =
-                    "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
-                if (penance)
-                    prompt += " This could place you under penance!";
-
-                if (!yesno(prompt.c_str(), false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                }
-            }
 
             // check if you'd get stat-zeroed
             if (!_safe_to_remove_or_wear(*wpn, true))
@@ -943,41 +978,34 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         }
     }
 
-    // Ensure wieldable
-    if (!can_wield(&new_wpn, true))
-        return false;
-
-    // Really ensure wieldable, even unknown brand
-    if (!can_wield(&new_wpn, true, false, false, false))
-        return false;
-
-    // At this point, we know it's possible to equip this item. However, there
-    // might be reasons it's not advisable.
-    if (!isDualWeapon
-        && (!check_warning_inscriptions(new_wpn, OPER_WIELD)
-        || !_safe_to_remove_or_wear(new_wpn, false)))
+    if (!isDualWeapon)
     {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-
-    if(isDualWeapon) 
-    {
-        if ((you.weapon() && you.hands_reqd(*you.weapon()) == HANDS_TWO)
-            ||
-            you.hands_reqd(new_wpn) == HANDS_TWO)
+        if (!_wieldable(new_wpn))
+            return false;
+    
+        if (unwield_item(show_weff_messages, EQ_WEAPON))
         {
-            if(you.weapon() || you.second_weapon())
-            {//if two handed weapon(maybe range weapon) you should unwield weapon all
-            auto choosed_wpn = !you.weapon() ? EQ_WEAPON : EQ_SECOND_WEAPON;
+            // Enable skills so they can be re-disabled later
+            update_can_currently_train();
+        }
+        else
+            return false;
+    }
+    else
+    {
+        auto wpn = [](int EQ){ return (EQ == EQ_WEAPON)?you.weapon() : you.second_weapon(); };
+        auto twoweapons = [](){ return you.weapon() && you.second_weapon(); };
+        auto noweapons = [](){ return !you.weapon() || !you.second_weapon(); };
 
-                if (!check_warning_inscriptions(new_wpn, OPER_WIELD, you.second_weapon())
-                    || !_safe_to_remove_or_wear(new_wpn, false))
-                {
-                    canned_msg(MSG_OK);
+        if ((you.weapon() && you.hands_reqd(*you.weapon()) == HANDS_TWO)
+            || you.hands_reqd(new_wpn) == HANDS_TWO)
+        {
+            //if two handed weapon(maybe range weapon) you should unwield weapon all
+            while (!twoweapons() && !noweapons())
+            {
+                auto choosed_wpn = !you.weapon() ? EQ_WEAPON : EQ_SECOND_WEAPON;
+                if (!_wieldable(new_wpn, choosed_wpn == EQ_SECOND_WEAPON))
                     return false;
-                }
                 if (unwield_item(show_weff_messages, choosed_wpn))
                 {
                     // Enable skills so they can be re-disabled later
@@ -987,48 +1015,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                     return false;
             }
         }
-        else if((you.weapon() && you.second_weapon()) ||
-            (is_range_weapon(new_wpn) && you.weapon())) 
+        else if(is_range_weapon(new_wpn))
         {
-
-            auto choosed_wpn = !second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
-            if (is_range_weapon(new_wpn)) {
-                choosed_wpn = EQ_WEAPON;
-            }
-            else if (!auto_wield) {
-                choosed_wpn = _choose_weapon_slot();
-                bool isSecond = false;
-
-                if (choosed_wpn == EQ_NONE)
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                }
-                else if (choosed_wpn == EQ_WEAPON)
-                {  
-                    isSecond = false;
-                }
-                else if (choosed_wpn == EQ_SECOND_WEAPON)
-                {
-                    isSecond = true;
-                }
-                if (!check_warning_inscriptions(new_wpn, OPER_WIELD, isSecond)
-                        || !_safe_to_remove_or_wear(new_wpn, false))
-                    {
-                        canned_msg(MSG_OK);
-                        return false;
-                    }
-            }
-
-            auto checkWpn = you.slot_item(choosed_wpn, true);
-            if (checkWpn->cursed())
-            {
-                mpr("you can't unwield your cursed weapon!");
+            // if you tried to wield range_weapon, fix it EQ_WEAPON;
+            // Does it need?
+            if (!_wieldable(new_wpn, false))
                 return false;
-            }
-
             // TODO Choose and Unwield old weapon.
-            if (unwield_item(show_weff_messages, choosed_wpn))
+            if (unwield_item(show_weff_messages, EQ_WEAPON))
             {
                 // Enable skills so they can be re-disabled later
                 update_can_currently_train();
@@ -1036,37 +1030,36 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             else
                 return false;
         }
-        else if(!you.weapon() && !you.second_weapon())
+        else if(twoweapons())
         {
-            if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
-                    || !_safe_to_remove_or_wear(new_wpn, false))
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                }
+            auto choosed_wpn = second_weapon ? EQ_WEAPON : EQ_SECOND_WEAPON;
+            choosed_wpn = _choose_weapon_slot();
+            bool isSecond = false;
+
+            if (choosed_wpn == EQ_NONE)
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+
+            if (!_wieldable(new_wpn, choosed_wpn == EQ_SECOND_WEAPON))
+                return false;
+
+            // TODO Choose and Unwield old weapon.
+            if (unwield_item(show_weff_messages, EQ_SECOND_WEAPON))
+            {
+                // Enable skills so they can be re-disabled later
+                update_can_currently_train();
+            }
+            else
+                return false;
         }
         else
-        {  
-            if (!check_warning_inscriptions(new_wpn, OPER_WIELD, you.weapon())
-                    || !_safe_to_remove_or_wear(new_wpn, false))
-                {
-                    canned_msg(MSG_OK);
-                    return false;
-                } 
+        {
+            if (!_wieldable(new_wpn, you.weapon() ? EQ_SECOND_WEAPON : EQ_WEAPON))
+                return false;
         }
-        
     } 
-    // Unwield any old weapon.
-    else if (you.weapon())
-    {
-        if (unwield_item(show_weff_messages, EQ_WEAPON))
-        {
-            // Enable skills so they can be re-disabled later
-            update_can_currently_train();
-        }
-        else
-            return false;
-    }
 
     const unsigned int old_talents = your_talents(false).size();
 
