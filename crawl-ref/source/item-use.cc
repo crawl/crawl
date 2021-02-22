@@ -769,7 +769,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return false;
     }
 
-    if (isDualWeapon && !first_curse && !second_curse)
+    if (isDualWeapon && first_curse && second_curse)
     {   // just give a message 
         // "We don't care the case both weapons are cursed!"
         can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS); 
