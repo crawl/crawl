@@ -83,7 +83,7 @@ Items
 Spells
 ------
 * Ozocubu's armour and Frozen Ramparts now end under any location change.
-* Ozocubu's Refridgeration is now level 7.
+* Ozocubu's Refrigeration is now level 7.
 * Stone arrow damage is increased.
 * Monstrous Menagerie no longer summons harpies.
 * New spell: Animate Armour. A Level 4 Summon/Earth spell which draws out the
