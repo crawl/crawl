@@ -944,6 +944,8 @@ void item_check()
 // Identify the object the player stepped on.
 // Books are fully identified.
 // Wands are only type-identified.
+// Equipment items are fully identified,
+// but artefact equipment skips some type-id checks.
 static bool _id_floor_item(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS)
@@ -969,6 +971,30 @@ static bool _id_floor_item(item_def &item)
                 set_item_autopickup(item, AP_FORCE_OFF);
             return true;
         }
+    }
+    else if (item_type_is_equipment(item.base_type))
+    {
+        if (fully_identified(item))
+            return false;
+
+        // autopickup hack for previously-unknown items
+        if (item_needs_autopickup(item))
+            item.props["needs_autopickup"] = true;
+
+        if (is_artefact(item))
+        {
+            if (!(item.flags & ISFLAG_NOTED_ID))
+            {
+                item.flags |= ISFLAG_NOTED_ID;
+
+                // Make a note of it.
+                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                               origin_desc(item)));
+            }
+        }
+
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        return true;
     }
 
     return false;

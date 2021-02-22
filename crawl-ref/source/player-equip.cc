@@ -220,8 +220,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
             you.unrand_reacts.set(slot);
     }
 
-    const bool alreadyknown = item_type_known(item);
-    const bool dangerous    = player_in_a_dangerous_place();
     const bool msg          = !show_msgs || *show_msgs;
 
     artefact_properties_t  proprt;
@@ -265,25 +263,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
         mpr("You feel ready to rampage towards enemies.");
 
-    if (!alreadyknown && dangerous)
-    {
-        // Xom loves it when you use an unknown random artefact and
-        // there is a dangerous monster nearby...
-        xom_is_stimulated(100);
-    }
-
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
 
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
-
-    if (!fully_identified(item))
-    {
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
 }
 
 /**
@@ -447,8 +432,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
     case OBJ_STAVES:
     {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-        set_ident_type(OBJ_STAVES, item.sub_type, true);
         _wield_cursed(item, unmeld);
         break;
     }
@@ -460,25 +443,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         if (artefact)
             _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
-        const bool was_known      = item_type_known(item);
-
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-
         special = item.brand;
 
         if (artefact)
-        {
             special = artefact_property(item, ARTP_BRAND);
-
-            if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
-            {
-                item.flags |= ISFLAG_NOTED_ID;
-
-                // Make a note of it.
-                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
-                               origin_desc(item)));
-            }
-        }
 
         if (special != SPWPN_NORMAL)
         {
@@ -600,28 +568,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 }
             }
 
-            // effect second
-            switch (special)
-            {
-            case SPWPN_DISTORTION:
-                if (!was_known)
-                {
-                    // Xom loves it when you ID a distortion weapon this way,
-                    // and even more so if he gifted the weapon himself.
-                    if (origin_as_god_gift(item) == GOD_XOM)
-                        xom_is_stimulated(200);
-                    else
-                        xom_is_stimulated(100);
-                }
-                break;
-
-            case SPWPN_ANTIMAGIC:
+            if (special == SPWPN_ANTIMAGIC)
                 calc_mp();
-                break;
-
-            default:
-                break;
-            }
         }
 
         _wield_cursed(item, unmeld);
@@ -1250,20 +1198,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
     }
 
-    bool new_ident = false;
-    // Artefacts have completely different appearance than base types
-    // so we don't allow them to make the base types known.
     if (artefact)
     {
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld, slot);
-
-        set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
-    }
-    else
-    {
-        new_ident = set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     if (item.cursed() && !unmeld)
@@ -1277,8 +1215,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-    if (new_ident)
-        auto_assign_item_slot(item);
 }
 
 static void _deactivate_regeneration_item(const item_def &item, bool meld)
