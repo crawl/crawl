@@ -15,7 +15,7 @@ Character
 * Demonspawn mutation changes:
   - Mana link is re-ordered, providing MP Regen in the first rank, spirit
     shield in the second. The third level is unchanged.
-  - Foul stench provides stench at every rank as well as misasma immunity.
+  - Foul stench provides stench at every rank as well as miasma immunity.
   - The damage curve of the spiny facet is rescaled.
   - Ignite blood ignites blood at every rank, with power scaling with rank.
   - Demonic Guardian now summons a guardian when the player takes damage; the
