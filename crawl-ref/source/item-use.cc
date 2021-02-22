@@ -758,6 +758,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool adjust_time_taken, bool second_weapon)
 {
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
+    
+    bool first_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS);
+    bool second_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true);
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
     if (!isDualWeapon)
@@ -766,10 +769,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return false;
     }
 
-    if (isDualWeapon && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS)
-                     && !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true))
-    {
-        can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS); // just give a message
+    if (isDualWeapon && !first_curse && !second_curse)
+    {   // just give a message 
+        // "We don't care the case both weapons are cursed!"
+        can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS); 
         return false;
     }
 
@@ -1038,6 +1041,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             auto choosed_wpn = EQ_WEAPON;
             if (!auto_wield)
                 choosed_wpn = _choose_weapon_slot();
+            else if (first_curse)
+                choosed_wpn = EQ_SECOND_WEAPON;
+
             bool isSecond = false;
 
             if (choosed_wpn == EQ_NONE)
@@ -1050,7 +1056,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 return false;
 
             // TODO Choose and Unwield old weapon.
-            if (unwield_item(show_weff_messages, EQ_SECOND_WEAPON))
+            if (unwield_item(show_weff_messages, choosed_wpn))
             {
                 // Enable skills so they can be re-disabled later
                 update_can_currently_train();
