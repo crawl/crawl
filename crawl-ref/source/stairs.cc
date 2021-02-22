@@ -249,12 +249,19 @@ static void _clear_prisms()
             mons.reset();
 }
 
+static void _complete_zig()
+{
+    if (!zot_immune())
+        mpr("You have passed through the Ziggurat. Zot will hunt you nevermore.");
+    you.zigs_completed++;
+}
+
 void leaving_level_now(dungeon_feature_type stair_used)
 {
     if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
         if (you.depth == 27)
-            you.zigs_completed++;
+            _complete_zig();
         mark_milestone("zig.exit", make_stringf("left a ziggurat at level %d.",
                        you.depth));
     }

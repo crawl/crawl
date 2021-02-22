@@ -1595,7 +1595,7 @@ static void _experience_check()
 
     if (!crawl_state.game_is_sprint())
     {
-        if (player_has_orb())
+        if (zot_immune())
             msg::stream << "You are forever immune to Zot's power.";
         else if (player_in_branch(BRANCH_ABYSS))
             msg::stream << "You have unlimited time to explore this branch.";

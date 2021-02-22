@@ -504,8 +504,9 @@ area (diffusing Zot's attention once more) or to leave the area entirely.
 
 The Abyss is beyond Zot's comprehension, and adventurers there are safe from
 it (albeit subject to many other hazards). The Hells, along with their
-Vestibule, are a single area as far as Zot is concerned. Adventurers who hold
-the Orb of Zot are forever immune to Zot's power.
+Vestibule, are a single area as far as Zot is concerned. Rumours claim there
+are ways to escape Zot's pursuit forever, but what magics could be mighty
+enough to forestall such an implacable entity?
 
 Seeded play
 ========================================

@@ -1299,13 +1299,19 @@ static int& _zot_clock()
 
 static bool _zot_clock_active_in(branch_type br)
 {
-    return br != BRANCH_ABYSS && !player_has_orb() && !crawl_state.game_is_sprint();
+    return br != BRANCH_ABYSS && !zot_immune() && !crawl_state.game_is_sprint();
 }
 
 // Is the zot clock running, or is it paused or stopped altogether?
 bool zot_clock_active()
 {
     return _zot_clock_active_in(you.where_are_you);
+}
+
+// Has the player stopped the zot clock?
+bool zot_immune()
+{
+    return player_has_orb() || you.zigs_completed;
 }
 
 int turns_until_zot_in(branch_type br)

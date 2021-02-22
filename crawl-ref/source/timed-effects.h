@@ -30,6 +30,7 @@ const int MAX_ZOT_CLOCK = 27000 * BASELINE_DELAY;
 
 bool bezotted();
 bool bezotted_in(branch_type br);
+bool zot_immune();
 bool zot_clock_active();
 int bezotting_level();
 int turns_until_zot();
