@@ -550,6 +550,14 @@ void attack::antimagic_affects_defender(int pow)
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
 }
 
+static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+{
+    if (you.triggered_spectral)
+        return;
+    you.triggered_spectral = true;
+    spectral_weapon_fineff::schedule(attacker, defender);
+}
+
 /// Whose skill should be used for a pain-weapon effect?
 static actor* _pain_weapon_user(actor* attacker)
 {
@@ -1605,7 +1613,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             const monster* mon = defender->as_monster();
             if (mon && !mons_is_firewood(*mon))
-                handle_spectral_brand();
+                _handle_spectral_brand(*attacker, *defender);
         }
         break;
 
@@ -1643,7 +1651,7 @@ bool attack::apply_damage_brand(const char *what)
     {
         const monster* mon = defender->as_monster();
         if (mon && !mons_is_firewood(*mon))
-            handle_spectral_brand();
+            _handle_spectral_brand(*attacker, *defender);
     }
 
     if (special_damage > 0)

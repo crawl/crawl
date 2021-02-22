@@ -5003,7 +5003,8 @@ player::player()
     num_turns        = 0;
     exploration      = 0;
 
-    trapped          = false;
+    trapped            = false;
+    triggered_spectral = false;
 
     last_view_update = 0;
 
@@ -8185,15 +8186,6 @@ void refresh_weapon_protection()
 
     you.increase_duration(DUR_SPWPN_PROTECTION, 3 + random2(2), 5);
     you.redraw_armour_class = true;
-}
-
-/**
- * Refreshes a player's spectral weapon on hit.
- */
-void handle_spectral_brand()
-{
-    if (!find_spectral_weapon(&you))
-        cast_spectral_weapon(&you, 50, you.religion);
 }
 
 // Is the player immune to a particular hex because of their

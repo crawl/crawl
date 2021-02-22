@@ -954,22 +954,9 @@ static bool _handle_reaching(monster* mons)
     }
 
     const coord_def foepos(foe->pos());
-    const coord_def delta(foepos - mons->pos());
-    const int grid_distance(delta.rdist());
-    const coord_def first_middle(mons->pos() + delta / 2);
-    const coord_def second_middle(foepos - delta / 2);
-
-    if (grid_distance == 2
+    if (can_reach_attack_between(mons->pos(), foepos)
         // The monster has to be attacking the correct position.
-        && mons->target == foepos
-        // With a reaching attack with a large enough range:
-        && delta.rdist() <= range
-        // And with no dungeon furniture in the way of the reaching
-        // attack;
-        && (feat_is_reachable_past(env.grid(first_middle))
-            || feat_is_reachable_past(env.grid(second_middle)))
-        // The foe should be on the map (not stepped from time).
-        && in_bounds(foepos))
+        && mons->target == foepos)
     {
         ret = true;
 
@@ -1445,7 +1432,6 @@ static void _pre_monster_move(monster& mons)
     }
 
     reset_battlesphere(&mons);
-    reset_spectral_weapon(&mons);
 
     fedhas_neutralise(&mons);
     slime_convert(&mons);
@@ -2262,10 +2248,9 @@ static void _post_monster_move(monster* mons)
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
-        && !mons_is_avatar(mons->type)
-        && !find_spectral_weapon(mons))
+        && !mons_is_avatar(mons->type))
     {
-        cast_spectral_weapon(mons, mons->get_experience_level() * 4, mons->god);
+        // TODO: implement monster spectral ego
     }
 
     if (mons->foe != MHITNOT && mons_is_wandering(*mons) && mons_is_batty(*mons))

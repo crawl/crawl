@@ -425,6 +425,9 @@ public:
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
 
+    // Did the player trigger their spectral weapon this turn?
+    bool triggered_spectral;
+
     // TODO burn this API with fire
     bool wield_change;          // redraw weapon
     bool gear_change;           // redraw equip bar
@@ -1107,7 +1110,6 @@ bool sanguine_armour_valid();
 void activate_sanguine_armour();
 
 void refresh_weapon_protection();
-void handle_spectral_brand();
 
 void set_mp(int new_amount);
 

@@ -43,7 +43,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h" // cancel_tornado
-#include "spl-summoning.h" // trigger_spectral_weapon for palentonga charge
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -640,8 +639,6 @@ spret palentonga_charge(bool fail, dist *target)
     melee_attack charge_atk(&you, target_mons);
     charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
     charge_atk.attack();
-    if (you.props.exists("spectral_weapon"))
-        trigger_spectral_weapon(&you, target_mons);
 
     // Normally this is 10 aut (times haste, etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.

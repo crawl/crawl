@@ -302,43 +302,12 @@ void handle_behaviour(monster* mon)
     actor *owner = (mon->summoner ? actor_by_mid(mon->summoner) : nullptr);
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
-        // Do nothing if we're still being placed
-        if (!mon->summoner)
-            return;
-
-        owner = actor_by_mid(mon->summoner);
-
-        if (!owner || !owner->alive())
-        {
+        if (mon->summoner && (!owner || !owner->alive()))
             end_spectral_weapon(mon, false);
-            return;
-        }
 
-        // Only go after the target if it's still near the owner, and
-        // so are we. The weapon is restricted to a leash range of 2,
-        // and things reachable within that leash range [qoala]
-        const int leash = 2;
-
-        if (grid_distance(owner->pos(), mon->pos()) > leash
-            || mon->foe == MHITNOT)
-        {
-            mon->foe = owner->mindex();
-            mon->target = owner->pos();
-        }
-        else if (mon->props.exists(SW_TARGET_MID))
-        {
-            actor *atarget = actor_by_mid(mon->props[SW_TARGET_MID].get_int());
-
-            if (atarget && atarget->alive()
-                && (grid_distance(owner->pos(), atarget->pos())
-                    <= ((mon->reach_range() == REACH_TWO) ? leash + 2 : leash + 1)))
-            {
-                mon->target = atarget->pos();
-                mon->foe = atarget->mindex();
-            }
-            else
-                reset_spectral_weapon(mon);
-        }
+        // Spectral weapons never do anything on their own. They just attack
+        // on command. A sad existence, really.
+        return;
     }
 
     // Change proxPlayer depending on invisibility and standing
@@ -1498,16 +1467,7 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
 
     // Spectral weapons only attack their target
     if (mons->type == MONS_SPECTRAL_WEAPON)
-    {
-        // FIXME: find a way to use check_target_spectral_weapon
-        //        without potential info leaks about visibility.
-        if (mons->props.exists(SW_TARGET_MID))
-        {
-            actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
-            return target && target->pos() == p;
-        }
         return false;
-    }
 
     if (!mons->friendly()
         || !mons->is_summoned()

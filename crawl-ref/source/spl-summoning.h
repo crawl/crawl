@@ -15,11 +15,6 @@
 #define DEAD_ARE_HOPPING 16
 #define DEAD_ARE_CRAWLING 32
 
-// Properties set for active summons
-#define SW_TARGET_MID "sw_target_mid"
-#define SW_READIED "sw_readied"
-#define SW_TRACKING "sw_tracking"
-
 // How many aut until the next doom hound pops out of doom howl?
 #define NEXT_DOOM_HOUND_KEY "next_doom_hound"
 
@@ -108,12 +103,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
 int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
-bool weapon_can_be_spectral(const item_def *weapon);
-void cast_spectral_weapon(actor *agent, int pow, god_type god);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
-bool trigger_spectral_weapon(actor* agent, const actor* target);
-bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
-void reset_spectral_weapon(monster* mons);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 

@@ -16,9 +16,11 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "god-abil.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-abil.h"
 #include "mon-act.h"
@@ -28,6 +30,7 @@
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -710,6 +713,91 @@ void summon_dismissal_fineff::fire()
 {
     if (defender() && defender()->alive())
         monster_die(*(defender()->as_monster()), KILL_DISMISSED, NON_MONSTER);
+}
+
+void spectral_weapon_fineff::fire()
+{
+    actor *atk = attacker();
+    actor *def = defender();
+    if (!def || !atk || !def->alive() || !atk->alive())
+        return;
+
+    const coord_def target = def->pos();
+
+    // Do we already have a spectral weapon?
+    monster* sw = find_spectral_weapon(atk);
+    if (sw)
+    {
+        // Is it already in range?
+        const reach_type sw_range = sw->reach_range();
+        if (sw_range > REACH_NONE && can_reach_attack_between(sw->pos(), target)
+            || adjacent(sw->pos(), target))
+        {
+            // Just attack.
+            melee_attack melee_attk(sw, def);
+            melee_attk.attack();
+            return;
+        }
+    }
+
+    // Can we find a nearby space to attack from?
+    const reach_type atk_range = atk->reach_range();
+    int seen_valid = 0;
+    coord_def chosen_pos;
+    // Try only spaces adjacent to the attacker.
+    for (adjacent_iterator ai(atk->pos()); ai; ++ai)
+    {
+        if (actor_at(*ai)
+            || !monster_habitable_grid(MONS_SPECTRAL_WEAPON, env.grid(*ai)))
+        {
+            continue;
+        }
+        // ... and only spaces the weapon could attack the defender from.
+        if (grid_distance(*ai, target) > 1 &&
+            (atk_range <= REACH_NONE ||
+             !can_reach_attack_between(*ai, target)))
+        {
+            continue;
+        }
+        // Reservoir sampling.
+        seen_valid++;
+        if (one_chance_in(seen_valid))
+            chosen_pos = *ai;
+    }
+    if (!seen_valid)
+        return;
+
+    const item_def *weapon = atk->weapon();
+    if (!weapon)
+        return;
+
+    mgen_data mg(MONS_SPECTRAL_WEAPON,
+                 atk->is_player() ? BEH_FRIENDLY
+                                  : SAME_ATTITUDE(atk->as_monster()),
+                 chosen_pos,
+                 atk->mindex(),
+                 MG_FORCE_BEH | MG_FORCE_PLACE);
+    mg.set_summoned(atk, 1, 0);
+    mg.props[TUKIMA_WEAPON] = *weapon;
+    mg.props[TUKIMA_POWER] = 50;
+
+    dprf("spawning at %d,%d", chosen_pos.x, chosen_pos.y);
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+        return;
+
+    // We successfully made a new one! Kill off the old one.
+    if (sw)
+        end_spectral_weapon(sw, false, true);
+
+    dprf("spawned at %d,%d", mons->pos().x, mons->pos().y);
+
+    melee_attack melee_attk(mons, def);
+    melee_attk.attack();
+
+    mons->summoner = atk->mid;
+    atk->props["spectral_weapon"].get_int() = mons->mid;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

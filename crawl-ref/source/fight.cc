@@ -293,10 +293,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        // A spectral weapon attacks whenever the player does
-        if (!simu && you.props.exists("spectral_weapon"))
-            trigger_spectral_weapon(&you, defender);
-
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
@@ -306,15 +302,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
     // about unpredictable or weird results from players.
-
-    // If this is a spectral weapon check if it can attack
-    if (attacker->type == MONS_SPECTRAL_WEAPON
-        && !confirm_attack_spectral_weapon(attacker->as_monster(), defender))
-    {
-        // Pretend an attack happened,
-        // so the weapon doesn't advance unecessarily.
-        return true;
-    }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
         ? attacker->heads() + MAX_NUM_ATTACKS - 1
@@ -437,10 +424,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         fire_final_effects();
     }
-
-    // A spectral weapon attacks whenever the player does
-    if (!simu && attacker->props.exists("spectral_weapon"))
-        trigger_spectral_weapon(attacker, defender);
 
     return true;
 }
@@ -1258,4 +1241,20 @@ bool otr_stop_summoning_prompt(string verb)
         canned_msg(MSG_OK);
         return true;
     }
+}
+
+bool can_reach_attack_between(coord_def source, coord_def target)
+{
+    const coord_def delta(target - source);
+    const int grid_distance(delta.rdist());
+    const coord_def first_middle(source + delta / 2);
+    const coord_def second_middle(target - delta / 2);
+
+    return grid_distance == 2
+        // And with no dungeon furniture in the way of the reaching
+        // attack;
+        && (feat_is_reachable_past(env.grid(first_middle))
+            || feat_is_reachable_past(env.grid(second_middle)))
+        // The foe should be on the map (not stepped from time).
+        && in_bounds(target);
 }
