@@ -818,7 +818,8 @@ bool melee_attack::attack()
         handle_phase_blocked();
     else
     {
-        if (attacker != defender && adjacent(defender->pos(), attack_position)
+        if (attacker != defender
+            && (adjacent(defender->pos(), attack_position) || is_projected)
             && !is_riposte)
         {
             // Check for defender Spines
