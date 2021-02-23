@@ -1464,13 +1464,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                           mg.props[TUKIMA_POWER].get_int() : 100);
         }
         else
-        {
-            // Spectral weapons are placed at pretty high power.
-            // They shouldn't ever be placed in a normal game.
-            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                       mg.props.exists(TUKIMA_POWER) ?
-                                           mg.props[TUKIMA_POWER].get_int() : 100);
-        }
+            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)));
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }

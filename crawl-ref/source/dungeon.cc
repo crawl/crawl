@@ -5143,7 +5143,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (mons->type == MONS_DANCING_WEAPON)
             mons->ghost->init_dancing_weapon(*wpn, 100);
         else if (mons->type == MONS_SPECTRAL_WEAPON)
-            mons->ghost->init_spectral_weapon(*wpn, 100);
+            mons->ghost->init_spectral_weapon(*wpn);
         mons->ghost_demon_init();
     }
 
