@@ -304,7 +304,7 @@ function geoelf.rooms.draw (e, room_data, corridor_data, index,
   if (shape == geoelf.rooms.shape.SQUARE) then
     room_glyphs = geoelf.rooms.square(radius, fancy)
   elseif (shape == geoelf.rooms.shape.DIAMOND) then
-    room_glyphs = geoelf.rooms.diamond(radius, radius)
+    room_glyphs = geoelf.rooms.diamond(radius, fancy)
   elseif (shape == geoelf.rooms.shape.CROSS) then
     local indent = math.min(crawl.random2(radius - 2) + 2, radius - 1)
     room_glyphs = geoelf.rooms.cross(radius, indent, fancy)
