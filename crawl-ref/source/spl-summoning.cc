@@ -153,6 +153,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
     mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
                              SPELL_ANIMATE_ARMOUR);
+    mg.hd = 15 + div_rand_round(pow, 10);
     monster* spirit = create_monster(mg);
     if (!spirit)
     {
@@ -165,7 +166,6 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
     fake_armour.base_type = OBJ_ARMOUR;
     fake_armour.sub_type = armour->sub_type;
     fake_armour.quantity = 1;
-    fake_armour.plus = pow / 10;
     fake_armour.rnd = armour->rnd;
     fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
     item_set_appearance(fake_armour);
