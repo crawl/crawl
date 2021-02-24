@@ -1536,8 +1536,8 @@ static int _num_mons_wanted()
     else if (player_in_branch(BRANCH_CRYPT))
         size = 10;
 	else if (in_pan)
-		size = 40;
-		// 8 -> 40
+		size = 8;
+		// seperated for future modification
     else if (player_in_hell())
         size = 60;
 		// 23 -> 60
