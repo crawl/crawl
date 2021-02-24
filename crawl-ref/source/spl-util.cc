@@ -1138,6 +1138,12 @@ string casting_uselessness_reason(spell_type spell, bool temp)
 
         if (!enough_mp(spell_mana(spell), true, false))
             return "you don't have enough magic to cast this spell.";
+
+        if (spell == SPELL_SUBLIMATION_OF_BLOOD
+            && you.magic_points == you.max_magic_points)
+        {
+            return "your reserves of magic are already full.";
+        }
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
@@ -1336,8 +1342,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "you have no blood to sublime.";
         }
-        if (you.magic_points == you.max_magic_points && temp)
-            return "your reserves of magic are already full.";
         break;
 
     case SPELL_TORNADO:
