@@ -1531,12 +1531,16 @@ static int _num_mons_wanted()
 
     int size = 12;
 
-    if (player_in_branch(BRANCH_SWAMP) || in_pan)
+    if (player_in_branch(BRANCH_SWAMP))
         size = 8;
     else if (player_in_branch(BRANCH_CRYPT))
         size = 10;
+	else if (in_pan)
+		size = 40;
+		// 8 -> 40
     else if (player_in_hell())
-        size = 23;
+        size = 60;
+		// 23 -> 60
 
     int mon_wanted = roll_dice(3, size);
 
