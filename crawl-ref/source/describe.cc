@@ -4760,7 +4760,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << "no experience or items";
 
         if (!did_stair_use && !mi.is(MB_PERM_SUMMON))
-            inf.body << " and " << it << " " << is << " incapable of using stairs";
+            inf.body << "; " << it << " " << is << " incapable of using stairs";
 
         if (mi.is(MB_PERM_SUMMON))
             inf.body << " and " << it << " cannot be abjured";
