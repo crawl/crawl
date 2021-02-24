@@ -40,7 +40,7 @@ Animate Armour spell
 
 Call upon the spirit of your worn armour to fight alongside you. The spirit moves
 slowly, but draws strength from the inherent protection of your own armour. At
-higher power, the spirit's protective enchantments grow stronger.
+higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
