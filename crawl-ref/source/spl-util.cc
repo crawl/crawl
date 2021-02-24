@@ -1334,14 +1334,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        // XXX: write player_can_bleed(bool temp) & use that
-        if (you.species == SP_GARGOYLE
-            || you.species == SP_GHOUL
-            || you.species == SP_MUMMY
-            || (temp && !form_can_bleed(you.form)))
-        {
+        if (!you.can_bleed(temp))
             return "you have no blood to sublime.";
-        }
         break;
 
     case SPELL_TORNADO:
