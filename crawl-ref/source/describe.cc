@@ -3193,7 +3193,7 @@ static string _player_spell_desc(spell_type spell)
         // of applying slightly different formatting.
         description << "\n<red>"
                     << uppercase_first(casting_uselessness_reason(spell, true))
-                    << "<red>\n";
+                    << "</red>\n";
     }
     else if (spell_is_useless(spell, true, false))
     {
