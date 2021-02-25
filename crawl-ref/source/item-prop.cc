@@ -869,42 +869,6 @@ void auto_id_inventory()
             god_id_item(item, false);
 }
 
-void do_curse_item(item_def &item, bool quiet)
-{
-    // Already cursed?
-    if (item.flags & ISFLAG_CURSED)
-        return;
-
-    if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY)
-    {
-        return;
-    }
-
-    if (!quiet)
-    {
-        mprf("Your %s glows black for a moment.",
-             item.name(DESC_PLAIN).c_str());
-    }
-
-    item.flags |= ISFLAG_CURSED;
-
-    if (in_inventory(item))
-    {
-        if (item_is_equipped(item))
-        {
-
-            if (you.equip[EQ_WEAPON] == item.link)
-            {
-                // Redraw the weapon.
-                you.wield_change = true;
-            }
-
-        }
-    }
-    ash_check_bondage();
-}
-
 /**
  * Make a net stationary (because it currently traps a victim).
  *

@@ -407,19 +407,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a wizardly item like this.");
 }
 
-static void _wield_cursed(item_def& item, bool unmeld)
-{
-    if (!item.cursed() || unmeld)
-        return;
-    mprf("It sticks to your %s!", you.hand_name(false).c_str());
-    int amusement = 16;
-    const int wpn_skill = item_attack_skill(item.base_type, item.sub_type);
-    if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
-        amusement *= 2;
-
-    xom_is_stimulated(amusement);
-}
-
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -436,7 +423,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
     case OBJ_STAVES:
     {
-        _wield_cursed(item, unmeld);
         break;
     }
 
@@ -576,7 +562,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 calc_mp();
         }
 
-        _wield_cursed(item, unmeld);
         break;
     }
     default:
@@ -855,12 +840,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     {
         bool show_msgs = true;
         _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
-    }
-
-    if (arm.cursed() && !unmeld)
-    {
-        mpr("Oops, that feels deathly cold.");
-        learned_something_new(HINT_YOU_CURSED);
     }
 
     you.redraw_armour_class = true;
@@ -1206,15 +1185,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     {
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld, slot);
-    }
-
-    if (item.cursed() && !unmeld)
-    {
-        mprf("Oops, that %s feels deathly cold.",
-             jewellery_is_amulet(item)? "amulet" : "ring");
-        learned_something_new(HINT_YOU_CURSED);
-
-        xom_is_stimulated(32);
     }
 
     if (!unmeld)
