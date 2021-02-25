@@ -398,6 +398,17 @@ void maybe_mons_speaks(monster* mons)
     // Okay then, don't speak.
 }
 
+static actor* _get_foe(const monster &mon)
+{
+    if (!crawl_state.game_is_arena()
+        && mon.wont_attack()
+        && invalid_monster_index(mon.foe))
+    {
+        return &you;
+    }
+    return mon.get_foe();
+}
+
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {
@@ -482,9 +493,7 @@ bool mons_speaks(monster* mons)
     if (mons->props.exists("speech_prefix"))
         prefixes.push_back(mons->props["speech_prefix"].get_string());
 
-    const actor*    foe   = (!crawl_state.game_is_arena() && mons->wont_attack()
-                                && invalid_monster_index(mons->foe)) ?
-                                    &you : mons->get_foe();
+    const actor*    foe  = _get_foe(*mons);
     const monster* m_foe = foe ? foe->as_monster() : nullptr;
 
     if (!foe || foe->is_player() || mons->wont_attack())
@@ -774,6 +783,26 @@ bool mons_speaks(monster* mons)
     }
 
     return mons_speaks_msg(mons, msg, MSGCH_TALK, silence);
+}
+
+bool invalid_msg(const monster &mon, string msg)
+{
+    const actor*    foe    = _get_foe(mon);
+    const monster* m_foe   = foe ? foe->as_monster() : nullptr;
+    // TODO: dedup with mons_speaks()
+    const bool no_foe      = (foe == nullptr);
+    const bool no_player   = crawl_state.game_is_arena()
+                             || (!mon.wont_attack()
+                                 && (!foe || !foe->is_player()));
+    const bool mon_foe     = (m_foe != nullptr);
+    const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
+    const bool named_foe   = !no_foe && (!mon_foe || (m_foe->is_named()
+                                && m_foe->type != MONS_ROYAL_JELLY));
+    const bool no_foe_name = !named_foe
+                             || (mon_foe && (m_foe->flags & MF_NAME_MASK));
+    const bool unseen = !you.can_see(mon);
+    return _invalid_msg(msg, no_player, no_foe, no_foe_name, no_god, unseen);
+
 }
 
 bool mons_speaks_msg(monster* mons, const string &msg,

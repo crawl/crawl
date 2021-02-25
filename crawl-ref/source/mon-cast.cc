@@ -6589,7 +6589,8 @@ static void _speech_keys(vector<string>& key_list,
     }
 }
 
-static string _speech_message(const vector<string>& key_list,
+static string _speech_message(const monster &mon,
+                              const vector<string>& key_list,
                               bool silent, bool unseen)
 {
     string prefix;
@@ -6607,12 +6608,14 @@ static string _speech_message(const vector<string>& key_list,
 #endif
 
         msg = getSpeakString(prefix + key);
+
         if (msg == "__NONE")
         {
             msg = "";
             break;
         }
-        else if (!msg.empty())
+
+        if (!msg.empty() && !invalid_msg(mon, msg))
             break;
 
         // If we got no message and we're using the silent prefix, then
@@ -6836,7 +6839,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     vector<string> key_list;
     _speech_keys(key_list, mons, pbolt, spell_cast, slot_flags, targeted);
 
-    string msg = _speech_message(key_list, silent, unseen);
+    string msg = _speech_message(*mons, key_list, silent, unseen);
 
     if (msg.empty())
     {
