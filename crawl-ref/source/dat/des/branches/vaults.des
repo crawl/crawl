@@ -325,11 +325,11 @@ ENDMAP
 NAME:     skrybe_vaults_entry_preservation
 TAGS:     vaults_entry transparent
 ORIENT:   float
-MONS:     vault guard
 SHUFFLE:  AI , BJ , CK , DL
 SUBST:    A = v , B = v , C = v , D = v
 SUBST:    I = + , J = + , K = + , L = +
 SUBST:    E = vvm , F = vvm, G = vvm, H = vvm
+SHUFFLE:  vc
 KFEAT:    O = enter_vaults
 KMONS:    O = ironheart preserver
 NSUBST:   $ = 1:O / *=.$%
