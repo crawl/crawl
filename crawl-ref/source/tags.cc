@@ -3924,15 +3924,6 @@ static void _tag_read_you_items(reader &th)
             // Items in inventory have already been handled.
             if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED)
                 it.flags |= ISFLAG_HANDLED;
-
-            // Recurse everything for Ash worshippers, since we
-            // lost old curse information during unmarshall cleanup.
-            if (th.getMinorVersion() < TAG_MINOR_UNCURSE
-                && you_worship(GOD_ASHENZARI)
-                && item_type_has_curses(it.base_type))
-            {
-                do_curse_item(it);
-            }
         }
 #endif
     }
@@ -5176,7 +5167,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_WANDS && item.charges < 0)
         item.charges = 0;
 
-    if (th.getMinorVersion() < TAG_MINOR_UNCURSE && item.cursed())
+    // Prevent weird states for saves between UNCURSE and NEW_ASHENZARI
+    if (th.getMinorVersion() < TAG_MINOR_NEW_ASHENZARI && item.cursed())
         item.flags &= (~ISFLAG_CURSED);
 
     // turn old hides into the corresponding armour
