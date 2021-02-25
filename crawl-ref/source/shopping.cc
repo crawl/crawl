@@ -825,8 +825,7 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
     }
 
     // Shopkeepers will place goods you can't carry outside the shop.
