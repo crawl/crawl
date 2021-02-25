@@ -1785,6 +1785,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = god_title(god, species, piety);
             break;
 
+        case SK_FIGHTING:
+            if (species == SP_MINOTAUR && skill_rank == 5 && god == GOD_CHEIBRIADOS)
+                result = "Cranium Crusher";
+            break;
+
 #if TAG_MAJOR_VERSION == 34
         case SK_EVOCATIONS:
             if (god == GOD_PAKELLAS)
