@@ -66,7 +66,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define ASHENZARI_CURSE_PROGRESS_KEY "ashenzari_progress_to_next_curse"
 #define ASHENZARI_CURSE_DELAY_KEY "ashenzari_curse_delay"
 #define ASHENZARI_BASE_PIETY 2
-#define ASHENZARI_PIETY_SCALE 160
+#define ASHENZARI_PIETY_SCALE 168
 
 struct bolt;
 class stack_iterator;
