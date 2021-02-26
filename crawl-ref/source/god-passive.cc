@@ -342,7 +342,7 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::detect_items, "sense items" },
         {  0, passive_t::avoid_traps,
               "avoid traps" },
-        {  1, passive_t::bondage_skill_boost,
+        {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
