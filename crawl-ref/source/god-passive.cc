@@ -588,6 +588,11 @@ void ash_check_bondage()
     if (!will_have_passive(passive_t::bondage_skill_boost))
         return;
 
+#if TAG_MAJOR_VERSION == 34
+    // Save compatibility for the new ash tag minor forgot to do this
+    initialize_ashenzari_props();
+#endif
+
     int num_cursed = 0, num_slots = 0;
 
     you.skill_boost.clear();

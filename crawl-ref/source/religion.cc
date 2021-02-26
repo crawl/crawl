@@ -3392,6 +3392,19 @@ static void _check_good_god_wrath(god_type old_god)
     }
 }
 
+void initialize_ashenzari_props()
+{
+    if (!you.props.exists(ASHENZARI_CURSE_PROGRESS_KEY))
+        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    if (!you.props.exists(ASHENZARI_CURSE_DELAY_KEY))
+    {
+        int delay = 50;
+        if (crawl_state.game_is_sprint())
+            delay /= SPRINT_MULTIPLIER;
+        you.props[ASHENZARI_CURSE_DELAY_KEY] = delay;
+    }
+}
+
 /// Handle basic god piety & related setup for a new-joined god.
 static void _set_initial_god_piety()
 {
@@ -3411,14 +3424,7 @@ static void _set_initial_god_piety()
         you.piety = 15; // piety level is set directly by curses
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
-
-        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
-        {
-            int delay = 50;
-            if (crawl_state.game_is_sprint())
-                delay /= SPRINT_MULTIPLIER;
-            you.props[ASHENZARI_CURSE_DELAY_KEY] = delay;
-        }
+        initialize_ashenzari_props();
         break;
 
     case GOD_RU:
