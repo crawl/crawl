@@ -1484,11 +1484,8 @@ static vector<coord_def> _xom_scenery_candidates()
     vector<coord_def> candidates;
     vector<coord_def> closed_doors;
     vector<coord_def> open_doors;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
-        if (!you.see_cell(*ri))
-            continue;
-
         dungeon_feature_type feat = env.grid(*ri);
         if (feat_is_fountain(feat))
             candidates.push_back(*ri);

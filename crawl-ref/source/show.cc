@@ -540,12 +540,8 @@ void show_init(layers_type layers)
     ASSERT(you.on_current_level);
 
     vector <coord_def> update_locs;
-    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
-        // checks xray_vision
-        if (!you.see_cell(*ri))
-            continue;
-
         show_update_at(*ri, layers);
         update_locs.push_back(*ri);
     }

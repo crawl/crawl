@@ -4983,11 +4983,8 @@ bool check_for_interesting_features()
     // discovered and contain an item, or have an interesting dungeon
     // feature, stop exploring.
     explore_discoveries discoveries;
-    for (radius_iterator ri(you.pos(), LOS_NONE); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
-        if (!you.see_cell(*ri))
-            continue;
-
         const coord_def p(*ri);
 
         // Find just noticed squares.
