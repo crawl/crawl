@@ -1661,6 +1661,55 @@ bool make_item_randart(item_def &item, bool force_mundane)
     return true;
 }
 
+static string _ashenzari_artefact_name(item_def &item)
+{
+    const int old_orig = item.orig_monnum;
+
+    item.orig_monnum = -GOD_ASHENZARI;
+
+    int tries = 100;
+    string name;
+    do
+    {
+        name = _artefact_name_lookup(item, "Ashenzari");
+    }
+    while (--tries > 0 && strwidth(name) > 25);
+
+    item.orig_monnum = old_orig;
+
+    return item_base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
+}
+
+void make_ashenzari_randart(item_def &item)
+{
+    if (item.base_type != OBJ_WEAPONS
+        && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY)
+    {
+        return;
+    }
+
+    // This item already is a randart, just rename
+    if (item.flags & ISFLAG_RANDART)
+    {
+        set_artefact_name(item, _ashenzari_artefact_name(item));
+        return;
+    }
+
+    // Too special, will just be cursed
+    if (item.flags & ISFLAG_UNRANDART)
+        return;
+
+    // Ash randarts get no props
+    _artefact_setup_prop_vectors(item);
+    item.flags |= ISFLAG_RANDART;
+    item.flags |= ISFLAG_KNOW_PROPERTIES;
+
+    set_artefact_name(item, _ashenzari_artefact_name(item));
+    item.props[ARTEFACT_APPEAR_KEY].get_string() =
+        make_artefact_name(item, true);
+}
+
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;

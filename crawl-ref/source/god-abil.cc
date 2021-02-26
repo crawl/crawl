@@ -2300,6 +2300,7 @@ bool ashenzari_curse_item()
     }
 
     _do_curse_item(item);
+    make_ashenzari_randart(item);
     ash_check_bondage();
 
     you.props.erase(CURSE_KNOWLEDGE_KEY);

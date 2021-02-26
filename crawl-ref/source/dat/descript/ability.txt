@@ -543,7 +543,8 @@ Removes a randomly selected bad mutation.
 Curse Item ability
 
 Curses a chosen equipped item, binding it to the wearer until the curse
-and the item both are broken.
+and the item both are broken. Cursed items can no longer be enchanted or
+modified.
 %%%%
 Shatter The Chains ability
 

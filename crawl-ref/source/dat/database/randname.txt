@@ -7,9 +7,10 @@
 # phrases of randart type, namely "weapon", "armour" and "jewellery" as well
 # as in combination with those gods that occasionally gift randarts, i.e.
 # "Trog weapon", "Okawaru weapon", "Okawaru armour", "Xom weapon", "Xom armour"
-# and "Xom jewellery". Incidentally, they are listed in precisely that order.
-# At the end of the file you will also find a few lists of adjectives used for
-# unidentified randart appearances.
+# and "Xom jewellery". Ashenzari names cursed items; these names don't depend
+# on type and are found under the keyword "Ashenzari". Incidentally, they
+# are listed in precisely that order. At the end of the file you will also
+# find a few lists of adjectives used for unidentified randart appearances.
 #
 # The syntax for keywords is the same as that of monster speech (details are in
 # docs/develop/monster_speech.txt). Any phrase encased in '@' symbols is one
@@ -613,6 +614,244 @@ w:300
 # why not some other names?
 # (sadly, some weapon names don't make sense even for Xom)
 @armour@
+%%%%
+######################################################
+# ASHENZARI
+# All types of curses
+######################################################
+Ashenzari
+
+w:100
+of the @_ashenzari_adjective_@ @_ashenzari_object_@
+
+w:100
+of @god_name@'s @_ashenzari_object_@
+
+w:100
+"@_ashenzari_adjective_@ @_ashenzari_object_@"
+
+w:50
+"@_ashenzari_object_@ of @god_name@"
+
+w:100
+"@_ashenzari_object_@ of the @_ashenzari_epithet_@"
+
+w:20
+"@_celestial_bodies of the @_ashenzari_epithet_@
+
+w:20
+of the @_ashenzari_epithet_@
+
+w:20
+of the @_ashenzari_bound_adjective_@ @_celestial_bodies_@
+
+w:20
+of the @_ashenzari_knowledge_adjective_@ @_celestial_bodies_@
+
+w:20
+of @god_name@'s @_celestial_bodies_@
+
+of the @_ashenzari_bound_adjective_@ @_ashenzari_heavens_@
+
+of the @_ashenzari_knowledge_adjective_@ @_ashenzari_heavens_@
+
+"Gaze Upon Infinity"
+
+"Share My Sorrow"
+
+of the Wild Blue Yonder
+
+w:1
+@god_name@'s Oscillating Fan
+%%%%
+_ashenzari_object_
+
+Adversity
+
+Affliction
+
+Burden
+
+Fetters
+
+Loss
+
+Omen
+
+Ordeal
+
+Portent
+
+Prison
+
+Regret
+
+Repose
+
+Vision
+
+Yoke
+
+w:100
+@_diviner_name_@
+
+w:150
+@_discomfort_weapon_@
+
+w:100
+@_philosophy_name_@
+
+w:100
+@_discomfort_and_inaction_@
+
+w:100
+@_suspicion_no_conflict_name_@
+%%%%
+_ashenzari_adjective_
+
+w:50
+@_ashenzari_bound_adjective_@
+
+w:50
+@_ashenzari_knowledge_adjective_@
+
+@_ashenzari_celestial_adjective_@
+%%%%
+_ashenzari_bound_adjective_
+
+Bound
+
+Chained
+
+Circumscribed
+
+Cursed
+
+Ensconced
+
+Eternal
+
+Lashed
+
+Restrained
+
+Ruined
+
+Shackled
+
+Shattered
+
+Tethered
+%%%%
+_ashenzari_celestial_adjective_
+
+Astral
+
+Celestial
+
+Cosmic
+
+Distant
+
+Elysian
+
+Sidereal
+
+Stellar
+
+Sublime
+%%%%
+_ashenzari_knowledge_adjective_
+
+w:2
+All-seeing
+
+Astrological
+
+Clairvoyant
+
+Cryptic
+
+Enlightened
+
+Enigmatic
+
+Esoteric
+
+Manifest
+
+Mantic
+
+w:2
+Omniscient
+
+Oracular
+
+Perceptive
+
+Prescient
+
+Profound
+
+Prophetic
+
+Revealing
+
+Sibylline
+
+Unveiling
+
+Visionary
+%%%%
+_ashenzari_epithet_
+
+w:100
+@_ashenzari_adjective_@ God
+
+w:50
+@_ashenzari_bound_adjective_@ Augur
+
+w:50
+@_ashenzari_celestial_adjective_@ Augur
+
+w:50
+@_ashenzari_bound_adjective_@ Sage
+
+w:50
+@_ashenzari_celestial_adjective_@ Sage
+
+w:50
+@_ashenzari_bound_adjective_@ Seer
+
+w:50
+@_ashenzari_celestial_adjective_@ Seer
+
+All-Knowing
+
+Curse-Bearer
+
+Soothsayer
+
+Unmoving One
+%%%
+_ashenzari_heavens_
+
+Cosmos
+
+Empyrean
+
+Ether
+
+Firmament
+
+Heavens
+
+w:40
+Sky
+
+Sphere
+
+Welkin
 %%%%
 ######################################################
 # Library of randart APPEARANCE (un-identified).
