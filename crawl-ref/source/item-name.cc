@@ -1592,7 +1592,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             }
         }
 
-        if (cursed() && terse && !qualname)
+        if (cursed() && terse && !dbname && !qualname)
             buff << " (curse)";
         break;
 
@@ -1729,7 +1729,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                      << " ring";
             }
         }
-        if (cursed() && terse && !qualname)
+        if (cursed() && terse && !dbname && !qualname)
             buff << " (curse)";
         break;
     }
@@ -1795,7 +1795,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         else
             buff << "staff of " << staff_type_name(item_typ);
 
-        if (cursed() && terse && !qualname)
+        if (cursed() && terse && !dbname && !qualname)
             buff << " (curse)";
         break;
 
