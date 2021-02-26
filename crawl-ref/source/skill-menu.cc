@@ -121,7 +121,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     }
 }
 
-bool SkillMenuEntry::is_selectable(bool keep_hotkey)
+bool SkillMenuEntry::is_selectable(bool)
 {
     if (is_invalid_skill(m_sk))
         return false;
