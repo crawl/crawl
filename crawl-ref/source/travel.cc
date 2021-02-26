@@ -385,14 +385,14 @@ static pair<bool, string> _feat_is_blocking_door_strict(
  */
 static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
-    if (!ignore_danger && is_excluded(c))
-        return true;
-
     map_cell &cell(env.map_knowledge(c));
     const dungeon_feature_type grid = cell.feat();
 
     if (feat_is_wall(grid) || grid == DNGN_TREE)
         return false;
+
+    if (!ignore_danger && is_excluded(c))
+        return true;
 
     return feat_is_water(grid)
            || grid == DNGN_LAVA
