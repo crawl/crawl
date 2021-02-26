@@ -976,7 +976,7 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything nearby for as long as the spell lasts.
+everything in line of sight for as long as the spell lasts.
 %%%%
 Orb of Destruction spell
 
@@ -1635,5 +1635,7 @@ after a short delay.
 %%%%
 Yara's Violent Unravelling spell
 
-Tears apart the bonds that bind enchantments to the target creature,
-transforming the magic into a spray of deadly, mutagenic radiation.
+If cast upon a creature already blessed (or cursed) with magical enchantments,
+those enchantments will be torn apart, transforming into a spray of
+destructive mutagenic radiation. The victim and anyone adjacent will be
+blasted and heavily deformed, weakening them and reducing their armour.
