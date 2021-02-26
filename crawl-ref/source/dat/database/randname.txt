@@ -637,7 +637,7 @@ w:100
 "@_ashenzari_object_@ of the @_ashenzari_epithet_@"
 
 w:20
-"@_celestial_bodies of the @_ashenzari_epithet_@
+"@_celestial_bodies_@ of the @_ashenzari_epithet_@
 
 w:20
 of the @_ashenzari_epithet_@
@@ -655,10 +655,13 @@ of the @_ashenzari_bound_adjective_@ @_ashenzari_heavens_@
 
 of the @_ashenzari_knowledge_adjective_@ @_ashenzari_heavens_@
 
+w:5
 "Gaze Upon Infinity"
 
+w:5
 "Share My Sorrow"
 
+w:5
 of the Wild Blue Yonder
 
 w:1
