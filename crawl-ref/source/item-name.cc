@@ -2870,6 +2870,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.get_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
+        case SCR_IDENTIFY:
+            return you_worship(GOD_ASHENZARI);
         default:
             return false;
         }
