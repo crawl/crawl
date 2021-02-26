@@ -762,7 +762,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     bool isDualWeapon = (you.species == SP_TWO_HEADED_OGRE);
     ASSERT(auto_wield || !second_weapon);
     bool first_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS);
-    bool second_curse = !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true);
+    bool second_curse = isDualWeapon ? !can_wield(nullptr, false, false, slot == SLOT_BARE_HANDS, false, true) : false;
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
 
@@ -991,14 +991,16 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     {
         if (!_wieldable(new_wpn))
             return false;
-    
-        if (unwield_item(show_weff_messages, EQ_WEAPON))
+        if (you.weapon())
         {
-            // Enable skills so they can be re-disabled later
-            update_can_currently_train();
+            if (unwield_item(show_weff_messages, EQ_WEAPON))
+            {
+                // Enable skills so they can be re-disabled later
+                update_can_currently_train();
+            }
+            else
+                return false;
         }
-        else
-            return false;
     }
     else
     {
@@ -1084,7 +1086,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // At this point new_wpn is potentially not the right thing anymore (the
     // thing actually in the player's inventory), that is, in the case where the
     // player chose something from the floor. So use item_slot from here on.
-
     if(isDualWeapon) {
         if(!you.weapon()) {
             equip_item(EQ_WEAPON, item_slot, show_weff_messages);
