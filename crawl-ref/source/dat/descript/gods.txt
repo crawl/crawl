@@ -217,12 +217,11 @@ while keeping some piety.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts followers to garb themselves with curses, and appreciates
-using cursed armour, jewellery or weapons. Ashenzari will passively grant
-followers increased skills depending on how cursed they are by equipment
-associated with those skills, and will reveal the invisible and grant clarity
-of mind. The truly devout will gain a fragment of Ashenzari's astral sight,
-letting them see through walls.
+Ashenzari exhorts followers to garb themselves with curses, periodically
+offered to worshippers as they explore. Ashenzari will passively grant
+followers increased skills associated to these curses, and will reveal the
+invisible and grant clarity of mind. The truly devout will gain a fragment of
+Ashenzari's astral sight, letting them see through walls.
 %%%%
 Beogh powers
 
