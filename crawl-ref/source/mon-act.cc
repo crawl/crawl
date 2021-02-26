@@ -1211,7 +1211,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             return false;
     }
 
-    if (prefer_ranged_attack && mons->is_archer())
+    if (prefer_ranged_attack)
     {
         // Master archers are always quite likely to shoot you, if they can.
         if (one_chance_in(10))
