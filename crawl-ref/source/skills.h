@@ -88,6 +88,7 @@ int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
+const char *skill_abbr(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
 

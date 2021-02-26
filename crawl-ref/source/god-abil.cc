@@ -2266,8 +2266,7 @@ static void _do_curse_item(item_def &item)
     for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
     {
         add_inscription(item,
-            lowercase_string(
-                skill_name(static_cast<skill_type>(curse.get_int()))));
+                skill_abbr(static_cast<skill_type>(curse.get_int())));
         item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
     }
 }
@@ -3796,10 +3795,7 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
  */
 static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 {
-    // XXX: this does a really silly dance back and forth between school &
-    // spelltype.
-    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
-    return spelltype_short_name(school);
+    return skill_abbr(arcane_mutation_to_skill(mutation));
 }
 
 static int _piety_for_skill(skill_type skill)

@@ -743,6 +743,17 @@ static string _nemelex_card_text(ability_type ability)
 
 static const int VAMPIRE_BAT_FORM_STAT_DRAIN = 2;
 
+static string _ashenzari_curse_text()
+{
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+    return "(Boost: "
+           + comma_separated_fn(curses.begin(), curses.end(),
+                [] (const CrawlStoreValue& c) {
+                    return skill_abbr(static_cast<skill_type>(c.get_int()));
+                }, "/", "/")
+           + ")";
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -764,6 +775,13 @@ const string make_cost_description(ability_type ability)
 
     if (ability == ABIL_REVIVIFY)
         ret += ", Frailty";
+
+    if (ability == ABIL_ASHENZARI_CURSE
+        && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
+    {
+        ret += ", ";
+        ret += _ashenzari_curse_text();
+    }
 
     if (abil.hp_cost)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
