@@ -280,10 +280,7 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    {   { 1, "The more cursed you are, the more Ashenzari will now support your skills.",
-             "Ashenzari will no longer support your skills.",
-             "The more cursed you are, the more Ashenzari supports your skills." },
-        { 2, "Ashenzari will now reveal the unseen.",
+    {   { 2, "Ashenzari will now reveal the unseen.",
              "Ashenzari will no longer reveal the unseen.",
              "Ashenzari reveals the unseen." },
         { 3, "Ashenzari will now keep your mind clear.",
