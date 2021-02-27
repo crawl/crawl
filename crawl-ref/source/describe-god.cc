@@ -18,7 +18,6 @@
 #include "describe.h"
 #include "english.h"
 #include "env.h"
-#include "eq-type-flags.h"
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"

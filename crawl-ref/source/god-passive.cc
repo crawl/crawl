@@ -15,7 +15,6 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
-#include "eq-type-flags.h"
 #include "fight.h"
 #include "files.h"
 #include "fprop.h"

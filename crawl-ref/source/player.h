@@ -19,7 +19,6 @@
 #include "caction-type.h"
 #include "daction-type.h"
 #include "duration-type.h"
-#include "eq-type.h"
 #include "equipment-type.h"
 #include "flush-reason-type.h"
 #include "game-chapter.h"

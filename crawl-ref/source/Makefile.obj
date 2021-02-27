@@ -389,8 +389,6 @@ enchant-type.h.o \
 endianness.h.o \
 energy-use-type.h.o \
 enum.h.o \
-eq-type-flags.h.o \
-eq-type.h.o \
 equipment-type.h.o \
 errors.h.o \
 externs.h.o \
