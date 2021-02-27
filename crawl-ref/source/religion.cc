@@ -3421,7 +3421,7 @@ static void _set_initial_god_piety()
         break;
 
     case GOD_ASHENZARI:
-        you.piety = 15; // piety level is set directly by curses
+        you.piety = ASHENZARI_BASE_PIETY;
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         initialize_ashenzari_props();
