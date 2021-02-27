@@ -2350,11 +2350,11 @@ bool ashenzari_uncurse_item()
     unequip_item(item_equip_slot(you.inv[item_slot]));
     ash_check_bondage();
 
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
     if (you.props.exists(AVAILABLE_CURSE_KEY))
     {
         simple_god_message(" withdraws the vision and curse.");
         you.props.erase(AVAILABLE_CURSE_KEY);
-        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
     }
 
     return true;
