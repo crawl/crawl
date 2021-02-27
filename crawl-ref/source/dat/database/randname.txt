@@ -651,21 +651,38 @@ of the @_ashenzari_knowledge_adjective_@ @_celestial_bodies_@
 w:20
 of @god_name@'s @_celestial_bodies_@
 
+w:20
+"Share My @_ashenzari_object_@"
+
+w:20
+"@_ashenzari_bound_adjective_@ With Me"
+
+w:20
+"@_ashenzari_bound_adjective_@ Together"
+
 of the @_ashenzari_bound_adjective_@ @_ashenzari_heavens_@
 
 of the @_ashenzari_knowledge_adjective_@ @_ashenzari_heavens_@
+
+of the Fated @_ashenzari_object_@
 
 w:5
 "Gaze Upon Infinity"
 
 w:5
-"Share My Sorrow"
+"Per Aspera Ad Scientiam"
+
+w:5
+of Panopticon
+
+w:5
+of Star-Bound Widom
 
 w:5
 of the Wild Blue Yonder
 
 w:1
-@god_name@'s Oscillating Fan
+"Oscillating Fan"
 %%%%
 _ashenzari_object_
 
@@ -676,6 +693,8 @@ Affliction
 Burden
 
 Fetters
+
+Gnosis
 
 Loss
 
@@ -690,6 +709,8 @@ Prison
 Regret
 
 Repose
+
+Sorrow
 
 Vision
 
@@ -766,7 +787,6 @@ Sublime
 %%%%
 _ashenzari_knowledge_adjective_
 
-w:2
 All-seeing
 
 Astrological
@@ -781,14 +801,17 @@ Enigmatic
 
 Esoteric
 
+Gnostic
+
 Manifest
 
 Mantic
 
-w:2
 Omniscient
 
 Oracular
+
+Pangnostic
 
 Perceptive
 
