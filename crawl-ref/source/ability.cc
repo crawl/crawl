@@ -2173,7 +2173,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             you.attribute[ATTR_PERM_FLIGHT] = 1;
             float_player();
         }
-        if (you.species == SP_TENGU)
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
             mpr("You feel very comfortable in the air.");
         break;
 

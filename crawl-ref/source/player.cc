@@ -4697,7 +4697,7 @@ void float_player()
     else
         mpr("You fly up into the air.");
 
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 }
 
@@ -4748,7 +4748,7 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -6417,7 +6417,7 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return species == SP_TENGU && airborne();
+    return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 
 /**
