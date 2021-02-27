@@ -5239,6 +5239,11 @@ bool monster::is_stationary() const
     return mons_class_is_stationary(type);
 }
 
+bool monster::can_burrow() const
+{
+    return mons_class_flag(type, M_BURROWS);
+}
+
 /**
  * Malmutate the monster.
  *

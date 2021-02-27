@@ -153,6 +153,11 @@ bool species_has_hair(species_type species)
     return !bool(get_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));
 }
 
+bool species_has_bones(species_type species)
+{
+    return !(species == SP_OCTOPODE || species == SP_FORMICID);
+}
+
 size_type species_size(species_type species, size_part_type psize)
 {
     const size_type size = get_species_def(species).size;
@@ -291,6 +296,17 @@ bool species_has_claws(species_type species)
                   get_species_def(species).level_up_mutations.end(),
                   [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
                                                      && lum.xp_level == 1; });
+}
+
+/// Does the species have (real) mutation `mut`? Not for demonspawn.
+/// @return the first level at which the species gains the mutation, or 0 if it
+///         does not ever gain it.
+int species_mutation_level(species_type species, mutation_type mut)
+{
+    for (const auto& lum : get_species_def(species).level_up_mutations)
+        if (mut == lum.mut)
+            return lum.xp_level;
+    return 0;
 }
 
 void give_basic_mutations(species_type species)

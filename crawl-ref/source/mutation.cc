@@ -1294,18 +1294,20 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
     {
         // Formicids have stasis and so prevent mutations that would do nothing.
         // Antennae provides SInv, so acute vision is pointless.
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
-            || mutat == MUT_TELEPORT
-            || mutat == MUT_ACUTE_VISION)
+            || mutat == MUT_TELEPORT)
         {
             return true;
         }
     }
+
+    if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
+        return true;
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)

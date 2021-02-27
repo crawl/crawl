@@ -459,7 +459,7 @@ static void _set_mons_move_dir(const monster* mons,
     ASSERT(delta);
 
     // Some calculations.
-    if ((mons_class_flag(mons->type, M_BURROWS)
+    if ((mons->can_burrow()
          || _mons_can_cast_dig(mons, false))
         && mons->foe == MHITYOU)
     {
@@ -2860,7 +2860,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
     if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
-           && (mons_class_flag(mons->type, M_BURROWS) || digs)
+           && (mons->can_burrow() || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
            && !feat_is_critical(target_grid)
@@ -3489,7 +3489,7 @@ static bool _monster_move(monster* mons)
         }
     }
 
-    const bool burrows = mons_class_flag(mons->type, M_BURROWS);
+    const bool burrows = mons->can_burrow();
     const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);

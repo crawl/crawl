@@ -3911,7 +3911,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             piety_gain += _piety_for_skill(SK_BOWS);
     }
     return piety_gain;
@@ -4580,7 +4580,7 @@ bool ru_do_sacrifice(ability_type sac)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             _ru_kill_skill(SK_BOWS);
     }
 

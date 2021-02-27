@@ -17,6 +17,7 @@ bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
 bool species_is_orcish(species_type species);
 bool species_has_hair(species_type species);
+bool species_has_bones(species_type species);
 bool species_can_throw_large_rocks(species_type species);
 
 bool species_has_claws(species_type species);
@@ -55,6 +56,7 @@ ability_type draconian_breath(species_type species);
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
 
+int species_mutation_level(species_type species, mutation_type mut);
 void give_basic_mutations(species_type species);
 void give_level_mutations(species_type species, int xp_level);
 

@@ -2016,6 +2016,14 @@ static const mutation_def mut_data[] =
   {"You feel resistant to acid.", "",  ""},
   {"You feel less resistant to acid.", "", ""},
 },
+
+{ MUT_QUADRUMANOUS, 0, 1, mutflag::good, false,
+  "four strong arms",
+
+  {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
+  {"Two of your of your arms shrink away.", "", ""},
+  {"You grow two extra arms."},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

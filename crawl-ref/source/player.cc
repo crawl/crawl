@@ -1075,7 +1075,7 @@ int player_teleport(bool calc_unid)
         return 0;
 
     // Short-circuit rings of teleport to prevent spam.
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
         return 0;
 
     int tp = 0;
@@ -1932,8 +1932,10 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls, etc.
-                                                  : _player_evasion_size_factor(true)));
+    const int ev_factor = you.has_mutation(MUT_QUADRUMANOUS)
+                                        ? -2 // Same as trolls, etc.
+                                        : _player_evasion_size_factor(true);
+    return max(1, 5 + ev_factor);
 }
 
 
@@ -3295,7 +3297,13 @@ bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
     return you.get_mutation_level(MUT_GOURMAND) > 0;
 }
 
+/// Does the player have permastasis?
 bool player::stasis() const
+{
+    return species == SP_FORMICID;
+}
+
+bool player::can_burrow() const
 {
     return species == SP_FORMICID;
 }
