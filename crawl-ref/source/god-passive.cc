@@ -573,11 +573,13 @@ static void _curse_boost_skills(const item_def &item)
 
     for (auto& curse : item.props[CURSE_KNOWLEDGE_KEY].get_vector())
     {
-        skill_type sk = static_cast<skill_type>(curse.get_int());
-        if (you.skill_boost.count(sk))
-            you.skill_boost[sk]++;
-        else
-            you.skill_boost[sk] = 1;
+        for (skill_type sk : curse_skills(curse))
+        {
+            if (you.skill_boost.count(sk))
+                you.skill_boost[sk]++;
+            else
+                you.skill_boost[sk] = 1;
+        }
     }
 }
 

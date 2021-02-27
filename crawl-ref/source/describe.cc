@@ -1958,6 +1958,22 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     return description;
 }
 
+static string _describe_item_curse(const item_def &item)
+{
+    const CrawlVector& curses = item.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (curses.empty())
+        return "\nIt has a curse placed upon it.";
+
+    ostringstream desc;
+
+    desc << "\nIt has a curse which improves the following skills:\n";
+    desc << comma_separated_fn(curses.begin(), curses.end(), desc_curse_skills,
+                               ".\n", ".\n") << ".";
+
+    return desc.str();
+}
+
 bool is_dumpable_artefact(const item_def &item)
 {
     return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
@@ -2200,7 +2216,7 @@ string get_item_description(const item_def &item, bool verbose,
             if (need_extra_line)
                 description << "\n";
             if (item.cursed())
-                description << "\nIt has a curse placed upon it.";
+                description << _describe_item_curse(item);
 
             if (is_artefact(item))
             {

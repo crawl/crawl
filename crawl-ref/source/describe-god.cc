@@ -276,9 +276,7 @@ static string _describe_item_curse(const item_def& item)
         return "None";
 
     return comma_separated_fn(curses.begin(), curses.end(),
-            [](CrawlStoreValue curse) {
-                return skill_name(static_cast<skill_type>(curse.get_int()));
-            }, ", ", ", ");
+            curse_name, ", ", ", ");
 }
 
 static string _describe_ash_skill_boost()
@@ -287,7 +285,7 @@ static string _describe_ash_skill_boost()
     desc.setf(ios::left);
     desc << "<white>";
     desc << setw(40) << "Bound item";
-    desc << setw(30) << "Boosted skills";
+    desc << setw(30) << "Curse bonuses";
     desc << "</white>\n";
 
     for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
@@ -610,7 +608,7 @@ static formatted_string _god_extra_description(god_type which_god)
             if (have_passive(passive_t::bondage_skill_boost))
             {
                 desc.cprintf("\n");
-                _add_par(desc, "Ashenzari supports the following skills because of your curses:");
+                _add_par(desc, "Ashenzari supports the following skill groups because of your curses:");
                 _add_par(desc,  _describe_ash_skill_boost());
             }
             break;

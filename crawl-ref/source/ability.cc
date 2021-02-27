@@ -748,9 +748,7 @@ static string _ashenzari_curse_text()
     const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
     return "(Boost: "
            + comma_separated_fn(curses.begin(), curses.end(),
-                [] (const CrawlStoreValue& c) {
-                    return skill_abbr(static_cast<skill_type>(c.get_int()));
-                }, "/", "/")
+                                curse_abbr, "/", "/")
            + ")";
 }
 
@@ -1096,12 +1094,10 @@ static string _curse_desc()
     if (curses.empty())
         return "";
 
-    const bool plural = curses.size() > 1;
-
-    return make_stringf("\nIf you bind an item with this curse Ashenzari will"
-                        " enhance your %s skill%s.\n",
-                        ashenzari_curse_knowledge_list().c_str(),
-                        plural ? "s" : "");
+    return "\nIf you bind an item with this curse Ashenzari will enhance "
+           "the following skills:\n"
+           + comma_separated_fn(curses.begin(), curses.end(), desc_curse_skills,
+                                ".\n", ".\n") + ".";
 }
 
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)

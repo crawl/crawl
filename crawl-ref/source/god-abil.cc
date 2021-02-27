@@ -22,6 +22,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
 #include "describe.h"
@@ -2169,9 +2170,86 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     mpr("You return to the normal time flow.");
 }
 
-static string _desc_curse_skill(const CrawlStoreValue& c)
+struct curse_data
 {
-    return lowercase_string(skill_name(static_cast<skill_type>(c.get_int())));
+    string name;
+    string abbr;
+    vector<skill_type> boosted;
+};
+
+static map<curse_type, curse_data> _ashenzari_curses =
+{
+    { CURSE_MELEE, {
+        "Melee", "Melee",
+        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
+            SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
+    } },
+    { CURSE_RANGED, {
+        "Ranged", "Range",
+        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
+    } },
+    { CURSE_ELEMENTS, {
+        "Elements", "Elem",
+        { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
+    } },
+    { CURSE_ALCHEMY, {
+        "Alchemy", "Alch",
+        { SK_POISON_MAGIC, SK_TRANSMUTATIONS },
+    } },
+    { CURSE_COMPANIONS, {
+        "Companions", "Comp",
+        { SK_SUMMONINGS, SK_NECROMANCY },
+    } },
+    { CURSE_BEGUILING, {
+        "Beguiling", "Bglg",
+        { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
+    } },
+    { CURSE_SELF, {
+        "Self", "Self",
+        { SK_FIGHTING, SK_SPELLCASTING },
+    } },
+    { CURSE_FORTITUDE, {
+        "Fortitude", "Fort",
+        { SK_ARMOUR, SK_SHIELDS },
+    } },
+    { CURSE_CUNNING, {
+        "Cunning", "Cun",
+        { SK_DODGING, SK_STEALTH },
+    } },
+    { CURSE_EVOCATIONS, {
+        "Evocations", "Evo",
+        { SK_EVOCATIONS },
+    } },
+};
+
+static bool _can_use_curse(const curse_data& c)
+{
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            return true;
+
+    return false;
+}
+
+string curse_name(const CrawlStoreValue& c)
+{
+    return _ashenzari_curses[static_cast<curse_type>(c.get_int())].name;
+}
+
+string curse_abbr(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.abbr;
+}
+
+const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.boosted;
 }
 
 string ashenzari_curse_knowledge_list()
@@ -2181,8 +2259,23 @@ string ashenzari_curse_knowledge_list()
 
     const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
-    return comma_separated_fn(curses.begin(), curses.end(),
-                              _desc_curse_skill);
+    return lowercase_string(comma_separated_fn(curses.begin(), curses.end(),
+                              curse_name));
+}
+
+string desc_curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    vector<skill_type> trainable;
+
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            trainable.push_back(sk);
+
+    return c.name + ": "
+           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
 }
 
 /**
@@ -2195,35 +2288,35 @@ static void _choose_curse_knowledge()
     //
     // If Ashenzari curses need some fancier weighting this is the
     // place to do that weighting.
-    skill_type first_choice = SK_NONE;
-    skill_type second_choice = SK_NONE;
-    int valid_skills = 0;
-    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    curse_type first_choice = NUM_CURSES;
+    curse_type second_choice = NUM_CURSES;
+    int valid_curses = 0;
+    for (auto const& curse : _ashenzari_curses)
     {
-        if (you.can_currently_train[sk] && sk != SK_INVOCATIONS)
+        if (_can_use_curse(curse.second))
         {
-            ++valid_skills;
-            if (valid_skills == 1)
-                first_choice = sk;
-            else if (valid_skills == 2)
+            ++valid_curses;
+            if (valid_curses == 1)
+                first_choice = curse.first;
+            else if (valid_curses == 2)
             {
-                second_choice = sk;
+                second_choice = curse.first;
                 if (coinflip())
                     swap(first_choice, second_choice);
             }
-            else if (one_chance_in(valid_skills))
-                first_choice = sk;
-            else if (one_chance_in(valid_skills - 1))
-                second_choice = sk;
+            else if (one_chance_in(valid_curses))
+                first_choice = curse.first;
+            else if (one_chance_in(valid_curses - 1))
+                second_choice = curse.first;
         }
     }
 
     you.props.erase(CURSE_KNOWLEDGE_KEY);
     CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
-    if (first_choice != SK_NONE)
+    if (first_choice != NUM_CURSES)
         curses.push_back(first_choice);
-    if (second_choice != SK_NONE)
+    if (second_choice != NUM_CURSES)
         curses.push_back(second_choice);
 
     // It's not an error for this to be empty, curses are still useful for
@@ -2244,9 +2337,9 @@ void ashenzari_offer_new_curse()
 
     you.props[AVAILABLE_CURSE_KEY] = true;
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
-    const string curse_skills = ashenzari_curse_knowledge_list();
-    const string offer_string = curse_skills.empty() ? "" :
-                                (" of " + curse_skills);
+    const string curse_names = ashenzari_curse_knowledge_list();
+    const string offer_string = curse_names.empty() ? "" :
+                                (" of " + curse_names);
 
     mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
                     " and a curse%s.", offer_string.c_str());
@@ -2266,7 +2359,7 @@ static void _do_curse_item(item_def &item)
     for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
     {
         add_inscription(item,
-                skill_abbr(static_cast<skill_type>(curse.get_int())));
+                curse_abbr(static_cast<curse_type>(curse.get_int())));
         item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
     }
 }
