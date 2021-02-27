@@ -95,6 +95,40 @@ string species_walking_verb(species_type sp)
     return verb ? verb : "Walk";
 }
 
+string species_skin_adj(species_type species)
+{
+    if (species_is_draconian(species) || species == SP_NAGA)
+        return "scaled";
+    else if (species == SP_TENGU)
+        return "feathered";
+    else if (species == SP_MUMMY)
+        return "bandage-wrapped";
+    else
+        return "";
+}
+
+string species_arm_name(species_type species)
+{
+    if (species == SP_OCTOPODE)
+        return "tentacle";
+    else
+        return "arm";
+}
+
+string species_hand_name(species_type species)
+{
+    // see also player::hand_name
+    if (species_mutation_level(species, MUT_PAWS))
+        return "paw";
+    else if (you.species == SP_OCTOPODE)
+        return "tentacle";
+    else if (species_mutation_level(species, MUT_CLAWS))
+        return "claw"; // overridden for felids by first check
+    else
+        return "hand";
+
+}
+
 /**
  * Where does a given species fall on the Undead Spectrum?
  *

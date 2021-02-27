@@ -1168,22 +1168,29 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
 static string _handedness_string(const item_def &item)
 {
-    string description;
+    const bool quad = you.has_mutation(MUT_QUADRUMANOUS);
+    string handname = species_hand_name(you.species);
+    if (quad)
+        handname += "-pair";
 
+    string n;
     switch (you.hands_reqd(item))
     {
     case HANDS_ONE:
-        if (you.has_mutation(MUT_QUADRUMANOUS))
-            description += "It is a weapon for one hand-pair.";
-        else
-            description += "It is a one handed weapon.";
+        n = "one";
         break;
     case HANDS_TWO:
-        description += "It is a two handed weapon.";
+        if (quad)
+            handname = pluralise(handname);
+        n = "two";
         break;
     }
 
-    return description;
+    if (quad)
+        return make_stringf("It is a weapon for %s %s.", n.c_str(), handname.c_str());
+    else
+        return make_stringf("It is a %s-%sed weapon.", n.c_str(), handname.c_str());
+
 }
 
 static string _describe_weapon(const item_def &item, bool verbose)

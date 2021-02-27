@@ -2615,6 +2615,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
+    // TODO: shared code with species_skin_adj for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -2634,6 +2635,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
         str = "tentacle";
         break;
 
+    // TODO: this looks extremely non-general
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
