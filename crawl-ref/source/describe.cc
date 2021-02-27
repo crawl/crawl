@@ -1960,6 +1960,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
 
 static string _describe_item_curse(const item_def &item)
 {
+    if (!item.props.exists(CURSE_KNOWLEDGE_KEY))
+        return "\nIt has a curse placed upon it.";
+
     const CrawlVector& curses = item.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
     if (curses.empty())
