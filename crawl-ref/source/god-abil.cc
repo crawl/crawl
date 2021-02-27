@@ -2304,7 +2304,6 @@ bool ashenzari_curse_item()
 
     you.props.erase(CURSE_KNOWLEDGE_KEY);
     you.props.erase(AVAILABLE_CURSE_KEY);
-    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
 
     return true;
 }
