@@ -2090,6 +2090,42 @@ _.tt.tttt.t.tt.ttttt_
             -_-
 ENDMAP
 
+#### An ancient temple to kiku revived by a powerful spellcaster.
+NAME: beargit_kiku_chapel
+DEPTH: Swamp:2-
+TAGS: no_monster_gen
+MONS: bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
+MONS: patrolling spriggan berserker simulacrum w:20 / \
+      patrolling spriggan defender simulacrum / \
+      patrolling spriggan air mage simulacrum / \
+      juggernaut zombie w:5 / caustic shrike zombie w:1
+MONS: patrolling necromancer / patrolling fenstrider_witch; quick blade ego:pain
+MONS: ghost crab / death drake w:1
+KMONS: 5 = bunyip zombie / bunyip skeleton / swamp dragon skeleton / \
+           hornet zombie / death scarab w:1
+KFEAT: J = altar_kikubaaqudgha
+KFEAT: 5 = W
+ITEM: randbook disc:necromancy slevels:10 / \
+      randbook disc:necromancy slevels:12 / randbook disc:necromancy slevels:16
+SUBST: z = cccccccccccc...WWWwwt
+SUBST: F : VVVVY
+FTILE: . = floor_sandstone
+{{
+dgn.delayed_decay_extra(_G, 'K', 'frost giant corpse / ' ..
+                                  'frost giant skeleton / ' ..
+                                  'shadow dragon corpse / ' ..
+                                  'shadow dragon skeleton')
+}}
+MAP
+.zzzzzcccccc
+.zWz5wc111dcc
+.zWWWW+WW.KFc
+@A.W45+2WW3Jc
+.z.WW5+..WKFc
+.zzzz.c111$cc
+....zzcccccc
+ENDMAP
+
 NAME:   nicolae_swamp_phyte_club
 DEPTH:  Swamp:2-, !Swamp:$
 ORIENT: float
@@ -2277,7 +2313,7 @@ ENDMAP
 default-depth:
 
 ###############################################################################
-# Swamp:5 standard
+# Swamp:4 standard
 #
 NAME:    swamp
 TAGS:    transparent no_monster_gen
@@ -2318,7 +2354,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Swamp:5 alternative (dp)
+# Swamp:4 alternative (dp)
 #
 NAME:    swamp_alternative
 TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
@@ -2409,7 +2445,7 @@ tttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# Swamp:5 alternative (due)
+# Swamp:4 alternative (due)
 NAME:    swamp_fiery
 TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
