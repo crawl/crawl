@@ -66,29 +66,29 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
 static const char *skill_titles[NUM_SKILLS][7] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27       skill abbr
-    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror",    "Fght"},
-    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician",   "Sbl"},
-    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster",  "Lbl"},
-    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac",   "Axes"},
-    {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher", "Maces"},
-    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine", "Pole"},
-    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff", "Stav"},
-    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult", "Slng"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Bows"},
-    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest", "Xbow"},
+    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror",    "Fgt"},
+    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician",   "SBl"},
+    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster",  "LBl"},
+    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac",   "Axs"},
+    {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher", "M&F"},
+    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine", "Pla"},
+    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff", "Stv"},
+    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult", "Slg"},
+    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Bws"},
+    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest", "Crb"},
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista", "Thr"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable", "Arm"},
-    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible",   "Dodge"},
-    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja",        "Stlth"},
+    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible",   "Ddg"},
+    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja",        "Sth"},
 #if TAG_MAJOR_VERSION == 34
-    {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician",   "Stab"},
+    {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician",   "Stb"},
 #endif
-    {"Shields",        "Shield-Bearer", "Blocker",         "Peltast",         "Hoplite",        "@Adj@ Barricade", "Shld"},
+    {"Shields",        "Shield-Bearer", "Blocker",         "Peltast",         "Hoplite",        "@Adj@ Barricade", "Shd"},
 #if TAG_MAJOR_VERSION == 34
-    {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master", "Trap"},
+    {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master", "Trp"},
 #endif
     // STR based fighters, for DEX/martial arts titles see below. Felids get their own category, too.
-    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion", "Unarm"},
+    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion", "UC"},
 
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage",     "Spc"},
     {"Conjurations",   "Conjurer",      "Destroyer",       "Devastator",      "Ruinous",        "Annihilator",  "Conj"},
