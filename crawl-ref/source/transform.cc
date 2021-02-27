@@ -590,7 +590,13 @@ public:
      */
     string get_uc_attack_name(string /*default_name*/) const override
     {
-        return make_stringf("Stone %s", you.base_hand_name(true, false));
+        string hand = you.base_hand_name(true, false).c_str();
+        // sorry for the hacks
+        if (hand == "hand")
+            hand = "fist";
+        else if (hand == "hands")
+            hand = "fists";
+        return make_stringf("Stone %s", hand.c_str());
     }
 };
 
