@@ -402,36 +402,48 @@ static const pop_entry pop_vaults[] =
 { // The Vaults (OOD cap: 12)
   // Vaults is essentially split in two: Vaults 1-4, the 'normal' part,
   // and Vaults:5, the final challenge.
-  // Trying to keep total around 10,000 on each floor, roughly.
+  // Trying to keep total around 10,000 on each floor 1-4, roughly.
 
   // Easy enemies:
-  //
-  { -5,  3,  178, SEMI, MONS_BOGGART },
-  { -2,  4,   89, PEAK, MONS_HARPY },
+  {  1,  4,  100, FALL, MONS_BOGGART },
+  {  1,  4,  100, FALL, MONS_HARPY },
+  {  1,  4,  800, FALL, MONS_UGLY_THING },
+  {  1,  4,  800, FALL, MONS_CENTAUR_WARRIOR },
+  {  1,  4,  425, FALL, MONS_YAKTAUR },
+  {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
 
-  { -4,  4,  335, SEMI, MONS_YAKTAUR },
-  {  1,  4,  415, FALL, MONS_YAKTAUR_CAPTAIN },
-  { -2,  4,  136, SEMI, MONS_GREAT_ORB_OF_EYES },
-  { -2,  4,  245, PEAK, MONS_BOULDER_BEETLE },
-  { -1,  4,   89, PEAK, MONS_GLOWING_ORANGE_BRAIN },
-  {  0,  4,   89, PEAK, MONS_ENTROPY_WEAVER },
-  {  0,  4,   89, PEAK, MONS_SPHINX },
-  {  0,  4,   89, PEAK, MONS_VERY_UGLY_THING },
-  {  1,  4,  440, FALL, MONS_SLIME_CREATURE },
-  {  1,  4,  222, FLAT, MONS_WIZARD },
-  {  1,  4,  440, FALL, MONS_UGLY_THING },
-  {  1,  4,  440, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,   89, FLAT, MONS_NECROMANCER },
-  {  1,  4,  640, FALL, MONS_VAULT_SENTINEL },
-  {  1,  4,  640, FALL, MONS_IRONBRAND_CONVOKER },
-  {  1,  4,  575, FALL, MONS_IRONHEART_PRESERVER },
-  {  1,  4,  510, FALL, MONS_VAULT_WARDEN },
-  {  4,  4,   30, PEAK, MONS_ORC_WARLORD },
-  {  2,  4,   32, PEAK, MONS_CRYSTAL_GUARDIAN },
-  {  4,  4,   70, FLAT, MONS_WAR_GARGOYLE },
+  {  1,  4,  500, FLAT, MONS_SLIME_CREATURE },
+  {  1,  4,  500, FALL, MONS_SLIME_CREATURE },
+  {  1,  4, 1400, FLAT, MONS_VAULT_SENTINEL },
+  // Harder enemies:
+  {  1,  4,  200, FLAT, MONS_ENTROPY_WEAVER },
+  {  1,  4, 1700, FLAT, MONS_IRONBRAND_CONVOKER },
+  {  1,  4, 1700, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,  4,  550, FLAT, MONS_VAULT_WARDEN },
+  {  1,  4,  550, RISE, MONS_VAULT_WARDEN },
+  {  1,  4,  200, FLAT, MONS_GREAT_ORB_OF_EYES },
+  {  1,  4,  200, RISE, MONS_GREAT_ORB_OF_EYES },
+  {  1,  4,  100, FLAT, MONS_GLOWING_ORANGE_BRAIN },
+  {  1,  4,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
+  {  1,  4,  100, FLAT, MONS_VERY_UGLY_THING },
+  {  1,  4,  100, RISE, MONS_VERY_UGLY_THING },
+  {  1,  4,  225, FLAT, MONS_WIZARD },
+  {  1,  4,  225, RISE, MONS_WIZARD },
+  {  1,  4,  125, FLAT, MONS_NECROMANCER },
+  {  1,  4,  125, RISE, MONS_NECROMANCER },
+  {  1,  4,  450, FLAT, MONS_YAKTAUR_CAPTAIN },
+  {  1,  4,  450, RISE, MONS_YAKTAUR_CAPTAIN },
+  {  1,  4,   75, FLAT, MONS_ORC_WARLORD },
+  {  1,  4,   75, RISE, MONS_ORC_WARLORD },
+  {  1,  4,  100, FLAT, MONS_CRYSTAL_GUARDIAN },
+  {  1,  4,  100, RISE, MONS_CRYSTAL_GUARDIAN },
+  {  1,  4,  150, FLAT, MONS_WAR_GARGOYLE },
+  {  1,  4,  150, RISE, MONS_WAR_GARGOYLE },
+  // Top-tier threats:
+  {  1,  4,  350, RISE, MONS_SPHINX },
 
   // Vaults:5 enemies. These weights are very roughly based on
-  // the monster frequency as of 0.24.
+  // the monster frequency as of 0.26.
   // V:5 humans:
   {  5, 12, 1000, FALL, MONS_VAULT_WARDEN },
   {  5, 12,  600, FALL, MONS_IRONHEART_PRESERVER },
