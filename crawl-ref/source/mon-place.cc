@@ -1957,6 +1957,10 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_LINDWURM,         { {0, 0, []() {
         return you.where_are_you == BRANCH_VAULTS;
     }},                            {{ BAND_LINDWURMS, {1, 3} }}}},
+    { MONS_DIRE_ELEPHANT,    { {0, 0, []() {
+        return you.where_are_you == BRANCH_VAULTS;
+    }},                            {{ BAND_DIRE_ELEPHANTS, {2, 4} }}}},
+
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2142,6 +2146,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
+    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},

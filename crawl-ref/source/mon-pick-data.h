@@ -403,7 +403,7 @@ static const pop_entry pop_vaults[] =
   // Trying to keep total around 10,000 on each floor 1-4, roughly.
 
   // Easy enemies:
-  {  1,  4,  750, FALL, MONS_UGLY_THING },
+  {  1,  4,  650, FALL, MONS_UGLY_THING },
   {  1,  4,  650, FALL, MONS_LINDWURM },
   {  1,  4,  400, FALL, MONS_CENTAUR_WARRIOR },
   {  1,  4,  350, FALL, MONS_YAKTAUR },
@@ -411,13 +411,15 @@ static const pop_entry pop_vaults[] =
   {  1,  4,  125, FALL, MONS_BOGGART },
   {  1,  4,  125, FALL, MONS_HARPY },
 
-  {  1,  4,  500, FLAT, MONS_SLIME_CREATURE },
-  {  1,  4,  500, FALL, MONS_SLIME_CREATURE },
+  {  1,  4,  400, FLAT, MONS_SLIME_CREATURE },
+  {  1,  4,  400, FALL, MONS_SLIME_CREATURE },
+  {  1,  4,  200, FLAT, MONS_DIRE_ELEPHANT },
+  {  1,  4,  200, FALL, MONS_DIRE_ELEPHANT },
   {  1,  4, 1400, FLAT, MONS_VAULT_SENTINEL },
   // Harder enemies:
   {  1,  4,  200, FLAT, MONS_ENTROPY_WEAVER },
-  {  1,  4, 1700, FLAT, MONS_IRONBRAND_CONVOKER },
-  {  1,  4, 1700, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,  4, 1650, FLAT, MONS_IRONBRAND_CONVOKER },
+  {  1,  4, 1650, FLAT, MONS_IRONHEART_PRESERVER },
   {  1,  4,  550, FLAT, MONS_VAULT_WARDEN },
   {  1,  4,  550, RISE, MONS_VAULT_WARDEN },
   {  1,  4,  200, FLAT, MONS_GREAT_ORB_OF_EYES },
