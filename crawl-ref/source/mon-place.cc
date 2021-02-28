@@ -1753,8 +1753,10 @@ struct band_set
     vector<band_info> bands;
 };
 
+// We handle Vaults centaur warriors specially.
 static const band_conditions centaur_band_condition
-    = { 3, 10, []() { return !player_in_branch(BRANCH_SHOALS); }};
+    = { 3, 10, []() { return !player_in_branch(BRANCH_SHOALS)
+                          && !player_in_branch(BRANCH_VAULTS); }};
 
 // warrior & mage spawn alone more frequently at shallow depths of Snake
 static const band_conditions naga_band_condition
@@ -2021,6 +2023,16 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         break;
     }
 
+    // Per-branch hacks. TODO: move this into the main branch structure
+    // (probably moving conditionals inside band_info?)
+    case MONS_CENTAUR_WARRIOR:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_CENTAUR_WARRIORS;
+            band_size = random_range(2, 4);
+        }
+        break;
+
     case MONS_SATYR:
         if (!one_chance_in(3))
         {
@@ -2125,6 +2137,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
+    { BAND_CENTAUR_WARRIORS,    {{{MONS_CENTAUR_WARRIOR, 1}}}},
     { BAND_MOLTEN_GARGOYLES,    {{{MONS_MOLTEN_GARGOYLE, 1}}}},
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
