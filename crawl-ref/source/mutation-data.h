@@ -1707,7 +1707,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
+{ MUT_DRINK_SAFETY, 0, 1, mutflag::bad, false,
   "inability to drink while threatened",
 
   {"You cannot drink potions while threatened.", "", ""},
@@ -1715,7 +1715,7 @@ static const mutation_def mut_data[] =
   {"You can once more drink potions while threatened.", "", ""},
 },
 
-{ MUT_NO_READ, 0, 1, mutflag::bad, false,
+{ MUT_READ_SAFETY, 0, 1, mutflag::bad, false,
   "inability to read while threatened",
 
   {"You cannot read scrolls while threatened.", "", ""},

@@ -179,8 +179,8 @@ enum mutation_type
     MUT_FORLORN,
 #endif
     MUT_SUBDUED_MAGIC,
-    MUT_NO_DRINK,
-    MUT_NO_READ,
+    MUT_DRINK_SAFETY,
+    MUT_READ_SAFETY,
     MUT_MISSING_HAND,
     MUT_NO_STEALTH,
     MUT_NO_ARTIFICE,
