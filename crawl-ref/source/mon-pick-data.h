@@ -405,12 +405,12 @@ static const pop_entry pop_vaults[] =
   // Trying to keep total around 10,000 on each floor 1-4, roughly.
 
   // Easy enemies:
-  {  1,  4,  100, FALL, MONS_BOGGART },
-  {  1,  4,  100, FALL, MONS_HARPY },
-  {  1,  4,  800, FALL, MONS_UGLY_THING },
-  {  1,  4,  800, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,  425, FALL, MONS_YAKTAUR },
-  {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
+  {  1,  4,  125, FALL, MONS_BOGGART },
+  {  1,  4,  125, FALL, MONS_HARPY },
+  {  1,  4,  850, FALL, MONS_UGLY_THING },
+  {  1,  4,  850, FALL, MONS_CENTAUR_WARRIOR },
+  {  1,  4,  450, FALL, MONS_YAKTAUR },
+  {  1,  4,  225, FALL, MONS_BOULDER_BEETLE },
 
   {  1,  4,  500, FLAT, MONS_SLIME_CREATURE },
   {  1,  4,  500, FALL, MONS_SLIME_CREATURE },
@@ -435,12 +435,9 @@ static const pop_entry pop_vaults[] =
   {  1,  4,  450, RISE, MONS_YAKTAUR_CAPTAIN },
   {  1,  4,   75, FLAT, MONS_ORC_WARLORD },
   {  1,  4,   75, RISE, MONS_ORC_WARLORD },
-  {  1,  4,  100, FLAT, MONS_CRYSTAL_GUARDIAN },
-  {  1,  4,  100, RISE, MONS_CRYSTAL_GUARDIAN },
-  {  1,  4,  150, FLAT, MONS_WAR_GARGOYLE },
-  {  1,  4,  150, RISE, MONS_WAR_GARGOYLE },
   // Top-tier threats:
-  {  1,  4,  350, RISE, MONS_SPHINX },
+  {  1,  4,  300, RISE, MONS_SPHINX },
+  {  1,  4,  300, RISE, MONS_PEACEKEEPER },
 
   // Vaults:5 enemies. These weights are very roughly based on
   // the monster frequency as of 0.26.

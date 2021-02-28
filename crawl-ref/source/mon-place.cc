@@ -1861,6 +1861,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
+    { MONS_PEACEKEEPER,     { { 0, 0, []() {
+        return player_in_branch(BRANCH_VAULTS); }},
+                                  {{ BAND_GOLEMS, {2, 4}, true }}}},
     // Journey -- Added Draconian Packs
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
@@ -2162,6 +2165,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                  {{MONS_DEATH_YAK, 1}}}},
     { BAND_VERY_UGLY_THINGS,    {{{MONS_UGLY_THING, 3},
                                   {MONS_VERY_UGLY_THING, 4}}}},
+    { BAND_GOLEMS,              {{{MONS_WAR_GARGOYLE, 1},
+                                  {MONS_CRYSTAL_GUARDIAN, 1}}}},
     { BAND_ORCS,                {{{MONS_ORC_PRIEST, 6},
                                   {MONS_ORC_WIZARD, 7},
                                   {MONS_ORC, 35}}}},
