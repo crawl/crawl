@@ -234,6 +234,20 @@ Call Canine Familiar spell
 
 Summons a solitary canine to the caster's aid.
 %%%%
+Call Down Damnation spell
+
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
+%%%%
+Call Down Lightning spell
+
+Blasts a targeted enemy with lightning, with no direct line of fire required.
+The targeting magics need distance to function, so enemies that are adjacent
+or nearly adjacent cannot be struck by this.
+%%%%
 Call Imp spell
 
 Calls forth a minor demon from the pits of Hell.
@@ -695,14 +709,6 @@ dies.
 Heal Other spell
 
 Heals a nearby ally.
-%%%%
-Call Down Damnation spell
-
-Blasts a targeted enemy with damnation, with no direct line of fire required.
-These unholy forces harm the victim and anyone adjacent, and are not affected
-by any means of protection, such as armour or resistances. However, certain
-creatures, usually those able to invoke damnation themselves, are entirely
-unscathed by damnation.
 %%%%
 Hurl Damnation spell
 

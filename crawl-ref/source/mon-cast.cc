@@ -123,11 +123,13 @@ static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
+static ai_action::goodness _foe_not_nearby(const monster &caster);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
+static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
@@ -353,6 +355,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
+    { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
     { SPELL_FLAY, {
@@ -2401,6 +2404,30 @@ static bool _near_visible_wall(const monster &caster, const actor &target)
         if (cell_is_solid(*ai) && caster.see_cell_no_trans(*ai))
             return true;
     return false;
+}
+
+/// Does the given monster have a foe that's 3+ distance away?
+static ai_action::goodness _foe_not_nearby(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe
+        || grid_distance(caster.pos(), foe->pos()) < 3
+        || !caster.see_cell_no_trans(foe->pos()))
+    {
+        return ai_action::impossible();
+    }
+    return ai_action::good();
+}
+
+/// Cast the spell Call Down Lightning, blasting the target with a smitey lightning bolt. (It can miss.)
+static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt &beam)
+{
+    actor *foe = caster.get_foe();
+    if (!foe)
+        return;
+    beam.source = foe->pos();
+    beam.target = foe->pos();
+    beam.fire();
 }
 
 /// Does the given monster have a foe that's adjacent to a wall, and can the caster see

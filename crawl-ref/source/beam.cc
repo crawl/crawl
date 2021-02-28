@@ -3067,8 +3067,11 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if (is_explosion || aimed_at_feet || auto_hit)
+    if ((is_explosion || auto_hit || aimed_at_feet)
+        && origin_spell != SPELL_CALL_DOWN_LIGHTNING)
+    {
         return false;
+    }
 
     const int dodge = you.evasion();
     int real_tohit  = hit;

@@ -1039,6 +1039,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_IRONBOUND_THUNDERHULK,
+      {
+       { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('P') Immobile plants.
     {  MST_BURNING_BUSH,
       {

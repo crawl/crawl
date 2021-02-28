@@ -1493,6 +1493,13 @@ iron troll
 A great troll, mighty of limb and plated with thick scales that resemble
 lightly rusted iron, especially in their hardness.
 %%%%
+ironbound thunderhulk
+
+A brutish figure, hastily armoured in scraps of leather and metal to combat
+a fearsome intruder. On its back is an antique, arcane 'lightning rod', which
+calls down thunder on distant foes, though it can't hit anything adjacent or
+even nearly adjacent.
+%%%%
 ironbrand convoker
 
 A guardian mage clad in pattern-etched armour. It can recite words of power

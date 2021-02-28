@@ -110,6 +110,10 @@ Creeping Frost cast
 
 @The_monster@ calls freezing cold from the walls.
 %%%%
+hulking thunderguard cast
+
+Electricity crackles from @the_monster@'s apparatus.
+%%%%
 Mara Summon cast
 
 @The_monster@ weaves an illusion.

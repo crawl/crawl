@@ -107,6 +107,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_FIRE_BREATH, ZAP_FIRE_BREATH },
     { SPELL_SEARING_BREATH, ZAP_SEARING_BREATH },
     { SPELL_ELECTRICAL_BOLT, ZAP_ELECTRICAL_BOLT },
+    { SPELL_CALL_DOWN_LIGHTNING, ZAP_LIGHTNING_BOLT },
     { SPELL_FLAMING_CLOUD, ZAP_FLAMING_CLOUD },
 
     // These are all for zap -> spell lookup.
