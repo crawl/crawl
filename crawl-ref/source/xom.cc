@@ -1971,7 +1971,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (you.species == SP_MUMMY && you_can_wear(EQ_BODY_ARMOUR, true))
+    if (starts_with(species_skin_adj(you.species), "bandage")
+        && you_can_wear(EQ_BODY_ARMOUR, true))
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())

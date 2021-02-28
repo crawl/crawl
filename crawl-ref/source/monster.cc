@@ -5231,7 +5231,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::can_bleed(bool /*allow_tran*/) const
+bool monster::can_bleed(bool /*temp*/) const
 {
     return mons_has_blood(type);
 }

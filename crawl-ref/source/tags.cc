@@ -3172,10 +3172,17 @@ static void _tag_read_you(reader &th)
     if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
         you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
 
+    // TODO: can we just provide generic species mutation fixup code?
     if (you.species == SP_FORMICID)
     {
         you.mutation[MUT_QUADRUMANOUS]
                 = you.innate_mutation[MUT_QUADRUMANOUS] = 1;
+    }
+    if (you.species == SP_MUMMY)
+    {
+        you.mutation[MUT_NO_DRINK] = you.innate_mutation[MUT_NO_DRINK] = 1;
+        you.mutation[MUT_HEAT_VULNERABILITY] =
+                            you.innate_mutation[MUT_HEAT_VULNERABILITY] = 1;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON

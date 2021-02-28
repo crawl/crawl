@@ -2024,6 +2024,16 @@ static const mutation_def mut_data[] =
   {"Two of your of your arms shrink away.", "", ""},
   {"You grow two extra arms."},
 },
+
+{ MUT_NO_DRINK, 0, 1, mutflag::good, false,
+  "no potions",
+
+  {"You do not drink.", "", ""},
+  {"Your mouth dries to ashes.", "", ""},
+  {"You gain the ability to drink."},
+},
+
+
 };
 
 static const mutation_category_def category_mut_data[] =

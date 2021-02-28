@@ -97,6 +97,8 @@ string species_walking_verb(species_type sp)
 
 string species_skin_adj(species_type species)
 {
+    // Aside from direct adjectival uses, some flavor stuff checks the strings
+    // here. TODO: should these be species flags a la hair?
     if (species_is_draconian(species) || species == SP_NAGA)
         return "scaled";
     else if (species == SP_TENGU)

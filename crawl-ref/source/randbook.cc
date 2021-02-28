@@ -967,14 +967,10 @@ void make_book_kiku_gift(item_def &book, bool first)
     // spell, to complement Receive Corpses.
     if (first)
     {
-        bool can_bleed = you.species != SP_GARGOYLE
-                         && you.species != SP_GHOUL
-                         && you.species != SP_MUMMY;
-
         chosen_spells[0] = SPELL_PAIN;
         chosen_spells[1] = SPELL_CORPSE_ROT;
         chosen_spells[2] = SPELL_ANIMATE_SKELETON;
-        if (can_bleed) // Replace one of the corpse-using spells
+        if (you.can_bleed(false)) // Replace one of the corpse-using spells
             chosen_spells[random_range(1, 2)] = SPELL_SUBLIMATION_OF_BLOOD;
 
         chosen_spells[3] = SPELL_VAMPIRIC_DRAINING;

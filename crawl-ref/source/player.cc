@@ -1257,10 +1257,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         }
     }
 
-    // species:
-    if (you.species == SP_MUMMY)
-        rf--;
-
     // mutations:
     rf += you.get_mutation_level(MUT_HEAT_RESISTANCE, temp);
     rf -= you.get_mutation_level(MUT_HEAT_VULNERABILITY, temp);
@@ -7036,18 +7032,23 @@ bool player::can_polymorph() const
     return !(transform_uncancellable || is_lifeless_undead());
 }
 
-bool player::can_bleed(bool allow_tran) const
+bool player::can_bleed(bool temp) const
 {
-    // XXX: Lich and statue forms are still caught by the holiness checks below.
-    if (allow_tran && !form_can_bleed(form))
+    if (temp && !form_can_bleed(form))
         return false;
 
-    if (is_lifeless_undead() || is_nonliving())
-    {   // demonspawn and demigods have a mere drop of taint
+    return !is_lifeless_undead(temp) && !is_nonliving(temp);
+}
+
+bool player::can_drink(bool temp) const
+{
+    if (temp && (you.form == transformation::lich
+                    || you.duration[DUR_NO_POTIONS]))
+    {
         return false;
     }
+    return !you.has_mutation(MUT_NO_DRINK);
 
-    return true;
 }
 
 bool player::is_stationary() const
@@ -7151,7 +7152,7 @@ bool player::can_throw_large_rocks() const
 
 bool player::can_smell() const
 {
-    return species != SP_MUMMY;
+    return !you.is_lifeless_undead(true);
 }
 
 bool player::can_sleep(bool holi_only) const

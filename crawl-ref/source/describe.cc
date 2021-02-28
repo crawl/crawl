@@ -2619,7 +2619,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (!you_drinkless()) // mummies and lich form forbidden
+        if (you.can_drink()) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:

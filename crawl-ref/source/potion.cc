@@ -35,12 +35,6 @@
 
 int _xom_factor(bool was_known);
 
-bool you_drinkless(bool temp)
-{
-    return you.undead_state(temp) == US_UNDEAD
-           && you.species != SP_GHOUL;
-}
-
 PotionEffect::PotionEffect(const potion_type pot)
     : potion_name(potion_type_name(pot)), kind(pot)
 { }
