@@ -1535,6 +1535,8 @@ static int _num_mons_wanted()
         size = 8;
     else if (player_in_branch(BRANCH_CRYPT))
         size = 10;
+    else if (player_in_branch(BRANCH_DEPTHS))
+        size = 11;
     else if (player_in_hell())
         size = 23;
 

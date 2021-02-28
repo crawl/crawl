@@ -1040,7 +1040,6 @@ static const pop_entry pop_depths[] =
   { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },
   { -2, 10,  100, PEAK, MONS_VAMPIRE_KNIGHT },
   {  1,  3,  300, FALL, MONS_UGLY_THING },
-  {  1,  4,  300, FALL, MONS_OGRE_MAGE },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },
   {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
