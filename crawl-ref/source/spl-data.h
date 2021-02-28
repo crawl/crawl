@@ -2370,6 +2370,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CREEPING_FROST, "Creeping Frost",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_LEGENDARY_DESTRUCTION, "Legendary Destruction",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,

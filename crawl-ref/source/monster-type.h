@@ -504,6 +504,12 @@ enum monster_type                      // env.mons[].type
     MONS_VAULT_WARDEN,
     MONS_IRONBRAND_CONVOKER,
     MONS_IRONHEART_PRESERVER,
+<<<<<<< HEAD
+    MONS_ICEBOUND_STALWART,
+=======
+    MONS_ICEGRIP_STALWART,
+    MONS_IRONBOUND_THUNDERHULK,
+>>>>>>> 53494ac402... Rename cold
     MONS_IMPERIAL_MYRMIDON,
     MONS_SERVANT_OF_WHISPERS,
     MONS_RAGGED_HIEROPHANT,
@@ -1095,6 +1101,7 @@ enum monster_type                      // env.mons[].type
     MONS_DREAD_LICH,
     MONS_DEEP_ELF_AIR_MAGE,
     MONS_ANIMATED_ARMOUR,
+    MONS_ICEGRIP_STALWART,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

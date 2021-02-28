@@ -353,6 +353,11 @@ Instills a corruption within all visible targets, temporarily mutating their
 bodies in an adverse fashion. It cannot affect artificial beings, and the
 undead will decompose if affected.
 %%%%
+Creeping Frost spell
+
+Calls forth freezing cold from the walls. Any enemies of the caster standing
+next to those walls will be frozen and will find their movements slowed.
+%%%%
 Crystal Bolt spell
 
 Projects a penetrating projectile with peculiar magical properties. It is

@@ -3968,6 +3968,7 @@ void bolt::affect_player()
     pull_actor(&you, final_dam);
 
     if (origin_spell == SPELL_FLASH_FREEZE
+        || origin_spell == SPELL_CREEPING_FROST
         || name == "blast of ice"
         || origin_spell == SPELL_GLACIATE && !is_explosion)
     {

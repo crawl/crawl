@@ -1865,6 +1865,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_VAULT_SENTINEL:
     case MONS_IRONBRAND_CONVOKER:
+    case MONS_ICEGRIP_STALWART:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;

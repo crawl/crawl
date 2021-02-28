@@ -1444,6 +1444,11 @@ ice statue
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
+icegrip stalwart
+
+An emaciated warrior-mage, bound to guard long-coveted treasures. It calls
+forth deadly frost from its surrounds, freezing foes that are next to walls.
+%%%%
 iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.

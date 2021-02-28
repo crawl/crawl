@@ -106,6 +106,9 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
+Creeping Frost cast
+
+@The_monster@ calls freezing cold from the walls.
 %%%%
 Mara Summon cast
 

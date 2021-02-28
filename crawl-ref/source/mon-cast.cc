@@ -115,16 +115,19 @@ static function<void(bolt&, const monster&, int)>
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
+static void _setup_creeping_frost(bolt &beam, const monster &caster, int pow);
 static ai_action::goodness _negative_energy_spell_goodness(const actor* foe);
 static ai_action::goodness _caster_sees_foe(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
+static ai_action::goodness _foe_near_wall(const monster &caster);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
+static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
@@ -351,6 +354,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
+    { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
     { SPELL_FLAY, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe(); // XXX: check vis?
@@ -2386,6 +2390,69 @@ static bool _seal_doors_and_stairs(const monster* warden,
     }
 
     return false;
+}
+
+/// Can the caster see the given target's cell and a wall next to them?
+static bool _near_visible_wall(const monster &caster, const actor &target)
+{
+    if (!caster.see_cell_no_trans(target.pos()))
+        return false;
+    for (adjacent_iterator ai(target.pos()); ai; ++ai)
+        if (cell_is_solid(*ai) && caster.see_cell_no_trans(*ai))
+            return true;
+    return false;
+}
+
+/// Does the given monster have a foe that's adjacent to a wall, and can the caster see
+/// that wall?
+static ai_action::goodness _foe_near_wall(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe)
+        return ai_action::bad();
+
+    if (_near_visible_wall(caster, *foe))
+        return ai_action::good();
+    return ai_action::bad();
+}
+
+static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
+{
+    zappy(spell_to_zap(SPELL_CREEPING_FROST), pow, true, beam);
+    beam.hit = AUTOMATIC_HIT;
+    beam.name = "frost";
+}
+
+static void _creeping_frost_freeze(actor &a, bolt &beam)
+{
+    beam.hit_verb = "grips"; // We can't do this in _setup_creeping_frost,
+                             // since hit_verb isn't copied. XXX: think about
+                             // the consequences of copying it in bolt_parent_init
+    beam.source = a.pos();
+    beam.target = a.pos();
+    beam.fire();
+}
+
+/// Cast the spell Creeping Frost, freezing any of the caster's foes that are adjacent to walls.
+static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
+{
+    // Freeze the player.
+    if (!caster.wont_attack() && _near_visible_wall(caster, you))
+        _creeping_frost_freeze(you, beam);
+
+    // Freeze the player's friends.
+    for (vision_iterator vi(caster); vi; ++vi)
+    {
+        actor* target = actor_at(*vi);
+        if (!target)
+            continue;
+
+        monster *mon = target->as_monster();
+        if (!mon || mons_aligned(&caster, mon))
+            continue;
+        if (_near_visible_wall(caster, *mon))
+            _creeping_frost_freeze(*mon, beam);
+    }
 }
 
 /// Should the given monster cast Still Winds?

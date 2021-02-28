@@ -479,6 +479,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ICEGRIP_STALWART,
+      {
+       { SPELL_CREEPING_FROST, 50, MON_SPELL_WIZARD },
+      }
+    },
+
     { MST_IMPERIAL_MYRMIDON,
       {
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
