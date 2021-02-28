@@ -19,7 +19,7 @@
 NAME:   advil_vaults_ghost_guards
 TAGS:   allow_dup
 KITEM:  12 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost
@@ -40,7 +40,7 @@ ENDMAP
 NAME:   advil_vaults_ghost_lines
 TAGS:   allow_dup
 KITEM:  123 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost

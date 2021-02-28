@@ -1189,7 +1189,7 @@ iron troll
 Un énorme troll aux membres puissant et recouvert de plaques qui ressemblent
 légèrement à du fer rouillé, particulièrement à cause de leur dureté.
 %%%%
-ironheart preserver
+ironbound preserver
 
 De grandes silhouettes revêtus en armure lourde, les preservers protégent leurs
 alliés en acceptant généreusement une partie des blessures qui leur sont

@@ -641,8 +641,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_WAR_AXE,          3 },
                 { WPN_MORNINGSTAR,      3 },
         } } },
-        { MONS_IRONBRAND_CONVOKER,      { IRON_WEAPONS } },
-        { MONS_IRONHEART_PRESERVER,     { IRON_WEAPONS } },
+        { MONS_IRONBOUND_CONVOKER,      { IRON_WEAPONS } },
+        { MONS_IRONBOUND_PRESERVER,     { IRON_WEAPONS } },
         { MONS_SIGMUND, { { { WPN_SCYTHE, 1 } } } },
         { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
@@ -652,6 +652,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
+        { MONS_IRONBOUND_THUNDERHULK,   { IRON_WEAPONS } },
+        { MONS_IRONBOUND_BEASTMASTER,
+            { { { WPN_WHIP,             5 },
+                { WPN_QUARTERSTAFF,     4 },
+                { WPN_DEMON_WHIP,       1 },
+        } } },
         { MONS_ETTIN,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -1482,6 +1488,10 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_GNOLL:
             if (!level || !one_chance_in(20))
                 break;
+            // deliberate fall-through
+        case MONS_IRONBOUND_BEASTMASTER:
+            if (!one_chance_in(10))
+                break;
             // deliberate fall-through to harold
 
         case MONS_HAROLD: // bounty hunter, up to 5 nets
@@ -1810,6 +1820,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_IRONBOUND_BEASTMASTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
@@ -1863,8 +1874,10 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;
 
+    case MONS_IRONBOUND_THUNDERHULK:
     case MONS_VAULT_SENTINEL:
-    case MONS_IRONBRAND_CONVOKER:
+    case MONS_IRONBOUND_CONVOKER:
+    case MONS_IRONBOUND_FROSTHEART:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;
@@ -1976,7 +1989,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_TENGU_WARRIOR:
-    case MONS_IRONHEART_PRESERVER:
+    case MONS_IRONBOUND_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_RING_MAIL);
         break;

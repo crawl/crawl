@@ -923,8 +923,8 @@ TAGS: vaults_hard vaults_orient_s patrolling no_monster_gen
 KMONS: S = vault sentinel
 KMONS: G = vault guard
 KMONS: W = vault warden
-KMONS: P = ironheart preserver
-KMONS: C = ironbrand convoker
+KMONS: P = ironbound preserver
+KMONS: C = ironbound convoker
 SUBST: | = ||*
 MAP
    xxxxxxx
@@ -1171,7 +1171,7 @@ ENDMAP
 NAME:   kennysheep_vaults_gozag_temple
 TAGS:   vaults_hard no_item_gen uniq_kennysheep_gozag_temple
 WEIGHT: 5
-KMONS:  1 = ironheart preserver
+KMONS:  1 = ironbound preserver
 KMONS:  2 = vault warden
 KITEM:  | = gold good_item
 KITEM:  12 = gold
@@ -1255,7 +1255,7 @@ KFEAT: g = iron_grate
 KFEAT: ^ = alarm trap
 KMONS: 1 = vault guard
 KMONS: 2 = vault warden
-KMONS: 3 = ironheart preserver / ironbrand convoker
+KMONS: 3 = ironbound preserver / ironbound convoker
 NSUBST: 1 = 4:1 / 1:2 / 1:3 / *:., . = 2:^ / *:.
 SUBST: ' = .
 KPROP: P = no_tele_into
