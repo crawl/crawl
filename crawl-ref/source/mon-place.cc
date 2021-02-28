@@ -1787,7 +1787,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ORC_WIZARD,      { {}, {{ BAND_ORCS, {2, 5} }}}},
     { MONS_ORC_PRIEST,      { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
     { MONS_ORC_WARRIOR,     { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
-    { MONS_ORC_WARLORD,     { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_ORC_WARLORD,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS); }},
+                                         {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
@@ -2033,6 +2034,14 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         }
         break;
 
+    case MONS_ORC_WARLORD:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_ORC_WARLORD;
+            band_size = random_range(2, 4);
+        }
+        break;
+
     case MONS_SATYR:
         if (!one_chance_in(3))
         {
@@ -2124,6 +2133,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
     { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},
     { BAND_KILLER_BEES,         {{{MONS_KILLER_BEE, 1}}}},
+    { BAND_ORC_WARLORD,         {{{MONS_ORC_KNIGHT, 1}}}},
     { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
     { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
