@@ -2180,12 +2180,12 @@ struct curse_data
 static map<curse_type, curse_data> _ashenzari_curses =
 {
     { CURSE_MELEE, {
-        "Melee", "Melee",
+        "Melee Combat", "Melee",
         { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        "Ranged", "Range",
+        "Ranged Combat", "Range",
         { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
     } },
     { CURSE_ELEMENTS, {
@@ -2205,7 +2205,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
         { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
     } },
     { CURSE_SELF, {
-        "Self", "Self",
+        "Introspection", "Self",
         { SK_FIGHTING, SK_SPELLCASTING },
     } },
     { CURSE_FORTITUDE, {
