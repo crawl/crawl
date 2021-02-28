@@ -1032,8 +1032,6 @@ static const pop_entry pop_wizlab[] =
 
 static const pop_entry pop_depths[] =
 { // Depths (OOD cap: 14)
-  { -2,  4,  100, SEMI, MONS_BOGGART },
-  { -2,  4,  200, SEMI, MONS_SLIME_CREATURE },
   { -2,  4,  250, SEMI, MONS_RAKSHASA },
   { -2,  4,  100, SEMI, MONS_WIZARD },
   { -2,  4,  100, SEMI, MONS_NECROMANCER },
@@ -1042,11 +1040,7 @@ static const pop_entry pop_depths[] =
   { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },
   { -2, 10,  100, PEAK, MONS_VAMPIRE_KNIGHT },
   {  1,  3,  300, FALL, MONS_UGLY_THING },
-  {  1,  4,  250, FALL, MONS_CENTAUR_WARRIOR },
   {  1,  4,  300, FALL, MONS_OGRE_MAGE },
-  {  1,  6,  375, FALL, MONS_YAKTAUR },
-  {  1,  6,  375, RISE, MONS_YAKTAUR_CAPTAIN },
-  {  1,  6,  300, FALL, MONS_SHAPESHIFTER },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },
   {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
