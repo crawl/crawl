@@ -343,9 +343,9 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player() ?
-                you.species == SP_MINOTAUR :
-                mons_species(mons_base_type(*defender->as_monster()))
+        if (defender->is_player()
+                ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
+                : mons_species(mons_base_type(*defender->as_monster()))
                     == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();

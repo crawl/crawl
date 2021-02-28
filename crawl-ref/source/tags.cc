@@ -3184,6 +3184,11 @@ static void _tag_read_you(reader &th)
         you.mutation[MUT_HEAT_VULNERABILITY] =
                             you.innate_mutation[MUT_HEAT_VULNERABILITY] = 1;
     }
+    if (you.species == SP_MINOTAUR)
+    {
+        you.mutation[MUT_REFLEXIVE_HEADBUTT]
+                        = you.innate_mutation[MUT_REFLEXIVE_HEADBUTT] = 1;
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)

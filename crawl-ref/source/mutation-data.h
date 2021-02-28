@@ -2022,7 +2022,7 @@ static const mutation_def mut_data[] =
 
   {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
   {"Two of your of your arms shrink away.", "", ""},
-  {"You grow two extra arms."},
+  {"You grow two extra arms.", "", ""},
 },
 
 { MUT_NO_DRINK, 0, 1, mutflag::good, false,
@@ -2030,9 +2030,16 @@ static const mutation_def mut_data[] =
 
   {"You do not drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
-  {"You gain the ability to drink."},
+  {"You gain the ability to drink.", "", ""},
 },
 
+{ MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,
+  "retaliatory headbutt",
+
+  {"You reflexively headbutt those who attack you in melee.", "", ""},
+  {"Your retaliatory reflexes feel sharp.", "", ""},
+  {"Your retaliatory reflexes feel dull.", "", ""},
+},
 
 };
 
