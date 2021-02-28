@@ -721,8 +721,10 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    if (x_chance_in_y(slow_sources, 100))
+    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
+    {
         slow_player(10 + random2(5));
+    }
 }
 
 static void _place_player_corpse(bool explode)
