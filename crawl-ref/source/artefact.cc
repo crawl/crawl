@@ -1700,13 +1700,15 @@ void make_ashenzari_randart(item_def &item)
     if (item.flags & ISFLAG_UNRANDART)
         return;
 
+    const int brand = item.brand;
+
     // Ash randarts get no props
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_KNOW_PROPERTIES;
 
     if (item.brand != SPWPN_NORMAL)
-        item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = item.brand;
+        set_artefact_brand(item, brand);
 
     set_artefact_name(item, _ashenzari_artefact_name(item));
     item.props[ARTEFACT_APPEAR_KEY].get_string() =
