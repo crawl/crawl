@@ -637,7 +637,7 @@ w:100
 "@_ashenzari_object_@ of the @_ashenzari_epithet_@"
 
 w:20
-"@_celestial_bodies_@ of the @_ashenzari_epithet_@
+"@_celestial_bodies_@ of the @_ashenzari_epithet_@"
 
 w:20
 of the @_ashenzari_epithet_@
@@ -667,7 +667,37 @@ of the @_ashenzari_knowledge_adjective_@ @_ashenzari_heavens_@
 of the Fated @_ashenzari_object_@
 
 w:5
+of Apeoromancy
+
+w:5
+"At What Cost Knowledge?"
+
+w:5
+"Behold Eternity"
+
+w:5
+of Cremastomancy
+
+w:5
+of Curses and Power
+
+w:5
+of Desmomancy
+
+w:5
+of the Eye in the Sky
+
+w:5
 "Gaze Upon Infinity"
+
+w:5
+"I Knew You'd Do That"
+
+w:5
+of Ouranomancy
+
+w:5
+"Overhang to Understand"
 
 w:5
 "Per Aspera Ad Scientiam"
@@ -676,7 +706,28 @@ w:5
 of Panopticon
 
 w:5
-of Star-Bound Widom
+of Star-Bound Wisdom
+
+w:5
+of Supernal Gnosis
+
+w:5
+of Supernal Knowledge
+
+w:5
+of Supernal Understanding
+
+w:5
+of Supernal Wisdom
+
+w:5
+"Thunder Perfect Mind"
+
+w:5
+of Toth-Mos's Legacy
+
+w:5
+of the Unyielding Gaze
 
 w:5
 of the Wild Blue Yonder
