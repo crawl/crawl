@@ -1705,9 +1705,13 @@ void make_ashenzari_randart(item_def &item)
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_KNOW_PROPERTIES;
 
+    if (item.brand != SPWPN_NORMAL)
+        item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = item.brand;
+
     set_artefact_name(item, _ashenzari_artefact_name(item));
     item.props[ARTEFACT_APPEAR_KEY].get_string() =
         make_artefact_name(item, true);
+
 }
 
 static void _make_faerie_armour(item_def &item)
