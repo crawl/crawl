@@ -747,7 +747,9 @@ static void _explore_find_target_square()
         tp.pathfind(static_cast<run_mode_type>(you.running.runmode));
 
     // If we didn't find an explore target the first time, try fallback mode
-    if (!whereto.x && !whereto.y)
+    // Do the same if the original target was a "hostile" place.
+    if (!whereto.x && !whereto.y
+       || 0 > travel_point_distance[whereto.x][whereto.y])
     {
         travel_pathfind fallback_tp;
         fallback_tp.set_floodseed(you.pos(), true);
@@ -1535,7 +1537,6 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
 void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
-        && (!ignore_hostile || point_distance[c.x][c.y] > 0)
         && is_greed_inducing_square(c)
         && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
