@@ -43,6 +43,8 @@
 #include "transform.h"
 #include "xom.h"
 
+static void _handle_spectral_brand(const actor &attacker, const actor &defender);
+
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -140,6 +142,14 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
+    if (attacker->is_player() && defender)
+    {
+        _handle_spectral_brand(*attacker, *defender);
+        // Use the Nessos hack to give the player glaive of the guard spectral too
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
+            _handle_spectral_brand(*attacker, *defender);
+    }
+
     return true;
 }
 
@@ -552,7 +562,7 @@ void attack::antimagic_affects_defender(int pow)
 
 static void _handle_spectral_brand(const actor &attacker, const actor &defender)
 {
-    if (you.triggered_spectral)
+    if (you.triggered_spectral || !defender.alive())
         return;
     you.triggered_spectral = true;
     spectral_weapon_fineff::schedule(attacker, defender);
@@ -1608,15 +1618,6 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker, 3);
         break;
 
-    case SPWPN_SPECTRAL:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                _handle_spectral_brand(*attacker, *defender);
-        }
-        break;
-
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
@@ -1644,15 +1645,6 @@ bool attack::apply_damage_brand(const char *what)
     // was always a bit of a hack.
     if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
         apply_poison_damage_brand();
-
-    // Use the Nessos hack to give the player glaive of the guard spectral too
-    if (attacker->is_player() && weapon
-        && is_unrandom_artefact(*weapon, UNRAND_GUARD))
-    {
-        const monster* mon = defender->as_monster();
-        if (mon && !mons_is_firewood(*mon))
-            _handle_spectral_brand(*attacker, *defender);
-    }
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
