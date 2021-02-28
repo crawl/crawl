@@ -2252,7 +2252,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
     return c.boosted;
 }
 
-string ashenzari_curse_knowledge_list()
+static string ashenzari_curse_knowledge_list()
 {
     if (!you_worship(GOD_ASHENZARI))
         return "";
