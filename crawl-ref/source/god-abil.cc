@@ -2427,6 +2427,14 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    if (item_is_melded(item))
+    {
+        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+                           "melded with your body!",
+             item.name(DESC_THE).c_str());
+        return false;
+    }
+
     if (!yesno(make_stringf("Really remove and destroy %s?%s",
                             item.name(DESC_THE).c_str(),
                             you.props.exists(AVAILABLE_CURSE_KEY) ?
