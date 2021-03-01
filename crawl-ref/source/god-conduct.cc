@@ -449,12 +449,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_AGRAPHEDE,
     {
-        { DID_CURING_POISON, {
-            "you cure poison", true,
-            1, 1, " forgives your cure poison, just this once.",
-            " doesn't appreciate your cure poison!",
-            nullptr, -5
-        } },
     },
 };
 

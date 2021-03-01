@@ -150,9 +150,17 @@ public:
         else
             mpr("That felt strangely inert.");
         // need to redraw from yellow to green even if no hp was gained
-        if (you.duration[DUR_POISONING])
-            you.redraw_hit_points = true;
-        you.duration[DUR_POISONING] = 0;
+        if (you_worship(GOD_AGRAPHEDE) == false) {
+            if (you.duration[DUR_POISONING])
+                you.redraw_hit_points = true;
+            you.duration[DUR_POISONING] = 0;
+        }
+        else {
+            if (you.duration[DUR_POISONING])
+            {
+                simple_god_message(" prevents the cure of poison.");
+            }
+        }
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
         you.duration[DUR_CIGOTUVIS_PLAGUE] = 0;

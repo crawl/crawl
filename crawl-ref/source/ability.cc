@@ -751,17 +751,17 @@ static const ability_def Ability_List[] =
 
     // Agraphede
     { ABIL_AGRAPHEDE_WEB, "Create Web",
-      2, 0, 0, 1, {fail_basis::invo, 30, 4, 20}, abflag::poison },
+      0, 0, 0, 1, {fail_basis::invo, 30, 4, 20}, abflag::poison },
     { ABIL_AGRAPHEDE_CONVERT_POISON, "Convert Curing Potion",
       0, 0, 0, 0, {fail_basis::invo}, abflag::potion },
     { ABIL_AGRAPHEDE_ENCHANT_POISON, "Enchant Poison",
-      3, 0, 0, 1, {fail_basis::invo, 40, 4, 20}, abflag::poison },
+      0, 0, 0, 1, {fail_basis::invo, 40, 4, 20}, abflag::poison },
     { ABIL_AGRAPHEDE_TRAP, "Ball of web",
-      6, 0, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::poison },
+      0, 0, 0, 4, {fail_basis::invo, 60, 4, 25}, abflag::poison },
     { ABIL_AGRAPHEDE_HORNET_STING, "Hornet Sting",
-      4, 0, 0, 3, {fail_basis::invo, 50, 4, 20}, abflag::poison },
+      0, 0, 0, 3, {fail_basis::invo, 50, 4, 20}, abflag::poison },
     { ABIL_AGRAPHEDE_SUMMON_SPIDER, "Summon Spider",
-      8, 0, 0, 12, {fail_basis::invo, 70, 4, 25}, abflag::poison },
+      0, 0, 0, 12, {fail_basis::invo, 70, 4, 25}, abflag::poison },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::starve_ok },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",

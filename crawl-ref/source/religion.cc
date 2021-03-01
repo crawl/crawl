@@ -471,7 +471,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Agraphede
     {
-      { 0, "You lose poison resistance." },
+      { 0, "You lose poison resistance and can't cure the poison." },
       { 1, ABIL_AGRAPHEDE_WEB, 
            "install a spider web" },
       { 1, "converts a certain percentage of damage to poison" },
