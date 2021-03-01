@@ -95,6 +95,42 @@ string species_walking_verb(species_type sp)
     return verb ? verb : "Walk";
 }
 
+string species_skin_adj(species_type species)
+{
+    // Aside from direct adjectival uses, some flavor stuff checks the strings
+    // here. TODO: should these be species flags a la hair?
+    if (species_is_draconian(species) || species == SP_NAGA)
+        return "scaled";
+    else if (species == SP_TENGU)
+        return "feathered";
+    else if (species == SP_MUMMY)
+        return "bandage-wrapped";
+    else
+        return "";
+}
+
+string species_arm_name(species_type species)
+{
+    if (species == SP_OCTOPODE)
+        return "tentacle";
+    else
+        return "arm";
+}
+
+string species_hand_name(species_type species)
+{
+    // see also player::hand_name
+    if (species_mutation_level(species, MUT_PAWS))
+        return "paw";
+    else if (you.species == SP_OCTOPODE)
+        return "tentacle";
+    else if (species_mutation_level(species, MUT_CLAWS))
+        return "claw"; // overridden for felids by first check
+    else
+        return "hand";
+
+}
+
 /**
  * Where does a given species fall on the Undead Spectrum?
  *
@@ -133,6 +169,22 @@ bool species_can_throw_large_rocks(species_type species)
     return species_size(species) >= SIZE_LARGE;
 }
 
+bool species_wears_barding(species_type species)
+{
+    // TODO: dataify?
+    switch (species)
+    {
+        case SP_NAGA:
+        case SP_PALENTONGA:
+#if TAG_MAJOR_VERSION == 34
+        case SP_CENTAUR:
+#endif
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool species_is_elven(species_type species)
 {
     return bool(get_species_def(species).flags & SPF_ELVEN);
@@ -151,6 +203,11 @@ bool species_is_orcish(species_type species)
 bool species_has_hair(species_type species)
 {
     return !bool(get_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));
+}
+
+bool species_has_bones(species_type species)
+{
+    return !(species == SP_OCTOPODE || species == SP_FORMICID);
 }
 
 size_type species_size(species_type species, size_part_type psize)
@@ -291,6 +348,17 @@ bool species_has_claws(species_type species)
                   get_species_def(species).level_up_mutations.end(),
                   [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
                                                      && lum.xp_level == 1; });
+}
+
+/// Does the species have (real) mutation `mut`? Not for demonspawn.
+/// @return the first level at which the species gains the mutation, or 0 if it
+///         does not ever gain it.
+int species_mutation_level(species_type species, mutation_type mut)
+{
+    for (const auto& lum : get_species_def(species).level_up_mutations)
+        if (mut == lum.mut)
+            return lum.xp_level;
+    return 0;
 }
 
 void give_basic_mutations(species_type species)

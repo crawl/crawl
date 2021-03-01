@@ -1240,7 +1240,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return "your stasis prevents you from teleporting.";
 
         if (temp && you.no_tele(false, false, true))
@@ -1248,7 +1248,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SWIFTNESS:
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return "your stasis precludes magical swiftness.";
 
         if (temp)

@@ -2252,21 +2252,20 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (you_drinkless())
+    if (!you.can_drink(false))
     {
         mpr("You can't drink.");
+        return;
+    }
+    else if (!you.can_drink(true))
+    {
+        mpr("You cannot drink potions in your current state!");
         return;
     }
 
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.duration[DUR_NO_POTIONS])
-    {
-        mpr("You cannot drink potions in your current state!");
         return;
     }
 
@@ -2729,10 +2728,13 @@ void random_uselessness()
         break;
 
     case 3:
-        if (you.species == SP_MUMMY)
+        if (starts_with(species_skin_adj(you.species), "bandage"))
             mpr("Your bandages flutter.");
-        else // if (you.can_smell())
-            mprf("You smell %s.", _weird_smell().c_str());
+        else
+        {
+            mprf("You %s %s.", you.can_smell() ? "smell" : "sense",
+                _weird_smell().c_str());
+        }
         break;
 
     case 4:
@@ -2742,7 +2744,7 @@ void random_uselessness()
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
+        else if (!you.can_smell() || coinflip())
             mpr("Your ears itch!");
         else
             mpr("Your nose twitches suddenly!");

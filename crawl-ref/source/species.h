@@ -17,7 +17,9 @@ bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
 bool species_is_orcish(species_type species);
 bool species_has_hair(species_type species);
+bool species_has_bones(species_type species);
 bool species_can_throw_large_rocks(species_type species);
+bool species_wears_barding(species_type species);
 
 bool species_has_claws(species_type species);
 undead_state_type species_undead_type(species_type species) PURE;
@@ -46,6 +48,9 @@ enum species_name_type
 string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
+string species_skin_adj(species_type sp);
+string species_arm_name(species_type species);
+string species_hand_name(species_type species);
 const vector<string>& fake_mutations(species_type species, bool terse);
 
 monster_type dragon_form_dragon_type();
@@ -55,6 +60,7 @@ ability_type draconian_breath(species_type species);
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
 
+int species_mutation_level(species_type species, mutation_type mut);
 void give_basic_mutations(species_type species);
 void give_level_mutations(species_type species, int xp_level);
 

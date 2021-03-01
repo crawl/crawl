@@ -413,6 +413,11 @@ int determine_nice_weapon_plusses(int item_level)
     return plus;
 }
 
+void set_artefact_brand(item_def &item, int brand)
+{
+    item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = brand;
+}
+
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int agent = NO_AGENT)
@@ -436,7 +441,8 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
-                    item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
+                    set_artefact_brand(item, ego);
+
                 if (randart_is_bad(item)) // recheck, the brand changed
                 {
                     force_type = item.sub_type;
@@ -1147,7 +1153,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
                 // best way to force an ego??
                 if (ego > SPARM_NORMAL)
                 {
-                    item.props[ARTEFACT_PROPS_KEY].get_vector()[ARTP_BRAND].get_short() = ego;
+                    set_artefact_brand(item, ego);
+
                     if (randart_is_bad(item)) // recheck, the brand changed
                     {
                         force_type = item.sub_type;

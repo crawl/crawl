@@ -2522,7 +2522,7 @@ bool is_emergency_item(const item_def &item)
         {
         case SCR_TELEPORTATION:
         case SCR_BLINKING:
-            return you.species != SP_FORMICID;
+            return !you.stasis();
         case SCR_FEAR:
         case SCR_FOG:
             return true;
@@ -2530,14 +2530,14 @@ bool is_emergency_item(const item_def &item)
             return false;
         }
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (!you.can_drink())
             return false;
 
         switch (item.sub_type)
         {
         case POT_HASTE:
             return !have_passive(passive_t::no_haste)
-                && you.species != SP_FORMICID;
+                && !you.stasis();
         case POT_HEAL_WOUNDS:
             return you.can_potion_heal();
         case POT_CURING:
@@ -2573,7 +2573,7 @@ bool is_good_item(const item_def &item)
     case OBJ_SCROLLS:
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
         switch (item.sub_type)
         {
@@ -2619,7 +2619,7 @@ bool is_bad_item(const item_def &item)
         }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
-        if (you.species == SP_MUMMY)
+        if (!you.can_drink(false))
             return false;
 
         switch (item.sub_type)
@@ -2851,11 +2851,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_RANDOM_USELESSNESS:
             return true;
         case SCR_TELEPORTATION:
-            return you.species == SP_FORMICID
+            return you.stasis()
                    || crawl_state.game_is_sprint()
                    || temp && player_in_branch(BRANCH_GAUNTLET);
         case SCR_BLINKING:
-            return you.species == SP_FORMICID;
+            return you.stasis();
         case SCR_AMNESIA:
             return you_worship(GOD_TROG);
 #if TAG_MAJOR_VERSION == 34

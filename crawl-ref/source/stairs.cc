@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "ability.h"
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
@@ -447,7 +448,7 @@ static void _rune_effect(dungeon_feature_type ftype)
 static void _gauntlet_effect()
 {
     // already doomed
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
         return;
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
@@ -873,8 +874,11 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // Warn Formicids if they cannot shaft here
-    if (you.species == SP_FORMICID && !is_valid_shaft_level())
+    if (player_has_ability(ABIL_SHAFT_SELF, true)
+                                && !is_valid_shaft_level())
+    {
         mpr("Beware, you cannot shaft yourself on this level.");
+    }
 
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 

@@ -966,7 +966,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead(false)
-            || you.species == SP_FORMICID)
+            || you.stasis())
         {
             return ABIL_NON_ABILITY;
         }
@@ -974,7 +974,7 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -2173,7 +2173,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             you.attribute[ATTR_PERM_FLIGHT] = 1;
             float_player();
         }
-        if (you.species == SP_TENGU)
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
             mpr("You feel very comfortable in the air.");
         break;
 
@@ -3442,7 +3442,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
             return false;
         // fallthrough
     case ABIL_DIG:
-        return you.species == SP_FORMICID
+        return you.can_burrow()
                             && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
@@ -3740,6 +3740,8 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
+    case ABIL_ASHENZARI_CURSE:
+    case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
     default:

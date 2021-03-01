@@ -47,9 +47,7 @@ levelup_stats:
 mutations:
   1:
     MUT_HORNS: 2
-fake_mutations:
-  - long: You reflexively headbutt those who attack you in melee.
-    short: retaliatory headbutt
+    MUT_REFLEXIVE_HEADBUTT: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR

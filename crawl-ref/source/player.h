@@ -603,6 +603,7 @@ public:
     bool        extra_balanced() const override;
     bool        shove(const char* feat_name = "") override;
     bool        can_pass_through_feat(dungeon_feature_type grid) const override;
+    bool        can_burrow() const override;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const
         override;
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
@@ -623,8 +624,7 @@ public:
     bool      has_usable_hooves(bool allow_tran = true) const;
     int       has_fangs(bool allow_tran = true) const;
     int       has_usable_fangs(bool allow_tran = true) const;
-    int       has_tail(bool allow_tran = true) const;
-    int       has_usable_tail(bool allow_tran = true) const;
+    bool      has_tail(bool allow_tran = true) const;
     bool      has_usable_offhand() const;
     int       has_pseudopods(bool allow_tran = true) const;
     int       has_usable_pseudopods(bool allow_tran = true) const;
@@ -679,6 +679,7 @@ public:
                 bool force_article = false) const override;
     string pronoun(pronoun_type pro, bool force_visible = false) const override;
     string conj_verb(const string &verb) const override;
+    string base_hand_name(bool plural, bool temp, bool *can_plural=nullptr) const;
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string hands_verb(const string &plural_verb) const;
     string hands_act(const string &plural_verb, const string &object) const;
@@ -701,6 +702,7 @@ public:
     bool is_lifeless_undead(bool temp = true) const;
     bool can_polymorph() const override;
     bool can_bleed(bool allow_tran = true) const override;
+    bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
     bool malmutate(const string &reason) override;
     bool polymorph(int pow, bool allow_immobile = true) override;

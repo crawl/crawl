@@ -494,7 +494,7 @@ public:
      */
     string get_long_name() const override
     {
-        return "blade " + blade_parts(true);
+        return you.base_hand_name(true, true);
     }
 
     /**
@@ -590,13 +590,13 @@ public:
      */
     string get_uc_attack_name(string /*default_name*/) const override
     {
-        if (you.has_usable_claws(true))
-            return "Stone claws";
-        if (you.has_usable_tentacles(true))
-            return "Stone tentacles";
-
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
-        return make_stringf("Stone fist%s", singular ? "" : "s");
+        string hand = you.base_hand_name(true, false).c_str();
+        // sorry for the hacks
+        if (hand == "hand")
+            hand = "fist";
+        else if (hand == "hands")
+            hand = "fists";
+        return make_stringf("Stone %s", hand.c_str());
     }
 };
 
@@ -622,7 +622,9 @@ public:
     string get_uc_attack_name(string /*default_name*/) const override
     {
         const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
-        return make_stringf("Ice fist%s", singular ? "" : "s");
+        // paws for consistency with form-data and the tile
+        // XX does this imply the behavior of feline paws?
+        return make_stringf("Ice paw%s", singular ? "" : "s");
     }
 };
 
@@ -1322,17 +1324,12 @@ monster_type transform_mons()
 
 string blade_parts(bool terse)
 {
-    string str;
+    string str = you.base_hand_name(true, false);
 
-    if (you.species == SP_FELID)
-        str = terse ? "paw" : "front paw";
-    else if (you.species == SP_OCTOPODE)
-        str = "tentacle";
-    else
-        str = "hand";
-
-    if (!you.get_mutation_level(MUT_MISSING_HAND))
-        str = pluralise(str);
+    // creatures with paws (aka felids) have four paws, but only two of them
+    // turn into blades.
+    if (!terse && you.has_mutation(MUT_PAWS, false))
+      str = "front " + str;
 
     return str;
 }

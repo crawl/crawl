@@ -1533,7 +1533,7 @@ static int _num_mons_wanted()
 
     if (player_in_branch(BRANCH_SWAMP) || in_pan)
         size = 8;
-    else if (player_in_branch(BRANCH_CRYPT))
+    else if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
         size = 10;
     else if (player_in_hell())
         size = 23;

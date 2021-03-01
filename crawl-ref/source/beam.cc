@@ -3550,7 +3550,8 @@ static const vector<pie_effect> pie_effects = {
     {
         "lemon",
         [](const actor &defender) {
-            return defender.is_player() && !you_drinkless();
+            return defender.is_player() && (you.can_drink()
+                                            || you.duration[DUR_NO_POTIONS]); // allow stacking
         },
         [](actor &/*defender*/, const bolt &/*beam*/) {
             if (you.duration[DUR_NO_POTIONS])
