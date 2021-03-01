@@ -64,6 +64,7 @@
 #include "species.h"
 #include "spl-cast.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -2182,8 +2183,16 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (item.sub_type == POT_LIGNIFY && verbose && item_type_known(item))
-            description << "\n\n" + _describe_lignify_ac();
+        if (verbose && item_type_known(item))
+        {
+            if (item.sub_type == POT_LIGNIFY)
+                description << "\n\n" + _describe_lignify_ac();
+            else if (item.sub_type == POT_CANCELLATION && player_is_cancellable())
+            {
+                description << "\n\nIf you drink this now, you will no longer be " <<
+                    describe_player_cancellation() << ".";
+            }
+        }
         break;
 
     case OBJ_WANDS:
