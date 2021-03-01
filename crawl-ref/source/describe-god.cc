@@ -23,6 +23,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-type.h"
+#include "items.h"
 #include "item-name.h"
 #include "libutil.h"
 #include "menu.h"
@@ -293,12 +294,14 @@ static string _describe_ash_skill_boost()
         if (you.equip[i] != -1)
         {
             const item_def& item = you.inv[you.equip[i]];
+            const bool meld = item_is_melded(item);
             if (item.cursed())
             {
-                desc << "<lightred>";
+                desc << (meld ? "<darkgrey>" : "<lightred>");
                 desc << setw(40) << item.name(DESC_QUALNAME, true, false, false);
-                desc << setw(30) << _describe_item_curse(item);
-                desc << "</lightred>\n";
+                desc << setw(30) << (meld ? "melded" : _describe_item_curse(item));
+                desc << (meld ? "</darkgrey>" : "</lightred>");
+                desc << "\n";
             }
         }
     }

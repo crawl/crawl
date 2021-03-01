@@ -644,7 +644,8 @@ void ash_check_bondage()
                         if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
                             num_cursed += 3;
                     }
-                    _curse_boost_skills(item);
+                    if (!item_is_melded(item))
+                        _curse_boost_skills(item);
                 }
             }
         }
