@@ -2181,7 +2181,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_DAMNATION:
         fail_check();
         if (your_spells(SPELL_HURL_DAMNATION,
-                        you.experience_level * 10,
+                        40 + you.experience_level * 6,
                         false, nullptr, target) == spret::abort)
         {
             return spret::abort;
