@@ -1075,7 +1075,7 @@ int player_teleport(bool calc_unid)
         return 0;
 
     // Short-circuit rings of teleport to prevent spam.
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
         return 0;
 
     int tp = 0;
@@ -1256,10 +1256,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf++;
         }
     }
-
-    // species:
-    if (you.species == SP_MUMMY)
-        rf--;
 
     // mutations:
     rf += you.get_mutation_level(MUT_HEAT_RESISTANCE, temp);
@@ -1932,8 +1928,10 @@ static int _player_evasion_size_factor(bool base = false)
 // other medium-sized races)
 int player_shield_racial_factor()
 {
-    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls, etc.
-                                                  : _player_evasion_size_factor(true)));
+    const int ev_factor = you.has_mutation(MUT_QUADRUMANOUS)
+                                        ? -2 // Same as trolls, etc.
+                                        : _player_evasion_size_factor(true);
+    return max(1, 5 + ev_factor);
 }
 
 
@@ -3295,7 +3293,13 @@ bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
     return you.get_mutation_level(MUT_GOURMAND) > 0;
 }
 
+/// Does the player have permastasis?
 bool player::stasis() const
+{
+    return species == SP_FORMICID;
+}
+
+bool player::can_burrow() const
 {
     return species == SP_FORMICID;
 }
@@ -4689,7 +4693,7 @@ void float_player()
     else
         mpr("You fly up into the air.");
 
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 }
 
@@ -4740,7 +4744,7 @@ bool land_player(bool quiet)
 
     if (!quiet)
         mpr("You float gracefully downwards.");
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -6409,7 +6413,7 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return species == SP_TENGU && airborne();
+    return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 
 /**
@@ -6769,7 +6773,7 @@ int player::has_usable_fangs(bool allow_tran) const
     return has_fangs(allow_tran);
 }
 
-int player::has_tail(bool allow_tran) const
+bool player::has_tail(bool allow_tran) const
 {
     if (allow_tran)
     {
@@ -6784,7 +6788,8 @@ int player::has_tail(bool allow_tran) const
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
-        || fishtail
+        || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
+        || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
         || get_mutation_level(MUT_STINGER, allow_tran))
     {
@@ -6792,11 +6797,6 @@ int player::has_tail(bool allow_tran) const
     }
 
     return 0;
-}
-
-int player::has_usable_tail(bool allow_tran) const
-{
-    return has_tail(allow_tran);
 }
 
 // Whether the player has a usable offhand for the
@@ -7028,18 +7028,23 @@ bool player::can_polymorph() const
     return !(transform_uncancellable || is_lifeless_undead());
 }
 
-bool player::can_bleed(bool allow_tran) const
+bool player::can_bleed(bool temp) const
 {
-    // XXX: Lich and statue forms are still caught by the holiness checks below.
-    if (allow_tran && !form_can_bleed(form))
+    if (temp && !form_can_bleed(form))
         return false;
 
-    if (is_lifeless_undead() || is_nonliving())
-    {   // demonspawn and demigods have a mere drop of taint
+    return !is_lifeless_undead(temp) && !is_nonliving(temp);
+}
+
+bool player::can_drink(bool temp) const
+{
+    if (temp && (you.form == transformation::lich
+                    || you.duration[DUR_NO_POTIONS]))
+    {
         return false;
     }
+    return !you.has_mutation(MUT_NO_DRINK);
 
-    return true;
 }
 
 bool player::is_stationary() const
@@ -7143,7 +7148,7 @@ bool player::can_throw_large_rocks() const
 
 bool player::can_smell() const
 {
-    return species != SP_MUMMY;
+    return !you.is_lifeless_undead(true);
 }
 
 bool player::can_sleep(bool holi_only) const
@@ -7611,17 +7616,9 @@ bool player::form_uses_xl() const
         || form == transformation::bat && you.species != SP_VAMPIRE;
 }
 
-bool player::wear_barding() const {
-    switch (you.species) {
-        case SP_NAGA:
-        case SP_PALENTONGA:
-#if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR:
-#endif
-            return true;
-        default:
-            return false;
-    }
+bool player::wear_barding() const
+{
+    return species_wears_barding(you.species);
 }
 
 static int _get_potion_heal_factor()

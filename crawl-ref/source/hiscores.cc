@@ -2228,20 +2228,26 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (race == SP_MUMMY)
+            if (starts_with(species_skin_adj(
+                        static_cast<species_type>(race)), "bandage"))
+            {
                 desc += "Turned to ash by lava";
+            }
             else
                 desc += "Took a swim in molten lava";
         }
         break;
 
     case KILLED_BY_WATER:
-        if (you.undead_state())
+        if (species_is_undead(static_cast<species_type>(race)))
         {
             if (terse)
                 desc = "fell apart";
-            else if (race == SP_MUMMY)
+            else if (starts_with(species_skin_adj(
+                        static_cast<species_type>(race)), "bandage"))
+            {
                 desc = "Soaked and fell apart";
+            }
             else
                 desc = "Sank and fell apart";
         }

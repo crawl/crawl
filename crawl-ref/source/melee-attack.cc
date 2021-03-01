@@ -343,9 +343,9 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player() ?
-                you.species == SP_MINOTAUR :
-                mons_species(mons_base_type(*defender->as_monster()))
+        if (defender->is_player()
+                ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
+                : mons_species(mons_base_type(*defender->as_monster()))
                     == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();
@@ -3414,7 +3414,10 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
-        return you.has_usable_tail() && coinflip();
+        return you.has_tail()
+            // constricting tails are too slow to slap
+            && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+            && coinflip();
 
     case UNAT_PSEUDOPODS:
         return you.has_usable_pseudopods() && !one_chance_in(3);

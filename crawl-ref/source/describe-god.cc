@@ -27,7 +27,6 @@
 #include "libutil.h"
 #include "menu.h"
 #include "message.h"
-#include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -965,7 +964,7 @@ static formatted_string _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         desc.cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
-        if (!you_drinkless(false))
+        if (you.can_drink(false))
         {
             if (have_passive(passive_t::bottle_mp))
                 desc.textcolour(god_colour(which_god));

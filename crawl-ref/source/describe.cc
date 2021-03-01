@@ -1168,22 +1168,29 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
 static string _handedness_string(const item_def &item)
 {
-    string description;
+    const bool quad = you.has_mutation(MUT_QUADRUMANOUS);
+    string handname = species_hand_name(you.species);
+    if (quad)
+        handname += "-pair";
 
+    string n;
     switch (you.hands_reqd(item))
     {
     case HANDS_ONE:
-        if (you.species == SP_FORMICID)
-            description += "It is a weapon for one hand-pair.";
-        else
-            description += "It is a one handed weapon.";
+        n = "one";
         break;
     case HANDS_TWO:
-        description += "It is a two handed weapon.";
+        if (quad)
+            handname = pluralise(handname);
+        n = "two";
         break;
     }
 
-    return description;
+    if (quad)
+        return make_stringf("It is a weapon for %s %s.", n.c_str(), handname.c_str());
+    else
+        return make_stringf("It is a %s-%sed weapon.", n.c_str(), handname.c_str());
+
 }
 
 static string _describe_weapon(const item_def &item, bool verbose)
@@ -1960,6 +1967,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
 
 static string _describe_item_curse(const item_def &item)
 {
+    if (!item.props.exists(CURSE_KNOWLEDGE_KEY))
+        return "\nIt has a curse placed upon it.";
+
     const CrawlVector& curses = item.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
     if (curses.empty())
@@ -2609,7 +2619,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (!you_drinkless()) // mummies and lich form forbidden
+        if (you.can_drink()) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:

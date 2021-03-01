@@ -918,7 +918,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         // Check _is_damage_threatening separately for read and drink so they
         // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_NO_READ))
+        if (you.get_mutation_level(MUT_READ_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -929,7 +929,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
         }
 
-        if (you.get_mutation_level(MUT_NO_DRINK))
+        if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {

@@ -1266,16 +1266,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_REMOVE_ARMOUR);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_CENTAUR ||
-#endif
-            you.species == SP_MINOTAUR)
+        if (you.get_innate_mutation_level(MUT_HORNS) > 0)
         {
-            text << "\nNote that as a " << species_name(you.species)
-                 << " you will be unable to wear "
-                 << (you.species == SP_CENTAUR ? "boots" : "helmets")
-                 << ".";
+            text << "\nNote that because of your horns you will be unable"
+                    " to wear helmets. "
+                    "(Type <w>%</w> to see a list of your mutations and "
+                    "innate abilities.)";
+            cmd.push_back(CMD_DISPLAY_MUTATIONS);
         }
         break;
 
@@ -3070,9 +3067,9 @@ string hints_describe_item(const item_def &item)
             }
             else
 #endif
-            if (you.species == SP_MINOTAUR && is_hard_helmet(item))
+            if (you.get_innate_mutation_level(MUT_HORNS) > 0 && is_hard_helmet(item))
             {
-                ostr << "As a Minotaur you cannot wear helmets. "
+                ostr << "Because of your horns you cannot wear helmets. "
                         "(Type <w>%</w> to see a list of your mutations and "
                         "innate abilities.)";
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);

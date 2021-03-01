@@ -96,6 +96,7 @@ public:
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
+    virtual bool can_burrow() const = 0;
 
     virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
             bool is_habitable(const coord_def &pos) const;
@@ -194,7 +195,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool can_bleed(bool allow_tran = true) const = 0;
+    virtual bool can_bleed(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;

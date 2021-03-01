@@ -138,7 +138,7 @@ spret cast_tornado(int /*powc*/, bool fail)
 
     you.props["tornado_since"].get_int() = you.elapsed_time;
     _set_tornado_durations();
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
     return spret::success;
@@ -490,7 +490,7 @@ void cancel_tornado(bool tloc)
             // is safe
             you.duration[DUR_FLIGHT] = 0;
             you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
-            if (you.species == SP_TENGU)
+            if (you.has_mutation(MUT_TENGU_FLIGHT))
                 you.redraw_evasion = true;
         }
     }

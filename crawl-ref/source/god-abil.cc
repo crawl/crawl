@@ -2180,12 +2180,12 @@ struct curse_data
 static map<curse_type, curse_data> _ashenzari_curses =
 {
     { CURSE_MELEE, {
-        "Melee", "Melee",
+        "Melee Combat", "Melee",
         { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
-        "Ranged", "Range",
+        "Ranged Combat", "Range",
         { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
     } },
     { CURSE_ELEMENTS, {
@@ -2205,7 +2205,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
         { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
     } },
     { CURSE_SELF, {
-        "Self", "Self",
+        "Introspection", "Self",
         { SK_FIGHTING, SK_SPELLCASTING },
     } },
     { CURSE_FORTITUDE, {
@@ -2252,7 +2252,7 @@ const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
     return c.boosted;
 }
 
-string ashenzari_curse_knowledge_list()
+static string ashenzari_curse_knowledge_list()
 {
     if (!you_worship(GOD_ASHENZARI))
         return "";
@@ -2424,6 +2424,14 @@ bool ashenzari_uncurse_item()
     {
         mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
                            "the amulet's finger first!");
+        return false;
+    }
+
+    if (item_is_melded(item))
+    {
+        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+                           "melded with your body!",
+             item.name(DESC_THE).c_str());
         return false;
     }
 
@@ -3038,8 +3046,9 @@ bool gozag_call_merchant()
         if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
             continue;
 #endif
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
             continue;
+
         if (you.species == SP_FELID &&
             (type == SHOP_ARMOUR
              || type == SHOP_ARMOUR_ANTIQUE
@@ -3733,7 +3742,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         }
 
         // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
+        if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
             continue;
 
         // The Grunt Algorithm
@@ -3911,7 +3920,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             piety_gain += _piety_for_skill(SK_BOWS);
     }
     return piety_gain;
@@ -4580,7 +4589,7 @@ bool ru_do_sacrifice(ability_type sac)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             _ru_kill_skill(SK_BOWS);
     }
 

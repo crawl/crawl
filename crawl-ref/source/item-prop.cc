@@ -865,7 +865,7 @@ bool item_is_cursable(const item_def &item)
 void auto_id_inventory()
 {
     for (auto &item : you.inv)
-        if (item.defined())
+        if (item.defined() && !fully_identified(item))
             god_id_item(item, false);
 }
 

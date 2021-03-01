@@ -1714,6 +1714,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Blood Saint";
             else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Forbidden One";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Black Lotus";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1941,7 +1945,7 @@ bool is_useless_skill(skill_type skill)
         || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR))
         || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
         || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
-            && you.species != SP_FORMICID)
+            && !you.has_innate_mutation(MUT_QUADRUMANOUS))
         || (skill == SK_EVOCATIONS && you.get_mutation_level(MUT_NO_ARTIFICE))
         || (skill == SK_STEALTH && you.get_mutation_level(MUT_NO_STEALTH))
     )

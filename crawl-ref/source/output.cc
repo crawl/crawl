@@ -2573,11 +2573,6 @@ string mutation_overview()
             mutations.push_back(
                 _annotate_form_based(str, form_changed_physiology()));
         }
-        else if (you.species == SP_MINOTAUR)
-        {
-            mutations.push_back(
-                _annotate_form_based(str, !form_keeps_mutations()));
-        }
         else
             mutations.push_back(str);
     }

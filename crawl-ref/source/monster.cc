@@ -2615,6 +2615,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
+    // TODO: shared code with species_skin_adj for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -2634,6 +2635,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
         str = "tentacle";
         break;
 
+    // TODO: this looks extremely non-general
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
@@ -5229,7 +5231,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::can_bleed(bool /*allow_tran*/) const
+bool monster::can_bleed(bool /*temp*/) const
 {
     return mons_has_blood(type);
 }
@@ -5237,6 +5239,11 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+bool monster::can_burrow() const
+{
+    return mons_class_flag(type, M_BURROWS);
 }
 
 /**
@@ -5713,11 +5720,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    // Randomize interval between servitor spellcasts
-    // TODO: is there a more transparent way to implement this than energy?
-    if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
-        energy_loss += random2(16);
 
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.

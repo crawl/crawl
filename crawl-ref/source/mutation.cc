@@ -636,8 +636,6 @@ string describe_mutations(bool drop_title)
             result += _dragon_abil(str);
         else if (you.species == SP_MERFOLK)
             result += _annotate_form_based(str, form_changed_physiology());
-        else if (you.species == SP_MINOTAUR)
-            result += _annotate_form_based(str, !form_keeps_mutations());
         else
             result += str + "\n";
     }
@@ -1231,9 +1229,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (_is_covering(mutat) && _body_covered() >= 3)
         return true;
 
-    // Only species that already have tails can get this one.
-    if (you.species != SP_NAGA && !species_is_draconian(you.species)
-        && you.species != SP_PALENTONGA && mutat == MUT_STINGER)
+    // Only species that already have tails can get this one. For merfolk it
+    // would only work in the water, so skip it.
+    if ((!you.has_tail(false) || you.species == SP_MERFOLK)
+        && mutat == MUT_STINGER)
     {
         return true;
     }
@@ -1261,7 +1260,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Palentonga can go on a roll.
-    if (you.species != SP_PALENTONGA && mutat == MUT_ROLL)
+    if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.
@@ -1294,18 +1293,20 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
     {
         // Formicids have stasis and so prevent mutations that would do nothing.
         // Antennae provides SInv, so acute vision is pointless.
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
-            || mutat == MUT_TELEPORT
-            || mutat == MUT_ACUTE_VISION)
+            || mutat == MUT_TELEPORT)
         {
             return true;
         }
     }
+
+    if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
+        return true;
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
