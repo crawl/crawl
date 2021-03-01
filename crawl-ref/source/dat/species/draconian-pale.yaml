@@ -33,6 +33,8 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+  7:
+    MUT_STEAM_RESISTANCE: 1
 fake_mutations:
   - long: You can breathe blasts of scalding, opaque steam.
     short: breathe steam

@@ -60,7 +60,7 @@ ability_type draconian_breath(species_type species);
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
 
-int species_mutation_level(species_type species, mutation_type mut);
+int species_mutation_level(species_type species, mutation_type mut, int mut_level=1);
 void give_basic_mutations(species_type species);
 void give_level_mutations(species_type species, int xp_level);
 

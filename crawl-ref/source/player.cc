@@ -1290,8 +1290,7 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     int res = 0;
     const int rf = player_res_fire(calc_unid, temp, items);
 
-    if (you.species == SP_PALE_DRACONIAN)
-        res += 2;
+    res += you.get_mutation_level(MUT_STEAM_RESISTANCE) * 2;
 
     if (items)
     {
@@ -5219,6 +5218,7 @@ bool player::can_swim(bool permanently) const
     // stat-boosting boots or heavy armour.
     return (species_can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
+            || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
                 && form_can_swim();
 }

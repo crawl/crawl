@@ -542,12 +542,6 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (pbolt.origin_spell == SPELL_NO_SPELL)
         pbolt.origin_spell = zap_to_spell(z_type);
 
-    if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN
-        && !is_monster)
-    {
-        pbolt.origin_spell = SPELL_SEARING_BREATH;
-    }
-
     if (pbolt.loudness == 0)
         pbolt.loudness = zinfo->hit_loudness;
 }

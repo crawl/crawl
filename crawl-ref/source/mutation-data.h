@@ -605,10 +605,11 @@ static const mutation_def mut_data[] =
    "You feel frail."},
 },
 
-{ MUT_UNBREATHING, 0, 1, mutflag::good, true,
+{ MUT_UNBREATHING, 0, 2, mutflag::good, true,
   "unbreathing",
 
-  {"You can survive without breathing.", "", ""},
+  {"You can survive without breathing.",
+   "You can survive without breathing, even under water.", ""},
   {"You feel breathless.", "", ""},
   {"", "", ""},
 },
@@ -2039,6 +2040,14 @@ static const mutation_def mut_data[] =
   {"You reflexively headbutt those who attack you in melee.", "", ""},
   {"Your retaliatory reflexes feel sharp.", "", ""},
   {"Your retaliatory reflexes feel dull.", "", ""},
+},
+
+{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, false,
+  "steam resistance",
+
+  {"You are immune to the effects of steam.", "", ""},
+  {"You are now immune to the effects of steam.", "", ""},
+  {"You are no longer immune to the effects of steam.", "", ""},
 },
 
 };
