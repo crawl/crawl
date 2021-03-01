@@ -19,7 +19,7 @@ function castle_lemuel_subvault_setup(e)
          e.colour("? = brown")
          e.ftile("? = floor_mud")
          e.kfeat("? = floor")
-         e.kfeat("~ = alarm trap w:1 / floor")
+         e.kfeat("~ = known alarm trap w:1 / floor")
          e.subst("X = c +:1")
          e.subst("8 = 89")
          e.tile("c = wall_stone_smooth")
@@ -49,24 +49,24 @@ function castle_lemuel_subvault_setup(e)
          elseif you.absdepth () < 24 then
             e.subst("* : *$")
             e.subst("| = |*")
-            e.mons("deep elf pyromancer / deep elf zephyrmancer")
+            e.mons("deep elf mage")
             e.mons("deep elf knight w:5 / deep elf archer w:5 / "
-                   .. "deep elf pyromancer w:15 / deep elf zephyrmancer w:15")
+                   .. "deep elf mage w:30")
             e.mons("deep elf annihilator / deep elf sorcerer / "
                    .. "deep elf high priest / deep elf death mage / "
                    .. "deep elf demonologist")
             e.mons("nothing")
-            e.mons("deep elf pyromancer / deep elf zephyrmancer")
+            e.mons("deep elf mage")
             e.mons("nothing")
          elseif you.absdepth () < 27 then
             e.subst("* = *$")
-            e.mons("two-headed ogre / cyclops / deep troll / ogre mage w:5")
+            e.mons(" cyclops / deep troll w:2 / ogre mage w:5")
             e.mons("ettin / fire giant / frost giant / stone giant / \
                     deep troll shaman w:5")
             e.mons("titan")
             e.mons("nothing")
             e.mons("cyclops")
-            e.mons("yak / death yak w:5")
+            e.mons("death yak")
             e.mons("plant / w:1 bush")
          else
             e.subst("* = *$")
@@ -115,7 +115,7 @@ MAP
 .+....+..1...1....1...1..+....+.
 .cccccccccccccc++cccccccccccXcc.
 1c1.1..ccccccc....ccccccc..m..c1
-.c.2...+.....+....+.....+..+.8c.
+.c.2...+.....+....+.....+..m.8c.
 +c1.1..ccccccc....ccccccc..m..c+
   cccccccccccc++++cccccccccccc
 ENDMAP
@@ -145,7 +145,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $ = $:5 .
-ITEM:   nothing w:20 / potion of ambrosia ident:type
+ITEM:   ration w:20 / potion of ambrosia ident:type
 MAP
 +c....+.......1.............$*c+
 ...1..cccccccccccccccccccccccXc.
@@ -182,7 +182,7 @@ ENDMAP
 
 ############################################################################
 NAME:     lemuel_castle_with_subvaults
-TAGS:     layout_city transparent
+TAGS:     layout_city
 DEPTH:    D:3-, Depths
 PLACE:    Depths:$
 ORIENT:   northwest

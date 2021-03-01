@@ -25,43 +25,41 @@ NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:xxxx+
 NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:xxxx+
 NSUBST: H = 1:+ / *:xxxx+, I = 1:+ / *:xxxx+, J = 1:+ / *:xxxx+
 SUBST:  d : *., e : *., f : *., g : *., h : *., i : *.
-KMASK:   - = !opaque
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcceeeeeccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc9.....9ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxcc.........ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxcccccccxxxxxxxxxcc.0.......0.ccxxccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxcc.....ccxxxxxxxcc.............cccc||||ccxxxxxxxxxxxxxxxxxxxxccccccxxx
-xxxxxxxxxcc.......ccxcccccc0.............0cc.8..9.ccxxxxxxxxcccccccxxxccffffccxx
-xxcccccxcc.........ccc|||cc......0.0......c........cxxxxxxxcciiiiiccxcc......ccx
-xccdddccc...........c.....c.......G.......H...8....ccccccxcc.......ccc..0..0..cx
-xc.....cc....0.0....J..8..J......0.0......c....9...cc...ccc.........cc....9...cx
-x..0.0..c.....9.....c.....c0.............0c........H.0.0.c...9...9...I...9....cx
+                               xxxxxxx
+                               ccccccc
+                              cceeeeecc
+                             cc9.....9cc
+                            cc.........cc
+           ccccccc         cc.0.......0.cc  cccccc
+          cc.....cc       cc.............cccc||||cc                    cccccc
+         cc.......cc cccccc0.............0cc.8..9.cc        ccccccc   ccffffcc
+  ccccc cc.........ccc|||cc......0.0......c........c       cciiiiicc cc......cc
+ ccdddccc...........c.....c.......G.......H...8....cccccc cc.......ccc..0..0..c
+xc.....cc....0.0....J..8..J......0.0......c....9...cc...ccc.........cc....9...c
+x..0.0..c.....9.....c.....c0.............0c........H.0.0.c...9...9...I...9....c
 x...9...F....0.0....cc9.9ccc.............ccc.9..8.cc..9..+...........c..0..0..cx
-x..0.0..c...........cccccc.cc.0.......0.cc-cc****ccc.0.0.c.....8.....cc......ccx
-xc.....ccc.........cc-------cc.........cc---cccccc.cc...cc...........ccc....cc-x
-xcc...cc-cc.......cc---------cc.......cc------------cccccc...9...9...c.cc++cc--x
-x-cc+cc---cc.....cc---xxExx---cc.....cc---xxxCxxx--------cc.........cc---------x
-x----------cccFccc---xx...xx---ccc+ccc---xx.....xx--------cc.......cc----------x
-x--------------------x.9.9.x------------xx.......xx--------cc.....cc--xxxxxx---x
-x-------------xxxxxx.E..8..E--xxBxx----xx.........xx--------cccIccc--xx9..9xx--x
-x----xxAxx---xx$$$$xxx.9.9.x-xx...xx---x...0...0...x--xxDxx.--------xx......xx-x
-x---xx...xx-xx$$$$$$x.x...xx-x.0.0.x---x....9h9....x-xx...xx--------x9......9x-x
-x---x.0.0.x-x$$$$$$$$xxxExx--B..9..B---C....hhh....C-x.0.0.x--------x...gg...x-x
-x---A..9..A-x$$$$$$$$x-------x.0.0.x---x....9h9....x-D..9..D--------x...gg...x-x
-x---x.0.0.x-x$$$$$$$$x-------xx...xx---x...0...0...x-x.0.0.x--------x........x-x
-x---xx...xx-x$$$$$$$$x--------xxBxx----xx.........xx-xx...xx--------xx......xx-x
-x----xxAxx--xx$$$$$$xx------------------xx.......xx---xxDxx.---------xx....xx--x
-x------------xx$$$$xx--------------------xx.....xx--------------------xx++xx---x
-x-------------xxxxxx------      ----------xxxCxxx------------    --------------x
-        -----------------         ------------------                   --------x
+x..0.0..c...........cccccc.cc.0.......0.cc.cc****ccc.0.0.c.....8.....cc......ccx
+xc.....ccc.........cc.......cc.........cc...cccccc.cc...cc...........ccc....cc.x
+xcc...cc.cc.......cc.........cc.......cc............cccccc...9...9...c.cc++cc..x
+x.cc+cc...cc.....cc...xxExx...cc.....cc...xxxCxxx........cc.........cc.........x
+x..........cccFccc...xx...xx...ccc+ccc...xx.....xx........cc.......cc..........x
+x....................x.9.9.x............xx.......xx........cc.....cc..xxxxxx...x
+x.............xxxxxx.E..8..E..xxBxx....xx.........xx........cccIccc..xx9..9xx..x
+x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...x...0...0...x..xxDxx.........xx......xx.x
+x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...x....9h9....x.xx...xx........x9......9x.x
+x...x.0.0.x.x$$$$$$$$xxxExx..B..9..B...C....hhh....C.x.0.0.x........x...gg...x.x
+x...A..9..A.x$$$$$$$$x.......x.0.0.x...x....9h9....x.D..9..D........x...gg...x.x
+x...x.0.0.x.x$$$$$$$$x.......xx...xx...x...0...0...x.x.0.0.x........x........x.x
+x...xx...xx.x$$$$$$$$x........xxBxx....xx.........xx.xx...xx........xx......xx.x
+x....xxAxx..xx$$$$$$xx..................xx.......xx...xxDxx..........xx....xx..x
+x............xx$$$$xx....................xx.....xx....................xx++xx...x
+x.............xxxxxx......      ..........xxxCxxx............    ..............x
+        .................         ..................                   ........x
 ENDMAP
 
 NAME:   minmay_thick_lines
 ORIENT: north
-TAGS:   transparent
 DEPTH:  D:4-, Depths
 WEIGHT: 1
 MAP
@@ -458,34 +456,33 @@ ENDMAP
 NAME:   impenetrable_vault
 DEPTH:  Depths:2-, !Depths:$
 ORIENT: southeast
-KMASK:   - = !opaque
 MAP
-       -------@----------------x
-       ------------------------x
-       ------------------------x
--------------------------------x
--------------------------------x
------cccccccccccccccc----------x
------c[............9cc---------x
------c.xxxxx+xxxxxx..cc--------x
------c.x9........9xx..cc-------x
------c.x.xxx=xxxx..xx..cc------x
------c.x.x$$$$$$xx..xx.9c------x
------c.+.=$*|||*$xx..xx.c------x
------c.x.xx$*|||*$xx.9x.c------x
------c.x9.xx$*|||*$xx.x.c------x
------c.xx..xx$*|||*$=.+.c------x
------c9.xx..xx$$$$$$x.x.c------x
------cc..xx..xxxx=xxx.x.c------x
-------cc..xx9........9x.c------x
--------cc..xxxxxx+xxxxx.c------x
---------cc9............]c------x
----------cccccccccccccccc------x
--------------------------------x
-      -------------------------x
-      -------------------------x
-      -------------------------x
-      -------------------------x
+       .......@................x
+       ........................x
+       ........................x
+...............................x
+...............................x
+.....cccccccccccccccc..........x
+.....c[............9cc.........x
+.....c.xxxxx+xxxxxx..cc........x
+.....c.x9........9xx..cc.......x
+.....c.x.xxx=xxxx..xx..cc......x
+.....c.x.x$$$$$$xx..xx.9c......x
+.....c.+.=$*|||*$xx..xx.c......x
+.....c.x.xx$*|||*$xx.9x.c......x
+.....c.x9.xx$*|||*$xx.x.c......x
+.....c.xx..xx$*|||*$=.+.c......x
+.....c9.xx..xx$$$$$$x.x.c......x
+.....cc..xx..xxxx=xxx.x.c......x
+......cc..xx9........9x.c......x
+.......cc..xxxxxx+xxxxx.c......x
+........cc9............]c......x
+.........cccccccccccccccc......x
+...............................x
+      .........................x
+      .........................x
+      .........................x
+      .........................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -560,7 +557,6 @@ ENDMAP
 
 NAME:    minmay_open_boxes_in_corner
 ORIENT:  southeast
-TAGS:    transparent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SHUFFLE: $*%
 SUBST:   c : xcv
@@ -603,41 +599,39 @@ SUBST:   F = c
 SUBST:   H = c
 SUBST:   c : xcv
 SUBST:   G : GGTTU.
-KMASK:   - = !opaque
 MAP
----------------------------x
--CCCcc.....ccccc.....ccBBB-x
--C...c.....c...c.....c...B-x
--C.0.cc...cc.0.cc...cc.0.B-x
--c....cc.cc.....cc.cc....c-x
--ccc...ccc...c...ccc...ccc-x
----cc.......ccc.......cc---x
-----cc.....cc*cc.....cc----x
------c..G.0c***c0.G..c-----x
-----cc.....cc*cc.....cc----x
----cc...0...c+c...0...cc---x
--ccc...ccc.......ccc...ccc-x
--c....cc$cc.9.9.cc$cc....c-x
--c.0.cc$$$+..8..+$$$cc.0.c-x
--c....cc$cc.9.9.cc$cc....c-x
--ccc...ccc.......ccc...ccc-x
----cc...0...c+c...0...cc---x
-----cc.....cc%cc.....cc----x
------c..G.0c%%%c0.G..c-----x
-----cc.....cc%cc.....cc----x
----cc.......ccc.......cc---x
--ccc...ccc...c...ccc...ccc-x
--c....cc.cc.....cc.cc....c-x
--D.0.cc...cc.0.cc...cc.0.A-x
--D...c.....c...c.....c...A-x
--DDDcc.....ccccc.....ccAAA-x
----------------------------x
+...........................x
+.CCCcc.....ccccc.....ccBBB.x
+.C...c.....c...c.....c...B.x
+.C.0.cc...cc.0.cc...cc.0.B.x
+.c....cc.cc.....cc.cc....c.x
+.ccc...ccc...c...ccc...ccc.x
+...cc.......ccc.......cc...x
+....cc.....cc*cc.....cc....x
+.....c..G.0c***c0.G..c.....x
+....cc.....cc*cc.....cc....x
+...cc...0...c+c...0...cc...x
+.ccc...ccc.......ccc...ccc.x
+.c....cc$cc.9.9.cc$cc....c.x
+.c.0.cc$$$+..8..+$$$cc.0.c.x
+.c....cc$cc.9.9.cc$cc....c.x
+.ccc...ccc.......ccc...ccc.x
+...cc...0...c+c...0...cc...x
+....cc.....cc%cc.....cc....x
+.....c..G.0c%%%c0.G..c.....x
+....cc.....cc%cc.....cc....x
+...cc.......ccc.......cc...x
+.ccc...ccc...c...ccc...ccc.x
+.c....cc.cc.....cc.cc....c.x
+.D.0.cc...cc.0.cc...cc.0.A.x
+.D...c.....c...c.....c...A.x
+.DDDcc.....ccccc.....ccAAA.x
+...........................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minmay_triangles_in_corner
 ORIENT:  southeast
-TAGS:    transparent
 DEPTH:   D:12-, !D:$, Depths
 SHUFFLE: $%
 SUBST:   $ = $$$$%* .:180
@@ -682,28 +676,27 @@ SUBST:   * = %**|$....
 SUBST:   $ = $$$$%
 SUBST:   G = GTUV
 SUBST:   c : cv
-KMASK:   - = !opaque
 MAP
------------------------------x
------------------------------x
---ccccccccccccccccccccccccc--x
---c(.c........0..ccc...c**c--x
---c..c.0.0.......cc..9.+**c--x
---c..c.....c0.G.0c.....c**c--x
---c..+.0..cc.......9.9.c**c--x
---c..c...ccc..0........c**c--x
---ccccccccccccccccccccccccc--x
------------------------------x
------------------------------x
---ccccccccccccccccccccccccc--x
---c$$c999ccc......0....c..c--x
---c$$c...ccc...........+..c--x
---c$$c....0...G...0....c..c--x
---c$$+...........ccc...c..c--x
---c$$c....0......ccc000c.[c--x
---ccccccccccccccccccccccccc--x
------------------------------x
------------------------------x
+.............................x
+.............................x
+..ccccccccccccccccccccccccc..x
+..c(.c........0..ccc...c**c..x
+..c..c.0.0.......cc..9.+**c..x
+..c..c.....c0.G.0c.....c**c..x
+..c..+.0..cc.......9.9.c**c..x
+..c..c...ccc..0........c**c..x
+..ccccccccccccccccccccccccc..x
+.............................x
+.............................x
+..ccccccccccccccccccccccccc..x
+..c$$c999ccc......0....c..c..x
+..c$$c...ccc...........+..c..x
+..c$$c....0...G...0....c..c..x
+..c$$+...........ccc...c..c..x
+..c$$c....0......ccc000c.[c..x
+..ccccccccccccccccccccccccc..x
+.............................x
+.............................x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -712,32 +705,31 @@ ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
-KMASK:   - = !opaque
 MAP
-------------------------x
-------------------------x
---cccccccccccc----------x
---c|*%9.9.9cc-----------x
---c*%.....cc------------x
---c%.....cc-------------x
---c9....cc--------------x
---c.....cc--------------x
---c9..cc.cc-------------x
---c..cccc.cc------------x
---c9cc--cc.cc--------c--x
---ccc----cc.cc------cc--x
---cc------cc.cc----ccc--x
---c--------cc.cc--cc0c--x
-------------cc.cccc..c--x
--------------cc.cc..0c--x
---------------cc.....c--x
---------------cc....0c--x
--------------cc......c--x
-------------cc.......c--x
------------cc0.0.0..(c--x
-----------cccccccccccc--x
-------------------------x
-------------------------x
+........................x
+........................x
+..cccccccccccc..........x
+..c|*%9.9.9cc...........x
+..c*%.....cc............x
+..c%.....cc.............x
+..c9....cc..............x
+..c.....cc..............x
+..c9..cc.cc.............x
+..c..cccc.cc............x
+..c9cc..cc.cc........c..x
+..ccc....cc.cc......cc..x
+..cc......cc.cc....ccc..x
+..c........cc.cc..cc0c..x
+............cc.cccc..c..x
+.............cc.cc..0c..x
+..............cc.....c..x
+..............cc....0c..x
+.............cc......c..x
+............cc.......c..x
+...........cc0.0.0..(c..x
+..........cccccccccccc..x
+........................x
+........................x
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -773,25 +765,26 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KMONS:  0 = 0
+KMONS:  01 = 0
 KMONS:  8 = 8
-KMONS:  9 = 9
-KITEM:  0 = % / nothing w:20
-KITEM:  8 = | / nothing
-KITEM:  9 = * / nothing
+KMONS:  92 = 9
+KITEM:  01 = %
+KITEM:  8 = |
+KITEM:  92 = *
 SUBST:  c : cv
+KPROP:  .089 = no_tele_into
 MAP
 @cccccccccccccccccx
-c+..ccccccccccccccx
-c...0cccccccccccccx
-c...9cccccccccccccx
-cc09.mccccccccccccx
-ccccm=...cccccccccx
+c+''ccccccccccccccx
+c'''1cccccccccccccx
+c'''2cccccccccccccx
+cc12mmccccccccccccx
+ccccmm...cccccccccx
 ccccc....0ccccccccx
 ccccc...09ccccccccx
 ccccc..098ccccccccx
-cccccc098.mcccccccx
-cccccccccm=....cccx
+cccccc098mmcccccccx
+cccccccccmm....cccx
 cccccccccc.....0ccx
 cccccccccc....09ccx
 cccccccccc...098ccx
@@ -1029,17 +1022,18 @@ NAME:   minmay_tri_stars
 ORIENT: north
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 SUBST:  x : xvb
-MONS:   wizard w:300 / deep elf pyromancer w:60 / deep elf zephyrmancer w:60 / \
-        orc wizard / orc sorcerer w:35 / ogre mage w:35 / nothing w:500
+MONS:   wizard w:300 / deep elf mage w:120 / orc wizard / \
+        orc sorcerer w:35 / ogre mage w:35 / nothing w:500
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
         any randart armour w:3
-: if you.in_branch("Depths") then
+: if you.absdepth() > 18 then
 NSUBST: 2 = 2:2 / 2 = 21 / *:1
 : else
 SUBST:  2 = 1
 : end
+KPROP:  d = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1048,17 +1042,17 @@ x...................................................................x
 xx........x....xx......xx2..................xx.........xx..........xx
 x........xx....xxx......xxxxxx.............xx..........xxx..........x
 xx......2xx....xxxx......xxxx............2xxx...........xxx2..xxxx.xx
-x.....xxxxx.....xxxx......x2...........xx.xx.........xx..xx.xxxxxx..x
+x.....xxxxx.....xxxx......x2...........xxmxx.........xx..xxmxxxxxx..x
 xx...xxxxxx2....xxxx.....xx..........xxxxdm2........xxx..2mdmxxx...xx
 x.........xx.....xxxx1...xx............2mxxx........xxx...xxx2......x
-xx.........x.....xxxx.x1..................xxx......xxxx...xx.......xx
-x..xx............1xxx.xxxxxxxx.............xx......xxx...xxx........x
+xx.........x.....xxxxmx1..................xxx......xxxx...xx.......xx
+x..xx............1xxxmxxxxxxxx.............xx......xxx...xxx........x
 xx..xxx......xxx..mmdxxxxxxxxxx........xx...x.....xxxx...xxx.......xx
 x....xxxx1xxxxx..1xxxmxxxxxxxx.......xxxx.........xxxx...xx.........x
-xx....xxx.xxxx...xxxxmx1............xxxx.........xxxxx...xx........xx
+xx....xxxmxxxx...xxxxmx1............xxxx.........xxxxx...xx........xx
 x......xmdmxx....xxxx1............1xxxx.........1xxxx...............x
-xx.....1xxx1....xxxx.....xxxxxxxxx.xxxx......xxxx.xxx..............xx
-x.......xxx.....xxxx......xxxxxxxx.xxx....xxxxxxxxdmm1..........x...x
+xx.....1xxx1....xxxx.....xxxxxxxxxmxxxx......xxxxmxxx..............xx
+x.......xxx.....xxxx......xxxxxxxxmxxx....xxxxxxxxdmm1..........x...x
 xx......xxx....xxxx....x....xxxxxxdmm1..xxxxxxxxxmxxxx........1xx..xx
 x.......xxx....xxx....xx......1xxmxxx...xxxxxxxxxmxxxxx...xxxxxx....x
 xx......xx.....xx.....xx........1xxxx.....xxx1...1xxxxxx...xxxxx...xx
@@ -1135,7 +1129,6 @@ ENDMAP
 
 NAME:   minmay_fractal_lines_corner
 ORIENT: northwest
-TAGS:   transparent
 DEPTH:  Depths
 SUBST:  z : xcvb
 SUBST:  8 = 888.
@@ -1172,7 +1165,6 @@ ENDMAP
 
 NAME:   minmay_stepped
 ORIENT: northwest
-TAGS:   transparent
 DEPTH:  D:12-, !D:$, Depths
 SUBST:  z : xcvb
 SUBST:  9 = 9...
@@ -1208,7 +1200,6 @@ ENDMAP
 
 NAME:   minmay_outward_triangles
 ORIENT: northwest
-TAGS:   transparent
 DEPTH:  D:12-, !D:$, Depths
 SUBST:  z : xcvb
 SUBST:  9 = 9.
@@ -1274,24 +1265,24 @@ KMONS: 8 = 8 band w:20 / 9 band
 KMONS: 9 = 9 band w:20 / 0 band
 KMONS: 0 = 0 band w:20 / nothing
 MAP
-xxxxxxxxxxxxxxxxxxcccccc
-xxcccccxxxxxxcccccc....ccccc
-xcc|**ccxxxcccc...+c.90...ccc
-xc||*.8cxccc.......c..*9.9..cc
-xc**.8.ccc....*9.9.c+.......*c
-xc*.8..ccc+.9.9*....cccc+cc+cc
-xcc8..+c9.cc.....cccccc...0.*c
-xxccccc....+c.ccccc..+..9%..cc
-xxxxxc9.8.9.ccc...%..cc.09.cc
-xxxccc....*cc.+.0.9...c+..cc
-xxxc.+c.9*cc..cc....0..cccc
-xxcc..c+.cc%0..cc.0%.cccc
-xxc..9.ccc.0..0.c+.ccc
-xcc.....c....0...ccc
-xcc.*9.cc+c.0..c+ccc
-xc..9*.c..cc..cc...cc
-xc.....c.0.cc.+.....cc
-xc..9.cc....+cc..G...c
+                  cccccc
+  ccccc      cccccc....ccccc
+ cc|**cc   cccc...+c.90...ccc
+ c||*.8c ccc.......c..*9.9..cc
+ c**.8.ccc....*9.9.c+.......*c
+ c*.8..ccc+.9.9*....cccc+cc+cc
+ cc8..+c9.cc.....cccccc...0.*c
+  ccccc....+c.ccccc..+..9%..cc
+     c9.8.9.ccc...%..cc.09.cc
+   ccc....*cc.+.0.9...c+..cc
+   c.+c.9*cc..cc....0..cccc
+  cc..c+.cc%0..cc.0%.cccc
+  c..9.ccc.0..0.c+.ccc
+ cc.....c....0...ccc
+ cc.*9.cc+c.0..c+ccc
+ c..9*.c..cc..cc...cc
+ c.....c.0.cc.+.....cc
+ c..9.cc....+cc..G...c
 cc+...cc%9.0.cc......
 c.ccc.c....%cccc...@
 c...+cc...0.c  cc..
@@ -1482,7 +1473,7 @@ ENDMAP
 
 NAME:   kennysheep_scales
 ORIENT: northeast
-TAGS:   no_pool_fixup transparent
+TAGS:   no_pool_fixup
 : if crawl.one_chance_in(4) then
 SUBST:  w : wW
 SUBST:  x : xcbt
@@ -1693,7 +1684,6 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME:    minmay_tearing_corner
-TAGS:    transparent
 DEPTH:   D:11-, Depths
 ORIENT:  northeast
 SUBST:   x : ccvvb, X = x
@@ -1705,18 +1695,18 @@ NSUBST:  8 = 4:8 / 10 = 8. / *:.
 NSUBST:  9 = 6:9 / 18 = 9. / *:.
 : end
 MAP
-         XXXXXXXXXXXXXXXXXXX
-         xxxxxxxxxXXXXXXXXXX
-         x9x....9xXXXXXXXXXX
-         x9x..xx.xXXXXXXXXXX
-         xx.x...9xXXXXXXXXXX
-          x.xx..xxXXXXXXXXXX
-          x.x8..8xXXXXXXXXXX
-          x.xx..xxXXXXXXXXXX
-         xx.x8||8xXXXXXXXXXX
-        xx..xxxxxxxXXXXXXXXX
-xxxxxxxxx.x9..99x.xxXXXXXXXX
-x9.9x8x8xx9x...x9x.xxxxxxXXX
+         XXXXXXXXX
+         xxxxxxxxx
+         x9x....9x
+         x9x..xx.x
+         xx.x...9x
+          x.xx..xx
+          x.x8..8x
+          x.xx..xx
+         xx.x8||8x
+        xx..xxxxxxx
+xxxxxxxxx.x9..99x.xx
+x9.9x8x8xx9x...x9x.xxxxxx
 x.x....|x9x.x.x.x9......xxxX
 x.x....|x9.x.x.x..xxxxxx..xX
 x...x8x8x...x.x...x8x8x...xX

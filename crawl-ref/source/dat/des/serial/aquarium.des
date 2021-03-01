@@ -16,7 +16,7 @@
 #   -> ??????? ice, ice beast, simulacrum, freezing clouds
 #   -> ??????? lava, fire vortex, lava snake, salamander
 #   -> ??????? lava, fire vortex, fire bat, fire elemental
-#   -> Elf     deep water, ball lightning, water elemental, air elemental, diamond obelisk
+#   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond obelisk
 #
 # Most of these vaults come in three sizes/shapes depending on
 #  which characters of w, D and E turn into water.
@@ -40,12 +40,7 @@
 #  and thus failed an implicit accesibility validation of some
 #  sort.  Taking out transparent solved the problem.
 #
-# advil: I've readded transparent, in combination with explicit
-# opacity on the aquariums. This vault does have a lot of
-# trouble placing, but lack of transparent was contributing as
-# much as anything else. One challenge is that it's highly
-# likely that many of the serial vaults will break a level into
-# multiple zones. This might do better as some kind of layout?
+
 
 # These vaults do not generate randomly.  They are too weird.
 default-depth:
@@ -65,7 +60,6 @@ function init_aquarium(e)
   e.tags('no_monster_gen')
   e.tags('no_item_gen')
   e.tags('no_trap_gen')
-  e.tags('transparent')
   if dgn.persist.aquarium_serial_pool_size == 0 then
     e.subst('D : x')
     e.subst('E : x')
@@ -79,19 +73,14 @@ function init_aquarium(e)
     e.subst('E : w')
     nothing_weight = 200
   end
-  e.kmask('w = opaque')
   e.kprop('w = no_tele_into')
   e.kprop('w = no_jiyva')
-  e.kmask('_ = opaque')
   e.kprop('_ = no_tele_into')
   e.kprop('_ = no_jiyva')
-  e.kmask('W = opaque')
   e.kprop('W = no_tele_into')
   e.kprop('W = no_jiyva')
-  e.kmask('l = opaque')
   e.kprop('l = no_tele_into')
   e.kprop('l = no_jiyva')
-  e.kmask('! = opaque')
   e.kprop('! = no_tele_into')
   e.kprop('! = no_jiyva')
 
@@ -101,7 +90,7 @@ function init_aquarium(e)
     e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
-                 w:50 generate_awake ball lightning /
+                 w:50 generate_awake insubstantial wisp /
                  w:5  generate_awake water elemental /
                  w:4  generate_awake air elemental]] )
     -- I tried using [[ ]] here, but Crawl could not find the
@@ -161,7 +150,6 @@ function init_aquarium(e)
                  w:1  generate_awake wolf spider simulacrum /
                  w:1  generate_awake wolf simulacrum /
                  w:1  generate_awake polar bear simulacrum /
-                 w:1  generate_awake boulder beetle simulacrum /
                  w:1  generate_awake fire dragon simulacrum /
                  w:1  generate_awake hydra simulacrum]] )
     e.ftile('! = floor_frozen')
@@ -323,19 +311,19 @@ CHANCE:  1%
 # subvaults for possible bridge side pieces
 
 NAME:    aquarium_subvault_wall
-TAGS:    aquarium_subvault_wall unrand
+TAGS:    aquarium_subvault_wall
 KPROP:   . = no_tele_into
 : init_aquarium(_G)
 MAP
  xDD
  xDDw
-@xDDwm
+.xDDwm
  xDDw
  xDD
 ENDMAP
 
 NAME:    aquarium_subvault_window
-TAGS:    aquarium_subvault_window unrand
+TAGS:    aquarium_subvault_window
 : init_aquarium(_G)
 MAP
  xDD
@@ -346,7 +334,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_balcony
-TAGS:    aquarium_subvault_balcony unrand
+TAGS:    aquarium_subvault_balcony
 : init_aquarium(_G)
 MAP
  xww
@@ -357,7 +345,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_bridge
-TAGS:    aquarium_subvault_bridge unrand
+TAGS:    aquarium_subvault_bridge
 : init_aquarium(_G)
 MAP
  xww
@@ -370,7 +358,7 @@ ENDMAP
 # subvaults for small islands
 
 NAME:    aquarium_subvault_small_water
-TAGS:    aquarium_subvault_small_water no_exits unrand
+TAGS:    aquarium_subvault_small_water no_exits
 : init_aquarium(_G)
 MAP
 cmc
@@ -379,7 +367,7 @@ cmc
 ENDMAP
 
 NAME:    aquarium_subvault_small_open
-TAGS:    aquarium_subvault_small_open unrand
+TAGS:    aquarium_subvault_small_open
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
 MAP
@@ -391,7 +379,7 @@ ENDMAP
 # subvaults for large islands
 
 NAME:    aquarium_subvault_large_water
-TAGS:    aquarium_subvault_large_water no_exits unrand
+TAGS:    aquarium_subvault_large_water no_exits
 : init_aquarium(_G)
 MAP
 cmmmmmc
@@ -404,7 +392,7 @@ cmmmmmc
 ENDMAP
 
 NAME:    aquarium_subvault_large_open
-TAGS:    aquarium_subvault_large_open unrand
+TAGS:    aquarium_subvault_large_open
 SUBST:   S : .:89 0:10 9:1
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
@@ -419,7 +407,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_large_1_pool
-TAGS:    aquarium_subvault_large_1_pool unrand
+TAGS:    aquarium_subvault_large_1_pool
 SUBST:   S : .:89 0:10 9:1
 : init_aquarium(_G)
 MAP
@@ -433,7 +421,7 @@ MAP
 ENDMAP
 
 NAME:    aquarium_subvault_large_4_pools
-TAGS:    aquarium_subvault_large_4_pools unrand
+TAGS:    aquarium_subvault_large_4_pools
 SUBST:   Z : .:35 0:10 9:1 $:3 %:1
 : init_aquarium(_G)
 MAP

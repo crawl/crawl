@@ -123,16 +123,16 @@ PLACE:   D:$, Depths:$
 WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = demonic plant
-KMONS:   mo = vault guard
+KMONS:   no = vault guard
 KMONS:   p = floating eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
-KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
+KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 : local bands = {
 :     [65 - you.absdepth() * 3] =
 :         { "cyclops", "tengu warrior", "centaur warrior", },
 :     [42 - you.absdepth() * 2] =
-:         { "kobold demonologist", "tengu conjurer", "deep elf pyromancer", "deep elf zephyrmancer",
+:         { "kobold demonologist", "tengu conjurer", "deep elf mage",
 :           "necromancer", "yaktaur", "Azrael", "Kirke", },
 :     [26 - you.absdepth()] =
 :         { "boggart", "orc knight", "ogre mage", "skeletal warrior",
@@ -141,7 +141,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :         { "deep elf knight", "orc high priest", "deep troll shaman", },
 :     [you.absdepth() * 2 - 42] =
 :         { "harpy", "hell knight", "naga sharpshooter", "vampire mage",
-:           "orc warlord", "vampire knight", "yaktaur captain",
+:           "orc warlord", "vampire knight", "stone giant",
 :           "deep elf high priest", "spriggan defender", },
 :     [you.absdepth() - 18] =
 :         { "death knight", "ancient champion",
@@ -163,7 +163,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
-KFEAT:   ^ = permanent teleport trap
+KFEAT:   ^ = known permanent teleport trap
 KFEAT:   ~ = teleport trap
 KFEAT:   aD = stone_arch
 KFEAT:   A = enter_hell
@@ -183,40 +183,34 @@ SUBST:   A&@ = a, _ = -, l = W
 SHUFFLE: aA&@
 :     end
 :     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-NSUBST:  (D = Z / D
+NSUBST:  (D = 1:Z / *:D
 SUBST:   f = ', 2 = t
 :     end
 : else
 SUBST:   A&@ = a, _ = -, l = W
 :     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-NSUBST:  ( = B / T
+NSUBST:  ( = 1:B / *:T
 SUBST:   f = ', 2 = r
 :     end
 : end
 SUBST:   {} = **|||, ) = C, [ = !, ] = ?
-NSUBST:  < = { / ( / [, > = } / ) / ]
+NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
 SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
 SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
-SHUFFLE: })]` / {([>, ?!, mo / pq, pq / pq / pq / qp / pp / qq
+SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
 SHUFFLE: LM / LM / LM / LM / LM / LM / ML / ML / MM
 SHUFFLE: NO / NO / NO / NO / NO / NO / ON / ON / OO
 SHUFFLE: PQ / PQ / PQ / PQ / QP, RS / RS / RS / SR
-SHUFFLE: EF / GH / Iu / yz
 SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
-SUBST:   Iy = D, uz = a
-NSUBST:  ~ = 2:~ / ~. / 75 = ~ .:4490 / 225 = ~ .:9990 / .
+NSUBST:  ~ = 2:~ / 1:~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
 COLOUR:  "-_ = green
 COLOUR:  '`089rs%*|!? = white
-FTILE:   ^"aAFHuz@&-_U = floor_grass
+FTILE:   ^"aA@&-_U = floor_grass
 : if crawl.coinflip() then
-FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_vault
+FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_vault
 : else
-FTILE:   '`<{([>})]089rst%*|!?BCTDEGIZy = floor_pebble_darkgray
+FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_pebble_darkgray
 : end
-MARKER:  E = lua:transp_loc("spin_cycle_entry")
-MARKER:  F = lua:transp_dest_loc("spin_cycle_entry")
-MARKER:  G = lua:transp_dest_loc("spin_cycle_exit")
-MARKER:  H = lua:transp_loc("spin_cycle_exit")
 MAP
                           vvvvvvv
                          vv'%<%'vv
@@ -230,7 +224,7 @@ MAP
           xxxx xcccc..~~~~L~~~~OO~~~~..ccv  xxxx
          xxJJxxx~~~..~~~~~MM~~~~N~~Q~~..ccxxxKKxx
          xJJJJxx~~~~px~~~~~L~~~~OO~~x~~~~~xxKKKKx
-         xJJJJx~~~~~xm~~~~~MM~~~~N~~~P~~~~~xKKKKx
+         xJJJJx~~~~~xn~~~~~MM~~~~N~~~P~~~~~xKKKKx
          xxJJ~~~~~~~~~~~~~~.L...~~~~~~~~~~~~~KKxx
     vvvv  xxx~www~~~~~~~~~.......~~~~~~~~www~xxxx
    vv%'vv xx~~www~x~~~.....c+c+c....~~~x~www~~~xx vvvvv
@@ -238,24 +232,24 @@ MAP
   v%'2'''cc~~~~~RS~~..c+ccc''4''ccc+c..~SR~~~~~~cvf''(vv
   v'''cc+c.~~~~x~~...cc''kch'''hci''cc..~~x~~~~~c'''2'%v
   vvf'c....~~~~~~....+'7''cc%>%cc''5'+..~~~~~~~.c+cc'''v
-   vv'+...~~P~~~..c+cck''%bbbEbbb%''ic...~~~~xq....c'fvv
-   vvcc..~~x~~~..cc'jbbb%]bbnnnbb}%bbc+c..~~~ox~...+'vv
+   vv'+...~~P~~~..c+cck''%bbbbbbb%''ic...~~~~xq....c'fvv
+   vvcc..~~x~~~..cc'jbbb%]bbbbbbb}%bbc+c..~~~ox~...+'vv
    vcc...~Q~~~~..+'6'bbbbbbblllbbbbbbj'cc..~~~~~~..ccvv
    vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
- vvvc...~~~ON~~..cj'%)bblllllFllllbb%'''c..~~~~~~....cv
+ vvvc...~~~ON~~..cj'%)bblllll"llllbb%'''c..~~~~~~....cv
 vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
 v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
-v%''c.NO~~~~~..+'''%bnlll"_""""""lbbbbck'cc..~~MLM~..+'''v
-v['3c..~~~~~ML.c'5'}Gnl^H""""""U"lllnb%'''+..MLM~~~..c''%v
-v%''c..~~~MLM..+'''%bnlll"U""""""u^lnI]'7'c.LM~~~~~..c1'{v
-v'''+..~MLM~~..cc'icbbbbl""""""_"lllnb%'''+..~~~~~ON.c''%v
+v%''c.NO~~~~~..+'''%bblll"_""""""lbbbbck'cc..~~MLM~..+'''v
+v['3c..~~~~~ML.c'5'}bbl^"""""""U"lllbb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bblll"U"""""""^lbb]'7'c.LM~~~~~..c1'{v
+v'''+..~MLM~~..cc'icbbbbl""""""_"lllbb%'''+..~~~~~ON.c''%v
 vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
  vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
-   vc....~~~~~~..c'''%bbllllzlllllbb>%'hc..~~NO~~~~..cvvv
+   vc....~~~~~~..c'''%bbllll"lllllbb>%'hc..~~NO~~~~..cvvv
    vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
    vvcc..~~~~~~..cc'hbbbbbblllbbbbbbb'4'+..~~~~Q~...ccv
-  vvv'+...~xo~~~..c+cbb%]bbnnnbb}%bbbh'cc..~~~x~~..ccvv
-  vvd'c....qx~~~~...ck''%bbbybbb%''icc+c..~~~P~~...+'vvv
+  vvv'+...~xo~~~..c+cbb%]bbbbbbb}%bbbh'cc..~~~x~~..ccvv
+  vvd'c....qx~~~~...ck''%bbbbbbb%''icc+c..~~~P~~...+'vvv
   v'''cc+c.~~~~~~~..+'7''cc%)%cc''5'+....~~~~~~....c'dvv
   v%'`'''c~~~~~x~~..cc''kcj'''jci''cc...~~x~~~~.c+cc'''v
   vv<''dvc~~~~~~RS~..c+ccc''6''ccc+c..~~SR~~~~~cc'''`'%v
@@ -263,7 +257,7 @@ vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
     vvvv cxx~~www~x~~.....c+c+c.....~~~x~www~~xx vv'%vv
           xxx~www~~~~~~~~.......~~~~~~~~~www~xxx  vvvv
          xxKK~~~~~~~~~~~~~..L..~~~~~~~~~~~~~~JJxx
-         xKKKKx~~~~~P~~~N~~~MM~~~~~~mx~~~~~xJJJJx
+         xKKKKx~~~~~P~~~N~~~MM~~~~~~nx~~~~~xJJJJx
          xKKKKxx~~~~~x~~OO~~~L~~~~~~xp~~~~xxJJJJx
          xxKKxxxxc..~~Q~~N~~~MM~~~~~~..~~~xxxJJxx
           xxxx  vcc..~~~~OO~~~L~~~~~..ccccc xxxx
@@ -577,10 +571,10 @@ SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
 MONS: tengu warrior band w:5 / tengu conjurer band w:5 / \
-      ogre mage band / centaur warrior band / yaktaur band / cyclops band / \
+      deep troll shaman band / deep elf archer band w:2 / cyclops band / \
       deep elf knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
-      fire dragon w:12 / ice dragon w:8 / yaktaur captain band
+      fire dragon w:12 / ice dragon w:8 / stone giant
 MONS: hydra / dire elephant / emperor scorpion / death yak band / \
       very ugly thing band
 MAP
@@ -633,12 +627,12 @@ WEIGHT: 5
 KMONS:  op = plant
 KMONS:  P = bush
 KMONS:  1 = merfolk
-KMONS:  2 = orc warrior / kobold brigand / two-headed ogre / troll / gnoll sergeant
+KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
 KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
-KMONS:  6 = wyvern w:6 / manticore w:3 / black bear w:19
-KITEM:  o5 = gold / nothing w:1000
+KMONS:  6 = wyvern w:5 / manticore w:2 / hippogriff w:2 / black bear w:19
+KITEM:  o5 = ration / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
 NSUBST: F = 5:5 / 5 = 55o / * = o:100 R:57

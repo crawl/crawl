@@ -16,14 +16,14 @@ NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen
 ORIENT: north
 MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
-MONS:   generate_awake lemure, kobold
+MONS:   generate_awake slave, kobold
   : if you.absdepth() < 23 then
-KMONS:  a = patrolling two-headed ogre
+KMONS:  a = patrolling deep troll
   : else
-KMONS:  a = patrolling two-headed ogre / patrolling stone giant
+KMONS:  a = patrolling deep troll / patrolling stone giant
   : end
 KMONS:  b = patrolling ettin
-KMONS:  k = patrolling vampire mage / patrolling boggart
+KMONS:  k = patrolling vampire mage / patrolling wizard
 KMONS:  d = orc warlord
   : if you.absdepth() < 23 then
 KMONS:  e = vampire / yaktaur /\
@@ -38,6 +38,7 @@ KMONS:  i = titan
   : end
 KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
+: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 kobold chunk')
 KFEAT:  = = floor
 KPROP:  4 = no_tele_into
 FTILE:  =E79 = floor_grass
@@ -45,7 +46,7 @@ COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  * = animal skin, any good_item
+KITEM:  * = animal skin, ration, any good_item
 KITEM:  ' = ident:type wand of digging, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
@@ -58,16 +59,18 @@ KFEAT:  f = fountain_blue
 KFEAT:  j = fountain_sparkling
 KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
-KFEAT:  A = general shop
-# TODO: removed food shop on B, is there a good replacement?
+KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
+            w:50 whip | wand of enslavement
+KFEAT:  B = food shop name:Jack type:Jerk-a-riffic suffix:Jerky count:10 ; \
+            q:1 ration
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of mutation
 : local smithy = string.gsub(crawl.make_name(), " ", "_")
 : kfeat("D = armour shop name:The_Legendary_" .. smithy .. " \
 :        type:Legendary suffix:Smithy count:10 greed:40 ;\
 :        damaged plate armour ego:none | damaged chain mail ego:none |\
-:        damaged long sword ego:none | damaged kite shield ego:none |\
-:        damaged tower shield ego:none | damaged battleaxe ego:none")
+:        damaged long sword ego:none | damaged shield ego:none |\
+:        damaged large shield ego:none | damaged battleaxe ego:none")
 SHUFFLE:  QRSTUVX
 SUBVAULT: Q : grated_community_mu_home1
 SUBVAULT: R : grated_community_mu_home2
@@ -124,7 +127,7 @@ ENDMAP
 ####  vampire, some slaves, bloody lounge, bricked up window, guard dogs
 NAME: grated_community_mu_vampire_home
 TAGS: grated_community_mu_home grated_community_mu_home1 unrand
-KMONS:   1 = generate_awake lemure
+KMONS:   1 = generate_awake slave
 KMONS:   2 = generate_awake spectral hound
 KMONS:   3 = generate_awake spectral wolf
 KMONS:   4 = generate_awake spectral warg
@@ -171,7 +174,8 @@ KITEM: - = animal skin
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
-KITEM:  $ = giant spiked club / giant club / nothing
+KITEM:  $ = q:5 ration / nothing, \
+            giant spiked club / giant club / nothing
 : local frosty = crawl.random2(6)
 : if frosty == 5 then
 SUBST:  1 = 2
@@ -210,7 +214,7 @@ SUBST: * = "
 : end
 : local occupant = crawl.random2(3)
   : if occupant == 0 then
-MONS:  lich / w:4 ancient lich / w:4 dread lich / w:5 royal mummy
+MONS:  lich / w:8 ancient lich / w:5 greater mummy
 KFEAT: * = altar_kikubaaqudgha / w:4 altar_sif_muna / w:1 altar_yredelemnul
 KITEM: " = gold, any wand / w:15 nothing, any scroll / nothing
 KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor
@@ -270,11 +274,12 @@ SUBST:   _ = _8
 SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
-KITEM:   % = w:12 animal skin / club / hand axe
+KITEM:   % = w:12 animal skin / club / hand axe /\
+             ration w:15 / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
 KITEM:   $ = battleaxe / nothing, plate armour / nothing, \
-             gold, any, any
+             ration / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
                  size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
@@ -300,7 +305,7 @@ MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
-: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton', 'any / nothing')
+: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton / w:5 any chunk', 'any / nothing')
 KFEAT:   ~ = floor
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
@@ -327,15 +332,15 @@ FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
 KITEM:  ' = q:1 arrow
-KITEM:  $ = q:30 arrow / any good_item
+KITEM:  $ = barding / nothing, q:30 arrow / any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
 KITEM:  ' = q:1 bolt
-KITEM:  $ = q:30 bolt / any good_item
+KITEM:  $ = barding / nothing, q:30 bolt / any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W
-KITEM:  % = any potion
+KITEM:  % = q:2 ration
 SUBST:  8 = 82
 KFEAT:  8 = granite_statue / floor
 MARKER: + = lua:restrict_door()

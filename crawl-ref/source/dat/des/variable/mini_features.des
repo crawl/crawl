@@ -914,25 +914,24 @@ NAME:   minmay_stone_trees_large
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Lair
 WEIGHT: 1
-SHUFFLE: TR
-SUBST:  T = t., R = .
+SUBST:  T = t.
 MAP
 ...................
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctRtccctTtccct.
+.tccctTtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....R.....T...
+...T.....T.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctRtccctTtccct.
+.tccctTtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
-...T.....R.....T...
+...T.....T.....T...
 ..ttt...ttt...ttt..
 .tccct.tccct.tccct.
-.tccctTtccctRtccct.
+.tccctTtccctTtccct.
 .tccct.tccct.tccct.
 ..ttt...ttt...ttt..
 ...................
@@ -952,7 +951,7 @@ ENDMAP
 NAME:   minmay_holes
 TAGS:   transparent extra decor
 DEPTH:  D:5-, !D:$, Depths, !Depths:$, Lair, !Lair:$
-KFEAT:  ^ = shaft trap
+KFEAT:  ^ = known shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
 WEIGHT: 15
 MAP
@@ -1173,7 +1172,7 @@ NAME:    roderic_nine_men_s_morris
 TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
-ITEM:    q:1 $, stone q:1
+ITEM:    q:1 $, ration q:1, stone q:1
 NSUBST:  ' = 2:d / 1:e / 2:f / *:.
 SHUFFLE: ddeff
 MAP
@@ -1201,7 +1200,7 @@ NAME:   roderic_three_in_a_row
 TAGS:   transparent extra decor
 DEPTH:  D, Depths, Elf
 WEIGHT: 1
-ITEM:   q:1 $, stone
+ITEM:   q:1 $, ration, stone
 SUBST:  ' : TTUUddeff
 MAP
 @xxxx@xxxx@
@@ -1355,7 +1354,7 @@ ENDMAP
 
 NAME:  abandoned_shop
 TAGS:  transparent extra allow_dup decor
-DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Forest
 KFEAT: O = abandoned_shop
 MAP
 O
@@ -1610,9 +1609,8 @@ NAME:    hangedman_decor_clover_reticule
 TAGS:    transparent extra decor
 DEPTH:   D, Depths
 SHUFFLE: ABCDE
-SUBST:   A : z:9 ':1, B : z', C : z'', DE = '
+SUBST:   A : z:9 .:1, B : z., C : z.., DE = '
 KPROP:   ' = no_tele_into
-KMASK:   ' = opaque
 : init_hm_decor_walldepth(_G, "z")
 MAP
       .......
@@ -1861,7 +1859,7 @@ SUBST: w : wwl
 MAP
      .......
    ...wwwww.@.
-  ..wwwwxxxx...
+  ..www.xxxx...
  ..wwwxxx.x.xx..
  .wwwwx.x..xxww.
 ..wwwwx.....xww..
@@ -2666,46 +2664,6 @@ xxxxx
 xxxxx
 ENDMAP
 
-NAME:   amcnicky_mini_pool_small
-TAGS:   decor extra transparent
-SUBST:  p:wwwWWl
-MAP
- xx.xx
-xx...xx
-x..p..x
-..ppp..
-x..p..x
-xx...xx
- xx.xx
-ENDMAP
-
-NAME:   amcnicky_mini_rare_corridor_liquid
-TAGS:   extra transparent decor
-SUBST:  p:wl
-MAP
-xxxxxxxxxxx
-xpppppppppx
-@.........@
-xpppppppppx
-xxxxxxxxxxx
-ENDMAP
-
-NAME:   amcnicky_mini_corridor_feature
-TAGS:   extra no_item_gen transparent
-# Total weight: 100
-SUBST:  p: ......GGGGttnlY
-MAP
-xx@xx
-xp.px
-xx.xx
-xx.xx
-xp.px
-xx.xx
-xx.xx
-xp.px
-xx@xx
-ENDMAP
-
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2940,7 +2898,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen extra
-ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
+ITEM:   ration w:20 / arrow / bolt / spear / any potion w:5
 MAP
 x+xx
 xddx
@@ -2951,14 +2909,14 @@ ENDMAP
 NAME:    minmay_variable_closet
 TAGS:    extra
 DEPTH:   D:9-, Depths
-ITEM:    any weapon, any missile, any armour, any scroll
+ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
 SUBST:   $ : $ZYXW
-SUBST:   $ : $%defghij
-SUBST:   W = $%defghij
+SUBST:   $ : $%defghijk
+SUBST:   W = $%defghijk
 SUBST:   Z = def
-SUBST:   Y = gi
-SUBST:   X = hj
+SUBST:   Y = hj
+SUBST:   X = ik
 MAP
 x+xx
 x$$x
@@ -3045,6 +3003,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
+ITEM:   ration / w:5 minotaur chunk
 : dgn.delayed_decay(_G, 'e', 'minotaur corpse')
 ITEM:   hand axe
 SUBST:  ' = .
@@ -3064,7 +3023,7 @@ NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   any potion / nothing
+ITEM:   ration / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass / floor_dirt
@@ -3086,7 +3045,7 @@ NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
-ITEM:   any potion / nothing
+ITEM:   ration / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
 FTILE:  .d = floor_moss / floor_grass
@@ -3103,7 +3062,7 @@ NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
 TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
-ITEM:   any potion / nothing
+ITEM:   ration / nothing
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
 KFEAT:  w = shallow_water
@@ -3124,13 +3083,13 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = wand of acid / wand of iceblast / wand of flame
+KITEM:  d = wand of disintegration ident:all
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra transparent
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
 SUBST:  A = a, B = b
-NSUBST: a = 1:c / *:. , b = 1:c / *:.
-: dgn.delayed_decay(_G, 'c', 'human corpse')
+NSUBST: a = 5:c / *:. , b = 5:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
 MAP
   aaa.....bbb
  aaaaa...bbbbb
@@ -3337,6 +3296,27 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
+NAME:  bh_chokoban
+TAGS:  extra decor no_exits
+TAGS:  no_rotate no_hmirror no_vmirror
+DEPTH: D:2-, !D:$, Depths:2-, !Depths:$, Lair:2-, !Lair:$
+ITEM:  ration w:5 / stone
+MAP
+cccccc  ccccc
+c....c  c...c
+c.d..cccc.d.c
+c.d......d..c
+c..ccc(cccd.c
+cccccccccc.ccc
+c.....)c.....c
+c..cccccd....c
+cc.c   c.d...c
+ c.ccccc.d...c
+ c......d.d..c
+ c%%cccccccccc
+ cccc
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
@@ -3441,15 +3421,15 @@ SUBST:  1 = l, 2 = l
 SUBST:  l = l w:20
 SUBST:  ? : w. , ! : w. , & : w.
 :  if you.in_branch("Geh") then
-TAGS:   extra
+TAGS:   transparent extra
 :  end
 MAP
 .......?.......
 ......&?.......
 .......??......
 ..&&&&???......
-&&&&&wwwww.....
-&&&wwwwwwwww&&.
+&&&&?wwwww.....
+&&?wwwwwwwww&&.
 .wwwwwlwwwwwww&
 ..&wwl1lwwwww&&
 ...wwwl2lwww&&.
@@ -3802,16 +3782,15 @@ ENDMAP
 NAME:  minivault_21
 TAGS:  transparent allow_dup extra
 DEPTH: D:8-, !D:$, Depths:2-, !Depths:$
-KMASK: |'<>* = opaque
 MAP
 ............
 ..xxxxxxxx..
 .x........x.
 .x.ccnccc.x.
-.x.c|''<c.x.
-.x.c'**'n.x.
-.x.n'**'c.x.
-.x.c>''|c.x.
+.x.c|..<c.x.
+.x.c.**.n.x.
+.x.n.**.c.x.
+.x.c>..|c.x.
 .x.cccncc.x.
 .x........x.
 ..xxxxxxxx..

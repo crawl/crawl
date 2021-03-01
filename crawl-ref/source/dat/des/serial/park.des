@@ -21,7 +21,6 @@ KMONS:    1 = bush
 SUBST:    F : GGTTT
 FTILE:    DTG = floor_vault
 FTILE:    E1t = floor_grass
-# TODO: this SUBST can occasionally produce pockets:
 SUBST:    E = .....11t
 SUBST:    < = ({[
 SUBVAULT: H : serial_park_minivault
@@ -29,7 +28,7 @@ SUBVAULT: J : serial_park_minivault
 MAP
     @       @@@
  xxx+xxxxxxxx+xxxxxxxxxxxx
- x.....x1111D.DtEEtttttttx
+ x.....x1111D.DtEEttEEEttx
  x.....xDDDDD.DEEEtJJJJJtx
  x..% .+......DtEEEJJJJJE+
  x.....xDDDDD.DEEEEJJJJJEx
@@ -219,8 +218,6 @@ TAGS:    transparent extra decor serial_park
 ORIENT:  float
 FTILE:   DFGT = floor_vault
 FTILE:   Et = floor_grass
-KPROP:   T = no_tele_into
-KMASK:   T = opaque
 MAP
                ......
                .DDDDD.
@@ -323,11 +320,11 @@ NAME:     serial_park_minivault_5x5_3
 TAGS:     serial_park_minivault allow_dup unrand
 FTILE:    t = floor_grass
 MAP
-tc+ct
+tccct
 cc0cc
-+0%0+
++0%0c
 cc0cc
-tc+ct
+tccct
 ENDMAP
 
 NAME:     serial_park_minivault_5x5_4

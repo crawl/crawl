@@ -21,10 +21,10 @@ TAGS:    no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:    spriggan air mage, spriggan defender, the Enchantress
-KMONS:   0 = centaur warrior / manticore w:5 / yaktaur captain w:5 / \
+KMONS:   0 = deep elf archer / manticore w:5 / stone giant w:5 / \
              tengu warrior band / tengu conjurer band / deep elf knight / \
-             boggart band / rakshasa / ogre mage / cyclops / \
-             two-headed ogre w:5 / shapeshifter w:5 / death yak band
+             rakshasa / wizard / eleionoma w:2 / cyclops / \
+             deep troll w:5 / shapeshifter w:5 / death yak band
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / stone giant / \
              sphinx / tengu reaver w:5 / deep elf high priest w:5
@@ -38,7 +38,7 @@ KMONS:   Q = bush
 KMONS:   R = plant
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
-ITEM:    gold
+ITEM:    ration q:3
 KFEAT:   _ = altar_trog
 NSUBST:  . = 10:0 / 8 = 00... / 2:O / 1:3 / 1:5 / *:.
 NSUBST:  6 = 1:9 / 2 = 669 / *:6
@@ -48,7 +48,8 @@ SUBST:   C = c
 COLOUR:  "MN = green
 LFLOORTILE: floor_grass
 veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
+  return crawl.game_started()
+         and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
 }}
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -127,10 +128,10 @@ NAME:   grunt_forest_end_chambers
 ORIENT: north
 KMONS:  O = the Enchantress patrolling
 MONS:   spriggan defender, spriggan berserker, spriggan rider, spriggan air mage
-MONS:   faun / centaur warrior / manticore w:5 / yaktaur captain w:5
+MONS:   faun / manticore w:5 / stone giant w:5
 MONS:   tengu warrior / two-headed ogre / deep elf knight w:5 / \
-        deep elf archer w:5 / shapeshifter w:5
-MONS:   tengu conjurer w:20 / ogre mage w:15 / boggart band / rakshasa / \
+        deep elf archer w:6 / shapeshifter w:5
+MONS:   tengu conjurer w:20 / wizard w:5 / eleionoma w:10 / rakshasa / \
         cyclops w:5
 KMONS:  8 = ettin ; giant club randart . giant club randart / \
             glowing shapeshifter hd:13 w:5 / stone giant / \
@@ -139,7 +140,8 @@ NSUBST: 3 = 6:3 / 4:6 / * = 36., 7 = 4:7 / * = 77., 1 = 1:8 / 2 = 118 / *:1
 : old_forest_ends(_G)
 FTILE: .O1234678+T%*| = floor_marble
 veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
+  return crawl.game_started()
+         and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -199,12 +201,11 @@ MONS:   tengu reaver / glowing shapeshifter hd:13
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
         tengu conjurer ; quarterstaff . robe . arbalest . bolt / \
-        centaur warrior / rakshasa / ogre mage ; giant club . \
-        robe . potion of berserk rage q:1 ident:type
+        deep elf archer / rakshasa / eleionoma
 KMONS:  L = water nymph
 KMONS:  P = plant
-ITEM:   gold / nothing w:90
-ITEM:   any potion / nothing w:35
+ITEM:   ration / nothing w:90
+ITEM:   any potion / ration w:5 / nothing w:35
 KFEAT:  L = deep_water
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.
@@ -213,7 +214,8 @@ NSUBST: 5 = 1:4 / 3:6 / 1:56 / *:5
 NSUBST: 2 = 1:3 / 1:223 / *:2
 : old_forest_ends(_G)
 veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
+  return crawl.game_started()
+         and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -259,8 +261,8 @@ MONS:   sphinx w:20 / tengu reaver w:15 / deep elf high priest / \
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         dire elephant w:5 / shambling mangrove w:3 / anaconda w:2
 MONS:   manticore / deep elf knight w:5 / deep elf archer w:5 / \
-        rakshasa / ogre mage / boggart band w:5 / glowing shapeshifter w:5 / \
-        yaktaur captain w:4
+        rakshasa / wizard / eleionoma w:5 / glowing shapeshifter w:5 / \
+        stone giant w:4
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
 SUBST:  T = tx
@@ -269,7 +271,8 @@ FTILE:  1|*$-+ = floor_dirt
 FTILE:  ._@2345Gtx = floor_grass
 : old_forest_ends(_G)
 veto {{
-  return crawl.game_started() and you.uniques("the Enchantress")
+  return crawl.game_started()
+         and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
 }}
 MAP
   TTTTTTTTTTTTT

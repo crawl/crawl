@@ -19,7 +19,6 @@
 ###############################################################################
 
 : crawl_require("dlua/ghost.lua")
-: crawl_require("dlua/vault.lua")
 
 {{
 -- Set up the non-flaming edged weapon "left" by the ghost in
@@ -42,26 +41,60 @@ function setup_hydra_weapon(e)
     e.kitem("O = " .. weapon_def)
 end
 
+-- Set up equipment for monsters with Trog-themed gifts in
+-- gammafunk_ghost_wrathful_warriors.
 function wrathful_weapon(class, quality)
+    local weap
+    if class == "kobold" then
+        weap = {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
+                ["whip"] = 10}
+    elseif class == "sergeant" then
+        weap = {["spear"] = 5, ["trident"] = 10}
+    elseif class == "ogre" then
+        weap = {["dire flail"] = 5, ["great mace"] = 10, ["giant club"] = 10,
+                ["giant spiked club"] = 10}
+    elseif class == "warrior" then
+        weap = ghost_warrior_weap
+    elseif class == "knight" then
+        weap = ghost_knight_weap
+    elseif class == "rider" then
+        weap = {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2}
+    elseif class == "berserker" then
+        weap = {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
+                ["broad axe"] = 10, ["morningstar"] = 10, ["morningstar"] = 10,
+                ["demon whip"] = 5, ["quarterstaff"] = 10, ["lajatang"] = 5}
+    elseif class == "impaler" then
+        weap = {["trident"] = 15, ["demon trident"] = 5}
+    elseif class == "defender" then
+        weap = {["rapier"] = 10, ["quick blade"] = 10, ["morningstar"] = 10,
+                ["demon whip"] = 10, ["lajatang"] = 10}
+    elseif class == "blademaster" then
+        weap = {["rapier"] = 20, ["quick blade"] = 5}
+    else
+        error("Unknown weapon class: " .. class)
+    end
+
     local egos
-    -- Only the egos Trog gifts, using equal weights for good_item but giving
-    -- the more desireable antimagic brand for randarts, which are trying to be
-    -- better quality.
     if quality == "good_item" then
-        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["flaming"] = 10}
+        -- No egos that Trog hates (pain) or that don't occur on mundane
+        -- weapons, like chaos.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
+                ["flaming"] = 10, ["venom"] = 10, ["protection"] = 10,
+                ["electrocution"] = 5, ["vampirism"] = 5, ["holy_wrath"] = 5,
+                ["draining"] = 5, ["distortion"] = 5, ["speed"] = 2}
     elseif quality == "randart" then
-        -- Increased chance for antimagic.
-        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["flaming"] = 10}
+        -- Allow chaos and make weights more favorable for better brands.
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10,
+                ["flaming"] = 10, ["vampirism"] = 10, ["draining"] = 10,
+                ["electrocution"] = 10, ["protection"] = 5, ["venom"] = 5,
+                ["holy_wrath"] = 5, ["distortion"] = 5, ["speed"] = 4,
+                ["chaos"] = 4}
     else
         error("Unknown weapon quality: " .. quality)
     end
 
-    return ghost_monster_weapon(class, egos, quality, '|')
+    return random_item_def(weap, egos, quality, '|')
  end
-
-function disto_weapon(class, quality)
-    return ghost_monster_weapon(class, {["distortion"] = 1}, quality)
-end
 }}
 
 # Only the below levels and Vaults:1-4 place ghost vaults. A specific ghost
@@ -100,7 +133,6 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
-TAGS:   transparent
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -198,27 +230,25 @@ MARKER: P = lua:transp_loc("ghost_arena_entry")
 MARKER: Q = lua:transp_dest_loc("ghost_arena_entry")
 MARKER: R = lua:transp_loc("ghost_arena_exit")
 MARKER: S = lua:transp_dest_loc("ghost_arena_exit")
-KMASK: - = !opaque
 : ghost_setup(_G)
 MAP
-  -----------
- --nnnnnnnnn--
- -nnRD...DRnn-
- -nG.rsDsrDGn-
- -nD.sr.rsqgn-
---n.D..D.Djen--
+  ...........
+ ..nnnnnnnnn..
+ .nnRD...DRnn.
+ .nG.rsDsrDGn.
+ .nD.sr.rsqgn.
+..n.D..D.Djen..
 @Pn.O.DQD.idnS@
---n.D..D.Dkfn--
- -nD.sr.rsphn-
- -nG.rsDsrDGn-
- -nnRD...DRnn-
- --nnnnnnnnn--
-  -----------
+..n.D..D.Dkfn..
+ .nD.sr.rsphn.
+ .nG.rsDsrDGn.
+ .nnRD...DRnn.
+ ..nnnnnnnnn..
+  ...........
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
 ORIENT:  float
-KMASK:   . = !opaque
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
@@ -267,10 +297,11 @@ WEIGHT: 5 (D:3-7)
 KPROP:  cn'O = w:5 bloody / nothing
 KMONS:  O = player_ghost
 KITEM:  O = scroll of immolation ident:all
-NSUBST: ' = |* / |*$ / 998 / 2=F. / .
+NSUBST: ' = |* / |*$ / 998 / dF / 3=d. / F. / .
 MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
+: dgn.delayed_decay(_G, "d", "chunk")
 : ghost_setup(_G)
 MAP
  ccccc
@@ -386,7 +417,7 @@ ENDMAP
 NAME:   hellmonk_ghost_happy_afterlife
 DEPTH:  D:3-, Lair
 ORIENT: float
-ITEM:   any potion
+ITEM:   ration, any potion
 : item(dgn.loot_potions)
 KMONS:  O = player ghost
 : if you.absdepth() < 6 then
@@ -436,97 +467,6 @@ ccnn==nncc
   ..@@..
 ENDMAP
 
-NAME:   gammafunk_ghost_door_vault
-DEPTH:  D:13-, Depths, Elf, Crypt, Zot
-WEIGHT: 2
-ORIENT: float
-: ghost_good_loot(_G, "45")
-KMONS:  1 = 9
-KMONS:  2 = 8
-KMONS:  345 = player_ghost
-# Ghosts on 4 and 5 will get upgraded loot.
-NSUBST: 3 = 4 / 5 / 3, 1 = 5=23 / 3 / 1
-: door_vault_setup(_G)
-: ghost_setup(_G)
-MAP
-aaaaaaaaaa
-a++++++++a
-a++++++++a
-a++1111++a
-a++1331++a
-a++1331++a
-a++1111++a
-a++++++++a
-a++++++++a
-aaaaaaaaaa
-ENDMAP
-
-NAME:    nzn_ghost_randoct
-DEPTH:   D:7-, Depths, Lair, Crypt, Spider, Zot
-ORIENT:  float
-ITEM:    potion of haste / scroll of blinking
-ITEM:    potion of heal wounds / scroll of teleportation
-MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
-MONS:    caustic shrike / juggernaut / titan
-MONS:    orb of fire / ancient lich w:5 / dread lich w:5
-MONS:    ice statue / oklob plant, w:5 orange crystal statue / obsidian statue
-SHUFFLE: PS, QR
-NSUBST:  Q = Q / ', R = R / '
-NSUBST:  x = 2=' / c
-SUBST:   DEFH = ':75 $:5, J = ':50 W:30 0, K = ':50 $ 0
-: if you.in_branch("Zot") then
-NSUBST:  M = 2=1 / 5
-SUBST:   L = ':30 9:20 d:20 8 |
-SUBST:   y = G:30 7, c : ccb, W : Wwl
-: elseif you.in_branch("Depths") then
-NSUBST:  M = 2=1 / 4
-SUBST:   L = ':30 9:20 d:20 8 *, * = *|
-SUBST:   y = G:30 7, c : cvb, W : Wwl
-: elseif you.in_branch("Crypt") then
-NSUBST:  M = 2=1 / 3
-SUBST:   L = ':30 9:20 d:20 8 *, * = *|
-SUBST:   y = G, W = '
-: elseif you.in_branch("Spider") then
-NSUBST:  M = 1 / 2 / M
-SUBST:   M = * 1:5 8:5, L = ':40 %:30 9:20, % = %**ee, * = **|, f = dde
-SUBST:   y = G:70 6, ' = ':80 WW
-: elseif you.absdepth() >= 13 then
-NSUBST:  M = 1 / d / M
-SUBST:   M = * 9:6 1:2 8:2, L = ':20 %:50 9:20, % = %**ee, * = **|, f = dde
-SUBST:   y = G:30 6
-: else
-NSUBST:  M = 1 / 9 / e / %
-SUBST:   L = ':60 9 0 %, % = %*, * = **e|
-SUBST:   y = G:70 6
-: end
-MARKER:  P = lua:transp_loc("ghost_randoct_entry")
-MARKER:  Q = lua:transp_dest_loc("ghost_randoct_entry")
-MARKER:  R = lua:transp_loc("ghost_randoct_exit")
-MARKER:  S = lua:transp_dest_loc("ghost_randoct_exit")
-: ghost_setup(_G)
-MAP
-        .@.
-       .@P@.
-      .ncncn.
-     .cnEREnc.
-    .ccEcncEcc.
-   .ncJKJKJKJcn.
-  .ccyJJKJKJJycc.
- .ccJJcKxnxKcJJcc.
-.nnDKJKxxMxxKJKHnn.
-.cDcJKxxLLLxxKJcHc.
-.nQnKJnMLLLMnJKnRn.
-.cDcJKxxLLLxxKJcHc.
-.nnDKJKxxMxxKJKHnn.
- .ccJJcKxnxKcJJcc.
-  .ccyJJKJKJJycc.
-   .ncJKJKJKJcn.
-    .ccFcncFcc.
-     .cnFQFnc.
-      .ncncn.
-       .@S@.
-        .@.
-ENDMAP
 ###############################################################################
 #
 # <<2>> Themed ghost vaults.
@@ -584,11 +524,11 @@ MONS: revenant / curse skull
 SUBST:  fg = |*, h = *, i = %$, j = -
 NSUBST: 1 = 12 / 1, - = 3=1 / 6=1- / -
 :     elseif you.in_branch("Depths") then
-MONS: ancient lich / dread lich
+MONS: ancient lich
 SUBST:  fgh = |*, i = *%, j = %$--
 NSUBST: 1 = 2=12 / 1, - = 3=1 / 8=1- / -
 :     elseif you.in_branch("Zot") then
-MONS: ancient lich / dread lich, curse toe
+MONS: ancient lich, curse toe
 SUBST:  fghij = |*
 NSUBST: 1 = 12 / 123 / 1, - = 4=1 / 8=1- / -
 # Lair branches
@@ -659,7 +599,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_ooze
-DEPTH:  D:8-, Lair, Depths
+DEPTH:  D:8, Lair, Depths
 ORIENT: float
 KMONS:  O = player ghost
 MONS:   jelly, slime creature, death ooze
@@ -715,19 +655,19 @@ KMONS:  O = player ghost
 : if you.in_branch("D") then
 :     if you.depth() < 6 then
 MONS:   skeleton place:D:6 / zombie place:D:6
-MONS:   mummy / shadow imp / wight / necrophage / phantom
+MONS:   mummy / shadow imp / wight / necrophage / phantom / hungry ghost
 SUBST:  d = *%, e = %$, f = %$--, ghij = -
 NSUBST: D = 2=1 / 2=1- / 2- / -
 :     elseif you.depth() < 9 then
 MONS:   skeleton place:D:9 / zombie place:D:9 / spectre place:D:9 / \
         simulacrum place:D:9 / mummy / shadow imp / wight / necrophage / \
-        phantom
+        phantom / hungry ghost
 MONS:   wraith / vampire
 SUBST:  d = *, e = *%, f = %$,  ghi = -
 NSUBST: D = 2=1 / 3=1- / 2- / 2--- / -
 :     elseif you.depth() < 12 then
 MONS:   mummy / wight / zombie place:D:12 / spectre place:D:12 / \
-        simulacrum place:D:12 / phantom / wraith / vampire
+        simulacrum place:D:12 / phantom / hungry ghost / wraith / vampire
 MONS:   vampire mosquito band / shadow / death knight / skeletal warrior / \
         freezing wraith w:5
 SUBST:  e = *, f = *%,  g = %$--, hi = -
@@ -750,7 +690,7 @@ SUBST:  f = |*, g = *, h = %$, ij = -
 NSUBST: D = 4=1 / 4=1- / 2 / 2=2- / -
 :     end
 : elseif you.in_branch("Swamp") then
-MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / bloated husk / \
+MONS:   spectre place:Swamp:4 / simulacrum place:Swamp:4 / shadow / \
         bog body / vampire mosquito band / tyrant leech
 MONS:   ghost crab / hydra spectre / hydra simulacrum
 SUBST:  fg = |*, h = *%, i = %$--, j = -
@@ -763,7 +703,7 @@ MONS:   spectre place:Depths:5 / simulacrum place:Depths:5 / \
         necromancer / vampire knight / vampire mage / sphinx / flayed ghost w:5
 MONS:   lich / deep elf death mage / juggernaut simulacrum / \
         juggernaut spectre / caustic shrike simulacrum / caustic shrike spectre
-MONS:   ancient lich / dread lich
+MONS:   ancient lich
 SUBST:  fgh = |*, i = *, j = %$
 NSUBST: D = 5=0 / 6=0- / 2 / 4=2- / 3- / -
 : elseif you.in_branch("Zot") then
@@ -771,8 +711,7 @@ MONS:   simulacrum place:Zot:5 / spectre place:Zot:5 / shadow dragon / \
         death cob
 MONS:   golden dragon simulacrum / golden dragon spectre / \
         quicksilver dragon simulacrum / quicksilver dragon spectre / \
-        killer klown simulacrum / killer klown spectre / \
-        ancient lich / dread lich
+        killer klown simulacrum / killer klown spectre / ancient lich
 MONS:   curse toe
 SUBST:  fghij = |*, 2 = 12
 NSUBST: D = 5=0 / 7=0- / 2=2 / 2=2- / 3- / -
@@ -861,13 +800,13 @@ ORIENT: float
 KFEAT:  OP = altar_okawaru
 KMONS:  OP = player ghost
 # Bad Oka gift.
-KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
-        animal skin damaged ident:all / robe damaged ident:all / \
-        leather armour damaged ident:all / whip damaged ident:all / \
-        spear damaged ident:all / short sword damaged ident:all / \
-        dagger damaged ident:all / hand axe damaged ident:all / \
-        scythe damaged ident:all / club damaged ident:all / \
-        hunting sling damaged ident:all
+KITEM:  O = hat cursed ident:all / cloak cursed ident:all / \
+        animal skin cursed ident:all / robe cursed ident:all / \
+        leather armour cursed ident:all / whip cursed ident:all / \
+        spear cursed ident:all / short sword cursed ident:all / \
+        dagger cursed ident:all / hand axe cursed ident:all / \
+        scythe cursed ident:all / club cursed ident:all / \
+        hunting sling cursed ident:all
 KITEM:  P = robe cursed plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
@@ -950,7 +889,7 @@ MONS:   lich
 MONS:   vampire knight / vampire mage
 MONS:   flayed ghost / juggernaut simulacrum
 MONS:   deep elf death mage
-MONS:   ancient lich / dread lich
+MONS:   ancient lich
 : end
 : ghost_good_loot(_G)
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / 3 / -
@@ -1124,8 +1063,6 @@ SUBST:  - = pt., S : GV A:1
 COLOUR: .pO012345689de|*$ = green
 FTILE:  tGVA.pO012345689de|*$ = floor_moss
 : end
-# Don't burn down or tornado down these sacred trees
-MARKER: t = lua:props_marker { veto_destroy="veto" }
 : ghost_setup(_G)
 MAP
   ttttttt
@@ -1147,7 +1084,7 @@ ITEM:   any armour, any armour good_item, any weapon, any weapon good_item
 ITEM:   any jewellery, any jewellery good_item
 KMONS:  O = player ghost
 MONS:   orc, orc ; any weapon good_item | any weapon randart . \
-            leather armour good_item | leather armour randart | \
+            leather armour good_item | leather_armour randart | \
             ring mail good_item | ring mail randart | scale mail good_item | \
             scale mail randart | chain mail good_item | chain mail randart
 MONS:   orc priest, warg, orc warrior, orc knight, orc high priest
@@ -1228,7 +1165,7 @@ NSUBST: - = 4=1 / 6=1' / 2=45 / 3=45'' / 67 / D''' / '
 :     end
 : elseif you.in_branch("Lair") then
 KITEM:  O = ring of fire ident:type / ring of fire randart ident:type
-SUBST:  f = *%, g = %$--, hij = -
+SUBST:  f = *%, h = %$--, ij = -
 NSUBST: - = 4=1 / 5=1' / 2=4 / 2=4' / 7''' / '
 # Depths
 : else
@@ -1261,7 +1198,6 @@ ENDMAP
 
 NAME:   maelrawn_ghost_gauntlet_escape
 # Same depths where Gauntlets can place
-TAGS:   transparent
 DEPTH:  D:11-, Lair, Orc:$
 ORIENT: float
 KPROP:  x = bloody
@@ -1306,7 +1242,6 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
-TAGS:   transparent
 WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
@@ -1326,7 +1261,6 @@ ENDMAP
 
 # based on sewer_entry_d
 NAME:   ebering_ghost_sewer_d
-TAGS:   transparent
 ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
@@ -1453,59 +1387,33 @@ ORIENT:  float
 TAGS:    water_ok
 KMONS:   O = player_ghost
 KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
-KMONS:   1 = snapping turtle / sea snake / alligator snapping turtle w:2
-KMONS:   2 = spectral snapping turtle / spectral sea snake \
-             / spectral alligator snapping turtle w:2
-KMONS:   E = water elemental
-{{
-kmons("F = merfolk ; " .. ghost_monster_weapon("merfolk", {["draining"] = 1}) ..
-      "    . throwing net w:3 | nothing w:9")
-local quality = crawl.one_chance_in(3) and "randart" or "good_item"
-kmons("3 = merfolk aquamancer ; " ..
-           ghost_monster_weapon("blademaster", {["electrocution"] = 1},
-               quality) ..
-      "    . robe good_item")
-kmons("4 = merfolk impaler ; " ..
-           ghost_monster_weapon("impaler", {["draining"] = 1}, quality) ..
-      "    . robe good_item | leather armour good_item")
-}}
-KMONS:   5 = kraken
-KMONS:   6 = spectral kraken
-KFEAT:   O = W
-KFEAT:   123456EF = w
-# Place 2-6 corpses around the perimiter. Place monsters on D, excluding the
-# merfolk leader's band, which goes on the E.
-NSUBST:  - = 2=- / 4=-s / s, D = 2=1 / 4=1w / 2=E / 3=Ew / 3 / w
-# Either the normal or spectral set. Also randomize wall patterns.
-SHUFFLE: 1E35 / 2F46, pq
-SUBST:   d = |*, r = wW, p = x, q = s, s = W.
+KMONS:   1 = kraken
+KMONS:   2 = kraken simulacrum / spectral kraken
+SHUFFLE: 1D / D2
+KFEAT:   Od = W
+KFEAT:   12D = w
+SUBST:   u = wW, s=W.
+NSUBST:  d = 3=|* / *%
 TILE:    G = dngn_statue_mermaid
-MARKER:  P = lua:transp_loc("davey_jones_entry")
-MARKER:  Q = lua:transp_dest_loc("davey_jones_entry")
-MARKER:  R = lua:transp_loc("davey_jones_exit")
-MARKER:  S = lua:transp_dest_loc("davey_jones_exit")
 {{
-dgn.delayed_decay(_G, "-", "minotaur skeleton / halfling skeleton" ..
+dgn.delayed_decay(_G,"'","minotaur skeleton / halfling skeleton" ..
   " / dwarf skeleton / human skeleton / kobold skeleton" ..
   " / felid skeleton / orc skeleton / centaur skeleton")
-ghost_setup(_G)
 }}
+: ghost_setup(_G)
 MAP
- WWssssSssssWW
+ WWWWWWWWWWWWW
 WWcccccccccccWW
-WccG---Q---GccW
-WcGspqpqpqpsGcW
-Wc-sqqrprqqs-cW
-Wc-srDDDDDrs-cW
-Wn-prDDDDDrp-nW
-Wn-qpDD5DDpq-nW
-Wn-prDDDDDrp-nW
-Wc-srDDDDDrs-cW
-Wc-sqqrprqqs-cW
-WcGspqpOpqpsGcW
-WccG-ddRdd-GccW
-WWccccnnnccccWW
- WWssssPssssWW
+WccGwwwwwwwGccW
+WcWuwwwwwdwuWcW
+WcWWWdDwDwWWWcW
+Wns'Www1wwWWWnW
+Wn.sWwwwwwW'snW
+Wc'sWduOudWs.cW
+Wc..'sWsWWs..cW
+WccG.....'.GccW
+WWcnnn===nnncWW
+ WW....@....WW
 ENDMAP
 
 NAME:   gammafunk_ghost_stat_death
@@ -1640,31 +1548,31 @@ DEPTH:  D:3-13
 KMONS:  pq = plant / fungus
 KFEAT:  q = W
 KMONS:  O = player ghost
-MONS:   kobold, kobold brigand, kobold demonologist
-KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
-KMONS:  E = kobold ; wand of flame | wand of acid | wand of iceblast \
-                | wand of mindburst | wand of polymorph | wand of charming \
-                | wand of paralysis . dagger | short sword | whip
-KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
-                . wand of flame | wand of acid | wand of iceblast \
-                | wand of mindburst | wand of polymorph | wand of charming \
-                | wand of paralysis . dagger | short sword | whip
+MONS:   kobold, big kobold, kobold demonologist
+KMONS:  D = kobold ; dart ego:curare | dart ego:poisoned . dagger
+KMONS:  E = big kobold ; dart ego:curare | \
+                dart ego:poisoned w:5 . dagger | short sword | whip
+KMONS:  F = kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger
+KMONS:  H = big kobold ; wand of flame | wand of acid | wand of polymorph | \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration . dagger | short sword | whip
+KMONS:  J = kobold ; dagger ego:distortion
+KMONS:  K = big kobold ; dagger ego:distortion | short sword ego:distortion | \
+                whip ego:distortion
 # Define some kobolds with more general nasty ego weapons.
 {{
-    kmons("H = kobold ; " .. disto_weapon("kobold"))
-    kmons("J = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
-          disto_weapon("kobold"))
-
+    local weapons = {["dagger"] = 10, ["short sword"] = 10, ["whip"] = 10}
     local egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
-                  ["pain"] = 5, ["electrocution"] = 5, ["distortion"] = 5}
-    local basic_def = ghost_monster_weapon("kobold", egos)
-    local good_def = ghost_monster_weapon("kobold", egos,
-        crawl.coinflip() and "randart" or "good_item")
-    kmons("K = kobold ; " .. basic_def)
-    kmons("L = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
-          basic_def)
-    kmons("M = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
-          good_def)
+                  ["pain"] = 5, ["electrocution"] = 5}
+    local basic_def = random_item_def(weapons, egos, "", "|")
+    local quality = crawl.coinflip() and "randart" or "good_item"
+    good_def = random_item_def(weapons, egos, quality, "|")
+    kmons("L = kobold ; " .. basic_def)
+    kmons("M = big kobold ; " .. basic_def)
+    kmons("N = kobold ; " .. good_def)
+    kmons("P = big kobold ; " .. good_def)
 }}
 # 50% of time put statue/tree/fountain with plants and vertical wall, otherwise
 # add some diagonal wall instead. The second shuffle makes any statue sometimes
@@ -1674,16 +1582,16 @@ SUBST: r = -, Z = T, s = x, G : GGt, T : TTUV, x : xcbv
 : ghost_good_loot(_G)
 : if you.depth() < 6 then
 SUBST:  d = *%, e = %$, fg = -
-NSUBST: - = 2=1 / 4=1. / DE / DE.. / H / 2=K. / M / .
+NSUBST: - = 2=1 / 4=1. / DEFH / DF.. / NP / JK / 2=JL.. / .
 : elseif you.depth() < 9 then
 SUBST:  d = *, e = *%, f = %$--, g = -
-NSUBST: - = 2=2 / 4=2. / F / F. / J / 3=L. / M / 3. / .
+NSUBST: - = 2=2 / 4=2. / EH / EH.. / P / K / 3=KM.. / 3. / .
 : elseif you.depth() < 12 then
 SUBST:  e = *, f = %$, g = -
-NSUBST: - = 2=2 / 2=2. / F / 2=F. / J / 3=L. / M / 3 / 2=3. / .
+NSUBST: - = 2=2 / 2=2. / EH / 2=EH.. / P / K / 3=KM.. / 3 / 2=3. / .
 : else
 SUBST:  f = *, g = %$
-NSUBST: - = 2 / F / 2=F. / 2=M / 2=J / 3=L. / 2=3 / 4=3. / .
+NSUBST: - = E / H / 2=EH.. / 2=P / 2=K / 3=KM.. / 2=3 / 4=3. / .
 : end
 : ghost_setup(_G)
 MAP
@@ -1700,10 +1608,10 @@ ENDMAP
 
 NAME:   gammafunk_ghost_hive
 DEPTH:  D:5-, Lair
-KITEM:  ' = potion of ambrosia
+KITEM:  ' = ration
 KMONS:  O = player ghost
 MONS:   killer bee, queen bee, hornet, meliai
-# Chance to make a partial wall in each of the full cells. Add 0-4 ambrosias.
+# Chance to make a partial wall in each of the full cells. Add 0-4 rations.
 NSUBST: p = x- / -, q = x- / -, r = x- / -, s = x- / -, - = 4='- / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
@@ -1768,8 +1676,8 @@ KMONS:   p = plant
 KMONS:   O = player ghost
 MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
 KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
-                wand of charming | wand of paralysis | \
-                wand of mindburst \
+                wand of enslavement | wand of paralysis | \
+                wand of disintegration \
             . spear w:20 | halberd | club | whip | flail | nothing w:15
 # Define some gnolls with reach weapons.
 {{
@@ -1789,11 +1697,11 @@ KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
     kmons("E = gnoll ; " .. basic_def .. " . throwing net | nothing")
     kmons("F = gnoll ; " .. good_def .. " . throwing net | nothing")
     kmons("H = gnoll sergeant ; " .. sergeant_basic_def ..
-          "    . buckler | kite shield | nothing w:40" ..
+          "    . buckler | shield | nothing w:40" ..
           "    . ring mail | scale mail")
     kmons("J = gnoll sergeant ; " .. sergeant_good_def ..
           "    . buckler good_item | buckler randart w:5 " ..
-          "        | kite shield good_item | kite shield randart w:5 " ..
+          "        | shield good_item | shield randart w:5 " ..
           "    . ring mail good_item | ring mail randart w:5 " ..
           "        | scale mail good_item | scale mail randart w:5")
 }}
@@ -1900,7 +1808,8 @@ cccnn===nnccc
 ENDMAP
 
 NAME:    gammafunk_ghost_crypt
-DEPTH:   D:13-, Crypt, Depths, Zot
+DEPTH:   D:15, Crypt, Depths, Zot
+WEIGHT:  5 (D:15)
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 # Always place one randart aux, one randart jewel, and one nice book, each
 # using the possible ghost locations.
@@ -1911,12 +1820,12 @@ KITEM:   FJL = randbook owner:Kikubaaqudgha disc:necromancy numspells:6 \
 KITEM:   12 = superb_item / star_item
 KMONS:   DEF = player ghost
 KMONS:   HJ1 =  lich
-KMONS:   KL2 =  ancient lich / dread lich
+KMONS:   KL2 =  ancient lich
 # 1/7 chance for 3 ghosts, 2/7 chance for 2 ghosts, 4/7 chance for 1 ghost.
 # Any ghost that doesn't place will place a depth-appropriate lich instead.
 SHUFFLE: EF / EJ / EJ / HJ / HJ / HJ / HJ
-# For later branches, guarantee at least one ancient or dread lich and
-# upgrade ordinary liches by depth.
+# For later branches, guarantee at least one ancient lich and upgrade ordinary
+# liches to ancient liches by depth.
 : if you.in_branch("Crypt") then
 SUBST:   H = HHK, J = JJL
 NSUBST:  1 = 2 / 112
@@ -1953,14 +1862,16 @@ NSUBST: R = R / -
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 9 then
-MONS:   water moccasin / ice beast / bullfrog / black bear
+MONS:   water moccasin / ice beast / bullfrog / black bear / hippogriff \
+        / crocodile
 MONS:   yak / wyvern / killer bee band
 MONS:   soldier ant / komodo dragon / redback / basilisk / hydra / hornet \
         / manticore / acid dragon / catoblepas
 SUBST:  D = DE, d = *, e = *%, f = %$, ghij= -
 NSUBST: - = 1 / 2=2 / 3=2. / 3. / 4... / .
 :     elseif you.depth() < 12 then
-MONS:   killer bee band / yak / soldier ant / wyvern / komodo dragon
+MONS:   killer bee band / yak / soldier ant / hippogriff / crocodile / wyvern \
+        / komodo dragon
 MONS:   hydra / redback / basilisk / hornet / manticore / acid dragon
 MONS:   catoblepas / fire dragon / wolf spider / ice dragon
 SUBST:  D = DE, e = *, f = *%, g = %$--, hij= -
@@ -1988,7 +1899,7 @@ MONS:   warg
 SUBST:  D = DEFH, f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = 1 / 1. / 4=2 / 5=2. / .
 : elseif you.in_branch("Shoals") then
-MONS:   snapping turtle / manticore
+MONS:   hippogriff / snapping turtle / manticore
 MONS:   harpy / sea snake
 MONS:   alligator snapping turtle
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
@@ -2005,9 +1916,9 @@ MONS:   torpor snail / ghost moth
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Swamp") then
-MONS:   goliath frog / tyrant leech
+MONS:   spiny frog / komodo dragon / hornet / ugly thing
 MONS:   hydra / alligator / swamp dragon
-MONS:   bunyip
+MONS:   very ugly thing
 SUBST:  D = FH, fg = |*, h = *%, i = $%--, j= -
 NSUBST: - = 1 / 1. / 3=2 / 5=2. / 3 / 3=3. / 4. / .
 : elseif you.in_branch("Elf") then
@@ -2090,7 +2001,7 @@ kmons("q = kobold; " .. wrathful_weapon("kobold",
 kmons("r = gnoll sergeant; " .. wrathful_weapon("sergeant",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
       "    . leather armour good_item | ring mail good_item" ..
-      "    . buckler good_item | kite shield good_item w:5")
+      "    . buckler good_item | shield good_item w:5")
 kmons("s = orc warrior ; " .. wrathful_weapon("warrior",
                crawl.one_chance_in(3) and "randart" or "good_item") ..
       "    . chain mail good_item | plate armour good_item")
@@ -2101,10 +2012,10 @@ kmons("y = two-headed ogre ; " .. wrathful_weapon("ogre",
       "    . " .. wrathful_weapon("ogre", "good_item"))
 kmons("z = tengu warrior ; " .. wrathful_weapon("warrior", "randart") ..
       "    . leather armour good_item | ring mail good_item" ..
-      "    . buckler good_item | kite shield good_item")
+      "    . buckler good_item | shield good_item")
 }}
 :     if you.depth() < 9 then
-MONS:   kobold brigand / gnoll sergeant / ogre / orc warrior
+MONS:   big kobold / gnoll sergeant / ogre / orc warrior
 MONS:   troll
 MONS:   cyclops
 SUBST:  d = *, e = *%, f = %$, ghij= -
@@ -2156,8 +2067,8 @@ NSUBST: - = 1 / 1. / 3=2. / q / r / 3=3. / .
 : elseif you.in_branch("Snake") then
 {{
 kmons("q = naga warrior; " .. wrathful_weapon("warrior", "randart") ..
-      "    . nothing w:95 | robe good_item w:95 | barding good_item" ..
-      "    . nothing w:40 | kite shield good_item | tower shield good_item")
+      "    . nothing w:95 | robe good_item w:95 | naga barding good_item" ..
+      "    . nothing w:40 | shield good_item | large shield good_item")
 }}
 MONS:   naga / salamander
 MONS:   naga warrior
@@ -2222,267 +2133,4 @@ MAP
   ...cnnnc...
     ...S...
       .@.
-ENDMAP
-
-NAME:   gammafunk_ghost_abyssal_escape
-KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
-            / scroll of blinking ident:all w:20 \
-            / boomerang ego:dispersal ident:all \
-            / book of spatial translocations ident:all \
-            / book of the warp ident:all w:5 \
-            / randbook owner:Lugonu disc:translocation ident:all w:5 \
-            / manual of translocations w:2 / rift w:2 / ring of the hare w:2
-KMONS:  O = player ghost
-KFEAT:  O = enter_abyss
-KFEAT:  ^ = dispersal trap
-COLOUR: -apQ = magenta
-RTILE:  x = wall_abyss
-FTILE:  -apQ = floor_nerves
-# Randomize transporter feature placement among set of specific locations on
-# 'P', using remaining instances for loot.
-NSUBST: P = P / S, Q = Q / R, R = R / k, S = S / .
-NSUBST: k = d / e / f / g / h / i / j / -
-# Place some rocks and dispersal traps in the inner area and along the inner
-# wall, but with lower density along wall to make fewer choke points.
-SUBST:  a = x -:7 ^:1, p = x -:37 ^:1
-# Place ghost and translocation loot, remaining instances of '-' will be used
-# for further loot and monster placement.
-NSUBST: - = O / N / -
-: ghost_good_loot(_G)
-# Some monsters we use in multiple branches
-{{
-kmons("D = orc knight; " .. disto_weapon("knight", "randart") ..
-      "    . chain mail good_item | plate armour good_item")
-kmons("E = spriggan rider; " .. disto_weapon("rider", "randart") ..
-      "    . robe good_item . buckler good_item")
-kmons("F = deep elf knight; " .. disto_weapon("elf knight", "randart") ..
-      "    . leather armour good_item | ring mail good_item" ..
-      "      | scale mail good_item | chain mail good_item" ..
-      "    . buckler good_item")
-kmons("H = orc warlord; " .. disto_weapon("knight", "randart") ..
-      "    . chain mail good_item | plate armour good_item")
-}}
-: if you.in_branch("D") then
-{{
-kmons("q = kobold; " .. disto_weapon("kobold",
-               crawl.one_chance_in(3) and "randart" or "good_item"))
-kmons("r = gnoll; " .. disto_weapon("gnoll",
-               crawl.one_chance_in(3) and "randart" or "good_item"))
-kmons("s = kobold brigand; " .. disto_weapon("kobold",
-               crawl.one_chance_in(3) and "randart" or "good_item"))
-kmons("u = gnoll sergeant; " .. disto_weapon("sergeant",
-               crawl.one_chance_in(3) and "randart" or "good_item") ..
-      "    . leather armour good_item | ring mail good_item" ..
-      "    . buckler good_item | kite shield good_item w:5")
-kmons("y = orc warrior ; " .. disto_weapon("warrior",
-               crawl.one_chance_in(3) and "randart" or "good_item") ..
-      "    . chain mail good_item | plate armour good_item")
-kmons("z = skeletal warrior ; " .. disto_weapon("warrior", "randart"))
-}}
-:     if you.depth() < 6 then
-MONS:   any lesser demon / small abomination
-MONS:   toenail golem / ancient zyme
-SUBST:  d = *%, e = %$, fghij= -
-NSUBST: - = qrs / 2=1 / 2=1. / 2... / .
-:     elseif you.depth() < 9 then
-MONS:   any lesser demon w:5 / small abomination
-MONS:   toenail golem / ancient zyme / any common demon / ugly thing
-MONS:   worldbinder / large abomination / raiju / shapeshifter / rakshasa \
-        / wizard / hell hog / thrashing horror
-SUBST:  d = *, e = *%, f = %$, ghij= -
-NSUBST: - = suy / 2=1 / 2=1. / 2=2. / 3... / .
-:     elseif you.depth() < 12 then
-MONS:   small abomination / toenail golem / any common demon w:5
-MONS:   ugly thing / large abomination / raiju / shapeshifter / wizard \
-        / hell hog / thrashing horror
-MONS:   ancient zyme / worldbinder / rakshasa
-MONS:   great orb of eyes / glowing orange brain / very ugly thing \
-        / lurking horror / wretched star / tentacled starspawn
-SUBST:  e = *, f = *%, g = %$--, hij= -
-NSUBST: - = uyz / 2=1 / 2=1. / 2 / 2. / 3. / 4... / .
-:     elseif you.depth() < 14 then
-MONS:   any common demon / ugly thing / large abomination / worldbinder
-MONS:   raiju / shapeshifter / thrashing horror / wizard / hell hog \
-        / very ugly thing
-MONS:   ancient zyme / rakshasa / great orb of eyes / glowing orange brain
-MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
-        / executioner w:2 / profane servitor w:2
-SUBST:  f = |*, g = *%, h = %$--, ij= -
-NSUBST: - = yzDF / 2=1 / 3=1. / 2 / 2=2. / 3 / 4. / .
-:     else
-MONS:   ugly thing / large abomination / worldbinder / raiju / shapeshifter \
-        / rakshasa / thrashing horror / wizard
-MONS:   wizard / hell hog / great orb of eyes / very ugly thing \
-        / glowing orange brain / tentacled starspawn / cacodemon
-MONS:   lurking horror / wretched star / hellion / apocalypse crab
-MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
-        / starcursed mass / daeva god:Xom / executioner / profane servitor \
-        / hell sentinel w:5 / hellephant w:5
-SUBST:  f = |*, g = *, h = %$, ij= -
-NSUBST: - = qDFH / 2=1 / 3=1. / 2 / 3=2. / 3 / 4 / .
-:     end
-: elseif you.in_branch("Lair") then
-{{
-kmons("q = spriggan; " .. disto_weapon("spriggan",
-      crawl.one_chance_in(3) and "randart" or "good_item"))
-}}
-MONS:   any common demon / ugly thing
-MONS:   large abomination / raiju / shapeshifter / rakshasa / hell hog \
-        / thrashing horror
-MONS:   ancient zyme / worldbinder
-MONS:   great orb of eyes / glowing orange brain / very ugly thing \
-        / lurking horror / tentacled starspawn / wretched star \
-        / cacodemon / hellion / apocalypse crab / glowing shapeshifter
-SUBST:  f = *, g = %$, hij= -
-NSUBST: - = qE / 2=1 / 2=1. / 2 / 2=2. / 3. / 4. / .
-: elseif you.in_branch("Orc") then
-MONS:   any common demon / ugly thing / large abomination / worldbinder / raiju
-MONS:   shapeshifter / rakshasa / thrashing horror / wizard / hell hog \
-        / very ugly thing
-MONS:   ancient zyme / great orb of eyes / glowing orange brain
-MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
-        / hellion / apocalypse crab / glowing shapeshifter / crystal guardian \
-        / tentacled monstrosity w:2 / starcursed mass w:2 / daeva god:Xom w:2 \
-        / executioner w:2 / profane servitor w:2
-SUBST:  f = |*, g = *%, h = %$--, ij= -
-NSUBST: - = DH / 2=1 / 3=1. / 2 / 2=2. / 3 / 4. / .
-: elseif you.in_branch("Shoals")
-:        or you.in_branch("Snake")
-:        or you.in_branch("Swamp")
-:        or you.in_branch("Spider") then
-# Use the same basic monster list for all 4 Lair branches.
-MONS:   ugly thing / large abomination / worldbinder / raiju \
-        / thrashing horror / wizard / hell hog
-MONS:   great orb of eyes / glowing orange brain / very ugly thing \
-        / tentacled starspawn / cacodemon
-MONS:   lurking horror / wretched star / hellion / apocalypse crab
-MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
-        / starcursed mass / daeva god:Xom / executioner / profane servitor \
-        / hell sentinel / hellephant
-# Define any branch-specific disto warriors and other substitutions.
-:     if you.in_branch("Shoals") then
-{{
-kmons("q = merfolk impaler ; " .. disto_weapon("impaler", "randart") ..
-      "    . robe good_item | leather armour good_item")
-}}
-NSUBST: - = q / -
-:     elseif you.in_branch("Snake") then
-{{
-kmons("q = naga warrior ; " .. disto_weapon("warrior", "randart") ..
-      "    . nothing w:95 | robe good_item w:95 | barding good_item" ..
-      "    . nothing w:40 | kite shield good_item | tower shield good_item")
-kmons("r = nagaraja ; " .. disto_weapon("warrior", "randart") ..
-      "    . robe good_item w:40 | barding good_item")
-}}
-NSUBST: - = qr / -
-:     elseif you.in_branch("Swamp") then
-{{
-kmons("q = spriggan druid ; " .. disto_weapon("druid", "randart") ..
-      "    . robe good_item")
-}}
-# Potential druids need some trees!
-SUBST:  x = txxx
-NSUBST: - = Eq / -
-:     elseif you.in_branch("Spider") then
-# No good humanoids to wield distortion in Spider, so let's go with a narrative
-# of the player getting banished by a zot trap.
-KFEAT:  ~ = zot trap
-NSUBST: - = ~ / 2=~- / -
-:     end
-# Common monster/loot placement for all Lair branches.
-SUBST:  fg = |*, h = *%, i = $%--, j= -
-NSUBST: - = 2=1 / 4=1. / 2=2 / 2=2. / 3 / 4 / .
-: elseif you.in_branch("Elf") then
-{{
-kmons("q = deep elf blademaster; " .. disto_weapon("blademaster", "randart") ..
-      " . " .. disto_weapon("blademaster",
-                   crawl.one_chance_in(3) and "randart" or "good_item") ..
-      " . leather armour good_item")
-}}
-MONS:   large abomination / worldbinder / shapeshifter / thrashing horror \
-        / rakshasa / very ugly thing / great orb of eyes / glowing orange brain
-MONS:   tentacled starspawn / cacodemon / deep elf demonologist \
-        / deep elf sorcerer / glowing shapeshifter / crystal guardian
-MONS:   wretched star / lurking horror / hellion / apocalypse crab
-MONS:   tentacled monstrosity / starcursed mass / daeva god:Xom / executioner \
-        / profane servitor / hellephant / hell sentinel
-SUBST:  fg = |*, h = *, i = $%, j= -
-NSUBST: - = Fq / 3=1 / 3=1. / 2=2 / 2=2. / 3 / 4 / 4. / .
-: elseif you.in_branch("Crypt") then
-{{
-kmons("q = ancient champion ; " .. disto_weapon("warrior", "randart") ..
-      "    . chain mail good_item | plate armour good_item")
-}}
-MONS:   thrashing horror / rakshasa / very ugly thing / great orb of eyes \
-        / glowing orange brain / tentacled starspawn / cacodemon
-MONS:   glowing shapeshifter / crystal guardian / lich
-MONS:   lurking horror / wretched star / hellion / apocalypse crab
-MONS:   tentacled monstrosity / starcursed mass / daeva god:Xom / executioner \
-        / profane servitor / hellephant / hell sentinel
-SUBST:  fgh = |*, i = *%, j= $%--
-NSUBST: - = q / 3=1 / 4=1. / 2=2 / 2=2. / 3 / 3. / 4 / 4. / .
-: elseif you.in_branch("Depths") then
-{{
-kmons("q = spriggan defender; " .. disto_weapon("defender", "randart") ..
-      "    . robe good_item  . buckler good_item")
-kmons("r = tengu reaver; " .. disto_weapon("knight", "randart") ..
-      "    . scale mail good_item  . buckler good_item")
-}}
-MONS:   rakshasa / very ugly thing / great orb of eyes / glowing orange brain \
-        / tentacled starspawn / cacodemon
-MONS:   glowing shapeshifter / crystal guardian / tentacled monstrosity \
-        / daeva god:Xom / executioner / profane servitor
-MONS:   lurking horror / wretched star / hellion / apocalypse crab \
-        / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
-SUBST:  fgh = |*, i = *, j= %$
-NSUBST: - = Hqr / 4=1 / 4=1. / 2=2 / 2=2. / 3 / 3. / 4 / 4. / .
-: elseif you.in_branch("Zot") then
-{{
-kmons("q = draconian knight; " .. disto_weapon("knight", "randart") ..
-      "    . cloak good_item . kite shield good_item | tower shield good_item")
-kmons("r = killer klown; club ego:distortion plus:" ..
-       tostring(8 + crawl.random2(5)))
-}}
-MONS:   rakshasa w:5 / very ugly thing w:5 / great orb of eyes w:5 \
-        / glowing orange brain / tentacled starspawn / cacodemon \
-        / glowing shapeshifter / crystal guardian / tentacled monstrosity
-MONS:   draconian shifter / daeva god:Xom / executioner / profane servitor \
-        / killer klown
-MONS:   lurking horror / wretched star / hellion / apocalypse crab \
-        / starcursed mass
-MONS:   ancient lich / dread lich / hellephant / hell sentinel
-SUBST:  fghij = |*
-NSUBST: - = qr / 4=1 / 4=1. / 2=2 / 3=2. / 3 / 3. / 4 / 2=4. / .
-: end
-MARKER: P = lua:transp_loc("abyssal_escape_entry")
-MARKER: Q = lua:transp_dest_loc("abyssal_escape_entry")
-MARKER: R = lua:transp_loc("abyssal_escape_exit")
-MARKER: S = lua:transp_dest_loc("abyssal_escape_exit")
-# Color weights similar to that used for rock in the Abyss.
-COLOUR: x = blue:13 / red:66 / magenta:50 / brown:90 / lightgreen:68 \
-            / lightred:110 / lightmagenta:38 / yellow / white / fire:6
-RTILE:  x = wall_abyss
-: ghost_setup(_G)
-MAP
-     ....
-   ...cc..  ..P..
- ...Pcccc....cnc.
-..ccnc-pcc..ccQc.
-.cc-Q-a-QnP.cp-c..
-.c-aaappcc..cc-cc.
-.cc-apccc...cc-pc.
-..cc-pc....cc-apc.
-..ccp-ccPcccp-pcc.
-.ccpaa-cncpp-ccc..
-PnQ-aaa-Q-aaQnP..
-.cc-aaaaa-aa-cc..
-..cc-aap-Q--a-cc..
- ..c-aa-cnccpa-cc.
- .ccp--ccP.cppa-c.
- .cpQccc...cccQcc.
- .ccnc.......cnc..
- ...P..     ..P..
 ENDMAP
