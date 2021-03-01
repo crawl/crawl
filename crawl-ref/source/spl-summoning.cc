@@ -2994,7 +2994,10 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
              agent.is_monster() ? "s" : "");
     }
     else if (agent.is_player())
-        canned_msg(MSG_NOTHING_HAPPENS);
+    {
+        mpr("There is not enough space to conjure foxfire!");
+        return spret::abort;
+    }
 
     return spret::success;
 }
