@@ -1971,9 +1971,9 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_PAWS, 0, 1, mutflag::good, true,
-  "sharp paws",
+  "stealthy paws",
 
-  {"Your sharp claws are effective at attacking unaware monsters.", "", ""},
+  {"Your stealthy paws help you sneak and pounce on unaware monsters.", "", ""},
   {"", "", ""},
   {"", "", ""},
 },

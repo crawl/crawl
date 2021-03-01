@@ -623,7 +623,7 @@ string player::unarmed_attack_name() const
 
     if (has_usable_claws(true))
     {
-        if (species == SP_FELID)
+        if (you.has_mutation(MUT_FANGS))
             default_name = "Teeth and claws";
         else
             default_name = "Claws";

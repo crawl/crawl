@@ -822,7 +822,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.species == SP_NAGA
-        || you.species == SP_FELID
+        || you.has_mutation(MUT_PAWS) // paws are not feet?
         || you.species == SP_OCTOPODE
         || you.fishtail && temp)
     {
@@ -2987,7 +2987,8 @@ int player_stealth()
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 
-    if (you.form == transformation::blade_hands && you.species == SP_FELID
+    if (you.form == transformation::blade_hands
+        && you.has_innate_mutation(MUT_PAWS)
         && !you.airborne())
     {
         stealth -= STEALTH_PIP; // klack klack klack go the blade paws
@@ -3029,12 +3030,8 @@ int player_stealth()
             stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
-        else if (you.species == SP_FELID
-                 && (you.form == transformation::none
-                     || you.form == transformation::appendage))
-        {
-            stealth += 20;  // paws
-        }
+        else if (you.has_mutation(MUT_PAWS))
+            stealth += 20; // XX why is this 2/5 of a regular STEALTH_PIP?
     }
 
     // If you've been tagged with Corona or are Glowing, the glow

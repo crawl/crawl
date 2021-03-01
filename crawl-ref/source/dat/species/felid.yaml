@@ -60,8 +60,6 @@ fake_mutations:
     short: no armour
   - long: You are incapable of wielding weapons or throwing items.
     short: no weapons or thrown items
-  - long: Your paws allow you to move quietly. (Stealth)
-    short: stealth
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_ENCHANTER
