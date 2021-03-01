@@ -144,7 +144,8 @@ bool attack::handle_phase_end()
 {
     if (attacker->is_player() && defender)
     {
-        _handle_spectral_brand(*attacker, *defender);
+        if (damage_brand == SPWPN_SPECTRAL)
+            _handle_spectral_brand(*attacker, *defender);
         // Use the Nessos hack to give the player glaive of the guard spectral too
         if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
             _handle_spectral_brand(*attacker, *defender);
