@@ -1072,7 +1072,7 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp(bool scale = false, bool set = false);
-void calc_mp();
+void calc_mp(bool scale = false);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);

@@ -33,6 +33,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "output.h"
+#include "player.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -653,6 +654,9 @@ void ash_check_bondage()
 
     set_piety(ASHENZARI_BASE_PIETY
               + (num_cursed * ASHENZARI_PIETY_SCALE) / num_slots);
+
+    calc_hp(true);
+    calc_mp(true);
 }
 
 bool god_id_item(item_def& item, bool silent)
