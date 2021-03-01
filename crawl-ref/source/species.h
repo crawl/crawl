@@ -19,6 +19,7 @@ bool species_is_orcish(species_type species);
 bool species_has_hair(species_type species);
 bool species_has_bones(species_type species);
 bool species_can_throw_large_rocks(species_type species);
+bool species_wears_barding(species_type species);
 
 bool species_has_claws(species_type species);
 undead_state_type species_undead_type(species_type species) PURE;

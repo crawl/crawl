@@ -624,8 +624,7 @@ public:
     bool      has_usable_hooves(bool allow_tran = true) const;
     int       has_fangs(bool allow_tran = true) const;
     int       has_usable_fangs(bool allow_tran = true) const;
-    int       has_tail(bool allow_tran = true) const;
-    int       has_usable_tail(bool allow_tran = true) const;
+    bool      has_tail(bool allow_tran = true) const;
     bool      has_usable_offhand() const;
     int       has_pseudopods(bool allow_tran = true) const;
     int       has_usable_pseudopods(bool allow_tran = true) const;

@@ -6773,7 +6773,7 @@ int player::has_usable_fangs(bool allow_tran) const
     return has_fangs(allow_tran);
 }
 
-int player::has_tail(bool allow_tran) const
+bool player::has_tail(bool allow_tran) const
 {
     if (allow_tran)
     {
@@ -6788,7 +6788,8 @@ int player::has_tail(bool allow_tran) const
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
-        || fishtail
+        || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
+        || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
         || get_mutation_level(MUT_STINGER, allow_tran))
     {
@@ -6796,11 +6797,6 @@ int player::has_tail(bool allow_tran) const
     }
 
     return 0;
-}
-
-int player::has_usable_tail(bool allow_tran) const
-{
-    return has_tail(allow_tran);
 }
 
 // Whether the player has a usable offhand for the
@@ -7620,17 +7616,9 @@ bool player::form_uses_xl() const
         || form == transformation::bat && you.species != SP_VAMPIRE;
 }
 
-bool player::wear_barding() const {
-    switch (you.species) {
-        case SP_NAGA:
-        case SP_PALENTONGA:
-#if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR:
-#endif
-            return true;
-        default:
-            return false;
-    }
+bool player::wear_barding() const
+{
+    return species_wears_barding(you.species);
 }
 
 static int _get_potion_heal_factor()

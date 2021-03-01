@@ -1229,9 +1229,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (_is_covering(mutat) && _body_covered() >= 3)
         return true;
 
-    // Only species that already have tails can get this one.
-    if (you.species != SP_NAGA && !species_is_draconian(you.species)
-        && you.species != SP_PALENTONGA && mutat == MUT_STINGER)
+    // Only species that already have tails can get this one. For merfolk it
+    // would only work in the water, so skip it.
+    if ((!you.has_tail(false) || you.species == SP_MERFOLK)
+        && mutat == MUT_STINGER)
     {
         return true;
     }
@@ -1259,7 +1260,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Palentonga can go on a roll.
-    if (you.species != SP_PALENTONGA && mutat == MUT_ROLL)
+    if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.

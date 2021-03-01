@@ -169,6 +169,22 @@ bool species_can_throw_large_rocks(species_type species)
     return species_size(species) >= SIZE_LARGE;
 }
 
+bool species_wears_barding(species_type species)
+{
+    // TODO: dataify?
+    switch (species)
+    {
+        case SP_NAGA:
+        case SP_PALENTONGA:
+#if TAG_MAJOR_VERSION == 34
+        case SP_CENTAUR:
+#endif
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool species_is_elven(species_type species)
 {
     return bool(get_species_def(species).flags & SPF_ELVEN);
