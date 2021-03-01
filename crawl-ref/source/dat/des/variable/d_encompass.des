@@ -126,7 +126,7 @@ KMONS:   _ = demonic plant
 KMONS:   mo = vault guard
 KMONS:   p = floating eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
-KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
+KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 : local bands = {
 :     [65 - you.absdepth() * 3] =
@@ -141,7 +141,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :         { "deep elf knight", "orc high priest", "deep troll shaman", },
 :     [you.absdepth() * 2 - 42] =
 :         { "harpy", "hell knight", "naga sharpshooter", "vampire mage",
-:           "orc warlord", "vampire knight", "yaktaur captain",
+:           "orc warlord", "vampire knight", "stone giant",
 :           "deep elf high priest", "spriggan defender", },
 :     [you.absdepth() - 18] =
 :         { "death knight", "ancient champion",
@@ -576,12 +576,12 @@ SHUFFLE: O3hi
 SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
-MONS: tengu warrior band w:5 / tengu conjurer band w:5 / \
-      ogre mage band / centaur warrior band / yaktaur band / cyclops band / \
+MONS: tengu warrior band w:15 / tengu conjurer band w:15 / \
+      deep troll earth mage band / deep elf archer band w:1 / cyclops band / \
       deep elf knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
-      fire dragon w:12 / ice dragon w:8 / yaktaur captain band
-MONS: hydra / dire elephant / emperor scorpion / death yak band / \
+      fire dragon w:12 / ice dragon w:8 / titan
+MONS: caustic shrike w:5 / dire elephant / emperor scorpion / dire elephant band / \
       very ugly thing band
 MAP
   ......
