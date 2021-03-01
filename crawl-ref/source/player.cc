@@ -2040,7 +2040,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 static int _player_armour_adjusted_dodge_bonus(int scale)
 {
     const int dodge_bonus =
-        (80 + you.skill(SK_DODGING, 10) * you.dex() * 9) * scale
+        (800 + you.skill(SK_DODGING, 10) * you.dex() * 8) * scale
         / (20 - _player_evasion_size_factor()) / 10 / 10;
 
     const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
