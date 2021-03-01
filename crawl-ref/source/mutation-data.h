@@ -1095,12 +1095,12 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_PASSIVE_FREEZE, 0, 1, mutflag::good, false,
+{ MUT_PASSIVE_FREEZE, 1, 1, mutflag::good, false,
   "passive freeze",
 
   {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
   {"Your skin feels very cold.", "", ""},
-  {"", "", ""},
+  {"Your skin warms up.", "", ""},
 },
 
 { MUT_NIGHTSTALKER, 0, 3, mutflag::good, false,
