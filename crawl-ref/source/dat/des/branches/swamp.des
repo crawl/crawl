@@ -1844,31 +1844,6 @@ _.tt.tttt.t.tt.ttttt_
             -_-
 ENDMAP
 
-#### A dangerous temple to kiku
-NAME: beargit_kiku_chapel
-DEPTH: Swamp:2-
-TAGS: no_monster_gen
-KMONS: 1 = bunyip zombie w:10 / bunyip skeleton w:10 / bog body w:20 / death scarab w:1
-KMONS: 2 = patrolling juggernaut zombie w:20 / patrolling caustic shrike zombie w:3 / patrolling shard shrike zombie w:3 / patrolling spectral juggernaut w:5 / patrolling spectral caustic shrike w:1
-KMONS: 4 = patrolling lich w:1 / patrolling fenstrider_witch; quick blade pain w:1
-KMONS: 5 = ghost crab w:10 / death drake w:1 / ghoul w:1
-KFEAT: J = altar_kikubaaqudgha
-KITEM: K = shadow dragon skeleton
-KITEM: L = frost giant skeleton
-FTILE: . = floor_sandstone
-ITEM: randbook disc:necromancy slevels:12
-SUBST: x = xxxxxxxxxxxxx..WWWwwt.
-TILE: c = wall_brick_vines, x = wall_brick_vines
-MAP
-.xxxxxcccccc
-.xWx1wc111dcc
-.xWWWW+WW.KYc
-.A5W.1+2WW4Jc
-.x.WW1+..WLVc
-.xxxx.c111$cc
-....xxcccccc
-ENDMAP
-
 NAME:   nicolae_swamp_phyte_club
 DEPTH:  Swamp:2-, !Swamp:$
 ORIENT: float
@@ -2053,7 +2028,7 @@ ENDMAP
 default-depth:
 
 ###############################################################################
-# Swamp:4 standard
+# Swamp:5 standard
 #
 NAME:    swamp
 TAGS:    transparent no_monster_gen
@@ -2094,7 +2069,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Swamp:4 alternative (dp)
+# Swamp:5 alternative (dp)
 #
 NAME:    swamp_alternative
 TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
@@ -2185,7 +2160,7 @@ tttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# Swamp:4 alternative (due)
+# Swamp:5 alternative (due)
 NAME:    swamp_fiery
 TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
