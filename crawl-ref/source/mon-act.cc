@@ -1491,17 +1491,6 @@ static void _pre_monster_move(monster& mons)
         mons.add_ench(ENCH_SHAPESHIFTER);
 
     mons.check_speed();
-
-    // spellforged servitors lose an extra random2(16) energy per turn, often
-    // causing them to skip a turn. Show this message to give the player some
-    // feedback on what is going on when a servitor skips an attack due to
-    // random energy loss (otherwise, it just sits there silently).
-    // TODO: could this effect be implemented in some way other than energy?
-    if (mons.type == MONS_SPELLFORGED_SERVITOR && mons.foe != MHITNOT
-        && !mons.has_action_energy())
-    {
-        simple_monster_message(mons, " hums quietly as it recharges.");
-    }
 }
 
 void handle_monster_move(monster* mons)
