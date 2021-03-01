@@ -1823,7 +1823,6 @@ spret furious_charge(bool fail)
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    const coord_def orig_pos = you.pos();
     for (coord_def pos : target_path)
     {
         monster* sneaky_mons = monster_at(pos);

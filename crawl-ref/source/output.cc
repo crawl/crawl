@@ -869,7 +869,7 @@ static void _print_stats_mp(int x, int y)
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
-static void _print_stats_contam(int x, int y)
+static void _print_stats_contam(int /*x*/, int y)
 {
     if (you.species != SP_DJINNI)
         return;

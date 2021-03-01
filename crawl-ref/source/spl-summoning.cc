@@ -266,6 +266,7 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
 spret cast_summon_lively_mass(int pow, god_type god, bool fail)
 {
+    fail_check();
 
     mgen_data mass = _pal_data(MONS_LIVELY_MASS, 3, god,
                                 SPELL_SUMMON_LIVELY_MASS);

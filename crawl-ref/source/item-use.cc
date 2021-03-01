@@ -884,8 +884,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return true;
         };
 
-    auto _wieldable = [](const item_def& wpn, int slot = EQ_WEAPON){
-            bool isSecond = slot == EQ_SECOND_WEAPON;
+    auto _wieldable = [](const item_def& wpn, int wpn_slot){
+            bool isSecond = wpn_slot == EQ_SECOND_WEAPON;
             // Ensure wieldable
             if (!can_wield(&wpn, true, false, false, true, isSecond))
                 return false;
@@ -989,7 +989,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     if (!isDualWeapon)
     {
-        if (!_wieldable(new_wpn))
+        if (!_wieldable(new_wpn, EQ_WEAPON))
             return false;
         if (you.weapon())
         {
@@ -1004,7 +1004,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     }
     else
     {
-        auto wpn = [](int EQ){ return (EQ == EQ_WEAPON)?you.weapon() : you.second_weapon(); };
         auto twoweapons = [](){ return you.weapon() && you.second_weapon(); };
         auto noweapons = [](){ return !you.weapon() || !you.second_weapon(); };
 
@@ -1015,7 +1014,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             while (!twoweapons() && !noweapons())
             {
                 auto choosed_wpn = !you.weapon() ? EQ_WEAPON : EQ_SECOND_WEAPON;
-                if (!_wieldable(new_wpn, choosed_wpn == EQ_SECOND_WEAPON))
+                if (!_wieldable(new_wpn, choosed_wpn))
                     return false;
                 if (unwield_item(show_weff_messages, choosed_wpn))
                 {
@@ -1030,7 +1029,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         {
             // if you tried to wield range_weapon, fix it EQ_WEAPON;
             // Does it need?
-            if (!_wieldable(new_wpn, false))
+            if (!_wieldable(new_wpn, EQ_WEAPON))
                 return false;
             // TODO Choose and Unwield old weapon.
             if (unwield_item(show_weff_messages, EQ_WEAPON))
@@ -1049,15 +1048,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             else if (first_curse)
                 choosed_wpn = EQ_SECOND_WEAPON;
 
-            bool isSecond = false;
-
             if (choosed_wpn == EQ_NONE)
             {
                 canned_msg(MSG_OK);
                 return false;
             }
 
-            if (!_wieldable(new_wpn, choosed_wpn == EQ_SECOND_WEAPON))
+            if (!_wieldable(new_wpn, choosed_wpn))
                 return false;
 
             // TODO Choose and Unwield old weapon.

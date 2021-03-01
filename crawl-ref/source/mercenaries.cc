@@ -149,7 +149,7 @@ bool is_caravan_companion_for_type(monster_type mon_type)
  * @param quiet     Whether to print messages if the target is invalid.
  * @return          Whether the player can give an item to the monster.
  */
-bool caravan_can_gift_items_to(const monster* mons, bool quiet)
+static bool _caravan_can_gift_items_to(const monster* mons, bool quiet)
 {
     if (!mons || !mons->visible_to(&you))
     {
@@ -194,7 +194,7 @@ static vector<monster* > _valid_caravan_gift_targets_in_sight()
 {
     vector<monster* > list_merc;
     for (monster_near_iterator rad(you.pos(), LOS_NO_TRANS); rad; ++rad)
-        if (caravan_can_gift_items_to(*rad, true))
+        if (_caravan_can_gift_items_to(*rad, true))
             list_merc.push_back(*rad);
     sort(list_merc.begin(), list_merc.end(), 
     [](monster* m1, monster* m2){
@@ -602,7 +602,7 @@ static bool _can_use_range(monster* mons, item_def& gift)
     bool range_tier3 = (range_tier1 || range_tier2
             || gift.sub_type == WPN_ARBALEST || gift.sub_type == WPN_LONGBOW);
 
-    bool range_tier4 = (gift.sub_type == WPN_TRIPLE_CROSSBOW);
+    //bool range_tier4 = (gift.sub_type == WPN_TRIPLE_CROSSBOW);
 
     if (!shaman)
     {

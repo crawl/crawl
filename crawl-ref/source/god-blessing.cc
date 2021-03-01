@@ -857,6 +857,7 @@ static bool _legion_bless_follower(monster* follower, bool force)
 
     string blessing = "";
     blessing = _legion_bless_buff(follower);
+    return true;
 }
 
 /**

@@ -2517,11 +2517,6 @@ static int _spell_power(spell_type spell, bool rod)
     return power;
 }
 
-static int _spell_power_bars(spell_type spell, bool rod)
-{
-    return power_to_barcount(_spell_power(spell, rod));
-}
-
 #ifdef WIZARD
 static string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
 {

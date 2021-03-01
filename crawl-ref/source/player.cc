@@ -1478,7 +1478,7 @@ bool player_likes_chunks(bool permanently)
            || you.get_mutation_level(MUT_CARNIVOROUS) > 0;
 }
 
-bool _has_dragon_scale()
+static bool _has_dragon_scale()
 {
     return you.slot_item(EQ_BODY_ARMOUR, true) ?
                         (you.form == transformation::dragon 
@@ -9443,7 +9443,6 @@ bool has_mercenaries()
 {
     for (auto &entry : companion_list)
     {
-        int mid = entry.first;
         companion& comp = entry.second;
         if (comp.level.branch == BRANCH_ABYSS)
             continue;

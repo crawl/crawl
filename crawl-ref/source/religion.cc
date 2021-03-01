@@ -1746,38 +1746,7 @@ static bool _handle_veh_gift(bool forced)
     return success;
 }
 
-static bool _gift_wyrm_gift(bool forced)
-{
-    bool success = false;
-    if (!feat_has_solid_floor(grd(you.pos())))
-        return false;
-
-    if (you_worship(GOD_WYRM) && you.piety >= piety_breakpoint(0)
-        && you.num_total_gifts[you.religion] == 0)
-    {
-        int thing_created = items(true, OBJ_BOOKS,
-                BOOK_STALKING, 1, 0, you.religion);
-        make_book_wyrm_gift(mitm[thing_created]);
-
-        if (thing_created == NON_ITEM)
-            return false;
-
-        move_item_to_grid(&thing_created, you.pos(), true);
-
-        if (thing_created != NON_ITEM)
-            success = true;
-    }
-    if (success)
-    {
-        simple_god_message(" grants you a book of alchemical arts.");
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-    }
-    return success;
-}
-
-static bool _gift_legion_gift(bool forced)
+static bool _gift_legion_gift(bool /*forced*/)
 {
     bool success = false;
     book_type gift = NUM_BOOKS;
@@ -2292,10 +2261,6 @@ bool do_god_gift(bool forced)
 
         case GOD_VEHUMET:
             success = _handle_veh_gift(forced);
-            break;
-
-        case GOD_WYRM:
-            //success = _gift_wyrm_gift(forced);
             break;
 
         case GOD_LEGION_FROM_BEYOND:

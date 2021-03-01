@@ -446,8 +446,6 @@ bool iood_act(monster& mon, bool no_trail)
     }
 
 move_again:
-    coord_def starting_pos = (mon.pos() == coord_def()) ?
-                                                coord_def(x, y) : mon.pos();
 
     x += vx;
     y += vy;
