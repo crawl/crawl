@@ -1673,6 +1673,22 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_SILENCE_AURA, 0, 1, mutflag::good, false,
+  "aura of silence",
+
+  {"You are surrounded by an aura of silence.", "", ""},
+  {"An unnatural silence shrouds you.", "", ""},
+  {"", "", ""},
+},
+
+{ MUT_HEX_ENHANCER, 0, 1, mutflag::good, false,
+  "bedeviling",
+
+  {"Your maledictions are enhanced.", "", ""},
+  {"You feel delightfully devilish.", "", ""},
+  {"", "", ""},
+},
+
 { MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
   "cold-blooded",
 

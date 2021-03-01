@@ -22,6 +22,7 @@
 #include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mutation.h"
 #include "religion.h"
 #include "stepdown.h"
 #include "terrain.h"
@@ -97,7 +98,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1
-         || act->liquefying_radius() > -1 || act->umbra_radius() > -1))
+         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
+         || act->demon_silence_radius() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -118,6 +120,15 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
+            _set_agrid_flag(*ri, areaprop::silence);
+        no_areas = false;
+    }
+    
+    if ((r = a->demon_silence_radius()) >= 0)
+    {
+        _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
+
+        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT, true); ri; ++ri)
             _set_agrid_flag(*ri, areaprop::silence);
         no_areas = false;
     }
@@ -510,6 +521,13 @@ int player::silence_radius() const
     return _shrinking_aoe_range(duration[DUR_SILENCE]);
 }
 
+int player::demon_silence_radius() const
+{
+    if (you.get_mutation_level(MUT_SILENCE_AURA))
+        return 1;
+    return -1;
+}
+
 int monster::silence_radius() const
 {
     if (type == MONS_SILENT_SPECTRE)
@@ -523,6 +541,11 @@ int monster::silence_radius() const
     const int moddur = BASELINE_DELAY
                        * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
     return _shrinking_aoe_range(moddur);
+}
+
+int monster::demon_silence_radius() const
+{
+    return -1;
 }
 
 /// Check if a coordinate is silenced

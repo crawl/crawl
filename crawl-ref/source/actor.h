@@ -366,6 +366,8 @@ public:
     virtual int halo_radius() const = 0;
     // Silence radius.
     virtual int silence_radius() const = 0;
+    // Demonspawn silence radius
+    virtual int demon_silence_radius() const = 0;
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
