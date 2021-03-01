@@ -2228,7 +2228,11 @@ ENDMAP
 NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
+: if you.absdepth() > 15 then
+MONS: deep elf archer, stone giant
+: else
 MONS:   centaur, centaur warrior
+: end
 DEPTH:  D:6-, Depths
 : if you.in_branch("D") then
 SUBST:  1 = ..1
@@ -2380,12 +2384,12 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
+MONS:    deep elf archer w:6 / orc knight w:15 / \
          deep elf pyromancer / deep elf zephyrmancer / deep troll / \
-         boggart w:5 / efreet w:5 / rakshasa w:5 / wizard / necromancer / \
-         spriggan rider w:5 / vampire
+         hell hog w:5 / rakshasa w:10 / wizard / necromancer / \
+         spriggan rider w:5 / vampire knight
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
-         skeletal warrior / yaktaur captain w:5 / ogre mage / \
+         skeletal warrior / stone giant w:5 / wizard / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
          spriggan berserker / guardian serpent w:5 / harpy w:5 / \
          salamander mystic
@@ -2515,7 +2519,7 @@ KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
 KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
            deep elf annihilator w:5 / deep elf death mage / \
            deep elf pyromancer / deep elf zephyrmancer / deep elf sorcerer
-KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
+KMONS: L = black mamba / catoblepas w:5 / basilisk / lindwurm / boulder beetle
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
 KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
@@ -2524,7 +2528,7 @@ KMONS: K = nagaraja w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
 KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
            tarantella
-KMONS: M = acid blob w:5 / azure jelly / jelly w:15 / great orb of eyes
+KMONS: M = acid blob w:5 / azure jelly / slime creature w:15 / great orb of eyes
 KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
            skeletal warrior
 KMONS: C = skeletal warrior / bone dragon / vampire / lich w:5
@@ -2677,7 +2681,7 @@ ENDMAP
 NAME:   grunt_double_whammy
 ORIENT: float
 DEPTH:  Depths, !Depths:$
-MONS:   ettin / two-headed ogre
+MONS:   ettin / deep troll
 MONS:   deep elf blademaster / ettin
 MAP
    cccccccc     cccccccc
@@ -2843,10 +2847,9 @@ NAME:     gammafunk_depths_water_palace
 DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
-KMONS:    1 = centaur warrior / yaktaur captain / centaur warrior \
-              / ettin / stone giant / spriggan berserker
+KMONS:    1 = deep elf archer w:2 / ettin / stone giant w:2 / spriggan berserker
 KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
-              / deep elf annihilator / deep troll earth mage / boggart band
+              / deep elf annihilator / deep troll earth mage / deep elf knight
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
 KMONS:    4 = tengu reaver / spriggan air mage / sphinx
 KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
@@ -3067,7 +3070,7 @@ MONS:    necromancer ; \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, efreet, deep elf pyromancer / deep elf zephyrmancer
+MONS:    ettin simulacrum, hell hog, deep elf pyromancer / deep elf zephyrmancer
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -3973,13 +3976,13 @@ MONS: mana viper, orc knight ; battleaxe | great mace | broad axe \
           | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
           | w:3 broad axe ego:antimagic . plate armour \
           | plate armour ego:willpower
-MONS: stone giant / iron troll / w:5 ettin
+MONS: deep troll / iron troll / w:5 ettin
 MONS: spriggan berserker ; rapier | quick blade | demon whip \
           | w:3 rapier ego:antimagic | w:3 quick blade ego:antimagic \
           | w:3 demon whip ego:antimagic
 MONS: spriggan defender ; quick blade ego:antimagic \
           | demon whip ego:antimagic, quicksilver dragon
-KMONS: T = yaktaur captain
+KMONS: T = stone giant
 KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
@@ -3988,7 +3991,7 @@ KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
                | plate armour ego:willpower
-KMONS: U = stone giant / iron troll / w:5 ettin
+KMONS: U = deep troll / iron troll / w:5 ettin
 KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
@@ -9424,7 +9427,7 @@ MONS:    wizard / boggart / deep elf annihilator / deep elf demonologist \
 MONS:    patrolling juggernaut
 MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
          iron troll w:5 / ettin w:5
-MONS:    boggart / deep elf annihilator / deep elf demonologist / titan \
+MONS:    deep elf annihilator / deep elf demonologist / titan \
          / deep elf sorcerer / spriggan air mage / lich / vampire mage
 : end
 MONS:    generate_awake moth of wrath, deep troll earth mage

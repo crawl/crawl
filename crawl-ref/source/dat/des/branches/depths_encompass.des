@@ -110,7 +110,7 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \
          spectral minotaur w:1 / spriggan simulacrum w:2 / centaur simulacrum w:1 / \
          naga simulacrum w:2 / troll simulacrum w:2 / minotaur simulacrum w:1 / \
-         merfolk simulacrum w:2 / vampire / wraith / wight
+         merfolk simulacrum w:2 / vampire / shadow wraith / skeleton warrior
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
 MONS:    ancient lich / dread lich / tzitzimitl
@@ -208,17 +208,17 @@ MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
         deep elf archer w:5 / nothing
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
-MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
-        ogre mage w:8 / ettin / stone giant / frost giant w:8 / nothing
+MONS:   spriggan rider w:12 / spriggan berserker w:12 / spriggan druid / \
+        wizard w:8 / ettin / stone giant / frost giant w:8 / nothing
 MONS:   spriggan air mage / fire giant
 : else
-MONS:   yaktaur w:8 / centaur warrior / minotaur w:2 / \
+MONS:   deep elf archer w:9 / minotaur w:2 / \
         tengu conjurer / tengu warrior / nothing w:5
 MONS:   tengu reaver / sphinx
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
-KMONS:   z = killer bee
+KMONS:   z = killer bee w:19 / meliai
 KMONS:   Z = queen bee
 ITEM:    scroll of teleportation
 ITEM:    amulet of reflection
@@ -445,7 +445,7 @@ NAME: grunt_profane_temple_geh
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = red devil / hell hound / efreet w:5
+KMONS: 4 = red devil / hell hog w:6
 KMONS: 5 = sun demon
 KMONS: 6 = balrug
 KFEAT: A = stone_arch
@@ -512,7 +512,7 @@ NAME: grunt_profane_temple_tar
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = shadow / wraith / flying skull
+KMONS: 4 = shadow wraith w:2 / flying skull
 KMONS: 5 = soul eater
 KMONS: 6 = reaper w:18 / lich w:5 / bone dragon w:4
 KFEAT: A = stone_arch
@@ -635,11 +635,10 @@ NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 MONS:     deep elf pyromancer w:6 / deep elf zephyrmancer w:6 / naga mage / \
-          hell knight / efreet w:5 / \
+          hell knight w: 6/ \
           rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
-          centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . \
-                                arrow . long sword good_item
+	  frost giant w:1 ; double sword good_item / frost giant w:7 ; scimitar good_item
 MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
           ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
           mana viper w:5 / mana viper perm_ench:shapeshifter w:5 / \
@@ -854,9 +853,9 @@ DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
 # everything here (bar the very top) spawns regularly in depths,
 # if possibly as part of a band.
-MONS:    boggart / wizard w:8 / necromancer w:8 / centaur warrior / \
-         ogre mage / yaktaur w:8 / spriggan rider w:4
-MONS:    rakshasa / hell knight / yaktaur captain w:5 / \
+MONS:    wizard w:9 / necromancer w:9 / deep elf archer w:9 / \
+         spriggan rider w:4
+MONS:    rakshasa / hell knight / stone giant w:5 / \
          vampire mage / ettin / spriggan berserker / \
          deep troll earth mage / deep troll shaman w:5
 MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
@@ -864,7 +863,7 @@ MONS:    fire giant / frost giant / stone giant w:6 / lich w:4 / \
          deep elf high priest w:4 / deep elf demonologist w:4 / \
          deep elf annihilator w:4 / deep elf sorcerer w:4 / \
          deep elf death mage w:2 / deep elf elementalist w:2
-MONS:    large slime creature / ugly thing w:20 / shapeshifter w:20 / \
+MONS:    very ugly thing w:10 / ugly thing w:30 / \
          great orb of eyes / glowing orange brain / deep troll
 MONS:    fire dragon / ice dragon / very ugly thing / glowing shapeshifter / \
          titanic slime creature w:4 / jiangshi w:2 / phantasmal warrior w:2 / \

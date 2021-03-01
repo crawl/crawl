@@ -211,7 +211,7 @@ function pan_entry_vault_contents(e, glyph)
                       .. "   lorocyproca / tormentor / shadow demon")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = lesser demon")
+        e.kmons(glyph .. " = common demon")
     end
 end
 

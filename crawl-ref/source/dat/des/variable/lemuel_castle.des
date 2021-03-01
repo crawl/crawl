@@ -60,13 +60,13 @@ function castle_lemuel_subvault_setup(e)
             e.mons("nothing")
          elseif you.absdepth () < 27 then
             e.subst("* = *$")
-            e.mons("two-headed ogre / cyclops / deep troll / ogre mage w:5")
+            e.mons("cyclops / deep troll w:2 / ogre mage w:5")
             e.mons("ettin / fire giant / frost giant / stone giant / \
                     deep troll shaman w:5")
             e.mons("titan")
             e.mons("nothing")
             e.mons("cyclops")
-            e.mons("yak / death yak w:5")
+            e.mons("death yak")
             e.mons("plant / w:1 bush")
          else
             e.subst("* = *$")

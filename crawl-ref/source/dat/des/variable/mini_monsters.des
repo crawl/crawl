@@ -866,8 +866,8 @@ NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen transparent
 DEPTH: Depths
 KMASK: 4 = opaque
-MONS:  naga / naga warrior w:2 / naga mage w:1, nagaraja / guardian serpent
-MONS:  ball python / adder / water moccasin / black mamba / anaconda
+MONS:  naga / naga warrior w:4 / naga mage w:2, nagaraja / guardian serpent
+MONS:  ball python / adder / water moccasin / black mamba / anaconda w:2 / sea serpent w:2
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
@@ -1846,7 +1846,7 @@ ENDMAP
 NAME:    hangedman_summoners_spam
 TAGS:    no_monster_gen patrolling
 DEPTH:   Depths, Elf, Crypt, Abyss
-MONS:    boggart, orc high priest, kobold demonologist
+MONS:    deep elf pyromancer, orc high priest, kobold demonologist
 MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings w:20 / grand grimoire w:5 / \
@@ -2104,7 +2104,7 @@ DEPTH: Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
 MONS:    deep elf pyromancer / deep elf zephyrmancer / tengu conjurer / \
-         wizard / orc sorcerer / naga mage / ogre mage
+         wizard / orc sorcerer / nagaraja / tengu reaver
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
@@ -2624,7 +2624,7 @@ NAME:   hangedman_devilish_allure
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths
 WEIGHT: 5
-MONS:   obsidian statue, lesser demon, common demon
+MONS:   obsidian statue, common demon, common demon
 MONS:   efreet / large abomination / rakshasa
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor

@@ -433,8 +433,8 @@ ENDMAP
 NAME:   minmay_haunted_quarter
 ORIENT: northwest
 DEPTH:  Depths, !Depths:$
-KMONS:  w = wraith / freezing wraith / shadow wraith / phantasmal warrior / \
-            flayed ghost / nothing w:950
+KMONS:  w = freezing wraith / shadow wraith / phantasmal warrior / \
+            flayed ghost / nothing w:951
 KFEAT:  w = w
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -680,8 +680,8 @@ MARKER: z = lua:fog_machine { \
 MONS:   gargoyle, earth elemental, air elemental
 MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
 KMONS:  A = wizard
-KMONS:  B = orc sorcerer
-KMONS:  C = ogre mage
+KMONS:  B = deep elf pyromancer
+KMONS:  C = deep elf zephyrmancer
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich
 KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
@@ -874,7 +874,7 @@ NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
-MONS:   flayed ghost w:5 / phantasmal warrior w:5 / wraith / shadow / shadow wraith
+MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
@@ -1148,12 +1148,6 @@ MONS:    orc warrior w:8 / deep elf knight w:1 / deep elf archer w:1 / \
 MONS:    orc knight w:12 / deep elf knight w:3 / deep elf archer w:3 / \
          centaur warrior w:4 / yaktaur captain w:2
 MONS:    orc knight, patrolling orc warlord
-: elseif you.absdepth() < 26 then
-MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         centaur warrior w:4 / yaktaur captain w:2
-MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         yaktaur captain w:6
-MONS:    orc warlord, patrolling deep elf blademaster
 : else
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
          yaktaur captain w:6
@@ -2144,7 +2138,7 @@ NAME:    regret_index_dithmenos_brocken_genspenst
 TAGS:    no_monster_gen no_item_gen no_rotate patrolling
 DEPTH:   Depths, !Depths:$, Tar, !Tar:$
 ORIENT:  south
-MONS:    shadow, boggart, rakshasa, shadow wraith
+MONS:    shadow wraith / nothing, vampire mage / nothing, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon
 KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
 KMONS:   8 = bone dragon / reaper / doom hound
