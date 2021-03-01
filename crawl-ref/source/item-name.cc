@@ -44,6 +44,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -2731,6 +2732,13 @@ static bool _invisibility_is_useless(const bool temp)
                 : you.haloed() && will_have_passive(passive_t::halo);
 }
 
+static bool _cancellation_is_useless()
+{
+    if (get_contamination_level())
+        return false;
+    return !player_is_debuffable();
+}
+
 /**
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:
@@ -2928,8 +2936,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
-        case POT_ATTRACTION:
-            return false;
+        case POT_CANCELLATION:
+            return temp && _cancellation_is_useless();
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 
