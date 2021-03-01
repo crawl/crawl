@@ -428,6 +428,7 @@ public:
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
+    int demon_silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
     bool petrified() const override;
