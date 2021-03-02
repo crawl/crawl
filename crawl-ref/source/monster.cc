@@ -3532,7 +3532,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     return holi;
 }
 
-bool monster::undead_or_demonic() const
+bool monster::undead_or_demonic(bool /*temp*/) const
 {
     const mon_holy_type holi = holiness();
 

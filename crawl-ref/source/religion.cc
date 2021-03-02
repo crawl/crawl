@@ -3145,35 +3145,46 @@ static bool _god_rejects_loveless(god_type god)
     }
 }
 
-bool player_can_join_god(god_type which_god)
+/**
+ * Return true if the player can worship which_god.
+ *
+ * @param which_god  god to query
+ * @param temp       If true (default), test if you can worship which_god now.
+ *                   If false, test if you may ever be able to worship the god.
+ * @return           Whether you can worship which_god.
+ */
+bool player_can_join_god(god_type which_god, bool temp)
 {
     if (you.has_mutation(MUT_FORLORN))
         return false;
 
-    if (is_good_god(which_god) && you.undead_or_demonic())
+    if (is_good_god(which_god) && you.undead_or_demonic(temp))
         return false;
 
-    if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
+    if (which_god == GOD_YREDELEMNUL && you.is_nonliving(temp))
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
-    if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
+    if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
         return false;
 
-    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    if (you.get_base_mutation_level(MUT_NO_LOVE, true, temp, temp)
+        && _god_rejects_loveless(which_god))
+    {
         return false;
+    }
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.get_mutation_level(MUT_NO_ARTIFICE)
+    if (you.get_base_mutation_level(MUT_NO_ARTIFICE, true, temp, temp)
         && which_god == GOD_PAKELLAS)
     {
         return false;
     }
 #endif
 
-    return _transformed_player_can_join_god(which_god);
+    return !temp || _transformed_player_can_join_god(which_god);
 }
 
 // Handle messaging and identification for items/equipment on conversion.

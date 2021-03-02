@@ -749,7 +749,7 @@ public:
     monster_type mons_species(bool zombie_base = false) const override;
 
     mon_holy_type holiness(bool temp = true) const override;
-    bool undead_or_demonic() const override;
+    bool undead_or_demonic(bool temp = true) const override;
     bool is_holy() const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
