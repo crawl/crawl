@@ -138,15 +138,20 @@ bool player::floundering() const
     return in_water() && !can_swim() && !extra_balanced();
 }
 
+/**
+ * Does the player get a balance bonus in their current terrain? If so, they
+ * will not count as floundering, even if they can't swim.
+ */
 bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = env.grid(pos());
-    return species == SP_GREY_DRACONIAN
-              || form == transformation::tree
-              || grid == DNGN_SHALLOW_WATER
-                  && (species == SP_NAGA // tails, not feet
-                      || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && form_keeps_mutations();
+    // trees are balanced everywhere they can inhabit.
+    return form == transformation::tree
+        // Species or forms with large bodies (e.g. nagas) are ok in shallow
+        // water. (N.b. all large form sizes can swim anyways, and also
+        // giant sized creatures can automatically swim, so the form part is a
+        // bit academic at the moment.)
+        || grid == DNGN_SHALLOW_WATER && body_size(PSIZE_BODY) >= SIZE_LARGE;
 }
 
 int player::get_hit_dice() const

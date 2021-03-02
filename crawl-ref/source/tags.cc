@@ -3189,6 +3189,16 @@ static void _tag_read_you(reader &th)
         you.mutation[MUT_REFLEXIVE_HEADBUTT]
                         = you.innate_mutation[MUT_REFLEXIVE_HEADBUTT] = 1;
     }
+    if (you.species == SP_PALE_DRACONIAN)
+    {
+        you.mutation[MUT_STEAM_RESISTANCE]
+                        = you.innate_mutation[MUT_STEAM_RESISTANCE] = 1;
+    }
+    if (you.species == SP_GREY_DRACONIAN)
+    {
+        you.mutation[MUT_UNBREATHING]
+                        = you.innate_mutation[MUT_UNBREATHING] = 2;
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)

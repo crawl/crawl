@@ -1196,7 +1196,7 @@ int player_mp_regen()
  */
 int player_total_spell_levels()
 {
-    return you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
+    return you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, false, false);
 }
 
 /**
@@ -1213,7 +1213,6 @@ int player_spell_levels()
             sl -= spell_difficulty(spell);
     }
 
-    // XXX: Should this be an assert now that draining lowers mhp?
     if (sl < 0)
         sl = 0;
 
@@ -1290,8 +1289,7 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     int res = 0;
     const int rf = player_res_fire(calc_unid, temp, items);
 
-    if (you.species == SP_PALE_DRACONIAN)
-        res += 2;
+    res += you.get_mutation_level(MUT_STEAM_RESISTANCE) * 2;
 
     if (items)
     {
@@ -3476,10 +3474,19 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     you.redraw_hit_points = true;
 }
 
-void calc_mp()
+void calc_mp(bool scale)
 {
+    int old_max = you.max_magic_points;
     you.max_magic_points = get_real_mp(true);
-    you.magic_points = min(you.magic_points, you.max_magic_points);
+    if (scale)
+    {
+        int mp = you.magic_points * 100 + you.magic_points_regeneration;
+        int new_max = you.max_magic_points;
+        mp = mp * new_max / old_max;
+        you.magic_points = min(mp / 100, you.max_magic_points);
+    }
+    else
+        you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
 }
 
@@ -3731,8 +3738,12 @@ int get_real_hp(bool trans, bool drained)
     hitp  = you.experience_level * 11 / 2 + 8;
     hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
-    hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
-          + (you.skill(SK_FIGHTING, 3, true) + 1) / 2;
+    // ^ The above is a 2011 comment from 1kb, in 2021 this isn't
+    // archaeologied for further explanation, but the below now adds Ash boosts
+    // to fighting to the HP calculation while preventing it for Heroism
+    // - eb
+    hitp += you.experience_level * you.skill(SK_FIGHTING, 5, false, false) / 70
+          + (you.skill(SK_FIGHTING, 3, false, false) + 1) / 2;
 
     // Racial modifier.
     hitp *= 10 + species_hp_modifier(you.species);
@@ -3777,7 +3788,7 @@ int get_real_hp(bool trans, bool drained)
 int get_real_mp(bool include_items)
 {
     const int scale = 100;
-    int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, true);
+    int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, false, false);
     int scaled_xl = you.experience_level * scale;
 
     // the first 4 experience levels give an extra .5 mp up to your spellcasting
@@ -3785,7 +3796,7 @@ int get_real_mp(bool include_items)
     int enp = min(23 * scale, scaled_xl);
 
     int spell_extra = spellcasting; // 100%
-    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) / 2; // 50%
+    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, false, false) / 2; // 50%
     int highest_skill = max(spell_extra, invoc_extra);
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
@@ -5219,6 +5230,7 @@ bool player::can_swim(bool permanently) const
     // stat-boosting boots or heavy armour.
     return (species_can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
+            || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
                 && form_can_swim();
 }

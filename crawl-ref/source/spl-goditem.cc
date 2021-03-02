@@ -367,6 +367,7 @@ spret cast_healing(int pow, bool fail)
 struct player_debuff_effects
 {
     /// Attributes removed by a debuff.
+    // TODO: I'm nearly sure these are unused; REMOVEME!
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
@@ -406,6 +407,54 @@ bool player_is_debuffable()
     _dispellable_player_buffs(buffs);
     return !buffs.durations.empty()
            || !buffs.attributes.empty();
+}
+
+/**
+ * Does the player have any magical effects that can be removed
+ * or any magical contamination?
+ *
+ * @return Whether cancellation will have any effect on the player.
+ */
+bool player_is_cancellable()
+{
+    return get_contamination_level() || player_is_debuffable();
+}
+
+/**
+ * Lists out the effects that will be removed by cancellation.
+ */
+string describe_player_cancellation()
+{
+    vector<string> effects;
+
+    // Try to clarify it doesn't remove all contam?
+    if (get_contamination_level())
+        effects.push_back("as magically contaminated");
+
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    for (auto duration : buffs.durations)
+    {
+        status_info inf;
+        if (fill_status_info(duration, inf) && !inf.short_text.empty())
+            effects.push_back(inf.short_text);
+    }
+
+    // I hate this, but here are some awkward special cases.
+    // (I suspect there are more.)
+    static const vector<status_type> dispellable_statuses = {
+        STATUS_AIRBORNE,
+        STATUS_SPEED,
+        STATUS_INVISIBLE,
+    };
+    for (auto status : dispellable_statuses)
+    {
+        status_info inf;
+        if (fill_status_info(status, inf))
+            effects.push_back(inf.short_text);
+    }
+
+    return comma_separated_line(begin(effects), end(effects), " or ");
 }
 
 /**

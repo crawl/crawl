@@ -414,7 +414,9 @@ bool Form::player_can_swim() const
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || species_can_swim(you.species) && can_swim != FC_FORBID
+           || (species_can_swim(you.species)
+                        || you.get_mutation_level(MUT_UNBREATHING) >= 2)
+                && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 
@@ -1891,6 +1893,10 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (you.species == SP_MERFOLK)
         merfolk_check_swimming(false);
 
+    // Update skill boosts for the current state of equipment melds
+    // Must happen before the HP check!
+    ash_check_bondage();
+
     if (you.hp <= 0)
     {
         ouch(0, KILLED_BY_FRAILTY, MID_NOBODY,
@@ -1974,6 +1980,10 @@ void untransform(bool skip_move)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
     _unmeld_equipment(melded);
+
+    // Update skill boosts for the current state of equipment melds
+    // Must happen before the HP check!
+    ash_check_bondage();
 
     if (!skip_move)
     {

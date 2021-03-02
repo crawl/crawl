@@ -161,7 +161,8 @@ bool species_can_swim(species_type species)
 bool species_likes_water(species_type species)
 {
     return species_can_swim(species)
-           || get_species_def(species).habitat == HT_AMPHIBIOUS;
+           || get_species_def(species).habitat == HT_AMPHIBIOUS
+           || species_mutation_level(species, MUT_UNBREATHING, 2);
 }
 
 bool species_can_throw_large_rocks(species_type species)
@@ -336,27 +337,21 @@ ability_type draconian_breath(species_type species)
 
 bool species_is_unbreathing(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum)
-                    { return lum.mut == MUT_UNBREATHING;});
+    return species_mutation_level(species, MUT_UNBREATHING);
 }
 
 bool species_has_claws(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
-                                                     && lum.xp_level == 1; });
+    return species_mutation_level(species, MUT_CLAWS) == 1;
 }
 
 /// Does the species have (real) mutation `mut`? Not for demonspawn.
-/// @return the first level at which the species gains the mutation, or 0 if it
+/// @return the first xl at which the species gains the mutation, or 0 if it
 ///         does not ever gain it.
-int species_mutation_level(species_type species, mutation_type mut)
+int species_mutation_level(species_type species, mutation_type mut, int mut_level)
 {
     for (const auto& lum : get_species_def(species).level_up_mutations)
-        if (mut == lum.mut)
+        if (mut == lum.mut && lum.mut_level >= mut_level)
             return lum.xp_level;
     return 0;
 }

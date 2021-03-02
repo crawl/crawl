@@ -44,6 +44,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -2928,8 +2929,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
-        case POT_ATTRACTION:
-            return false;
+        case POT_CANCELLATION:
+            return temp && !player_is_cancellable();
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 

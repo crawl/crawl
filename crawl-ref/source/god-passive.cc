@@ -33,6 +33,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "output.h"
+#include "player.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -644,7 +645,8 @@ void ash_check_bondage()
                         if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
                             num_cursed += 3;
                     }
-                    _curse_boost_skills(item);
+                    if (!item_is_melded(item))
+                        _curse_boost_skills(item);
                 }
             }
         }
@@ -652,6 +654,9 @@ void ash_check_bondage()
 
     set_piety(ASHENZARI_BASE_PIETY
               + (num_cursed * ASHENZARI_PIETY_SCALE) / num_slots);
+
+    calc_hp(true);
+    calc_mp(true);
 }
 
 bool god_id_item(item_def& item, bool silent)
@@ -789,7 +794,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
 
-    skill_points += (you.skill_boost[sk] * 3 + 1) * (piety_rank() * 2 + 1)
+    skill_points += (you.skill_boost[sk] * 3 + 1) * (piety_rank() + 1)
                     * max(scaled_skill, 1) * species_apt_factor(sk);
     return skill_points;
 }
@@ -797,7 +802,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 3 + 1 ) * (piety_rank * 2 + 1) * skill_level
+    // ( curses * 3 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
