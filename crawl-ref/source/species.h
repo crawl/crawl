@@ -70,6 +70,7 @@ int species_hp_modifier(species_type species);
 int species_mp_modifier(species_type species);
 int species_wl_modifier(species_type species);
 
+int species_stat_gain_multiplier(species_type species);
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);
 bool species_has_low_str(species_type species);

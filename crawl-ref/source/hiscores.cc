@@ -1983,7 +1983,9 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
+        if (god != GOD_NO_GOD
+            // XX is this check really needed?
+            && !species_mutation_level(static_cast<species_type>(race), MUT_FORLORN))
         {
             if (god == GOD_XOM)
             {

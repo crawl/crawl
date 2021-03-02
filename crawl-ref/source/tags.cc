@@ -3208,7 +3208,10 @@ static void _tag_read_you(reader &th)
         you.mutation[MUT_MULTILIVED]
                         = you.innate_mutation[MUT_MULTILIVED] = 1;
     }
-
+    if (you.species == SP_DEMIGOD)
+        you.mutation[MUT_FORLORN] = you.innate_mutation[MUT_FORLORN] = 1;
+    else // just in case this is still lurking around on old chars?
+        you.mutation[MUT_FORLORN] = you.innate_mutation[MUT_FORLORN] = 0;
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)

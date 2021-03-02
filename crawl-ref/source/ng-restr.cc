@@ -28,19 +28,13 @@ static bool _banned_combination(job_type job, species_type species)
         return true;
     }
 
-    switch (species)
-    {
-    case SP_DEMIGOD:
-        if (job == JOB_BERSERKER
+    if (species_mutation_level(species, MUT_FORLORN)
+        && (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT
-            || job == JOB_MONK)
-        {
-            return true;
-        }
-        break;
-    default:
-        break;
+            || job == JOB_MONK))
+    {
+        return true;
     }
 
     if (job == JOB_TRANSMUTER && species_undead_type(species) == US_UNDEAD)

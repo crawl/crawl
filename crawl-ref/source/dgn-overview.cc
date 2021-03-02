@@ -386,7 +386,7 @@ static string _get_branches(bool display)
 static string _get_altars(bool display)
 {
     // Just wastes space for demigods.
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
         return "";
 
     string disp;

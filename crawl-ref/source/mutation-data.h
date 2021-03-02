@@ -1020,16 +1020,13 @@ static const mutation_def mut_data[] =
   {"","",""},
 },
 
-#if TAG_MAJOR_VERSION == 34
-
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
   "forlorn",
 
-  {"You have difficulty communicating with the divine.","",""},
+  {"You are unable to connect with the divine beyond yourself.","",""},
   {"You feel forlorn.","",""},
   {"You feel more spiritual.","",""},
 },
-#endif
 
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
   "50% torment resistance",

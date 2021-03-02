@@ -1250,7 +1250,8 @@ static void _redraw_title()
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
-        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+        if (you.char_class == JOB_MONK
+            && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
         {
             string godpiety = "**....";

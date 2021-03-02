@@ -456,11 +456,26 @@ void species_stat_init(species_type species)
     you.base_stats[STAT_DEX] = get_species_def(species).d;
 }
 
+bool species_has_stat_gain(species_type species)
+{
+    return get_species_def(species).level_stats.size() > 0;
+}
+
+int species_stat_gain_multiplier(species_type species)
+{
+    // TODO: is this worth dataifying? Currently matters only for
+    // player-stats.cc:attribute_increase
+    return species == SP_DEMIGOD ? 4 : 1;
+}
+
 void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
     if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
-        modify_stat(*random_iterator(sd.level_stats), 1, false);
+    {
+        modify_stat(*random_iterator(sd.level_stats),
+                        species_stat_gain_multiplier(species), false);
+    }
 }
 
 static void _swap_equip(equipment_type a, equipment_type b)

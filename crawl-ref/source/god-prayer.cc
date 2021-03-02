@@ -115,7 +115,7 @@ void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
         mpr("A being of your status worships no god.");
         return;
