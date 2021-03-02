@@ -21,19 +21,19 @@ TAGS:    no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:    spriggan air mage, spriggan defender, the Enchantress
-KMONS:   0 = deep elf archer / manticore w:5 / stone giant w:5 / \
+KMONS:   0 = deep elf archer / caustic shrike / stone giant w:5 / \
              tengu warrior band / tengu conjurer band / deep elf knight / \
-             rakshasa / wizard / eleionoma w:2 / cyclops / \
-             deep troll w:8 / shapeshifter w:2 / death yak band
+             rakshasa / wizard / eleionoma w:2 / \
+             deep troll w:8 / shapeshifter w:2 / dire elephant band / nothing w:5
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / stone giant / \
              sphinx / tengu reaver w:5 / deep elf high priest w:5
 KMONS:   J = caustic shrike skeleton
 KMONS:   K = spriggan rider
 KMONS:   L = spriggan ; robe . dagger
-KMONS:   M = yak
+KMONS:   M = death yak
 KMONS:   N = spriggan ; robe . quarterstaff
-KMONS:   O = dire elephant / death yak / emperor scorpion / anaconda w:5
+KMONS:   O = dire elephant / emperor scorpion / anaconda w:5
 KMONS:   Q = bush
 KMONS:   R = plant
 ITEM:    dagger / short sword / rapier / flail / whip / shortbow
@@ -257,7 +257,7 @@ MONS:   sphinx w:20 / tengu reaver w:15 / deep elf high priest / \
         ettin w:5 ; giant club randart . giant club randart
 MONS:   spriggan air mage w:15 / spriggan druid / spriggan berserker / \
         dire elephant w:5 / shambling mangrove w:3 / anaconda w:2
-MONS:   manticore / deep elf knight w:5 / deep elf archer w:5 / \
+MONS:   caustic shrike / deep elf knight w:5 / deep elf archer w:5 / \
         rakshasa / wizard / eleionoma w:5 / glowing shapeshifter w:5 / \
         stone giant w:4
 KFEAT:  _ = altar_vehumet

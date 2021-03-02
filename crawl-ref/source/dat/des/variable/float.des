@@ -2229,7 +2229,7 @@ NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
 : if you.absdepth() > 15 then
-MONS: deep elf archer, stone giant
+MONS: tengu warrior ; longbow . arrow, stone giant / deep elf master archer
 : else
 MONS:   centaur, centaur warrior
 : end
@@ -2298,7 +2298,7 @@ ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake floating eye, eye of devastation, glowing orange brain
-MONS:    generate_awake golden eye, slime creature, jelly
+MONS:    generate_awake golden eye, slime creature, acid blob / nothing w:40
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
@@ -2384,15 +2384,15 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    deep elf archer w:6 / orc knight w:15 / \
+MONS:    deep elf archer w:6 / orc warlord w:7 / \
          deep elf pyromancer / deep elf zephyrmancer / deep troll / \
          hell hog w:5 / rakshasa w:10 / wizard / necromancer / \
-         spriggan rider w:5 / vampire knight
-MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
-         skeletal warrior / stone giant w:5 / wizard / \
+         spriggan rider w:5 / vampire knight / nothing w:8
+MONS:    orc high priest / naga warrior / nagaraja / \
+         skeletal warrior / stone giant w:5 / wizard w:2 / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
-         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
-         salamander mystic
+         spriggan berserker / guardian serpent w:5 / caustic shrike / \
+         salamander mystic / nothing w:4
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
@@ -2452,10 +2452,10 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
-MONS:    fire dragon / ice dragon / lindwurm / hell hound
-MONS:    death yak / manticore / catoblepas / dire elephant
-MONS:    hydra / anaconda / hornet w:2 / redback w:3 / wolf spider w:5 / harpy
-MONS:    spriggan druid, spriggan rider
+MONS:    fire dragon / ice dragon / lindwurm / hell hog
+MONS:    caustic shrike / catoblepas / dire elephant / emporer scorpion / nothing w:3
+MONS:    12-headed hydra / anaconda / ghost moth w:2 / wolf spider w:8 / harpy / moth of wrath
+MONS:    spriggan druid, spriggan rider / spriggan defender / nothing
 MONS:    sphinx / hell beast w:5 / caustic shrike w:5
 ITEM:    gold / nothing w:80
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
@@ -9427,7 +9427,7 @@ MONS:    wizard / boggart / deep elf annihilator / deep elf demonologist \
 MONS:    patrolling juggernaut
 MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
          iron troll w:5 / ettin w:5
-MONS:    deep elf annihilator / deep elf demonologist / titan \
+MONS:    tengu conjurer / deep elf annihilator / deep elf demonologist / titan \
          / deep elf sorcerer / spriggan air mage / lich / vampire mage
 : end
 MONS:    generate_awake moth of wrath, deep troll earth mage

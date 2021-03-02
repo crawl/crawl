@@ -2272,7 +2272,7 @@ NAME: cheibrodos_cascadia
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 DEPTH: Depths
 ORIENT: northwest
-MONS: wizard, ice devil, ice dragon , frost giant, blizzard demon, lich
+MONS: wizard, freezing wraith, ice dragon , frost giant, blizzard demon, lich
 KPROP: -Tp =  no_tele_into
 KMONS: I = ice statue
 KMONS: " = ancient lich / dread lich

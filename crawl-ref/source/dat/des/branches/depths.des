@@ -24,7 +24,7 @@ end
 
 NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
-MONS: cyclops
+MONS: tengu warrior ; longbow . arrows / tengu warrior ; arbalest . arrows
 KMONS: O = stone giant / frost giant w:4
 SUBST: - = ++c
 : depths_entry(_G)
@@ -179,7 +179,7 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
 TAGS:    transparent
-MONS:    deep troll w:14 / cyclops w:4 / tengu warrior w:8 / \
+MONS:    deep troll w:14 / tengu warrior w:12 / \
          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
 MONS:    wizard w:14 / tengu conjurer w:6 / deep elf knight w:5 /\
          deep elf archer w:6

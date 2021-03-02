@@ -42,7 +42,7 @@
         e.kmons("f = fire elemental")
         e.kmons("a = air elemental")
         e.kmons("o = iron golem")
-        e.kmons("r = molten gargoyle / gargoyle")
+        e.kmons("r = war gargoyle / molten gargoyle / nothing w:3")
         e.kmons("t = glowing orange brain / wind drake w:5")
         e.kfeat("A = stone_arch")
         e.kfeat("W = deep_water")
@@ -102,16 +102,16 @@ NAME:    lemuel_river_lethe
 TAGS:    no_rotate no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 MONS:    plant / fungus w:2
-MONS:    wolf / warg / hell hound / raiju w:4
-MONS:    shadow w:20 / wraith w:20 / shadow wraith / phantasmal warrior / \
-         skeletal warrior
+MONS:    hell hound / raiju w:3
+MONS:    shadow wraith w:20 / phantasmal warrior w:10 / \
+         skeletal warrior / nothing w:10
 MONS:    dancing weapon / war gargoyle w:2
 MONS:    spectral spriggan / spectral centaur / spectral naga / \
          spectral merfolk / spectral ogre / spectral troll / \
          spectral minotaur w:1 / spriggan simulacrum w:2 / centaur simulacrum w:1 / \
          naga simulacrum w:2 / troll simulacrum w:2 / minotaur simulacrum w:1 / \
-         merfolk simulacrum w:2 / vampire / shadow wraith / skeleton warrior
-MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
+         merfolk simulacrum w:2 / vampire knight / shadow wraith / skeleton warrior / nothing
+MONS:    eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
 MONS:    ancient lich / dread lich / tzitzimitl
 KMONS:   89 = patrolling glowing orange brain
@@ -121,7 +121,7 @@ KMONS:   C = 0 band
 KMONS:   W = patrolling water elemental w:40 / \
              patrolling hydra simulacrum / patrolling hydra spectre / \
              patrolling anaconda simulacrum / patrolling anaconda spectre / \
-             patrolling snapping turtle zombie
+             patrolling alligator snapping turtle zombie
 ITEM:    any scroll
 KITEM:   e = any / any good_item w:4
 KITEM:   8B = potion of experience ident:type q:1 / any good_item
@@ -203,22 +203,22 @@ TAGS:    no_pool_fixup no_rotate uniq_d_encompass
 ORIENT:  encompass
 : local brnd = crawl.random2(3)
 : if brnd == 0 then
-MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
+MONS:   orc high priest w:2 / orc sorcerer / orc warlord / \
         deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / \
-        deep elf archer w:5 / nothing
+        deep elf archer w:5 / nothing w:2
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
 MONS:   spriggan rider w:12 / spriggan berserker w:12 / spriggan druid / \
-        wizard w:8 / ettin / stone giant / frost giant w:8 / nothing
+        wizard w:8 / ettin / stone giant / frost giant w:8 / nothing w:2
 MONS:   spriggan air mage / fire giant
 : else
-MONS:   deep elf archer w:9 / minotaur w:2 / \
+MONS:   stone giant w:4 / minotaur w:2 / \
         tengu conjurer / tengu warrior / nothing w:5
 MONS:   tengu reaver / sphinx
 : end
 KMONS:   L = fire dragon
 KMONS:   ~ = ice dragon
-KMONS:   z = killer bee w:19 / meliai
+KMONS:   z = meliai w:5 / nothing w:10 / killer bee
 KMONS:   Z = queen bee
 ITEM:    scroll of teleportation
 ITEM:    amulet of reflection
@@ -445,7 +445,7 @@ NAME: grunt_profane_temple_geh
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = red devil / hell hog w:6
+KMONS: 4 = hell hog / nothing
 KMONS: 5 = sun demon
 KMONS: 6 = balrug
 KFEAT: A = stone_arch
@@ -512,7 +512,7 @@ NAME: grunt_profane_temple_tar
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = shadow wraith w:2 / flying skull
+KMONS: 4 = shadow wraith / nothing w:3
 KMONS: 5 = soul eater
 KMONS: 6 = reaper w:18 / lich w:5 / bone dragon w:4
 KFEAT: A = stone_arch
@@ -545,7 +545,7 @@ NAME: grunt_profane_temple_dis
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
-KMONS: 4 = rust devil
+KMONS: 4 = iron troll / nothing
 KMONS: 5 = skeletal warrior / iron troll w:1
 KMONS: 6 = iron dragon / war gargoyle
 KFEAT: A = stone_arch
@@ -635,7 +635,7 @@ NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 MONS:     deep elf pyromancer w:6 / deep elf zephyrmancer w:6 / naga mage / \
-          hell knight w: 6/ \
+          hell knight w:6 / \
           rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
 	  frost giant w:1 ; double sword good_item / frost giant w:7 ; scimitar good_item
@@ -853,8 +853,8 @@ DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
 # everything here (bar the very top) spawns regularly in depths,
 # if possibly as part of a band.
-MONS:    wizard w:9 / necromancer w:9 / deep elf archer w:9 / \
-         spriggan rider w:4
+MONS:    wizard w:8 / necromancer w:8 / tengu warrior w:9 / \
+         spriggan defender w:2 / tengu conjurer w:2 / nothing w:2
 MONS:    rakshasa / hell knight / stone giant w:5 / \
          vampire mage / ettin / spriggan berserker / \
          deep troll earth mage / deep troll shaman w:5
