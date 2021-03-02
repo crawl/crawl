@@ -4777,7 +4777,7 @@ DEPTH:  D:8-, Lair, Spider
 ORIENT: float
 ITEM:   pair of boots ego:rampaging ident:all
 ITEM:   pair of boots ego:rampaging good_item ident:all
-ITEM:   pair of boots ego:rampaging randart ident:all
+ITEM:   pair of boots randart ident:all
 MONS:   boulder beetle, torpor snail
 : if you.in_branch("D") then
 :     if you.depth() < 11 then
