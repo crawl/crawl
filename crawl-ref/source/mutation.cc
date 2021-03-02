@@ -110,7 +110,6 @@ static vector<mutation_type> removed_mutations =
         MUT_FAST_METABOLISM,
         MUT_FLEXIBLE_WEAK,
         MUT_FOOD_JELLY,
-        MUT_FORLORN,
         MUT_FUMES,
         MUT_HERBIVOROUS,
         MUT_JUMP,
