@@ -24,7 +24,7 @@ end
 
 NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
-MONS: tengu warrior ; longbow . arrow / tengu warrior ; arbalest . arrow
+MONS: tengu warrior ; longbow . arrow / tengu warrior ; arbalest . bolt
 KMONS: O = stone giant / frost giant w:4
 SUBST: - = ++c
 : depths_entry(_G)

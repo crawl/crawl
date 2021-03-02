@@ -371,7 +371,7 @@ MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
 : if crawl.coinflip() then
 KFEAT:      _ = altar_lugonu
 KFEAT:      P = enter_abyss
-: kmons("1 =  kobold brigand w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
+: kmons("1 = kobold brigand w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
 :       "w:6 | rapier ego:distortion | short sword ego:distortion / kobold "   ..
 :       "w:80 ; short sword | rapier | quick blade w:3")
 : else
