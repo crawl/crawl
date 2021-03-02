@@ -867,7 +867,7 @@ TAGS:  no_monster_gen no_item_gen transparent
 DEPTH: Depths
 KMASK: 4 = opaque
 MONS:  naga w:1 / naga warrior w:8 / naga mage w:4 / nothing w:1, nagaraja / guardian serpent
-MONS:  ball python / adder / water moccasin / black mamba / anaconda w:20 / sea serpent w:20 / nothing
+MONS:  ball python / adder / water moccasin / black mamba / anaconda w:20 / sea snake w:20 / nothing
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
