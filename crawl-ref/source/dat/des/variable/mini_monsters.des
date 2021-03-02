@@ -866,8 +866,8 @@ NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen transparent
 DEPTH: Depths
 KMASK: 4 = opaque
-MONS:  naga / naga warrior w:8 / naga mage w:4 / nothing, nagaraja / guardian serpent
-MONS:  ball python / adder / water moccasin / black mamba / anaconda w:5 / sea serpent w:5 / nothing w:2
+MONS:  naga w:1 / naga warrior w:8 / naga mage w:4 / nothing w:1, nagaraja / guardian serpent
+MONS:  ball python / adder / water moccasin / black mamba / anaconda w:20 / sea serpent w:20 / nothing
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
@@ -2103,8 +2103,8 @@ NAME:  grunt_absolute_annihilation
 DEPTH: Depths
 MONS:    ancient lich
 MONS:    deep elf annihilator / draconian annihilator w:5 / lich
-MONS:    deep elf pyromancer w:2 / deep elf zephyrmancer w:2 / tengu conjurer w:2 / \
-         wizard w:2 / orc sorcerer w:2 / nagaraja / tengu reaver
+MONS:    deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / tengu conjurer w:20 / \
+         wizard w:20 / orc sorcerer w:20 / nagaraja / tengu reaver
 ITEM:    book of annihilations, book of power, book of conjurations
 ITEM:    randbook disc:conjuration, staff of conjuration
 KFEAT:   _ = altar_vehumet
@@ -2475,8 +2475,8 @@ MONS:   brimstone fiend
 MONS:   ice fiend
 MONS:   balrug / hellion
 MONS:   blizzard demon
-MONS:   crimson imp / nothing w:5
-MONS:   white imp / nothing w:5
+MONS:   crimson imp w:1 / nothing w:5
+MONS:   white imp w:1 / nothing w:5
 SUBST:  " = |
 SUBST:  ' = |
 : elseif you.absdepth() > 18 then
@@ -2484,8 +2484,8 @@ MONS:   balrug / hellion w:5
 MONS:   blizzard demon
 MONS:   sun demon / smoke demon w:5
 MONS:   ice devil
-MONS:   crimson imp / nothing w:3
-MONS:   white imp / nothing w:3
+MONS:   crimson imp w:1 / nothing w:3
+MONS:   white imp w:1 / nothing w:3
 SUBST:  " = |
 SUBST:  ' = *
 : elseif you.absdepth() > 12 then
@@ -2820,7 +2820,7 @@ KMONS: 3 = ice devil / ice dragon / freezing wraith
 KMONS: 4 = ice fiend / blizzard demon
 KMONS: 5 = shard shrike
 KFEAT: 1 = >
-: if you.in_branch("Depths") then
+: if you.absdepth() > 20 then
 SUBST:  3 = 4, 2 = ..3
 NSUBST: | = 1:1 / *:|
 : end

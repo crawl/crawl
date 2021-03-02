@@ -2228,7 +2228,7 @@ ENDMAP
 NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
-: if you.absdepth() > 15 then
+: if you.in_branch("Depths") then
 MONS: tengu warrior ; longbow . arrow, stone giant / deep elf master archer
 : else
 MONS:   centaur, centaur warrior
@@ -2298,7 +2298,7 @@ ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake floating eye, eye of devastation, glowing orange brain
-MONS:    generate_awake golden eye, slime creature, acid blob / nothing w:40
+MONS:    generate_awake golden eye, slime creature, acid blob w:1 / nothing w:40
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
@@ -2384,14 +2384,14 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    deep elf archer w:6 / orc warlord w:7 / \
+MONS:    deep elf archer w:15 / orc warlord w:7 / \
          deep elf pyromancer / deep elf zephyrmancer / deep troll / \
-         hell hog w:5 / rakshasa w:10 / wizard / necromancer / \
+         hell hog w:5 / rakshasa / wizard / necromancer / \
          spriggan rider w:5 / vampire knight / nothing w:8
 MONS:    orc high priest / naga warrior / nagaraja / \
-         skeletal warrior / stone giant w:5 / wizard w:2 / \
+         skeletal warrior / stone giant w:5 / wizard w:20 / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
-         spriggan berserker / guardian serpent w:5 / caustic shrike / \
+         spriggan berserker / guardian serpent w:5 / caustic shrike w:1 / \
          salamander mystic / nothing w:4
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          hell knight w:5 / orc warlord / minotaur / \
@@ -2453,7 +2453,7 @@ ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hog
-MONS:    caustic shrike / catoblepas / dire elephant / emporer scorpion / nothing w:3
+MONS:    caustic shrike w:1 / catoblepas / dire elephant / emperor scorpion / nothing w:3
 MONS:    12-headed hydra / anaconda / ghost moth w:2 / wolf spider w:8 / harpy / moth of wrath
 MONS:    spriggan druid, spriggan rider / spriggan defender / nothing
 MONS:    sphinx / hell beast w:5 / caustic shrike w:5
@@ -2847,7 +2847,7 @@ NAME:     gammafunk_depths_water_palace
 DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
-KMONS:    1 = deep elf archer w:2 / ettin / stone giant w:2 / spriggan berserker
+KMONS:    1 = deep elf archer w:20 / ettin / stone giant w:20 / spriggan berserker
 KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
               / deep elf annihilator / deep troll earth mage / deep elf knight
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon

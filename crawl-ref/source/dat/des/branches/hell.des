@@ -185,7 +185,7 @@ NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_tele_into
-MONS:   ice devil / orange demon w:2 / w:5 rust devil / \
+MONS:   ice devil / orange demon w:20 / w:5 rust devil / \
         w:35 nothing
 MONS:   sun demon / soul eater / w:20 nothing
 MONS:   shadow demon / blizzard demon / hell beast
@@ -297,11 +297,11 @@ NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
 KMONS: O = hell beast
-MONS: quicksilver dragon simulacrum w:20 / blizzard demon
-MONS: iron troll w:20 / iron dragon
+MONS: quicksilver dragon simulacrum w:20 / blizzard demon w:1
+MONS: iron troll w:20 / iron dragon w:1
 MONS: hell beast w:20 / hell hog / sun demon
-MONS: skeletal warrior band / bone dragon / reaper \
-      ancient champion band w:5 / soul eater
+MONS: skeletal warrior band w:20 / bone dragon / reaper \
+      ancient champion band / soul eater w:20
 : hell_entry_tier(_G, "mid")
 MAP
   .....@.....
@@ -326,7 +326,7 @@ ENDMAP
 NAME:    hangedman_geh_valley
 WEIGHT:  4
 TAGS:    transparent uniq_hell_entry_geh
-KMONS:   O = sun demon w:10 / balrug / nothing w:5
+KMONS:   O = sun demon / balrug w:1 / nothing w:5
 SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
 SUBST:   = = c
@@ -408,7 +408,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = crimson imp ; wand of flame ident:type / balrug w:10 ; wand of flame ident:type
+KMONS:  i = crimson imp ; wand of flame ident:type w:1 / balrug ; wand of flame ident:type
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank
@@ -433,7 +433,7 @@ ENDMAP
 NAME:    hangedman_coc_ice_floe
 WEIGHT:  7
 TAGS:    transparent no_pool_fixup uniq_hell_entry_coc
-KMONS:   O = blizzard demon w:10 / nothing
+KMONS:   O = blizzard demon w:5 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: ab / ab / ba
 SUBST:   a : xww, b = x
@@ -487,7 +487,7 @@ ENDMAP
 NAME:    hangedman_tar_grid_catacomb
 WEIGHT:  4
 TAGS:    transparent uniq_hell_entry_tar
-KMONS:   O = soul eater w:20 / nothing
+KMONS:   O = soul eater w:5 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: o@O& / O&o@
 SUBST:   o = ., & = x
@@ -572,7 +572,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_old
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 4
-KMONS: O = iron dragon / iron troll w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 MAP
 ...................
@@ -595,7 +595,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_mu
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-KMONS: O = iron dragon / iron troll w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -617,7 +617,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_grunt
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-KMONS: O = iron dragon / iron troll w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP

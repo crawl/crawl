@@ -576,12 +576,12 @@ SHUFFLE: O3hi
 SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
-MONS: tengu warrior band w:6 / tengu conjurer band w:5 / \
+MONS: tengu warrior band w:15 / tengu conjurer band w:15 / \
       deep troll earth mage band / deep elf archer band w:1 / cyclops band / \
       deep elf knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
       fire dragon w:12 / ice dragon w:8 / titan
-MONS: caustic shrike / dire elephant / emperor scorpion / dire elephant band / \
+MONS: caustic shrike w:5 / dire elephant / emperor scorpion / dire elephant band / \
       very ugly thing band
 MAP
   ......
