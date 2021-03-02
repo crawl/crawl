@@ -717,15 +717,15 @@ void summon_dismissal_fineff::fire()
 
 void spectral_weapon_fineff::fire()
 {
-    actor *attack = attacker();
+    actor *atkr = attacker();
     actor *defend = defender();
-    if (!defend || !attack || !defend->alive() || !attack->alive())
+    if (!defend || !atkr || !defend->alive() || !atkr->alive())
         return;
 
     const coord_def target = defend->pos();
 
     // Do we already have a spectral weapon?
-    monster* sw = find_spectral_weapon(attack);
+    monster* sw = find_spectral_weapon(atkr);
     if (sw)
     {
         // Is it already in range?
@@ -741,11 +741,11 @@ void spectral_weapon_fineff::fire()
     }
 
     // Can we find a nearby space to attack from?
-    const reach_type atk_range = attack->reach_range();
+    const reach_type atk_range = atkr->reach_range();
     int seen_valid = 0;
     coord_def chosen_pos;
     // Try only spaces adjacent to the attacker.
-    for (adjacent_iterator ai(attack->pos()); ai; ++ai)
+    for (adjacent_iterator ai(atkr->pos()); ai; ++ai)
     {
         if (actor_at(*ai)
             || !monster_habitable_grid(MONS_SPECTRAL_WEAPON, env.grid(*ai)))
@@ -767,17 +767,17 @@ void spectral_weapon_fineff::fire()
     if (!seen_valid)
         return;
 
-    const item_def *weapon = attack->weapon();
+    const item_def *weapon = atkr->weapon();
     if (!weapon)
         return;
 
     mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 attack->is_player() ? BEH_FRIENDLY
-                                  : SAME_ATTITUDE(attack->as_monster()),
+                 atkr->is_player() ? BEH_FRIENDLY
+                                  : SAME_ATTITUDE(atkr->as_monster()),
                  chosen_pos,
-                 attack->mindex(),
+                 atkr->mindex(),
                  MG_FORCE_BEH | MG_FORCE_PLACE);
-    mg.set_summoned(attack, 1, 0);
+    mg.set_summoned(atkr, 1, 0);
     mg.props[TUKIMA_WEAPON] = *weapon;
     mg.props[TUKIMA_POWER] = 50;
 
@@ -796,8 +796,8 @@ void spectral_weapon_fineff::fire()
     melee_attack melee_attk(mons, defend);
     melee_attk.attack();
 
-    mons->summoner = attack->mid;
-    attack->props["spectral_weapon"].get_int() = mons->mid;
+    mons->summoner = atkr->mid;
+    atkr->props["spectral_weapon"].get_int() = mons->mid;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
