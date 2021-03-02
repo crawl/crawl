@@ -856,7 +856,7 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
+    if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
     {
         if (verbose)
             mpr("You can't wear that.");
@@ -1165,7 +1165,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_GRASPING))
     {
         mpr("You can't wear anything.");
         return false;
@@ -2706,7 +2706,8 @@ void random_uselessness()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    switch (random2(8))
+    const string skin = species_skin_name(you.species).c_str();
+    switch (random2(9))
     {
     case 0:
     case 1:
@@ -2728,7 +2729,7 @@ void random_uselessness()
         break;
 
     case 3:
-        if (starts_with(species_skin_adj(you.species), "bandage"))
+        if (starts_with(skin, "bandage"))
             mpr("Your bandages flutter.");
         else
         {
@@ -2754,6 +2755,12 @@ void random_uselessness()
     case 7:
         mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
         noisy(2, you.pos());
+        break;
+    case 8:
+        mprf("Your %s briefly flash%s %s.",
+                        skin.c_str(),
+                        ends_with(skin, "s") ? "" : "s",
+                        weird_glowing_colour().c_str());
         break;
     }
 }

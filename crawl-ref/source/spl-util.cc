@@ -1294,7 +1294,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         // intentional fallthrough to portal projectile
     case SPELL_PORTAL_PROJECTILE:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
         break;
     case SPELL_LEDAS_LIQUEFACTION:

@@ -95,24 +95,35 @@ string species_walking_verb(species_type sp)
     return verb ? verb : "Walk";
 }
 
-string species_skin_adj(species_type species)
+/**
+ * Return an adjective or noun for the species' skin.
+ * @param adj whether to provide an adjective (if true), or a noun (if false).
+ * @return a non-empty string. Nouns will be pluralised if they are count nouns.
+ *         Right now, plurality can be determined by `ends_with(noun, "s")`.
+ */
+string species_skin_name(species_type species, bool adj)
 {
-    // Aside from direct adjectival uses, some flavor stuff checks the strings
-    // here. TODO: should these be species flags a la hair?
+    // Aside from direct uses, some flavor stuff checks the strings
+    // here. TODO: should some of these be species flags a la hair?
+    // Also, some skin mutations should have a way of overriding these perhaps
     if (species_is_draconian(species) || species == SP_NAGA)
-        return "scaled";
+        return adj ? "scaled" : "scales";
     else if (species == SP_TENGU)
-        return "feathered";
+        return adj ? "feathered" : "feathers";
+    else if (species == SP_FELID)
+        return adj ? "furry" : "fur";
     else if (species == SP_MUMMY)
-        return "bandage-wrapped";
+        return adj ? "bandage-wrapped" : "bandages";
     else
-        return "";
+        return adj ? "fleshy" : "skin";
 }
 
 string species_arm_name(species_type species)
 {
     if (species == SP_OCTOPODE)
         return "tentacle";
+    else if (species == SP_FELID)
+        return "leg";
     else
         return "arm";
 }
@@ -209,6 +220,38 @@ bool species_has_hair(species_type species)
 bool species_has_bones(species_type species)
 {
     return !(species == SP_OCTOPODE || species == SP_FORMICID);
+}
+
+static const string shout_verbs[] = {"shout", "yell", "scream"};
+static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
+static const string frog_shout_verbs[] = {"croak", "ribbit", "bellow"};
+static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
+
+/**
+ * What verb should be used to describe the species' shouting?
+ * @param sp a species
+ * @param screaminess a loudness level; in range [0,2]
+ * @param directed with this is to be directed at another actor
+ * @return A shouty kind of verb
+ */
+string species_shout_verb(species_type sp, int screaminess, bool directed)
+{
+    screaminess = max(min(screaminess, static_cast<int>(sizeof(shout_verbs) - 1)), 0);
+    switch (sp)
+    {
+    case SP_GNOLL:
+        if (screaminess == 0 && directed && coinflip())
+            return "growl";
+        return dog_shout_verbs[screaminess];
+    case SP_BARACHI:
+        return frog_shout_verbs[screaminess];
+    case SP_FELID:
+        if (screaminess == 0 && directed)
+            return "hiss"; // hiss at, not meow at
+        return felid_shout_verbs[screaminess];
+    default:
+        return shout_verbs[screaminess];
+    }
 }
 
 size_type species_size(species_type species, size_part_type psize)

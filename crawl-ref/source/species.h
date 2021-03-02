@@ -48,7 +48,8 @@ enum species_name_type
 string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
-string species_skin_adj(species_type sp);
+string species_shout_verb(species_type sp, int screaminess, bool directed);
+string species_skin_name(species_type sp, bool adj=false);
 string species_arm_name(species_type species);
 string species_hand_name(species_type species);
 const vector<string>& fake_mutations(species_type species, bool terse);

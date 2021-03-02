@@ -3049,11 +3049,14 @@ bool gozag_call_merchant()
         if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
             continue;
 
-        if (you.species == SP_FELID &&
+        if (you.has_mutation(MUT_NO_ARMOUR) &&
             (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE
-             || type == SHOP_WEAPON
-             || type == SHOP_WEAPON_ANTIQUE))
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
+        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
+            && you.has_mutation(MUT_NO_GRASPING))
         {
             continue;
         }
@@ -4037,7 +4040,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (you.get_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races

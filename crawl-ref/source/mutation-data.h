@@ -1772,7 +1772,7 @@ static const mutation_def mut_data[] =
   {"You can once more train Dodging skill.", "", ""},
 },
 
-{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
+{ MUT_NO_ARMOUR_SKILL, 0, 1, mutflag::bad, false,
   "inability to train armour",
 
   {"You cannot train Armour skill.", "", ""},
@@ -2048,6 +2048,22 @@ static const mutation_def mut_data[] =
   {"You are immune to the effects of steam.", "", ""},
   {"You are now immune to the effects of steam.", "", ""},
   {"You are no longer immune to the effects of steam.", "", ""},
+},
+
+{ MUT_NO_GRASPING, 0, 1, mutflag::bad, false,
+  "no weapons or thrown items",
+
+  {"You are incapable of wielding weapons or throwing items.", "", ""},
+  {"You can no longer grasp objects.", "", ""},
+  {"You can now grasp objects.", "", ""},
+},
+
+{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
+  "no armour",
+
+  {"You cannot wear armour.", "", ""},
+  {"You can no longer wear armour.", "", ""},
+  {"You can now wear armour.", "", ""},
 },
 
 };

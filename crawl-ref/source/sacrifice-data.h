@@ -137,7 +137,7 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
+{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR_SKILL,
   "sacrifice your Armour skill",
   "sacrificed armour",
 

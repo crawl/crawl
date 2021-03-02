@@ -1991,7 +1991,7 @@ void canned_msg(canned_message_type which_message)
         {
             const char* when =
             (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 mprf("Your mouth is %s empty.", when);
             else if (you.has_usable_claws(true))
                 mprf("You are %s empty-clawed.", when);

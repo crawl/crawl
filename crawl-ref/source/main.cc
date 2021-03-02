@@ -1617,9 +1617,10 @@ static void _experience_check()
 
 static void _do_remove_armour()
 {
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
-        mpr("You can't remove your fur, sorry.");
+        mprf("You can't remove your %s, sorry.",
+            species_skin_name(you.species).c_str());
         return;
     }
 

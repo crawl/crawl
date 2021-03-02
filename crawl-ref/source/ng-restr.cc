@@ -19,17 +19,17 @@
 
 static bool _banned_combination(job_type job, species_type species)
 {
-    switch (species)
-    {
-    case SP_FELID:
-        if (job == JOB_GLADIATOR
+    if (species_mutation_level(species, MUT_NO_GRASPING)
+        && (job == JOB_GLADIATOR
             || job == JOB_BRIGAND
             || job == JOB_HUNTER
-            || job == JOB_ARCANE_MARKSMAN)
-        {
-            return true;
-        }
-        break;
+            || job == JOB_ARCANE_MARKSMAN))
+    {
+        return true;
+    }
+
+    switch (species)
+    {
     case SP_DEMIGOD:
         if (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
@@ -92,7 +92,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Some special cases:
 
-    if (ng.species == SP_FELID && wpn != WPN_UNARMED)
+    if (species_mutation_level(ng.species, MUT_NO_GRASPING) && wpn != WPN_UNARMED)
         return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,

@@ -742,7 +742,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species == SP_FELID ? MB_FALSE :
+        return you.has_mutation(MUT_NO_GRASPING) ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
                                          MB_TRUE;
 
@@ -5266,11 +5266,6 @@ bool player::cannot_speak() const
     return false;
 }
 
-static const string shout_verbs[] = {"shout", "yell", "scream"};
-static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
-static const string frog_shout_verbs[] = {"ribbit", "croak", "bellow"};
-static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
-
 /**
  * What verb should be used to describe the player's shouting?
  *
@@ -5287,16 +5282,7 @@ string player::shout_verb(bool directed) const
         return "howl";
 
     const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
-
-    if (species == SP_GNOLL)
-        return dog_shout_verbs[screaminess];
-    if (species == SP_BARACHI)
-        return frog_shout_verbs[screaminess];
-    if (species != SP_FELID)
-        return shout_verbs[screaminess];
-    if (directed && screaminess == 0)
-        return "hiss"; // hiss at, not meow at
-    return felid_shout_verbs[screaminess];
+    return species_shout_verb(you.species, screaminess, directed);
 }
 
 /**

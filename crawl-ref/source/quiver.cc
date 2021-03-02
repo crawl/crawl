@@ -740,7 +740,7 @@ namespace quiver
 
         virtual bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -971,7 +971,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -1954,7 +1954,7 @@ namespace quiver
     shared_ptr<action> find_action_from_launcher(const item_def *item)
     {
         // Felids have no use for launchers or ammo.
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return make_shared<ammo_action>(-1);
 
         int slot = -1;
@@ -2523,7 +2523,7 @@ namespace quiver
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(you.species == SP_FELID
+              any_items(you.has_mutation(MUT_NO_GRASPING)
                 ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
                 : inv_count() > 0)
         {

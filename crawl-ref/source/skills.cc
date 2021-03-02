@@ -1942,7 +1942,7 @@ bool is_useless_skill(skill_type skill)
         || (skill == SK_TRANSMUTATIONS
             && you.get_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
         || (skill == SK_DODGING && you.get_mutation_level(MUT_NO_DODGING))
-        || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR))
+        || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
         || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
         || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
             && !you.has_innate_mutation(MUT_QUADRUMANOUS))

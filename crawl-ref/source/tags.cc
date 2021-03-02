@@ -3199,6 +3199,14 @@ static void _tag_read_you(reader &th)
         you.mutation[MUT_UNBREATHING]
                         = you.innate_mutation[MUT_UNBREATHING] = 2;
     }
+    if (you.species == SP_FELID)
+    {
+        you.mutation[MUT_NO_GRASPING]
+                        = you.innate_mutation[MUT_NO_GRASPING] = 1;
+        you.mutation[MUT_NO_ARMOUR]
+                        = you.innate_mutation[MUT_NO_ARMOUR] = 1;
+    }
+
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)

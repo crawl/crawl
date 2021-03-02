@@ -395,7 +395,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
         return true;
     }
-    else if (species == SP_FELID)
+    else if (you.has_mutation(MUT_NO_GRASPING))
     {
         if (!quiet)
             mpr("You can't use weapons.");
@@ -599,9 +599,9 @@ string player::arm_name(bool plural, bool *can_plural) const
     else if (form == transformation::shadow)
         adj = "shadowy";
     else
-        adj = species_skin_adj(species);
+        adj = species_skin_name(species, true);
 
-    if (!adj.empty())
+    if (adj != "fleshy")
         str = adj + " " + str;
 
     if (plural)

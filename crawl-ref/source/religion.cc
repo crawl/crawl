@@ -415,7 +415,7 @@ void god_power::display(bool gaining, const char* fmt) const
     // hack: don't mention the necronomicon alone unless it wasn't
     // already mentioned by the other message
     if (abil == ABIL_KIKU_GIFT_NECRONOMICON
-        && you.species != SP_FELID)
+        && !you.has_mutation(MUT_NO_GRASPING))
     {
         return;
     }
@@ -1368,8 +1368,9 @@ static bool _give_trog_oka_gift(bool forced)
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    // Should gift catnip instead.
-    if (you.species == SP_FELID)
+    // No use for anything below. (No guarantees this will work right if these
+    // mutations can ever appear separately.)
+    if (you.has_mutation(MUT_NO_GRASPING) && you.has_mutation(MUT_NO_ARMOUR))
         return false;
 
     const bool want_equipment = forced

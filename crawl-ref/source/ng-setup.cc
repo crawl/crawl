@@ -307,11 +307,11 @@ void give_items_skills(const newgame_def& ng)
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    if (you.species == SP_FELID)
-    {
+    if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;
+
+    if (you.has_mutation(MUT_NO_ARMOUR))
         you.skills[SK_SHIELDS] = 0;
-    }
 
     if (!you_worship(GOD_NO_GOD))
     {

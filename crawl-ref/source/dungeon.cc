@@ -4484,23 +4484,6 @@ static void _build_postvault_level(vault_placement &place)
     }
 }
 
-static object_class_type _acquirement_object_class()
-{
-    static const object_class_type classes[] =
-    {
-        OBJ_JEWELLERY,
-        OBJ_BOOKS,
-        OBJ_WANDS,
-        OBJ_MISCELLANY, // Felids stop here
-        OBJ_WEAPONS,
-        OBJ_ARMOUR,
-        OBJ_STAVES,
-    };
-
-    const int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
-    return classes[random2(nc)];
-}
-
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     rng::subgenerator corpse_rng;
@@ -4714,7 +4697,7 @@ int dgn_place_item(const item_spec &spec,
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
-            base_type = acquire ? _acquirement_object_class()
+            base_type = acquire ? shuffled_acquirement_classes(false)[0]
                                 : _superb_object_class();
         }
     }
