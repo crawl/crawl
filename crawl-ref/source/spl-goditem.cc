@@ -437,7 +437,10 @@ string describe_player_cancellation()
     {
         status_info inf;
         if (fill_status_info(duration, inf) && !inf.short_text.empty())
+        {
+            strip_suffix(inf.short_text, " (expiring)");
             effects.push_back(inf.short_text);
+        }
     }
 
     // I hate this, but here are some awkward special cases.
@@ -450,8 +453,11 @@ string describe_player_cancellation()
     for (auto status : dispellable_statuses)
     {
         status_info inf;
-        if (fill_status_info(status, inf))
+        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        {
+            strip_suffix(inf.short_text, " (expiring)");
             effects.push_back(inf.short_text);
+        }
     }
 
     return comma_separated_line(begin(effects), end(effects), " or ");

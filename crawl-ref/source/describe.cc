@@ -2187,10 +2187,15 @@ string get_item_description(const item_def &item, bool verbose,
         {
             if (item.sub_type == POT_LIGNIFY)
                 description << "\n\n" + _describe_lignify_ac();
-            else if (item.sub_type == POT_CANCELLATION && player_is_cancellable())
+            else if (item.sub_type == POT_CANCELLATION)
             {
-                description << "\n\nIf you drink this now, you will no longer be " <<
-                    describe_player_cancellation() << ".";
+                if (player_is_cancellable())
+                {
+                    description << "\n\nIf you drink this now, you will no longer be " <<
+                        describe_player_cancellation() << ".";
+                }
+                else
+                    description << "\n\nDrinking this now will have no effect.";
             }
         }
         break;
