@@ -300,7 +300,7 @@ KMONS: O = hell beast
 MONS: quicksilver dragon simulacrum w:20 / blizzard demon w:1
 MONS: iron troll w:20 / iron dragon w:1
 MONS: hell beast w:20 / hell hog / sun demon
-MONS: skeletal warrior band w:20 / bone dragon / reaper \
+MONS: skeletal warrior band w:20 / bone dragon / reaper / \
       ancient champion band / soul eater w:20
 : hell_entry_tier(_G, "mid")
 MAP
