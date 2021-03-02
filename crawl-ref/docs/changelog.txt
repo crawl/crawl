@@ -1,4 +1,4 @@
-Stone Soup 0.27-a0 (through 0.27-a0-365-ged15d12)
+Stone Soup 0.27-a0 (through 0.27-a0-498-g7ecbb0a)
 -------------------------------------------------
 
 Branches, Environment
@@ -6,6 +6,7 @@ Branches, Environment
 * Net traps trigger less often.
 * Gadget shops are removed.
 * Storm clouds no longer make noise.
+* After completing one Ziggurat the player is immune to the malevolence of Zot.
 
 Character
 ---------
@@ -32,6 +33,23 @@ Character
 * Hidden stepdowns on dexterity and evasion are removed.
 * Spriggans' dodging apt is reduced to +3 and base dexterity reduced by one.
 
+Gods
+----
+* Ashenzari is completely overhauled.
+  - Ashenzari's conduct is cursing slots. Curses are offered at regular
+    intervals.
+  - When a curse is applied to an equipped item it binds the item to the slot,
+    increases the player's piety, and grants a skill boost based on the kind of
+    curse offered.
+  - Uncursing can be done at any time by destroying the item via an ability.
+  - In exchange for these curses, Ashenzari grants the following benefits:
+    - Scaling with piety: skill boosts from curses, item and monster detection,
+      passive mapping.
+    - 0* Item identification, portal detection, and exploration trap protection.
+    - 2* See Invisible
+    - 3* Clarity
+    - 4* Passive scrying to radius 2, scaling with piety to radius 4 at 6*.
+
 Monsters
 --------
 * Monsters with ranged attacks now have unlimited ammunition. (Except nets.)
@@ -49,6 +67,7 @@ Monsters
 * Big kobolds are re-named kobold brigands. Kobold brigands always spawn with
   darts, either poison or curare.
 * Launchers can now be dancing weapons, which will shoot!
+* When Boris spawns on the orb run he comes hasted and with a brilliance aura.
 
 
 Interface
@@ -69,6 +88,8 @@ Items
 * Broad axe's base delay is returned to 1.6.
 * The *Curse property on unrands is removed. the Scythe of Curses and obsidian
   axe now have *Drain. The property is removed from the Necklace of Bloodlust
+* The obsidian axe can no longer be unwielded while mesmerised.
+* The *Slow artefact property now stacks.
 * Hats and gloves can now get the stealth ego.
 * Wands of random effects now only apply buff or debuff effects (15% chance of
   a buff), not damaging effects.
@@ -77,6 +98,8 @@ Items
   still possible on randarts)
 * Amulets of regeneration and the Regen+ property now regenerate 1 HP per 10
   aut.
+* Equipment is identified when visiting the square it is in, instead of
+  requiring wear-identification.
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
   inaccuracy, scrolls of remove curse, and boots of running are removed.
 
@@ -92,6 +115,7 @@ Spells
   caster's armour.
 * New spell: Manifold Assault. A level 5 translocations spell which attacks 2-4
   random foes in sight with the attacker's wielded weapon.
+* Airstrike no longer gets bonus damage against flying monsters.
 * Summon Demon and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
