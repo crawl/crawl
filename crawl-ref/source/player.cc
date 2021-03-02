@@ -6054,10 +6054,11 @@ mon_holy_type player::holiness(bool temp) const
     return holi;
 }
 
-bool player::undead_or_demonic() const
+// With temp (default true), report temporary effects such as lichform.
+bool player::undead_or_demonic(bool temp) const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
-    return undead_state() || species == SP_DEMONSPAWN;
+    return undead_state(temp) || species == SP_DEMONSPAWN;
 }
 
 bool player::is_holy() const

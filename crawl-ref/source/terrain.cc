@@ -1967,9 +1967,12 @@ bool is_boring_terrain(dungeon_feature_type feat)
     if (!is_notable_terrain(feat))
         return true;
 
-    // Altars in the temple are boring.
-    if (feat_is_altar(feat) && player_in_branch(BRANCH_TEMPLE))
+    // Altars in the temple are boring, as are any you can never use.
+    if (feat_is_altar(feat) && (player_in_branch(BRANCH_TEMPLE)
+        || !player_can_join_god(feat_altar_god(feat), false)))
+    {
         return true;
+    }
 
     // Only note the first entrance to the Abyss/Pan/Hell
     // which is found.
