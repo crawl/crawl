@@ -2066,6 +2066,14 @@ static const mutation_def mut_data[] =
   {"You can now wear armour.", "", ""},
 },
 
+{ MUT_MULTILIVED, 0, 1, mutflag::good, false,
+  "multi-lived",
+
+  {"You gain extra lives every three experience levels.", "", ""},
+  {"You are no longer multi-lived.", "", ""},
+  {"You can now gain extra lives.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

@@ -2840,13 +2840,12 @@ void level_change(bool skip_attribute_increase)
                 break;
             }
 
-            case SP_FELID:
-                _felid_extra_life();
-                break;
-
             default:
                 break;
             }
+
+            if (you.has_mutation(MUT_MULTILIVED))
+                _felid_extra_life();
 
             give_level_mutations(you.species, you.experience_level);
 
@@ -2872,7 +2871,7 @@ void level_change(bool skip_attribute_increase)
         ASSERT(you.experience_level == you.get_max_xl());
         ASSERT(you.max_level < 127); // marshalled as an 1-byte value
         you.max_level++;
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_MULTILIVED))
             _felid_extra_life();
     }
 

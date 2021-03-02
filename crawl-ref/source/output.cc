@@ -2300,7 +2300,7 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
         entry.cprintf("Lives:  ");

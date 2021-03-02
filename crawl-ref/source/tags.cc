@@ -3205,6 +3205,8 @@ static void _tag_read_you(reader &th)
                         = you.innate_mutation[MUT_NO_GRASPING] = 1;
         you.mutation[MUT_NO_ARMOUR]
                         = you.innate_mutation[MUT_NO_ARMOUR] = 1;
+        you.mutation[MUT_MULTILIVED]
+                        = you.innate_mutation[MUT_MULTILIVED] = 1;
     }
 
 
