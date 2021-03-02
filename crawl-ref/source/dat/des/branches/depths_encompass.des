@@ -635,7 +635,7 @@ NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 MONS:     deep elf pyromancer / deep elf zephyrmancer / nagaraja / \
-          hell knight / nothing w:5 \
+          hell knight / nothing w:5 / \
           rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
           frost giant w:1 ; double sword good_item / \
