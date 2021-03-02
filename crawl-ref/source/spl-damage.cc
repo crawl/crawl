@@ -663,7 +663,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         {
             if (ai->is_player())
                 affects_you = true;
-            else
+            else if (*ai != agent)
                 affected_monsters.push_back(ai->as_monster());
         }
     }
