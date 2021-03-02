@@ -90,19 +90,6 @@ void update_mons_cloud_ring(monster* mons)
     }
 }
 
-static void _place_thunder_ring(const monster &mons)
-{
-    const cloud_type ctype = CLOUD_STORM;
-
-    for (adjacent_iterator ai(mons.pos()); ai; ++ai)
-        if (!cell_is_solid(*ai)
-            && (!cloud_at(*ai)
-                || cloud_at(*ai)->type == ctype))
-        {
-            place_cloud(ctype, *ai, 2 + random2(3), &mons);
-        }
-}
-
 #ifdef DEBUG_DIAGNOSTICS
 bool monster::has_ench(enchant_type ench) const
 {

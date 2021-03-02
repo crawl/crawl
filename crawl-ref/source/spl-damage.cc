@@ -1946,16 +1946,9 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
 
         // Used to deal damage; invisible
         bolt beam_actual;
+        zappy(ZAP_IGNITION, pow, false, beam_actual);
         beam_actual.set_agent(agent);
-        beam_actual.flavour       = BEAM_FIRE;
-        beam_actual.real_flavour  = BEAM_FIRE;
-        beam_actual.glyph         = 0;
-        beam_actual.damage        = calc_dice(3, 10 + pow/3); // less than fireball
-        beam_actual.name          = "fireball";
-        beam_actual.colour        = RED;
         beam_actual.ex_size       = 0;
-        beam_actual.is_explosion  = true;
-        beam_actual.loudness      = 0;
         beam_actual.origin_spell  = SPELL_IGNITION;
         beam_actual.apply_beam_conducts();
 
@@ -3969,21 +3962,16 @@ dice_def ramparts_damage(int pow, bool random)
 static void _hailstorm_cell(coord_def where, int pow, actor* agent)
 {
     bolt beam;
-    beam.flavour = BEAM_ICE;
+    zappy(ZAP_HAILSTORM, pow, agent->is_monster(), beam);
     beam.thrower = agent->is_player() ? KILL_YOU : KILL_MON;
     beam.source_id = agent->mid;
     beam.attitude = agent->temp_attitude();
-    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour = ETC_ICE;
 #ifdef USE_TILE
     beam.tile_beam = -1;
 #endif
     beam.draw_delay = 10;
     beam.source = where;
     beam.target = where;
-    beam.damage = calc_dice(3, 10 + pow / 2);
-    beam.hit = 18 + pow / 6;
-    beam.name = "hail";
     beam.hit_verb = "pelts";
 
     monster* mons = monster_at(where);
