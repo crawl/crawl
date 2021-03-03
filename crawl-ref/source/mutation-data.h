@@ -2042,7 +2042,7 @@ static const mutation_def mut_data[] =
   {"Your retaliatory reflexes feel dull.", "", ""},
 },
 
-{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, true,
   "steam resistance",
 
   {"You are immune to the effects of steam.", "", ""},
