@@ -345,6 +345,9 @@ public:
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
 
+    virtual bool is_dragonkind() const;
+    virtual int  dragon_level() const;
+
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
     virtual bool cannot_act() const = 0;

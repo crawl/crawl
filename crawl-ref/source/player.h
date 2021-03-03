@@ -789,6 +789,7 @@ public:
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
     int get_noise_perception(bool adjusted = true) const;
+    bool is_dragonkind() const override;
 
     bool paralysed() const override;
     bool cannot_move() const override;

@@ -552,7 +552,8 @@ public:
 
     bool is_illusion() const;
     bool is_divine_companion() const;
-    // Jumping spiders (jump instead of blink)
+    bool is_dragonkind() const override;
+    int  dragon_level() const override;
     bool is_jumpy() const;
 
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;

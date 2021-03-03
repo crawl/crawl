@@ -93,6 +93,16 @@ bool actor::is_habitable(const coord_def &_pos) const
     return is_habitable_feat(env.grid(_pos));
 }
 
+bool actor::is_dragonkind() const {
+    return mons_class_is_draconic(mons_species());
+}
+
+int actor::dragon_level() const {
+    if (!is_dragonkind())
+        return 0;
+    return min(get_experience_level(), 18);
+}
+
 bool actor::handle_trap()
 {
     trap_def* trap = trap_at(pos());

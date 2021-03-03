@@ -6519,6 +6519,28 @@ bool monster::is_divine_companion() const
            && mons_can_use_stairs(*this);
 }
 
+bool monster::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+
+    if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
+        return true;
+
+    if (mons_is_ghost_demon(type) && species_is_draconian(ghost->species))
+        return true;
+
+    return false;
+}
+
+int monster::dragon_level() const
+{
+    if (is_summoned() || testbits(flags, MF_NO_REWARD))
+        return 0;
+    return actor::dragon_level();
+}
+
+/// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;

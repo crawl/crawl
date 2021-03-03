@@ -692,6 +692,19 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
+bool mons_class_is_draconic(monster_type mc)
+{
+    switch (mons_genus(mc))
+    {
+        case MONS_DRAGON:
+        case MONS_DRAKE:
+        case MONS_DRACONIAN:
+            return true;
+        default:
+            return false;
+    }
+}
+
 /**
  * Can killing this class of monster ever reward xp?
  *

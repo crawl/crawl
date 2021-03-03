@@ -858,3 +858,10 @@ int player::heads() const
         return props[HYDRA_FORM_HEADS_KEY].get_int();
     return 1; // not actually always true
 }
+
+bool player::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+    return you.form == transformation::dragon;
+}
