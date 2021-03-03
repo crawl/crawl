@@ -456,11 +456,6 @@ void species_stat_init(species_type species)
     you.base_stats[STAT_DEX] = get_species_def(species).d;
 }
 
-bool species_has_stat_gain(species_type species)
-{
-    return get_species_def(species).level_stats.size() > 0;
-}
-
 int species_stat_gain_multiplier(species_type species)
 {
     // TODO: is this worth dataifying? Currently matters only for
