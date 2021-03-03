@@ -1557,16 +1557,9 @@ static vector<string> _desc_meph_chance(const monster_info& mi)
 
 static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
 {
-    if (get_resist(mi.resists(), MR_RES_NEG) >= 3)
+    if (mi.mb.get(MB_CANT_DRAIN))
         return vector<string>{"not susceptible"};
-    // Assumes these !actor_is_susceptible_to_vampirism() cases would have rN+++:
-    // - monster with MF_SPECTRALISED would be undead
-    // - monster without MH_NATURAL holiness would have rN+++
-    // Then these cases are inconvenient to check here but as of 0.26+ there are no practical examples:
-    // - monster with ENCH_FAKE_ABJURATION
-    // - monster with ENCH_PHANTOM_MIRROR may count as is_summoned() and not have MB_SUMMONED
-    if (mi.mb.get(MB_SUMMONED))
-        return vector<string>{"would not gain hp"};
+
     return vector<string>{};
 }
 

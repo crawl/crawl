@@ -595,6 +595,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
+    if (!actor_is_susceptible_to_vampirism(*m))
+        mb.set(MB_CANT_DRAIN);
 
     dam = mons_get_damage_level(*m);
 
