@@ -197,7 +197,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (!you.can_drink())
+        if (!you.can_drink(false))
             inf.light_colour = DARKGREY;
         break;
 
