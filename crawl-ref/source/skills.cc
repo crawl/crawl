@@ -492,15 +492,10 @@ static void _check_skills_to_show()
     you.skills_to_show.clear();
 }
 
-static bool _player_is_gnoll()
-{
-    return you.species == SP_GNOLL;
-}
-
 static void _check_skills_to_hide()
 {
     // Gnolls can't stop training skills.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return;
 
     _check_inventory_skills();
@@ -538,7 +533,7 @@ void update_can_currently_train()
 
 bool skill_default_shown(skill_type sk)
 {
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return true;
 
     switch (sk)
@@ -590,8 +585,8 @@ void init_train()
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
-            const bool gnoll_enable = _player_is_gnoll() &&
-                                !is_removed_skill((skill_type) i);
+            const bool gnoll_enable = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+                                        && !is_removed_skill((skill_type) i);
             // Skills are on by default in auto mode and off in manual.
             you.train[i] = (training_status) (gnoll_enable
                                                 || you.auto_training);
@@ -733,7 +728,7 @@ bool check_selected_skills()
 
     mpr("You need to enable at least one skill for training.");
     // Training will be fixed up on load if this ASSERT triggers.
-    ASSERT(!_player_is_gnoll());
+    ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
     more();
     reset_training();
     skill_menu();
@@ -752,7 +747,7 @@ void reset_training()
 {
     // Disable this here since we don't want any autotraining related skilling
     // changes for Gnolls.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         you.auto_training = false;
 
     // We clear the values in the training array. In auto mode they are set
@@ -762,8 +757,11 @@ void reset_training()
     {
         // skill_trained doesn't work for gnolls, but all existent skills
         // will be set as enabled here.
-        if (!_player_is_gnoll() && (you.auto_training || !skill_trained(i)))
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+            && (you.auto_training || !skill_trained(i)))
+        {
             you.training[i] = 0;
+        }
         else
             you.training[i] = you.train[i];
     }
@@ -816,7 +814,7 @@ void reset_training()
     }
 
     _scale_array(you.training, 100, you.auto_training);
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         // we use the full set of skills to calculate gnoll percentages,
         // but they don't actually get to train sacrificed skills.
@@ -877,7 +875,7 @@ int _gnoll_total_skill_cost();
 void train_skills(bool simu)
 {
     int cost, exp;
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         do
         {
@@ -949,7 +947,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         if (you.training[i] > 0)
         {
             sk_exp[i] = you.training[i] * exp / 100;
-            if (sk_exp[i] < cost && !_player_is_gnoll())
+            if (sk_exp[i] < cost && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             {
                 // One skill has a too low training to be trained at all.
                 // We skip the first phase and go directly to the random
@@ -965,7 +963,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     {
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
-        if (_player_is_gnoll())
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             reverse(training_order.begin(), training_order.end());
         else
             shuffle_array(training_order);
@@ -973,7 +971,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         {
             int gain = 0;
 
-            if (_player_is_gnoll())
+            if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
                 sk_exp[sk] = exp;
             while (sk_exp[sk] >= cost && you.training[sk])
             {
@@ -983,7 +981,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
                 ASSERT(exp >= 0);
                 if (_level_up_check(sk, simu))
                     sk_exp[sk] = 0;
-                if (_player_is_gnoll())
+                if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
                     break;
             }
 
@@ -999,7 +997,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     // with random_choose_weighted.
     while (exp >= cost)
     {
-        if (_player_is_gnoll())
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             break;
         int gain;
         skill_type sk = SK_NONE;
@@ -1042,7 +1040,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (total_gain[sk] && !simu && !_player_is_gnoll())
+            if (total_gain[sk] && !simu
+                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             {
                 dprf(DIAG_SKILLS, "Trained %s by %d.",
                      skill_name(sk), total_gain[sk]);
@@ -1269,7 +1268,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
 
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         int useless_count = _useless_skill_count();
         int total_count = _total_skill_count();
@@ -1558,8 +1557,8 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
     const int ranged_target = min(max((int) target, 0), 270);
     if (announce && ranged_target != (int) training_targets[sk])
     {
-        if (_player_is_gnoll())
-            mprf("Gnolls can't set training targets!");
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            mprf("You can't set training targets!");
         else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else
@@ -2039,7 +2038,7 @@ float species_apt_factor(skill_type sk, species_type sp)
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
     // Gnolls do not have crosstraining.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return {};
 
     switch (sk)
@@ -2228,12 +2227,15 @@ void fixup_skills()
             // gnolls have everything existent enabled, so that the
             // training percentage is calculated correctly. (Useless
             // skills still won't be trained for them.)
-            if (_player_is_gnoll() && !is_removed_skill(sk))
+            if (you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+                && !is_removed_skill(sk))
+            {
                 you.train[sk] = TRAINING_ENABLED;
+            }
             else
                 you.train[sk] = TRAINING_DISABLED;
         }
-        else if (_player_is_gnoll())
+        else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             you.train[sk] = TRAINING_ENABLED;
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
@@ -2242,8 +2244,11 @@ void fixup_skills()
     init_can_currently_train();
     reset_training();
 
-    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && !_player_is_gnoll())
+    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
+        && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    {
         skill_menu(SKMF_EXPERIENCE);
+    }
 
     check_training_targets();
 }
@@ -2258,7 +2263,7 @@ void fixup_skills()
 bool can_enable_skill(skill_type sk, bool override)
 {
     // TODO: should this check you.skill_points or you.skills?
-    return !_player_is_gnoll()
+    return !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
        && you.skills[sk] < MAX_SKILL_LEVEL
        && !is_useless_skill(sk)
        && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));

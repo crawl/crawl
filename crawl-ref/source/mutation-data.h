@@ -2074,6 +2074,14 @@ static const mutation_def mut_data[] =
   {"You can now gain extra lives.", "", ""},
 },
 
+{ MUT_DISTRIBUTED_TRAINING, 0, 1, mutflag::good, false,
+  "distributed training",
+
+  {"Your experience applies equally to all skills.", "", ""},
+  {"Your experience now applies equally to all skills.", "", ""},
+  {"Your experience no longer applies equally to all skills.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

@@ -3906,7 +3906,7 @@ static int _piety_for_skill(skill_type skill)
 {
     // Gnolls didn't have a choice about training the skill, so don't give
     // them more piety for waiting longer before taking the sacrifice.
-    if (you.species == SP_GNOLL)
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return 0;
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }

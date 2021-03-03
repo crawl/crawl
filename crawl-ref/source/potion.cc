@@ -479,7 +479,7 @@ public:
 
         // these are included in default force_more_message
         const int exp = 7500 * you.experience_level;
-        if (you.species == SP_GNOLL)
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         {
             you.exp_available += exp;
             train_skills();
