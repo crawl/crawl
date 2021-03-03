@@ -893,12 +893,12 @@ void move_player_action(coord_def move)
         return;
     }
 
+    // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
-                          : (you.species == SP_NAGA
-                             && form_keeps_mutations())        ? "slither"
-                                                               : "walk";
+                          : you.form != transformation::none   ? "walk" // XX
+                          : lowercase_first(species_walking_verb(you.species));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())

@@ -1051,10 +1051,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                if (you.species == SP_NAGA)
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!");
+                    mpr("Boots don't fit your feet!"); // palentonga
             }
             return false;
         }

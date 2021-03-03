@@ -563,10 +563,9 @@ LUAFN(moninf_get_can_be_constricted)
     MONINF(ls, 1, mi);
     if (!mi->constrictor_name.empty()
         || !form_keeps_mutations()
-        || (you.species != SP_NAGA
-            || you.experience_level <= 12
-            || you.is_constricting())
-         && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
+        || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
+                || you.is_constricting())
+            && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
     {
         lua_pushboolean(ls, false);
     }

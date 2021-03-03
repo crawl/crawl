@@ -641,6 +641,7 @@ string describe_mutations(bool drop_title)
 
     if (you.racial_ac(false) > 0)
     {
+        // XX generalize this code somehow?
         const string scale_clause = string(scale_type(you.species))
               + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
@@ -1258,8 +1259,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Only nagas can get upgraded poison spit.
-    if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
+    // To get upgraded spit poison, you must have it innately
+    if (!you.has_innate_mutation(MUT_SPIT_POISON) && mutat == MUT_SPIT_POISON)
         return true;
 
     // Only Palentonga can go on a roll.

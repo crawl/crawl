@@ -814,12 +814,15 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_CONSTRICTING_TAIL, 0, 1, mutflag::good, true,
-  "constrict 1",
+{ MUT_CONSTRICTING_TAIL, 0, 2, mutflag::good, true,
+  "naga tail",
 
-  {"You can use your snake-like lower body to constrict enemies.", "", ""},
-  {"Your tail grows strong enough to constrict your enemies.", "", ""},
-  {"", "", ""},
+  {"You have a snake-like lower body.",
+   "You can use your snake-like lower body to constrict enemies.", ""},
+  {"Your lower body turns into a snake tail.",
+   "Your tail grows strong enough to constrict your enemies.", ""},
+  {"Your lower body returns to normal.",
+   "Your snake tail weakens and can no longer constrict your enemies.", ""},
 },
 
 // Naga and Draconian only

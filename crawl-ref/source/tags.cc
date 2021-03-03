@@ -2482,6 +2482,21 @@ void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib)
         lib.set(i, lib[i] && !spell_removed(static_cast<spell_type>(i)));
 }
 
+
+static void _fixup_species_mutations(mutation_type mut)
+{
+    // this is *not safe* to use with any mutations where there could be a
+    // physiology conflict, or with mutations where there could be random
+    // upgrades on top of the innate levels (e.g. MUT_ROLL).
+    int total = 0;
+    // Don't perma_mutate since that gives messages.
+    for (const auto& lum : get_species_def(you.species).level_up_mutations)
+        if (lum.xp_level <= you.experience_level && lum.mut == mut)
+            total += lum.mut_level;
+
+    you.innate_mutation[mut] = you.mutation[mut] = total;
+}
+
 static void _tag_read_you(reader &th)
 {
     int count;
@@ -3169,49 +3184,43 @@ static void _tag_read_you(reader &th)
     }
 
     // No minor version needed: all old felids should get MUT_PAWS.
-    if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
-        you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
+    if (you.species == SP_FELID)
+        _fixup_species_mutations(MUT_PAWS);
 
-    // TODO: can we just provide generic species mutation fixup code?
+    // TODO: can we just provide even more generic species mutation fixup code?
+    // (There's a lot of weird interactions and special cases to worry about..)
     if (you.species == SP_FORMICID)
-    {
-        you.mutation[MUT_QUADRUMANOUS]
-                = you.innate_mutation[MUT_QUADRUMANOUS] = 1;
-    }
+        _fixup_species_mutations(MUT_QUADRUMANOUS);
+
     if (you.species == SP_MUMMY)
     {
-        you.mutation[MUT_NO_DRINK] = you.innate_mutation[MUT_NO_DRINK] = 1;
-        you.mutation[MUT_HEAT_VULNERABILITY] =
-                            you.innate_mutation[MUT_HEAT_VULNERABILITY] = 1;
+        _fixup_species_mutations(MUT_NO_DRINK);
+        // note that the following would not be reliable on a species that can
+        // mutate normally...
+        _fixup_species_mutations(MUT_HEAT_VULNERABILITY);
     }
+
     if (you.species == SP_MINOTAUR)
-    {
-        you.mutation[MUT_REFLEXIVE_HEADBUTT]
-                        = you.innate_mutation[MUT_REFLEXIVE_HEADBUTT] = 1;
-    }
+        _fixup_species_mutations(MUT_REFLEXIVE_HEADBUTT);
+
     if (you.species == SP_PALE_DRACONIAN)
-    {
-        you.mutation[MUT_STEAM_RESISTANCE]
-                        = you.innate_mutation[MUT_STEAM_RESISTANCE] = 1;
-    }
+        _fixup_species_mutations(MUT_STEAM_RESISTANCE);
+
     if (you.species == SP_GREY_DRACONIAN)
-    {
-        you.mutation[MUT_UNBREATHING]
-                        = you.innate_mutation[MUT_UNBREATHING] = 2;
-    }
+        _fixup_species_mutations(MUT_UNBREATHING);
+
     if (you.species == SP_FELID)
     {
-        you.mutation[MUT_NO_GRASPING]
-                        = you.innate_mutation[MUT_NO_GRASPING] = 1;
-        you.mutation[MUT_NO_ARMOUR]
-                        = you.innate_mutation[MUT_NO_ARMOUR] = 1;
-        you.mutation[MUT_MULTILIVED]
-                        = you.innate_mutation[MUT_MULTILIVED] = 1;
+        _fixup_species_mutations(MUT_NO_GRASPING);
+        _fixup_species_mutations(MUT_NO_ARMOUR);
+        _fixup_species_mutations(MUT_MULTILIVED);
     }
-    if (you.species == SP_DEMIGOD)
-        you.mutation[MUT_FORLORN] = you.innate_mutation[MUT_FORLORN] = 1;
-    else // just in case this is still lurking around on old chars?
-        you.mutation[MUT_FORLORN] = you.innate_mutation[MUT_FORLORN] = 0;
+    // blanket fixup for this, just in case it is still lurking around on old
+    // characters
+    _fixup_species_mutations(MUT_FORLORN);
+
+    if (you.species == SP_NAGA)
+        _fixup_species_mutations(MUT_CONSTRICTING_TAIL);
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)
@@ -3240,15 +3249,6 @@ static void _tag_read_you(reader &th)
     {
         if (you.mutation[MUT_MP_WANDS] > 1)
             you.mutation[MUT_MP_WANDS] = 1;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
-    {
-        if (you.species == SP_NAGA)
-        {
-            you.mutation[MUT_SLOW_METABOLISM] =
-                you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
