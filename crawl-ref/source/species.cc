@@ -393,9 +393,16 @@ bool species_has_claws(species_type species)
 ///         does not ever gain it.
 int species_mutation_level(species_type species, mutation_type mut, int mut_level)
 {
+    int total = 0;
+    // relies on levels being in order -- I think this is safe?
     for (const auto& lum : get_species_def(species).level_up_mutations)
-        if (mut == lum.mut && lum.mut_level >= mut_level)
-            return lum.xp_level;
+        if (mut == lum.mut)
+        {
+            total += lum.mut_level;
+            if (total >= mut_level)
+                return lum.xp_level;
+        }
+
     return 0;
 }
 
