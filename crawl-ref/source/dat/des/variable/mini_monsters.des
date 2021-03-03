@@ -5002,7 +5002,7 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
 ENDMAP
 
 NAME:   kennysheep_kite_vault
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen transparent
 SUBST:  x : xcnvb
 DEPTH:  D:8-, Depths
 MAP
