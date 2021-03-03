@@ -1026,7 +1026,7 @@ static const mutation_def mut_data[] =
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
   "forlorn",
 
-  {"You are unable to connect with the divine beyond yourself.","",""},
+  {"You shall have no god before yourself.","",""},
   {"You feel forlorn.","",""},
   {"You feel more spiritual.","",""},
 },
