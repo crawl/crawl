@@ -1044,10 +1044,10 @@ spret cast_portal_projectile(int pow, bool fail)
     return spret::success;
 }
 
-static bool _projectable_weapon()
+string weapon_unprojectability_reason()
 {
     if (!you.weapon())
-        return true;
+        return "";
     const item_def &it = *you.weapon();
     // These all cause attack prompts, which are awkward to handle.
     // TODO: support these!
@@ -1060,9 +1060,14 @@ static bool _projectable_weapon()
         UNRAND_ARC_BLADE,
     };
     for (int urand : forbidden_unrands)
+    {
         if (is_unrandom_artefact(it, urand))
-            return false;
-    return true;
+        {
+            return make_stringf("%s would react catastrophically with paradoxical space!",
+                                you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+        }
+    }
+    return "";
 }
 
 spret cast_manifold_assault(int pow, bool fail, bool real)
@@ -1086,14 +1091,14 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
         return spret::abort;
     }
 
-    if (!_projectable_weapon())
+    if (real)
     {
-        if (real)
+        const string unproj_reason = weapon_unprojectability_reason();
+        if (unproj_reason != "")
         {
-            mprf("%s would react catastrophically with paradoxical space!",
-                 you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+            mprf("%s", unproj_reason.c_str());
+            return spret::abort;
         }
-        return spret::abort;
     }
 
     if (!real)

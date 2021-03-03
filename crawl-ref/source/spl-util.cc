@@ -1441,6 +1441,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no body armour to summon the spirit of.";
         break;
 
+    case SPELL_MANIFOLD_ASSAULT:
+    {
+        const string unproj_reason = weapon_unprojectability_reason();
+        if (unproj_reason != "")
+            return unproj_reason;
+    }
+        break;
+
     default:
         break;
     }
