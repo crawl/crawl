@@ -2963,7 +2963,25 @@ spret fedhas_grow_oklob(bool fail)
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
+    bool see_space = false;
+    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+            continue;
+        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+            continue;
+        see_space = true;
+        break;
+    }
+
+    if (agent.is_player() && !see_space)
+    {
+        mpr("There is not enough space to conjure forxfire!");
+        return spret::abort;
+    }
+
     fail_check();
+
     int created = 0;
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
