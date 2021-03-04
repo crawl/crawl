@@ -2976,7 +2976,7 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     if (agent.is_player() && !see_space)
     {
-        mpr("There is not enough space to conjure forxfire!");
+        mpr("There is not enough space to conjure foxfire!");
         return spret::abort;
     }
 
