@@ -2266,12 +2266,16 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
 
     { BAND_VAULT_WARDEN,        {{{MONS_VAULT_SENTINEL, 4},
                                   {MONS_IRONBRAND_CONVOKER, 6},
-                                  {MONS_IRONHEART_PRESERVER, 5}},
+                                  {MONS_IRONHEART_PRESERVER, 5},
+                                  {MONS_ICEGRIP_STALWART, 3},
+                                  {MONS_IRONBOUND_THUNDERHULK, 2}},
         // one fancy pal, and a 50% chance of another
                                 {{MONS_VAULT_SENTINEL, 4},
                                  {MONS_IRONBRAND_CONVOKER, 6},
                                  {MONS_IRONHEART_PRESERVER, 5},
-                                 {MONS_VAULT_GUARD, 15}},
+                                 {MONS_ICEGRIP_STALWART, 3},
+                                 {MONS_IRONBOUND_THUNDERHULK, 2},
+                                 {MONS_VAULT_GUARD, 20}},
 
                                 {{MONS_VAULT_GUARD, 1}}}},
 
