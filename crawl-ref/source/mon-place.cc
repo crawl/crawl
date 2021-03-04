@@ -1961,6 +1961,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     }},                            {{ BAND_MOLTEN_GARGOYLES, {2, 3} }}}},
     { MONS_IRONWHIP_BEASTMASTER, { {}, {{ BAND_DIRE_ELEPHANTS, {1, 3}, true },
                                         { BAND_LINDWURMS, {1, 4}, true}}}},
+    { MONS_WIZARD,  { {0, 0, []() {
+        return player_in_branch(BRANCH_VAULTS);
+    }},                            {{ BAND_UGLY_THINGS, {1, 3}, true }}}},
 
 
     // special-cased band-sizes
