@@ -2585,10 +2585,14 @@ string mutation_overview()
         mutations.emplace_back("unfitting armour");
     }
 
-    if (you.species == SP_OCTOPODE)
+    if (species_can_swim(you.species))
     {
         mutations.push_back(_annotate_form_based("amphibious",
-                                                 !form_likes_water()));
+                                            !form_likes_water()));
+    }
+
+    if (you.species == SP_OCTOPODE)
+    {
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));

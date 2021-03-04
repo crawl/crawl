@@ -329,9 +329,9 @@ static const mutation_def mut_data[] =
 { MUT_FAST, 0, 3, mutflag::good, true,
   "speed",
 
-  {"You cover ground quickly.",
-   "You cover ground very quickly.",
-   "You cover ground extremely quickly."},
+  {"You cover ground quickly. (Speed+)",
+   "You cover ground very quickly. (Speed++)",
+   "You cover ground extremely quickly. (Speed+++)"},
 
   {"You feel quick.",
    "You feel quick.",
@@ -2080,6 +2080,17 @@ static const mutation_def mut_data[] =
   {"Your experience applies equally to all skills.", "", ""},
   {"Your experience now applies equally to all skills.", "", ""},
   {"Your experience no longer applies equally to all skills.", "", ""},
+},
+
+{ MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good, true,
+  "nimble swimmer",
+
+  {"You are stealthy while swimming. (Stealth+)",
+   "You are quick and stealthy while swimming. (Stealth+, EV+, Speed+++)", ""},
+  {"You feel comfortable in water.",
+   "You feel very comfortable in water.", ""},
+  {"You feel less comfortable in water.",
+   "You feel less comfortable in water.", ""},
 },
 
 };

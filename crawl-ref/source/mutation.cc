@@ -669,11 +669,17 @@ string describe_mutations(bool drop_title)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
     }
 
-    if (you.species == SP_OCTOPODE)
+    // player::can_swim includes other cases, e.g. extra-balanced species that
+    // are not truly amphibious
+    if (species_can_swim(you.species))
     {
         result += _annotate_form_based("You are amphibious.",
-                                       !form_likes_water());
+                                                        !form_likes_water());
+    }
+    // XX if there is ever a giant player species, check it here
 
+    if (you.species == SP_OCTOPODE)
+    {
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(

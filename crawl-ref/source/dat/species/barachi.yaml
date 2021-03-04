@@ -48,8 +48,6 @@ mutations:
 fake_mutations:
   - long: You can be seen from farther away. (+LOS)
     short: +LOS
-  - long: You can swim through water.
-    short: swims
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER

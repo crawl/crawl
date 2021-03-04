@@ -3225,6 +3225,9 @@ static void _tag_read_you(reader &th)
     if (you.species == SP_GNOLL)
         _fixup_species_mutations(MUT_DISTRIBUTED_TRAINING);
 
+    if (you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+        _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
+
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)
     {

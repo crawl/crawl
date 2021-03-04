@@ -506,7 +506,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 }
             }
 
-            if (you.species == SP_OCTOPODE
+            if ((you.can_swim() || you.extra_balanced())
                 && !feat_is_water(old_feat)
                 && you.invisible())
             {
@@ -1764,12 +1764,16 @@ int player_movement_speed()
         mv = 7;
     else if (you.form == transformation::wisp)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water())
+    else if (you.form == transformation::hydra && you.in_water())
         mv = 6;
 
-    // Wading through water is very slow.
-    if (you.in_water() && !you.can_swim())
-        mv += 6;
+    if (you.in_water())
+    {
+        if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+            mv -= 4;
+        else if (!you.can_swim())
+            mv += 6; // Wading through water is very slow.
+    }
 
     // moving on liquefied ground, or while maintaining the
     // effect takes longer
@@ -1995,7 +1999,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         prescaled_ev /= 2;
 
     // Merfolk get a 25% evasion bonus in water.
-    if (you.fishtail)
+    if (you.in_water() && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
     {
         const int ev_bonus = max(2 * scale, prescaled_ev / 4);
         return prescaled_ev + ev_bonus;
@@ -3019,8 +3023,7 @@ int player_stealth()
     {
         if (you.in_water())
         {
-            // Merfolk can sneak up on monsters underwater -- bwr
-            if (you.fishtail || you.species == SP_OCTOPODE)
+            if (you.has_mutation(MUT_NIMBLE_SWIMMER))
                 stealth += STEALTH_PIP;
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
