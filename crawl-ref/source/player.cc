@@ -6147,7 +6147,8 @@ int player::res_poison(bool temp) const
 
 bool player::res_miasma(bool temp) const
 {
-    if (get_mutation_level(MUT_FOUL_STENCH)
+    if (has_mutation(MUT_FOUL_STENCH)
+        || has_mutation(MUT_UNBREATHING)
         || is_nonliving(temp)
         || temp && get_form()->res_miasma())
     {

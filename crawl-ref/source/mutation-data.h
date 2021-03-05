@@ -865,9 +865,7 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
-#endif
 
-// species-dependent innate mutations
 { MUT_MIASMA_IMMUNITY, 0, 1, mutflag::good, false,
   "miasma immunity",
 
@@ -875,7 +873,9 @@ static const mutation_def mut_data[] =
   {"You feel immune to miasma.", "", ""},
   {"You feel vulnerable to miasma.", "", ""},
 },
+#endif
 
+// species-dependent innate mutations
 { MUT_GOURMAND, 0, 1, mutflag::good, false,
   "gourmand",
 
