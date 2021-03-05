@@ -3142,30 +3142,6 @@ static void _tag_read_you(reader &th)
         you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY)
-    {
-        if (you.species == SP_VINE_STALKER)
-        {
-            you.mutation[MUT_NO_POTION_HEAL] =
-                    you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
-            you.mutation[MUT_MIASMA_IMMUNITY] =
-                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 0;
-        }
-        else if (you.species == SP_GARGOYLE)
-        {
-            you.mutation[MUT_MIASMA_IMMUNITY] =
-                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
-        }
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_FOUL_STENCH
-        && you.species == SP_DEMONSPAWN
-        && you.innate_mutation[MUT_SAPROVOROUS])
-    {
-        you.mutation[MUT_MIASMA_IMMUNITY] =
-                you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
         && you.species == SP_DEMONSPAWN)
     {
