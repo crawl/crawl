@@ -1844,29 +1844,39 @@ _.tt.tttt.t.tt.ttttt_
             -_-
 ENDMAP
 
-#### A dangerous temple to kiku
+#### An ancient temple to kiku revived by a powerful spellcaster.
 NAME: beargit_kiku_chapel
 DEPTH: Swamp:2-
 TAGS: no_monster_gen
-MONS: bunyip zombie / bunyip skeleton / bog body w:20 / death scarab w:1
-KMONS: 2 = patrolling juggernaut zombie w:20 / patrolling caustic shrike zombie w:3 / patrolling shard shrike zombie w:3 / patrolling spectral juggernaut w:5 / patrolling spectral caustic shrike w:1
+WEIGHT:1000000000000
+KMONS: Z = bunyip zombie / bunyip skeleton / swamp dragon skeleton / hornet zombie / death scarab w:1
+MONS: bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
+MONS: patrolling spriggan berserker simulacrum w:20 / patrolling spriggan defender simulacrum / \
+      patrolling spark wasp simulacrum / patrolling harpy simulacrum / \
+      patrolling spriggan air mage simulacrum / juggernaut zombie w:5 / caustic shrike zombie w:1
 MONS: patrolling necromancer / patrolling fenstrider_witch; quick blade ego:pain
-MONS: ghost crab w:10 / death drake w:1
+MONS: ghost crab / death drake w:1
 KFEAT: J = altar_kikubaaqudgha
-KITEM: K = shadow dragon skeleton
-KITEM: L = frost giant skeleton
+KFEAT: Z = W
+ITEM: randbook disc:necromancy slevels:10 / randbook disc:necromancy slevels:12 / randbook disc:necromancy slevels:16
+SUBST: z = cccccccccccc...WWWwwt
+SUBST: F = VVVVY
+TILE: c = wall_brick_vines
 FTILE: . = floor_sandstone
-ITEM: randbook disc:necromancy slevels:12
-SUBST: x = xxxxxxxxxxxxx..WWWwwt.
-TILE: c = wall_brick_vines, x = wall_brick_vines
+{{
+dgn.delayed_decay_extra(_G, 'K', 'frost giant corpse / ' ..
+                                  'frost giant skeleton / ' ..
+                                  'shadow dragon corpse / ' ..
+                                  'shadow dragon skeleton')
+}}
 MAP
-.xxxxxcccccc
-.xWx1wc111dcc
-.xWWWW+WW.KYc
-.A.W51+2WW3Jc
-.x.WW1+..WLVc
-.xxxx.c111$cc
-....xxcccccc
+.zzzzzcccccc
+.zWzZwc111dcc
+.zWWWW+WW.KFc
+@A.W4Z+2WW3Jc
+.z.WWZ+..WKFc
+.zzzz.c111$cc
+....zzcccccc
 ENDMAP
 
 NAME:   nicolae_swamp_phyte_club
