@@ -265,15 +265,15 @@ NSUBST: _ = 2:x/*:. , - = 1:x/*:. , ' = 1:x/*:. , " = 2:x/*:.
 MAP
                           xxxxxxxxxxxx
           xxxxxxxxxxxxxxxxxxxxx''xxxxx
-         xxxxxXXX...WWWWWWxwww4x'xxxxx
+         xxxxxXXX...WWWWWWxwww1x'xxxxx
         xxxXWWWW...2WW....wwwww''xxxxx
     xxxxxxxW...WWXXXxxxxWW.wxxxxxxxxxx
    xxxxxxxX.WW2XXxxxx**xxWWxxxxxxxxxxx
    x1wxxxXWWXXxxxxxx7**xx++xxxxxxxxxxx
   xxwwwxxWWxxxxwwxxx+xxxx..Wxxxxxx""xx
-xxxxxwwxx++xwwwwww4x6xxx5..*Wwwww4""xx
-@..xxx.WW.WWWwwwww1x.3+...65*Wwwww4xxx
-@..WWWWW.WWWWwwwww1x6xxx6..*Wwwww4""xx
+xxxxxwwxx++xwwwwww4x6xxx5..*Wwwww1""xx
+@..xxx.WW.WWWwwwww1x.3+...65*Wwwww1xxx
+@..WWWWW.WWWWwwwww1x6xxx6..*Wwwww1""xx
 @..xxx.WWWWWWwwwwxxx+xxxx..Wxxxxxx""xx
 xxxxxxxxx++xwwww1xx**xxxx++xxxxxxxxxxx
    xxxxxx..xxwwwxx7**xxxxxWWxxxxxxxxxx
@@ -283,7 +283,7 @@ xxxxxxxxx++xwwww1xx**xxxx++xxxxxxxxxxx
   xxxxxxXWWWXxxxxXWWWWWW..WWwxxxxxxxxx
   x__xxxwW.WWWxxXXX..XXxxWWWwwxxxxxxxx
   x__xwwwwxW.WW.WW.3.Xxxxxxwwww--xxxxx
-  x__4wwwxxxxx.WWWWxxxxxxxxxxw4x-xxxxx
+  x__4wwwxxxxx.WWWWxxxxxxxxxxw1x-xxxxx
   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxx
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
