@@ -3142,6 +3142,13 @@ static void _tag_read_you(reader &th)
         you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY
+                                        && you.species == SP_VINE_STALKER)
+    {
+        you.mutation[MUT_NO_POTION_HEAL] =
+                you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
         && you.species == SP_DEMONSPAWN)
     {
