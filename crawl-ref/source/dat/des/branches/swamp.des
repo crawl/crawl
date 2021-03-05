@@ -1848,7 +1848,6 @@ ENDMAP
 NAME: beargit_kiku_chapel
 DEPTH: Swamp:2-
 TAGS: no_monster_gen
-WEIGHT:1000000000000
 KMONS: Z = bunyip zombie / bunyip skeleton / swamp dragon skeleton / hornet zombie / death scarab w:1
 MONS: bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
 MONS: patrolling spriggan berserker simulacrum w:20 / patrolling spriggan defender simulacrum / \
