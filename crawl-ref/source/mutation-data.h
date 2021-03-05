@@ -2024,7 +2024,7 @@ static const mutation_def mut_data[] =
   "four strong arms",
 
   {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
-  {"Two of your of your arms shrink away.", "", ""},
+  {"Two of your arms shrink away.", "", ""},
   {"You grow two extra arms.", "", ""},
 },
 
