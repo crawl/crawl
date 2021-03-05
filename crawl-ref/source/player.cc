@@ -1459,7 +1459,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
  */
 bool player_res_torment(bool random)
 {
-    if (you.get_mutation_level(MUT_TORMENT_RESISTANCE))
+    if (you.get_mutation_level(MUT_TORMENT_RESISTANCE) >= 2)
         return true;
 
     if (random

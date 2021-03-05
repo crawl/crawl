@@ -614,11 +614,13 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_TORMENT_RESISTANCE, 0, 2, mutflag::good, false,
   "torment resistance",
 
-  {"You are immune to unholy pain and torment.", "", ""},
-  {"You feel a strange anaesthesia.", "", ""},
+  {"You are resistance to unholy torment.",
+   "You are immune to unholy pain and torment.", ""},
+  {"You feel a strange anaesthesia.",
+   "You feel a very strange anaesthesia.", ""},
   {"", "", ""},
 },
 
