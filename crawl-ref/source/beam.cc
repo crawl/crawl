@@ -5984,6 +5984,12 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             loudness = spell_effect_noise(origin_spell);
         }
 
+        // Make bloated husks quieter, both for balance (they're waking up
+        // whole levels!) and for theme (it's not a huge fireball, it's a big
+        // gas leak).
+        if (name == "blast of putrescent gases")
+            loudness = loudness * 2 / 3;
+
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
         const coord_def noise_position = clamp_in_bounds(pos());
