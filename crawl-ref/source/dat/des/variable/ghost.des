@@ -79,15 +79,16 @@ default-depth: D:3-, Lair, Elf, Orc, Snake, Shoals, Swamp, Spider, Depths, \
 #
 ###############################################################################
 
-NAME:  gammafunk_ghost_grave
+NAME:   gammafunk_ghost_grave
+TAGS:   allow_dup
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, "-")
-KMONS: O = player ghost
-KMONS: p = withered plant
-SUBST: t : tp
-TILE:  G = dngn_gravestone
-TILE:  t = dngn_tree_dead
+KMONS:  O = player ghost
+KMONS:  p = withered plant
+SUBST:  t : tp
+TILE:   G = dngn_gravestone
+TILE:   t = dngn_tree_dead
 : set_feature_name("granite_statue", "a gravestone")
 FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
 : ghost_setup(_G)
@@ -100,7 +101,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_split
-TAGS:   transparent
+TAGS:   transparent allow_dup
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -149,6 +150,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_ghost_arena
+TAGS:   allow_dup
 ORIENT: float
 KMONS: O = player ghost
 : ghost_good_loot(_G)
@@ -217,6 +219,7 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_ghost_cemetery
+TAGS:    allow_dup
 ORIENT:  float
 KMASK:   . = !opaque
 KMONS:   DFH = player ghost
@@ -343,6 +346,7 @@ cc'''''cc
 ENDMAP
 
 NAME:   ebering_ghost_rock_garden
+TAGS:   allow_dup
 ORIENT: float
 KMONS:  O = player_ghost
 : local large_rocks = crawl.random_range(3,7)
@@ -365,6 +369,7 @@ cnn===nnc
 ENDMAP
 
 NAME:   ebering_ghost_reflecting_pool
+TAGS:   allow_dup
 ORIENT: float
 KMONS:  O = player_ghost
 KFEAT:  O = shallow_water
@@ -418,6 +423,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_disaster_area
+TAGS:   allow_dup
 ORIENT: float
 KMONS:  O = player ghost
 NSUBST: ' = d / e / 8=wWl / -
@@ -535,6 +541,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   gammafunk_ghost_necromancy
+TAGS:   allow_dup
 # Omit Elf since that branch has few good monsters for derived undead.
 WEIGHT: 0 (Elf)
 ORIENT: float
@@ -1306,7 +1313,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_ghost_xom
-TAGS:   transparent
+TAGS:   transparent allow_dup
 WEIGHT: 0 (D:3-5), 5 (D:6-7)
 ORIENT: float
 : lone_ghost_guarded_loot(_G, "O")

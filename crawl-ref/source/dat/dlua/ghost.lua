@@ -6,8 +6,7 @@ _GHOST_CHANCE_PERCENT = 10
 
 -- Common setup we want regardless of the branch of the ghost vault.
 function ghost_setup_common(e)
-     e.tags("allow_dup luniq_player_ghost")
-     e.tags("no_tele_into no_trap_gen no_monster_gen")
+     e.tags("luniq_player_ghost no_tele_into no_trap_gen no_monster_gen")
 end
 
 -- For vaults that want more control over their tags, use this function to
