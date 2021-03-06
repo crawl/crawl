@@ -300,10 +300,10 @@ ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 
-NAME:   cheibriados_altar_1
-TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:   transparent decor
-KFEAT:  _ = altar_cheibriados
+NAME:  cheibriados_altar_1
+TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+TAGS:  transparent decor
+KFEAT: _ = altar_cheibriados
 : interest_check(_G)
 MAP
 ...
@@ -311,16 +311,16 @@ MAP
 ...
 ENDMAP
 
-NAME:    cheibriados_altar_2
-TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:    transparent decor
-DEPTH:   D:2-
-WEIGHT:  1
-KPROP:   1 = no_tele_into
-KFEAT:   _ = altar_cheibriados
-MONS:    torpor snail
-SUBST:   1 : 1:50 2:30 3:10 4:10
-NSUBST:  4 = 1:1 / 1:2 / 1:3
+NAME:   cheibriados_altar_2
+TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
+TAGS:   transparent decor
+DEPTH:  D:2-
+WEIGHT: 1
+KPROP:  1 = no_tele_into
+KFEAT:  _ = altar_cheibriados
+MONS:   torpor snail
+SUBST:  1 : 1:50 2:30 3:10 4:10
+NSUBST: 4 = 1:1 / 1:2 / 1:3
 KMASK: 1234 = opaque
 : interest_check(_G)
 MAP
@@ -1047,8 +1047,8 @@ ENDMAP
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
 DEPTH:  D:2-, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
-TAGS:   temple_overflow_kikubaaqudgha
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen no_trap_gen
+TAGS:   temple_overflow_1 temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / bat zombie / nothing w:90
 : interest_check(_G)
@@ -1176,8 +1176,8 @@ ENDMAP
 
 NAME:    demons_altar
 DEPTH:   D:3-11, Orc, !Orc:$
-TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb transparent
-TAGS:    layout_rooms layout_city layout_open
+TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb
+TAGS:    transparent layout_rooms layout_city layout_open
 KFEAT:   _ = altar_makhleb
 # Either one type 3 or 4 demon (rust devil or smoke demon) or
 # three slow type 5 demons (iron imp).
@@ -2364,9 +2364,9 @@ xxxxxx.xxxxxx
      x@x
 ENDMAP
 
-NAME:  pdpol_wu_jian_five_deadly_venoms
-DEPTH: D:2-9
-TAGS:  no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
+NAME:   pdpol_wu_jian_five_deadly_venoms
+DEPTH:  D:2-9
+TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_wu_jian
 KFEAT:  _ = altar_wu_jian
 KPROP:  F = no_tele_into
 MARKER: F = lua:fog_machine { \
