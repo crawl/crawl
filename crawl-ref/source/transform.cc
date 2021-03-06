@@ -1195,7 +1195,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
              equip->quantity > 1 ? "" : "s",
              unequip ? "away" : "into your body.");
 
-        if (you_worship(GOD_ASHENZARI) && unequip)
+        if (you_worship(GOD_ASHENZARI) && unequip && e->cursed())
             mprf(MSGCH_GOD, "%s, shattering the curse!", msg.c_str());
         else if (unequip)
             mprf("%s!", msg.c_str());
