@@ -298,6 +298,24 @@ FDD..CCDCD.CC.DDF
 EC...F..E..F....E
 ENDMAP
 
+NAME:   nicolae_ashenzari_skybound
+TAGS:   temple_overflow_ashenzari temple_overflow_1 decor
+DEPTH:  D:2-
+KFEAT:  _ = altar_ashenzari
+COLOUR: m = blue
+: interest_check(_G)
+MAP
+    ..@..
+   .......
+ ...mmmmm...
+..mmm...mmm..
+.mm.v._.v.mm.
+.m..v...v..m.
+mm..vv+vv..mm
+m...........m
+m    .@.    m
+ENDMAP
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:  cheibriados_altar_1
@@ -670,6 +688,47 @@ MAP
 .............
 ENDMAP
 
+NAME:  nicolae_elyvilon_peaceful_grove
+TAGS:  temple_overflow_elyvilon temple_overflow_1 transparent
+DEPTH: D:2-
+KFEAT: _ = altar_elyvilon
+KMONS: P = bush w:20 / nothing
+KMONS: _ = patrolling butterfly att:good_neutral
+: interest_check(_G)
+MAP
+ww.PtttP.ww
+wwP..P..Pww
+.PPtt.ttPP.
+P.ttP.Ptt.P
+t.tP...Pt.t
+tP..._...Pt
+t.tP...Pt.t
+P.ttP.Ptt.P
+.PPtt.ttPP.
+wwP..P..Pww
+ww.PtttP.ww
+ENDMAP
+
+NAME:  nicolae_elyvilon_temple_path
+TAGS:  temple_overflow_elyvilon temple_overflow_1 decor no_pool_fixup
+TAGS:  no_trap_gen
+DEPTH: D:2-
+SUBST: p = ppp....
+KMONS: p = plant
+KFEAT: _ = altar_elyvilon
+: interest_check(_G)
+MAP
+  ccccc
+ ccwwwcc @ppppppppp
+ccwwUwwccppcppcppcp
+cww...wwwwwwwwwwwww
+cwU._..............@
+cww...wwwwwwwwwwwww
+ccwwUwwccppcppcppcp
+ ccwwwcc @ppppppppp
+  ccccc
+ENDMAP
+
 ### Fedhas overflow altars ####################################################
 
 NAME:   fedhas_altar_1
@@ -985,6 +1044,39 @@ d_d
 ddd
 ENDMAP
 
+NAME:   nicolae_gozag_conspicuous_consumption
+TAGS:   temple_overflow_gozag temple_overflow_1 no_pool_fixup decor
+TAGS:   transparent no_trap_gen
+DEPTH:  D:2-
+WEIGHT: 1
+KPROP:  $ = no_tele_into
+KMASK:  $ = opaque
+KMASK:  $ = no_monster_gen
+KITEM:  $ = gold
+KFEAT:  _ = altar_gozag
+TILE:   G = dngn_golden_statue
+TILE:   n = dngn_transparent_stone_yellow
+TILE:   m = dngn_transparent_wall_yellow
+FTILE:  ._Gmn$U = floor_limestone
+COLOUR: .Gmn$U = yellow
+: set_feature_name("granite_statue", "golden statue")
+: interest_check(_G)
+MAP
+    .....
+ G...._....G
+ ...G...G...
+ ..UwwwwwU..
+..GwnmmmnwG..
+...wm$$$mw...
+._.wm$$$mw._.
+...wm$$$mw...
+..GwnmmmnwG..
+ ..UwwwwwU..
+ ...G...G...
+ G...._....G
+    .....
+ENDMAP
+
 ### Hepliaklqana overflow altars #############################################
 
 NAME: worldfamousw_hep_ancestral_shrine
@@ -1041,6 +1133,109 @@ xx.xx
  xAx
  x.x
   @
+ENDMAP
+
+# A long-forgotten ecumenical temple. Only Hepliaklqana clearly remains,
+# although a few forgotten altars are still around.
+NAME:   nicolae_hepliaklqana_ecumenical_no_more
+TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
+DEPTH:  D:2-
+WEIGHT: 5
+KMONS:  WD = plant / nothing
+NSUBST: E = - / E, H = _ / - / E, E = E / . / EEE-.., P = 4=W / WDD / D
+SUBST:  ' = '''., c = ccx
+KFEAT:  WS = W
+KFEAT:  _ = altar_hepliaklqana
+KFEAT:  - = altar_ecumenical
+FTILE:  WVD = floor_mud
+COLOUR: D = darkgrey
+FTILE:  ' = floor_w_marble
+COLOUR: ' = white
+FTILE:  _-E = floor_limestone
+COLOUR: E = yellow
+: interest_check(_G)
+MAP
+xxxxx.@.xxxxx
+xxccxx+xxccxx
+xccc''.''cccx
+xcc''E'E''ccx
+xc'''''''''cx
+xc'E'PPP'E'cx
+xc'''PVP'''cx
+xc'H'PPP'H'cx
+xc'''''''''cx
+xcc''H'H''ccx
+xccc'''''cccx
+xxcccccccccxx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_hepliaklqana_hazy_memory
+TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
+DEPTH:  D:2-
+MONS:   plant
+SUBST:  ' = ..', . = ...1
+CLEAR:  '
+KFEAT:  _ = altar_hepliaklqana
+MARKER: _ = lua:fog_machine { cloud_type = "thin mist", size = 1, pow_min = 5, \
+  pow_max = 7, delay = 10, start_clouds = 1, walk_dist = 5, spread_rate = 10 }
+: interest_check(_G)
+MAP
+    '''
+ ''''.''''
+ '.'.'.'.'
+ ''.'''.''
+''.'...'.''
+'.''._.''.'
+''.'...'.''
+ ''.'''.''
+ '.'.'.'.'
+ ''''.''''
+    '''
+ENDMAP
+
+# Or should that be "heppocampus"...?
+NAME:  nicolae_hepliaklqana_hippocampus
+TAGS:  temple_overflow_hepliaklqana temple_overflow_1 transparent decor
+DEPTH: D:2-
+KFEAT: _ = altar_hepliaklqana
+SUBST: D = cxx, E = cx
+: interest_check(_G)
+MAP
+    xxxxxxxx
+   @....xxxx
+    xxx..xxx
+xxxxxxxx.xxx
+xcccccxx..xx
+xc...cxx..xx
+xc._.cxD..xx
+xc...cxD..Dx
+xc..ccxD..Dx
+xc...EE...Dx
+xc........Dx
+xcE......DDx
+xxEEEEEDDDxx
+xxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_hepliaklqana_monster_ancestors
+TAGS:    temple_overflow_hepliaklqana temple_overflow_1 transparent
+TAGS:    patrolling no_monster_gen no_trap_gen
+DEPTH:   D:2-9
+MONS:    goblin, spectral goblin, kobold, spectral kobold, hobgoblin
+MONS:    spectral hobgoblin, orc
+KMONS:   D = spectral orc
+SHUFFLE: 12 / 34 / 56 / 7D
+KFEAT:   _ = altar_hepliaklqana
+: interest_check(_G)
+MAP
+xxxxxxxxx
+xxwwwwwxx
+x..1....x
++....._.x
+x..2....x
+xxwwwwwxx
+xxxxxxxxx
 ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
@@ -1170,6 +1365,27 @@ xx.x.x.x.x.xx
 xxx.V.x.V.xxx
 xxxx.....xxxx
 xxxxx+++xxxxx
+ENDMAP
+
+NAME:   nicolae_kikubaaqudgha_miasma_corner
+TAGS:   temple_overflow_kikubaaqudgha temple_overflow_1 transparent decor
+DEPTH:  D:3-
+KFEAT:  _ = altar_kikubaaqudgha
+MARKER: M = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+    pow_max = 20, delay_min = 1, delay_max = 1, size = 1, walk_dist = 0, \
+    spread_rate = 0 }
+COLOUR: c = darkgrey
+: interest_check(_G)
+MAP
+    .
+ ccc.ccc
+ cM...Mc
+ c.....c
+...._....
+ c.....c
+ cM...Mc
+ ccc.ccc
+    .
 ENDMAP
 
 ### Makhleb overflow altars ###################################################
@@ -1793,6 +2009,27 @@ zwwxwCDwx..z.
 ...........z.
 ENDMAP
 
+NAME: nicolae_qazlal_scattered_showers
+# The rain is localized to a 5x5 square centered on the altar.
+# There's some rain water that occasionally gets deep but it's passable.
+TAGS:   temple_overflow_qazlal temple_overflow_1 transparent decor
+TAGS:   no_trap_gen
+DEPTH:  D:2-
+KFEAT:  _ = altar_qazlal
+MARKER: _ = lua:fog_machine { cloud_type = "rain", pow_min = 10, \
+    pow_max = 15, delay_min = 5, delay_max = 15, size = 1, walk_dist = 2, \
+    spread_rate = 0 }
+: interest_check(_G)
+MAP
+.......
+.......
+.......
+..._...
+.......
+.......
+.......
+ENDMAP
+
 
 # Ru overflow altar vaults ####################################################
 
@@ -2033,6 +2270,50 @@ xxWWWWWxx
  xxxxxxx
 ENDMAP
 
+NAME:   nicolae_sif_muna_condensation
+TAGS:   temple_overflow_sif_muna temple_overflow_1 transparent decor
+TAGS:   no_trap_gen no_pool_fixup
+DEPTH:  D:2-
+KFEAT:  _ = altar_sif_muna
+MARKER: _ = lua:fog_machine { cloud_type = "magical condensation", \
+    pow_min = 5, pow_max = 15, delay_min = 5, delay_max = 20, size = 1, \
+    walk_dist = 3, spread_rate = 1 }
+FTILE:  ._w = floor_marble
+COLOUR: . = blue
+: interest_check(_G)
+MAP
+.......
+.wwwww.
+.wwwww.
+..._ww.
+.wwwww.
+.wwwww.
+.......
+ENDMAP
+
+NAME:   nicolae_sif_muna_little_library
+TAGS:   temple_overflow_sif_muna temple_overflow_1 no_trap_gen
+DEPTH:  D:2-
+NSUBST: D = + / x
+KPROP:  a = no_tele_into
+KMASK:  a = no_item_gen
+KMASK:  a = no_monster_gen
+KITEM:  a = any randbook ident:all owner:Sif_Muna slevels:1
+KFEAT:  _ = altar_sif_muna
+FTILE:  a._mc+ = floor_marble
+COLOUR: a.mc+ = blue
+: interest_check(_G)
+MAP
+xxxxDDDx
+xccc...D
+xcam...D
+xcam._.D
+xcam...D
+xccc...D
+xxxxDDDx
+ENDMAP
+
+
 ### Trog overflow altars ######################################################
 
 NAME:  bloody_trog
@@ -2243,6 +2524,123 @@ MAP
   .......
 ENDMAP
 
+NAME:    nicolae_uskayaw_dance_hall
+# Either a square dance or a round dance depending on how the shuffle goes.
+TAGS:    temple_overflow_uskayaw temple_overflow_1 transparent decor
+DEPTH:   D:2-
+SHUFFLE: Gg
+SUBST:   g : ., b : bvcmn
+KFEAT: _ = altar_uskayaw
+: interest_check(_G)
+MAP
+xxxx.........
+x......GgG...
+x.b...g...g..
+x....G.....G.
+ ._..g.....g.
+x....G.....G.
+x.b...g...g..
+x......GgG...
+xxxx.........
+ENDMAP
+
+NAME:   nicolae_uskayaw_dance_studio
+TAGS:   temple_overflow_uskayaw temple_overflow_1 no_monster_gen transparent
+TAGS:   patrolling
+DEPTH:  D:2-
+MONS:   goblin, kobold
+NSUBST: D = 2=1 / 2=2
+KMONS:  _ = kobold brigand
+KFEAT:  _ = altar_uskayaw
+: interest_check(_G)
+MAP
+xxxx+xxxx
+xmmm.mmmx
+xm.....mx
+xm.DDD.mx
+xm.D_D.mx
+xm.DDD.mx
+xm.....mx
+xmmmmmmmx
+xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_uskayaw_en_pointe
+TAGS:   temple_overflow_uskayaw temple_overflow_1
+TAGS:   no_trap_gen generate_awake transparent decor
+DEPTH:  D:2-
+KPROP:  'D = no_tele_into
+MONS:   dancing weapon ; mundane short sword
+MONS:   dancing weapon ; mundane falchion, dancing weapon ; mundane spear
+MONS:   dancing weapon ; mundane dagger
+NSUBST: D = 2=1 / 2=2 / 2=3 / 2=4
+KFEAT:  _ = altar_uskayaw
+KMASK:  '1234n = opaque
+KMASK:  '1234 = no_item_gen
+KMASK:  '1234 = no_monster_gen
+TILE:   n = dngn_transparent_stone_red
+TILE:   c = dngn_stone_wall_lightred
+COLOUR: n = red
+COLOUR: c = lightred
+: interest_check(_G)
+MAP
+ .............
+...nnnnncccc...
+..nnD'Dnn..ccc.
+..nDn'nDnn...c.
+@.n''n'''n._.+.
+..nDn'nDnn...c.
+..nnD'Dnn..ccc.
+...nnnnncccc...
+ .............
+ENDMAP
+
+NAME:   nicolae_uskayaw_murder_on_the_dancefloor
+# But you'd better not kill the groove.
+TAGS:   temple_overflow_uskayaw temple_overflow_1 transparent
+DEPTH:  D:2-
+KFEAT:  _ = altar_uskayaw
+NSUBST: . = 4=D / 3=D.
+SUBST:  . = ..a, D = DDE
+: dgn.delayed_decay(_G, "DE","random corpse")
+KPROP:  aE = bloody
+KFEAT:  b = .
+COLOUR: ._aDE = disco
+FTILE:  ._aDE = floor_pebble
+: interest_check(_G)
+MAP
+xxxx@xxxx
+x.......x
+x.......x
+x.......x
+@..._...@
+x.......x
+x.......x
+x.......x
+xxxx@xxxx
+ENDMAP
+
+# https://www.youtube.com/watch?v=vpULWBT1WEg
+NAME:    nicolae_uskayaw_suspiria
+TAGS:    temple_overflow_uskayaw temple_overflow_1 transparent decor
+DEPTH:   D:2-
+SHUFFLE: Aa, Bb
+SUBST:   D : l, E : ...l, F : l, H : .l, J : ...l, K : ...l, L : ...l
+SUBST:   M : ...l, N : .lll, O : ...l, P : ...l, Q : ...l
+KPROP:   l = no_cloud_gen
+KFEAT: _ = altar_uskayaw
+: interest_check(_G)
+MAP
+xxxxxxlll..O..ll
+x.FllH.L..ll.JNl
+x.....M.ll..P.K.
+x_.lll.Q...E.D.@
+x.....M.ll..P.K.
+x.FllH.L..ll.JNl
+xxxxxxlll..O..ll
+ENDMAP
+
+
 ### Vehumet overflow altars ###################################################
 
 # Rather than put the flame cloud on the altar, flames now surround the
@@ -2318,6 +2716,56 @@ MAP
 .......
 ...x...
 .......
+ENDMAP
+
+# It's part of the design from the Vehumet altar tile.
+NAME:   nicolae_vehumet_altar_sigil
+TAGS:   temple_overflow_vehumet temple_overflow_1 transparent decor
+DEPTH:  D:2-
+KFEAT:  _ = altar_vehumet
+COLOUR: . = white
+COLOUR: + = green
+COLOUR: D = lightblue
+COLOUR: E = lightgreen
+FTILE:  .DE+ = floor_pebble
+FTILE:  _ = floor_pebble_lightgreen
+: interest_check(_G)
+MAP
+ bbb+bbb
+bb..E..bb
+b..DDD..b
+b.D.E.D.b
++EDE_EDE+
+b.D.E.D.b
+b..DDD..b
+bb..E..bb
+ bbb+bbb
+ENDMAP
+
+NAME:    nicolae_vehumet_radiance
+TAGS:    temple_overflow_vehumet temple_overflow_1 no_trap_gen transparent
+TAGS:    decor
+DEPTH:   D:2-
+SHUFFLE: DEFHJKLM / FHDELMJK, DE, JK
+SUBST:   DJ = N, EKFHLM = ., N : cb
+KFEAT:   _ = altar_vehumet
+: interest_check(_G)
+MAP
+     xxxxx
+    .......
+   ..MLMLM..
+  ..LJKJKJL..
+ ..MK.HFH.KM..
+x.LJ.FDEDF.JL.x
+x.MKHE...EHKM.x
+x.LJFD._.DFJL.x
+x.MKHE...EHKM.x
+x.LJ.FDEDF.JL.x
+ ..MK.HFH.KM..
+  ..LJKJKJL..
+   ..MLMLM..
+    .......
+     xxxxx
 ENDMAP
 
 ### Wu Jian overflow altars ###################################################
@@ -2401,6 +2849,86 @@ cccn.nccc
  cFc.cFc
  ccc.ccc
    c@c
+ENDMAP
+
+# As an enticement to join, the Wu Jian Council has placed weapons beyond lava,
+# but you can get to them if you know how to wall jump off of the metal walls.
+# You can also get to them in other ways, of course, which is why most of the
+# weapons are just plain.
+NAME:   nicolae_wu_jian_glorious_leap
+TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen
+DEPTH:  D:4-, !D:$
+WEIGHT: 5
+KITEM:  I = any weapon level:-2
+KITEM:  i = any weapon
+NSUBST: i = I / i
+KFEAT:  _ = altar_wu_jian
+KMASK:  >Ii' = no_monster_gen
+KMASK:  >Ii' = no_item_gen
+: interest_check(_G)
+MAP
+xxxxxxxxxxxxxxx
+xccccccccvccccx
+xcccilll.....cx
+xcccivlll....cx
+xc>+i''ll._...+
+xcccivlll....cx
+xcccilll.....cx
+xccccccccvccccx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+# Abstract representations of the moves of Wu Jian's three martial arts.
+# The green space is where you start, the red space is where you move to,
+# the statue is where the monster is.
+NAME:   nicolae_wu_jian_immortal_techniques
+TAGS:   temple_overflow_wu_jian temple_overflow_1 decor
+DEPTH:  D:2-
+KFEAT:  _ = altar_wu_jian
+KFEAT:  DE = .
+FTILE:  D = floor_pebble_lightgreen
+FTILE:  E = floor_pebble_lightred
+COLOUR: D = green
+COLOUR: E = red
+: interest_check(_G)
+MAP
+cc+cccccc
+c.D.c.EEc
+c.E...DGc
+c.G.c.EEc
+ccnccc.cc
+c...c...c
+c._..EGDc
+c...c...c
+ccccccccc
+ENDMAP
+
+# The five elements, or five phases, Wood, Fire, Earth, Metal, Water,
+# in a cycle of either mutual generation or mutual overcoming.
+NAME:    nicolae_wu_jian_wuxing_cycle
+TAGS:    temple_overflow_wu_jian temple_overflow_1 transparent \
+         no_pool_fixup decor
+DEPTH:   D:2-
+SHUFFLE: tlcvw/lcvwt/cvwtl/vwtlc/wtlcv/tcwlv/cwlvt/wlvtc/lvtcw/vtwcl
+NSUBST:  Q = 4=@ / x
+KFEAT:   _ = altar_wu_jian
+: interest_check(_G)
+MAP
+     xxQxx
+   xx.....xx
+  Q.........Q
+ x......ll...x
+ x..tt..ll...x
+x...tt........x
+x.............x
+Q......_..cc..Q
+x..ww.....cc..x
+x..ww.........x
+ x.....vv....x
+ x.....vv....x
+  Q.........Q
+   xx.....xx
+     xxQxx
 ENDMAP
 
 ### Xom overflow altars #######################################################
@@ -2698,6 +3226,63 @@ xc.....cx
 xcc...ccx
 xxcc+ccxx
  xxx@xxx
+ENDMAP
+
+NAME: nicolae_yredelemnul_corpse_copse
+TAGS: temple_overflow_yredelemnul temple_overflow_1 no_monster_gen
+TAGS: transparent patrolling
+DEPTH: D:2-
+# Statistically, the probability that none of the edge glyphs will end up as .
+# and the level builder won't be able to connect the vault is extremely small.
+# ...but not zero. Thus:
+MONS:   zombie
+NSUBST: D = . / E
+NSUBST: t = . / ttE
+SUBST:  E = tt.
+: nsubst( ". = " .. you.absdepth() .. "=1 / 1=1. / ." )
+KFEAT:  _ = altar_yredelemnul
+COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+: interest_check(_G)
+MAP
+   DDDDD
+  DE.E.ED
+ DE.E.E.ED
+DE.ttttt.ED
+D.Et...tE.D
+DE.t._.t.ED
+D.Et...tE.D
+DE.ttttt.ED
+ DE.E.E.ED
+  DE.E.ED
+   DDDDD
+ENDMAP
+
+NAME:   nicolae_yredelemnul_ghost_church
+TAGS:   temple_overflow_yredelemnul temple_overflow_1 transparent
+TAGS:   no_trap_gen
+DEPTH:  D:3-
+WEIGHT: 5
+KPROP:  dO' = no_tele_into
+KMASK:  dO' = no_monster_gen
+NSUBST: d = * / $ / %
+KFEAT:  _ = altar_yredelemnul
+KMONS:  O = player ghost
+KMONS:  z = patrolling zombie
+: interest_check(_G)
+MAP
+xxxxxxxxxxx
+xxxcccccxxx
+xxcc...ccxx
+xxcz._.zcxx
+xccc...cccx
+xc.......cx
+xc.n===n.cx
+xc.n'O'n.cx
++..ndddn..+
+xcccccccccx
+xxxxxxxxxxx
 ENDMAP
 
 ### Zin overflow altars #######################################################
