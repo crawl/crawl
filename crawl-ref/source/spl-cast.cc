@@ -2593,6 +2593,9 @@ string spell_damage_string(spell_type spell, bool evoked)
     case SPELL_STARBURST:
         mult = "8x";
         break;
+    case SPELL_OLGREBS_LAST_MERCY:
+        mult = "(poison)x";
+        break;
     default:
         break;
     }

@@ -1911,4 +1911,38 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     false,
     0
 },
+
+{
+    ZAP_ERINYA_ROOT_SPIKE,
+    "poisonous roots",
+    200,
+    new calcdice_calculator<2, 20, 1, 4>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTGREEN,
+    false,
+    BEAM_POISON_ERINYA,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    0
+},
+
+{
+    ZAP_OLGREB_LAST_MERCY,
+    "noxious blast",
+    200,
+    new calcdice_calculator<3, 36, 18, 100>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTGREEN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    0
+},
 };

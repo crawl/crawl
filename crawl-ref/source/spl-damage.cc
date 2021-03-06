@@ -3373,13 +3373,13 @@ spret cast_eringyas_rootspike(int splpow, const dist& beam, bool fail)
 
     noisy(spell_effect_noise(SPELL_ERINGYAS_ROOTSPIKE), beam.target);
 
-    int damage = 9 + random2(3 + div_rand_round(splpow, 4));
 
     bolt pbeam;
-    pbeam.name = "poisonous roots";
-    pbeam.flavour = BEAM_POISON_ERINYA;
-    pbeam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
-    pbeam.colour = LIGHTGREEN;
+    zappy(ZAP_ERINYA_ROOT_SPIKE, splpow, false, pbeam);
+
+    int damage = pbeam.damage.roll();
+    // old: 9 + random2(3 + div_rand_round(splpow, 4));
+    // new: 2d(10+sp/8)
 #ifdef USE_TILE
     pbeam.tile_beam = -1;
 #endif
@@ -3422,20 +3422,17 @@ spret cast_olgrebs_last_mercy(int pow, const dist& dist, bool fail)
         canned_msg(MSG_SPELL_FIZZLES);
         return spret::success;
     }
-    
-    // poison currently does roughly 6 damage per degree (over its duration)
-    // do roughly 3x to 4x that much, scaling with spellpower
-    const dice_def dam_dice(pois_str * 3, 12 + div_rand_round(pow * 6, 100));
 
     bolt mbeam;
-    mbeam.flavour = BEAM_MMISSILE;
-    mbeam.glyph = dchar_glyph(DCHAR_FIRED_ZAP);
-    mbeam.colour = LIGHTGREEN;
+    zappy(ZAP_OLGREB_LAST_MERCY, pow, false, mbeam);
 #ifdef USE_TILE
     mbeam.tile_beam = -1;
 #endif
     mbeam.draw_delay = 0;
-    const int base_dam = dam_dice.roll();
+    int base_dam = 0;
+    for (int i = 0; i < pois_str; i++) {
+        base_dam += mbeam.damage.roll();
+    }
     const int damage = mons_adjust_flavoured(mon, mbeam, base_dam, false);
 
     const int max_hp = mon->max_hit_points;
