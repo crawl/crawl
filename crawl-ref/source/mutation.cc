@@ -1623,7 +1623,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
-    if (undead_mutation_rot() || you.species == SP_HOMUNCULUS || you.species == SP_ADAPTION_HOMUNCULUS)
+    if (undead_mutation_rot()
+        || you.species == SP_HOMUNCULUS 
+        || you.species == SP_ADAPTION_HOMUNCULUS
+        || you.species == SP_ANGEL)
     {
         switch (mutclass)
         {
