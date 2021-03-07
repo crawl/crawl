@@ -4300,7 +4300,7 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*drained*/, bool /*temp*/) const
+int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*drained*/, bool /*temp*/, bool /*crosstraining*/) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
     if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))

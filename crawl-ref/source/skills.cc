@@ -331,17 +331,20 @@ static void _change_skill_level(skill_type exsk, int n)
 
     // calc_hp() has to be called here because it currently doesn't work
     // right if you.skills[] hasn't been updated yet.
-    if (exsk == SK_FIGHTING)
+    if (exsk == SK_FIGHTING ||
+        (you.species == SP_BLOSSOM_HOMUNCULUS && exsk == SK_SPELLCASTING))
         calc_hp(true, false);
 }
 
 // Called whenever a skill is trained.
 void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_order)
 {
-    if (exsk == SK_FIGHTING)
+    if (exsk == SK_FIGHTING ||
+    (you.species == SP_BLOSSOM_HOMUNCULUS && exsk == SK_SPELLCASTING))
         calc_hp(true, false);
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS || 
+        (you.species == SP_BLOSSOM_HOMUNCULUS && exsk == SK_FIGHTING))
         calc_mp();
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR)

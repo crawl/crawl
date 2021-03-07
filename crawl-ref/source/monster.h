@@ -351,7 +351,7 @@ public:
 
     int  skill(skill_type skill, int scale = 1,
                bool real = false, bool drained = true,
-               bool temp = true) const override;
+               bool temp = true, bool crosstraining = false) const override;
 
     void attacking(actor *other, bool ranged) override;
     bool can_go_frenzy() const;

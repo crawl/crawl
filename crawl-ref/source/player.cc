@@ -4391,8 +4391,8 @@ int get_real_hp(bool trans, bool rotted)
     hitp  = you.experience_level * 11 / 2 + 8;
     hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
-    hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
-          + (you.skill(SK_FIGHTING, 3, true) + 1) / 2;
+    hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true, true, true, true) / 70
+          + (you.skill(SK_FIGHTING, 3, true, true, true, true) + 1) / 2;
 
     // Racial modifier.
     hitp *= 10 + species_hp_modifier(you.species);
@@ -6332,8 +6332,9 @@ int player::shield_tohit_penalty(bool random_factor, int scale) const
  * @param real whether to return the real value, or modified value.
  * @param drained whether to include modification by draining.
  * @param temp whether to include modification by other temporary factors (e.g. heroism)
+ * @param crosstraining (for homunculus)
  */
-int player::skill(skill_type sk, int scale, bool real, bool drained, bool temp) const
+int player::skill(skill_type sk, int scale, bool real, bool drained, bool temp, bool crosstraining) const
 {
     // If you add another enhancement/reduction, be sure to change
     // SkillMenuSwitch::get_help() to reflect that
@@ -6346,7 +6347,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained, bool temp) 
     // skill training, so make sure to use the correct value.
     int actual_skill = skills[sk];
     unsigned int effective_points = skill_points[sk];
-    if (!real)
+    if (!real || crosstraining)
         effective_points += get_crosstrain_points(sk);
     effective_points = min(effective_points, skill_exp_needed(MAX_SKILL_LEVEL, sk));
     actual_skill = calc_skill_level_change(sk, actual_skill, effective_points);
