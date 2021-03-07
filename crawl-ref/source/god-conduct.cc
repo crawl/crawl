@@ -342,7 +342,7 @@ static peeve_map divine_peeves[] =
         } },
         { DID_SPELL_PRACTISE, {
             "you train magic skills", true,
-            1, 0, nullptr, " doesn't appreciate your training magic!"
+            1, 0, nullptr, " doesn't appreciate that you’re training magic!"
         } },
         { DID_WIZARDLY_ITEM, {
             "you use magical staves or pain-branded weapons", true,
