@@ -340,6 +340,25 @@ public:
         static PotionCancellation inst; return inst;
     }
 
+    bool can_quaff(string *reason = nullptr) const override
+    {
+        if (!player_is_cancellable())
+        {
+            if (reason)
+                *reason = "Drinking this now will have no effect.";
+            return false;
+        }
+
+        return true;
+    }
+
+    bool quaff(bool was_known) const override {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        return effect(was_known);
+    }
+
     bool effect(bool=true, int=40, bool=true) const override
     {
         debuff_player();
