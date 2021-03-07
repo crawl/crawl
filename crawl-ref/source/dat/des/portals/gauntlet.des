@@ -178,7 +178,7 @@ default-depth: Gauntlet
 
 
 NAME:   gammafunk_gauntlet_arena_open
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 WEIGHT: 5
 NSUBST: "' = 10=3, - = 6=2 / ^...
 SUBST:  ' = ^.....
@@ -196,7 +196,7 @@ n'''...'''n
 ENDMAP
 
 NAME:   gammafunk_gauntlet_arena_corners
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -213,7 +213,7 @@ n.^xx~xx^.n
 ENDMAP
 
 NAME:  gammafunk_gauntlet_arena_hedges
-TAGS:  gauntlet_arena_first gauntlet_arena_second
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: q = pp~, ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -229,7 +229,7 @@ n.qqq~qqq~n
 ENDMAP
 
 NAME:  gammafunk_gauntlet_arena_split_x
-TAGS:  gauntlet_arena_first gauntlet_arena_second
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -245,7 +245,7 @@ n.^xxnxx^.n
 ENDMAP
 
 NAME:   gammafunk_gauntlet_arena_grid
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST: - = 10=3 / ^...., ' = 6=2 / ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -261,7 +261,7 @@ n-x-x-x-x-n
 ENDMAP
 
 NAME:   gammafunk_gauntlet_arena_split_diamond
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -278,7 +278,7 @@ n!x.....x!n
 ENDMAP
 
 NAME:   nicolae_gauntlet_arena_t_cross
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: P = P / ., ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -295,7 +295,7 @@ n.n..x..n.n
 ENDMAP
 
 NAME:  nicolae_gauntlet_arena_x
-TAGS:  gauntlet_arena_first gauntlet_arena_second
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -311,7 +311,7 @@ n..~x.x~..n
 ENDMAP
 
 NAME:   nicolae_gauntlet_arena_flowing_pool
-TAGS:   gauntlet_arena_first gauntlet_arena_second no_pool_fixup
+TAGS:   gauntlet_arena_first gauntlet_arena_second no_pool_fixup allow_dup
 NSUBST: P = P / -, - = 10=3 / ^..., ' = 6=2 / ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -327,7 +327,7 @@ n-w-www-w-n
 ENDMAP
 
 NAME:   nicolae_gauntlet_arena_quarters
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: P = P / ., ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -344,7 +344,7 @@ n.x..x..x.n
 ENDMAP
 
 NAME:   nicolae_gauntlet_arena_blocks
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -361,7 +361,7 @@ n..xx~xx..n
 ENDMAP
 
 NAME:   nicolae_gauntlet_arena_grate_2
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 KFEAT:  qr = iron_grate
 NSUBST: "' = 10=3, - = 6=2 / ^.., ! = ^. / .
 SUBST:  r = rr^, ' = ^...
@@ -379,7 +379,7 @@ n---xqx...n
 ENDMAP
 
 NAME:   nicolae_gauntlet_swirl
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST: P = P / -, - = 10=3 / ., ' = 6=2 / ., ! = ^.. / .
 SUBST:  ~ = ^.
 : gauntlet_arena_setup(_G)
@@ -396,7 +396,7 @@ n!xx'n''''n
 ENDMAP
 
 NAME: minmay_gauntlet_arena_make_your_own_arena
-TAGS: gauntlet_arena_first gauntlet_arena_second
+TAGS: gauntlet_arena_first gauntlet_arena_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n..=.P.=..n
@@ -411,7 +411,7 @@ n==n...n==n
 ENDMAP
 
 NAME:   gammafunk_gauntlet_arena_teeth
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^...
 NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -428,7 +428,7 @@ n.x~x~x~x.n
 ENDMAP
 
 NAME:    gammafunk_gauntlet_arena_mazey
-TAGS:    gauntlet_arena_first gauntlet_arena_second
+TAGS:    gauntlet_arena_first gauntlet_arena_second allow_dup
 NSUBST:  P = P / a
 # Ensure that at least one of the four paths is always open.
 SHUFFLE: qrsu
@@ -448,7 +448,7 @@ n...rxxs2un
 ENDMAP
 
 NAME:   gammafunk_gauntlet_arena_chambers
-TAGS:   gauntlet_arena_first gauntlet_arena_second
+TAGS:   gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST:  ~ = ^..
 NSUBST: ! = ^. / .
 : gauntlet_arena_setup(_G)
@@ -465,7 +465,7 @@ nx..x^x..xn
 ENDMAP
 
 NAME:    gammafunk_gauntlet_arena_crates
-TAGS:    gauntlet_arena_first gauntlet_arena_second
+TAGS:    gauntlet_arena_first gauntlet_arena_second allow_dup
 # At least one open path, but usually not the one adjacent to the landing site.
 SHUFFLE: Pq / Rr / Ss
 SUBST:   a = ...^nn, q = ^nnn, r = .^nn, sRS = ., x = ^ x:150
@@ -483,7 +483,7 @@ n.a.a..a.an
 ENDMAP
 
 NAME:  gammafunk_gauntlet_arena_arrow_garden
-TAGS:  gauntlet_arena_first gauntlet_arena_second
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: ~ = ^..
 : gauntlet_arena_setup(_G)
 MAP
@@ -499,7 +499,7 @@ n..xp^px..n
 ENDMAP
 
 NAME:  gammafunk_gauntlet_arena_spirals
-TAGS:  gauntlet_arena_first gauntlet_arena_second
+TAGS:  gauntlet_arena_first gauntlet_arena_second allow_dup
 SUBST: q = ^ n:190
 : gauntlet_arena_setup(_G)
 MAP
@@ -550,7 +550,7 @@ ENDMAP
 #
 
 NAME:   minmay_gauntlet_arena_77_fan
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n2223xx3n
@@ -563,7 +563,7 @@ n2^3x3nxn
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_two_lines
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n1.xx333n
@@ -576,7 +576,7 @@ n22xx..3n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_checkered
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 nx2x3x2xn
@@ -589,7 +589,7 @@ nx3x^x3xn
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_box
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n333333^n
@@ -602,7 +602,7 @@ n2x..^x2n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_double_cross
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n2......n
@@ -615,7 +615,7 @@ n333xxx.n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_museum
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G, true)
 MAP
 n2223222n
@@ -628,7 +628,7 @@ n^.p.p.^n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_chump_sandwich
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n3322233n
@@ -641,7 +641,7 @@ n.xxnxx.n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_tiled_triplets
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n1xx2xx2n
@@ -654,7 +654,7 @@ nx3nn3nxn
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_hold_the_fort
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n3333222n
@@ -667,7 +667,7 @@ n.^nx.x3n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_cramped
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 nnn222nnn
@@ -680,7 +680,7 @@ n3d=nn32n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_p_blocks
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n33332xxn
@@ -696,7 +696,7 @@ ENDMAP
 # the entry point by running clockwise around the vault. That is tedious, so the
 # runed door gets rid of the need for it.
 NAME:   minmay_gauntlet_arena_77_path
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n222n^.Pn
@@ -709,7 +709,7 @@ ndn333n3n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_mirror
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n2221222n
@@ -722,7 +722,7 @@ n3n...n3n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_terracotta_army
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n22GxG22n
@@ -735,7 +735,7 @@ nG3G^G3Gn
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_run_for_it
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n...Pn33n
@@ -748,7 +748,7 @@ nnn===21n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_squiggly
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n22222x3n
@@ -761,7 +761,7 @@ n33nn..xn
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_radiant_squares
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n3332221n
@@ -774,7 +774,7 @@ n.ddx3x3n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_broken_ladder
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n3nnx333n
@@ -787,7 +787,7 @@ n2nnx^.1n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_shame_cube
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n^333333n
@@ -800,7 +800,7 @@ n2nwwwn2n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_mess
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 # there is one 3 on the map because a dispersal trap should not be on that
 # square
 NSUBST: ' = 9=3 / 6=2 / 1 / ^ / .
@@ -816,7 +816,7 @@ n'n''xn'n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_block_sizes
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n222.222n
@@ -829,7 +829,7 @@ n3xnx^13n
 ENDMAP
 
 NAME:   minmay_gauntlet_arena_77_braids
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n22n.n22n
@@ -843,7 +843,7 @@ ENDMAP
 
 # to escape, face either the 1 or the plant
 NAME:   minmay_gauntlet_arena_77_two_paths
-TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second
+TAGS:   gauntlet_arena_77_first gauntlet_arena_77_second allow_dup
 : gauntlet_arena_setup(_G)
 MAP
 n222.222n
@@ -890,7 +890,7 @@ ENDMAP
 
 # Adapted from the labyrinth_watery minotaur exit vault.
 NAME:    gauntlet_exit_watery
-TAGS:    gauntlet_exit no_pool_fixup
+TAGS:    gauntlet_exit no_pool_fixup allow_dup
 MONS:    patrolling generate_awake minotaur
 KFEAT:   < = exit_gauntlet
 SHUFFLE: def, ghi
@@ -914,7 +914,7 @@ ENDMAP
 
 # Adapted from labyrinth_green.
 NAME:   gauntlet_exit_green
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit allow_dup
 MONS:   patrolling generate_awake minotaur
 KFEAT:  < = exit_gauntlet
 : gauntlet_exit_loot(_G)
@@ -936,7 +936,7 @@ ENDMAP
 
 # Adapted from labyrinth_spiral.
 NAME:   gauntlet_exit_spiral
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit allow_dup
 MONS:   patrolling generate_awake minotaur
 SUBST:  b : bvz, z = vb
 KFEAT:  < = exit_gauntlet
@@ -959,7 +959,7 @@ ENDMAP
 
 # Adapted from labyrinth_hidden_loot.
 NAME:   gauntlet_exit_hidden_loot
-TAGS:   gauntlet_exit
+TAGS:   gauntlet_exit allow_dup
 MONS:   patrolling generate_awake minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
@@ -983,7 +983,7 @@ ENDMAP
 
 # Adapted from labyrinth_mini_lab.
 NAME:    gauntlet_exit_mini_maze
-TAGS:    gauntlet_exit
+TAGS:    gauntlet_exit allow_dup
 SHUFFLE: def, ghi, klm
 SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
@@ -1014,7 +1014,7 @@ ENDMAP
 # Chooses four corpses, each with their own set of loot, themed around some
 # particular archetypical species/background. Each set of loot has 2-4 items.
 NAME:    nicolae_gauntlet_exit_dead_adventurers
-TAGS:    gauntlet_exit
+TAGS:    gauntlet_exit allow_dup
 KMONS:   1 = patrolling generate_awake minotaur
 KPROP:   DELM'1 = bloody
 KFEAT:   ' = floor
@@ -1215,7 +1215,7 @@ ENDMAP
 
 NAME:   gammafunk_gauntlet_branching
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNPRp", "EHKMOQSq")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: d : gauntlet_arena_first
@@ -1305,7 +1305,7 @@ ENDMAP
 
 NAME:   gammafunk_gauntlet_hard_choice
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: p : gauntlet_arena_first
@@ -1392,7 +1392,7 @@ ENDMAP
 
 NAME:   gammafunk_gauntlet_shortcut
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 : gauntlet_arena_set_tier(2)
 # 3.5 on average per arena (including the single guaranteed item), for 7 items
@@ -1464,7 +1464,7 @@ ENDMAP
 
 NAME:   gammafunk_gauntlet_one_two_three
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNPRpr", "EHKMOQSqs")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: d : gauntlet_arena_first
@@ -1540,7 +1540,7 @@ ENDMAP
 # still examine every arena before they start.
 NAME:   minmay_gauntlet_77_indecision
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup allow_dup
 SUBST:  G : GT
 : gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 SUBVAULT: a : gauntlet_arena_77_first
@@ -1619,7 +1619,7 @@ ENDMAP
 
 NAME:   minmay_gauntlet_77_tree
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup allow_dup
 KMONS:  ' = plant
 SUBST:  ' = '.
 : gauntlet_setup(_G, "DFJLNPR", "EHKMOQS")
@@ -1701,7 +1701,7 @@ ENDMAP
 ################################################################################
 NAME:   minmay_gauntlet_mixed_big_or_small
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 SUBVAULT: a : gauntlet_arena_first
 SUBVAULT: p : gauntlet_arena_77_first
@@ -1779,7 +1779,7 @@ ENDMAP
 
 NAME:   minmay_gauntlet_mixed_oops_all_seconds
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen no_trap_gen
+TAGS:   no_item_gen no_monster_gen no_trap_gen allow_dup
 : gauntlet_setup(_G, "DFJLNP", "EHKMOQ")
 : gauntlet_arena_set_tier(2)
 SUBVAULT: a : gauntlet_arena_77_second
