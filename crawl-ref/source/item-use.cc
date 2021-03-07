@@ -2767,7 +2767,8 @@ void random_uselessness()
 
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
+    const int dur = 30 + random2(20);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -2784,7 +2785,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, dur, 0,
+                     "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
