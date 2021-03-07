@@ -1,5 +1,12 @@
 ###############################################################################
 # swamp.des: All maps and branch endings relating to the Swamp.
+#
+# <<1>>      Entries
+# <<2>>      Decorative vaults
+# <<3>>      Monster-placing vaults
+# <<4>>      Swamp end vaults
+#
+###############################################################################
 ###############################################################################
 
 # Functionality for one of Grunt's vaults.
@@ -38,7 +45,10 @@ end
 }}
 
 ###############################################################################
-# Swamp entries
+#
+# <<1>> Swamp entries.
+#       All must have the swamp_entry tag and place an enter_swamp feature.
+#
 ###############################################################################
 
 # This is basically the dummy balancer.
@@ -239,8 +249,11 @@ tt--ttt---ttt
    ttt...ttt
      ttttt
 ENDMAP
+
 ###############################################################################
-# Swamp non-entry and non-ending vaults
+#
+# <<2>> Non-entry, non-ending vaults.
+#
 ###############################################################################
 
 default-depth: Swamp
@@ -942,7 +955,10 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Other Swamp vaults
+#
+# <<3>> Monster-placing vaults.
+#
+###############################################################################
 
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
@@ -2018,12 +2034,15 @@ wwHww   wwKww
 ENDMAP
 
 ###############################################################################
-# Swamp ending vaults
+#
+# <<4>> Swamp ending vaults
 #
 # They come in two flavours: normal and themed. The first three are normal and
 # use regular swamp monsters. The other five have special themes, and are less
 # common.
+#
 ###############################################################################
+
 
 default-depth:
 
