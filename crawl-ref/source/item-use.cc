@@ -927,6 +927,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
+        if (you.wear_barding())
+        {
+            if (verbose)
+                mpr("The hauberk won't fit over your tail.");
+            return false;
+        }
+
         if (!player_has_feet(!ignore_temporary))
         {
             if (verbose)
@@ -972,8 +979,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s)
-                    || s == EQ_BOOTS && you.wear_barding())
+                if (!get_form()->slot_available(s))
                 {
                     if (verbose)
                     {
