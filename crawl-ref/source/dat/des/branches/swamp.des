@@ -1399,62 +1399,62 @@ qqrx...xrqq
     @@@
 ENDMAP
 
-NAME: nicolae_swamp_alligator_family
-TAGS: layout_swamp
-NSUBST: T = 2:W / *:t
-KMONS: 1 = alligator / nothing w:5
-KFEAT: 1@ = W
+NAME:   nicolae_swamp_alligator_family
+TAGS:   layout_swamp
+NSUBST: D = 2=W / t
+KMONS:  1 = alligator / nothing w:5
+KFEAT:  1@ = W
 MAP
    tttt
   tt11tt
  tt1WW1tt
-tTWWWWWWTt
-tWTTWWTTWt
- WWWTTWWW
+tDWWWWWWDt
+tWDDWWDDWt
+ WWWDDWWW
    @@@@
 ENDMAP
 
-NAME: nicolae_swamp_snake_nest
-TAGS: transparent no_monster_gen
+NAME:  nicolae_swamp_snake_nest
+TAGS:  transparent no_monster_gen
 KMONS: 1 = anaconda
 KMONS: 2 = water moccasin / black mamba / nothing w:20
-SUBST: T = ..ttw
+SUBST: D = ..ttw
 SUBST: . = .:20 2:3
 KFEAT: .12 = . / W w:2
 MAP
        t.@.tttt
-tttt   tt....Tt
-tTTt    tTT...Tt
-@.TttttttT....Tt
-.....TTT.....Ttt
-tt........TTTtt
-tttt.TwT..Ttt
-ttT...wwT..Tt
-tT.........Ttt
-tT.1...tT...Ttt
-tTT...ttTT...Tt
-ttTTTTtttTT...t
- tttttt tttT...
+tttt   tt....Dt
+tDDt    tDD...Dt
+@.DttttttD....Dt
+.....DDD.....Dtt
+tt........DDDtt
+tttt.DwD..Dtt
+ttD...wwD..Dt
+tD.........Dtt
+tD.1...tD...Dtt
+tDD...ttDD...Dt
+ttDDDDtttDD...t
+ tttttt tttD...
           ttt.@
 ENDMAP
 
-NAME: nicolae_swamp_baby_hydras
+NAME:    nicolae_swamp_baby_hydras
 SHUFFLE: abcd
-SUBST: a:@, bcd:t, T = .Wt, . = ...W
-KMONS: 1 = 1-headed hydra
-KMONS: 2 = 2-headed hydra / 3-headed hydra / 4-headed hydra
-KFEAT: 12 = . / W
+SUBST:   a:@, bcd:t, D = .Wt, . = ...W
+KMONS:   1 = 1-headed hydra
+KMONS:   2 = 2-headed hydra / 3-headed hydra / 4-headed hydra
+KFEAT:   12 = . / W
 MAP
              taat
             tt..b
-  tttt     ttT..b
- ttTTtttttttT.1.t
-ttT..TtTTttT...Tt
-tT....1..TTT..TTt
-tT2...TT...1..TTt
-ttT..TttTTTTT..Tt
- ttTTtttttttT...t
-  tttt    ttT1.tt
+  tttt     ttD..b
+ ttDDtttttttD.1.t
+ttD..DtDDttD...Dt
+tD....1..DDD..DDt
+tD2...DD...1..DDt
+ttD..DttDDDDD..Dt
+ ttDDtttttttD...t
+  tttt    ttD1.tt
          tt....d
          t...t.d
          tccttt
