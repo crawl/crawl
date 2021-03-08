@@ -918,7 +918,7 @@ int main(int argc, char* argv[])
                 case AF_ACID:
                 case AF_REACH_TONGUE:
                     monsterattacks +=
-                        colour(YELLOW, damage_flavour("acid", "7d3"));
+                        colour(YELLOW, damage_flavour("acid", "4d3"));
                     break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
