@@ -1,0 +1,68 @@
+enum: SP_MAGIC_GOLEM
+monster: MONS_GOLEM
+name: Golem
+short_name: "MG"
+difficulty: Advanced
+difficulty_priority: 80
+aptitudes:
+  xp: 0
+  hp: 0
+  mp_mod: 2
+  mr: 4
+  fighting: 1
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  slings: -3
+  bows: -3
+  crossbows: -3
+  throwing: -3
+  armour: -1
+  dodging: -1
+  stealth: -2
+  shields: -2
+  unarmed_combat: -1
+  spellcasting: 1
+  conjurations: 0
+  hexes: 0
+  charms: 0
+  summoning: 0
+  necromancy: 0
+  translocations: 0
+  transmutations: 0
+  fire_magic: 0
+  ice_magic: 0
+  air_magic: 0
+  earth_magic: 0
+  poison_magic: 0
+  invocations: 0
+  evocations: 0
+str: 8
+int: 8
+dex: 8
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_ROT_IMMUNITY: 1
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 1
+    MUT_PETRIFICATION_RESISTANCE: 1
+    MUT_SHOCK_RESISTANCE: 1
+    MUT_UNBREATHING: 1
+fake_mutations:
+  - long: You can't use magic directly, instead you can remember it in your body.
+recommended_jobs:
+  - JOB_WIZARD
+  - JOB_CONJURER
+  - JOB_SUMMONER
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_ICE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+  - JOB_EARTH_ELEMENTALIST
+  - JOB_VENOM_MAGE
+  - JOB_WARPER
+  - JOB_SKALD
+  - JOB_ENCHANTER
+  - JOB_CRUSADER
