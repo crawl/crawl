@@ -948,7 +948,7 @@ ENDMAP
 NAME:   trove_trog_arena
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
-               or trove.weapon_skills() < you.skill("Unarmed Combat"))
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
@@ -1040,7 +1040,7 @@ ENDMAP
 NAME:   trove_weapons_four_rooms
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
-               or trove.weapon_skills() < you.skill("Unarmed Combat"))
+               or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
           and not crawl.one_chance_in(3) }}
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
