@@ -1319,7 +1319,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCORD:
         return make_unique<targeter_discord>();
     case SPELL_IGNITION:
-        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
+        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you, true));
 
     // Summons. Most summons have a simple range 2 radius, see find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:

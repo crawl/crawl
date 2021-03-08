@@ -1709,7 +1709,7 @@ static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square
         noisy(spell_effect_noise(SPELL_IGNITION),square);
 }
 
-vector<coord_def> get_ignition_blast_sources(const actor *agent)
+vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
 {
     // Ignition affects squares that had hostile monsters on them at the time
     // of casting. This way nothing bad happens when monsters die halfway
@@ -1724,7 +1724,8 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent)
         if (ai->is_monster()
             && !ai->as_monster()->wont_attack()
             && !mons_is_firewood(*ai->as_monster())
-            && !mons_is_tentacle_segment(ai->as_monster()->type))
+            && !mons_is_tentacle_segment(ai->as_monster()->type)
+            && (!tracer || agent->can_see(**ai)))
         {
             blast_sources.push_back(ai->position);
         }

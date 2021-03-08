@@ -79,7 +79,8 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim,
 
 spret cast_random_bolt(int pow, bolt& beam, bool fail = false);
 
-vector<coord_def> get_ignition_blast_sources(const actor *agent);
+vector<coord_def> get_ignition_blast_sources(const actor *agent,
+                                             bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);
