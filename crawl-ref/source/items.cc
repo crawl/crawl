@@ -943,6 +943,11 @@ void item_check()
 
 void identify_item(item_def& item)
 {
+    // items_stack() has strict flag conditions to prevent a shop info leak,
+    // so we need set_ident_type() here to permit stacking shop purchases.
+    if (is_stackable_item(item))
+        set_ident_type(item, true);
+
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     if (is_artefact(item) && !(item.flags & ISFLAG_NOTED_ID))
