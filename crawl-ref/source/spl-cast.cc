@@ -2436,7 +2436,7 @@ int fail_severity(spell_type spell)
     const int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
-    if (level * level * raw_fail <= 150)
+    if (level * level * raw_fail <= MISCAST_THRESHOLD)
         return 0;
 
     const int max_damage = max_miscast_damage(spell);
