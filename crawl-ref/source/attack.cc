@@ -500,55 +500,51 @@ void attack::alert_defender()
     }
 }
 
+disto_effect get_disto_effect()
+{
+    return random_choose_weighted(35, DISTO_SMALL_DMG,
+        25, DISTO_BIG_DMG,
+        10, DISTO_BANISH,
+        20, DISTO_BLINK,
+        10, DISTO_NONE);
+}
+
 bool attack::distortion_affects_defender()
 {
-    enum disto_effect
-    {
-        SMALL_DMG,
-        BIG_DMG,
-        BANISH,
-        BLINK,
-        NONE
-    };
+    const disto_effect choice = get_disto_effect();
 
-    const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
-                                                       25, BIG_DMG,
-                                                       10,  BANISH,
-                                                       20, BLINK,
-                                                       10,  NONE);
-
-    if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
+    if (simu && !(choice == DISTO_SMALL_DMG || choice == DISTO_BIG_DMG))
         return false;
 
     switch (choice)
     {
-    case SMALL_DMG:
+    case DISTO_SMALL_DMG:
         special_damage += 1 + random2avg(7, 2);
         // No need to call attack_strength_punctuation here,
         // since special damage < 7, so it will always return "."
         special_damage_message = make_stringf("Space bends around %s.",
                                               defender_name(false).c_str());
         break;
-    case BIG_DMG:
+    case DISTO_BIG_DMG:
         special_damage += 3 + random2avg(24, 2);
         special_damage_message =
             make_stringf("Space warps horribly around %s%s",
                          defender_name(false).c_str(),
                          attack_strength_punctuation(special_damage).c_str());
         break;
-    case BLINK:
+    case DISTO_BLINK:
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
             blink_fineff::schedule(defender);
         break;
-    case BANISH:
+    case DISTO_BANISH:
         if (defender_visible)
             obvious_effect = true;
         defender->banish(attacker, attacker->name(DESC_PLAIN, true),
                          attacker->get_experience_level());
         return true;
-    case NONE:
+    case DISTO_NONE:
         // Do nothing
         break;
     }
@@ -1493,6 +1489,30 @@ bool attack::apply_poison_damage_brand()
     return false;
 }
 
+bool attack::apply_distotion_damage_brand()
+{
+    bool ret = false;
+    if (distortion_affects_defender()) {
+        ret = true;
+    }
+    if (!obvious_effect)
+        obvious_effect = !special_damage_message.empty();
+
+    if (needs_message && !special_damage_message.empty())
+    {
+        mpr(special_damage_message);
+
+        special_damage_message.clear();
+        // Don't do message-only miscasts along with a special
+        // damage message.
+        if (miscast_level == 0)
+            miscast_level = -1;
+    }
+    if (special_damage > 0)
+        inflict_damage(special_damage, special_damage_flavour);
+    return ret;
+}
+
 bool attack::apply_damage_brand(const char *what)
 {
     bool brand_was_known = false;
@@ -1834,24 +1854,9 @@ bool attack::apply_damage_brand(const char *what)
     if (attacker->is_player() 
         && player_equip_unrand(UNRAND_GAUNTLETS_DISTOTION)
         && defender && defender->alive()) {
-        if(distortion_affects_defender()) {
+        if (apply_distotion_damage_brand()) {
             ret = true;
         }
-        if (!obvious_effect)
-            obvious_effect = !special_damage_message.empty();
-
-        if (needs_message && !special_damage_message.empty())
-        {
-            mpr(special_damage_message);
-
-            special_damage_message.clear();
-            // Don't do message-only miscasts along with a special
-            // damage message.
-            if (miscast_level == 0)
-                miscast_level = -1;
-        }
-        if (special_damage > 0)
-            inflict_damage(special_damage, special_damage_flavour);
     }
 
     if (obvious_effect && attacker_visible && using_weapon())

@@ -13,6 +13,15 @@ const int HIT_WEAK   = 7;
 const int HIT_MED    = 18;
 const int HIT_STRONG = 36;
 
+enum disto_effect
+{
+    DISTO_SMALL_DMG,
+    DISTO_BIG_DMG,
+    DISTO_BANISH,
+    DISTO_BLINK,
+    DISTO_NONE
+};
+
 class attack
 {
 // Public Properties
@@ -190,6 +199,7 @@ protected:
 
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();
+    bool apply_distotion_damage_brand();
 
     virtual int  player_stat_modify_damage(int damage);
     virtual int  player_apply_weapon_skill(int damage);
@@ -206,4 +216,5 @@ protected:
     virtual void player_stab_check();
 };
 
+disto_effect get_disto_effect();
 string attack_strength_punctuation(int dmg);

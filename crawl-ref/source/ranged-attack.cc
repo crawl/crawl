@@ -810,6 +810,12 @@ bool ranged_attack::apply_missile_brand()
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
 
+    if (attacker->is_player()
+        && player_equip_unrand(UNRAND_GAUNTLETS_DISTOTION)
+        && defender && defender->alive()) {
+        apply_distotion_damage_brand();
+    }
+
     return !defender->alive();
 }
 
