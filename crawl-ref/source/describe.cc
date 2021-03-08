@@ -1904,6 +1904,11 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     if (is_artefact(item))
     {
+        if (is_unrandom_artefact(item, UNRAND_GAUNTLETS_DISTOTION))
+        {
+            description += "\n\nIt may blink you when you take damage.";
+        }
+
         string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {

@@ -1520,8 +1520,14 @@ bool attack::apply_damage_brand(const char *what)
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ANTIMAGIC
             || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM))
     {
-        // These brands require some regular damage to function.
-        return false;
+        if(attacker->is_player() 
+        && player_equip_unrand(UNRAND_GAUNTLETS_DISTOTION)) {
+            brand = SPWPN_NORMAL;
+            //for gauntlets distotion
+        } else {
+            // These brands require some regular damage to function.
+            return false;
+        }
     }
 
     switch (brand)
@@ -1823,6 +1829,30 @@ bool attack::apply_damage_brand(const char *what)
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
+
+    // Use the Nessos hack to give the player gauntlets of distotion too
+    if (attacker->is_player() 
+        && player_equip_unrand(UNRAND_GAUNTLETS_DISTOTION)
+        && defender && defender->alive()) {
+        if(distortion_affects_defender()) {
+            ret = true;
+        }
+        if (!obvious_effect)
+            obvious_effect = !special_damage_message.empty();
+
+        if (needs_message && !special_damage_message.empty())
+        {
+            mpr(special_damage_message);
+
+            special_damage_message.clear();
+            // Don't do message-only miscasts along with a special
+            // damage message.
+            if (miscast_level == 0)
+                miscast_level = -1;
+        }
+        if (special_damage > 0)
+            inflict_damage(special_damage, special_damage_flavour);
+    }
 
     if (obvious_effect && attacker_visible && using_weapon())
     {

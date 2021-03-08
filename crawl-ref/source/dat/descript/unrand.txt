@@ -770,3 +770,11 @@ viper's Fang
 
 A quickblade with a deadly poison that reduces the poison resistance of
 the opponent.
+%%%%
+gauntlets of Distotion
+
+A pair of gauntlets blessed by Lugonu. Even when equipped, it gives a 
+distortion brand to all attacks. These unstable, distorted gloves also 
+force the wearer to blink. this blink ignores effects that would usually
+prevent translocations.
+%%%%

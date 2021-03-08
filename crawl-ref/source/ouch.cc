@@ -745,6 +745,17 @@ static void _maybe_blink(int dam)
     }
 }
 
+static void _maybe_distotion_blink(int dam)
+{
+    if(player_equip_unrand(UNRAND_GAUNTLETS_DISTOTION) && dam > 1) {
+        int blink_chance = dam * 100 / you.hp_max; //by damage
+        if (x_chance_in_y(blink_chance, 100))
+        {
+            uncontrolled_blink(true);
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1149,6 +1160,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 _maybe_corrode();
                 _maybe_slow();
                 _maybe_invisible();
+                _maybe_distotion_blink(dam);
                 if (you.has_mutation(MUT_BLINKBOLT)
                     && !you.duration[DUR_BLINKBOLT_COOLDOWN])
                 {

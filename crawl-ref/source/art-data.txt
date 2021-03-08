@@ -1489,6 +1489,17 @@ INSCRIP: Conj+
 MP:       +9
 BOOL:    curse, blink
 
+ENUM:    GAUNTLETS_DISTOTION
+NAME:    gauntlets of Distotion
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    -2
+COLOUR:  ETC_WARP
+TILE:    urand_distotion
+TILE_EQ: glove_black
+INSCRIP: Distotion, *Blink 
+EV:      4
+BOOL:    evil, curse
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
