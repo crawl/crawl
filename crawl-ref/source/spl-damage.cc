@@ -3256,7 +3256,9 @@ spret cast_imb(int pow, bool fail)
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
-                 && mons_is_conjured(act->as_monster()->type));
+                 && (mons_is_conjured(act->as_monster()->type)
+                     || (have_passive(passive_t::shoot_through_plants)
+                         && fedhas_protects(act->as_monster())))) ;
     };
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable))
