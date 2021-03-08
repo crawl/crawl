@@ -942,6 +942,7 @@ static int _get_power_level(int power)
 
     // other functions in this file will break if this assertion is violated
     ASSERT(power_level >= 0 && power_level <= 2);
+    dprf("power level: %d", power_level);
     return power_level;
 }
 
