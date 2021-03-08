@@ -4531,33 +4531,21 @@ void dec_disease_player(int delay)
     }
 }
 
-static void _dec_elixir_hp(int delay)
-{
-    you.duration[DUR_ELIXIR_HEALTH] -= delay;
-    if (you.duration[DUR_ELIXIR_HEALTH] < 0)
-        you.duration[DUR_ELIXIR_HEALTH] = 0;
-
-    int heal = (delay * you.hp_max / 10) / BASELINE_DELAY;
-    if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(heal);
-}
-
-static void _dec_elixir_mp(int delay)
-{
-    you.duration[DUR_ELIXIR_MAGIC] -= delay;
-    if (you.duration[DUR_ELIXIR_MAGIC] < 0)
-        you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    int heal = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
-    inc_mp(heal);
-}
-
 void dec_elixir_player(int delay)
 {
-    if (you.duration[DUR_ELIXIR_HEALTH])
-        _dec_elixir_hp(delay);
-    if (you.duration[DUR_ELIXIR_MAGIC])
-        _dec_elixir_mp(delay);
+    if (!you.duration[DUR_ELIXIR])
+        return;
+
+    you.duration[DUR_ELIXIR] -= delay;
+    if (you.duration[DUR_ELIXIR] < 0)
+        you.duration[DUR_ELIXIR] = 0;
+
+    const int hp = (delay * you.hp_max / 10) / BASELINE_DELAY;
+    if (!you.duration[DUR_DEATHS_DOOR])
+        inc_hp(hp);
+
+    const int mp = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
+    inc_mp(mp);
 }
 
 void dec_ambrosia_player(int delay)

@@ -1167,26 +1167,8 @@ static void _elixir_card(int power)
 {
     int power_level = _get_power_level(power);
 
-    you.duration[DUR_ELIXIR_HEALTH] = 0;
-    you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    switch (power_level)
-    {
-    case 0:
-        you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
-        you.set_duration(DUR_ELIXIR_MAGIC, 1 + random2(3));
-        break;
-    case 1:
-        you.set_duration(DUR_ELIXIR_HEALTH, 4 + random2(3));
-        you.set_duration(DUR_ELIXIR_MAGIC, 4 + random2(3));
-        break;
-    default:
-        you.set_duration(DUR_ELIXIR_HEALTH, 7 + random2(3));
-        you.set_duration(DUR_ELIXIR_MAGIC, 7 + random2(3));
-    }
-
-    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-        mpr("You begin rapidly regenerating health and magic.");
+    you.set_duration(DUR_ELIXIR, 1 + 3 * power_level + random2(3));
+    mpr("You begin rapidly regenerating health and magic.");
 }
 
 // Special case for *your* god, maybe?

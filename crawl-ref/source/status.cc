@@ -546,19 +546,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_ELIXIR:
-        if (you.duration[DUR_ELIXIR_HEALTH] || you.duration[DUR_ELIXIR_MAGIC])
-        {
-            if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-                inf.light_colour = WHITE;
-            else if (you.duration[DUR_ELIXIR_HEALTH])
-                inf.light_colour = LIGHTGREEN;
-            else
-                inf.light_colour = LIGHTBLUE;
-            inf.light_text   = "Elixir";
-        }
-        break;
-
     case STATUS_MAGIC_SAPPED:
         if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
         {

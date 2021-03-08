@@ -545,6 +545,9 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Attr",
       "attractive", "attract",
       "You attract monsters toward you.", D_DISPELLABLE },
+    { DUR_ELIXIR, WHITE, "Elixir",
+      "elixired", "elixir",
+      "You are rapidly regenerating health and magic.", D_NO_FLAGS},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -576,8 +579,6 @@ static const duration_def duration_data[] =
     { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_ELIXIR_HEALTH, 0, "", "", "elixir health", "", D_NO_FLAGS},
-    { DUR_ELIXIR_MAGIC, 0, "", "", "elixir magic", "", D_NO_FLAGS},
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
@@ -649,5 +650,6 @@ static const duration_def duration_data[] =
     { DUR_DARKNESS, 0, "", "", "old darkness", "", D_NO_FLAGS},
     { DUR_STABBING, 0, "", "", "old stabbing", "", D_NO_FLAGS},
     { DUR_SCRYING, 0, "", "", "old scrying", "", D_NO_FLAGS},
+    { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
 #endif
 };
