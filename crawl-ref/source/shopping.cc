@@ -1507,10 +1507,12 @@ static const char *shop_types[] =
     "antique armour",
     "antiques",
     "jewellery",
-    "gadget",
+#if TAG_MAJOR_VERSION == 34
+    "removed gadget",
+#endif
     "book",
 #if TAG_MAJOR_VERSION == 34
-    "food",
+    "removed food",
 #endif
     "distillery",
     "scroll",
@@ -1524,6 +1526,10 @@ static const char *shop_types[] =
  */
 shop_type str_to_shoptype(const string &s)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (s == "removed gadget" || s == "removed food")
+        return SHOP_UNASSIGNED;
+#endif
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
 
