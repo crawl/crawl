@@ -275,8 +275,8 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(rest_wait_percent), 100, 0, 100),
         new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1),
         new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY, 0),
-        new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
-        new IntGameOption(SIMPLE_NAME(fail_severity_to_quiver), 3, -1, 1),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 5),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_quiver), 3, -1, 5),
         new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(rest_delay), USING_DGL ? -1 : 0,
@@ -289,7 +289,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
-        new IntGameOption(SIMPLE_NAME(dump_message_count), 20),
+        new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
@@ -320,7 +320,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
         new StringGameOption(SIMPLE_NAME(map_file_name), ""),
-        new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/")),
 #endif
@@ -1029,8 +1028,8 @@ void game_options::reset_options()
 
     macro_dir = SysEnv.macro_dir;
 
-#ifdef DGAMELAUNCH
     save_dir = _get_save_path("saves/");
+#ifdef DGAMELAUNCH
     morgue_dir = _get_save_path("morgue/");
 #else
     if (macro_dir.empty())
@@ -2971,6 +2970,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
         SysEnv.crawl_dir = field;
+    }
+#endif
+#ifndef SAVE_DIR_PATH
+    else if (key == "save_dir")
+    {
+        save_dir = field;
+#ifndef SHARED_DIR_PATH
+        shared_dir = save_dir;
+#endif
     }
     else if (key == "macro_dir")
         macro_dir = field;

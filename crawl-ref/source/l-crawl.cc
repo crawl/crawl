@@ -457,6 +457,8 @@ static int crawl_do_targeted_command(lua_State *ls)
         quiver::get_secondary_action()->trigger(target);
         break;
     case CMD_THROW_ITEM_NO_QUIVER:
+        // This pops up an inventory menu -- maybe support taking an item
+        // directly?
         throw_item_no_quiver(&target);
         break;
     default:

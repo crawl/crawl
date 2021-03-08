@@ -43,6 +43,8 @@
 #include "transform.h"
 #include "xom.h"
 
+static void _handle_spectral_brand(const actor &attacker, const actor &defender);
+
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -140,6 +142,15 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
+    if (attacker->is_player() && defender)
+    {
+        if (damage_brand == SPWPN_SPECTRAL)
+            _handle_spectral_brand(*attacker, *defender);
+        // Use the Nessos hack to give the player glaive of the guard spectral too
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
+            _handle_spectral_brand(*attacker, *defender);
+    }
+
     return true;
 }
 
@@ -269,7 +280,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        modifiers -= 5;
+        modifiers += CONFUSION_TO_HIT_MALUS;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -288,7 +299,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            modifiers -= 2 * how_transparent;
+            modifiers += TRANSLUCENT_SKIN_TO_HIT_MALUS * how_transparent;
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
@@ -548,6 +559,14 @@ void attack::antimagic_affects_defender(int pow)
 {
     obvious_effect =
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
+}
+
+static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+{
+    if (you.triggered_spectral || !defender.alive())
+        return;
+    you.triggered_spectral = true;
+    spectral_weapon_fineff::schedule(attacker, defender);
 }
 
 /// Whose skill should be used for a pain-weapon effect?
@@ -966,7 +985,7 @@ void attack::stab_message()
         if (coinflip())
         {
             mprf("You %s %s from a blind spot!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         else
@@ -984,13 +1003,13 @@ void attack::stab_message()
         else
         {
             mprf("You %s %s from behind!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         break;
     case 2:
     case 1:
-        if (you.species == SP_FELID && coinflip())
+        if (you.has_mutation(MUT_PAWS) && coinflip())
         {
             mprf("You pounce on the unaware %s!",
                  defender->name(DESC_PLAIN).c_str());
@@ -1067,15 +1086,12 @@ string attack::defender_name(bool allow_reflexive)
 
 int attack::player_stat_modify_damage(int damage)
 {
-    int dammod = 39;
-
-    if (you.strength() > 10)
-        dammod += (random2(you.strength() - 9) * 2);
-    else if (you.strength() < 10)
-        dammod -= (random2(11 - you.strength()) * 3);
-
-    damage *= dammod;
-    damage /= 39;
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    damage *= max(1.0, 75 + 2.5 * you.strength());
+    damage /= 100;
 
     return damage;
 }
@@ -1603,15 +1619,6 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker, 3);
         break;
 
-    case SPWPN_SPECTRAL:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                handle_spectral_brand();
-        }
-        break;
-
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
@@ -1639,15 +1646,6 @@ bool attack::apply_damage_brand(const char *what)
     // was always a bit of a hack.
     if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
         apply_poison_damage_brand();
-
-    // Use the Nessos hack to give the player glaive of the guard spectral too
-    if (attacker->is_player() && weapon
-        && is_unrandom_artefact(*weapon, UNRAND_GUARD))
-    {
-        const monster* mon = defender->as_monster();
-        if (mon && !mons_is_firewood(*mon))
-            handle_spectral_brand();
-    }
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);

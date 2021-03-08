@@ -26,8 +26,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
-spret vampiric_drain(int pow, monster* mons, bool fail);
-dice_def vampiric_drain_damage(int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
 dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, const dist &beam, bool fail);
@@ -62,6 +60,8 @@ void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
 
+int dazzle_chance_numerator(int hd);
+int dazzle_chance_denom(int pow);
 bool dazzle_monster(monster *mon, int pow);
 spret cast_dazzling_flash(int pow, bool fail, bool tracer = false);
 

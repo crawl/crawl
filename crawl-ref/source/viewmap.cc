@@ -363,7 +363,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
     features.clear();
 
     if (on_level)
-        find_travel_pos(you.pos(), nullptr, nullptr, &features);
+        fill_travel_point_distance(you.pos(), &features);
     else
     {
         travel_pathfind tp;
@@ -573,10 +573,58 @@ static coord_def _recentre_map_target(const level_id level,
 }
 
 #ifndef USE_TILE_LOCAL
-static map_view_state _get_view_state(const map_control_state& state)
+static map_view_state _get_view_state(coord_def cur_ul, const map_control_state& state)
 {
-    map_view_state view;
+    // TODO: why should local tiles use different logic?
+    // also, these might make more sense as member functions of UIMapView.
 
+    // recalculate cursor position, and scroll if necessary
+    map_view_state view;
+    const int num_lines = _get_number_of_lines_levelmap();
+
+    view.start.x = cur_ul.x;
+    view.start.y = cur_ul.y;
+
+    // Scroll when needed to keep MARGIN rows/cols to the left or right of the
+    // cursor -- as long as there is map to scroll to.
+    const int MARGIN = 3;
+
+    // careful with off-by-one errors in these calcs
+    view.cursor = state.lpos.pos - view.start + coord_def(1,1);
+    const auto bounds = known_map_bounds();
+    const coord_def map_min = state.lpos.pos - bounds.first;
+    const coord_def map_max = bounds.second - state.lpos.pos;
+    const coord_def ul_margin(max(0, min(MARGIN, map_min.x)),
+                              max(0, min(MARGIN, map_min.y)));
+    const coord_def lr_margin(max(0, min(MARGIN, map_max.x)),
+                              max(0, min(MARGIN, map_max.y)));
+
+    // First check upper-left margins
+    // In principle x doesn't need to scroll; a level can't be larger than 80
+    // columns. But let's make the logic general.
+    coord_def shift = coord_def(min(0, view.cursor.x - ul_margin.x - 1),
+                                min(0, view.cursor.y - ul_margin.y - 1));
+
+    // If we didn't enforce any margins on the upper-left, check lower-right
+    if (shift.x >= 0)
+        shift.x = max(0, view.cursor.x - get_number_of_cols() + lr_margin.x);
+    if (shift.y >= 0)
+        shift.y = max(0, view.cursor.y - num_lines + lr_margin.y);
+
+    view.start += shift;
+
+    // now calculate the final cursor position relative to any view shifting
+    // that happened to enforce margins
+    view.cursor = state.lpos.pos - view.start + coord_def(1,1);
+    return view;
+}
+
+static map_view_state _init_view_state(const map_control_state& state)
+{
+    // initial placement calculations for the map viewport window.
+    // This code is a bit inscrutable but it seems to do some heuristics to
+    // try to make partially explored levels look reasonable in console map
+    // view, mostly to do with placement in the x direction.
     const int num_lines = _get_number_of_lines_levelmap();
     const int half_screen = (num_lines - 1) / 2;
 
@@ -588,8 +636,7 @@ static map_view_state _get_view_state(const map_control_state& state)
 
     const auto map_lines = max_y - min_y + 1;
 
-    view.start.x = (min_x + max_x + 1) / 2 - 40;  // no x scrolling.
-    view.start.y = 0;                             // y does scroll.
+    coord_def ul((min_x + max_x + 1) / 2 - 40, 0);
 
     auto screen_y = state.lpos.pos.y;
 
@@ -608,12 +655,11 @@ static map_view_state _get_view_state(const map_control_state& state)
     else if (screen_y + half_screen > max_y)
         screen_y = max_y - half_screen;
 
-    view.cursor.x = state.lpos.pos.x - view.start.x + 1;
-    view.cursor.y = state.lpos.pos.y - screen_y + half_screen + 1;
+    ul.y = screen_y - half_screen;
 
-    view.start.y = screen_y - half_screen;
-
-    return view;
+    // Finally, adjust the upper left corner for the view state so that it is
+    // appropriately scrolled relative to the cursor.
+    return _get_view_state(ul, state);
 }
 #endif
 
@@ -653,11 +699,13 @@ public:
 #endif
 
 #ifndef USE_TILE_LOCAL
-        const auto view = _get_view_state(m_state);
+        const auto view = _get_view_state(view_ul, m_state);
+        view_ul = view.start;
         _draw_title(m_state.lpos.pos, *m_state.feats, m_region.width);
         const ui::Region map_region = {0, 1, m_region.width, m_region.height - 1};
-        _draw_level_map(view.start.x, view.start.y, m_state.travel_mode,
+        _draw_level_map(view_ul.x, view_ul.y, m_state.travel_mode,
                         m_state.on_level, map_region);
+        // the `+ 1` here is for the map overview line
         ui::show_cursor_at(view.cursor.x, view.cursor.y + 1);
 #endif
     }
@@ -756,6 +804,10 @@ public:
                 _recentre_map_target(m_state.lpos.id, m_state.original);
             m_state.lpos.id = level_id::current();
         }
+#ifndef USE_TILE_LOCAL
+        auto s = _init_view_state(m_state);
+        view_ul = s.start;
+#endif
 
         _expose();
     }
@@ -782,6 +834,10 @@ private:
     vector<coord_def> m_features;
     // List of all interesting features for display in the (console) title.
     feature_list m_feats;
+
+#ifndef USE_TILE_LOCAL
+    coord_def view_ul;
+#endif
 
 #ifdef USE_TILE_LOCAL
     bool first_run = true;

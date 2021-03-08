@@ -25,9 +25,9 @@ function init_research(e, disc)
   e.tags('patrolling')
   e.weight('1')
   if you.in_branch("Elf") then
-     e.kmons('0 = deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5')
+     e.kmons('0 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / deep elf archer w:5')
   else
-     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf mage')
+     e.kmons('0 = wizard / ogre mage / naga mage w:8 / deep elf pyromancer w:5 / deep elf zephyrmancer w:5')
   end
   e.kmask('@, = !no_monster_gen')
   e.shuffle('abcdefghi')
@@ -156,7 +156,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_thanatology
-MONS:    macabre mass hd:4 / small abomination
+MONS:    small abomination
 MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \

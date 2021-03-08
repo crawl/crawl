@@ -251,7 +251,7 @@ A tree
 
 “I like trees because they seem more resigned to the way they have to live than
  other things do.”
-    -Willa Cather, _O Pioneers_. 1913.
+    -Willa Cather, _O Pioneers!_. 1913.
 %%%%
 acid dragon scales
 
@@ -393,6 +393,16 @@ Chain Lightning spell
  but that the lightning ain't distributed right.”
     -traditionally attributed to Samuel Clemens
 %%%%
+Charm spell
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+ saying, ‘All these lives will I give you, ay, and many more and greater,
+ through countless ages, if you will fall down and worship me!’ And then a red
+ cloud, like the colour of blood, seemed to close over my eyes, and before I
+ knew what I was doing, I found myself opening the sash and saying to Him,
+ ‘Come in, Lord and Master!’”
+    -Bram Stoker, _Dracula_. 1897.
+%%%%
 Cigotuvi's Monster
 
 “I beheld the wretch — the miserable monster whom I had
@@ -468,16 +478,6 @@ Edmund
  little chance against the tall athletic Edmund, proposed, on the contrary, for
  them to divide the realm as their fathers had done.”
     -Thomas Keightley, _The History of England_. 1839.
-%%%%
-Enslavement spell
-
-“He held up his hand, and they all stopped, and I thought he seemed to be
- saying, ‘All these lives will I give you, ay, and many more and greater,
- through countless ages, if you will fall down and worship me!’ And then a red
- cloud, like the colour of blood, seemed to close over my eyes, and before I
- knew what I was doing, I found myself opening the sash and saying to Him,
- ‘Come in, Lord and Master!’”
-    -Bram Stoker, _Dracula_. 1897.
 %%%%
 Ensorcelled Hibernation spell
 
@@ -807,10 +807,6 @@ amulet of faith
 <amulet>
 %%%%
 amulet of guardian spirit
-
-<amulet>
-%%%%
-amulet of inaccuracy
 
 <amulet>
 %%%%
@@ -2231,10 +2227,6 @@ ring of flight
     -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
      trans. Gregory Rabassa. 1972
 %%%%
-ring of attention
-
-<ring>
-%%%%
 ring of ice
 
 “Some say the world will end in fire;
@@ -2303,16 +2295,6 @@ ring of strength
 
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
-%%%%
-ring of stealth
-
-“No one ever approaches perfection except by stealth, and unknown to
- themselves.”
-    -William Hazlitt
-%%%%
-ring of teleportation
-
-<ring>
 %%%%
 ring of wizardry
 
@@ -2433,10 +2415,6 @@ scroll of noise
 <scroll>
 %%%%
 scroll of random uselessness
-
-<scroll>
-%%%%
-scroll of remove curse
 
 <scroll>
 %%%%
@@ -3116,6 +3094,10 @@ wand of acid
 
 <wand>
 %%%%
+wand of charming
+
+<Charm spell>
+%%%%
 wand of digging
 
 <Passwall spell>
@@ -3123,10 +3105,6 @@ wand of digging
 wand of mindburst
 
 <wand>
-%%%%
-wand of enslavement
-
-<Enslavement spell>
 %%%%
 wand of flame
 

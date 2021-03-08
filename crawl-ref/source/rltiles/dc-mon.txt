@@ -446,6 +446,7 @@ toenail_golem MONS_TOENAIL_GOLEM
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
+animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
@@ -764,7 +765,7 @@ sonja MONS_SONJA
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
-big_kobold MONS_BIG_KOBOLD
+kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
@@ -776,6 +777,7 @@ revenant MONS_REVENANT
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
+dread_lich MONS_DREAD_LICH
 halazid_warlock MONS_HALAZID_WARLOCK
 mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
@@ -921,7 +923,8 @@ fannar MONS_FANNAR
 elf MONS_ELF
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
 deep_elf_archer MONS_DEEP_ELF_ARCHER
-deep_elf_mage MONS_DEEP_ELF_MAGE
+deep_elf_zephyrmancer MONS_DEEP_ELF_AIR_MAGE
+deep_elf_pyromancer MONS_DEEP_ELF_FIRE_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
 deep_elf_death_mage MONS_DEEP_ELF_DEATH_MAGE
 deep_elf_demonologist MONS_DEEP_ELF_DEMONOLOGIST
@@ -1078,8 +1081,6 @@ curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
 %rim 1
-crawling_corpse MONS_CRAWLING_CORPSE
-macabre_mass MONS_MACABRE_MASS
 %sdir mon/unique
 murray MONS_MURRAY
 

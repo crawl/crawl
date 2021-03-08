@@ -18,11 +18,6 @@ amulet of guardian spirit
 An amulet containing a protective spirit which will cause any damage taken to
 be divided between the wearer's reserves of health and magic.
 %%%%
-amulet of inaccuracy
-
-An amulet that makes its wearer less accurate in melee combat and when
-targeting monsters via ranged attacks or spells.
-%%%%
 amulet of magic regeneration
 
 An amulet that substantially increases the wearer's normal rate of magic
@@ -554,8 +549,7 @@ A short club with a metal head.
 %%%%
 manual
 
-A valuable book which allows one to practise a certain skill more efficiently
-when carried.
+A valuable book which allows one to learn a certain skill faster.
 %%%%
 morningstar
 
@@ -757,10 +751,6 @@ ring of resist corrosion
 
 A ring that provides partial protection from all sources of acid and corrosion.
 %%%%
-ring of attention
-
-A ring that makes the player less stealthy.
-%%%%
 ring of magical power
 
 A ring that increases its wearer's reserves of magical power.
@@ -801,19 +791,10 @@ ring of slaying
 A ring that increases or decreases the wearer's effectiveness with ranged
 weapons and melee attacks, depending on its degree of enchantment.
 %%%%
-ring of stealth
-
-A ring that allows its wearer to move quietly, making them more stealthy.
-%%%%
 ring of strength
 
 A ring that increases or decreases the physical strength of its wearer,
 depending on its degree of enchantment.
-%%%%
-ring of teleportation
-
-A ring that occasionally exerts its power to teleport its wearer next to
-monsters.
 %%%%
 ring of wizardry
 
@@ -924,10 +905,6 @@ A prank scroll that creates a loud noise when read.
 scroll of random uselessness
 
 A scroll with no apparent practical use.
-%%%%
-scroll of remove curse
-
-A scroll that removes any curses from the reader's equipped items.
 %%%%
 scroll of silence
 
@@ -1111,13 +1088,14 @@ wand of acid
 
 A magical device which throws bolts of corrosive acid.
 %%%%
+wand of charming
+
+A magical device which causes a creature to become fiercely, but briefly,
+loyal to the user.
+%%%%
 wand of digging
 
 A magical device which drills tunnels through unworked rock.
-%%%%
-wand of enslavement
-
-A magical device which causes slavish obedience in a creature.
 %%%%
 wand of flame
 
@@ -1147,7 +1125,9 @@ form. It is especially effective against shape-changing creatures.
 %%%%
 wand of random effects
 
-A magical device which can produce a variety of effects.
+A magical device which can produce a variety of enchanting effects. Its target
+is randomly afflicted with one of the following: haste, invisibility, might,
+corona, slow, paralyse, confuse, malmutate, petrify, or sleep.
 %%%%
 war axe
 

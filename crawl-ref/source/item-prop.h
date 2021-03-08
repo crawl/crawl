@@ -53,11 +53,7 @@ extern const set<pair<object_class_type, int> > removed_items;
 bool item_type_removed(object_class_type base, int subtype);
 
 // cursed:
-bool item_known_cursed(const item_def &item) PURE;
 bool item_is_cursable(const item_def &item);
-bool curse_an_item();
-void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool check_bondage = true);
 inline constexpr bool item_type_has_curses(object_class_type base_type)
 {
         return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
@@ -243,6 +239,12 @@ void seen_item(const item_def &item);
 static inline bool is_weapon(const item_def &item)
 {
     return item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES;
+}
+
+inline constexpr bool item_type_is_equipment(object_class_type base_type)
+{
+        return base_type == OBJ_WEAPONS || base_type == OBJ_ARMOUR
+               || base_type == OBJ_JEWELLERY || base_type == OBJ_STAVES;
 }
 
 void remove_whitespace(string &str);

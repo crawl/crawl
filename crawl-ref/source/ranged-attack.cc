@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
@@ -355,8 +356,7 @@ int ranged_attack::calc_base_unarmed_damage()
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_hit_dice() * hd_mult / 6;
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)

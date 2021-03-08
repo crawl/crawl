@@ -1250,7 +1250,8 @@ static void _redraw_title()
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
-        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+        if (you.char_class == JOB_MONK
+            && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
         {
             string godpiety = "**....";
@@ -2300,7 +2301,7 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
         entry.cprintf("Lives:  ");
@@ -2573,11 +2574,6 @@ string mutation_overview()
             mutations.push_back(
                 _annotate_form_based(str, form_changed_physiology()));
         }
-        else if (you.species == SP_MINOTAUR)
-        {
-            mutations.push_back(
-                _annotate_form_based(str, !form_keeps_mutations()));
-        }
         else
             mutations.push_back(str);
     }
@@ -2589,10 +2585,14 @@ string mutation_overview()
         mutations.emplace_back("unfitting armour");
     }
 
-    if (you.species == SP_OCTOPODE)
+    if (species_can_swim(you.species))
     {
         mutations.push_back(_annotate_form_based("amphibious",
-                                                 !form_likes_water()));
+                                            !form_likes_water()));
+    }
+
+    if (you.species == SP_OCTOPODE)
+    {
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));

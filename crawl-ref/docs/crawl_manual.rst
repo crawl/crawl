@@ -504,8 +504,9 @@ area (diffusing Zot's attention once more) or to leave the area entirely.
 
 The Abyss is beyond Zot's comprehension, and adventurers there are safe from
 it (albeit subject to many other hazards). The Hells, along with their
-Vestibule, are a single area as far as Zot is concerned. Adventurers who hold
-the Orb of Zot are forever immune to Zot's power.
+Vestibule, are a single area as far as Zot is concerned. Rumours claim there
+are ways to escape Zot's pursuit forever, but what magics could be mighty
+enough to forestall such an implacable entity?
 
 Seeded play
 ========================================
@@ -760,10 +761,6 @@ the top of the inventory screen.
 You can use the adjust command (the '=' key) to change the letters to which your
 possessions are assigned. This command can be used to change spell or ability
 letters, too.
-
-Some items can be sticky-cursed, in which case they weld themselves to your body
-when you use them. If you are lucky, you might find magic scrolls which can rid
-you of these curses.
 
 Items like scrolls, potions, and some other types each have a characteristic,
 like a label or a colour, which will let you tell them apart on the basis of
@@ -1788,7 +1785,7 @@ Vampires (Vp)
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but
-  have excellent attributes (Str, Int, Dex) and are extremely robust; they can
+  have excellent attributes (Str, Int, Dex) and are extremely robust. They can
   also draw on great supplies of magical energy. On the downside, they advance
   more slowly in experience than any other race, gain skills slightly less
   quickly than Humans and, due to their status, cannot worship the various gods
@@ -1823,7 +1820,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Centaurs, their body shape also prevents them from gaining full protection
+  Palentongas, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -1858,8 +1855,8 @@ Felids (Fe)
 
   Their agility and stealth are legendary, as is their ability to get to hard to
   reach places. They move faster than most races, but don't run as fast as
-  Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
-  with many forms of magic, though less so with raw elemental magic.
+  Spriggans. Felids advance in levels very slowly. They are skilled with many
+  forms of magic, though less so with raw elemental magic.
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
@@ -1884,8 +1881,7 @@ Mummies (Mu)
   levels, they become increasingly in touch with the powers of death, but cannot
   use some types of necromancy which only affect living creatures. The side
   effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also do not need
-  to eat or drink and, in any case, are incapable of doing so.
+  However, their desiccated bodies are highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -1944,7 +1940,7 @@ definitely easier than others, at least to begin with. The best backgrounds for
 a beginner are probably Gladiators and Berserkers; if you really want to play a
 magician, try a Conjurer or a Hedge Wizard. However, not all species are equally
 well suited for all backgrounds. After you have selected a species, the background
-selection menu while show backgrounds generally considered to be more accessible
+selection menu will show backgrounds generally considered to be more accessible
 for a species in a brighter colour.
 
 Each background starts out with a different set of skills and items, but from
@@ -2044,14 +2040,13 @@ Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
-  They begin the game with the Book of Changes, some arrows to turn into snakes,
-  and a robe.
+  They begin the game with the Book of Changes and a robe.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, the Book of
-  Spatial Translocations, some dispersal tomahawks, a simple weapon of their
+  Spatial Translocations, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
 Arcane Marksmen
@@ -2196,7 +2191,7 @@ There are a number of individual weapon skills for missile weapons:
   * Crossbows
   * Slings
 
-Throwing is the skill for all things hurled without a launcher: tomahawks,
+Throwing is the skill for all things hurled without a launcher: boomerangs,
 javelins, nets, darts, etc. The other skills refer to various types of missiles
 shot with a launcher. Since stones can be thrown without launchers to some
 effect, these skills crosstrain:
@@ -2893,8 +2888,8 @@ You can use inscriptions to define shortcuts for easy access to items,
 regardless of their actual inventory letter. For example, if an item's
 inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
 the 9, any other digit works as well. And instead of 'w'ield, any other command
-used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire,
-etc. Using "@*9" will make any action command followed by '9' use this item.
+used for handling items can be used: 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
+Using "@*9" will make any action command followed by '9' use this item.
 
 Safety inscriptions
 ========================================
@@ -2940,9 +2935,6 @@ commands:
 !v
   Prompt before evoking this item.
 
-!Q
-  Prompt before explicitly quivering this item.
-
 =g
   Pick this item up automatically if autopickup is on.
 
@@ -2953,10 +2945,13 @@ commands:
   Include this item in automatic quivering.
 
 =F
-  Exclude this item when cycling ammunition.
+  Exclude this item when cycling quiver actions.
 
 \+F
-  Include this item when cycling ammunition.
+  Include this item when cycling quiver actions.
+
+!Q
+  Prompt before explicitly quivering this item. Entails =F,=f.
 
 =R
   Do not offer to swap out this ring if another one can be removed instead.

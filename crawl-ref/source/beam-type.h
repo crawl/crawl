@@ -44,7 +44,7 @@ enum beam_type                  // bolt::flavour
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_MALMUTATE,
-    BEAM_ENSLAVE,
+    BEAM_CHARM,
     BEAM_BANISH,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
@@ -75,7 +75,8 @@ enum beam_type                  // bolt::flavour
     BEAM_INFESTATION,
     BEAM_AGONY,
     BEAM_VILE_CLUTCH,
-    BEAM_LAST_ENCHANTMENT = BEAM_VILE_CLUTCH,
+    BEAM_VAMPIRIC_DRAINING,
+    BEAM_LAST_ENCHANTMENT = BEAM_VAMPIRIC_DRAINING,
 
     BEAM_MEPHITIC,
     BEAM_AIR,

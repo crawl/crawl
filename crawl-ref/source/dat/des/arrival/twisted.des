@@ -421,7 +421,7 @@ SUBST:   t : U...., 23 = 0
 : else
 SUBST:   D = V
 KMONS:   1 : gnoll / orc / 0 w:20
-KMONS:   2 : big kobold / ogre / 0 w:60
+KMONS:   2 : ogre / 0 w:70
 KMONS:   3 : troll / 0 w:70
 SUBST:   t = T
 : end

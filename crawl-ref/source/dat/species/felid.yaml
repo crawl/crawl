@@ -45,6 +45,9 @@ levelup_stats:
   - dex
 mutations:
   1:
+    MUT_NO_GRASPING: 1
+    MUT_NO_ARMOUR: 1
+    MUT_MULTILIVED: 1
     MUT_FAST: 1
     MUT_FANGS: 3
     MUT_SHAGGY_FUR: 1
@@ -55,13 +58,6 @@ mutations:
     MUT_SHAGGY_FUR: 1
   12:
     MUT_SHAGGY_FUR: 1
-fake_mutations:
-  - long: You cannot wear armour.
-    short: no armour
-  - long: You are incapable of wielding weapons or throwing items.
-    short: no weapons or thrown items
-  - long: Your paws allow you to move quietly. (Stealth)
-    short: stealth
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_ENCHANTER

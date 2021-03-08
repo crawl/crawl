@@ -132,6 +132,51 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
     return spret::success;
 }
 
+spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
+{
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (armour == nullptr)
+    {
+        // I don't think we can ever reach this line, but let's be safe.
+        mpr("You aren't wearing any armour!");
+        return spret::abort;
+    }
+
+    int mitm_slot = get_mitm_slot(10);
+    if (mitm_slot == NON_ITEM)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
+                             SPELL_ANIMATE_ARMOUR);
+    mg.hd = 15 + div_rand_round(pow, 10);
+    monster* spirit = create_monster(mg);
+    if (!spirit)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    item_def &fake_armour = env.item[mitm_slot];
+    fake_armour.clear();
+    fake_armour.base_type = OBJ_ARMOUR;
+    fake_armour.sub_type = armour->sub_type;
+    fake_armour.quantity = 1;
+    fake_armour.rnd = armour->rnd;
+    fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
+    item_set_appearance(fake_armour);
+
+    spirit->pickup_item(fake_armour, false, true);
+
+    return spret::success;
+}
+
+
+
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -160,12 +205,7 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     if (random2(pow) > 60 && coinflip())
         type = MONS_SPHINX;
     else
-        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
-
-    int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
-                                      + x_chance_in_y(pow - 75, 100)
-                                  : 1);
-    const bool plural = (num > 1);
+        type = coinflip() ? MONS_MANTICORE : MONS_LINDWURM;
 
     mgen_data mdata = _summon_data(*caster, type, 4, god,
                                    SPELL_MONSTROUS_MENAGERIE);
@@ -173,41 +213,20 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
     if (caster->is_player())
         mdata.hd = get_monster_data(type)->HD + div_rand_round(pow - 50, 25);
 
-    bool seen = false;
-    bool first = true;
-    int mid = -1;
-    while (num-- > 0)
+    monster* beast = create_monster(mdata);
+    if (!beast)
     {
-        if (monster* beast = create_monster(mdata))
-        {
-            if (you.can_see(*beast))
-                seen = true;
-
-            // Link the harpies together as one entity as far as the summon
-            // cap is concerned.
-            if (type == MONS_HARPY)
-            {
-                if (mid == -1)
-                    mid = beast->mid;
-
-                beast->props["summon_id"].get_int() = mid;
-            }
-
-            // Handle cap only for the first of the batch being summoned
-            if (first)
-                summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
-
-            first = false;
-        }
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
     }
 
-    if (seen)
+    summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
+
+    if (you.can_see(*beast))
     {
-        mprf("%s %s %s %s!", caster->name(DESC_THE).c_str(),
-                             caster->conj_verb("summon").c_str(),
-                             plural ? "some" : "a",
-                             plural ? pluralise_monster(mons_type_name(type, DESC_PLAIN)).c_str()
-                                    : mons_type_name(type, DESC_PLAIN).c_str());
+        mprf("%s %s %s!", caster->name(DESC_THE).c_str(),
+                          caster->conj_verb("summon").c_str(),
+                          mons_type_name(type, DESC_A).c_str());
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1086,9 +1105,6 @@ coord_def find_gateway_location(actor* caster)
 {
     vector<coord_def> points;
 
-    bool xray = you.xray_vision;
-    you.xray_vision = false;
-
     for (coord_def delta : Compass)
     {
         coord_def test = coord_def(-1, -1);
@@ -1107,8 +1123,6 @@ coord_def find_gateway_location(actor* caster)
             points.push_back(test);
         }
     }
-
-    you.xray_vision = xray;
 
     if (points.empty())
         return coord_def(0, 0);
@@ -1797,173 +1811,9 @@ spret cast_simulacrum(int pow, god_type god, bool fail)
     return spret::success;
 }
 
-// Return a definite/indefinite article for (number) things.
-static const char *_count_article(int number, bool definite)
-{
-    if (number == 0)
-        return "No";
-    else if (definite)
-        return "The";
-    else if (number == 1)
-        return "A";
-    else
-        return "Some";
-}
-
-bool twisted_resurrection(actor *caster, int pow, beh_type beha,
-                          unsigned short foe, god_type god, bool actual)
-{
-    int num_orcs = 0;
-    int num_holy = 0;
-
-    // In a tracer (actual == false), num_crawlies counts the number of
-    // affected corpses. When actual == true, these count the number of
-    // crawling corpses, macabre masses, and lost corpses, respectively.
-    int num_crawlies = 0;
-    int num_masses = 0;
-    int num_lost = 0;
-
-    // ...and the number of each that were seen by the player.
-    int seen_crawlies = 0;
-    int seen_masses = 0;
-    int seen_lost = 0;
-    int seen_lost_piles = 0;
-
-    for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        int num_corpses = 0;
-        int total_max_chunks = 0;
-        const bool visible = you.see_cell(*ri);
-
-        // Count up number/size of corpses at this location.
-        for (stack_iterator si(*ri); si; ++si)
-        {
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (!actual)
-                {
-                    ++num_crawlies;
-                    continue;
-                }
-
-                if (mons_genus(si->mon_type) == MONS_ORC)
-                    num_orcs++;
-                if (mons_class_holiness(si->mon_type) & MH_HOLY)
-                    num_holy++;
-
-                total_max_chunks += max_corpse_chunks(si->mon_type);
-
-                ++num_corpses;
-                item_was_destroyed(*si);
-                destroy_item(si->index());
-            }
-        }
-
-        if (!actual || num_corpses == 0)
-            continue;
-
-        // 3 HD per 2 max chunks at 500 power.
-        int hd = div_rand_round((pow + 100) * total_max_chunks, 400);
-
-        if (hd <= 0)
-        {
-            num_lost += num_corpses;
-            if (visible)
-            {
-                seen_lost += num_corpses;
-                seen_lost_piles++;
-            }
-            continue;
-        }
-
-        // Getting a huge abomination shouldn't be too easy.
-        if (hd > 15)
-            hd = 15 + (hd - 15) / 2;
-
-        hd = min(hd, 30);
-
-        monster_type montype;
-
-        if (hd >= 11 && num_corpses > 2)
-            montype = MONS_ABOMINATION_LARGE;
-        else if (hd >= 6 && num_corpses > 1)
-            montype = MONS_ABOMINATION_SMALL;
-        else if (num_corpses > 1)
-            montype = MONS_MACABRE_MASS;
-        else
-            montype = MONS_CRAWLING_CORPSE;
-
-        mgen_data mg(montype, beha, *ri, foe, MG_FORCE_BEH | MG_AUTOFOE);
-        mg.set_summoned(caster, 0, 0, god);
-        if (monster *mons = create_monster(mg))
-        {
-            // Set hit dice, AC, and HP.
-            init_abomination(*mons, hd);
-
-            if (num_corpses > 1)
-            {
-                ++num_masses;
-                if (visible)
-                    ++seen_masses;
-            }
-            else
-            {
-                ++num_crawlies;
-                if (visible)
-                    ++seen_crawlies;
-            }
-        }
-        else
-        {
-            num_lost += num_corpses;
-            if (visible)
-            {
-                seen_lost += num_corpses;
-                seen_lost_piles++;
-            }
-        }
-    }
-
-    // Monsters shouldn't bother casting Twisted Res for just a single corpse.
-    if (!actual)
-        return num_crawlies >= (caster->is_player() ? 1 : 2);
-
-    if (num_lost + num_crawlies + num_masses == 0)
-        return false;
-
-    if (seen_lost)
-    {
-        mprf("%s %s into %s!",
-             _count_article(seen_lost, seen_crawlies + seen_masses == 0),
-             seen_lost == 1 ? "corpse collapses" : "corpses collapse",
-             seen_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
-    }
-
-    if (seen_crawlies > 0)
-    {
-        mprf("%s %s to drag %s along the ground!",
-             _count_article(seen_crawlies, seen_lost + seen_masses == 0),
-             seen_crawlies == 1 ? "corpse begins" : "corpses begin",
-             seen_crawlies == 1 ? "itself" : "themselves");
-    }
-
-    if (seen_masses > 0)
-    {
-        mprf("%s corpses meld into %s of writhing flesh!",
-             _count_article(2, seen_crawlies + seen_lost == 0),
-             seen_masses == 1 ? "an agglomeration" : "agglomerations");
-    }
-
-    if (num_orcs > 0 && caster->is_player())
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
-
-    return true;
-}
-
 monster_type pick_random_wraith()
 {
-    return random_choose_weighted(2, MONS_PHANTOM,
-                                  1, MONS_SHADOW_WRAITH,
+    return random_choose_weighted(1, MONS_SHADOW_WRAITH,
                                   5, MONS_WRAITH,
                                   2, MONS_FREEZING_WRAITH,
                                   2, MONS_PHANTASMAL_WARRIOR);
@@ -2642,62 +2492,6 @@ monster* find_spectral_weapon(const actor* agent)
         return nullptr;
 }
 
-bool weapon_can_be_spectral(const item_def *wpn)
-{
-    return wpn && is_weapon(*wpn) && !is_range_weapon(*wpn)
-        && !is_special_unrandom_artefact(*wpn);
-}
-
-// Now used for the spectral ego, so it lacks certain parameters
-void cast_spectral_weapon(actor *agent, int pow, god_type god)
-{
-    ASSERT(agent);
-
-    const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
-    item_def* wpn = agent->weapon();
-
-    // Remove any existing spectral weapons. Only one should be alive at any
-    // given time.
-    monster *old_mons = find_spectral_weapon(agent);
-    if (old_mons)
-        end_spectral_weapon(old_mons, false);
-
-    mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 agent->is_player() ? BEH_FRIENDLY
-                                    : SAME_ATTITUDE(agent->as_monster()),
-                 agent->pos(),
-                 agent->mindex());
-    mg.set_summoned(agent, dur, 0, god);
-    mg.props[TUKIMA_WEAPON] = *wpn;
-    mg.props[TUKIMA_POWER] = pow;
-
-    monster *mons = create_monster(mg);
-    if (!mons)
-        return;
-
-    if (agent->is_player())
-        mpr("You draw out your weapon's spirit!");
-    else
-    {
-        if (you.can_see(*agent) && you.can_see(*mons))
-        {
-            string buf = " draws out ";
-            buf += agent->pronoun(PRONOUN_POSSESSIVE);
-            buf += " weapon's spirit!";
-            simple_monster_message(*agent->as_monster(), buf.c_str());
-        }
-        else if (you.can_see(*mons))
-            simple_monster_message(*mons, " appears!");
-
-        mons->props["band_leader"].get_int() = agent->mid;
-        mons->foe = agent->mindex();
-        mons->target = agent->pos();
-    }
-
-    mons->summoner = agent->mid;
-    agent->props["spectral_weapon"].get_int() = mons->mid;
-}
-
 void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 {
     // Should only happen if you dismiss it in wizard mode, I think
@@ -2722,83 +2516,6 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
     if (!killed)
         monster_die(*mons, KILL_RESET, NON_MONSTER);
-}
-
-bool trigger_spectral_weapon(actor* agent, const actor* target)
-{
-    monster *spectral_weapon = find_spectral_weapon(agent);
-
-    // Don't try to attack with a nonexistent spectral weapon
-    if (!spectral_weapon || !spectral_weapon->alive())
-    {
-        agent->props.erase("spectral_weapon");
-        return false;
-    }
-
-    // Likewise if the target is the spectral weapon itself
-    if (target->as_monster() == spectral_weapon)
-        return false;
-
-    // Clear out any old orders.
-    reset_spectral_weapon(spectral_weapon);
-
-    spectral_weapon->props[SW_TARGET_MID].get_int() = target->mid;
-    spectral_weapon->props[SW_READIED] = true;
-
-    return true;
-}
-
-// Called at the start of each round. Cancels attack order given in the
-// previous round, if the weapon was not able to execute them fully
-// before the next player action
-void reset_spectral_weapon(monster* mons)
-{
-    if (!mons || mons->type != MONS_SPECTRAL_WEAPON)
-        return;
-
-    if (mons->props.exists(SW_TRACKING))
-    {
-        mons->props.erase(SW_TRACKING);
-        mons->props.erase(SW_READIED);
-        mons->props.erase(SW_TARGET_MID);
-
-        return;
-    }
-
-    // If an attack has been readied, begin tracking.
-    if (mons->props.exists(SW_READIED))
-        mons->props[SW_TRACKING] = true;
-    else
-        mons->props.erase(SW_TARGET_MID);
-}
-
-/* Confirms the spectral weapon can and will attack the given defender.
- *
- * Checks the target, and that we haven't attacked yet.
- * Then consumes our ready state, preventing further attacks.
- */
-bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
-{
-    // No longer tracking towards the target.
-    mons->props.erase(SW_TRACKING);
-
-    // Is the defender our target?
-    if (mons->props.exists(SW_TARGET_MID)
-        && (mid_t)mons->props[SW_TARGET_MID].get_int() == defender->mid
-        && mons->props.exists(SW_READIED))
-    {
-        // Consume our ready state and attack
-        mons->props.erase(SW_READIED);
-        return true;
-    }
-
-    // Expend the weapon's energy, as it can't attack
-    int energy = mons->action_energy(EUT_ATTACK);
-    ASSERT(energy > 0);
-
-    mons->speed_increment -= energy;
-
-    return false;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
@@ -2856,6 +2573,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
     { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
     { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
+    { SPELL_ANIMATE_ARMOUR,       { 1, 2 } },
     // Monster spells
     { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
     { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },
@@ -2885,6 +2603,8 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
     { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
     { SPELL_SUMMON_DEMON,               { 3, 2 } },
+    { SPELL_SUMMON_TZITZIMITL,          { 3, 1 } },
+    { SPELL_SUMMON_HELL_SENTINEL,          { 3, 1 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -3243,7 +2963,25 @@ spret fedhas_grow_oklob(bool fail)
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
+    bool see_space = false;
+    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+            continue;
+        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+            continue;
+        see_space = true;
+        break;
+    }
+
+    if (agent.is_player() && !see_space)
+    {
+        mpr("There is not enough space to conjure foxfire!");
+        return spret::abort;
+    }
+
     fail_check();
+
     int created = 0;
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)

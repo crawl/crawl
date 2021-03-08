@@ -17,6 +17,7 @@
 #include "message.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "movement.h" // passwall
 #include "place.h"
 #include "religion.h"
 #include "spl-util.h"
@@ -380,6 +381,10 @@ bool passwall_path::check_moveto() const
 
 spret cast_passwall(const coord_def& c, int pow, bool fail)
 {
+    // prompt player to end position-based ice spells
+    if (cancel_harmful_move(false))
+        return spret::abort;
+
     coord_def delta = c - you.pos();
     passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
     string fail_msg;

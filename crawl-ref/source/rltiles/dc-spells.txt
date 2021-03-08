@@ -40,7 +40,7 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 discord DISCORD
-enslavement ENSLAVEMENT
+charming CHARMING
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
@@ -127,6 +127,7 @@ summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_guardian_golem SUMMON_GUARDIAN_GOLEM
+animate_armour ANIMATE_ARMOUR
 summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
@@ -142,6 +143,7 @@ passage_of_golubria PASSAGE_OF_GOLUBRIA
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 gravitas GRAVITAS
+manifold_assault MANIFOLD_ASSAULT
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
@@ -215,7 +217,6 @@ summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
 teleport TELEPORT
-twisted_resurrection TWISTED_RESURRECTION
 wall_of_brambles WALL_OF_BRAMBLES
 water_elementals WATER_ELEMENTALS
 %back none

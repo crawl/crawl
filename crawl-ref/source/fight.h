@@ -53,7 +53,15 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0,
                            wu_jian_attack_type wu_jian_attack
-                               = WU_JIAN_ATTACK_NONE);
+                               = WU_JIAN_ATTACK_NONE,
+                           bool is_projected = false);
+
+class attack;
+int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
+int mon_to_hit_base(int hd, bool skilled, bool ranged);
+int mon_to_hit_pct(int to_land, int ev);
+int mon_shield_bypass(int hd);
+int mon_beat_sh_pct(int shield_bypass, int shield_class);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
@@ -76,7 +84,6 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-class attack;
-int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
-
 bool otr_stop_summoning_prompt(string verb = "summon");
+
+bool can_reach_attack_between(coord_def source, coord_def target);

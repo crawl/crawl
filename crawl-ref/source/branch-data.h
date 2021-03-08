@@ -71,7 +71,7 @@ const Branch branches[NUM_BRANCHES] =
       "Swamp", "the Swamp", "Swamp",
       nullptr,
       BROWN, BROWN,
-      'S', { RUNE_SWAMP }, branch_noise::normal },
+      'S', { RUNE_SWAMP }, branch_noise::loud },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 2, 4, 4, 15,
       brflag::dangerous_end,

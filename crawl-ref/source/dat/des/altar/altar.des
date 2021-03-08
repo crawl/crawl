@@ -216,7 +216,7 @@ ENDMAP
 # to Beogh. Only one of these can come up.
 NAME:  david_defended_altar_elf
 DEPTH: D:7-14, Elf
-MONS:  patrolling deep elf mage / w:30 nothing
+MONS:  patrolling deep elf pyromancer / w:30 nothing
 TAGS:  uniq_defended_altar transparent
 MAP
 ccccc...
@@ -410,6 +410,7 @@ TAGS:     transparent no_monster_gen
 # Lugonu cares not about moderate vault placement
 DEPTH:    D:3-, Vaults, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
             Spider, Snake, Swamp, Zot:1-4
+WEIGHT:   2
 : if crawl.coinflip() then
 SUBST:    ' = ccc'.
 : else

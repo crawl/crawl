@@ -226,15 +226,12 @@ static void _zap_los_monsters()
         dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true).c_str());
 
-        // If a unique gets zapped, let it generate elsewhere
         if (mons_is_or_was_unique(*mon))
         {
-            you.unique_creatures.set(mon->type, false);
             if (mons_is_elven_twin(mon))
             {
                 if (monster* sibling = mons_find_elven_twin_of(mon))
                 {
-                    you.unique_creatures.set(sibling->type, false);
                     sibling->flags |=MF_HARD_RESET;
                     monster_die(*sibling, KILL_DISMISSED, NON_MONSTER, true, true);
                 }
@@ -354,9 +351,8 @@ static void _post_init(bool newc)
     new_level(!newc);
     update_turn_count();
     update_vision_range();
-    you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
-    ash_check_bondage(false);
+    ash_check_bondage();
 
     trackers_init_new_level();
 

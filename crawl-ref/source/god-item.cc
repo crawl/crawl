@@ -109,8 +109,6 @@ bool is_potentially_evil_item(const item_def& item, bool calc_unid)
             return true;
         }
         break;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_RANDOM_EFFECTS;
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_CONDENSER_VANE;
     default:
@@ -215,7 +213,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH);
+        retval = (item.sub_type == WAND_POLYMORPH
+                  || item.sub_type == WAND_RANDOM_EFFECTS);
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION
@@ -269,12 +268,8 @@ static bool _is_potentially_hasty_item(const item_def& item)
 
 bool is_hasty_item(const item_def& item, bool calc_unid)
 {
-    bool retval = false;
-
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (item.sub_type == WPN_QUICK_BLADE)
-            return true;
         if (calc_unid || item_brand_known(item))
             return get_weapon_brand(item) == SPWPN_SPEED;
     }
@@ -285,24 +280,18 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        {
-        const int item_brand = get_armour_ego_type(item);
-        retval = (item_brand == SPARM_RUNNING
-                  || get_armour_rampaging(item, true));
-        }
-        break;
+        return get_armour_rampaging(item, true)
+               || is_unrandom_artefact(item, UNRAND_LIGHTNING_SCALES);
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_HASTE
-                  || item.sub_type == POT_BERSERK_RAGE);
-        break;
+        return item.sub_type == POT_HASTE
+               || item.sub_type == POT_BERSERK_RAGE;
     case OBJ_BOOKS:
-        retval = _is_book_type(item, is_hasty_spell);
-        break;
+        return _is_book_type(item, is_hasty_spell);
     default:
         break;
     }
 
-    return retval;
+    return false;
 }
 
 bool is_wizardly_item(const item_def& item, bool calc_unid)
@@ -433,12 +422,6 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
                 return false;
             break;
 
-        case GOD_SHINING_ONE:
-            // Crusader god: holiness, honourable combat.
-            if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
-                return false;
-            break;
-
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
             // The magic gods: no weapons, no preventing spellcasting.
@@ -463,12 +446,6 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
         case GOD_CHEIBRIADOS:
             // Slow god: no quick blades, no berserking.
             if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
-                return false;
-            break;
-
-        case GOD_DITHMENOS:
-            // Shadow god: no reducing stealth.
-            if (item.is_type(OBJ_JEWELLERY, RING_ATTENTION))
                 return false;
             break;
 

@@ -540,18 +540,15 @@ Cure Bad Mutation ability
 Removes a randomly selected bad mutation.
 %%%%
 # Ashenzari
-Scrying ability
+Curse Item ability
 
-Provides astral sight, allowing you to see through walls.
+Curses a chosen equipped item, binding it to the wearer until the curse
+and the item both are broken. Cursed items can no longer be enchanted or
+modified.
 %%%%
-Transfer Knowledge ability
+Shatter The Chains ability
 
-Sacrifices part of one of your skills to improve another. The transfer will
-take place gradually as you gain experience.
-%%%%
-End Transfer Knowledge ability
-
-Aborts an ongoing skill transfer.
+Destroys a chosen cursed equipped item, relieving the wearer of the curse.
 %%%%
 # Dithmenos
 Shadow Step ability
@@ -713,8 +710,7 @@ decreased by one. This will likely cause you to lose ranks in trained skills.
 %%%%
 Sacrifice an Eye ability
 
-Sacrifices an eye, causing you to have a much harder time hitting targets, as
-if wearing an amulet of inaccuracy.
+Sacrifices an eye, causing you to have a much harder time hitting targets.
 %%%%
 Sacrifice Resistance ability
 
@@ -771,10 +767,6 @@ Donate Gold ability
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
 %%%%
-Curse Item ability
-
-Curses a chosen item, at the cost of a scroll of remove curse.
-%%%%
 Recall Ancestor ability
 
 Recalls your ancestor from anywhere in the dungeon to your immediate
@@ -825,7 +817,7 @@ the landing spot and taking two turns to complete the motion.
 Serpent's Lash ability
 
 Allows you to move at supernatural speeds, making any normal movements up to a
-distance of two tiles instantly. Martial attacks performed under the effect of
+distance of two tiles instant. Martial attacks performed under the effect of
 Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability

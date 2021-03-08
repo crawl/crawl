@@ -10,15 +10,6 @@ all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
 and foresight, but be warned: to Ashenzari, power and blessing and curse are
 all the same thing.
 %%%%
-Ashenzari extra
-
-Ashenzari provides worshippers with a bounty of knowledge about their
-surroundings. Followers are able to glimpse the shape of the dungeon around
-them, and can sense portals to other realms. They can detect nearby items and
-traps, and can sense monsters and gain an indication of how dangerous they
-are. While equipped with cursed equipment, they can also identify on sight the
-properties of other items of that type that are found.
-%%%%
 Beogh
 
 Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
@@ -226,13 +217,11 @@ while keeping some piety.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts followers to garb themselves with curses, and appreciates
-exploration while using cursed armour, jewellery or weapons. Followers will
-soon be granted the ability to scry through walls. Ashenzari will passively
-grant followers increased skills depending on how cursed they are by equipment
-associated with those skills, and will reveal the invisible and grant clarity
-of mind. The truly devout will gain the ability to transfer a portion of their
-knowledge from one skill to another.
+Ashenzari exhorts followers to garb themselves with curses, periodically
+offered to worshippers as they explore. Ashenzari will passively grant
+followers increased skills associated to these curses, and will reveal the
+invisible and grant clarity of mind. The truly devout will gain a fragment of
+Ashenzari's astral sight, letting them see through walls.
 %%%%
 Beogh powers
 

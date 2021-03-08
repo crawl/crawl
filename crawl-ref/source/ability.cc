@@ -94,7 +94,7 @@ enum class abflag
     instant             = 0x00000020, // doesn't take time to use
     conf_ok             = 0x00000040, // can use even if confused
     variable_mp         = 0x00000080, // costs a variable amount of MP
-    remove_curse_scroll = 0x00000100, // Uses ?rc
+    curse               = 0x00000100, // Destroys a cursed item
     max_hp_drain        = 0x00000200, // drains max hit points
     gold                = 0x00000400, // costs gold
     sacrifice           = 0x00000800, // sacrifice (Ru)
@@ -517,13 +517,9 @@ static const ability_def Ability_List[] =
 
     // Ashenzari
     { ABIL_ASHENZARI_CURSE, "Curse Item",
-        0, 0, 0, {fail_basis::invo}, abflag::remove_curse_scroll },
-    { ABIL_ASHENZARI_SCRYING, "Scrying",
-        4, 0, 2, {fail_basis::invo}, abflag::instant },
-    { ABIL_ASHENZARI_TRANSFER_KNOWLEDGE, "Transfer Knowledge",
-        0, 0, 10, {fail_basis::invo}, abflag::none },
-    { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
         0, 0, 0, {fail_basis::invo}, abflag::none },
+    { ABIL_ASHENZARI_UNCURSE, "Shatter the Chains",
+        0, 0, 0, {fail_basis::invo}, abflag::curse },
 
     // Dithmenos
     { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
@@ -747,6 +743,15 @@ static string _nemelex_card_text(ability_type ability)
 
 static const int VAMPIRE_BAT_FORM_STAT_DRAIN = 2;
 
+static string _ashenzari_curse_text()
+{
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+    return "(Boost: "
+           + comma_separated_fn(curses.begin(), curses.end(),
+                                curse_abbr, "/", "/")
+           + ")";
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -768,6 +773,13 @@ const string make_cost_description(ability_type ability)
 
     if (ability == ABIL_REVIVIFY)
         ret += ", Frailty";
+
+    if (ability == ABIL_ASHENZARI_CURSE
+        && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
+    {
+        ret += ", ";
+        ret += _ashenzari_curse_text();
+    }
 
     if (abil.hp_cost)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
@@ -796,8 +808,8 @@ const string make_cost_description(ability_type ability)
         ret += ", Max HP drain";
     }
 
-    if (abil.flags & abflag::remove_curse_scroll)
-        ret += ", Scroll of remove curse";
+    if (abil.flags & abflag::curse)
+        ret += ", Cursed item";
 
     if (abil.flags & abflag::gold)
     {
@@ -888,10 +900,10 @@ static const string _detailed_cost_description(ability_type ability)
             ret << "variable";
     }
 
-    if (abil.flags & abflag::remove_curse_scroll)
+    if (abil.flags & abflag::curse)
     {
         have_cost = true;
-        ret << "\nOne scroll of remove curse";
+        ret << "\nOne cursed item";
     }
 
     if (!have_cost)
@@ -954,7 +966,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.is_lifeless_undead(false)
-            || you.species == SP_FORMICID)
+            || you.stasis())
         {
             return ABIL_NON_ABILITY;
         }
@@ -962,7 +974,7 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -977,7 +989,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -990,12 +1002,6 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         if (you.get_mutation_level(MUT_NO_LOVE))
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        if (you.species == SP_GNOLL)
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1078,6 +1084,22 @@ vector<const char*> get_ability_names()
     return result;
 }
 
+static string _curse_desc()
+{
+    if (!you.props.exists(CURSE_KNOWLEDGE_KEY))
+        return "";
+
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (curses.empty())
+        return "";
+
+    return "\nIf you bind an item with this curse Ashenzari will enhance "
+           "the following skills:\n"
+           + comma_separated_fn(curses.begin(), curses.end(), desc_curse_skills,
+                                ".\n", ".\n") + ".";
+}
+
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 {
     return mut_upgrade_summary(static_cast<mutation_type>(mut_store.get_int()));
@@ -1133,6 +1155,9 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
+
+    if (ability == ABIL_ASHENZARI_CURSE)
+        lookup += _curse_desc();
 
     if (testbits(get_ability_def(ability).flags, abflag::sacrifice))
         lookup += _sacrifice_desc(ability);
@@ -1543,15 +1568,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return can_cast_spells(quiet, true);
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        if (!trainable_skills(true))
-        {
-            if (!quiet)
-                mpr("You have nothing more to learn.");
-            return false;
-        }
-        return true;
 
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
@@ -2157,7 +2173,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             you.attribute[ATTR_PERM_FLIGHT] = 1;
             float_player();
         }
-        if (you.species == SP_TENGU)
+        if (you.has_mutation(MUT_TENGU_FLIGHT))
             mpr("You feel very comfortable in the air.");
         break;
 
@@ -2526,6 +2542,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {
+        // TODO: range check duplicated for UI/messaging purposes in quiver.cc,
+        // _ability_quiver_range_check
         beam.range = min((int)you.current_vision, 5);
 
         if (!spell_direction(*target, beam))
@@ -2688,11 +2706,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         lugonu_bend_space();
         break;
@@ -2729,6 +2751,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_LUGONU_ABYSS_ENTER:
     {
+        if (cancel_harmful_move(false))
+            return spret::abort;
         fail_check();
         // Deflate HP.
         dec_hp(random2avg(you.hp, 2), false);
@@ -2920,60 +2944,19 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_ASHENZARI_CURSE:
     {
         fail_check();
-        auto iter = find_if(begin(you.inv), end(you.inv),
-                [] (const item_def &it) -> bool
-                {
-                    return it.defined()
-                           && it.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE)
-                           && check_warning_inscriptions(it, OPER_DESTROY);
-                });
-        if (iter != end(you.inv))
-        {
-            if (ashenzari_curse_item(iter->quantity))
-                dec_inv_item_quantity(iter - begin(you.inv), 1);
-            else
-                return spret::abort;
-        }
-        else
-        {
-            mpr("You need a scroll of remove curse to do this.");
+        if (!ashenzari_curse_item())
             return spret::abort;
-        }
         break;
     }
 
-    case ABIL_ASHENZARI_SCRYING:
+    case ABIL_ASHENZARI_UNCURSE:
         fail_check();
-        if (you.duration[DUR_SCRYING])
-            mpr("You extend your astral sight.");
-        else
-            mpr("You gain astral sight.");
-        you.duration[DUR_SCRYING] = 100 + random2avg(you.piety * 2, 2);
-        you.xray_vision = true;
-        viewwindow(true);
-        update_screen();
-        break;
-
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        fail_check();
-        if (!ashenzari_transfer_knowledge())
-        {
-            canned_msg(MSG_OK);
+        if (!ashenzari_uncurse_item())
             return spret::abort;
-        }
-        break;
-
-    case ABIL_ASHENZARI_END_TRANSFER:
-        fail_check();
-        if (!ashenzari_end_transfer())
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
         break;
 
     case ABIL_DITHMENOS_SHADOW_STEP:
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move(false))
             return spret::abort;
         fail_check();
         if (!dithmenos_shadow_step()) // TODO dist arg
@@ -3076,7 +3059,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         }
 
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move())
             return spret::abort;
 
         fail_check();
@@ -3122,7 +3105,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_USKAYAW_LINE_PASS:
-        if (_abort_if_stationary())
+        if (_abort_if_stationary() || cancel_harmful_move())
             return spret::abort;
         fail_check();
         if (!uskayaw_line_pass()) // TODO dist arg
@@ -3130,6 +3113,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
+        if (cancel_harmful_move(false))
+            return spret::abort;
         return uskayaw_grand_finale(fail); // TODO dist arg
 
     case ABIL_HEPLIAKLQANA_IDEALISE:
@@ -3395,6 +3380,7 @@ int choose_ability_menu(const vector<talent>& talents)
     return ret;
 }
 
+
 string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
@@ -3456,7 +3442,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
             return false;
         // fallthrough
     case ABIL_DIG:
-        return you.species == SP_FORMICID
+        return you.can_burrow()
                             && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
@@ -3754,6 +3740,8 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
+    case ABIL_ASHENZARI_CURSE:
+    case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
     default:
@@ -3799,6 +3787,13 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         if (any_sacrifices)
             abilities.push_back(ABIL_RU_REJECT_SACRIFICES);
     }
+    if (you_worship(GOD_ASHENZARI))
+    {
+        if (you.props.exists(AVAILABLE_CURSE_KEY))
+            abilities.push_back(ABIL_ASHENZARI_CURSE);
+        if (ignore_piety || you.piety > ASHENZARI_BASE_PIETY )
+            abilities.push_back(ABIL_ASHENZARI_UNCURSE);
+    }
     // XXX: should we check ignore_piety?
     if (you_worship(GOD_HEPLIAKLQANA)
         && piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
@@ -3810,8 +3805,6 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(static_cast<ability_type>(anc_type));
         }
     }
-    if (you.transfer_skill_points > 0)
-        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
     if (silenced(you.pos()) && you_worship(GOD_WU_JIAN) && piety_rank() >= 2)
         abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
 

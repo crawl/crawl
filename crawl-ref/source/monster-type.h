@@ -169,6 +169,7 @@ enum monster_type                      // env.mons[].type
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
+    MONS_ANIMATED_ARMOUR,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -364,7 +365,7 @@ enum monster_type                      // env.mons[].type
     MONS_GNOLL_SERGEANT,
     MONS_BOGGART,
     MONS_KOBOLD,
-    MONS_BIG_KOBOLD,
+    MONS_KOBOLD_BRIGAND,
     MONS_KOBOLD_DEMONOLOGIST,
     MONS_ORC,
     MONS_ORC_WARRIOR,
@@ -392,8 +393,9 @@ enum monster_type                      // env.mons[].type
     MONS_DEEP_ELF_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEEP_ELF_ARCHER,
+    MONS_DEEP_ELF_AIR_MAGE,
 #endif
-    MONS_DEEP_ELF_MAGE,
+    MONS_DEEP_ELF_FIRE_MAGE,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
@@ -664,8 +666,10 @@ enum monster_type                      // env.mons[].type
     MONS_TENTACLED_MONSTROSITY,
     MONS_ABOMINATION_SMALL,
     MONS_ABOMINATION_LARGE,
+#if TAG_MAJOR_VERSION == 34
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
+#endif
 
     // Undead:
 #if TAG_MAJOR_VERSION > 34
@@ -709,6 +713,9 @@ enum monster_type                      // env.mons[].type
     MONS_PHANTASMAL_WARRIOR,
     MONS_LICH,
     MONS_ANCIENT_LICH,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DREAD_LICH,
+#endif
     MONS_DEATH_COB,
     MONS_CURSE_TOE,
     MONS_CURSE_SKULL,
@@ -1085,6 +1092,9 @@ enum monster_type                      // env.mons[].type
     MONS_FENSTRIDER_WITCH,
     MONS_WILL_O_THE_WISP,
     MONS_TEST_BLOB,
+    MONS_DREAD_LICH,
+    MONS_DEEP_ELF_AIR_MAGE,
+    MONS_ANIMATED_ARMOUR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

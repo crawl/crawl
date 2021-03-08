@@ -78,8 +78,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_VAMPIRISM
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
-                 || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSE)))
+                 || is_demonic(item)))
     {
         return false;
     }
@@ -145,10 +144,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_CHEIBRIADOS:
         // Slow god: no speed, no berserking.
-        if (brand == SPWPN_SPEED)
-            return false;
-
-        if (ego == SPARM_RUNNING)
+        if (brand == SPWPN_SPEED || ego == SPARM_RAMPAGING)
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
@@ -367,7 +363,6 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_FLIGHT, { { ARTP_FLY, 1 } } },
     { RING_SEE_INVISIBLE, { { ARTP_SEE_INVISIBLE, 1 } } },
     { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
-    { RING_ATTENTION, { { ARTP_STEALTH, -1 } } },
 
     { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
     { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
@@ -693,7 +688,9 @@ static const artefact_prop_data artp_data[] =
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
       []() { return -(2 + random2(5)); }, 3, 2 },
+#if TAG_MAJOR_VERSION == 34
     { "*Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSE,
+#endif
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, 0, 0 },
     { "MP", ARTP_VAL_ANY, 15,       // ARTP_MAGICAL_POWER,
@@ -976,15 +973,7 @@ static bool _init_artefact_properties(item_def &item)
     _get_randart_properties(item, prop);
 
     for (int i = 0; i < ART_PROPERTIES; i++)
-    {
-        if (i == ARTP_CURSE && prop[i])
-        {
-            do_curse_item(item);
-            continue;
-        }
         rap[i] = static_cast<short>(prop[i]);
-    }
-
 
     return true;
 }
@@ -1469,10 +1458,6 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_STEALTH;
         break;
 
-    case RING_TELEPORTATION:
-        provides = ARTP_CAUSE_TELEPORTATION;
-        break;
-
     case RING_EVASION:
         provides = ARTP_EVASION;
         break;
@@ -1503,10 +1488,6 @@ static bool _randart_is_redundant(const item_def &item,
 
     case RING_RESIST_CORROSION:
         provides = ARTP_RCORR;
-        break;
-
-    case AMU_INACCURACY:
-        provides = ARTP_SLAYING;
         break;
 
     case AMU_REGENERATION:
@@ -1547,10 +1528,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_ATTENTION:
-        conflicts = ARTP_STEALTH;
-        break;
-
     case RING_FIRE:
     case RING_ICE:
     case RING_WIZARDRY:
@@ -1560,13 +1537,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     case RING_RESIST_CORROSION:
         conflicts = ARTP_CORRODE;
-        break;
-
-    case RING_TELEPORTATION:
-#if TAG_MAJOR_VERSION == 34
-    case RING_TELEPORT_CONTROL:
-#endif
-        conflicts = ARTP_PREVENT_TELEPORTATION;
         break;
     }
 
@@ -1691,6 +1661,61 @@ bool make_item_randart(item_def &item, bool force_mundane)
     return true;
 }
 
+static string _ashenzari_artefact_name(item_def &item)
+{
+    const int old_orig = item.orig_monnum;
+
+    item.orig_monnum = -GOD_ASHENZARI;
+
+    int tries = 100;
+    string name;
+    do
+    {
+        name = _artefact_name_lookup(item, "Ashenzari");
+    }
+    while (--tries > 0 && strwidth(name) > 25);
+
+    item.orig_monnum = old_orig;
+
+    return item_base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
+}
+
+void make_ashenzari_randart(item_def &item)
+{
+    if (item.base_type != OBJ_WEAPONS
+        && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY)
+    {
+        return;
+    }
+
+    // This item already is a randart, just rename
+    if (item.flags & ISFLAG_RANDART)
+    {
+        set_artefact_name(item, _ashenzari_artefact_name(item));
+        return;
+    }
+
+    // Too special, will just be cursed
+    if (item.flags & ISFLAG_UNRANDART)
+        return;
+
+    const int brand = item.brand;
+
+    // Ash randarts get no props
+    _artefact_setup_prop_vectors(item);
+    item.flags |= ISFLAG_RANDART;
+    item.flags |= ISFLAG_KNOW_PROPERTIES;
+
+    if (item.brand != SPWPN_NORMAL)
+        set_artefact_brand(item, brand);
+
+    set_artefact_name(item, _ashenzari_artefact_name(item));
+    item.props[ARTEFACT_APPEAR_KEY].get_string() =
+        make_artefact_name(item, true);
+
+}
+
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;
@@ -1735,7 +1760,7 @@ static void _make_faerie_armour(item_def &item)
 static jewellery_type octoring_types[8] =
 {
     RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
-    RING_RESIST_CORROSION, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_RESIST_CORROSION, RING_FLIGHT, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };
 
@@ -1775,9 +1800,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_CURSE])
-        do_curse_item(item);
-
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
@@ -1788,7 +1810,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
-    else if (unrand_index == UNRAND_WOE && you.species != SP_FELID
+    else if (unrand_index == UNRAND_WOE && !you.has_mutation(MUT_NO_GRASPING)
              && !you.could_wield(item, true, true))
     {
         // always wieldable, always 2-handed

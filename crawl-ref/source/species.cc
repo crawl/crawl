@@ -96,6 +96,53 @@ string species_walking_verb(species_type sp)
 }
 
 /**
+ * Return an adjective or noun for the species' skin.
+ * @param adj whether to provide an adjective (if true), or a noun (if false).
+ * @return a non-empty string. Nouns will be pluralised if they are count nouns.
+ *         Right now, plurality can be determined by `ends_with(noun, "s")`.
+ */
+string species_skin_name(species_type species, bool adj)
+{
+    // Aside from direct uses, some flavor stuff checks the strings
+    // here. TODO: should some of these be species flags a la hair?
+    // Also, some skin mutations should have a way of overriding these perhaps
+    if (species_is_draconian(species) || species == SP_NAGA)
+        return adj ? "scaled" : "scales";
+    else if (species == SP_TENGU)
+        return adj ? "feathered" : "feathers";
+    else if (species == SP_FELID)
+        return adj ? "furry" : "fur";
+    else if (species == SP_MUMMY)
+        return adj ? "bandage-wrapped" : "bandages";
+    else
+        return adj ? "fleshy" : "skin";
+}
+
+string species_arm_name(species_type species)
+{
+    if (species == SP_OCTOPODE)
+        return "tentacle";
+    else if (species == SP_FELID)
+        return "leg";
+    else
+        return "arm";
+}
+
+string species_hand_name(species_type species)
+{
+    // see also player::hand_name
+    if (species_mutation_level(species, MUT_PAWS))
+        return "paw";
+    else if (you.species == SP_OCTOPODE)
+        return "tentacle";
+    else if (species_mutation_level(species, MUT_CLAWS))
+        return "claw"; // overridden for felids by first check
+    else
+        return "hand";
+
+}
+
+/**
  * Where does a given species fall on the Undead Spectrum?
  *
  * @param species   The species in question.
@@ -125,12 +172,29 @@ bool species_can_swim(species_type species)
 bool species_likes_water(species_type species)
 {
     return species_can_swim(species)
-           || get_species_def(species).habitat == HT_AMPHIBIOUS;
+           || get_species_def(species).habitat == HT_AMPHIBIOUS
+           || species_mutation_level(species, MUT_UNBREATHING, 2);
 }
 
 bool species_can_throw_large_rocks(species_type species)
 {
     return species_size(species) >= SIZE_LARGE;
+}
+
+bool species_wears_barding(species_type species)
+{
+    // TODO: dataify?
+    switch (species)
+    {
+        case SP_NAGA:
+        case SP_PALENTONGA:
+#if TAG_MAJOR_VERSION == 34
+        case SP_CENTAUR:
+#endif
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool species_is_elven(species_type species)
@@ -151,6 +215,43 @@ bool species_is_orcish(species_type species)
 bool species_has_hair(species_type species)
 {
     return !bool(get_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));
+}
+
+bool species_has_bones(species_type species)
+{
+    return !(species == SP_OCTOPODE || species == SP_FORMICID);
+}
+
+static const string shout_verbs[] = {"shout", "yell", "scream"};
+static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
+static const string frog_shout_verbs[] = {"croak", "ribbit", "bellow"};
+static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
+
+/**
+ * What verb should be used to describe the species' shouting?
+ * @param sp a species
+ * @param screaminess a loudness level; in range [0,2]
+ * @param directed with this is to be directed at another actor
+ * @return A shouty kind of verb
+ */
+string species_shout_verb(species_type sp, int screaminess, bool directed)
+{
+    screaminess = max(min(screaminess, static_cast<int>(sizeof(shout_verbs) - 1)), 0);
+    switch (sp)
+    {
+    case SP_GNOLL:
+        if (screaminess == 0 && directed && coinflip())
+            return "growl";
+        return dog_shout_verbs[screaminess];
+    case SP_BARACHI:
+        return frog_shout_verbs[screaminess];
+    case SP_FELID:
+        if (screaminess == 0 && directed)
+            return "hiss"; // hiss at, not meow at
+        return felid_shout_verbs[screaminess];
+    default:
+        return shout_verbs[screaminess];
+    }
 }
 
 size_type species_size(species_type species, size_part_type psize)
@@ -279,18 +380,30 @@ ability_type draconian_breath(species_type species)
 
 bool species_is_unbreathing(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum)
-                    { return lum.mut == MUT_UNBREATHING;});
+    return species_mutation_level(species, MUT_UNBREATHING);
 }
 
 bool species_has_claws(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
-                                                     && lum.xp_level == 1; });
+    return species_mutation_level(species, MUT_CLAWS) == 1;
+}
+
+/// Does the species have (real) mutation `mut`? Not for demonspawn.
+/// @return the first xl at which the species gains the mutation, or 0 if it
+///         does not ever gain it.
+int species_mutation_level(species_type species, mutation_type mut, int mut_level)
+{
+    int total = 0;
+    // relies on levels being in order -- I think this is safe?
+    for (const auto& lum : get_species_def(species).level_up_mutations)
+        if (mut == lum.mut)
+        {
+            total += lum.mut_level;
+            if (total >= mut_level)
+                return lum.xp_level;
+        }
+
+    return 0;
 }
 
 void give_basic_mutations(species_type species)
@@ -350,11 +463,21 @@ void species_stat_init(species_type species)
     you.base_stats[STAT_DEX] = get_species_def(species).d;
 }
 
+int species_stat_gain_multiplier(species_type species)
+{
+    // TODO: is this worth dataifying? Currently matters only for
+    // player-stats.cc:attribute_increase
+    return species == SP_DEMIGOD ? 4 : 1;
+}
+
 void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
     if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
-        modify_stat(*random_iterator(sd.level_stats), 1, false);
+    {
+        modify_stat(*random_iterator(sd.level_stats),
+                        species_stat_gain_multiplier(species), false);
+    }
 }
 
 static void _swap_equip(equipment_type a, equipment_type b)

@@ -11,6 +11,7 @@
 #include "ng-restr.h"
 
 #include "jobs.h"
+#include "mutation-type.h"
 #include "newgame.h"
 #include "newgame-def.h"
 #include "size-type.h"
@@ -18,28 +19,22 @@
 
 static bool _banned_combination(job_type job, species_type species)
 {
-    switch (species)
-    {
-    case SP_FELID:
-        if (job == JOB_GLADIATOR
+    if (species_mutation_level(species, MUT_NO_GRASPING)
+        && (job == JOB_GLADIATOR
             || job == JOB_BRIGAND
             || job == JOB_HUNTER
-            || job == JOB_ARCANE_MARKSMAN)
-        {
-            return true;
-        }
-        break;
-    case SP_DEMIGOD:
-        if (job == JOB_BERSERKER
+            || job == JOB_ARCANE_MARKSMAN))
+    {
+        return true;
+    }
+
+    if (species_mutation_level(species, MUT_FORLORN)
+        && (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT
-            || job == JOB_MONK)
-        {
-            return true;
-        }
-        break;
-    default:
-        break;
+            || job == JOB_MONK))
+    {
+        return true;
     }
 
     if (job == JOB_TRANSMUTER && species_undead_type(species) == US_UNDEAD)
@@ -91,7 +86,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     // Some special cases:
 
-    if (ng.species == SP_FELID && wpn != WPN_UNARMED)
+    if (species_mutation_level(ng.species, MUT_NO_GRASPING) && wpn != WPN_UNARMED)
         return CC_BANNED;
 
     // These recommend short blades because they're good at stabbing,
@@ -103,7 +98,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     }
 
     if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR
-        && !(ng.job == JOB_FIGHTER && ng.species == SP_FORMICID))
+        && !(ng.job == JOB_FIGHTER
+             // formicids are allowed to have shield + quarterstaff
+             && species_mutation_level(ng.species, MUT_QUADRUMANOUS)))
     {
         return CC_BANNED;
     }

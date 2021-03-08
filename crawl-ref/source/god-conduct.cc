@@ -342,11 +342,11 @@ static peeve_map divine_peeves[] =
         } },
         { DID_SPELL_PRACTISE, {
             "you train magic skills", true,
-            1, 0, nullptr, " doesn't appreciate your training magic!"
+            1, 0, nullptr, " does not appreciate your training of magic skills!"
         } },
         { DID_WIZARDLY_ITEM, {
             "you use magical staves or pain-branded weapons", true,
-            1, 0, nullptr, " doesn't appreciate your use of wizardly items!"
+            1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -451,7 +451,7 @@ string get_god_dislikes(god_type which_god)
         // Trog forgives Gnolls practising spellcasting since they do it
         // without choice. XXX: Rework the peeve_map to allow checking this.
         if (which_god == GOD_TROG
-            && you.species == SP_GNOLL
+            && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
             && entry.first == DID_SPELL_PRACTISE)
         {
             continue;
@@ -647,6 +647,22 @@ static like_response okawaru_kill(const char* desc)
     };
 }
 
+static const like_response _fedhas_kill_living_response()
+{
+    return
+    {
+        "you kill living beings", false,
+        _piety_bonus_for_holiness(MH_NATURAL), 18, 0,
+        nullptr, [] (int &, int &, const monster* victim)
+        {
+            if (victim && mons_class_can_leave_corpse(mons_species(victim->type)))
+                simple_god_message(" appreciates your contribution to the ecosystem.");
+            else
+                simple_god_message(" accepts your kill.");
+        }
+    };
+}
+
 static const like_response EXPLORE_RESPONSE = {
     "you explore the world", false,
     0, 0, 0, nullptr,
@@ -805,7 +821,7 @@ static like_map divine_likes[] =
     like_map(),
     // GOD_FEDHAS,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_LIVING, _fedhas_kill_living_response() },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
@@ -837,15 +853,16 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
-            "you explore the world (preferably while bound by curses)", false,
-            0, 0, 0, nullptr,
+            nullptr, false, 0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
-                const int level = denom; // also = piety
-                const int base_gain = 8; // base gain per dungeon level
-                // levels: x1, x1.25, x1.5, x1.75, x2
-                piety = base_gain + base_gain * you.bondage_level / 4;
-                denom = level;
+                piety = 0;
+                denom = 1;
+
+                ASSERT(you.props.exists(ASHENZARI_CURSE_PROGRESS_KEY));
+
+                if (one_chance_in(100))
+                    you.props[ASHENZARI_CURSE_PROGRESS_KEY].get_int()++;
             }
         } },
     },
@@ -948,7 +965,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     // Trog forgives Gnolls practising spellcasting since they do it without
     // choice. XXX: Rework the peeve_map to allow checking this.
     if (you_worship(GOD_TROG)
-        && you.species == SP_GNOLL
+        && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && thing_done == DID_SPELL_PRACTISE)
     {
         return;
@@ -1054,6 +1071,8 @@ string get_god_likes(god_type which_god)
     case GOD_ZIN:
         likes.emplace_back("you donate money");
         break;
+    case GOD_ASHENZARI:
+        likes.emplace_back("you bind yourself with curses");
     default:
         break;
     }

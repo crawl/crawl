@@ -1464,13 +1464,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                           mg.props[TUKIMA_POWER].get_int() : 100);
         }
         else
-        {
-            // Spectral weapons are placed at pretty high power.
-            // They shouldn't ever be placed in a normal game.
-            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                       mg.props.exists(TUKIMA_POWER) ?
-                                           mg.props[TUKIMA_POWER].get_int() : 100);
-        }
+            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)));
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
@@ -1795,7 +1789,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
-    { MONS_BIG_KOBOLD,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
+    { MONS_KOBOLD_BRIGAND,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
     { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
@@ -2136,14 +2130,16 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
-    { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_MAGE, 92},
+    { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
+                                  {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
                                   {MONS_DEEP_ELF_ARCHER, 24},
                                   {MONS_DEEP_ELF_DEATH_MAGE, 3},
                                   {MONS_DEEP_ELF_DEMONOLOGIST, 2},
                                   {MONS_DEEP_ELF_ANNIHILATOR, 2},
                                   {MONS_DEEP_ELF_SORCERER, 2}}}},
-    { BAND_DEEP_ELF_HIGH_PRIEST, {{{MONS_DEEP_ELF_MAGE, 5},
+    { BAND_DEEP_ELF_HIGH_PRIEST, {{{MONS_DEEP_ELF_AIR_MAGE, 3},
+                                   {MONS_DEEP_ELF_FIRE_MAGE, 3},
                                    {MONS_DEEP_ELF_KNIGHT, 2},
                                    {MONS_DEEP_ELF_ARCHER, 2},
                                    {MONS_DEEP_ELF_DEMONOLOGIST, 1},
@@ -2188,7 +2184,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                  {{MONS_TWO_HEADED_OGRE, 1},
                                   {MONS_OGRE, 2}}}},
     { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
-                                  {MONS_BIG_KOBOLD, 2},
+                                  {MONS_KOBOLD_BRIGAND, 2},
                                   {MONS_KOBOLD_DEMONOLOGIST, 1}}}},
     // Favour tougher naga suited to melee, compared to normal naga bands
     { BAND_GUARDIAN_SERPENT,    {{{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10}},

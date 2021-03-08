@@ -563,7 +563,7 @@ SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
  scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
  potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
- ring of flight w:5 | ring of stealth w:4 | wand of digging w:4
+ ring of flight w:5 | wand of digging w:4
 MAP
   wwwwwwwww
  wwwwwwwwwww
@@ -791,7 +791,7 @@ TAGS:    extra luniq_floating_shops transparent
 DEPTH:   D:4-, Depths, Elf, Snake
 ORIENT:  float
 MONS:    plant / bush w:2
-KFEAT:   B = gadget shop
+KFEAT:   B = book shop
 KFEAT:   C = jewellery shop
 SUBST:   1 : 1.
 SUBST:   1 = 1:9 .:1

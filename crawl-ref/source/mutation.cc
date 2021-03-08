@@ -110,7 +110,6 @@ static vector<mutation_type> removed_mutations =
         MUT_FAST_METABOLISM,
         MUT_FLEXIBLE_WEAK,
         MUT_FOOD_JELLY,
-        MUT_FORLORN,
         MUT_FUMES,
         MUT_HERBIVOROUS,
         MUT_JUMP,
@@ -122,6 +121,7 @@ static vector<mutation_type> removed_mutations =
         MUT_TRAMPLE_RESISTANCE,
         MUT_MUMMY_RESTORATION,
         MUT_NO_CHARM_MAGIC,
+        MUT_MIASMA_IMMUNITY,
 #endif
     };
 
@@ -636,14 +636,13 @@ string describe_mutations(bool drop_title)
             result += _dragon_abil(str);
         else if (you.species == SP_MERFOLK)
             result += _annotate_form_based(str, form_changed_physiology());
-        else if (you.species == SP_MINOTAUR)
-            result += _annotate_form_based(str, !form_keeps_mutations());
         else
             result += str + "\n";
     }
 
     if (you.racial_ac(false) > 0)
     {
+        // XX generalize this code somehow?
         const string scale_clause = string(scale_type(you.species))
               + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
@@ -671,11 +670,17 @@ string describe_mutations(bool drop_title)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
     }
 
-    if (you.species == SP_OCTOPODE)
+    // player::can_swim includes other cases, e.g. extra-balanced species that
+    // are not truly amphibious
+    if (species_can_swim(you.species))
     {
         result += _annotate_form_based("You are amphibious.",
-                                       !form_likes_water());
+                                                        !form_likes_water());
+    }
+    // XX if there is ever a giant player species, check it here
 
+    if (you.species == SP_OCTOPODE)
+    {
         const string num_tentacles =
                number_in_words(you.has_usable_tentacles(false));
         result += _annotate_form_based(
@@ -688,23 +693,24 @@ string describe_mutations(bool drop_title)
             !form_keeps_mutations());
     }
 
-    if (you.species != SP_FELID)
+    switch (you.body_size(PSIZE_TORSO, true))
     {
-        switch (you.body_size(PSIZE_TORSO, true))
-        {
-        case SIZE_LITTLE:
-            result += "You are very small and have problems with some larger weapons.\n"
-                      "You are too small for most types of armour.\n";
-            break;
-        case SIZE_SMALL:
+    case SIZE_LITTLE:
+        if (!you.has_mutation(MUT_NO_GRASPING))
+            result += "You are very small and have problems with some larger weapons.\n";
+        if (!you.has_mutation(MUT_NO_ARMOUR))
+            result += "You are too small for most types of armour.\n";
+        break;
+    case SIZE_SMALL:
+        if (!you.has_mutation(MUT_NO_GRASPING))
             result += "You are small and have problems with some larger weapons.\n";
-            break;
-        case SIZE_LARGE:
+        break;
+    case SIZE_LARGE:
+        if (!you.has_mutation(MUT_NO_ARMOUR))
             result += "You are too large for most types of armour.\n";
-            break;
-        default:
-            break;
-        }
+        break;
+    default:
+        break;
     }
 
     // Could move this into species-data, but then the hack that assumes
@@ -714,6 +720,9 @@ string describe_mutations(bool drop_title)
 
     if (player_res_poison(false, false, false) == 3)
         result += "You are immune to poison.\n";
+
+    if (species_stat_gain_multiplier(you.species) > 1)
+        result += "Your attributes grow dramatically as you level up.\n";
 
     result += "</lightblue>";
 
@@ -1231,9 +1240,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (_is_covering(mutat) && _body_covered() >= 3)
         return true;
 
-    // Only species that already have tails can get this one.
-    if (you.species != SP_NAGA && !species_is_draconian(you.species)
-        && you.species != SP_PALENTONGA && mutat == MUT_STINGER)
+    // Only species that already have tails can get this one. For merfolk it
+    // would only work in the water, so skip it.
+    if ((!you.has_tail(false) || you.species == SP_MERFOLK)
+        && mutat == MUT_STINGER)
     {
         return true;
     }
@@ -1256,12 +1266,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Only nagas can get upgraded poison spit.
-    if (you.species != SP_NAGA && mutat == MUT_SPIT_POISON)
+    // To get upgraded spit poison, you must have it innately
+    if (!you.has_innate_mutation(MUT_SPIT_POISON) && mutat == MUT_SPIT_POISON)
         return true;
 
     // Only Palentonga can go on a roll.
-    if (you.species != SP_PALENTONGA && mutat == MUT_ROLL)
+    if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.
@@ -1278,9 +1288,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them. And octopodes have no hands.
-    if ((you.species == SP_FELID || you.species == SP_OCTOPODE)
+    // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
+    if ((you.has_innate_mutation(MUT_PAWS) || you.species == SP_OCTOPODE)
          && mutat == MUT_CLAWS)
     {
         return true;
@@ -1294,18 +1303,20 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
     {
         // Formicids have stasis and so prevent mutations that would do nothing.
         // Antennae provides SInv, so acute vision is pointless.
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
-            || mutat == MUT_TELEPORT
-            || mutat == MUT_ACUTE_VISION)
+            || mutat == MUT_TELEPORT)
         {
             return true;
         }
     }
+
+    if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
+        return true;
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
@@ -1624,13 +1635,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_LARGE_BONE_PLATES:
             {
-                const char *arms;
-                if (you.species == SP_FELID)
-                    arms = "legs";
-                else if (you.species == SP_OCTOPODE)
-                    arms = "tentacles";
-                else
-                    break;
+                const string arms = pluralise(species_arm_name(you.species));
                 mprf(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "arms",
                                  arms).c_str());
@@ -1640,13 +1645,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_MISSING_HAND:
             {
-                const char *hands;
-                if (you.species == SP_FELID)
-                    hands = "front paws";
-                else if (you.species == SP_OCTOPODE)
-                    hands = "tentacles";
-                else
-                    break;
+                // n.b. we cannot use the built in pluralisation, because at
+                // this point the mut has already applied, and hand_name takes
+                // it into account.
+                const string hands = pluralise(you.hand_name(false));
                 mprf(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "hands",
                                  hands).c_str());
@@ -2257,8 +2259,8 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
         result = ostr.str();
     }
-    else if (!ignore_player && you.species == SP_FELID && mut == MUT_CLAWS)
-        result = "You have sharp claws.";
+    else if (!ignore_player && you.has_innate_mutation(MUT_PAWS) && mut == MUT_CLAWS)
+        result = "You have sharp claws."; // XX ugly override
     else if (have_passive(passive_t::no_mp_regen) && mut == MUT_ANTIMAGIC_BITE)
         result = "Your bite disrupts the magic of your enemies.";
     else if (result.empty() && level > 0)

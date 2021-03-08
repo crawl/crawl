@@ -67,7 +67,7 @@ ENDMAP
 NAME:    enter_ziggurat_c
 TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich
+MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
@@ -92,7 +92,7 @@ ENDMAP
 NAME:    enter_ziggurat_d
 TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich
+MONS:    lich / ancient lich / dread lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
@@ -219,7 +219,7 @@ TAGS: ziggurat_pillar centered unrand no_exits
 # This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
-MONS: ancient lich / shadow demon / curse skull / \
+MONS: dread lich / shadow demon / curse skull / \
       ironbrand convoker / corrupter / deep elf demonologist
 MONS: eye of draining / eye of devastation / \
       floating eye / ghost moth / black sun / torpor snail

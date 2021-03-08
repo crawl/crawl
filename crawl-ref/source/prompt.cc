@@ -147,7 +147,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             if (use_popup && status) // redundant, but will quiet a warning
                 status->text = pr;
             else
-                mpr(pr);
+                mprf(MSGCH_PROMPT, "%s", pr.c_str());
         }
     }
 }

@@ -367,6 +367,7 @@ spret cast_healing(int pow, bool fail)
 struct player_debuff_effects
 {
     /// Attributes removed by a debuff.
+    // TODO: I'm nearly sure these are unused; REMOVEME!
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
@@ -406,6 +407,60 @@ bool player_is_debuffable()
     _dispellable_player_buffs(buffs);
     return !buffs.durations.empty()
            || !buffs.attributes.empty();
+}
+
+/**
+ * Does the player have any magical effects that can be removed
+ * or any magical contamination?
+ *
+ * @return Whether cancellation will have any effect on the player.
+ */
+bool player_is_cancellable()
+{
+    return get_contamination_level() || player_is_debuffable();
+}
+
+/**
+ * Lists out the effects that will be removed by cancellation.
+ */
+string describe_player_cancellation()
+{
+    vector<string> effects;
+
+    // Try to clarify it doesn't remove all contam?
+    if (get_contamination_level())
+        effects.push_back("as magically contaminated");
+
+    player_debuff_effects buffs;
+    _dispellable_player_buffs(buffs);
+    for (auto duration : buffs.durations)
+    {
+        status_info inf;
+        if (fill_status_info(duration, inf) && !inf.short_text.empty())
+        {
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+        }
+    }
+
+    // I hate this, but here are some awkward special cases.
+    // (I suspect there are more.)
+    static const vector<status_type> dispellable_statuses = {
+        STATUS_AIRBORNE,
+        STATUS_SPEED,
+        STATUS_INVISIBLE,
+    };
+    for (auto status : dispellable_statuses)
+    {
+        status_info inf;
+        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        {
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+        }
+    }
+
+    return comma_separated_line(begin(effects), end(effects), " or ");
 }
 
 /**
@@ -641,150 +696,6 @@ int detect_creatures(int pow, bool telepathic)
 
     return creatures_found;
 }
-
-static bool _selectively_remove_curse(const string &pre_msg)
-{
-    bool used = false;
-
-    while (1)
-    {
-        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
-        {
-            mpr("You have uncursed all your worn items.");
-            return used;
-        }
-
-        int item_slot = prompt_invent_item("Uncurse which item?",
-                                           menu_type::invlist,
-                                           OSEL_CURSED_WORN, OPER_ANY,
-                                           invprompt_flag::escape_only);
-        if (prompt_failed(item_slot))
-            return used;
-
-        item_def& item(you.inv[item_slot]);
-
-        if (!item.cursed()
-            || !item_is_equipped(item)
-            || &item == you.weapon() && !is_weapon(item))
-        {
-            mpr("Choose a cursed equipped item, or Esc to abort.");
-            more();
-            continue;
-        }
-
-        if (!used && !pre_msg.empty())
-            mpr(pre_msg);
-
-        do_uncurse_item(item, false);
-        used = true;
-    }
-}
-
-bool remove_curse(bool alreadyknown, const string &pre_msg)
-{
-    if (have_passive(passive_t::want_curses) && alreadyknown)
-    {
-        if (_selectively_remove_curse(pre_msg))
-        {
-            ash_check_bondage();
-            return true;
-        }
-        else
-            return false;
-    }
-
-    bool success = false;
-
-    // Players can no longer wield armour and jewellery as weapons, so we do
-    // not need to check whether the EQ_WEAPON slot actually contains a weapon:
-    // only weapons (and staves) are both wieldable and cursable.
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
-    {
-        // Melded equipment can also get uncursed this way.
-        item_def * const it = you.slot_item(equipment_type(i), true);
-        if (it && it->cursed())
-        {
-            do_uncurse_item(*it);
-            success = true;
-        }
-    }
-
-    if (success)
-    {
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        mpr("You feel as if something is helping you.");
-        learned_something_new(HINT_REMOVED_CURSE);
-    }
-    else if (alreadyknown)
-        mprf(MSGCH_PROMPT, "None of your equipped items are cursed.");
-    else
-    {
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        mpr("You feel blessed for a moment.");
-    }
-
-    return success;
-}
-
-#if TAG_MAJOR_VERSION == 34
-static bool _selectively_curse_item(bool armour, const string &pre_msg)
-{
-    while (1)
-    {
-        int item_slot = prompt_invent_item("Curse which item?", menu_type::invlist,
-                                           armour ? OSEL_UNCURSED_WORN_ARMOUR
-                                                  : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           OPER_ANY, invprompt_flag::escape_only);
-        if (prompt_failed(item_slot))
-            return false;
-
-        item_def& item(you.inv[item_slot]);
-
-        if (item.cursed()
-            || !item_is_equipped(item)
-            || armour && item.base_type != OBJ_ARMOUR
-            || !armour && item.base_type != OBJ_JEWELLERY)
-        {
-            mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
-                 armour ? "armour" : "jewellery");
-            more();
-            continue;
-        }
-
-        if (!pre_msg.empty())
-            mpr(pre_msg);
-        do_curse_item(item, false);
-        learned_something_new(HINT_YOU_CURSED);
-        return true;
-    }
-}
-
-bool curse_item(bool armour, const string &pre_msg)
-{
-    // Make sure there's something to curse first.
-    bool found = false;
-    int min_type, max_type;
-    if (armour)
-        min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
-    else
-        min_type = EQ_LEFT_RING, max_type = EQ_RING_AMULET;
-    for (int i = min_type; i <= max_type; i++)
-    {
-        if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
-            found = true;
-    }
-    if (!found)
-    {
-        mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
-             armour ? "armour" : "jewellery");
-        return false;
-    }
-
-    return _selectively_curse_item(armour, pre_msg);
-}
-#endif
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
@@ -1136,8 +1047,11 @@ void torment_player(const actor *attacker, torment_source_type taux)
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue
+            || you.has_mutation(MUT_TORMENT_RESISTANCE))
+        {
             hploss /= 2;
+        }
     }
 
     // Kiku protects you from torment to a degree.
@@ -1207,7 +1121,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
         break;
 
     case TORMENT_LURKING_HORROR:
-        type = KILLED_BY_SPORE;
+        type = KILLED_BY_DEATH_EXPLOSION;
         aux = "an exploding lurking horror";
         break;
 
@@ -1353,20 +1267,18 @@ spret cast_random_effects(int pow, bolt& beam, bool fail)
 
     fail_check();
 
-    // Extremely arbitrary list of possible effects.
-    zap_type zap = random_choose(ZAP_THROW_FLAME,
-                                 ZAP_THROW_FROST,
-                                 ZAP_SLOW,
-                                 ZAP_HASTE,
-                                 ZAP_PARALYSE,
-                                 ZAP_CONFUSE,
-                                 ZAP_TELEPORT_OTHER,
-                                 ZAP_INVISIBILITY,
-                                 ZAP_ICEBLAST,
-                                 ZAP_FIREBALL,
-                                 ZAP_BOLT_OF_DRAINING,
-                                 ZAP_VENOM_BOLT,
-                                 ZAP_MALMUTATE);
+    // List of possible effects. Mostly debuffs, a few buffs to keep it
+    // exciting
+    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
+                                          5, ZAP_INVISIBILITY,
+                                          5, ZAP_MIGHT,
+                                          10, ZAP_CORONA,
+                                          15, ZAP_SLOW,
+                                          15, ZAP_MALMUTATE,
+                                          15, ZAP_PETRIFY,
+                                          10, ZAP_PARALYSE,
+                                          10, ZAP_CONFUSE,
+                                          10, ZAP_SLEEP);
     beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
     zapping(zap, pow, beam, false);

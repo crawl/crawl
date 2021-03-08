@@ -16,6 +16,7 @@
 #include "art-enum.h"
 #include "beam.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
@@ -155,9 +156,11 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
+    const string damagestring = spell_damage_string(spell);
 
-    desc << chop_string(spell_power_string(spell), 13)
-         << chop_string(rangestring, 9)
+    desc << chop_string(spell_power_string(spell), 10)
+         << chop_string(damagestring.length() ? damagestring : "N/A", 10)
+         << chop_string(rangestring, 10)
          << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -181,7 +184,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 titlestring + "         Type                          Failure  Level",
-                titlestring + "         Power        Range    Noise         ",
+                titlestring + "         Power     Damage    Range     Noise ",
                 MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
@@ -1321,6 +1324,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     // Summons. Most summons have a simple range 2 radius, see find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_CALL_CANINE_FAMILIAR:
+    case SPELL_ANIMATE_ARMOUR:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_MONSTROUS_MENAGERIE:
     case SPELL_SUMMON_HYDRA:
@@ -1347,7 +1351,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         // just show that one. If this spell were to do something better, e.g.
         // randomization, this would need to take a different approach
         return make_unique<targeter_multiposition>(&you, _find_animatable_skeletons(&you), AFF_YES);
-    case SPELL_TWISTED_RESURRECTION:
     case SPELL_ANIMATE_DEAD:
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
@@ -1372,7 +1375,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     if (get_spell_flags(spell) & spflag::selfench
         && !spell_typematch(spell, spschool::summoning) // all summoning spells are selfench
         && !spell_typematch(spell, spschool::translocation) // blink, passage
-        && spell != SPELL_VAMPIRIC_DRAINING
         && spell != SPELL_PHANTOM_MIRROR) // ??
     {
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
@@ -1537,9 +1539,30 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
     if (!mons_can_be_dazzled(mi.type))
         return vector<string>{"not susceptible"};
 
-    const int dazzle_pct = max(100 * ( 95 - mi.hd * 4 ) / ( 150 - pow ), 0);
+    const int numerator = dazzle_chance_numerator(mi.hd);
+    const int denom = dazzle_chance_denom(pow);
+    const int dazzle_pct = max(100 * numerator / denom, 0);
 
     return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
+}
+
+static vector<string> _desc_meph_chance(const monster_info& mi)
+{
+    if (!mi.mresists & MR_RES_POISON || mons_is_unbreathing(mi.type))
+        return vector<string>{"not susceptible"};
+
+    int pct_chance = 2;
+    if (mi.hd < MEPH_HD_CAP)
+        pct_chance = 100 - (100 * mi.hd / MEPH_HD_CAP);
+    return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
+}
+
+static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
+{
+    if (mi.mb.get(MB_CANT_DRAIN))
+        return vector<string>{"not susceptible"};
+
+    return vector<string>{};
 }
 
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
@@ -1628,6 +1651,46 @@ private:
     string err;
 };
 
+static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
+                                       bool evoked_wand, targeter *hitfunc)
+{
+    // Add success chance to targeted spells checking monster WL
+    const bool wl_check = testbits(flags, spflag::WL_check)
+                          && !testbits(flags, spflag::helpful);
+    if (wl_check)
+    {
+        const zap_type zap = spell_to_zap(spell);
+        const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
+                                                             false)
+                                            :
+              testbits(flags, spflag::area) ? ( powc * 3 ) / 2
+                                            : powc;
+        return bind(desc_wl_success_chance, placeholders::_1,
+                    eff_pow, evoked_wand, hitfunc);
+    }
+    switch (spell)
+    {
+        case SPELL_INTOXICATE:
+            return bind(_desc_intoxicate_chance, placeholders::_1,
+                        hitfunc, powc);
+        case SPELL_ENGLACIATION:
+            return bind(_desc_englaciate_chance, placeholders::_1,
+                        hitfunc, powc);
+        case SPELL_DAZZLING_FLASH:
+            return bind(_desc_dazzle_chance, placeholders::_1, powc);
+        case SPELL_MEPHITIC_CLOUD:
+            return bind(_desc_meph_chance, placeholders::_1);
+        case SPELL_VAMPIRIC_DRAINING:
+            return bind(_desc_vampiric_draining_valid, placeholders::_1);
+        default:
+            break;
+    }
+    targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
+    if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
+        return bind(_desc_hit_chance, placeholders::_1, hitfunc);
+    return nullptr;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1710,43 +1773,8 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
 
-        // Add success chance to targeted spells checking monster WL
-        const bool mr_check = testbits(flags, spflag::WL_check)
-                              && !testbits(flags, spflag::helpful);
-        desc_filter additional_desc = nullptr;
-        const zap_type zap = spell_to_zap(spell);
-        if (mr_check)
-        {
-            const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
-                                                                 false)
-                                                :
-                  testbits(flags, spflag::area) ? ( powc * 3 ) / 2
-                                                : powc;
-            additional_desc = bind(desc_wl_success_chance, placeholders::_1,
-                                   eff_pow, evoked_wand, hitfunc.get());
-        }
-        else if (spell == SPELL_INTOXICATE)
-        {
-            additional_desc = bind(_desc_intoxicate_chance, placeholders::_1,
-                                   hitfunc.get(), powc);
-        }
-        else if (spell == SPELL_ENGLACIATION)
-        {
-            additional_desc = bind(_desc_englaciate_chance, placeholders::_1,
-                                   hitfunc.get(), powc);
-        }
-        else if (spell == SPELL_DAZZLING_FLASH)
-            additional_desc = bind(_desc_dazzle_chance, placeholders::_1, powc);
-        else
-        {
-            targeter_beam* beam_hitf =
-                dynamic_cast<targeter_beam*>(hitfunc.get());
-            if (beam_hitf && beam_hitf->beam.hit > 0 && !beam_hitf->beam.is_explosion)
-            {
-                additional_desc = bind(_desc_hit_chance, placeholders::_1,
-                                       hitfunc.get());
-            }
-        }
+        desc_filter additional_desc
+            = _targeter_addl_desc(spell, powc, flags, evoked_wand, hitfunc.get());
 
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out
@@ -1996,7 +2024,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
-    if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
+    if (spell == SPELL_FREEZE)
     {
         if (!adjacent(you.pos(), target))
             return spret::abort;
@@ -2009,9 +2037,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SANDBLAST:
         return cast_sandblast(powc, beam, fail);
-
-    case SPELL_VAMPIRIC_DRAINING:
-        return vampiric_drain(powc, monster_at(target), fail);
 
     case SPELL_IOOD:
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
@@ -2099,6 +2124,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
+
+    case SPELL_ANIMATE_ARMOUR:
+        return cast_summon_armour_spirit(powc, god, fail);
 
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
@@ -2256,6 +2284,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DISJUNCTION:
         return cast_disjunction(powc, fail);
+
+    case SPELL_MANIFOLD_ASSAULT:
+        return cast_manifold_assault(powc, fail);
 
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(fail);
@@ -2598,11 +2629,6 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
-        case SPELL_VAMPIRIC_DRAINING:
-        {
-            const int power = _spell_power(spell, evoked);
-            return make_stringf("2d5+1d%d", power / 7);
-        }
         case SPELL_ABSOLUTE_ZERO:
             return "∞";
         case SPELL_CONJURE_FLAME:

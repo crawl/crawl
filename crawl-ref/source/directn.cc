@@ -320,7 +320,11 @@ void direction_chooser::print_key_hints() const
     else
     {
         if (moves.fire_context)
-            prompt += moves.fire_context->fire_key_hints() + "\n";
+        {
+            const string hint = moves.fire_context->fire_key_hints();
+            if (!hint.empty())
+                prompt += hint + "\n";
+        }
         string direction_hint = "";
         if (!behaviour->targeted())
             direction_hint = "Dir - look around, f - activate";
@@ -784,13 +788,12 @@ static void _get_nearby_items(vector<item_def> &list_items,
                                 bool need_path, int range, targeter *hitfunc)
 {
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (need_path && _blocked_ray(*ri))
             continue;
 
         const int oid = you.visible_igrd(*ri);
@@ -809,13 +812,12 @@ static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
     vector <text_pattern> &filters = Options.monster_item_view_features;
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (need_path && _blocked_ray(*ri))
             continue;
 
         // Do we want to aim at this because its the feature, not because
@@ -2127,23 +2129,20 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_DESCRIBE: describe_target(); break;
     case CMD_TARGET_HELP:     show_help();       break;
 
-    case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
-    case CMD_TARGET_CYCLE_QUIVER_FORWARD:
-    case CMD_TARGET_SELECT_ACTION:
-        if (moves.fire_context)
+    default:
+        if (moves.fire_context
+            && moves.fire_context->targeter_handles_key(command))
         {
             // because of the somewhat convoluted way in which action selection
-            // is handled, this can only be handled if the direction chooser
-            // has been called via a quiver::action. Otherwise, we ignore these
-            // commands.
+            // is handled, some commands can only be handled if the direction
+            // chooser has been called via a quiver::action. Otherwise, we
+            // ignore these commands.
             moves.isValid = false;
             moves.isCancel = true;
             moves.cmd_result = static_cast<int>(command);
             loop_done = true;
+            break;
         }
-        break; // otherwise, ignore
-
-    default:
         // Some blocks of keys with similar handling.
         handle_movement_key(command, &loop_done);
         handle_wizard_command(command, &loop_done);
@@ -2167,7 +2166,12 @@ void direction_chooser::finalize_moves()
 #endif
 }
 
-class UIDirectionChooserView : public ui::Widget
+class UIDirectionChooserView
+#ifdef USE_TILE_LOCAL
+    : public ui::Widget
+#else
+    : public ui::OverlayWidget
+#endif
 {
 public:
     UIDirectionChooserView(direction_chooser& dc) :
@@ -2182,15 +2186,18 @@ public:
             return;
 
 #ifndef USE_TILE_LOCAL
-        // do_redraws() only calls viewwindow(); we must first draw the sidebar.
-        // TODO: why does this even clear the sidebar in the first place? I
-        // can't figure it out. -advil
-        redraw_screen(false);
+        // This call ensures that the hud will get redrawn in console any time
+        // need_all_redraw is set. Minimally, this needs to happen on the
+        // initial call, as well as after any popups on top of this widget.
+        if (m_dc.need_all_redraw)
+            redraw_screen(false);
 #endif
 
+#ifdef USE_TILE_LOCAL
         // We always have to redraw the viewport, because ui::redraw() will call
         // redraw_screen in case the window has been resized.
         m_dc.need_viewport_redraw = true;
+#endif
         m_dc.do_redraws();
 
 #ifdef USE_TILE_LOCAL
@@ -2201,6 +2208,7 @@ public:
 
     void _allocate_region() override
     {
+        m_dc.need_all_redraw = true;
         _expose();
     }
 
@@ -3333,15 +3341,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
     if (weap && (!ident || item_type_known(*weap)))
-    {
-        name1 = weap->name(DESC_A, false, false, true,
-                           false, ISFLAG_KNOW_CURSE);
-    }
+        name1 = weap->name(DESC_A, false, false, true, false);
     if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
-    {
-        name2 = alt->name(DESC_A, false, false, true,
-                          false, ISFLAG_KNOW_CURSE);
-    }
+        name2 = alt->name(DESC_A, false, false, true, false);
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
@@ -3350,8 +3352,7 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     {
         item_def dup = *weap;
         ++dup.quantity;
-        name1 = dup.name(DESC_A, false, false, true, true,
-                         ISFLAG_KNOW_CURSE);
+        name1 = dup.name(DESC_A, false, false, true, true);
         name2.clear();
     }
 
@@ -3718,7 +3719,8 @@ string get_monster_equipment_desc(const monster_info& mi,
         item_descriptions.push_back(weap.substr(1)); // strip leading space
     }
 
-    if (mon_arm)
+    // as with dancing weapons, don't claim animated armours 'wear' their armour
+    if (mon_arm && mi.type != MONS_ANIMATED_ARMOUR)
     {
         const string armour_desc = make_stringf("wearing %s",
                                                 mon_arm->name(DESC_A).c_str());

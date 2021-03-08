@@ -2381,9 +2381,9 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf mage / deep troll / boggart w:5 / efreet w:5 / \
-         rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
-         vampire / deep elf mage w:5
+         deep elf pyromancer / deep elf zephyrmancer / deep troll / \
+         boggart w:5 / efreet w:5 / rakshasa w:5 / wizard / necromancer / \
+         spriggan rider w:5 / vampire
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
@@ -2514,7 +2514,7 @@ KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
 KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
            deep elf annihilator w:5 / deep elf death mage / \
-           deep elf mage / deep elf sorcerer
+           deep elf pyromancer / deep elf zephyrmancer / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
@@ -2574,7 +2574,7 @@ MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
 : else
-KMONS:   12 = deep elf mage / deep elf knight w:5 / deep elf archer w:5
+KMONS:   12 = deep elf pyromancer / deep elf zephyrmancer / deep elf knight / deep elf archer
 MONS:    deep elf knight band / deep elf archer band
 MONS:    deep elf annihilator / deep elf sorcerer / deep elf high priest
 : end
@@ -3067,7 +3067,7 @@ MONS:    necromancer ; \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, efreet, deep elf mage
+MONS:    ettin simulacrum, efreet, deep elf pyromancer / deep elf zephyrmancer
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -3358,7 +3358,7 @@ NAME:    minmay_guarded_unrand_majin_bo
 ORIENT:  float
 DEPTH:   Depths, Crypt
 MONS:    necromancer / vampire mage
-MONS:    lich / ancient lich w:5
+MONS:    lich w:40 / ancient lich / dread lich
 ITEM:    majin-bo no_pickup ident:type
 ITEM:    any magical staff / any book
 NSUBST:  d = 1:d / *:e
@@ -3755,9 +3755,10 @@ TAGS: no_item_gen no_monster_gen
 ORIENT: float
 KPROP: w;W = no_tele_into
 MONS: kobold ; club / kobold ; dagger, hobgoblin ; club
-MONS: big kobold ; club | w:3 dagger ego:venom | w:3 dagger ego:draining \
-                   | w:3 dagger ego:speed
-NSUBST: - = 2:1 / 2=12., " = 3:1 / 3=12., ' = 1:3 / 1=3. / 1=1., ` = 1=*% / *:%
+MONS: kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
+          . club | w:3 dagger ego:venom | w:3 dagger ego:draining \
+              | w:3 dagger ego:speed
+NSUBST: - = 2=1 / 2=12., " = 3=1 / 3=12. / ., ' = 3 / 3. / 1. / ., ` = *% / %
 SUBST: ; = WWWw
 MAP
                WWWWW
@@ -3776,7 +3777,7 @@ TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
-MONS: kobold / big kobold w:6, ooze / jelly, slime creature
+MONS: kobold / kobold brigand w:6, ooze / jelly, slime creature
 : else
 MONS: kobold, ooze, jelly
 : end
@@ -3988,7 +3989,7 @@ KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 broad axe ego:antimagic . plate armour \
                | plate armour ego:willpower
 KMONS: U = stone giant / iron troll / w:5 ettin
-KMONS: r = lich / w:5 ancient lich
+KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
 KFEAT: H = iron_grate
@@ -4047,11 +4048,12 @@ NSUBST:  ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
 MONS:    phantasmal warrior
 MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
          / eidolon
-MONS:    revenant / ancient champion / lich, ancient lich
+MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS:    eye of draining
-MONS:    boggart / kobold demonologist / deep elf mage / tengu conjurer
+MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
+         deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage
 MONS:    deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
 SUBST:   4 = 23, 5 = 4
@@ -4061,7 +4063,7 @@ MONS:    boggart / rakshasa / ogre mage / wizard / necromancer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
-MONS:    titan / ancient lich / glowing shapeshifter
+MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Depths") then
 MONS:    floating eye / great orb of eyes / glowing orange brain \
          / phantasmal warrior
@@ -4070,9 +4072,10 @@ MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf high priest / deep elf death mage / deep troll earth mage \
          / spriggan air mage / vampire mage
 MONS:    sphinx / tengu reaver / lich / fire giant / frost giant
-MONS:    titan / ancient lich / glowing shapeshifter
+MONS:    titan / ancient lich w:5 / dread lich w:5 / glowing shapeshifter
 : elseif you.in_branch("Elf") then
-MONS:    water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
+MONS:    water elemental / shapeshifter
+MONS:    deep elf pyromancer / deep elf zephyrmancer / w:2 orc sorcerer
 MONS:    deep elf sorcerer / deep elf annihilator / deep elf demonologist \
          / deep elf death mage
 MONS:    glowing shapeshifter
@@ -4084,7 +4087,7 @@ SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS:    ghost moth / death cob / curse toe
 MONS:    nonbase draconian
-MONS:    ancient lich, orb of fire
+MONS:    ancient lich / dread lich, orb of fire
 SUBST:   3 = 2, 4 = 3, 5 = 4
 : end
 KFEAT:   _ = altar_sif_muna / altar_vehumet
@@ -4334,7 +4337,7 @@ KMASK:  LM = no_item_gen
 ITEM:   wand of flame
 ITEM:   wand of iceblast / wand of acid
 ITEM:   wand of random effects / wand of mindburst / wand of paralysis \
-        / wand of enslavement / wand of polymorph w:5
+        / wand of charming / wand of polymorph w:5
 MONS: shadow imp, orc priest, kobold demonologist
 MONS: deep elf knight / fire crab / orc high priest / orc sorcerer
 KMONS:  p = plant
@@ -4580,7 +4583,7 @@ DEPTH:  D:8-12
 ORIENT: float
 KMONS:  1 = kobold demonologist
 KMONS:  2 = shadow imp
-KMONS:  k = kobold / big kobold w:3
+KMONS:  k = kobold / kobold brigand w:3
 KMONS:  u = kobold skeleton / kobold zombie
 KITEM:  ?1 = kobold skeleton
 : dgn.delayed_decay(_G, '?1', 'kobold skeleton')
@@ -4774,7 +4777,7 @@ DEPTH:  D:8-, Lair, Spider
 ORIENT: float
 ITEM:   pair of boots ego:rampaging ident:all
 ITEM:   pair of boots ego:rampaging good_item ident:all
-ITEM:   pair of boots ego:rampaging randart ident:all
+ITEM:   pair of boots randart ident:all
 MONS:   boulder beetle, torpor snail
 : if you.in_branch("D") then
 :     if you.depth() < 11 then
@@ -6076,7 +6079,7 @@ SUBST:  ] = ]>
 # but use normal OOD for D.
 # Also remove the bits of loot for Hell branches and Zot.
 : if you.in_branch("Crypt") then
-KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
+KMONS:  8 = bone dragon / lich / ancient lich / dread lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
 : elseif you.in_branch("Dis") then
@@ -6090,7 +6093,7 @@ KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
 SUBST:  *% = .
 : elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 tzitzimitl / reaper / w:5 soul eater / shadow dragon / \
-            lich / ancient lich / w:15 place:Tar
+            lich / ancient lich / dread lich / w:15 place:Tar
 SUBST:  *% = .
 : elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
@@ -6098,7 +6101,8 @@ KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
 SUBST:  *% = .
 : elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
-            killer klown / death cob / w:5 curse toe / w:5 ancient lich
+            killer klown / death cob / w:5 curse toe / w:5 ancient lich / \
+            w:5 dread lich
 SUBST:  *% = .
 :else
 KMONS:  8 = 8 band
@@ -8092,7 +8096,7 @@ DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.in_branch("D") then
-MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
+MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, wizard
 : else
 MONS: wizard w:5 / fire elemental w:5 / nothing, lich
 : end
@@ -9243,7 +9247,7 @@ SUBST:   FGH = ., JKLM = ", ' = ^., " = ^^., d = dd$
 # Supplement the 8s in Crypt and Zot since OOD defs in these branches aren't
 # very deep.
 : if you.in_branch("Crypt") then
-KMONS:   2 = ancient lich
+KMONS:   2 = ancient lich / dread lich
 NSUBST:  8 = 2 / 8
 : elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
@@ -9252,7 +9256,7 @@ KMONS:   3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:   8 = 39, 9 = 02
 : elseif you.in_branch("Zot") then
-KMONS:   2 = ancient lich / orb of fire / curse toe
+KMONS:   2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
 SUBST:   8 = 28
 : end
 KFEAT:   ^ = zot trap
@@ -9316,7 +9320,7 @@ TILE:   p = dngn_transparent_stone_blue
 : else
 KMONS:  1HK = cacodemon
 :   if you.in_branch("Crypt") then
-KMONS:  2 = ancient lich
+KMONS:  2 = ancient lich / dread lich
 NSUBST: 8 = 2 / 8
 :   elseif you.in_branch("Pandemonium") then
 # 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
@@ -9325,7 +9329,7 @@ KMONS:  3 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
 SUBST:  8 = 39, 9 = 02, H = K
 :   elseif you.in_branch("Zot") then
-KMONS:  2 = ancient lich / orb of fire / curse toe
+KMONS:  2 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
 SUBST:  8 = 28
 :   end
 COLOUR: p = yellow
@@ -9397,15 +9401,17 @@ KPROP:   .$*def123456 = bloody w:5 / nothing
 : if you.in_branch("D") then
 MONS:    patrolling ettin / patrolling iron troll
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
-MONS:    ogre mage / wizard / deep elf mage / boggart / necromancer
+MONS:    ogre mage / wizard / deep elf pyromancer / deep elf zephyrmancer / \
+         boggart / necromancer
 : elseif you.in_branch("Orc") then
 MONS:    patrolling stone giant / patrolling ettin
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5 \
          / orc knight
 # The orcs mostly offer naughty elves to Trog's Sanctum, with a few naughty
 # orcs and ogres thrown in.
-MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf mage w:60 \
-         / deep elf sorcerer / deep elf demonologist / deep elf annihilator
+MONS:    orc sorcerer w:5 / ogre mage w:5 / deep elf pyromancer w:30 / \
+         deep elf zephyrmancer w:30 / deep elf sorcerer / \
+         deep elf demonologist / deep elf annihilator
 KMONS:   7 = deep elf elementalist
 SUBST:   5 = 7, " = m
 : elseif you.in_branch("Vaults") then
@@ -9488,13 +9494,13 @@ SHUFFLE: Ww / LL
 SUBST:   9 = 09, 1 = 98, r = $%, s = *|,  2G = ., bcv = x, } = }>, K = p
 KFEAT:   ^ = shaft trap / teleport trap / alarm trap / dispersal trap
 : elseif you.in_branch("Depths") then
-MONS:    juggernaut / ancient lich / golden dragon
+MONS:    juggernaut / ancient lich / dread lich / golden dragon
 MONS:    obsidian statue / orange crystal statue
 SHUFFLE: Ww / ll
 SUBST:   2 = G:50 2, r = $*, s = |
 KFEAT:   ^ = shaft trap / alarm trap / zot trap
 : elseif you.in_branch("Zot") then
-MONS:    ancient lich / orb of fire, orange crystal statue
+MONS:    ancient lich w:5 / dread lich w:5 / orb of fire, orange crystal statue
 SUBST:   2 = G:50 2, r = *:30 |, wW = l, K = ), s = ]
 KFEAT:   ^ = zot trap
 : end

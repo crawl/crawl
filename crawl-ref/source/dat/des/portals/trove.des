@@ -179,7 +179,7 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.get_trove_toll(e)
-  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" and you.god() ~= "Uskayaw" then
+  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" and you.god() ~= "Ashenzari" and you.god() ~= "Uskayaw" then
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(
@@ -708,7 +708,6 @@ ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
-WEIGHT: 15
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
@@ -737,7 +736,6 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_weapon_2
-WEIGHT: 15
 veto {{ return crawl.game_started()
           and (trove.weapon_skills() < trove.spell_skills()
                or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
@@ -912,36 +910,82 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 # Misc items/evocations trove. 15 items.
-NAME:   trove_misc_throne_room
-WEIGHT: 15
-veto {{ return crawl.game_started()
-          and (you.base_skill("Evocations") < 4 and not crawl.one_chance_in(3)
-               or you.mutation("inability to use devices") == 1) }}
-COLOUR: x = blue
-COLOUR: ' = yellow
-SUBST:  d = dde
-FTILE:  ' : floor_limestone
-ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc
-ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
-ITEM:   manual of evocations
+NAME:    trove_misc_throne_room
+ORIENT:  encompass
+WEIGHT:  15
+TAGS:    no_item_gen no_monster_gen allow_dup
+ITEM:    manual of evocations, tin of tremorstones, lightning rod
+ITEM:    condenser vane, phial of floods, box of beasts, phantom mirror
+ITEM:    acquire wand w:15 / acquire magical staff w:5
+SHUFFLE: efghij
+COLOUR:  x = blue
+COLOUR:  ' = yellow
+FTILE:   ' = floor_limestone
 : trove.setup_features(_G)
+veto {{ return crawl.game_started()
+        and (you.base_skill("Evocations") < 4
+             and not crawl.one_chance_in(3)
+             or you.mutation("inability to use devices") == 1) }}
 MAP
    xxx
-   xfx
+   xdx
  xxx+xxx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
- xd'''dx
+ xk'''kx
+ xe'''fx
+ xk'''kx
+ xg'''hx
+ xk'''kx
+ xi'''jx
+ xk'''kx
 xxxx+xxxx
 x.......x
 x<..A..<x
 xxxxxxxxx
+ENDMAP
+
+# This can generate weapons that are out of character for Trog, e.g. pain.
+# Just say they were looted from unwilling arena participants.
+NAME:   trove_trog_arena
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
+ITEM:   acquire weapon w:5 / acquire:trog weapon w:5 / \
+        any useful weapon good_item / any weapon w:2
+ITEM:   acquire:trog weapon
+KFEAT:  _ = altar_trog
+KFEAT:  m = iron_grate
+NSUBST: ; = 2:d / 4:X / *:'
+NSUBST: $ = 13:d / *:'
+KPROP:  X = bloody
+SUBST:  X : '
+FTILE:  +<dem_' = floor_dirt
+COLOUR: +<dem_' = brown
+: trove.setup_features(_G)
+MAP
+      xxxxxxxxxxx
+     xx''''<''''xx
+     x'''''''''''x
+     x'''mmmmm'''x
+xxxxxx''mm;;;mm''xxxxxx
+x$$$$x''m;;;;;m''x$$$$x
+x$$$$+''+;;;;;+''+$$$$x
+x$$$$x''m;;;;;m''x$$$$x
+xxxxxx''mm;;;mm''xxxxxx
+     x'''mmmmm'''x
+     x'''''''''''x
+     xx'''''''''xx
+      xxx'''''xxx
+        x''_''x
+        x''e''x
+        xx'''xx
+         xx+xx
+         x...x
+         x.A.x
+         x...x
+         xxxxx
 ENDMAP
 
 ###################################
@@ -994,6 +1038,10 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
+veto {{ return crawl.game_started()
+          and (trove.weapon_skills() < trove.spell_skills()
+               or trove.weapon_skills() < you.skill("Unarmed Combat"))
+          and not crawl.one_chance_in(3) }}
 TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2

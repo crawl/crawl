@@ -27,7 +27,6 @@ Airstrike spell
 
 Causes the air around a creature to twist itself into a whirling vortex of
 meteorological fury. It does more damage to targets surrounded by empty space.
-It is especially effective against flying enemies.
 %%%%
 Alistair's Intoxication spell
 
@@ -36,6 +35,12 @@ attempting to confuse all intelligent living creatures within view (although
 poison-resistant creatures may resist the effects). The caster will experience
 vertigo briefly if they successfully make contact with other minds. It is
 frequently used as an icebreaker at wizard parties.
+%%%%
+Animate Armour spell
+
+Call upon the spirit of your worn armour to fight alongside you. The spirit moves
+slowly, but draws strength from the inherent protection of your own armour. At
+higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
@@ -273,6 +278,10 @@ Releases a massive electrical discharge that arcs from target to target until
 it grounds out. It may ground out harmlessly if there are no targets
 sufficiently close to the caster. Its damage partially bypasses armour.
 %%%%
+Charm spell
+
+Causes an otherwise hostile creature to fight on the caster's side for a while.
+%%%%
 Chaos Breath spell
 
 Exhales a large cloud of fumes filled with the very essence of chaos.
@@ -500,10 +509,6 @@ Throws a bolt of electricity at the target, with high accuracy.
 Energy Bolt spell
 
 Fires a bolt of highly destructive energy.
-%%%%
-Enslavement spell
-
-Causes an otherwise hostile creature to fight on the caster's side for a while.
 %%%%
 Ensnare spell
 
@@ -882,6 +887,13 @@ Malmutate spell
 Bestows a mutation on a target. The mutation is almost always harmful. It
 cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
+Manifold Assault spell
+
+Launches melee attacks against multiple visible enemies, warping space into
+paradoxical configurations to allow one swing to be in many places. The effect
+is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
+used to strike more enemies at once.
+%%%%
 Mara Summon spell
 
 Weaves illusions of the caster. Such illusions have the same physical prowess
@@ -943,10 +955,9 @@ Heals a small amount of damage to the caster's body.
 %%%%
 Monstrous Menagerie spell
 
-Summons a powerful exotic creature to the caster's aid. It may call forth a
-harpy, manticore or lindwurm, and at high power may summon a sphinx, or an
-entire pack of harpies. With high power the individual creatures will also gain
-increased strength.
+Summons a powerful exotic creature to the caster's aid: a manticore, a lindwurm,
+or, at high power, even a sphinx. Casting the spell at higher power also
+increases the strength of the beasts themselves.
 %%%%
 Necromutation spell
 
@@ -965,7 +976,7 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything nearby for as long as the spell lasts.
+everything in line of sight for as long as the spell lasts.
 %%%%
 Orb of Destruction spell
 
@@ -1449,6 +1460,10 @@ Summon Spectral Orcs spell
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
 %%%%
+Summon Tzitzimitl spell
+
+Summons a tzitzimitl, a demon of disease and despair.
+%%%%
 Summon Ufetubus spell
 
 Summons multiple ufetubi; small, annoying demons.
@@ -1620,5 +1635,7 @@ after a short delay.
 %%%%
 Yara's Violent Unravelling spell
 
-Tears apart the bonds that bind enchantments to the target creature,
-transforming the magic into a spray of deadly, mutagenic radiation.
+If cast upon a creature already blessed (or cursed) with magical enchantments,
+those enchantments will be torn apart, transforming into a spray of
+destructive mutagenic radiation. The victim and anyone adjacent will be
+blasted and heavily deformed, weakening them and reducing their armour.

@@ -275,7 +275,7 @@ mset(spec_fn(function ()
   return "place:Vaults:$ w:" .. d * 2 .. " / place:Vaults:$ w:" .. d .. " / " ..
          "glowing shapeshifter / sphinx w:5 / " ..
          "titan w:" .. e .. " / golden dragon w:" .. e .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()
@@ -284,7 +284,7 @@ mset(spec_fn(function ()
   return "place:Crypt:$ 9 w:255 / ancient champion w:" .. d - 5 .. " / " ..
          "curse skull w:" .. d - 5 .. " / profane servitor w:" .. d - 5 .. " / " ..
          "bone dragon w:" .. d .. " / revenant w:" .. d .. " / " ..
-         "ancient lich w:" .. e
+         "ancient lich w:" .. e / 2 .. " / dread lich w:" .. e / 2
 end))
 
 mset(spec_fn(function ()

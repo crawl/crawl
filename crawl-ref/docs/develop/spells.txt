@@ -41,7 +41,7 @@ Hexes
 =====
 
 Hexes are spells that affect things and monsters (usually negatively). They
-cannot do direct damage nor change fundamental state of anything without
+cannot do direct damage nor change the fundamental state of anything without
 another spell school being involved.
 
 If we had spells that bestow a curse on someone or something, make an item

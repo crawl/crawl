@@ -270,9 +270,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
-        if (item_known_cursed(item))
-            valued -= 30;
-
         break;
 
     case OBJ_MISSILES:          // ammunition
@@ -336,7 +333,6 @@ unsigned int item_value(item_def item, bool ident)
             const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
-            case SPARM_RUNNING:
             case SPARM_ARCHMAGI:
             case SPARM_RESISTANCE:
                 valued += 250;
@@ -393,9 +389,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
-        if (item_known_cursed(item))
-            valued -= 30;
-
         break;
 
     case OBJ_WANDS:
@@ -421,7 +414,7 @@ unsigned int item_value(item_def item, bool ident)
                 good = true;
                 break;
 
-            case WAND_ENSLAVEMENT:
+            case WAND_CHARMING:
             case WAND_POLYMORPH:
             case WAND_PARALYSIS:
                 valued += 20;
@@ -531,7 +524,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 35;
                 break;
 
-            case SCR_REMOVE_CURSE:
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
@@ -555,9 +547,6 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_JEWELLERY:
-        if (item_known_cursed(item))
-            valued -= 30;
-
         if (!item_type_known(item))
             valued += 50;
         else
@@ -637,16 +626,9 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_ATTENTION:
-                case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
                     break;
-
-                case AMU_INACCURACY:
-                    valued -= 300;
-                    break;
-                    // got to do delusion!
                 }
             }
 
@@ -838,12 +820,12 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
     origin_purchased(item);
 
-    if (shoptype_identifies_stock(shop.type))
+    if (shoptype_identifies_stock(shop.type)
+        || item_type_is_equipment(item.base_type))
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
     }
 
     // Shopkeepers will place goods you can't carry outside the shop.
@@ -1421,11 +1403,11 @@ string shop_type_name(shop_type type)
             return "Armour";
         case SHOP_JEWELLERY:
             return "Jewellery";
-        case SHOP_EVOKABLES:
-            return "Gadget";
         case SHOP_BOOK:
             return "Book";
 #if TAG_MAJOR_VERSION == 34
+        case SHOP_EVOKABLES:
+            return "Gadget";
         case SHOP_FOOD:
             return "Removed Food";
 #endif
@@ -2468,9 +2450,8 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return desc;
 }
 
-// Item name without curse-status or inscription.
+// Item name without inscription.
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
-    return item.name(DESC_PLAIN, false, ident, false, false,
-                     ISFLAG_KNOW_CURSE);
+    return item.name(DESC_PLAIN, false, ident, false, false);
 }

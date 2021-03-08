@@ -663,7 +663,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         {
             if (ai->is_player())
                 affects_you = true;
-            else
+            else if (*ai != agent)
                 affected_monsters.push_back(ai->as_monster());
         }
     }
@@ -739,69 +739,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
                             bool fail, int* damage_done)
 {
     return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
-}
-
-spret vampiric_drain(int pow, monster* mons, bool fail)
-{
-    const bool observable = mons && mons->observable();
-    if (!mons
-        || mons->submerged()
-        || !observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        fail_check();
-
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // Cost to disallow freely locating invisible/submerged
-        // monsters.
-        return spret::success;
-    }
-
-    // TODO: check known rN instead of holiness
-    if (observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        mpr("You can't drain life from that!");
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
-    fail_check();
-
-    if (!mons->alive())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    // The practical maximum of this is about 25 (pow @ 100). - bwr
-    // If you update this, also update spell_damage_string().
-    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
-    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
-
-    if (!dam)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    int hp_gain = min(mons->hit_points, dam);
-    hp_gain = div_rand_round(hp_gain, 2);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    _player_hurt_monster(*mons, dam, BEAM_NEG);
-
-    if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
-    {
-        mprf("You feel life coursing into your body%s",
-             attack_strength_punctuation(hp_gain).c_str());
-        inc_hp(hp_gain);
-    }
-
-    return spret::success;
 }
 
 dice_def freeze_damage(int pow)
@@ -899,8 +836,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
 
-    mprf("The air twists around and %sstrikes %s%s%s",
-         mons->airborne() ? "violently " : "",
+    mprf("The air twists around and strikes %s%s%s",
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());
@@ -2065,7 +2001,8 @@ enum class frag_damage_type
     player_gargoyle, // weaker, because (?)
 };
 
-struct frag_effect {
+struct frag_effect
+{
     frag_damage_type damage;
     colour_t colour;
     string name;
@@ -2074,8 +2011,9 @@ struct frag_effect {
     bool hit_centre;
 };
 
-// Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for blowing up the player. Returns true iff the player can be deconstructed.
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for blowing up the player. Returns true iff the
+// player can be deconstructed.
 static bool _init_frag_player(frag_effect &effect)
 {
     if (you.form == transformation::statue || you.species == SP_GARGOYLE)
@@ -2102,7 +2040,8 @@ static bool _init_frag_player(frag_effect &effect)
     return false;
 }
 
-struct monster_frag {
+struct monster_frag
+{
     const char* type;
     colour_t colour;
     frag_damage_type damage;
@@ -2169,7 +2108,8 @@ static bool _init_frag_monster(frag_effect &effect, const monster &mon)
     return false;
 }
 
-struct feature_frag {
+struct feature_frag
+{
     const char* type;
     const char* what;
     frag_damage_type damage;
@@ -2219,7 +2159,7 @@ static bool _init_frag_grid(frag_effect &effect, coord_def target, const char **
     if (what)
         *what = frag.what;
 
-    if (feat_is_solid(grid))
+    if (!feat_is_solid(grid))
         effect.hit_centre = true; // to hit monsters standing on doors
 
    // If it was recoloured, use that colour instead.
@@ -2645,12 +2585,23 @@ void forest_damage(const actor *mon)
     }
 }
 
+int dazzle_chance_numerator(int hd)
+{
+    return 95 - hd * 4;
+}
+
+int dazzle_chance_denom(int pow)
+{
+    return 150 - pow;
+}
+
 bool dazzle_monster(monster * mons, int pow)
 {
     if (!mons || !mons_can_be_dazzled(mons->type))
         return false;
 
-    if (x_chance_in_y(95 - mons->get_hit_dice() * 4 , 150 - pow))
+    const int numerator = dazzle_chance_numerator(mons->get_hit_dice());
+    if (x_chance_in_y(numerator, dazzle_chance_denom(pow)))
     {
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, &you,
                        random_range(4, 8) * BASELINE_DELAY));
@@ -3297,15 +3248,6 @@ static void _imb_actor(actor * act, int pow, coord_def source)
     beam.affect_actor(act);
 }
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 spret cast_imb(int pow, bool fail)
 {
     int range = spell_range(SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
@@ -3340,7 +3282,7 @@ spret cast_imb(int pow, bool fail)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = { source };
+    far_to_near_sorter sorter = { source };
     sort(act_list.begin(), act_list.end(), sorter);
 
     for (actor *act : act_list)

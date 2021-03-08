@@ -16,7 +16,7 @@ end
 function tomb_1_mummy_priest_set(e, chamber)
   e.mons("mummy priest w:30 / revenant w:5 / lich w:5 / nothing w:30")
   if chamber then
-    e.mons("royal mummy / ancient lich w:1 / nothing w:11")
+    e.mons("royal mummy / nothing w:11")
     e.mons("obsidian statue / orange crystal statue")
   else
     e.mons("royal mummy")
@@ -29,7 +29,7 @@ end
 
 function tomb_mummy_priest_set(e)
   e.mons("mummy priest w:20 / lich w:2 / revenant w:2")
-  e.mons("royal mummy / ancient lich w:1")
+  e.mons("royal mummy")
 end
 
 function tomb_guardian_set(e, include_nothing)

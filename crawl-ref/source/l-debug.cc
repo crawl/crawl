@@ -511,6 +511,8 @@ LUAFN(debug_check_moncasts)
         SPELL_RANDOM_EFFECTS,
         SPELL_POISONOUS_VAPOURS,
         SPELL_BORGNJORS_VILE_CLUTCH,
+        SPELL_ANIMATE_ARMOUR,
+        SPELL_MANIFOLD_ASSAULT,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

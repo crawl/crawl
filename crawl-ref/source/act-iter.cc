@@ -208,3 +208,13 @@ void monster_iterator::advance()
              return;
     while (!(*this)->alive());
 }
+
+bool far_to_near_sorter::operator()(const actor* a, const actor* b)
+{
+    return a->pos().distance_from(pos) > b->pos().distance_from(pos);
+}
+
+bool near_to_far_sorter::operator()(const actor* a, const actor* b)
+{
+    return a->pos().distance_from(pos) < b->pos().distance_from(pos);
+}

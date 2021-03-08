@@ -884,15 +884,6 @@ wand of digging
 
 En magisk anordning, som graver tunneller gennem uforarbejdet klippe.
 %%%%
-wand of disintegration
-
-En magisk anordning, som kan sprænge alt andet end de hårdeste mures fysiske
-struktur – selv stenhårde statuer, for slet ikke at tale om kød.
-%%%%
-wand of enslavement
-
-En magisk anordning, som forårsager slavisk lydighed i et væsen.
-%%%%
 wand of fire
 
 En magisk anordning, som kaster kolossale ildkiler.

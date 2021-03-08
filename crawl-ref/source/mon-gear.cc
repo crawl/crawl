@@ -564,7 +564,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_DAGGER,           1 },
         } } },
         { MONS_DEEP_ELF_MASTER_ARCHER, { { { WPN_LONGBOW, 1 } } } },
-        { MONS_DEEP_ELF_MAGE,           { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_AIR_MAGE,       { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_FIRE_MAGE,      { DE_MAGE_WEAPONS } },
         { MONS_DEEP_ELF_ANNIHILATOR,    { DE_MAGE_WEAPONS } },
         { MONS_DEEP_ELF_DEATH_MAGE,     { DE_MAGE_WEAPONS } },
         { MONS_DEEP_ELF_DEMONOLOGIST,   { DE_MAGE_WEAPONS } },
@@ -991,7 +992,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     };
 
     bool force_item = false;
-    bool force_uncursed = false;
 
     string floor_tile = "";
     string equip_tile = "";
@@ -1019,7 +1019,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     switch (type)
     {
     case MONS_KOBOLD:
-    case MONS_BIG_KOBOLD:
+    case MONS_KOBOLD_BRIGAND:
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
@@ -1053,17 +1053,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             if (one_chance_in(5))
                 set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         }
-
-        if (one_chance_in(3))
-            do_curse_item(item);
-        break;
-
-    case MONS_DEEP_ELF_ARCHER:
-    case MONS_VASHNIA:
-    case MONS_NAGA_SHARPSHOOTER:
-    case MONS_SATYR:
-    case MONS_SONJA:
-        force_uncursed = true;
         break;
 
     case MONS_JORGRUN:
@@ -1266,12 +1255,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     if (force_item)
         item_set_appearance(i);
 
-    if (force_uncursed)
-    {
-        do_uncurse_item(i);
-        set_ident_flags(i, ISFLAG_KNOW_CURSE); // despoiler
-    }
-
     if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {
         ASSERT(!equip_tile.empty());
@@ -1395,15 +1378,25 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             {
                 weap_type  = MI_DART;
                 qty = random_range(2, 8);
-                brand = got_curare_roll(level) ? SPMSL_CURARE : SPMSL_POISONED;
+                brand = SPMSL_POISONED;
                 break;
             }
-            // intentional fallthrough
-        case MONS_BIG_KOBOLD:
             if (x_chance_in_y(2, 5))
             {
                 weap_type  = MI_STONE;
                 qty = 1 + random2(5);
+            }
+            break;
+        case MONS_KOBOLD_BRIGAND:
+            weap_type  = MI_DART;
+            if (one_chance_in(3)) {
+                // Avoid increasing total amount of generated curare
+                // too much.
+                brand = SPMSL_CURARE;
+                qty = 1;
+            } else {
+                qty = random_range(2, 8);
+                brand = SPMSL_POISONED;
             }
             break;
 
@@ -1752,7 +1745,8 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DEEP_ELF_DEMONOLOGIST:
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
-    case MONS_DEEP_ELF_MAGE:
+    case MONS_DEEP_ELF_AIR_MAGE:
+    case MONS_DEEP_ELF_FIRE_MAGE:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_ELEMENTALIST:
     case MONS_ORC:
@@ -2233,8 +2227,8 @@ void view_monster_equipment(monster* mon)
             continue;
 
         item_def &item = env.item[mon->inv[i]];
-        item.flags |= ISFLAG_SEEN;
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+        item.flags |= ISFLAG_SEEN;
         if (item.base_type == OBJ_WANDS)
             set_ident_type(item, true);
     }

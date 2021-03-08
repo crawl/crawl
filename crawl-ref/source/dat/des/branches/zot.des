@@ -706,7 +706,8 @@ ENDMAP
 NAME:   lemuel_lich_library
 DEPTH:  Zot, !Zot:$
 TAGS:   no_monster_gen
-MONS:   flying skull, lich, ancient lich, necromancer, vampire mage
+MONS:   flying skull, lich, ancient lich / dread lich, necromancer
+MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 SUBST:  w:w?
 SUBST:  ?=. 1:1
@@ -1780,7 +1781,7 @@ MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
 MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / glowing orange brain w:3 / war gargoyle w:3
 MONS:    nonbase draconian w:20 / killer klown / orb of fire w:5 / \
-         curse toe w:5 / ancient lich / electric golem / death cob
+         curse toe w:5 / ancient lich / dread lich / electric golem / death cob
 SHUFFLE: EF
 SUBST:   E : .
 SHUFFLE: ABCDF, GH / GH / GH / HG
@@ -2630,7 +2631,7 @@ NAME:    ebering_klown_carousel
 DEPTH:   Zot, !Zot:$
 ORIENT:  float
 TAGS:    no_monster_gen no_trap_gen
-MONS:    killer klown, ancient lich, death cob
+MONS:    killer klown, ancient lich / dread lich, death cob
 NSUBST:  - = 2 / 3 = 3.. / *:.
 : if (crawl.coinflip()) then
 NSUBST:  > = 1 = }:80 > / 1 = ):80 > / 1 = ]:80 >
@@ -2681,7 +2682,8 @@ SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
-MONS:    tentacled monstrosity, ancient lich, electric golem, draconian
+MONS:    tentacled monstrosity, ancient lich / dread lich, electric golem
+MONS:    draconian
 SHUFFLE: ABCDEFHI
 # Fire breathers: Red draconians, with some scorchers
 NSUBST:  A = 3 = 112 / 9 = 2. / *:.
@@ -2746,7 +2748,7 @@ ORIENT:  north
 TAGS:    no_dump no_trap_gen
 KITEM:   Z = Orb of Zot
 MONS:    patrolling orb guardian, orange crystal statue / w:20 obsidian statue
-MONS:    electric golem, killer klown, ancient lich, orb of fire
+MONS:    electric golem, killer klown, ancient lich / dread lich, orb of fire
 # Traps to spread throughout the vault. Fewer alarm traps as those have a big
 # effect on the vault as a whole.
 KFEAT:   ~ = zot trap / dispersal trap / permanent teleport trap / net trap \

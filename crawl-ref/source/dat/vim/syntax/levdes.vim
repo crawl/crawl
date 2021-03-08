@@ -120,7 +120,7 @@ syn keyword desOrientation preserve_wall
 " ITEM | KITEM (in mapdef.cc, without `random`)
 syn keyword desOrientation randbook any good_item star_item superb_item gold
 syn keyword desOrientation nothing syn keyword desOrientation acquire mundane
-syn keyword desOrientation damaged cursed randart not_cursed useful unobtainable
+syn keyword desOrientation damaged randart useful unobtainable
 syn keyword desOrientation mimic no_mimic no_pickup no_uniq allow_uniq
 "Note: `rotting` removed here which often caught `rotting devil` but was
 "unused as item tag

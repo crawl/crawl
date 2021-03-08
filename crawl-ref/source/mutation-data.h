@@ -329,9 +329,9 @@ static const mutation_def mut_data[] =
 { MUT_FAST, 0, 3, mutflag::good, true,
   "speed",
 
-  {"You cover ground quickly.",
-   "You cover ground very quickly.",
-   "You cover ground extremely quickly."},
+  {"You cover ground quickly. (Speed+)",
+   "You cover ground very quickly. (Speed++)",
+   "You cover ground extremely quickly. (Speed+++)"},
 
   {"You feel quick.",
    "You feel quick.",
@@ -605,19 +605,22 @@ static const mutation_def mut_data[] =
    "You feel frail."},
 },
 
-{ MUT_UNBREATHING, 0, 1, mutflag::good, true,
+{ MUT_UNBREATHING, 0, 2, mutflag::good, true,
   "unbreathing",
 
-  {"You can survive without breathing.", "", ""},
+  {"You can survive without breathing.",
+   "You can survive without breathing, even under water.", ""},
   {"You feel breathless.", "", ""},
   {"", "", ""},
 },
 
-{ MUT_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
+{ MUT_TORMENT_RESISTANCE, 0, 2, mutflag::good, false,
   "torment resistance",
 
-  {"You are immune to unholy pain and torment.", "", ""},
-  {"You feel a strange anaesthesia.", "", ""},
+  {"You are resistant to unholy torment.",
+   "You are immune to unholy pain and torment.", ""},
+  {"You feel a strange anaesthesia.",
+   "You feel a very strange anaesthesia.", ""},
   {"", "", ""},
 },
 
@@ -813,12 +816,15 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_CONSTRICTING_TAIL, 0, 1, mutflag::good, true,
-  "constrict 1",
+{ MUT_CONSTRICTING_TAIL, 0, 2, mutflag::good, true,
+  "naga tail",
 
-  {"You can use your snake-like lower body to constrict enemies.", "", ""},
-  {"Your tail grows strong enough to constrict your enemies.", "", ""},
-  {"", "", ""},
+  {"You have a snake-like lower body.",
+   "You can use your snake-like lower body to constrict enemies.", ""},
+  {"Your lower body turns into a snake tail.",
+   "Your tail grows strong enough to constrict your enemies.", ""},
+  {"Your lower body returns to normal.",
+   "Your snake tail weakens and can no longer constrict your enemies.", ""},
 },
 
 // Naga and Draconian only
@@ -861,9 +867,7 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
-#endif
 
-// species-dependent innate mutations
 { MUT_MIASMA_IMMUNITY, 0, 1, mutflag::good, false,
   "miasma immunity",
 
@@ -871,7 +875,9 @@ static const mutation_def mut_data[] =
   {"You feel immune to miasma.", "", ""},
   {"You feel vulnerable to miasma.", "", ""},
 },
+#endif
 
+// species-dependent innate mutations
 { MUT_GOURMAND, 0, 1, mutflag::good, false,
   "gourmand",
 
@@ -1019,16 +1025,13 @@ static const mutation_def mut_data[] =
   {"","",""},
 },
 
-#if TAG_MAJOR_VERSION == 34
-
 { MUT_FORLORN, 0, 1, mutflag::bad, false,
   "forlorn",
 
-  {"You have difficulty communicating with the divine.","",""},
+  {"You shall have no god before yourself.","",""},
   {"You feel forlorn.","",""},
   {"You feel more spiritual.","",""},
 },
-#endif
 
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
   "50% torment resistance",
@@ -1186,7 +1189,7 @@ static const mutation_def mut_data[] =
   "magic regeneration",
 
   {"You regenerate magic rapidly.", "", ""},
-  {"You feel your magic shroud grow more resilient.", "", ""},
+  {"Your magic begins to regenerate rapidly.", "", ""},
   {"", "", ""},
 },
 
@@ -1707,7 +1710,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
+{ MUT_DRINK_SAFETY, 0, 1, mutflag::bad, false,
   "inability to drink while threatened",
 
   {"You cannot drink potions while threatened.", "", ""},
@@ -1715,7 +1718,7 @@ static const mutation_def mut_data[] =
   {"You can once more drink potions while threatened.", "", ""},
 },
 
-{ MUT_NO_READ, 0, 1, mutflag::bad, false,
+{ MUT_READ_SAFETY, 0, 1, mutflag::bad, false,
   "inability to read while threatened",
 
   {"You cannot read scrolls while threatened.", "", ""},
@@ -1771,7 +1774,7 @@ static const mutation_def mut_data[] =
   {"You can once more train Dodging skill.", "", ""},
 },
 
-{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
+{ MUT_NO_ARMOUR_SKILL, 0, 1, mutflag::bad, false,
   "inability to train armour",
 
   {"You cannot train Armour skill.", "", ""},
@@ -1970,9 +1973,9 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_PAWS, 0, 1, mutflag::good, true,
-  "sharp paws",
+  "stealthy paws",
 
-  {"Your sharp claws are effective at attacking unaware monsters.", "", ""},
+  {"Your stealthy paws help you sneak and pounce on unaware monsters.", "", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -2016,6 +2019,82 @@ static const mutation_def mut_data[] =
   {"You feel resistant to acid.", "",  ""},
   {"You feel less resistant to acid.", "", ""},
 },
+
+{ MUT_QUADRUMANOUS, 0, 1, mutflag::good, false,
+  "four strong arms",
+
+  {"Your four strong arms can wield two-handed weapons with a shield.", "", ""},
+  {"Two of your arms shrink away.", "", ""},
+  {"You grow two extra arms.", "", ""},
+},
+
+{ MUT_NO_DRINK, 0, 1, mutflag::good, false,
+  "no potions",
+
+  {"You do not drink.", "", ""},
+  {"Your mouth dries to ashes.", "", ""},
+  {"You gain the ability to drink.", "", ""},
+},
+
+{ MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,
+  "retaliatory headbutt",
+
+  {"You reflexively headbutt those who attack you in melee.", "", ""},
+  {"Your retaliatory reflexes feel sharp.", "", ""},
+  {"Your retaliatory reflexes feel dull.", "", ""},
+},
+
+{ MUT_STEAM_RESISTANCE, 0, 1, mutflag::good, true,
+  "steam resistance",
+
+  {"You are immune to the effects of steam.", "", ""},
+  {"You are now immune to the effects of steam.", "", ""},
+  {"You are no longer immune to the effects of steam.", "", ""},
+},
+
+{ MUT_NO_GRASPING, 0, 1, mutflag::bad, false,
+  "no weapons or thrown items",
+
+  {"You are incapable of wielding weapons or throwing items.", "", ""},
+  {"You can no longer grasp objects.", "", ""},
+  {"You can now grasp objects.", "", ""},
+},
+
+{ MUT_NO_ARMOUR, 0, 1, mutflag::bad, false,
+  "no armour",
+
+  {"You cannot wear armour.", "", ""},
+  {"You can no longer wear armour.", "", ""},
+  {"You can now wear armour.", "", ""},
+},
+
+{ MUT_MULTILIVED, 0, 1, mutflag::good, false,
+  "multi-lived",
+
+  {"You gain extra lives every three experience levels.", "", ""},
+  {"You are no longer multi-lived.", "", ""},
+  {"You can now gain extra lives.", "", ""},
+},
+
+{ MUT_DISTRIBUTED_TRAINING, 0, 1, mutflag::good, false,
+  "distributed training",
+
+  {"Your experience applies equally to all skills.", "", ""},
+  {"Your experience now applies equally to all skills.", "", ""},
+  {"Your experience no longer applies equally to all skills.", "", ""},
+},
+
+{ MUT_NIMBLE_SWIMMER, 0, 2, mutflag::good, true,
+  "nimble swimmer",
+
+  {"You are stealthy while swimming. (Stealth+)",
+   "You are quick and stealthy while swimming. (Stealth+, EV+, Speed+++)", ""},
+  {"You feel comfortable in water.",
+   "You feel very comfortable in water.", ""},
+  {"You feel less comfortable in water.",
+   "You feel less comfortable in water.", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

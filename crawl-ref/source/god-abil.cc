@@ -13,6 +13,8 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
+#include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -20,8 +22,10 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -172,8 +176,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
-    if (wpn.cursed())
-        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -1572,28 +1574,6 @@ bool beogh_gift_item()
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON;
 
-    // need to remove any curses so that drop_item won't fail
-    item_def* item_to_drop = mons->mslot_item(mslot);
-    if (item_to_drop && item_to_drop->cursed())
-    {
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                item_to_drop->name(DESC_THE).c_str());
-        do_uncurse_item(*item_to_drop);
-    }
-
-    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
-    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
-        && shield_slot
-        && mons->hands_reqd(gift) == HANDS_TWO
-        && shield_slot->cursed())
-    {
-        // TODO: this doesn't seem to describe the shield as uncursed to the
-        // player. The weapon case works properly.
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                shield_slot->name(DESC_THE).c_str());
-        do_uncurse_item(*shield_slot);
-    }
-
     item_def *floor_item = mons->take_item(item_slot, mslot);
     if (!floor_item)
     {
@@ -1728,7 +1708,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     ASSERT(mon); // XXX: change to monster &mon
     ASSERT(mons_enslaved_body_and_soul(*mon));
 
-    add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
     remove_enslaved_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
@@ -2190,69 +2170,198 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     mpr("You return to the normal time flow.");
 }
 
-bool ashenzari_transfer_knowledge()
+struct curse_data
 {
-    if (you.transfer_skill_points > 0 && !ashenzari_end_transfer())
-        return false;
+    string name;
+    string abbr;
+    vector<skill_type> boosted;
+};
 
-    while (true)
-    {
-        skill_menu(SKMF_RESKILL_FROM);
-        if (is_invalid_skill(you.transfer_from_skill))
-        {
-            redraw_screen();
-            update_screen();
-            return false;
-        }
+static map<curse_type, curse_data> _ashenzari_curses =
+{
+    { CURSE_MELEE, {
+        "Melee Combat", "Melee",
+        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
+            SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
+    } },
+    { CURSE_RANGED, {
+        "Ranged Combat", "Range",
+        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
+    } },
+    { CURSE_ELEMENTS, {
+        "Elements", "Elem",
+        { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
+    } },
+    { CURSE_ALCHEMY, {
+        "Alchemy", "Alch",
+        { SK_POISON_MAGIC, SK_TRANSMUTATIONS },
+    } },
+    { CURSE_COMPANIONS, {
+        "Companions", "Comp",
+        { SK_SUMMONINGS, SK_NECROMANCY },
+    } },
+    { CURSE_BEGUILING, {
+        "Beguiling", "Bglg",
+        { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
+    } },
+    { CURSE_SELF, {
+        "Introspection", "Self",
+        { SK_FIGHTING, SK_SPELLCASTING },
+    } },
+    { CURSE_FORTITUDE, {
+        "Fortitude", "Fort",
+        { SK_ARMOUR, SK_SHIELDS },
+    } },
+    { CURSE_CUNNING, {
+        "Cunning", "Cun",
+        { SK_DODGING, SK_STEALTH },
+    } },
+    { CURSE_EVOCATIONS, {
+        "Evocations", "Evo",
+        { SK_EVOCATIONS },
+    } },
+};
 
-        you.transfer_skill_points = skill_transfer_amount(
-                                                    you.transfer_from_skill);
+static bool _can_use_curse(const curse_data& c)
+{
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            return true;
 
-        skill_menu(SKMF_RESKILL_TO);
-        if (is_invalid_skill(you.transfer_to_skill))
-        {
-            you.transfer_from_skill = SK_NONE;
-            you.transfer_skill_points = 0;
-            continue;
-        }
-
-        break;
-    }
-
-    // We reset the view to force view transfer next time.
-    you.skill_menu_view = SKM_NONE;
-
-    mprf("As you forget about %s, you feel ready to understand %s.",
-         skill_name(you.transfer_from_skill),
-         skill_name(you.transfer_to_skill));
-
-    you.transfer_total_skill_points = you.transfer_skill_points;
-
-    redraw_screen();
-    update_screen();
-    return true;
+    return false;
 }
 
-bool ashenzari_end_transfer(bool finished, bool force)
+string curse_name(const CrawlStoreValue& c)
 {
-    if (!force && !finished)
+    return _ashenzari_curses[static_cast<curse_type>(c.get_int())].name;
+}
+
+string curse_abbr(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.abbr;
+}
+
+const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.boosted;
+}
+
+static string ashenzari_curse_knowledge_list()
+{
+    if (!you_worship(GOD_ASHENZARI))
+        return "";
+
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    return lowercase_string(comma_separated_fn(curses.begin(), curses.end(),
+                              curse_name));
+}
+
+string desc_curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    vector<skill_type> trainable;
+
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            trainable.push_back(sk);
+
+    return c.name + ": "
+           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
+}
+
+/**
+ * Choose skills to boost accompanying the current curse.
+ */
+static void _choose_curse_knowledge()
+{
+    // This loop choses two available skills without replacement,
+    // it is a two element version of a resivoir sampling algorithm.
+    //
+    // If Ashenzari curses need some fancier weighting this is the
+    // place to do that weighting.
+    curse_type first_choice = NUM_CURSES;
+    curse_type second_choice = NUM_CURSES;
+    int valid_curses = 0;
+    for (auto const& curse : _ashenzari_curses)
     {
-        mprf("You are currently transferring knowledge from %s to %s.",
-             skill_name(you.transfer_from_skill),
-             skill_name(you.transfer_to_skill));
-        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
-            return false;
+        if (_can_use_curse(curse.second))
+        {
+            ++valid_curses;
+            if (valid_curses == 1)
+                first_choice = curse.first;
+            else if (valid_curses == 2)
+            {
+                second_choice = curse.first;
+                if (coinflip())
+                    swap(first_choice, second_choice);
+            }
+            else if (one_chance_in(valid_curses))
+                first_choice = curse.first;
+            else if (one_chance_in(valid_curses - 1))
+                second_choice = curse.first;
+        }
     }
 
-    mprf("You %s forgetting about %s and learning about %s.",
-         finished ? "have finished" : "stop",
-         skill_name(you.transfer_from_skill),
-         skill_name(you.transfer_to_skill));
-    you.transfer_from_skill = SK_NONE;
-    you.transfer_to_skill = SK_NONE;
-    you.transfer_skill_points = 0;
-    you.transfer_total_skill_points = 0;
-    return true;
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
+    CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (first_choice != NUM_CURSES)
+        curses.push_back(first_choice);
+    if (second_choice != NUM_CURSES)
+        curses.push_back(second_choice);
+
+    // It's not an error for this to be empty, curses are still useful for
+    // piety alone
+}
+
+/**
+ * Offer a new curse to the player, letting them know their new curse is
+ * available.
+ */
+void ashenzari_offer_new_curse()
+{
+    // No curse at full piety, since shattering resets the curse timer anyway
+    if (piety_rank() > 5)
+        return;
+
+    _choose_curse_knowledge();
+
+    you.props[AVAILABLE_CURSE_KEY] = true;
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    const string curse_names = ashenzari_curse_knowledge_list();
+    const string offer_string = curse_names.empty() ? "" :
+                                (" of " + curse_names);
+
+    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+                    " and a curse%s.", offer_string.c_str());
+}
+
+static void _do_curse_item(item_def &item)
+{
+    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
+    item.flags |= ISFLAG_CURSED;
+
+    if (you.equip[EQ_WEAPON] == item.link)
+    {
+        // Redraw the weapon.
+        you.wield_change = true;
+    }
+
+    for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
+    {
+        add_inscription(item,
+                curse_abbr(static_cast<curse_type>(curse.get_int())));
+        item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
+    }
 }
 
 /**
@@ -2260,18 +2369,13 @@ bool ashenzari_end_transfer(bool finished, bool force)
  *
  * This is the core logic behind Ash's Curse Item ability.
  * Player can abort without penalty.
- * Player can curse any cursable item (not just worn ones).
+ * Player can curse only worn items.
  *
- * @param num_rc Number of remove curse scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item(int num_rc)
+bool ashenzari_curse_item()
 {
-    ASSERT(num_rc > 0);
-    const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
-            " (Esc to abort)",
-            num_rc, num_rc == 1 ? "" : "s");
+    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
@@ -2287,8 +2391,73 @@ bool ashenzari_curse_item(int num_rc)
         return false;
     }
 
-    do_curse_item(item, false);
-    learned_something_new(HINT_YOU_CURSED);
+    _do_curse_item(item);
+    make_ashenzari_randart(item);
+    ash_check_bondage();
+
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
+    you.props.erase(AVAILABLE_CURSE_KEY);
+
+    return true;
+}
+
+/**
+ * Give a prompt to uncurse (and destroy an item).
+ *
+ * Player can abort without penalty.
+ *
+ * @return      Whether the player uncursed anything.
+ */
+bool ashenzari_uncurse_item()
+{
+    int item_slot = prompt_invent_item("Uncurse and destroy which item?",
+                                       menu_type::invlist,
+                                       OSEL_CURSED_WORN, OPER_ANY,
+                                       invprompt_flag::escape_only);
+    if (prompt_failed(item_slot))
+        return false;
+
+    item_def& item(you.inv[item_slot]);
+
+    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
+        && you.equip[EQ_RING_AMULET] != -1)
+    {
+        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
+                           "the amulet's finger first!");
+        return false;
+    }
+
+    if (item_is_melded(item))
+    {
+        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+                           "melded with your body!",
+             item.name(DESC_THE).c_str());
+        return false;
+    }
+
+    if (!yesno(make_stringf("Really remove and destroy %s?%s",
+                            item.name(DESC_THE).c_str(),
+                            you.props.exists(AVAILABLE_CURSE_KEY) ?
+                                " Ashenzari will withdraw the offered vision "
+                                "and curse!"
+                                : "").c_str(),
+                            false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
+    unequip_item(item_equip_slot(you.inv[item_slot]));
+    ash_check_bondage();
+
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    if (you.props.exists(AVAILABLE_CURSE_KEY))
+    {
+        simple_god_message(" withdraws the vision and curse.");
+        you.props.erase(AVAILABLE_CURSE_KEY);
+    }
+
     return true;
 }
 
@@ -2874,18 +3043,20 @@ bool gozag_call_merchant()
     {
         shop_type type = static_cast<shop_type>(i);
 #if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD)
+        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
             continue;
 #endif
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
             continue;
-        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
-            continue;
-        if (you.species == SP_FELID &&
+
+        if (you.has_mutation(MUT_NO_ARMOUR) &&
             (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE
-             || type == SHOP_WEAPON
-             || type == SHOP_WEAPON_ANTIQUE))
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
+        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
+            && you.has_mutation(MUT_NO_GRASPING))
         {
             continue;
         }
@@ -3574,7 +3745,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         }
 
         // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
+        if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
             continue;
 
         // The Grunt Algorithm
@@ -3728,17 +3899,14 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
  */
 static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 {
-    // XXX: this does a really silly dance back and forth between school &
-    // spelltype.
-    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
-    return spelltype_short_name(school);
+    return skill_abbr(arcane_mutation_to_skill(mutation));
 }
 
 static int _piety_for_skill(skill_type skill)
 {
     // Gnolls didn't have a choice about training the skill, so don't give
     // them more piety for waiting longer before taking the sacrifice.
-    if (you.species == SP_GNOLL)
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return 0;
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
@@ -3755,7 +3923,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             piety_gain += _piety_for_skill(SK_BOWS);
     }
     return piety_gain;
@@ -3872,7 +4040,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (you.get_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
@@ -4424,7 +4592,7 @@ bool ru_do_sacrifice(ability_type sac)
         if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             _ru_kill_skill(SK_BOWS);
     }
 
@@ -4744,6 +4912,7 @@ bool ru_power_leap()
     }
 
     move_player_to_grid(beam.target, false);
+    apply_barbs_damage();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5135,6 +5304,7 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
+        apply_barbs_damage();
     }
 
     crawl_state.cancel_cmd_again();
@@ -5472,6 +5642,8 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim->is_player())
     {
+        if (cancel_harmful_move(false))
+            return spret::abort;
         ancestor->move_to_pos(target, true, true);
         victim->move_to_pos(destination, true, true);
     }
@@ -5624,11 +5796,10 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
 
-    monster* beholder = you.get_beholder(target);
+    monster* beholder = you.get_beholder(wall_jump_landing_spot);
     if (beholder)
     {
-        error_ret = make_stringf("You cannot move your %s away from %s to wall jump!",
-             you.foot_name(true).c_str(),
+        error_ret = make_stringf("You cannot wall jump away from %s!",
              beholder->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5636,7 +5807,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
     if (fearmonger)
     {
-        error_ret = make_stringf("You are too afraid to wall jump closer to %s!",
+        error_ret = make_stringf("You cannot wall jump closer to %s!",
              fearmonger->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5803,7 +5974,6 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_repeat();
 
     apply_barbs_damage();
-    remove_ice_movement();
     return spret::success;
 }
 

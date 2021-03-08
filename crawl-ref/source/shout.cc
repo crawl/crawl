@@ -263,7 +263,7 @@ void monster_shout(monster* mons, int shout)
 bool check_awaken(monster* mons, int stealth)
 {
     // Usually redundant because we iterate over player LOS,
-    // but e.g. for you.xray_vision.
+    // but e.g. for passive_t::xray_vision.
     if (!mons->see_cell(you.pos()))
         return false;
 

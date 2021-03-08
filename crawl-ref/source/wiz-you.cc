@@ -822,14 +822,20 @@ void wizard_get_god_gift()
         return;
     }
 
+    if (you_worship(GOD_ASHENZARI))
+    {
+        ashenzari_offer_new_curse();
+        return;
+    }
+
     if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
 
 void wizard_toggle_xray_vision()
 {
-    you.xray_vision = !you.xray_vision;
-    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
+    you.wizard_vision = !you.wizard_vision;
+    mprf("X-ray vision %s.", you.wizard_vision ? "enabled" : "disabled");
     viewwindow(true);
     update_screen();
 }
@@ -930,9 +936,9 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
-        mpr("Not even in wizmode may Demigods worship a god!");
+        mpr("Not even in wizmode may divine creatures worship a god!");
         return;
     }
     god_type god = choose_god();

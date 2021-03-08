@@ -666,10 +666,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
 {
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
-    {
-        ASSERT(you.xray_vision);
         return NUM_FEATURES;
-    }
 
     ray.advance();
     int blocked = 0;

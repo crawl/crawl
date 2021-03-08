@@ -8,6 +8,7 @@
 #include "mon-poly.h"
 
 #include "artefact.h"
+#include "art-enum.h"
 #include "attitude-change.h"
 #include "delay.h"
 #include "describe.h"
@@ -754,6 +755,13 @@ void seen_monster(monster* mons)
                                  short_ghost_description(mons, true).c_str());
         }
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
+    }
+
+    if (player_equip_unrand(UNRAND_WYRMBANE))
+    {
+        const item_def *wyrmbane = you.weapon();
+        if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
+            mprf("<green>Wyrmbane glows as a worthy foe approaches.</green>");
     }
 
     // attempt any god conversions on first sight

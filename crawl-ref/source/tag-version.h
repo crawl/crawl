@@ -254,6 +254,9 @@ enum tag_minor_version
     TAG_MINOR_APPENDAGE,           // Change beastly appendage
     TAG_MINOR_REALLY_UNSTACK_EVOKERS, // Unstack all evokers
     TAG_MINOR_SETPOLY,             // Despoiler polymorph wands
+    TAG_MINOR_GOLDIFY_MANUALS,     // Move manuals out of the inventory
+    TAG_MINOR_UNCURSE,             // Remove curses from items
+    TAG_MINOR_NEW_ASHENZARI,       // New Ashenzari
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

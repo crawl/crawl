@@ -692,6 +692,19 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
+bool mons_class_is_draconic(monster_type mc)
+{
+    switch (mons_genus(mc))
+    {
+        case MONS_DRAGON:
+        case MONS_DRAKE:
+        case MONS_DRACONIAN:
+            return true;
+        default:
+            return false;
+    }
+}
+
 /**
  * Can killing this class of monster ever reward xp?
  *
@@ -1979,46 +1992,57 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
 
-    if (mons_is_demonspawn(mon.type) && attk_number == 0)
+    if (attk_number == 0)
     {
-        const monsterentry* mbase =
-            get_monster_data (draco_or_demonspawn_subspecies(mon));
-        ASSERT(mbase);
-        attk.flavour = mbase->attack[0].flavour;
-        return attk;
-    }
+        if (mons_is_demonspawn(mon.type))
+        {
+            const monsterentry* mbase =
+                get_monster_data (draco_or_demonspawn_subspecies(mon));
+            ASSERT(mbase);
+            attk.flavour = mbase->attack[0].flavour;
+            return attk;
+        }
 
-    // Nonbase draconians inherit aux attacks from their base type.
-    // Implicit assumption: base draconian types only get one aux
-    // attack, and it's in their second attack slot.
-    // If that changes this code will need to be changed.
-    if (mons_species(mon.type) == MONS_DRACONIAN
-        && mon.type != MONS_DRACONIAN
-        && attk.type == AT_NONE
-        && attk_number > 0
-        && smc->attack[attk_number - 1].type != AT_NONE)
+        if (mon.type == MONS_PLAYER_SHADOW)
+        {
+            if (!you.weapon())
+                attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
+        }
+
+        // summoning miscast monster; hd scaled with miscast severity
+        if (mon.type == MONS_NAMELESS)
+            attk.damage = mon.get_hit_dice() * 2;
+
+        // Boulder beetles get double attack damage and a normal 'hit' attack.
+        if (mon.has_ench(ENCH_ROLLING))
+        {
+            attk.type = AT_HIT;
+            attk.damage *= 2;
+        }
+    } else if (mons_species(mon.type) == MONS_DRACONIAN
+            && mon.type != MONS_DRACONIAN
+            && attk.type == AT_NONE
+            && smc->attack[attk_number - 1].type != AT_NONE)
     {
+        // Nonbase draconians inherit aux attacks from their base type.
+        // Implicit assumption: base draconian types only get one aux
+        // attack, and it's in their second attack slot.
+        // If that changes this code will need to be changed.
         const monsterentry* mbase =
             get_monster_data (draco_or_demonspawn_subspecies(mon));
         ASSERT(mbase);
         return mbase->attack[1];
     }
 
-    if (mon.type == MONS_PLAYER_SHADOW && attk_number == 0)
+    if (mon.type == MONS_ANIMATED_ARMOUR)
     {
-        if (!you.weapon())
-            attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
-    }
-
-    // summoning miscast monster; hd scaled with miscast severity
-    if (mon.type == MONS_NAMELESS && attk_number == 0)
-        attk.damage = mon.get_hit_dice() * 2;
-
-    // Boulder beetles get double attack damage and a normal 'hit' attack.
-    if (mon.has_ench(ENCH_ROLLING) && attk_number == 0)
-    {
-        attk.type = AT_HIT;
-        attk.damage *= 2;
+        const int armour_slot = mon.inv[MSLOT_ARMOUR];
+        if (armour_slot != NON_ITEM)
+        {
+            const int typ = env.item[armour_slot].sub_type;
+            const int ac = armour_prop(typ, PARM_AC);
+            attk.damage = ac + ac * ac / 2;
+        }
     }
 
     if (!base_flavour)
@@ -2602,156 +2626,71 @@ monster_type random_demonspawn_job()
                                 MONS_LAST_NONBASE_DEMONSPAWN);
 }
 
-// Note: For consistent behaviour in god_hates_monster(), all
-// spellbooks a given monster can get here should produce the same
-// return values in the following:
-//
-//     is_evil_spell()
-//
-//     (is_unclean_spell() || is_chaotic_spell())
-//
-// FIXME: This is not true for one set of spellbooks; MST_WIZARD_I
-// contains the unholy and chaotic Banishment spell, but the other
-// MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
-// chaotic spells.
-//
-// If a monster has only one spellbook, it is specified in mon-data.h.
-// If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
-// and the books are accounted for here.
-static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
+static mon_spellbook_type _get_mc_spellbook(const monster_type mon_type)
 {
-    switch (mon_type)
-    {
-    case MONS_HELL_KNIGHT:
-        return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
-
-    case MONS_NECROMANCER:
-        return { MST_NECROMANCER_I, MST_NECROMANCER_II };
-
-    case MONS_ORC_WIZARD:
-        return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
-
-    case MONS_WIZARD:
-    case MONS_EROLCHA:
-        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III };
-
-    case MONS_OGRE_MAGE:
-        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III };
-
-    case MONS_ANCIENT_CHAMPION:
-        return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II };
-
-    case MONS_TENGU_CONJURER:
-        return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
-                 MST_TENGU_CONJURER_III, MST_TENGU_CONJURER_IV };
-
-    case MONS_TENGU_REAVER:
-        return { MST_TENGU_REAVER_I, MST_TENGU_REAVER_II,
-                 MST_TENGU_REAVER_III };
-
-    case MONS_DEEP_ELF_MAGE:
-        return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
-                 MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
-                 MST_DEEP_ELF_MAGE_V, MST_DEEP_ELF_MAGE_VI };
-
-    case MONS_FAUN:
-        return { MST_FAUN_I, MST_FAUN_II };
-
-    case MONS_ROYAL_MUMMY:
-        return { MST_ROYAL_MUMMY_I, MST_ROYAL_MUMMY_II,
-                 MST_ROYAL_MUMMY_III, MST_ROYAL_MUMMY_IV };
-
-    case MONS_DEEP_ELF_KNIGHT:
-        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II };
-
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        return { MST_LICH_I, MST_LICH_II, MST_LICH_III,
-                 MST_LICH_IV, MST_LICH_V, };
-
-    default:
-        return { static_cast<mon_spellbook_type>(
-                     get_monster_data(mon_type)->sec) };
-    }
+    return static_cast<mon_spellbook_type>(get_monster_data(mon_type)->sec);
 }
 
-vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
+mon_spellbook_type get_spellbook(const monster_info &mon)
 {
     // special case for vault monsters: if they have a custom book,
     // treat it as MST_GHOST
     if (mon.props.exists(CUSTOM_SPELLS_KEY))
-        return { MST_GHOST };
-    else
-        return _mons_spellbook_list(mon.type);
+        return MST_GHOST;
+
+    return _get_mc_spellbook(mon.type);
 }
 
 // Get a list of unique spells from a monster's preset spellbooks
 // or in the case of ghosts their actual spells.
 // If flags is non-zero, it returns only spells that match those flags.
-unique_books get_unique_spells(const monster_info &mi,
+vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
                                mon_spell_slot_flags flags)
 {
     // No entry for MST_GHOST
     COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
 
-    const vector<mon_spellbook_type> books = get_spellbooks(mi);
-    const size_t num_books = books.size();
+    const mon_spellbook_type book = get_spellbook(mi);
 
-    unique_books result;
-    for (size_t i = 0; i < num_books; ++i)
+    // TODO: should we build an index to speed this reverse lookup?
+    unsigned int msidx;
+    for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
+        if (mspell_list[msidx].type == book)
+            break;
+
+    vector<mon_spell_slot> slots;
+
+    if (mons_genus(mi.type) == MONS_DRACONIAN)
     {
-        const mon_spellbook_type book = books[i];
-        // TODO: should we build an index to speed this reverse lookup?
-        unsigned int msidx;
-        for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
-            if (mspell_list[msidx].type == book)
-                break;
-
-        vector<mon_spell_slot> slots;
-
-        // Only prepend the first time; might be misleading if a draconian
-        // ever gets multiple sets of natural abilities.
-        if (mons_genus(mi.type) == MONS_DRACONIAN && i == 0)
-        {
-            const mon_spell_slot breath =
-                drac_breath(mi.draco_or_demonspawn_subspecies());
-            if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
-                slots.push_back(breath);
-            // No other spells; quit right away.
-            if (book == MST_NO_SPELLS)
-            {
-                if (slots.size())
-                    result.push_back(slots);
-                return result;
-            }
-        }
-
-        if (book != MST_GHOST)
-            ASSERT(msidx < ARRAYSZ(mspell_list));
-        for (const mon_spell_slot &slot : (book == MST_GHOST
-                                           ? mi.spells
-                                           : mspell_list[msidx].spells))
-        {
-            if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
-                continue;
-
-            if (none_of(slots.begin(), slots.end(),
-                [&](const mon_spell_slot& oldslot)
-                {
-                    return oldslot.spell == slot.spell;
-                }))
-            {
-                slots.push_back(slot);
-            }
-        }
-
-        if (slots.size() == 0)
-            continue;
-
-        result.push_back(slots);
+        const mon_spell_slot breath =
+            drac_breath(mi.draco_or_demonspawn_subspecies());
+        if (breath.flags & flags && breath.spell != SPELL_NO_SPELL)
+            slots.push_back(breath);
+        // No other spells; quit right away.
+        if (book == MST_NO_SPELLS)
+            return slots;
     }
 
-    return result;
+    if (book != MST_GHOST)
+        ASSERT(msidx < ARRAYSZ(mspell_list));
+    for (const mon_spell_slot &slot : (book == MST_GHOST
+                                       ? mi.spells
+                                       : mspell_list[msidx].spells))
+    {
+        if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
+            continue;
+
+        if (none_of(slots.begin(), slots.end(),
+            [&](const mon_spell_slot& oldslot)
+            {
+                return oldslot.spell == slot.spell;
+            }))
+        {
+            slots.push_back(slot);
+        }
+    }
+
+    return slots;
 }
 
 mon_spell_slot drac_breath(monster_type drac_type)
@@ -2782,8 +2721,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
 
 void mons_load_spells(monster& mon)
 {
-    vector<mon_spellbook_type> books = _mons_spellbook_list(mon.type);
-    const mon_spellbook_type book = books[random2(books.size())];
+    const mon_spellbook_type book = _get_mc_spellbook(mon.type);
 
     if (book == MST_GHOST)
         return mon.load_ghost_spells();
@@ -2823,14 +2761,8 @@ colour_t random_monster_colour()
 
 bool init_abomination(monster& mon, int hd)
 {
-    if (mon.type == MONS_CRAWLING_CORPSE
-        || mon.type == MONS_MACABRE_MASS)
-    {
-        mon.set_hit_dice(mon.hit_points = mon.max_hit_points = hd);
-        return true;
-    }
-    else if (mon.type != MONS_ABOMINATION_LARGE
-             && mon.type != MONS_ABOMINATION_SMALL)
+    if (mon.type != MONS_ABOMINATION_LARGE
+        && mon.type != MONS_ABOMINATION_SMALL)
     {
         return false;
     }
@@ -3831,6 +3763,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
     case SPELL_BLINK_CLOSE:
+    case SPELL_VAMPIRIC_DRAINING:
         return false;
 
     default:
@@ -5086,10 +5019,14 @@ void debug_monspells()
     // (zero-initialised, where 0 == MONS_PROGRAM_BUG).
     monster_type mon_book_map[NUM_MSTYPES] = { };
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+    {
         if (!invalid_monster_type(mc))
-            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
-                if (mon_book < ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
-                    mon_book_map[mon_book] = mc;
+        {
+            mon_spellbook_type mon_book = _get_mc_spellbook(mc);
+            if (mon_book < ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
+                mon_book_map[mon_book] = mc;
+        }
+    }
 
     // then, check every spellbook for errors.
 
@@ -5113,18 +5050,8 @@ void debug_monspells()
         }
         else
         {
-            const vector<mon_spellbook_type> mons_books
-                = _mons_spellbook_list(sample_mons);
             const char * const mons_name = get_monster_data(sample_mons)->name;
-            if (mons_books.size() > 1)
-            {
-                auto it = find(begin(mons_books), end(mons_books), spbook.type);
-                ASSERT(it != end(mons_books));
-                book_name = make_stringf("%s-%d", mons_name,
-                                         (int) (it - begin(mons_books)));
-            }
-            else
-                book_name = mons_name;
+            book_name = mons_name;
         }
 
         const char * const bknm = book_name.c_str();

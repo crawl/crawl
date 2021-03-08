@@ -1400,6 +1400,8 @@ bool keycode_is_printable(int keycode)
         // applied more generally but I'm concerned about non-US keyboard
         // layouts etc. I'm also not sure how accurate it is for sdl...
         return keycode >= 32 && keycode < 256;
+#elif defined(USE_TILE_WEB)
+        return keycode >= 32 && keycode < 128;
 #else
         return keycode >= 32;
 #endif
@@ -1408,6 +1410,10 @@ bool keycode_is_printable(int keycode)
 
 string keycode_to_name(int keycode)
 {
+    // this is printable, but it's very confusing to try to use ' ' to print it
+    // in circumstances where a name is called for
+    if (keycode == ' ')
+        return "Space";
     // TODO: handling of alt keys in SDL is generally a mess, including here
     // (they are basically just ignored)
     if (keycode_is_printable(keycode))

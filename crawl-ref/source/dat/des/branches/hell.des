@@ -789,7 +789,7 @@ KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
-           curse skull
+           curse skull / dread lich
 TILE:   c = dngn_stone_dark
 MAP
 .......dd...............dd.......

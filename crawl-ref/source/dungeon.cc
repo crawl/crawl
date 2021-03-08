@@ -34,7 +34,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
-#include "tile-env.h"
+#include "fight.h"
 #include "files.h"
 #include "flood-find.h"
 #include "ghost.h"
@@ -49,6 +49,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-gear.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -65,6 +66,7 @@
 #include "stringutil.h"
 #include "rltiles/tiledef-dngn.h"
 #include "tag-version.h"
+#include "tile-env.h"
 #include "tilepick.h"
 #include "tileview.h"
 #include "timed-effects.h"
@@ -1510,9 +1512,9 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return 10 + random2avg(90, 2); // rich level!
+        return 10 + random2avg(85, 2); // rich level!
     else
-        return 3 + roll_dice(3, 11);
+        return 3 + roll_dice(3, 10);
 }
 
 // Return how many level monster are wanted for level generation.
@@ -1531,7 +1533,7 @@ static int _num_mons_wanted()
 
     if (player_in_branch(BRANCH_SWAMP) || in_pan)
         size = 8;
-    else if (player_in_branch(BRANCH_CRYPT))
+    else if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
         size = 10;
     else if (player_in_hell())
         size = 23;
@@ -4482,23 +4484,6 @@ static void _build_postvault_level(vault_placement &place)
     }
 }
 
-static object_class_type _acquirement_object_class()
-{
-    static const object_class_type classes[] =
-    {
-        OBJ_JEWELLERY,
-        OBJ_BOOKS,
-        OBJ_WANDS,
-        OBJ_MISCELLANY, // Felids stop here
-        OBJ_WEAPONS,
-        OBJ_ARMOUR,
-        OBJ_STAVES,
-    };
-
-    const int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
-    return classes[random2(nc)];
-}
-
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     rng::subgenerator corpse_rng;
@@ -4614,10 +4599,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_colour(item);
     }
 
-    if (props.exists("cursed"))
-        do_curse_item(item);
-    else if (props.exists("uncursed"))
-        do_uncurse_item(item);
     if (props.exists("useful") && is_useless_item(item, false)
         && !allow_useless)
     {
@@ -4716,7 +4697,7 @@ int dgn_place_item(const item_spec &spec,
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
-            base_type = acquire ? _acquirement_object_class()
+            base_type = acquire ? shuffled_acquirement_classes(false)[0]
                                 : _superb_object_class();
         }
     }
@@ -4798,6 +4779,24 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
     const item_spec spec = sitems.get_item(index);
     dgn_place_item(spec, where);
+}
+
+static void _give_animated_weapon_ammo(monster &mon)
+{
+    const item_def *launcher = mon.launcher();
+    if (!launcher)
+        return;
+
+    const item_def *missiles = mon.missiles();
+    if (missiles && missiles->launched_by(*launcher))
+        return;
+
+    const int ammo_type = fires_ammo_type(*launcher);
+    const int thing_created = items(false, OBJ_MISSILES, ammo_type, 1);
+    if (thing_created == NON_ITEM)
+        return;
+
+    give_specific_item(&mon, thing_created);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
@@ -4897,6 +4896,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     {
         mon->swap_weapons(MB_FALSE);
     }
+
+    // Make dancing launchers less pathetic.
+    if (mons_class_is_animated_weapon(mon->type))
+        _give_animated_weapon_ammo(*mon);
 }
 
 static bool _monster_type_is_already_spawned_unique(monster_type type)
@@ -5123,7 +5126,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (mons->type == MONS_DANCING_WEAPON)
             mons->ghost->init_dancing_weapon(*wpn, 100);
         else if (mons->type == MONS_SPECTRAL_WEAPON)
-            mons->ghost->init_spectral_weapon(*wpn, 100);
+            mons->ghost->init_spectral_weapon(*wpn);
         mons->ghost_demon_init();
     }
 
@@ -5912,7 +5915,7 @@ static shop_type _random_shop()
 {
     return random_choose(SHOP_WEAPON, SHOP_ARMOUR, SHOP_WEAPON_ANTIQUE,
                          SHOP_ARMOUR_ANTIQUE, SHOP_GENERAL_ANTIQUE,
-                         SHOP_JEWELLERY, SHOP_EVOKABLES, SHOP_BOOK,
+                         SHOP_JEWELLERY, SHOP_BOOK,
                          SHOP_DISTILLERY, SHOP_SCROLL, SHOP_GENERAL);
 }
 
@@ -5981,9 +5984,6 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_JEWELLERY:
         return OBJ_JEWELLERY;
-
-    case SHOP_EVOKABLES:
-        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;

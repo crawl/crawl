@@ -86,7 +86,8 @@ ENDMAP
 
 NAME: grunt_enter_depths_magical_seal
 KMONS: O = ogre mage band / necromancer band
-MONS: wizard / deep elf mage / orc sorcerer / naga mage
+MONS: wizard / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
+      orc sorcerer / naga mage
 : depths_entry(_G)
 MAP
   bbbbbbb
@@ -178,7 +179,8 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
 TAGS:    transparent
-MONS:    two-headed ogre w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf mage w:2
+MONS:    two-headed ogre w:14 / yaktaur w:4 / tengu warrior w:8 / \
+         deep elf pyromancer w:1 / deep elf zephyrmancer w:1
 MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight w:5 /\
          deep elf archer w:5 / centaur warrior
 MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4

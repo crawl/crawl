@@ -68,7 +68,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), roll_dist(0),
+    cleaving(is_cleaving), is_riposte(false), is_projected(false), roll_dist(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -84,7 +84,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 bool melee_attack::can_reach()
 {
     return attk_type == AT_HIT && weapon && weapon_reach(*weapon) > REACH_NONE
-           || flavour_has_reach(attk_flavour);
+           || flavour_has_reach(attk_flavour)
+           || is_projected;
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -342,9 +343,9 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player() ?
-                you.species == SP_MINOTAUR :
-                mons_species(mons_base_type(*defender->as_monster()))
+        if (defender->is_player()
+                ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
+                : mons_species(mons_base_type(*defender->as_monster()))
                     == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();
@@ -548,7 +549,8 @@ bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player()
         && !cleaving
-        && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX)
+        && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX
+        && !is_projected)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
@@ -691,7 +693,8 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number, wu_jian_attack);
+                              effective_attack_number, wu_jian_attack,
+                              is_projected);
     }
 
     // Check for passive mutation effects.
@@ -815,7 +818,8 @@ bool melee_attack::attack()
         handle_phase_blocked();
     else
     {
-        if (attacker != defender && adjacent(defender->pos(), attack_position)
+        if (attacker != defender
+            && (adjacent(defender->pos(), attack_position) || is_projected)
             && !is_riposte)
         {
             // Check for defender Spines
@@ -2267,7 +2271,8 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 
 void melee_attack::player_stab_check()
 {
-    attack::player_stab_check();
+    if (!is_projected)
+        attack::player_stab_check();
 }
 
 /**
@@ -2664,6 +2669,11 @@ void melee_attack::mons_apply_attack_flavour()
         // blinking can kill, delay the call
         if (one_chance_in(3))
             blink_fineff::schedule(attacker);
+        break;
+
+    case AF_BLINK_WITH:
+        if (coinflip())
+            blink_fineff::schedule(attacker, defender);
         break;
 
     case AF_CONFUSE:
@@ -3305,9 +3315,17 @@ bool melee_attack::do_knockback(bool trample)
  */
 void melee_attack::cleave_setup()
 {
-    // Don't cleave on a self-attack.
+    // Don't cleave on a self-attack attack.
     if (attacker->pos() == defender->pos())
         return;
+
+    // Allow Gyre & Gimble to 'cleave' when projected, but not other attacks.
+    if (is_projected)
+    {
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+            cleave_targets.push_back(defender);
+        return;
+    }
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
@@ -3381,7 +3399,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        return you.get_mutation_level(MUT_CONSTRICTING_TAIL)
+        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
 
     case UNAT_KICK:
@@ -3396,7 +3414,10 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
-        return you.has_usable_tail() && coinflip();
+        return you.has_tail()
+            // constricting tails are too slow to slap
+            && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+            && coinflip();
 
     case UNAT_PSEUDOPODS:
         return you.has_usable_pseudopods() && !one_chance_in(3);
@@ -3465,8 +3486,7 @@ int melee_attack::calc_mon_to_hit_base()
 {
     const bool fighter = attacker->is_monster()
                          && attacker->as_monster()->is_fighter();
-    const int hd_mult = fighter ? 25 : 15;
-    return 18 + attacker->get_hit_dice() * hd_mult / 10;
+    return mon_to_hit_base(attacker->get_hit_dice(), fighter, false);
 }
 
 /**

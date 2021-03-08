@@ -161,8 +161,7 @@ static const char* missile_brand_field = "BrandNums";
 
 static const vector<string> monster_fields = {
     "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
-    "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
-    "MonsNumChunks", "TotalNutr", "TotalCarnNutr",
+    "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP"
 };
 
 static const vector<string> feature_fields = {
@@ -902,8 +901,7 @@ static void _write_stat(map<string, double> &stats, string field)
              || field == "MiscPlus"
              || field == "MonsHD"
              || field == "MonsHP"
-             || field == "MonsXP"
-             || field == "MonsNumChunks")
+             || field == "MonsXP")
     {
         value = stats[field] / stats["Num"];
     }

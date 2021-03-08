@@ -1017,9 +1017,8 @@ KITEM:  E = any armour good_item
 KITEM:  f = potion of curing / potion of might / potion of brilliance / \
             potion of attraction / potion of mutation w:30 / potion of flight w:20 / \
             potion of lignification  / \
-            scroll of teleportation / scroll of identify w:30 / \
-            scroll of fear / scroll of noise w:30 / scroll of magic mapping / \
-            scroll of remove curse
+            scroll of teleportation / scroll of identify w:35 / \
+            scroll of fear / scroll of noise w:30 / scroll of magic mapping
 KITEM:  F = scroll of enchant weapon q:2 / scroll of enchant armour q:2 /\
             potion of heal wounds q:3 / potion of resistance q:2 /\
             scroll of blinking q:2 / scroll of fog q:2 / potion of ambrosia q:2 /\

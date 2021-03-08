@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Unbrace
-        run: util/unbrace -n
-        working-directory: crawl-ref/source
       - name: Checkwhite
         run: util/checkwhite -n
+        working-directory: crawl-ref/source
+      - name: Unbrace
+        run: util/unbrace -n
         working-directory: crawl-ref/source
   build_linux:
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
@@ -100,7 +100,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.ccache
           key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
@@ -171,7 +171,7 @@ jobs:
         run: |
           sudo pip3 install PyYAML
       - name: Cache compilation
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.ccache
           key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
@@ -230,7 +230,7 @@ jobs:
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.ccache
           key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
@@ -294,7 +294,7 @@ jobs:
         run: ./deps.py --coverage
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.ccache
           key: ccache-catch2-${{ github.sha }}
@@ -393,7 +393,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.ccache
           key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}

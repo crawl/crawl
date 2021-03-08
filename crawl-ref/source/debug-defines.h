@@ -48,6 +48,10 @@
 #ifdef DEBUG_DIAGNOSTICS
     #define DEBUG_TESTS
     #define DEBUG_MONSPEAK
-    #define DEBUG_BLOOD_POTIONS
     #define DEBUG_STATISTICS
+#endif
+
+#ifdef DEBUG_MONSPEAK
+    // ensure dprf is available
+    #define DEBUG_DIAGNOSTICS
 #endif

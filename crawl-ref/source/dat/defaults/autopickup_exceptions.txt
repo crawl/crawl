@@ -21,9 +21,6 @@ ae += dangerous_item
 # Exclude items which your god disapproves of.
 ae += forbidden
 
-# Ignore books that you have already seen
-ae += [^n]identified.*spellbook
-
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
 :  if it.class(true) ~= "misc" then
@@ -49,7 +46,6 @@ ae += [^n]identified.*spellbook
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
 :   or itsubtype == "ring of wizardry"
-:   or itsubtype == "ring of stealth"
 :   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
@@ -81,7 +77,6 @@ ae += [^n]identified.*spellbook
 :  local itsubtype = it.subtype()
 :  if itsubtype == "amulet of faith"
 :  or itsubtype == "amulet of guardian spirit"
-:  or itsubtype == "amulet of inaccuracy"
 :  or itsubtype == "amulet of magic regeneration"
 :  or itsubtype == "amulet of nothing"
 :  or itsubtype == "amulet of reflection"

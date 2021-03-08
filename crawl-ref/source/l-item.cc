@@ -381,9 +381,7 @@ IDEFN(ego, do_ego)
  */
 IDEF(cursed)
 {
-    bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
-                       && item->cursed();
-    lua_pushboolean(ls, cursed);
+    lua_pushboolean(ls, item && item->cursed());
     return 1;
 }
 
@@ -1063,8 +1061,6 @@ IDEFN(inc_quantity, do_inc_quantity)
 static iflags_t _str_to_item_status_flags(string flag)
 {
     iflags_t flags = 0;
-    if (flag.find("curse") != string::npos)
-        flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
     //if (flag.find("type") != string::npos)
     //    flags &= ISFLAG_KNOW_TYPE;

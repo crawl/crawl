@@ -15,17 +15,13 @@
 #define DEAD_ARE_HOPPING 16
 #define DEAD_ARE_CRAWLING 32
 
-// Properties set for active summons
-#define SW_TARGET_MID "sw_target_mid"
-#define SW_READIED "sw_readied"
-#define SW_TRACKING "sw_tracking"
-
 // How many aut until the next doom hound pops out of doom howl?
 #define NEXT_DOOM_HOUND_KEY "next_doom_hound"
 
 spret cast_summon_small_mammal(int pow, god_type god, bool fail);
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail);
+spret cast_summon_armour_spirit(int pow, god_type god, bool fail);
 spret cast_summon_ice_beast(int pow, god_type god, bool fail);
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god,
                                  bool fail = false);
@@ -89,9 +85,6 @@ int animate_dead(actor *caster, int pow, beh_type beha,
 int find_simulacrable_corpse(coord_def c);
 spret cast_simulacrum(int pow, god_type god, bool fail);
 
-bool twisted_resurrection(actor *caster, int pow, beh_type beha,
-                          unsigned short foe, god_type god, bool actual = true);
-
 monster_type pick_random_wraith();
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
@@ -110,12 +103,7 @@ spret cast_fulminating_prism(actor* caster, int pow,
 int prism_hd(int pow, bool random = true);
 
 monster* find_spectral_weapon(const actor* agent);
-bool weapon_can_be_spectral(const item_def *weapon);
-void cast_spectral_weapon(actor *agent, int pow, god_type god);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
-bool trigger_spectral_weapon(actor* agent, const actor* target);
-bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
-void reset_spectral_weapon(monster* mons);
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 

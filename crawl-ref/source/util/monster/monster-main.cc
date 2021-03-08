@@ -901,9 +901,7 @@ int main(int argc, char* argv[])
                 if (attk.type == AT_CLAW && mon.has_claws() >= 3)
                     monsterattacks += colour(LIGHTGREEN, "(claw)");
 
-                const attack_flavour flavour(orig_attk.flavour == AF_KLOWN
-                                                     || orig_attk.flavour
-                                                            == AF_DRAIN_STAT ?
+                const attack_flavour flavour(orig_attk.flavour == AF_DRAIN_STAT ?
                                                  orig_attk.flavour :
                                                  attk.flavour);
 
@@ -920,10 +918,13 @@ int main(int argc, char* argv[])
                 case AF_ACID:
                 case AF_REACH_TONGUE:
                     monsterattacks +=
-                        colour(YELLOW, damage_flavour("acid", "7d3"));
+                        colour(YELLOW, damage_flavour("acid", "4d3"));
                     break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");
+                    break;
+                case AF_BLINK_WITH:
+                    monsterattacks += colour(MAGENTA, "(blink together)");
                     break;
                 case AF_COLD:
                     monsterattacks += colour(
@@ -979,9 +980,6 @@ int main(int argc, char* argv[])
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
-                    break;
-                case AF_KLOWN:
-                    monsterattacks += colour(LIGHTBLUE, "(klown)");
                     break;
                 case AF_SCARAB:
                     monsterattacks += colour(LIGHTMAGENTA, "(scarab)");
@@ -1055,6 +1053,8 @@ int main(int argc, char* argv[])
                 case AF_POISON_STAT:
                 case AF_FIREBRAND:
                 case AF_MIASMATA:
+                case AF_ROT:
+                case AF_KLOWN:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
@@ -1169,7 +1169,7 @@ int main(int argc, char* argv[])
             else
                 monsterresistances += ", ";
             monsterresistances += colour(
-                MAGENTA, "magic(" + to_string(me->willpower) + ")");
+                MAGENTA, "will(" + to_string(me->willpower) + ")");
         }
 
         const resists_t res(shapeshifter ? me->resists :

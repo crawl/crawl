@@ -146,7 +146,9 @@ item_def* newgame_make_item(object_class_type base,
     ASSERT(item.quantity == 1 || is_stackable_item(item));
 
     // If that didn't help, nothing will.
-    if (is_useless_item(item, false, true))
+    // However, wanderer randbooks aren't yet initialized and all other
+    // starting books are guaranteed to be useful at game start.
+    if (item.base_type != OBJ_BOOKS && is_useless_item(item, false, true))
     {
         item = item_def();
         return nullptr;
@@ -305,11 +307,11 @@ void give_items_skills(const newgame_def& ng)
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    if (you.species == SP_FELID)
-    {
+    if (you.has_mutation(MUT_NO_GRASPING))
         you.skills[SK_THROWING] = 0;
+
+    if (you.has_mutation(MUT_NO_ARMOUR))
         you.skills[SK_SHIELDS] = 0;
-    }
 
     if (!you_worship(GOD_NO_GOD))
     {

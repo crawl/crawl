@@ -70,7 +70,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BECKONING,
     SPELL_GRAVITAS,
     SPELL_TELEPORT_OTHER,
-    SPELL_GOLUBRIAS_PASSAGE,
+    SPELL_MANIFOLD_ASSAULT,
 },
 
 {   // Book of Hexes
@@ -186,6 +186,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Warp
     SPELL_GRAVITAS,
     SPELL_PORTAL_PROJECTILE,
+    SPELL_MANIFOLD_ASSAULT,
+    SPELL_GOLUBRIAS_PASSAGE,
     SPELL_DISPERSAL,
     SPELL_DISJUNCTION,
 },
@@ -225,6 +227,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Earth
+    SPELL_ANIMATE_ARMOUR,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_BOLT_OF_MAGMA,
     SPELL_STATUE_FORM,
@@ -297,6 +300,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Dreams
     SPELL_HIBERNATION,
+    SPELL_ANIMATE_ARMOUR,
     SPELL_BORGNJORS_VILE_CLUTCH,
     SPELL_SILENCE,
     SPELL_SHADOW_CREATURES,

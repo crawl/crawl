@@ -54,7 +54,6 @@
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
-#include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
@@ -437,8 +436,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         return;
     item_def& item = env.item[o];
 
-    do_uncurse_item(item);
-
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
@@ -600,7 +597,7 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_ENSLAVED ? "enslaved" :
+           killer == KILL_CHARMD ? "enslaved" :
            killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
@@ -772,7 +769,7 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
         && killer != KILL_BANISHED)
     {
         record_monster_defeat(mons, killer);
-        record_monster_defeat(mons, KILL_ENSLAVED);
+        record_monster_defeat(mons, KILL_CHARMD);
         yred_make_enslaved_soul(mons, player_under_penance());
         return true;
     }
@@ -1117,7 +1114,7 @@ static string _killer_type_name(killer_type killer)
 #endif
     case KILL_PACIFIED:
         return "pacified";
-    case KILL_ENSLAVED:
+    case KILL_CHARMD:
         return "enslaved";
     case KILL_SLIMIFIED:
         return "slimified";
@@ -1913,7 +1910,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 // perhaps this should go to its own function
                 if (mp_heal
                     && have_passive(passive_t::bottle_mp)
-                    && !you_drinkless(false))
+                    && you.can_drink(false))
                 {
                     simple_god_message(" collects the excess magic power.");
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
@@ -2773,7 +2770,7 @@ void pikel_band_neutralise()
         }
     }
     string final_msg;
-    if (visible_minions > 0)
+    if (visible_minions > 0 && you.num_turns > 0)
     {
         if (you.get_mutation_level(MUT_NO_LOVE))
         {
@@ -2831,7 +2828,7 @@ void hogs_to_humans()
     }
 
     string final_msg;
-    if (any > 0)
+    if (any > 0 && you.num_turns > 0)
     {
         final_msg = make_stringf("No longer under Kirke's spell, the %s %s %s!",
                                  any > 1 ? "hogs return to their"
@@ -2896,6 +2893,9 @@ monster* mons_find_elven_twin_of(const monster* mons)
 **/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
+    if (killer == KILL_DISMISSED || killer == KILL_RESET)
+        return;
+
     // Sometimes, if you pacify one twin near a staircase, they leave
     // in the same turn. Convert, in those instances. The strict_neutral check
     // is intended to cover the slimify case, we don't want to pacify the other

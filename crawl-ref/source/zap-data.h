@@ -757,7 +757,7 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     8
 },
 
-_mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
+_mon_hex_zap(ZAP_CHARMING, BEAM_CHARM),
 
 {
     ZAP_PAIN,
@@ -1113,6 +1113,23 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
     BLACK,
     true,
     BEAM_AGONY,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    0
+},
+
+{
+    ZAP_VAMPIRIC_DRAINING,
+    "",
+    200,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BLACK,
+    true,
+    BEAM_VAMPIRIC_DRAINING,
     NUM_DCHAR_TYPES,
     false,
     false,
@@ -1742,6 +1759,23 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     BEAM_DEVASTATION,
     DCHAR_FIRED_ZAP,
     true,
+    false,
+    0
+},
+
+{
+    ZAP_MIGHT,
+    "",
+    100,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    BLACK,
+    true,
+    BEAM_MIGHT,
+    NUM_DCHAR_TYPES,
+    false,
     false,
     0
 },

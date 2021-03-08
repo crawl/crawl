@@ -412,6 +412,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
+        && player_equip_unrand(UNRAND_DEMON_AXE)
+        && you.beheld())
+    {
+        SAY(mpr("Your thirst for blood prevents you from unwielding your "
+                "weapon!"));
+        return false;
+    }
+
+    if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
@@ -847,7 +856,7 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
+    if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
     {
         if (verbose)
             mpr("You can't wear that.");
@@ -1042,10 +1051,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                if (you.species == SP_NAGA)
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!");
+                    mpr("Boots don't fit your feet!"); // palentonga
             }
             return false;
         }
@@ -1156,7 +1165,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_GRASPING))
     {
         mpr("You can't wear anything.");
         return false;
@@ -2186,7 +2195,6 @@ bool remove_ring(int slot, bool announce)
         else
             mpr("It's stuck to you!");
 
-        set_ident_flags(you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE);
         return false;
     }
 
@@ -2244,21 +2252,20 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (you_drinkless())
+    if (!you.can_drink(false))
     {
         mpr("You can't drink.");
+        return;
+    }
+    else if (!you.can_drink(true))
+    {
+        mpr("You cannot drink potions in your current state!");
         return;
     }
 
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.duration[DUR_NO_POTIONS])
-    {
-        mpr("You cannot drink potions in your current state!");
         return;
     }
 
@@ -2617,13 +2624,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (item.link == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item.link == you.equip[EQ_AMULET]
-            && !item_known_cursed(item))
-        {
-            learned_something_new(HINT_INACCURACY);
-        }
-
         const int target_link = item.link;
         item_def* moved_target = auto_assign_item_slot(item);
         if (moved_target != nullptr && moved_target->link == link)
@@ -2706,7 +2706,8 @@ void random_uselessness()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    switch (random2(8))
+    const string skin = species_skin_name(you.species).c_str();
+    switch (random2(9))
     {
     case 0:
     case 1:
@@ -2728,10 +2729,13 @@ void random_uselessness()
         break;
 
     case 3:
-        if (you.species == SP_MUMMY)
+        if (starts_with(skin, "bandage"))
             mpr("Your bandages flutter.");
-        else // if (you.can_smell())
-            mprf("You smell %s.", _weird_smell().c_str());
+        else
+        {
+            mprf("You %s %s.", you.can_smell() ? "smell" : "sense",
+                _weird_smell().c_str());
+        }
         break;
 
     case 4:
@@ -2741,7 +2745,7 @@ void random_uselessness()
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
             mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
+        else if (!you.can_smell() || coinflip())
             mpr("Your ears itch!");
         else
             mpr("Your nose twitches suddenly!");
@@ -2752,12 +2756,19 @@ void random_uselessness()
         mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
         noisy(2, you.pos());
         break;
+    case 8:
+        mprf("Your %s briefly flash%s %s.",
+                        skin.c_str(),
+                        ends_with(skin, "s") ? "" : "s",
+                        weird_glowing_colour().c_str());
+        break;
     }
 }
 
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
+    const int dur = 30 + random2(20);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -2774,7 +2785,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, dur, 0,
+                     "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -2783,7 +2795,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BLINKING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
-           || scroll == SCR_REMOVE_CURSE
 #if TAG_MAJOR_VERSION == 34
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
@@ -2888,10 +2899,9 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
+            if (have_passive(passive_t::want_curses))
+                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
-
-        case SCR_REMOVE_CURSE:
-            return _no_items_reason(OSEL_CURSED_WORN);
 
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
@@ -3107,16 +3117,6 @@ void read_scroll(item_def& scroll)
         you_teleport();
         break;
 
-    case SCR_REMOVE_CURSE:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            remove_curse(false);
-        }
-        else
-            cancel_scroll = !remove_curse(true, pre_succ_msg);
-        break;
-
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
             mpr("This is a scroll of acquirement!");
@@ -3202,31 +3202,6 @@ void read_scroll(item_def& scroll)
         break;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    case SCR_CURSE_WEAPON:
-    {
-        // Not you.weapon() because we want to handle melded weapons too.
-        item_def * const weapon = you.slot_item(EQ_WEAPON, true);
-        if (!weapon || !is_weapon(*weapon) || weapon->cursed())
-        {
-            bool plural = false;
-            const string weapon_name =
-                weapon ? weapon->name(DESC_YOUR)
-                       : "Your " + you.hand_name(true, &plural);
-            mprf("%s very briefly gain%s a black sheen.",
-                 weapon_name.c_str(), plural ? "" : "s");
-        }
-        else
-        {
-            // Also sets wield_change.
-            do_curse_item(*weapon, false);
-            learned_something_new(HINT_YOU_CURSED);
-            bad_effect = true;
-        }
-        break;
-    }
-#endif
-
     case SCR_ENCHANT_WEAPON:
         if (!alreadyknown)
         {
@@ -3272,15 +3247,9 @@ void read_scroll(item_def& scroll)
             (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
         break;
 #if TAG_MAJOR_VERSION == 34
-    // Should always be identified by Ashenzari.
+    case SCR_CURSE_WEAPON:
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
-    {
-        const bool armour = which_scroll == SCR_CURSE_ARMOUR;
-        cancel_scroll = !curse_item(armour, pre_succ_msg);
-        break;
-    }
-
     case SCR_RECHARGING:
     {
         mpr("This item has been removed, sorry!");

@@ -168,7 +168,6 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -200,7 +199,6 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -230,7 +228,7 @@ TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
-KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
+KMONS: e = patrolling deep elf pyromancer ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds
 KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
@@ -411,10 +409,11 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf mage w:30
+MONS: deep elf knight / deep elf pyromancer w:15 / deep elf zephyrmancer w:15
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:2 deep elf pyromancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
+      w:2 deep elf zephyrmancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
@@ -600,7 +599,7 @@ KMONS: 8 = anaconda
 SUBST: 5 = 5..
 SUBST: 5 = 5678
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = serpentine rune of zot
@@ -639,7 +638,7 @@ TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
 MONS: Polyphemus, dream sheep, sea snake, Ilsuiw, merfolk javelineer
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
@@ -684,7 +683,7 @@ SUBST: p = 34.
 NSUBST: w = 2:? / *:w
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
@@ -758,7 +757,7 @@ SUBST: . = ...W
 SUBST: W = WWWW......p2
 KFEAT: ! = deep_water
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: B = book shop / jewellery shop
 KFEAT: C = distillery shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = decaying rune of zot
@@ -851,13 +850,12 @@ SUBST: G : GtTUVY
 SUBST: Y : TUY
 KFEAT: i = antique weapon shop
 KFEAT: d = antique armour shop
-KFEAT: e = gadget shop
 KFEAT: f = book shop
 KFEAT: h = jewellery shop
 KFEAT: j = distillery shop
 KFEAT: k = scroll shop
 KFEAT: * = any shop
-NSUBST: * = 1:i / 1:d / 1:e / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
+NSUBST: * = 1:i / 1:d / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
 COLOUR: Z = shimmer_blue
 KFEAT:  Z = closed_door
 MARKER: Z = lua:props_marker({ \
@@ -1182,7 +1180,7 @@ KMONS: t = col:white generate_awake statue name:pristine name_adjective \
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
-KFEAT: ! = gadget shop / armour shop / distillery shop
+KFEAT: ! = armour shop / distillery shop
 KITEM: $ = wand of mindburst w:2 / potion of curing / star_item
 KMONS: C = patrolling ice devil
 KMONS: D = patrolling hell beast

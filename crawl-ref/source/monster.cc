@@ -1030,12 +1030,11 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     if (!force && item.cursed())
         return false;
 
-    if (!force && you.can_see(*this))
-        set_ident_flags(item, ISFLAG_KNOW_CURSE);
-
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (!force && mons_class_is_animated_weapon(type))
+            return false;
         unequip_weapon(item, msg);
         break;
 
@@ -1619,9 +1618,6 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
-    if (item.sub_type == AMU_INACCURACY)
-        return false;
-
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
@@ -1658,10 +1654,6 @@ static int _get_monster_armour_value(const monster *mon,
     // Give a sizable bonus for shields of reflection.
     if (get_armour_ego_type(item) == SPARM_REFLECTION)
         value += 3;
-
-    // And an even more sizable bonus for boots/bardings of running.
-    if (get_armour_ego_type(item) == SPARM_RUNNING)
-        value += 5;
 
     // Another sizable bonus for rampaging.
     if (get_armour_rampaging(item, true))
@@ -1797,9 +1789,6 @@ static int _get_monster_jewellery_value(const monster *mon,
     {
         value += item.plus;
     }
-
-    if (item.sub_type == AMU_INACCURACY)
-        value -= 5;
 
     value += get_jewellery_res_fire(item, true);
     value += get_jewellery_res_cold(item, true);
@@ -2134,10 +2123,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     if (weap && !unequip(*weap, msg))
     {
         // Item was cursed.
-        // A centaur may randomly decide to not shoot you, but bashing
-        // people with a ranged weapon is a dead giveaway.
-        if (weap->cursed() && you.can_see(*this) && is_range_weapon(*weap))
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         return;
     }
 
@@ -2630,6 +2615,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
+    // TODO: shared code with species_skin_name for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -2649,6 +2635,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
         str = "tentacle";
         break;
 
+    // TODO: this looks extremely non-general
     case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
@@ -3128,7 +3115,7 @@ int monster::shield_bonus() const
     if (incapacitated())
         return -100;
 
-    int sh = -100;
+    int sh = 0;
     const item_def *shld = shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
@@ -3143,7 +3130,7 @@ int monster::shield_bonus() const
     if (amulet && amulet->sub_type == AMU_REFLECTION)
         sh += AMU_REFLECT_SH;
 
-    return sh;
+    return sh ? sh : -100;
 }
 
 int monster::shield_block_penalty() const
@@ -3160,7 +3147,7 @@ void monster::shield_block_succeeded()
 
 int monster::shield_bypass_ability(int) const
 {
-    return 15 + get_hit_dice() * 2 / 3;
+    return mon_shield_bypass(get_hit_dice());
 }
 
 bool monster::missile_repulsion() const
@@ -3279,6 +3266,17 @@ int monster::base_armour_class() const
         if (type == MONS_ANCESTOR_KNIGHT)
             return get_experience_level() + 7;
         return get_experience_level() / 2;
+    }
+
+    if (type == MONS_ANIMATED_ARMOUR)
+    {
+        // Armour spirits get double AC from their armour.
+        const int armour_slot = inv[MSLOT_ARMOUR];
+        if (armour_slot != NON_ITEM)
+        {
+            const int typ = env.item[armour_slot].sub_type;
+            return armour_prop(typ, PARM_AC);
+        }
     }
 
     const int base_ac = get_monster_data(type)->AC;
@@ -3534,7 +3532,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     return holi;
 }
 
-bool monster::undead_or_demonic() const
+bool monster::undead_or_demonic(bool /*temp*/) const
 {
     const mon_holy_type holi = holiness();
 
@@ -3887,11 +3885,12 @@ bool monster::res_sticky_flame() const
 
 bool monster::res_miasma(bool /*temp*/) const
 {
-    if (holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+    if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+        || get_mons_resist(*this, MR_RES_MIASMA)
+        || is_unbreathing())
+    {
         return true;
-
-    if (get_mons_resist(*this, MR_RES_MIASMA))
-        return true;
+    }
 
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
@@ -5233,7 +5232,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::can_bleed(bool /*allow_tran*/) const
+bool monster::can_bleed(bool /*temp*/) const
 {
     return mons_has_blood(type);
 }
@@ -5241,6 +5240,11 @@ bool monster::can_bleed(bool /*allow_tran*/) const
 bool monster::is_stationary() const
 {
     return mons_class_is_stationary(type);
+}
+
+bool monster::can_burrow() const
+{
+    return mons_class_flag(type, M_BURROWS);
 }
 
 /**
@@ -5691,9 +5695,6 @@ int monster::action_energy(energy_use_type et) const
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;
 
-    if (run())
-        move_cost -= 1;
-
     // Shadows move more quickly when blended with the darkness.
     // Change _monster_stat_description in describe.cc if you change this.
     if (type == MONS_SHADOW && invisible())
@@ -5720,11 +5721,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
 
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
-
-    // Randomize interval between servitor spellcasts
-    // TODO: is there a more transparent way to implement this than energy?
-    if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
-        energy_loss += random2(16);
 
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.
@@ -6524,6 +6520,28 @@ bool monster::is_divine_companion() const
            && mons_can_use_stairs(*this);
 }
 
+bool monster::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+
+    if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
+        return true;
+
+    if (mons_is_ghost_demon(type) && species_is_draconian(ghost->species))
+        return true;
+
+    return false;
+}
+
+int monster::dragon_level() const
+{
+    if (is_summoned() || testbits(flags, MF_NO_REWARD))
+        return 0;
+    return actor::dragon_level();
+}
+
+/// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;
@@ -6542,27 +6560,6 @@ int monster::spell_hd(spell_type spell) const
     if (has_ench(ENCH_EMPOWERED_SPELLS))
         hd += 5;
     return hd;
-}
-
-/**
- * For monsters with random spellbooks, track which spells
- * the player has seen this monster cast.
- *
- * @param spell     The spell the player just saw the monster cast.
- */
-void monster::note_spell_cast(spell_type spell)
-{
-    const monster_info mi(this);
-    if (get_spellbooks(mi).size() <= 1)
-        return;
-
-    for (int old_spell : props[SEEN_SPELLS_KEY].get_vector())
-        if (old_spell == spell)
-            return;
-
-    dprf("tracking seen spell %s for %s",
-         spell_title(spell), name(DESC_A, true).c_str());
-    props[SEEN_SPELLS_KEY].get_vector().push_back(spell);
 }
 
 /**

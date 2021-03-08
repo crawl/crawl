@@ -113,7 +113,7 @@ MONS:    spectral spriggan / spectral centaur / spectral naga / \
          merfolk simulacrum w:2 / vampire / wraith / wight
 MONS:    mana viper / eidolon w:5 / soul eater w:5 / \
          death drake w:5 / flayed ghost / shadow dragon w:2
-MONS:    ancient lich w:20 / tzitzimitl
+MONS:    ancient lich / dread lich / tzitzimitl
 KMONS:   89 = patrolling glowing orange brain
 KMONS:   0 = orange crystal statue
 KMONS:   B = floating eye
@@ -204,7 +204,8 @@ ORIENT:  encompass
 : local brnd = crawl.random2(3)
 : if brnd == 0 then
 MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
-        deep elf mage w:20 / deep elf knight w:5 / deep elf archer w:5 / nothing
+        deep elf pyromancer / deep elf zephyrmancer / deep elf knight w:5 / \
+        deep elf archer w:5 / nothing
 MONS:   orc warlord / deep elf annihilator
 : elseif brnd == 1 then
 MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
@@ -633,7 +634,8 @@ default-depth: Depths:2-, !Depths:$
 NAME:     hangedman_crystal_crosses_colossus
 TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
-MONS:     deep elf mage w:12 / naga mage / hell knight / efreet w:5 / \
+MONS:     deep elf pyromancer w:6 / deep elf zephyrmancer w:6 / naga mage / \
+          hell knight / efreet w:5 / \
           rakshasa w:5 ; robe . wand of iceblast | wand of acid . \
                          trident ego:freezing | trident ego:flaming / \
           centaur warrior w:8 ; shortbow ego:flaming | shortbow ego:freezing . \
@@ -665,7 +667,7 @@ KMONS:    5 = deep elf blademaster ; mundane crystal plate armour . \
 KMONS:    6 = deep elf master archer ; fire dragon scales | ice dragon scales . \
                                        longbow ego:flaming | longbow ego:freezing . \
                                        arrow . potion of haste | potion of resistance
-KMONS:    7 = lich / ancient lich w:5
+KMONS:    7 = lich w:40 / ancient lich / dread lich
 KMONS:    8 = titan / draconian annihilator w:5
 KMONS:    A = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
               quicksilver dragon w:14 / \

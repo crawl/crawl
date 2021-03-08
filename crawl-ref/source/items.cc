@@ -438,11 +438,10 @@ bool dec_inv_item_quantity(int obj, int amount)
         // the next stack.
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
+        quiver::on_actions_changed();
     }
     else
         you.inv[obj].quantity -= amount;
-
-    quiver::on_actions_changed();
 
     return ret;
 }
@@ -477,7 +476,8 @@ void inc_inv_item_quantity(int obj, int amount)
         you.wield_change = true;
 
     you.inv[obj].quantity += amount;
-    quiver::on_actions_changed();
+    if (you.inv[obj].quantity == amount) // not currently possible?
+        quiver::on_actions_changed(true);
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -941,9 +941,25 @@ void item_check()
     }
 }
 
+void identify_item(item_def& item)
+{
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    if (is_artefact(item) && !(item.flags & ISFLAG_NOTED_ID))
+    {
+        item.flags |= ISFLAG_NOTED_ID;
+
+        // Make a note of it.
+        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                       origin_desc(item)));
+    }
+}
+
 // Identify the object the player stepped on.
 // Books are fully identified.
 // Wands are only type-identified.
+// Equipment items are fully identified,
+// but artefact equipment skips some type-id checks.
 static bool _id_floor_item(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS)
@@ -969,6 +985,17 @@ static bool _id_floor_item(item_def &item)
                 set_item_autopickup(item, AP_FORCE_OFF);
             return true;
         }
+    }
+    else if (item_type_is_equipment(item.base_type))
+    {
+        if (fully_identified(item))
+            return false;
+
+        // autopickup hack for previously-unknown items
+        if (item_needs_autopickup(item))
+            item.props["needs_autopickup"] = true;
+        identify_item(item);
+        return true;
     }
 
     return false;
@@ -1795,12 +1822,27 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
-static void _get_book(const item_def& it)
+static void _get_book(item_def& it)
 {
-    mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+    if (it.sub_type != BOOK_MANUAL)
+    {
+        mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
-    if (!library_add_spells(spells_in_book(it)))
-        mpr("Unfortunately, you learned nothing new.");
+        if (!library_add_spells(spells_in_book(it)))
+            mpr("Unfortunately, you learned nothing new.");
+        return;
+    }
+    // This is mainly for save compat: if a manual generated somehow that is not
+    // id'd, the following message is completely useless
+    set_ident_flags(it, ISFLAG_IDENT_MASK);
+
+    const skill_type sk = static_cast<skill_type>(it.plus);
+    if (you.skill_manual_points[sk])
+        mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
+    else
+        mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
+    you.skill_manual_points[sk] += it.skill_points;
+    you.skills_to_show.insert(sk);
 }
 
 // Adds all books in the player's inventory to library.
@@ -1810,7 +1852,7 @@ void add_held_books_to_library()
 {
     for (item_def& it : you.inv)
     {
-        if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+        if (it.base_type == OBJ_BOOKS)
         {
             _get_book(it);
             destroy_item(it);
@@ -2065,7 +2107,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     }
 
     you.last_pickup[item.link] = quant_got;
-    quiver::on_actions_changed();
+    quiver::on_actions_changed(true);
     item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
@@ -2108,7 +2150,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         get_gold(it, quant_got, quiet);
         return true;
     }
-    if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+    if (it.base_type == OBJ_BOOKS)
     {
         _get_book(it);
         return true;
@@ -2960,11 +3002,6 @@ static bool _similar_equip(const item_def& pickup_item,
     const equipment_type inv_slot = get_item_slot(inv_item);
 
     if (inv_slot == EQ_NONE)
-        return false;
-
-    // If it's an unequipped cursed item the player might be looking
-    // for a replacement.
-    if (item_known_cursed(inv_item) && !item_is_equipped(inv_item))
         return false;
 
     if (get_item_slot(pickup_item) != inv_slot)
@@ -4530,9 +4567,6 @@ item_def get_item_known_info(const item_def& item)
         ii.sub_type = item.sub_type;
         break;
     }
-
-    if (item_ident(item, ISFLAG_KNOW_CURSE))
-        ii.flags |= (item.flags & ISFLAG_CURSED);
 
     if (item_type_known(item))
     {

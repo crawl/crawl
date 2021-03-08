@@ -42,8 +42,6 @@ mutations:
     MUT_REGENERATION: 1
   8:
     MUT_FANGS: 1
-  12:
-    MUT_REGENERATION: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BRIGAND

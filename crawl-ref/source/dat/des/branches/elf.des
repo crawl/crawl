@@ -103,7 +103,7 @@ TAGS:    patrolling
 SHUFFLE: asd/x$+
 SHUFFLE: fgh/x$+
 SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 MAP
 xxxxxxxxxxxxxxxaaa
 xxxxxxxxxxxxxxxasa
@@ -122,7 +122,7 @@ NAME:    elf_arrival_002
 PLACE:   Elf:1
 ORIENT:  south
 TAGS:    patrolling
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 MAP
 xxxxx@xxx@xxx@xxxxx
 xxxx...........xxxx
@@ -144,8 +144,8 @@ NAME:    eino_elf_arrival_customs
 ORIENT:  southwest
 PLACE:   Elf:1
 TAGS:    patrolling
-MONS:    deep elf mage
-MONS:    deep elf mage / nothing
+MONS:    deep elf pyromancer / deep elf zephyrmancer
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
 MAP
 xxxxxxxxx
 x.+.....x
@@ -166,8 +166,8 @@ NAME:    eino_elf_arrival_shootout
 PLACE:   Elf:1
 ORIENT:  float
 TAGS:    patrolling
-MONS:    deep elf mage / nothing
-MONS:    deep elf mage w:13 / nothing w:6
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
+MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing
 MAP
 xxxxxxxx@@@xxxxxxxx
 xxxx...........xxxx
@@ -191,7 +191,7 @@ PLACE:  Elf:1
 ORIENT: south
 TAGS:   patrolling
 TAGS:   no_monster_gen
-KMONS:  Z = deep elf mage / nothing w:7
+KMONS:  Z = deep elf pyromancer / deep elf zephyrmancer / nothing
 KFEAT:  Z = W
 MAP
  .........
@@ -213,7 +213,7 @@ NAME:   eino_elf_arrival_the_gate
 PLACE:  Elf:1
 ORIENT: south
 TAGS:   patrolling
-MONS:   deep elf mage
+MONS:   deep elf pyromancer / deep elf zephyrmancer
 MAP
 x.........x
 @.........@
@@ -239,7 +239,7 @@ ORIENT:  west
 PLACE:   Elf:1
 SHUFFLE: 12
 KFEAT:   C = altar_vehumet
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 xxxxxxxxxxxxx...xxxxxx.....xxx
@@ -260,7 +260,7 @@ NAME:   minmay_elf_arrival_circle
 ORIENT: float
 PLACE:  Elf:1
 TAGS:   patrolling
-MONS:   deep elf mage
+MONS:   deep elf pyromancer / deep elf zephyrmancer
 SUBST:  B : b.
 MAP
        xx+xx
@@ -288,7 +288,7 @@ NAME:   minmay_elf_arrival_plus
 TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-MONS:   deep elf mage w:11 / nothing w:8
+MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:14
 MAP
      x@...@x
      x.....x
@@ -313,7 +313,7 @@ NAME:   minmay_elf_arrival_summoners
 TAGS:   patrolling
 ORIENT: float
 PLACE:  Elf:1
-MONS:   deep elf mage
+MONS:   deep elf pyromancer / deep elf zephyrmancer
 KFEAT:  m = iron_grate
 MAP
   xxxxxxx
@@ -352,7 +352,7 @@ PLACE:   Elf:1
 NAME:   minmay_elf_crystal_square
 DEPTH:  Elf
 ORIENT: float
-MONS:   deep elf mage / nothing
+MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:20
 MAP
 +bbbbbbbbbbbbbbb+
 b...............b
@@ -377,7 +377,7 @@ NAME:   minmay_elf_crystal_pentagon
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 8
-MONS:   deep elf mage w:20 / nothing w:25
+MONS:   deep elf pyromancer / deep elf zephyrmancer / nothing w:25
 MAP
    +bbbbbbbbbbb+
    b...........b
@@ -404,7 +404,7 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 6
-MONS:   deep elf mage w:5 / nothing
+MONS:   deep elf zephyrmancer / deep elf pyromancer / nothing w:40
 MAP
     +bbbbbbbbb+
     b...1b1...b
@@ -430,7 +430,8 @@ TAGS:   misc_elf_vault
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 4
-MONS:   deep elf mage w:30 / deep elf death mage / nothing w:70
+MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / \
+        deep elf death mage / nothing w:70
 MAP
     +bbbbbbb+
    bb.......bb
@@ -455,8 +456,8 @@ NAME:   minmay_elf_crystal_octagon
 DEPTH:  Elf
 ORIENT: float
 WEIGHT: 2
-MONS:   deep elf mage w:30 / deep elf death mage / deep elf sorcerer / \
-        nothing w:100
+MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / \
+        deep elf death mage / deep elf sorcerer / nothing w:100
 MAP
      +bbbbb+
     bb.....bb
@@ -499,7 +500,7 @@ ENDMAP
 NAME:  minmay_elf_sorcery
 TAGS:  misc_elf_vault transparent
 DEPTH: Elf
-MONS:  deep elf mage w:30 / nothing
+MONS:  deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
 KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
 SUBST: x : xxc, m : mmcxb
@@ -527,7 +528,7 @@ ENDMAP
 NAME:  minmay_elf_annihilation
 TAGS:  misc_elf_vault transparent
 DEPTH: Elf
-MONS:  deep elf mage / nothing
+MONS:  deep elf pyromancer / deep elf zephyrmancer / nothing w:20
 KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
 KITEM: 2 = randbook disc:conjuration slevels:16
 SUBST: x : x c:1
@@ -556,7 +557,7 @@ ENDMAP
 NAME:  minmay_elf_demonology
 TAGS:  misc_elf_vault transparent
 DEPTH: Elf
-MONS:  deep elf mage / nothing
+MONS:  deep elf pyromancer / deep elf zephyrmancer / nothing w:20
 KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
 KITEM: 2 = randbook disc:summoning slevels:16
 MAP
@@ -707,7 +708,8 @@ ENDMAP
 NAME:  guppyfry_elf_castle
 TAGS:  transparent
 DEPTH: Elf:2-
-MONS:  deep elf mage / deep elf knight / deep elf archer
+MONS:  deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
+       deep elf knight / deep elf archer
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
 MONS:  plant
 SUBST: - = .%*3$
@@ -730,7 +732,7 @@ ENDMAP
 NAME:  guppyfry_elf_garden
 TAGS:  transparent
 DEPTH: Elf:2-
-MONS:  deep elf mage
+MONS:  deep elf pyromancer / deep elf zephyrmancer
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
 MONS:  plant
 SUBST: - = WW333..%
@@ -756,7 +758,8 @@ ENDMAP
 
 NAME:  guppyfry_elf_altar
 DEPTH: Elf:2-
-MONS:  deep elf knight w:5 / deep elf archer w:5 / deep elf mage
+MONS:  deep elf knight / deep elf archer / \
+       deep elf pyromancer / deep elf zephyrmancer
 MONS:  deep elf high priest
 SUBST: F = G:6 F:1
 KMONS: F = orange crystal statue / obsidian statue / ice statue
@@ -779,7 +782,7 @@ ENDMAP
 NAME:  guppyfry_elf_lava
 TAGS:  transparent
 DEPTH: Elf:2-
-MONS:  deep elf mage
+MONS:  deep elf pyromancer / deep elf zephyrmancer
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
        w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
@@ -1184,8 +1187,9 @@ ENDMAP
 NAME:    hangedman_elven_crosses_minicolossus
 TAGS:    no_monster_gen transparent misc_elf_vault
 DEPTH:   Elf
-MONS:    deep elf mage, deep elf knight / deep elf mage w:6
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
+MONS:    deep elf knight / deep elf pyromancer w:3 / deep elf zephyrmancer w:3
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 MONS:    dancing weapon ; short sword ego:flaming | short sword ego:freezing | \
                           short sword ego:venom | short sword ego:electrocution
 # Some basic excessive pillar randomization work,
@@ -1224,8 +1228,8 @@ NAME:    hangedman_elf_represent
 TAGS:    no_monster_gen misc_elf_vault transparent
 DEPTH:   Elf
 # Place two pairings of obvious descendents / ascendents.
-MONS:    deep elf mage, deep elf sorcerer
-MONS:    deep elf mage, deep elf high priest
+MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf sorcerer
+MONS:    deep elf pyromancer / deep elf zephyrmancer, deep elf high priest
 MONS:    deep elf annihilator, deep elf demonologist
 NSUBST:  1 = 2 = 111.. / 1:. / 2:1, 3 = 2 = 333.. / 1:. / 2:3
 SHUFFLE: 12 / 34 / 15 / 16
@@ -1248,7 +1252,7 @@ ENDMAP
 NAME:    hangedman_elf_disciples
 TAGS:    no_monster_gen misc_elf_vault
 DEPTH:   Elf
-MONS:    deep elf mage
+MONS:    deep elf pyromancer / deep elf zephyrmancer
 # Some other fledgling miscellaneous magic casters.
 MONS:    wizard, tengu conjurer, boggart, kobold demonologist
 MONS:    deep elf sorcerer / deep elf annihilator w:2
@@ -1332,8 +1336,9 @@ NAME:     elven_hall_of_blades_hangedman_original
 TAGS:     no_dump no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   north
-MONS:     deep elf mage
-MONS:     deep elf knight w:11 / deep elf mage w:1
+MONS:     deep elf pyromancer / deep elf zephyrmancer
+MONS:     deep elf knight w:22 / \
+          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
 MONS:     deep elf blademaster, dancing weapon
 : halls_of_blades_weapon(_G)
 SHUFFLE:  CD / CD / DC / DC / DD
@@ -1399,8 +1404,9 @@ TAGS:     no_dump no_item_gen no_monster_gen
 PLACE:    Elf:2
 WEIGHT:   5
 ORIENT:   north
-MONS:     deep elf mage
-MONS:     deep elf knight w:11 / deep elf mage w:1
+MONS:     deep elf pyromancer / deep elf zephyrmancer
+MONS:     deep elf knight w:22 / \
+          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
 MONS:     deep elf blademaster, dancing weapon
 : halls_of_blades_weapon(_G)
 SHUFFLE:  CD / CD / DC / DC / DD
@@ -1649,7 +1655,7 @@ NAME: nicolae_blade_entry_area_security
 FTILE: 1 = floor_vault
 COLOUR: 1 = lightgrey
 SUBST: b : bmc
-KMONS: 2 = deep elf mage
+KMONS: 2 = deep elf pyromancer / deep elf zephyrmancer
 MAP
       =
 ...c-----c...

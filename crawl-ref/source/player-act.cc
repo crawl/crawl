@@ -26,6 +26,7 @@
 #include "item-prop.h"
 #include "item-use.h"
 #include "message.h"
+#include "movement.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -77,6 +78,8 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     clear_invalid_constrictions();
     end_searing_ray();
+    // Remove spells that break upon movement
+    remove_ice_movement();
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
@@ -135,15 +138,20 @@ bool player::floundering() const
     return in_water() && !can_swim() && !extra_balanced();
 }
 
+/**
+ * Does the player get a balance bonus in their current terrain? If so, they
+ * will not count as floundering, even if they can't swim.
+ */
 bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = env.grid(pos());
-    return species == SP_GREY_DRACONIAN
-              || form == transformation::tree
-              || grid == DNGN_SHALLOW_WATER
-                  && (species == SP_NAGA // tails, not feet
-                      || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && form_keeps_mutations();
+    // trees are balanced everywhere they can inhabit.
+    return form == transformation::tree
+        // Species or forms with large bodies (e.g. nagas) are ok in shallow
+        // water. (N.b. all large form sizes can swim anyways, and also
+        // giant sized creatures can automatically swim, so the form part is a
+        // bit academic at the moment.)
+        || grid == DNGN_SHALLOW_WATER && body_size(PSIZE_BODY) >= SIZE_LARGE;
 }
 
 int player::get_hit_dice() const
@@ -294,6 +302,8 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     // TODO: does this really have to depend on `you.time_taken`?  In basic
     // cases at least, `you.time_taken` is just `player_speed()`. See
     // `_prep_input`.
+    // We could simplify some code elsewhere if we fixed this,
+    // e.g. cast_manifold_assault().
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
@@ -322,7 +332,7 @@ item_def *player::weapon(int /* which_attack */) const
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
-    if (species == SP_FORMICID)
+    if (you.has_mutation(MUT_QUADRUMANOUS))
         return HANDS_ONE;
     else
         return actor::hands_reqd(item, base);
@@ -385,7 +395,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
         return true;
     }
-    else if (species == SP_FELID)
+    else if (you.has_mutation(MUT_NO_GRASPING))
     {
         if (!quiet)
             mpr("You can't use weapons.");
@@ -454,21 +464,49 @@ string player::conj_verb(const string &verb) const
  *
  * @return A string describing the player's current hand or hand-equivalents.
  */
-static string _hand_name_singular()
+static string _hand_name_singular(bool temp)
 {
-    if (!get_form()->hand_name.empty())
+    // first handle potentially transient hand names
+    if (temp && !get_form()->hand_name.empty())
         return get_form()->hand_name;
 
-    if (you.species == SP_FELID)
-        return "paw";
-
-    if (you.has_usable_claws())
+    // let species case handle paws
+    const bool paws = you.has_mutation(MUT_PAWS, temp);
+    if (you.has_usable_claws() && !paws)
         return "claw";
 
     if (you.has_usable_tentacles())
         return "tentacle";
 
-    return "hand";
+    // player has no usable claws, but has the mutation -- they are suppressed
+    // by something. (The species names will give the wrong answer for this
+    // case, except for felids, where we want "blade paws".)
+    if (you.has_mutation(MUT_CLAWS, false) && !paws)
+        return "hand";
+
+    // then fall back on the species name
+    return species_hand_name(you.species);
+}
+
+// XX: this is distinct from hand_name because of the actor api
+string player::base_hand_name(bool plural, bool temp, bool *can_plural) const
+{
+    bool _can_plural;
+    if (can_plural == nullptr)
+        can_plural = &_can_plural;
+    *can_plural = !get_mutation_level(MUT_MISSING_HAND);
+
+    string singular;
+    // it's ugly to do this here, but blade hands' hand name is dependent on
+    // the hand name without forms, so it's hard to offload into transform.cc
+    // without code duplication.
+    if (temp && form == transformation::blade_hands)
+        singular += "blade ";
+    singular += _hand_name_singular(temp);
+    if (plural && *can_plural)
+        return pluralise(singular);
+
+    return singular;
 }
 
 /**
@@ -480,16 +518,7 @@ static string _hand_name_singular()
  */
 string player::hand_name(bool plural, bool *can_plural) const
 {
-    bool _can_plural;
-    if (can_plural == nullptr)
-        can_plural = &_can_plural;
-    *can_plural = !get_mutation_level(MUT_MISSING_HAND);
-
-    const string singular = _hand_name_singular();
-    if (plural && *can_plural)
-        return pluralise(singular);
-
-    return singular;
+    return base_hand_name(plural, true, can_plural);
 }
 
 /**
@@ -521,7 +550,7 @@ static string _foot_name_singular(bool *can_plural)
         return "underbelly";
     }
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_PAWS))
         return "paw";
 
     if (you.fishtail)
@@ -562,24 +591,17 @@ string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != nullptr)
         *can_plural = true;
 
+    string str = species_arm_name(species);
+
     string adj;
-    string str = "arm";
-
-    if (species_is_draconian(you.species) || species == SP_NAGA)
-        adj = "scaled";
-    else if (species == SP_TENGU)
-        adj = "feathered";
-    else if (species == SP_MUMMY)
-        adj = "bandage-wrapped";
-    else if (species == SP_OCTOPODE)
-        str = "tentacle";
-
     if (form == transformation::lich)
         adj = "bony";
     else if (form == transformation::shadow)
         adj = "shadowy";
+    else
+        adj = species_skin_name(species, true);
 
-    if (!adj.empty())
+    if (adj != "fleshy")
         str = adj + " " + str;
 
     if (plural)
@@ -601,7 +623,7 @@ string player::unarmed_attack_name() const
 
     if (has_usable_claws(true))
     {
-        if (species == SP_FELID)
+        if (you.has_mutation(MUT_FANGS))
             default_name = "Teeth and claws";
         else
             default_name = "Claws";
@@ -835,4 +857,11 @@ int player::heads() const
     if (props.exists(HYDRA_FORM_HEADS_KEY))
         return props[HYDRA_FORM_HEADS_KEY].get_int();
     return 1; // not actually always true
+}
+
+bool player::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+    return you.form == transformation::dragon;
 }

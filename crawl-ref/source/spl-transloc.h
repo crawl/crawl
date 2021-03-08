@@ -26,6 +26,9 @@ bool you_teleport_to(const coord_def where,
 
 spret cast_portal_projectile(int pow, bool fail);
 
+spret cast_manifold_assault(int pow, bool fail, bool real = true);
+string weapon_unprojectability_reason();
+
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
 spret cast_golubrias_passage(const coord_def& where, bool fail);

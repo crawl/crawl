@@ -69,7 +69,7 @@ ENDMAP
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
 WEIGHT: 5
-MONS:  big kobold ; boomerang ego:dispersal, kobold demonologist
+MONS:  kobold brigand ; boomerang ego:dispersal, kobold demonologist
 : abyss_entry(_G, '_')
 MAP
 xxxxxxxxxxxxxxx
@@ -1154,7 +1154,7 @@ TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / eye of draining w:4 / floating eye w:2
 KMONS:  3O = flying skull
-KMONS:  4 = large abomination / small abomination w:6 / macabre mass w:2
+KMONS:  4 = large abomination / small abomination w:6
 KMONS:  5 = cacodemon
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
@@ -1321,7 +1321,7 @@ ENDMAP
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
 MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
-KMONS:  OL = lich / ancient lich w:1
+KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 NSUBST: L = 1:O / *:L
@@ -1464,8 +1464,8 @@ KMONS:   6 = lurking horror
 KITEM:   4d = scroll of random uselessness w:15 q:1 / \
          club w:6 / stone q:1 / dart q:1 ego:atropa / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of random effects / wand of flame / whip not_cursed w:2 / \
-         hat not_cursed mundane w:5
+KITEM:   5 = wand of random effects / wand of flame / whip w:2 / \
+         hat mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
@@ -1603,7 +1603,7 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
          / very ugly thing / quicksilver dragon / shadow dragon
 MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
          / blizzard demon / executioner / angel / daeva
-KMONS:   R = hellephant / ancient lich / hell sentinel / profane servitor
+KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
@@ -2069,9 +2069,11 @@ MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KMONS:  1 = big kobold w:80 ; short sword | rapier | quick blade w:3 /\
-            big kobold w:10 ; quick blade ego:distortion w:6 | \
-                              rapier ego:distortion | short sword ego:distortion
+KMONS:  1 = kobold brigand w:80 ; dart ego:poisoned | dart ego:curare w:5 \
+                . short sword | rapier | quick blade w:3 \
+            / kobold brigand w:10 ; dart ego:poisoned | dart ego:curare w:5 \
+                . quick blade ego:distortion w:6 | rapier ego:distortion \
+                    | short sword ego:distortion
 : init_abyss_exit(_G, "P")
 MAP
   ccccc

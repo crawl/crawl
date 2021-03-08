@@ -106,7 +106,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && testbits(mon->flags, MF_BAND_MEMBER)
                && mon->props.exists("pikel_band");
 
-    case DACT_OLD_ENSLAVED_SOULS_POOF:
+    case DACT_OLD_CHARMD_SOULS_POOF:
         return mons_enslaved_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
@@ -210,7 +210,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 upgrade_hepliaklqana_ancestor(true);
             break;
 
-        case DACT_OLD_ENSLAVED_SOULS_POOF:
+        case DACT_OLD_CHARMD_SOULS_POOF:
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
@@ -270,7 +270,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
-    case DACT_OLD_ENSLAVED_SOULS_POOF:
+    case DACT_OLD_CHARMD_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_PIKEL_MINIONS:
     case DACT_KIRKE_HOGS:

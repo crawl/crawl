@@ -14,11 +14,14 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "god-abil.h" // fedhas_passthrough for palentonga charge
 #include "item-prop.h"
 #include "items.h"
@@ -32,7 +35,7 @@
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // remove_ice_movement for palentonga charge
+#include "movement.h" // palentonga charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -40,7 +43,6 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h" // cancel_tornado
-#include "spl-summoning.h" // trigger_spectral_weapon for palentonga charge
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -242,6 +244,12 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
+        if (cancel_harmful_move(false))
+        {
+            clear_messages();
+            continue;
+        }
+
         target = beam.target; // Grid in los, no problem.
         return true;
     }
@@ -330,6 +338,10 @@ spret frog_hop(bool fail)
     coord_def target;
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
+
+    if (cancel_harmful_move())
+        return spret::abort;
+
     while (true)
     {
         if (!_find_cblink_target(target, true, "hop", &tgt))
@@ -363,6 +375,7 @@ spret frog_hop(bool fail)
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
+    apply_barbs_damage();
 
     return spret::success; // TODO
 }
@@ -603,7 +616,6 @@ spret palentonga_charge(bool fail, dist *target)
     move_player_to_grid(dest_pos, true);
     noisy(12, you.pos());
     apply_barbs_damage();
-    remove_ice_movement();
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
@@ -627,8 +639,6 @@ spret palentonga_charge(bool fail, dist *target)
     melee_attack charge_atk(&you, target_mons);
     charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
     charge_atk.attack();
-    if (you.props.exists("spectral_weapon"))
-        trigger_spectral_weapon(&you, target_mons);
 
     // Normally this is 10 aut (times haste, etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
@@ -694,6 +704,9 @@ spret cast_blink(bool fail)
     // effects that cast the spell through the player, I guess (e.g. xom)
     if (you.no_tele(false, false, true))
         return fail ? spret::fail : spret::success; // probably always SUCCESS
+
+    if (cancel_harmful_move(false))
+        return spret::abort;
 
     fail_check();
     uncontrolled_blink();
@@ -1031,6 +1044,94 @@ spret cast_portal_projectile(int pow, bool fail)
     return spret::success;
 }
 
+string weapon_unprojectability_reason()
+{
+    if (!you.weapon())
+        return "";
+    const item_def &it = *you.weapon();
+    // These all cause attack prompts, which are awkward to handle.
+    // TODO: support these!
+    static const vector<int> forbidden_unrands = {
+        UNRAND_POWER,
+        UNRAND_DEVASTATOR,
+        UNRAND_VARIABILITY,
+        UNRAND_SINGING_SWORD,
+        UNRAND_TORMENT,
+        UNRAND_ARC_BLADE,
+    };
+    for (int urand : forbidden_unrands)
+    {
+        if (is_unrandom_artefact(it, urand))
+        {
+            return make_stringf("%s would react catastrophically with paradoxical space!",
+                                you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+        }
+    }
+    return "";
+}
+
+spret cast_manifold_assault(int pow, bool fail, bool real)
+{
+    vector<monster*> targets;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->friendly() || mi->neutral())
+            continue; // this should be enough to avoid penance?
+        if (mons_is_firewood(**mi))
+            continue;
+        if (!you.can_see(**mi))
+            continue;
+        targets.emplace_back(*mi);
+    }
+
+    if (targets.empty())
+    {
+        if (real)
+            mpr("You can't see anything to attack.");
+        return spret::abort;
+    }
+
+    if (real)
+    {
+        const string unproj_reason = weapon_unprojectability_reason();
+        if (unproj_reason != "")
+        {
+            mprf("%s", unproj_reason.c_str());
+            return spret::abort;
+        }
+    }
+
+    if (!real)
+        return spret::success;
+
+    if (!wielded_weapon_check(you.weapon()))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("Space momentarily warps into an impossible shape!");
+
+    const int initial_time = you.time_taken;
+
+    shuffle_array(targets);
+    const size_t max_targets = 2 + div_rand_round(pow, 50);
+    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    {
+        // Somewhat hacky: reset attack delay before each attack so that only the final
+        // attack ends up actually setting time taken. (No quadratic effects.)
+        you.time_taken = initial_time;
+
+        melee_attack atk(&you, targets[i]);
+        atk.is_projected = true;
+        atk.attack();
+
+        if (you.hp <= 0 || you.pending_revival)
+            break;
+    }
+
+    return spret::success;
+}
+
 spret cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
@@ -1341,7 +1442,8 @@ static void _attract_actor(const actor* agent, actor* victim,
 
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 {
-    bool affected = false;
+    vector <actor *> victims;
+
     for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
     {
         if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
@@ -1351,13 +1453,24 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
         if (range > gravitas_range(pow))
             continue;
 
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        affected = true;
-        _attract_actor(agent, *ai, pos, pow, strength);
+        victims.push_back(*ai);
     }
 
-    return affected;
+    if (victims.empty())
+        return false;
+
+    near_to_far_sorter sorter = {you.pos()};
+    sort(victims.begin(), victims.end(), sorter);
+
+    for (actor * ai : victims)
+    {
+        const int range = (pos - ai->pos()).rdist();
+        const int strength = ((pow + 100) / 20) / (range*range);
+
+        _attract_actor(agent, ai, pos, pow, strength);
+    }
+
+    return true;
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
@@ -1456,11 +1569,15 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
  */
 void attract_monsters()
 {
+    vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!_can_beckon(**mi) || mi->friendly())
-            continue;
+        if (!mi->friendly() && _can_beckon(**mi))
+            targets.push_back(*mi);
 
+    near_to_far_sorter sorter = {you.pos()};
+    sort(targets.begin(), targets.end(), sorter);
+
+    for (monster *mi : targets) {
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;
@@ -1473,7 +1590,7 @@ void attract_monsters()
         for (int i = 0; i < max_move && i < orig_dist - 1; i++)
             ray.advance();
 
-        while (!_can_move_mons_to(**mi, ray.pos()) && ray.pos() != mi->pos())
+        while (!_can_move_mons_to(*mi, ray.pos()) && ray.pos() != mi->pos())
             ray.regress();
 
         if (ray.pos() == mi->pos())
@@ -1486,6 +1603,6 @@ void attract_monsters()
         mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
 
         mi->apply_location_effects(old_pos);
-        mons_relocated(*mi);
+        mons_relocated(mi);
     }
 }

@@ -132,7 +132,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :     [65 - you.absdepth() * 3] =
 :         { "cyclops", "tengu warrior", "centaur warrior", },
 :     [42 - you.absdepth() * 2] =
-:         { "kobold demonologist", "tengu conjurer", "deep elf mage",
+:         { "kobold demonologist", "tengu conjurer", "deep elf pyromancer", "deep elf zephyrmancer",
 :           "necromancer", "yaktaur", "Azrael", "Kirke", },
 :     [26 - you.absdepth()] =
 :         { "boggart", "orc knight", "ogre mage", "skeletal warrior",
@@ -633,7 +633,7 @@ WEIGHT: 5
 KMONS:  op = plant
 KMONS:  P = bush
 KMONS:  1 = merfolk
-KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
+KMONS:  2 = orc warrior / kobold brigand / two-headed ogre / troll / gnoll sergeant
 KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40

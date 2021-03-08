@@ -17,7 +17,6 @@
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
-#include "potion.h" // you_drinkless
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
@@ -198,7 +197,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (you_drinkless())
+        if (!you.can_drink(false))
             inf.light_colour = DARKGREY;
         break;
 

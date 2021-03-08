@@ -18,23 +18,19 @@ using std::vector;
 
 enum skill_menu_flags
 {
-    //Ashenzari transfer knowledge ability.
-    SKMF_RESKILL_FROM      = 1<<0,
-    SKMF_RESKILL_TO        = 1<<1,
-    SKMF_RESKILLING        = SKMF_RESKILL_FROM | SKMF_RESKILL_TO,
-    SKMF_EXPERIENCE        = 1<<2,
-    SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
+    SKMF_EXPERIENCE        = 1<<0,
+    SKMF_SPECIAL           = SKMF_EXPERIENCE,
 
-    SKMF_MANUAL            = 1<<3,
-    SKMF_ENHANCED          = 1<<4,
-    SKMF_REDUCED           = 1<<5,
+    SKMF_MANUAL            = 1<<1,
+    SKMF_ENHANCED          = 1<<2,
+    SKMF_REDUCED           = 1<<3,
     SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
 
-    SKMF_SKILL_ICONS       = 1<<6,
-    SKMF_APTITUDE          = 1<<7,
-    SKMF_SIMPLE            = 1<<8, // Simple mode for tutorial and hint mode.
-    SKMF_HELP              = 1<<9,
-    SKMF_SET_TARGET        = 1<<10,
+    SKMF_SKILL_ICONS       = 1<<4,
+    SKMF_APTITUDE          = 1<<5,
+    SKMF_SIMPLE            = 1<<6, // Simple mode for tutorial and hint mode.
+    SKMF_HELP              = 1<<7,
+    SKMF_SET_TARGET        = 1<<8,
 };
 
 // these need to both be negative, because positive ids are used by the
@@ -108,7 +104,6 @@ private:
     void set_new_level();
     void set_points();
     void set_progress();
-    void set_reskill_progress();
     void set_title();
     void set_training();
     void set_targets();

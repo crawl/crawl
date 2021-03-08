@@ -122,6 +122,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "startup.h"
@@ -1568,7 +1569,7 @@ static void _experience_check()
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         int xl = you.experience_level;
         // calculate the "real" level
@@ -1595,7 +1596,7 @@ static void _experience_check()
 
     if (!crawl_state.game_is_sprint())
     {
-        if (player_has_orb())
+        if (zot_immune())
             msg::stream << "You are forever immune to Zot's power.";
         else if (player_in_branch(BRANCH_ABYSS))
             msg::stream << "You have unlimited time to explore this branch.";
@@ -1616,9 +1617,10 @@ static void _experience_check()
 
 static void _do_remove_armour()
 {
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
-        mpr("You can't remove your fur, sorry.");
+        mprf("You can't remove your %s, sorry.",
+            species_skin_name(you.species).c_str());
         return;
     }
 
@@ -1694,10 +1696,18 @@ static void _do_cycle_quiver(int dir)
     you.launcher_action.set(you.quiver_action.get());
     quiver::set_needs_redraw();
 
-    if (!changed && you.quiver_action.get()->is_valid())
-        mpr("No other quiver actions available. Use F to throw any item.");
-    else if (!you.quiver_action.get()->is_valid())
-        mpr("No quiver actions available. Use F to throw any item.");
+    const bool valid = you.quiver_action.get()->is_valid();
+
+    if (!changed || !valid)
+    {
+        const bool others = quiver::menu_size() > (valid ? 1 : 0);
+        // Things could be excluded from this via inscriptions, custom
+        // fire_order, or setting fire_items_start.
+        mprf("No %squiver actions available for cycling.%s",
+            valid ? "other " : "",
+            others ? " Use <white>Q</white> to select from all actions."
+                   : "");
+    }
 }
 
 static void _do_list_gold()
@@ -2298,6 +2308,14 @@ static void _update_still_winds()
     end_still_winds();
 }
 
+static void _check_spectral_weapon()
+{
+    if (!you.triggered_spectral)
+        if (monster* sw = find_spectral_weapon(&you))
+            end_spectral_weapon(sw, false, true);
+    you.triggered_spectral = false;
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2337,6 +2355,7 @@ void world_reacts()
     _check_banished();
     _check_sanctuary();
     _check_trapped();
+    _check_spectral_weapon();
 
     run_environment_effects();
 

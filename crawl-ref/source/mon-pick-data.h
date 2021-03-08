@@ -51,7 +51,7 @@ static const pop_entry pop_d[] =
   {  6, 16,  860, SEMI, MONS_ORC_WARRIOR },
   {  6, 16,  500, SEMI, MONS_WIGHT },
   {  6, 16,  335, SEMI, MONS_NO_MONSTER }, // Old ballistomycete spore weight.
-  {  7, 14,  415, SEMI, MONS_BIG_KOBOLD },
+  {  7, 14,  415, SEMI, MONS_KOBOLD_BRIGAND },
   {  7, 13,  470, SEMI, MONS_KILLER_BEE },
   {  7, 15,   89, PEAK, MONS_STEAM_DRAGON },
   {  7, 17,  192, PEAK, MONS_HORNET },
@@ -78,7 +78,7 @@ static const pop_entry pop_d[] =
   { 11, 21,  192, PEAK, MONS_DEATH_KNIGHT },
   { 11, 23,  540, SEMI, MONS_HYDRA },
   { 11, 23,  540, SEMI, MONS_BOULDER_BEETLE},
-  { 12, 19,  475, SEMI, MONS_DEEP_ELF_MAGE },
+  { 12, 19,  475, SEMI, MONS_DEEP_ELF_FIRE_MAGE },
   { 12, 20,  500, SEMI, MONS_VAMPIRE_MOSQUITO },
   { 12, 22,  440, FALL, MONS_SLIME_CREATURE },
   { 13, 20,  150, SEMI, MONS_MELIAI },
@@ -110,7 +110,7 @@ static const pop_entry pop_d[] =
   { 17, 25,  136, SEMI, MONS_HORNET },
   { 17, 25,   89, PEAK, MONS_FIRE_CRAB },
   { 17, 25,   89, PEAK, MONS_HARPY },
-  { 17, 25,  136, SEMI, MONS_DEEP_ELF_MAGE },
+  { 17, 25,  136, SEMI, MONS_DEEP_ELF_AIR_MAGE },
   { 18, 24,   52, SEMI, MONS_GLOWING_ORANGE_BRAIN },
   { 18, 28,  180, PEAK, MONS_FLAYED_GHOST },
   { 19, 25,   35, PEAK, MONS_ORC_HIGH_PRIEST },
@@ -173,7 +173,8 @@ static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 7)
   {  1,  5,   50, FLAT, MONS_ORC_HIGH_PRIEST },
   {  1,  6,   50, FLAT, MONS_ORC_SORCERER },
-  {  1,  7, 2775, FLAT, MONS_DEEP_ELF_MAGE },
+  {  1,  7, 1385, FLAT, MONS_DEEP_ELF_AIR_MAGE },
+  {  1,  7, 1385, FLAT, MONS_DEEP_ELF_FIRE_MAGE },
   {  1,  7, 1385, FLAT, MONS_DANCING_WEAPON },
   {  1,  7,  925, FLAT, MONS_DEEP_ELF_KNIGHT },
   {  1,  7,  925, FLAT, MONS_DEEP_ELF_ARCHER },
@@ -441,7 +442,6 @@ static const pop_entry pop_vaults[] =
   {  2,  6,   32, PEAK, MONS_CRYSTAL_GUARDIAN },
   {  2, 12,  340, FALL, MONS_STONE_GIANT },
   {  2, 12,  192, PEAK, MONS_ETTIN },
-  {  3, 10,   80, FLAT, MONS_DEEP_ELF_MAGE },
   {  3, 11,  136, SEMI, MONS_FIRE_GIANT },
   {  3, 11,  136, SEMI, MONS_FROST_GIANT },
   {  3, 11,   68, SEMI, MONS_DEEP_TROLL },
@@ -467,6 +467,7 @@ static const pop_entry pop_vaults[] =
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_ELEMENTALIST },
   { 12, 12,   16, FLAT, MONS_ANCIENT_LICH },
+  { 12, 12,   16, FLAT, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -494,6 +495,7 @@ static const pop_entry pop_crypt[] =
   {  2,  7,   40, SEMI, MONS_REAPER },
   {  2,  7,   55, PEAK, MONS_LICH },
   {  3,  7,   15, PEAK, MONS_ANCIENT_LICH },
+  {  3,  7,   15, PEAK, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -509,6 +511,7 @@ static const pop_entry pop_tomb[] =
   {  4,  5,    3, RISE, MONS_ROYAL_MUMMY },
   {  3,  5,    6, FLAT, MONS_LICH },
   {  3,  5,    3, SEMI, MONS_ANCIENT_LICH },
+  {  3,  5,    3, SEMI, MONS_DREAD_LICH },
   {  1,  5,  250, FLAT, MONS_USHABTI },
   {  1,  5,  150, FLAT, MONS_DEATH_SCARAB },
   {  3,  5,   12, SEMI, MONS_BENNU },
@@ -816,9 +819,9 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    9, FLAT, MONS_REVENANT },
   {  1,  5,   46, FLAT, MONS_LICH },
   {  1,  5,    8, FLAT, MONS_ANCIENT_LICH },
+  {  1,  5,    8, FLAT, MONS_DREAD_LICH },
   // Thematic branch representatives, outsiders
   {  1,  5,    8, FLAT, MONS_ORC_SORCERER },
-  {  1,  5,    4, FLAT, MONS_DEEP_ELF_MAGE },
   {  1,  5,    8, FLAT, MONS_DEEP_ELF_SORCERER },
   {  1,  5,    5, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,  5,    8, FLAT, MONS_DEEP_ELF_ELEMENTALIST },
@@ -1029,8 +1032,6 @@ static const pop_entry pop_wizlab[] =
 
 static const pop_entry pop_depths[] =
 { // Depths (OOD cap: 14)
-  { -2,  4,  100, SEMI, MONS_BOGGART },
-  { -2,  4,  200, SEMI, MONS_SLIME_CREATURE },
   { -2,  4,  250, SEMI, MONS_RAKSHASA },
   { -2,  4,  100, SEMI, MONS_WIZARD },
   { -2,  4,  100, SEMI, MONS_NECROMANCER },
@@ -1039,11 +1040,6 @@ static const pop_entry pop_depths[] =
   { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },
   { -2, 10,  100, PEAK, MONS_VAMPIRE_KNIGHT },
   {  1,  3,  300, FALL, MONS_UGLY_THING },
-  {  1,  4,  250, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,  300, FALL, MONS_OGRE_MAGE },
-  {  1,  6,  375, FALL, MONS_YAKTAUR },
-  {  1,  6,  375, RISE, MONS_YAKTAUR_CAPTAIN },
-  {  1,  6,  300, FALL, MONS_SHAPESHIFTER },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },
   {  1,  6,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },
   {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
@@ -1082,6 +1078,7 @@ static const pop_entry pop_depths[] =
   {  5, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
   {  6, 14,   50, FLAT, MONS_TITAN },
   { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },
+  { 10, 14,   10, FLAT, MONS_DREAD_LICH },
   { 0,0,0,FLAT,MONS_0 }
 };
 

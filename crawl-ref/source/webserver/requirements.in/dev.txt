@@ -8,7 +8,7 @@ flake8-commas
 flake8-isort
 flake8-mutable
 flake8-polyfill
-flake8-print
+flake8-print; python_version >= '3.3'
 isort
 pytest
 mock; python_version < '3'

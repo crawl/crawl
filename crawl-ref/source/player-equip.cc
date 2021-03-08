@@ -62,9 +62,6 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     you.equip[slot] = item_slot;
 
     equip_effect(slot, item_slot, false, msg);
-    ash_check_bondage();
-    if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        auto_id_inventory();
     you.gear_change = true;
 }
 
@@ -172,6 +169,8 @@ void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg)
 
     const interrupt_block block_unmeld_interrupts(unmeld);
 
+    identify_item(item);
+
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
@@ -198,6 +197,9 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg)
         _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_FIRST_JEWELLERY && slot <= EQ_LAST_JEWELLERY)
         _unequip_jewellery_effect(item, msg, meld, slot);
+
+    if (item.cursed() && !meld)
+        destroy_item(item);
 }
 
 ///////////////////////////////////////////////////////////
@@ -222,8 +224,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
             you.unrand_reacts.set(slot);
     }
 
-    const bool alreadyknown = item_type_known(item);
-    const bool dangerous    = player_in_a_dangerous_place();
     const bool msg          = !show_msgs || *show_msgs;
 
     artefact_properties_t  proprt;
@@ -267,28 +267,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
         mpr("You feel ready to rampage towards enemies.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
-        do_curse_item(item, !msg);
-
-    if (!alreadyknown && dangerous)
-    {
-        // Xom loves it when you use an unknown random artefact and
-        // there is a dangerous monster nearby...
-        xom_is_stimulated(100);
-    }
-
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
 
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
-
-    if (!fully_identified(item))
-    {
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
 }
 
 /**
@@ -423,25 +407,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a wizardly item like this.");
 }
 
-static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
-{
-    if (!item.cursed() || unmeld)
-        return;
-    mprf("It sticks to your %s!", you.hand_name(false).c_str());
-    int amusement = 16;
-    if (!known_cursed)
-    {
-        amusement *= 2;
-        if (origin_as_god_gift(item) == GOD_XOM)
-            amusement *= 2;
-    }
-    const int wpn_skill = item_attack_skill(item.base_type, item.sub_type);
-    if (wpn_skill != SK_FIGHTING && you.skills[wpn_skill] == 0)
-        amusement *= 2;
-
-    xom_is_stimulated(amusement);
-}
-
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
@@ -452,16 +417,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     int special = 0;
 
     const bool artefact     = is_artefact(item);
-    const bool known_cursed = item_known_cursed(item);
 
     // And here we finally get to the special effects of wielding. {dlb}
     switch (item.base_type)
     {
     case OBJ_STAVES:
     {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-        set_ident_type(OBJ_STAVES, item.sub_type, true);
-        _wield_cursed(item, known_cursed, unmeld);
         break;
     }
 
@@ -472,28 +433,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         if (artefact)
             _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
-        const bool was_known      = item_type_known(item);
-              bool known_recurser = false;
-
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-
         special = item.brand;
 
         if (artefact)
-        {
             special = artefact_property(item, ARTP_BRAND);
-
-            if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
-            {
-                item.flags |= ISFLAG_NOTED_ID;
-
-                // Make a note of it.
-                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
-                               origin_desc(item)));
-            }
-            else
-                known_recurser = artefact_known_property(item, ARTP_CURSE);
-        }
 
         if (special != SPWPN_NORMAL)
         {
@@ -615,31 +558,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 }
             }
 
-            // effect second
-            switch (special)
-            {
-            case SPWPN_DISTORTION:
-                if (!was_known)
-                {
-                    // Xom loves it when you ID a distortion weapon this way,
-                    // and even more so if he gifted the weapon himself.
-                    if (origin_as_god_gift(item) == GOD_XOM)
-                        xom_is_stimulated(200);
-                    else
-                        xom_is_stimulated(100);
-                }
-                break;
-
-            case SPWPN_ANTIMAGIC:
+            if (special == SPWPN_ANTIMAGIC)
                 calc_mp();
-                break;
-
-            default:
-                break;
-            }
         }
 
-        _wield_cursed(item, known_cursed || known_recurser, unmeld);
         break;
     }
     default:
@@ -782,17 +704,11 @@ static void _spirit_shield_message(bool unmeld)
 static void _equip_armour_effect(item_def& arm, bool unmeld,
                                  equipment_type slot)
 {
-    const bool known_cursed = item_known_cursed(arm);
     int ego = get_armour_ego_type(arm);
     if (ego != SPARM_NORMAL)
     {
         switch (ego)
         {
-        case SPARM_RUNNING:
-            if (!you.fishtail)
-                mpr("You feel quick.");
-            break;
-
         case SPARM_FIRE_RESISTANCE:
             mpr("You feel resistant to fire.");
             break;
@@ -926,22 +842,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
     }
 
-    if (arm.cursed() && !unmeld)
-    {
-        mpr("Oops, that feels deathly cold.");
-        learned_something_new(HINT_YOU_CURSED);
-
-        if (!known_cursed)
-        {
-            int amusement = 64;
-
-            if (origin_as_god_gift(arm) == GOD_XOM)
-                amusement *= 2;
-
-            xom_is_stimulated(amusement);
-        }
-    }
-
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }
@@ -984,11 +884,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     switch (get_armour_ego_type(item))
     {
-    case SPARM_RUNNING:
-        if (!you.fishtail)
-            mpr("You feel rather sluggish.");
-        break;
-
     case SPARM_FIRE_RESISTANCE:
         mpr("You feel less resistant to fire.");
         break;
@@ -1202,9 +1097,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                     equipment_type slot)
 {
     const bool artefact     = is_artefact(item);
-    const bool known_cursed = item_known_cursed(item);
-    const bool known_bad    = (item_type_known(item)
-                               && item_value(item) <= 2);
 
     switch (item.sub_type)
     {
@@ -1246,17 +1138,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         calc_mp();
         break;
 
-    case RING_TELEPORTATION:
-        if (you.no_tele())
-            mpr("You feel a slight, muted jump rush through you.");
-        else
-            // keep in sync with player_teleport
-            mprf("You feel slightly %sjumpy.",
-                 (player_teleport(false) > 8) ? "more " : "");
-        break;
-
     case AMU_FAITH:
-        if (you.species == SP_DEMIGOD)
+        if (you.has_mutation(MUT_FORLORN))
             mpr("You feel a surge of self-confidence.");
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
@@ -1298,46 +1181,14 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
     }
 
-    bool new_ident = false;
-    // Artefacts have completely different appearance than base types
-    // so we don't allow them to make the base types known.
     if (artefact)
     {
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld, slot);
-
-        set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
     }
-    else
-    {
-        new_ident = set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
-    }
-
-    if (item.cursed() && !unmeld)
-    {
-        mprf("Oops, that %s feels deathly cold.",
-             jewellery_is_amulet(item)? "amulet" : "ring");
-        learned_something_new(HINT_YOU_CURSED);
-
-        int amusement = 32;
-        if (!known_cursed && !known_bad)
-        {
-            amusement *= 2;
-
-            if (origin_as_god_gift(item) == GOD_XOM)
-                amusement *= 2;
-        }
-        xom_is_stimulated(amusement);
-    }
-
-    // Cursed or not, we know that since we've put the ring on.
-    set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-    if (new_ident)
-        auto_assign_item_slot(item);
 }
 
 static void _deactivate_regeneration_item(const item_def &item, bool meld)
@@ -1353,7 +1204,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     switch (item.sub_type)
     {
     case RING_FIRE:
-    case RING_ATTENTION:
     case RING_ICE:
     case RING_LIFE_PROTECTION:
     case RING_POISON_RESISTANCE:
@@ -1362,7 +1212,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_WILLPOWER:
     case RING_SLAYING:
     case RING_STEALTH:
-    case RING_TELEPORTATION:
     case RING_WIZARDRY:
         break;
 

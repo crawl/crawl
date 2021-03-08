@@ -34,28 +34,23 @@
 #include "traps.h"
 #include "travel.h"
 
-
-// HACK ALERT: In the following several functions, want_move is true if the
-// player is travelling. If that is the case, things must be considered one
-// square closer to the player, since we don't yet know where the player will
-// be next turn.
-
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
+static bool _mons_has_path_to_player(const monster* mon)
 {
-    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
-    {
-        int dist = grid_distance(you.pos(), mon->pos());
-        if (want_move)
-            dist--;
-        if (dist >= 2)
-            return false;
-    }
-
     // Short-cut if it's already adjacent.
     if (grid_distance(mon->pos(), you.pos()) <= 1)
         return true;
+
+    // Non-adjacent non-tentacle stationary monsters are only threatening
+    // because of any ranged attack they might posess, which is handled
+    // elsewhere in the safety checks. Presently all stationary monsters
+    // have a ranged attack, but if a melee stationary monster is introduced
+    // this will fail. Don't add a melee stationary monster it's not a good
+    // monster.
+    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
+        return false;
+
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
@@ -93,7 +88,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     return false;
 }
 
-bool mons_can_hurt_player(const monster* mon, const bool want_move)
+bool mons_can_hurt_player(const monster* mon)
 {
     // FIXME: This takes into account whether the player knows the map!
     //        It should, for the purposes of i_feel_safe. [rob]
@@ -103,7 +98,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // This also doesn't account for explosion radii, which is a false positive
     // for a player waiting near (but not in range of) their own fulminant
     // prism
-    if (_mons_has_path_to_player(mon, want_move) || mons_blows_up(*mon))
+    if (_mons_has_path_to_player(mon) || mons_blows_up(*mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
@@ -128,6 +123,10 @@ static bool _mons_is_always_safe(const monster *mon)
                && !mons_is_active_ballisto(*mon));
 }
 
+// HACK ALERT: In the following several functions, want_move is true if the
+// player is travelling. If that is the case, things must be considered one
+// square closer to the player, since we don't yet know where the player will
+// be next turn.
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
@@ -145,7 +144,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // Only seen through glass walls or within water?
                            // Assuming that there are no water-only/lava-only
                            // monsters capable of throwing or zapping wands.
-                           || !mons_can_hurt_player(mon, want_move)));
+                           || !mons_can_hurt_player(mon)));
 
     if (consider_user_options)
     {
@@ -194,8 +193,11 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
+        if (ri->distance_from(you.pos()) > range)
+            continue;
+
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
@@ -457,8 +459,6 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    if (you.duration[DUR_SCRYING])
-        you.xray_vision = false;
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 

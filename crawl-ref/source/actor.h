@@ -96,6 +96,7 @@ public:
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
+    virtual bool can_burrow() const = 0;
 
     virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
             bool is_habitable(const coord_def &pos) const;
@@ -194,7 +195,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool can_bleed(bool allow_tran = true) const = 0;
+    virtual bool can_bleed(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
@@ -283,7 +284,7 @@ public:
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness(bool temp = true) const = 0;
-    virtual bool undead_or_demonic() const = 0;
+    virtual bool undead_or_demonic(bool temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
@@ -321,7 +322,6 @@ public:
                          vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
-    virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
@@ -344,6 +344,9 @@ public:
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
+
+    virtual bool is_dragonkind() const;
+    virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;

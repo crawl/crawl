@@ -567,12 +567,6 @@ chimera
 Une grotesque parodie de la nature, cette créature fantastique se compose de
 trois bêtes individuels combinés en une seul.
 %%%%
-crawling corpse
-
-Un cadavre faiblement animé par nécromancie. Il est facilement destructible,
-mais aussi capable de fusionner avec d'autres pour former d'autres horreurs
-plus puissantes.
-%%%%
 crimson imp
 
 Un petit démon mineur. Sa mâchoire dentée semble être bloquée en un rictus
@@ -673,11 +667,6 @@ magie infernale de la mort.
 deep elf knight
 
 Un combattant elfe profond aguerri.
-%%%%
-deep elf mage
-
-Un elfe profond ayant appris la magie meurtrière. Les mages elfes profonds
-connaissent tout un large panel de sorts nocifs.
 %%%%
 deep elf master archer
 
@@ -1302,12 +1291,6 @@ attirée d'un instinct persistant vers le moment de la mort. Si puissant est
 cette impulsion envers elle même qu'elle saisit au passage d'autres âmes,
 perdant les derniers vestiges de sa conscience en la mémoire de la vie des
 autres.
-%%%%
-macabre mass
-
-Un ensemble de membres fusionnés et déformés, faiblement animés par
-nécromancie. C'est facile à exterminer mais c'est aussi capable de fusionner
-avec d'autres pour former d'autres horreurs plus puissantes.
 %%%%
 manticore
 

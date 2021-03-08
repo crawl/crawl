@@ -1,5 +1,12 @@
 ###############################################################################
 # swamp.des: All maps and branch endings relating to the Swamp.
+#
+# <<1>>      Entries
+# <<2>>      Decorative vaults
+# <<3>>      Monster-placing vaults
+# <<4>>      Swamp end vaults
+#
+###############################################################################
 ###############################################################################
 
 # Functionality for one of Grunt's vaults.
@@ -38,7 +45,10 @@ end
 }}
 
 ###############################################################################
-# Swamp entries
+#
+# <<1>> Swamp entries.
+#       All must have the swamp_entry tag and place an enter_swamp feature.
+#
 ###############################################################################
 
 # This is basically the dummy balancer.
@@ -239,8 +249,11 @@ tt--ttt---ttt
    ttt...ttt
      ttttt
 ENDMAP
+
 ###############################################################################
-# Swamp non-entry and non-ending vaults
+#
+# <<2>> Non-entry, non-ending vaults.
+#
 ###############################################################################
 
 default-depth: Swamp
@@ -941,8 +954,241 @@ MAP
   ..........
 ENDMAP
 
+NAME:    nicolae_swamp_ascending_descending
+TAGS:    transparent decor no_pool_fixup
+ORIENT:  float
+: if you.depth() == 1 then
+SUBST:   P = p, Q = q, R = r, S = s, Z = z
+: elseif you.depth_fraction() < 1 then
+SHUFFLE: PQRSZ/pqrsz
+: end
+SUBST:   Ps = t, Qr = ., Rq = W, Sp = w, Z = [{(, z = ]})
+MAP
+SSSSSSSSS
+SRRRRRRRS
+SRQQQQQRS
+SRQPPPQRS
+SRQQZPQRR
+SRQPPPQRS
+SRQQQQQRS
+SRRRRRRRS
+SSSSSSSSS
+ENDMAP
+
+NAME:    nicolae_swamp_ascending_descending_big
+TAGS:    transparent decor no_pool_fixup
+ORIENT:  float
+SUBST:   D = PQ, E = QR, F = RS, _ = S_
+: if you.depth() == 1 then
+SUBST:   P = p, Q = q, R = r, S = s, Z = z
+: elseif you.depth_fraction() < 1 then
+SHUFFLE: PQRSZ/pqrsz
+: end
+SUBST:   Ps = t, Qr = ., Rq = W, Sp = w, Z = [{(, z = ]})
+CLEAR:   _
+MAP
+___________________
+_SSSSSSSSSSSSSSSSS_
+_SFFFFFFFFFFFFFFFS_
+_SFRRRRRRRRRRRRRFS_
+_SFREEEEEEEEEEERFS_
+_SFREQQQQQQQQQERFS_
+_SFREQDDDDDDDQERFS_
+_SFREQDPPPPPDQERFS_
+_SFREQDPDDDPDQERFS_
+_SFREQQQQZDPDQERRRR
+_SFREQDPDDDPDQERFS_
+_SFREQDPPPPPDQERFS_
+_SFREQDDDDDDDQERFS_
+_SFREQQQQQQQQQERFS_
+_SFREEEEEEEEEEERFS_
+_SFRRRRRRRRRRRRRFS_
+_SFFFFFFFFFFFFFFFS_
+_SSSSSSSSSSSSSSSSS_
+___________________
+ENDMAP
+
+NAME:   nicolae_swamp_bean_lake
+TAGS:   transparent decor
+NSUBST: Q = 2=@ / _
+SUBST:  D = tt., L : w., R : w., E = w., . = ...W
+CLEAR:  _
+MAP
+Q..  ....Q
+..........
+.....EwwE...
+ ..EwwwwwwE..Q
+ ..wwwwwwwwR..
+..EwwwwwwwwR..
+..wwwwwwwwE..
+..wwwwwwE...Dt
+..EwwwwE...Dttt
+Q..wwww....DDtt
+  .EwwE.....Dt
+  ..LL..DD...
+   ....DtDD.Q
+   Q.. tttt
+        tt
+ENDMAP
+
+NAME:  nicolae_swamp_big_swirl
+TAGS:  decor
+SUBST: M = ..wt, D = t..
+MAP
+   tttttt   .@.ttt
+ tttDDDDtttD...DDttt
+ tDD....DDtD.....DDt
+ttD......MwM......Dtt
+tD...DD.MwwwM.DD...Dt
+tD..DDDDMwwwMDDDD..Dt
+tD..DDDDMwwwMDDDD..Dt
+tD...DD.MwwwM.DD...Dt
+ttD......MwM......Dtt
+ tDD.....DtDD....DDt
+ tttDD...DtttDDDDttt
+   ttt.@.   tttttt
+ENDMAP
+
+NAME:   nicolae_swamp_oxbows
+TAGS:   decor
+NSUBST: D = w / ', E = w / ', F = w / ', H = w / ', J = w / ', K = w / '
+NSUBST: L = w / ', M = w / ', N = w / ', O = w / ', P = w / ', Q = w / '
+NSUBST: R = w / ', S = w / ', Z = w / ', a = w / ', p = w / ', q = w / '
+NSUBST: r = w / ', s = w / ', y = w / ', z = w / ', - = w / ', " = w / '
+NSUBST: ` = w / '
+SUBST:  ' = W.
+MAP
+ ''  .@.   '''''
+'ww'.....''awwwp''
+'www'...'Zwwa'pwwq'
+ 'wwD'.'SwZ''.''qwr
+  'Dw'.'wS'.....'rw
+   'w'.'w'.......'w
+  'Ew'.'wR'.....'sw
+ 'FwE'.'RwQ'...'-ws
+ HwF'...'QwP'.'"w-'
+ wH'.....'Pw'.'w"'
+ w'.......'w'.'w'
+ wJ'.....'Ow'.'w`'
+ JwK''.''NwO'.'`ww'
+ 'KwwL'MwwN'...'www'
+  ''LwwwM''.....'ww'
+    '''''   .@.  ''
+ENDMAP
+
+NAME:    nicolae_swamp_small_spring
+TAGS:    transparent decor
+SHUFFLE: DEFHJKLMNOPRS / QQQ___QQ_____/ QQQ___Q___QQQ / __QQQQQ______ \
+         / _____QQQ_____ / _____QQ___QQQ / __QQQ_Q_QQQ__ / ______QQQQQ__ \
+         / ________QQQQQ / QQQQ___Q_____ / _QQQQQ_______ / _______QQQQQ_ \
+         / _____Q___QQQQ / _QQQ_QQQ_QQQ_
+SUBST:   DEFHJQ = w, KLMNOPRS = _, a = Ww, ' = .W
+CLEAR:   _
+MAP
+    .'''''......
+tttt.     ..wwa..
+txxx.DEFHJ.wwwwa.
+txwwwwKLMwwwwwwa.
+txxx.NOPRS.wwwwa.
+tttt.     ..wwa..
+    .'''''......
+ENDMAP
+
+NAME:    nicolae_swamp_some_circles
+TAGS:    transparent decor
+# Shuffle guide:
+# PQR - sides (Q) guaranteed traversible, center (P)/corners (R) whatever
+# DER - sides/center guaranteed blocked, corners whatever
+# PFH - corners guaranteed traversible, sides/center whatever
+SHUFFLE: PQR/DER/PFH
+SUBST:   P : twWpM., Q : WpM., D : tE, E : wt, R : twWM, F : twWpM., H : WM
+KMONS:   pM = plant
+KFEAT:   M = W
+MAP
+............
+..RR....RR..
+.RRRRQQRRRR.
+.RRRRQQRRRR.
+..RRPPPPRR..
+..QQPPPPQQ..
+..QQPPPPQQ..
+..RRPPPPRR..
+.RRRRQQRRRR.
+.RRRRQQRRRR.
+..RR....RR..
+............
+ENDMAP
+
+NAME:    nicolae_swamp_tree_designs
+TAGS:    transparent decor
+SHUFFLE: JKLMNO / ------ / -----q / ----q- / ----qq / ---q-- / ---q-q / \
+         ---qqq / --q--- / --q--q / --q-q- / --q-qq / --qq-- / --qq-q / \
+         --qqqq / -q---- / -q---q / -q--q- / -q--qq / -q-q-- / -q-q-q / \
+         -q-qqq / -qq--- / -qq--q / -qq-q- / -qq-qq / -qqqqq / q----- / \
+         q----q / q---qq / q--q-- / q--q-q / q--qqq / q-q--- / q-q--q / \
+         q-q-q- / q-q-qq / q-qq-- / q-qq-q / q-qqqq / qq---- / qq---q / \
+         qq--q- / qq--qq / qq-q-- / qq-q-q / qq-qqq
+SUBST:   JKLMNOq = t, - = ., D = t_, p : t., P : t.
+CLEAR:   _
+MAP
+   DDDDDDDDD
+ DDtttttttttDD
+Dttt.......tttD
+tt...JKLKJ...tt
+...p.KMNMK.p...
+@..P.LNONL.P..@
+...p.KMNMK.p...
+tt...JKLKJ...tt
+Dttt.......tttD
+ DDtttttttttDD
+   DDDDDDDDD
+ENDMAP
+
+NAME:   nicolae_swamp_tree_isthmus
+TAGS:   transparent decor
+ORIENT: float
+SUBST:  E = .Wtw
+MAP
+       wwwwwww
+     wwwwwwwwwww
+   wwwwEEEEEEwwwww
+ttwwwEEE....EEwwwwwwwtt
+.ttwEE..EEEE.Ewwwwwwtt.
+..ttE.EEEwwE.EwwwEEtt..
+@....EEwwwE.EwwwEE....@
+..ttEEwwwE.EwwEEE.Ett..
+.ttwwwwwwE.EEEE..EEwtt.
+ttwwwwwwwEE....EEEwwwtt
+     wwwwwEEEEEEwwww
+       wwwwwwwwwww
+         wwwwwww
+ENDMAP
+
+NAME:   nicolae_swamp_well_well_well
+TAGS:   transparent decor
+NSUBST: x = . / xxxx.
+SUBST:  p = p..., x : xxxxt, . = ...W
+KMONS:  p = plant
+KFEAT:  p = . w:30 / W
+MAP
+ ........
+..pppppp..
+.ppxxxxpp.
+.pxxwwxxp.
+.pxwwwwxp.
+.pxwwwwxp.
+.pxxwwxxp.
+.ppxxxxpp.
+..pppppp..
+ ........
+ENDMAP
+
+
 ###############################################################################
-# Other Swamp vaults
+#
+# <<3>> Monster-placing vaults.
+#
+###############################################################################
 
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
@@ -1263,7 +1509,7 @@ www.cc+c.www
 ENDMAP
 
 NAME: grunt_witch_cave
-MONS: wizard
+MONS: fenstrider witch
 MONS: hydra
 {{
   dgn.delayed_decay(_G, 'd',
@@ -1383,62 +1629,62 @@ qqrx...xrqq
     @@@
 ENDMAP
 
-NAME: nicolae_swamp_alligator_family
-TAGS: layout_swamp
-NSUBST: T = 2:W / *:t
-KMONS: 1 = alligator / nothing w:5
-KFEAT: 1@ = W
+NAME:   nicolae_swamp_alligator_family
+TAGS:   layout_swamp
+NSUBST: D = 2=W / t
+KMONS:  1 = alligator / nothing w:5
+KFEAT:  1@ = W
 MAP
    tttt
   tt11tt
  tt1WW1tt
-tTWWWWWWTt
-tWTTWWTTWt
- WWWTTWWW
+tDWWWWWWDt
+tWDDWWDDWt
+ WWWDDWWW
    @@@@
 ENDMAP
 
-NAME: nicolae_swamp_snake_nest
-TAGS: transparent no_monster_gen
+NAME:  nicolae_swamp_snake_nest
+TAGS:  transparent no_monster_gen
 KMONS: 1 = anaconda
 KMONS: 2 = water moccasin / black mamba / nothing w:20
-SUBST: T = ..ttw
+SUBST: D = ..ttw
 SUBST: . = .:20 2:3
 KFEAT: .12 = . / W w:2
 MAP
        t.@.tttt
-tttt   tt....Tt
-tTTt    tTT...Tt
-@.TttttttT....Tt
-.....TTT.....Ttt
-tt........TTTtt
-tttt.TwT..Ttt
-ttT...wwT..Tt
-tT.........Ttt
-tT.1...tT...Ttt
-tTT...ttTT...Tt
-ttTTTTtttTT...t
- tttttt tttT...
+tttt   tt....Dt
+tDDt    tDD...Dt
+@.DttttttD....Dt
+.....DDD.....Dtt
+tt........DDDtt
+tttt.DwD..Dtt
+ttD...wwD..Dt
+tD.........Dtt
+tD.1...tD...Dtt
+tDD...ttDD...Dt
+ttDDDDtttDD...t
+ tttttt tttD...
           ttt.@
 ENDMAP
 
-NAME: nicolae_swamp_baby_hydras
+NAME:    nicolae_swamp_baby_hydras
 SHUFFLE: abcd
-SUBST: a:@, bcd:t, T = .Wt, . = ...W
-KMONS: 1 = 1-headed hydra
-KMONS: 2 = 2-headed hydra / 3-headed hydra / 4-headed hydra
-KFEAT: 12 = . / W
+SUBST:   a:@, bcd:t, D = .Wt, . = ...W
+KMONS:   1 = 1-headed hydra
+KMONS:   2 = 2-headed hydra / 3-headed hydra / 4-headed hydra
+KFEAT:   12 = . / W
 MAP
              taat
             tt..b
-  tttt     ttT..b
- ttTTtttttttT.1.t
-ttT..TtTTttT...Tt
-tT....1..TTT..TTt
-tT2...TT...1..TTt
-ttT..TttTTTTT..Tt
- ttTTtttttttT...t
-  tttt    ttT1.tt
+  tttt     ttD..b
+ ttDDtttttttD.1.t
+ttD..DtDDttD...Dt
+tD....1..DDD..DDt
+tD2...DD...1..DDt
+ttD..DttDDDDD..Dt
+ ttDDtttttttD...t
+  tttt    ttD1.tt
          tt....d
          t...t.d
          tccttt
@@ -1542,9 +1788,9 @@ tttt....t.Wt     t.WtW...tttt
 ENDMAP
 
 NAME:    cheibrodos_swamp_mausoleum
-TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   Swamp:2-, !Swamp:$
 ORIENT:  south
+TAGS:    no_monster_gen no_pool_fixup
 WEIGHT:  5
 MONS:    spectral hydra / spectral swamp dragon, death drake, necromancer
 MONS:    bog body w:8 / w:5 wraith / w:3 phantasmal warrior / w:1 freezing wraith
@@ -1593,41 +1839,37 @@ xxx%%xxxxxxxx%.....%xxxxxxxx..xxx
             ttttttttt
 ENDMAP
 
-NAME:  cheibrodos_swamp_witchery
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
-WEIGHT: 2
-MONS:  fenstrider witch
-ITEM:  book of callings, book of summonings
-SUBST: ' = %:20 d:1 e:1
-SUBST: 1 = 1:1 .:1
+NAME:   cheibrodos_swamp_witchery
+TAGS:   no_monster_gen
+ITEM:   book of hexes
+MONS:   fenstrider witch
+SUBST:  ' = %:20 d:1
+NSUBST: 1 = 1 / .
 MAP
         WWW
        WxxxW
       Wxx'xxW
       Wx.1'xW
     WWWx+.xxW
-  WWWW..xxxW
+  WWWW..xmxW
  Wxxx..WWWWW
 Wxx.+xW..WW
-Wx'1.xWWW@
+Wx'1.mWWW@
 Wxx'xxWWW
  WxxxWW
   WWW
 ENDMAP
 
 NAME:  cheibrodos_swamp_pet_leeches
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
+TAGS:  no_monster_gen
 MONS:  vampire mage, tyrant leech
-KPROP: e' = no_tele_into
 KPROP: .21 = bloody / w:30 nothing
 KPROP: e = bloody
 : dgn.delayed_decay(_G, 'e', 'human corpse')
 MAP
  ttttt
 tt''ett
-txxmxxt
+txx+xxt
 tx.1.xt
 tx2.2xt
 tx...xt
@@ -1636,10 +1878,9 @@ txx+xxt
 ENDMAP
 
 NAME:  cheibrodos_swamp_minitomb
-TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp, !Swamp:$
-KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
+TAGS:  no_monster_gen
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
+KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
 SUBST: ' = .W
 MAP
   W@WWtW
@@ -1849,6 +2090,42 @@ _.tt.tttt.t.tt.ttttt_
             -_-
 ENDMAP
 
+#### An ancient temple to kiku revived by a powerful spellcaster.
+NAME: beargit_kiku_chapel
+DEPTH: Swamp:2-
+TAGS: no_monster_gen
+MONS: bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
+MONS: patrolling spriggan berserker simulacrum w:20 / \
+      patrolling spriggan defender simulacrum / \
+      patrolling spriggan air mage simulacrum / \
+      juggernaut zombie w:5 / caustic shrike zombie w:1
+MONS: patrolling necromancer / patrolling fenstrider_witch; quick blade ego:pain
+MONS: ghost crab / death drake w:1
+KMONS: 5 = bunyip zombie / bunyip skeleton / swamp dragon skeleton / \
+           hornet zombie / death scarab w:1
+KFEAT: J = altar_kikubaaqudgha
+KFEAT: 5 = W
+ITEM: randbook disc:necromancy slevels:10 / \
+      randbook disc:necromancy slevels:12 / randbook disc:necromancy slevels:16
+SUBST: z = cccccccccccc...WWWwwt
+SUBST: F : VVVVY
+FTILE: . = floor_sandstone
+{{
+dgn.delayed_decay_extra(_G, 'K', 'frost giant corpse / ' ..
+                                  'frost giant skeleton / ' ..
+                                  'shadow dragon corpse / ' ..
+                                  'shadow dragon skeleton')
+}}
+MAP
+.zzzzzcccccc
+.zWz5wc111dcc
+.zWWWW+WW.KFc
+@A.W45+2WW3Jc
+.z.WW5+..WKFc
+.zzzz.c111$cc
+....zzcccccc
+ENDMAP
+
 NAME:   nicolae_swamp_phyte_club
 DEPTH:  Swamp:2-, !Swamp:$
 ORIENT: float
@@ -2023,17 +2300,20 @@ wwHww   wwKww
 ENDMAP
 
 ###############################################################################
-# Swamp ending vaults
+#
+# <<4>> Swamp ending vaults
 #
 # They come in two flavours: normal and themed. The first three are normal and
 # use regular swamp monsters. The other five have special themes, and are less
 # common.
+#
 ###############################################################################
+
 
 default-depth:
 
 ###############################################################################
-# Swamp:5 standard
+# Swamp:4 standard
 #
 NAME:    swamp
 TAGS:    transparent no_monster_gen
@@ -2074,7 +2354,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Swamp:5 alternative (dp)
+# Swamp:4 alternative (dp)
 #
 NAME:    swamp_alternative
 TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
@@ -2165,7 +2445,7 @@ tttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
 ###############################################################################
-# Swamp:5 alternative (due)
+# Swamp:4 alternative (due)
 NAME:    swamp_fiery
 TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
@@ -2275,7 +2555,7 @@ KFEAT:   ?Y = deep_water
 KFEAT:   O* = shallow_water
 SHUFFLE: O*
 SUBST:   1 = 113, ? = ??w, " = tc, ' = .w
-NSUBST:  6 = 5:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
+NSUBST:  6 = 1:5 / 3 = 89 / 10 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 3, walk_dist = 1, excl_rad = 0}
@@ -2528,7 +2808,8 @@ TAGS:   no_monster_gen no_rotate no_vmirror
 KITEM:  O = decaying rune of zot
 MONS:   fenstrider witch, green death / reaper / blizzard demon
 MONS:   neqoxec / soul eater / sixfirhy, orange demon / hellwing / chaos spawn
-MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf mage / wizard
+MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
+        deep elf zephyrmancer w:5 / wizard
 SUBST:  ' = W:55 .:15 4:5, 4 = 049
 KFEAT:  B = stone_arch
 KFEAT:  a = c

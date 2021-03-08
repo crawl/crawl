@@ -91,7 +91,7 @@ void add_auto_excludes()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster *mon = monster_at(*ri);
-        if (!mon)
+        if (!mon || mon->is_summoned())
             continue;
         // Something of a speed hack, but some vaults have a TON of plants.
         if (mon->type == MONS_PLANT)

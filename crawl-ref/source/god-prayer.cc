@@ -89,6 +89,8 @@ static bool _pray_ecumenical_altar()
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else if (you_worship(GOD_ASHENZARI))
+            you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
         else if (you_worship(GOD_XOM))
             xom_is_stimulated(200, XM_INTRIGUED, true);
         else
@@ -113,7 +115,7 @@ void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
         mpr("A being of your status worships no god.");
         return;

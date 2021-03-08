@@ -264,14 +264,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
-    case BEAM_AIR:
-    {
-        // Airstrike.
-        if (you.airborne())
-            hurted += hurted / 2;
-        break;
-    }
-
     default:
         break;
     }                           // end switch
@@ -729,7 +721,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    if (x_chance_in_y(slow_sources, 100))
+    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
         slow_player(10 + random2(5));
 }
 
@@ -830,7 +822,7 @@ static void _consider_curling(kill_method_type death_type)
     {
         case KILLED_BY_MONSTER:
         case KILLED_BY_BEAM:
-        case KILLED_BY_SPORE:
+        case KILLED_BY_DEATH_EXPLOSION:
         case KILLED_BY_TRAP:
         case KILLED_BY_BOUNCE:
         case KILLED_BY_REFLECTION:
@@ -926,7 +918,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         // Check _is_damage_threatening separately for read and drink so they
         // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_NO_READ))
+        if (you.get_mutation_level(MUT_READ_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -937,7 +929,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
         }
 
-        if (you.get_mutation_level(MUT_NO_DRINK))
+        if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {

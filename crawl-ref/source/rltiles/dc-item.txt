@@ -492,8 +492,13 @@ boots4_green
 # The order of armour brands must be identical to the one defined
 # in item-prop-enum.h.
 %sdir item/armour/brands
+# start TAG_MAJOR_VERSION == 34
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
+# end TAG_MAJOR_VERSION
+# start TAG_MAJOR_VERSION == 35
+# i-fire-res BRAND_ARM_FIRE_RESISTANCE BRAND_ARM_FIRST
+# end TAG_MAJOR_VERSION
 i-cold-res BRAND_ARM_COLD_RESISTANCE
 i-poison-res BRAND_ARM_POISON_RESISTANCE
 i-see-invis BRAND_ARM_SEE_INVISIBLE
@@ -569,7 +574,7 @@ i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
 # end TAG_MAJOR_VERSION
 i-polymorph WAND_POLYMORPH
-i-enslavement WAND_ENSLAVEMENT
+i-charming WAND_CHARMING
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 # start TAG_MAJOR_VERSION == 34
@@ -642,8 +647,10 @@ i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 %back scroll-grey
 i-noise SCR_NOISE
+# start TAG_MAJOR_VERSION == 34
 %back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
+# end TAG_MAJOR_VERSION
 # aka scroll of summoning
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
@@ -762,8 +769,10 @@ i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
 i-r-corrosion RING_RESIST_CORROSION
+# start TAG_MAJOR_VERSION == 34
 i-attention RING_ATTENTION
 i-teleport RING_TELEPORTATION
+# end TAG_MAJOR_VERSION
 i-evasion RING_EVASION
 # start TAG_MAJOR_VERSION == 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
@@ -844,8 +853,8 @@ i-m-regeneration AMU_MANA_REGENERATION
 i-gourmand AMU_THE_GOURMAND
 i-rage AMU_REMOVEME1
 i-rage AMU_REMOVEME2
-# end TAG_MAJOR_VERSION
 i-inaccuracy AMU_INACCURACY
+# end TAG_MAJOR_VERSION
 i-rage AMU_NOTHING
 i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
