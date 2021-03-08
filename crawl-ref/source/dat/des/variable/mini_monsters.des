@@ -2232,6 +2232,52 @@ MAP
   .....
 ENDMAP
 
+# Very hungry Elvish explorers and their campfire, mounts and pet.
+# Sometimes they have starved to death.
+NAME: beargit_elvish_explorers
+DEPTH: D:14-, Depths, Swamp, Snake, Shoals, Spider, Crypt
+: if crawl.one_chance_in(5) then
+SUBST: 1 = %, 2 = %, 3 = E
+: dgn.delayed_decay(_G, '%', 'elf skeleton')
+: dgn.delayed_decay(_G, 'E', 'elephant skeleton')
+KMONS: 4 = hell hound
+KMONS: 5 = fungus / nothing
+: elseif you.in_branch("D") then
+MONS: patrolling deep elf archer, patrolling deep elf knight
+MONS: patrolling elephant / patrolling death yak
+MONS: hound / wolf / warg
+MONS: plant / fungus / nothing
+: elseif you.in_branch("Swamp") or you.in_branch("Shoals") or you.in_branch("Spider") or you.in_branch("Snake") then
+MONS: patrolling deep elf archer, patrolling deep elf knight
+MONS: patrolling dire elephant / patrolling elephant
+MONS: hound / wolf / warg / raiju
+MONS: fungus / nothing
+: elseif you.in_branch("Crypt") then
+MONS: deep elf master archer zombie / deep elf master archer skeleton, \
+      deep elf blademaster zombie / deep elf blademaster skeleton
+MONS: dire elephant zombie / dire elephant skeleton
+MONS: raiju skeleton / raiju zombie
+MONS: nothing
+: else
+MONS: deep elf master archer, deep elf blademaster
+MONS: dire elephant
+MONS: raiju
+MONS: fungus / nothing
+: end
+MARKER:  P = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_min = 3, pow_max = 3, delay = 100, \
+             size = 1, walk_dist = 1, start_clouds = 1 }
+: dgn.delayed_decay(_G, 'P', 'rat skeleton')
+MAP
+55555
+51P25
+53435
+55555
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
