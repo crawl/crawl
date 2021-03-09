@@ -664,6 +664,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
 
+    if (mons_class_requires_band(mg.cls) && ! mg.flags & MG_PERMIT_BANDS)
+        return 0;
+
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return 0;
 

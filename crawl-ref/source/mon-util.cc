@@ -1031,6 +1031,11 @@ bool herd_monster(const monster& mon)
     return mons_class_flag(mon.type, M_HERD);
 }
 
+bool mons_class_requires_band(monster_type mc)
+{
+    return mons_class_flag(mc, M_REQUIRE_BAND);
+}
+
 // Plant or fungus or really anything with
 // permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
