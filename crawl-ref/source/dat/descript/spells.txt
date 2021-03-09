@@ -679,6 +679,10 @@ Greater Servant of Makhleb spell
 
 Summons a major demon.
 %%%%
+Goad Beasts spell
+
+Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
+can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 

@@ -1045,6 +1045,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_IRONWHIP_BEASTMASTER,
+      {
+       { SPELL_GOAD_BEASTS, 40, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('P') Immobile plants.
     {  MST_BURNING_BUSH,
       {

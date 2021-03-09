@@ -1961,6 +1961,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_MOLTEN_GARGOYLE,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;
     }},                            {{ BAND_MOLTEN_GARGOYLES, {2, 3} }}}},
+    { MONS_IRONWHIP_BEASTMASTER, { {}, {{ BAND_DIRE_ELEPHANTS, {1, 3}, true },
+                                        { BAND_LINDWURMS, {1, 4}, true}}}},
+
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2129,6 +2132,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_HELL_HOGS,           {{{MONS_HELL_HOG, 1}}}},
     { BAND_HELL_RATS,           {{{MONS_HELL_RAT, 1}}}},
     { BAND_JIANGSHI,            {{{MONS_JIANGSHI, 1}}}},
+    { BAND_LINDWURMS,           {{{MONS_LINDWURM, 1}}}},
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
@@ -2145,6 +2149,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
+    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},

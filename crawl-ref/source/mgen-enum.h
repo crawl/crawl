@@ -116,6 +116,8 @@ enum band_type
     BAND_DANCING_WEAPONS,
     BAND_MOLTEN_GARGOYLES,
     BAND_GOLEMS,
+    BAND_LINDWURMS,
+    BAND_DIRE_ELEPHANTS,
     NUM_BANDS                   // always last
 };
 

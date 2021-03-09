@@ -405,16 +405,18 @@ static const pop_entry pop_vaults[] =
   // Trying to keep total around 10,000 on each floor 1-4, roughly.
 
   // Easy enemies:
-  {  1,  4,  125, FALL, MONS_BOGGART },
-  {  1,  4,  125, FALL, MONS_HARPY },
   {  1,  4,  650, FALL, MONS_UGLY_THING },
   {  1,  4,  650, FALL, MONS_CENTAUR_WARRIOR },
   {  1,  4,  450, FALL, MONS_YAKTAUR },
   {  1,  4,  225, FALL, MONS_BOULDER_BEETLE },
+  {  1,  4,  125, FALL, MONS_BOGGART },
+  {  1,  4,  125, FALL, MONS_HARPY },
 
+  {  1,  4,  200, FLAT, MONS_IRONWHIP_BEASTMASTER },
+  {  1,  4,  800, FALL, MONS_IRONWHIP_BEASTMASTER },
   {  1,  4,  400, FLAT, MONS_SLIME_CREATURE },
   {  1,  4,  400, FALL, MONS_SLIME_CREATURE },
-  {  1,  4, 1400, FLAT, MONS_VAULT_SENTINEL },
+  {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   // Harder enemies:
   {  1,  4,  200, FLAT, MONS_ENTROPY_WEAVER },
   {  1,  4, 1500, FLAT, MONS_IRONBRAND_CONVOKER },

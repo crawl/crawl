@@ -1510,6 +1510,11 @@ ironheart preserver
 A towering, muscular figure, capable of safeguarding its allies by selflessly
 accepting a portion of the injuries inflicted upon them.
 %%%%
+ironwhip beastmaster
+
+A cruel and wild ogre who growls in the language of the wild. It conditions
+beasts for combat with nets and malice, and spurs them to fight its foes.
+%%%%
 jackal
 
 A small canine scavenger. Packs of jackals roam the underworld, searching for

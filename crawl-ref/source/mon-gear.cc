@@ -653,6 +653,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRONBOUND_THUNDERHULK,   { IRON_WEAPONS } },
+        { MONS_IRONWHIP_BEASTMASTER,
+            { { { WPN_WHIP,             5 },
+                { WPN_QUARTERSTAFF,     4 },
+                { WPN_DEMON_WHIP,       1 },
+        } } },
         { MONS_ETTIN,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -1483,6 +1488,10 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_GNOLL:
             if (!level || !one_chance_in(20))
                 break;
+            // deliberate fall-through
+        case MONS_IRONWHIP_BEASTMASTER:
+            if (!one_chance_in(10))
+                break;
             // deliberate fall-through to harold
 
         case MONS_HAROLD: // bounty hunter, up to 5 nets
@@ -1811,6 +1820,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_IRONWHIP_BEASTMASTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
