@@ -470,18 +470,25 @@ static string _hand_name_singular(bool temp)
     if (temp && !get_form()->hand_name.empty())
         return get_form()->hand_name;
 
-    // let species case handle paws
-    const bool paws = you.has_mutation(MUT_PAWS, temp);
-    if (you.has_usable_claws() && !paws)
+    if (you.has_mutation(MUT_PAWS, temp))
+        return "paw"; // XX redundant with species
+
+    if (you.has_usable_claws())
         return "claw";
 
     if (you.has_usable_tentacles())
         return "tentacle";
 
+    // For flavor reasons, use "fists" instead of "hands" in various places,
+    // but if the creature does have a custom hand name, let the above code
+    // preempt it.
+    if (temp && you.form == transformation::statue)
+        return "fist";
+
     // player has no usable claws, but has the mutation -- they are suppressed
     // by something. (The species names will give the wrong answer for this
     // case, except for felids, where we want "blade paws".)
-    if (you.has_mutation(MUT_CLAWS, false) && !paws)
+    if (you.has_mutation(MUT_CLAWS, false))
         return "hand";
 
     // then fall back on the species name
@@ -494,12 +501,15 @@ string player::base_hand_name(bool plural, bool temp, bool *can_plural) const
     bool _can_plural;
     if (can_plural == nullptr)
         can_plural = &_can_plural;
+    // note: octopodes have four primary tentacles, two pairs that are each used
+    // like a hand. So even with MUT_MISSING_HAND, they should flavorwise still
+    // use plurals when counting arms.
     *can_plural = you.arm_count() > 1;
 
     string singular;
-    // it's ugly to do this here, but blade hands' hand name is dependent on
-    // the hand name without forms, so it's hard to offload into transform.cc
-    // without code duplication.
+    // For flavor reasons we use "blade X" in a bunch of places, not just the
+    // UC weapon display, where X is the custom hand name. For that reason, we
+    // need to do the calculation here.
     if (temp && form == transformation::blade_hands)
         singular += "blade ";
     singular += _hand_name_singular(temp);

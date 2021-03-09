@@ -514,7 +514,7 @@ public:
      */
     string transform_message(transformation /*previous_trans*/) const override
     {
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.arm_count() == 1;
 
         // XXX: a little ugly
         return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
@@ -527,7 +527,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.arm_count() == 1;
 
         // XXX: a little ugly
         return make_stringf("Your %s revert%s to %s normal proportions.",
@@ -592,13 +592,8 @@ public:
      */
     string get_uc_attack_name(string /*default_name*/) const override
     {
-        string hand = you.base_hand_name(
-                    !you.has_mutation(MUT_MISSING_HAND), false);
-        // sorry for the hacks
-        if (hand == "hand")
-            hand = "fist";
-        else if (hand == "hands")
-            hand = "fists";
+        // there's special casing in base_hand_name to get "fists"
+        string hand = you.base_hand_name(true, true);
         return make_stringf("Stone %s", hand.c_str());
     }
 };
@@ -1325,14 +1320,21 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
+/**
+ * What is the name of the player parts that will become blades?
+ */
 string blade_parts(bool terse)
 {
-    string str = you.base_hand_name(!you.has_mutation(MUT_MISSING_HAND), false);
+    // there's special casing in base_hand_name to use "blade" everywhere, so
+    // use the non-temp name
+    string str = you.base_hand_name(true, false);
 
     // creatures with paws (aka felids) have four paws, but only two of them
     // turn into blades.
     if (!terse && you.has_mutation(MUT_PAWS, false))
-      str = "front " + str;
+        str = "front " + str;
+    else if (!terse && you.arm_count() > 2)
+        str = "main " + str; // Op have four main tentacles
 
     return str;
 }
