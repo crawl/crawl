@@ -9,6 +9,7 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "describe.h"
 
 /*** Is this spell memorised?
  * @tparam string spellname
@@ -346,6 +347,24 @@ static int l_spells_cast(lua_State *ls)
     PLUARET(boolean, you.turn_is_over);
 }
 
+/*** Describe a spell.
+ *
+ * @tparam string spell name
+ * @function describe
+ */
+static int l_spells_describe(lua_State *ls)
+{
+    const string spell_name = luaL_checkstring(ls, 1);
+    spell_type spell = spell_by_name(spell_name, false);
+    if (!is_valid_spell(spell))
+    {
+        luaL_argerror(ls, 1, ("Invalid spell: " + spell_name).c_str());
+        return 0;
+    }
+    PLUARET(string, player_spell_desc(spell).c_str());
+}
+
+
 static const struct luaL_reg spells_clib[] =
 {
     { "memorised"     , l_spells_memorised },
@@ -369,6 +388,7 @@ static const struct luaL_reg spells_clib[] =
     { "god_hates"     , l_spells_god_hates },
     { "god_loathes"   , l_spells_god_loathes },
     { "cast"          , l_spells_cast },
+    { "describe"      , l_spells_describe },
     { nullptr, nullptr }
 };
 
