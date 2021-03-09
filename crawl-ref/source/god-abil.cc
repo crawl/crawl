@@ -1269,7 +1269,6 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
@@ -1278,7 +1277,6 @@ void zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
-
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1
