@@ -423,6 +423,8 @@ bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);
 
+bool mons_class_requires_band(monster_type mc);
+
 int cheibriados_monster_player_speed_delta(const monster& mon);
 bool cheibriados_thinks_mons_is_fast(const monster& mon);
 bool mons_is_projectile(monster_type mc);
