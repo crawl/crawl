@@ -299,7 +299,7 @@ void list_jewellery()
 {
     string jstr;
     int cols = get_number_of_cols() - 1;
-    bool split = you.species == SP_OCTOPODE && cols > 84;
+    bool split = species_arm_count(you.species) > 2 && cols > 84;
 
     for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
@@ -346,7 +346,8 @@ void list_jewellery()
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
+        // doesn't handle arbitrary arm counts
+        if (i == EQ_RING_SEVEN && species_arm_count(you.species) == 8 &&
                 you.get_mutation_level(MUT_MISSING_HAND))
         {
             mprf(MSGCH_EQUIPMENT, "%s", item.c_str());

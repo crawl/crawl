@@ -4325,12 +4325,10 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        equipment_type ring_slot;
-
-        if (you.species == SP_OCTOPODE)
-            ring_slot = EQ_RING_EIGHT;
-        else
-            ring_slot = EQ_LEFT_RING;
+        auto ring_slots = species_ring_slots(you.species);
+        // the last one gets sacrificed: either EQ_LEFT_RING or EQ_RING_EIGHT
+        equipment_type ring_slot = ring_slots.back();
+        ring_slots.pop_back();
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
@@ -4360,25 +4358,13 @@ static void _extra_sacrifice_code(ability_type sac)
         // And one ring
         if (ring != nullptr)
         {
-            if (you.species == SP_OCTOPODE)
-            {
-                for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
-                {
-                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
-                    {
-                        open_ring_slot = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                if (!you.slot_item(static_cast<equipment_type>(
-                    EQ_RIGHT_RING), true))
+            // XX does not handle an open slot on the finger amulet
+            for (const auto &eq : ring_slots)
+                if (!you.slot_item(eq, true))
                 {
                     open_ring_slot = true;
+                    break;
                 }
-            }
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
@@ -4387,7 +4373,7 @@ static void _extra_sacrifice_code(ability_type sac)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
-                     (you.species == SP_OCTOPODE ? "another" : "your other"),
+                     (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
                 puton_ring(ring_inv_slot, false);
             }

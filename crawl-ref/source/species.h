@@ -4,6 +4,7 @@
 
 #include "enum.h"
 #include "ability-type.h"
+#include "equipment-type.h"
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "size-part-type.h"
@@ -52,6 +53,10 @@ string species_shout_verb(species_type sp, int screaminess, bool directed);
 string species_skin_name(species_type sp, bool adj=false);
 string species_arm_name(species_type species);
 string species_hand_name(species_type species);
+int species_arm_count(species_type species);
+vector<equipment_type> species_ring_slots(species_type species);
+bool species_bans_eq(species_type species, equipment_type eq);
+
 const vector<string>& fake_mutations(species_type species, bool terse);
 
 monster_type dragon_form_dragon_type();

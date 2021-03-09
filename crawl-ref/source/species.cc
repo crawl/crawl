@@ -118,6 +118,97 @@ string species_skin_name(species_type species, bool adj)
         return adj ? "fleshy" : "skin";
 }
 
+int species_arm_count(species_type species)
+{
+    return species == SP_OCTOPODE ? 8 : 2;
+}
+
+/**
+ *  Checks some species-level equipment slot constraints. Anything hard-coded
+ *  per species, but not handled by a mutation should be here. See also
+ *  player.cc::you_can_wear and item-use.cc::can_wear_armour for the full
+ *  division of labor. This function is guaranteed to handle species ring
+ *  slots.
+ *
+ *  @param species the species type to check
+ *  @param eq the equipment slot to check
+ *  @return true if the equipment slot is not used by the species; false
+ *          indicates only that nothing in this check bans the slot. For
+ *          example, this function does not check felid mutations.
+ */
+bool species_bans_eq(species_type species, equipment_type eq)
+{
+    const int arms = species_arm_count(species);
+    // only handles 2 or 8
+    switch (eq)
+    {
+    case EQ_LEFT_RING:
+    case EQ_RIGHT_RING:
+        return arms > 2;
+    case EQ_RING_ONE:
+    case EQ_RING_TWO:
+    case EQ_RING_THREE:
+    case EQ_RING_FOUR:
+    case EQ_RING_FIVE:
+    case EQ_RING_SIX:
+    case EQ_RING_SEVEN:
+    case EQ_RING_EIGHT:
+        return arms <= 2;
+    // not banned by any species
+    case EQ_AMULET:
+    case EQ_RING_AMULET:
+    // not handled here:
+    case EQ_WEAPON:
+    case EQ_STAFF:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS: // what is this stuff
+    case EQ_ALL_ARMOUR:
+        return false;
+    default:
+        break;
+    }
+    // remaining should be armour only
+    if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_SHIELD)
+        return true;
+
+    if (species_is_draconian(species) && eq == EQ_BODY_ARMOUR)
+        return true;
+
+    // for everything else that is handled by mutations, including felid
+    // restrictions, see item-use.cc::can_wear_armour. (TODO: move more of the
+    // code here to mutations?)
+    return false;
+}
+
+/**
+ * Get ring slots available to a species. The last slot is the one that would
+ * be missing under MUT_MISSING_HAND.
+ */
+vector<equipment_type> species_ring_slots(species_type species)
+{
+    vector<equipment_type> result;
+    if (species_arm_count(species) == 2)
+    {
+        // ugh; sac hand sacrifices either left or eight, but these are in an
+        // inconsistent order in equipment_type. Ensure that the sacrificial
+        // arm ends up last. XX reorder this enum
+        result.push_back(EQ_RIGHT_RING);
+        result.push_back(EQ_LEFT_RING);
+    }
+    else
+    {
+        // generic code: works for the == 2 case as well except for the
+        // sacrifice issue noted above.
+        for (int i = EQ_FIRST_JEWELLERY; i <= EQ_LAST_JEWELLERY; i++)
+        {
+            const auto eq = static_cast<equipment_type>(i);
+            if (eq != EQ_AMULET && eq != EQ_RING_AMULET && !species_bans_eq(species, eq))
+                result.push_back(eq);
+        }
+    }
+    return result;
+}
+
 string species_arm_name(species_type species)
 {
     if (species == SP_OCTOPODE)
@@ -585,6 +676,7 @@ void change_species_to(species_type sp)
 
     update_vision_range(); // for Ba, and for Ko
 
+    // XX not general if there are ever any other options
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);

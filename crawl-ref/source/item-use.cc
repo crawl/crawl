@@ -859,7 +859,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
     {
         if (verbose)
-            mpr("You can't wear that.");
+            mpr("You can't wear that!");
 
         return false;
     }
@@ -867,19 +867,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
-    {
-        if (verbose)
-            mpr("You can't wear that!");
-        return false;
-    }
-
-    if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
+    if (species_bans_eq(you.species, slot))
     {
         if (verbose)
         {
-            mprf("Your wings%s won't fit in that.", you.has_mutation(MUT_BIG_WINGS)
-                 ? "" : ", even vestigial as they are,");
+            // *if* the species bans body armour, then blame it on wings.
+            // (But don't unconditionally ban armour with this mut.)
+            // XX turn this mut into a two-level mutation?
+            if (slot == EQ_BODY_ARMOUR
+                && species_mutation_level(you.species, MUT_BIG_WINGS))
+            {
+                mprf("Your wings%s won't fit in that.",
+                    you.has_mutation(MUT_BIG_WINGS)
+                        ? "" : ", even vestigial as they are,");
+            }
+            else
+                mpr("You can't wear that!");
         }
         return false;
     }
@@ -898,7 +901,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.species == SP_OCTOPODE) // XX ugly hardcoding -- but Op locomotion is unique
                 mpr("You need the rest of your tentacles for walking.");
             else
                 mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
@@ -1368,31 +1371,16 @@ bool takeoff_armour(int item)
 // Returns a list of possible ring slots.
 static vector<equipment_type> _current_ring_types()
 {
-    vector<equipment_type> ret;
-    if (you.species == SP_OCTOPODE)
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            const equipment_type slot = (equipment_type)(EQ_RING_ONE + i);
-
-            if (you.get_mutation_level(MUT_MISSING_HAND)
-                && slot == EQ_RING_EIGHT)
-            {
-                continue;
-            }
-
-            if (get_form()->slot_available(slot))
-                ret.push_back(slot);
-        }
-    }
-    else
-    {
-        if (you.get_mutation_level(MUT_MISSING_HAND) == 0)
-            ret.push_back(EQ_LEFT_RING);
-        ret.push_back(EQ_RIGHT_RING);
-    }
+    vector<equipment_type> ret = species_ring_slots(you.species);
+    if (you.has_mutation(MUT_MISSING_HAND))
+        ret.pop_back();
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
         ret.push_back(EQ_RING_AMULET);
+
+    erase_if(ret, [](const equipment_type &e)
+        {
+            return !get_form()->slot_available(e);
+        });
     return ret;
 }
 

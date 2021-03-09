@@ -679,14 +679,18 @@ string describe_mutations(bool drop_title)
     }
     // XX if there is ever a giant player species, check it here
 
-    if (you.species == SP_OCTOPODE)
+    if (species_arm_count(you.species) > 2)
     {
-        const string num_tentacles =
-               number_in_words(you.has_usable_tentacles(false));
+        const string num_arms = number_in_words(you.arm_count());
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                         num_tentacles.c_str()),
+                         num_arms.c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
+    }
+
+    if (you.species == SP_OCTOPODE)
+    {
+        const string num_tentacles = number_in_words(you.has_tentacles(false));
         result += _annotate_form_based(
             make_stringf("You can use your tentacles to constrict %s enemies at once.",
                          num_tentacles.c_str()),

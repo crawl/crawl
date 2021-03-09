@@ -844,7 +844,7 @@ static const mutation_def mut_data[] =
    "The barb on your tail seems less sharp."},
 },
 
-// Draconian only
+// Draconian/gargoyle only
 { MUT_BIG_WINGS, 4, 1, mutflag::good, true,
   "big wings",
 

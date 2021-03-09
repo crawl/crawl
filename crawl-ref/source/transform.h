@@ -170,7 +170,7 @@ public:
     /** A bitfield representing a union of (1 << equipment_type) values for
      * equipment types that are unusable in this form.
      */
-    const int blocked_slots;
+    const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
     const size_type size;
     /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)

@@ -718,19 +718,18 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (temp && !get_form()->slot_available(eq))
         return MB_FALSE;
 
+    // handles incorrect ring slots vs species
+    if (species_bans_eq(you.species, eq))
+        return MB_FALSE;
+
     switch (eq)
     {
+    case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
-
-    case EQ_RING_EIGHT:
-        if (you.get_mutation_level(MUT_MISSING_HAND))
-            return MB_FALSE;
-        // intentional fallthrough
     case EQ_RING_ONE:
     case EQ_RING_TWO:
     case EQ_RING_THREE:
@@ -738,7 +737,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
+        return MB_TRUE;
 
     case EQ_WEAPON:
     case EQ_STAFF:
@@ -823,7 +822,7 @@ bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.species == SP_NAGA
         || you.has_mutation(MUT_PAWS) // paws are not feet?
-        || you.species == SP_OCTOPODE
+        || you.has_tentacles(temp)
         || you.fishtail && temp)
     {
         return false;
@@ -6836,19 +6835,19 @@ int player::has_usable_pseudopods(bool allow_tran) const
     return has_pseudopods(allow_tran);
 }
 
+int player::arm_count() const
+{
+    // XX transformations? arm count per se isn't used by much though.
+
+    return species_arm_count(species)
+                    - get_mutation_level(MUT_MISSING_HAND);
+}
+
 int player::has_tentacles(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // Most transformations suppress tentacles.
-        if (!form_keeps_mutations())
-            return 0;
-    }
-
-    if (species == SP_OCTOPODE && get_mutation_level(MUT_MISSING_HAND))
-        return 7;
-    else if (species == SP_OCTOPODE)
-        return 8;
+    // tentacles count as a mutation for these purposes. (TODO: realmut?)
+    if (species == SP_OCTOPODE && (!allow_tran || form_keeps_mutations()))
+        return arm_count();
 
     return 0;
 }

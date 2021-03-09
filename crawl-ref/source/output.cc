@@ -586,7 +586,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    cprintf((species_arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -1916,14 +1916,15 @@ static void _print_overview_screen_equip(column_composer& cols,
 
     for (equipment_type eqslot : e_order)
     {
-        if (you.species == SP_OCTOPODE
+        // leave space for all the ring slots
+        if (species_arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
             && !you_can_wear(eqslot))
         {
             continue;
         }
 
-        if (you.species != SP_OCTOPODE
+        if (species_arm_count(you.species) <= 2
             && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
         {
             continue;
@@ -2591,11 +2592,14 @@ string mutation_overview()
                                             !form_likes_water()));
     }
 
-    if (you.species == SP_OCTOPODE)
+    if (species_arm_count(you.species) > 2)
     {
         mutations.push_back(_annotate_form_based(
-            make_stringf("%d rings", you.has_tentacles(false)),
+            make_stringf("%d rings", you.arm_count()),
             !get_form()->slot_available(EQ_RING_EIGHT)));
+    }
+    if (you.species == SP_OCTOPODE)
+    {
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", you.has_tentacles(false)),
             !form_keeps_mutations()));

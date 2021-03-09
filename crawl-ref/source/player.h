@@ -685,6 +685,7 @@ public:
     string hands_act(const string &plural_verb, const string &object) const;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
+    int arm_count() const;
     string unarmed_attack_name() const;
 
     bool fumbles_attack() override;

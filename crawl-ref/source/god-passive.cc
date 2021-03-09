@@ -601,53 +601,32 @@ void ash_check_bondage()
     for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
     {
         const equipment_type i = static_cast<equipment_type>(j);
-        // Missing hands mean fewer rings
-        if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
-                 && you.get_mutation_level(MUT_MISSING_HAND))
-        {
+
+        // handles missing hand, octopode ring slots, finger necklace, species
+        // armour restrictions, etc. Finger necklace slot counts.
+        if (you_can_wear(i) == MB_FALSE)
             continue;
-        }
-        // Octopodes don't count these slots:
-        else if (you.species == SP_OCTOPODE
-                 && ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
-                     || (i == EQ_RING_EIGHT
-                         && you.get_mutation_level(MUT_MISSING_HAND))))
-        {
-            continue;
-        }
-        // *Only* octopodes count these slots:
-        else if (you.species != SP_OCTOPODE
-                 && i >= EQ_RING_ONE && i <= EQ_RING_EIGHT)
-        {
-            continue;
-        }
-        // The macabre finger necklace's extra slot does count if equipped.
-        else if (!player_equip_unrand(UNRAND_FINGER_AMULET)
-                 && i == EQ_RING_AMULET)
-        {
-            continue;
-        }
 
         // transformed away slots are still considered to be possibly bound
-        if (you_can_wear(i))
+        num_slots++;
+        if (you.equip[i] != -1)
         {
-            num_slots++;
-            if (you.equip[i] != -1)
+            const item_def& item = you.inv[you.equip[i]];
+            if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
             {
-                const item_def& item = you.inv[you.equip[i]];
-                if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
+                if (i == EQ_WEAPON && _two_handed())
+                    num_cursed += 2;
+                else
                 {
-                    if (i == EQ_WEAPON && _two_handed())
-                        num_cursed += 2;
-                    else
+                    num_cursed++;
+                    if (i == EQ_BODY_ARMOUR
+                        && is_unrandom_artefact(item, UNRAND_LEAR))
                     {
-                        num_cursed++;
-                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
-                            num_cursed += 3;
+                        num_cursed += 3;
                     }
-                    if (!item_is_melded(item))
-                        _curse_boost_skills(item);
                 }
+                if (!item_is_melded(item))
+                    _curse_boost_skills(item);
             }
         }
     }
