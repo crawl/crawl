@@ -481,6 +481,15 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
 static int _los_spell_damage_player(const actor* agent, bolt &beam,
                                     bool actual)
 {
+    // No self damage from ozo's, but we do get -Potion
+    if (actual && agent->is_player()
+        && beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
+    {
+        mpr("You feel very cold.");
+        you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+        return 0;
+    }
+
     int hurted = actual ? beam.damage.roll()
                         // Monsters use the average for foe calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
@@ -489,8 +498,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
             actual && beam.origin_spell != SPELL_DRAIN_LIFE);
     if (actual && hurted > 0)
     {
-        if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            mpr("You feel very cold.");
 
         if (agent && !agent->is_player())
         {
@@ -499,9 +506,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
                  agent->as_monster()->name(DESC_A).c_str());
             you.expose_to_element(beam.flavour, 5);
         }
-        // -harm from player casting Ozo's Refridge.
-        else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
     }
 
     return hurted;
