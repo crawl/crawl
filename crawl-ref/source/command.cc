@@ -347,11 +347,8 @@ void list_jewellery()
         item = colour_string(item, colour);
 
         // doesn't handle arbitrary arm counts
-        if (i == EQ_RING_SEVEN && species_arm_count(you.species) == 8 &&
-                you.get_mutation_level(MUT_MISSING_HAND))
-        {
+        if (i == EQ_RING_SEVEN && you.arm_count() == 7)
             mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
-        }
         else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else

@@ -592,7 +592,8 @@ public:
      */
     string get_uc_attack_name(string /*default_name*/) const override
     {
-        string hand = you.base_hand_name(true, false).c_str();
+        string hand = you.base_hand_name(
+                    !you.has_mutation(MUT_MISSING_HAND), false);
         // sorry for the hacks
         if (hand == "hand")
             hand = "fist";
@@ -1326,7 +1327,7 @@ monster_type transform_mons()
 
 string blade_parts(bool terse)
 {
-    string str = you.base_hand_name(true, false);
+    string str = you.base_hand_name(!you.has_mutation(MUT_MISSING_HAND), false);
 
     // creatures with paws (aka felids) have four paws, but only two of them
     // turn into blades.

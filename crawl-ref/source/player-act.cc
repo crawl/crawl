@@ -494,7 +494,7 @@ string player::base_hand_name(bool plural, bool temp, bool *can_plural) const
     bool _can_plural;
     if (can_plural == nullptr)
         can_plural = &_can_plural;
-    *can_plural = !get_mutation_level(MUT_MISSING_HAND);
+    *can_plural = you.arm_count() > 1;
 
     string singular;
     // it's ugly to do this here, but blade hands' hand name is dependent on

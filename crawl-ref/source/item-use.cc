@@ -437,7 +437,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mpr("You can't wield that without your missing limb."));
+        SAY(mprf("You can't wield that without your missing %s.",
+            species_arm_name(you.species).c_str()));
         return false;
     }
 
@@ -1034,7 +1035,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (verbose)
             {
                 mprf("You can't wear a glove with your huge claw%s!",
-                     you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
+                     you.arm_count() == 1 ? "" : "s");
             }
             return false;
         }

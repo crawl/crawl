@@ -1970,7 +1970,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.form == transformation::blade_hands)
         {
-            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const bool plural = you.arm_count() > 1;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS && you.wear_barding())
