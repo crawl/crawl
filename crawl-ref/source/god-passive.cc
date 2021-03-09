@@ -659,6 +659,10 @@ void ash_check_bondage()
     calc_mp(true);
 }
 
+// XXX: If this is called on an item in inventory, then auto_assign_item_slot
+// needs to be called subsequently. However, moving an item in inventory
+// invalidates its reference, which is a different behavior than for floor
+// items, so we don't do it in this function.
 bool god_id_item(item_def& item, bool silent)
 {
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
@@ -693,8 +697,6 @@ bool god_id_item(item_def& item, bool silent)
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
-        if (in_inventory(item))
-            auto_assign_item_slot(item);
         return true;
     }
 

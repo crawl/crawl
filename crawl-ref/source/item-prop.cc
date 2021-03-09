@@ -864,9 +864,19 @@ bool item_is_cursable(const item_def &item)
 
 void auto_id_inventory()
 {
-    for (auto &item : you.inv)
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
         if (item.defined() && !fully_identified(item))
+        {
             god_id_item(item, false);
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
+        }
+    }
 }
 
 /**
