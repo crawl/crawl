@@ -2252,7 +2252,7 @@ MONS:   deep elf knight; quarterstaff . leather armour good_item
 MONS:   elephant / death yak
 MONS:   wolf / warg w:20
 MONS:   plant / fungus, nothing
-: elseif you.in_branch("Swamp") or or you.in_branch("Spider") or you.in_branch("Snake") then
+: elseif you.in_branch("Swamp") or you.in_branch("Spider") or you.in_branch("Snake") then
 TAGS:   no_monster_gen
 MONS:   deep elf archer; longbow . arrow . quarterstaff . robe
 MONS:   deep elf knight; quarterstaff . chain mail
