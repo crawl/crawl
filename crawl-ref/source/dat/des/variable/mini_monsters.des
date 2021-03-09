@@ -2247,14 +2247,14 @@ KMONS:  5 = fungus / nothing
 KMONS:  6 = necrophage w:50, ghoul
 : elseif you.in_branch("D") then
 TAGS:   no_monster_gen
-MONS:   deep elf archer; shortbow . arrow . quarterstaff . robes
+MONS:   deep elf archer; shortbow . arrow . quarterstaff . robe
 MONS:   deep elf knight; quarterstaff . leather armour good_item
 MONS:   elephant / death yak
 MONS:   wolf / warg w:20
 MONS:   plant / fungus, nothing
 : elseif you.in_branch("Swamp") or you.in_branch("Shoals") or you.in_branch("Spider") or you.in_branch("Snake") then
 TAGS:   no_monster_gen
-MONS:   deep elf archer; longbow . arrow . quarterstaff . robes
+MONS:   deep elf archer; longbow . arrow . quarterstaff . robe
 MONS:   deep elf knight; quarterstaff . chain mail
 MONS:   dire elephant / elephant
 MONS:   warg / raiju
