@@ -429,6 +429,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose body/animal_skin
 %compose hair/elf_yellow
 %finish SP_RECOMMENDED_SLUDGE_ELF
+%start
+%compose base/golem
+%compose body/animal_skin
+%finish SP_RECOMMENDED_MAGIC_GOLEM
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -476,4 +480,5 @@ enum:SP_RECOMMENDED_MELIAI SP_MELIAI
 enum:SP_RECOMMENDED_WIGHT SP_WIGHT
 enum:SP_RECOMMENDED_SPARKBORN SP_SPARKBORN
 enum:SP_RECOMMENDED_SLUDGE_ELF SP_SLUDGE_ELF
+enum:SP_RECOMMENDED_MAGIC_GOLEM SP_MAGIC_GOLEM
 %syn LAST_SPECIES

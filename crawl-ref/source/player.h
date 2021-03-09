@@ -952,6 +952,8 @@ public:
 
     vector<item_def* > bag() const;
 
+    bool is_auto_spell();
+
 protected:
     void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;

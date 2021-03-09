@@ -1463,8 +1463,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  * the casting.
  **/
 spret your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item)
+                       const item_def* const evoked_item, coord_def auto_target)
 {
+    bool is_auto_target = auto_target != coord_def(-1, -1);
     ASSERT(!crawl_state.game_is_arena());
     if (evoked_item)
     {
@@ -1496,7 +1497,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
-    if (flags & spflag::targeting_mask)
+    if (flags & spflag::targeting_mask && !is_auto_target)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -1559,6 +1560,9 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         args.needs_path = needs_path;
         args.target_prefix = prompt;
         args.top_prompt = title;
+        if(is_auto_target) {
+            args.default_place = auto_target;
+        }
         if (hitfunc && hitfunc->can_affect_walls())
         {
             args.show_floor_desc = true;

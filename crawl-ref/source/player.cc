@@ -9507,3 +9507,8 @@ vector<item_def* > player::bag() const
 
     return bagVector;
 }
+
+bool player::is_auto_spell()
+{
+    return species == SP_MAGIC_GOLEM;
+}

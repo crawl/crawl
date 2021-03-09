@@ -1,6 +1,6 @@
 enum: SP_MAGIC_GOLEM
 monster: MONS_GOLEM
-name: Golem
+name: MagicGolem
 short_name: "MG"
 difficulty: Advanced
 difficulty_priority: 80
@@ -44,6 +44,9 @@ str: 8
 int: 8
 dex: 8
 levelup_stat_frequency: 4
+levelup_stats:
+  - str
+  - int
 mutations:
   1:
     MUT_ROT_IMMUNITY: 1

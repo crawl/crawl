@@ -1292,6 +1292,10 @@ void move_player_action(coord_def move)
                 return;
             }
 
+            if(you.is_auto_spell() && targ_monst && targ_monst->alive()) {
+                //your_spells(SPELL_MAGIC_DART, 0, true, nullptr, targ); //TEST
+            }
+
             you.turn_is_over = true;
             you.berserk_penalty = 0;
             attacking = true;
