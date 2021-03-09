@@ -2282,15 +2282,15 @@ MONS:   nothing, nothing
 : end
 : if you.in_branch("Crypt") then
 TILE:   t = dngn_tree_dead
-TILE:   x = c
+SUBST:  x = c
 FTILE:  ` = floor_crypt
 : elseif you.in_branch("Swamp") then
-SUBST:  ` = `````W
-FTILE:  `123456 = floor_grass
+SUBST:  ` = ``....W, x = t
+FTILE:  `123456E%t = floor_grass
 : elseif you.in_branch("Spider") then
 SUBST:  ` = ., t = x
 : else
-FTILE:  `123456 = floor_grass
+FTILE:  `123456E%t = floor_grass
 FTILE:  P = floor_sand
 : end
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
