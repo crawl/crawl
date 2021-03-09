@@ -9512,3 +9512,84 @@ bool player::is_auto_spell()
 {
     return species == SP_MAGIC_GOLEM;
 }
+
+/**
+ * for magic golem
+ */
+bool player::auto_cast(const coord_def& target, int delay, bool escape)
+{
+    init_auto_cast_vector();
+    CrawlVector& spell_cooldown = you.props[AUTO_SPELL_COOLDOWN_KEY].get_vector();
+    vector<pair<int, int>> weights;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++) {
+        const spell_type spl = spells[i];
+        if (!is_valid_spell(spl))
+            continue;
+
+        if (spell_cooldown[i].get_int() > 0) {
+            spell_cooldown[i].get_int() -= delay;
+            continue;
+        }
+        int cost = spell_mana(spl);
+        if (!enough_mp(cost, true))
+        {
+            continue;
+        }
+        
+        //check fail
+        bool fail = false;
+        int spfl = random2avg(100, 3);
+        if (!you_worship(GOD_SIF_MUNA)
+            && you.penance[GOD_SIF_MUNA] && one_chance_in(20))
+        {
+            spfl = -you.penance[GOD_SIF_MUNA];
+        }
+        const int spfail_chance = raw_spell_fail(spl);
+        if (spfl < spfail_chance)
+            fail = spfail_chance - spfl;
+
+        if(!fail)
+            weights.push_back({ i, 100 });
+    }
+
+    if (weights.size() == 0)
+        return false;
+
+    int* cast_spell_slot = random_choose_weighted(weights);
+
+    if (*cast_spell_slot == MAX_KNOWN_SPELLS) {
+        return false;
+    }
+    const spell_type cast_spell = spells[*cast_spell_slot];
+
+    int cost = spell_mana(cast_spell);
+    // Majin Bo HP cost taken at the same time
+    const int hp_cost = min(spell_mana(cast_spell), you.hp - 1);
+
+    spell_cooldown[*cast_spell_slot].get_int() += cost * 10;
+
+    dec_mp(cost, false);
+    if (majin_charge_hp())
+        dec_hp(hp_cost, false);
+    spret cast_result = your_spells(cast_spell, 0, false, nullptr, target);
+    if (cast_result == spret::abort)
+    {
+        inc_mp(cost, true);
+        if (majin_charge_hp())
+            inc_hp(hp_cost);
+        redraw_screen();
+        return false;
+    }
+    return true;
+}
+
+void player::init_auto_cast_vector()
+{
+    if (you.props[AUTO_SPELL_COOLDOWN_KEY].get_type() == SV_NONE) {
+        you.props[AUTO_SPELL_COOLDOWN_KEY].new_vector(SV_INT);
+        CrawlVector& spell_cooldown = you.props[AUTO_SPELL_COOLDOWN_KEY].get_vector();
+        for (int i = 0; i < MAX_KNOWN_SPELLS;i++) {
+            spell_cooldown.push_back(0);
+        }
+    }
+}

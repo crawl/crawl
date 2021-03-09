@@ -1,6 +1,6 @@
 enum: SP_MAGIC_GOLEM
 monster: MONS_GOLEM
-name: MagicGolem
+name: Magic Golem
 short_name: "MG"
 difficulty: Advanced
 difficulty_priority: 80

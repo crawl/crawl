@@ -519,6 +519,7 @@ direction_chooser::direction_chooser(dist& moves_,
     show_boring_feats(args.show_boring_feats),
     hitfunc(args.hitfunc),
     default_place(args.default_place),
+    auto_click(args.auto_click),
     unrestricted(args.unrestricted),
     needs_path(args.needs_path)
 {
@@ -1370,7 +1371,8 @@ bool direction_chooser::handle_signals()
         moves.isValid  = false;
         moves.isCancel = true;
 
-        mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
+        if(!auto_click)
+            mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
         return true;
     }
     return false;
@@ -1922,12 +1924,17 @@ bool direction_chooser::do_main_loop()
     reinitialize_move_flags();
 
     const coord_def old_target = target();
+    if (auto_click) {
+        bool auto_success = select(false, false);
+        return auto_success;
+    }
     const int key = behaviour->get_key();
     if (key == CK_REDRAW)
     {
         redraw_screen(false);
         return false;
     }
+
 
     const command_type key_command = behaviour->get_command(key);
     behaviour->update_top_prompt(&top_prompt);
@@ -2113,7 +2120,8 @@ bool direction_chooser::choose_direction()
     clear_messages();
     msgwin_set_temporary(true);
     unwind_bool save_more(crawl_state.show_more_prompt, false);
-    show_initial_prompt();
+    if(!auto_click)
+        show_initial_prompt();
     need_text_redraw = false;
 
     do_redraws();

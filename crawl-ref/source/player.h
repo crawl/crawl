@@ -70,6 +70,7 @@
 #define COMBAT_MANA_KEY "combat_mana"
 #define CARAVAN_MERCENARY "caravan_mercenary"
 #define PALENTONGA_CURL_KEY "palentonga_curl"
+#define AUTO_SPELL_COOLDOWN_KEY "auto_spell_cooldown_key"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -953,6 +954,9 @@ public:
     vector<item_def* > bag() const;
 
     bool is_auto_spell();
+
+    bool auto_cast(const coord_def& target, int delay, bool escape);
+    void init_auto_cast_vector();
 
 protected:
     void _removed_beholder(bool quiet = false);
