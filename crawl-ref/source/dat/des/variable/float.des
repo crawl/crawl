@@ -2989,7 +2989,7 @@ cc'nn-...-nnnnnc...cncnc...cnnnnn-...-nn'cc
  c''nnn-nnn''''ccc.......ccc''''nnn-nnn''c
  cc'''nnn'''''cc cc.....cc cc'''''nnn'''cc
   cc?'''''?cccc   ccc+ccc   cccc?'''''?cc
-   ccc'''ccc                   ccc'''ccc
+   ccc'''ccc         @         ccc'''ccc
      ccccc                       ccccc
 ENDMAP
 
