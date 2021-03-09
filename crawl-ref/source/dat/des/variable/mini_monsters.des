@@ -2234,48 +2234,91 @@ ENDMAP
 
 # Very hungry Elvish explorers and their campfire, mounts and pet.
 # Sometimes they have starved to death.
-NAME: beargit_elvish_explorers
-DEPTH: D:14-, Depths, Swamp, Snake, Shoals, Spider, Crypt
+NAME:   beargit_elvish_explorers
+DEPTH:  D:12-, Depths, Swamp, Snake, Shoals, Spider, Crypt
+TAGS:   patrolling
 : if crawl.one_chance_in(5) then
-SUBST: 1 = %, 2 = %, 3 = E
+# we allow monster gen since maybe they killed the elves?
+SUBST:  1 = %, 2 = %, 3 = E
 : dgn.delayed_decay(_G, '%', 'elf skeleton')
 : dgn.delayed_decay(_G, 'E', 'elephant skeleton')
-KMONS: 4 = hell hound
-KMONS: 5 = fungus / nothing
+KMONS:  4 = hell hound
+KMONS:  5 = fungus / nothing
+KMONS:  6 = necrophage w:50, ghoul
 : elseif you.in_branch("D") then
-MONS: patrolling deep elf archer, patrolling deep elf knight
-MONS: patrolling elephant / patrolling death yak
-MONS: hound / wolf / warg
-MONS: plant / fungus / nothing
+TAGS:   no_monster_gen
+MONS:   deep elf archer; shortbow . arrow . quarterstaff . robes
+MONS:   deep elf knight; quarterstaff . leather armour good_item
+MONS:   elephant / death yak
+MONS:   wolf / warg w:20
+MONS:   plant / fungus, nothing
 : elseif you.in_branch("Swamp") or you.in_branch("Shoals") or you.in_branch("Spider") or you.in_branch("Snake") then
-MONS: patrolling deep elf archer, patrolling deep elf knight
-MONS: patrolling dire elephant / patrolling elephant
-MONS: hound / wolf / warg / raiju
-MONS: fungus / nothing
+TAGS:   no_monster_gen
+MONS:   deep elf archer; longbow . arrow . quarterstaff . robes
+MONS:   deep elf knight; quarterstaff . chain mail
+MONS:   dire elephant / elephant
+MONS:   warg / raiju
+MONS:   fungus / nothing, nothing
 : elseif you.in_branch("Crypt") then
-MONS: deep elf master archer zombie / deep elf master archer skeleton, \
-      deep elf blademaster zombie / deep elf blademaster skeleton
-MONS: dire elephant zombie / dire elephant skeleton
-MONS: raiju skeleton / raiju zombie
-MONS: nothing
+MONS:   spectral deep elf master archer
+MONS:   spectral deep elf blademaster
+MONS:   spectral hellephant
+MONS:   doom hound
+MONS:   nothing
+MONS:   ancient lich / necromancer w:30 / deep elf death mage w:30 / \
+        mummy priest / lich / dread lich / royal mummy / vampire mage
 : else
-MONS: deep elf master archer, deep elf blademaster
-MONS: dire elephant
-MONS: raiju
-MONS: fungus / nothing
+# The elves have mastered the dungeon and allied with the darkness
+# Good loot on the elves given the difficulty of the pets
+TAGS:   no_monster_gen
+MONS:   deep elf master archer; longbow good_item . arrow . chain mail good_item / \
+        deep elf master archer; longbow randart . arrow . quicksilver dragon scales
+MONS:   deep elf blademaster; quarterstaff randart . shadow dragon scales good_item / \
+        deep elf blademaster; lajatang good_item . plate armour good_item / \
+        deep elf blademaster; lajatang randart . plate armour good_item
+MONS:   hellephant
+MONS:   doom hound
+MONS:   nothing, nothing
 : end
-MARKER:  P = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 1000, pow_max = 1000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
-MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
-             pow_min = 3, pow_max = 3, delay = 100, \
-             size = 1, walk_dist = 1, start_clouds = 1 }
+: if you.in_branch("Crypt") then
+TILE:   t = dngn_tree_dead
+TILE:   x = c
+FTILE:  ` = floor_crypt
+: else
+FTILE:  `123456 = floor_grass
+FTILE:  P = floor_sand
+: end
+MARKER: P = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 1000, pow_max = 1000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
+            pow_min = 3, pow_max = 3, delay = 100, \
+            size = 1, walk_dist = 1, start_clouds = 1 }
 : dgn.delayed_decay(_G, 'P', 'rat skeleton')
 MAP
-55555
-51P25
-53435
-55555
+    xx.@.xxx
+    xt````tx
+    xt555ttx
+    xt````tx
+    xtt``ttx
+    xt````tx
+    xt``t`tx
+    xt````tx
+    xttt``tx
+xxxxxt````txxxx
+xttttt````ttttx
+xt`````t````4txx
+xt`WWW```P```ttx
+xt`WwWW````3``tx
+xt``````2163``tx
+xttt`````````ttx
+xxxtt``tttttttxx
+  xxt```tttttttx
+   xt````t````5.
+   xt`````````5@
+   xt```````t`5.
+   xt555tttttttx
+   xx.@.xxxxxxxx
 ENDMAP
 
 ################################################################################
