@@ -1270,7 +1270,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
+unique_ptr<targeter> spell_targeter(spell_type spell, int pow,
                                               int range)
 {
     switch (spell)
@@ -1538,7 +1538,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
         const int range = calc_spell_range(spell, powc, allow_fail);
 
-        unique_ptr<targeter> hitfunc = _spell_targeter(spell, powc, range);
+        unique_ptr<targeter> hitfunc = spell_targeter(spell, powc, range);
 
         // Add success chance to targeted spells checking monster MR
         const bool mr_check = testbits(flags, spflag::MR_check)

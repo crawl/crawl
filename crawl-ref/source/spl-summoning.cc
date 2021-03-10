@@ -948,7 +948,7 @@ bool tukima_affects(const actor &target)
  * @param target     The spell's target.
  * @return           Whether the target is valid.
  **/
-static bool _check_tukima_validity(const actor *target)
+bool check_tukima_validity(const actor *target, bool silent)
 {
     bool target_is_player = target == &you;
     const item_def* wpn = target->weapon();
@@ -961,16 +961,20 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-            mpr(you.hands_act("twitch", "."));
+        {
+            if(!silent)
+                mpr(you.hands_act("twitch", "."));
+        }
         else
         {
             // FIXME: maybe move hands_act to class actor?
             bool plural = true;
             const string hand = target->hand_name(true, &plural);
 
-            mprf("%s %s %s.",
-                 apostrophise(target->name(DESC_THE)).c_str(),
-                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
+            if (!silent)
+                mprf("%s %s %s.",
+                     apostrophise(target->name(DESC_THE)).c_str(),
+                     hand.c_str(), conjugate_verb("twitch", plural).c_str());
         }
         return false;
     }
@@ -978,18 +982,24 @@ static bool _check_tukima_validity(const actor *target)
     if (!tukima_affects(*target))
     {
         if (!can_see_target)
-            return _fail_tukimas();
+        {
+            if (!silent)
+                _fail_tukimas();
+            return false;
+        }
 
         if (mons_class_is_animated_weapon(target->type))
         {
-            simple_monster_message(*(monster*)target,
-                                   " is already dancing.");
+            if (!silent)
+                simple_monster_message(*(monster*)target,
+                                       " is already dancing.");
         }
         else
         {
-            mprf("%s vibrate%s crazily for a second.",
-                 _get_item_desc(wpn, target_is_player).c_str(),
-                 wpn->quantity > 1 ? "" : "s");
+            if (!silent)
+                mprf("%s vibrate%s crazily for a second.",
+                     _get_item_desc(wpn, target_is_player).c_str(),
+                     wpn->quantity > 1 ? "" : "s");
         }
         return false;
     }
@@ -1093,7 +1103,7 @@ void cast_tukimas_dance(int pow, actor* target)
 {
     ASSERT(target);
 
-    if (!_check_tukima_validity(target))
+    if (!check_tukima_validity(target, false))
         return;
 
     _animate_weapon(pow, target);

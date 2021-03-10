@@ -130,4 +130,5 @@ void spell_skills(spell_type spell, set<skill_type> &skills);
 void majin_speak(spell_type spell);
 bool majin_charge_hp();
 
-bool spell_removed(spell_type spell);
+bool spell_removed(spell_type spell); 
+unique_ptr<targeter> spell_targeter(spell_type spell, int pow, int range);

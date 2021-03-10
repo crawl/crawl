@@ -9567,6 +9567,7 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
         const spell_type spl = spells[i];
         if (!is_valid_spell(spl))
             continue;
+        const spell_flags flags = get_spell_flags(spl);
 
         if (spell_cooldown[i].get_int() > 0) {
             spell_cooldown[i].get_int() -= delay;
@@ -9574,8 +9575,14 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
                 continue;
             }
         }
+
         int cost = spell_mana(spl);
         if (!enough_mp(cost, true))
+        {
+            continue;
+        }
+
+        if (!can_auto_cast_spell(spl, (flags & spflag::selfench) ? you.pos() : target, escape))
         {
             continue;
         }
@@ -9609,6 +9616,7 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
         return false;
     }
     const spell_type cast_spell = spells[*cast_spell_slot];
+    const spell_flags flags = get_spell_flags(cast_spell);
 
     int cost = spell_mana(cast_spell);
     // Majin Bo HP cost taken at the same time
@@ -9619,7 +9627,7 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
     dec_mp(cost, false);
     if (majin_charge_hp())
         dec_hp(hp_cost, false);
-    spret cast_result = your_spells(cast_spell, 0, false, nullptr, target);
+    spret cast_result = your_spells(cast_spell, 0, false, nullptr, (flags & spflag::selfench) ? you.pos() : target);
     if (cast_result == spret::abort)
     {
         inc_mp(cost, true);

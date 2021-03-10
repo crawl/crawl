@@ -14,8 +14,10 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "coordit.h"
+#include "cloud.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -36,6 +38,7 @@
 #include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-zap.h"
 #include "stringutil.h"
 #include "target.h"
@@ -1194,6 +1197,30 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're a holy being.";
     }
 
+    if (you.species == SP_MAGIC_GOLEM)
+    {
+        switch (spell)
+        {
+        case SPELL_CONJURE_FLAME:
+        case SPELL_FULMINANT_PRISM:
+        case SPELL_CONFUSING_TOUCH:
+        case SPELL_APPORTATION:
+        case SPELL_TELEPORT_OTHER:
+        case SPELL_PASSWALL:
+        case SPELL_RECALL:
+        case SPELL_INSULATION:
+        case SPELL_FULSOME_DISTILLATION:
+        case SPELL_EVAPORATE:
+        case SPELL_WILL_OF_EARTH:
+        case SPELL_WALL_MELTING:
+        case SPELL_WALL_MELTING_2:
+        case SPELL_SUMMON_ELEMENTAL:
+                return "This spell is too tricky to use automatically.";
+            default:
+                break;
+        }
+    }
+
     switch (spell)
     {
     case SPELL_BLINK:
@@ -1253,8 +1280,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_STATUE_FORM:
         if (SP_GARGOYLE == you.species)
             return "you're already a statue.";
-        if (you.species == SP_ADAPTION_HOMUNCULUS)
-            return "you're an artificial being.";
         // fallthrough to other forms
     case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
@@ -1271,6 +1296,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your current blood level is not sufficient.";
         if (you.species == SP_ADAPTION_HOMUNCULUS)
             return "you're an artificial being.";
+        if (you.species == SP_MAGIC_GOLEM)
+            return "you're an artificial being.";
         break;
 
     case SPELL_BLADE_HANDS:
@@ -1285,6 +1312,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "your current blood level is not sufficient.";
         if (you.species == SP_ADAPTION_HOMUNCULUS)
             return "you're an artificial being.";
+        if (you.species == SP_MAGIC_GOLEM)
+            return "you're an artificial being.";
         break;
         
     case SPELL_HYDRA_FORM:
@@ -1298,6 +1327,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (temp && you.is_lifeless_undead())
             return "your current blood level is not sufficient.";
         if (you.species == SP_ADAPTION_HOMUNCULUS)
+            return "you're an artificial being.";
+        if (you.species == SP_MAGIC_GOLEM)
             return "you're an artificial being.";
         break;
         
@@ -1384,6 +1415,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             || you.species == SP_WIGHT
             || you.species == SP_DJINNI
             || you.species ==  SP_ADAPTION_HOMUNCULUS
+            || you.species == SP_MAGIC_GOLEM
             || (temp && !form_can_bleed(you.form)))
         {
             return "you have no blood to sublime.";
@@ -1776,4 +1808,450 @@ const vector<spell_type> *soh_breath_spells(spell_type spell)
     };
 
     return map_find(soh_breaths, spell);
+}
+
+bool can_auto_cast_spell(spell_type spell, const coord_def& target, bool escape)
+{
+    const int range = calc_spell_range(spell, 0, true);
+    const int targetRange = grid_distance(you.pos(), target);
+    const int minRange = get_dist_to_nearest_monster();
+    const int powc = calc_spell_power(spell, true);
+    monster* mons = monster_at(target);
+    if (invalid_monster(mons) && target != you.pos() && !escape)
+        return false;
+
+    switch (spell) {
+        //buf spell
+    case SPELL_FROZEN_RAMPARTS:
+    {
+        if (you.duration[DUR_FROZEN_RAMPARTS])
+            return false;
+        break;
+    }
+    case SPELL_OZOCUBUS_ARMOUR:
+    {
+        if (you.duration[DUR_ICY_ARMOUR]
+            || you.form == transformation::ice_beast)
+            return false;
+        break;
+    }
+    case SPELL_LEDAS_LIQUEFACTION:
+    {
+        if (you.duration[DUR_LIQUEFYING])
+            return false;
+        break;
+    }
+    case SPELL_TORNADO:
+    {
+        if (you.duration[DUR_TORNADO])
+            return false;
+        break;
+    }
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+    {
+        if(you.duration[DUR_TOXIC_RADIANCE])
+            return false;
+        bool affected = false;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!toxic_can_affect(mons))
+                continue;
+            affected = true;
+        }
+        if (!affected)
+            return false;
+        break;
+    }
+    case SPELL_NOXIOUS_BOG:
+    {
+        if (you.duration[DUR_NOXIOUS_BOG])
+            return false;
+        break;
+    }
+    case SPELL_SEARING_RAY:
+    {
+        if (you.attribute[ATTR_SEARING_RAY])
+            return false;
+        break;
+    }
+    case SPELL_SILENCE:
+    {
+        if (you.duration[DUR_SILENCE])
+            return false;
+        break; 
+    }
+    case SPELL_SUMMON_FOREST:
+    {
+        if (you.duration[DUR_FORESTED])
+            return false;
+        break;
+    }
+    case SPELL_DRAGON_CALL:
+    {
+        if (you.duration[DUR_DRAGON_CALL])
+            return false;
+        break;
+    }
+    case SPELL_INFUSION:
+    {
+        if (you.duration[DUR_INFUSION])
+            return false;
+        break;
+    }
+    case SPELL_SHROUD_OF_GOLUBRIA:
+    {
+        if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+            return false;
+        break;
+    }
+    case SPELL_PORTAL_PROJECTILE:
+    {
+        if (you.duration[DUR_PORTAL_PROJECTILE])
+            return false;
+        break;
+    }
+    case SPELL_SONG_OF_SLAYING:
+    {
+        if (you.duration[DUR_SONG_OF_SLAYING])
+            return false;
+        break;
+    }
+    case SPELL_DEFLECT_MISSILES:
+    {
+        if (you.duration[DUR_DEFLECT_MISSILES])
+            return false;
+        break;
+    }
+    case SPELL_RING_OF_FLAMES:
+    {
+        if (you.duration[DUR_FIRE_SHIELD])
+            return false;
+        break;
+    }
+    case SPELL_SPECTRAL_WEAPON:
+    {
+        item_def* wpn = you.weapon();
+
+        // If the wielded weapon should not be cloned, abort
+        if (!weapon_can_be_spectral(wpn))
+            return false;
+        monster* old_mons = find_spectral_weapon(&you);
+        if (old_mons)
+            return false;
+        break;
+    }
+    case SPELL_DARKNESS:
+    {
+        if (you.duration[DUR_DARKNESS])
+            return false;
+        break;
+    }
+    case SPELL_SHRAPNEL_CURTAIN:
+    {
+        if (you.duration[DUR_SHRAPNEL])
+            return false;
+        break;
+    }
+    case SPELL_STONESKIN:
+    {
+        if (you.duration[DUR_STONESKIN])
+            return false;
+        break;
+    }
+    case SPELL_REPEL_MISSILES:
+    {
+        if (you.duration[DUR_REPEL_MISSILES])
+            return false;
+        break;
+    }
+    case SPELL_CONDENSATION_SHIELD:
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD])
+            return false;
+        break;
+    }
+    case SPELL_HASTE:
+    {
+        if (you.duration[DUR_HASTE])
+            return false;
+        break;
+    }
+    case SPELL_ELENENTAL_WEAPON:
+    {
+        item_def* wpn = you.weapon();
+        if (!wpn || you.duration[DUR_ELEMENTAL_WEAPON])
+            return false;
+        break;
+    }
+    case SPELL_FLAME_STRIKE:
+    {
+        if (you.duration[DUR_FLAME_STRIKE]
+            || you.duration[DUR_OVERHEAT])
+            return false;
+        break;
+    }
+    case SPELL_BARRIER:
+    {
+        if (you.duration[DUR_BARRIER]
+            || you.duration[DUR_BARRIER_BROKEN])
+            return false;
+        break;
+    }
+    case SPELL_SWIFTNESS:
+    {
+        if (you.duration[DUR_SWIFTNESS])
+            return false;
+        if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
+            return false;
+        if (you.is_stationary())
+            return false;
+        break;
+    }
+
+
+    //debuf spell
+    case SPELL_STICKY_FLAME:
+    {
+        if (mons->has_ench(ENCH_STICKY_FLAME) 
+            || mons->res_sticky_flame() 
+            || mons->has_ench(ENCH_WATER_HOLD))
+            return false;
+        break;
+    }
+    case SPELL_CORONA:
+    {
+        if (mons->has_ench(ENCH_CORONA)
+            || mons->has_ench(ENCH_SILVER_CORONA))
+            return false;
+        break;
+    }
+    case SPELL_HIBERNATION:
+    {
+        const bool valid_target = mons->can_hibernate();
+        if (!valid_target)
+            return false;
+        if (mons->behaviour == BEH_SLEEP)
+            return false;
+        break;
+    }
+    case SPELL_SLOW:
+    {
+        if (mons->stasis()
+            || mons->is_stationary()
+            || mons->has_ench(ENCH_SLOW))
+            return false;
+        break;
+    }
+    case SPELL_INNER_FLAME:
+    {
+        if(mons->has_ench(ENCH_INNER_FLAME))
+            return false;
+        break;
+    }
+    case SPELL_TUKIMAS_DANCE:
+    {
+        if (!check_tukima_validity(mons, true))
+            return false;
+        break;
+    }
+    case SPELL_ENGLACIATION:
+    {
+        if (apply_area_visible([](coord_def where) {
+                actor* victim = actor_at(where);
+                if (!victim || victim == &you)
+                    return 0;
+                if (victim->res_cold() > 0
+                    || victim->is_stationary())
+                {
+                    return 0;
+                }
+                return 1;
+            }, you.pos()) <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    case SPELL_DISCORD:
+    {
+        if (apply_area_visible([](coord_def where) {
+            monster* victim = monster_at(where);
+            if (victim == nullptr)
+                return 0;
+            if (victim->has_ench(ENCH_INSANE)
+                || !victim->can_go_frenzy())
+            {
+                return 0;
+            }
+            return 1;
+            }, you.pos()) <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    case SPELL_PETRIFY:
+    {
+        if (mons->petrified()
+            || mons->petrifying()
+            || mons->res_petrify())
+            return false;
+        break;
+    }
+    case SPELL_INTOXICATE:
+    {
+        if (apply_area_visible([](coord_def where) {
+            monster* victim = monster_at(where);
+            if (victim == nullptr
+                || mons_intel(*victim) < I_HUMAN
+                || !(victim->holiness() & MH_NATURAL)
+                || victim->check_clarity()
+                || monster_resists_this_poison(*victim)
+                || victim->has_ench(ENCH_CONFUSION))
+            {
+                return 0;
+            }
+            return 1;
+            }, you.pos()) <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    case SPELL_ERINGYAS_ROOTSPIKE:
+    {
+        if (mons->has_ench(ENCH_ERINGYAS_ROOTSPIKE))
+            return false;
+        break;
+    }
+    case SPELL_CIGOTUVIS_PLAGUE:
+    {
+        if(!mons_gives_xp(*mons, you)
+            || !mons_can_be_zombified(*mons)
+            || mons->has_ench(ENCH_CIGOTUVIS_PLAGUE))
+            return false;
+        break;
+    }
+
+    //cloud spell
+    case SPELL_FREEZING_CLOUD:
+    {
+        if (cloud_at(target)
+            || mons->res_cold() >= 3)
+            return false;
+        break;
+    }
+    case SPELL_POISONOUS_CLOUD:
+    {
+        if (cloud_at(target)
+            || mons->res_poison() >= 1)
+            return false;
+        break;
+    }
+    case SPELL_MEPHITIC_CLOUD:
+    {
+        if (cloud_at(target)
+            || mons->res_poison() >= 1)
+            return false;
+        break;
+    }
+
+    //special case
+    case SPELL_LRD:
+    {
+        bolt tempbeam;
+        bool temp;
+
+        if (!setup_fragmentation_beam(tempbeam, powc, &you, target, true, nullptr, temp,
+            temp))
+            return false;
+    }
+    break;    
+    case SPELL_IGNITE_POISON:
+        return cast_ignite_poison(&you, -1, false, true) == spret::abort;
+    case SPELL_CONVERT_POISON:
+        return cast_convert_poison(&you, -1, false, true) == spret::abort;
+    case SPELL_HAILSTORM:
+        return cast_hailstorm(-1, false, true) == spret::abort;
+    case SPELL_STARBURST:
+        return cast_starburst(-1, false, true) == spret::abort;
+    case SPELL_BECKONING:
+    {
+        if (minRange > 1) {
+            return false;
+        }
+        break;
+    }
+    case SPELL_GRAVITAS:
+    {
+        bool affected = false;
+        for (actor_near_iterator ai(target, LOS_SOLID); ai; ++ai)
+        {
+            if (*ai == &you || ai->is_stationary() || ai->pos() == target)
+                continue;
+
+            const int currentRange = (target - ai->pos()).rdist();
+            if (currentRange > gravitas_range(powc))
+                continue;
+            affected = true;
+        }
+        if (!affected) {
+            return false;
+        }
+        break;
+    }
+    case SPELL_AURA_OF_ABJURATION:
+    {
+        if (you.duration[DUR_ABJURATION_AURA])
+            return false;
+        bool affected = false;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons->wont_attack())
+                continue;
+
+            int duration;
+            if (mons->is_summoned(&duration))
+                affected = true;
+        }
+        return affected;
+    }
+    case SPELL_VIOLENT_UNRAVELLING:
+    {
+        if (!unravelling_explodes_at(target))
+            return false;
+        break;
+    }
+    case SPELL_OLGREBS_LAST_MERCY:
+    {
+        if (!mons->has_ench(ENCH_POISON))
+            return false;
+        break;
+    }
+    case SPELL_MALIGN_GATEWAY:
+    {
+        coord_def point = find_gateway_location(&you);
+        if (point == coord_def(0, 0))
+            return false;
+        break;
+    }
+    default:
+        break;
+    }
+
+    if (range != -1 && range < targetRange)
+        return false;
+
+    if (spell_to_zap(spell) != NUM_ZAPS)
+    {
+        unique_ptr<targeter> hitfunc = spell_targeter(spell, powc, range);
+        
+        if (hitfunc && mons) {
+            if(!hitfunc->affects_monster(monster_info(mons)))
+                return false;
+        }
+    }
+
+    return true;
+
 }

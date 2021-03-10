@@ -73,6 +73,8 @@ public:
     bool set_aim(coord_def a) override;
 };
 
+bool unravelling_explodes_at(const coord_def c);
+
 class targeter_imb : public targeter_beam
 {
 public:

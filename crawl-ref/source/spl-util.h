@@ -138,3 +138,5 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
+
+bool can_auto_cast_spell(spell_type spell, const coord_def& target, bool escape);

@@ -5,11 +5,11 @@ short_name: "MG"
 difficulty: Advanced
 difficulty_priority: 80
 aptitudes:
-  xp: 0
+  xp: -1
   hp: 0
   mp_mod: 2
   mr: 4
-  fighting: 1
+  fighting: 0
   short_blades: -1
   long_blades: -1
   axes: -1
@@ -27,18 +27,18 @@ aptitudes:
   unarmed_combat: -1
   spellcasting: 1
   conjurations: 0
-  hexes: 0
+  hexes: -1
   charms: 0
   summoning: 0
-  necromancy: 0
-  translocations: 0
-  transmutations: 0
+  necromancy: false
+  translocations: -1
+  transmutations: -1
   fire_magic: 0
   ice_magic: 0
   air_magic: 0
   earth_magic: 0
-  poison_magic: 0
-  invocations: 0
+  poison_magic: -1
+  invocations: -1
   evocations: 0
 str: 8
 int: 8
@@ -54,8 +54,11 @@ mutations:
     MUT_PETRIFICATION_RESISTANCE: 1
     MUT_SHOCK_RESISTANCE: 1
     MUT_UNBREATHING: 1
+    MUT_TOUGH_SKIN: 1
+    MUT_CLAWS: 1
 fake_mutations:
   - long: You can't use magic directly, instead you can remember it in your body.
+  - long: "You need no food."
 recommended_jobs:
   - JOB_WIZARD
   - JOB_CONJURER

@@ -384,7 +384,7 @@ targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
  * @return      Whether, to the player's knowledge, there's a valid target for
  *              Violent Unravelling at the given coordinate.
  */
-static bool unravelling_explodes_at(const coord_def c)
+bool unravelling_explodes_at(const coord_def c)
 {
     if (you.pos() == c && player_is_debuffable())
         return true;

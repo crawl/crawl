@@ -152,4 +152,6 @@ spret cast_pakellas_summon(int pow, god_type god, bool fail);
 
 spret cast_pavise(int pow, bolt& beam, bool fail);
 
-spret fragmentation(int power);
+spret fragmentation(int power); 
+
+bool check_tukima_validity(const actor* target, bool silent);
