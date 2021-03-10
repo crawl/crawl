@@ -2939,7 +2939,7 @@ ENDMAP
 
 NAME: cheibrodos_poisonous_passages
 DEPTH: Depths, !Depths:$
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
@@ -2958,6 +2958,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 KMONS: A = lich
 KFEAT: A = stone_arch
 KPROP: '? = no_tele_into
+KMASK: '? = opaque
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
