@@ -41,8 +41,8 @@ function, it must first attune itself to the wearer's body at full health.
 amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their
-enemies, but only while moving and waiting. While taking other actions the
-amulet conveys no benefits.
+enemies, but only while moving and waiting. While taking other actions
+(including climbing stairs) the amulet conveys no benefits.
 %%%%
 animal skin
 
