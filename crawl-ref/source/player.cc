@@ -2968,8 +2968,6 @@ int player_stealth()
         stealth /= 3;
 
     const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
-    const item_def *boots = you.slot_item(EQ_BOOTS, false);
-
     if (arm)
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
@@ -2983,7 +2981,7 @@ int player_stealth()
     }
 
     stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
-
+    stealth += STEALTH_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_STEALTH);
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
 
     if (you.duration[DUR_STEALTH])
@@ -3027,8 +3025,6 @@ int player_stealth()
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
-        else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
         else if (you.has_mutation(MUT_PAWS))
