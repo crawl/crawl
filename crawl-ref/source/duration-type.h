@@ -232,5 +232,6 @@ enum duration_type
     DUR_POISON_WEAPON,
     DUR_SPECTRUM,
     DUR_ATTRACTIVE,
+    DUR_HEAT,
     NUM_DURATIONS
 };

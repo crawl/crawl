@@ -1293,20 +1293,6 @@ void player_reacts()
 
     if (you.props[EMERGENCY_WALL_KEY].get_bool())
         _handle_emergency_wall();
-
-    if (you.is_auto_spell())
-    {
-        you.init_auto_cast_vector();
-        CrawlVector& spell_cooldown = you.props[AUTO_SPELL_COOLDOWN_KEY].get_vector();
-        for (auto it : spell_cooldown)
-        {
-            if (it.get_int() > 0) {
-                it.get_int() -= you.time_taken;
-                if (it.get_int() < 0)
-                    it.get_int() = 0;
-            }
-        }
-    }
 }
 
 void extract_manticore_spikes(const char* endmsg)

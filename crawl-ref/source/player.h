@@ -449,6 +449,7 @@ public:
     bool redraw_hit_points;
     bool redraw_magic_points;
     bool redraw_temperature;
+    bool redraw_heat_gauge;
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_experience;
     bool redraw_armour_class;
@@ -1276,6 +1277,8 @@ bool temperature_effect(int which);
 int temperature_colour(int temp);
 string temperature_string(int temp);
 string temperature_text(int temp);
+
+int heat();
 
 bool has_mercenaries();
 bool can_call_friends();

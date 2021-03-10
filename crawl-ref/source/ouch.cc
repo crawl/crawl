@@ -938,6 +938,11 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     _consider_curling(death_type);
 
+    if(you.species == SP_MAGIC_GOLEM)
+    {
+        you.duration[DUR_HEAT] = 5 * BASELINE_DELAY;
+    }
+
     const bool non_death = death_type == KILLED_BY_QUITTING
                         || death_type == KILLED_BY_WINNING
                         || death_type == KILLED_BY_LEAVING;

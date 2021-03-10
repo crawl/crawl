@@ -1337,6 +1337,18 @@ int player_mp_regen()
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         regen_amount += 25;
 
+    if (you.species == SP_MAGIC_GOLEM)
+    {
+        if(you.duration[DUR_BERSERK])
+            return 0;
+
+        regen_amount *= 1.5f; //faster than other species
+        if(you.duration[DUR_HEAT] <= 0) {
+            float ten_percent_of_mp = (you.max_magic_points-you.magic_points)/10.0f;
+            regen_amount += (int)(ten_percent_of_mp * 100); //more cooling (10% of current mp)
+        }
+    }
+
     return regen_amount;
 }
 
@@ -4112,7 +4124,10 @@ void calc_mp()
     }
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
-    you.redraw_magic_points = true;
+    if(you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
+    else
+        you.redraw_magic_points = true;
 }
 
 void flush_mp()
@@ -4125,7 +4140,10 @@ void flush_mp()
     }
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    you.redraw_magic_points = true;
+    if(you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
+    else
+        you.redraw_magic_points = true;
 }
 
 void dec_mp(int mp_loss, bool silent)
@@ -4253,7 +4271,10 @@ void inc_mp(int mp_gain, bool silent)
     {
         if (_should_stop_resting(you.magic_points, you.max_magic_points))
             interrupt_activity(activity_interrupt::full_mp);
-        you.redraw_magic_points = true;
+        if(you.species == SP_MAGIC_GOLEM)
+            you.redraw_heat_gauge = true;
+        else
+            you.redraw_magic_points = true;
     }
 }
 
@@ -4281,8 +4302,12 @@ void inc_hp(int hp_gain)
 void rot_hp(int hp_loss)
 {
     if (!player_rotted() && hp_loss > 0)
-        you.redraw_magic_points = true;
-
+    {
+        if(you.species == SP_MAGIC_GOLEM)
+            you.redraw_heat_gauge = true;
+        else
+            you.redraw_magic_points = true;
+    }
     const int initial_rot = you.hp_max_adj_temp;
     you.hp_max_adj_temp -= hp_loss;
     // don't allow more rot than you have normal mhp
@@ -4313,7 +4338,12 @@ int unrot_hp(int hp_recovered)
 
     you.redraw_hit_points = true;
     if (!player_rotted())
-        you.redraw_magic_points = true;
+    {
+        if(you.species == SP_MAGIC_GOLEM)
+            you.redraw_heat_gauge = true;
+        else
+            you.redraw_magic_points = true;
+    }
     return hp_balance;
 }
 
@@ -4327,7 +4357,10 @@ void rot_mp(int mp_loss)
     you.mp_max_adj -= mp_loss;
     calc_mp();
 
-    you.redraw_magic_points = true;
+    if(you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
+    else
+        you.redraw_magic_points = true;
 }
 
 void inc_max_hp(int hp_gain)
@@ -4374,7 +4407,10 @@ void set_mp(int new_amount)
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
 
     // Must remain outside conditional, given code usage. {dlb}
-    you.redraw_magic_points = true;
+    if(you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
+    else
+        you.redraw_magic_points = true;
 }
 
 /**
@@ -5766,7 +5802,7 @@ player::player()
     redraw_status_lights = false;
     redraw_hit_points    = false;
     redraw_magic_points  = false;
-    redraw_temperature = false;
+    redraw_temperature   = false;
     redraw_stats.init(false);
     redraw_experience    = false;
     redraw_armour_class  = false;
@@ -8876,7 +8912,11 @@ string temperature_text(int temp)
     }
 }
 
-
+//Magic Golem
+int heat()
+{
+    return get_real_mp(true)-you.magic_points;
+}
 
 void player_open_door(coord_def doorpos)
 {
@@ -9518,6 +9558,8 @@ bool player::is_auto_spell()
  */
 bool player::auto_cast(const coord_def& target, int delay, bool escape)
 {
+    you.duration[DUR_HEAT] = 5 * BASELINE_DELAY; //heat 5turn
+
     init_auto_cast_vector();
     CrawlVector& spell_cooldown = you.props[AUTO_SPELL_COOLDOWN_KEY].get_vector();
     vector<pair<int, int>> weights;
@@ -9528,7 +9570,9 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
 
         if (spell_cooldown[i].get_int() > 0) {
             spell_cooldown[i].get_int() -= delay;
-            continue;
+            if(spell_cooldown[i].get_int() > 0) {
+                continue;
+            }
         }
         int cost = spell_mana(spl);
         if (!enough_mp(cost, true))
@@ -9550,6 +9594,10 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
 
         if(!fail)
             weights.push_back({ i, 100 });
+        else {
+            //if you fail, spell cooldown
+            spell_cooldown[i].get_int() += random2((cost + 1) * 10);
+        }
     }
 
     if (weights.size() == 0)
@@ -9566,7 +9614,7 @@ bool player::auto_cast(const coord_def& target, int delay, bool escape)
     // Majin Bo HP cost taken at the same time
     const int hp_cost = min(spell_mana(cast_spell), you.hp - 1);
 
-    spell_cooldown[*cast_spell_slot].get_int() += cost * 10;
+    spell_cooldown[*cast_spell_slot].get_int() += random2((cost + 1) * 10);
 
     dec_mp(cost, false);
     if (majin_charge_hp())

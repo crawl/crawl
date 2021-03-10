@@ -335,7 +335,7 @@ public:
             m_old_disp = -1;
             return;
         }
-        const colour_t temp_colour = temperature_colour(temperature());
+        const colour_t temp_colour = temperature_colour(val);
         const int width = (horiz_bar_width != -1) ?
                                   horiz_bar_width :
                                   crawl_view.hudsz.x - (ox - 1);
@@ -412,7 +412,7 @@ public:
             m_old_disp = -1;
             return;
         }
-        const colour_t temp_colour = temperature_colour(temperature());
+        const colour_t temp_colour = temperature_colour(val);
         const int width = (horiz_bar_width != -1) ?
             horiz_bar_width :
             crawl_view.hudsz.x - (ox - 1);
@@ -561,6 +561,7 @@ static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 
 colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
 colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
+colour_bar Heat_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
 static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
@@ -665,6 +666,40 @@ static int _count_digits(int val)
         return 2;
     return 1;
 }
+
+static void _print_stats_heat(int x, int y)
+{
+    const bool boosted = _boosted_mp();
+
+    short mp_colour = HUD_VALUE_COLOUR;
+    if (boosted)
+        mp_colour = LIGHTBLUE;
+    else
+    {
+        int mp_percent = (you.max_magic_points == 0
+                          ? 100
+                          : (you.magic_points * 100) / you.max_magic_points);
+
+        for (const auto &entry : Options.mp_colour)
+            if (mp_percent <= entry.first)
+                mp_colour = entry.second;
+    }
+
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Heat:   ");
+    textcolour(mp_colour);
+    CPRINTF("%d", get_real_mp(true)-you.magic_points);
+    if (!boosted)
+        textcolour(HUD_VALUE_COLOUR);
+    CPRINTF("/%d", get_real_mp(true));
+    int col = _count_digits(get_real_mp(true)-you.magic_points)
+              + _count_digits(get_real_mp(true)) + 1;
+    for (int i = 11-col; i > 0; i--)
+        CPRINTF(" ");
+    Heat_Bar.draw(19, y, heat(), get_real_mp(true), true);
+}
+
 
 static void _print_stats_temperature(int x, int y)
 {
@@ -1381,6 +1416,7 @@ static bool _need_stats_printed()
     return you.redraw_title
            || you.redraw_hit_points
            || you.redraw_magic_points
+           || you.redraw_heat_gauge
            || you.redraw_armour_class
            || you.redraw_evasion
            || you.redraw_stats[STAT_STR]
@@ -1520,8 +1556,10 @@ void print_stats()
 
     if (HP_Bar.wants_redraw())
         you.redraw_hit_points = true;
-    if (MP_Bar.wants_redraw())
+    if (MP_Bar.wants_redraw() && you.species != SP_MAGIC_GOLEM)
         you.redraw_magic_points = true;
+    if (Heat_Bar.wants_redraw() && you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
     if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
         you.redraw_temperature = true;
 
@@ -1550,6 +1588,11 @@ void print_stats()
     {
         you.redraw_magic_points = false;
         _print_stats_mp(1, 4);
+    }
+    if (you.redraw_heat_gauge)
+    {
+        you.redraw_heat_gauge = false;
+        _print_stats_heat(1, 4);
     }
     _print_stats_contam(1, 4);
     if (you.redraw_temperature)
@@ -1739,7 +1782,10 @@ void redraw_console_sidebar()
 
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    if (you.species != SP_MAGIC_GOLEM)
+        you.redraw_magic_points = true;
+    if (you.species == SP_MAGIC_GOLEM)
+        you.redraw_heat_gauge = true;
     if (you.species == SP_LAVA_ORC)
         you.redraw_temperature = true;
     you.redraw_stats.init(true);
@@ -1783,7 +1829,10 @@ void redraw_screen(bool show_updates)
 
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
-    you.redraw_magic_points = true;
+    if(you.species != SP_MAGIC_GOLEM)
+        you.redraw_magic_points = true;
+    else
+        you.redraw_heat_gauge = true;
     you.redraw_stats.init(true);
     you.redraw_armour_class  = true;
     you.redraw_evasion       = true;
@@ -2493,21 +2542,35 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
-        entry.cprintf("MP:   ");
-    else
-        entry.cprintf("Magic:  ");
-
-    if (_boosted_mp())
-        entry.textcolour(LIGHTBLUE);
-    else
-        entry.textcolour(HUD_VALUE_COLOUR);
-
-    entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
-    if (you.species == SP_DEEP_DWARF
-        && get_real_mp(false) != you.max_magic_points)
+    if(you.species != SP_MAGIC_GOLEM )
     {
-        entry.cprintf(" (%d)", get_real_mp(false));
+        if (player_rotted())
+            entry.cprintf("MP:   ");
+        else
+            entry.cprintf("Magic:  ");
+
+        if (_boosted_mp())
+            entry.textcolour(LIGHTBLUE);
+        else
+            entry.textcolour(HUD_VALUE_COLOUR);
+
+        entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
+        if (you.species == SP_DEEP_DWARF
+            && get_real_mp(false) != you.max_magic_points)
+        {
+            entry.cprintf(" (%d)", get_real_mp(false));
+        }
+    }
+    else
+    {
+        entry.cprintf("Heat:  ");
+
+        if (_boosted_mp())
+            entry.textcolour(LIGHTBLUE);
+        else
+            entry.textcolour(HUD_VALUE_COLOUR);
+
+        entry.cprintf("%d/%d", you.max_magic_points-you.magic_points, you.max_magic_points);
     }
 
     cols.add_formatted(0, entry.to_colour_string(), false);

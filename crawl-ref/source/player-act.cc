@@ -833,6 +833,11 @@ bool player::go_berserk(bool intentional, bool potion)
         // This will get sqrt'd later, so.
         you.temperature = TEMP_MAX;
     }
+    if(you.species == SP_MAGIC_GOLEM) {
+        mpr("Your body is overheating!");
+        you.magic_points = 0;
+        you.redraw_heat_gauge = true;
+    }
 
     if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

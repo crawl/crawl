@@ -775,7 +775,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 {
     if (you.is_auto_spell())
     {
-        mprf("You have no mouth for casting spells. (See spell learned with <w>%s</w> key.)",
+        mprf("You have no mouth for casting spells. (See spell describe with <w>%s</w> key.)",
             command_to_string(CMD_DISPLAY_SPELLS).c_str());
         return false;
     }
