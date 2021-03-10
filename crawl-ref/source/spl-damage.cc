@@ -832,8 +832,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 
     empty_space = max(3, empty_space);
 
-    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7),
-                                              empty_space - 2);
+    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
