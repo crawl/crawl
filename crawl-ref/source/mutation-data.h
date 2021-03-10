@@ -2095,6 +2095,13 @@ static const mutation_def mut_data[] =
    "You feel less comfortable in water.", ""},
 },
 
+{ MUT_TENTACLE_ARMS, 0, 1, mutflag::good, true,
+  "tentacles",
+
+  {"You have tentacles for arms and can constrict enemies.", "", ""},
+  {"Your arms feel tentacular.", "", ""},
+  {"Your arms no longer feel tentacular.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

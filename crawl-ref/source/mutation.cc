@@ -688,15 +688,6 @@ string describe_mutations(bool drop_title)
             !get_form()->slot_available(EQ_RING_EIGHT));
     }
 
-    if (you.species == SP_OCTOPODE)
-    {
-        const string num_tentacles = number_in_words(you.has_tentacles(false));
-        result += _annotate_form_based(
-            make_stringf("You can use your tentacles to constrict %s enemies at once.",
-                         num_tentacles.c_str()),
-            !form_keeps_mutations());
-    }
-
     switch (you.body_size(PSIZE_TORSO, true))
     {
     case SIZE_LITTLE:
@@ -1253,8 +1244,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Need tentacles to grow something on them.
-    if (you.species != SP_OCTOPODE && mutat == MUT_TENTACLE_SPIKE)
+    if (!you.has_innate_mutation(MUT_TENTACLE_ARMS)
+        && mutat == MUT_TENTACLE_SPIKE)
+    {
         return true;
+    }
 
     // No bones for thin skeletal structure, and too squishy for horns.
     if (you.species == SP_OCTOPODE
@@ -1293,7 +1287,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
-    if ((you.has_innate_mutation(MUT_PAWS) || you.species == SP_OCTOPODE)
+    if ((you.has_innate_mutation(MUT_PAWS)
+                        || you.has_innate_mutation(MUT_TENTACLE_ARMS))
          && mutat == MUT_CLAWS)
     {
         return true;
@@ -2262,6 +2257,13 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostringstream ostr;
         ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
         result = ostr.str();
+    }
+    else if (!ignore_player && mut == MUT_TENTACLE_ARMS)
+    {
+        const string num_tentacles = number_in_words(you.has_tentacles(false));
+        result = make_stringf(
+            "You have tentacles for arms and can constrict up to %s enemies at once.",
+            num_tentacles.c_str());
     }
     else if (!ignore_player && you.has_innate_mutation(MUT_PAWS) && mut == MUT_CLAWS)
         result = "You have sharp claws."; // XX ugly override

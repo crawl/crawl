@@ -211,7 +211,7 @@ vector<equipment_type> species_ring_slots(species_type species)
 
 string species_arm_name(species_type species)
 {
-    if (species == SP_OCTOPODE)
+    if (species_mutation_level(species, MUT_TENTACLE_ARMS))
         return "tentacle";
     else if (species == SP_FELID)
         return "leg";
@@ -224,7 +224,7 @@ string species_hand_name(species_type species)
     // see also player::hand_name
     if (species_mutation_level(species, MUT_PAWS))
         return "paw";
-    else if (you.species == SP_OCTOPODE)
+    else if (species_mutation_level(species, MUT_TENTACLE_ARMS))
         return "tentacle";
     else if (species_mutation_level(species, MUT_CLAWS))
         return "claw"; // overridden for felids by first check

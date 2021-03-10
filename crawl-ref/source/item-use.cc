@@ -902,7 +902,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE) // XX ugly hardcoding -- but Op locomotion is unique
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
                 mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
@@ -916,7 +916,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
             {

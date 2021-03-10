@@ -712,7 +712,7 @@ static bool _legs_msg_applicable()
     // XX forms
     return !(you.has_mutation(MUT_CONSTRICTING_TAIL)
                 || you.fishtail
-                || you.species == SP_OCTOPODE);
+                || you.has_mutation(MUT_TENTACLE_ARMS));
 }
 
 // Monster spell of uselessness, just prints a message.

@@ -1200,11 +1200,11 @@ bool melee_attack::player_gets_aux_punch()
 
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
+    if (you.arm_count() <= 2 && !you.has_usable_offhand())
         return false;
 
     // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
+    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2,
                          6);
 }
 
@@ -3400,7 +3400,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     {
     case UNAT_CONSTRICT:
         return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
-                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+                || you.has_mutation(MUT_TENTACLE_ARMS)
+                    && you.has_usable_tentacle();
 
     case UNAT_KICK:
         return you.has_usable_hooves()

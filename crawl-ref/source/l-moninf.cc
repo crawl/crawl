@@ -565,7 +565,8 @@ LUAFN(moninf_get_can_be_constricted)
         || !form_keeps_mutations()
         || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
                 || you.is_constricting())
-            && (you.species != SP_OCTOPODE || !you.has_usable_tentacle()))
+            && (you.has_mutation(MUT_TENTACLE_ARMS)
+                || !you.has_usable_tentacle()))
     {
         lua_pushboolean(ls, false);
     }

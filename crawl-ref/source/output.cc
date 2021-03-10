@@ -2598,12 +2598,6 @@ string mutation_overview()
             make_stringf("%d rings", you.arm_count()),
             !get_form()->slot_available(EQ_RING_EIGHT)));
     }
-    if (you.species == SP_OCTOPODE)
-    {
-        mutations.push_back(_annotate_form_based(
-            make_stringf("constrict %d", you.has_tentacles(false)),
-            !form_keeps_mutations()));
-    }
 
     if (you.can_water_walk())
         mutations.emplace_back("walk on water");

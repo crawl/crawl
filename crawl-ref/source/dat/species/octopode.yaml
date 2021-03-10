@@ -29,6 +29,7 @@ mutations:
     MUT_CAMOUFLAGE: 1
     MUT_GELATINOUS_BODY: 1
     MUT_NIMBLE_SWIMMER: 1
+    MUT_TENTACLE_ARMS: 1
 fake_mutations:
   - long: You cannot wear most types of armour.
     short: almost no armour

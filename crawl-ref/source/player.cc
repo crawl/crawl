@@ -6846,7 +6846,7 @@ int player::arm_count() const
 int player::has_tentacles(bool allow_tran) const
 {
     // tentacles count as a mutation for these purposes. (TODO: realmut?)
-    if (species == SP_OCTOPODE && (!allow_tran || form_keeps_mutations()))
+    if (you.has_mutation(MUT_TENTACLE_ARMS, allow_tran))
         return arm_count();
 
     return 0;
