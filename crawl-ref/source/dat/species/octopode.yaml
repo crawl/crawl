@@ -23,7 +23,7 @@ int: 10
 dex: 7
 levelup_stat_frequency: 5
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 mutations:
   1:
     MUT_CAMOUFLAGE: 1

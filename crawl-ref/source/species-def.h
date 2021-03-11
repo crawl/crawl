@@ -12,11 +12,9 @@ using std::vector;
 enum species_flag
 {
     SPF_NONE        = 0,
-    SPF_ELVEN       = 1 << 0, /// If this species counts as an elf
-    SPF_DRACONIAN   = 1 << 1, /// If this is a draconian subspecies
-    SPF_ORCISH      = 1 << 2, /// If this species is a kind of orc
-    SPF_NO_HAIR     = 1 << 3, /// If members of the species are hairless
-    SPF_SMALL_TORSO = 1 << 4, /// Torso is smaller than body
+    SPF_DRACONIAN   = 1 << 0, /// If this is a draconian subspecies
+    SPF_NO_HAIR     = 1 << 1, /// If members of the species are hairless
+    SPF_SMALL_TORSO = 1 << 2, /// Torso is smaller than body
 };
 DEF_BITFIELD(species_flags, species_flag);
 

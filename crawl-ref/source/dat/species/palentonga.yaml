@@ -4,7 +4,7 @@ name: "Palentonga"
 difficulty: Intermediate
 difficulty_priority: 70
 species_flags:
-  - small_torso
+  - SPF_SMALL_TORSO
 aptitudes:
   xp: -1
   hp: 1

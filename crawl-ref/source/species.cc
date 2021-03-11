@@ -290,7 +290,7 @@ bool species_wears_barding(species_type species)
 
 bool species_is_elven(species_type species)
 {
-    return bool(get_species_def(species).flags & SPF_ELVEN);
+    return species == SP_DEEP_ELF;
 }
 
 bool species_is_draconian(species_type species)
@@ -300,7 +300,7 @@ bool species_is_draconian(species_type species)
 
 bool species_is_orcish(species_type species)
 {
-    return bool(get_species_def(species).flags & SPF_ORCISH);
+    return species == SP_HILL_ORC;
 }
 
 bool species_has_hair(species_type species)

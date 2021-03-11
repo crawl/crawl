@@ -245,18 +245,9 @@ def quote(s):
 def species_flags(flags):
     out = set()
     for f in flags:
-        if f == 'elven':
-            out.add('SPF_ELVEN')
-        elif f == 'draconian':
-            out.add('SPF_DRACONIAN')
-        elif f == 'orcish':
-            out.add('SPF_ORCISH')
-        elif f == 'hairless':
-            out.add('SPF_NO_HAIR')
-        elif f == 'small_torso':
-            out.add('SPF_SMALL_TORSO')
-        else:
+        if f not in {'SPF_NO_HAIR', 'SPF_DRACONIAN', 'SPF_SMALL_TORSO'}:
             raise ValueError("Unknown species flag %s" % f)
+        out.add(f)
     if not out:
         out.add('SPF_NONE')
     return ' | '.join(out)
