@@ -1778,9 +1778,9 @@ Vampires (Vp)
   negative energy and torment, resistant to damage from the cold), but cannot
   physically regenerate when monsters are in sight and are less resilient. On
   the other hand, a Vampire full with blood will regenerate very quickly, but
-  will lose all undead powers. Vampires can never starve. Upon growing, they
-  learn to transform into fast-moving bats. Unlike other undead species, they
-  may be mutated normally at all times.
+  will lose all undead powers. Upon growing, they learn to transform into
+  fast-moving bats. Unlike other undead species, they may be mutated normally
+  at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
