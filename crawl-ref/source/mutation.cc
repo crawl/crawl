@@ -412,8 +412,13 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (mut == MUT_DEMONIC_GUARDIAN && you.get_mutation_level(MUT_NO_LOVE))
         return mutation_activity_type::INACTIVE;
 
-    if (mut == MUT_NIMBLE_SWIMMER && you.species == SP_MERFOLK && !you.fishtail)
-        return mutation_activity_type::INACTIVE;
+    if (mut == MUT_NIMBLE_SWIMMER && you.has_innate_mutation(MUT_MERTAIL))
+    {
+        if (you.has_mutation(MUT_MERTAIL) && you.fishtail)
+            return mutation_activity_type::FULL;
+        else
+            return mutation_activity_type::INACTIVE;
+    }
 
     return mutation_activity_type::FULL;
 }
@@ -637,8 +642,6 @@ string describe_mutations(bool drop_title)
     {
         if (species_is_draconian(you.species))
             result += _dragon_abil(str);
-        else if (you.species == SP_MERFOLK)
-            result += _annotate_form_based(str, form_changed_physiology());
         else
             result += str + "\n";
     }
@@ -674,8 +677,9 @@ string describe_mutations(bool drop_title)
     }
 
     // player::can_swim includes other cases, e.g. extra-balanced species that
-    // are not truly amphibious
-    if (species_can_swim(you.species))
+    // are not truly amphibious. Mertail has its own description that implies
+    // amphibiousness.
+    if (species_can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
     {
         result += _annotate_form_based("You are amphibious.",
                                                         !form_likes_water());
@@ -1239,7 +1243,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Only species that already have tails can get this one. For merfolk it
     // would only work in the water, so skip it.
-    if ((!you.has_tail(false) || you.species == SP_MERFOLK)
+    if ((!you.has_tail(false) || you.has_innate_mutation(MUT_MERTAIL))
         && mutat == MUT_STINGER)
     {
         return true;
@@ -1298,7 +1302,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Merfolk have no feet in the natural form, and we never allow mutations
     // that show up only in a certain transformation.
-    if (you.species == SP_MERFOLK
+    if (you.has_innate_mutation(MUT_MERTAIL)
         && (mutat == MUT_TALONS || mutat == MUT_HOOVES))
     {
         return true;

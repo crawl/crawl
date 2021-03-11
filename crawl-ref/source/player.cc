@@ -467,7 +467,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         fall_into_a_pool(new_grid);
 
     // called after fall_into_a_pool, in case of emergency untransform
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(stepped);
 
     if (you.ground_level())
@@ -4702,7 +4702,7 @@ bool land_player(bool quiet)
     // Handle landing on (formerly) instakill terrain
     if (is_feat_dangerous(env.grid(you.pos())))
     {
-        enable_emergency_flight();
+        fall_into_a_pool(env.grid(you.pos()));
         return false;
     }
 

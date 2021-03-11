@@ -1893,7 +1893,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     }
 
     // Update merfolk swimming for the form change.
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(false);
 
     // Update skill boosts for the current state of equipment melds
@@ -1997,12 +1997,12 @@ void untransform(bool skip_move)
             move_player_to_grid(you.pos(), false);
 
         // Update merfolk swimming for the form change.
-        if (you.species == SP_MERFOLK)
+        if (you.has_innate_mutation(MUT_MERTAIL))
             merfolk_check_swimming(false);
     }
 
 #ifdef USE_TILE
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
         init_player_doll();
 #endif
 
@@ -2046,7 +2046,7 @@ void emergency_untransform()
     mpr("You quickly transform back into your natural form.");
     untransform(true); // We're already entering the water.
 
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_start_swimming(false);
 }
 
@@ -2063,11 +2063,11 @@ void merfolk_check_swimming(bool stepped)
     const dungeon_feature_type grid = env.grid(you.pos());
     if (you.ground_level()
         && feat_is_water(grid)
-        && !form_changed_physiology(you.form))
+        && you.has_mutation(MUT_MERTAIL))
     {
         merfolk_start_swimming(stepped);
     }
-    else if (!is_feat_dangerous(grid)) // don't bother, the player is dying
+    else
         merfolk_stop_swimming();
 }
 

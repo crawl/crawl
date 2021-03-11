@@ -2111,6 +2111,14 @@ static const mutation_def mut_data[] =
   {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
 },
 
+{ MUT_MERTAIL, 0, 1, mutflag::good, true,
+  "mertail",
+
+  {"Your lower body shifts to a powerful aquatic tail in water.", "", ""},
+  {"Your legs feel aquatic.", "", ""},
+  {"Your legs no longer feel aquatic."},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =
