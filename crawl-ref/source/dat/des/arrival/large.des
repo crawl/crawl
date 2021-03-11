@@ -1115,3 +1115,55 @@ MAP
       xxxxxxGxxxxxx
         xxxxxxxxx
 ENDMAP
+
+##############################################################################
+# 37x22
+NAME:   beargit_arrival_diablo_church
+TAGS:   arrival no_trap_gen no_item_gen no_monster_gen
+ORIENT: float
+MONS:   rat / nothing w:50
+FTILE:  `t = floor_grass, 1'G_> = floor_limestone
+COLOUR: ` = green, 1'G = white
+KPROP:  ` = no_tele_into
+SUBST:  V = VVVT, H = ....H
+: dgn.delayed_decay(_G, 'H', 'human skeleton / elf skeleton')
+MAP
+       ccccccc
+       ctttttc
+       ct```tc
+       ccnnncc
+        c.{.c
+        c...c
+  ccccccc+++ccccccccc
+  cV............+...+
+  cV............ccccc
+  ccc..cc...cc..ccc
+  ccc..cc...cc..ccc
+  ctc...........ctc
+  ctn...........ntc
+ cctc...........ctc
+ cttc...........ctc
+ ct`n...........ntccc
+ cttc...........ctc1+
+  ccc..cc...cc..cccHc
+  ctc..cc...cc..ctcHc
+  ctn...........ntcHc
+  ctc...........ctcHc
+  ctc...........ctc.cc
+  ctn...........ntc..c
+  ctc...........ctcc.c
+ cccc..cc...cc..ccc..c
+ccccc..cc...cc..ccc+cc
++...................c
++...................c
+cccccccc+c+c+cccccccc
+      cG'''''Gc
+      c'''''''c
+      cG''>''Gc
+      cc'''''cc
+       cc'''cc
+        cc'cc
+        ccncc
+        ctttc
+        ccccc
+ENDMAP
