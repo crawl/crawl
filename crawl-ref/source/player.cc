@@ -1319,8 +1319,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         rc += get_form()->res_cold();
 
+        // XX temp?
         if (you.species == SP_VAMPIRE && !you.vampire_alive)
-                rc += 2;
+            rc += 2;
     }
 
     if (items)
@@ -1488,19 +1489,8 @@ bool player_kiku_res_torment()
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
-    switch (you.undead_state(temp))
-    {
-        case US_ALIVE:
-            break;
-        case US_UNDEAD: // ghouls, mummies, and lichform
-            return 3;
-        case US_SEMI_UNDEAD: // vampire
-            if (!you.vampire_alive) // XXX: && temp?
-                return 3;
-            break;
-    }
-
     if (you.is_nonliving(temp)
+        || you.is_lifeless_undead(true) // XX: temp? impacts `A` screen
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -1692,14 +1682,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 {
     int pl = 0;
 
-    // Hunger is temporary, true, but that's something you can control,
-    // especially as life protection only increases the hungrier you
-    // get.
+    // XX temp?
     if (you.species == SP_VAMPIRE && !you.vampire_alive)
-            pl = 3;
+        pl = 3;
 
-    // Same here. Your piety status, and, hence, TSO's protection, is
-    // something you can more or less control.
+    // piety-based rN doesn't count as temporary (XX why)
     if (you_worship(GOD_SHINING_ONE))
     {
         if (you.piety >= piety_breakpoint(1))
@@ -3014,7 +3001,7 @@ int player_stealth()
 
     // Bloodless vampires are stealthier.
     if (you.species == SP_VAMPIRE && !you.vampire_alive)
-            stealth += STEALTH_PIP * 2;
+        stealth += STEALTH_PIP * 2;
 
     if (!you.airborne())
     {
@@ -4139,7 +4126,7 @@ void handle_player_poison(int delay)
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
-    if (you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+    if (you.is_nonliving() || you.is_lifeless_undead())
         return;
 
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
@@ -6142,20 +6129,7 @@ bool player::res_miasma(bool temp) const
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
         return true;
 
-    switch (undead_state(temp))
-    {
-    default:
-    case US_ALIVE:
-        return false;
-
-    case US_UNDEAD:
-        return true;
-
-    case US_SEMI_UNDEAD:
-        if (temp && !you.vampire_alive)
-            return true;
-        return false;
-    }
+    return is_lifeless_undead();
 }
 
 
@@ -6999,8 +6973,8 @@ bool player::can_safely_mutate(bool temp) const
 // Is the player too undead to bleed, rage, or polymorph?
 bool player::is_lifeless_undead(bool temp) const
 {
-    if (undead_state() == US_SEMI_UNDEAD)
-        return temp ? !you.vampire_alive : false;
+    if (temp && undead_state() == US_SEMI_UNDEAD)
+        return !you.vampire_alive;
     else
         return undead_state(temp) != US_ALIVE;
 }

@@ -403,7 +403,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
 #endif
 
-    if (mut == MUT_BERSERK && you.species == SP_VAMPIRE && !you.vampire_alive)
+    if (mut == MUT_BERSERK && you.is_lifeless_undead())
         return mutation_activity_type::INACTIVE;
 
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
@@ -660,14 +660,14 @@ string describe_mutations(bool drop_title)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (!you.vampire_alive)
+        if (you.vampire_alive)
+            result += "<green>Your natural rate of healing is unusually fast.</green>\n";
+        else
         {
             result += "<green>You do not regenerate when monsters are visible.</green>\n";
             result += "<green>You are frail without blood (-20% HP).</green>\n";
             result += "<green>You can heal yourself when you bite living creatures.</green>\n";
         }
-        else
-            result += "<green>Your natural rate of healing is unusually fast.</green>\n";
     }
 
     // player::can_swim includes other cases, e.g. extra-balanced species that
@@ -789,11 +789,6 @@ static formatted_string _vampire_Ascreen_footer(bool first_page)
     return formatted_string::parse_string(fmt);
 }
 
-static int _vampire_bloodlessness()
-{
-    return you.vampire_alive ? 1 : 2;
-}
-
 static string _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -831,16 +826,16 @@ static string _display_vampire_attributes()
          "berserk              ", "yes        ", "no    "}
     };
 
-    int current = _vampire_bloodlessness();
+    const int highlight_col = you.vampire_alive ? 1 : 2;
 
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
         for (int x = 0; x < 3; x++)  // columns (states)
         {
-            if (y > 0 && x == current)
+            if (y > 0 && x == highlight_col)
                 result += "<w>";
             result += column[y][x];
-            if (y > 0 && x == current)
+            if (y > 0 && x == highlight_col)
                 result += "</w>";
         }
         result += "\n";
@@ -881,7 +876,9 @@ void display_mutations()
 
     auto switcher = make_shared<Switcher>();
 
-    const string vamp_s = you.species == SP_VAMPIRE ?_display_vampire_attributes() : "N/A";
+    const string vamp_s = you.species == SP_VAMPIRE
+                                        ?_display_vampire_attributes()
+                                        : "N/A";
     const string descs[3] =  { mutation_s, vamp_s };
     for (int i = 0; i < 2; i++)
     {
@@ -915,7 +912,8 @@ void display_mutations()
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        if (you.species == SP_VAMPIRE && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
+        if (you.species == SP_VAMPIRE
+            && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {
             int& c = switcher->current();
 
@@ -937,7 +935,7 @@ void display_mutations()
     tiles.json_open_object();
     tiles.json_write_string("mutations", mutation_s);
     if (you.species == SP_VAMPIRE)
-        tiles.json_write_int("vampire", _vampire_bloodlessness());
+        tiles.json_write_bool("vampire_alive", you.vampire_alive);
     tiles.push_ui_layout("mutations", 1);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
