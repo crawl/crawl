@@ -5,6 +5,7 @@ name: "Centaur"
 difficulty: False
 species_flags:
   - SPF_SMALL_TORSO
+  - SPF_BARDING
 aptitudes:
   xp: -1
   hp: 1

@@ -5,6 +5,7 @@ difficulty: Advanced
 difficulty_priority: 60
 species_flags:
   - SPF_SMALL_TORSO
+  - SPF_BARDING
 aptitudes:
   xp: 0
   hp: 2

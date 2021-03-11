@@ -5,6 +5,7 @@ difficulty: Intermediate
 difficulty_priority: 70
 species_flags:
   - SPF_SMALL_TORSO
+  - SPF_BARDING
 aptitudes:
   xp: -1
   hp: 1

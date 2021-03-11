@@ -189,6 +189,9 @@ ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',
     'SK_CROSSBOWS', 'SK_UNARMED_COMBAT')
 
+ALL_SPECIES_FLAGS = {'SPF_NO_HAIR', 'SPF_DRACONIAN', 'SPF_SMALL_TORSO',
+    'SPF_NO_BONES', 'SPF_BARDING'}
+
 def recommended_jobs(jobs):
     return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
 
@@ -241,11 +244,11 @@ def quote(s):
         raise ValueError('Expected a string but got %s' % repr(s))
     return '"%s"' % s
 
-
 def species_flags(flags):
+    global ALL_SPECIES_FLAGS
     out = set()
     for f in flags:
-        if f not in {'SPF_NO_HAIR', 'SPF_DRACONIAN', 'SPF_SMALL_TORSO'}:
+        if f not in ALL_SPECIES_FLAGS:
             raise ValueError("Unknown species flag %s" % f)
         out.add(f)
     if not out:

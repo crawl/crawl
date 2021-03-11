@@ -24,6 +24,7 @@ dex: 7
 levelup_stat_frequency: 5
 species_flags:
   - SPF_NO_HAIR
+  - SPF_NO_BONES
 mutations:
   1:
     MUT_CAMOUFLAGE: 1

@@ -274,18 +274,7 @@ bool species_can_throw_large_rocks(species_type species)
 
 bool species_wears_barding(species_type species)
 {
-    // TODO: dataify?
-    switch (species)
-    {
-        case SP_NAGA:
-        case SP_PALENTONGA:
-#if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR:
-#endif
-            return true;
-        default:
-            return false;
-    }
+    return bool(get_species_def(species).flags & SPF_SMALL_TORSO);
 }
 
 bool species_is_elven(species_type species)
@@ -310,7 +299,7 @@ bool species_has_hair(species_type species)
 
 bool species_has_bones(species_type species)
 {
-    return !(species == SP_OCTOPODE || species == SP_FORMICID);
+    return !bool(get_species_def(species).flags & SPF_NO_BONES);
 }
 
 static const string shout_verbs[] = {"shout", "yell", "scream"};
