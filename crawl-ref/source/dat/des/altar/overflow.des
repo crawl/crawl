@@ -1236,6 +1236,92 @@ xxwwwwwxx
 xxxxxxxxx
 ENDMAP
 
+NAME:   beargit_hepliaklqana_dungeon_heroes
+TAGS:   temple_overflow_hepliaklqana temple_overflow_1
+TAGS:   no_monster_gen patrolling no_trap_gen
+DEPTH:  D:2-, Depths
+SHUFFLE: 123
+SHUFFLE: _-G
+
+#   Only 1 dangerous monster early
+: if you.in_branch("D") and you.depth() < 7 then
+:   if crawl.one_chance_in(3) then
+#   Knight only
+SUBST: 1 = ., 2 = .
+:   elseif crawl.coinflip() then
+#   Hexer only
+SUBST: 1 = ., 3 = .
+:   else
+#   Battlemage only
+SUBST: 2 = ., 3 = .
+:   end
+: end
+
+: if you.in_branch("D") and you.depth() < 4 then
+# One of these 3
+KMONS: 1 = orc wizard; quarterstaff . robe
+KMONS: 2 = Jessica; dagger ego:draining . robe . wand of random effects, \
+           orc wizard; dagger ego:draining . robe . wand of random effects / \
+           kobold; dagger ego:draining . wand of random effects
+KMONS: 3 = orc warrior; flail . kite shield . chain mail
+: elseif you.in_branch("D") and you.depth() < 7 then
+# One of these 3
+KMONS: 1 = blork the orc; quarterstaff . robe, orc wizard; quarterstaff . robe
+KMONS: 2 = sigmund; scythe ego:draining . robe . wand of random effects, \
+           orc wizard; dagger ego:draining . robe . wand of random effects / \
+           gnoll; whip ego:draining . wand of random effects
+KMONS: 3 = orc warrior; flail . kite shield . chain mail
+: elseif you.in_branch("D") and you.depth() < 12 then
+MONS: gargoyle; quarterstaff / orc wizard; quarterstaff . robe
+MONS: human; dagger ego:draining . wand of paralysis
+MONS: orc warrior; flail . kite shield . chain mail
+: elseif you.in_branch("D") then
+MONS: ogre mage; lajatang ego:freezing . potion of haste
+MONS: spriggan; dagger ego:draining . wand of paralysis . potion of haste / \
+      merfolk siren; dagger ego:draining . wand of paralysis . potion of haste
+MONS: orc knight; chain mail . broad axe w:40 | broad axe ego:flaming . \
+      tower shield w:40 | tower shield ego:reflection . potion of haste / \
+      tengu warrior; chain mail . broad axe w:40 | broad axe ego:flaming . \
+      tower shield w:40 | tower shield ego:reflection . potion of haste / \
+      naga warrior; chain mail . broad axe w:40 | broad axe ego:flaming . \
+      tower shield w:40 | tower shield ego:reflection . potion of haste
+: else
+MONS: deep elf annihilator; lajatang ego:freezing . potion of haste . \
+      potion of haste / \
+      draconian annihilator; lajatang ego:freezing . potion of haste . \
+      potion of haste . cloak
+MONS: vampire knight; quick blade ego:antimagic w:20 / \
+      spriggan defender; quick blade ego:antimagic w:20 . wand of paralysis . \
+      potion of haste . potion of haste . buckler
+MONS: minotaur; chain mail . broad axe randart w:90 | arga . \
+      tower shield w:40 | tower shield ego:reflection . potion of haste . \
+      potion of haste . javelin / \
+      orc warlord; chain mail . broad axe randart w:90 | arga . \
+      tower shield w:40 | tower shield ego:reflection . potion of haste
+: end
+KFEAT:   _ = altar_hepliaklqana
+KFEAT:   - = altar_ecumenical
+MARKER:  ` = lua:fog_machine { cloud_type = "thin mist", \
+                              pow_min = 100, pow_max = 200, \
+                              delay = 100, size = 2, walk_dist = 1 }
+TILE:   G = dngn_gravestone
+: interest_check(_G)
+MAP
+    ccccc
+    c...c
+    c.-.c
+    c.2.c     cc
+ccccc...ccccccc.
+c.......`..`..`.
+c._1..c.........
+c.......`..`..`.
+ccccc...ccccccc.
+    c.3.c     cc
+    c.G.c
+    c...c
+    ccccc
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
