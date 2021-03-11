@@ -819,7 +819,8 @@ void throw_it(quiver::action &a)
         if (!did_return)
             pbolt.drop_object(!tossing);
         // Costs 1 MP per shot.
-        dec_mp(1);
+        pay_mp(1);
+        finalize_mp_cost();
     }
     else
     {

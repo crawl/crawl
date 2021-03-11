@@ -448,7 +448,7 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { lose_stat(STAT_RANDOM, 1 + random2avg(5, 2)); }, 4 },
     { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
-    { [] { dec_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
+    { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
     { [] { you.petrify(nullptr); }, 1 },
     { [] { you.increase_duration(DUR_LOWERED_WL, 5 + random2(15), 20,
                 "Your willpower is stripped away!"); }, 4 },

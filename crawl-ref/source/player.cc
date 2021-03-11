@@ -821,6 +821,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.has_mutation(MUT_CONSTRICTING_TAIL)
+        || you.has_mutation(MUT_FLOAT)
         || you.has_mutation(MUT_PAWS) // paws are not feet?
         || you.has_tentacles(temp)
         || you.fishtail && temp)
@@ -1178,6 +1179,9 @@ int player_regen()
 
 int player_mp_regen()
 {
+    if (you.has_mutation(MUT_HP_CASTING))
+        return 0;
+
     int regen_amount = 7 + you.max_magic_points / 2;
 
     if (you.get_mutation_level(MUT_MANA_REGENERATION))
@@ -2592,6 +2596,22 @@ int xp_to_level_diff(int xp, int scale)
         return adjusted_level - projected_level;
 }
 
+static void _gain_innate_spells()
+{
+    auto &spell_vec = you.props[INNATE_SPELLS_KEY].get_vector();
+    // Gain spells at every odd XL, starting at XL 3 and continuing to XL 27.
+    for (int i = 0; i < spell_vec.size() && i < (you.experience_level - 1) / 2; i++)
+    {
+        const spell_type spell = (spell_type)spell_vec[i].get_int();
+        auto spindex = find(begin(you.spells), end(you.spells), spell);
+        if (spindex != end(you.spells))
+            continue; // already learned that one
+
+        add_spell_to_memory(spell);
+        mprf("The power to cast %s wells up from within.", spell_title(spell));
+    }
+}
+
 /**
  * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
@@ -2827,6 +2847,9 @@ void level_change(bool skip_attribute_increase)
         }
         if (!updated_maxhp)
             _gain_and_note_hp_mp();
+
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _gain_innate_spells();
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))
@@ -3464,7 +3487,19 @@ void flush_mp()
     you.redraw_magic_points = true;
 }
 
-void dec_mp(int mp_loss, bool silent)
+void flush_hp()
+{
+    if (Options.hp_warning
+        && you.hp <= (you.hp_max * Options.hp_warning) / 100)
+    {
+        flash_view_delay(UA_HP, RED, 50);
+        mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
+        dungeon_events.fire_event(DET_HP_WARNING);
+    }
+    you.redraw_hit_points = true;
+}
+
+static void _dec_mp(int mp_loss, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3475,6 +3510,52 @@ void dec_mp(int mp_loss, bool silent)
 
     you.magic_points = max(0, you.magic_points);
     if (!silent)
+        flush_mp();
+}
+
+void drain_mp(int mp_loss)
+{
+    _dec_mp(mp_loss, false);
+}
+
+void pay_hp(int cost)
+{
+    you.hp -= cost;
+    ASSERT(you.hp);
+}
+
+void pay_mp(int cost)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+        you.hp -= cost;
+    else
+        _dec_mp(cost, true);
+}
+
+void refund_hp(int cost)
+{
+    you.hp += cost;
+}
+
+void refund_mp(int cost)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        you.hp += cost;
+        you.redraw_hit_points = true;
+    }
+    else
+    {
+        inc_mp(cost, true);
+        you.redraw_magic_points = true;
+    }
+}
+
+void finalize_mp_cost(bool addl_hp_cost)
+{
+    if (you.has_mutation(MUT_HP_CASTING) || addl_hp_cost)
+        flush_hp();
+    if (!you.has_mutation(MUT_HP_CASTING))
         flush_mp();
 }
 
@@ -3515,6 +3596,9 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (you.has_mutation(MUT_HP_CASTING))
+        return enough_hp(minimum, suppress_msg, abort_macros);
 
     if (you.magic_points < minimum)
     {
@@ -3569,7 +3653,7 @@ void inc_mp(int mp_gain, bool silent)
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
 // To avoid message spam, don't take notes when HP increases.
-void inc_hp(int hp_gain)
+void inc_hp(int hp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3581,10 +3665,13 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (_should_stop_resting(you.hp, you.hp_max))
-        interrupt_activity(activity_interrupt::full_hp);
+    if (!silent)
+    {
+        if (_should_stop_resting(you.hp, you.hp_max))
+            interrupt_activity(activity_interrupt::full_hp);
 
-    you.redraw_hit_points = true;
+        you.redraw_hit_points = true;
+    }
 }
 
 void drain_hp(int hp_loss)
@@ -3710,6 +3797,8 @@ int get_real_hp(bool trans, bool drained)
     hitp *= 10 + species_hp_modifier(you.species);
     hitp /= 10;
 
+    hitp += you.get_mutation_level(MUT_FLAT_HP) * 4;
+
     const bool hep_frail = have_passive(passive_t::frail)
                            || player_under_penance(GOD_HEPLIAKLQANA);
 
@@ -3748,6 +3837,9 @@ int get_real_hp(bool trans, bool drained)
 
 int get_real_mp(bool include_items)
 {
+    if (you.has_mutation(MUT_HP_CASTING))
+        return 0;
+
     const int scale = 100;
     int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, false, false);
     int scaled_xl = you.experience_level * scale;
@@ -3796,6 +3888,9 @@ bool player_regenerates_hp()
 
 bool player_regenerates_mp()
 {
+    // Djinn don't do the whole "mp" thing.
+    if (you.has_mutation(MUT_HP_CASTING))
+        return false;
     // Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
@@ -5160,7 +5255,8 @@ bool player::airborne() const
     if (duration[DUR_FLIGHT]
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
-        || get_form()->enables_flight())
+        || get_form()->enables_flight()
+        || has_mutation(MUT_FLOAT))
     {
         return true;
     }
@@ -5996,7 +6092,7 @@ mon_holy_type player::holiness(bool temp) const
     // Alive Vampires are MH_NATURAL
     if (is_lifeless_undead(temp))
         holi = MH_UNDEAD;
-    else if (species == SP_GARGOYLE)
+    else if (species == SP_GARGOYLE || species == SP_DJINNI)
         holi = MH_NONLIVING;
     else
         holi = MH_NATURAL;
@@ -6353,13 +6449,14 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT] || has_mutation(MUT_FLOAT);
 }
 
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
-        || get_mutation_level(MUT_BIG_WINGS);
+        || get_mutation_level(MUT_BIG_WINGS)
+        || has_mutation(MUT_FLOAT);
 }
 
 bool player::tengu_flight() const

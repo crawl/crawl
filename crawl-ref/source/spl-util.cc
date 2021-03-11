@@ -31,6 +31,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -1138,12 +1139,24 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (you.duration[DUR_CONF] > 0)
             return "you're too confused to cast spells.";
 
-        if (!enough_mp(spell_mana(spell), true, false))
+        if (spell_difficulty(spell) > you.experience_level)
+            return "you aren't experienced enough to cast this spell.";
+
+        if (you.has_mutation(MUT_HP_CASTING))
+        {
+            // TODO: deduplicate with enough_hp()
+            if (you.duration[DUR_DEATHS_DOOR])
+                return "you cannot pay life while functionally dead.";
+            if (!enough_hp(spell_mana(spell), true, false))
+                return "you don't have enough health to cast this spell.";
+        } else if (!enough_mp(spell_mana(spell), true, false))
             return "you don't have enough magic to cast this spell.";
 
         if (spell == SPELL_SUBLIMATION_OF_BLOOD
             && you.magic_points == you.max_magic_points)
         {
+            if (you.has_mutation(MUT_HP_CASTING))
+                return "your magic and health are inextricable.";
             return "your reserves of magic are already full.";
         }
     }
@@ -1287,6 +1300,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:
+        if (is_useless_skill(SK_NECROMANCY))
+            return "you lack the necromantic skill to inflict true pain.";
         if (temp
             && (!you.weapon()
                 || you.weapon()->base_type != OBJ_WEAPONS

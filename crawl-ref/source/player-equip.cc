@@ -682,7 +682,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
 static void _spirit_shield_message(bool unmeld)
 {
-    if (!unmeld && you.spirit_shield() < 2)
+    if (!unmeld && you.spirit_shield() < 2 && !you.has_mutation(MUT_HP_CASTING))
     {
         mpr("You feel your power drawn to a protective spirit.");
 #if TAG_MAJOR_VERSION == 34
@@ -690,13 +690,16 @@ static void _spirit_shield_message(bool unmeld)
             && !(have_passive(passive_t::no_mp_regen)
                  || player_under_penance(GOD_PAKELLAS)))
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             mpr("Now linked to your health, your magic stops regenerating.");
         }
 #endif
     }
-    else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
+    else if (!unmeld && (you.get_mutation_level(MUT_MANA_SHIELD)
+                         || you.has_mutation(MUT_HP_CASTING)))
+    {
         mpr("You feel the presence of a powerless spirit.");
+    }
     else if (!you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel spirits watching over you.");
 }
@@ -1135,6 +1138,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_MAGICAL_POWER:
+        if (you.has_mutation(MUT_HP_CASTING))
+        {
+            mpr("You repel a surge of foreign magic.");
+            break;
+        }
         canned_msg(MSG_MANA_INCREASE);
         calc_mp();
         break;
@@ -1264,7 +1272,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_MAGICAL_POWER:
-        canned_msg(MSG_MANA_DECREASE);
+        if (!you.has_mutation(MUT_HP_CASTING))
+            canned_msg(MSG_MANA_DECREASE);
         break;
 
     case AMU_FAITH:

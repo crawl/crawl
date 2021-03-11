@@ -2854,7 +2854,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_BLINKING:
             return you.stasis();
         case SCR_AMNESIA:
-            return you_worship(GOD_TROG);
+            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
@@ -2921,6 +2921,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
+        case POT_MAGIC:
+            return you.has_mutation(MUT_HP_CASTING);
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 
@@ -2948,7 +2950,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                     || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false);
+            return you.spirit_shield(false, false) || you.has_mutation(MUT_HP_CASTING);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -2960,10 +2962,18 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                            || you.has_mutation(MUT_VAMPIRISM))
                        && regeneration_is_inhibited());
 
-#if TAG_MAJOR_VERSION == 34
         case AMU_MANA_REGENERATION:
-            return you_worship(GOD_PAKELLAS);
+#if TAG_MAJOR_VERSION == 34
+            if (have_passive(passive_t::no_mp_regen)
+                || player_under_penance(GOD_PAKELLAS))
+            {
+                return true;
+            }
 #endif
+            return !you.max_magic_points;
+
+        case RING_MAGICAL_POWER:
+            return you.has_mutation(MUT_HP_CASTING);
 
         case RING_SEE_INVISIBLE:
             return you.innate_sinv();
@@ -3048,6 +3058,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
 
     case OBJ_BOOKS:
+        // this might be wrong if we ever add more item ID back
+        if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)
+            return true;
         if (!ident && !item_type_known(item))
             return false;
         if ((ident || item_type_known(item)) && item.sub_type != BOOK_MANUAL)

@@ -415,7 +415,12 @@ static spell_list _get_spell_list(bool just_check = false,
     if (available_spells.empty())
     {
         if (!just_check)
-            mprf(MSGCH_PROMPT, "Your library has no spells.");
+        {
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                mprf(MSGCH_PROMPT, "You need no library to learn spells.");
+            else
+                mprf(MSGCH_PROMPT, "Your library has no spells.");
+        }
         return mem_spells;
     }
 

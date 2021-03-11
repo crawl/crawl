@@ -530,7 +530,12 @@ public:
         if (you.magic_points == you.max_magic_points)
         {
             if (reason)
-                *reason = "Your magic is already full.";
+            {
+                if (you.max_magic_points)
+                    *reason = "Your magic is already full.";
+                else
+                    *reason = "You have no magic to restore.";
+            }
             return false;
         }
         return true;

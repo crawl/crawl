@@ -2877,7 +2877,8 @@ void handle_searing_ray()
     beam.fire();
     trigger_battlesphere(&you);
 
-    dec_mp(1);
+    pay_mp(1);
+    finalize_mp_cost();
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
     {

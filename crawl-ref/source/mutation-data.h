@@ -2119,6 +2119,30 @@ static const mutation_def mut_data[] =
   {"Your legs no longer feel aquatic."},
 },
 
+{ MUT_FLOAT, 0, 1, mutflag::good, false,
+  "float",
+
+  {"You float through the air.", "", ""},
+  {"You feel weightless.", "", ""},
+  {"You feel dragged down by the weight of the world."},
+},
+
+{ MUT_INNATE_CASTER, 0, 1, mutflag::good, false,
+  "innate caster",
+
+  {"You learn spells naturally, not from books.", "", ""},
+  {"You feel mystic power welling inside you.", "", ""},
+  {"You feel a greater respect for book-learning."},
+},
+
+{ MUT_HP_CASTING, 0, 1, mutflag::good, false,
+  "hp casting",
+
+  {"Your magical power is your life essence.", "", ""},
+  {"Your magical power and health merge together.", "", ""},
+  {"Your life and magica unlink."},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

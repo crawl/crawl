@@ -342,9 +342,10 @@ static void _place_dragon()
         if (!dragon)
             continue;
 
-        dec_mp(mp_cost);
+        pay_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
             mpr("A dragon arrives to answer your call!");
+        finalize_mp_cost();
 
         // The dragon is allowed to act immediately here
         dragon->flags &= ~MF_JUST_SUMMONED;
@@ -1924,6 +1925,14 @@ spell_type player_servitor_spell()
         if (you.has_spell(spell) && raw_spell_fail(spell) < 50)
             return spell;
     return SPELL_NO_SPELL;
+}
+
+bool spell_servitorable(spell_type to_serve)
+{
+    for (const spell_type spell : servitor_spells)
+        if (spell == to_serve)
+            return true;
+    return false;
 }
 
 /**

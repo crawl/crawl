@@ -1552,6 +1552,23 @@ Gargoyles (Gr)
   skilled with blunt weapons and in unarmed combat. They can also be exceptional
   earth-based conjurers.
 
+Djinni (Dj)
+  Djinn are beings of smokeless fire. They enter the world spontaneously and
+  without explanation, born with a tireless hunger for knowledge and adventure.
+  Djinni have a unique relationship with magic: rather than learning spells
+  from books, their spells come from within, welling up from their fiery core
+  as they gain experience. They draw from that same fiery core to cast spells -
+  for Djinn, magical power and health are one and the same.
+
+  As elemental beings, Djinn are immune to poison and highly resistant to
+  fire, though cold damage is deeply inimical to them. Since they float
+  through the air without need for legs or feet, they cannot wear boots.
+
+  Djinn are middlingly competent at most forms of physical combat, but have
+  a particular aptitude for spellcasting. Their Spellcasting skill grants
+  the same level of spell success and power that other races need multiple
+  skills to reach.
+
 Draconians (Dr)
   Draconians are human-dragon hybrids: humanoid in form and approximately
   human-sized, with wings, tails and scaly skins. Draconians start out in an

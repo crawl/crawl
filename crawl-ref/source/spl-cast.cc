@@ -413,6 +413,26 @@ int stepdown_spellpower(int power, int scale)
     return result;
 }
 
+static int _skill_power(spell_type spell)
+{
+    int power = 0;
+
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    const int skillcount = count_bits(disciplines);
+    if (skillcount)
+    {
+        for (const auto bit : spschools_type::range())
+            if (disciplines & bit)
+                power += you.skill(spell_type2skill(bit), 200);
+        power /= skillcount;
+    }
+
+    // Innate casters use spellcasting for every spell school.
+    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
+    power += you.skill(SK_SPELLCASTING, splcast_mult);
+    return power;
+}
+
 /*
  * Calculate spell power.
  *
@@ -432,20 +452,7 @@ int stepdown_spellpower(int power, int scale)
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, int scale)
 {
-    int power = 0;
-
-    const spschools_type disciplines = get_spell_disciplines(spell);
-
-    int skillcount = count_bits(disciplines);
-    if (skillcount)
-    {
-        for (const auto bit : spschools_type::range())
-            if (disciplines & bit)
-                power += you.skill(spell_type2skill(bit), 200);
-        power /= skillcount;
-    }
-
-    power += you.skill(SK_SPELLCASTING, 50);
+    int power = _skill_power(spell);
 
     if (you.divine_exegesis)
         power += you.skill(SK_INVOCATIONS, 300);
@@ -913,11 +920,13 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     const int cost = spell_mana(spell);
+    pay_mp(cost);
+
     // Majin Bo HP cost taken at the same time
+    // (but after hp costs from HP casting)
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
-    dec_mp(cost, true);
     if (_majin_charge_hp())
-        dec_hp(hp_cost, false);
+        pay_hp(cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target);
@@ -925,9 +934,9 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     {
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
+        refund_mp(cost);
         if (_majin_charge_hp())
-            inc_hp(hp_cost);
+            refund_hp(hp_cost);
 
         redraw_screen();
         update_screen();
@@ -944,8 +953,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         count_action(CACT_CAST, spell);
     }
 
-    flush_mp();
-
+    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     you.turn_is_over = true;
     alert_nearby_monsters();
 

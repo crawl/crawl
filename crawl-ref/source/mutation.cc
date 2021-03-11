@@ -192,6 +192,9 @@ static const int conflict[][3] =
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
+
+    { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
+    { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
 };
 
 static bool _mut_has_use(const mutation_def &mut, mutflag use)
@@ -2514,6 +2517,8 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
         result = ostr.str();
     }
+    else if (mut == MUT_MP_WANDS && you.has_mutation(MUT_HP_CASTING))
+        result = "You expend health (3 HP) to strengthen your wands.";
     else if (!ignore_player && mut == MUT_TENTACLE_ARMS)
     {
         const string num_tentacles = number_in_words(you.has_tentacles(false));

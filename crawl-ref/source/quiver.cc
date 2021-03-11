@@ -133,7 +133,9 @@ namespace quiver
         bool af_hp_check = false;
         bool af_mp_check = false;
         if (!clua.callfn("af_hp_is_low", ">b", &af_hp_check)
-            || uses_mp() && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
+            || uses_mp()
+               && !you.has_mutation(MUT_HP_CASTING)
+               && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
@@ -1767,7 +1769,10 @@ namespace quiver
             switch (you.inv[wand_slot].unrand_idx)
             {
             case UNRAND_DISPATER:
-                return enough_hp(14, quiet) && enough_mp(4, quiet); // TODO: code duplication...
+                // TODO: code duplication...
+                if (you.has_mutation(MUT_HP_CASTING))
+                    return enough_hp(18, quiet);
+                return enough_hp(14, quiet) && enough_mp(4, quiet);
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:

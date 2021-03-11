@@ -125,6 +125,8 @@ function species_mock(e)
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
     return "hell beast"
+  elseif you.race() == "Djinni" then
+    return "crimson imp"
   elseif you.race():find("Draconian") then
     return "wyvern"
   elseif you.race() == "Deep Dwarf" then

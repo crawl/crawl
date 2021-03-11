@@ -23,6 +23,11 @@ Demonspawn
 Demonspawn are half human, half demon. They acquire strong demonic mutations as
 they grow.
 %%%%
+Djinni
+
+Djinn are ever-burning spirits. They learn spells innately, without books, and
+cast by drawing down their own fires.
+%%%%
 Draconian
 
 Draconians are versatile hybrids. They mature when reaching level 7 and develop

@@ -3718,6 +3718,10 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         if (mut_check_conflict(mut, true))
             continue;
 
+        // Don't offer sacrifices of skills that a player already can't use.
+        if (!can_sacrifice_skill(mut))
+            continue;
+
         // Special case a few weird interactions:
 
         // Don't offer to sacrifice summoning magic when already hated by all.
@@ -5097,12 +5101,13 @@ int pakellas_surge_devices()
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
         return 0;
 
+    // XXX TODO: support djinn here (HP_CASTING, pay_mp, etc)
     const int mp = min(you.magic_points, min(9, max(3,
                        1 + random2avg(you.piety * 9 / piety_breakpoint(5),
                                       2))));
 
     const int severity = div_rand_round(mp, 3);
-    dec_mp(mp);
+    drain_mp(mp);
     you.duration[DUR_DEVICE_SURGE] = 0;
     if (severity == 0)
     {
