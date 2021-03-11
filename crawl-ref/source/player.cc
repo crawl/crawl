@@ -820,7 +820,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.species == SP_NAGA
+    if (you.has_mutation(MUT_CONSTRICTING_TAIL)
         || you.has_mutation(MUT_PAWS) // paws are not feet?
         || you.has_tentacles(temp)
         || you.fishtail && temp)

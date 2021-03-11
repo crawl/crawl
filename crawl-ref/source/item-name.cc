@@ -530,14 +530,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         {
         case SPARM_NORMAL:            return "";
 #if TAG_MAJOR_VERSION == 34
-        case SPARM_RUNNING:
-            // "naga barding of running" doesn't make any sense, and yes,
-            // they are possible. The terse ego name for these is {run}
-            // still to avoid player confusion, it used to be {sslith}.
-            if (item.sub_type == ARM_BARDING && you.species == SP_NAGA)
-                                      return "speedy slithering";
-            else
-                                      return "running";
+        case SPARM_RUNNING:           return "running";
 #endif
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
@@ -550,7 +543,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PONDEROUSNESS:     return "ponderousness";
         case SPARM_FLYING:            return "flying";
 
-        case SPARM_WILLPOWER:  return "willpower";
+        case SPARM_WILLPOWER:         return "willpower";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
         case SPARM_RESISTANCE:        return "resistance";

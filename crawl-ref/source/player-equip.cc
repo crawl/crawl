@@ -923,8 +923,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     case SPARM_PONDEROUSNESS:
     {
-        const string verb = you.species == SP_NAGA ? "slither" : "step";
-            mprf("That put a bit of spring back into your %s.", verb.c_str());
+        // XX can the noun here be derived from the species walking verb?
+        const string noun = you.species == SP_NAGA ? "slither" : "step";
+        mprf("That put a bit of spring back into your %s.", noun.c_str());
         break;
     }
 
