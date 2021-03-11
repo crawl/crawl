@@ -2102,6 +2102,15 @@ static const mutation_def mut_data[] =
   {"Your arms feel tentacular.", "", ""},
   {"Your arms no longer feel tentacular.", "", ""},
 },
+
+{ MUT_VAMPIRISM, 0, 2, mutflag::good, false,
+  "vampiric",
+
+  {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
+  {"You feel a craving for blood.", "You can now turn into a vampire bat when bloodless.", ""},
+  {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

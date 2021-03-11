@@ -1190,7 +1190,7 @@ void no_ability_msg()
     // Give messages if the character cannot use innate talents right now.
     // * Vampires can't turn into bats when full of blood.
     // * Tengu can't start to fly if already flying.
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+    if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
     {
         if (you.transform_uncancellable)
             mpr("You can't untransform!");
@@ -3453,12 +3453,13 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
     case ABIL_REVIVIFY:
-        return you.species == SP_VAMPIRE && !you.vampire_alive;
+        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
     case ABIL_EXSANGUINATE:
-        return you.species == SP_VAMPIRE && you.vampire_alive;
+        return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_TRAN_BAT:
-        return you.species == SP_VAMPIRE && !you.vampire_alive
-            && you.experience_level >= 3 && you.form != transformation::bat;
+        return you.get_mutation_level(MUT_VAMPIRISM) >= 2
+                && !you.vampire_alive
+                && you.form != transformation::bat;
     case ABIL_FLY:
         return you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT];
     case ABIL_STOP_FLYING:

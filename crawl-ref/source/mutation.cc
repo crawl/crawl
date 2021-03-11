@@ -339,7 +339,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         }
         // Vampire bats keep their fangs.
         if (you.form == transformation::bat
-            && you.species == SP_VAMPIRE
+            && you.has_innate_mutation(MUT_VAMPIRISM)
             && mut == MUT_FANGS)
         {
             return mutation_activity_type::FULL;
@@ -658,7 +658,7 @@ string describe_mutations(bool drop_title)
                          && you.form == transformation::dragon));
     }
 
-    if (you.species == SP_VAMPIRE)
+    if (you.has_mutation(MUT_VAMPIRISM))
     {
         if (you.vampire_alive)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
@@ -791,11 +791,11 @@ static formatted_string _vampire_Ascreen_footer(bool first_page)
 
 static string _display_vampire_attributes()
 {
-    ASSERT(you.species == SP_VAMPIRE);
+    ASSERT(you.has_mutation(MUT_VAMPIRISM));
 
     string result;
 
-    const int lines = 12;
+    const int lines = 13;
     string column[lines][3] =
     {
         {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
@@ -815,15 +815,16 @@ static string _display_vampire_attributes()
 
         {"Negative resistance  ", "           ", "+++   "},
 
-        {"Miasma  resistance   ", "           ", "+     "},
+        {"Miasma resistance    ", "           ", "immune"},
 
-        {"Torment resistance   ", "           ", "+     "},
+        {"Torment resistance   ", "           ", "immune"},
 
         {"\n<w>Transformations</w>\n"
-         "Bat form             ", "no         ", "yes   "},
+         "Bat form (XL 3+)     ", "no         ", "yes   "},
 
-        {"Other forms and \n"
-         "berserk              ", "yes        ", "no    "}
+        {"Other forms          ", "yes        ", "no    "},
+
+        {"Berserk              ", "yes        ", "no    "}
     };
 
     const int highlight_col = you.vampire_alive ? 1 : 2;
@@ -876,7 +877,7 @@ void display_mutations()
 
     auto switcher = make_shared<Switcher>();
 
-    const string vamp_s = you.species == SP_VAMPIRE
+    const string vamp_s = you.has_mutation(MUT_VAMPIRISM)
                                         ?_display_vampire_attributes()
                                         : "N/A";
     const string descs[3] =  { mutation_s, vamp_s };
@@ -903,7 +904,7 @@ void display_mutations()
     auto bottom = make_shared<Text>(_vampire_Ascreen_footer(true));
     bottom->set_margin_for_sdl(20, 0, 0, 0);
     bottom->set_margin_for_crt(1, 0, 0, 0);
-    if (you.species == SP_VAMPIRE)
+    if (you.has_mutation(MUT_VAMPIRISM))
         vbox->add_child(bottom);
 
     auto popup = make_shared<ui::Popup>(vbox);
@@ -912,7 +913,7 @@ void display_mutations()
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        if (you.species == SP_VAMPIRE
+        if (you.has_mutation(MUT_VAMPIRISM)
             && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
         {
             int& c = switcher->current();
@@ -934,7 +935,7 @@ void display_mutations()
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("mutations", mutation_s);
-    if (you.species == SP_VAMPIRE)
+    if (you.has_mutation(MUT_VAMPIRISM))
         tiles.json_write_bool("vampire_alive", you.vampire_alive);
     tiles.push_ui_layout("mutations", 1);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
@@ -1278,7 +1279,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Vampires' healing rates depend on their blood level.
-    if (you.species == SP_VAMPIRE
+    if (you.has_mutation(MUT_VAMPIRISM)
         && (mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION))
     {
         return true;

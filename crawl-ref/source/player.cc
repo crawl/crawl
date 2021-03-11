@@ -1125,7 +1125,7 @@ static int _player_bonus_regen()
 bool regeneration_is_inhibited()
 {
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || (you.species == SP_VAMPIRE && !you.vampire_alive))
+        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
@@ -1160,7 +1160,7 @@ int player_regen()
     rr = max(1, rr);
 
     // Bonus regeneration for alive vampires.
-    if (you.species == SP_VAMPIRE && you.vampire_alive)
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         rr += 20;
 
     if (you.duration[DUR_COLLAPSE])
@@ -1320,7 +1320,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += get_form()->res_cold();
 
         // XX temp?
-        if (you.species == SP_VAMPIRE && !you.vampire_alive)
+        if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
             rc += 2;
     }
 
@@ -1470,7 +1470,7 @@ bool player_res_torment(bool random)
     }
 
     return get_form()->res_neg() == 3
-           || you.species == SP_VAMPIRE && !you.vampire_alive
+           || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
@@ -1683,7 +1683,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     int pl = 0;
 
     // XX temp?
-    if (you.species == SP_VAMPIRE && !you.vampire_alive)
+    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
         pl = 3;
 
     // piety-based rN doesn't count as temporary (XX why)
@@ -2688,22 +2688,6 @@ void level_change(bool skip_attribute_increase)
 
             switch (you.species)
             {
-            case SP_VAMPIRE:
-                if (you.experience_level == 3)
-                {
-                    if (you.vampire_alive)
-                    {
-                        mprf(MSGCH_INTRINSIC_GAIN, "If you were bloodless "
-                             "you could now transform into a vampire bat.");
-                    }
-                    else
-                    {
-                        mprf(MSGCH_INTRINSIC_GAIN,
-                             "You can now transform into a vampire bat.");
-                    }
-                }
-                break;
-
             case SP_NAGA:
                 if (!(you.experience_level % 3))
                 {
@@ -3000,7 +2984,7 @@ int player_stealth()
         stealth -= STEALTH_PIP;
 
     // Bloodless vampires are stealthier.
-    if (you.species == SP_VAMPIRE && !you.vampire_alive)
+    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
         stealth += STEALTH_PIP * 2;
 
     if (!you.airborne())
@@ -3227,7 +3211,7 @@ void display_char_status()
     else if (you.haloed())
         mpr("An external divine halo illuminates you.");
 
-    if (you.species == SP_VAMPIRE)
+    if (you.has_mutation(MUT_VAMPIRISM))
         _display_vampire_status();
 
     status_info inf;
@@ -6017,7 +6001,7 @@ mon_holy_type player::holiness(bool temp) const
         holi |= MH_HOLY;
 
     if (is_evil_god(religion)
-        || species == SP_DEMONSPAWN || species == SP_VAMPIRE)
+        || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
     {
         holi |= MH_EVIL;
     }
@@ -7569,7 +7553,8 @@ bool player::form_uses_xl() const
     // should apply to more forms, too.  [1KB]
     return form == transformation::wisp || form == transformation::fungus
         || form == transformation::pig
-        || form == transformation::bat && you.species != SP_VAMPIRE;
+        || form == transformation::bat
+                        && you.get_mutation_level(MUT_VAMPIRISM) < 2;
 }
 
 bool player::wear_barding() const

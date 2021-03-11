@@ -562,7 +562,7 @@ public:
 
     bool effect(bool was_known = true, int = 40, bool=true) const override
     {
-        if (you.species == SP_VAMPIRE && !you.vampire_alive)
+        if (you.is_lifeless_undead())
         {
             mpr("You feel slightly irritated.");
             return false;

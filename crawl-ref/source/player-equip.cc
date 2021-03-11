@@ -489,7 +489,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_VAMPIRISM:
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel a bloodthirsty glee!");
                     else
                         mpr("You feel a sense of dread.");
@@ -630,7 +630,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_VAMPIRISM:
                 if (showMsgs)
                 {
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel your glee subside.");
                     else
                         mpr("You feel the dreadful sensation subside.");
