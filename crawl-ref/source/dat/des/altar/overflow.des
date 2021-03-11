@@ -1238,6 +1238,84 @@ xxwwwwwxx
 xxxxxxxxx
 ENDMAP
 
+NAME:   beargit_hepliaklqana_dungeon_heroes
+TAGS:   temple_overflow_hepliaklqana temple_overflow_1
+TAGS:   no_monster_gen patrolling no_trap_gen
+DEPTH:  D:4-, Depths
+SHUFFLE: 12d
+# Battlemage
+: if crawl.one_chance_in(3) then
+:   if you.in_branch("D") and you.depth() < 10 then
+KMONS:  1 = blork the orc; quarterstaff, orc wizard; quarterstaff . robe
+KMONS:  2 = spectral orc wizard name:ancestral_orc_wizard name_replace
+ITEM:   randbook owner:Hepliaklqana spells:stone_arrow numspells:1
+:   elseif you.in_branch("D") then
+MONS:   ogre mage; lajatang . potion of haste
+MONS:   spectral ogre mage name:ancestral_ogre_mage name_replace
+ITEM:   randbook owner:Hepliaklqana spells:bolt_of_magma numspells:1
+:   else
+MONS:   deep elf annihilator; lajatang ego:freezing . potion of haste
+MONS:   ancient lich name:ancestral_lich name_replace
+ITEM:   randbook owner:Hepliaklqana spells:lehudib's_crystal_spear numspells:1
+:   end
+
+# Hexer
+: elseif crawl.coinflip() then
+:   if you.in_branch("D") and you.depth() < 10 then
+MONS:   orc wizard; dagger ego:draining . robe
+MONS:   spectral orc wizard name:ancestral_orc_wizard name_replace
+ITEM:   randbook owner:Hepliaklqana spells:slow numspells:1 / \
+        randbook owner:Hepliaklqana spells:confusing_touch numspells:1
+:   elseif you.in_branch("D") then
+MONS:   orc sorcerer; dagger ego:draining . robe . potion of haste
+MONS:   spectral orc sorcerer name:ancestral_orc_sorcerer name_replace \
+        perm_ench:haste
+ITEM:   wand of paralyze
+:   else
+MONS:   vampire knight; quick blade ego:antimagic
+MONS:   ancient lich name:ancestral_lich name_replace
+# Mass confuse is not a player spell
+ITEM:   randbook owner:Hepliaklqana spells:alistair's_intoxication numspells:1
+:   end
+
+# Knight
+: else
+:   if you.in_branch("D") and you.depth() < 10 then
+MONS:   orc warrior; flail . kite shield . chain mail
+MONS:   spectral orc warrior name:ancestral_orc_warrior name_replace
+ITEM:   nothing
+:   elseif you.in_branch("D") then
+MONS:   orc knight; broad axe ego:flaming . tower shield . \
+        chain mail . potion of haste
+MONS:   spectral orc knight name:ancestral_orc_knight name_replace \
+        perm_ench:haste
+ITEM:   nothing w:100 / tower shield ego:reflection
+:   else
+MONS:   deep elf blademaster; broad axe good_item . \
+        tower shield . chain mail . potion of haste
+MONS:   spectral deep elf blademaster name:ancestral_deep_elf_blademaster \
+        name_replace perm_ench:haste
+ITEM:   nothing w:100 / broad axe ego:speed / tower shield ego:reflection
+:   end
+: end
+KFEAT:   _ = altar_hepliaklqana
+MARKER:  _ = lua:fog_machine { cloud_type = "thin mist", \
+                              pow_min = 100, pow_max = 200, \
+                              delay = 100, size = 1, walk_dist = 1 }
+TILE:   G = dngn_gravestone
+: interest_check(_G)
+MAP
+    cc.cc
+    c...c
+ccccc.c.cccc
+c.2........c
+cd_G..c.c...
+c.1........c
+ccccc.c.cccc
+    c...c
+    cc.cc
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
