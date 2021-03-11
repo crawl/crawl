@@ -35,24 +35,6 @@
     nullptr
 } },
 
-{ SP_DJINNI, {
-    "Dj",
-    "Djinni", "Djinn", nullptr,
-    SPF_NONE,
-    -1, -1, 0, 3,
-    MONS_DJINNI,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    {},
-    {},
-    {},
-    {}, // not a starting race
-    {}, // not a starting race
-    nullptr,
-    nullptr
-} },
-
 { SP_HIGH_ELF, {
     "HE",
     "High Elf", "Elven", "Elf",
