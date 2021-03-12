@@ -993,8 +993,10 @@ vector<string> _get_mutations(bool terse)
     {
         mutation_type mut_type = static_cast<mutation_type>(i);
         if (you.has_temporary_mutation(mut_type))
+        {
             result.push_back(terse ? _terse_mut_name(mut_type)
                                    : mutation_desc(mut_type, -1, true));
+        }
     }
 
     return result;
