@@ -2058,6 +2058,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     // their own allies. This could be wrong!
     { MONS_SALTLING,          { "salt crystal", WHITE } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
+    { MONS_ROCKSLIME,         { "rock", BROWN } },
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },

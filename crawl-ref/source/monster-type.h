@@ -151,6 +151,8 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BROWN_OOZE,
     MONS_GIANT_AMOEBA,
+#else
+    MONS_ROCKSLIME,
 #endif
     MONS_AZURE_JELLY,
     MONS_DEATH_OOZE,
@@ -1095,6 +1097,7 @@ enum monster_type                      // env.mons[].type
     MONS_DREAD_LICH,
     MONS_DEEP_ELF_AIR_MAGE,
     MONS_ANIMATED_ARMOUR,
+    MONS_ROCKSLIME,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
