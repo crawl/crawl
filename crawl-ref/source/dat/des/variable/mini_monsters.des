@@ -2236,61 +2236,61 @@ ENDMAP
 # Sometimes they have starved to death.
 NAME:   beargit_elvish_explorers
 DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
-TAGS:   patrolling
-: if crawl.one_chance_in(5) then
-# we allow monster gen since maybe they killed the elves?
-SUBST:  1 = %, 2 = %, 3 = E
-: dgn.delayed_decay(_G, '%', 'elf skeleton')
-: dgn.delayed_decay(_G, 'E', 'elephant skeleton')
-KMONS:  4 = hell hound
-KMONS:  5 = fungus / nothing
-KMONS:  6 = necrophage w:50, ghoul
-: elseif you.in_branch("D") then
-TAGS:   no_monster_gen
-MONS:   deep elf archer; shortbow . arrow . quarterstaff . robe
-MONS:   deep elf knight; quarterstaff . leather armour good_item
-MONS:   elephant / death yak
-MONS:   wolf / warg w:20
+TAGS:   transparent patrolling no_monster_gen no_trap_gen
+: if you.in_branch("D") then
+:     if you.depth() < 14 then
+MONS:   deep elf archer; shortbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; quarterstaff good_item . leather armour good_item
+MONS:   elephant, warg / hell hound w:5
+:     else
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . scale mail good_item
+MONS:   elephant / dire elephant, warg / hell hound / raiju
+:     end
 MONS:   plant / fungus, nothing
-: elseif you.in_branch("Swamp") or you.in_branch("Spider") or you.in_branch("Snake") then
-TAGS:   no_monster_gen
-MONS:   deep elf archer; longbow . arrow . quarterstaff . robe
-MONS:   deep elf knight; quarterstaff . chain mail
-MONS:   dire elephant / elephant
-MONS:   warg / raiju
+: elseif you.in_branch("Swamp") or you.in_branch("Spider")
+:        or you.in_branch("Snake") then
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . chain mail good_item
+MONS:   dire elephant
+MONS:   hell hound / raiju
 MONS:   fungus / nothing, nothing
 : elseif you.in_branch("Crypt") then
-MONS:   spectral deep elf master archer
-MONS:   spectral deep elf blademaster
-MONS:   spectral hellephant
-MONS:   doom hound
-MONS:   nothing
-MONS:   ancient lich / necromancer w:30 / deep elf death mage w:30 / \
-        mummy priest / lich / dread lich / royal mummy / vampire mage
+KITEM:  1 = longbow good_item, arrow, quarterstaff, robe good_item
+KITEM:  2 = lajatang good_item, chain mail good_item
+KMONS:  1 = spectral deep elf master archer
+KMONS:  2 = spectral deep elf blademaster
+KMONS:  3 = spectral hellephant
+KMONS:  4 = doom hound
+KMONS:  5 = nothing
+KMONS:  6 = ancient lich / deep elf death mage w:30 / lich / dread lich \
+            / vampire mage
 : else
-# The elves have mastered the dungeon and allied with the darkness
-# Good loot on the elves given the difficulty of the pets
-TAGS:   no_monster_gen
-MONS:   deep elf master archer; longbow good_item . arrow . chain mail good_item / \
-        deep elf master archer; longbow randart . arrow . quicksilver dragon scales
-MONS:   deep elf blademaster; quarterstaff randart . shadow dragon scales good_item / \
-        deep elf blademaster; lajatang good_item . plate armour good_item / \
-        deep elf blademaster; lajatang randart . plate armour good_item
+# The elves have mastered the dungeon and allied with the darkness.
+MONS:   deep elf master archer; longbow good_item | longbow randart . arrow \
+            . chain mail good_item | quicksilver dragon scales
+MONS:   deep elf blademaster; lajatang good_item | lajatang randart \
+            . shadow dragon scales good_item | shadow dragon scales randart
 MONS:   hellephant
 MONS:   doom hound
 MONS:   nothing, nothing
 : end
 : if you.in_branch("Crypt") then
-TILE:   t = dngn_tree_dead
 SUBST:  x = c
-FTILE:  ` = floor_crypt
+COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+FTILE:  - = floor_crypt
 : elseif you.in_branch("Swamp") then
-SUBST:  ` = ``....W, x = t
-FTILE:  `123456E%t = floor_grass
+SUBST:  - = --....W, x = t
+FTILE:  -123456t = floor_grass
 : elseif you.in_branch("Spider") then
-SUBST:  ` = ., t = x
+SUBST:  t = x
 : else
-FTILE:  `123456E%t = floor_grass
+FTILE:  -123456t = floor_grass
 FTILE:  P = floor_sand
 : end
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
@@ -2302,26 +2302,26 @@ MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
 : dgn.delayed_decay(_G, 'P', 'rat skeleton')
 MAP
     xx.@.xxx
-    xt````tx
+    xt----tx
     xt555ttx
-    xt````tx
-    xtt``ttx
-    xt````tx
-    xt``t`tx
-    xt````tx
-   xxt`t``tx
-  xxttt```txxxx
- xxtt`````ttttx
-xxtt```t````4txx
-xttWWW```P```ttx
-xt`WwWW````3``tx
-xt``````2163``tx
-xttt`````````ttx
-xxxtt``tttttttxx
-  xxt```tttttttx
-   xt````t````5.
-   xtt````````5@
-   xxtt`````t`5.
+    xt----tx
+    xtt--ttx
+    xt----tx
+    xt--t-tx
+    xt----tx
+   xxt-t--tx
+  xxttt---txxxx
+ xxtt-----ttttx
+xxtt---t----4txx
+xttWWW---P---ttx
+xt-WwWW----3--tx
+xt------2163--tx
+xttt---------ttx
+xxxtt--tttttttxx
+  xxt---tttttttx
+   xt----t----5.
+   xtt--------5@
+   xxtt-----t-5.
     xxtttttttttx
      xxxxxxxxxxx
 ENDMAP
