@@ -153,6 +153,7 @@ enum monster_type                      // env.mons[].type
     MONS_GIANT_AMOEBA,
 #else
     MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
 #endif
     MONS_AZURE_JELLY,
     MONS_DEATH_OOZE,
@@ -1098,6 +1099,7 @@ enum monster_type                      // env.mons[].type
     MONS_DEEP_ELF_AIR_MAGE,
     MONS_ANIMATED_ARMOUR,
     MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

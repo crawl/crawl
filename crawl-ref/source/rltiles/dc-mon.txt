@@ -660,7 +660,6 @@ ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
 floating_eye MONS_FLOATING_EYE
-eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
 mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
@@ -755,6 +754,7 @@ slime_creature3
 slime_creature4
 slime_creature5
 rockslime MONS_ROCKSLIME
+quicksilver_ooze MONS_QUICKSILVER_OOZE
 %rim 1
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
