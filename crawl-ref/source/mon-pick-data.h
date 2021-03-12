@@ -393,7 +393,6 @@ static const pop_entry pop_slime[] =
   {  1,  5,  200, FLAT, MONS_GOLDEN_EYE },
   {  1,  8,  300, SEMI, MONS_EYE_OF_DEVASTATION },
   {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
-  {  1,  5,  200, RISE, MONS_DEATH_OOZE },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
   { 0,0,0,FLAT,MONS_0 }

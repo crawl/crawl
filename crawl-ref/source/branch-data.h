@@ -103,7 +103,7 @@ const Branch branches[NUM_BRANCHES] =
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
       GREEN, BROWN,
-      'M', { RUNE_SLIME }, branch_noise::quiet, 8 },
+      'M', { RUNE_SLIME }, branch_noise::quiet, 7 },
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
       brflag::dangerous_end,
