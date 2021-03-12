@@ -67,6 +67,22 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
+string Form::melding_description() const
+{
+    // this is a bit rough and ready...
+    // XX simplify slot melding rather than complicate this function?
+    if (blocked_slots == EQF_ALL)
+        return "Your equipment is entirely melded.";
+    else if (blocked_slots == EQF_PHYSICAL)
+        return "Your armour is entirely melded.";
+    else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
+        return "Your equipment is almost entirely melded.";
+    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE)
+        return "Your equipment is partially melded.";
+    // otherwise, rely on the form description to convey what is melded.
+    return "";
+}
+
 static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(nullptr, nullptr,
                                                              nullptr, nullptr);
 static const FormAttackVerbs ANIMAL_VERBS = FormAttackVerbs("hit", "bite",
@@ -107,7 +123,8 @@ Form::Form(const form_entry &fe)
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       flat_ac(fe.flat_ac), power_ac(fe.power_ac), xl_ac(fe.xl_ac),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
-      prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons)
+      prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons),
+      fakemuts(fe.fakemuts)
 { }
 
 Form::Form(transformation tran)
@@ -205,7 +222,7 @@ string Form::get_description(bool past_tense) const
 {
     return make_stringf("You %s %s",
                         past_tense ? "were" : "are",
-                        description.c_str());
+                        get_transform_description().c_str());
 }
 
 /**
@@ -459,6 +476,15 @@ string Form::player_prayer_action() const
     return species_prayer_action(you.species);
 }
 
+vector<string> Form::get_fakemuts(bool terse) const
+{
+    vector<string> result;
+    for (const auto &p : fakemuts)
+        result.push_back(terse ? p.first : p.second);
+    return result;
+}
+
+
 class FormNone : public Form
 {
 private:
@@ -646,6 +672,17 @@ public:
         return dragon_form_dragon_type();
     }
 
+    string get_transform_description() const override
+    {
+        if (species_is_draconian(you.species))
+        {
+            return make_stringf("a fearsome %s!",
+                          mons_class_name(get_equivalent_mons()));
+        }
+        else
+            return description;
+    }
+
     /**
      * The AC bonus of the form, multiplied by 100 to match
      * player::armour_class().
@@ -740,13 +777,6 @@ public:
         return you.has_mutation(MUT_VAMPIRISM) ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
 
-    string get_description(bool past_tense) const override
-    {
-        return make_stringf("You %s in %sbat-form.",
-                            past_tense ? "were" : "are",
-                            you.has_mutation(MUT_VAMPIRISM) ?  "vampire-" : "");
-    }
-
     /**
      * Get a string describing the form you're turning into. (If not the same
      * as the one used to describe this form in @.
@@ -782,22 +812,35 @@ public:
     string get_description(bool past_tense) const override
     {
         ostringstream desc;
+        bool spike = false;
+        vector<string> muts;
         for (auto app : you.props[APPENDAGE_KEY].get_vector())
         {
             mutation_type mut = static_cast<mutation_type>(app.get_int());
             if (mut == MUT_TENTACLE_SPIKE)
-            {
-                string tense =  past_tense ? "had" : "has";
-                desc << "One of your tentacles " << tense;
-                desc << " a temporary spike. ";
-
-            }
+                spike = true;
             else
-            {
-                string tense =  past_tense ? "had" : "have";
-                desc << "You " << tense << " grown temporary ";
-                desc << mutation_name(mut) << ". ";
-            }
+                muts.push_back(mutation_name(mut));
+        }
+
+        if (spike)
+        {
+            string tense =  past_tense ? "had" : "has";
+            desc << "One of your tentacles " << tense;
+            desc << " grown a beastly spike";
+            if (muts.empty())
+                desc << ".";
+            else
+                desc << ", and you ";
+        }
+        else if (!muts.empty())
+            desc << "You ";
+
+        if (!muts.empty())
+        {
+            string tense =  past_tense ? "had" : "have";
+            desc << tense << " temporarily grown beastly ";
+            desc << comma_separated_line(muts.begin(), muts.end()) << ".";
         }
 
         return trimmed_string(desc.str());
@@ -2118,4 +2161,18 @@ void vampire_update_transformations()
              form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
         untransform();
     }
+}
+
+// TODO: dataify? move to member functions?
+int form_base_movespeed(transformation tran)
+{
+    // statue form is handled as a multiplier in player_speed, not a movespeed.
+    if (tran == transformation::bat)
+        return 5; // but allowed minimum is six
+    else if (tran == transformation::pig)
+        return 7;
+    else if (tran == transformation::wisp)
+        return 8;
+    else
+        return 10;
 }

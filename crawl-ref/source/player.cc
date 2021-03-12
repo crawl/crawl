@@ -1490,7 +1490,7 @@ bool player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_nonliving(temp)
-        || you.is_lifeless_undead(true) // XX: temp? impacts `A` screen
+        || you.is_lifeless_undead(temp || you.undead_state() == US_SEMI_UNDEAD) // XX: ugly, can this be cleaned up?
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -1741,22 +1741,17 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // want to go past 6 (see below). -- bwr
 int player_movement_speed()
 {
-    int mv = 10;
-
-    // transformations
-    if (you.form == transformation::bat)
-        mv = 5; // but allowed minimum is six
-    else if (you.form == transformation::pig)
-        mv = 7;
-    else if (you.form == transformation::wisp)
-        mv = 8;
-    else if (you.form == transformation::hydra && you.in_water())
-        mv = 6;
+    int mv = you.form == transformation::none
+        ? 10
+        : form_base_movespeed(you.form);
 
     if (you.in_water())
     {
-        if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+        if (you.form == transformation::hydra
+            || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+        {
             mv -= 4;
+        }
         else if (!you.can_swim())
             mv += 6; // Wading through water is very slow.
     }
@@ -5179,8 +5174,6 @@ bool player::in_liquid() const
 
 bool player::can_swim(bool permanently) const
 {
-    // Transforming could be fatal if it would cause unequipment of
-    // stat-boosting boots or heavy armour.
     return (species_can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || get_mutation_level(MUT_UNBREATHING) >= 2

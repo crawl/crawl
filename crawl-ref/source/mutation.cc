@@ -680,11 +680,120 @@ string _terse_mut_name(mutation_type mut)
     return current;
 }
 
+// TODO: reimplement other form quirks as mutations, generalize this idea?
+static bool _is_appendage_mutation(mutation_type mut)
+{
+    for (auto app : you.props[APPENDAGE_KEY].get_vector())
+        if (mut == static_cast<mutation_type>(app.get_int()))
+            return true;
+    return false;
+}
+
 vector<string> _get_mutations(bool terse)
 {
     vector<string> result;
 
+    bool pois_printed = false;
+
+    // XX sort good and bad non-permanent mutations better? Comes up mostly for
+    // vampires
+
     // non-permanent and form-based stuff
+
+    if (you.form != transformation::none)
+    {
+        const auto *form = get_form(you.form);
+        ASSERT(form);
+        // we could add form->get_long_name() here for `terse`, but the line in
+        // % is shown right below a line which includes the form name.
+        if (!terse)
+            result.push_back(_formmut(form->get_description()));
+        else if (you.form == transformation::appendage)
+        {
+            // terse mode: these mutations are skipped later, so add the short
+            // forms here. The appendage description covers the long form case.
+            for (auto app : you.props[APPENDAGE_KEY].get_vector())
+            {
+                result.push_back(_terse_mut_name(
+                                static_cast<mutation_type>(app.get_int())));
+            }
+        }
+
+        for (const auto &p : form->get_fakemuts(terse))
+            if (!p.empty())
+                result.push_back(_formmut(p, terse));
+
+        if (you.form == transformation::dragon)
+        {
+            if (!species_is_draconian(you.species))
+                result.push_back(terse ? "breathe fire" : _formmut("You can breathe fire."));
+            else if (!terse && draconian_breath(you.species) != ABIL_NON_ABILITY)
+                result.push_back(_formmut("Your breath weapon is enhanced in this form."));
+        }
+
+        if (form_base_movespeed(you.form) < 10)
+            result.push_back(terse ? "fast" : _formmut("You move quickly."));
+
+        // form-based flying can't be stopped, so don't print amphibiousness
+        if (form->player_can_fly())
+            result.push_back(terse ? "flying" : _formmut("You are flying."));
+        else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
+            result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
+
+        if (form->hp_mod > 10)
+        {
+            result.push_back(terse ? "boosted hp"
+                : _formmut(make_stringf("Your maximum health is %sincreased.",
+                    form->hp_mod < 13 ? "" : "greatly ")));
+        }
+        else if (form->hp_mod < 10)
+            result.push_back(terse ? "reduced hp" : _badmut("Your maximum health is decreased."));
+
+        // immunity comes from form
+        if (!terse && player_res_poison(false, true, false) == 3
+                    && !player_res_poison(false, false, false))
+        {
+            pois_printed = true;
+            // wispform has a fakemut that prints something more general
+            if (you.form != transformation::wisp)
+                result.push_back(_formmut("You are immune to poison."));
+        }
+
+        // bad stuff
+        if (!terse
+            && (form->spellcasting_penalty > 0
+                || you.form == transformation::shadow)) // hard-coded effect
+        {
+            result.push_back(_badmut("Your spellcasting is less reliable in this form."));
+        }
+
+        // XX say something about AC? Best would be to compare it to AC without
+        // the form, but I'm not sure if that's possible
+
+        // XX better synchronizing with various base armour/eq possibilities
+        if (!terse && !you.has_mutation(MUT_NO_ARMOUR))
+        {
+            const string melding_desc = form->melding_description();
+            if (!melding_desc.empty())
+                result.push_back(_badmut(melding_desc));
+        }
+        if (!terse && !form->can_wield() && !you.has_mutation(MUT_NO_GRASPING))
+        {
+            // same as MUT_NO_GRASPING
+            result.push_back(_badmut(
+                "You are incapable of wielding weapons or throwing items."));
+        }
+
+        if (!form->can_cast)
+            result.push_back(terse ? "no casting" : _badmut("You cannot cast spells."));
+
+    }
+
+    // This gets DUR_NO_POTIONS as well as necromutation, is that good?
+    if (!you.can_drink(true) && you.can_drink(false))
+        result.push_back(terse ? "no potions" : _badmut("You cannot drink.")); // same as MUT_NO_DRINK
+
+    //pseudo-forms that come from species
 
     if (you.has_mutation(MUT_VAMPIRISM))
     {
@@ -705,7 +814,9 @@ vector<string> _get_mutations(bool terse)
                 _formmut("You can heal yourself when you bite living creatures."));
             // XX automatically color this green somehow? Handled below more
             // generally for non-vampires
-            result.push_back(_formmut("You are immune to poison."));
+            if (!pois_printed)
+                result.push_back(_formmut("You are immune to poison."));
+            pois_printed = true;
         }
     }
 
@@ -844,17 +955,16 @@ vector<string> _get_mutations(bool terse)
     if (!terse && species_stat_gain_multiplier(you.species) > 1)
         result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
 
-    // vampire treats this as a non-permanent mut, handled above
-    if (!terse && player_res_poison(false, false, false) == 3
-                && (!you.has_mutation(MUT_VAMPIRISM) || you.vampire_alive))
-    {
+    // vampire, form cases handled above
+    if (!terse && player_res_poison(false, false, false) == 3 && !pois_printed)
         result.push_back(_innatemut("You are immune to poison."));
-    }
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut_type = static_cast<mutation_type>(i);
+        if (_is_appendage_mutation(mut_type))
+            continue;
         if (you.has_innate_mutation(mut_type))
         {
             result.push_back(terse ? _terse_mut_name(mut_type)
@@ -867,6 +977,8 @@ vector<string> _get_mutations(bool terse)
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut_type = static_cast<mutation_type>(i);
+        if (_is_appendage_mutation(mut_type))
+            continue;
         if (you.get_base_mutation_level(mut_type, false, false, true) > 0
             && !you.has_innate_mutation(mut_type)
             && !you.has_temporary_mutation(mut_type))
@@ -2052,14 +2164,6 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     return true;
 }
 
-static bool _is_appendage_mutation(mutation_type mut)
-{
-    for (auto app : you.props[APPENDAGE_KEY].get_vector())
-        if (mut == static_cast<mutation_type>(app.get_int()))
-            return true;
-    return false;
-}
-
 /*
  * Delete a mutation level, accepting random mutation types and checking mutation resistance.
  * This will not delete temporary or innate mutations.
@@ -2468,9 +2572,9 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         else if (partially_active)
             colourname = "brown";
         else if (_is_appendage_mutation(mut) && you.form == transformation::appendage)
-            colourname = "lightgreen";
-        else if (is_slime_mutation(mut))
             colourname = "green";
+        else if (is_slime_mutation(mut))
+            colourname = "lightgreen";
         else if (temporary)
             colourname = (you.get_base_mutation_level(mut, true, false, true) > 0) ?
                          "lightmagenta" : "magenta";
