@@ -1201,7 +1201,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-// Jiyva only mutations
+// Jiyva only mutations. (MUT_GELATINOUS_BODY is also used by Op)
 { MUT_GELATINOUS_BODY, 0, 3, mutflag::good | mutflag::jiyva, true,
   "gelatinous body",
 

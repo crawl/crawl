@@ -518,7 +518,7 @@ LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
  * @treturn string
  * @function mutation_overview
  */
-LUARET1(you_mutation_overview, string, mutation_overview().c_str())
+LUARET1(you_mutation_overview, string, terse_mutation_list().c_str())
 
 /*** LOS Radius.
  * @treturn int

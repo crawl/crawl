@@ -33,6 +33,4 @@ int stealth_pips();
 
 void print_overview_screen();
 
-string mutation_overview();
-
 string dump_overview_screen(bool full_id);

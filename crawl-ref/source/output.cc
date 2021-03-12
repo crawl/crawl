@@ -2542,125 +2542,6 @@ string dump_overview_screen(bool full_id)
     return text;
 }
 
-static string _annotate_form_based(string desc, bool suppressed)
-{
-    if (suppressed)
-        return "<darkgrey>(" + desc + ")</darkgrey>";
-    else
-        return desc;
-}
-
-static string _dragon_abil(string desc)
-{
-    const bool supp = form_changed_physiology()
-                      && you.form != transformation::dragon;
-    return _annotate_form_based(desc, supp);
-}
-
-string mutation_overview()
-{
-    string mtext;
-    vector<string> mutations;
-
-    const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
-    if (size_adjective)
-        mutations.emplace_back(size_adjective);
-
-    for (const string& str : fake_mutations(you.species, true))
-    {
-        if (species_is_draconian(you.species))
-            mutations.push_back(_dragon_abil(str));
-        else
-            mutations.push_back(str);
-    }
-
-    // a bit more stuff
-    if (you.species == SP_OGRE || you.species == SP_TROLL
-        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
-    {
-        mutations.emplace_back("unfitting armour");
-    }
-
-    if (species_can_swim(you.species))
-    {
-        mutations.push_back(_annotate_form_based("amphibious",
-                                            !form_likes_water()));
-    }
-
-    if (species_arm_count(you.species) > 2)
-    {
-        mutations.push_back(_annotate_form_based(
-            make_stringf("%d rings", you.arm_count()),
-            !get_form()->slot_available(EQ_RING_EIGHT)));
-    }
-
-    if (you.can_water_walk())
-        mutations.emplace_back("walk on water");
-
-    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
-        mutations.emplace_back("reduced essence");
-
-    string current;
-    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const mutation_type mut = static_cast<mutation_type>(i);
-        if (!you.has_mutation(mut))
-            continue;
-
-        const int current_level = you.get_mutation_level(mut);
-        const int base_level = you.get_base_mutation_level(mut);
-        const bool lowered = current_level < base_level;
-        const int temp_levels = you.get_base_mutation_level(mut, false, true, false); // only temp levels
-        const int ordinary_levels = you.get_base_mutation_level(mut, true, false, true); // excluding temp levels
-
-        const int max_levels = mutation_max_levels(mut);
-
-        current = mutation_name(mut);
-
-        if (max_levels > 1)
-        {
-            // add on any numeric levels
-            ostringstream ostr;
-            ostr << " ";
-            if (ordinary_levels == 0) // only temporary levels are present
-                ostr << temp_levels;
-            else
-            {
-                // at least some non-temporary levels
-                ostr << ordinary_levels;
-                if (temp_levels)
-                    ostr << "[+" << temp_levels << "]";
-            }
-            current += ostr.str();
-        }
-
-        // bracket the whole thing
-        if (ordinary_levels == 0)
-            current = "[" + current + "]";
-
-        if (!current.empty())
-        {
-            if (current_level == 0) // suppressed by form
-                current = "(" + current + ")";
-            if (lowered)
-                current = "<darkgrey>" + current + "</darkgrey>";
-            mutations.push_back(current);
-        }
-    }
-
-    if (you.racial_ac(false))
-        mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
-
-    if (mutations.empty())
-        mtext += "no striking features";
-    else
-    {
-        mtext += comma_separated_line(mutations.begin(), mutations.end(),
-                                     ", ", ", ");
-    }
-    return mtext;
-}
-
 /// Creates rows of short descriptions for current status effects, mutations,
 /// and runes/Orbs of Zot.
 string _status_mut_rune_list(int sw)
@@ -2695,7 +2576,7 @@ string _status_mut_rune_list(int sw)
     // print mutation information
     text += "<w>A:</w> ";
 
-    text += mutation_overview();
+    text += terse_mutation_list();
 
     // print the Orb
     if (player_has_orb())
