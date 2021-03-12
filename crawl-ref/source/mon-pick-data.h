@@ -396,7 +396,6 @@ static const pop_entry pop_slime[] =
   {  1,  5,  200, RISE, MONS_DEATH_OOZE },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
-  {  1,  5, 2750, FLAT, MONS_NO_MONSTER }, // Old ooze and jelly weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
