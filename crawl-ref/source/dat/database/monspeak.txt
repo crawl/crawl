@@ -2751,6 +2751,10 @@ w:50
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
 @The_monster@ says, "I hope the rune isn't sticky."
+
+@The_monster@ says, "A rock stubbed itself on my toe. I hate that."
+
+@The_monster@ says, "What's so magical about quicksilver, anyway?"
 %%%%
 Snake Donald
 
