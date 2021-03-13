@@ -2919,16 +2919,10 @@ static void _cast_druids_call(const monster* mon)
 
 static void _cast_goad_beasts(const monster* mon)
 {
-    bool goaded = false;
+    // Gain moves from the goad.
     for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!_valid_goad_beasts_target(mon, *mi))
-            continue;
-
-        // Gain a move from the goad.
-        mi->gain_energy(EUT_MOVE);
-        goaded = true;
-    }
+        if (_valid_goad_beasts_target(mon, *mi))
+            mi->gain_energy(EUT_MOVE);
 }
 
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
