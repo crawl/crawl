@@ -560,7 +560,6 @@ ironbound_convoker MONS_IRONBOUND_CONVOKER
 ironbound_preserver MONS_IRONBOUND_PRESERVER
 ironbound_frostheart MONS_IRONBOUND_FROSTHEART
 ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
-ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -822,6 +821,7 @@ ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 ogre_mage MONS_OGRE_MAGE
+ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1
 
 ## Plants ('P')
