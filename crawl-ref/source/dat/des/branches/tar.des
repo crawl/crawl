@@ -104,7 +104,7 @@ NAME:   lemuel_nasty_pond
 DEPTH:  Tar
 TAGS:   no_pool_fixup no_rotate
 MONS:   withered plant
-MONS:   oklob plant, death ooze, necrophage, blizzard demon / green death
+MONS:   oklob plant, ghoul, necrophage, blizzard demon / green death
 SUBST:  W:w.
 SUBST:  Z:w.
 SUBST:  w = w .:1
@@ -243,7 +243,7 @@ DEPTH:   Tar, !Tar:$
 MONS:    soul eater, patrolling curse skull
 MONS:    skeletal warrior / phantasmal warrior w:6 / \
          shadow wraith w:4 / guardian mummy w:4 / \
-         ushabti w:2 / death ooze w:4
+         ushabti w:2 / ghoul w:4
 KMONS:   45 = vampire knight
 KMONS:   67 = vampire mage
 KMONS:   89 = flayed ghost

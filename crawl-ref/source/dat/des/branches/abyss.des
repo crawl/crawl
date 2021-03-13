@@ -596,7 +596,7 @@ NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
 MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
 MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
-MONS:    large abomination / ghoul / death ooze w:2, ancient zyme
+MONS:    large abomination / ghoul, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
 KMONS:   9 = floating eye / chaos spawn / anaconda perm_ench:shapeshifter w:2

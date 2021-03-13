@@ -408,7 +408,7 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon simulacrum / spriggan simulacrum / water elemental /\
                     ice devil / merfolk aquamancer / frost giant",
                 "death cob / death yak / death drake w:5 / deep elf death mage /\
-                    death knight / death ooze / green death",
+                    death knight / green death",
                 -- Misc
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",

@@ -286,6 +286,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
     AXED_MON(MONS_MACABRE_MASS, "macabre mass")
     AXED_MON(MONS_EYE_OF_DRAINING, "eye of draining")
+    AXED_MON(MONS_DEATH_OOZE, "death ooze")
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -3576,19 +3577,6 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
     I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB,
     {TILEP_MONS_AZURE_JELLY}, TILE_ERROR
-},
-
-{
-    MONS_DEATH_OOZE, 'J', MAGENTA, "death ooze",
-    M_SEE_INVIS | M_UNBLINDABLE | M_EAT_DOORS,
-    MR_RES_COLD | mrd(MR_RES_ACID, 3),
-    15, MONS_JELLY, MONS_DEATH_OOZE, MH_UNDEAD, 120,
-    { {AT_HIT, AF_DRAIN, 32}, {AT_HIT, AF_PLAIN, 32}, AT_NO_ATK, AT_NO_ATK },
-    11, 495,
-    2, 4, MST_NO_SPELLS, false, S_SILENT,
-    I_BRAINLESS, HT_LAND, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_BLOB,
-    {TILEP_MONS_DEATH_OOZE}, TILE_ERROR
 },
 
 {

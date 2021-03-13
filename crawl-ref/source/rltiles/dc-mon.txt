@@ -758,7 +758,6 @@ quicksilver_ooze MONS_QUICKSILVER_OOZE
 %rim 1
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
-death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
 %sdir mon/unique

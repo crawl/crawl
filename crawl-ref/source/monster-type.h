@@ -156,7 +156,9 @@ enum monster_type                      // env.mons[].type
     MONS_QUICKSILVER_OOZE,
 #endif
     MONS_AZURE_JELLY,
+#if TAG_MAJOR_VERSION == 34
     MONS_DEATH_OOZE,
+#endif
     MONS_ACID_BLOB,
     MONS_SLIME_CREATURE,
 #if TAG_MAJOR_VERSION == 34

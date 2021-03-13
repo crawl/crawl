@@ -845,10 +845,6 @@ death knight
 
 A warrior-priest of Yredelemnul, chanting fearful supplications to its dark god.
 %%%%
-death ooze
-
-A putrid undead mass of decaying flesh that spurts pestilent slime.
-%%%%
 death scarab
 
 A hideous swarming undead insect, exuding death and decay and feeding on the

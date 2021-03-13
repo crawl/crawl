@@ -148,7 +148,7 @@ function species_mock(e)
   elseif you.race() == "Gargoyle" then
     return "earth elemental"
   elseif you.race() == "Ghoul" then
-    return "death ooze"
+    return "necrophage"
   elseif you.race() == "Kobold" then
     return "boggart"
   elseif you.race() == "Merfolk" then
@@ -170,7 +170,7 @@ function species_mock(e)
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then
-    return "necrophage"
+    return "ugly thing"
   elseif you.race() == "Vampire" then
     return "tyrant leech"
   elseif you.race() == "Vine Stalker" then

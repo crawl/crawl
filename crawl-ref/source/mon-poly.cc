@@ -194,8 +194,7 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
 static bool _jiyva_slime_target(monster_type targetc)
 {
     return you_worship(GOD_JIYVA)
-           && (targetc == MONS_DEATH_OOZE
-              || targetc == MONS_OOZE
+           && (targetc == MONS_OOZE
               || targetc == MONS_JELLY
               || targetc == MONS_SLIME_CREATURE
               || targetc == MONS_ACID_BLOB
@@ -605,7 +604,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         targetc = target_types[random2(target_types.size())];
     }
 
-    if (!_valid_morph(mons, targetc))
+    if (power != PPT_SLIME && !_valid_morph(mons, targetc))
         return simple_monster_message(*mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
@@ -697,9 +696,6 @@ void slimify_monster(monster* mon)
     if (feat_is_water(env.grid(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
-    if (mon->holiness() & MH_UNDEAD)
-        target = MONS_DEATH_OOZE;
-
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, env.grid(mon->pos())))
     {
@@ -710,7 +706,7 @@ void slimify_monster(monster* mon)
     record_monster_defeat(mon, KILL_SLIMIFIED);
     remove_unique_annotation(mon);
 
-    monster_polymorph(mon, target);
+    monster_polymorph(mon, target, PPT_SLIME);
 
     mon->attitude = ATT_STRICT_NEUTRAL;
 

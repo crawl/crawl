@@ -308,7 +308,7 @@ function choose_mset_3(e)
     e.kmons("1 = jelly w:15 / ooze / slime creature w:30 /\
                floating eye w:2 / golden eye w:5 / quicksilver ooze w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
-               death ooze / azure jelly w:5 / great orb of eyes w:5 /\
+               rockslime / azure jelly w:5 / great orb of eyes w:5 /\
                glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then
@@ -437,7 +437,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = jelly w:5 / slime creature w:30 /\
                floating eye w:2 / golden eye w:4 / quicksilver ooze w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
-               death ooze / azure jelly / great orb of eyes w:4 /\
+               rockslime / azure jelly / great orb of eyes w:4 /\
                glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then

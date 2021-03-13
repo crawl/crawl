@@ -3238,7 +3238,7 @@ ENDMAP
 NAME:   minmay_acid_items
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  Depths
-MONS:   slime creature w:30 / death ooze / azure jelly / acid blob w:5
+MONS:   slime creature w:30 / rockslime / azure jelly / acid blob w:5
 MONS:   acid blob
 MAP
   ...........
