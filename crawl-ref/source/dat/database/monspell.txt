@@ -110,6 +110,10 @@ Creeping Frost cast
 
 @The_monster@ calls freezing cold from the walls.
 %%%%
+Goad Beasts cast
+
+@The_monster@ goads on nearby beasts.
+%%%%
 ironbound thunderhulk cast
 
 Electricity crackles from @the_monster@'s apparatus.

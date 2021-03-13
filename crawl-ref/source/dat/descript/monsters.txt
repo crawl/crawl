@@ -1504,7 +1504,7 @@ accepting a portion of the injuries inflicted upon them.
 %%%%
 ironbound beastmaster
 
-A cruel and wild ogre who growls in the language of the wild. It conditions
+A cruel and wild brute who growls in the language of the untamed. It conditions
 beasts for combat with nets and malice, and spurs them to fight its foes.
 %%%%
 jackal

@@ -2929,9 +2929,6 @@ static void _cast_goad_beasts(const monster* mon)
         mi->gain_energy(EUT_MOVE);
         goaded = true;
     }
-
-    if (goaded)
-        simple_monster_message(*mon, " goads on nearby beasts.");
 }
 
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
