@@ -1814,7 +1814,7 @@ DEPTH:  Depths
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye / eye of draining w:2
+MONS:   golden eye
 MONS:   glowing orange brain
 MAP
 ...................................
@@ -4052,7 +4052,7 @@ MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
 MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS:    eye of draining
+MONS:    floating eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage

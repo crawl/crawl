@@ -3178,13 +3178,13 @@ ENDMAP
 NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Depths, !Depths:$
-MONS:    large slime creature, great orb of eyes, eye of draining
+MONS:    large slime creature, great orb of eyes
 KMASK:   %$de = opaque
 KITEM:   R = gold
 ITEM:    scroll of teleportation q:2 / wand of digging
 ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
-SUBST:   J = 1111111123
+SUBST:   J = 1111111122
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
 NSUBST:  ! = 1:d / * = %$
@@ -3275,7 +3275,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, eye of draining, floating eye
+MONS:   golden eye, ophan, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate

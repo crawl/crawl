@@ -38,8 +38,8 @@ function st_box_setup(e)
   e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
                iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
-               catoblepas / moth of wrath w:1 / ghost moth w:1 /\
-               eye of draining / floating eye / eye of devastation /\
+               catoblepas / moth of wrath w:1 / ghost moth /\
+               floating eye / eye of devastation /\
                glowing orange brain / nagaraja / guardian serpent /\
                vampire knight / vampire mage / deep elf sorcerer /\
                deep elf death mage / deep elf demonologist /\
@@ -707,7 +707,7 @@ ENDMAP
 
 NAME:   dpeg_vaults_hating_casters
 TAGS:   vaults_hard
-MONS:   eye of draining
+MONS:   ghost moth
 SUBST:  % = %%%$* , * = **|
 NSUBST: . = 6:0 / *:.
 SUBST:  0 = 00009, 8 = 889

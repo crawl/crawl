@@ -2377,20 +2377,19 @@ MAP
        xx@xx
 ENDMAP
 
-NAME:   trog_eyes_of_draining
+NAME:   trog_antimagical
 TAGS:   uniq_altar_trog temple_overflow_1 temple_overflow_trog patrolling
 DEPTH:  D:3-9
 WEIGHT: 4
-MONS:   eye of draining
 : if you.absdepth() > 5 and crawl.coinflip() then
-KMONS:  2 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
+KMONS:  1 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
         ogre god:trog ; giant spiked club ego:antimagic ident:type | w:5 giant spiked club / \
         orc warrior god:trog ; halberd ego:antimagic ident:type | war axe ego:antimagic ident:type | \
         flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
         kobold brigand god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
         rapier ego:antimagic ident:type | rapier
 : else
-KMONS:  2 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
+KMONS:  1 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
         war axe ego:antimagic ident:type | any weapon / \
         kobold god:trog ; short sword ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
         club ego:antimagic ident:type | whip ego:antimagic ident:type | any weapon / \
@@ -2399,12 +2398,11 @@ KMONS:  2 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimag
         halberd ego:antimagic ident:type | whip ego:antimagic ident:type | halberd | any weapon
 : end
 KFEAT:  _ = altar_trog
-NSUBST: 1 = 1:1 / 1 = 1. / 1 = 1.. / *:.
 MAP
   xxxxx
- xx111xx
-xx11_11xx
-x112.211x
+ xx.1.xx
+xx.._..xx
+x..1.1..x
 x.......x
 x.G...G.x
 xx.....xx

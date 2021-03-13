@@ -3488,11 +3488,8 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
         dec_mp(amount);
-        if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
-                        || agent()->type == MONS_GHOST_MOTH))
-        {
+        if (agent() && agent()->type == MONS_GHOST_MOTH)
             agent()->heal(amount);
-        }
         obvious_effect = true;
         break;
     }
@@ -5690,11 +5687,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                  apostrophise(mon->name(DESC_THE)).c_str());
         }
 
-        if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
-                        || agent()->type == MONS_GHOST_MOTH))
-        {
+        if (agent() && agent()->type == MONS_GHOST_MOTH)
             agent()->heal(dur / BASELINE_DELAY);
-        }
         obvious_effect = true;
         break;
     }

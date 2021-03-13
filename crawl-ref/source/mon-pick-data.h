@@ -57,7 +57,6 @@ static const pop_entry pop_d[] =
   {  7, 17,  192, PEAK, MONS_HORNET },
   {  8, 17,  675, SEMI, MONS_TWO_HEADED_OGRE },
   {  8, 18,  335, SEMI, MONS_WYVERN },
-  {  8, 18,  230, PEAK, MONS_EYE_OF_DRAINING },
   {  9, 14,  850, SEMI, MONS_YAK },
   {  9, 17,  825, SEMI, MONS_TROLL },
   {  9, 19,  192, PEAK, MONS_VAMPIRE },
@@ -385,7 +384,6 @@ static const pop_entry pop_slime[] =
 { // Slime Pits
   {  1,  5, 2000, FLAT, MONS_SLIME_CREATURE },
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
-  {  1,  5,  515, FLAT, MONS_EYE_OF_DRAINING },
   {  1,  5,  515, FLAT, MONS_AZURE_JELLY },
   {  1,  5,  515, FLAT, MONS_ROCKSLIME },
   {  1,  5,  515, FLAT, MONS_QUICKSILVER_OOZE },
@@ -837,7 +835,6 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   12, FLAT, MONS_VAMPIRE_MAGE },
   {  1,  5,    3, FLAT, MONS_DANCING_WEAPON },
   {  1,  5,   21, FALL, MONS_JELLY },
-  {  1,  5,   46, FLAT, MONS_EYE_OF_DRAINING },
   {  1,  5,    8, FLAT, MONS_SHINING_EYE },
   {  1,  5,   33, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,    8, FLAT, MONS_EYE_OF_DEVASTATION },
@@ -884,7 +881,6 @@ static const pop_entry pop_pan[] =
 { // Pandemonium - only used for 1 in 40 random Pan spawns (the rest are drawn
   // from each floor's monster list), and for the Orb run (where monsters are
   // picked randomly without checking rarity).
-  {  1,  1,    4, FLAT, MONS_EYE_OF_DRAINING },
   {  1,  1,    4, FLAT, MONS_GOLDEN_EYE },
   {  1,  1,    4, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  1,    4, FLAT, MONS_GLOWING_ORANGE_BRAIN },

@@ -285,6 +285,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_PORCUPINE, "porcupine")
     AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
     AXED_MON(MONS_MACABRE_MASS, "macabre mass")
+    AXED_MON(MONS_EYE_OF_DRAINING, "eye of draining")
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -3263,19 +3264,6 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
     I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB,
     {TILEP_MONS_FLOATING_EYE}, TILE_ERROR
-},
-
-{
-    MONS_EYE_OF_DRAINING, 'G', LIGHTGREY, "eye of draining",
-    M_SEE_INVIS | M_FLIES,
-    MR_NO_FLAGS,
-    10, MONS_FLOATING_EYE, MONS_EYE_OF_DRAINING, MH_NATURAL, 60,
-    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    7, 385,
-    3, 1, MST_DRAIN_GAZE, false, S_SILENT,
-    I_BRAINLESS, HT_LAND, 5, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_MEDIUM, MON_SHAPE_ORB,
-    {TILEP_MONS_EYE_OF_DRAINING}, TILE_ERROR
 },
 
 {

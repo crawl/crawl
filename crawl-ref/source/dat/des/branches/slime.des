@@ -103,7 +103,7 @@ ENDMAP
 NAME:   minmay_slime_entry_eyes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 2
-MONS:   eye of devastation, eye of draining
+MONS:   eye of devastation, floating eye
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
 MAP

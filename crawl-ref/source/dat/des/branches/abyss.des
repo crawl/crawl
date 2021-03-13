@@ -1152,7 +1152,7 @@ ENDMAP
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
-KMONS:  2 = golden eye / eye of draining w:4 / floating eye w:2
+KMONS:  2 = golden eye / floating eye w:2
 KMONS:  3O = flying skull
 KMONS:  4 = large abomination / small abomination w:6
 KMONS:  5 = cacodemon

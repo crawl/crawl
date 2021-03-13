@@ -1941,10 +1941,6 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
-    { MONS_EYE_OF_DRAINING, { {0, 0, []() {
-        return branch_has_monsters(you.where_are_you)
-            || !vault_mon_types.empty();
-    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
     { MONS_MELIAI,          { {}, {{ BAND_MELIAI, {2, 3} }}}},
     { MONS_DANCING_WEAPON,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;

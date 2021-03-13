@@ -1105,10 +1105,6 @@ eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.
 %%%%
-eye of draining
-
-A hovering horror that waxes strong on magic.
-%%%%
 faun
 
 A hybrid with the torso of a human atop the forelegs of a goat. It is fabled

@@ -163,7 +163,9 @@ enum monster_type                      // env.mons[].type
     MONS_PULSATING_LUMP,
 #endif
     MONS_FLOATING_EYE,
+#if TAG_MAJOR_VERSION == 34
     MONS_EYE_OF_DRAINING,
+#endif
     MONS_SHINING_EYE,
     MONS_EYE_OF_DEVASTATION,
     MONS_GREAT_ORB_OF_EYES,
