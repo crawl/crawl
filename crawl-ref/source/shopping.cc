@@ -853,16 +853,16 @@ static string _hyphenated_letters(int how_many, char first)
 
 enum shopping_order
 {
-    ORDER_DEFAULT,
+    ORDER_TYPE,
+    ORDER_DEFAULT = ORDER_TYPE,
     ORDER_PRICE,
     ORDER_ALPHABETICAL,
-    ORDER_TYPE,
     NUM_ORDERS
 };
 
 static const char * const shopping_order_names[NUM_ORDERS] =
 {
-    "default", "price", "name", "type"
+    "type", "price", "name"
 };
 
 static shopping_order operator++(shopping_order &x)
@@ -968,6 +968,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     set_tag("shop");
 
     init_entries();
+    resort();
 
     update_help();
 
@@ -1168,13 +1169,27 @@ void ShopMenu::resort()
 {
     switch (order)
     {
-    case ORDER_DEFAULT:
-        sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b)
-             {
-                 return a->data < b->data;
-             });
+    case ORDER_TYPE:
+    {
+        const bool id = shoptype_identifies_stock(shop.type);
+        // Using a map to sort reduces the number of item->name() calls.
+        multimap<const string, MenuEntry *> list;
+        for (const auto entry : items)
+        {
+            const auto item = dynamic_cast<ShopEntry*>(entry)->item;
+            if (is_known_artefact(*item))
+                list.insert({item->name(DESC_QUALNAME, false, id), entry});
+            else
+            {
+                list.insert({item->name(DESC_DBNAME, false, id) + " "
+                     + item->name(DESC_PLAIN, false, id), entry});
+            }
+        }
+        items.clear();
+        for (auto &entry : list)
+            items.push_back(entry.second);
         break;
+    }
     case ORDER_PRICE:
         sort(begin(items), end(items),
              [this](MenuEntry* a, MenuEntry* b)
@@ -1190,18 +1205,6 @@ void ShopMenu::resort()
                  const bool id = shoptype_identifies_stock(shop.type);
                  return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
                         < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
-             });
-        break;
-    case ORDER_TYPE:
-        sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b) -> bool
-             {
-                 const auto ai = dynamic_cast<ShopEntry*>(a)->item;
-                 const auto bi = dynamic_cast<ShopEntry*>(b)->item;
-                 if (ai->base_type == bi->base_type)
-                     return ai->sub_type < bi->sub_type;
-                 else
-                     return ai->base_type < bi->base_type;
              });
         break;
     case NUM_ORDERS:
