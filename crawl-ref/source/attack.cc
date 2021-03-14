@@ -1231,8 +1231,6 @@ int attack::calc_damage()
                 damage += random2(1 + wpn_damage_plus);
             else
                 damage -= random2(1 - wpn_damage_plus);
-
-            damage -= 1 + random2(3);
         }
 
         damage_max += attk_damage;
