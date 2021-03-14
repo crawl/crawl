@@ -969,6 +969,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     set_tag("shop");
 
     init_entries();
+    resort();
 
     update_help();
 
@@ -1170,11 +1171,27 @@ void ShopMenu::resort()
     switch (order)
     {
     case ORDER_DEFAULT:
+        {
+        const bool id = shoptype_identifies_stock(shop.type);
         sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b)
+             [id](MenuEntry* a, MenuEntry* b)
              {
-                 return a->data < b->data;
+                auto a_item = dynamic_cast<ShopEntry*>(a)->item;
+                auto b_item = dynamic_cast<ShopEntry*>(b)->item;
+
+                // "fizzy potion" is "potion", "potion of curing" is
+                // "potion of curing".
+                int cmp = a_item->name(DESC_DBNAME, false, id)
+                    .compare(b_item->name(DESC_DBNAME, false, id));
+
+                if (cmp)
+                    return cmp < 0;
+
+                // "fizzy potion" emerges unchanged.
+                return a_item->name(DESC_PLAIN, false, id)
+                    < b_item->name(DESC_PLAIN, false, id);
              });
+        }
         break;
     case ORDER_PRICE:
         sort(begin(items), end(items),
