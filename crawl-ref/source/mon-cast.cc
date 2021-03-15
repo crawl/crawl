@@ -2458,22 +2458,24 @@ static void _setup_creeping_frost(bolt &beam, const monster &, int pow)
     beam.name = "frost";
 }
 
-static void _creeping_frost_freeze(actor &a, bolt &beam)
+static bool _creeping_frost_freeze(coord_def p, bolt &beam)
 {
     beam.hit_verb = "grips"; // We can't do this in _setup_creeping_frost,
                              // since hit_verb isn't copied. XXX: think about
                              // the consequences of copying it in bolt_parent_init
-    beam.source = a.pos();
-    beam.target = a.pos();
+    beam.source = p;
+    beam.target = p;
     beam.fire();
+    return beam.explosion_draw_cell(p);
 }
 
 /// Cast the spell Creeping Frost, freezing any of the caster's foes that are adjacent to walls.
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
 {
+    bool visible_effect = false;
     // Freeze the player.
     if (!caster.wont_attack() && _near_visible_wall(caster, you))
-        _creeping_frost_freeze(you, beam);
+        visible_effect |= _creeping_frost_freeze(you.pos(), beam);
 
     // Freeze the player's friends.
     for (vision_iterator vi(caster); vi; ++vi)
@@ -2486,7 +2488,13 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
         if (!mon || mons_aligned(&caster, mon))
             continue;
         if (_near_visible_wall(caster, *mon))
-            _creeping_frost_freeze(*mon, beam);
+            visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
+    }
+    if (visible_effect)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(25);
     }
 }
 
