@@ -495,7 +495,7 @@ ENDMAP
 ### Ecumenical altars ########################################################
 
 NAME:   chequers_ecumenical_altar_simple
-DEPTH:  D:2-3
+DEPTH:  D:1-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
@@ -509,7 +509,7 @@ MAP
 ENDMAP
 
 NAME: chequers_ecumenical_altar_simple_redux
-DEPTH: D:2-3
+DEPTH: D:1-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
@@ -525,7 +525,7 @@ MAP
 ENDMAP
 
 NAME:   chequers_ecumenical_altar_grove
-DEPTH:  D:2-3
+DEPTH:  D:1-3
 TAGS:   uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 WEIGHT: 5
@@ -556,7 +556,7 @@ MAP
 ENDMAP
 
 NAME: chequers_ecumenical_altar_lobes
-DEPTH: D:2-3
+DEPTH: D:1-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
 CHANCE: 10%
 WEIGHT: 5
@@ -583,7 +583,7 @@ xxxtGpppp..ppppGtxxx
 ENDMAP
 
 NAME: chequers_ecumenical_altar_twisty
-DEPTH: D:2-3
+DEPTH: D:1-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar transparent
 CHANCE: 10%
 WEIGHT: 5
@@ -604,7 +604,7 @@ xx.x
 ENDMAP
 
 NAME: chequers_ecumenical_altar_island
-DEPTH: D:2-3
+DEPTH: D:1-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
 CHANCE: 10%
 KFEAT: _ = altar_ecumenical
