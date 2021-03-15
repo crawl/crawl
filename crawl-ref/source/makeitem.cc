@@ -1364,7 +1364,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        const int depth_mod = random2(1 + item_level);
         int tries = 500;
 
         // If this item is created by Xom, keep looping until an
@@ -1372,8 +1371,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
         // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
-            // total weight:    597  if depth_mod < 4
-            //                  716  otherwise
+            // total weight:    750
             //                 -122  in sprint
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
@@ -1388,17 +1386,17 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_FOG,
                  32, SCR_BLINKING,
                  32, SCR_IMMOLATION,
+                 29, SCR_VULNERABILITY,
                  // [Cha] don't generate noise scrolls if in sprint
                  22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
-                 27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 14, SCR_SUMMONING,
+                 14, SCR_ACQUIREMENT,
+                 14, SCR_SILENCE,
+                 14, SCR_BRAND_WEAPON,
+                 14, SCR_TORMENT,
+                 14, SCR_HOLY_WORD);
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
@@ -1411,6 +1409,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
                                             1, 3);
 
     item.plus = 0;
+    
+    // Don't let monsters use ?summoning too early
+    if (item_level < 2 && item.sub_type == SCR_SUMMONING)
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 /// Choose a random spellbook type for the given level.
