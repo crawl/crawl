@@ -403,11 +403,11 @@ static const pop_entry pop_vaults[] =
   // Trying to keep total around 10,000 on each floor 1-4, roughly.
 
   // Easy enemies:
+  {  1,  4,  400, FALL, MONS_YAKTAUR },
   {  1,  4,  350, FALL, MONS_CENTAUR_WARRIOR },
-  {  1,  4,  350, FALL, MONS_YAKTAUR },
   {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
+  {  1,  4,  175, FALL, MONS_HARPY },
   {  1,  4,  100, FALL, MONS_BOGGART },
-  {  1,  4,  125, FALL, MONS_HARPY },
 
   {  1,  4,  200, FLAT, MONS_IRONBOUND_BEASTMASTER },
   {  1,  4,  800, FALL, MONS_IRONBOUND_BEASTMASTER },
@@ -416,30 +416,30 @@ static const pop_entry pop_vaults[] =
   {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   // Harder enemies:
   {  1,  4,  150, FLAT, MONS_ENTROPY_WEAVER },
-  {  1,  4, 1500, FLAT, MONS_IRONBOUND_CONVOKER },
-  {  1,  4, 1500, FLAT, MONS_IRONBOUND_PRESERVER },
+  {  1,  4, 1200, FLAT, MONS_IRONBOUND_CONVOKER },
+  {  1,  4, 1200, FLAT, MONS_IRONBOUND_PRESERVER },
   {  1,  4,  725, FLAT, MONS_IRONBOUND_FROSTHEART },
   {  1,  4,  525, FLAT, MONS_VAULT_WARDEN },
   {  1,  4,  525, RISE, MONS_VAULT_WARDEN },
-  {  1,  4,  200, FLAT, MONS_IRONBOUND_THUNDERHULK },
+  {  1,  4,  500, FLAT, MONS_IRONBOUND_THUNDERHULK },
   {  1,  4,  200, RISE, MONS_IRONBOUND_THUNDERHULK },
   {  1,  4,  150, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  4,  150, RISE, MONS_GREAT_ORB_OF_EYES },
   {  1,  4,   50, FLAT, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
-  {  1,  4,  100, FLAT, MONS_VERY_UGLY_THING },
+  {  1,  4,  150, FLAT, MONS_VERY_UGLY_THING },
   {  1,  4,  100, RISE, MONS_VERY_UGLY_THING },
   {  1,  4,  525, FLAT, MONS_WIZARD },
   {  1,  4,  525, RISE, MONS_WIZARD },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
   {  1,  4,   75, RISE, MONS_NECROMANCER },
-  {  1,  4,  400, FLAT, MONS_YAKTAUR_CAPTAIN },
+  {  1,  4,  500, FLAT, MONS_YAKTAUR_CAPTAIN },
   {  1,  4,  400, RISE, MONS_YAKTAUR_CAPTAIN },
-  {  1,  4,   50, FLAT, MONS_ORC_WARLORD },
+  {  1,  4,  100, FLAT, MONS_ORC_WARLORD },
   {  1,  4,   50, RISE, MONS_ORC_WARLORD },
   // Top-tier threats:
-  {  1,  4,  300, RISE, MONS_PEACEKEEPER },
-  {  1,  4,  250, RISE, MONS_SPHINX },
+  {  1,  4,  350, RISE, MONS_PEACEKEEPER },
+  {  1,  4,  300, RISE, MONS_SPHINX },
 
   // Vaults:5 enemies. These weights are very roughly based on
   // the monster frequency as of 0.26.

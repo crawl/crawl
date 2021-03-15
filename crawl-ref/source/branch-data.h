@@ -111,7 +111,7 @@ const Branch branches[NUM_BRANCHES] =
       "Vaults", "the Vaults", "Vaults",
       nullptr,
       LIGHTGREY, BROWN,
-      'V', { RUNE_VAULTS }, branch_noise::normal, 10 },
+      'V', { RUNE_VAULTS }, branch_noise::normal, 9 },
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
