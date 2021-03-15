@@ -302,7 +302,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that may knock back airborne targets.
+Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
 Cleansing Flame spell
 

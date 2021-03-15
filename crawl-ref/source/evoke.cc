@@ -370,9 +370,6 @@ static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 {
     int dist = 1 + random2(pow / 20);
 
-    if (victim->airborne())
-        dist++;
-
     if (victim->body_size(PSIZE_BODY) < SIZE_MEDIUM)
         dist++;
     else if (victim->body_size(PSIZE_BODY) > SIZE_BIG)

@@ -6544,7 +6544,7 @@ bool bolt::can_knockback(const actor &act, int dam) const
         return false;
 
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
+           || origin_spell == SPELL_CHILLING_BREATH && dam
            || origin_spell == SPELL_FORCE_LANCE && dam
            || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST && dam;
 }
