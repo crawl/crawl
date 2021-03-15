@@ -1513,6 +1513,8 @@ static int _num_items_wanted(int absdepth0)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
         return 10 + random2avg(85, 2); // rich level!
+    else if (absdepth0 < 3)
+        return 3 + roll_dice(3, 7); // thin loot on early floors
     else
         return 3 + roll_dice(3, 10);
 }
