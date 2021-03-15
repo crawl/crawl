@@ -1489,8 +1489,7 @@ ironbound thunderhulk
 
 A brutish figure, hastily armoured in scraps of leather and metal to combat
 a fearsome intruder. On its back is an antique, arcane 'lightning rod', which
-calls down thunder on distant foes, though it can't hit anything adjacent or
-even nearly adjacent.
+calls down thunder on distant foes, although it cannot hit nearby targets.
 %%%%
 ironbound convoker
 
