@@ -2482,6 +2482,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         if (mons && you.can_see(*mons) && mons->is_illusion())
         {
+            fail_check();
             simple_monster_message(*mons, "'s clone doesn't have a soul to enslave!");
             // Still costs a turn to gain the information.
             return spret::success;
