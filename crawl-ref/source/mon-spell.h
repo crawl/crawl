@@ -993,6 +993,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_NAGA_WARRIOR,
+      {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                               | MON_SPELL_NO_SILENT },
+      }
+    },
+
     // Shared with nagaraja.
     {  MST_NAGA_MAGE,
       {
