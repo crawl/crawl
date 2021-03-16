@@ -174,8 +174,13 @@ LUAFN(l_spells_fail)
     PLUARET(number, failure_rate_to_int(raw_spell_fail(spell)));
 }
 
-/*** The failure severity of the spell.
- * TODO: Document these numbers
+/*** The miscast severity of the spell as a number in [0,5].
+ * 0: light grey, no chance of damaging miscast
+ * 1: white, <= 10% max HP damage
+ * 2: yellow, <= 30% max HP damage
+ * 3: light red, <= 50% max HP damage
+ * 4: red, <= 70% max HP damage
+ * 5: magenta, > 70% max HP damage (potentially lethal)
  * @tparam string name
  * @treturn int
  * @function fail_severity

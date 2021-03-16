@@ -143,7 +143,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
-    if (you.species == SP_OCTOPODE)
+    if (species_arm_count(you.species) > 2)
         r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
     if (slot >= r1 && slot <= r2)
         return;
@@ -489,7 +489,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_VAMPIRISM:
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel a bloodthirsty glee!");
                     else
                         mpr("You feel a sense of dread.");
@@ -630,7 +630,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_VAMPIRISM:
                 if (showMsgs)
                 {
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel your glee subside.");
                     else
                         mpr("You feel the dreadful sensation subside.");
@@ -923,8 +923,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     case SPARM_PONDEROUSNESS:
     {
-        const string verb = you.species == SP_NAGA ? "slither" : "step";
-            mprf("That put a bit of spring back into your %s.", verb.c_str());
+        // XX can the noun here be derived from the species walking verb?
+        const string noun = you.species == SP_NAGA ? "slither" : "step";
+        mprf("That put a bit of spring back into your %s.", noun.c_str());
         break;
     }
 

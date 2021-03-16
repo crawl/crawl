@@ -280,7 +280,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    {   { 2, "Ashenzari will now reveal the unseen.",
+    {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
+             "Ashenzari reveals the structure of the dungeon to you.\n"
+             "Ashenzari shows you where magical portals lie.\n"
+             "Ashenzari prevents you from stumbling into unseen traps.\n"
+             "Ashenzari identifies your possessions." },
+        { 2, "Ashenzari will now reveal the unseen.",
              "Ashenzari will no longer reveal the unseen.",
              "Ashenzari reveals the unseen." },
         { 3, "Ashenzari will now keep your mind clear.",
@@ -699,7 +704,7 @@ void dec_penance(int val)
 // TODO: find out what this is duplicating & deduplicate it
 static bool _need_water_walking()
 {
-    return you.ground_level() && you.species != SP_MERFOLK
+    return you.ground_level() && !you.has_mutation(MUT_MERTAIL)
            && env.grid(you.pos()) == DNGN_DEEP_WATER;
 }
 

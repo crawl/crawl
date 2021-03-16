@@ -784,7 +784,7 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
     }
 
 #ifdef USE_TILE
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
     {
         const dungeon_feature_type new_grid = env.grid(you.pos());
         const dungeon_feature_type old_grid = env.grid(old_pos);

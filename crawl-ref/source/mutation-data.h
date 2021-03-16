@@ -844,7 +844,7 @@ static const mutation_def mut_data[] =
    "The barb on your tail seems less sharp."},
 },
 
-// Draconian only
+// Draconian/gargoyle only
 { MUT_BIG_WINGS, 4, 1, mutflag::good, true,
   "big wings",
 
@@ -1201,7 +1201,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-// Jiyva only mutations
+// Jiyva only mutations. (MUT_GELATINOUS_BODY is also used by Op)
 { MUT_GELATINOUS_BODY, 0, 3, mutflag::good | mutflag::jiyva, true,
   "gelatinous body",
 
@@ -2093,6 +2093,30 @@ static const mutation_def mut_data[] =
    "You feel very comfortable in water.", ""},
   {"You feel less comfortable in water.",
    "You feel less comfortable in water.", ""},
+},
+
+{ MUT_TENTACLE_ARMS, 0, 1, mutflag::good, true,
+  "tentacles",
+
+  {"You have tentacles for arms and can constrict enemies.", "", ""},
+  {"Your arms feel tentacular.", "", ""},
+  {"Your arms no longer feel tentacular.", "", ""},
+},
+
+{ MUT_VAMPIRISM, 0, 2, mutflag::good, false,
+  "vampiric",
+
+  {"You are afflicted with vampirism.", "You are afflicted with vampirism and can become a bat while bloodless.", ""},
+  {"You feel a craving for blood.", "You can now turn into a vampire bat when bloodless.", ""},
+  {"Your craving for blood subsides.", "You can no longer turn into a bat.", ""},
+},
+
+{ MUT_MERTAIL, 0, 1, mutflag::good, true,
+  "mertail",
+
+  {"Your lower body shifts to a powerful aquatic tail in water.", "", ""},
+  {"Your legs feel aquatic.", "", ""},
+  {"Your legs no longer feel aquatic."},
 },
 
 };

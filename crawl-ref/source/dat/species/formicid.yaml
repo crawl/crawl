@@ -4,6 +4,8 @@ name: "Formicid"
 genus: "Ant"
 difficulty: Advanced
 difficulty_priority: 70
+species_flags: # n.b. ants have hair
+  - SPF_NO_BONES
 aptitudes:
   xp: 1
   hp: 0

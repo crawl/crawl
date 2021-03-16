@@ -467,7 +467,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         fall_into_a_pool(new_grid);
 
     // called after fall_into_a_pool, in case of emergency untransform
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
         merfolk_check_swimming(stepped);
 
     if (you.ground_level())
@@ -718,19 +718,18 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     if (temp && !get_form()->slot_available(eq))
         return MB_FALSE;
 
+    // handles incorrect ring slots vs species
+    if (species_bans_eq(you.species, eq))
+        return MB_FALSE;
+
     switch (eq)
     {
+    case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
-
-    case EQ_RING_EIGHT:
-        if (you.get_mutation_level(MUT_MISSING_HAND))
-            return MB_FALSE;
-        // intentional fallthrough
     case EQ_RING_ONE:
     case EQ_RING_TWO:
     case EQ_RING_THREE:
@@ -738,7 +737,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
+        return MB_TRUE;
 
     case EQ_WEAPON:
     case EQ_STAFF:
@@ -821,9 +820,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
 bool player_has_feet(bool temp, bool include_mutations)
 {
-    if (you.species == SP_NAGA
+    if (you.has_mutation(MUT_CONSTRICTING_TAIL)
         || you.has_mutation(MUT_PAWS) // paws are not feet?
-        || you.species == SP_OCTOPODE
+        || you.has_tentacles(temp)
         || you.fishtail && temp)
     {
         return false;
@@ -1126,7 +1125,7 @@ static int _player_bonus_regen()
 bool regeneration_is_inhibited()
 {
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || (you.species == SP_VAMPIRE && !you.vampire_alive))
+        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
@@ -1161,7 +1160,7 @@ int player_regen()
     rr = max(1, rr);
 
     // Bonus regeneration for alive vampires.
-    if (you.species == SP_VAMPIRE && you.vampire_alive)
+    if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
         rr += 20;
 
     if (you.duration[DUR_COLLAPSE])
@@ -1320,8 +1319,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         rc += get_form()->res_cold();
 
-        if (you.species == SP_VAMPIRE && !you.vampire_alive)
-                rc += 2;
+        // XX temp?
+        if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
+            rc += 2;
     }
 
     if (items)
@@ -1470,7 +1470,7 @@ bool player_res_torment(bool random)
     }
 
     return get_form()->res_neg() == 3
-           || you.species == SP_VAMPIRE && !you.vampire_alive
+           || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
            || you.petrified()
 #if TAG_MAJOR_VERSION == 34
            || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
@@ -1489,19 +1489,8 @@ bool player_kiku_res_torment()
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
-    switch (you.undead_state(temp))
-    {
-        case US_ALIVE:
-            break;
-        case US_UNDEAD: // ghouls, mummies, and lichform
-            return 3;
-        case US_SEMI_UNDEAD: // vampire
-            if (!you.vampire_alive) // XXX: && temp?
-                return 3;
-            break;
-    }
-
     if (you.is_nonliving(temp)
+        || you.is_lifeless_undead(temp || you.undead_state() == US_SEMI_UNDEAD) // XX: ugly, can this be cleaned up?
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -1693,14 +1682,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 {
     int pl = 0;
 
-    // Hunger is temporary, true, but that's something you can control,
-    // especially as life protection only increases the hungrier you
-    // get.
-    if (you.species == SP_VAMPIRE && !you.vampire_alive)
-            pl = 3;
+    // XX temp?
+    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
+        pl = 3;
 
-    // Same here. Your piety status, and, hence, TSO's protection, is
-    // something you can more or less control.
+    // piety-based rN doesn't count as temporary (XX why)
     if (you_worship(GOD_SHINING_ONE))
     {
         if (you.piety >= piety_breakpoint(1))
@@ -1755,22 +1741,17 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // want to go past 6 (see below). -- bwr
 int player_movement_speed()
 {
-    int mv = 10;
-
-    // transformations
-    if (you.form == transformation::bat)
-        mv = 5; // but allowed minimum is six
-    else if (you.form == transformation::pig)
-        mv = 7;
-    else if (you.form == transformation::wisp)
-        mv = 8;
-    else if (you.form == transformation::hydra && you.in_water())
-        mv = 6;
+    int mv = you.form == transformation::none
+        ? 10
+        : form_base_movespeed(you.form);
 
     if (you.in_water())
     {
-        if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+        if (you.form == transformation::hydra
+            || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+        {
             mv -= 4;
+        }
         else if (!you.can_swim())
             mv += 6; // Wading through water is very slow.
     }
@@ -2702,22 +2683,6 @@ void level_change(bool skip_attribute_increase)
 
             switch (you.species)
             {
-            case SP_VAMPIRE:
-                if (you.experience_level == 3)
-                {
-                    if (you.vampire_alive)
-                    {
-                        mprf(MSGCH_INTRINSIC_GAIN, "If you were bloodless "
-                             "you could now transform into a vampire bat.");
-                    }
-                    else
-                    {
-                        mprf(MSGCH_INTRINSIC_GAIN,
-                             "You can now transform into a vampire bat.");
-                    }
-                }
-                break;
-
             case SP_NAGA:
                 if (!(you.experience_level % 3))
                 {
@@ -2969,8 +2934,6 @@ int player_stealth()
         stealth /= 3;
 
     const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
-    const item_def *boots = you.slot_item(EQ_BOOTS, false);
-
     if (arm)
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
@@ -2984,7 +2947,7 @@ int player_stealth()
     }
 
     stealth += STEALTH_PIP * you.scan_artefacts(ARTP_STEALTH);
-
+    stealth += STEALTH_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_STEALTH);
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
 
     if (you.duration[DUR_STEALTH])
@@ -3016,8 +2979,8 @@ int player_stealth()
         stealth -= STEALTH_PIP;
 
     // Bloodless vampires are stealthier.
-    if (you.species == SP_VAMPIRE && !you.vampire_alive)
-            stealth += STEALTH_PIP * 2;
+    if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
+        stealth += STEALTH_PIP * 2;
 
     if (!you.airborne())
     {
@@ -3028,8 +2991,6 @@ int player_stealth()
             else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
-        else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
         else if (you.has_mutation(MUT_PAWS))
@@ -3245,7 +3206,7 @@ void display_char_status()
     else if (you.haloed())
         mpr("An external divine halo illuminates you.");
 
-    if (you.species == SP_VAMPIRE)
+    if (you.has_mutation(MUT_VAMPIRISM))
         _display_vampire_status();
 
     status_info inf;
@@ -4144,7 +4105,7 @@ void handle_player_poison(int delay)
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
-    if (you.is_nonliving() || (you.undead_state() && !you.vampire_alive))
+    if (you.is_nonliving() || you.is_lifeless_undead())
         return;
 
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
@@ -4531,33 +4492,21 @@ void dec_disease_player(int delay)
     }
 }
 
-static void _dec_elixir_hp(int delay)
-{
-    you.duration[DUR_ELIXIR_HEALTH] -= delay;
-    if (you.duration[DUR_ELIXIR_HEALTH] < 0)
-        you.duration[DUR_ELIXIR_HEALTH] = 0;
-
-    int heal = (delay * you.hp_max / 10) / BASELINE_DELAY;
-    if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(heal);
-}
-
-static void _dec_elixir_mp(int delay)
-{
-    you.duration[DUR_ELIXIR_MAGIC] -= delay;
-    if (you.duration[DUR_ELIXIR_MAGIC] < 0)
-        you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    int heal = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
-    inc_mp(heal);
-}
-
 void dec_elixir_player(int delay)
 {
-    if (you.duration[DUR_ELIXIR_HEALTH])
-        _dec_elixir_hp(delay);
-    if (you.duration[DUR_ELIXIR_MAGIC])
-        _dec_elixir_mp(delay);
+    if (!you.duration[DUR_ELIXIR])
+        return;
+
+    you.duration[DUR_ELIXIR] -= delay;
+    if (you.duration[DUR_ELIXIR] < 0)
+        you.duration[DUR_ELIXIR] = 0;
+
+    const int hp = (delay * you.hp_max / 10) / BASELINE_DELAY;
+    if (!you.duration[DUR_DEATHS_DOOR])
+        inc_hp(hp);
+
+    const int mp = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
+    inc_mp(mp);
 }
 
 void dec_ambrosia_player(int delay)
@@ -4748,7 +4697,7 @@ bool land_player(bool quiet)
     // Handle landing on (formerly) instakill terrain
     if (is_feat_dangerous(env.grid(you.pos())))
     {
-        enable_emergency_flight();
+        fall_into_a_pool(env.grid(you.pos()));
         return false;
     }
 
@@ -5225,8 +5174,6 @@ bool player::in_liquid() const
 
 bool player::can_swim(bool permanently) const
 {
-    // Transforming could be fatal if it would cause unequipment of
-    // stat-boosting boots or heavy armour.
     return (species_can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || get_mutation_level(MUT_UNBREATHING) >= 2
@@ -6047,7 +5994,7 @@ mon_holy_type player::holiness(bool temp) const
         holi |= MH_HOLY;
 
     if (is_evil_god(religion)
-        || species == SP_DEMONSPAWN || species == SP_VAMPIRE)
+        || species == SP_DEMONSPAWN || you.has_mutation(MUT_VAMPIRISM))
     {
         holi |= MH_EVIL;
     }
@@ -6159,20 +6106,7 @@ bool player::res_miasma(bool temp) const
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
         return true;
 
-    switch (undead_state(temp))
-    {
-    default:
-    case US_ALIVE:
-        return false;
-
-    case US_UNDEAD:
-        return true;
-
-    case US_SEMI_UNDEAD:
-        if (temp && !you.vampire_alive)
-            return true;
-        return false;
-    }
+    return is_lifeless_undead();
 }
 
 
@@ -6848,19 +6782,19 @@ int player::has_usable_pseudopods(bool allow_tran) const
     return has_pseudopods(allow_tran);
 }
 
+int player::arm_count() const
+{
+    // XX transformations? arm count per se isn't used by much though.
+
+    return species_arm_count(species)
+                    - get_mutation_level(MUT_MISSING_HAND);
+}
+
 int player::has_tentacles(bool allow_tran) const
 {
-    if (allow_tran)
-    {
-        // Most transformations suppress tentacles.
-        if (!form_keeps_mutations())
-            return 0;
-    }
-
-    if (species == SP_OCTOPODE && get_mutation_level(MUT_MISSING_HAND))
-        return 7;
-    else if (species == SP_OCTOPODE)
-        return 8;
+    // tentacles count as a mutation for these purposes. (TODO: realmut?)
+    if (you.has_mutation(MUT_TENTACLE_ARMS, allow_tran))
+        return arm_count();
 
     return 0;
 }
@@ -7016,8 +6950,8 @@ bool player::can_safely_mutate(bool temp) const
 // Is the player too undead to bleed, rage, or polymorph?
 bool player::is_lifeless_undead(bool temp) const
 {
-    if (undead_state() == US_SEMI_UNDEAD)
-        return temp ? !you.vampire_alive : false;
+    if (temp && undead_state() == US_SEMI_UNDEAD)
+        return !you.vampire_alive;
     else
         return undead_state(temp) != US_ALIVE;
 }
@@ -7612,7 +7546,8 @@ bool player::form_uses_xl() const
     // should apply to more forms, too.  [1KB]
     return form == transformation::wisp || form == transformation::fungus
         || form == transformation::pig
-        || form == transformation::bat && you.species != SP_VAMPIRE;
+        || form == transformation::bat
+                        && you.get_mutation_level(MUT_VAMPIRISM) < 2;
 }
 
 bool player::wear_barding() const

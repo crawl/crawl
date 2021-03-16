@@ -42,10 +42,8 @@ dex: 9
 levelup_stat_frequency: 5
 mutations:
   1:
+    MUT_MERTAIL: 1
     MUT_NIMBLE_SWIMMER: 2
-fake_mutations:
-  - long: You revert to your normal form in water.
-    short: change form in water
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER

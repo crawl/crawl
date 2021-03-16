@@ -387,8 +387,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_VAULT_WARDEN:
     case TILEP_MONS_VAULT_SENTINEL:
-    case TILEP_MONS_IRONBRAND_CONVOKER:
-    case TILEP_MONS_IRONHEART_PRESERVER:
+    case TILEP_MONS_IRONBOUND_CONVOKER:
+    case TILEP_MONS_IRONBOUND_PRESERVER:
+    case TILEP_MONS_IRONBOUND_BEASTMASTER:
+    case TILEP_MONS_IRONBOUND_FROSTHEART:
     case TILEP_MONS_GARGOYLE:
     case TILEP_MONS_MOLTEN_GARGOYLE:
     case TILEP_MONS_WAR_GARGOYLE:
@@ -643,6 +645,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     // Shift downwards and to the right.
     case TILEP_MONS_OGRE:
     case TILEP_MONS_OGRE_MAGE:
+    case TILEP_MONS_IRONBOUND_THUNDERHULK:
         *ofs_x = 1;
         *ofs_y = 1;
         break;
@@ -874,8 +877,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ZOMBIE_SMALL:
     case TILEP_MONS_SKELETON_SMALL:
     case TILEP_MONS_VAULT_GUARD:
-    case TILEP_MONS_IRONBRAND_CONVOKER:
-    case TILEP_MONS_IRONHEART_PRESERVER:
+    case TILEP_MONS_IRONBOUND_CONVOKER:
+    case TILEP_MONS_IRONBOUND_PRESERVER:
+    case TILEP_MONS_IRONBOUND_BEASTMASTER:
+    case TILEP_MONS_IRONBOUND_FROSTHEART:
     case TILEP_MONS_VAULT_WARDEN:
         *ofs_x = -2;
         *ofs_y = 1;

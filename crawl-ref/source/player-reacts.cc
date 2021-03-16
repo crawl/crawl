@@ -584,7 +584,8 @@ static void _decrement_durations()
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != transformation::bat
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
         || you.transform_uncancellable)
     {
         if (form_can_fly()

@@ -328,10 +328,6 @@ tier1_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first  = {mons = "death ooze", min = 1, max = 1},
-    plant  = "withered",
-  },
-  {
     first  = {mons = "sixfirhy", min = 1, max = 1},
     second = {mons = "ufetubus", min = 2, max = 4},
     liquid = "water",
@@ -509,8 +505,7 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    second = {mons = "death ooze", min = 1, max = 1},
-    third  = {mons = "jelly w:5 / slime creature", min = 2, max = 4},
+    first = {mons = "quicksilver ooze", min = 1, max = 1},
     liquid = "water",
   },
   {

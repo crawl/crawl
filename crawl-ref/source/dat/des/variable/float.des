@@ -1814,7 +1814,7 @@ DEPTH:  Depths
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye / eye of draining w:2
+MONS:   golden eye
 MONS:   glowing orange brain
 MAP
 ...................................
@@ -2939,7 +2939,7 @@ ENDMAP
 
 NAME: cheibrodos_poisonous_passages
 DEPTH: Depths, !Depths:$
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
@@ -2958,6 +2958,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 KMONS: A = lich
 KFEAT: A = stone_arch
 KPROP: '? = no_tele_into
+KMASK: '? = opaque
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
@@ -4051,7 +4052,7 @@ MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
 MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS:    eye of draining
+MONS:    floating eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage
@@ -4141,7 +4142,7 @@ NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 4=1 / 6=1. / 2=2. / .
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation \
          / golden eye / shining eye
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rocksliem
 NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 :   end
@@ -4150,7 +4151,7 @@ NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 MONS:    slime creature
 MONS:    glowing orange brain / shining eye / floating eye / golden eye \
          / eye of devastation
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2=2. / 3=3 / 4=3. / .
 : end

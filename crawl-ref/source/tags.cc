@@ -3211,6 +3211,15 @@ static void _tag_read_you(reader &th)
     if (you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
         _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
 
+    if (you.species == SP_MERFOLK)
+        _fixup_species_mutations(MUT_MERTAIL);
+
+    if (you.species == SP_OCTOPODE)
+        _fixup_species_mutations(MUT_TENTACLE_ARMS);
+
+    if (you.species == SP_VAMPIRE)
+        _fixup_species_mutations(MUT_VAMPIRISM);
+
     if (you.has_innate_mutation(MUT_TORMENT_RESISTANCE)
         || you.species == SP_GARGOYLE)
     {

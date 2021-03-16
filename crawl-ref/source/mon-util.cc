@@ -1031,6 +1031,11 @@ bool herd_monster(const monster& mon)
     return mons_class_flag(mon.type, M_HERD);
 }
 
+bool mons_class_requires_band(monster_type mc)
+{
+    return mons_class_flag(mc, M_REQUIRE_BAND);
+}
+
 // Plant or fungus or really anything with
 // permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
@@ -2703,7 +2708,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
-    case MONS_WHITE_DRACONIAN:   sp = SPELL_CHILLING_BREATH; break;
+    case MONS_WHITE_DRACONIAN:   sp = SPELL_COLD_BREATH; break;
     case MONS_DRACONIAN:
     case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
     case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
@@ -4230,7 +4235,10 @@ mon_inv_type item_to_mslot(const item_def &item)
 
 monster_type royal_jelly_ejectable_monster()
 {
-    return random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
+    return random_choose(MONS_ACID_BLOB,
+                         MONS_AZURE_JELLY,
+                         MONS_ROCKSLIME,
+                         MONS_QUICKSILVER_OOZE);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.

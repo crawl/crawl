@@ -154,7 +154,7 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_BERSERK,
       BLUE, "Berserk",
-      "berserking", "berserker",
+      "berserking", "berserk",
       "You are possessed by a berserker rage.", D_EXPIRES,
       {{ "You are no longer berserk.", player_end_berserk }}, 6},
     { DUR_BERSERK_COOLDOWN,
@@ -224,7 +224,7 @@ static const duration_def duration_data[] =
       "You are covered in liquid flames.", D_NO_FLAGS},
     { DUR_LOWERED_WL,
       RED, "Will/2",
-      "weak-willed", "lowered wp",
+      "weak-willed", "lowered wl",
       "", D_DISPELLABLE,
       {{ "You feel your willpower return." }}},
     { DUR_MIGHT,
@@ -340,7 +340,7 @@ static const duration_def duration_data[] =
       {{ "Your divine protection fades away." }}},
     { DUR_TORNADO_COOLDOWN,
       YELLOW, "-Tornado",
-      "", "tornado cooldown",
+      "tornado cooldown", "",
       "", D_NO_FLAGS,
       {{ "The winds around you calm down.", []() {
           remove_tornado_clouds(MID_PLAYER);
@@ -393,7 +393,7 @@ static const duration_def duration_data[] =
       "You are reciting Zin's Axioms of Law.", D_NO_FLAGS},
     { DUR_RECITE_COOLDOWN,
       YELLOW, "-Recite",
-      "", "recite cooldown",
+      "recite cooldown", "",
       "", D_NO_FLAGS,
       {{ "You are ready to recite again." }}},
     { DUR_FIRE_VULN,
@@ -442,7 +442,7 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_DRAGON_CALL_COOLDOWN,
       YELLOW, "-Dragoncall",
-      "", "dragon call cooldown",
+      "dragon call cooldown", "",
       "", D_NO_FLAGS,
       {{ "You can once more reach out to the dragon horde." }}},
     { DUR_NO_POTIONS,
@@ -545,6 +545,9 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Attr",
       "attractive", "attract",
       "You attract monsters toward you.", D_DISPELLABLE },
+    { DUR_ELIXIR, WHITE, "Elixir",
+      "elixired", "elixir",
+      "You are rapidly regenerating health and magic.", D_NO_FLAGS},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -576,8 +579,6 @@ static const duration_def duration_data[] =
     { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_ELIXIR_HEALTH, 0, "", "", "elixir health", "", D_NO_FLAGS},
-    { DUR_ELIXIR_MAGIC, 0, "", "", "elixir magic", "", D_NO_FLAGS},
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
@@ -649,5 +650,6 @@ static const duration_def duration_data[] =
     { DUR_DARKNESS, 0, "", "", "old darkness", "", D_NO_FLAGS},
     { DUR_STABBING, 0, "", "", "old stabbing", "", D_NO_FLAGS},
     { DUR_SCRYING, 0, "", "", "old scrying", "", D_NO_FLAGS},
+    { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
 #endif
 };

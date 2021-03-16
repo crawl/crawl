@@ -4,7 +4,7 @@ name: "Draconian"
 difficulty: Simple
 difficulty_priority: 60
 species_flags:
-  - draconian
+  - SPF_DRACONIAN
 aptitudes:
   xp: -1
   hp: 1

@@ -669,7 +669,7 @@ NAME:   gammafunk_ghost_ooze
 DEPTH:  D:8-, Lair, Depths
 ORIENT: float
 KMONS:  O = player ghost
-MONS:   jelly, slime creature, death ooze
+MONS:   jelly, slime creature, quicksilver ooze
 : ghost_good_loot(_G)
 : if you.in_branch("D") then
 :     if you.depth() < 10 then

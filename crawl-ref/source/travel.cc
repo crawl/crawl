@@ -290,7 +290,7 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
     if (feat_is_trap(feat) && feat != DNGN_PASSAGE_OF_GOLUBRIA)
     {
         if (ignore_player_traversability)
-            return !(feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_TELEPORT || feat == DNGN_TRAP_TELEPORT_PERMANENT);
+            return !(feat == DNGN_TRAP_TELEPORT || feat == DNGN_TRAP_TELEPORT_PERMANENT);
         return false;
     }
 #if TAG_MAJOR_VERSION == 34

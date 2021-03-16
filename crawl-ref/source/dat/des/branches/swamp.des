@@ -2603,7 +2603,7 @@ PLACE:   Swamp:$
 ORIENT:  southeast
 MONS:    bog body / ugly thing, shadow / orange demon / small abomination w:2
 MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, hell beast, death ooze, titanic slime creature
+MONS:    green death, hell beast, great orb of eyes, titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KMONS:   & = the Lernaean hydra

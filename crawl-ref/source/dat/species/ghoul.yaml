@@ -5,7 +5,7 @@ adjective: Ghoulish
 difficulty: Simple
 difficulty_priority: 30
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: 1

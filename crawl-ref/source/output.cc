@@ -576,7 +576,7 @@ static int _count_digits(int val)
 static const equipment_type e_order[] =
 {
     EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
-    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
+    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
     EQ_RING_AMULET,
@@ -586,7 +586,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    cprintf((species_arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -1916,14 +1916,15 @@ static void _print_overview_screen_equip(column_composer& cols,
 
     for (equipment_type eqslot : e_order)
     {
-        if (you.species == SP_OCTOPODE
+        // leave space for all the ring slots
+        if (species_arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
             && !you_can_wear(eqslot))
         {
             continue;
         }
 
-        if (you.species != SP_OCTOPODE
+        if (species_arm_count(you.species) <= 2
             && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
         {
             continue;
@@ -1969,7 +1970,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.form == transformation::blade_hands)
         {
-            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const bool plural = you.arm_count() > 1;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS && you.wear_barding())
@@ -2541,133 +2542,6 @@ string dump_overview_screen(bool full_id)
     return text;
 }
 
-static string _annotate_form_based(string desc, bool suppressed)
-{
-    if (suppressed)
-        return "<darkgrey>(" + desc + ")</darkgrey>";
-    else
-        return desc;
-}
-
-static string _dragon_abil(string desc)
-{
-    const bool supp = form_changed_physiology()
-                      && you.form != transformation::dragon;
-    return _annotate_form_based(desc, supp);
-}
-
-string mutation_overview()
-{
-    string mtext;
-    vector<string> mutations;
-
-    const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
-    if (size_adjective)
-        mutations.emplace_back(size_adjective);
-
-    for (const string& str : fake_mutations(you.species, true))
-    {
-        if (species_is_draconian(you.species))
-            mutations.push_back(_dragon_abil(str));
-        else if (you.species == SP_MERFOLK)
-        {
-            mutations.push_back(
-                _annotate_form_based(str, form_changed_physiology()));
-        }
-        else
-            mutations.push_back(str);
-    }
-
-    // a bit more stuff
-    if (you.species == SP_OGRE || you.species == SP_TROLL
-        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
-    {
-        mutations.emplace_back("unfitting armour");
-    }
-
-    if (species_can_swim(you.species))
-    {
-        mutations.push_back(_annotate_form_based("amphibious",
-                                            !form_likes_water()));
-    }
-
-    if (you.species == SP_OCTOPODE)
-    {
-        mutations.push_back(_annotate_form_based(
-            make_stringf("%d rings", you.has_tentacles(false)),
-            !get_form()->slot_available(EQ_RING_EIGHT)));
-        mutations.push_back(_annotate_form_based(
-            make_stringf("constrict %d", you.has_tentacles(false)),
-            !form_keeps_mutations()));
-    }
-
-    if (you.can_water_walk())
-        mutations.emplace_back("walk on water");
-
-    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
-        mutations.emplace_back("reduced essence");
-
-    string current;
-    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const mutation_type mut = static_cast<mutation_type>(i);
-        if (!you.has_mutation(mut))
-            continue;
-
-        const int current_level = you.get_mutation_level(mut);
-        const int base_level = you.get_base_mutation_level(mut);
-        const bool lowered = current_level < base_level;
-        const int temp_levels = you.get_base_mutation_level(mut, false, true, false); // only temp levels
-        const int ordinary_levels = you.get_base_mutation_level(mut, true, false, true); // excluding temp levels
-
-        const int max_levels = mutation_max_levels(mut);
-
-        current = mutation_name(mut);
-
-        if (max_levels > 1)
-        {
-            // add on any numeric levels
-            ostringstream ostr;
-            ostr << " ";
-            if (ordinary_levels == 0) // only temporary levels are present
-                ostr << temp_levels;
-            else
-            {
-                // at least some non-temporary levels
-                ostr << ordinary_levels;
-                if (temp_levels)
-                    ostr << "[+" << temp_levels << "]";
-            }
-            current += ostr.str();
-        }
-
-        // bracket the whole thing
-        if (ordinary_levels == 0)
-            current = "[" + current + "]";
-
-        if (!current.empty())
-        {
-            if (current_level == 0) // suppressed by form
-                current = "(" + current + ")";
-            if (lowered)
-                current = "<darkgrey>" + current + "</darkgrey>";
-            mutations.push_back(current);
-        }
-    }
-
-    if (you.racial_ac(false))
-        mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
-
-    if (mutations.empty())
-        mtext += "no striking features";
-    else
-    {
-        mtext += comma_separated_line(mutations.begin(), mutations.end(),
-                                     ", ", ", ");
-    }
-    return mtext;
-}
-
 /// Creates rows of short descriptions for current status effects, mutations,
 /// and runes/Orbs of Zot.
 string _status_mut_rune_list(int sw)
@@ -2702,7 +2576,7 @@ string _status_mut_rune_list(int sw)
     // print mutation information
     text += "<w>A:</w> ";
 
-    text += mutation_overview();
+    text += terse_mutation_list();
 
     // print the Orb
     if (player_has_orb())

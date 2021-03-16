@@ -293,7 +293,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Spider",
                 "place:Snake",
                 "jelly / floating eye / w:2 shining eye /\
-                    w:2 golden eye / w:2 eye of draining / w:1 slime creature",
+                    w:2 golden eye / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
@@ -408,7 +408,7 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon simulacrum / spriggan simulacrum / water elemental /\
                     ice devil / merfolk aquamancer / frost giant",
                 "death cob / death yak / death drake w:5 / deep elf death mage /\
-                    death knight / death ooze / green death",
+                    death knight / green death",
                 -- Misc
                 "centaur / centaur warrior",
                 "yaktaur w:15 / yaktaur captain w:5",
@@ -429,7 +429,7 @@ function arena_sprint_get_monster_set(round, boss)
                     killer klown",
                 "base draconian / w:1 nonbase draconian",
                 "golden eye / shining eye / floating eye / eye of devastation /\
-                    great orb of eyes / eye of draining / w:5 ophan",
+                    great orb of eyes / w:5 ophan",
                 "vampire / vampire knight / vampire mage / w:1 jory",
                 -- Gimmicks
                 "neqoxec", "smoke demon", "catoblepas",
@@ -492,7 +492,7 @@ function arena_sprint_get_monster_set(round, boss)
                     killer klown",
                 "base draconian / w:5 nonbase draconian",
                 "golden eye / shining eye / floating eye / eye of devastation /\
-                    great orb of eyes / eye of draining / w:5 ophan",
+                    great orb of eyes / w:5 ophan",
                 "vampire knight / vampire mage / w:1 jory",
                 "hellion / hell sentinel / hell beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
@@ -506,7 +506,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "curse toe / w:20 wandering mushroom / w:4 murray",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / eye of draining",
+                "ghost moth / w:30 lorocyproca / quicksilver ooze",
                 "floating eye w:5 / ettin",
                 "executioner / w:1 ignacio",
                 "ghost moth / moth of wrath / w:30 vampire mosquito"
@@ -531,7 +531,7 @@ function arena_sprint_get_monster_set(round, boss)
                     ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 nagaraja / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / floating eye /\
-                    eye of draining",
+                    quicksilver ooze",
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
                     spriggan berserker / spriggan rider",
@@ -560,7 +560,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "glowing shapeshifter hd:20",
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / floating eye / eye of devastation /\
-                    great orb of eyes / eye of draining / w:5 ophan",
+                    great orb of eyes / w:5 ophan",
                 "w:20 hellion / hell sentinel / hell beast / hell hog / hell knight /\
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:25 / angel / daeva / cherub / seraph",
@@ -571,7 +571,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / eye of draining",
+                "ghost moth / w:30 lorocyproca / quicksilver ooze",
                 "floating eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 "ghost moth / moth of wrath / vampire mosquito",
@@ -603,7 +603,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "green death / death drake w:15",
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "w:40 nagaraja / guardian serpent / w:5 anaconda",
-                "w:30 acid blob / azure jelly / floating eye / eye of draining",
+                "w:30 acid blob / azure jelly / floating eye / quicksilver ooze",
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage",
                 "w:15 ancient lich / w:6 curse toe",
@@ -631,7 +631,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "glowing shapeshifter hd:20",
                 "nonbase draconian",
                 "golden eye / shining eye / floating eye w:15 / eye of devastation /\
-                    great orb of eyes / eye of draining / w:5 ophan",
+                    great orb of eyes / w:5 ophan",
                 "w:30 hellion / hell sentinel / hell beast / hell hog / hell knight /\
                     hell hound / hellephant / w:2 nellie",
                 "profane servitor w:25 / angel w:5 / daeva / cherub w:5 / seraph w:15",
@@ -642,7 +642,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
-                "ghost moth / w:30 lorocyproca / eye of draining",
+                "ghost moth / w:30 lorocyproca / quicksilver ooze",
                 "floating eye w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
                 -- Just die already!
@@ -749,7 +749,7 @@ function arena_sprint_init_boss_table()
     -- Pan sets are based on those in pan.des
     bs[10] = {"neqoxec / cacodemon / tormentor / tentacled monstrosity / " ..
               "floating eye / golden eye / eye of devastation / " ..
-              "eye of draining / shining eye", "mnoleg", "glowing rune of zot"}
+              "shining eye", "mnoleg", "glowing rune of zot"}
     bs[11] = {"smoke demon / blizzard demon / green death / rakshasa / " ..
               "glowing orange brain / titan / lich / draconian annihilator / " ..
               "deep elf annihilator", "lom lobon", "magical rune of zot"}

@@ -1248,15 +1248,15 @@ static void _jiyva_summon_slimes()
     const monster_type slimes[] =
     {
         MONS_FLOATING_EYE,
-        MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
+        MONS_ROCKSLIME,
+        MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
-        MONS_DEATH_OOZE,
         MONS_SLIME_CREATURE,
     };
 

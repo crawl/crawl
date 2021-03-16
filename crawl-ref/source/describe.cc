@@ -86,6 +86,7 @@
 #endif
 #include "transform.h"
 #include "unicode.h"
+#include "viewchar.h"
 
 using namespace ui;
 
@@ -2176,8 +2177,8 @@ string get_item_description(const item_def &item, bool verbose,
                             : "activated")
                         << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
-                           "and all other devices of its kind " : "")
-                        << "are rendered temporarily inert. However, "
+                           "and all other devices of its kind are " : "is ")
+                        << "rendered temporarily inert. However, "
                         << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
                         << "as you gain experience."
                         << (!evoker_charges(item.sub_type) ?
@@ -3297,9 +3298,12 @@ static void _get_spell_description(const spell_type spell,
     {
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd);
-        description += "\nRange : "
-                       + range_string(range, range, mons_char(mon_owner->type))
-                       + "\n";
+        description += "\nRange : ";
+        if (spell == SPELL_CALL_DOWN_LIGHTNING)
+            description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
+        else
+            description += range_string(range, range, mons_char(mon_owner->type));
+        description += "\n";
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)

@@ -411,10 +411,10 @@ random_var monster::attack_delay(const item_def *projectile,
     if (use_unarmed || !weap)
         return random_var(10);
 
-    random_var delay(property(*weap, PWPN_SPEED));
+    random_var delay(10);
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
         delay = div_rand_round(delay * 2, 3);
-    return (random_var(10) + delay) / 2;
+    return delay;
 }
 
 int monster::has_claws(bool /*allow_tran*/) const
@@ -2435,7 +2435,6 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 break;
 
             case MONS_FLOATING_EYE:
-            case MONS_EYE_OF_DRAINING:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
             case MONS_GOLDEN_EYE:

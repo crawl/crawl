@@ -1207,7 +1207,7 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 greet:
 	@if [ ! -e $(GAME) ]; then\
 		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
-		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
+		                  "at INSTALL.md: the solution to your problem just might be in there!";\
 	fi
 
 docs: $(GENERATED_DOCS)

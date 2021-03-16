@@ -2232,6 +2232,100 @@ MAP
   .....
 ENDMAP
 
+# Very hungry Elvish explorers and their campfire, mounts and pet.
+# Sometimes they have starved to death.
+NAME:   beargit_elvish_explorers
+DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
+TAGS:   transparent patrolling no_monster_gen no_trap_gen
+: if you.in_branch("D") then
+:     if you.depth() < 14 then
+MONS:   deep elf archer; shortbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; quarterstaff good_item . leather armour good_item
+MONS:   elephant, warg / hell hound w:5
+:     else
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . scale mail good_item
+MONS:   elephant / dire elephant, warg / hell hound / raiju
+:     end
+MONS:   plant / fungus, nothing
+: elseif you.in_branch("Swamp") or you.in_branch("Spider")
+:        or you.in_branch("Snake") then
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . chain mail good_item
+MONS:   dire elephant
+MONS:   hell hound / raiju
+MONS:   fungus / nothing, nothing
+: elseif you.in_branch("Crypt") then
+KITEM:  1 = longbow good_item, arrow, quarterstaff, robe good_item
+KITEM:  2 = lajatang good_item, chain mail good_item
+KMONS:  1 = spectral deep elf master archer
+KMONS:  2 = spectral deep elf blademaster
+KMONS:  3 = spectral hellephant
+KMONS:  4 = doom hound
+KMONS:  5 = nothing
+KMONS:  6 = ancient lich / deep elf death mage w:30 / lich / dread lich \
+            / vampire mage
+: else
+# The elves have mastered the dungeon and allied with the darkness.
+MONS:   deep elf master archer; longbow good_item | longbow randart . arrow \
+            . chain mail good_item | quicksilver dragon scales
+MONS:   deep elf blademaster; lajatang good_item | lajatang randart \
+            . shadow dragon scales good_item | shadow dragon scales randart
+MONS:   hellephant
+MONS:   doom hound
+MONS:   nothing, nothing
+: end
+: if you.in_branch("Crypt") then
+SUBST:  x = c
+COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+FTILE:  - = floor_crypt
+: elseif you.in_branch("Swamp") then
+SUBST:  - = --....W, x = t
+FTILE:  -123456t = floor_grass
+: elseif you.in_branch("Spider") then
+SUBST:  t = x
+: else
+FTILE:  -123456t = floor_grass
+FTILE:  P = floor_sand
+: end
+MARKER: P = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 1000, pow_max = 1000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
+            pow_min = 3, pow_max = 3, delay = 100, \
+            size = 1, walk_dist = 1, start_clouds = 1 }
+: dgn.delayed_decay(_G, 'P', 'rat skeleton')
+MAP
+    xx.@.xxx
+    xt----tx
+    xt555ttx
+    xt----tx
+    xtt--ttx
+    xt----tx
+    xt--t-tx
+    xt----tx
+   xxt-t--tx
+  xxttt---txxxx
+ xxtt-----ttttx
+xxtt---t----4txx
+xttWWW---P---ttx
+xt-WwWW----3--tx
+xt------2163--tx
+xttt---------ttx
+xxxtt--tttttttxx
+  xxt---tttttttx
+   xt----t----5.
+   xtt--------5@
+   xxtt-----t-5.
+    xxtttttttttx
+     xxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -3084,13 +3178,13 @@ ENDMAP
 NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Depths, !Depths:$
-MONS:    large slime creature, great orb of eyes, eye of draining
+MONS:    large slime creature, great orb of eyes
 KMASK:   %$de = opaque
 KITEM:   R = gold
 ITEM:    scroll of teleportation q:2 / wand of digging
 ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
-SUBST:   J = 1111111123
+SUBST:   J = 1111111122
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
 NSUBST:  ! = 1:d / * = %$
@@ -3144,7 +3238,7 @@ ENDMAP
 NAME:   minmay_acid_items
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  Depths
-MONS:   slime creature w:30 / death ooze / azure jelly / acid blob w:5
+MONS:   slime creature w:30 / rockslime / azure jelly / acid blob w:5
 MONS:   acid blob
 MAP
   ...........
@@ -3181,7 +3275,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, eye of draining, floating eye
+MONS:   golden eye, ophan, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate

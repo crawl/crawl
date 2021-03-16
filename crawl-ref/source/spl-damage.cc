@@ -481,6 +481,15 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
 static int _los_spell_damage_player(const actor* agent, bolt &beam,
                                     bool actual)
 {
+    // No self damage from ozo's, but we do get -Potion
+    if (actual && agent->is_player()
+        && beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
+    {
+        mpr("You feel very cold.");
+        you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+        return 0;
+    }
+
     int hurted = actual ? beam.damage.roll()
                         // Monsters use the average for foe calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
@@ -489,8 +498,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
             actual && beam.origin_spell != SPELL_DRAIN_LIFE);
     if (actual && hurted > 0)
     {
-        if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            mpr("You feel very cold.");
 
         if (agent && !agent->is_player())
         {
@@ -499,9 +506,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
                  agent->as_monster()->name(DESC_A).c_str());
             you.expose_to_element(beam.flavour, 5);
         }
-        // -harm from player casting Ozo's Refridge.
-        else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
     }
 
     return hurted;
@@ -828,8 +832,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 
     empty_space = max(3, empty_space);
 
-    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7),
-                                              empty_space - 2);
+    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -1709,7 +1712,7 @@ static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square
         noisy(spell_effect_noise(SPELL_IGNITION),square);
 }
 
-vector<coord_def> get_ignition_blast_sources(const actor *agent)
+vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
 {
     // Ignition affects squares that had hostile monsters on them at the time
     // of casting. This way nothing bad happens when monsters die halfway
@@ -1724,7 +1727,8 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent)
         if (ai->is_monster()
             && !ai->as_monster()->wont_attack()
             && !mons_is_firewood(*ai->as_monster())
-            && !mons_is_tentacle_segment(ai->as_monster()->type))
+            && !mons_is_tentacle_segment(ai->as_monster()->type)
+            && (!tracer || agent->can_see(**ai)))
         {
             blast_sources.push_back(ai->position);
         }
@@ -2054,6 +2058,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     // their own allies. This could be wrong!
     { MONS_SALTLING,          { "salt crystal", WHITE } },
     { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
+    { MONS_ROCKSLIME,         { "rock", BROWN } },
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
@@ -3256,7 +3261,9 @@ spret cast_imb(int pow, bool fail)
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
-                 && mons_is_conjured(act->as_monster()->type));
+                 && (mons_is_conjured(act->as_monster()->type)
+                     || (have_passive(passive_t::shoot_through_plants)
+                         && fedhas_protects(act->as_monster())))) ;
     };
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable))

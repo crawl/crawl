@@ -893,11 +893,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
         break;
 
-    case GOD_ASHENZARI:
-        have_any = true;
-        desc.cprintf("You are provided with a bounty of information.\n");
-        break;
-
     case GOD_CHEIBRIADOS:
         have_any = true;
         if (have_passive(passive_t::stat_boost))

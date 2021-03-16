@@ -1459,11 +1459,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
-        if (as == &you)
-        {
-            mpr("The flesh is too rotten for a proper zombie; "
-                "only a skeleton remains.");
-        }
         mon = MONS_SKELETON;
     }
 
@@ -1699,7 +1694,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
             {
                 butcher_corpse(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
-                request_autopickup();
                 // Only convert the top one.
             }
 
@@ -2188,13 +2182,13 @@ bool aim_battlesphere(actor* agent, spell_type spell)
 
         // Pick a random baddie in LOS
         vector<actor *> targets;
-        for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
-            actor * foe = actor_at(*ri);
-            if (foe && battlesphere->can_see(*foe)
-                    && !mons_aligned(agent, foe))
+            if (battlesphere->can_see(**ai)
+                && !mons_aligned(agent, *ai)
+                && (ai->is_player() || !mons_is_firewood(*ai->as_monster())))
             {
-                targets.push_back(foe);
+                targets.push_back(*ai);
             }
         }
 

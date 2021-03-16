@@ -3067,8 +3067,11 @@ bool bolt::misses_player()
     if (flavour == BEAM_VISUAL)
         return true;
 
-    if (is_explosion || aimed_at_feet || auto_hit)
+    if ((is_explosion || auto_hit || aimed_at_feet)
+        && origin_spell != SPELL_CALL_DOWN_LIGHTNING)
+    {
         return false;
+    }
 
     const int dodge = you.evasion();
     int real_tohit  = hit;
@@ -3488,11 +3491,8 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
         dec_mp(amount);
-        if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
-                        || agent()->type == MONS_GHOST_MOTH))
-        {
+        if (agent() && agent()->type == MONS_GHOST_MOTH)
             agent()->heal(amount);
-        }
         obvious_effect = true;
         break;
     }
@@ -3968,6 +3968,7 @@ void bolt::affect_player()
     pull_actor(&you, final_dam);
 
     if (origin_spell == SPELL_FLASH_FREEZE
+        || origin_spell == SPELL_CREEPING_FROST
         || name == "blast of ice"
         || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
@@ -5690,11 +5691,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                  apostrophise(mon->name(DESC_THE)).c_str());
         }
 
-        if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
-                        || agent()->type == MONS_GHOST_MOTH))
-        {
+        if (agent() && agent()->type == MONS_GHOST_MOTH)
             agent()->heal(dur / BASELINE_DELAY);
-        }
         obvious_effect = true;
         break;
     }
@@ -6546,7 +6544,7 @@ bool bolt::can_knockback(const actor &act, int dam) const
         return false;
 
     return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH && act.airborne()
+           || origin_spell == SPELL_CHILLING_BREATH && dam
            || origin_spell == SPELL_FORCE_LANCE && dam
            || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST && dam;
 }

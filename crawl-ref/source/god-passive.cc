@@ -601,53 +601,32 @@ void ash_check_bondage()
     for (int j = EQ_FIRST_EQUIP; j < NUM_EQUIP; j++)
     {
         const equipment_type i = static_cast<equipment_type>(j);
-        // Missing hands mean fewer rings
-        if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
-                 && you.get_mutation_level(MUT_MISSING_HAND))
-        {
+
+        // handles missing hand, octopode ring slots, finger necklace, species
+        // armour restrictions, etc. Finger necklace slot counts.
+        if (you_can_wear(i) == MB_FALSE)
             continue;
-        }
-        // Octopodes don't count these slots:
-        else if (you.species == SP_OCTOPODE
-                 && ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
-                     || (i == EQ_RING_EIGHT
-                         && you.get_mutation_level(MUT_MISSING_HAND))))
-        {
-            continue;
-        }
-        // *Only* octopodes count these slots:
-        else if (you.species != SP_OCTOPODE
-                 && i >= EQ_RING_ONE && i <= EQ_RING_EIGHT)
-        {
-            continue;
-        }
-        // The macabre finger necklace's extra slot does count if equipped.
-        else if (!player_equip_unrand(UNRAND_FINGER_AMULET)
-                 && i == EQ_RING_AMULET)
-        {
-            continue;
-        }
 
         // transformed away slots are still considered to be possibly bound
-        if (you_can_wear(i))
+        num_slots++;
+        if (you.equip[i] != -1)
         {
-            num_slots++;
-            if (you.equip[i] != -1)
+            const item_def& item = you.inv[you.equip[i]];
+            if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
             {
-                const item_def& item = you.inv[you.equip[i]];
-                if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
+                if (i == EQ_WEAPON && _two_handed())
+                    num_cursed += 2;
+                else
                 {
-                    if (i == EQ_WEAPON && _two_handed())
-                        num_cursed += 2;
-                    else
+                    num_cursed++;
+                    if (i == EQ_BODY_ARMOUR
+                        && is_unrandom_artefact(item, UNRAND_LEAR))
                     {
-                        num_cursed++;
-                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
-                            num_cursed += 3;
+                        num_cursed += 3;
                     }
-                    if (!item_is_melded(item))
-                        _curse_boost_skills(item);
                 }
+                if (!item_is_melded(item))
+                    _curse_boost_skills(item);
             }
         }
     }
@@ -659,6 +638,10 @@ void ash_check_bondage()
     calc_mp(true);
 }
 
+// XXX: If this is called on an item in inventory, then auto_assign_item_slot
+// needs to be called subsequently. However, moving an item in inventory
+// invalidates its reference, which is a different behavior than for floor
+// items, so we don't do it in this function.
 bool god_id_item(item_def& item, bool silent)
 {
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
@@ -693,8 +676,6 @@ bool god_id_item(item_def& item, bool silent)
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
-        if (in_inventory(item))
-            auto_assign_item_slot(item);
         return true;
     }
 
@@ -794,7 +775,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
 
-    skill_points += (you.skill_boost[sk] * 3 + 1) * (piety_rank() + 1)
+    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
                     * max(scaled_skill, 1) * species_apt_factor(sk);
     return skill_points;
 }
@@ -802,7 +783,7 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 3 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 2 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
