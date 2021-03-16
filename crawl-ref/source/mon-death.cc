@@ -1265,7 +1265,11 @@ static bool _mons_reaped(actor &killer, monster& victim)
     }
 
     if (you.can_see(victim))
-        mprf("%s turns into a zombie!", victim.name(DESC_THE).c_str());
+    {
+        mprf("%s turns into a %s!", victim.name(DESC_THE).c_str(),
+                                    zombie->type == MONS_ZOMBIE ? "zombie"
+                                                                : "skeleton");
+    }
     else if (you.can_see(*zombie))
         mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 

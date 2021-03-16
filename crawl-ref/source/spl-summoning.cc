@@ -1459,11 +1459,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
-        if (as == &you)
-        {
-            mpr("The flesh is too rotten for a proper zombie; "
-                "only a skeleton remains.");
-        }
         mon = MONS_SKELETON;
     }
 
@@ -1699,7 +1694,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
             {
                 butcher_corpse(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
-                request_autopickup();
                 // Only convert the top one.
             }
 
