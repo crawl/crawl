@@ -1469,6 +1469,8 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_COLD_BREATH:
+        if (mons && mons_is_draconian(mons->type))
+            power = power * 2 / 3;
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.aux_source = "blast of icy breath";
         beam.short_name = "frost";
