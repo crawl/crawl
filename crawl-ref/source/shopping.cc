@@ -1171,28 +1171,26 @@ void ShopMenu::resort()
     switch (order)
     {
     case ORDER_DEFAULT:
-        {
+    {
+        // Using a map to sort reduces the number of item->name() calls.
         const bool id = shoptype_identifies_stock(shop.type);
-        sort(begin(items), end(items),
-             [id](MenuEntry* a, MenuEntry* b)
-             {
-                auto a_item = dynamic_cast<ShopEntry*>(a)->item;
-                auto b_item = dynamic_cast<ShopEntry*>(b)->item;
-
-                // "fizzy potion" is "potion", "potion of curing" is
-                // "potion of curing".
-                int cmp = a_item->name(DESC_DBNAME, false, id)
-                    .compare(b_item->name(DESC_DBNAME, false, id));
-
-                if (cmp)
-                    return cmp < 0;
-
-                // "fizzy potion" emerges unchanged.
-                return a_item->name(DESC_PLAIN, false, id)
-                    < b_item->name(DESC_PLAIN, false, id);
-             });
+        map<const string, MenuEntry *> list;
+        for (const auto entry : items)
+        {
+            const auto &item = dynamic_cast<ShopEntry*>(entry)->item;
+            if (is_known_artefact(*item))
+                list[item->name(DESC_QUALNAME, false, id)] = entry;
+            else
+            {
+                list[item->name(DESC_DBNAME, false, id) + "\x01"
+                     + item->name(DESC_PLAIN, false, id)] = entry;
+            }
         }
+        items.clear();
+        for (auto &entry : list)
+            items.push_back(entry.second);
         break;
+    }
     case ORDER_PRICE:
         sort(begin(items), end(items),
              [this](MenuEntry* a, MenuEntry* b)
