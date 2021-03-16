@@ -368,8 +368,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Hepliaklqana
-    {   { 0, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
-        { 0, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
+    {   { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
+        { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
         { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
         { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
         { 5, "drain nearby creatures when transferring your ancestor"},

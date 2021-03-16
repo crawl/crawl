@@ -414,7 +414,7 @@ static const vector<god_passive> god_passives[] =
 
     // Hepliaklqana
     {
-        { -1, passive_t::frail,
+        {  1, passive_t::frail,
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
