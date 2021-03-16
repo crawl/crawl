@@ -389,7 +389,7 @@ BOOL:    nogen
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
-PLUS:    +8
+PLUS:    +5
 COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
