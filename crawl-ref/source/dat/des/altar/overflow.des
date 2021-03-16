@@ -4193,12 +4193,14 @@ KFEAT:   D = altar_trog
 KFEAT:   E = altar_sif_muna
 : local egos = {["antimagic"] = 1, ["vorpal"] = 2, ["flaming"] = 2}
 : if you.absdepth() <= 3 then
+{{
+local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)
+local weapons = {["spear"] = 1, ["handaxe"] = 1, ["mace"] = 1,
+                 ["falchion"] = 1}
+kitem("1 = " .. dgn.random_item_def(weapons, nil, "ego:none plus:" .. enchant))
+}}
 KMONS:   1 = gnoll ; animal skin / w:2 Terence
 KMONS:   2 = white imp / w:2 Jessica
-: local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)
-: local weapons = {["spear"] = 1, ["handaxe"] = 1, ["mace"] = 1,
-:                  ["falchion"] = 1}
-: kitem("1 = " .. random_item_def(weapons, nil, "ego:none plus:" .. enchant))
 KITEM:   2 = randbook owner:Sif_Muna numspells:1 slevels:1
 : elseif you.absdepth() <= 7 then
 :     if crawl.one_chance_in(5) then
@@ -4208,16 +4210,20 @@ KMONS:   2 = dowan
 KMONS:   1 = orc warrior
 KMONS:   2 = orc wizard
 :     end
-: local weapons = {["trident"] = 1, ["war axe"] = 1, ["flail"] = 1,
-:                  ["long sword"] = 1}
-: kitem("1 = " .. random_item_def(weapons, egos, "plus:0"))
+{{
+local weapons = {["trident"] = 1, ["war axe"] = 1, ["flail"] = 1,
+                 ["long sword"] = 1}
+kitem("1 = " .. dgn.random_item_def(weapons, egos, "plus:0"))
+}}
 KITEM:   2 = randbook owner:Sif_Muna numspells:2 slevels:2
 : else
 KMONS:   1 = troll
 KMONS:   2 = ynoxinul
-: local weapons = {["trident"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
-:                  ["scimitar"] = 1}
-: kitem("1 = " .. random_item_def(weapons, egos, "plus:0"))
+{{
+local weapons = {["trident"] = 1, ["war axe"] = 1, ["morningstar"] = 1,
+                 ["scimitar"] = 1}
+kitem("1 = " .. dgn.random_item_def(weapons, egos, "plus:0"))
+}}
 KITEM:   2 = randbook owner:Sif_Muna numspells:3 slevels:4
 : end
 : interest_check(_G)
