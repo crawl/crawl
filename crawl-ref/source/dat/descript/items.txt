@@ -718,13 +718,11 @@ protective in combat, but slightly uncomfortable due to the added weight.
 %%%%
 ring of dexterity
 
-A ring that increases or decreases the dexterity of its wearer, depending on
-its degree of enchantment.
+A ring that increases the dexterity of its wearer.
 %%%%
 ring of evasion
 
-A ring that makes its wearer either more or less capable of avoiding attacks,
-depending on its degree of enchantment.
+A ring that makes its wearer more capable of avoiding attacks.
 %%%%
 ring of fire
 
@@ -744,8 +742,7 @@ resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
-A ring that increases or decreases the mental ability of its wearer, depending
-on its degree of enchantment.
+A ring that increases the mental ability of its wearer.
 %%%%
 ring of resist corrosion
 
@@ -766,8 +763,7 @@ them partially immune to the draining effects of undead and necromantic magic.
 %%%%
 ring of protection
 
-A ring that either protects its wearer from harm or makes them more vulnerable
-to injury, depending on its degree of enchantment.
+A ring that protects its wearer from most sources of damage.
 %%%%
 ring of protection from cold
 
@@ -788,13 +784,12 @@ A ring that allows its wearer to see those things hidden from view by magic.
 %%%%
 ring of slaying
 
-A ring that increases or decreases the wearer's effectiveness with ranged
-weapons and melee attacks, depending on its degree of enchantment.
+A ring that increases the wearer's effectiveness with ranged weapons and melee
+attacks.
 %%%%
 ring of strength
 
-A ring that increases or decreases the physical strength of its wearer,
-depending on its degree of enchantment.
+A ring that increases the physical strength of its wearer.
 %%%%
 ring of wizardry
 
@@ -845,8 +840,7 @@ recapture the magical energy bound up with it.
 scroll of blinking
 
 A scroll that allows its reader to teleport a short distance, with precise
-control. Be wary that controlled teleports will cause the subject to become
-contaminated with magical energy.
+control.
 %%%%
 scroll of brand weapon
 
