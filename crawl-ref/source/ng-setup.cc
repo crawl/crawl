@@ -127,6 +127,11 @@ item_def* newgame_make_item(object_class_type base,
     item.plus      = plus;
     item.brand     = force_ego;
 
+    // To mitigate higher shield penalties for smaller races, give small
+    // races bucklers instead of shields.
+    if (item.is_type(OBJ_ARMOUR, ARM_KITE_SHIELD) && you.body_size() < SIZE_MEDIUM)
+        item.sub_type = ARM_BUCKLER;
+
     // If the character is restricted in wearing the requested armour,
     // hand out a replacement instead.
     if (item.base_type == OBJ_ARMOUR
