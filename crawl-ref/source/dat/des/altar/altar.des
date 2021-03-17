@@ -357,47 +357,81 @@ LLll33_33llLL..
 ENDMAP
 
 # Distorted/chaotic kobolds, to Lugonu or Xom (Jude)
-# Note: This altar is too deep to be of use as a Xom overflow altar.
-#
-NAME:       due_chaos_kobolds
-DEPTH:      Depths, Vaults, Elf, Crypt
-TAGS:       no_rotate
-ORIENT:     float
-SUBST:      y  = c.
-COLOUR:     1. = random
-MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
-            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
-            spread_rate=3, start_clouds=1, colour="blue" }
+# This vault originally placed in late game branches. I've reworked this to a
+# Dungeon runed door vault with a more varied monsters and loot, but still
+# respecting the kobolds + distortion/chaos theme. --gammafunk
+NAME:   due_chaos_kobolds
+TAGS:   patrolling no_monster_gen no_trap_gen
+DEPTH:  D:2-
+ORIENT: float
+WEIGHT: 5
+# Either a Lucy theme or a Xom theme, setting the kobolds' weapon ego according
+# to theme. We only ever use the orange crystal statue for the Xom theme, and
+# only at sufficient depth. Otherwise the D location has the highest tier
+# guardian that's equipped with good loot.
 : if crawl.coinflip() then
-KFEAT:      _ = altar_lugonu
-KFEAT:      P = enter_abyss
-: kmons("1 = kobold brigand w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
-:       "w:6 | rapier ego:distortion | short sword ego:distortion / kobold "   ..
-:       "w:80 ; short sword | rapier | quick blade w:3")
+:     ego = "distortion"
+SUBST:  D = E
+KFEAT:  _ = altar_lugonu
+KFEAT:  EFH = enter_abyss
 : else
-KFEAT:      _ = altar_xom
-:   if crawl.one_chance_in(4) then
-KMONS:      P = orange crystal statue
-:   else
-KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
-:   end
-: kmons("1 = kobold brigand w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
-:       "w:6 | rapier ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
-:       "short sword | rapier | quick blade w:3")
+:     ego = "chaos"
+KFEAT:  _ = altar_xom
+KMONS:  D = orange crystal statue
 : end
+MONS:   kobold
+{{
+local quality = crawl.x_chance_in_y(you.depth(), 15) and "randart"
+                or "good_item"
+mons("kobold; " .. dgn.monster_weapon("kobold", ego))
+kmons("E = kobold ; " .. dgn.monster_weapon("kobold", ego, quality))
+
+brigand_weap = {["dagger"] = 5, ["rapier"] = 10, ["short sword"] = 10}
+mons("kobold brigand ; dart ego:poisoned | dart ego:curare w:5 " ..
+     dgn.random_item_def(brigand_weap, ego, nil, "|"))
+kmons("F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 " ..
+     dgn.random_item_def(brigand_weap, ego, quality, "|"))
+
+mons("kobold demonologist; dagger ego:" .. ego .. " . robe")
+kmons("H = kobold demonologist; dagger ego:" .. ego .. " " .. quality ..
+     ". robe good_item | robe randart")
+}}
+MONS:   ugly thing, very ugly thing
+: if you.depth() < 5 then
+SUBST:  D = E
+NSUBST: 1 = 1 / 1. / 2 / 2. / .
+: elseif you.depth() < 8 then
+SUBST:  DE = F, * = ., ' = *
+NSUBST: 1 = 2=2 / 3=2. / 3. / .
+: elseif you.depth() < 11 then
+SUBST:  DE = H, ' = *
+NSUBST: 1 = 2=3 / 2=3. / 4. / 5 / 5. / .
+: elseif you.depth() < 14 then
+# From this depth we place an OCS on D for the chaos theme.
+SUBST:  E = H, '" = *
+NSUBST: 1 = 3 / 3. / 4 / 2=4. / 2=5 / 2=5. / .
+: else
+SUBST:  E = H, '- = *
+NSUBST: 1 = 3 / 3. / 4 / 2=4. / 2=5 / 2=5. / 6 / 6. / .
+: end
+SUBST:  y  = c.
+MARKER: J = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
+             size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+             spread_rate=3, start_clouds=1, colour="blue" }
 MAP
-  ccccc
- cc...cc
-cc..P..cc
- cc...cc
- ccc.cccc
+   .@.
+  ccncc
+ cc'*'cc
+cc-1D1-cc
+ cc1"1cc
+ cccJcccc
 ccyy.yyyccc
 cy..111.yyc
 cc..1_1..cc
 cyy.111..yc
 cccyy..yycc
   ccc..ccc
-    c++c
+    c==c
      @@
 ENDMAP
 
