@@ -679,7 +679,7 @@ static void _handle_wucad_mu(int cost)
         if (coinflip())
             confuse_player(2 + random2(4));
         else
-        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+            lose_stat(STAT_INT, 1 + random2avg(5, 2));
     }
     else
     {
