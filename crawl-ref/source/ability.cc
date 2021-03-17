@@ -965,11 +965,8 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        if (you.is_lifeless_undead(false)
-            || you.stasis())
-        {
+        if (you.is_lifeless_undead() || you.stasis())
             return ABIL_NON_ABILITY;
-        }
         return ability;
 
     case ABIL_BLINK:
