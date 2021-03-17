@@ -951,6 +951,7 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     case GOD_HEPLIAKLQANA:
         have_any = true;
+        desc.cprintf("Your projectile can through your ancestor.\n");
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
         break;
 

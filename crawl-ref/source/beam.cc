@@ -6597,7 +6597,7 @@ int _ench_pow_to_dur(int pow)
 bool always_shoot_through_monster(const actor *originator, const monster &victim)
 {
     return mons_is_projectile(victim)
-        || (mons_is_avatar(victim.type)
+        || ((mons_is_avatar(victim.type) || mons_is_hepliaklqana_ancestor(victim.type))
             && originator && mons_aligned(originator, &victim));
 }
 
