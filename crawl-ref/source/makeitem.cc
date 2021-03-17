@@ -1408,7 +1408,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                                             1, 3);
 
     item.plus = 0;
-    
+
     // Don't let monsters use ?summoning too early
     if (item_level < 2 && item.sub_type == SCR_SUMMONING)
         item.flags |= ISFLAG_NO_PICKUP;
