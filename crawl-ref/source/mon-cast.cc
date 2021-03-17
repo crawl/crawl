@@ -1108,6 +1108,9 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_MASS_CONFUSION:
             return 8 * ENCH_POW_FACTOR;
 
+        case SPELL_CALL_DOWN_LIGHTNING:
+            return 16;
+
         case SPELL_OLGREBS_TOXIC_RADIANCE:
             return 8;
 
