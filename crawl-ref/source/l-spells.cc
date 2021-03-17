@@ -353,8 +353,10 @@ static int l_spells_cast(lua_State *ls)
 }
 
 /*** Describe a spell.
- *
+ * Provide the complete text description of a spell as displayed in the
+ * game UI
  * @tparam string spell name
+ * @treturn string description
  * @function describe
  */
 static int l_spells_describe(lua_State *ls)
