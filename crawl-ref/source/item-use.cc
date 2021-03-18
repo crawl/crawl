@@ -3169,7 +3169,7 @@ void read_scroll(item_def& scroll)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
-        bad_effect = !player_res_torment(false);
+        bad_effect = !player_res_torment();
         break;
 
     case SCR_IMMOLATION:

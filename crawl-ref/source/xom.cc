@@ -3027,7 +3027,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
                 return XOM_BAD_DRAINING;
             // else choose something else
         }
-        else if (!player_res_torment(false))
+        else if (!player_res_torment())
             return XOM_BAD_TORMENT;
         // else choose something else
     }
