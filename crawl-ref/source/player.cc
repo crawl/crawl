@@ -4057,21 +4057,33 @@ int get_player_poisoning()
         return 0;
 }
 
+// Fraction of current poison removed every 10 aut.
+const double poison_denom = 15.0;
+
+// these values are stored relative to dur's scaling, which is
+// poison_points * 1000;
+// 0.025 HP/aut
+const double poison_min_hp_aut  = 25.0;
+// 1.000 HP/aut
+const double poison_max_hp_aut  = 1000.0;
+
 // The amount of aut needed for poison to end if
 // you.duration[DUR_POISONING] == dur, assuming no Chei/DD shenanigans.
 // This function gives the following behaviour:
-// * 1/15 of current poison is removed every 10 aut normally
-// * but speed of poison is capped between 0.025 and 1.000 HP/aut
+// * 1/poison_denominator of current poison is removed every 10 aut normally
+// * but speed of poison is capped between the two parameters
 static double _poison_dur_to_aut(double dur)
 {
+    const double min_speed_dur = poison_denom * poison_min_hp_aut * 10.0;
+    const double decay = log(poison_denom / poison_denom - 1.0);
     // Poison already at minimum speed.
-    if (dur < 15.0 * 250.0)
-        return dur / 25.0;
+    if (dur < min_speed_dur)
+        return dur / poison_min_hp_aut;
     // Poison is not at maximum speed.
-    if (dur < 15.0 * 10000.0)
-        return 150.0 + 10.0 * log(dur / (15.0 * 250.0)) / log(15.0 / 14.0);
-    return 150.0 + (dur - 15.0 * 10000.0) / 1000.0
-                 + 10.0 * log(10000.0 / 250.0) / log(15.0 / 14.0);
+    if (dur < poison_denom * poison_max_hp_aut * 10.0)
+        return 10.0 * (poison_denom + log(dur / min_speed_dur) / decay);
+    return 10.0 * (poison_denom + log(poison_max_hp_aut / poison_min_hp_aut) / decay)
+         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut * 10.0;
 }
 
 // The inverse of the above function, i.e. the amount of poison needed
@@ -4079,13 +4091,19 @@ static double _poison_dur_to_aut(double dur)
 static double _poison_aut_to_dur(double aut)
 {
     // Amount of time that poison lasts at minimum speed.
-    if (aut < 150.0)
-        return aut * 25.0;
+    if (aut < poison_denom * 10.0)
+        return aut * poison_min_hp_aut;
+    const double decay = log(poison_denom / poison_denom - 1.0);
     // Amount of time that poison exactly at the maximum speed lasts.
-    const double aut_from_max_speed = 150.0 + 10.0 * log(40.0) / log(15.0 / 14.0);
+    const double aut_from_max_speed = 10.0 * (poison_denom
+        + log(poison_max_hp_aut / poison_min_hp_aut) / log(decay));
     if (aut < aut_from_max_speed)
-        return 15.0 * 250.0 * exp(log(15.0 / 14.0) / 10.0 * (aut - 150.0));
-    return 15.0 * 10000.0 + 1000.0 * (aut - aut_from_max_speed);
+    {
+        return 10.0 * poison_denom * poison_min_hp_aut
+            * exp(decay / 10.0 * (aut - poison_denom * 10.0));
+    }
+    return poison_denom * 10.0 * poison_max_hp_aut
+         + poison_max_hp_aut * (aut - aut_from_max_speed);
 }
 
 void handle_player_poison(int delay)
@@ -4198,9 +4216,9 @@ int poison_survival()
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
     // Calculate the poison amount at which regen starts to beat poison.
-    double min_poison_rate = 0.25;
+    double min_poison_rate = poison_min_hp_aut;
     if (dd)
-        min_poison_rate = 25.0/15.0;
+        min_poison_rate = 25.0/poison_denom;
     if (chei)
         min_poison_rate /= 1.5;
     int regen_beats_poison;
