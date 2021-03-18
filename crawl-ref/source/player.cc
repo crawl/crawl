@@ -4058,14 +4058,14 @@ int get_player_poisoning()
 }
 
 // Fraction of current poison removed every 10 aut.
-const double poison_denom = 15.0;
+const double poison_denom = 5.0;
 
 // these values are stored relative to dur's scaling, which is
 // poison_points * 1000;
-// 0.025 HP/aut
-const double poison_min_hp_aut  = 25.0;
-// 1.000 HP/aut
-const double poison_max_hp_aut  = 1000.0;
+// 0.1 HP/aut
+const double poison_min_hp_aut  = 100.0;
+// 5.0 HP/aut
+const double poison_max_hp_aut  = 5000.0;
 
 // The amount of aut needed for poison to end if
 // you.duration[DUR_POISONING] == dur, assuming no Chei/DD shenanigans.
