@@ -637,7 +637,7 @@ void validate_mutations(bool debug_msg)
     ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
 }
 
-string _terse_mut_name(mutation_type mut)
+static string _terse_mut_name(mutation_type mut)
 {
     const int current_level = you.get_mutation_level(mut);
     const int base_level = you.get_base_mutation_level(mut);
