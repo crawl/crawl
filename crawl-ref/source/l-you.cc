@@ -69,7 +69,12 @@ LUARET1(you_race, string, species_name(you.species).c_str())
  * @treturn string
  * @function class
  */
-LUARET1(you_class, string, get_job_name(you.char_class))
+ LUARET1(you_class, string, get_job_name(you.char_class))
+/*** Get noun for player's hands.
+ * @treturn string
+ * @function hand
+ */
+ LUARET1(you_hand, string, species_hand_name(you.species).c_str())
 /*** Is player in wizard mode?
  * @treturn boolean
  * @function wizard
@@ -1217,6 +1222,7 @@ static const struct luaL_reg you_clib[] =
     { "ability_table", l_you_abil_table },
     { "name"        , you_name },
     { "race"        , you_race },
+    { "hand"        , you_hand },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
     { "monster"     , l_you_monster },
