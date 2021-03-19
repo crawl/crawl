@@ -141,11 +141,23 @@ deplete magical power.
 %%%%
 Blade Hands spell
 
-Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage significantly.
+{{
+    local hands = you.hand() .. "s"
+    local description =
+               "Causes long, scythe-shaped blades to grow from the " ..
+               "caster's " .. hands .. ", increasing melee damage " ..
+               "significantly.\n\nWhile transformed, equipped weapons, " ..
+               "shields, and gloves are melded, and casting spells " ..
+               "becomes somewhat more difficult."
 
-While transformed, any equipped weapons are melded, and casting spells becomes
-somewhat more difficult.
+    if hands == "paws" then
+        return description .. " In addition, the clacking of blades " ..
+               "on the ground makes the caster slightly less stealthy."
+    else
+        return description
+    end
+}}
+
 %%%%
 Blink Allies Away spell
 
