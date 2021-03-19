@@ -2397,6 +2397,12 @@ bool melee_attack::mons_do_poison()
                               attacker->get_hit_dice() * 4);
     }
 
+    if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+    {
+        return curare_actor(attacker, defender, 2, "concentrated venom",
+                            attacker->name(DESC_PLAIN));
+    }
+
     if (!defender->poison(attacker, amount))
         return false;
 

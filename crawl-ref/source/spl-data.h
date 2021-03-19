@@ -3429,6 +3429,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
+    spschool::poison,
+    spflag::dir_or_target | spflag::not_self | spflag::helpful
+        | spflag::needs_tracer | spflag::utility | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

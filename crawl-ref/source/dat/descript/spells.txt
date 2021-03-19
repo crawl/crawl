@@ -312,6 +312,11 @@ Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
 %%%%
+Concentrate Venom spell
+
+Intensifies the natural venom of the target monster. Poisonous bites and spit
+become intense enough to slow and asphyxiate.
+%%%%
 Confuse spell
 
 Induces a state of bewilderment and confusion in a creature's mind.

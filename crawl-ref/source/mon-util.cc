@@ -3658,6 +3658,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_MIGHT:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_CONCENTRATE_VENOM:
         return true;
 
     default:

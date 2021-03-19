@@ -1471,7 +1471,18 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         if (!hurted && doFlavouredEffects && original > 0)
             simple_monster_message(*mons, " completely resists.");
         else if (doFlavouredEffects && !one_chance_in(3))
-            poison_monster(mons, pbolt.agent());
+        {
+            if (pbolt.origin_spell == SPELL_SPIT_POISON &&
+                pbolt.agent(true)->is_monster() &&
+                pbolt.agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+            {
+                // set the cause to the reflected agent for piety &c.
+                curare_actor(pbolt.agent(), mons, 2, "concentrated venom",
+                             pbolt.agent(true)->name(DESC_PLAIN));
+            }
+            else
+                poison_monster(mons, pbolt.agent());
+        }
 
         break;
     }
@@ -5063,6 +5074,7 @@ bool bolt::has_saving_throw() const
     case BEAM_IRRESISTIBLE_CONFUSION:
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
+    case BEAM_CONCENTRATE_VENOM:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores HR 1/3 of the time
@@ -5738,6 +5750,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
+    case BEAM_CONCENTRATE_VENOM:
+        dprf("trying to ench");
+        if (!mon->has_ench(ENCH_CONCENTRATE_VENOM)
+            && mon->add_ench(ENCH_CONCENTRATE_VENOM))
+        {
+            if (simple_monster_message(*mon, " seems to grow toxic."))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
     default:
         break;
     }
@@ -6270,7 +6292,8 @@ bool bolt::nice_to(const monster_info& mi) const
         || flavour == BEAM_MIGHT
         || flavour == BEAM_AGILITY
         || flavour == BEAM_INVISIBILITY
-        || flavour == BEAM_RESISTANCE)
+        || flavour == BEAM_RESISTANCE
+        || flavour == BEAM_CONCENTRATE_VENOM)
     {
         return true;
     }
@@ -6510,6 +6533,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_INFESTATION:           return "infestation";
     case BEAM_VILE_CLUTCH:           return "vile clutch";
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
+    case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
