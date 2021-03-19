@@ -1703,7 +1703,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_type)
         {
-            if (know_pluses && jewellery_has_pluses(*this))
+            if (!dbname && jewellery_has_pluses(*this))
                 buff << make_stringf("%+d ", plus);
 
             buff << jewellery_type_name(item_typ);

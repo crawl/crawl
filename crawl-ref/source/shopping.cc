@@ -552,8 +552,7 @@ unsigned int item_value(item_def item, bool ident)
         else
         {
             // Variable-strength rings.
-            if (item_ident(item, ISFLAG_KNOW_PLUSES)
-                && jewellery_type_has_plusses(item.sub_type))
+            if (jewellery_type_has_plusses(item.sub_type))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)

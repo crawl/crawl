@@ -1025,12 +1025,8 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_POTIONS:
     case OBJ_WANDS:
     case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
     case OBJ_JEWELLERY:
         flagset = ISFLAG_KNOW_TYPE;
-        if (jewellery_has_pluses(item))
-            flagset |= ISFLAG_KNOW_PLUSES;
         break;
     case OBJ_MISCELLANY:
         flagset = 0;
