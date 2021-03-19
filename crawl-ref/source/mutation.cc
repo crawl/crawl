@@ -689,7 +689,7 @@ static bool _is_appendage_mutation(mutation_type mut)
     return false;
 }
 
-vector<string> _get_mutations(bool terse)
+static vector<string> _get_mutations(bool terse)
 {
     vector<string> result;
 
