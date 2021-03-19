@@ -1,8 +1,8 @@
 enum: SP_PALENTONGA
 monster: MONS_PALENTONGA
 name: "Palentonga"
-difficulty: Intermediate
-difficulty_priority: 70
+difficulty: Simple
+difficulty_priority: 60
 species_flags:
   - SPF_SMALL_TORSO
   - SPF_BARDING
