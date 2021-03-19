@@ -2236,7 +2236,7 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
     if (!verbose && item.cursed())
-        description << "\nIt has a curse placed upon it.";
+        description << _describe_item_curse(item);
     else
     {
         if (verbose)
