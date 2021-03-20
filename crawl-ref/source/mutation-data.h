@@ -2119,6 +2119,14 @@ static const mutation_def mut_data[] =
   {"Your legs no longer feel aquatic."},
 },
 
+{ MUT_FLOAT, 0, 1, mutflag::good, false,
+  "float",
+
+  {"You float through the air.", "", ""},
+  {"You feel weightless.", "", ""},
+  {"You feel dragged down by the weight of the world."},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

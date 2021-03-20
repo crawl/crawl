@@ -5142,7 +5142,8 @@ bool player::airborne() const
     if (duration[DUR_FLIGHT]
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
-        || get_form()->enables_flight())
+        || get_form()->enables_flight()
+        || has_mutation(MUT_FLOAT))
     {
         return true;
     }
