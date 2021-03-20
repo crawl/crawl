@@ -316,6 +316,10 @@ unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
+Freeze cast
+
+@The_monster@ freezes @target@.
+%%%%
 Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame @at@ @target@.

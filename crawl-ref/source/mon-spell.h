@@ -1735,6 +1735,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('J') Jellies.
+    { MST_OOZE,
+      {
+        { SPELL_FREEZE, 70, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_DISSOLUTION,
       {
        { SPELL_SUMMON_EYEBALLS, 62, MON_SPELL_PRIEST },

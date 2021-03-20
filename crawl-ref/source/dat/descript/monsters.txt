@@ -1790,7 +1790,8 @@ it sprays is just as deadly.
 ooze
 
 A glob of grey sludge that has somehow developed a rudimentary awareness and
-limited motility.
+limited motility. It periodically draws heat from its surroundings to sustain
+itself, freezing enemies unfortunate enough to be adjacent at the time.
 %%%%
 ophan
 
