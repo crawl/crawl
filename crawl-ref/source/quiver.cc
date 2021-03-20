@@ -1767,7 +1767,10 @@ namespace quiver
             switch (you.inv[wand_slot].unrand_idx)
             {
             case UNRAND_DISPATER:
-                return enough_hp(14, quiet) && enough_mp(4, quiet); // TODO: code duplication...
+                // TODO: code duplication...
+                if (you.has_mutation(MUT_HP_CASTING))
+                    return enough_hp(18, quiet);
+                return enough_hp(14, quiet) && enough_mp(4, quiet);
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:

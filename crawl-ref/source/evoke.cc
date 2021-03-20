@@ -188,15 +188,16 @@ void black_drac_breath()
 }
 
 /**
- * Returns the MP cost of zapping a wand:
- *     3 if player has MP-powered wands and enough MP available,
- *     1-2 if player has MP-powered wands and only 1-2 MP left,
- *     0 otherwise.
+ * Returns the MP cost of zapping a wand, depending on the player's MP-powered wands
+ * level and their available MP (or HP, if they're a djinn).
  */
 int wand_mp_cost()
 {
+    const int cost = you.get_mutation_level(MUT_MP_WANDS) * 3;
+    if (you.has_mutation(MUT_HP_CASTING))
+        return min(you.hp - 1, cost);
     // Update mutation-data.h when updating this value.
-    return min(you.magic_points, you.get_mutation_level(MUT_MP_WANDS) * 3);
+    return min(you.magic_points, cost);
 }
 
 int wand_power()
@@ -246,6 +247,7 @@ void zap_wand(int slot, dist *_target)
 
     const int mp_cost = wand_mp_cost();
     const int power = wand_power();
+    pay_mp(mp_cost);
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -253,9 +255,13 @@ void zap_wand(int slot, dist *_target)
     spret ret = your_spells(spell, power, false, &wand, _target);
 
     if (ret == spret::abort)
+    {
+        refund_mp(mp_cost);
         return;
+    }
     else if (ret == spret::fail)
     {
+        refund_mp(mp_cost);
         canned_msg(MSG_NOTHING_HAPPENS);
         you.turn_is_over = true;
         return;
@@ -263,7 +269,7 @@ void zap_wand(int slot, dist *_target)
 
     // Spend MP.
     if (mp_cost)
-        dec_mp(mp_cost, false);
+        finalize_mp_cost();
 
     // Take off a charge.
     wand.charges--;

@@ -2143,6 +2143,14 @@ static const mutation_def mut_data[] =
   {"You feel footloose."},
 },
 
+{ MUT_HP_CASTING, 0, 1, mutflag::good, false,
+  "hp casting",
+
+  {"Your magical power is your life essence.", "", ""},
+  {"Your magical power and health merge together.", "", ""},
+  {"Your life and magica unlink."},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

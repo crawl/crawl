@@ -5097,6 +5097,7 @@ int pakellas_surge_devices()
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
         return 0;
 
+    // XXX TODO: support djinn here (HP_CASTING, pay_mp, etc)
     const int mp = min(you.magic_points, min(9, max(3,
                        1 + random2avg(you.piety * 9 / piety_breakpoint(5),
                                       2))));

@@ -1078,10 +1078,14 @@ void calc_mp(bool scale = false);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
+void pay_mp(int cost);
 
 void inc_mp(int mp_gain, bool silent = false);
-void inc_hp(int hp_gain);
+void inc_hp(int hp_gain, bool silent = false);
+void refund_mp(int cost);
 void flush_mp();
+void flush_hp();
+void finalize_mp_cost(int addl_hp_cost = 0);
 
 void drain_hp(int hp_loss);
 // Undrain the player's HP and return excess HP if any.

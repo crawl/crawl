@@ -913,11 +913,13 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     const int cost = spell_mana(spell);
+    pay_mp(cost);
+
     // Majin Bo HP cost taken at the same time
+    // (but after hp costs from HP casting)
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
-    dec_mp(cost, true);
     if (_majin_charge_hp())
-        dec_hp(hp_cost, false);
+        you.hp -= cost;
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target);
@@ -925,9 +927,9 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     {
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
+        refund_mp(cost);
         if (_majin_charge_hp())
-            inc_hp(hp_cost);
+            you.hp += hp_cost;
 
         redraw_screen();
         update_screen();
@@ -944,8 +946,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         count_action(CACT_CAST, spell);
     }
 
-    flush_mp();
-
+    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     you.turn_is_over = true;
     alert_nearby_monsters();
 

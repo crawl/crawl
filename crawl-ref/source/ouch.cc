@@ -991,14 +991,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.hp > 0 && dam > 0)
         {
-            if (Options.hp_warning
-                && you.hp <= (you.hp_max * Options.hp_warning) / 100
-                && (death_type != KILLED_BY_POISON || poison_is_lethal()))
-            {
-                flash_view_delay(UA_HP, RED, 50);
-                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
-                dungeon_events.fire_event(DET_HP_WARNING);
-            }
+            if (death_type != KILLED_BY_POISON || poison_is_lethal())
+                flush_hp();
 
             hints_healing_check();
 

@@ -1136,13 +1136,19 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (you.duration[DUR_CONF] > 0)
             return "you're too confused to cast spells.";
 
-        if (!enough_mp(spell_mana(spell), true, false))
+        if (you.has_mutation(MUT_HP_CASTING))
+        {
+            if (!enough_hp(spell_mana(spell), true, false))
+                return "you don't have enough health to cast this spell.";
+        } else if (!enough_mp(spell_mana(spell), true, false))
             return "you don't have enough magic to cast this spell.";
 
         if (spell == SPELL_SUBLIMATION_OF_BLOOD
             && you.magic_points == you.max_magic_points)
         {
-            return "your reserves of magic are already full.";
+            if (you.max_magic_points)
+                return "your reserves of magic are already full.";
+            return "your magic and health are inextricable.";
         }
     }
 
