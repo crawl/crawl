@@ -1919,34 +1919,37 @@ bool is_removed_skill(skill_type skill)
     return false;
 }
 
+static map<skill_type, mutation_type> skill_sac_muts = {
+    { SK_AIR_MAGIC,      MUT_NO_AIR_MAGIC },
+    { SK_FIRE_MAGIC,     MUT_NO_FIRE_MAGIC },
+    { SK_EARTH_MAGIC,    MUT_NO_EARTH_MAGIC },
+    { SK_ICE_MAGIC,      MUT_NO_ICE_MAGIC },
+    { SK_POISON_MAGIC,   MUT_NO_POISON_MAGIC },
+    { SK_HEXES,          MUT_NO_HEXES_MAGIC },
+    { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
+    { SK_TRANSMUTATIONS, MUT_NO_TRANSMUTATION_MAGIC },
+    { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
+    { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
+    { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },
+
+    { SK_DODGING,        MUT_NO_DODGING },
+    { SK_ARMOUR,         MUT_NO_ARMOUR_SKILL },
+    { SK_EVOCATIONS,     MUT_NO_ARTIFICE },
+    { SK_STEALTH,        MUT_NO_STEALTH },
+};
+
 bool is_useless_skill(skill_type skill)
 {
-    if (is_removed_skill(skill)
-        || (skill == SK_AIR_MAGIC && you.get_mutation_level(MUT_NO_AIR_MAGIC))
-        || (skill == SK_CONJURATIONS
-            && you.get_mutation_level(MUT_NO_CONJURATION_MAGIC))
-        || (skill == SK_EARTH_MAGIC
-            && you.get_mutation_level(MUT_NO_EARTH_MAGIC))
-        || (skill == SK_FIRE_MAGIC && you.get_mutation_level(MUT_NO_FIRE_MAGIC))
-        || (skill == SK_HEXES && you.get_mutation_level(MUT_NO_HEXES_MAGIC))
-        || (skill == SK_ICE_MAGIC && you.get_mutation_level(MUT_NO_ICE_MAGIC))
-        || (skill == SK_NECROMANCY
-            && you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC))
-        || (skill == SK_POISON_MAGIC
-            && you.get_mutation_level(MUT_NO_POISON_MAGIC))
-        || (skill == SK_SUMMONINGS
-            && you.get_mutation_level(MUT_NO_SUMMONING_MAGIC))
-        || (skill == SK_TRANSLOCATIONS
-            && you.get_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
-        || (skill == SK_TRANSMUTATIONS
-            && you.get_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-        || (skill == SK_DODGING && you.get_mutation_level(MUT_NO_DODGING))
-        || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
-        || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
-        || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
-            && !you.has_innate_mutation(MUT_QUADRUMANOUS))
-        || (skill == SK_EVOCATIONS && you.get_mutation_level(MUT_NO_ARTIFICE))
-        || (skill == SK_STEALTH && you.get_mutation_level(MUT_NO_STEALTH))
+    if (is_removed_skill(skill))
+        return true;
+    auto mut = skill_sac_muts.find(skill);
+    if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
+        return true;
+    // shields isn't in the big map because shields being useless doesn't
+    // imply that missing hand is meaningless.
+    if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
+        || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
+                            && !you.has_innate_mutation(MUT_QUADRUMANOUS)
     )
     {
         return true;
