@@ -9,10 +9,9 @@ aptitudes:
   hp: 0
   mp_mod: 0
   mr: 4
-  fighting: -3
   long_blades: 1
   dodging: 1
-  spellcasting: -2
+  stealth: -2
   fire_magic: False
   ice_magic: False
   air_magic: False
