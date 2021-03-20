@@ -1938,6 +1938,14 @@ static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_STEALTH,        MUT_NO_STEALTH },
 };
 
+bool can_sacrifice_skill(mutation_type mut)
+{
+    for (auto sac : skill_sac_muts)
+        if (sac.second == mut)
+            return species_apt(sac.first) != UNUSABLE_SKILL;
+    return true;
+}
+
 bool is_useless_skill(skill_type skill)
 {
     if (is_removed_skill(skill))

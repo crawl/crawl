@@ -3718,6 +3718,10 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         if (mut_check_conflict(mut, true))
             continue;
 
+        // Don't offer sacrifices of skills that a player already can't use.
+        if (!can_sacrifice_skill(mut))
+            continue;
+
         // Special case a few weird interactions:
 
         // Don't offer to sacrifice summoning magic when already hated by all.
