@@ -1497,6 +1497,10 @@ static bool _handle_uskayaw_ability_unlocks()
 
 static bool _gift_sif_kiku_gift(bool forced)
 {
+    // Smokeless fire and books don't get along.
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return false;
+
     bool success = false;
     book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
@@ -3168,6 +3172,9 @@ bool player_can_join_god(god_type which_god, bool temp)
         return false;
 
     if (which_god == GOD_YREDELEMNUL && you.is_nonliving(temp))
+        return false;
+
+    if (which_god == GOD_SIF_MUNA && you.has_mutation(MUT_INNATE_CASTER))
         return false;
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
