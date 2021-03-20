@@ -2127,6 +2127,22 @@ static const mutation_def mut_data[] =
   {"You feel dragged down by the weight of the world."},
 },
 
+{ MUT_INNATE_CASTER, 0, 1, mutflag::good, false,
+  "innate caster",
+
+  {"You learn spells naturally, not from books.", "", ""},
+  {"You feel mystic power welling inside you.", "", ""},
+  {"You feel a greater respect for book-learning."},
+},
+
+{ MUT_FOOTLESS, 0, 1, mutflag::good, false,
+  "footless",
+
+  {"You have no feet.", "", ""},
+  {"You feel footless.", "", ""},
+  {"You feel footloose."},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

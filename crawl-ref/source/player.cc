@@ -5979,7 +5979,7 @@ mon_holy_type player::holiness(bool temp) const
     // Alive Vampires are MH_NATURAL
     if (is_lifeless_undead(temp))
         holi = MH_UNDEAD;
-    else if (species == SP_GARGOYLE)
+    else if (species == SP_GARGOYLE || species == SP_DJINNI)
         holi = MH_NONLIVING;
     else
         holi = MH_NATURAL;

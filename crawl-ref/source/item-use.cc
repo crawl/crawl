@@ -1075,6 +1075,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You don't currently have feet!");
             return false;
         }
+
+        if (you.get_mutation_level(MUT_FOOTLESS))
+        {
+            if (verbose)
+                mpr("You have no feet!"); // or legs
+            return false;
+        }
     }
 
     if (slot == EQ_HELMET)

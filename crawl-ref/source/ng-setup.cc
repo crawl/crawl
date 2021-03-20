@@ -238,6 +238,20 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
+static void _cleanup_innate_magic_skills()
+{
+    // could use a reference here, but seems surprising to the reader
+    int spcasting = you.skills[SK_SPELLCASTING];
+    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; sk++)
+    {
+        const int lvl = you.skills[sk];
+        if (lvl > spcasting)
+            spcasting = lvl;
+        you.skills[sk] = 0;
+    }
+    you.skills[SK_SPELLCASTING] = spcasting;
+}
+
 void give_items_skills(const newgame_def& ng)
 {
     create_wanderer();
@@ -317,6 +331,9 @@ void give_items_skills(const newgame_def& ng)
 
     if (you.has_mutation(MUT_NO_ARMOUR))
         you.skills[SK_SHIELDS] = 0;
+
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _cleanup_innate_magic_skills();
 
     if (!you_worship(GOD_NO_GOD))
     {

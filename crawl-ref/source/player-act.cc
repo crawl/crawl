@@ -554,7 +554,8 @@ static string _foot_name_singular(bool *can_plural)
         return "tentacles";
     }
 
-    if (you.species == SP_NAGA)
+    if (you.species == SP_NAGA
+        || you.species == SP_DJINNI)
     {
         *can_plural = false;
         return "underbelly";
