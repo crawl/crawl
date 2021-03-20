@@ -128,38 +128,40 @@ KMONS:   p = floating eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / stone giant / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
-: local bands = {
-:     [65 - you.absdepth() * 3] =
-:         { "cyclops", "tengu warrior", "centaur warrior", },
-:     [42 - you.absdepth() * 2] =
-:         { "kobold demonologist", "tengu conjurer", "deep elf pyromancer", "deep elf zephyrmancer",
-:           "necromancer", "yaktaur", "Azrael", "Kirke", },
-:     [26 - you.absdepth()] =
-:         { "boggart", "orc knight", "ogre mage", "skeletal warrior",
-:           "spriggan rider", "naga mage", "rakshasa", },
-:     [you.absdepth() * 2 - 37] =
-:         { "deep elf knight", "orc high priest", "deep troll shaman", },
-:     [you.absdepth() * 2 - 42] =
-:         { "harpy", "hell knight", "naga sharpshooter", "vampire mage",
-:           "orc warlord", "vampire knight", "stone giant",
-:           "deep elf high priest", "spriggan defender", },
-:     [you.absdepth() - 18] =
-:         { "death knight", "ancient champion",
-:           "merfolk aquamancer",
-:           "Margery", "Saint Roka", "Sojobo", },
-: }
-: local kmonsters = {}
-: for weight, monsters in pairs(bands) do
-:     if weight > 0 then
-:         for _, mons in ipairs(monsters) do
-:             if not you.uniques(mons) then
-:                 table.insert(kmonsters, mons .. " band w:" .. weight)
-:             end
-:         end
-:     end
-: end
-: util.sort(kmonsters)
-: kmons("s = " .. table.concat(kmonsters, " / "))
+{{
+local bands = {
+    [65 - you.absdepth() * 3] =
+        { "cyclops", "tengu warrior", "centaur warrior", },
+    [42 - you.absdepth() * 2] =
+        { "kobold demonologist", "tengu conjurer", "deep elf pyromancer",
+          "deep elf zephyrmancer", "necromancer", "yaktaur", "Azrael",
+          "Kirke", },
+    [26 - you.absdepth()] =
+        { "glowing orange brain", "spriggan berserker", "wizard",
+          "skeletal warrior", "salamander tyrant", "rakshasa", },
+    [you.absdepth() * 2 - 37] =
+        { "deep elf death mage", "spriggan air mage", "deep troll shaman", },
+    [you.absdepth() * 2 - 42] =
+        { "spark wasp", "hell knight", "naga sharpshooter", "vampire mage",
+          "orc warlord", "vampire knight", "stone giant",
+          "deep elf high priest", "spriggan defender", },
+    [you.absdepth() - 18] =
+        { "lich", "ancient champion", "tengu reaver", "Margery",
+          "Saint Roka", "Sojobo", },
+}
+local kmonsters = {}
+for weight, monsters in pairs(bands) do
+    if weight > 0 then
+        for _, mons in ipairs(monsters) do
+            if not you.uniques(mons) then
+                table.insert(kmonsters, mons .. " band w:" .. weight)
+            end
+        end
+    end
+end
+util.sort(kmonsters)
+kmons("s = " .. table.concat(kmonsters, " / "))
+}}
 KITEM:   ? = any ring randart w:390 / ring_of_the_octopus_king
 KITEM:   ! = ring of slaying / ring of wizardry / any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
@@ -577,12 +579,10 @@ SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
 MONS: tengu warrior band w:15 / tengu conjurer band w:15 / \
-      deep troll earth mage band / deep elf archer band w:1 / cyclops band / \
-      deep elf knight band
+      deep troll earth mage band / hell knight band / vampire knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
       fire dragon w:12 / ice dragon w:8 / titan
-MONS: caustic shrike w:5 / dire elephant / emperor scorpion / dire elephant band / \
-      very ugly thing band
+MONS: caustic shrike w:5 / very ugly thing band w:20
 MAP
   ......
  ...cc...
