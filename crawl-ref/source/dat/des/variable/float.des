@@ -4142,7 +4142,7 @@ NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 4=1 / 6=1. / 2=2. / .
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation \
          / golden eye / shining eye
-MONS:    acid blob / azure jelly / rocksliem
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 :   end
