@@ -3097,20 +3097,30 @@ bool bolt::misses_player()
         && !aimed_at_feet
         && SH > 0)
     {
-        // We use the original to-hit here.
-        // (so that effects increasing dodge chance don't increase block...?)
-        const int testhit = random2(hit * 130 / 100
-                                    + you.shield_block_penalty());
+        bool blocked = false;
+        if (hit == AUTOMATIC_HIT)
+        {
+            // 50% chance of blocking ench-type effects at 20 displayed sh
+            blocked = x_chance_in_y(SH, omnireflect_chance_denom(SH));
 
-        const int block = you.shield_bonus();
+            dprf(DIAG_BEAM, "%smnireflected: %d/%d chance",
+                 blocked ? "O" : "Not o", SH, omnireflect_chance_denom(SH));
+        }
+        else
+        {
+            // We use the original to-hit here.
+            // (so that effects increasing dodge chance don't increase
+            // block...?)
+            const int testhit = random2(hit * 130 / 100
+                                        + you.shield_block_penalty());
 
-        // 50% chance of blocking ench-type effects at 20 displayed sh
-        const bool omnireflected
-            = hit == AUTOMATIC_HIT
-              && x_chance_in_y(SH, omnireflect_chance_denom(SH));
+            const int block = you.shield_bonus();
 
-        dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
-        if ((testhit < block && hit != AUTOMATIC_HIT) || omnireflected)
+            dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
+            blocked = testhit < block;
+        }
+
+        if (blocked)
         {
             const string refl_name = name.empty() &&
                                      origin_spell != SPELL_NO_SPELL ?
