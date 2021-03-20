@@ -1023,6 +1023,11 @@ ability_type fixup_ability(ability_type ability)
         if (you.get_mutation_level(MUT_HP_CASTING))
             return ABIL_NON_ABILITY;
         return ability;
+    
+    case ABIL_SIF_MUNA_FORGET_SPELL:
+        if (you.get_mutation_level(MUT_INNATE_CASTER))
+            return ABIL_NON_ABILITY;
+        return ability;
 
     default:
         return ability;
