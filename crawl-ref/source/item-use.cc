@@ -3286,25 +3286,25 @@ void read_scroll(item_def& scroll)
             mpr("It is a scroll of amnesia.");
             // included in default force_more_message (to show it before menu)
         }
-        if (you.spell_no == 0)
-            mpr("You feel forgetful for a moment.");
-        else
+        if (you.spell_no == 0 || you.has_mutation(MUT_INNATE_CASTER))
         {
-            bool done;
-            bool aborted;
-            do
-            {
-                aborted = cast_selective_amnesia() == -1;
-                done = !aborted
-                       || alreadyknown
-                       || crawl_state.seen_hups
-                       || yesno("Really abort (and waste the scroll)?",
-                                false, 0);
-                cancel_scroll = aborted && alreadyknown;
-            } while (!done);
-            if (aborted)
-                canned_msg(MSG_OK);
+            mpr("You feel forgetful for a moment.");
+            break;
         }
+        bool done;
+        bool aborted;
+        do
+        {
+            aborted = cast_selective_amnesia() == -1;
+            done = !aborted
+                   || alreadyknown
+                   || crawl_state.seen_hups
+                   || yesno("Really abort (and waste the scroll)?",
+                            false, 0);
+            cancel_scroll = aborted && alreadyknown;
+        } while (!done);
+        if (aborted)
+            canned_msg(MSG_OK);
         break;
 
     default:

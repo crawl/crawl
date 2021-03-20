@@ -2854,7 +2854,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_BLINKING:
             return you.stasis();
         case SCR_AMNESIA:
-            return you_worship(GOD_TROG);
+            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
