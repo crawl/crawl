@@ -180,7 +180,9 @@ item_def* newgame_make_item(object_class_type base,
     // Wanderers may or may not already have a spell. - bwr
     // Also, when this function gets called their possible randbook
     // has not been initialised and will trigger an ASSERT.
-    if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
+    if (item.base_type == OBJ_BOOKS
+        && you.char_class != JOB_WANDERER
+        && !you.has_mutation(MUT_INNATE_CASTER))
     {
         spell_type which_spell = spells_in_book(item)[0];
         if (!spell_is_useless(which_spell, false, true)
@@ -433,6 +435,92 @@ static void _free_up_slot(char letter)
     }
 }
 
+// Randomize order of memorization of spells in the same level.
+static vector<spell_type> _shuffle_innates(const vector<spell_type> &spells)
+{
+    vector<spell_type> all_spells;
+    vector<spell_type> cur_level_spells;
+    int cur_level = 0;
+    for (spell_type spell : spells)
+    {
+        const int difficulty = spell_difficulty(spell);
+        ASSERT(difficulty >= cur_level);
+        if (difficulty > cur_level)
+        {
+            if (!cur_level_spells.empty())
+            {
+                shuffle_array(cur_level_spells);
+                for (spell_type cur_spell : cur_level_spells)
+                    all_spells.push_back(cur_spell);
+                cur_level_spells.clear();
+            }
+            cur_level = difficulty;
+        }
+        cur_level_spells.push_back(spell);
+    }
+
+    if (!cur_level_spells.empty())
+    {
+        shuffle_array(cur_level_spells);
+        for (spell_type cur_spell : cur_level_spells)
+            all_spells.push_back(cur_spell);
+    }
+    return all_spells;
+}
+
+static void _setup_innate_spells()
+{
+    vector<spell_type> chosen_spells;
+    for (item_def& it : you.inv)
+    {
+        if (it.base_type != OBJ_BOOKS || it.sub_type == BOOK_MANUAL)
+            continue;
+        ASSERT(!chosen_spells.size());
+        chosen_spells = spells_in_book(it);
+        destroy_item(it);
+    }
+
+    chosen_spells = _shuffle_innates(chosen_spells);
+
+    set<spell_type> spellset;
+    for (spell_type s : chosen_spells)
+        spellset.insert(s);
+
+    // Get spells at XL 1 and every even level thereafter.
+    int const min_lev[] = {1,1,2, 2,3,4, 5,6,6, 6,7,7, 8,9};
+    int const max_lev[] = {1,1,2, 3,4,5, 5,6,7, 7,8,8, 9,9};
+    for (int i = chosen_spells.size(); i <= 27 / 2; i++)
+    {
+        spell_type next_spell = SPELL_NO_SPELL;
+        int seen = 0;
+        for (int s = 0; s < NUM_SPELLS; ++s)
+        {
+            const spell_type spell = static_cast<spell_type>(s);
+
+            if (!is_player_book_spell(spell)
+                || spellset.find(spell) != spellset.end()
+                || spell_is_useless(spell, false))
+            {
+                continue;
+            }
+
+            const int lev = spell_difficulty(spell);
+            if (lev >= min_lev[i] && lev <= max_lev[i]
+                && one_chance_in(++seen))
+            {
+                next_spell = spell;
+            }
+        }
+        ASSERT(next_spell != SPELL_NO_SPELL);
+        spellset.insert(next_spell);
+        chosen_spells.push_back(next_spell);
+    }
+
+    add_spell_to_memory(chosen_spells[0]);
+    for (spell_type s : chosen_spells)
+        you.props[INNATE_SPELLS_KEY].get_vector().push_back(s);
+}
+
 void initial_dungeon_setup()
 {
     rng::generator levelgen_rng(BRANCH_DUNGEON);
@@ -506,13 +594,16 @@ static void _setup_generic(const newgame_def& ng,
 
     _give_basic_knowledge();
 
+    // Must be after _give_basic_knowledge
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _setup_innate_spells();
+    else
     {
-        msg::suppress quiet;
-        // Must be after _give_basic_knowledge
+        msg::suppress quiet; // XXX: TODO: move this back outside
         add_held_books_to_library();
     }
 
-    if (you.char_class == JOB_WANDERER)
+    if (you.char_class == JOB_WANDERER && !you.has_mutation(MUT_INNATE_CASTER))
         memorise_wanderer_spell();
 
     // A first pass to link the items properly.

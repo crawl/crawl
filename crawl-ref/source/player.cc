@@ -2595,6 +2595,21 @@ int xp_to_level_diff(int xp, int scale)
         return adjusted_level - projected_level;
 }
 
+static void _gain_innate_spells()
+{
+    auto &spell_vec = you.props[INNATE_SPELLS_KEY].get_vector();
+    for (int i = 0; i < spell_vec.size() && i <= you.experience_level / 2; i++)
+    {
+        const spell_type spell = (spell_type)spell_vec[i].get_int();
+        auto spindex = find(begin(you.spells), end(you.spells), spell);
+        if (spindex != end(you.spells))
+            continue; // already learned that one
+
+        add_spell_to_memory(spell);
+        mprf("The power to cast %s wells up from within.", spell_title(spell));
+    }
+}
+
 /**
  * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
@@ -2830,6 +2845,9 @@ void level_change(bool skip_attribute_increase)
         }
         if (!updated_maxhp)
             _gain_and_note_hp_mp();
+
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _gain_innate_spells();
 
         xom_is_stimulated(12);
         if (in_good_standing(GOD_HEPLIAKLQANA))

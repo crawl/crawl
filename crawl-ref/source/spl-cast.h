@@ -81,6 +81,8 @@ enum class spret
 #define IOOD_FLAWED "iood_flawed"
 #define IOOD_TPOS "iood_tpos"
 
+#define INNATE_SPELLS_KEY "innate_spells"
+
 #define fail_check() if (fail) return spret::fail
 
 void surge_power(const int enhanced);
