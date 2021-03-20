@@ -1831,6 +1831,11 @@ static void _get_book(item_def& it)
 {
     if (it.sub_type != BOOK_MANUAL)
     {
+        if (you.has_mutation(MUT_INNATE_CASTER))
+        {
+            mprf("%s burns to shimmering ash in your grasp.", it.name(DESC_THE).c_str());
+            return;
+        }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))

@@ -3058,6 +3058,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
 
     case OBJ_BOOKS:
+        // this might be wrong if we ever add more item ID back
+        if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)
+            return true;
         if (!ident && !item_type_known(item))
             return false;
         if ((ident || item_type_known(item)) && item.sub_type != BOOK_MANUAL)
