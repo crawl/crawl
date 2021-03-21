@@ -84,9 +84,9 @@ appropriate launcher and ammunition.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (such as javelins)more effective. In
-particular, it makes weapons of returning more likely to return to their
-thrower, and makes certain magical darts more likely to have an effect.
+Training Throwing will make thrown weapons (such as javelins) more effective.
+In particular, it makes boomerangs more likely to return to their thrower,
+and makes certain magical darts more likely to have an effect.
 
 Being skilled in Throwing increases your effectiveness with Slings, and vice
 versa.
@@ -94,20 +94,20 @@ versa.
 Armour
 
 Armour skill increases the AC gained by wearing heavy armour, and it also helps
-lessen the hindrance of heavy armour on melee combat and spellcasting.
+slightly lessen the hindrance of heavy armour on melee combat and spellcasting.
 %%%%
 Dodging
 
 The Dodging skill will affect your chance of dodging an attack, be it melee,
 ranged or magical. Certain types of attack cannot be dodged, however, such as
-enchantments (which must be resisted) and explosions.
+enchantments (which must be resisted with Willpower) and explosions.
 %%%%
 Stealth
 
 By training Stealth, you can make it less likely that monsters will notice you
 if they are asleep or otherwise unalert, and increase your chances of monsters
-losing track of you after you leave their vision. Note that monsters become
-more suspicious and observant as you descend.
+losing track of you after you leave their vision. Note that more powerful
+monsters tend to be more suspicious and observant.
 
 Stealth skill, along with the weapon skill for your equipped weapon, also
 governs the likelihood of doing a great amount of damage when attacking a
@@ -150,9 +150,8 @@ Hexes
 
 Hexes try to bestow various enchantments on nearby things. While none do direct
 damage, being ensorcelled can effectively take an opponent out of combat,
-although they often require overcoming an opponent's resistance to hostile
-enchantments to have an effect. Being skilled in Hexes will help overcome this
-resistance.
+although they often require overcoming an opponent's willpower to have an effect.
+Skill in Hexes can help overcome this.
 
 Being skilled in Hexes increases the success rate and spell power of spells in
 this school. Many spells belong to a combination of several schools, in which
@@ -161,12 +160,11 @@ schools.
 %%%%
 Summonings
 
-Summonings deals with summoning creatures from another plane of reality to join
-your army or distract your foes. Increasing Summonings skill may have a number
-of effects depending on the spell, such as longer duration, more powerful
-allies, or lower chances of creating hostile creatures. Note that summoned
-beings do not leave corpses and give no experience when killed, and their
-equipment is as ephemeral as they are.
+Summonings deals with summoning creatures from another plane of reality to
+temporarily aid you. Increasing Summonings skill may grant a number of effects
+depending on the spell, such as longer duration or more powerful allies. Note
+that summoned beings do not leave corpses and give no experience when killed,
+and their equipment is as ephemeral as they are.
 
 Being skilled in Summonings increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
@@ -177,7 +175,7 @@ Necromancy
 
 Necromancy is the art of draining and gaining life, although most often
 associated with zombies and other undead. As such, Necromancy spells have a
-wide range of effects, ranging from spells to create or control the undead to
+wide range of effects, ranging from spells to create or disrupt the undead to
 spells granting unholy healing in various forms.
 
 Being skilled in Necromancy increases the success rate and spell power of
@@ -220,7 +218,7 @@ in these schools.
 Ice Magic
 
 Ice Magic contains a range of direct damage spells, as well as some defensive
-effects such as spells to craft temporary shields and armour from ice.
+effects - for example, crafting temporary ice armour.
 
 Being skilled in Ice Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in
@@ -273,7 +271,5 @@ degree than the Spellcasting skill, and only the highest contribution is used.
 Evocations
 
 Evocations skill affects your ability to use magical items like wands and other
-uncommon objects. High skill may increase the power or success rate of such
-items, and may also let you determine the amount of charges a zapped wand has
-left.
+uncommon objects, increasing the power or success rate of such items.
 %%%%
