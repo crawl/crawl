@@ -580,12 +580,15 @@ static void _setup_generic(const newgame_def& ng,
     _give_basic_knowledge();
 
     // Must be after _give_basic_knowledge
-    if (you.has_mutation(MUT_INNATE_CASTER))
-        _setup_innate_spells();
-    else
     {
-        msg::suppress quiet; // XXX: TODO: move this back outside
-        add_held_books_to_library();
+        msg::suppress quiet;
+        // intentionally create the subgenerator either way, so that this has the
+        // same impact on the current main rng for all chars.
+        rng::subgenerator dj_rng;
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _setup_innate_spells();
+        else
+            add_held_books_to_library();
     }
 
     if (you.char_class == JOB_WANDERER && !you.has_mutation(MUT_INNATE_CASTER))
