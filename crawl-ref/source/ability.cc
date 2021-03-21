@@ -3486,13 +3486,17 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                 && !you.vampire_alive
                 && you.form != transformation::bat;
     case ABIL_FLY:
-        return you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT];
+        return you.racial_permanent_flight()
+            && !you.attribute[ATTR_PERM_FLIGHT]
+            && !you.has_mutation(MUT_FLOAT);
     case ABIL_STOP_FLYING:
         // handles both species and evoke flight
         // if (you.racial_permanent_flight() && you.attribute[ATTR_PERM_FLIGHT])
         //     return true;
         // TODO: dbl check tengu flight
-        return you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE];
+        return you.airborne()
+            && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+            && !you.has_mutation(MUT_FLOAT);
 
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
