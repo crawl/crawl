@@ -293,11 +293,11 @@ static species_type _get_hints_species(unsigned int type)
     switch (type)
     {
     case HINT_BERSERK_CHAR:
-        return SP_MINOTAUR;
+        return SP_HILL_ORC;
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:
-        return SP_HALFLING;
+        return SP_MINOTAUR;
     default:
         // Use something fancy for debugging.
         return SP_TENGU;
