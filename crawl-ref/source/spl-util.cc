@@ -1139,6 +1139,9 @@ string casting_uselessness_reason(spell_type spell, bool temp)
 
         if (you.has_mutation(MUT_HP_CASTING))
         {
+            // TODO: deduplicate with enough_hp()
+            if (you.duration[DUR_DEATHS_DOOR])
+                return "you cannot pay life while functionally dead.";
             if (!enough_hp(spell_mana(spell), true, false))
                 return "you don't have enough health to cast this spell.";
         } else if (!enough_mp(spell_mana(spell), true, false))
