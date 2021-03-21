@@ -289,30 +289,27 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 {
     rng::subgenerator item_rng;
 
-    static const weapon_list GOBLIN_WEAPONS = // total 10
-    {   { WPN_DAGGER,           3 },
-        { WPN_CLUB,             3 },
-        { NUM_WEAPONS,          4 }, };   // 60% chance of weapon
+    static const weapon_list GOBLIN_WEAPONS =
+    {   { WPN_DAGGER,           1 },
+        { WPN_CLUB,             1 }};
     static const weapon_list GNOLL_WEAPONS = // total 30
     {   { WPN_SPEAR,            8 },
         { WPN_HALBERD,          4 },
-        { WPN_CLUB,             4 },
-        { WPN_WHIP,             4 },
-        { WPN_FLAIL,            4 },
-        { NUM_WEAPONS,          6 } };    // 80% chance of weapon
+        { WPN_CLUB,             6 },
+        { WPN_WHIP,             6 },
+        { WPN_FLAIL,            6 } };
     static const weapon_list ORC_WEAPONS = // total 525 (!)
-    {   { WPN_CLUB,             70 },
-        { WPN_DAGGER,           60 },
+    {   { WPN_CLUB,            100 },
+        { WPN_DAGGER,           80 },
         { WPN_FLAIL,            60 },
-        { WPN_HAND_AXE,         60 },
-        { WPN_SHORT_SWORD,      40 },
+        { WPN_SHORT_SWORD,      60 },
+        { WPN_HAND_AXE,         80 },
+        { WPN_WHIP,             45 },
         { WPN_MACE,             40 },
-        { WPN_WHIP,             30 },
         { WPN_TRIDENT,          20 },
         { WPN_FALCHION,         20 },
         { WPN_WAR_AXE,          14 },
-        { WPN_MORNINGSTAR,      6 },
-        { NUM_WEAPONS,          105 } }; // 80% chance of weapon
+        { WPN_MORNINGSTAR,      6 } };
     static const weapon_list DE_KNIGHT_WEAPONS = // total 83 (?)
     {   { WPN_LONG_SWORD,       22 },
         { WPN_SHORT_SWORD,      22 },
@@ -1029,18 +1026,18 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     {
     case MONS_KOBOLD:
     case MONS_KOBOLD_BRIGAND:
-        if (x_chance_in_y(3, 5))     // give hand weapon
+        if (one_chance_in(30) && level > 2)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_HAND_CROSSBOW;
+            break;
+        }
+        else     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
                                            WPN_SHORT_SWORD, WPN_SHORT_SWORD,
                                            WPN_CLUB,        WPN_WHIP);
-        }
-        else if (one_chance_in(30) && level > 2)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HAND_CROSSBOW;
-            break;
         }
         break;
 
