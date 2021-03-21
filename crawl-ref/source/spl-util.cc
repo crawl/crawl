@@ -1137,6 +1137,9 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (you.duration[DUR_CONF] > 0)
             return "you're too confused to cast spells.";
 
+        if (spell_difficulty(spell) > you.experience_level)
+            return "you aren't experienced enough to cast this spell.";
+
         if (you.has_mutation(MUT_HP_CASTING))
         {
             // TODO: deduplicate with enough_hp()
