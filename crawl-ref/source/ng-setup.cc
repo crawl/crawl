@@ -502,6 +502,8 @@ static void _setup_innate_spells()
     }
 
     chosen_spells = _shuffle_innates(chosen_spells);
+    if (chosen_spells.empty())
+        chosen_spells.push_back(SPELL_NO_SPELL);
 
     set<spell_type> spellset;
     for (spell_type s : chosen_spells)
@@ -538,7 +540,8 @@ static void _setup_innate_spells()
         chosen_spells.push_back(next_spell);
     }
 
-    add_spell_to_memory(chosen_spells[0]);
+    if (chosen_spells[0] != SPELL_NO_SPELL)
+        add_spell_to_memory(chosen_spells[0]);
     for (spell_type s : chosen_spells)
         you.props[INNATE_SPELLS_KEY].get_vector().push_back(s);
 }
