@@ -869,7 +869,9 @@ deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
 deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
 ## From moon base wizlab
+%rim 0
 moon_troll MONS_MOON_TROLL
+%rim 1
 
 ## Vampires ('V')
 %sdir mon/undead
