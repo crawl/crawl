@@ -130,13 +130,13 @@ Spellcasting
 
 {{
     if you.race() == "Djinni" then
-	return "Being skilled in Spellcasting increases the success rate and spell "..
-	       "power of all spells."
+        return "Being skilled in Spellcasting increases the success rate and spell "..
+               "power of all spells."
     else
-	return "Being skilled in Spellcasting slightly increases the success " ..
-		"rate and spell power of all spells, along with increasing your " ..
-		"magical reserves. Training Spellcasting also gives you more spell " ..
-		"slots to spend on new spells."
+        return "Being skilled in Spellcasting slightly increases the success " ..
+                "rate and spell power of all spells, along with increasing your " ..
+                "magical reserves. Training Spellcasting also gives you more spell " ..
+                "slots to spend on new spells."
     end
 }}
 %%%%
@@ -275,8 +275,8 @@ abilities.
 {{
     if you.race() ~= "Djinni" then
         return "The Invocations skill also affects your magical reserves, " ..
-	       "but to a lesser degree than the Spellcasting skill. Only the " ..
-	       "higher contribution is used."
+               "but to a lesser degree than the Spellcasting skill. Only the " ..
+               "higher contribution is used."
     end
 }}
 %%%%
