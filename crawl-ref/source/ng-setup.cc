@@ -436,39 +436,6 @@ static void _free_up_slot(char letter)
     }
 }
 
-// Randomize order of memorization of spells in the same level.
-static vector<spell_type> _shuffle_innates(const vector<spell_type> &spells)
-{
-    vector<spell_type> all_spells;
-    vector<spell_type> cur_level_spells;
-    int cur_level = 0;
-    for (spell_type spell : spells)
-    {
-        const int difficulty = spell_difficulty(spell);
-        ASSERT(difficulty >= cur_level);
-        if (difficulty > cur_level)
-        {
-            if (!cur_level_spells.empty())
-            {
-                shuffle_array(cur_level_spells);
-                for (spell_type cur_spell : cur_level_spells)
-                    all_spells.push_back(cur_spell);
-                cur_level_spells.clear();
-            }
-            cur_level = difficulty;
-        }
-        cur_level_spells.push_back(spell);
-    }
-
-    if (!cur_level_spells.empty())
-    {
-        shuffle_array(cur_level_spells);
-        for (spell_type cur_spell : cur_level_spells)
-            all_spells.push_back(cur_spell);
-    }
-    return all_spells;
-}
-
 static bool _spell_has_trigger(spell_type to_trigger,
                                const set<spell_type> &triggers)
 {
@@ -491,28 +458,23 @@ static bool _spell_has_trigger(spell_type to_trigger,
 
 static void _setup_innate_spells()
 {
-    vector<spell_type> chosen_spells;
+    // Start with all spells from spellbooks in your inventory.
     for (item_def& it : you.inv)
     {
         if (it.base_type != OBJ_BOOKS || it.sub_type == BOOK_MANUAL)
             continue;
-        ASSERT(!chosen_spells.size());
-        chosen_spells = spells_in_book(it);
+        for (spell_type sp : spells_in_book(it))
+            if (!spell_is_useless(sp, false))
+                add_spell_to_memory(sp);
         destroy_item(it);
     }
 
-    chosen_spells = _shuffle_innates(chosen_spells);
-    if (chosen_spells.empty())
-        chosen_spells.push_back(SPELL_NO_SPELL);
-
+    // Get spells at XL 3 and every odd level thereafter.
+    vector<spell_type> chosen_spells;
     set<spell_type> spellset;
-    for (spell_type s : chosen_spells)
-        spellset.insert(s);
-
-    // Get spells at XL 1 and every even level thereafter.
-    int const min_lev[] = {1,1,2, 2,3,4, 5,6,6, 6,7,7, 8,9};
-    int const max_lev[] = {1,1,2, 3,4,5, 5,6,7, 7,8,8, 9,9};
-    for (int i = chosen_spells.size(); i <= 27 / 2; i++)
+    int const min_lev[] = {1,2, 2,3,4, 5,6,6, 6,7,7, 8,9};
+    int const max_lev[] = {1,2, 3,4,5, 5,6,7, 7,8,8, 9,9};
+    for (int i = 0; i < 27 / 2; i++)
     {
         spell_type next_spell = SPELL_NO_SPELL;
         int seen = 0;
@@ -540,8 +502,6 @@ static void _setup_innate_spells()
         chosen_spells.push_back(next_spell);
     }
 
-    if (chosen_spells[0] != SPELL_NO_SPELL)
-        add_spell_to_memory(chosen_spells[0]);
     for (spell_type s : chosen_spells)
         you.props[INNATE_SPELLS_KEY].get_vector().push_back(s);
 }

@@ -2599,7 +2599,7 @@ static void _gain_innate_spells()
 {
     auto &spell_vec = you.props[INNATE_SPELLS_KEY].get_vector();
     // Gain spells at every odd XL, starting at XL 3 and continuing to XL 27.
-    for (int i = 0; i < spell_vec.size() && i <= (you.experience_level - 1) / 2; i++)
+    for (int i = 0; i < spell_vec.size() && i < (you.experience_level - 1) / 2; i++)
     {
         const spell_type spell = (spell_type)spell_vec[i].get_int();
         auto spindex = find(begin(you.spells), end(you.spells), spell);

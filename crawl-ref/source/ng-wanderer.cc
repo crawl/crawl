@@ -153,7 +153,10 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         break;
 
     case STAT_INT:
-        selected_skill = random_choose(SK_SPELLCASTING, sk_1, sk_2);
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            selected_skill = SK_SPELLCASTING;
+        else
+            selected_skill = random_choose(SK_SPELLCASTING, sk_1, sk_2);
         break;
 
     default:
