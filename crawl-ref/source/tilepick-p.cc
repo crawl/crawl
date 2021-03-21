@@ -589,8 +589,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
 #endif
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
+#if TAG_MAJOR_VERSION == 34
     case SP_HALFLING:
         return TILEP_BASE_HALFLING;
+#endif
     case SP_HILL_ORC:
         return TILEP_BASE_ORC;
     case SP_KOBOLD:
