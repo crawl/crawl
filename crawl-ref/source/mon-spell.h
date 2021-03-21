@@ -1004,9 +1004,8 @@ static const mon_spellbook mspell_list[] =
     {  MST_NAGA_MAGE,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-       { SPELL_VENOM_BOLT, 10, MON_SPELL_WIZARD },
+       { SPELL_VENOM_BOLT, 20, MON_SPELL_WIZARD },
        { SPELL_CONCENTRATE_VENOM, 20, MON_SPELL_WIZARD },
-       { SPELL_HASTE_OTHER, 20, MON_SPELL_WIZARD },
        { SPELL_HASTE, 10, MON_SPELL_WIZARD },
       }
     },
