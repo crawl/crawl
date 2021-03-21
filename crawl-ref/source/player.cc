@@ -3442,7 +3442,8 @@ void calc_mp(bool scale)
     {
         int mp = you.magic_points * 100 + you.magic_points_regeneration;
         int new_max = you.max_magic_points;
-        mp = mp * new_max / old_max;
+        if (old_max)
+            mp = mp * new_max / old_max;
         you.magic_points = min(mp / 100, you.max_magic_points);
     }
     else
