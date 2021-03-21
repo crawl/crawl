@@ -3779,6 +3779,8 @@ int get_real_hp(bool trans, bool drained)
     hitp *= 10 + species_hp_modifier(you.species);
     hitp /= 10;
 
+    hitp += you.get_mutation_level(MUT_FLAT_HP) * 4;
+
     const bool hep_frail = have_passive(passive_t::frail)
                            || player_under_penance(GOD_HEPLIAKLQANA);
 

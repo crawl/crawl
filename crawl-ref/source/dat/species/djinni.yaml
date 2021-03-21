@@ -6,7 +6,7 @@ difficulty: Intermediate
 difficulty_priority: 70
 aptitudes:
   xp: 0
-  hp: 0
+  hp: -1
   mp_mod: 0
   mr: 4
   short_blades: 0
@@ -47,6 +47,7 @@ mutations:
     MUT_FOOTLESS: 1
     MUT_INNATE_CASTER: 1
     MUT_HP_CASTING: 1
+    MUT_FLAT_HP: 1
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_GLADIATOR
