@@ -133,7 +133,9 @@ namespace quiver
         bool af_hp_check = false;
         bool af_mp_check = false;
         if (!clua.callfn("af_hp_is_low", ">b", &af_hp_check)
-            || uses_mp() && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
+            || uses_mp()
+               && !you.has_mutation(MUT_HP_CASTING)
+               && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
