@@ -19,6 +19,7 @@ aptitudes:
   bows: -1
   crossbows: -1
   throwing: -1
+  spellcasting: -2
   dodging: 1
   fire_magic: False
   ice_magic: False
