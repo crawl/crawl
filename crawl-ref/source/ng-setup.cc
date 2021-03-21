@@ -25,6 +25,7 @@
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "tag-version.h"
@@ -468,6 +469,26 @@ static vector<spell_type> _shuffle_innates(const vector<spell_type> &spells)
     return all_spells;
 }
 
+static bool _spell_has_trigger(spell_type to_trigger,
+                               const set<spell_type> &triggers)
+{
+    switch (to_trigger)
+    {
+    case SPELL_BATTLESPHERE:
+        for (spell_type trigger : triggers)
+            if (battlesphere_can_mirror(trigger))
+                return true;
+        return false;
+    case SPELL_SPELLFORGED_SERVITOR:
+        for (spell_type trigger : triggers)
+            if (spell_servitorable(trigger))
+                return true;
+        return false;
+    default:
+        return true;
+    }
+}
+
 static void _setup_innate_spells()
 {
     vector<spell_type> chosen_spells;
@@ -499,7 +520,8 @@ static void _setup_innate_spells()
 
             if (!is_player_book_spell(spell)
                 || spellset.find(spell) != spellset.end()
-                || spell_is_useless(spell, false))
+                || spell_is_useless(spell, false)
+                || !_spell_has_trigger(spell, spellset))
             {
                 continue;
             }

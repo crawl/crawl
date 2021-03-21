@@ -1927,6 +1927,14 @@ spell_type player_servitor_spell()
     return SPELL_NO_SPELL;
 }
 
+bool spell_servitorable(spell_type to_serve)
+{
+    for (const spell_type spell : servitor_spells)
+        if (spell == to_serve)
+            return true;
+    return false;
+}
+
 /**
  * Initialize the given spellforged servitor's HD and spellset, based on the
  * caster's spellpower and castable attack spells.
