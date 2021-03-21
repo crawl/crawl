@@ -2,8 +2,8 @@ enum: SP_DJINNI
 monster: MONS_EFREET
 name: Djinni
 short_name: Dj
-difficulty: Intermediate
-difficulty_priority: 10
+difficulty: Simple
+difficulty_priority: 50
 aptitudes:
   xp: 0
   hp: 0

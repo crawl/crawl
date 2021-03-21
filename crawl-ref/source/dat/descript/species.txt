@@ -26,7 +26,7 @@ they grow.
 Djinni
 
 Djinni are ever-burning spirits. They learn spells innately, without books, and
-cast them by drawing down their own fires.
+cast by drawing down their own fires.
 %%%%
 Draconian
 
