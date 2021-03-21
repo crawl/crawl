@@ -395,6 +395,12 @@ vector<god_power> get_god_powers(god_type god)
     vector<god_power> ret;
     for (const auto& power : god_powers[god])
     {
+        // hack :( don't show fake hp restore
+        if (god == GOD_VEHUMET && power.rank == 1
+            && you.has_mutation(MUT_HP_CASTING))
+        {
+            continue;
+        }
         if (!(power.abil != ABIL_NON_ABILITY
               && fixup_ability(power.abil) == ABIL_NON_ABILITY))
         {
