@@ -128,10 +128,17 @@ do so.
 %%%%
 Spellcasting
 
-Being skilled in Spellcasting slightly increases the success rate and spell
-power of all spells, along with increasing your magical reserves.
-
-Training Spellcasting also gives you more spell slots to spend on new spells.
+{{
+    if you.race() == "Djinni" then
+	return "Being skilled in Spellcasting increases the success rate and spell "..
+	       "power of all spells."
+    else
+	return "Being skilled in Spellcasting slightly increases the success " ..
+		"rate and spell power of all spells, along with increasing your " ..
+		"magical reserves. Training Spellcasting also gives you more spell " ..
+		"slots to spend on new spells."
+    end
+}}
 %%%%
 Conjurations
 
@@ -265,8 +272,13 @@ Your Invocations skill affects the likelihood that an attempt to use divine
 abilities with certain gods will be successful, and often the power of such
 abilities.
 
-The Invocations skill also affects your magical reserves, but to a lesser
-degree than the Spellcasting skill, and only the highest contribution is used.
+{{
+    if you.race() ~= "Djinni" then
+        return "The Invocations skill also affects your magical reserves, " ..
+	       "but to a lesser degree than the Spellcasting skill. Only the " ..
+	       "higher contribution is used."
+    end
+}}
 %%%%
 Evocations
 
