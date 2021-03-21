@@ -20,7 +20,6 @@ aptitudes:
   crossbows: -1
   throwing: -1
   dodging: 1
-  stealth: -2
   fire_magic: False
   ice_magic: False
   air_magic: False
@@ -32,7 +31,6 @@ aptitudes:
   necromancy: False
   translocations: False
   transmutations: False
-  invocations: -1
   stealth: -1
 str: 7
 int: 9
