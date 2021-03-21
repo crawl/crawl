@@ -280,11 +280,6 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose body/animal_skin
 %finish SP_RECOMMENDED_GNOLL
 %start
-%compose base/halfling_m
-%compose body/animal_skin
-%compose hair/short_black
-%finish SP_RECOMMENDED_HALFLING
-%start
 %compose base/human_f
 %compose body/animal_skin
 %compose hair/short_black
@@ -364,7 +359,6 @@ enum:SP_RECOMMENDED_BARACHI SP_BARACHI
 enum:SP_RECOMMENDED_GARGOYLE SP_GARGOYLE
 enum:SP_RECOMMENDED_GHOUL SP_GHOUL
 enum:SP_RECOMMENDED_GNOLL SP_GNOLL
-enum:SP_RECOMMENDED_HALFLING SP_HALFLING
 enum:SP_RECOMMENDED_HUMAN SP_HUMAN
 enum:SP_RECOMMENDED_KOBOLD SP_KOBOLD
 enum:SP_RECOMMENDED_MERFOLK SP_MERFOLK

@@ -490,13 +490,8 @@ A lightweight spear, designed for throwing. It will pass through the targets it
 hits, potentially hitting all targets in its path until it reaches maximum
 range.
 {{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
         return "Unfortunately, it is too long and awkward for you to use."
-    else
-        return ""
     end
 }}
 %%%%
