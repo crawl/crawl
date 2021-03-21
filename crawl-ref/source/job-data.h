@@ -46,7 +46,8 @@ static const map<job_type, job_def> job_data =
 { JOB_AIR_ELEMENTALIST, {
     "AE", "Air Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA, SP_VINE_STALKER, },
+    { SP_DEEP_ELF, SP_TENGU, SP_BASE_DRACONIAN, SP_NAGA, SP_VINE_STALKER,
+      SP_DJINNI, },
     { "robe", "book of Air" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_AIR_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
@@ -111,7 +112,7 @@ static const map<job_type, job_def> job_data =
 { JOB_CONJURER, {
     "Cj", "Conjurer",
     -1, 10, 3,
-    { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, },
+    { SP_DEEP_ELF, SP_NAGA, SP_TENGU, SP_BASE_DRACONIAN, SP_DEMIGOD, SP_DJINNI, },
     { "robe", "book of Conjurations" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
@@ -153,7 +154,8 @@ static const map<job_type, job_def> job_data =
 { JOB_FIRE_ELEMENTALIST, {
     "FE", "Fire Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE, },
+    { SP_DEEP_ELF, SP_HILL_ORC, SP_NAGA, SP_TENGU, SP_DEMIGOD, SP_GARGOYLE,
+      SP_DJINNI, },
     { "robe", "book of Flames" },
     WCHOICE_NONE,
     { { SK_CONJURATIONS, 1 }, { SK_FIRE_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
@@ -184,8 +186,8 @@ static const map<job_type, job_def> job_data =
 { JOB_ICE_ELEMENTALIST, {
     "IE", "Ice Elementalist",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
-      SP_GARGOYLE, },
+    { SP_MERFOLK, SP_NAGA, SP_BASE_DRACONIAN, SP_DEMIGOD,
+      SP_GARGOYLE, SP_DJINNI, },
     { "robe", "book of Frost" },
     WCHOICE_NONE,
     { { SK_ICE_MAGIC, 4 }, { SK_SPELLCASTING, 2 },
@@ -249,7 +251,7 @@ static const map<job_type, job_def> job_data =
 { JOB_VENOM_MAGE, {
     "VM", "Venom Mage",
     0, 7, 5,
-    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_FELID,
+    { SP_DEEP_ELF, SP_SPRIGGAN, SP_NAGA, SP_MERFOLK, SP_TENGU, SP_DJINNI,
       SP_DEMONSPAWN, },
     { "robe", "Young Poisoner's Handbook" },
     WCHOICE_NONE,
@@ -284,7 +286,7 @@ static const map<job_type, job_def> job_data =
     "Wz", "Hedge Wizard",
     2, 6, 4,
     { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_MUMMY, },
+      SP_DJINNI, },
     { "dagger", "robe", "hat", "book of Minor Magic" },
     WCHOICE_NONE,
     { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
