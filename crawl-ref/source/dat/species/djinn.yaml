@@ -9,7 +9,16 @@ aptitudes:
   hp: 0
   mp_mod: 0
   mr: 4
-  long_blades: 1
+  short_blades: 0
+  long_blades: 0
+  axes: -1
+  maces_and_flails: -1
+  polearms: -1
+  staves: 0
+  slings: -1
+  bows: -1
+  crossbows: -1
+  throwing: -1
   dodging: 1
   stealth: -2
   fire_magic: False
