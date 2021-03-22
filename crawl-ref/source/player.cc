@@ -3498,7 +3498,7 @@ void flush_hp()
     you.redraw_hit_points = true;
 }
 
-void dec_mp(int mp_loss, bool silent)
+static void _dec_mp(int mp_loss, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -3512,6 +3512,11 @@ void dec_mp(int mp_loss, bool silent)
         flush_mp();
 }
 
+void drain_mp(int mp_loss)
+{
+    _dec_mp(mp_loss, false);
+}
+
 void pay_hp(int cost)
 {
     you.hp -= cost;
@@ -3523,7 +3528,7 @@ void pay_mp(int cost)
     if (you.has_mutation(MUT_HP_CASTING))
         you.hp -= cost;
     else
-        dec_mp(cost, true);
+        _dec_mp(cost, true);
 }
 
 void refund_hp(int cost)

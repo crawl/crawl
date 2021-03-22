@@ -3267,7 +3267,10 @@ static void _pay_ability_costs(const ability_def& abil)
          mp_cost, hp_cost, piety_cost);
 
     if (mp_cost)
-        dec_mp(mp_cost);
+    {
+        pay_mp(mp_cost);
+        finalize_mp_cost();
+    }
 
     if (hp_cost)
         dec_hp(hp_cost, false);

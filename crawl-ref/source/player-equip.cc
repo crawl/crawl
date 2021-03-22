@@ -690,7 +690,7 @@ static void _spirit_shield_message(bool unmeld)
             && !(have_passive(passive_t::no_mp_regen)
                  || player_under_penance(GOD_PAKELLAS)))
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             mpr("Now linked to your health, your magic stops regenerating.");
         }
 #endif

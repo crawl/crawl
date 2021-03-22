@@ -5107,7 +5107,7 @@ int pakellas_surge_devices()
                                       2))));
 
     const int severity = div_rand_round(mp, 3);
-    dec_mp(mp);
+    drain_mp(mp);
     you.duration[DUR_DEVICE_SURGE] = 0;
     if (severity == 0)
     {

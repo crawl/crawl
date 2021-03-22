@@ -1077,7 +1077,7 @@ void calc_hp(bool scale = false, bool set = false);
 void calc_mp(bool scale = false);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
-void dec_mp(int mp_loss, bool silent = false);
+void drain_mp(int mp_loss, bool silent = false);
 void pay_hp(int cost);
 void pay_mp(int cost);
 

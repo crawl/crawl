@@ -972,7 +972,7 @@ static bool _sif_muna_retribution()
     case 8:
         if (you.magic_points > 0)
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
