@@ -1451,7 +1451,7 @@ NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair:1-, !Lair:$
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
-MONS:    leopard gecko / frilled lizard, iguana, komodo dragon
+MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34

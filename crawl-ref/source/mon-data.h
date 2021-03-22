@@ -287,6 +287,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MACABRE_MASS, "macabre mass")
     AXED_MON(MONS_EYE_OF_DRAINING, "eye of draining")
     AXED_MON(MONS_DEATH_OOZE, "death ooze")
+    AXED_MON(MONS_LEOPARD_GECKO, "leopard gecko")
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -1421,7 +1422,7 @@ DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake", TILEP_MONS_SWAMP_DRAKE)
 },
 
 // lizards ('l')
-DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_LEOPARD_GECKO)
+DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
 
 {
     MONS_FRILLED_LIZARD, 'l', GREEN, "frilled lizard",
@@ -1434,19 +1435,6 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_LEOPARD_GECK
     I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED,
     {TILEP_MONS_FRILLED_LIZARD}, TILE_CORPSE_FRILLED_LIZARD
-},
-
-{
-    MONS_LEOPARD_GECKO, 'l', YELLOW, "leopard gecko",
-    M_COLD_BLOOD,
-    MR_NO_FLAGS,
-    16, MONS_GIANT_LIZARD, MONS_LEOPARD_GECKO, MH_NATURAL, 0,
-    { {AT_BITE, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    1, 55,
-    1, 14, MST_NO_SPELLS, true, S_HISS,
-    I_ANIMAL, HT_LAND, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED,
-    {TILEP_MONS_LEOPARD_GECKO}, TILE_CORPSE_LEOPARD_GECKO
 },
 
 {

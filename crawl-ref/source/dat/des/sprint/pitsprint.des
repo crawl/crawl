@@ -10,7 +10,7 @@
 
 function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / ooze / ball python /\
-           bat / kobold / rat / leopard gecko / gnoll band /\
+           bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
            floating eye / hound / iguana / ogre / orc wizard band /\
@@ -94,7 +94,7 @@ function base_monster_setup(e)
            pandemonium lord w:20 / pearl dragon / titan")
   e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
            ball python /\
-           bat / kobold / rat / leopard gecko / gnoll /\
+           bat / kobold / rat / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
            orc / worker ant / floating eye / skeleton /\
            zombie / river rat / ufetubus")

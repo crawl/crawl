@@ -106,7 +106,6 @@ meliai MONS_MELIAI
 
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
-leopard_gecko MONS_LEOPARD_GECKO
 iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON

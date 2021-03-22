@@ -1076,7 +1076,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
+MONS:    rat, bat, frilled lizard, worm, ooze
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
@@ -1220,7 +1220,7 @@ ENDMAP
 NAME:   wander_ebering_terrifying_dragon_lair
 TAGS:   no_monster_gen
 DEPTH:  D:1-3
-MONS:   frilled lizard / leopard gecko
+MONS:   frilled lizard
 NSUBST:  $ = $ / 4=$.. / *:.
 NSUBST:  D = 3:d / 3=d.. / *:.
 NSUBST:  E = e / 2=e. / .
@@ -1480,8 +1480,8 @@ MONS:    kobold brigand ; dagger . throwing net q:2
 : end
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
-: dgn.delayed_decay(_G, 'f', 'leopard gecko skeleton')
-MONS:    rat / leopard gecko
+: dgn.delayed_decay(_G, 'f', 'frilled lizard skeleton')
+MONS:    rat / frilled lizard
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
@@ -4582,16 +4582,16 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, leopard gecko, iguana, komodo dragon, basilisk, plant
-SUBST:   6 = 61, 1 = 1.
+MONS:    frilled lizard, iguana, komodo dragon, basilisk, plant
+SUBST:   5 = 51, 1 = 1.
 : if you.absdepth() > 9 then
-SUBST:   1 = 433221
+SUBST:   1 = 32211
 : elseif you.absdepth() > 6 then
-SUBST:   5 = 4, 1 = 32211
+SUBST:   4 = 3, 1 = 21
 : elseif you.absdepth() > 3 then
-SUBST:   5 = 3, 1 = 21
+SUBST:   4 = 2
 : else
-SUBST:   5 = 2
+SUBST:   4 = 1
 : end
 MAP
   xxxxxx

@@ -1365,7 +1365,7 @@ NAME:   ebering_ghost_sewer_f
 ORIENT: float
 DEPTH:  D:3-6
 KMONS:  O = player_ghost
-KMONS:  1 = leopard gecko / giant cockroach / rat / ball python
+KMONS:  1 = quokka / giant cockroach / rat / ball python
 KMONS:  2 = adder / worm / river rat
 KMONS:  3 = bullfrog
 KFEAT:  O = expired_portal

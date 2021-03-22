@@ -2414,7 +2414,7 @@ TAGS:   overflow_altar_trog
 DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
-MONS:   leopard gecko / rat / frilled lizard / quokka
+MONS:   rat / frilled lizard / quokka w:20
 : else
 MONS:   orc warrior ; war axe . animal skin
 MONS:   iguana / worker ant
@@ -2828,7 +2828,7 @@ MARKER: F = lua:fog_machine { \
         "spectral demonic crawler name:centipede name_species name_replace name_descriptor",
         "spectral black mamba",
         "spectral scorpion",
-        "spectral leopard gecko",
+        "spectral frilled lizard",
         "spectral cane toad"
       }
     }

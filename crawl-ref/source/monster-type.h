@@ -12,7 +12,9 @@ enum monster_type                      // env.mons[].type
     MONS_GIANT_LIZARD,          // genus
 #endif
     MONS_FRILLED_LIZARD,
+#if TAG_MAJOR_VERSION == 34
     MONS_LEOPARD_GECKO,
+#endif
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
     MONS_BASILISK,

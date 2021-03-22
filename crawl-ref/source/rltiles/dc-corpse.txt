@@ -44,7 +44,6 @@ cat1 CORPSE_FELID
 
 ## Lizards ('l')
 frilled_lizard CORPSE_FRILLED_LIZARD
-leopard_gecko CORPSE_LEOPARD_GECKO
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON

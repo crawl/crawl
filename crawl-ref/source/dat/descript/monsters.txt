@@ -1590,10 +1590,6 @@ lemure
 An accursed soul magically bound to hellish servitude for the highest bidder.
 If its master is slain, it will be freed, departing this realm with gratitude.
 %%%%
-leopard gecko
-
-A brightly-coloured lizard with huge, sharp teeth.
-%%%%
 lich
 
 A powerful wizard who has learned to cheat death itself, now existing as a
