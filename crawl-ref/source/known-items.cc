@@ -130,10 +130,15 @@ public:
         else if (item->base_type == OBJ_RUNES)
             name = "runes";
         else if (item->sub_type == get_max_subtype(item->base_type))
-            name = "unknown " + lowercase_string(item_class_name(item->base_type));
+        {
+            name = "unknown "
+                   + lowercase_string(item_class_name(item->base_type));
+        }
+        else if (item->base_type == OBJ_JEWELLERY)
+            name = pluralise(item->name(DESC_DBNAME));
         else
         {
-            name = item->name(DESC_PLAIN,false,true,false,false,flags);
+            name = item->name(DESC_PLAIN, false, true, false, false, flags);
             name = pluralise(name);
         }
 
@@ -222,8 +227,11 @@ static bool _identified_item_names(const item_def *it1,
                                    const item_def *it2)
 {
     int flags = it1->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
-    return it1->name(DESC_PLAIN, false, true, false, false, flags)
-         < it2->name(DESC_PLAIN, false, true, false, false, flags);
+    description_level_type desc =
+        it1->base_type == OBJ_JEWELLERY ? DESC_DBNAME : DESC_PLAIN;
+
+    return it1->name(desc, false, true, false, false, flags)
+         < it2->name(desc, false, true, false, false, flags);
 }
 
 // Allocate (with new) a new item_def with the given base and sub types,

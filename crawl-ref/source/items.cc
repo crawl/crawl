@@ -4532,11 +4532,13 @@ item_def get_item_known_info(const item_def& item)
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
+        {
             ii.sub_type = item.sub_type;
+            if (jewellery_has_pluses(item))
+                ii.plus = item.plus;
+        }
         else
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:
