@@ -5160,7 +5160,8 @@ bool player::is_sufficiently_rested() const
     // Only return false if resting will actually help.
     return (!player_regenerates_hp() || hp >= _rest_trigger_level(hp_max))
             && (magic_points >= _rest_trigger_level(max_magic_points)
-                || !player_regenerates_mp());
+                || !player_regenerates_mp())
+            && !you.duration[DUR_BARBS];
 }
 
 bool player::in_water() const
