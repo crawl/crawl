@@ -3100,7 +3100,7 @@ bool bolt::misses_player()
         bool blocked = false;
         if (hit == AUTOMATIC_HIT)
         {
-            // 50% chance of blocking ench-type effects at 20 displayed sh
+            // 50% chance of blocking ench-type effects at 10 displayed sh
             blocked = x_chance_in_y(SH, omnireflect_chance_denom(SH));
 
             dprf(DIAG_BEAM, "%smnireflected: %d/%d chance",
