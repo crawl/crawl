@@ -1378,6 +1378,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
                                                    : SCR_TELEPORTATION),
                  45, SCR_AMNESIA,
+                 // [Cha] don't generate noise scrolls if in sprint
+                 44, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
                  40, SCR_MAGIC_MAPPING,
@@ -1386,9 +1388,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_BLINKING,
                  32, SCR_IMMOLATION,
                  29, SCR_VULNERABILITY,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-                 22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
                  14, SCR_SUMMONING,
                  14, SCR_ACQUIREMENT,

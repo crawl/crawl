@@ -26,11 +26,6 @@
 #include "tileview.h"
 #include "traps.h"
 
-string weird_glowing_colour()
-{
-    return getMiscString("glowing_colour_name");
-}
-
 // Make the player swap positions with a given monster.
 void swap_with_monster(monster* mon_to_swap)
 {

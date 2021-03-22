@@ -251,16 +251,6 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static string _weird_smell()
-{
-    return getMiscString("smell_name");
-}
-
-static string _weird_sound()
-{
-    return getMiscString("sound_name");
-}
-
 /**
  * Prompt use of an item from either player inventory or the floor.
  *
@@ -2704,69 +2694,6 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     return result ? 1 : 0;
 }
 
-void random_uselessness()
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    const string skin = species_skin_name(you.species).c_str();
-    switch (random2(9))
-    {
-    case 0:
-    case 1:
-        mprf("The dust glows %s!", weird_glowing_colour().c_str());
-        break;
-
-    case 2:
-        if (you.weapon())
-        {
-            mprf("%s glows %s for a moment.",
-                 you.weapon()->name(DESC_YOUR).c_str(),
-                 weird_glowing_colour().c_str());
-        }
-        else
-        {
-            mpr(you.hands_act("glow", weird_glowing_colour()
-                                      + " for a moment."));
-        }
-        break;
-
-    case 3:
-        if (starts_with(skin, "bandage"))
-            mpr("Your bandages flutter.");
-        else
-        {
-            mprf("You %s %s.", you.can_smell() ? "smell" : "sense",
-                _weird_smell().c_str());
-        }
-        break;
-
-    case 4:
-        mpr("You experience a momentary feeling of inescapable doom!");
-        break;
-
-    case 5:
-        if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
-            mpr("Your brain hurts!");
-        else if (!you.can_smell() || coinflip())
-            mpr("Your ears itch!");
-        else
-            mpr("Your nose twitches suddenly!");
-        break;
-
-    case 6:
-    case 7:
-        mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
-        noisy(2, you.pos());
-        break;
-    case 8:
-        mprf("Your %s briefly flash%s %s.",
-                        skin.c_str(),
-                        ends_with(skin, "s") ? "" : "s",
-                        weird_glowing_colour().c_str());
-        break;
-    }
-}
-
 static void _vulnerability_scroll()
 {
     const int dur = 30 + random2(20);
@@ -3090,10 +3017,6 @@ void read_scroll(item_def& scroll)
 
     switch (which_scroll)
     {
-    case SCR_RANDOM_USELESSNESS:
-        random_uselessness();
-        break;
-
     case SCR_BLINKING:
     {
         const string reason = you.no_tele_reason(true, true);
@@ -3253,6 +3176,7 @@ void read_scroll(item_def& scroll)
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
     case SCR_RECHARGING:
+    case SCR_RANDOM_USELESSNESS:
     {
         mpr("This item has been removed, sorry!");
         cancel_scroll = true;

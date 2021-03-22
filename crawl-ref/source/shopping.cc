@@ -539,7 +539,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_NOISE:
-            case SCR_RANDOM_USELESSNESS:
                 valued += 10;
                 break;
             }
@@ -757,7 +756,6 @@ bool is_worthless_consumable(const item_def &item)
         case SCR_CURSE_JEWELLERY:
 #endif
         case SCR_NOISE:
-        case SCR_RANDOM_USELESSNESS:
             return true;
         default:
             return false;

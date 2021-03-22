@@ -579,11 +579,6 @@ scroll of magic mapping
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.
 %%%%
-scroll of random uselessness
-
-Man wird leicht durch den Umstand geblendet das diese Schriftrolle überhaupt
-funktioniert, jedoch ist diese im wesentlichen nutzlos.
-%%%%
 scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.

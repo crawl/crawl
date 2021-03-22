@@ -523,7 +523,7 @@ ORIENT:   encompass
 SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
-          scroll of random uselessness w:1
+          scroll of noise w:1
 MONS:     frilled lizard / ball python w:5 / giant cockroach / \
           generate_awake frilled lizard / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake \
@@ -581,7 +581,7 @@ KMONS:    ! = bullfrog / nothing w:2
 SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
-          scroll of random uselessness w:1
+          scroll of noise w:1
 ITEM:     nothing, nothing
 KITEM:    de = *
 : sewer_setup(_G)
@@ -723,8 +723,7 @@ KMONS:  4 = Purgy, water moccasin
 ITEM:   potion of flight / potion of attraction / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / \
-        nothing w:140
+        scroll of noise / nothing w:140
 : sewer_setup(_G)
 MAP
    ccccccccc
@@ -851,8 +850,7 @@ KMONS:  2 = purgy, water moccasin
 ITEM:   potion of flight / potion of attraction / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / \
-        nothing w:140
+        scroll of noise / nothing w:140
 NSUBST: e = 3:* / 9:d / *:.
 NSUBST: 0 = 5:1 / 1:2 / *:.
 KFEAT:  ' = deep_water
@@ -927,11 +925,10 @@ ITEM:     scroll of identify / potion of invisibility / pair of gloves w:5 / \
           pair of boots w:5 / potion of attraction / nothing
 ITEM:     scroll of identify / potion of resistance / potion of might / \
           potion of berserk rage / buckler / nothing
-KITEM:    ' = scroll of random uselessness w:30 / \
-              scroll of identify / scroll of teleportation / \
-              potion of degeneration w:100 / potion of mutation / \
-              potion of flight / hat / buckler / pair of gloves w:5 / \
-              pair of boots w:5
+KITEM:    ' = scroll of noise w:30 / scroll of identify / \
+              scroll of teleportation / potion of degeneration w:100 / \
+              potion of mutation / potion of flight / hat / buckler / \
+              pair of gloves w:5 / pair of boots w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx

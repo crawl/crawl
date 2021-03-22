@@ -690,7 +690,6 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_ENCHANT_WEAPON:     return "enchant weapon";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
-    case SCR_RANDOM_USELESSNESS: return "random uselessness";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
@@ -2845,8 +2844,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         switch (item.sub_type)
         {
-        case SCR_RANDOM_USELESSNESS:
-            return true;
         case SCR_TELEPORTATION:
             return you.stasis()
                    || crawl_state.game_is_sprint()
