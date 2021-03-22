@@ -486,6 +486,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
+        || spell == SPELL_MANIFOLD_ASSAULT
         || spell == SPELL_ABSOLUTE_ZERO) // n.b. not an area spell
     {
         return true;
