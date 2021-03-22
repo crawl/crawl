@@ -1917,6 +1917,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3} }}}},
     { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
     { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
+    { MONS_SALAMANDER_TYRANT, { {}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
     { MONS_MONSTROUS_DEMONSPAWN, { {2, 0, []() {
         return !player_in_branch(BRANCH_WIZLAB); // hack for wizlab_wucad_mu
     }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
