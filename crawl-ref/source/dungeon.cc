@@ -1519,6 +1519,46 @@ static int _num_items_wanted(int absdepth0)
         return 3 + roll_dice(3, 10);
 }
 
+static int _mon_die_size()
+{
+    const int size = branches[you.where_are_you].mon_die_size;
+    if (you.where_are_you != BRANCH_DUNGEON)
+        return size;
+
+    // Dungeon is a very special place and needs a lot of hand-holding.
+    // Historically we used weird mysterious MONS_NO_MONSTER weights for
+    // this balancing, but now we have technology.
+    switch (you.depth)
+    {
+        case 1:
+            return 12;
+        case 2:
+            return 10;
+        case 3:
+        case 4:
+            return 9;
+        case 5:
+        case 6:
+            return 7;
+        case 7:
+            return 6;
+        case 8:
+        case 9:
+            return 5;
+        case 10:
+            return 4;
+        case 11:
+            return 5;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            return 6;
+        default:
+            return 12;
+    }
+}
+
 // Return how many level monster are wanted for level generation.
 static int _num_mons_wanted()
 {
@@ -1531,8 +1571,7 @@ static int _num_mons_wanted()
         return 0;
     }
 
-    const int size = branches[you.where_are_you].mon_die_size;
-    int mon_wanted = roll_dice(3, size);
+    int mon_wanted = roll_dice(3, _mon_die_size());
     if (mon_wanted > 60)
         mon_wanted = 60;
     return mon_wanted;

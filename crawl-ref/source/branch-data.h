@@ -21,7 +21,7 @@ const Branch branches[NUM_BRANCHES] =
       "Dungeon", "the Dungeon", "D",
       nullptr,
       LIGHTGREY, BROWN,
-      'D', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'D', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE /*unused*/ },
 
     { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
       brflag::no_items,
