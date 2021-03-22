@@ -121,8 +121,6 @@ end
 function species_mock(e)
   if you.race() == "Barachi" then
     return "cane toad"
-  elseif you.race() == "Gnoll" then
-    return "jackal"
   elseif you.race() == "Demigod" then
     return "titan simulacrum"
   elseif you.race() == "Demonspawn" then
