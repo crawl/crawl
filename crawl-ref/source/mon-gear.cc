@@ -438,10 +438,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_DIRE_FLAIL,       2 }, };
 
     static const map<monster_type, mon_weapon_spec> primary_weapon_specs = {
-        { MONS_HOBGOBLIN,
-            { { { WPN_CLUB,             3 },
-                { NUM_WEAPONS,          2 },
-        } } },
         { MONS_ROBIN,
             { { { WPN_CLUB,             35 },
                 { WPN_DAGGER,           30 },
