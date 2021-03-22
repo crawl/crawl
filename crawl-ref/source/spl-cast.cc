@@ -926,7 +926,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     // (but after hp costs from HP casting)
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
     if (_majin_charge_hp())
-        you.hp -= cost;
+        pay_hp(cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target);
@@ -936,7 +936,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         // Return the MP since the spell is aborted.
         refund_mp(cost);
         if (_majin_charge_hp())
-            you.hp += hp_cost;
+            refund_hp(hp_cost);
 
         redraw_screen();
         update_screen();

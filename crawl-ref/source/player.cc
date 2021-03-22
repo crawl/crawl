@@ -3512,12 +3512,23 @@ void dec_mp(int mp_loss, bool silent)
         flush_mp();
 }
 
+void pay_hp(int cost)
+{
+    you.hp -= cost;
+    ASSERT(you.hp);
+}
+
 void pay_mp(int cost)
 {
     if (you.has_mutation(MUT_HP_CASTING))
         you.hp -= cost;
     else
         dec_mp(cost, true);
+}
+
+void refund_hp(int cost)
+{
+    you.hp += cost;
 }
 
 void refund_mp(int cost)

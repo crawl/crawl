@@ -204,8 +204,8 @@ static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* u
     }
 
     *did_work = true;
-    you.hp -= hp_cost;
-    dec_mp(mp_cost, true);
+    pay_hp(hp_cost);
+    pay_mp(mp_cost);
 
     int power = you.skill(SK_EVOCATIONS, 8);
 
@@ -213,8 +213,8 @@ static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* u
         == spret::abort)
     {
         *unevokable = true;
-        you.hp += hp_cost;
-        inc_mp(mp_cost, true);
+        refund_hp(hp_cost);
+        refund_mp(mp_cost);
 
         redraw_screen();
         update_screen();
