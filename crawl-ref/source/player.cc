@@ -6414,7 +6414,7 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT] || has_mutation(MUT_FLOAT);
 }
 
 bool player::racial_permanent_flight() const
