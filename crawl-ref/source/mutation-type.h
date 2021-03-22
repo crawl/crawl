@@ -257,7 +257,7 @@ enum mutation_type
     MUT_INNATE_CASTER,
     MUT_FOOTLESS,
     MUT_HP_CASTING,
-    MUT_FLAT_HP,
+    MUT_FLAT_HP, // XXX: remove before merging
     NUM_MUTATIONS,
     CATEGORY_MUTATIONS,
     RANDOM_MUTATION = CATEGORY_MUTATIONS,

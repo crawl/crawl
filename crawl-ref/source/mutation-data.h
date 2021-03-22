@@ -2122,8 +2122,8 @@ static const mutation_def mut_data[] =
 { MUT_FLOAT, 0, 1, mutflag::good, false,
   "float",
 
-  {"You float through the air.", "", ""},
-  {"You feel weightless.", "", ""},
+  {"You float through the air rather than walking.", "", ""},
+  {"You feel both weightless and legless.", "", ""},
   {"You feel dragged down by the weight of the world."},
 },
 
@@ -2135,6 +2135,7 @@ static const mutation_def mut_data[] =
   {"You feel a greater respect for book-learning."},
 },
 
+// XXX: remove before merging
 { MUT_FOOTLESS, 0, 1, mutflag::good, false,
   "footless",
 
