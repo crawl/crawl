@@ -570,6 +570,7 @@ enum monster_type                      // env.mons[].type
     MONS_SALAMANDER,
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     // Water monsters:
@@ -1112,6 +1113,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_FROSTHEART,
     MONS_IRONBOUND_THUNDERHULK,
     MONS_IRONBOUND_BEASTMASTER,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

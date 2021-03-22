@@ -2065,6 +2065,12 @@ salamander mystic
 A member of the salamander's scholarly caste, possessed of lesser size and
 strength, but wise in the ways of magic.
 %%%%
+salamander tyrant
+
+An intimidating volcano lord. It commands the magma of its realm as an
+extension of its body, and the majesty of its gaze can weaken even the proudest
+challenger.
+%%%%
 saltling
 
 A small, human-shaped agglomeration of salt. It was created by the last

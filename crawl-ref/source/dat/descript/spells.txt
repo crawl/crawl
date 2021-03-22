@@ -556,6 +556,10 @@ nor on areas that lack solid floor, like deep water or lava. The transformation
 is temporary and cannot be sustained out of the caster's sight. Spellpower will
 increase how long the bog lingers.
 %%%%
+Eruption spell
+
+Splits the earth to draw up a localized, short-lived volcano under the target.
+%%%%
 Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
@@ -1115,6 +1119,11 @@ Primal Wave spell
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
+Pyroclastic Surge spell
+
+Draws searing flames from lava. Any enemies of the caster standing
+next to or above lava will be burned.
+%%%%
 Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
@@ -1628,6 +1637,11 @@ Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
+%%%%
+Weakening Gaze spell
+
+Irresistably weakens a creature's melee attacks for a period of time,
+requiring line of sight but not not line of fire.
 %%%%
 Wereblood spell
 

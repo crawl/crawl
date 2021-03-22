@@ -406,7 +406,8 @@ bool del_spell_from_memory(spell_type spell)
 bool spell_is_direct_explosion(spell_type spell)
 {
     return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
-           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL
+           || spell == SPELL_ERUPTION;
 }
 
 bool spell_harms_target(spell_type spell)

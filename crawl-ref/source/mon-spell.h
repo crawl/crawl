@@ -1043,6 +1043,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SALAMANDER_TYRANT,
+      {
+       { SPELL_ERUPTION, 20, MON_SPELL_WIZARD },
+       { SPELL_PYROCLASTIC_SURGE, 50, MON_SPELL_WIZARD },
+       { SPELL_WEAKENING_GAZE, 50, MON_SPELL_WIZARD | MON_SPELL_INSTANT },
+      }
+    },
+
     // ('O') Ogres.
     {  MST_OGRE_MAGE,
       {

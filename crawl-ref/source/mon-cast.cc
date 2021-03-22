@@ -116,6 +116,7 @@ static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
 static void _setup_creeping_frost(bolt &beam, const monster &caster, int pow);
+static void _setup_pyroclastic_surge(bolt &beam, const monster &caster, int pow);
 static ai_action::goodness _negative_energy_spell_goodness(const actor* foe);
 static ai_action::goodness _caster_sees_foe(const monster &caster);
 static ai_action::goodness _foe_sleep_viable(const monster &caster);
@@ -124,12 +125,14 @@ static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
+static ai_action::goodness _foe_near_lava(const monster &caster);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
 static void _cast_resonance_strike(monster &mons, mon_spell_slot, bolt&);
 static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
+static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
@@ -358,6 +361,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
     { SPELL_CREEPING_FROST, { _foe_near_wall, _cast_creeping_frost, _setup_creeping_frost } },
+    { SPELL_PYROCLASTIC_SURGE, { _foe_near_lava, _cast_pyroclastic_surge, _setup_pyroclastic_surge } },
     { SPELL_FLAY, {
         [](const monster &caster) {
             const actor* foe = caster.get_foe(); // XXX: check vis?
@@ -378,6 +382,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             enchant_actor_with_flavour(caster.get_foe(), &caster,
                                        BEAM_DRAIN_MAGIC,
                                        mons_spellpower(caster, slot.spell));
+        },
+    } },
+    { SPELL_WEAKENING_GAZE, {
+        _caster_sees_foe,
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.get_foe()->weaken(&caster, caster.get_hit_dice());
         },
     } },
     { SPELL_WATER_ELEMENTALS, { _always_worthwhile, _mons_summon_elemental } },
@@ -1596,6 +1606,14 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.ex_size     = 2;
         break;
 
+    case SPELL_ERUPTION:
+        beam.flavour     = BEAM_LAVA;
+        beam.damage      = dice_def(3, 24);
+        beam.hit         = AUTOMATIC_HIT;
+        beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
+        beam.ex_size     = 2;
+        break;
+
     default:
         if (logic && logic->setup_beam) // already setup
             break;
@@ -2510,6 +2528,71 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
             continue;
         if (_near_visible_wall(caster, *mon))
             visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
+    }
+    if (visible_effect)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(25);
+    }
+}
+
+/// Can the caster see the given target's cell and lava next to (or under) them?
+static bool _near_visible_lava(const monster &caster, const actor &target)
+{
+    if (!caster.see_cell_no_trans(target.pos()))
+        return false;
+    for (adjacent_iterator ai(target.pos(), false); ai; ++ai)
+        if (feat_is_lava(env.grid(*ai)) && caster.see_cell_no_trans(*ai))
+            return true;
+    return false;
+}
+
+static ai_action::goodness _foe_near_lava(const monster &caster)
+{
+    const actor* foe = caster.get_foe();
+    if (!foe)
+        return ai_action::bad();
+
+    if (_near_visible_lava(caster, *foe))
+        return ai_action::good();
+    return ai_action::bad();
+}
+
+static void _setup_pyroclastic_surge(bolt &beam, const monster &, int pow)
+{
+    zappy(spell_to_zap(SPELL_PYROCLASTIC_SURGE), pow, true, beam);
+    beam.hit = AUTOMATIC_HIT;
+    beam.name = "flame surge";
+}
+
+static bool _pyroclastic_surge(coord_def p, bolt &beam)
+{
+    beam.source = p;
+    beam.target = p;
+    beam.fire();
+    return beam.explosion_draw_cell(p);
+}
+
+static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt &beam)
+{
+    bool visible_effect = false;
+    // Burn the player.
+    if (!caster.wont_attack() && _near_visible_lava(caster, you))
+        visible_effect |= _pyroclastic_surge(you.pos(), beam);
+
+    // Burn the player's friends.
+    for (vision_iterator vi(caster); vi; ++vi)
+    {
+        actor* target = actor_at(*vi);
+        if (!target)
+            continue;
+
+        monster *mon = target->as_monster();
+        if (!mon || mons_aligned(&caster, mon))
+            continue;
+        if (_near_visible_lava(caster, *mon))
+            visible_effect |= _pyroclastic_surge(mon->pos(), beam);
     }
     if (visible_effect)
     {
@@ -5254,8 +5337,9 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
 
 // Draconian stormcaller upheaval. Simplified compared to the player version.
 // Noisy! Causes terrain changes. Destroys doors/walls.
+// Also used for Salamander Tyrants
 // TODO: Could use further simplification.
-static void _mons_upheaval(monster& mons, actor& /*foe*/)
+static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
 {
     bolt beam;
     beam.source_id   = mons.mid;
@@ -5274,7 +5358,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/)
     beam.target = mons.target;
     string message = "";
 
-    switch (random2(4))
+    switch (randomize ? random2(4) : 0)
     {
         case 0:
             beam.name     = "blast of magma";
@@ -6509,7 +6593,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_UPHEAVAL:
-        _mons_upheaval(*mons, *foe);
+        _mons_upheaval(*mons, *foe, true);
+        return;
+
+    case SPELL_ERUPTION:
+        _mons_upheaval(*mons, *foe, false);
         return;
 
     case SPELL_SPORULATE:

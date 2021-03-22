@@ -192,9 +192,13 @@ Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
 %%%%
-Chant Fire Storm cast
+Pyroclastic Surge cast
 
-@The_monster@ begins to chant a fire storm spell!
+@The_monster@ calls gouts of flame from the lava!
+%%%%
+Eruption cast
+
+@The_monster@ rends the earth beneath you!
 %%%%
 Chant Word of Entropy cast
 
@@ -355,6 +359,10 @@ Slug Dart cast
 Paralysis Gaze cast
 
 @The_monster@ gazes piercingly through @target@!
+%%%%
+Weakening Gaze cast
+
+@The_monster@ gazes fiercely through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################

@@ -356,7 +356,8 @@ static const pop_entry pop_snake[] =
   {  1,  4,  200, FLAT, MONS_MANA_VIPER },
   {  1,  7,  225, PEAK, MONS_GUARDIAN_SERPENT },
   {  2,  5,  110, PEAK, MONS_SALAMANDER_MYSTIC },
-  {  2,  8,  245, SEMI, MONS_NAGARAJA },
+  {  2,  8,  145, SEMI, MONS_NAGARAJA },
+  {  2,  8,  100, SEMI, MONS_SALAMANDER_TYRANT },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1444,7 +1445,8 @@ static const pop_entry pop_lava_snake[] =
 { // Snake lava monsters
   {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
   {  1,   4,  200, FLAT, MONS_SALAMANDER },
-  {  0,   6,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
+  {  0,   6,  65,  SEMI, MONS_SALAMANDER_MYSTIC },
+  {  0,   6,  25,  RISE, MONS_SALAMANDER_TYRANT },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1454,8 +1456,9 @@ static const pop_entry pop_lava_depths[] =
   {  1,  6,   22, FALL, MONS_FIRE_BAT },
   {  1,  6,   11, FALL, MONS_FIRE_VORTEX },
   {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },
-  {  1,  6,  100, FLAT, MONS_SALAMANDER },
+  {  1,  6,   60, FLAT, MONS_SALAMANDER },
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
+  {  1,  8,   40, RISE, MONS_SALAMANDER_TYRANT },
   {  1,  6,  400, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
