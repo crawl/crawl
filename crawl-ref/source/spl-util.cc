@@ -1153,9 +1153,9 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (spell == SPELL_SUBLIMATION_OF_BLOOD
             && you.magic_points == you.max_magic_points)
         {
-            if (you.max_magic_points)
-                return "your reserves of magic are already full.";
-            return "your magic and health are inextricable.";
+            if (you.has_mutation(MUT_HP_CASTING))
+                return "your magic and health are inextricable.";
+            return "your reserves of magic are already full.";
         }
     }
 
