@@ -3550,7 +3550,7 @@ void refund_mp(int cost)
     }
 }
 
-void finalize_mp_cost(int addl_hp_cost)
+void finalize_mp_cost(bool addl_hp_cost)
 {
     if (you.has_mutation(MUT_HP_CASTING) || addl_hp_cost)
         flush_hp();

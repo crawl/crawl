@@ -1087,7 +1087,7 @@ void refund_mp(int cost);
 void refund_hp(int cost);
 void flush_mp();
 void flush_hp();
-void finalize_mp_cost(int addl_hp_cost = 0);
+void finalize_mp_cost(bool addl_hp_cost = false);
 
 void drain_hp(int hp_loss);
 // Undrain the player's HP and return excess HP if any.
