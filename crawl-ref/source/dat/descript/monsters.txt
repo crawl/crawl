@@ -1946,13 +1946,6 @@ quasit
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws
 are engraved with cursing runes that stiffen muscles.
 %%%%
-queen ant
-
-A bloated ant, covered in thick chitinous armour and possessing a strong
-poison. It is the sovereign of the colony and, when not disturbed, is
-constantly laying eggs. Once capable of flight, it has long since shed its
-wings; only rudimentary stubs remain.
-%%%%
 queen bee
 
 A ruler of a swarm of bees, even larger and more dangerous than its many
@@ -2213,12 +2206,6 @@ snapping turtle
 
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
 extensible and can reach out and bite from afar.
-%%%%
-soldier ant
-
-A tough ant with a disproportionately large head, strong mandibles, and a
-vicious sting capable of injecting painful venom. It is a soldier, and thus
-tasked with protecting the colony from invaders.
 %%%%
 soul eater
 
@@ -2604,12 +2591,6 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles. It roams the dungeon
 in search of prey, which it kills with its deadly venom.
-%%%%
-worker ant
-
-A wingless black insect with sharp mandibles capable of injecting a deadly
-poison. It is a worker, and thus tasked with gathering food — any living being
-it encounters is a potential meal.
 %%%%
 worldbinder
 

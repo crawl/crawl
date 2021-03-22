@@ -1712,8 +1712,7 @@ void melee_attack::set_attack_verb(int damage)
             else if (damage < HIT_STRONG)
                 attack_verb = "pummel";
             else if (defender->is_monster()
-                     && (mons_genus(defender->type) == MONS_WORKER_ANT
-                         || mons_genus(defender->type) == MONS_FORMICID))
+                     && mons_genus(defender->type) == MONS_FORMICID)
             {
                 attack_verb = "squash";
                 verb_degree = "like the proverbial ant";

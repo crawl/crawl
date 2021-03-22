@@ -201,95 +201,6 @@ a++++++++a
 aaaaaaaaaa
 ENDMAP
 
-# Anthill origins
-NAME:   minivault_29
-TAGS:   uniq_anthill transparent
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  0 = 1., ' = .
-: else
-NSUBST: 0 = 2:3 / * = 12
-SUBST:  ' = %
-: end
-MAP
-'1......1..'
-...x.xx.x.2.
-.xxx2xxxxx..
-.xxxx02xxx2.
-.2xx201012x1
-.xx024020xx.
-1xx021202x..
-.x2x1201xxx.
-.x2xx02022x.
-..xxxxxxxx2.
-...x2xxxx1..
-'1.......11'
-ENDMAP
-
-NAME:   zaba_anthell
-TAGS:   no_rotate uniq_anthill
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-SUBST:  X = x.
-NSUBST: @ = 1:@ / * = x.
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  1 = 111., 0 = 112, 3' = .
-: else
-SUBST:  1 = 112., 0 = 11122, ' = %
-: end
-MAP
-     X  X X X  X
-   XXx@x@x@x@x@xXX
-  X@xX1X.X1X.X1Xx@X
- XXx.X..1.X.1.X.0xXX
- XxX0000X.2X....0xxX
-XxX..X....X'.X2X01XxX
- @11.0X.'X2X3.X.011@
-XxX1X...X242X...X1XxX
- @110.X.3X2X'.X0.11@
-XxX10X2X.'X....X..XxX
- XxX0....X2.X0000XxX
- XXx0.X.1.X.1..X.xXX
-  X@xX1X.X1X.X1Xx@X
-   XXx@x@x@x@x@xXX
-     X  X X X  X
-ENDMAP
-
-NAME:  zaba_antful_of_joy
-TAGS:  no_rotate uniq_anthill
-DEPTH: D:8-13, Lair:2-, Spider
-MONS:  patrolling worker ant, soldier ant
-MONS:  entropy weaver, patrolling queen ant
-KFEAT: ^ = alarm trap
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST: 1 = 11., 2 = 221, 3 = ., ^ = ^.
-: else
-SUBST: 1 = 112., ' = %
-: end
-MAP
-    xxxxxxxxxxx
-   xx131xxx131xx
-   x11111x11111x
-  xxx.1.xxx.1.xxx
- xxx..x..x..x..xxx
-xx.2.xxx222xxx.2.xx
-x'111.x12421x.111'x
-xx...xxx222xxx...xx
- xxx..x.1x1.x..xxx
-  xxx.^.xxx.^.xxx
-   x'....x....'x
-   xx...xxx...xx
-    xxx11x11xxx
-      xx.^.xx
-       x+++x
-ENDMAP
-
 # I've revamped this vault to always place reasonably challenging monsters,
 # with monster/loot types and number scaling with depth. -gammafunk
 NAME:   worms_lemuel
@@ -343,38 +254,6 @@ WWwxxx1xxxwWW
  WWWWxxxWWWW
    WWwDwWW
     WWWWW
-ENDMAP
-
-NAME:   minmay_another_anthill
-TAGS:   uniq_anthill transparent
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  ab = 1:6 2:24 3 .:50 x:40
-: else
-NSUBST: b = 2:4 / 2:* / *:2
-SUBST:  a = 1:12 2:19 3:19 .:40 x:40
-: end
-MAP
-  .. .... .. .
- .xx.xxxx.xx.x.
-.xx.xaxxaxx.x.x.
-.x..xa.aax.aaxx.
- .xxa.x.a.axxax.
-.x.x.aaaaa.axx.
-.xx.aabbba.aaxx.
-.x.xxab5baa.ax.
-.x.aaa.bba.ax.x.
- .x.xaa.xxa.a.x.
-.x.xaa.aax.aaxx.
- ..xaax.a.aax.x.
-.xxaxaaa.aa.ax.
-.x.x.aaxxaxa.xx.
-.xx.x.xax.xax.x.
- .xxxx.x.x.x.xx.
-  .... . . . ..
 ENDMAP
 
 NAME:    hangedman_stitches_earthworm
@@ -449,24 +328,6 @@ xp.bp.bp.bpx
 xp..p..p..px
 xpb..b..b.px
 xxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-# Anthole (zaba)
-#
-NAME:   zaba_anthole
-TAGS:   extra layout_rooms
-DEPTH:  D:5-9, Lair
-MONS:   worker ant / nothing w:5
-MAP
-   @
- xx+xx
-xx...xx
-x.111.x
-x.111.x
-xx...xx
- xx+xx
-   @
 ENDMAP
 
 NAME:   minmay_worlds_worst_comb
@@ -979,7 +840,7 @@ KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
-KMONS:  8 = worker ant
+KMONS:  8 = scorpion
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
 KFEAT:  78 = W
@@ -1032,7 +893,7 @@ KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
-KMONS:  8 = worker ant
+KMONS:  8 = scorpion
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush
 KFEAT:  78 = W
@@ -1084,7 +945,7 @@ KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
 KMONS:   D = worm / tyrant leech
 KMONS:   E = jelly
-KMONS:   F = worker ant
+KMONS:   F = scorpion
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
 KMONS:   I = hell rat
@@ -7007,7 +6868,7 @@ ENDMAP
 NAME:    minmay_guarded_unrand_staff_of_olgreb
 DEPTH:   D:5-10
 TAGS:    no_monster_gen no_trap_gen transparent
-MONS:    worker ant / soldier ant
+MONS:    scorpion / redback w:5
 MONS:    killer bee
 MONS:    adder / water moccasin
 # TODO: built in fallback for staff of olgreb is kind of dumb

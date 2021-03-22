@@ -390,10 +390,6 @@ tier1_gauntlet_arenas = {
     plant  = "withered",
   },
   {
-    first  = {mons = "queen ant", min = 1, max = 1},
-    second = {mons = "soldier ant", min = 3, max = 6},
-  },
-  {
     second = {mons = "hornet", min = 2, max = 3},
   },
   {

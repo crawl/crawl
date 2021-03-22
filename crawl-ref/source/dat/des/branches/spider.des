@@ -159,7 +159,7 @@ NAME: nicolae_spider_entry_non_spiders
 TAGS: spider_entry ruin_lair transparent
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion / worker ant / worm / giant cockroach
+KMONS: 1 = scorpion w:20 / worm / giant cockroach
 KMONS: 2 = demonic crawler / boulder beetle / hornet
 MAP
 ...........
@@ -488,9 +488,8 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-KMONS:   1 = scorpion w:20 / hornet w:13 / worker ant w:35 / \
-             giant cockroach w:1 / worm w:1
-KMONS:   2 = soldier ant / redback / vampire mosquito w:5
+KMONS:   1 = scorpion w:55 / hornet w:13 / giant cockroach w:1 / worm w:1
+KMONS:   2 = redback w:15 / vampire mosquito
 KMONS:   3aAdD = boulder beetle
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
@@ -1100,34 +1099,6 @@ xX.X.XXX.X..XXxx
 xxX.X...X.XXXxx
  xxXXXXXXXXxxx
   xxxxxxxxxx
-ENDMAP
-
-NAME: nicolae_spider_ant_collections
-TAGS: uniq_anthill
-DEPTH: Spider
-NSUBST: % = 1:* / 5:% / 3:$ / *:1
-SUBST: X = xxxx., 1 = 11102.
-MONS: worker ant, soldier ant, entropy weaver, queen ant
-MAP
-        xxxx      xxxxx
-      xxxXXxxxx xxxxxxxx
-  xxxxxXX%XxX%xxxXxxXXXxx
- xxXXxxX..XX.XX%x%XXX%Xxx
-xxX.%xxXX.XX.XxX.X.XX.Xxx
-xX.XXxxX.XX%X.XX.XxXX.Xxx
-xxX3.xX.xxxXX.XxX.Xx.xxx
- xxXX..x1.xxx.xxX.xx....
- xX%XXx......xxxxx...1..@
- xX.XXx.4.2.1..xx.......@
-xxxX..x..........1..1xx.
-xxX.Xx.x1.xx.1.1....xxxx
-xxxX3xxxx.xxxx....xx.Xxxx
- xxxX%XX...XXx.xxxxXX.Xxx
-  xxxXX.X.X.XxX.xx%XX.Xxx
-   xxxXXX.XXxxXX..XxX%Xxx
-     xxX%X%XxxxxXXxxxXxx
-      xxxxxxx xxxxxxxxx
-        xxxx     xxxx
 ENDMAP
 
 NAME: nicolae_spider_cling_halls

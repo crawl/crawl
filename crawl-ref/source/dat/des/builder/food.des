@@ -83,8 +83,8 @@ NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   extra no_monster_gen patrolling
-MONS:   hornet / worm w:5 / worker ant
-MONS:   hornet w:7 / soldier ant w:13
+MONS:   hornet / worm w:5 / scorpion
+MONS:   hornet w:7 / vampire mosquito w:13
 MAP
 .xxxxxxx
 @xx.x.xcccc

@@ -142,7 +142,7 @@ function species_mock(e)
   elseif you.race() == "Felid" then
     return "sphinx zombie"
   elseif you.race() == "Formicid" then
-    return "soldier ant"
+    return "giant cockroach"
   elseif you.race() == "Gargoyle" then
     return "earth elemental"
   elseif you.race() == "Ghoul" then
@@ -2415,7 +2415,7 @@ MONS:   orc ; hand axe . animal skin
 MONS:   rat / frilled lizard / quokka w:20
 : else
 MONS:   orc warrior ; war axe . animal skin
-MONS:   iguana / worker ant
+MONS:   iguana / scorpion
 : end
 NSUBST: ' = 3=2 / .
 SUBST:  y = x, " = .

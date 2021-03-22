@@ -31,12 +31,11 @@ static const pop_entry pop_d[] =
   {  3,  8, 1000, FLAT, MONS_ORC },
 
 // These historically don't get kills after D:7ish.
-  {  4,  7,  500, PEAK, MONS_SCORPION },
-  {  4,  7, 1000, PEAK, MONS_WORKER_ANT },
-  {  4,  7,  800, PEAK, MONS_HOUND },
+  {  4,  7,  800, PEAK, MONS_SCORPION },
+  {  4,  7, 1000, PEAK, MONS_HOUND },
   {  4,  7,  350, PEAK, MONS_UFETUBUS },
   {  4,  7,  800, PEAK, MONS_OGRE },
-  {  4,  7,  500, PEAK, MONS_IGUANA },
+  {  4,  7, 1000, PEAK, MONS_IGUANA },
   {  4,  7,  350, PEAK, MONS_PHANTOM },
   {  4,  7, 1000, FLAT, MONS_SKELETON },
   {  4,  8,  500, PEAK, MONS_JELLY },

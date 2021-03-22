@@ -200,7 +200,7 @@ ENDMAP
 
 NAME:   sprint2_early_9
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   worker ant
+MONS:   scorpion
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -543,7 +543,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_1
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   soldier ant
+MONS:   water moccasin
 KITEM:  $ = gold q:81
 MAP
 11

@@ -15,9 +15,6 @@
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_cockroach CORPSE_GIANT_COCKROACH
-worker_ant CORPSE_WORKER_ANT
-soldier_ant CORPSE_SOLDIER_ANT
-queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4

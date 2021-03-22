@@ -1554,11 +1554,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         *motions_r |= DEAD_ARE_HOPPING;
     }
-    else if (mons_genus(zombie_type)    == MONS_WORKER_ANT
-             || mons_base_char(zombie_type) == 's') // many genera
-    {
+    else if (mons_base_char(zombie_type) == 's') // many genera
         *motions_r |= DEAD_ARE_CRAWLING;
-    }
     else
         *motions_r |= DEAD_ARE_WALKING;
 

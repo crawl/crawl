@@ -12,7 +12,7 @@ function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
            bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
-           gnoll shaman band / orc band / orc priest band / worker ant /\
+           gnoll shaman band / orc band / orc priest band /\
            floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
@@ -22,7 +22,7 @@ function base_monster_setup(e)
            flying skull / iron imp / white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / killer bee band / hornet /\
            manticore / wyvern / troll / two-headed ogre / yak band /\
-           komodo dragon / wraith / soldier ant / unseen horror /\
+           komodo dragon / wraith / unseen horror /\
            basilisk / cyclops band / efreet /\
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
@@ -95,8 +95,8 @@ function base_monster_setup(e)
   e.kmons("G = goblin / frilled lizard / giant cockroach / endoplasm /\
            ball python /\
            bat / kobold / rat / gnoll /\
-           hobgoblin / jackal band /  adder / quokka /\
-           orc / worker ant / floating eye / skeleton /\
+           hobgoblin / jackal band / adder / quokka /\
+           orc / scorpion / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\

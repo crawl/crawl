@@ -1268,8 +1268,8 @@ ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant cockroach w:30 / butterfly w:20
-MONS:   worker ant
-MONS:   killer bee / scorpion / soldier ant w:5
+MONS:   scorpion
+MONS:   killer bee / scorpion / vampire mosquito w:5
 MAP
 cccccccc+cccccccc
 c...............c

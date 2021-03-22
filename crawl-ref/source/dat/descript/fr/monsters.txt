@@ -1538,13 +1538,6 @@ quasit
 Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont
 couvertes d'un venin qui raidit les muscles.
 %%%%
-queen ant
-
-Une fourmi boursouflée, couverte d'une armure chitineuse et possédant un poison
-puissant. C'est la souveraine de la colonie et, lorsqu'elle n'est pas dérangée,
-elle pond perpétuellement des œufs. Auparavant capable de voler, elle a depuis
-longtemps perdu ses ailes ; seul des moignons rudimentaires restent.
-%%%%
 queen bee
 
 La dirigeante de l'essaim d'abeilles, bien plus large et dangereuse que ses
@@ -2009,12 +2002,6 @@ explosions de vent.
 wolf
 
 Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
-%%%%
-worker ant
-
-Un insecte sans ailes avec des mandibules acérées capable d'injecter un poison
-mortel. C'est une ouvrière, et sa tâche est de récupérer de la nourriture —
-n'importe quel être vivant qu'elle rencontre est un repas potentiel.
 %%%%
 worm
 

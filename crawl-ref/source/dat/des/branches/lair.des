@@ -803,36 +803,6 @@ t1tt1ttt21tt
      tt1t.t
 ENDMAP
 
-NAME:   wad_woods_antlair
-TAGS:   uniq_anthill
-DEPTH:  Lair:2-
-: wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
-MONS:   worker ant, soldier ant
-KMONS:  8 = entropy weaver
-KMONS:  Q = queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  8' = .
-: else
-SUBST:  ' = %
-: end
-MAP
-xxxxxxxxxxx1.xxxx
-xxx1xxx1xt.t.txxx
-x1xx1%..t1t.1x.tx
-xx..1.t...WWt%.x.
-xxxx.t.t.1tWWtt1.
-xxxxxxx1.....t.t.
-xxxxxx.x.x.1x...t
-xxxx.x.7xxx.xx.xx
-xxx6x.x.xxx.x.xxx
-xxxx.x.6x7..x.x7x
-x'x.x6x.W.x7x%86x
-x7.'x.xWWW.x86Q*x
-xx6xxxxxxxx6xx*%x
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   wad_woods_river_01
 TAGS:   extra
 DEPTH:  D:2-, Lair
