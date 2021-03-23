@@ -2739,7 +2739,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += make_stringf("... %s by %s",
                          death_type == KILLED_BY_COLLISION ? "caused" :
-                         auxkilldata == "by angry trees"   ? "awakened"
+                         auxkilldata == "by angry trees"   ? "awakened" :
+                         auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
                          death_source_name.c_str());
                 desc += _hiscore_newline_string();
