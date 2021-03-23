@@ -285,7 +285,8 @@ static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* une
             *unevokable = true;
             return true;
         }
-    } else if (!enough_mp(cost, false))
+    }
+    else if (!enough_mp(cost, false))
     {
         *unevokable = true;
         return true;
