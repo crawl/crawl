@@ -671,6 +671,9 @@ static void _handle_wucad_mu(int cost)
     if (!player_equip_unrand(UNRAND_WUCAD_MU))
         return;
 
+    if (you.has_mutation(MUT_HP_CASTING))
+        return;
+
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
         return;
 
