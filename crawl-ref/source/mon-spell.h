@@ -1952,7 +1952,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_PARALYSE, 16, MON_SPELL_VOCAL },
        { SPELL_CONFUSE, 16, MON_SPELL_VOCAL },
-       { SPELL_BERSERKER_RAGE, 33, MON_SPELL_MAGICAL },
+       { SPELL_BERSERKER_RAGE, 33, MON_SPELL_NATURAL },
       }
     },
 
