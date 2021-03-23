@@ -2655,7 +2655,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
-        // Even god powers cannot override racial berserk/haste restrictions.
+        // Check cases where a potion is permanently useless to the player
+        // species - temporarily useless potions can still be offered.
         if (*which == POT_BERSERK_RAGE
             && !you.can_go_berserk(true, false, true, nullptr, false))
         {
@@ -2663,6 +2664,11 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         }
         if (*which == POT_HASTE && you.stasis())
             continue;
+        if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
+            continue;
+        if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
+            continue;
+
         // Don't add potions which are already in the list
         bool dup = false;
         for (unsigned int i = 0; i < vec.size(); i++)
