@@ -1581,3 +1581,15 @@ static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
         end_spectral_weapon(spectral_weapon, false, true);
     }
 }
+
+////////////////////////////////////////////////////
+
+static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
+                            bool /*unmeld*/)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        _equip_mpr(show_msgs, "The staff is unable to connect with your "
+                              "magical essence.");
+    }
+}
