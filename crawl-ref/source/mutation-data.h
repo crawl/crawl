@@ -2122,8 +2122,8 @@ static const mutation_def mut_data[] =
 { MUT_FLOAT, 0, 1, mutflag::good, false,
   "float",
 
-  {"You float through the air.", "", ""},
-  {"You feel weightless.", "", ""},
+  {"You float through the air rather than walking.", "", ""},
+  {"You feel both weightless and legless.", "", ""},
   {"You feel dragged down by the weight of the world."},
 },
 
@@ -2140,7 +2140,21 @@ static const mutation_def mut_data[] =
 
   {"Your magical power is your life essence.", "", ""},
   {"Your magical power and health merge together.", "", ""},
-  {"Your life and magica unlink."},
+  {"Your life and magic unlink."},
+},
+
+{ MUT_FLAT_HP, 0, 3, mutflag::good, false,
+  "extra vitality",
+
+    {"You have superior vitality. (+4 HP)",
+     "You have much superior vitality. (+8 MHP)",
+     "You have exceptionally superior vitality. (+12 MHP)"},
+    {"You feel less vital.",
+     "You feel less vital.",
+     "You feel less vital."},
+    {"You feel more vital.",
+     "You feel more vital.",
+     "You feel more vital."},
 },
 
 };
