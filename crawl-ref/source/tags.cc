@@ -7276,9 +7276,9 @@ void unmarshallSpells(reader &th, monster_spells &spells
 #if TAG_MAJOR_VERSION == 34
             if (th.getMinorVersion() < TAG_MINOR_DEMONIC_SPELLS)
             {
-                if (spells[j].flags & MON_SPELL_DEMONIC)
+                if (spells[j].flags & MON_SPELL_VOCAL)
                 {
-                    spells[j].flags &= ~MON_SPELL_DEMONIC;
+                    spells[j].flags &= ~MON_SPELL_VOCAL;
                     spells[j].flags |= MON_SPELL_MAGICAL;
                 }
             }

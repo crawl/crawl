@@ -5110,17 +5110,6 @@ void debug_monspells()
                     }
                 }
 
-                COMPILE_CHECK(MON_SPELL_NO_SILENT > MON_SPELL_LAST_CATEGORY);
-                static auto NO_SILENT_CATEGORIES =
-                    MON_SPELL_SILENCE_MASK & ~MON_SPELL_NO_SILENT;
-                if (flag == MON_SPELL_NO_SILENT
-                    && (category & NO_SILENT_CATEGORIES))
-                {
-                    fails += make_stringf("Spellbook %s has spell %s marked "
-                                          "MON_SPELL_NO_SILENT redundantly\n",
-                                          bknm, spell_name.c_str());
-                }
-
                 COMPILE_CHECK(MON_SPELL_NOISY > MON_SPELL_LAST_CATEGORY);
                 if (flag == MON_SPELL_NOISY
                     && category && !(category & MON_SPELL_INNATE_MASK))

@@ -4908,6 +4908,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "wizard, ";
         if (hspell_pass[i].flags & MON_SPELL_PRIEST)
             inf.body << "priest, ";
+        if (hspell_pass[i].flags & MON_SPELL_VOCAL)
+            inf.body << "vocal, ";
         if (hspell_pass[i].flags & MON_SPELL_BREATH)
             inf.body << "breath, ";
         inf.body << (int) hspell_pass[i].freq << ")";

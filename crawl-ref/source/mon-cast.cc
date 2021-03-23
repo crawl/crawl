@@ -1266,7 +1266,7 @@ int mons_spell_range_for_hd(spell_type spell, int hd)
  *
  * @param mons      The monster casting the spell.
  * @param flags     The slot flags;
- *                  e.g. MON_SPELL_NATURAL | MON_SPELL_NO_SILENT.
+ *                  e.g. MON_SPELL_NATURAL | MON_SPELL_NOISY.
  * @return          The god that is responsible for the spell.
  */
 static god_type _find_god(const monster &mons, mon_spell_slot_flags flags)
@@ -6667,7 +6667,8 @@ static void _speech_keys(vector<string>& key_list,
     // because the bitfield-to-bool conversion is not implicit.
     const bool wizard  {slot_flags & MON_SPELL_WIZARD};
     const bool priest  {slot_flags & MON_SPELL_PRIEST};
-    const bool natural {slot_flags & MON_SPELL_NATURAL};
+    const bool natural {slot_flags & MON_SPELL_NATURAL
+                        || slot_flags & MON_SPELL_VOCAL};
     const bool magical {slot_flags & MON_SPELL_MAGICAL};
 
     const mon_body_shape shape = get_mon_shape(*mons);

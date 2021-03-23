@@ -531,8 +531,8 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_MAGICAL,    "M" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
+                { MON_SPELL_VOCAL,      "V" },
                 { MON_SPELL_BREATH,     "br" },
-                { MON_SPELL_NO_SILENT,  "ns" },
                 { MON_SPELL_INSTANT,    "in" },
                 { MON_SPELL_NOISY,      "noi" },
             };
