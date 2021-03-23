@@ -34,6 +34,7 @@ levelup_stats:
   - dex
 mutations:
   1:
+    MUT_MUTATION_RESISTANCE: 1
     MUT_FANGS: 2
     MUT_MANA_SHIELD: 1
     MUT_ANTIMAGIC_BITE: 1

@@ -112,8 +112,8 @@ Scaled mammals the size of horses, Palentongas launch powerful rolling charges.
 %%%%
 Spriggan
 
-Very small, very frail and very fast, Spriggans make highly competent stabbers
-and spellcasters.
+Very small, very frail and very fast, Spriggans make highly competent stabbers,
+slingers, and spellcasters.
 %%%%
 Troll
 
@@ -129,4 +129,5 @@ Vine Stalker
 
 Frail symbionts, Vine Stalkers cannot regain health from potions.
 Their magical reserves absorb damage, and they pack a magic-restoring bite.
+They have an increased resistance to mutagenic effects.
 %%%%
