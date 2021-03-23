@@ -365,6 +365,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
 
     switch (spell)
     {
+        case SPELL_FREEZE:
+            return freeze_damage(pow);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -393,6 +395,18 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
 
 static colour_t _spell_colour(spell_type spell)
 {
+    switch (spell)
+    {
+        case SPELL_FREEZE:
+        case SPELL_GLACIATE:
+            return WHITE;
+        case SPELL_WATERSTRIKE:
+            return LIGHTBLUE;
+        case SPELL_IOOD:
+            return LIGHTMAGENTA;
+        default:
+            break;
+    }
     const zap_type zap = spell_to_zap(spell);
     if (zap == NUM_ZAPS)
         return COL_UNKNOWN;
