@@ -6986,14 +6986,8 @@ static void _speech_fill_target(string& targ_prep, string& target,
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags)
 {
-    bool force_silent = false;
-
-    if (mons->type == MONS_SHADOW_DRAGON)
-        // Draining breath is silent.
-        force_silent = true;
-
-    const bool unseen    = !you.can_see(*mons);
-    const bool silent    = silenced(mons->pos()) || force_silent;
+    const bool unseen = !you.can_see(*mons);
+    const bool silent = silenced(mons->pos());
 
     if (unseen && silent)
         return;
