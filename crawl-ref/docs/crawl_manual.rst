@@ -1555,7 +1555,7 @@ Gargoyles (Gr)
 Djinni (Dj)
   Djinn are beings of smokeless fire. They enter the world spontaneously and
   without explanation, born with a tireless hunger for knowledge and adventure.
-  Djinni have a unique relationship with magic: rather than learning spells
+  Djinn have a unique relationship with magic: rather than learning spells
   from books, their spells come from within, welling up from their fiery core
   as they gain experience. They draw from that same fiery core to cast spells -
   for Djinn, magical power and health are one and the same.
