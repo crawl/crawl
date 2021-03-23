@@ -1,4 +1,4 @@
-Stone Soup 0.27-a0 (through 0.27-a0-498-g7ecbb0a)
+Stone Soup 0.27-a0 (through 0.27-a0-737-g0a99b99)
 -------------------------------------------------
 
 Branches, Environment
@@ -7,6 +7,10 @@ Branches, Environment
 * Gadget shops are removed.
 * Storm clouds no longer make noise.
 * After completing one Ziggurat the player is immune to the malevolence of Zot.
+* Swamp is now loud.
+* Many weaker monsters that previously appeared in Vaults no longer appear
+  there.
+* Shops can now place on D:1-3.
 
 Character
 ---------
@@ -32,6 +36,15 @@ Character
   of strength increases (or decreases) this by 2.5 percentage points.
 * Hidden stepdowns on dexterity and evasion are removed.
 * Spriggans' dodging apt is reduced to +3 and base dexterity reduced by one.
+* Kobold Fighters start with bucklers now.
+* Palentonga HP apt is reduced to +0.
+* Poison damage ticks much faster.
+* New species: Djinni. Djinni are floating spirits formed from
+  smokeless fire, they have no MP, instead casting spells
+  using their HP. They also cannot learn spells from books;
+  they instead get spells randomly and naturally, starting on
+  XL 3 and continuing on every even level.
+* Halflings are removed.
 
 Gods
 ----
@@ -49,6 +62,11 @@ Gods
     - 2* See Invisible
     - 3* Clarity
     - 4* Passive scrying to radius 2, scaling with piety to radius 4 at 6*.
+* Cheibriados no longer hates quick blades.
+* The Elixir card no longer heals allies and always regenerates both health and
+  magic, with duration scaling with power.
+* Yredelemnul accepts nonliving worshippers again.
+* Zin's Sanctuary no longer applies holy word.
 
 Monsters
 --------
@@ -68,6 +86,30 @@ Monsters
   darts, either poison or curare.
 * Launchers can now be dancing weapons, which will shoot!
 * When Boris spawns on the orb run he comes hasted and with a brilliance aura.
+* New Slime monsters:
+  - rockslime, a high AC flame resistant slime that tramples and hits hard
+  - quicksilver ooze, an antimagic and engulfing magic-immune ooze.
+* New Vaults monsters:
+  - ironbound frostheart, a human spellcaster that draws creeping frost from
+    the walls
+  - ironbound thunderhulk, an ogre with a smite-lightning attack that cannot
+    hit in close range
+  - ironbound beastmaster, a human beast trainer that comes with lindwurm or
+    dire elephant bands and speeds them along.
+* Vaults band changes:
+  - orc warlord bands are entirely orc knights in Vaults
+  - wizards in Vaults come with bands of ugly things
+* Snake monster changes:
+  - Naga and Naga Warriors have increased base damage.
+  - Naga Warriors cast battlecry.
+  - Naga no longer cast force lance.
+  - Nagaraja cast Dimension Anchor instead of Teleport Other.
+  - Naga Mages gain an enchantment that turns an ally's poison into curare.
+  - New monster: salamander tyrant, a volcano-stoking spellcaster  with a
+    weakening gaze
+* Monster weapon delay is standardized at the monster's speed, certain monster
+  base damages are adjusted to compensate.
+* Leopard Geckos, Eyes of Draining, and Death Oozes are removed
 
 
 Interface
@@ -100,6 +142,8 @@ Items
   aut.
 * Equipment is identified when visiting the square it is in, instead of
   requiring wear-identification.
+* The Vampire's tooth is reduced to +8
+* Rare scrolls, books, manuals, and enhancer staves can now spawn early
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
   inaccuracy, scrolls of remove curse, and boots of running are removed.
 
@@ -116,6 +160,7 @@ Spells
 * New spell: Manifold Assault. A level 5 translocations spell which attacks 2-4
   random foes in sight with the attacker's wielded weapon.
 * Airstrike no longer gets bonus damage against flying monsters.
+* Poisonous Vapours can no longer target empty space.
 * Summon Demon and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
