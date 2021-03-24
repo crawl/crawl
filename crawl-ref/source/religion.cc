@@ -3170,8 +3170,13 @@ bool player_can_join_god(god_type which_god, bool temp)
     if (is_good_god(which_god) && you.undead_or_demonic(temp))
         return false;
 
-    if (which_god == GOD_SIF_MUNA && you.has_mutation(MUT_INNATE_CASTER))
+    if (you.has_mutation(MUT_INNATE_CASTER)
+        && (which_god == GOD_SIF_MUNA
+            || which_god == GOD_VEHUMET
+            || which_god == GOD_KIKUBAAQUDGHA))
+    {
         return false;
+    }
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
