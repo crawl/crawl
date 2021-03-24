@@ -2540,6 +2540,23 @@ bool is_emergency_item(const item_def &item)
         default:
             return false;
         }
+    case OBJ_MISSILES:
+        // Missiles won't help Felids.
+        if (you.has_mutation(MUT_NO_GRASPING))
+            return false;
+
+        switch (item.sub_type)
+        {
+        case MI_DART:
+            return get_ammo_brand(item) == SPMSL_CURARE
+                   || get_ammo_brand(item) == SPMSL_BLINDING;
+        case MI_BOOMERANG:
+            return get_ammo_brand(item) == SPMSL_DISPERSAL;
+        case MI_THROWING_NET:
+            return true;
+        default:
+            return false;
+        }
     default:
         return false;
     }
