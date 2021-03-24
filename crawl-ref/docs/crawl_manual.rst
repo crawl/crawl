@@ -1540,6 +1540,17 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
+Palentongas (Pa)
+  The Palentongas are a large, scaled mammalian race, walking on four feet and
+  swinging a powerful tail behind them. Their elephant-back armies terrorize the
+  lands outside the Dungeon.
+
+  Palentongas are best known for their powerful roll attack, curling up and
+  rolling into a crashing melee attack against nearby foes. They're well suited
+  to melee combat and to casting supportive spells, but they're significantly
+  worse at other forms of combat and advance quite slowly in experience levels.
+  Their body shape reduces the protection given by the body armour they wear.
+
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They have low health, but large
@@ -1551,23 +1562,6 @@ Gargoyles (Gr)
   Their natural armour makes them strong melee fighters, and they are naturally
   skilled with blunt weapons and in unarmed combat. They can also be exceptional
   earth-based conjurers.
-
-Djinni (Dj)
-  Djinn are beings of smokeless fire. They enter the world spontaneously and
-  without explanation, born with a tireless hunger for knowledge and adventure.
-  Djinn have a unique relationship with magic: rather than learning spells
-  from books, their spells come from within, welling up from their fiery core
-  as they gain experience. They draw from that same fiery core to cast spells -
-  for Djinn, magical power and health are one and the same.
-
-  As elemental beings, Djinn are immune to poison and highly resistant to
-  fire, though cold damage is deeply inimical to them. Since they float
-  through the air without need for legs or feet, they cannot wear boots.
-
-  Djinn are middlingly competent at most forms of physical combat, but have
-  a particular aptitude for spellcasting. Their Spellcasting skill grants
-  the same level of spell success and power that other races need multiple
-  skills to reach.
 
 Draconians (Dr)
   Draconians are human-dragon hybrids: humanoid in form and approximately
@@ -1671,16 +1665,22 @@ Demonspawn (Ds)
   and conjurations and much better at necromancy and invocations. Note that
   unlike Demigods, they can take on gods, although not all will accept them.
 
-Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian race, walking on four feet and
-  swinging a powerful tail behind them. Their elephant-back armies terrorize the
-  lands outside the Dungeon.
+Djinni (Dj)
+  Djinn are beings of smokeless fire. They enter the world spontaneously and
+  without explanation, born with a tireless hunger for knowledge and adventure.
+  Djinn have a unique relationship with magic: rather than learning spells
+  from books, their spells come from within, welling up from their fiery core
+  as they gain experience. They draw from that same fiery core to cast spells -
+  for Djinn, magical power and health are one and the same.
 
-  Palentongas are best known for their powerful roll attack, curling up and
-  rolling into a crashing melee attack against nearby foes. They're well suited
-  to melee combat and to casting supportive spells, but they're significantly
-  worse at other forms of combat and advance quite slowly in experience levels.
-  Their body shape reduces the protection given by the body armour they wear.
+  As elemental beings, Djinn are immune to poison and highly resistant to
+  fire, though cold damage is deeply inimical to them. Since they float
+  through the air without need for legs or feet, they cannot wear boots.
+
+  Djinn are middlingly competent at most forms of physical combat, but have
+  a particular aptitude for spellcasting. Their Spellcasting skill grants
+  the same level of spell success and power that other races need multiple
+  skills to reach.
 
 Spriggans (Sp)
   Spriggans are small magical creatures distantly related to Elves. They love to
