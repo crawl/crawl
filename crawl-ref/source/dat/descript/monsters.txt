@@ -1082,6 +1082,12 @@ emperor scorpion
 A giant scorpion with a massive barb on its tail dripping deadly venom. It is
 one of the largest arachnids known to exist.
 %%%%
+endoplasm
+
+A glob of grey sludge that has somehow developed a rudimentary awareness and
+limited motility. It periodically draws heat from its surroundings to sustain
+itself, freezing enemies unfortunate enough to be adjacent at the time.
+%%%%
 entropy weaver
 
 A gaunt humanoid with flaking, pale chitin. Its spindly limbs are capable of
@@ -1786,12 +1792,6 @@ oklob sapling
 
 A young oklob plant. It is more fragile than the mature specimen, but the acid
 it sprays is just as deadly.
-%%%%
-ooze
-
-A glob of grey sludge that has somehow developed a rudimentary awareness and
-limited motility. It periodically draws heat from its surroundings to sustain
-itself, freezing enemies unfortunate enough to be adjacent at the time.
 %%%%
 ophan
 

@@ -665,7 +665,7 @@ MAP
  ccccccc
 ENDMAP
 
-NAME:   gammafunk_ghost_ooze
+NAME:   gammafunk_ghost_endoplasm
 DEPTH:  D:8-, Lair, Depths
 ORIENT: float
 KMONS:  O = player ghost

@@ -194,7 +194,7 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
 static bool _jiyva_slime_target(monster_type targetc)
 {
     return you_worship(GOD_JIYVA)
-           && (targetc == MONS_OOZE
+           && (targetc == MONS_ENDOPLASM
               || targetc == MONS_JELLY
               || targetc == MONS_SLIME_CREATURE
               || targetc == MONS_ACID_BLOB
@@ -680,7 +680,7 @@ void slimify_monster(monster* mon)
     const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
 
     if (x < 3)
-        target = MONS_OOZE;
+        target = MONS_ENDOPLASM;
     else if (x >= 3 && x < 5)
         target = MONS_JELLY;
     else if (x >= 5 && x <= 11)

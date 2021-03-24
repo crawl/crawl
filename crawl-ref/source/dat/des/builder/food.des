@@ -98,7 +98,7 @@ NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 WEIGHT: 10
 KMONS:  A = jelly
-KMONS:  B = ooze
+KMONS:  B = endoplasm
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end

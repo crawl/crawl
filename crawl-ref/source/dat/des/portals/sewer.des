@@ -411,7 +411,7 @@ WEIGHT: 15
 ORIENT: encompass
 MONS:   rat / river rat w:3
 MONS:   kobold / kobold brigand w:1
-MONS:   ball python / adder w:5 / frilled lizard w:2 / ooze w:1
+MONS:   ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
@@ -463,7 +463,7 @@ NAME:    kennysheep_pipe_town
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / kobold brigand w:2
-MONS:    bat / rat / ooze w:5 / ball python / frilled lizard w:5 /\
+MONS:    bat / rat / endoplasm w:5 / ball python / frilled lizard w:5 /\
          giant cockroach w:5 / adder w:1
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
@@ -572,7 +572,7 @@ ORIENT:   encompass
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
 KMONS:    W = frilled lizard / ball python / giant cockroach / \
-              quokka / ooze / adder w:4 / \
+              quokka / endoplasm / adder w:4 / \
               nothing w:270
 KFEAT:    W = W
 KFEAT:    ! = w
@@ -626,7 +626,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: de
 MONS:    rat / river rat w:2
-MONS:    ball python / adder w:5 / frilled lizard w:2 / ooze w:1
+MONS:    ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 MONS:    bullfrog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of haste w:5 / potion of brilliance w:5
@@ -901,18 +901,18 @@ COLOUR:   " = green
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
 KMONS:    ? = bat / frilled lizard / ball python / giant cockroach / \
-              quokka / ooze w:4 / worm w:4 / adder w:2
+              quokka / endoplasm w:4 / worm w:4 / adder w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
 MONS:     bat / frilled lizard / ball python / giant cockroach / \
-          quokka / ooze w:4 / worm w:4 / adder w:2
+          quokka / endoplasm w:4 / worm w:4 / adder w:2
 SHUFFLE:  23
 MONS:     bat / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
-MONS:     ooze / nothing w:2
+MONS:     endoplasm / nothing w:2
 #       chances are good you'll find something to cross the deep water
 SHUFFLE:  de
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
@@ -1030,7 +1030,7 @@ NAME:    sewer_co_15_rooms
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / w:7 kobold brigand
-MONS:    kobold / adder / ball python / w:7 worm / w:7 ooze / \
+MONS:    kobold / adder / ball python / w:7 worm / w:7 endoplasm / \
          rat / river rat w:5
 SUBST:   . = W..
 SUBST:   X = xx.
@@ -1111,7 +1111,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   kobold / kobold brigand
 MONS:   adder / ball python / worm
-MONS:   ooze / rat / river rat w:5
+MONS:   endoplasm / rat / river rat w:5
 # less water in the middle, more at the endpoints.
 SUBST:  ~ = WWWW.
 SUBST:  - = WW...
@@ -1341,7 +1341,7 @@ WEIGHT:  3
 # Placed monsters.
 MONS:    kobold w:35 / shadow imp / ufetubus w:15 / nothing w:5
 # Randomly generated monsters.
-MONS:    kobold w:50 / kobold zombie / ooze / giant cockroach / \
+MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
          giant cockroach zombie w:3 / ball python / adder zombie w:3 / \
          bat / bat zombie w:3
 NSUBST:   . = 10:2 / *:.

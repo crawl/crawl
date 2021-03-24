@@ -1218,7 +1218,7 @@ ENDMAP
 NAME:   lemuel_slime
 DEPTH:  D:6-, Lair
 ORIENT: float
-MONS:   w:20 ooze / jelly / fungus
+MONS:   w:20 endoplasm / jelly / fungus
 MONS:   slime creature / oklob plant
 MAP
 xxxxxxxxxx
@@ -3778,9 +3778,9 @@ TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
-MONS: kobold / kobold brigand w:6, ooze / jelly, slime creature
+MONS: kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
-MONS: kobold, ooze, jelly
+MONS: kobold, endoplasm, jelly
 : end
 {{
 dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..

@@ -219,7 +219,7 @@ function sroom_jelly_pit(e)
 
     local mons = {}
 
-    mons[1] = "ooze w:" .. math.max(72 - level * 2, 1)
+    mons[1] = "endoplasm w:" .. math.max(72 - level * 2, 1)
     mons[2] = "jelly w:54"
     mons[3] = "great orb of eyes w:" .. (1 + level)
     mons[4] = "large slime creature w:" .. (2 + level)

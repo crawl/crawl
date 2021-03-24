@@ -229,7 +229,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
-                "ooze / w:5 jelly",
+                "endoplasm / w:5 jelly",
                 "giant cockroach w:20 / scorpion / worm"
             }
         elseif round <= 5 then
@@ -252,7 +252,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:5 tarantella / w:5 redback / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
-                "jelly / w:5 ooze / floating eye / w:2 shining eye",
+                "jelly / w:5 endoplasm / floating eye / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",

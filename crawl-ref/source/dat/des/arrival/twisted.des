@@ -416,7 +416,7 @@ SUBST:   t : U...., 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
-KMONS:   1 = jelly / ooze
+KMONS:   1 = jelly / endoplasm
 SUBST:   t : U...., 23 = 0
 : else
 SUBST:   D = V
@@ -646,9 +646,9 @@ ENDMAP
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
 MONS:    w:30 nothing / giant cockroach / w:2 worm
-MONS:    w:30 nothing / ooze
+MONS:    w:30 nothing / endoplasm
 MONS:    w:20 nothing / jackal / rat
-MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
+MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 worm / \
          w:5 jackal / w:5 rat
 ORIENT:  float
 FTILE:   1234ABCDEabcdem = floor_dirt

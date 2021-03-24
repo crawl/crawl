@@ -2094,7 +2094,7 @@ ENDMAP
 NAME:    onia_arrival_handbag
 TAGS:    arrival
 ORIENT:  float
-MONS:    w:30 rat / ooze / ball python
+MONS:    w:30 rat / endoplasm / ball python
 SHUFFLE: {[
 SUBST:   [=.
 MAP

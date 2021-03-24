@@ -1921,7 +1921,7 @@ NAME:   evilmike_abyss_exit_16
 TAGS:   abyss_exit
 NSUBST: . = 1:O / *:.
 SUBST:  c = cbx, . = .....12
-MONS:   slime creature, ooze / jelly
+MONS:   slime creature, endoplasm / jelly
 : init_abyss_exit(_G, "O")
 MAP
 c+c+c+c+c+c

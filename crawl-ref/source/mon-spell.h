@@ -1745,7 +1745,7 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('J') Jellies.
-    { MST_OOZE,
+    { MST_ENDOPLASM,
       {
         { SPELL_FREEZE, 70, MON_SPELL_NATURAL },
       }

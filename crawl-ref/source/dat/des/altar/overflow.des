@@ -1602,7 +1602,7 @@ MONS:    orc ; club
 : else
 MONS:    ogre ; giant club
 : end
-MONS:    ooze
+MONS:    endoplasm
 KFEAT:   _ = altar_nemelex_xobeh
 SHUFFLE:  12_
 COLOUR:  12' = random

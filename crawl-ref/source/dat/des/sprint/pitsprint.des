@@ -9,7 +9,7 @@
 {{
 
 function base_monster_setup(e)
-  e.kmons("A = goblin / frilled lizard / giant cockroach / ooze / ball python /\
+  e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
            bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
@@ -92,7 +92,7 @@ function base_monster_setup(e)
   e.kmons("F = orb of fire / electric golem / ancient lich / royal mummy /\
            hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
            pandemonium lord w:20 / pearl dragon / titan")
-  e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
+  e.kmons("G = goblin / frilled lizard / giant cockroach / endoplasm /\
            ball python /\
            bat / kobold / rat / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\

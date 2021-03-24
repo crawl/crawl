@@ -746,7 +746,7 @@ asterion MONS_ASTERION
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
 %sdir mon/amorphous
-ooze MONS_OOZE
+endoplasm MONS_ENDOPLASM
 %rim 0
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
