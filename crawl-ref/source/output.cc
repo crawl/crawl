@@ -2150,26 +2150,29 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();
 
-    entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_drained())
-        entry.cprintf("MP:   ");
-    else
-        entry.cprintf("Magic:  ");
-
-    if (_boosted_mp())
-        entry.textcolour(LIGHTBLUE);
-    else
-        entry.textcolour(HUD_VALUE_COLOUR);
-
-    entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
-    if (you.species == SP_DEEP_DWARF
-        && get_real_mp(false) != you.max_magic_points)
+    if (!you.has_mutation(MUT_HP_CASTING))
     {
-        entry.cprintf(" (%d)", get_real_mp(false));
-    }
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        if (player_drained())
+            entry.cprintf("MP:   ");
+        else
+            entry.cprintf("Magic:  ");
 
-    cols.add_formatted(0, entry.to_colour_string(), false);
-    entry.clear();
+        if (_boosted_mp())
+            entry.textcolour(LIGHTBLUE);
+        else
+            entry.textcolour(HUD_VALUE_COLOUR);
+
+        entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
+        if (you.species == SP_DEEP_DWARF
+            && get_real_mp(false) != you.max_magic_points)
+        {
+            entry.cprintf(" (%d)", get_real_mp(false));
+        }
+
+        cols.add_formatted(0, entry.to_colour_string(), false);
+        entry.clear();
+    }
 
     entry.textcolour(HUD_CAPTION_COLOUR);
     if (player_drained())
@@ -2292,15 +2295,18 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
 
-    entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Spells: ");
+    if (!you.has_mutation(MUT_INNATE_CASTER))
+    {
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("Spells: ");
 
-    entry.textcolour(HUD_VALUE_COLOUR);
-    entry.cprintf("%d/%d levels left",
-                  player_spell_levels(), player_total_spell_levels());
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d/%d levels left",
+                      player_spell_levels(), player_total_spell_levels());
 
-    cols.add_formatted(3, entry.to_colour_string(), false);
-    entry.clear();
+        cols.add_formatted(3, entry.to_colour_string(), false);
+        entry.clear();
+    }
 
     if (you.has_mutation(MUT_MULTILIVED))
     {
