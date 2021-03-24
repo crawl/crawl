@@ -1140,8 +1140,8 @@ dgn.delayed_decay_extra(_G, "P", "felid skeleton",
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
--- Halfling warper.
-dgn.delayed_decay_extra(_G, "Q", "halfling skeleton",
+-- Kobold warper.
+dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "randbook disc:translocation / book of spatial translocations" ..
     "    / book of the warp" ..
     ", scroll of blinking / scroll of teleportation q:2" ..

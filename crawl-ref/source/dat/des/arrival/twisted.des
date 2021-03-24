@@ -91,7 +91,7 @@ KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
 KMONS:   D = orc ; nothing
 KMONS:   E = merfolk ; nothing
-KMONS:   F = halfling ; nothing
+KMONS:   F = barachi ; nothing
 KMONS:   G = kobold ; nothing
 KMONS:   H = spriggan ; nothing
 KMONS:   I = naga ; nothing
@@ -111,7 +111,7 @@ KMONS:   V = octopode ; nothing
 KMONS:   W = formicid ; nothing
 KMONS:   X = gargoyle ; nothing
 KMONS:   Y = vine stalker ; nothing
-KMONS:   Z = nothing
+KMONS:   Z = palentonga ; nothing
 MAP
  ccccc
  c.{.c

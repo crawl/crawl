@@ -135,8 +135,6 @@ function species_mock(e)
     return "will-o-the-wisp"
   elseif you.race() == "Gnoll" then
     return "jackal"
-  elseif you.race() == "Halfling" then
-    return "hobgoblin ; mundane hunting sling"
   elseif you.race() == "Hill Orc" then
     return "goblin ; mundane hand axe . mundane ring mail"
   elseif you.race() == "Human" then

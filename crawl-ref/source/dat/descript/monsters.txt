@@ -1318,10 +1318,6 @@ An ancient undead sorcerer, exhumed by the living divines Sheza and Sargol and
 forced to labour night and day to anchor them to the world. Even after the fall
 of the divine twins, it works to resurrect its fallen masters.
 %%%%
-halfling
-
-A humanoid of diminutive stature.
-%%%%
 harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared

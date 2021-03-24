@@ -2370,10 +2370,11 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KMONS:  p = human / elf / orc / naga / centaur / draconian / ogre / \
+KMONS:  p = human / elf / orc / naga / palentonga / draconian / ogre / \
             minotaur / troll / kobold / mummy / ghoul / spriggan / felid / \
-            deep dwarf / octopode / vampire / base draconian / demigod / \
-            demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+            deep dwarf / octopode / vampire / demigod / gnoll / \
+            demonspawn / merfolk / barachi / gargoyle / formicid / \
+            vine stalker / tengu
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)

@@ -1200,48 +1200,6 @@ filth-coat
 gob-dollager
 %%%%
 ##########################################################
-# noun, Halfling special
-##########################################################
-insult halfling noun
-
-w:100
-@small_food@
-
-footstool
-
-munchkin
-
-side-stool
-
-pudgelet
-
-groundling
-
-burrow-snipe
-
-hole-bolter
-
-low-roller
-
-runt
-
-peewee
-
-mimicus
-
-manikin
-
-hop-o-thumb
-
-knee-biter
-
-burrow-botch
-
-hole-pimple
-
-hovel-pustule
-%%%%
-##########################################################
 # noun, Spriggan special
 ##########################################################
 insult spriggan noun
