@@ -3344,7 +3344,7 @@ COLOUR:  .c = white
 : if (not crawl.game_started()) or race == "Vampire"
 :     or race == "Mummy" or race == "Ghoul" or race == "Octopode"
 :     or race == "Gargoyle" or race == "Vine Stalker"
-:     or race == "Palentonga" or race == "Yak" or race == "Formicid" then
+:     or race == "Djinni" or race == "Yak" or race == "Formicid" then
 :   ally = humanoid_ally
 : end
 :
