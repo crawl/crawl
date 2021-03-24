@@ -1895,6 +1895,17 @@ static void _rescue_player_from_wall()
             target = upstairs[0];
         else if (downstairs.size())
             target = downstairs[0];
+        if (!in_bounds(target) && player_in_branch(BRANCH_ABYSS))
+        {
+            // something is *seriously* messed up. This can happen if the game
+            // crashed on an AK start where the initial map wasn't saved.
+            // Because it is abyss, it is relatively safe to just move a player
+            // to an arbitrary point and let abyss shift take over. (AK starts,
+            // the main case, can also escape from the abyss at this point.)
+            const coord_def emergency(1,1);
+            env.grid(emergency) = DNGN_FLOOR;
+            target = emergency;
+        }
         // if things get this messed up, don't make them worse
         ASSERT(in_bounds(target));
         you.moveto(target);
