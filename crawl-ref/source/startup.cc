@@ -299,7 +299,10 @@ static void _post_init(bool newc)
                old_level);
 
     if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
+    {
         generate_abyss();
+        save_level(level_id::current());
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
