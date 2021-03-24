@@ -1144,6 +1144,7 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_BATTLESPHERE:
         case SPELL_IGNITE_POISON:
         case SPELL_IOOD:
+        case SPELL_FREEZE:
             return 6;
 
         case SPELL_SUMMON_DRAGON:
@@ -4365,7 +4366,7 @@ static bool _mons_cast_freeze(monster* mons)
 
     const int pow = mons_spellpower(*mons, SPELL_FREEZE);
 
-    const int base_damage = roll_dice(1, 3 + pow / 6);
+    const int base_damage = freeze_damage(pow).roll();
     int damage = 0;
 
     if (target->is_player())
