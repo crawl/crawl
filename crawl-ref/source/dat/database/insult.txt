@@ -1240,37 +1240,6 @@ pussyfoot
 creepsneak
 %%%%
 ##########################################################
-# noun, Centaur special
-##########################################################
-insult centaur noun
-
-crock
-
-donkey
-
-four-legs
-
-hack
-
-half-breed
-
-horse-flesh
-
-horse meat
-
-horsey face
-
-jade
-
-mule
-
-nag
-
-nightmare
-
-pony
-%%%%
-##########################################################
 # noun, Minotaur special
 ##########################################################
 insult minotaur noun
