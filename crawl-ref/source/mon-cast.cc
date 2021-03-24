@@ -4387,16 +4387,7 @@ static bool _mons_cast_freeze(monster* mons)
     target->hurt(mons, damage, BEAM_COLD, KILLED_BY_BEAM, "", "by Freeze");
 
     if (target->alive())
-    {
         target->expose_to_element(BEAM_COLD, damage);
-
-        if (target->is_monster() && target->res_cold() <= 0)
-        {
-            const int stun = (1 - target->res_cold())
-                             * random2(min(7, 2 + pow/24));
-            target->as_monster()->speed_increment -= stun;
-        }
-    }
 
     return true;
 }
