@@ -2549,10 +2549,10 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case MI_DART:
-            return (get_ammo_brand(item) == SPMSL_CURARE
-                    || get_ammo_brand(item) == SPMSL_BLINDING);
+            return get_ammo_brand(item) == SPMSL_CURARE
+                   || get_ammo_brand(item) == SPMSL_BLINDING;
         case MI_BOOMERANG:
-            return (get_ammo_brand(item) == SPMSL_DISPERSAL);
+            return get_ammo_brand(item) == SPMSL_DISPERSAL;
         case MI_THROWING_NET:
             return true;
         default:
