@@ -134,7 +134,6 @@ namespace quiver
         bool af_mp_check = false;
         if (!clua.callfn("af_hp_is_low", ">b", &af_hp_check)
             || uses_mp()
-               && !you.has_mutation(MUT_HP_CASTING)
                && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
@@ -144,7 +143,10 @@ namespace quiver
         if (af_hp_check)
             mpr("You are too injured to fight recklessly!");
         else if (af_mp_check)
-            mpr("You are too depleted to draw on your mana recklessly!");
+        {
+            mprf("You are too depleted to draw on your %s recklessly!",
+                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+        }
         return af_hp_check || af_mp_check;
     }
 
