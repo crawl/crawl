@@ -186,8 +186,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Warp
     SPELL_GRAVITAS,
     SPELL_PORTAL_PROJECTILE,
-    SPELL_MANIFOLD_ASSAULT,
     SPELL_GOLUBRIAS_PASSAGE,
+    SPELL_MANIFOLD_ASSAULT,
     SPELL_DISPERSAL,
     SPELL_DISJUNCTION,
 },
