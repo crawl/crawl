@@ -1164,7 +1164,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
                 return "you don't have enough health to cast this spell.";
             }
 
-            if (!enough_mp(cost), true, false)
+            if (!enough_mp(cost, true, false))
                 return "you don't have enough magic to cast this spell.";
         }
 
