@@ -971,6 +971,12 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
+    // Guard against an ASSERT in get_species_def; it's really bad if the game
+    // crashes at this point while trying to clean up a dead/quit player.
+    // (This doesn't seem to even impact what is shown in the score list?)
+    if (race < 0 || race >= NUM_SPECIES)
+        return "Unknown (buggy) species!";
+
     return species_name(static_cast<species_type>(race));
 }
 
@@ -988,6 +994,10 @@ static const char* _species_abbrev(int race)
     case OLD_SP_DJINNI: return "Dj";
     case OLD_SP_LAVA_ORC: return "LO";
     }
+
+    // see note in _species_name: don't ASSERT in get_species_def.
+    if (race < 0 || race >= NUM_SPECIES)
+        return "??";
 
     return get_species_abbrev(static_cast<species_type>(race));
 }
