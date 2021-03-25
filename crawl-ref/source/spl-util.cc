@@ -1136,6 +1136,8 @@ string casting_uselessness_reason(spell_type spell, bool temp)
 {
     if (temp)
     {
+        int cost = spell_mana(spell);
+
         if (you.duration[DUR_CONF] > 0)
             return "you're too confused to cast spells.";
 
@@ -1147,10 +1149,24 @@ string casting_uselessness_reason(spell_type spell, bool temp)
             // TODO: deduplicate with enough_hp()
             if (you.duration[DUR_DEATHS_DOOR])
                 return "you cannot pay life while functionally dead.";
-            if (!enough_hp(spell_mana(spell), true, false))
+
+            if (player_equip_unrand(UNRAND_MAJIN))
+                cost *= 2;
+
+            if (!enough_hp(cost, true, false))
                 return "you don't have enough health to cast this spell.";
-        } else if (!enough_mp(spell_mana(spell), true, false))
-            return "you don't have enough magic to cast this spell.";
+        }
+        else
+        {
+            if (player_equip_unrand(UNRAND_MAJIN)
+                && !enough_hp(cost, true, false))
+            {
+                return "you don't have enough health to cast this spell.";
+            }
+
+            if (!enough_mp(cost), true, false)
+                return "you don't have enough magic to cast this spell.";
+        }
 
         if (spell == SPELL_SUBLIMATION_OF_BLOOD
             && you.magic_points == you.max_magic_points)
