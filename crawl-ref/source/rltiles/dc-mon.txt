@@ -33,6 +33,12 @@ serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
+bag_of_meat MONS_BAG_OF_MEAT
+meatzerker MONS_MEATZERKER
+large_bag_of_meat MONS_LARGE_BAG_OF_MEAT
+meat_hydra MONS_MEAT_HYDRA
+scourge MONS_SCOURGE
+meatlord MONS_MEATLORD
 unspeakable MONS_UNSPEAKABLE
 
 ### Animals
