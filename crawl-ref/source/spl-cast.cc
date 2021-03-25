@@ -929,7 +929,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     // (but after hp costs from HP casting)
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
     if (_majin_charge_hp())
-        pay_hp(cost);
+        pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target);
