@@ -6286,6 +6286,7 @@ int player_willpower(bool calc_unid, bool temp)
 
     // Mutations
     rm += WL_PIP * you.get_mutation_level(MUT_STRONG_WILLED);
+    rm += WL_PIP * you.get_mutation_level(MUT_DEMONIC_WILL);
     rm -= WL_PIP * you.get_mutation_level(MUT_WEAK_WILLED);
 
     // transformations

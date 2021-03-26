@@ -1713,6 +1713,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_DEMONIC_WILL, 0, 1, mutflag::good, false,
+  "demonic willpower",
+
+  {"You punish those that try to bend your will (Will+).", "", ""},
+  {"You feel willful.", "", ""},
+  {"", "", ""},
+},
+
 { MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
   "cold-blooded",
 
