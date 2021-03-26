@@ -66,7 +66,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 }
 
 // Clear an equipment slot (possibly melded).
-bool unequip_item(equipment_type slot, bool msg)
+bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
 {
     ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
@@ -78,10 +78,11 @@ bool unequip_item(equipment_type slot, bool msg)
     {
         you.equip[slot] = -1;
 
-        if (!you.melded[slot])
-            unequip_effect(slot, item_slot, false, msg);
-        else
+        if (you.melded[slot])
             you.melded.set(slot, false);
+        else if (!skip_effects)
+            unequip_effect(slot, item_slot, false, msg);
+
         ash_check_bondage();
         you.last_unequip = item_slot;
         you.gear_change = true;

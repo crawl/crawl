@@ -4379,14 +4379,14 @@ static void _extra_sacrifice_code(ability_type sac)
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot);
+            unequip_item(sac_ring_slot, true, true);
             if (open_ring_slot)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
                      (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                puton_ring(ring_inv_slot, false);
+                puton_ring(ring_inv_slot, false, false);
             }
         }
     }
