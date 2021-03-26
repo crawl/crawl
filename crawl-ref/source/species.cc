@@ -95,24 +95,126 @@ string species_walking_verb(species_type sp)
     return verb ? verb : "Walk";
 }
 
-string species_skin_adj(species_type species)
+/**
+ * Return an adjective or noun for the species' skin.
+ * @param adj whether to provide an adjective (if true), or a noun (if false).
+ * @return a non-empty string. Nouns will be pluralised if they are count nouns.
+ *         Right now, plurality can be determined by `ends_with(noun, "s")`.
+ */
+string species_skin_name(species_type species, bool adj)
 {
-    // Aside from direct adjectival uses, some flavor stuff checks the strings
-    // here. TODO: should these be species flags a la hair?
+    // Aside from direct uses, some flavor stuff checks the strings
+    // here. TODO: should some of these be species flags a la hair?
+    // Also, some skin mutations should have a way of overriding these perhaps
     if (species_is_draconian(species) || species == SP_NAGA)
-        return "scaled";
+        return adj ? "scaled" : "scales";
     else if (species == SP_TENGU)
-        return "feathered";
+        return adj ? "feathered" : "feathers";
+    else if (species == SP_FELID)
+        return adj ? "furry" : "fur";
     else if (species == SP_MUMMY)
-        return "bandage-wrapped";
+        return adj ? "bandage-wrapped" : "bandages";
     else
-        return "";
+        return adj ? "fleshy" : "skin";
+}
+
+int species_arm_count(species_type species)
+{
+    return species == SP_OCTOPODE ? 8 : 2;
+}
+
+/**
+ *  Checks some species-level equipment slot constraints. Anything hard-coded
+ *  per species, but not handled by a mutation should be here. See also
+ *  player.cc::you_can_wear and item-use.cc::can_wear_armour for the full
+ *  division of labor. This function is guaranteed to handle species ring
+ *  slots.
+ *
+ *  @param species the species type to check
+ *  @param eq the equipment slot to check
+ *  @return true if the equipment slot is not used by the species; false
+ *          indicates only that nothing in this check bans the slot. For
+ *          example, this function does not check felid mutations.
+ */
+bool species_bans_eq(species_type species, equipment_type eq)
+{
+    const int arms = species_arm_count(species);
+    // only handles 2 or 8
+    switch (eq)
+    {
+    case EQ_LEFT_RING:
+    case EQ_RIGHT_RING:
+        return arms > 2;
+    case EQ_RING_ONE:
+    case EQ_RING_TWO:
+    case EQ_RING_THREE:
+    case EQ_RING_FOUR:
+    case EQ_RING_FIVE:
+    case EQ_RING_SIX:
+    case EQ_RING_SEVEN:
+    case EQ_RING_EIGHT:
+        return arms <= 2;
+    // not banned by any species
+    case EQ_AMULET:
+    case EQ_RING_AMULET:
+    // not handled here:
+    case EQ_WEAPON:
+    case EQ_STAFF:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS: // what is this stuff
+    case EQ_ALL_ARMOUR:
+        return false;
+    default:
+        break;
+    }
+    // remaining should be armour only
+    if (species == SP_OCTOPODE && eq != EQ_HELMET && eq != EQ_SHIELD)
+        return true;
+
+    if (species_is_draconian(species) && eq == EQ_BODY_ARMOUR)
+        return true;
+
+    // for everything else that is handled by mutations, including felid
+    // restrictions, see item-use.cc::can_wear_armour. (TODO: move more of the
+    // code here to mutations?)
+    return false;
+}
+
+/**
+ * Get ring slots available to a species. The last slot is the one that would
+ * be missing under MUT_MISSING_HAND.
+ */
+vector<equipment_type> species_ring_slots(species_type species)
+{
+    vector<equipment_type> result;
+    if (species_arm_count(species) == 2)
+    {
+        // ugh; sac hand sacrifices either left or eight, but these are in an
+        // inconsistent order in equipment_type. Ensure that the sacrificial
+        // arm ends up last. XX reorder this enum
+        result.push_back(EQ_RIGHT_RING);
+        result.push_back(EQ_LEFT_RING);
+    }
+    else
+    {
+        // generic code: works for the == 2 case as well except for the
+        // sacrifice issue noted above.
+        for (int i = EQ_FIRST_JEWELLERY; i <= EQ_LAST_JEWELLERY; i++)
+        {
+            const auto eq = static_cast<equipment_type>(i);
+            if (eq != EQ_AMULET && eq != EQ_RING_AMULET && !species_bans_eq(species, eq))
+                result.push_back(eq);
+        }
+    }
+    return result;
 }
 
 string species_arm_name(species_type species)
 {
-    if (species == SP_OCTOPODE)
+    if (species_mutation_level(species, MUT_TENTACLE_ARMS))
         return "tentacle";
+    else if (species == SP_FELID)
+        return "leg";
     else
         return "arm";
 }
@@ -122,7 +224,7 @@ string species_hand_name(species_type species)
     // see also player::hand_name
     if (species_mutation_level(species, MUT_PAWS))
         return "paw";
-    else if (you.species == SP_OCTOPODE)
+    else if (species_mutation_level(species, MUT_TENTACLE_ARMS))
         return "tentacle";
     else if (species_mutation_level(species, MUT_CLAWS))
         return "claw"; // overridden for felids by first check
@@ -161,7 +263,8 @@ bool species_can_swim(species_type species)
 bool species_likes_water(species_type species)
 {
     return species_can_swim(species)
-           || get_species_def(species).habitat == HT_AMPHIBIOUS;
+           || get_species_def(species).habitat == HT_AMPHIBIOUS
+           || species_mutation_level(species, MUT_UNBREATHING, 2);
 }
 
 bool species_can_throw_large_rocks(species_type species)
@@ -169,9 +272,14 @@ bool species_can_throw_large_rocks(species_type species)
     return species_size(species) >= SIZE_LARGE;
 }
 
+bool species_wears_barding(species_type species)
+{
+    return bool(get_species_def(species).flags & SPF_SMALL_TORSO);
+}
+
 bool species_is_elven(species_type species)
 {
-    return bool(get_species_def(species).flags & SPF_ELVEN);
+    return species == SP_DEEP_ELF;
 }
 
 bool species_is_draconian(species_type species)
@@ -181,7 +289,7 @@ bool species_is_draconian(species_type species)
 
 bool species_is_orcish(species_type species)
 {
-    return bool(get_species_def(species).flags & SPF_ORCISH);
+    return species == SP_HILL_ORC;
 }
 
 bool species_has_hair(species_type species)
@@ -191,7 +299,39 @@ bool species_has_hair(species_type species)
 
 bool species_has_bones(species_type species)
 {
-    return !(species == SP_OCTOPODE || species == SP_FORMICID);
+    return !bool(get_species_def(species).flags & SPF_NO_BONES);
+}
+
+static const string shout_verbs[] = {"shout", "yell", "scream"};
+static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
+static const string frog_shout_verbs[] = {"croak", "ribbit", "bellow"};
+static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
+
+/**
+ * What verb should be used to describe the species' shouting?
+ * @param sp a species
+ * @param screaminess a loudness level; in range [0,2]
+ * @param directed with this is to be directed at another actor
+ * @return A shouty kind of verb
+ */
+string species_shout_verb(species_type sp, int screaminess, bool directed)
+{
+    screaminess = max(min(screaminess, static_cast<int>(sizeof(shout_verbs) - 1)), 0);
+    switch (sp)
+    {
+    case SP_GNOLL:
+        if (screaminess == 0 && directed && coinflip())
+            return "growl";
+        return dog_shout_verbs[screaminess];
+    case SP_BARACHI:
+        return frog_shout_verbs[screaminess];
+    case SP_FELID:
+        if (screaminess == 0 && directed)
+            return "hiss"; // hiss at, not meow at
+        return felid_shout_verbs[screaminess];
+    default:
+        return shout_verbs[screaminess];
+    }
 }
 
 size_type species_size(species_type species, size_part_type psize)
@@ -320,28 +460,29 @@ ability_type draconian_breath(species_type species)
 
 bool species_is_unbreathing(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum)
-                    { return lum.mut == MUT_UNBREATHING;});
+    return species_mutation_level(species, MUT_UNBREATHING);
 }
 
 bool species_has_claws(species_type species)
 {
-    return any_of(get_species_def(species).level_up_mutations.begin(),
-                  get_species_def(species).level_up_mutations.end(),
-                  [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
-                                                     && lum.xp_level == 1; });
+    return species_mutation_level(species, MUT_CLAWS) == 1;
 }
 
 /// Does the species have (real) mutation `mut`? Not for demonspawn.
-/// @return the first level at which the species gains the mutation, or 0 if it
+/// @return the first xl at which the species gains the mutation, or 0 if it
 ///         does not ever gain it.
-int species_mutation_level(species_type species, mutation_type mut)
+int species_mutation_level(species_type species, mutation_type mut, int mut_level)
 {
+    int total = 0;
+    // relies on levels being in order -- I think this is safe?
     for (const auto& lum : get_species_def(species).level_up_mutations)
         if (mut == lum.mut)
-            return lum.xp_level;
+        {
+            total += lum.mut_level;
+            if (total >= mut_level)
+                return lum.xp_level;
+        }
+
     return 0;
 }
 
@@ -402,11 +543,21 @@ void species_stat_init(species_type species)
     you.base_stats[STAT_DEX] = get_species_def(species).d;
 }
 
+int species_stat_gain_multiplier(species_type species)
+{
+    // TODO: is this worth dataifying? Currently matters only for
+    // player-stats.cc:attribute_increase
+    return species == SP_DEMIGOD ? 4 : 1;
+}
+
 void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
     if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
-        modify_stat(*random_iterator(sd.level_stats), 1, false);
+    {
+        modify_stat(*random_iterator(sd.level_stats),
+                        species_stat_gain_multiplier(species), false);
+    }
 }
 
 static void _swap_equip(equipment_type a, equipment_type b)
@@ -514,6 +665,7 @@ void change_species_to(species_type sp)
 
     update_vision_range(); // for Ba, and for Ko
 
+    // XX not general if there are ever any other options
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);

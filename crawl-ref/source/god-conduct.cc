@@ -342,11 +342,11 @@ static peeve_map divine_peeves[] =
         } },
         { DID_SPELL_PRACTISE, {
             "you train magic skills", true,
-            1, 0, nullptr, " doesn't appreciate your training magic!"
+            1, 0, nullptr, " does not appreciate your training of magic skills!"
         } },
         { DID_WIZARDLY_ITEM, {
             "you use magical staves or pain-branded weapons", true,
-            1, 0, nullptr, " doesn't appreciate your use of wizardly items!"
+            1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -451,7 +451,7 @@ string get_god_dislikes(god_type which_god)
         // Trog forgives Gnolls practising spellcasting since they do it
         // without choice. XXX: Rework the peeve_map to allow checking this.
         if (which_god == GOD_TROG
-            && you.species == SP_GNOLL
+            && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
             && entry.first == DID_SPELL_PRACTISE)
         {
             continue;
@@ -965,7 +965,7 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     // Trog forgives Gnolls practising spellcasting since they do it without
     // choice. XXX: Rework the peeve_map to allow checking this.
     if (you_worship(GOD_TROG)
-        && you.species == SP_GNOLL
+        && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && thing_done == DID_SPELL_PRACTISE)
     {
         return;

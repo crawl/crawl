@@ -971,6 +971,12 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
+    // Guard against an ASSERT in get_species_def; it's really bad if the game
+    // crashes at this point while trying to clean up a dead/quit player.
+    // (This doesn't seem to even impact what is shown in the score list?)
+    if (race < 0 || race >= NUM_SPECIES)
+        return "Unknown (buggy) species!";
+
     return species_name(static_cast<species_type>(race));
 }
 
@@ -988,6 +994,10 @@ static const char* _species_abbrev(int race)
     case OLD_SP_DJINNI: return "Dj";
     case OLD_SP_LAVA_ORC: return "LO";
     }
+
+    // see note in _species_name: don't ASSERT in get_species_def.
+    if (race < 0 || race >= NUM_SPECIES)
+        return "??";
 
     return get_species_abbrev(static_cast<species_type>(race));
 }
@@ -1983,7 +1993,9 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
+        if (god != GOD_NO_GOD
+            // XX is this check really needed?
+            && !species_mutation_level(static_cast<species_type>(race), MUT_FORLORN))
         {
             if (god == GOD_XOM)
             {
@@ -2228,7 +2240,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (starts_with(species_skin_adj(
+            if (starts_with(species_skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
                 desc += "Turned to ash by lava";
@@ -2243,7 +2255,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (terse)
                 desc = "fell apart";
-            else if (starts_with(species_skin_adj(
+            else if (starts_with(species_skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
                 desc = "Soaked and fell apart";
@@ -2739,7 +2751,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += make_stringf("... %s by %s",
                          death_type == KILLED_BY_COLLISION ? "caused" :
-                         auxkilldata == "by angry trees"   ? "awakened"
+                         auxkilldata == "by angry trees"   ? "awakened" :
+                         auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
                          death_source_name.c_str());
                 desc += _hiscore_newline_string();

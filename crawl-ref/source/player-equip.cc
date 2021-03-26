@@ -143,7 +143,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
-    if (you.species == SP_OCTOPODE)
+    if (species_arm_count(you.species) > 2)
         r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
     if (slot >= r1 && slot <= r2)
         return;
@@ -489,7 +489,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_VAMPIRISM:
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel a bloodthirsty glee!");
                     else
                         mpr("You feel a sense of dread.");
@@ -630,7 +630,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
             case SPWPN_VAMPIRISM:
                 if (showMsgs)
                 {
-                    if (you.species == SP_VAMPIRE)
+                    if (you.has_mutation(MUT_VAMPIRISM))
                         mpr("You feel your glee subside.");
                     else
                         mpr("You feel the dreadful sensation subside.");
@@ -682,7 +682,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
 static void _spirit_shield_message(bool unmeld)
 {
-    if (!unmeld && you.spirit_shield() < 2)
+    if (!unmeld && you.spirit_shield() < 2 && !you.has_mutation(MUT_HP_CASTING))
     {
         mpr("You feel your power drawn to a protective spirit.");
 #if TAG_MAJOR_VERSION == 34
@@ -690,13 +690,16 @@ static void _spirit_shield_message(bool unmeld)
             && !(have_passive(passive_t::no_mp_regen)
                  || player_under_penance(GOD_PAKELLAS)))
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             mpr("Now linked to your health, your magic stops regenerating.");
         }
 #endif
     }
-    else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
+    else if (!unmeld && (you.get_mutation_level(MUT_MANA_SHIELD)
+                         || you.has_mutation(MUT_HP_CASTING)))
+    {
         mpr("You feel the presence of a powerless spirit.");
+    }
     else if (!you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel spirits watching over you.");
 }
@@ -923,8 +926,9 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     case SPARM_PONDEROUSNESS:
     {
-        const string verb = you.species == SP_NAGA ? "slither" : "step";
-            mprf("That put a bit of spring back into your %s.", verb.c_str());
+        // XX can the noun here be derived from the species walking verb?
+        const string noun = you.species == SP_NAGA ? "slither" : "step";
+        mprf("That put a bit of spring back into your %s.", noun.c_str());
         break;
     }
 
@@ -1134,12 +1138,17 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_MAGICAL_POWER:
+        if (you.has_mutation(MUT_HP_CASTING))
+        {
+            mpr("You repel a surge of foreign magic.");
+            break;
+        }
         canned_msg(MSG_MANA_INCREASE);
         calc_mp();
         break;
 
     case AMU_FAITH:
-        if (you.species == SP_DEMIGOD)
+        if (you.has_mutation(MUT_FORLORN))
             mpr("You feel a surge of self-confidence.");
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
@@ -1263,7 +1272,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_MAGICAL_POWER:
-        canned_msg(MSG_MANA_DECREASE);
+        if (!you.has_mutation(MUT_HP_CASTING))
+            canned_msg(MSG_MANA_DECREASE);
         break;
 
     case AMU_FAITH:

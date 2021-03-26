@@ -33,6 +33,12 @@ serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
+bag_of_meat MONS_BAG_OF_MEAT
+meatzerker MONS_MEATZERKER
+large_bag_of_meat MONS_LARGE_BAG_OF_MEAT
+meat_hydra MONS_MEAT_HYDRA
+scourge MONS_SCOURGE
+meatlord MONS_MEATLORD
 unspeakable MONS_UNSPEAKABLE
 
 ### Animals
@@ -40,10 +46,6 @@ unspeakable MONS_UNSPEAKABLE
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
-%rim 1
-worker_ant MONS_WORKER_ANT
-soldier_ant MONS_SOLDIER_ANT
-queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 %rim 1
@@ -106,7 +108,6 @@ meliai MONS_MELIAI
 
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
-leopard_gecko MONS_LEOPARD_GECKO
 iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
@@ -556,8 +557,10 @@ wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
 vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL
-ironbrand_convoker MONS_IRONBRAND_CONVOKER
-ironheart_preserver MONS_IRONHEART_PRESERVER
+ironbound_convoker MONS_IRONBOUND_CONVOKER
+ironbound_preserver MONS_IRONBOUND_PRESERVER
+ironbound_frostheart MONS_IRONBOUND_FROSTHEART
+ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -660,7 +663,6 @@ ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
 floating_eye MONS_FLOATING_EYE
-eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
 mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
@@ -746,7 +748,7 @@ asterion MONS_ASTERION
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
 %sdir mon/amorphous
-ooze MONS_OOZE
+endoplasm MONS_ENDOPLASM
 %rim 0
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
@@ -754,10 +756,11 @@ slime_creature2
 slime_creature3
 slime_creature4
 slime_creature5
+rockslime MONS_ROCKSLIME
+quicksilver_ooze MONS_QUICKSILVER_OOZE
 %rim 1
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
-death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
 %sdir mon/unique
@@ -807,6 +810,7 @@ nagaraja MONS_NAGARAJA
 %sdir mon/demihumanoids
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
+salamander_tyrant MONS_SALAMANDER_TYRANT
 guardian_serpent MONS_GUARDIAN_SERPENT
 
 ## Ogres ('O')
@@ -819,6 +823,7 @@ ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 ogre_mage MONS_OGRE_MAGE
+ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1
 
 ## Plants ('P')
@@ -866,7 +871,9 @@ deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
 deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
 ## From moon base wizlab
+%rim 0
 moon_troll MONS_MOON_TROLL
+%rim 1
 
 ## Vampires ('V')
 %sdir mon/undead

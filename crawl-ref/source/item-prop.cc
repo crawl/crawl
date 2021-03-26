@@ -806,6 +806,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
     { OBJ_SCROLLS,   SCR_REMOVE_CURSE },
+    { OBJ_SCROLLS,   SCR_RANDOM_USELESSNESS },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -864,9 +865,19 @@ bool item_is_cursable(const item_def &item)
 
 void auto_id_inventory()
 {
-    for (auto &item : you.inv)
-        if (item.defined())
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
+        if (item.defined() && !fully_identified(item))
+        {
             god_id_item(item, false);
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
+        }
+    }
 }
 
 /**
@@ -1015,12 +1026,8 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_POTIONS:
     case OBJ_WANDS:
     case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
     case OBJ_JEWELLERY:
         flagset = ISFLAG_KNOW_TYPE;
-        if (jewellery_has_pluses(item))
-            flagset |= ISFLAG_KNOW_PLUSES;
         break;
     case OBJ_MISCELLANY:
         flagset = 0;

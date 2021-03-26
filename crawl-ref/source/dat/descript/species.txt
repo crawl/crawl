@@ -23,6 +23,11 @@ Demonspawn
 Demonspawn are half human, half demon. They acquire strong demonic mutations as
 they grow.
 %%%%
+Djinni
+
+Djinn are ever-burning spirits. They learn spells innately, without books, and
+cast by drawing down their own fires.
+%%%%
 Draconian
 
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
@@ -52,11 +57,6 @@ Gnoll
 
 Gnolls are canine-like humanoids. They have incredible proficiency and
 excellent physical attributes, but must learn all skills at once.
-%%%%
-Halfling
-
-Small but hardy, Halflings excel with slings. They have an increased resistance
-to mutagenic effects.
 %%%%
 Hill Orc
 

@@ -390,6 +390,7 @@ bool mons_just_slept(const monster& m);
 bool mons_class_is_slime(monster_type mc);
 bool mons_is_slime(const monster& mon);
 bool mons_class_is_plant(monster_type mc);
+bool mons_class_is_draconic(monster_type mc);
 bool mons_is_plant(const monster& mon);
 bool mons_eats_items(const monster& mon);
 bool actor_is_susceptible_to_vampirism(const actor& act);
@@ -421,6 +422,8 @@ bool mons_is_abyssal_only(monster_type mc);
 bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);
+
+bool mons_class_requires_band(monster_type mc);
 
 int cheibriados_monster_player_speed_delta(const monster& mon);
 bool cheibriados_thinks_mons_is_fast(const monster& mon);

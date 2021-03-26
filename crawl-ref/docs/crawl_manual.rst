@@ -270,16 +270,15 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Halflings and Kobolds are small; Ogres and Trolls are large; Nagas and
-  Palentongas are large with a medium torso; all other species are medium-sized.
-  Many transmutations will change your size too. Size affects your evasion: the
-  smaller your character the more evasive it is. On the other hand, characters
-  of larger than medium size do not suffer the usual attack penalties when
-  standing in shallow water. Characters of smaller than medium size will have
-  problems with some larger weapons. Very small characters and large characters
-  are not able to use most types of armour. Players and monsters can only
-  constrict foes of the same size or smaller. In the dungeon you can also meet
-  tiny, very large and giant creatures.
+  Kobolds are small; Ogres and Trolls are large; Nagas and Palentongas are large
+  with a medium torso; all other species are medium-sized. Many transmutations
+  will change your size. Size affects your evasion: the smaller your character,
+  the more evasive it is. On the other hand, characters of larger than medium
+  size do not suffer the usual attack penalties when standing in shallow water.
+  Characters of smaller than medium size will have problems with some larger
+  weapons. Very small characters and large characters are not able to use most
+  types of armour. Players and monsters can only constrict foes of the same size
+  or smaller. In the dungeon you can also meet tiny, very large and giant foes.
 
 Stealth
   High stealth allows your character to move through the dungeon undetected.
@@ -1541,6 +1540,17 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
+Palentongas (Pa)
+  The Palentongas are a large, scaled mammalian race, walking on four feet and
+  swinging a powerful tail behind them. Their elephant-back armies terrorize the
+  lands outside the Dungeon.
+
+  Palentongas are best known for their powerful roll attack, curling up and
+  rolling into a crashing melee attack against nearby foes. They're well suited
+  to melee combat and to casting supportive spells, but they're significantly
+  worse at other forms of combat and advance quite slowly in experience levels.
+  Their body shape reduces the protection given by the body armour they wear.
+
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They have low health, but large
@@ -1572,18 +1582,6 @@ Draconians (Dr)
 
   Draconian colours are detailed below, in the subsection titled
   `Draconian types`_.
-
-Halflings (Ha)
-  Halflings, who are named for being about half the size of Humans, live in
-  small villages. They live simple lives and have simple interests. Sometimes a
-  particularly restless Halfling will leave their village in search of adventure.
-
-  Halflings are very small but surprisingly hardy for their size, even having an
-  innate resistance to mutagenic effects. They can use short blades and shields
-  very well, are passable with long blades, and excel in ranged combat with
-  slings. They are also very stealthy and dextrous, but are poor at magic
-  (except for translocations and air magic). They advance in levels as rapidly
-  as Humans. Halflings cannot wield large weapons.
 
 Trolls (Tr)
   Trolls are monstrous creatures with powerful claws. They have thick, knobbly
@@ -1646,12 +1644,12 @@ Kobolds (Ko)
   the sort of people you would want to spend much time with, unless you happened
   to be a Kobold yourself.
 
-  They tend to be more agile and weaker than Halflings, and are slightly more
+  They tend to be more agile and weaker than Humans, and are slightly more
   talented at using most types of magic, particularly necromancy. They are
   competent in combat, especially with short blades, maces or crossbows, and are
   also very adept at using magical devices. Lurking in the darkness, enemies can
   only see them from quite close (and vice versa!). Kobolds advance in levels as
-  quickly as Humans. Like Halflings, Kobolds cannot wield large weapons.
+  quickly as Humans. Kobolds cannot wield large weapons.
 
 Demonspawn (Ds)
   Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
@@ -1667,16 +1665,22 @@ Demonspawn (Ds)
   and conjurations and much better at necromancy and invocations. Note that
   unlike Demigods, they can take on gods, although not all will accept them.
 
-Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian race, walking on four feet and
-  swinging a powerful tail behind them. Their elephant-back armies terrorize the
-  lands outside the Dungeon.
+Djinni (Dj)
+  Djinn are beings of smokeless fire. They enter the world spontaneously and
+  without explanation, born with a tireless hunger for knowledge and adventure.
+  Djinn have a unique relationship with magic: rather than learning spells
+  from books, their spells come from within, welling up from their fiery core
+  as they gain experience. They draw from that same fiery core to cast spells -
+  for Djinn, magical power and health are one and the same.
 
-  Palentongas are best known for their powerful roll attack, curling up and
-  rolling into a crashing melee attack against nearby foes. They're well suited
-  to melee combat and to casting supportive spells, but they're significantly
-  worse at other forms of combat and advance quite slowly in experience levels.
-  Their body shape reduces the protection given by the body armour they wear.
+  As elemental beings, Djinn are immune to poison and highly resistant to
+  fire, though cold damage is deeply inimical to them. Since they float
+  through the air without need for legs or feet, they cannot wear boots.
+
+  Djinn are middlingly competent at most forms of physical combat, but have
+  a particular aptitude for spellcasting. Their Spellcasting skill grants
+  the same level of spell success and power that other races need multiple
+  skills to reach.
 
 Spriggans (Sp)
   Spriggans are small magical creatures distantly related to Elves. They love to
@@ -1778,9 +1782,9 @@ Vampires (Vp)
   negative energy and torment, resistant to damage from the cold), but cannot
   physically regenerate when monsters are in sight and are less resilient. On
   the other hand, a Vampire full with blood will regenerate very quickly, but
-  will lose all undead powers. Vampires can never starve. Upon growing, they
-  learn to transform into fast-moving bats. Unlike other undead species, they
-  may be mutated normally at all times.
+  will lose all undead powers. Upon growing, they learn to transform into
+  fast-moving bats. Unlike other undead species, they may be mutated normally
+  at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.

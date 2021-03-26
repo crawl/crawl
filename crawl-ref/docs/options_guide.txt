@@ -1314,9 +1314,11 @@ fail_severity_to_confirm = 3
         spell (the colour shown in the spellcasting menu) is greater than
         or equal to the number specified:
 
-          3: dark red
-          2: light red or higher
-          1: yellow or higher
+          5: magenta (miscasting may deal greater damage than max HP)
+          4: dark red (up to 70% damage)
+          3: light red (up to 50% damage)
+          2: yellow (up to 30% damage)
+          1: white (up to 10% damage)
 
         If the value 0 or -1 is given, never prompt about miscasts.
 
@@ -1741,7 +1743,8 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
 fail_severity_to_quiver = 2
         Exclude spells with this miscast level or higher from quiver cycling
         and automatic quivering. -1 can be used to exclude spells entirely from
-        automatic quivering.
+        automatic quivering. See fail_severity_to_confirm for a breakdown of
+        miscast values.
 
 launcher_autoquiver = true
         If set to true, change the main quiver to launcher ammo on wielding

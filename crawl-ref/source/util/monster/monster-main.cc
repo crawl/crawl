@@ -299,6 +299,12 @@ static string mi_calc_major_healing(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+static string mi_calc_freeze_damage(monster* mons)
+{
+    const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
+    return dice_def_string(freeze_damage(pow));
+}
+
 /**
  * @return e.g.: "2d6", "5-12".
  */
@@ -312,6 +318,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_PORTAL_PROJECTILE:
         case SPELL_LRD:
             return ""; // Fake damage beam
+        case SPELL_FREEZE:
+            return mi_calc_freeze_damage(monster);
         case SPELL_SMITING:
             return mi_calc_smiting_damage(monster);
         case SPELL_AIRSTRIKE:
@@ -918,7 +926,7 @@ int main(int argc, char* argv[])
                 case AF_ACID:
                 case AF_REACH_TONGUE:
                     monsterattacks +=
-                        colour(YELLOW, damage_flavour("acid", "7d3"));
+                        colour(YELLOW, damage_flavour("acid", "4d3"));
                     break;
                 case AF_BLINK:
                     monsterattacks += colour(MAGENTA, "(blink self)");

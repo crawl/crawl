@@ -166,7 +166,7 @@ and unclean will be affected by powerful and damaging effects, undead and
 demons will be affected by weaker rebukes, and any other intelligent creatures
 will have confusion sown amongst them, with heretics and priests of gods other
 than Zin being punished much more strongly. The effectiveness of the recitation
-is increased by Invocations skill.
+is increased by Invocations skill and piety.
 %%%%
 Vitalisation ability
 
@@ -570,7 +570,7 @@ are permanently invisible and are immune to poison, draining, and torment.
 All incoming damage is halved, you bleed smoke on any incoming attack, and
 you have infinite willpower. However, your ability to deal damage in melee
 and with ranged attacks is halved, your spellcasting power is greatly
-hampered, and your skills are further drained when taking damage.
+hampered, and your maximum health is further drained when taking damage.
 Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag

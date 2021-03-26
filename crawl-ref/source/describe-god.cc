@@ -23,6 +23,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-type.h"
+#include "items.h"
 #include "item-name.h"
 #include "libutil.h"
 #include "menu.h"
@@ -293,12 +294,14 @@ static string _describe_ash_skill_boost()
         if (you.equip[i] != -1)
         {
             const item_def& item = you.inv[you.equip[i]];
+            const bool meld = item_is_melded(item);
             if (item.cursed())
             {
-                desc << "<lightred>";
+                desc << (meld ? "<darkgrey>" : "<lightred>");
                 desc << setw(40) << item.name(DESC_QUALNAME, true, false, false);
-                desc << setw(30) << _describe_item_curse(item);
-                desc << "</lightred>\n";
+                desc << setw(30) << (meld ? "melded" : _describe_item_curse(item));
+                desc << (meld ? "</darkgrey>" : "</lightred>");
+                desc << "\n";
             }
         }
     }
@@ -890,11 +893,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
         break;
 
-    case GOD_ASHENZARI:
-        have_any = true;
-        desc.cprintf("You are provided with a bounty of information.\n");
-        break;
-
     case GOD_CHEIBRIADOS:
         have_any = true;
         if (have_passive(passive_t::stat_boost))
@@ -920,7 +918,7 @@ static formatted_string _describe_god_powers(god_type which_god)
                                : "some of Vehumet's most lethal spells";
             desc.cprintf("You can memorise %s.\n", offer);
         }
-        else
+        else if (!you.has_mutation(MUT_INNATE_CASTER))
         {
             desc.textcolour(DARKGREY);
             desc.cprintf("You can memorise some of Vehumet's spells.\n");
@@ -993,7 +991,7 @@ static formatted_string _describe_god_powers(god_type which_god)
         // hack: don't mention the necronomicon alone unless it
         // wasn't already mentioned by the other description
         if (power.abil == ABIL_KIKU_GIFT_NECRONOMICON
-            && you.species != SP_FELID)
+            && !you.has_mutation(MUT_NO_GRASPING))
         {
             continue;
         }

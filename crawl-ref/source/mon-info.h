@@ -196,6 +196,8 @@ enum monster_info_flags
     MB_WITHERING,
     MB_CRUMBLING,
     MB_ALLY_TARGET,
+    MB_CANT_DRAIN,
+    MB_CONCENTRATE_VENOM,
     NUM_MB_FLAGS
 };
 

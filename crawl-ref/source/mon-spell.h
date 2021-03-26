@@ -37,8 +37,7 @@ static const mon_spellbook mspell_list[] =
     /* Orc warlords and cherubs. */
     {  MST_BATTLECRY,
       {
-       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_NOISY
-                               | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 100, MON_SPELL_VOCAL },
       }
     },
 
@@ -106,8 +105,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SATYR,
       {
-       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
-                              | MON_SPELL_NOISY },
+       { SPELL_BATTLECRY, 25, MON_SPELL_VOCAL },
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
       }
@@ -233,8 +231,7 @@ static const mon_spellbook mspell_list[] =
     // ('h') Carnivorous quadrupeds.
     { MST_HOWLER_MONKEY,
       {
-        { SPELL_WARNING_CRY, 40, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                 | MON_SPELL_NO_SILENT },
+        { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
       }
     },
 
@@ -392,8 +389,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ORC_KNIGHT,
       {
-       { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
-                              | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 50, MON_SPELL_VOCAL },
       }
     },
 
@@ -453,20 +449,19 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAULT_SENTINEL,
       {
-       { SPELL_WARNING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
-                                | MON_SPELL_BREATH },
+       { SPELL_WARNING_CRY, 50, MON_SPELL_VOCAL | MON_SPELL_BREATH },
        { SPELL_SENTINEL_MARK, 58, MON_SPELL_WIZARD },
       }
     },
 
-    {  MST_IRONHEART_PRESERVER,
+    {  MST_IRONBOUND_PRESERVER,
       {
        { SPELL_INJURY_BOND, 21, MON_SPELL_WIZARD },
        { SPELL_MINOR_HEALING, 41, MON_SPELL_WIZARD },
       }
     },
 
-    {  MST_IRONBRAND_CONVOKER,
+    {  MST_IRONBOUND_CONVOKER,
       {
        { SPELL_WORD_OF_RECALL, 30, MON_SPELL_WIZARD },
        { SPELL_MIGHT_OTHER, 30, MON_SPELL_WIZARD },
@@ -475,7 +470,13 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAULT_WARDEN,
       {
-       { SPELL_SEAL_DOORS, 50, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
+       { SPELL_SEAL_DOORS, 50, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_IRONBOUND_FROSTHEART,
+      {
+       { SPELL_CREEPING_FROST, 50, MON_SPELL_WIZARD },
       }
     },
 
@@ -626,8 +627,7 @@ static const mon_spellbook mspell_list[] =
 
     { MST_BUNYIP,
       {
-        { SPELL_WARNING_CRY, 20, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                 | MON_SPELL_NO_SILENT },
+        { SPELL_WARNING_CRY, 20, MON_SPELL_VOCAL | MON_SPELL_BREATH },
       }
     },
 
@@ -702,8 +702,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SERAPH,
       {
-       { SPELL_WARNING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
-                                | MON_SPELL_BREATH },
+       { SPELL_WARNING_CRY, 50, MON_SPELL_VOCAL| MON_SPELL_BREATH },
        { SPELL_SUMMON_HOLIES, 50, MON_SPELL_MAGICAL },
        { SPELL_INJURY_BOND, 50, MON_SPELL_MAGICAL },
        { SPELL_CLEANSING_FLAME, 25, MON_SPELL_MAGICAL },
@@ -987,14 +986,28 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    // Shared with nagaraja.
+    {  MST_NAGA_WARRIOR,
+      {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_BATTLECRY, 25, MON_SPELL_VOCAL },
+      }
+    },
+
     {  MST_NAGA_MAGE,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-       { SPELL_VENOM_BOLT, 10, MON_SPELL_WIZARD },
-       { SPELL_FORCE_LANCE, 10, MON_SPELL_WIZARD },
-       { SPELL_POISON_ARROW, 10, MON_SPELL_WIZARD },
-       { SPELL_TELEPORT_OTHER, 10, MON_SPELL_WIZARD },
+       { SPELL_VENOM_BOLT, 20, MON_SPELL_WIZARD },
+       { SPELL_CONCENTRATE_VENOM, 20, MON_SPELL_WIZARD },
+       { SPELL_HASTE, 10, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_NAGARAJA,
+      {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_VENOM_BOLT, 15, MON_SPELL_WIZARD },
+       { SPELL_POISON_ARROW, 15, MON_SPELL_WIZARD },
+       { SPELL_DIMENSION_ANCHOR, 10, MON_SPELL_WIZARD },
        { SPELL_HASTE, 10, MON_SPELL_WIZARD },
       }
     },
@@ -1009,9 +1022,8 @@ static const mon_spellbook mspell_list[] =
     {  MST_NAGA_RITUALIST,
       {
        { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-       { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
-       { SPELL_OLGREBS_TOXIC_RADIANCE, 23, MON_SPELL_WIZARD },
-       { SPELL_VIRULENCE, 23, MON_SPELL_WIZARD },
+       { SPELL_OLGREBS_TOXIC_RADIANCE, 30, MON_SPELL_PRIEST },
+       { SPELL_VIRULENCE, 35, MON_SPELL_PRIEST },
       }
     },
 
@@ -1023,6 +1035,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_SALAMANDER_TYRANT,
+      {
+       { SPELL_ERUPTION, 20, MON_SPELL_WIZARD },
+       { SPELL_PYROCLASTIC_SURGE, 50, MON_SPELL_WIZARD },
+       { SPELL_WEAKENING_GAZE, 50, MON_SPELL_WIZARD | MON_SPELL_INSTANT },
+      }
+    },
+
     // ('O') Ogres.
     {  MST_OGRE_MAGE,
       {
@@ -1030,6 +1050,18 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE_OTHER, 15, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_IRONBOUND_THUNDERHULK,
+      {
+       { SPELL_CALL_DOWN_LIGHTNING, 50, MON_SPELL_MAGICAL },
+      }
+    },
+
+    {  MST_IRONBOUND_BEASTMASTER,
+      {
+       { SPELL_GOAD_BEASTS, 40, MON_SPELL_NATURAL },
       }
     },
 
@@ -1406,8 +1438,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_USHABTI,
       {
        { SPELL_DEATH_RATTLE, 36, MON_SPELL_MAGICAL },
-       { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
-                                | MON_SPELL_BREATH },
+       { SPELL_WARNING_CRY, 56, MON_SPELL_VOCAL | MON_SPELL_BREATH },
        { SPELL_DISPEL_UNDEAD_RANGE, 44, MON_SPELL_MAGICAL },
       }
     },
@@ -1415,8 +1446,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_PEACEKEEPER,
       {
        { SPELL_THROW_BARBS, 33, MON_SPELL_NATURAL },
-       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
-                              | MON_SPELL_NOISY },
+       { SPELL_BATTLECRY, 25, MON_SPELL_VOCAL },
       }
     },
 
@@ -1531,8 +1561,7 @@ static const mon_spellbook mspell_list[] =
     // ('g') Small humanoids.
     {  MST_ROBIN,
       {
-        { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
-                               | MON_SPELL_NO_SILENT },
+        { SPELL_BATTLECRY, 50, MON_SPELL_VOCAL },
         { SPELL_THROW_ALLY, 80, MON_SPELL_NATURAL }
       }
     },
@@ -1601,8 +1630,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SAINT_ROKA,
       {
-       { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_NOISY
-                               | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 100, MON_SPELL_VOCAL },
        { SPELL_SMITING, 64, MON_SPELL_PRIEST },
       }
     },
@@ -1648,7 +1676,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SEARING_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                     | MON_SPELL_NOISY },
-       { SPELL_PARALYSE, 18, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
+       { SPELL_PARALYSE, 18, MON_SPELL_VOCAL },
       }
     },
 
@@ -1717,6 +1745,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('J') Jellies.
+    { MST_ENDOPLASM,
+      {
+        { SPELL_FREEZE, 70, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_DISSOLUTION,
       {
        { SPELL_SUMMON_EYEBALLS, 62, MON_SPELL_PRIEST },
@@ -1915,9 +1949,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_RUPERT,
       {
-       { SPELL_PARALYSE, 16, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
-       { SPELL_CONFUSE, 16, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
-       { SPELL_BERSERKER_RAGE, 33, MON_SPELL_MAGICAL },
+       { SPELL_PARALYSE, 16, MON_SPELL_VOCAL },
+       { SPELL_CONFUSE, 16, MON_SPELL_VOCAL },
+       { SPELL_BERSERKER_RAGE, 33, MON_SPELL_NATURAL },
       }
     },
 
@@ -2014,7 +2048,7 @@ static const mon_spellbook mspell_list[] =
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
-       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
+       { SPELL_SUMMON_HELL_BEAST, 65, MON_SPELL_VOCAL },
       }
     },
 

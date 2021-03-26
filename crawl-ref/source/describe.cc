@@ -64,6 +64,7 @@
 #include "species.h"
 #include "spl-cast.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -85,6 +86,7 @@
 #endif
 #include "transform.h"
 #include "unicode.h"
+#include "viewchar.h"
 
 using namespace ui;
 
@@ -1020,8 +1022,11 @@ static skill_type _item_training_skill(const item_def &item)
  */
 static bool _could_set_training_target(const item_def &item, bool ignore_current)
 {
-    if (!crawl_state.need_save || is_useless_item(item) || you.species == SP_GNOLL)
+    if (!crawl_state.need_save || is_useless_item(item)
+        || you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    {
         return false;
+    }
 
     const skill_type skill = _item_training_skill(item);
     if (skill == SK_NONE)
@@ -1120,7 +1125,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
 static void _append_skill_target_desc(string &description, skill_type skill,
                                         int scaled_target)
 {
-    if (you.species != SP_GNOLL)
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         description += "\n    " + _skill_target_desc(skill, scaled_target, 100);
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
@@ -2172,8 +2177,8 @@ string get_item_description(const item_def &item, bool verbose,
                             : "activated")
                         << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
-                           "and all other devices of its kind " : "")
-                        << "are rendered temporarily inert. However, "
+                           "and all other devices of its kind are " : "is ")
+                        << "rendered temporarily inert. However, "
                         << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
                         << "as you gain experience."
                         << (!evoker_charges(item.sub_type) ?
@@ -2182,8 +2187,21 @@ string get_item_description(const item_def &item, bool verbose,
         break;
 
     case OBJ_POTIONS:
-        if (item.sub_type == POT_LIGNIFY && verbose && item_type_known(item))
-            description << "\n\n" + _describe_lignify_ac();
+        if (verbose && item_type_known(item))
+        {
+            if (item.sub_type == POT_LIGNIFY)
+                description << "\n\n" + _describe_lignify_ac();
+            else if (item.sub_type == POT_CANCELLATION)
+            {
+                if (player_is_cancellable())
+                {
+                    description << "\n\nIf you drink this now, you will no longer be " <<
+                        describe_player_cancellation() << ".";
+                }
+                else
+                    description << "\n\nDrinking this now will have no effect.";
+            }
+        }
         break;
 
     case OBJ_WANDS:
@@ -2218,7 +2236,7 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
     if (!verbose && item.cursed())
-        description << "\nIt has a curse placed upon it.";
+        description << _describe_item_curse(item);
     else
     {
         if (verbose)
@@ -2597,7 +2615,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
     case OBJ_MISSILES:
         if (_could_set_training_target(item, false))
             actions.push_back(CMD_SET_SKILL_TARGET);
-        if (you.species != SP_FELID)
+        if (!you.has_mutation(MUT_NO_GRASPING))
             actions.push_back(CMD_QUIVER_ITEM);
         break;
     case OBJ_ARMOUR:
@@ -3048,7 +3066,7 @@ string get_skill_description(skill_type skill, bool need_title)
     switch (skill)
     {
         case SK_INVOCATIONS:
-            if (you.species == SP_DEMIGOD)
+            if (you.has_mutation(MUT_FORLORN))
             {
                 result += "\n";
                 result += "How on earth did you manage to pick this up?";
@@ -3280,9 +3298,12 @@ static void _get_spell_description(const spell_type spell,
     {
         const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range_for_hd(spell, hd);
-        description += "\nRange : "
-                       + range_string(range, range, mons_char(mon_owner->type))
-                       + "\n";
+        description += "\nRange : ";
+        if (spell == SPELL_CALL_DOWN_LIGHTNING)
+            description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
+        else
+            description += range_string(range, range, mons_char(mon_owner->type));
+        description += "\n";
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & spflag::WL_check)
@@ -4887,6 +4908,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << "wizard, ";
         if (hspell_pass[i].flags & MON_SPELL_PRIEST)
             inf.body << "priest, ";
+        if (hspell_pass[i].flags & MON_SPELL_VOCAL)
+            inf.body << "vocal, ";
         if (hspell_pass[i].flags & MON_SPELL_BREATH)
             inf.body << "breath, ";
         inf.body << (int) hspell_pass[i].freq << ")";

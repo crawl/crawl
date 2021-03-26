@@ -692,6 +692,19 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
+bool mons_class_is_draconic(monster_type mc)
+{
+    switch (mons_genus(mc))
+    {
+        case MONS_DRAGON:
+        case MONS_DRAKE:
+        case MONS_DRACONIAN:
+            return true;
+        default:
+            return false;
+    }
+}
+
 /**
  * Can killing this class of monster ever reward xp?
  *
@@ -1016,6 +1029,11 @@ bool mons_is_slime(const monster& mon)
 bool herd_monster(const monster& mon)
 {
     return mons_class_flag(mon.type, M_HERD);
+}
+
+bool mons_class_requires_band(monster_type mc)
+{
+    return mons_class_flag(mc, M_REQUIRE_BAND);
 }
 
 // Plant or fungus or really anything with
@@ -2690,7 +2708,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
-    case MONS_WHITE_DRACONIAN:   sp = SPELL_CHILLING_BREATH; break;
+    case MONS_WHITE_DRACONIAN:   sp = SPELL_COLD_BREATH; break;
     case MONS_DRACONIAN:
     case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
     case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
@@ -3640,6 +3658,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_MIGHT:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_CONCENTRATE_VENOM:
         return true;
 
     default:
@@ -3750,6 +3769,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
     case SPELL_BLINK_CLOSE:
+    case SPELL_VAMPIRIC_DRAINING:
         return false;
 
     default:
@@ -4216,7 +4236,10 @@ mon_inv_type item_to_mslot(const item_def &item)
 
 monster_type royal_jelly_ejectable_monster()
 {
-    return random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
+    return random_choose(MONS_ACID_BLOB,
+                         MONS_AZURE_JELLY,
+                         MONS_ROCKSLIME,
+                         MONS_QUICKSILVER_OOZE);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.
@@ -5085,17 +5108,6 @@ void debug_monspells()
                                               bknm, spell_name.c_str(),
                                               category, flag);
                     }
-                }
-
-                COMPILE_CHECK(MON_SPELL_NO_SILENT > MON_SPELL_LAST_CATEGORY);
-                static auto NO_SILENT_CATEGORIES =
-                    MON_SPELL_SILENCE_MASK & ~MON_SPELL_NO_SILENT;
-                if (flag == MON_SPELL_NO_SILENT
-                    && (category & NO_SILENT_CATEGORIES))
-                {
-                    fails += make_stringf("Spellbook %s has spell %s marked "
-                                          "MON_SPELL_NO_SILENT redundantly\n",
-                                          bknm, spell_name.c_str());
                 }
 
                 COMPILE_CHECK(MON_SPELL_NOISY > MON_SPELL_LAST_CATEGORY);

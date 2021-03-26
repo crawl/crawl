@@ -936,9 +936,9 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
-        mpr("Not even in wizmode may Demigods worship a god!");
+        mpr("Not even in wizmode may divine creatures worship a god!");
         return;
     }
     god_type god = choose_god();

@@ -1269,7 +1269,6 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
@@ -1278,7 +1277,6 @@ void zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
-
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1
@@ -2427,6 +2425,14 @@ bool ashenzari_uncurse_item()
         return false;
     }
 
+    if (item_is_melded(item))
+    {
+        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+                           "melded with your body!",
+             item.name(DESC_THE).c_str());
+        return false;
+    }
+
     if (!yesno(make_stringf("Really remove and destroy %s?%s",
                             item.name(DESC_THE).c_str(),
                             you.props.exists(AVAILABLE_CURSE_KEY) ?
@@ -2649,7 +2655,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
-        // Even god powers cannot override racial berserk/haste restrictions.
+        // Check cases where a potion is permanently useless to the player
+        // species - temporarily useless potions can still be offered.
         if (*which == POT_BERSERK_RAGE
             && !you.can_go_berserk(true, false, true, nullptr, false))
         {
@@ -2657,6 +2664,11 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         }
         if (*which == POT_HASTE && you.stasis())
             continue;
+        if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
+            continue;
+        if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
+            continue;
+
         // Don't add potions which are already in the list
         bool dup = false;
         for (unsigned int i = 0; i < vec.size(); i++)
@@ -3041,11 +3053,14 @@ bool gozag_call_merchant()
         if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
             continue;
 
-        if (you.species == SP_FELID &&
+        if (you.has_mutation(MUT_NO_ARMOUR) &&
             (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE
-             || type == SHOP_WEAPON
-             || type == SHOP_WEAPON_ANTIQUE))
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
+        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
+            && you.has_mutation(MUT_NO_GRASPING))
         {
             continue;
         }
@@ -3709,6 +3724,10 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         if (mut_check_conflict(mut, true))
             continue;
 
+        // Don't offer sacrifices of skills that a player already can't use.
+        if (!can_sacrifice_skill(mut))
+            continue;
+
         // Special case a few weird interactions:
 
         // Don't offer to sacrifice summoning magic when already hated by all.
@@ -3721,8 +3740,11 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         // Vampires can't get inhibited regeneration for some reason related
         // to their existing regen silliness.
         // Neither can deep dwarf, for obvious reasons.
-        if (mut == MUT_INHIBITED_REGENERATION && you.species == SP_VAMPIRE)
+        if (mut == MUT_INHIBITED_REGENERATION
+            && you.has_mutation(MUT_VAMPIRISM))
+        {
             continue;
+        }
 
         // demonspawn can't get frail if they have a robust facet
         if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -3895,7 +3917,7 @@ static int _piety_for_skill(skill_type skill)
 {
     // Gnolls didn't have a choice about training the skill, so don't give
     // them more piety for waiting longer before taking the sacrifice.
-    if (you.species == SP_GNOLL)
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return 0;
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
@@ -4029,7 +4051,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (you.get_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
@@ -4316,12 +4338,10 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        equipment_type ring_slot;
-
-        if (you.species == SP_OCTOPODE)
-            ring_slot = EQ_RING_EIGHT;
-        else
-            ring_slot = EQ_LEFT_RING;
+        auto ring_slots = species_ring_slots(you.species);
+        // the last one gets sacrificed: either EQ_LEFT_RING or EQ_RING_EIGHT
+        equipment_type ring_slot = ring_slots.back();
+        ring_slots.pop_back();
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
@@ -4351,25 +4371,13 @@ static void _extra_sacrifice_code(ability_type sac)
         // And one ring
         if (ring != nullptr)
         {
-            if (you.species == SP_OCTOPODE)
-            {
-                for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
-                {
-                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
-                    {
-                        open_ring_slot = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                if (!you.slot_item(static_cast<equipment_type>(
-                    EQ_RIGHT_RING), true))
+            // XX does not handle an open slot on the finger amulet
+            for (const auto &eq : ring_slots)
+                if (!you.slot_item(eq, true))
                 {
                     open_ring_slot = true;
+                    break;
                 }
-            }
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
@@ -4378,7 +4386,7 @@ static void _extra_sacrifice_code(ability_type sac)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
-                     (you.species == SP_OCTOPODE ? "another" : "your other"),
+                     (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
                 puton_ring(ring_inv_slot, false);
             }
@@ -5099,12 +5107,13 @@ int pakellas_surge_devices()
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
         return 0;
 
+    // XXX TODO: support djinn here (HP_CASTING, pay_mp, etc)
     const int mp = min(you.magic_points, min(9, max(3,
                        1 + random2avg(you.piety * 9 / piety_breakpoint(5),
                                       2))));
 
     const int severity = div_rand_round(mp, 3);
-    dec_mp(mp);
+    drain_mp(mp);
     you.duration[DUR_DEVICE_SURGE] = 0;
     if (severity == 0)
     {

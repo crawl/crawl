@@ -201,95 +201,6 @@ a++++++++a
 aaaaaaaaaa
 ENDMAP
 
-# Anthill origins
-NAME:   minivault_29
-TAGS:   uniq_anthill transparent
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  0 = 1., ' = .
-: else
-NSUBST: 0 = 2:3 / * = 12
-SUBST:  ' = %
-: end
-MAP
-'1......1..'
-...x.xx.x.2.
-.xxx2xxxxx..
-.xxxx02xxx2.
-.2xx201012x1
-.xx024020xx.
-1xx021202x..
-.x2x1201xxx.
-.x2xx02022x.
-..xxxxxxxx2.
-...x2xxxx1..
-'1.......11'
-ENDMAP
-
-NAME:   zaba_anthell
-TAGS:   no_rotate uniq_anthill
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-SUBST:  X = x.
-NSUBST: @ = 1:@ / * = x.
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  1 = 111., 0 = 112, 3' = .
-: else
-SUBST:  1 = 112., 0 = 11122, ' = %
-: end
-MAP
-     X  X X X  X
-   XXx@x@x@x@x@xXX
-  X@xX1X.X1X.X1Xx@X
- XXx.X..1.X.1.X.0xXX
- XxX0000X.2X....0xxX
-XxX..X....X'.X2X01XxX
- @11.0X.'X2X3.X.011@
-XxX1X...X242X...X1XxX
- @110.X.3X2X'.X0.11@
-XxX10X2X.'X....X..XxX
- XxX0....X2.X0000XxX
- XXx0.X.1.X.1..X.xXX
-  X@xX1X.X1X.X1Xx@X
-   XXx@x@x@x@x@xXX
-     X  X X X  X
-ENDMAP
-
-NAME:  zaba_antful_of_joy
-TAGS:  no_rotate uniq_anthill
-DEPTH: D:8-13, Lair:2-, Spider
-MONS:  patrolling worker ant, soldier ant
-MONS:  entropy weaver, patrolling queen ant
-KFEAT: ^ = alarm trap
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST: 1 = 11., 2 = 221, 3 = ., ^ = ^.
-: else
-SUBST: 1 = 112., ' = %
-: end
-MAP
-    xxxxxxxxxxx
-   xx131xxx131xx
-   x11111x11111x
-  xxx.1.xxx.1.xxx
- xxx..x..x..x..xxx
-xx.2.xxx222xxx.2.xx
-x'111.x12421x.111'x
-xx...xxx222xxx...xx
- xxx..x.1x1.x..xxx
-  xxx.^.xxx.^.xxx
-   x'....x....'x
-   xx...xxx...xx
-    xxx11x11xxx
-      xx.^.xx
-       x+++x
-ENDMAP
-
 # I've revamped this vault to always place reasonably challenging monsters,
 # with monster/loot types and number scaling with depth. -gammafunk
 NAME:   worms_lemuel
@@ -343,38 +254,6 @@ WWwxxx1xxxwWW
  WWWWxxxWWWW
    WWwDwWW
     WWWWW
-ENDMAP
-
-NAME:   minmay_another_anthill
-TAGS:   uniq_anthill transparent
-DEPTH:  D:8-13, Lair:2-, Spider
-MONS:   patrolling worker ant, worker ant, soldier ant
-MONS:   entropy weaver, patrolling queen ant
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
-SUBST:  ab = 1:6 2:24 3 .:50 x:40
-: else
-NSUBST: b = 2:4 / 2:* / *:2
-SUBST:  a = 1:12 2:19 3:19 .:40 x:40
-: end
-MAP
-  .. .... .. .
- .xx.xxxx.xx.x.
-.xx.xaxxaxx.x.x.
-.x..xa.aax.aaxx.
- .xxa.x.a.axxax.
-.x.x.aaaaa.axx.
-.xx.aabbba.aaxx.
-.x.xxab5baa.ax.
-.x.aaa.bba.ax.x.
- .x.xaa.xxa.a.x.
-.x.xaa.aax.aaxx.
- ..xaax.a.aax.x.
-.xxaxaaa.aa.ax.
-.x.x.aaxxaxa.xx.
-.xx.x.xax.xax.x.
- .xxxx.x.x.x.xx.
-  .... . . . ..
 ENDMAP
 
 NAME:    hangedman_stitches_earthworm
@@ -449,24 +328,6 @@ xp.bp.bp.bpx
 xp..p..p..px
 xpb..b..b.px
 xxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
-# Anthole (zaba)
-#
-NAME:   zaba_anthole
-TAGS:   extra layout_rooms
-DEPTH:  D:5-9, Lair
-MONS:   worker ant / nothing w:5
-MAP
-   @
- xx+xx
-xx...xx
-x.111.x
-x.111.x
-xx...xx
- xx+xx
-   @
 ENDMAP
 
 NAME:   minmay_worlds_worst_comb
@@ -979,7 +840,7 @@ KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
-KMONS:  8 = worker ant
+KMONS:  8 = scorpion
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
 KFEAT:  78 = W
@@ -1032,7 +893,7 @@ KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
 KMONS:  7 = hornet
-KMONS:  8 = worker ant
+KMONS:  8 = scorpion
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush
 KFEAT:  78 = W
@@ -1076,7 +937,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
+MONS:    rat, bat, frilled lizard, worm, endoplasm
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
@@ -1084,7 +945,7 @@ KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
 KMONS:   D = worm / tyrant leech
 KMONS:   E = jelly
-KMONS:   F = worker ant
+KMONS:   F = scorpion
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
 KMONS:   I = hell rat
@@ -1220,7 +1081,7 @@ ENDMAP
 NAME:   wander_ebering_terrifying_dragon_lair
 TAGS:   no_monster_gen
 DEPTH:  D:1-3
-MONS:   frilled lizard / leopard gecko
+MONS:   frilled lizard
 NSUBST:  $ = $ / 4=$.. / *:.
 NSUBST:  D = 3:d / 3=d.. / *:.
 NSUBST:  E = e / 2=e. / .
@@ -1480,8 +1341,8 @@ MONS:    kobold brigand ; dagger . throwing net q:2
 : end
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
-: dgn.delayed_decay(_G, 'f', 'leopard gecko skeleton')
-MONS:    rat / leopard gecko
+: dgn.delayed_decay(_G, 'f', 'frilled lizard skeleton')
+MONS:    rat / frilled lizard
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
@@ -2230,6 +2091,100 @@ MAP
 ...+1m...
  ..xxx..
   .....
+ENDMAP
+
+# Very hungry Elvish explorers and their campfire, mounts and pet.
+# Sometimes they have starved to death.
+NAME:   beargit_elvish_explorers
+DEPTH:  D:12-, Depths, Swamp, Snake, Spider, Crypt
+TAGS:   transparent patrolling no_monster_gen no_trap_gen
+: if you.in_branch("D") then
+:     if you.depth() < 14 then
+MONS:   deep elf archer; shortbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; quarterstaff good_item . leather armour good_item
+MONS:   elephant, warg / hell hound w:5
+:     else
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . scale mail good_item
+MONS:   elephant / dire elephant, warg / hell hound / raiju
+:     end
+MONS:   plant / fungus, nothing
+: elseif you.in_branch("Swamp") or you.in_branch("Spider")
+:        or you.in_branch("Snake") then
+MONS:   deep elf archer; longbow good_item . arrow . quarterstaff \
+            . robe good_item
+MONS:   deep elf knight; lajatang good_item . chain mail good_item
+MONS:   dire elephant
+MONS:   hell hound / raiju
+MONS:   fungus / nothing, nothing
+: elseif you.in_branch("Crypt") then
+KITEM:  1 = longbow good_item, arrow, quarterstaff, robe good_item
+KITEM:  2 = lajatang good_item, chain mail good_item
+KMONS:  1 = spectral deep elf master archer
+KMONS:  2 = spectral deep elf blademaster
+KMONS:  3 = spectral hellephant
+KMONS:  4 = doom hound
+KMONS:  5 = nothing
+KMONS:  6 = ancient lich / deep elf death mage w:30 / lich / dread lich \
+            / vampire mage
+: else
+# The elves have mastered the dungeon and allied with the darkness.
+MONS:   deep elf master archer; longbow good_item | longbow randart . arrow \
+            . chain mail good_item | quicksilver dragon scales
+MONS:   deep elf blademaster; lajatang good_item | lajatang randart \
+            . shadow dragon scales good_item | shadow dragon scales randart
+MONS:   hellephant
+MONS:   doom hound
+MONS:   nothing, nothing
+: end
+: if you.in_branch("Crypt") then
+SUBST:  x = c
+COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+FTILE:  - = floor_crypt
+: elseif you.in_branch("Swamp") then
+SUBST:  - = --....W, x = t
+FTILE:  -123456t = floor_grass
+: elseif you.in_branch("Spider") then
+SUBST:  t = x
+: else
+FTILE:  -123456t = floor_grass
+FTILE:  P = floor_sand
+: end
+MARKER: P = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 1000, pow_max = 1000, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MARKER: P = lua:fog_machine { cloud_type = "grey smoke", \
+            pow_min = 3, pow_max = 3, delay = 100, \
+            size = 1, walk_dist = 1, start_clouds = 1 }
+: dgn.delayed_decay(_G, 'P', 'rat skeleton')
+MAP
+    xx.@.xxx
+    xt----tx
+    xt555ttx
+    xt----tx
+    xtt--ttx
+    xt----tx
+    xt--t-tx
+    xt----tx
+   xxt-t--tx
+  xxttt---txxxx
+ xxtt-----ttttx
+xxtt---t----4txx
+xttWWW---P---ttx
+xt-WwWW----3--tx
+xt------2163--tx
+xttt---------ttx
+xxxtt--tttttttxx
+  xxt---tttttttx
+   xt----t----5.
+   xtt--------5@
+   xxtt-----t-5.
+    xxtttttttttx
+     xxxxxxxxxxx
 ENDMAP
 
 ################################################################################
@@ -3084,13 +3039,13 @@ ENDMAP
 NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen transparent
 DEPTH:   Depths, !Depths:$
-MONS:    large slime creature, great orb of eyes, eye of draining
+MONS:    large slime creature, great orb of eyes
 KMASK:   %$de = opaque
 KITEM:   R = gold
 ITEM:    scroll of teleportation q:2 / wand of digging
 ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
-SUBST:   J = 1111111123
+SUBST:   J = 1111111122
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
 NSUBST:  ! = 1:d / * = %$
@@ -3144,7 +3099,7 @@ ENDMAP
 NAME:   minmay_acid_items
 TAGS:   no_monster_gen no_trap_gen transparent
 DEPTH:  Depths
-MONS:   slime creature w:30 / death ooze / azure jelly / acid blob w:5
+MONS:   slime creature w:30 / rockslime / azure jelly / acid blob w:5
 MONS:   acid blob
 MAP
   ...........
@@ -3181,7 +3136,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, eye of draining, floating eye
+MONS:   golden eye, ophan, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KFEAT:  m = iron_grate
@@ -4488,24 +4443,24 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    frilled lizard, leopard gecko, iguana, komodo dragon, basilisk, plant
-SUBST:   6 = 61, 1 = 1.
+MONS:    frilled lizard, iguana, komodo dragon, basilisk, plant
+SUBST:   5 = 51, 1 = 1.
 : if you.absdepth() > 9 then
-SUBST:   1 = 433221
+SUBST:   1 = 32211
 : elseif you.absdepth() > 6 then
-SUBST:   5 = 4, 1 = 32211
+SUBST:   4 = 3, 1 = 21
 : elseif you.absdepth() > 3 then
-SUBST:   5 = 3, 1 = 21
+SUBST:   4 = 2
 : else
-SUBST:   5 = 2
+SUBST:   4 = 1
 : end
 MAP
   xxxxxx
-xxx6116x
-x561661xx
-xx166166x
- x666616x
- xxxxx6@
+xxx5115x
+x451551xx
+xx155155x
+ x555515x
+ xxxxx5@
 ENDMAP
 
 NAME:    minmay_joined_circles
@@ -5002,7 +4957,7 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
 ENDMAP
 
 NAME:   kennysheep_kite_vault
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen transparent
 SUBST:  x : xcnvb
 DEPTH:  D:8-, Depths
 MAP
@@ -6913,7 +6868,7 @@ ENDMAP
 NAME:    minmay_guarded_unrand_staff_of_olgreb
 DEPTH:   D:5-10
 TAGS:    no_monster_gen no_trap_gen transparent
-MONS:    worker ant / soldier ant
+MONS:    scorpion / redback w:5
 MONS:    killer bee
 MONS:    adder / water moccasin
 # TODO: built in fallback for staff of olgreb is kind of dumb

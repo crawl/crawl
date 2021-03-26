@@ -259,6 +259,21 @@ struct ability_def
     generic_cost        piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
     failure_info        failure;        // calculator for failure odds
     ability_flags       flags;          // used for additional cost notices
+
+    int get_mp_cost() const
+    {
+        if (you.has_mutation(MUT_HP_CASTING))
+            return 0;
+        return mp_cost;
+    }
+
+    int get_hp_cost() const
+    {
+        int cost = hp_cost.cost(you.hp_max);
+        if (you.has_mutation(MUT_HP_CASTING))
+            return cost + mp_cost;
+        return cost;
+    }
 };
 
 static int _lookup_ability_slot(ability_type abil);
@@ -656,7 +671,7 @@ static const ability_def& get_ability_def(ability_type abil)
 
 unsigned int ability_mp_cost(ability_type abil)
 {
-    return get_ability_def(abil).mp_cost;
+    return get_ability_def(abil).get_mp_cost();
 }
 
 /**
@@ -758,8 +773,8 @@ const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     string ret;
-    if (abil.mp_cost)
-        ret += make_stringf(", %d MP", abil.mp_cost);
+    if (abil.get_mp_cost())
+        ret += make_stringf(", %d MP", abil.get_mp_cost());
 
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
@@ -783,8 +798,9 @@ const string make_cost_description(ability_type ability)
         ret += _ashenzari_curse_text();
     }
 
-    if (abil.hp_cost)
-        ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
+    const int hp_cost = abil.get_hp_cost();
+    if (hp_cost)
+        ret += make_stringf(", %d HP", hp_cost);
 
     if (abil.piety_cost || abil.flags & abflag::piety)
         ret += ", Piety"; // randomised and exact amount hidden from player
@@ -863,17 +879,17 @@ static const string _detailed_cost_description(ability_type ability)
     bool have_cost = false;
     ret << "This ability costs: ";
 
-    if (abil.mp_cost > 0)
+    if (abil.get_mp_cost())
     {
         have_cost = true;
         ret << "\nMP     : ";
-        ret << abil.mp_cost;
+        ret << abil.get_mp_cost();
     }
-    if (abil.hp_cost)
+    if (abil.get_hp_cost())
     {
         have_cost = true;
         ret << "\nHP     : ";
-        ret << abil.hp_cost.cost(you.hp_max);
+        ret << abil.get_hp_cost();
     }
 
     if (abil.piety_cost || abil.flags & abflag::piety)
@@ -967,11 +983,8 @@ ability_type fixup_ability(ability_type ability)
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        if (you.is_lifeless_undead(false)
-            || you.stasis())
-        {
+        if (you.is_lifeless_undead() || you.stasis())
             return ABIL_NON_ABILITY;
-        }
         return ability;
 
     case ABIL_BLINK:
@@ -991,7 +1004,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1007,6 +1020,16 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         else
             return ability;
+
+    case ABIL_SIF_MUNA_CHANNEL_ENERGY:
+        if (you.get_mutation_level(MUT_HP_CASTING))
+            return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_SIF_MUNA_FORGET_SPELL:
+        if (you.get_mutation_level(MUT_INNATE_CASTER))
+            return ABIL_NON_ABILITY;
+        return ability;
 
     default:
         return ability;
@@ -1192,7 +1215,7 @@ void no_ability_msg()
     // Give messages if the character cannot use innate talents right now.
     // * Vampires can't turn into bats when full of blood.
     // * Tengu can't start to fly if already flying.
-    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+    if (you.get_mutation_level(MUT_VAMPIRISM) >= 2)
     {
         if (you.transform_uncancellable)
             mpr("You can't untransform!");
@@ -1475,10 +1498,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
     // so don't fail in that case if there's no MP cost.
-    if (abil.mp_cost > 0 && !enough_mp(abil.mp_cost, quiet, true))
+    if (abil.get_mp_cost() > 0 && !enough_mp(abil.get_mp_cost(), quiet, true))
         return false;
 
-    const int hpcost = abil.hp_cost.cost(you.hp_max);
+    const int hpcost = abil.get_hp_cost();
     if (hpcost > 0 && !enough_hp(hpcost, quiet))
         return false;
 
@@ -2497,6 +2520,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         if (mons && you.can_see(*mons) && mons->is_illusion())
         {
+            fail_check();
             simple_monster_message(*mons, "'s clone doesn't have a soul to enslave!");
             // Still costs a turn to gain the information.
             return spret::success;
@@ -3251,15 +3275,19 @@ static void _pay_ability_costs(const ability_def& abil)
 
     const int piety_cost =
         _scale_piety_cost(abil.ability, abil.piety_cost.cost());
-    const int hp_cost    = abil.hp_cost.cost(you.hp_max);
+    const int hp_cost    = abil.get_hp_cost();
+    const int mp_cost = abil.get_mp_cost();
 
     dprf("Cost: mp=%d; hp=%d; piety=%d",
-         abil.mp_cost, hp_cost, piety_cost);
+         mp_cost, hp_cost, piety_cost);
 
-    if (abil.mp_cost)
-        dec_mp(abil.mp_cost);
+    if (mp_cost)
+    {
+        pay_mp(mp_cost);
+        finalize_mp_cost();
+    }
 
-    if (abil.hp_cost)
+    if (hp_cost)
         dec_hp(hp_cost, false);
 
     if (piety_cost)
@@ -3468,20 +3496,25 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_SPIT_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) == 1;
     case ABIL_REVIVIFY:
-        return you.species == SP_VAMPIRE && !you.vampire_alive;
+        return you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive;
     case ABIL_EXSANGUINATE:
-        return you.species == SP_VAMPIRE && you.vampire_alive;
+        return you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive;
     case ABIL_TRAN_BAT:
-        return you.species == SP_VAMPIRE && !you.vampire_alive
-            && you.experience_level >= 3 && you.form != transformation::bat;
+        return you.get_mutation_level(MUT_VAMPIRISM) >= 2
+                && !you.vampire_alive
+                && you.form != transformation::bat;
     case ABIL_FLY:
-        return you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT];
+        return you.racial_permanent_flight()
+            && !you.attribute[ATTR_PERM_FLIGHT]
+            && !you.has_mutation(MUT_FLOAT);
     case ABIL_STOP_FLYING:
         // handles both species and evoke flight
         // if (you.racial_permanent_flight() && you.attribute[ATTR_PERM_FLIGHT])
         //     return true;
         // TODO: dbl check tengu flight
-        return you.airborne() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE];
+        return you.airborne()
+            && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+            && !you.has_mutation(MUT_FLOAT);
 
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch

@@ -83,16 +83,15 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     }
 
     monster* mons = monster_at(beam.target);
-    if (!mons || mons->submerged())
+    if (!mons || !you.can_see(*mons))
     {
-        fail_check();
-        canned_msg(MSG_SPELL_FIZZLES);
-        return spret::success; // still losing a turn
+        mpr("You see nothing there to target!");
+        return spret::abort;
     }
 
     if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
-        mprf("But poisonous vapours would do no harm to %s!",
+        mprf("%s cannot be affected by poisonous vapours!",
              mons->name(DESC_THE).c_str());
         return spret::abort;
     }
@@ -115,7 +114,8 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     {
         // Reinforce the cloud.
         mpr("The poisonous vapours increase!");
-        cloud->decay += cloud_duration * 10; // in this case, we're using auts
+        // in this case, we're using auts
+        cloud->decay += cloud_duration * BASELINE_DELAY;
         cloud->set_whose(KC_YOU);
     }
     else

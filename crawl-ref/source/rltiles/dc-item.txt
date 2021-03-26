@@ -660,9 +660,9 @@ i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
 %back scroll-grey
+# start TAG_MAJOR_VERSION == 34
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
-# start TAG_MAJOR_VERSION == 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 # end TAG_MAJOR_VERSION

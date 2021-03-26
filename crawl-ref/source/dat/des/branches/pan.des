@@ -50,7 +50,7 @@ function pan_lord_setup(_G, name)
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
                  "floating eye / golden eye band / eye of devastation / " ..
-                 "eye of draining / shining eye / very ugly thing band / "..
+                 "shining eye / very ugly thing band / "..
                  "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
@@ -636,7 +636,7 @@ NSUBST:     O = 1:O / *:|
 TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
 MONS:       floating eye / golden eye / eye of devastation / \
-            eye of draining / shining eye
+            shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
 MONS:       neqoxec
@@ -2370,10 +2370,11 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KMONS:  p = human / elf / orc / naga / centaur / draconian / ogre / \
+KMONS:  p = human / elf / orc / naga / palentonga / draconian / ogre / \
             minotaur / troll / kobold / mummy / ghoul / spriggan / felid / \
-            deep dwarf / octopode / vampire / base draconian / demigod / \
-            demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+            deep dwarf / octopode / vampire / demigod / gnoll / \
+            demonspawn / merfolk / barachi / gargoyle / formicid / \
+            vine stalker / tengu
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
@@ -2535,7 +2536,7 @@ epilogue{{
 NAME:   regret_index_pan_draining_boxed
 TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
 ORIENT: float
-MONS:   pandemonium lord, eye of draining
+MONS:   pandemonium lord, ghost moth
 MONS:   black sun, lorocyproca, any demon
 KMONS:  6O = ghost moth
 : if demonic_rune_vault_is_decoy() then
@@ -2572,7 +2573,7 @@ MAP
 ENDMAP
 
 NAME:    serial_pan_draining_one
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SHUFFLE: CDE
 SUBST:   C : vv..., DE = .
 KMASK:   1 = opaque
@@ -2589,7 +2590,7 @@ CCm1mDDD
 ENDMAP
 
 NAME:    serial_pan_draining_two
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SHUFFLE: CD
 SUBST:   C : vvv., D = .
 KMASK:   1 = opaque
@@ -2608,7 +2609,7 @@ ENDMAP
 
 NAME:    serial_pan_draining_three
 WEIGHT:  4
-MONS:    eye of draining, any demon
+MONS:    ghost moth, any demon
 SUBST:   - : +.
 : serial_pan_setup(_G, "boxes")
 MAP

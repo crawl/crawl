@@ -54,7 +54,7 @@ static const sacrifice_def sac_data[] =
   30,
   SK_NONE,
   nullptr,
-  []() { return you.has_mutation(MUT_NO_DRINK); },
+  []() { return !you.has_mutation(MUT_NO_DRINK); },
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
@@ -137,14 +137,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
+{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR_SKILL,
   "sacrifice your Armour skill",
   "sacrificed armour",
 
   30,
   SK_ARMOUR,
   nullptr,
-  []() { return you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE; },
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,

@@ -148,7 +148,7 @@ static void _init_consoles()
     // The AttachConsole() function is XP/2003 Server and up, so we
     // need to do the GetModuleHandle()/GetProcAddress() dance.
     typedef BOOL (WINAPI *ac_func)(DWORD);
-    ac_func attach_console = (ac_func)GetProcAddress(
+    ac_func attach_console = (ac_func)(void *)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
 
     if (attach_console)
@@ -175,7 +175,7 @@ static void _shutdown_console()
 {
 #ifdef TARGET_OS_WINDOWS
     typedef BOOL (WINAPI *fc_func)();
-    fc_func free_console = (fc_func)GetProcAddress(
+    fc_func free_console = (fc_func)(void *)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
     if (free_console)
         free_console();

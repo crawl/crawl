@@ -3771,10 +3771,10 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
+                    if (slot_vals[j] == "vocal")
+                        cur_spells[i].flags |= MON_SPELL_VOCAL;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no silent")
-                        cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")

@@ -1,0 +1,62 @@
+enum: SP_DJINNI
+monster: MONS_EFREET
+name: Djinni
+short_name: Dj
+difficulty: Intermediate
+difficulty_priority: 70
+aptitudes:
+  xp: 0
+  hp: -1
+  mp_mod: 0
+  mr: 4
+  short_blades: -1
+  long_blades: -1
+  axes: -2
+  maces_and_flails: -2
+  polearms: -2
+  staves: -1
+  slings: -2
+  bows: -2
+  crossbows: -2
+  throwing: -2
+  spellcasting: -2
+  dodging: 1
+  fire_magic: False
+  ice_magic: False
+  air_magic: False
+  earth_magic: False
+  poison_magic: False
+  conjurations: False
+  hexes: False
+  summoning: False
+  necromancy: False
+  translocations: False
+  transmutations: False
+  stealth: -1
+str: 7
+int: 9
+dex: 8
+levelup_stat_frequency: 4
+levelup_stats:
+  - dex
+  - int
+mutations:
+  1:
+    MUT_HEAT_RESISTANCE: 2
+    MUT_COLD_VULNERABILITY: 1
+    MUT_FLOAT: 1
+    MUT_INNATE_CASTER: 1
+    MUT_HP_CASTING: 1
+    MUT_FLAT_HP: 1
+recommended_jobs:
+  - JOB_BERSERKER
+  - JOB_GLADIATOR
+  - JOB_WIZARD
+  - JOB_FIRE_ELEMENTALIST
+  - JOB_AIR_ELEMENTALIST
+recommended_weapons:
+  - SK_SHORT_BLADES
+  - SK_LONG_BLADES
+# start TAG_MAJOR_VERSION == 34
+create_enum: false
+# end TAG_MAJOR_VERSION

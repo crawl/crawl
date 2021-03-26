@@ -1,4 +1,4 @@
-    stop := runrest_stop_message
+stop := runrest_stop_message
 ignore := runrest_ignore_message
 
 ignore += Jiyva gurgles merrily

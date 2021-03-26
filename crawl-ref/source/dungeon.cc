@@ -1513,8 +1513,50 @@ static int _num_items_wanted(int absdepth0)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
         return 10 + random2avg(85, 2); // rich level!
+    else if (absdepth0 < 3)
+        return 3 + roll_dice(3, 7); // thin loot on early floors
     else
         return 3 + roll_dice(3, 10);
+}
+
+static int _mon_die_size()
+{
+    const int size = branches[you.where_are_you].mon_die_size;
+    if (you.where_are_you != BRANCH_DUNGEON)
+        return size;
+
+    // Dungeon is a very special place and needs a lot of hand-holding.
+    // Historically we used weird mysterious MONS_NO_MONSTER weights for
+    // this balancing, but now we have technology.
+    switch (you.depth)
+    {
+        case 1:
+            return 12;
+        case 2:
+            return 10;
+        case 3:
+        case 4:
+            return 9;
+        case 5:
+        case 6:
+            return 7;
+        case 7:
+            return 6;
+        case 8:
+        case 9:
+            return 5;
+        case 10:
+            return 4;
+        case 11:
+            return 5;
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            return 6;
+        default:
+            return 12;
+    }
 }
 
 // Return how many level monster are wanted for level generation.
@@ -1529,22 +1571,9 @@ static int _num_mons_wanted()
         return 0;
     }
 
-    int size = 12;
-
-    if (player_in_branch(BRANCH_SWAMP) || in_pan)
-        size = 8;
-    else if (player_in_branch(BRANCH_CRYPT))
-        size = 10;
-    else if (player_in_branch(BRANCH_DEPTHS))
-        size = 11;
-    else if (player_in_hell())
-        size = 23;
-
-    int mon_wanted = roll_dice(3, size);
-
+    int mon_wanted = roll_dice(3, _mon_die_size());
     if (mon_wanted > 60)
         mon_wanted = 60;
-
     return mon_wanted;
 }
 
@@ -4486,23 +4515,6 @@ static void _build_postvault_level(vault_placement &place)
     }
 }
 
-static object_class_type _acquirement_object_class()
-{
-    static const object_class_type classes[] =
-    {
-        OBJ_JEWELLERY,
-        OBJ_BOOKS,
-        OBJ_WANDS,
-        OBJ_MISCELLANY, // Felids stop here
-        OBJ_WEAPONS,
-        OBJ_ARMOUR,
-        OBJ_STAVES,
-    };
-
-    const int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
-    return classes[random2(nc)];
-}
-
 static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
     rng::subgenerator corpse_rng;
@@ -4716,7 +4728,7 @@ int dgn_place_item(const item_spec &spec,
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
-            base_type = acquire ? _acquirement_object_class()
+            base_type = acquire ? shuffled_acquirement_classes(false)[0]
                                 : _superb_object_class();
         }
     }

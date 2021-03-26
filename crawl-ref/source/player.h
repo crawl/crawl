@@ -624,8 +624,7 @@ public:
     bool      has_usable_hooves(bool allow_tran = true) const;
     int       has_fangs(bool allow_tran = true) const;
     int       has_usable_fangs(bool allow_tran = true) const;
-    int       has_tail(bool allow_tran = true) const;
-    int       has_usable_tail(bool allow_tran = true) const;
+    bool      has_tail(bool allow_tran = true) const;
     bool      has_usable_offhand() const;
     int       has_pseudopods(bool allow_tran = true) const;
     int       has_usable_pseudopods(bool allow_tran = true) const;
@@ -686,6 +685,7 @@ public:
     string hands_act(const string &plural_verb, const string &object) const;
     string foot_name(bool plural, bool *can_plural = nullptr) const override;
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
+    int arm_count() const;
     string unarmed_attack_name() const;
 
     bool fumbles_attack() override;
@@ -750,7 +750,7 @@ public:
     monster_type mons_species(bool zombie_base = false) const override;
 
     mon_holy_type holiness(bool temp = true) const override;
-    bool undead_or_demonic() const override;
+    bool undead_or_demonic(bool temp = true) const override;
     bool is_holy() const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
@@ -790,6 +790,7 @@ public:
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
     int get_noise_perception(bool adjusted = true) const;
+    bool is_dragonkind() const override;
 
     bool paralysed() const override;
     bool cannot_move() const override;
@@ -1074,14 +1075,20 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp(bool scale = false, bool set = false);
-void calc_mp();
+void calc_mp(bool scale = false);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
-void dec_mp(int mp_loss, bool silent = false);
+void drain_mp(int mp_loss);
+void pay_hp(int cost);
+void pay_mp(int cost);
 
 void inc_mp(int mp_gain, bool silent = false);
-void inc_hp(int hp_gain);
+void inc_hp(int hp_gain, bool silent = false);
+void refund_mp(int cost);
+void refund_hp(int cost);
 void flush_mp();
+void flush_hp();
+void finalize_mp_cost(bool addl_hp_cost = false);
 
 void drain_hp(int hp_loss);
 // Undrain the player's HP and return excess HP if any.

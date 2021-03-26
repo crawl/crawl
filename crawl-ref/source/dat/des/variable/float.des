@@ -1218,7 +1218,7 @@ ENDMAP
 NAME:   lemuel_slime
 DEPTH:  D:6-, Lair
 ORIENT: float
-MONS:   w:20 ooze / jelly / fungus
+MONS:   w:20 endoplasm / jelly / fungus
 MONS:   slime creature / oklob plant
 MAP
 xxxxxxxxxx
@@ -1268,8 +1268,8 @@ ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant cockroach w:30 / butterfly w:20
-MONS:   worker ant
-MONS:   killer bee / scorpion / soldier ant w:5
+MONS:   scorpion
+MONS:   killer bee / scorpion / vampire mosquito w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1451,7 +1451,7 @@ NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair:1-, !Lair:$
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
-MONS:    leopard gecko / frilled lizard, iguana, komodo dragon
+MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
@@ -1814,7 +1814,7 @@ DEPTH:  Depths
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye / eye of draining w:2
+MONS:   golden eye
 MONS:   glowing orange brain
 MAP
 ...................................
@@ -2939,7 +2939,7 @@ ENDMAP
 
 NAME: cheibrodos_poisonous_passages
 DEPTH: Depths, !Depths:$
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
@@ -2958,6 +2958,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 KMONS: A = lich
 KFEAT: A = stone_arch
 KPROP: '? = no_tele_into
+KMASK: '? = opaque
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
@@ -3777,9 +3778,9 @@ TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
-MONS: kobold / kobold brigand w:6, ooze / jelly, slime creature
+MONS: kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
-MONS: kobold, ooze, jelly
+MONS: kobold, endoplasm, jelly
 : end
 {{
 dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
@@ -4051,7 +4052,7 @@ MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
 MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS:    eye of draining
+MONS:    floating eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage
@@ -4141,7 +4142,7 @@ NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 4=1 / 6=1. / 2=2. / .
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation \
          / golden eye / shining eye
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 :   end
@@ -4150,7 +4151,7 @@ NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 MONS:    slime creature
 MONS:    glowing orange brain / shining eye / floating eye / golden eye \
          / eye of devastation
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2=2. / 3=3 / 4=3. / .
 : end
@@ -4444,7 +4445,7 @@ SUBST: D = 1., E = 2.
 NSUBST: 3 = 2:3 / 3.
 {{
 dgn.delayed_decay(_G, '-', 'troll skeleton / minotaur skeleton ' ..
-                           '/ deep dwarf skeleton / centaur skeleton')
+                           '/ deep dwarf skeleton / ogre skeleton')
 }}
 MAP
 ccccccccccc
@@ -4777,7 +4778,7 @@ DEPTH:  D:8-, Lair, Spider
 ORIENT: float
 ITEM:   pair of boots ego:rampaging ident:all
 ITEM:   pair of boots ego:rampaging good_item ident:all
-ITEM:   pair of boots ego:rampaging randart ident:all
+ITEM:   pair of boots randart ident:all
 MONS:   boulder beetle, torpor snail
 : if you.in_branch("D") then
 :     if you.depth() < 11 then

@@ -447,6 +447,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CALL_DOWN_LIGHTNING, "Call Down Lightning",
+    spschool::conjuration | spschool::air,
+    spflag::target | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_BLINK, "Blink",
     spschool::translocation,
     spflag::escape | spflag::selfench | spflag::emergency | spflag::utility,
@@ -573,8 +584,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::not_self | spflag::emergency
-        | spflag::selfench,
+    spflag::dir_or_target | spflag::not_self | spflag::emergency,
     3,
     200,
     1, 1,
@@ -2371,6 +2381,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CREEPING_FROST, "Creeping Frost",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_LEGENDARY_DESTRUCTION, "Legendary Destruction",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
@@ -2859,6 +2880,17 @@ static const struct spell_desc spelldata[] =
     spschool::hexes,
     spflag::target | spflag::not_self | spflag::monster,
     5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_WEAKENING_GAZE, "Weakening Gaze",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    4,
     200,
     LOS_RADIUS, LOS_RADIUS,
     0, 0,
@@ -3389,11 +3421,56 @@ static const struct spell_desc spelldata[] =
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
     spflag::no_ghost,
-    4,
+    5,
     100,
     -1, -1,
     5, 0,
     TILEG_MANIFOLD_ASSAULT,
+},
+
+{
+    SPELL_GOAD_BEASTS, "Goad Beasts",
+    spschool::hexes,
+    spflag::area | spflag::monster | spflag::selfench,
+    6,
+    0,
+    -1, -1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
+    spschool::poison,
+    spflag::dir_or_target | spflag::not_self | spflag::helpful
+        | spflag::needs_tracer | spflag::utility | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_ERUPTION, "Eruption",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::target | spflag::not_self | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_PYROCLASTIC_SURGE, "Pyroclastic Surge",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::dir_or_target | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {

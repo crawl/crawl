@@ -556,9 +556,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
     int result = 0;
 
     // Rings are (number of usable rings) times as common as amulets.
-    // XXX: unify this with the actual check for ring slots
-    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
-                       - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+    const int ring_num = you.arm_count();
 
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
@@ -730,7 +728,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
+    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR))
         return OBJ_RANDOM;
 
     int type_wanted = OBJ_RANDOM;
@@ -1670,22 +1668,36 @@ static item_def _acquirement_item_def(object_class_type item_type)
     return item;
 }
 
-static void _make_acquirement_items()
+vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 {
     vector<object_class_type> rand_classes;
 
-    if (you.species != SP_FELID)
+    if (!you.has_mutation(MUT_NO_ARMOUR))
+        rand_classes.emplace_back(OBJ_ARMOUR);
+
+    if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_ARMOUR);
         rand_classes.emplace_back(OBJ_STAVES);
     }
 
     rand_classes.emplace_back(OBJ_JEWELLERY);
     rand_classes.emplace_back(OBJ_BOOKS);
 
-    const int num_wanted = min(3, (int) rand_classes.size());
+    // dungeon generation
+    if (!scroll)
+    {
+        rand_classes.emplace_back(OBJ_MISCELLANY);
+        rand_classes.emplace_back(OBJ_WANDS);
+    }
     shuffle_array(rand_classes);
+    return rand_classes;
+}
+
+static void _make_acquirement_items()
+{
+    vector<object_class_type> rand_classes = shuffled_acquirement_classes(true);
+    const int num_wanted = min(3, (int) rand_classes.size());
 
     CrawlVector &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
     acq_items.empty();

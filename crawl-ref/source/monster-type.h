@@ -12,7 +12,9 @@ enum monster_type                      // env.mons[].type
     MONS_GIANT_LIZARD,          // genus
 #endif
     MONS_FRILLED_LIZARD,
+#if TAG_MAJOR_VERSION == 34
     MONS_LEOPARD_GECKO,
+#endif
     MONS_IGUANA,
     MONS_KOMODO_DRAGON,
     MONS_BASILISK,
@@ -146,21 +148,28 @@ enum monster_type                      // env.mons[].type
     MONS_GOLDEN_DRAGON,
     MONS_PEARL_DRAGON,
 
-    MONS_OOZE,
+    MONS_ENDOPLASM,
     MONS_JELLY,
 #if TAG_MAJOR_VERSION == 34
     MONS_BROWN_OOZE,
     MONS_GIANT_AMOEBA,
+#else
+    MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
 #endif
     MONS_AZURE_JELLY,
+#if TAG_MAJOR_VERSION == 34
     MONS_DEATH_OOZE,
+#endif
     MONS_ACID_BLOB,
     MONS_SLIME_CREATURE,
 #if TAG_MAJOR_VERSION == 34
     MONS_PULSATING_LUMP,
 #endif
     MONS_FLOATING_EYE,
+#if TAG_MAJOR_VERSION == 34
     MONS_EYE_OF_DRAINING,
+#endif
     MONS_SHINING_EYE,
     MONS_EYE_OF_DEVASTATION,
     MONS_GREAT_ORB_OF_EYES,
@@ -193,10 +202,10 @@ enum monster_type                      // env.mons[].type
     MONS_BUTTERFLY,
 #if TAG_MAJOR_VERSION == 34
     MONS_ANT_LARVA,
-#endif
     MONS_WORKER_ANT,
     MONS_SOLDIER_ANT,
     MONS_QUEEN_ANT,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_FORMICID,
 #endif
@@ -502,8 +511,11 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_VAULT_SENTINEL,
     MONS_VAULT_WARDEN,
-    MONS_IRONBRAND_CONVOKER,
-    MONS_IRONHEART_PRESERVER,
+    MONS_IRONBOUND_CONVOKER,
+    MONS_IRONBOUND_PRESERVER,
+    MONS_IRONBOUND_FROSTHEART,
+    MONS_IRONBOUND_THUNDERHULK,
+    MONS_IRONBOUND_BEASTMASTER,
     MONS_IMPERIAL_MYRMIDON,
     MONS_SERVANT_OF_WHISPERS,
     MONS_RAGGED_HIEROPHANT,
@@ -558,6 +570,7 @@ enum monster_type                      // env.mons[].type
     MONS_SALAMANDER,
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_MYSTIC,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     // Water monsters:
@@ -939,8 +952,8 @@ enum monster_type                      // env.mons[].type
 
     MONS_VAULT_SENTINEL,
     MONS_VAULT_WARDEN,
-    MONS_IRONBRAND_CONVOKER,
-    MONS_IRONHEART_PRESERVER,
+    MONS_IRONBOUND_CONVOKER,
+    MONS_IRONBOUND_PRESERVER,
 
     MONS_ZOMBIE,
     MONS_SKELETON,
@@ -1095,6 +1108,12 @@ enum monster_type                      // env.mons[].type
     MONS_DREAD_LICH,
     MONS_DEEP_ELF_AIR_MAGE,
     MONS_ANIMATED_ARMOUR,
+    MONS_ROCKSLIME,
+    MONS_QUICKSILVER_OOZE,
+    MONS_IRONBOUND_FROSTHEART,
+    MONS_IRONBOUND_THUNDERHULK,
+    MONS_IRONBOUND_BEASTMASTER,
+    MONS_SALAMANDER_TYRANT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

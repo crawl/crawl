@@ -129,7 +129,7 @@ bool SkillMenuEntry::is_selectable(bool)
     if (is_set(SKMF_HELP))
         return true;
 
-    if (you.species == SP_GNOLL)
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return false;
 
     if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
@@ -957,7 +957,7 @@ bool SkillMenu::do_skill_enabled_check()
     {
         // Shouldn't happen, but crash rather than locking the player in the
         // menu. Training will be fixed up on load.
-        ASSERT(you.species != SP_GNOLL);
+        ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
         set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
@@ -1024,7 +1024,7 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
     }
     else if (!m_switches[sw])
     {
-        if (you.species == SP_GNOLL)
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         {
             switch (sw)
             {
@@ -1239,7 +1239,7 @@ void SkillMenu::init_button_row()
 void SkillMenu::init_switches()
 {
     SkillMenuSwitch* sw;
-    if (you.species != SP_GNOLL)
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
@@ -1305,7 +1305,7 @@ void SkillMenu::init_switches()
             sw->set_state(SKM_VIEW_COST);
     }
 
-    if (you.species != SP_GNOLL)
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         sw->add(SKM_VIEW_TARGETS);
 
     if (you.wizard)
@@ -1370,7 +1370,7 @@ void SkillMenu::refresh_button_row()
             clearlegend = "[<yellow>-</yellow>] clear all targets";
         }
     }
-    else if (you.species != SP_GNOLL) // SKM_VIEW_TARGETS unavailable for Gn
+    else if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)) // SKM_VIEW_TARGETS unavailable for Gn
         midlegend = "[<yellow>=</yellow>] set a skill target";
 
     m_help_button->set_text(helpstring + legend);

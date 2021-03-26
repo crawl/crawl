@@ -576,33 +576,57 @@ static void _show_commandline_options_help()
 #endif
 }
 
+static string _wanderer_equip_str()
+{
+    return "the following items: "
+        + comma_separated_fn(begin(you.inv), end(you.inv),
+                         [] (const item_def &item) -> string
+                         {
+                             return item.name(DESC_A, false, true);
+                         }, ", ", ", ", mem_fn(&item_def::defined));
+}
+
+static string _wanderer_spell_str()
+{
+    return comma_separated_fn(begin(you.spells), end(you.spells),
+                              [] (const spell_type spell) -> string
+                              {
+                                  return spell_title(spell);
+                              },
+                              ", ", ", ",
+                              // Don't include empty spell slots
+                              [] (const spell_type spell) -> bool
+                              {
+                                  return spell != SPELL_NO_SPELL;
+                              });
+}
+
+static void _djinn_announce_spells()
+{
+    const string equip_str = you.char_class == JOB_WANDERER ?
+                                        _wanderer_equip_str():
+                                        "";
+    const string spell_str = you.spell_no ?
+                                "the following spells memorised: " + _wanderer_spell_str() :
+                                "";
+    if (spell_str.empty() && equip_str.empty())
+        return;
+
+    const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
+    mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+}
+
 // Announce to the message log and make a note of the player's starting items,
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str =
-        "the following items: "
-        + comma_separated_fn(begin(you.inv), end(you.inv),
-                             [] (const item_def &item) -> string
-                             {
-                                 return item.name(DESC_A, false, true);
-                             }, ", ", ", ", mem_fn(&item_def::defined));
+    const string equip_str = _wanderer_equip_str();
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
         "; and the following spell memorised: "
-        + comma_separated_fn(begin(you.spells), end(you.spells),
-                             [] (const spell_type spell) -> string
-                             {
-                                 return spell_title(spell);
-                             },
-                             ", ", ", ",
-                             // Don't include empty spell slots
-                             [] (const spell_type spell) -> bool
-                             {
-                                 return spell != SPELL_NO_SPELL;
-                             });
+        + _wanderer_spell_str();
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
@@ -695,7 +719,9 @@ static void _take_starting_note()
     }
 #endif
 
-    if (you.char_class == JOB_WANDERER)
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _djinn_announce_spells();
+    else if (you.char_class == JOB_WANDERER)
         _wanderer_note_equipment();
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
@@ -1569,7 +1595,7 @@ static void _experience_check()
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         int xl = you.experience_level;
         // calculate the "real" level
@@ -1617,9 +1643,10 @@ static void _experience_check()
 
 static void _do_remove_armour()
 {
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
-        mpr("You can't remove your fur, sorry.");
+        mprf("You can't remove your %s, sorry.",
+            species_skin_name(you.species).c_str());
         return;
     }
 

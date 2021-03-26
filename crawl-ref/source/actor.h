@@ -284,7 +284,7 @@ public:
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness(bool temp = true) const = 0;
-    virtual bool undead_or_demonic() const = 0;
+    virtual bool undead_or_demonic(bool temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
@@ -344,6 +344,9 @@ public:
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
+
+    virtual bool is_dragonkind() const;
+    virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;

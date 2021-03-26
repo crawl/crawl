@@ -1032,6 +1032,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " stops rolling and uncurls.");
         break;
 
+    case ENCH_CONCENTRATE_VENOM:
+        if (!quiet)
+            simple_monster_message(*this, " no longer looks unusually toxic.");
+        break;
+
     default:
         break;
     }
@@ -2094,7 +2099,7 @@ static const char *enchant_names[] =
 #endif
     "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
-    "ring_acid", "ring_miasma",
+    "ring_acid", "ring_miasma", "concentrate_venom",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2247,6 +2252,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
+    case ENCH_CONCENTRATE_VENOM:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

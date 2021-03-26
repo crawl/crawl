@@ -481,6 +481,15 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
 static int _los_spell_damage_player(const actor* agent, bolt &beam,
                                     bool actual)
 {
+    // No self damage from ozo's, but we do get -Potion
+    if (actual && agent->is_player()
+        && beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
+    {
+        mpr("You feel very cold.");
+        you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+        return 0;
+    }
+
     int hurted = actual ? beam.damage.roll()
                         // Monsters use the average for foe calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
@@ -489,8 +498,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
             actual && beam.origin_spell != SPELL_DRAIN_LIFE);
     if (actual && hurted > 0)
     {
-        if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            mpr("You feel very cold.");
 
         if (agent && !agent->is_player())
         {
@@ -499,9 +506,6 @@ static int _los_spell_damage_player(const actor* agent, bolt &beam,
                  agent->as_monster()->name(DESC_A).c_str());
             you.expose_to_element(beam.flavour, 5);
         }
-        // -harm from player casting Ozo's Refridge.
-        else if (beam.origin_spell == SPELL_OZOCUBUS_REFRIGERATION)
-            you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
     }
 
     return hurted;
@@ -663,7 +667,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         {
             if (ai->is_player())
                 affects_you = true;
-            else
+            else if (*ai != agent)
                 affected_monsters.push_back(ai->as_monster());
         }
     }
@@ -739,69 +743,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
                             bool fail, int* damage_done)
 {
     return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
-}
-
-spret vampiric_drain(int pow, monster* mons, bool fail)
-{
-    const bool observable = mons && mons->observable();
-    if (!mons
-        || mons->submerged()
-        || !observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        fail_check();
-
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // Cost to disallow freely locating invisible/submerged
-        // monsters.
-        return spret::success;
-    }
-
-    // TODO: check known rN instead of holiness
-    if (observable && !actor_is_susceptible_to_vampirism(*mons))
-    {
-        mpr("You can't drain life from that!");
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
-    fail_check();
-
-    if (!mons->alive())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    // The practical maximum of this is about 25 (pow @ 100). - bwr
-    // If you update this, also update spell_damage_string().
-    int dam = 3 + random2avg(9, 2) + random2(pow) / 7;
-    dam = resist_adjust_damage(mons, BEAM_NEG, dam);
-
-    if (!dam)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
-    int hp_gain = min(mons->hit_points, dam);
-    hp_gain = div_rand_round(hp_gain, 2);
-    hp_gain = min(you.hp_max - you.hp, hp_gain);
-
-    _player_hurt_monster(*mons, dam, BEAM_NEG);
-
-    if (hp_gain && !you.duration[DUR_DEATHS_DOOR])
-    {
-        mprf("You feel life coursing into your body%s",
-             attack_strength_punctuation(hp_gain).c_str());
-        inc_hp(hp_gain);
-    }
-
-    return spret::success;
 }
 
 dice_def freeze_damage(int pow)
@@ -891,8 +832,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 
     empty_space = max(3, empty_space);
 
-    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7),
-                                              empty_space - 2);
+    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -908,50 +848,373 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
     return spret::success;
 }
 
-// Here begin the actual spells:
+dice_def base_fragmentation_damage(int pow)
+{
+    return dice_def(3, 5 + pow / 5);
+}
+
+enum class frag_damage_type
+{
+    rock, // default
+    metal, // extra damage
+    crystal, // extra damage & radius
+    ice, // BEAM_ICE, not BEAM_FRAG
+    player_gargoyle, // weaker, because (?)
+};
+
+struct frag_effect
+{
+    frag_damage_type damage;
+    colour_t colour;
+    string name;
+    const char* terrain_name;
+    bool direct;
+    bool hit_centre;
+};
+
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for blowing up the player. Returns true iff the
+// player can be deconstructed.
+static bool _init_frag_player(frag_effect &effect)
+{
+    if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    {
+        effect.name       = "blast of rock fragments";
+        effect.colour     = BROWN;
+        if (you.form != transformation::statue)
+            effect.damage = frag_damage_type::player_gargoyle;
+        return true;
+    }
+    if (you.petrified() || you.petrifying())
+    {
+        effect.name       = "blast of petrified fragments";
+        effect.colour     = mons_class_colour(player_mons(true));
+        return true;
+    }
+    if (you.form == transformation::ice_beast)
+    {
+        effect.name       = "icy blast";
+        effect.colour     = WHITE;
+        effect.damage     = frag_damage_type::ice;
+        return true;
+    }
+    return false;
+}
+
+struct monster_frag
+{
+    const char* type;
+    colour_t colour;
+    frag_damage_type damage;
+};
+
+static const map<monster_type, monster_frag> fraggable_monsters = {
+    { MONS_TOENAIL_GOLEM,     { "toenail", RED } },
+    // I made saltlings not have a big crystal explosion for balance reasons -
+    // there are so many of them, it seems wrong to have them be so harmful to
+    // their own allies. This could be wrong!
+    { MONS_SALTLING,          { "salt crystal", WHITE } },
+    { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
+    { MONS_ROCKSLIME,         { "rock", BROWN } },
+    { MONS_USHABTI,           { "rock", BROWN } },
+    { MONS_STATUE,            { "rock", BROWN } },
+    { MONS_GARGOYLE,          { "rock", BROWN } },
+    { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY,
+                                frag_damage_type::crystal } },
+    { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED,
+                                frag_damage_type::crystal } },
+    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN,
+                                frag_damage_type::crystal } },
+    { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
+};
+
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for blowing up the given monster. Return true iff
+// that monster can be deconstructed.
+static bool _init_frag_monster(frag_effect &effect, const monster &mon)
+{
+    auto frag_f = fraggable_monsters.find(mon.type);
+    if (frag_f != fraggable_monsters.end())
+    {
+        const monster_frag &frag = frag_f->second;
+        effect.damage = frag.damage;
+        const bool crystal = frag.damage == frag_damage_type::crystal;
+        effect.name = make_stringf("blast of %s %s", frag.type,
+                                   crystal ? "shards" : "fragments");
+        effect.colour = frag.colour;
+        return true;
+    }
+
+    // Petrifying or petrified monsters can be exploded.
+    if (mon.petrified() || mon.petrifying())
+    {
+        monster_info minfo(&mon);
+        effect.name       = "blast of petrified fragments";
+        effect.colour     = minfo.colour();
+        return true;
+    }
+    if (mon.is_icy()) // blast of ice
+    {
+        effect.name       = "icy blast";
+        effect.colour     = WHITE;
+        effect.damage     = frag_damage_type::ice;
+        return true;
+    }
+    if (mon.is_skeletal()) // blast of bone
+    {
+        effect.name   = "blast of bone shards";
+        effect.colour = LIGHTGREY;
+        return true;
+    }
+    // Targeted monster not shatterable.
+    return false;
+}
+
+struct feature_frag
+{
+    const char* type;
+    const char* what;
+    frag_damage_type damage;
+};
+
+static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
+    // Stone and rock terrain
+    { DNGN_ROCK_WALL, { "rock", "wall" } },
+    { DNGN_SLIMY_WALL, { "rock", "wall" } },
+    { DNGN_STONE_WALL, { "rock", "wall" } },
+    { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
+    { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
+    { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
+    { DNGN_GRANITE_STATUE, { "rock", "statue" } },
+    // Stone arches and doors
+    { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
+    { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_CLOSED_DOOR, { "rock", "stone door frame" } },
+    { DNGN_CLOSED_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_RUNED_DOOR, { "rock", "stone door frame" } },
+    { DNGN_RUNED_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_SEALED_DOOR, { "rock", "stone door frame" } },
+    { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
+    { DNGN_STONE_ARCH, { "rock", "stone arch" } },
+    // Metal -- small but nasty explosion
+    { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
+    { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
+    // Crystal -- large & nasty explosion
+    { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall",
+                           frag_damage_type::crystal } },
+};
+
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for the given target. Return true iff the target
+// can be deconstructed.
+static bool _init_frag_grid(frag_effect &effect,
+                            coord_def target, const char **what)
+{
+    const dungeon_feature_type grid = env.grid(target);
+
+    auto frag_f = fraggable_terrain.find(grid);
+    if (frag_f == fraggable_terrain.end())
+        return false;
+    const feature_frag &frag = frag_f->second;
+
+    effect.damage = frag.damage;
+    const bool crystal = frag.damage == frag_damage_type::crystal;
+    effect.name = make_stringf("blast of %s %s", frag.type,
+                               crystal ? "shards" : "fragments");
+    if (what)
+        *what = frag.what;
+
+    if (!feat_is_solid(grid))
+        effect.hit_centre = true; // to hit monsters standing on doors
+
+   // If it was recoloured, use that colour instead.
+   if (env.grid_colours(target))
+       effect.colour = env.grid_colours(target);
+   else
+   {
+       effect.colour = element_colour(get_feature_def(grid).colour(),
+                                     false, target);
+   }
+    return true;
+}
+
+// Initializes the provided frag_effect with the appropriate Lee's Rapid
+// Deconstruction explosion for the given target.
+static bool _init_frag_effect(frag_effect &effect, const actor &caster,
+                              coord_def target, const char **what)
+{
+    if (target == you.pos() && _init_frag_player(effect))
+    {
+        effect.direct = true;
+        return true;
+    }
+
+    const actor* victim = actor_at(target);
+    if (victim && victim->alive() && victim->is_monster()
+        && caster.can_see(*victim)
+        && _init_frag_monster(effect, *victim->as_monster()))
+    {
+        return true;
+    }
+
+    return _init_frag_grid(effect, target, what);
+}
+
+bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
+                              const coord_def target, bool quiet,
+                              const char **what, bool &hole)
+{
+    beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source_id   = caster->mid;
+    beam.thrower     = caster->is_player() ? KILL_YOU : KILL_MON;
+    beam.source      = you.pos();
+    beam.hit         = AUTOMATIC_HIT;
+
+    frag_effect effect = {};
+    if (!_init_frag_effect(effect, *caster, target, what))
+    {
+        // Couldn't find a monster or wall to shatter - abort casting!
+        if (caster->is_player() && !quiet)
+            mpr("You can't deconstruct that!");
+        return false;
+    }
+
+    beam.colour = effect.colour;
+    beam.name = effect.name;
+    if (effect.direct) // cast on the player, not next to them
+        beam.aux_source = "by Lee's Rapid Deconstruction";
+    else
+        beam.aux_source = effect.name;
+
+    beam.damage  = base_fragmentation_damage(pow);
+    beam.flavour = BEAM_FRAG;
+    beam.ex_size = 1;
+    switch (effect.damage)
+    {
+        case frag_damage_type::rock:
+        default:
+            break;
+        case frag_damage_type::metal:
+            beam.damage.num++;
+            break;
+        case frag_damage_type::crystal:
+            beam.damage.num++;
+            beam.ex_size++;
+            break;
+        case frag_damage_type::ice:
+            beam.flavour = BEAM_ICE;
+            break;
+        case frag_damage_type::player_gargoyle:
+            beam.damage.num--;
+            break;
+    }
+
+    if (effect.hit_centre)
+        hole = false;
+
+    beam.source_name = caster->name(DESC_PLAIN, true);
+    beam.target = target;
+
+    return true;
+}
+
+spret cast_fragmentation(int pow, const actor *caster,
+                              const coord_def target, bool fail)
+{
+    bool hole                = true;
+    const char *what         = nullptr;
+
+    bolt beam;
+
+    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
+                                  hole))
+    {
+        return spret::abort;
+    }
+
+    if (caster->is_player())
+    {
+        bolt tempbeam;
+        bool temp;
+        setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr,
+                                 temp);
+        tempbeam.is_tracer = true;
+        tempbeam.explode(false);
+        if (tempbeam.beam_cancelled)
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    if (what != nullptr) // Terrain explodes.
+    {
+        if (you.see_cell(target))
+            mprf("The %s shatters!", what);
+    }
+    else if (target == you.pos()) // You explode.
+    {
+        const int dam = beam.damage.roll();
+        mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
+
+        ouch(dam, KILLED_BY_BEAM, caster->mid,
+             "by Lee's Rapid Deconstruction", true,
+             caster->is_player() ? "you"
+                                 : caster->name(DESC_A).c_str());
+    }
+    else // Monster explodes.
+    {
+        // Checks by setup_fragmentation_beam() must guarantee that we have an
+        // alive monster.
+        monster* mon = monster_at(target);
+        ASSERT(mon);
+
+        const int dam = beam.damage.roll();
+        if (you.see_cell(target))
+        {
+            mprf("%s shatters%s", mon->name(DESC_THE).c_str(),
+                 attack_strength_punctuation(dam).c_str());
+        }
+
+        if (caster->is_player())
+            _player_hurt_monster(*mon, dam, BEAM_MINDBURST);
+        else if (dam)
+            mon->hurt(caster, dam, BEAM_MINDBURST);
+    }
+
+    beam.explode(true, hole);
+
+    return spret::success;
+}
+
 static int _shatter_mon_dice(const monster *mon)
 {
     const int DEFAULT_DICE = 3;
     if (!mon)
         return DEFAULT_DICE;
 
-    // Removed a lot of silly monsters down here... people, just because
-    // it says ice, rock, or iron in the name doesn't mean it's actually
-    // made out of the substance. - bwr
-    switch (mon->type)
-    {
-    // Double damage to stone, metal and crystal.
-    case MONS_EARTH_ELEMENTAL:
-    case MONS_USHABTI:
-    case MONS_STATUE:
-    case MONS_GARGOYLE:
-    case MONS_IRON_ELEMENTAL:
-    case MONS_IRON_GOLEM:
-    case MONS_PEACEKEEPER:
-    case MONS_WAR_GARGOYLE:
-    case MONS_SALTLING:
-    case MONS_CRYSTAL_GUARDIAN:
-    case MONS_OBSIDIAN_STATUE:
-    case MONS_ORANGE_STATUE:
-    case MONS_ROXANNE:
+    // Double damage to stone, metal and crystal - the same as the list of
+    // monsters affected by LRD.
+    if (map_find(fraggable_monsters, mon->type))
         return DEFAULT_DICE * 2;
-
-    default:
-        if (mon->is_insubstantial())
-            return 1;
-        if (mon->petrifying() || mon->petrified())
-        {
-            return DEFAULT_DICE * 2;
-            // reduced later by petrification's damage reduction
-        }
-        else if (mon->is_skeletal() || mon->is_icy())
-            return DEFAULT_DICE * 2;
-        else if (mon->airborne() || mons_is_slime(*mon))
-            return 1;
-        // Normal damage to everything else.
-        else
-            return DEFAULT_DICE;
+    if (mon->is_insubstantial())
+        return 1;
+    if (mon->petrifying() || mon->petrified()
+        || mon->is_skeletal() || mon->is_icy())
+    {
+        return DEFAULT_DICE * 2;
     }
+    else if (mon->airborne() || mons_is_slime(*mon))
+        return 1;
+    // Normal damage to everything else.
+    else
+        return DEFAULT_DICE;
 }
 
 dice_def shatter_damage(int pow, monster *mon)
@@ -1772,7 +2035,7 @@ static void _ignition_square(const actor */*agent*/, bolt beam, coord_def square
         noisy(spell_effect_noise(SPELL_IGNITION),square);
 }
 
-vector<coord_def> get_ignition_blast_sources(const actor *agent)
+vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
 {
     // Ignition affects squares that had hostile monsters on them at the time
     // of casting. This way nothing bad happens when monsters die halfway
@@ -1787,7 +2050,8 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent)
         if (ai->is_monster()
             && !ai->as_monster()->wont_attack()
             && !mons_is_firewood(*ai->as_monster())
-            && !mons_is_tentacle_segment(ai->as_monster()->type))
+            && !mons_is_tentacle_segment(ai->as_monster()->type)
+            && (!tracer || agent->can_see(**ai)))
         {
             blast_sources.push_back(ai->position);
         }
@@ -2046,343 +2310,6 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
                  plural ? " themselves" : "s itself");
         }
     }
-    return spret::success;
-}
-
-dice_def base_fragmentation_damage(int pow)
-{
-    return dice_def(3, 5 + pow / 5);
-}
-
-
-enum class frag_damage_type
-{
-    rock, // default
-    metal, // extra damage
-    crystal, // extra damage & radius
-    ice, // BEAM_ICE, not BEAM_FRAG
-    player_gargoyle, // weaker, because (?)
-};
-
-struct frag_effect
-{
-    frag_damage_type damage;
-    colour_t colour;
-    string name;
-    const char* terrain_name;
-    bool direct;
-    bool hit_centre;
-};
-
-// Initializes the provided frag_effect with the appropriate Lee's Rapid
-// Deconstruction explosion for blowing up the player. Returns true iff the
-// player can be deconstructed.
-static bool _init_frag_player(frag_effect &effect)
-{
-    if (you.form == transformation::statue || you.species == SP_GARGOYLE)
-    {
-        effect.name       = "blast of rock fragments";
-        effect.colour     = BROWN;
-        if (you.form != transformation::statue)
-            effect.damage = frag_damage_type::player_gargoyle;
-        return true;
-    }
-    if (you.petrified() || you.petrifying())
-    {
-        effect.name       = "blast of petrified fragments";
-        effect.colour     = mons_class_colour(player_mons(true));
-        return true;
-    }
-    if (you.form == transformation::ice_beast)
-    {
-        effect.name       = "icy blast";
-        effect.colour     = WHITE;
-        effect.damage     = frag_damage_type::ice;
-        return true;
-    }
-    return false;
-}
-
-struct monster_frag
-{
-    const char* type;
-    colour_t colour;
-    frag_damage_type damage;
-};
-
-static const map<monster_type, monster_frag> fraggable_monsters = {
-    { MONS_TOENAIL_GOLEM,     { "toenail", RED } },
-    // I made saltlings not have a big crystal explosion for balance reasons -
-    // there are so many of them, it seems wrong to have them be so harmful to
-    // their own allies. This could be wrong!
-    { MONS_SALTLING,          { "salt crystal", WHITE } },
-    { MONS_EARTH_ELEMENTAL,   { "rock", BROWN } },
-    { MONS_USHABTI,           { "rock", BROWN } },
-    { MONS_STATUE,            { "rock", BROWN } },
-    { MONS_GARGOYLE,          { "rock", BROWN } },
-    { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_WAR_GARGOYLE,      { "metal", CYAN, frag_damage_type::metal } },
-    { MONS_CRYSTAL_GUARDIAN,  { "crystal", DARKGREY, frag_damage_type::crystal } },
-    { MONS_ORANGE_STATUE,     { "orange crystal", LIGHTRED, frag_damage_type::crystal } },
-    { MONS_OBSIDIAN_STATUE,   { "obsidian", GREEN, frag_damage_type::crystal } },
-    { MONS_ROXANNE,           { "sapphire", BLUE, frag_damage_type::crystal } },
-};
-
-// Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for blowing up the given monster. Return true iff that monster can be deconstructede.
-static bool _init_frag_monster(frag_effect &effect, const monster &mon)
-{
-    auto frag_f = fraggable_monsters.find(mon.type);
-    if (frag_f != fraggable_monsters.end())
-    {
-        const monster_frag &frag = frag_f->second;
-        effect.damage = frag.damage;
-        const bool crystal = frag.damage == frag_damage_type::crystal;
-        effect.name = make_stringf("blast of %s %s", frag.type,
-                                   crystal ? "shards" : "fragments");
-        effect.colour = frag.colour;
-        return true;
-    }
-
-    // Petrifying or petrified monsters can be exploded.
-    if (mon.petrified() || mon.petrifying())
-    {
-        monster_info minfo(&mon);
-        effect.name       = "blast of petrified fragments";
-        effect.colour     = minfo.colour();
-        return true;
-    }
-    if (mon.is_icy()) // blast of ice
-    {
-        effect.name       = "icy blast";
-        effect.colour     = WHITE;
-        effect.damage     = frag_damage_type::ice;
-        return true;
-    }
-    if (mon.is_skeletal()) // blast of bone
-    {
-        effect.name   = "blast of bone shards";
-        effect.colour = LIGHTGREY;
-        return true;
-    }
-    // Targeted monster not shatterable.
-    return false;
-}
-
-struct feature_frag
-{
-    const char* type;
-    const char* what;
-    frag_damage_type damage;
-};
-
-static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
-    // Stone and rock terrain
-    { DNGN_ROCK_WALL, { "rock", "wall" } },
-    { DNGN_SLIMY_WALL, { "rock", "wall" } },
-    { DNGN_STONE_WALL, { "rock", "wall" } },
-    { DNGN_CLEAR_ROCK_WALL, { "rock", "wall" } },
-    { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
-    { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
-    { DNGN_GRANITE_STATUE, { "rock", "statue" } },
-    // Stone arches and doors
-    { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
-    { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_CLOSED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_CLOSED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_RUNED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_RUNED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_SEALED_DOOR, { "rock", "stone door frame" } },
-    { DNGN_SEALED_CLEAR_DOOR, { "rock", "stone door frame" } },
-    { DNGN_STONE_ARCH, { "rock", "stone arch" } },
-    // Metal -- small but nasty explosion
-    { DNGN_METAL_WALL, { "metal", "metal wall", frag_damage_type::metal } },
-    { DNGN_GRATE, { "metal", "iron grate", frag_damage_type::metal } },
-    // Crystal -- large & nasty explosion
-    { DNGN_CRYSTAL_WALL, { "crystal", "crystal wall", frag_damage_type::crystal } },
-};
-
-// Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for the given target. Return true iff the target can be deconstructed.
-static bool _init_frag_grid(frag_effect &effect, coord_def target, const char **what)
-{
-    const dungeon_feature_type grid = env.grid(target);
-
-    auto frag_f = fraggable_terrain.find(grid);
-    if (frag_f == fraggable_terrain.end())
-        return false;
-    const feature_frag &frag = frag_f->second;
-
-    effect.damage = frag.damage;
-    const bool crystal = frag.damage == frag_damage_type::crystal;
-    effect.name = make_stringf("blast of %s %s", frag.type,
-                               crystal ? "shards" : "fragments");
-    if (what)
-        *what = frag.what;
-
-    if (!feat_is_solid(grid))
-        effect.hit_centre = true; // to hit monsters standing on doors
-
-   // If it was recoloured, use that colour instead.
-   if (env.grid_colours(target))
-       effect.colour = env.grid_colours(target);
-   else
-   {
-       effect.colour = element_colour(get_feature_def(grid).colour(),
-                                     false, target);
-   }
-    return true;
-}
-
-// Initializes the provided frag_effect with the appropriate Lee's Rapid Deconstruction
-// explosion for the given target.
-static bool _init_frag_effect(frag_effect &effect, const actor &caster,
-                              coord_def target, const char **what)
-{
-    if (target == you.pos() && _init_frag_player(effect))
-    {
-        effect.direct = true;
-        return true;
-    }
-
-    const actor* victim = actor_at(target);
-    if (victim && victim->alive() && victim->is_monster() && caster.can_see(*victim)
-        && _init_frag_monster(effect, *victim->as_monster()))
-    {
-        return true;
-    }
-
-    return _init_frag_grid(effect, target, what);
-}
-
-bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
-                              const coord_def target, bool quiet,
-                              const char **what, bool &hole)
-{
-    beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source_id   = caster->mid;
-    beam.thrower     = caster->is_player() ? KILL_YOU : KILL_MON;
-    beam.source      = you.pos();
-    beam.hit         = AUTOMATIC_HIT;
-
-    frag_effect effect = {};
-    if (!_init_frag_effect(effect, *caster, target, what))
-    {
-        // Couldn't find a monster or wall to shatter - abort casting!
-        if (caster->is_player() && !quiet)
-            mpr("You can't deconstruct that!");
-        return false;
-    }
-
-    beam.colour = effect.colour;
-    beam.name = effect.name;
-    if (effect.direct) // cast on the player, not next to them
-        beam.aux_source = "by Lee's Rapid Deconstruction";
-    else
-        beam.aux_source = effect.name;
-
-    beam.damage  = base_fragmentation_damage(pow);
-    beam.flavour = BEAM_FRAG;
-    beam.ex_size = 1;
-    switch (effect.damage)
-    {
-        case frag_damage_type::rock:
-        default:
-            break;
-        case frag_damage_type::metal:
-            beam.damage.num++;
-            break;
-        case frag_damage_type::crystal:
-            beam.damage.num++;
-            beam.ex_size++;
-            break;
-        case frag_damage_type::ice:
-            beam.flavour = BEAM_ICE;
-            break;
-        case frag_damage_type::player_gargoyle:
-            beam.damage.num--;
-            break;
-    }
-
-    if (effect.hit_centre)
-        hole = false;
-
-    beam.source_name = caster->name(DESC_PLAIN, true);
-    beam.target = target;
-
-    return true;
-}
-
-spret cast_fragmentation(int pow, const actor *caster,
-                              const coord_def target, bool fail)
-{
-    bool hole                = true;
-    const char *what         = nullptr;
-
-    bolt beam;
-
-    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
-                hole))
-    {
-        return spret::abort;
-    }
-
-    if (caster->is_player())
-    {
-        bolt tempbeam;
-        bool temp;
-        setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr,
-                                 temp);
-        tempbeam.is_tracer = true;
-        tempbeam.explode(false);
-        if (tempbeam.beam_cancelled)
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-    }
-
-    fail_check();
-
-    if (what != nullptr) // Terrain explodes.
-    {
-        if (you.see_cell(target))
-            mprf("The %s shatters!", what);
-    }
-    else if (target == you.pos()) // You explode.
-    {
-        const int dam = beam.damage.roll();
-        mprf("You shatter%s", attack_strength_punctuation(dam).c_str());
-
-        ouch(dam, KILLED_BY_BEAM, caster->mid,
-             "by Lee's Rapid Deconstruction", true,
-             caster->is_player() ? "you"
-                                 : caster->name(DESC_A).c_str());
-    }
-    else // Monster explodes.
-    {
-        // Checks by setup_fragmentation_beam() must guarantee that we have an
-        // alive monster.
-        monster* mon = monster_at(target);
-        ASSERT(mon);
-
-        const int dam = beam.damage.roll();
-        if (you.see_cell(target))
-        {
-            mprf("%s shatters%s", mon->name(DESC_THE).c_str(),
-                 attack_strength_punctuation(dam).c_str());
-        }
-
-        if (caster->is_player())
-            _player_hurt_monster(*mon, dam, BEAM_MINDBURST);
-        else if (dam)
-            mon->hurt(caster, dam, BEAM_MINDBURST);
-    }
-
-    beam.explode(true, hole);
-
     return spret::success;
 }
 
@@ -2950,7 +2877,8 @@ void handle_searing_ray()
     beam.fire();
     trigger_battlesphere(&you);
 
-    dec_mp(1);
+    pay_mp(1);
+    finalize_mp_cost();
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
     {
@@ -3319,7 +3247,9 @@ spret cast_imb(int pow, bool fail)
     bool (*vulnerable) (const actor *) = [](const actor * act) -> bool
     {
         return !(act->is_monster()
-                 && mons_is_conjured(act->as_monster()->type));
+                 && (mons_is_conjured(act->as_monster()->type)
+                     || (have_passive(passive_t::shoot_through_plants)
+                         && fedhas_protects(act->as_monster())))) ;
     };
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable))

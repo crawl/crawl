@@ -281,11 +281,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         });
         paneset_cycle($body);
 
-        if (desc.vampire !== undefined)
+        if (desc.vampire_alive !== undefined)
         {
             var css = ".vamp-attrs th:nth-child(%d) { background: #111; }";
             css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
-            css = css.replace(/%d/g, desc.vampire + 1);
+            css = css.replace(/%d/g, desc.vampire_alive ? 2 : 3);
             $vamp.children("style").html(css);
             var vs = scroller($vamp[0]);
             $popup.on("keydown keypress", function (event) {

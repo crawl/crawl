@@ -1808,7 +1808,7 @@ NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
 NSUBST:  ' = 2:C / *:.
 NSUBST:  . = 10:3 / 4:5
 SUBST:  .z = .:200 W:35 4:20
-: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
+: dgn.delayed_decay(_G, 'C', 'spriggan corpse / spriggan skeleton')
 KPROP:  -C = bloody
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx

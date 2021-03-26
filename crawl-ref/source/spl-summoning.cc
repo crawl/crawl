@@ -342,9 +342,10 @@ static void _place_dragon()
         if (!dragon)
             continue;
 
-        dec_mp(mp_cost);
+        pay_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
             mpr("A dragon arrives to answer your call!");
+        finalize_mp_cost();
 
         // The dragon is allowed to act immediately here
         dragon->flags &= ~MF_JUST_SUMMONED;
@@ -1459,11 +1460,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
-        if (as == &you)
-        {
-            mpr("The flesh is too rotten for a proper zombie; "
-                "only a skeleton remains.");
-        }
         mon = MONS_SKELETON;
     }
 
@@ -1558,11 +1554,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         *motions_r |= DEAD_ARE_HOPPING;
     }
-    else if (mons_genus(zombie_type)    == MONS_WORKER_ANT
-             || mons_base_char(zombie_type) == 's') // many genera
-    {
+    else if (mons_base_char(zombie_type) == 's') // many genera
         *motions_r |= DEAD_ARE_CRAWLING;
-    }
     else
         *motions_r |= DEAD_ARE_WALKING;
 
@@ -1699,7 +1692,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
             {
                 butcher_corpse(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
-                request_autopickup();
                 // Only convert the top one.
             }
 
@@ -1930,6 +1922,14 @@ spell_type player_servitor_spell()
         if (you.has_spell(spell) && raw_spell_fail(spell) < 50)
             return spell;
     return SPELL_NO_SPELL;
+}
+
+bool spell_servitorable(spell_type to_serve)
+{
+    for (const spell_type spell : servitor_spells)
+        if (spell == to_serve)
+            return true;
+    return false;
 }
 
 /**
@@ -2188,13 +2188,13 @@ bool aim_battlesphere(actor* agent, spell_type spell)
 
         // Pick a random baddie in LOS
         vector<actor *> targets;
-        for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
-            actor * foe = actor_at(*ri);
-            if (foe && battlesphere->can_see(*foe)
-                    && !mons_aligned(agent, foe))
+            if (battlesphere->can_see(**ai)
+                && !mons_aligned(agent, *ai)
+                && (ai->is_player() || !mons_is_firewood(*ai->as_monster())))
             {
-                targets.push_back(foe);
+                targets.push_back(*ai);
             }
         }
 
@@ -2963,7 +2963,25 @@ spret fedhas_grow_oklob(bool fail)
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
+    bool see_space = false;
+    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+            continue;
+        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+            continue;
+        see_space = true;
+        break;
+    }
+
+    if (agent.is_player() && !see_space)
+    {
+        mpr("There is not enough space to conjure foxfire!");
+        return spret::abort;
+    }
+
     fail_check();
+
     int created = 0;
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)

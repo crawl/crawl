@@ -126,8 +126,6 @@ static void _ghost_dprf(const char *format, ...)
 # define _ghost_dprf(...) ((void)0)
 #endif
 
-static void _save_level(const level_id& lid);
-
 static bool _ghost_version_compatible(const save_version &version);
 
 static bool _restore_tagged_chunk(package *save, const string &name,
@@ -1659,7 +1657,7 @@ bool generate_level(const level_id &l)
     update_portal_entrances();
 
     // save the level and associated env state
-    _save_level(level_id::current());
+    save_level(level_id::current());
 
     const string save_name = level_id::current().describe(); // should be same as level_name...
 
@@ -1895,6 +1893,17 @@ static void _rescue_player_from_wall()
             target = upstairs[0];
         else if (downstairs.size())
             target = downstairs[0];
+        if (!in_bounds(target) && player_in_branch(BRANCH_ABYSS))
+        {
+            // something is *seriously* messed up. This can happen if the game
+            // crashed on an AK start where the initial map wasn't saved.
+            // Because it is abyss, it is relatively safe to just move a player
+            // to an arbitrary point and let abyss shift take over. (AK starts,
+            // the main case, can also escape from the abyss at this point.)
+            const coord_def emergency(1,1);
+            env.grid(emergency) = DNGN_FLOOR;
+            target = emergency;
+        }
         // if things get this messed up, don't make them worse
         ASSERT(in_bounds(target));
         you.moveto(target);
@@ -1968,7 +1977,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             if (env.level_state & LSTATE_DELETED)
                 delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");
             else
-                _save_level(old_level);
+                save_level(old_level);
         }
 
         // The player is now between levels.
@@ -2125,7 +2134,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Save the created/updated level out to disk:
     if (make_changes)
-        _save_level(level_id::current());
+        save_level(level_id::current());
 
     setup_environment_effects();
 
@@ -2289,7 +2298,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     return just_created_level;
 }
 
-static void _save_level(const level_id& lid)
+void save_level(const level_id& lid)
 {
     if (you.level_visited(lid))
         travel_cache.get_level_info(lid).update();
@@ -2361,7 +2370,7 @@ static void _save_game_exit()
 
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
-        _save_level(level_id::current());
+        save_level(level_id::current());
 
     clrscr();
 
@@ -3159,7 +3168,7 @@ void level_excursion::go_to(const level_id& next)
 
         ever_changed_levels = true;
 
-        _save_level(level_id::current());
+        save_level(level_id::current());
         _load_level(next);
 
         if (you.level_visited(next))
@@ -3247,26 +3256,6 @@ static bool _convert_obsolete_species()
         // level isn't loaded so we can't check the grid features. In
         // addition, even if the player isn't over lava, they might still get
         // trapped.
-        fly_player(100);
-        return true;
-    }
-    if (you.species == SP_DJINNI)
-    {
-        if (!yesno(
-            "This Djinni save game cannot be loaded as-is. If you load it now,\n"
-            "your character will be converted to a Vine Stalker. Continue?",
-                       false, 'N'))
-        {
-            you.save->abort(); // don't even rewrite the header
-            delete you.save;
-            you.save = 0;
-            game_ended(game_exit::abort,
-                "Please load the save in an earlier version "
-                "if you want to keep it as a Djinni.");
-        }
-        change_species_to(SP_VINE_STALKER);
-        you.magic_contamination = 0;
-        // Djinni were flying, so give the player some time to land
         fly_player(100);
         return true;
     }

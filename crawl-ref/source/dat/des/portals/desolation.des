@@ -1192,7 +1192,7 @@ ORIENT: float
 WEIGHT: 1
 NSUBST: - = 1:1 / 1=1. / 1:2 / 3:3 / 2=23.. / *:.
 KITEM: % = randbook w:50 / any jewellery randart / any magical staff
-MONS: peacekeeper / crystal guardian, ironbrand convoker, halazid warlock
+MONS: peacekeeper / crystal guardian, ironbound convoker, halazid warlock
 MAP
 .........ccc
 ..ccccccc.1c
@@ -1240,7 +1240,7 @@ NSUBST: % = 4:% / 4:| / 1:%| / 4:$ / 2:b / 2:g / *:s
 KMONS: 1b = saltling band
 KMONS: 2 = imperial myrmidon / halazid warlock / crystal guardian
 KMONS: g = crystal guardian
-KMONS: C = ironbrand convoker
+KMONS: C = ironbound convoker
 KITEM: $ = gold good_item
 KITEM: gsb = gold q:1 / gold q:2 / gold q:3 / gold q:4 / gold q:5
 KITEM: % = any weapon good_item / any armour good_item / \

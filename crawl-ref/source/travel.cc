@@ -290,7 +290,7 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
     if (feat_is_trap(feat) && feat != DNGN_PASSAGE_OF_GOLUBRIA)
     {
         if (ignore_player_traversability)
-            return !(feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_TELEPORT || feat == DNGN_TRAP_TELEPORT_PERMANENT);
+            return !(feat == DNGN_TRAP_TELEPORT || feat == DNGN_TRAP_TELEPORT_PERMANENT);
         return false;
     }
 #if TAG_MAJOR_VERSION == 34
@@ -385,14 +385,14 @@ static pair<bool, string> _feat_is_blocking_door_strict(
  */
 static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 {
-    if (!ignore_danger && is_excluded(c))
-        return true;
-
     map_cell &cell(env.map_knowledge(c));
     const dungeon_feature_type grid = cell.feat();
 
     if (feat_is_wall(grid) || grid == DNGN_TREE)
         return false;
+
+    if (!ignore_danger && is_excluded(c))
+        return true;
 
     return feat_is_water(grid)
            || grid == DNGN_LAVA
@@ -501,8 +501,11 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
         return true;
 
     // Excluded squares are only safe if marking stairs, i.e. another level.
-    if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
+    if (!ignore_danger && !ignore_hostile && is_excluded(c)
+        && !is_stair_exclusion(c))
+    {
         return false;
+    }
 
     if (g_Slime_Wall_Check && slime_wall_neighbour(c)
         && !actor_slime_wall_immune(&you))
@@ -744,7 +747,9 @@ static void _explore_find_target_square()
         tp.pathfind(static_cast<run_mode_type>(you.running.runmode));
 
     // If we didn't find an explore target the first time, try fallback mode
-    if (!whereto.x && !whereto.y)
+    // Do the same if the original target was a "hostile" place.
+    if (!whereto.x && !whereto.y
+       || 0 > travel_point_distance[whereto.x][whereto.y])
     {
         travel_pathfind fallback_tp;
         fallback_tp.set_floodseed(you.pos(), true);
@@ -1532,7 +1537,6 @@ bool travel_pathfind::square_slows_movement(const coord_def &c)
 void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
-        && (!ignore_hostile || point_distance[c.x][c.y] > 0)
         && is_greed_inducing_square(c)
         && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {

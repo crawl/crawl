@@ -280,7 +280,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Ashenzari
-    {   { 2, "Ashenzari will now reveal the unseen.",
+    {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
+             "Ashenzari reveals the structure of the dungeon to you.\n"
+             "Ashenzari shows you where magical portals lie.\n"
+             "Ashenzari prevents you from stumbling into unseen traps.\n"
+             "Ashenzari identifies your possessions." },
+        { 2, "Ashenzari will now reveal the unseen.",
              "Ashenzari will no longer reveal the unseen.",
              "Ashenzari reveals the unseen." },
         { 3, "Ashenzari will now keep your mind clear.",
@@ -390,6 +395,12 @@ vector<god_power> get_god_powers(god_type god)
     vector<god_power> ret;
     for (const auto& power : god_powers[god])
     {
+        // hack :( don't show fake hp restore
+        if (god == GOD_VEHUMET && power.rank == 1
+            && you.has_mutation(MUT_HP_CASTING))
+        {
+            continue;
+        }
         if (!(power.abil != ABIL_NON_ABILITY
               && fixup_ability(power.abil) == ABIL_NON_ABILITY))
         {
@@ -415,7 +426,7 @@ void god_power::display(bool gaining, const char* fmt) const
     // hack: don't mention the necronomicon alone unless it wasn't
     // already mentioned by the other message
     if (abil == ABIL_KIKU_GIFT_NECRONOMICON
-        && you.species != SP_FELID)
+        && !you.has_mutation(MUT_NO_GRASPING))
     {
         return;
     }
@@ -699,7 +710,7 @@ void dec_penance(int val)
 // TODO: find out what this is duplicating & deduplicate it
 static bool _need_water_walking()
 {
-    return you.ground_level() && you.species != SP_MERFOLK
+    return you.ground_level() && !you.has_mutation(MUT_MERTAIL)
            && env.grid(you.pos()) == DNGN_DEEP_WATER;
 }
 
@@ -1368,8 +1379,9 @@ static bool _give_trog_oka_gift(bool forced)
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    // Should gift catnip instead.
-    if (you.species == SP_FELID)
+    // No use for anything below. (No guarantees this will work right if these
+    // mutations can ever appear separately.)
+    if (you.has_mutation(MUT_NO_GRASPING) && you.has_mutation(MUT_NO_ARMOUR))
         return false;
 
     const bool want_equipment = forced
@@ -1491,6 +1503,10 @@ static bool _handle_uskayaw_ability_unlocks()
 
 static bool _gift_sif_kiku_gift(bool forced)
 {
+    // Smokeless fire and books don't get along.
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return false;
+
     bool success = false;
     book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
@@ -1565,6 +1581,7 @@ static bool _handle_veh_gift(bool forced)
     bool success = false;
     const int gifts = you.num_total_gifts[you.religion];
     if (forced || !you.duration[DUR_VEHUMET_GIFT]
+                  && !you.has_mutation(MUT_INNATE_CASTER)
                   && (you.piety >= piety_breakpoint(0) && gifts == 0
                       || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                       || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
@@ -3100,18 +3117,11 @@ static bool _transformed_player_can_join_god(god_type which_god)
 {
     if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
-    // all these clauses are written with a ! in front of them, so that
-    // the stuff to the right of that is uniformly "gods that hate this form"
-    switch (you.form)
-    {
-    case transformation::lich:
-        return !is_good_god(which_god);
-    case transformation::statue:
-    case transformation::wisp:
-        return !(which_god == GOD_YREDELEMNUL);
-    default:
-        return true;
-    }
+
+    if (is_good_god(which_god) && you.form == transformation::lich)
+        return false;
+
+    return true;
 }
 
 int gozag_service_fee()
@@ -3144,35 +3154,51 @@ static bool _god_rejects_loveless(god_type god)
     }
 }
 
-bool player_can_join_god(god_type which_god)
+/**
+ * Return true if the player can worship which_god.
+ *
+ * @param which_god  god to query
+ * @param temp       If true (default), test if you can worship which_god now.
+ *                   If false, test if you may ever be able to worship the god.
+ * @return           Whether you can worship which_god.
+ */
+bool player_can_join_god(god_type which_god, bool temp)
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
         return false;
 
-    if (is_good_god(which_god) && you.undead_or_demonic())
+    if (is_good_god(which_god) && you.undead_or_demonic(temp))
         return false;
 
-    if (which_god == GOD_YREDELEMNUL && you.is_nonliving())
+    if (you.has_mutation(MUT_INNATE_CASTER)
+        && (which_god == GOD_SIF_MUNA
+            || which_god == GOD_VEHUMET
+            || which_god == GOD_KIKUBAAQUDGHA))
+    {
         return false;
+    }
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
-    if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
+    if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
         return false;
 
-    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    if (you.get_base_mutation_level(MUT_NO_LOVE, true, temp, temp)
+        && _god_rejects_loveless(which_god))
+    {
         return false;
+    }
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.get_mutation_level(MUT_NO_ARTIFICE)
+    if (you.get_base_mutation_level(MUT_NO_ARTIFICE, true, temp, temp)
         && which_god == GOD_PAKELLAS)
     {
         return false;
     }
 #endif
 
-    return _transformed_player_can_join_god(which_god);
+    return !temp || _transformed_player_can_join_god(which_god);
 }
 
 // Handle messaging and identification for items/equipment on conversion.
@@ -3300,9 +3326,9 @@ static void _apply_monk_bonus()
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
     else if (you_worship(GOD_ASHENZARI))
     {
-        // two curses in rapid succession
+        // two curses in (somewhat) rapid succession
         ashenzari_offer_new_curse();
-        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
+        you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false); // of value with this god and looks weird.
@@ -3567,7 +3593,7 @@ static void _join_ru()
 /// Setup for joining the furious barbarians of Trog.
 static void _join_trog()
 {
-    if (you.species != SP_GNOLL)
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             you.train[sk] = you.train_alt[sk] = TRAINING_DISABLED;
 }
@@ -3638,7 +3664,7 @@ void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
     ASSERT(which_god != GOD_ECUMENICAL);
-    ASSERT(you.species != SP_DEMIGOD);
+    ASSERT(!you.has_mutation(MUT_FORLORN));
 
     redraw_screen();
     update_screen();

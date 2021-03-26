@@ -41,8 +41,8 @@ function, it must first attune itself to the wearer's body at full health.
 amulet of the acrobat
 
 An amulet that allows the user to tumble and roll to evade the blows of their
-enemies, but only while moving and waiting. While taking other actions the
-amulet conveys no benefits.
+enemies, but only while moving and waiting. While taking other actions
+(including climbing stairs) the amulet conveys no benefits.
 %%%%
 animal skin
 
@@ -490,13 +490,8 @@ A lightweight spear, designed for throwing. It will pass through the targets it
 hits, potentially hitting all targets in its path until it reaches maximum
 range.
 {{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
         return "Unfortunately, it is too long and awkward for you to use."
-    else
-        return ""
     end
 }}
 %%%%
@@ -683,7 +678,8 @@ fire, cold, electricity, poison, and acid.
 %%%%
 potion of attraction
 
-A potion which makes the drinker attract enemies, pulling them quickly closer.
+A potion which makes the drinker attract enemies, pulling them quickly closer
+for the duration of the effect.
 %%%%
 quad damage
 
@@ -718,13 +714,11 @@ protective in combat, but slightly uncomfortable due to the added weight.
 %%%%
 ring of dexterity
 
-A ring that increases or decreases the dexterity of its wearer, depending on
-its degree of enchantment.
+A ring that increases the dexterity of its wearer.
 %%%%
 ring of evasion
 
-A ring that makes its wearer either more or less capable of avoiding attacks,
-depending on its degree of enchantment.
+A ring that makes its wearer more capable of avoiding attacks.
 %%%%
 ring of fire
 
@@ -744,8 +738,7 @@ resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
-A ring that increases or decreases the mental ability of its wearer, depending
-on its degree of enchantment.
+A ring that increases the mental ability of its wearer.
 %%%%
 ring of resist corrosion
 
@@ -766,8 +759,7 @@ them partially immune to the draining effects of undead and necromantic magic.
 %%%%
 ring of protection
 
-A ring that either protects its wearer from harm or makes them more vulnerable
-to injury, depending on its degree of enchantment.
+A ring that protects its wearer from most sources of damage.
 %%%%
 ring of protection from cold
 
@@ -788,13 +780,12 @@ A ring that allows its wearer to see those things hidden from view by magic.
 %%%%
 ring of slaying
 
-A ring that increases or decreases the wearer's effectiveness with ranged
-weapons and melee attacks, depending on its degree of enchantment.
+A ring that increases the wearer's effectiveness with ranged weapons and melee
+attacks.
 %%%%
 ring of strength
 
-A ring that increases or decreases the physical strength of its wearer,
-depending on its degree of enchantment.
+A ring that increases the physical strength of its wearer.
 %%%%
 ring of wizardry
 
@@ -845,8 +836,7 @@ recapture the magical energy bound up with it.
 scroll of blinking
 
 A scroll that allows its reader to teleport a short distance, with precise
-control. Be wary that controlled teleports will cause the subject to become
-contaminated with magical energy.
+control.
 %%%%
 scroll of brand weapon
 
@@ -901,10 +891,6 @@ A scroll that reveals the surroundings of the one who reads it.
 scroll of noise
 
 A prank scroll that creates a loud noise when read.
-%%%%
-scroll of random uselessness
-
-A scroll with no apparent practical use.
 %%%%
 scroll of silence
 

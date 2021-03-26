@@ -48,6 +48,7 @@ levelup_stat_frequency: 28
 mutations:
   1:
     MUT_HIGH_MAGIC: 1
+    MUT_FORLORN: 1
 recommended_jobs:
   - JOB_TRANSMUTER
   - JOB_CONJURER

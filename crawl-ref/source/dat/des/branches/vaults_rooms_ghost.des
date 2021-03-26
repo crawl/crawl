@@ -17,8 +17,9 @@
 : crawl_require("dlua/vault.lua")
 
 NAME:   advil_vaults_ghost_guards
+TAGS:   allow_dup
 KITEM:  12 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost
@@ -37,8 +38,9 @@ ENDMAP
 
 # based on st_lines
 NAME:   advil_vaults_ghost_lines
+TAGS:   allow_dup
 KITEM:  123 = superb_item / star_item
-KMONS:  1 = vault guard / ironbrand convoker / ironheart preserver / \
+KMONS:  1 = vault guard / ironbound convoker / ironbound preserver / \
             vault warden
 KMONS:  2 = vault warden
 KMONS:  3 = player ghost
@@ -55,6 +57,7 @@ nnn==nnn
 ENDMAP
 
 NAME:  gammafunk_vaults_ghost_grave
+TAGS:  allow_dup
 TAGS:  vaults_orient_w
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
@@ -76,6 +79,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_split
+TAGS:   allow_dup
 KMONS:  O = player ghost
 : ghost_good_loot(_G)
 SUBST:  fg = |*, p : b., q : b., b : xbcv
@@ -98,7 +102,7 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_vaults_ghost_cemetery
-TAGS:    vaults_orient_s
+TAGS:    vaults_orient_s allow_dup
 KMONS:   DFH = player ghost
 KMONS:   p = withered plant
 # 1/12 chance for 5 ghosts, 1/6 for 4, 1/4 for 3, 1/2 for 2.
@@ -126,7 +130,7 @@ xnn===nnx
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_necromancy
-TAGS:   vaults_orient_w
+TAGS:   vaults_orient_w allow_dup
 KMONS:  O = player ghost
 MONS:   simulacrum place:Vaults:5 / spectre place:Vaults:5, lich
 : ghost_good_loot(_G)
@@ -235,7 +239,7 @@ MAP
 ENDMAP
 
 NAME:   ebering_vaults_ghost_reflecting_pool
-TAGS:   vaults_orient_s no_pool_fixup
+TAGS:   vaults_orient_s no_pool_fixup allow_dup
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
 KMONS:  O = player_ghost
@@ -254,7 +258,7 @@ xn=nx
 ENDMAP
 
 NAME:   ebering_vaults_ghost_disaster_area
-TAGS:   vaults_orient_s
+TAGS:   vaults_orient_s allow_dup
 KMONS:  O = player ghost
 NSUBST: ' = d / e / 8=wWl / .
 : lone_ghost_guarded_loot(_G, "O")

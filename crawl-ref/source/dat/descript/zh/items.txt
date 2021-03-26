@@ -507,10 +507,6 @@ scroll of magic mapping
 这个卷轴向使用者揭示出其周围的环境，但它的魔力不足以显示出秘门后的地形，
 也无法显示出完全封闭的区域。
 %%%%
-scroll of random uselessness
-
-你也许会为自己能成功使用这个卷轴感到自豪，但其实它真的一点用都没有。
-%%%%
 scroll of remove curse
 
 阅读这个卷轴会移除你装备的物品上的诅咒。

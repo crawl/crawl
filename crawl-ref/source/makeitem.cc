@@ -139,8 +139,7 @@ static bool _is_boring_item(int type, int sub_type)
 
 static weapon_type _determine_weapon_subtype(int item_level)
 {
-    if (item_level > 6 && one_chance_in(30)
-        && x_chance_in_y(10 + item_level, 100))
+    if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
                              WPN_FUSTIBALUS,
@@ -154,7 +153,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_QUICK_BLADE,
                              WPN_TRIPLE_SWORD);
     }
-    else if (x_chance_in_y(item_level, 20))
+    else if (x_chance_in_y(item_level + 1, 27))
     {
         // Pick a weapon based on rarity.
         while (true)
@@ -165,7 +164,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                 return static_cast<weapon_type>(wpntype);
         }
     }
-    else if (x_chance_in_y(item_level, item_level+7))
+    else if (x_chance_in_y(item_level + 1, item_level + 11))
     {
         return random_choose(WPN_QUARTERSTAFF,
                              WPN_FALCHION,
@@ -1364,7 +1363,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        const int depth_mod = random2(1 + item_level);
         int tries = 500;
 
         // If this item is created by Xom, keep looping until an
@@ -1372,8 +1370,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
         // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
-            // total weight:    597  if depth_mod < 4
-            //                  716  otherwise
+            // total weight:    750
             //                 -122  in sprint
             item.sub_type = random_choose_weighted(
                 200, SCR_IDENTIFY,
@@ -1381,6 +1378,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
                                                    : SCR_TELEPORTATION),
                  45, SCR_AMNESIA,
+                 // [Cha] don't generate noise scrolls if in sprint
+                 44, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
                  40, SCR_MAGIC_MAPPING,
@@ -1388,17 +1387,14 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  32, SCR_FOG,
                  32, SCR_BLINKING,
                  32, SCR_IMMOLATION,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-                 22, SCR_RANDOM_USELESSNESS,
+                 29, SCR_VULNERABILITY,
                  // Higher-level scrolls.
-                 27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 15, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD));
+                 14, SCR_SUMMONING,
+                 14, SCR_ACQUIREMENT,
+                 14, SCR_SILENCE,
+                 14, SCR_BRAND_WEAPON,
+                 14, SCR_TORMENT,
+                 14, SCR_HOLY_WORD);
         }
         while (item.sub_type == NUM_SCROLLS
                || agent == GOD_XOM
@@ -1411,6 +1407,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
                                             1, 3);
 
     item.plus = 0;
+
+    // Don't let monsters use ?summoning too early
+    if (item_level < 2 && item.sub_type == SCR_SUMMONING)
+        item.flags |= ISFLAG_NO_PICKUP;
 }
 
 /// Choose a random spellbook type for the given level.
@@ -1459,7 +1459,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
-    else if (item_level > 6 && x_chance_in_y(21 + item_level, 4000))
+    else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
     else
         item.sub_type = _choose_book_type(item_level);
@@ -1477,7 +1477,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     // Only randomly generate randart books for OBJ_RANDOM, since randart
     // spellbooks aren't merely of-the-same-type-but-better, but
     // have an entirely different set of spells.
-    if (allow_uniques && item_level > 2 && force_type == OBJ_RANDOM
+    if (allow_uniques && force_type == OBJ_RANDOM
         && x_chance_in_y(101 + item_level * 3, 4000))
     {
         int choice = random_choose_weighted(
@@ -1864,9 +1864,7 @@ int items(bool allow_uniques,
             item.base_type = OBJ_MISCELLANY;
 
         if (item_level < 7
-            && (item.base_type == OBJ_BOOKS
-                || item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_WANDS)
+            && item.base_type == OBJ_WANDS
             && random2(7) >= item_level)
         {
             item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);

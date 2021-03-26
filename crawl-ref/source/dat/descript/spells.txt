@@ -141,11 +141,23 @@ deplete magical power.
 %%%%
 Blade Hands spell
 
-Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage significantly.
+{{
+    local hands = you.hand() .. "s"
+    local description =
+               "Causes long, scythe-shaped blades to grow from the " ..
+               "caster's " .. hands .. ", increasing melee damage " ..
+               "significantly.\n\nWhile transformed, equipped weapons, " ..
+               "shields, and gloves are melded, and casting spells " ..
+               "becomes somewhat more difficult."
 
-While transformed, any equipped weapons are melded, and casting spells becomes
-somewhat more difficult.
+    if hands == "paws" then
+        return description .. " In addition, the clacking of blades " ..
+               "on the ground makes the caster slightly less stealthy."
+    else
+        return description
+    end
+}}
+
 %%%%
 Blink Allies Away spell
 
@@ -234,6 +246,20 @@ Call Canine Familiar spell
 
 Summons a solitary canine to the caster's aid.
 %%%%
+Call Down Damnation spell
+
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
+%%%%
+Call Down Lightning spell
+
+Blasts a targeted enemy with lightning, with no direct line of fire required.
+The targeting magics need distance to function, so enemies that are adjacent
+or nearly adjacent cannot be struck by this.
+%%%%
 Call Imp spell
 
 Calls forth a minor demon from the pits of Hell.
@@ -288,7 +314,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that may knock back airborne targets.
+Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
 Cleansing Flame spell
 
@@ -297,6 +323,11 @@ Cleansing Flame spell
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+%%%%
+Concentrate Venom spell
+
+Intensifies the natural venom of the target monster. Poisonous bites and spit
+become intense enough to slow and asphyxiate.
 %%%%
 Confuse spell
 
@@ -352,6 +383,11 @@ Corrupting Pulse spell
 Instills a corruption within all visible targets, temporarily mutating their
 bodies in an adverse fashion. It cannot affect artificial beings, and the
 undead will decompose if affected.
+%%%%
+Creeping Frost spell
+
+Calls forth freezing cold from the walls. Any enemies of the caster standing
+next to those walls will be frozen and will find their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -532,6 +568,10 @@ nor on areas that lack solid floor, like deep water or lava. The transformation
 is temporary and cannot be sustained out of the caster's sight. Spellpower will
 increase how long the bog lingers.
 %%%%
+Eruption spell
+
+Splits the earth to draw up a localized, short-lived volcano under the target.
+%%%%
 Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
@@ -660,6 +700,10 @@ Greater Servant of Makhleb spell
 
 Summons a major demon.
 %%%%
+Goad Beasts spell
+
+Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
+can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
@@ -690,14 +734,6 @@ dies.
 Heal Other spell
 
 Heals a nearby ally.
-%%%%
-Call Down Damnation spell
-
-Blasts a targeted enemy with damnation, with no direct line of fire required.
-These unholy forces harm the victim and anyone adjacent, and are not affected
-by any means of protection, such as armour or resistances. However, certain
-creatures, usually those able to invoke damnation themselves, are entirely
-unscathed by damnation.
 %%%%
 Hurl Damnation spell
 
@@ -1094,6 +1130,11 @@ Primal Wave spell
 
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
+%%%%
+Pyroclastic Surge spell
+
+Draws searing flames from lava. Any enemies of the caster standing
+next to or above lava will be burned.
 %%%%
 Quicksilver Bolt spell
 
@@ -1608,6 +1649,11 @@ Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
+%%%%
+Weakening Gaze spell
+
+Irresistably weakens a creature's melee attacks for a period of time,
+requiring line of sight but not not line of fire.
 %%%%
 Wereblood spell
 

@@ -978,7 +978,7 @@ void make_book_kiku_gift(item_def &book, bool first)
     else
     {
         chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
-        chosen_spells[1] = (you.species == SP_FELID || coinflip())
+        chosen_spells[1] = (you.has_mutation(MUT_NO_GRASPING) || coinflip())
             ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_AGONY,
                                          SPELL_DEATH_CHANNEL);
@@ -992,7 +992,7 @@ void make_book_kiku_gift(item_def &book, bool first)
                                         SPELL_EXCRUCIATING_WOUNDS,
                                         SPELL_SIMULACRUM,
                                         SPELL_DEATH_CHANNEL);
-            if (you.species == SP_FELID
+            if (you.has_mutation(MUT_NO_GRASPING)
                 && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
             {
                 extra_spell = SPELL_NO_SPELL;

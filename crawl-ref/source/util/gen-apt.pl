@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
 
-# Generates aptitude table from skills.cc and the aptitude template file.
-# All species names are discovered from skills.cc and all skill abbreviations
+# Generates aptitude table from species-data.h and the aptitude template file.
+# All species names are discovered from species-data.h and all skill abbreviations
 # are discovered from the apt template file, so this script should be
 # reasonably insulated from skill and species changes.
 #
@@ -127,9 +127,9 @@ sub aptitude_table
         next if $sp eq 'Mottled Draconian';
         next if $sp eq 'High Elf';
         next if $sp eq 'Sludge Elf';
-        next if $sp eq 'Djinni';
         next if $sp eq 'Lava Orc';
         next if $sp eq 'Centaur';
+        next if $sp eq 'Halfling';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);

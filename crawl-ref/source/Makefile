@@ -1207,7 +1207,7 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 greet:
 	@if [ ! -e $(GAME) ]; then\
 		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
-		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
+		                  "at INSTALL.md: the solution to your problem just might be in there!";\
 	fi
 
 docs: $(GENERATED_DOCS)
@@ -1232,7 +1232,8 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             peileppe_bloax_eye baconkid_duvessa_dowan ploomutoo_ijyb \
 	    froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
 	    froggy_natasha_and_boris froggy_jiyva_felid \
-	    froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode e_m_fields
+	    froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
+	    e_m_fields sastrei_chei
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \

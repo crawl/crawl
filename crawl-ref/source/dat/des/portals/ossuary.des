@@ -502,15 +502,14 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
          centaur zombie
 # mix of good items with useless ones
-ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
+ITEM:    scroll of noise w:20 / scroll of immolation / \
          scroll of identify w:20 / \
          potion of mutation w:5 / potion of ambrosia w:5 / \
          potion of degeneration / potion of lignification / \
          potion of flight / potion of curing w:15
 # and sometimes mostly useless ones
-ITEM:    scroll of noise / scroll of random uselessness w:20 / \
-         scroll of immolation / potion of mutation w:5 / \
-         potion of degeneration w:40
+ITEM:    scroll of noise w:30 / scroll of immolation / \
+         potion of mutation w:5 / potion of degeneration w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl
@@ -767,7 +766,7 @@ ITEM:    potion of curing / potion of heal wounds / potion of haste / \
          potion of ambrosia w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
-         scroll of random uselessness
+         scroll of noise
 SUBST:   M = 111.
 MONS:    mummy
 MONS:    centaur zombie / hobgoblin zombie / nothing w:20

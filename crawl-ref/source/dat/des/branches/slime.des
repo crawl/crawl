@@ -70,7 +70,7 @@ KFEAT:  _ = altar_jiyva
 KPROP:  1O_ = no_tele_into
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
-MONS:   jelly / ooze
+MONS:   jelly / endoplasm
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 KFEAT:  O = enter_slime_pits
@@ -103,7 +103,7 @@ ENDMAP
 NAME:   minmay_slime_entry_eyes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 2
-MONS:   eye of devastation, eye of draining
+MONS:   eye of devastation, floating eye
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
 MAP
@@ -144,7 +144,7 @@ ENDMAP
 NAME:   minmay_slime_entry_jelly_boxes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 5
-MONS:   jelly / ooze w:1 / nothing w:1
+MONS:   jelly / endoplasm w:1 / nothing w:1
 KFEAT:  O = enter_slime_pits
 MAP
 .............
@@ -221,7 +221,7 @@ NSUBST: A = . / A, B = . / B, C = . / C
 SHUFFLE: ABCD
 SUBST: A = x, BCD = .
 KFEAT: O = enter_slime_pits
-KMONS: 1 = ooze / jelly / nothing
+KMONS: 1 = endoplasm / jelly / nothing
 KFEAT: x = slimy_wall
 MAP
   .........
@@ -332,8 +332,9 @@ NAME: nicolae_slime_welcoming_committee
 TAGS: no_monster_gen no_item_gen no_trap_gen
 DEPTH: Slime:2-, !Slime:$
 SUBST: X = x., { = {[(
-KMONS: 1 : jelly w:20 / ooze / slime creature w:30 / \
-   acid blob w:5 / death ooze w:5 / azure jelly w:5
+KMONS: 1 : jelly w:20 / endoplasm / slime creature w:30 / \
+   acid blob w:5 / rockslime w:5 / quicksilver ooze w:5 /\
+   azure jelly w:5
 MAP
       xxx
    xxxxxxxx

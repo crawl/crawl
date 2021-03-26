@@ -251,16 +251,6 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static string _weird_smell()
-{
-    return getMiscString("smell_name");
-}
-
-static string _weird_sound()
-{
-    return getMiscString("sound_name");
-}
-
 /**
  * Prompt use of an item from either player inventory or the floor.
  *
@@ -437,7 +427,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mpr("You can't wield that without your missing limb."));
+        SAY(mprf("You can't wield that without your missing %s.",
+            species_arm_name(you.species).c_str()));
         return false;
     }
 
@@ -856,10 +847,10 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
+    if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
     {
         if (verbose)
-            mpr("You can't wear that.");
+            mpr("You can't wear that!");
 
         return false;
     }
@@ -867,19 +858,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
-    {
-        if (verbose)
-            mpr("You can't wear that!");
-        return false;
-    }
-
-    if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
+    if (species_bans_eq(you.species, slot))
     {
         if (verbose)
         {
-            mprf("Your wings%s won't fit in that.", you.has_mutation(MUT_BIG_WINGS)
-                 ? "" : ", even vestigial as they are,");
+            // *if* the species bans body armour, then blame it on wings.
+            // (But don't unconditionally ban armour with this mut.)
+            // XX turn this mut into a two-level mutation?
+            if (slot == EQ_BODY_ARMOUR
+                && species_mutation_level(you.species, MUT_BIG_WINGS))
+            {
+                mprf("Your wings%s won't fit in that.",
+                    you.has_mutation(MUT_BIG_WINGS)
+                        ? "" : ", even vestigial as they are,");
+            }
+            else
+                mpr("You can't wear that!");
         }
         return false;
     }
@@ -898,7 +892,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
                 mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
@@ -912,7 +906,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
             {
@@ -927,6 +921,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
+        if (you.wear_barding())
+        {
+            if (verbose)
+                mpr("The hauberk won't fit over your tail.");
+            return false;
+        }
+
         if (!player_has_feet(!ignore_temporary))
         {
             if (verbose)
@@ -972,8 +973,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s)
-                    || s == EQ_BOOTS && you.wear_barding())
+                if (!get_form()->slot_available(s))
                 {
                     if (verbose)
                     {
@@ -1025,7 +1025,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (verbose)
             {
                 mprf("You can't wear a glove with your huge claw%s!",
-                     you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
+                     you.arm_count() == 1 ? "" : "s");
             }
             return false;
         }
@@ -1051,10 +1051,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                if (you.species == SP_NAGA)
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!");
+                    mpr("Boots don't fit your feet!"); // palentonga
             }
             return false;
         }
@@ -1063,6 +1063,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You don't currently have feet!");
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_FLOAT))
+        {
+            if (verbose)
+                mpr("You have no feet!"); // or legs
             return false;
         }
     }
@@ -1165,7 +1172,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_GRASPING))
     {
         mpr("You can't wear anything.");
         return false;
@@ -1362,31 +1369,16 @@ bool takeoff_armour(int item)
 // Returns a list of possible ring slots.
 static vector<equipment_type> _current_ring_types()
 {
-    vector<equipment_type> ret;
-    if (you.species == SP_OCTOPODE)
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            const equipment_type slot = (equipment_type)(EQ_RING_ONE + i);
-
-            if (you.get_mutation_level(MUT_MISSING_HAND)
-                && slot == EQ_RING_EIGHT)
-            {
-                continue;
-            }
-
-            if (get_form()->slot_available(slot))
-                ret.push_back(slot);
-        }
-    }
-    else
-    {
-        if (you.get_mutation_level(MUT_MISSING_HAND) == 0)
-            ret.push_back(EQ_LEFT_RING);
-        ret.push_back(EQ_RIGHT_RING);
-    }
+    vector<equipment_type> ret = species_ring_slots(you.species);
+    if (you.has_mutation(MUT_MISSING_HAND))
+        ret.pop_back();
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
         ret.push_back(EQ_RING_AMULET);
+
+    erase_if(ret, [](const equipment_type &e)
+        {
+            return !get_form()->slot_available(e);
+        });
     return ret;
 }
 
@@ -2702,65 +2694,10 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     return result ? 1 : 0;
 }
 
-void random_uselessness()
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    switch (random2(8))
-    {
-    case 0:
-    case 1:
-        mprf("The dust glows %s!", weird_glowing_colour().c_str());
-        break;
-
-    case 2:
-        if (you.weapon())
-        {
-            mprf("%s glows %s for a moment.",
-                 you.weapon()->name(DESC_YOUR).c_str(),
-                 weird_glowing_colour().c_str());
-        }
-        else
-        {
-            mpr(you.hands_act("glow", weird_glowing_colour()
-                                      + " for a moment."));
-        }
-        break;
-
-    case 3:
-        if (starts_with(species_skin_adj(you.species), "bandage"))
-            mpr("Your bandages flutter.");
-        else
-        {
-            mprf("You %s %s.", you.can_smell() ? "smell" : "sense",
-                _weird_smell().c_str());
-        }
-        break;
-
-    case 4:
-        mpr("You experience a momentary feeling of inescapable doom!");
-        break;
-
-    case 5:
-        if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
-            mpr("Your brain hurts!");
-        else if (!you.can_smell() || coinflip())
-            mpr("Your ears itch!");
-        else
-            mpr("Your nose twitches suddenly!");
-        break;
-
-    case 6:
-    case 7:
-        mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
-        noisy(2, you.pos());
-        break;
-    }
-}
-
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
+    const int dur = 30 + random2(20);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -2777,7 +2714,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, dur, 0,
+                     "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -3079,10 +3017,6 @@ void read_scroll(item_def& scroll)
 
     switch (which_scroll)
     {
-    case SCR_RANDOM_USELESSNESS:
-        random_uselessness();
-        break;
-
     case SCR_BLINKING:
     {
         const string reason = you.no_tele_reason(true, true);
@@ -3242,6 +3176,7 @@ void read_scroll(item_def& scroll)
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
     case SCR_RECHARGING:
+    case SCR_RANDOM_USELESSNESS:
     {
         mpr("This item has been removed, sorry!");
         cancel_scroll = true;
@@ -3275,25 +3210,25 @@ void read_scroll(item_def& scroll)
             mpr("It is a scroll of amnesia.");
             // included in default force_more_message (to show it before menu)
         }
-        if (you.spell_no == 0)
-            mpr("You feel forgetful for a moment.");
-        else
+        if (you.spell_no == 0 || you.has_mutation(MUT_INNATE_CASTER))
         {
-            bool done;
-            bool aborted;
-            do
-            {
-                aborted = cast_selective_amnesia() == -1;
-                done = !aborted
-                       || alreadyknown
-                       || crawl_state.seen_hups
-                       || yesno("Really abort (and waste the scroll)?",
-                                false, 0);
-                cancel_scroll = aborted && alreadyknown;
-            } while (!done);
-            if (aborted)
-                canned_msg(MSG_OK);
+            mpr("You feel forgetful for a moment.");
+            break;
         }
+        bool done;
+        bool aborted;
+        do
+        {
+            aborted = cast_selective_amnesia() == -1;
+            done = !aborted
+                   || alreadyknown
+                   || crawl_state.seen_hups
+                   || yesno("Really abort (and waste the scroll)?",
+                            false, 0);
+            cancel_scroll = aborted && alreadyknown;
+        } while (!done);
+        if (aborted)
+            canned_msg(MSG_OK);
         break;
 
     default:

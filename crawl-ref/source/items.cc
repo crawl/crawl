@@ -943,6 +943,11 @@ void item_check()
 
 void identify_item(item_def& item)
 {
+    // items_stack() has strict flag conditions to prevent a shop info leak,
+    // so we need set_ident_type() here to permit stacking shop purchases.
+    if (is_stackable_item(item))
+        set_ident_type(item, true);
+
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     if (is_artefact(item) && !(item.flags & ISFLAG_NOTED_ID))
@@ -1826,6 +1831,11 @@ static void _get_book(item_def& it)
 {
     if (it.sub_type != BOOK_MANUAL)
     {
+        if (you.has_mutation(MUT_INNATE_CASTER))
+        {
+            mprf("%s burns to shimmering ash in your grasp.", it.name(DESC_THE).c_str());
+            return;
+        }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
@@ -4527,11 +4537,13 @@ item_def get_item_known_info(const item_def& item)
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
+        {
             ii.sub_type = item.sub_type;
+            if (jewellery_has_pluses(item))
+                ii.plus = item.plus;
+        }
         else
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
-        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:

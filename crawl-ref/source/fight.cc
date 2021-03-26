@@ -598,6 +598,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_NEG:
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
+        case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -647,6 +648,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
                                      || flavour == BEAM_MALIGN_OFFERING
+                                     || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
                                      || flavour == BEAM_POISON
                                      // just the resistible part
@@ -664,7 +666,8 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
-                     || flavour == BEAM_MALIGN_OFFERING)
+                     || flavour == BEAM_MALIGN_OFFERING
+                     || flavour == BEAM_VAMPIRIC_DRAINING)
             {
                 resistible /= res * 2;
             }

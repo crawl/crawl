@@ -173,12 +173,23 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
-            int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
-            pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
-            poison_player(pois, source, kaux);
 
-            if (player_res_poison() > 0)
-                canned_msg(MSG_YOU_RESIST);
+            if (beam->origin_spell == SPELL_SPIT_POISON &&
+                beam->agent(true)->is_monster() &&
+                beam->agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+            {
+                curare_actor(beam->agent(), &you, 2, "concentrated venom",
+                             beam->agent(true)->name(DESC_PLAIN));
+            }
+            else
+            {
+                int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
+                pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
+                poison_player(pois, source, kaux);
+
+                if (player_res_poison() > 0)
+                    canned_msg(MSG_YOU_RESIST);
+            }
         }
 
         break;
@@ -721,7 +732,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    if (x_chance_in_y(slow_sources, 100))
+    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
         slow_player(10 + random2(5));
 }
 
@@ -954,7 +965,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             mp = min(mp, you.magic_points);
 
             dam -= mp;
-            dec_mp(mp);
+            drain_mp(mp);
 
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshhold by spirit shield.
@@ -991,14 +1002,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.hp > 0 && dam > 0)
         {
-            if (Options.hp_warning
-                && you.hp <= (you.hp_max * Options.hp_warning) / 100
-                && (death_type != KILLED_BY_POISON || poison_is_lethal()))
-            {
-                flash_view_delay(UA_HP, RED, 50);
-                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
-                dungeon_events.fire_event(DET_HP_WARNING);
-            }
+            if (death_type != KILLED_BY_POISON || poison_is_lethal())
+                flush_hp();
 
             hints_healing_check();
 

@@ -44,6 +44,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -253,7 +254,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_WEAPON:
                     if (is_weapon(*this))
                         buff << " (weapon)";
-                    else if (you.species == SP_FELID)
+                    else if (you.has_mutation(MUT_NO_GRASPING))
                         buff << " (in mouth)";
                     else
                         buff << " (in " << you.hand_name(false) << ")";
@@ -529,14 +530,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         {
         case SPARM_NORMAL:            return "";
 #if TAG_MAJOR_VERSION == 34
-        case SPARM_RUNNING:
-            // "naga barding of running" doesn't make any sense, and yes,
-            // they are possible. The terse ego name for these is {run}
-            // still to avoid player confusion, it used to be {sslith}.
-            if (item.sub_type == ARM_BARDING && you.species == SP_NAGA)
-                                      return "speedy slithering";
-            else
-                                      return "running";
+        case SPARM_RUNNING:           return "running";
 #endif
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
@@ -549,7 +543,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_PONDEROUSNESS:     return "ponderousness";
         case SPARM_FLYING:            return "flying";
 
-        case SPARM_WILLPOWER:  return "willpower";
+        case SPARM_WILLPOWER:         return "willpower";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
         case SPARM_RESISTANCE:        return "resistance";
@@ -696,7 +690,6 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_ENCHANT_WEAPON:     return "enchant weapon";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
-    case SCR_RANDOM_USELESSNESS: return "random uselessness";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_BLINKING:           return "blinking";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
@@ -1709,7 +1702,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_type)
         {
-            if (know_pluses && jewellery_has_pluses(*this))
+            if (!dbname && jewellery_has_pluses(*this))
                 buff << make_stringf("%+d ", plus);
 
             buff << jewellery_type_name(item_typ);
@@ -2571,6 +2564,8 @@ bool is_good_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
+        if (item.sub_type == SCR_TORMENT)
+            return player_res_torment(false);
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
@@ -2606,8 +2601,10 @@ bool is_bad_item(const item_def &item)
         {
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_ARMOUR:
+            if (you.has_mutation(MUT_NO_ARMOUR))
+                return false;
         case SCR_CURSE_WEAPON:
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
@@ -2681,8 +2678,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
-            return !you.get_mutation_level(MUT_TORMENT_RESISTANCE)
-                   || !temp && you.species == SP_VAMPIRE;
+            return !player_res_torment(false);
         case SCR_HOLY_WORD:
             return you.undead_or_demonic();
         default:
@@ -2761,7 +2757,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return true;
 
         if (!you.could_wield(item, true, !temp)
@@ -2792,8 +2788,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return false;
         }
 
-        // Save for the above spells, all missiles are useless for felids.
-        if (you.species == SP_FELID)
+        // Save for the above spell, all missiles are useless for felids.
+        if (you.has_mutation(MUT_NO_GRASPING))
             return true;
 
         // These are the same checks as in is_throwable(), except that
@@ -2848,8 +2844,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         switch (item.sub_type)
         {
-        case SCR_RANDOM_USELESSNESS:
-            return true;
         case SCR_TELEPORTATION:
             return you.stasis()
                    || crawl_state.game_is_sprint()
@@ -2857,7 +2851,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_BLINKING:
             return you.stasis();
         case SCR_AMNESIA:
-            return you_worship(GOD_TROG);
+            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
@@ -2865,7 +2859,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_ENCHANT_WEAPON:
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
-            return you.species == SP_FELID;
+            return you.has_mutation(MUT_NO_GRASPING);
         case SCR_SUMMONING:
             return you.get_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_FOG:
@@ -2895,7 +2889,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     case OBJ_POTIONS:
     {
         // Mummies and liches can't use potions.
-        if (you.undead_state(temp) == US_UNDEAD && you.species != SP_GHOUL)
+        if (!you.can_drink(temp))
             return true;
 
         if (!ident && !item_type_known(item))
@@ -2913,12 +2907,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.stasis();
         case POT_MUTATION:
             return !you.can_safely_mutate(temp);
-
         case POT_LIGNIFY:
-            return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && !you.vampire_alive);
-
+            return you.is_lifeless_undead(temp);
         case POT_FLIGHT:
             return you.permanent_flight()
                    || you.racial_permanent_flight();
@@ -2928,8 +2918,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
             return you_worship(GOD_TROG);
-        case POT_ATTRACTION:
-            return false;
+        case POT_MAGIC:
+            return you.has_mutation(MUT_HP_CASTING);
         CASE_REMOVED_POTIONS(item.sub_type)
         }
 
@@ -2952,12 +2942,12 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.res_corr(false, false);
 
         case AMU_FAITH:
-            return (you.species == SP_DEMIGOD && !you.religion)
+            return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
                     || you_worship(GOD_GOZAG) || you_worship(GOD_ASHENZARI)
                     || (you_worship(GOD_RU) && you.piety == piety_breakpoint(5));
 
         case AMU_GUARDIAN_SPIRIT:
-            return you.spirit_shield(false, false);
+            return you.spirit_shield(false, false) || you.has_mutation(MUT_HP_CASTING);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -2966,20 +2956,27 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you.get_mutation_level(MUT_NO_REGENERATION) > 0
                    || (temp
                        && (you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
-                           || you.species == SP_VAMPIRE)
+                           || you.has_mutation(MUT_VAMPIRISM))
                        && regeneration_is_inhibited());
 
-#if TAG_MAJOR_VERSION == 34
         case AMU_MANA_REGENERATION:
-            return you_worship(GOD_PAKELLAS);
+#if TAG_MAJOR_VERSION == 34
+            if (have_passive(passive_t::no_mp_regen)
+                || player_under_penance(GOD_PAKELLAS))
+            {
+                return true;
+            }
 #endif
+            return !you.max_magic_points;
+
+        case RING_MAGICAL_POWER:
+            return you.has_mutation(MUT_HP_CASTING);
 
         case RING_SEE_INVISIBLE:
             return you.innate_sinv();
 
         case RING_POISON_RESISTANCE:
-            return player_res_poison(false, temp, false) > 0
-                   && (temp || you.species != SP_VAMPIRE);
+            return player_res_poison(false, temp, false) > 0;
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
@@ -3002,7 +2999,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 #endif
 
     case OBJ_STAVES:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return true;
         if (!you.could_wield(item, true, !temp))
         {
@@ -3058,6 +3055,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         }
 
     case OBJ_BOOKS:
+        // this might be wrong if we ever add more item ID back
+        if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)
+            return true;
         if (!ident && !item_type_known(item))
             return false;
         if ((ident || item_type_known(item)) && item.sub_type != BOOK_MANUAL)

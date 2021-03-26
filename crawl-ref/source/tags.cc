@@ -2482,6 +2482,21 @@ void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib)
         lib.set(i, lib[i] && !spell_removed(static_cast<spell_type>(i)));
 }
 
+
+static void _fixup_species_mutations(mutation_type mut)
+{
+    // this is *not safe* to use with any mutations where there could be a
+    // physiology conflict, or with mutations where there could be random
+    // upgrades on top of the innate levels (e.g. MUT_ROLL).
+    int total = 0;
+    // Don't perma_mutate since that gives messages.
+    for (const auto& lum : get_species_def(you.species).level_up_mutations)
+        if (lum.xp_level <= you.experience_level && lum.mut == mut)
+            total += lum.mut_level;
+
+    you.innate_mutation[mut] = you.mutation[mut] = total;
+}
+
 static void _tag_read_you(reader &th)
 {
     int count;
@@ -3127,28 +3142,11 @@ static void _tag_read_you(reader &th)
         you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY)
+    if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY
+                                        && you.species == SP_VINE_STALKER)
     {
-        if (you.species == SP_VINE_STALKER)
-        {
-            you.mutation[MUT_NO_POTION_HEAL] =
-                    you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
-            you.mutation[MUT_MIASMA_IMMUNITY] =
-                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 0;
-        }
-        else if (you.species == SP_GARGOYLE)
-        {
-            you.mutation[MUT_MIASMA_IMMUNITY] =
-                    you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
-        }
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_FOUL_STENCH
-        && you.species == SP_DEMONSPAWN
-        && you.innate_mutation[MUT_SAPROVOROUS])
-    {
-        you.mutation[MUT_MIASMA_IMMUNITY] =
-                you.innate_mutation[MUT_MIASMA_IMMUNITY] = 1;
+        you.mutation[MUT_NO_POTION_HEAL] =
+                you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
@@ -3169,20 +3167,63 @@ static void _tag_read_you(reader &th)
     }
 
     // No minor version needed: all old felids should get MUT_PAWS.
-    if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
-        you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
+    if (you.species == SP_FELID)
+        _fixup_species_mutations(MUT_PAWS);
 
-    // TODO: can we just provide generic species mutation fixup code?
+    // TODO: can we just provide even more generic species mutation fixup code?
+    // (There's a lot of weird interactions and special cases to worry about..)
     if (you.species == SP_FORMICID)
-    {
-        you.mutation[MUT_QUADRUMANOUS]
-                = you.innate_mutation[MUT_QUADRUMANOUS] = 1;
-    }
+        _fixup_species_mutations(MUT_QUADRUMANOUS);
+
     if (you.species == SP_MUMMY)
     {
-        you.mutation[MUT_NO_DRINK] = you.innate_mutation[MUT_NO_DRINK] = 1;
-        you.mutation[MUT_HEAT_VULNERABILITY] =
-                            you.innate_mutation[MUT_HEAT_VULNERABILITY] = 1;
+        _fixup_species_mutations(MUT_NO_DRINK);
+        // note that the following would not be reliable on a species that can
+        // mutate normally...
+        _fixup_species_mutations(MUT_HEAT_VULNERABILITY);
+    }
+
+    if (you.species == SP_MINOTAUR)
+        _fixup_species_mutations(MUT_REFLEXIVE_HEADBUTT);
+
+    if (you.species == SP_PALE_DRACONIAN)
+        _fixup_species_mutations(MUT_STEAM_RESISTANCE);
+
+    if (you.species == SP_GREY_DRACONIAN)
+        _fixup_species_mutations(MUT_UNBREATHING);
+
+    if (you.species == SP_FELID)
+    {
+        _fixup_species_mutations(MUT_NO_GRASPING);
+        _fixup_species_mutations(MUT_NO_ARMOUR);
+        _fixup_species_mutations(MUT_MULTILIVED);
+    }
+    // blanket fixup for this, just in case it is still lurking around on old
+    // characters
+    _fixup_species_mutations(MUT_FORLORN);
+
+    if (you.species == SP_NAGA)
+        _fixup_species_mutations(MUT_CONSTRICTING_TAIL);
+
+    if (you.species == SP_GNOLL)
+        _fixup_species_mutations(MUT_DISTRIBUTED_TRAINING);
+
+    if (you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+        _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
+
+    if (you.species == SP_MERFOLK)
+        _fixup_species_mutations(MUT_MERTAIL);
+
+    if (you.species == SP_OCTOPODE)
+        _fixup_species_mutations(MUT_TENTACLE_ARMS);
+
+    if (you.species == SP_VAMPIRE)
+        _fixup_species_mutations(MUT_VAMPIRISM);
+
+    if (you.has_innate_mutation(MUT_TORMENT_RESISTANCE)
+        || you.species == SP_GARGOYLE)
+    {
+        _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
@@ -3212,15 +3253,6 @@ static void _tag_read_you(reader &th)
     {
         if (you.mutation[MUT_MP_WANDS] > 1)
             you.mutation[MUT_MP_WANDS] = 1;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
-    {
-        if (you.species == SP_NAGA)
-        {
-            you.mutation[MUT_SLOW_METABOLISM] =
-                you.innate_mutation[MUT_SLOW_METABOLISM] = 1;
-        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DETERIORATION)
@@ -7244,9 +7276,9 @@ void unmarshallSpells(reader &th, monster_spells &spells
 #if TAG_MAJOR_VERSION == 34
             if (th.getMinorVersion() < TAG_MINOR_DEMONIC_SPELLS)
             {
-                if (spells[j].flags & MON_SPELL_DEMONIC)
+                if (spells[j].flags & MON_SPELL_VOCAL)
                 {
-                    spells[j].flags &= ~MON_SPELL_DEMONIC;
+                    spells[j].flags &= ~MON_SPELL_VOCAL;
                     spells[j].flags |= MON_SPELL_MAGICAL;
                 }
             }

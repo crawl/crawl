@@ -1036,15 +1036,15 @@ dgn.delayed_decay_extra(_G, "D", "dwarf skeleton",
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
- -- Centaur hunter.
-dgn.delayed_decay_extra(_G, "E", "centaur skeleton",
+ -- Minotaur hunter.
+dgn.delayed_decay_extra(_G, "E", "minotaur skeleton",
     "shortbow good_item / longbow w:5 / arbalest good_item" ..
     "    / triple crossbow w:5 / javelin good_item" ..
     ", leather armour good_item w:50 / ring mail good_item w:50" ..
     "    / " .. heavy_armour .. " / " .. medium_scales ..
     "    / " .. heavy_scales ..
-    ", barding good_item / " .. dgn.good_aux_armour ..
-    "    / nothing w:70" ..
+    ",   / " .. dgn.good_aux_armour ..
+    "    / nothing w:40" ..
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
@@ -1057,7 +1057,7 @@ dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
     ", buckler good_item / hat good_item / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 
- -- Merfolk skald. 3 guaranteed items, 3.25 on-average.
+ -- Merfolk gladiator. 3 guaranteed items, 3.25 on-average.
 dgn.delayed_decay_extra(_G, "H", "merfolk skeleton",
     "trident good_item / demon trident / glaive good_item / bardiche" ..
     ", leather armour good_item w:100 / ring mail good_item w:100" ..
@@ -1140,8 +1140,8 @@ dgn.delayed_decay_extra(_G, "P", "felid skeleton",
     ", any wand w:20 / any misc / gold / any scroll / any potion" ..
     "    / nothing w:60")
 
--- Halfling warper.
-dgn.delayed_decay_extra(_G, "Q", "halfling skeleton",
+-- Kobold warper.
+dgn.delayed_decay_extra(_G, "Q", "kobold skeleton",
     "randbook disc:translocation / book of spatial translocations" ..
     "    / book of the warp" ..
     ", scroll of blinking / scroll of teleportation q:2" ..

@@ -2083,7 +2083,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    return is_weapon(item) && you.species != SP_FELID;
+    return is_weapon(item) && !you.has_mutation(MUT_NO_GRASPING);
 }
 
 /// Does the item only serve to produce summons or allies?

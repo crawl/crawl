@@ -121,6 +121,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RING_OF_ICE,     MB_CLOUD_RING_ICE },
     { ENCH_RING_OF_DRAINING,MB_CLOUD_RING_DRAINING },
     { ENCH_RING_OF_ACID,    MB_CLOUD_RING_ACID },
+    { ENCH_CONCENTRATE_VENOM, MB_CONCENTRATE_VENOM },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -595,6 +596,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
+    if (!actor_is_susceptible_to_vampirism(*m))
+        mb.set(MB_CANT_DRAIN);
 
     dam = mons_get_damage_level(*m);
 

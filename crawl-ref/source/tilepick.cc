@@ -3860,8 +3860,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_HUMAN;
         case SP_DEEP_ELF:
             return TILEG_SP_DEEP_ELF;
-        case SP_HALFLING:
-            return TILEG_SP_HALFLING;
         case SP_HILL_ORC:
             return TILEG_SP_HILL_ORC;
         case SP_KOBOLD:
@@ -3910,6 +3908,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_BARACHI;
         case SP_GNOLL:
             return TILEG_SP_GNOLL;
+        case SP_DJINNI:
+            return TILEG_SP_DJINNI;
         default:
             return TILEP_ERROR;
     }

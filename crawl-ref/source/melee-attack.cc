@@ -343,9 +343,9 @@ bool melee_attack::handle_phase_dodged()
         // FIXME: player's attack is -1, even for auxes
         && effective_attack_number <= 0)
     {
-        if (defender->is_player() ?
-                you.species == SP_MINOTAUR :
-                mons_species(mons_base_type(*defender->as_monster()))
+        if (defender->is_player()
+                ? you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
+                : mons_species(mons_base_type(*defender->as_monster()))
                     == MONS_MINOTAUR)
         {
             do_minotaur_retaliation();
@@ -1200,11 +1200,11 @@ bool melee_attack::player_gets_aux_punch()
 
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
+    if (you.arm_count() <= 2 && !you.has_usable_offhand())
         return false;
 
     // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
+    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2,
                          6);
 }
 
@@ -1337,7 +1337,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 poison_monster(defender->as_monster(), &you);
 
             // Normal vampiric biting attack, not if already got stabbing special.
-            if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
+            if (damage_brand == SPWPN_VAMPIRISM
+                && you.has_mutation(MUT_VAMPIRISM)
                 && (!stab_attempt || stab_bonus <= 0))
             {
                 _player_vampire_draws_blood(defender->as_monster(), damage_done);
@@ -1711,8 +1712,7 @@ void melee_attack::set_attack_verb(int damage)
             else if (damage < HIT_STRONG)
                 attack_verb = "pummel";
             else if (defender->is_monster()
-                     && (mons_genus(defender->type) == MONS_WORKER_ANT
-                         || mons_genus(defender->type) == MONS_FORMICID))
+                     && mons_genus(defender->type) == MONS_FORMICID)
             {
                 attack_verb = "squash";
                 verb_degree = "like the proverbial ant";
@@ -1794,7 +1794,7 @@ bool melee_attack::player_monattk_hit_effects()
         return false;
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
-    if (you.species == SP_VAMPIRE
+    if (you.has_mutation(MUT_VAMPIRISM)
         && damage_done > 0
         && stab_attempt
         && stab_bonus > 0)
@@ -2394,6 +2394,12 @@ bool melee_attack::mons_do_poison()
     {
         amount = random_range(attacker->get_hit_dice() * 2,
                               attacker->get_hit_dice() * 4);
+    }
+
+    if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+    {
+        return curare_actor(attacker, defender, 2, "concentrated venom",
+                            attacker->name(DESC_PLAIN));
     }
 
     if (!defender->poison(attacker, amount))
@@ -3399,8 +3405,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        return you.get_mutation_level(MUT_CONSTRICTING_TAIL)
-                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+        return you.get_mutation_level(MUT_CONSTRICTING_TAIL) >= 2
+                || you.has_mutation(MUT_TENTACLE_ARMS)
+                    && you.has_usable_tentacle();
 
     case UNAT_KICK:
         return you.has_usable_hooves()
@@ -3414,7 +3421,10 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
-        return you.has_usable_tail() && coinflip();
+        return you.has_tail()
+            // constricting tails are too slow to slap
+            && !you.has_mutation(MUT_CONSTRICTING_TAIL)
+            && coinflip();
 
     case UNAT_PSEUDOPODS:
         return you.has_usable_pseudopods() && !one_chance_in(3);
@@ -3544,7 +3554,7 @@ int melee_attack::calc_damage()
 bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int damage,
                                                bool needs_bite_msg)
 {
-    ASSERT(you.species == SP_VAMPIRE);
+    ASSERT(you.has_mutation(MUT_VAMPIRISM));
 
     if (!_vamp_wants_blood_from_monster(mon) ||
         (!adjacent(defender->pos(), attack_position) && needs_bite_msg))
@@ -3591,7 +3601,7 @@ bool melee_attack::apply_damage_brand(const char *what)
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
-    return you.species == SP_VAMPIRE
+    return you.has_mutation(MUT_VAMPIRISM)
            && !you.vampire_alive
            && actor_is_susceptible_to_vampirism(*mon)
            && mons_has_blood(mon->type);

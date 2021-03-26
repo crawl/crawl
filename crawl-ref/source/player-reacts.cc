@@ -173,7 +173,8 @@ static void _decrement_petrification(int delay)
     {
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
-        // flesh when not petrified
+        // flesh when not petrified. (Unfortunately, species_skin_name doesn't
+        // really work here..)
         const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
                                             "flesh" :
                                             get_form()->flesh_equivalent;
@@ -583,7 +584,8 @@ static void _decrement_durations()
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != transformation::bat
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
         || you.transform_uncancellable)
     {
         if (form_can_fly()

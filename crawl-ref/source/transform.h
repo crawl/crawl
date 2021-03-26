@@ -151,6 +151,9 @@ public:
     bool player_can_swim() const;
 
     string player_prayer_action() const;
+    string melding_description() const;
+
+    vector<string> get_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -170,7 +173,7 @@ public:
     /** A bitfield representing a union of (1 << equipment_type) values for
      * equipment types that are unusable in this form.
      */
-    const int blocked_slots;
+    const int blocked_slots; // XX check enum size at compile time?
     /// size of the form
     const size_type size;
     /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
@@ -255,6 +258,8 @@ private:
 
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
+
+    vector<pair<string,string>> fakemuts;
 };
 const Form* get_form(transformation form = you.form);
 
@@ -305,3 +310,4 @@ void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void vampire_update_transformations();
+int form_base_movespeed(transformation tran);

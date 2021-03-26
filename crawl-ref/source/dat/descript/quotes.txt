@@ -1955,7 +1955,7 @@ oklob sapling
 
 <oklob plant>
 %%%%
-ooze
+endoplasm
 
 “Sea horses floundering in the slimy mud,
  Tossed up their heads, and dashed the ooze about them.”
@@ -2411,10 +2411,6 @@ scroll of magic mapping
 <scroll>
 %%%%
 scroll of noise
-
-<scroll>
-%%%%
-scroll of random uselessness
 
 <scroll>
 %%%%

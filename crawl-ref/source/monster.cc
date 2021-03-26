@@ -411,10 +411,10 @@ random_var monster::attack_delay(const item_def *projectile,
     if (use_unarmed || !weap)
         return random_var(10);
 
-    random_var delay(property(*weap, PWPN_SPEED));
+    random_var delay(10);
     if (get_weapon_brand(*weap) == SPWPN_SPEED)
         delay = div_rand_round(delay * 2, 3);
-    return (random_var(10) + delay) / 2;
+    return delay;
 }
 
 int monster::has_claws(bool /*allow_tran*/) const
@@ -2435,7 +2435,6 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 break;
 
             case MONS_FLOATING_EYE:
-            case MONS_EYE_OF_DRAINING:
             case MONS_SHINING_EYE:
             case MONS_EYE_OF_DEVASTATION:
             case MONS_GOLDEN_EYE:
@@ -2615,7 +2614,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    // TODO: shared code with species_skin_adj for player species
+    // TODO: shared code with species_skin_name for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -3532,7 +3531,7 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     return holi;
 }
 
-bool monster::undead_or_demonic() const
+bool monster::undead_or_demonic(bool /*temp*/) const
 {
     const mon_holy_type holi = holiness();
 
@@ -3885,11 +3884,12 @@ bool monster::res_sticky_flame() const
 
 bool monster::res_miasma(bool /*temp*/) const
 {
-    if (holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+    if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
+        || get_mons_resist(*this, MR_RES_MIASMA)
+        || is_unbreathing())
+    {
         return true;
-
-    if (get_mons_resist(*this, MR_RES_MIASMA))
-        return true;
+    }
 
     const item_def *armour = mslot_item(MSLOT_ARMOUR);
     if (armour && is_unrandom_artefact(*armour, UNRAND_EMBRACE))
@@ -5732,11 +5732,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
         energy_loss += 4;
 
-    // Randomize interval between servitor spellcasts
-    // TODO: is there a more transparent way to implement this than energy?
-    if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
-        energy_loss += random2(16);
-
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.
     // No randomization for allies following you to avoid traffic jam
@@ -6535,6 +6530,28 @@ bool monster::is_divine_companion() const
            && mons_can_use_stairs(*this);
 }
 
+bool monster::is_dragonkind() const
+{
+    if (actor::is_dragonkind())
+        return true;
+
+    if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
+        return true;
+
+    if (mons_is_ghost_demon(type) && species_is_draconian(ghost->species))
+        return true;
+
+    return false;
+}
+
+int monster::dragon_level() const
+{
+    if (is_summoned() || testbits(flags, MF_NO_REWARD))
+        return 0;
+    return actor::dragon_level();
+}
+
+/// Is this monster's Blink ability themed as a 'jump'?
 bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER || type == MONS_BOULDER_BEETLE;

@@ -156,9 +156,11 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 
     // spell power, spell range, noise
     const string rangestring = spell_range_string(spell);
+    const string damagestring = spell_damage_string(spell);
 
-    desc << chop_string(spell_power_string(spell), 13)
-         << chop_string(rangestring, 9)
+    desc << chop_string(spell_power_string(spell), 10)
+         << chop_string(damagestring.length() ? damagestring : "N/A", 10)
+         << chop_string(rangestring, 10)
          << chop_string(spell_noise_string(spell, 10), 14);
 
     desc << "</" << colour_to_str(highlight) <<">";
@@ -182,7 +184,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 titlestring + "         Type                          Failure  Level",
-                titlestring + "         Power        Range    Noise         ",
+                titlestring + "         Power     Damage    Range     Noise ",
                 MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
@@ -411,6 +413,26 @@ int stepdown_spellpower(int power, int scale)
     return result;
 }
 
+static int _skill_power(spell_type spell)
+{
+    int power = 0;
+
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    const int skillcount = count_bits(disciplines);
+    if (skillcount)
+    {
+        for (const auto bit : spschools_type::range())
+            if (disciplines & bit)
+                power += you.skill(spell_type2skill(bit), 200);
+        power /= skillcount;
+    }
+
+    // Innate casters use spellcasting for every spell school.
+    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
+    power += you.skill(SK_SPELLCASTING, splcast_mult);
+    return power;
+}
+
 /*
  * Calculate spell power.
  *
@@ -430,20 +452,7 @@ int stepdown_spellpower(int power, int scale)
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, int scale)
 {
-    int power = 0;
-
-    const spschools_type disciplines = get_spell_disciplines(spell);
-
-    int skillcount = count_bits(disciplines);
-    if (skillcount)
-    {
-        for (const auto bit : spschools_type::range())
-            if (disciplines & bit)
-                power += you.skill(spell_type2skill(bit), 200);
-        power /= skillcount;
-    }
-
-    power += you.skill(SK_SPELLCASTING, 50);
+    int power = _skill_power(spell);
 
     if (you.divine_exegesis)
         power += you.skill(SK_INVOCATIONS, 300);
@@ -662,6 +671,9 @@ static void _handle_wucad_mu(int cost)
     if (!player_equip_unrand(UNRAND_WUCAD_MU))
         return;
 
+    if (you.has_mutation(MUT_HP_CASTING))
+        return;
+
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
         return;
 
@@ -677,7 +689,7 @@ static void _handle_wucad_mu(int cost)
         if (coinflip())
             confuse_player(2 + random2(4));
         else
-        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+            lose_stat(STAT_INT, 1 + random2avg(5, 2));
     }
     else
     {
@@ -911,11 +923,13 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
     const int cost = spell_mana(spell);
+    pay_mp(cost);
+
     // Majin Bo HP cost taken at the same time
+    // (but after hp costs from HP casting)
     const int hp_cost = min(spell_mana(spell), you.hp - 1);
-    dec_mp(cost, true);
     if (_majin_charge_hp())
-        dec_hp(hp_cost, false);
+        pay_hp(hp_cost);
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target);
@@ -923,9 +937,9 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
     {
         crawl_state.zero_turns_taken();
         // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
+        refund_mp(cost);
         if (_majin_charge_hp())
-            inc_hp(hp_cost);
+            refund_hp(hp_cost);
 
         redraw_screen();
         update_screen();
@@ -942,8 +956,7 @@ bool cast_a_spell(bool check_range, spell_type spell, dist *_target)
         count_action(CACT_CAST, spell);
     }
 
-    flush_mp();
-
+    finalize_mp_cost(_majin_charge_hp() ? hp_cost : 0);
     you.turn_is_over = true;
     alert_nearby_monsters();
 
@@ -1317,7 +1330,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCORD:
         return make_unique<targeter_discord>();
     case SPELL_IGNITION:
-        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you));
+        return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you, true));
 
     // Summons. Most summons have a simple range 2 radius, see find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
@@ -1373,7 +1386,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     if (get_spell_flags(spell) & spflag::selfench
         && !spell_typematch(spell, spschool::summoning) // all summoning spells are selfench
         && !spell_typematch(spell, spschool::translocation) // blink, passage
-        && spell != SPELL_VAMPIRIC_DRAINING
         && spell != SPELL_PHANTOM_MIRROR) // ??
     {
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
@@ -1556,6 +1568,14 @@ static vector<string> _desc_meph_chance(const monster_info& mi)
     return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
 }
 
+static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
+{
+    if (mi.mb.get(MB_CANT_DRAIN))
+        return vector<string>{"not susceptible"};
+
+    return vector<string>{};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1671,6 +1691,8 @@ static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags f
             return bind(_desc_dazzle_chance, placeholders::_1, powc);
         case SPELL_MEPHITIC_CLOUD:
             return bind(_desc_meph_chance, placeholders::_1);
+        case SPELL_VAMPIRIC_DRAINING:
+            return bind(_desc_vampiric_draining_valid, placeholders::_1);
         default:
             break;
     }
@@ -2013,7 +2035,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
-    if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
+    if (spell == SPELL_FREEZE)
     {
         if (!adjacent(you.pos(), target))
             return spret::abort;
@@ -2026,9 +2048,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_SANDBLAST:
         return cast_sandblast(powc, beam, fail);
-
-    case SPELL_VAMPIRIC_DRAINING:
-        return vampiric_drain(powc, monster_at(target), fail);
 
     case SPELL_IOOD:
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
@@ -2428,7 +2447,7 @@ int fail_severity(spell_type spell)
     const int level = spell_difficulty(spell);
 
     // Impossible to get a damaging miscast
-    if (level * level * raw_fail <= 150)
+    if (level * level * raw_fail <= MISCAST_THRESHOLD)
         return 0;
 
     const int max_damage = max_miscast_damage(spell);
@@ -2621,11 +2640,6 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
-        case SPELL_VAMPIRIC_DRAINING:
-        {
-            const int power = _spell_power(spell, evoked);
-            return make_stringf("2d5+1d%d", power / 7);
-        }
         case SPELL_ABSOLUTE_ZERO:
             return "∞";
         case SPELL_CONJURE_FLAME:

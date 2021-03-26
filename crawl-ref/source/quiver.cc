@@ -133,7 +133,8 @@ namespace quiver
         bool af_hp_check = false;
         bool af_mp_check = false;
         if (!clua.callfn("af_hp_is_low", ">b", &af_hp_check)
-            || uses_mp() && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
+            || uses_mp()
+               && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
@@ -142,7 +143,10 @@ namespace quiver
         if (af_hp_check)
             mpr("You are too injured to fight recklessly!");
         else if (af_mp_check)
-            mpr("You are too depleted to draw on your mana recklessly!");
+        {
+            mprf("You are too depleted to draw on your %s recklessly!",
+                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+        }
         return af_hp_check || af_mp_check;
     }
 
@@ -740,7 +744,7 @@ namespace quiver
 
         virtual bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -971,7 +975,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -1767,7 +1771,10 @@ namespace quiver
             switch (you.inv[wand_slot].unrand_idx)
             {
             case UNRAND_DISPATER:
-                return enough_hp(14, quiet) && enough_mp(4, quiet); // TODO: code duplication...
+                // TODO: code duplication...
+                if (you.has_mutation(MUT_HP_CASTING))
+                    return enough_hp(18, quiet);
+                return enough_hp(14, quiet) && enough_mp(4, quiet);
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:
@@ -1954,7 +1961,7 @@ namespace quiver
     shared_ptr<action> find_action_from_launcher(const item_def *item)
     {
         // Felids have no use for launchers or ammo.
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return make_shared<ammo_action>(-1);
 
         int slot = -1;
@@ -2523,7 +2530,7 @@ namespace quiver
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(you.species == SP_FELID
+              any_items(you.has_mutation(MUT_NO_GRASPING)
                 ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
                 : inv_count() > 0)
         {

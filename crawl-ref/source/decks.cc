@@ -942,6 +942,7 @@ static int _get_power_level(int power)
 
     // other functions in this file will break if this assertion is violated
     ASSERT(power_level >= 0 && power_level <= 2);
+    dprf("power level: %d", power_level);
     return power_level;
 }
 
@@ -1167,45 +1168,8 @@ static void _elixir_card(int power)
 {
     int power_level = _get_power_level(power);
 
-    you.duration[DUR_ELIXIR_HEALTH] = 0;
-    you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    switch (power_level)
-    {
-    case 0:
-        if (coinflip())
-            you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
-        break;
-    case 1:
-        if (you.hp * 2 < you.hp_max)
-            you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 10);
-        break;
-    default:
-        you.set_duration(DUR_ELIXIR_HEALTH, 10);
-        you.set_duration(DUR_ELIXIR_MAGIC, 10);
-    }
-
-    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-        mpr("You begin rapidly regenerating health and magic.");
-    else if (you.duration[DUR_ELIXIR_HEALTH])
-        mpr("You begin rapidly regenerating.");
-    else
-        mpr("You begin rapidly regenerating magic.");
-
-    apply_visible_monsters([=](monster& mon)
-    {
-        if (mon.wont_attack())
-        {
-            const int hp = mon.max_hit_points / (4 - power_level);
-            if (mon.heal(hp + random2avg(hp, 2)))
-               simple_monster_message(mon, " is healed.");
-        }
-        return true;
-    });
+    you.set_duration(DUR_ELIXIR, 1 + 3 * power_level + random2(3));
+    mpr("You begin rapidly regenerating health and magic.");
 }
 
 // Special case for *your* god, maybe?
