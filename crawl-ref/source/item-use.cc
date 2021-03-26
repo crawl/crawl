@@ -1369,9 +1369,9 @@ bool takeoff_armour(int item)
 // Returns a list of possible ring slots.
 static vector<equipment_type> _current_ring_types()
 {
-    vector<equipment_type> ret = species_ring_slots(you.species);
-    if (you.has_mutation(MUT_MISSING_HAND))
-        ret.pop_back();
+    vector<equipment_type> ret = species_ring_slots(you.species,
+                                        you.has_mutation(MUT_MISSING_HAND));
+
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
         ret.push_back(EQ_RING_AMULET);
 

@@ -180,30 +180,37 @@ bool species_bans_eq(species_type species, equipment_type eq)
     return false;
 }
 
+equipment_type species_sacrificial_arm(species_type species)
+{
+    // this is a bit special-case-y because the sac slot doesn't follow
+    // from the enum; for 2-armed species it is the left ring (which is first),
+    // but for 8-armed species it is ring 8 (which is last).
+    // XX maybe swap the targeted sac hand? But this requires some painful
+    // save compat
+    return species_arm_count(species) == 2 ? EQ_LEFT_RING : EQ_RING_EIGHT;
+}
+
 /**
- * Get ring slots available to a species. The last slot is the one that would
- * be missing under MUT_MISSING_HAND.
+ * Get ring slots available to a species.
+ * @param species the species to check
+ * @param missing_hand if true, removes a designated hand from the result
  */
-vector<equipment_type> species_ring_slots(species_type species)
+vector<equipment_type> species_ring_slots(species_type species, bool missing_hand)
 {
     vector<equipment_type> result;
-    if (species_arm_count(species) == 2)
+
+    const equipment_type missing = missing_hand
+                        ? species_sacrificial_arm(species) : EQ_NONE;
+
+    for (int i = EQ_FIRST_JEWELLERY; i <= EQ_LAST_JEWELLERY; i++)
     {
-        // ugh; sac hand sacrifices either left or eight, but these are in an
-        // inconsistent order in equipment_type. Ensure that the sacrificial
-        // arm ends up last. XX reorder this enum
-        result.push_back(EQ_RIGHT_RING);
-        result.push_back(EQ_LEFT_RING);
-    }
-    else
-    {
-        // generic code: works for the == 2 case as well except for the
-        // sacrifice issue noted above.
-        for (int i = EQ_FIRST_JEWELLERY; i <= EQ_LAST_JEWELLERY; i++)
+        const auto eq = static_cast<equipment_type>(i);
+        if (eq != EQ_AMULET
+            && eq != EQ_RING_AMULET
+            && eq != missing
+            && !species_bans_eq(species, eq))
         {
-            const auto eq = static_cast<equipment_type>(i);
-            if (eq != EQ_AMULET && eq != EQ_RING_AMULET && !species_bans_eq(species, eq))
-                result.push_back(eq);
+            result.push_back(eq);
         }
     }
     return result;
