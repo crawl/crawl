@@ -43,6 +43,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h" // cancel_tornado
+#include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -1600,4 +1601,47 @@ void attract_monsters()
         mi->apply_location_effects(old_pos);
         mons_relocated(mi);
     }
+}
+
+bool word_of_chaos(int pow)
+{
+    vector<monster *> targets;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi) 
+    {
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type))
+            targets.push_back(*mi);
+    }
+    
+    if (targets.empty())
+    {
+        if (!yesno("There are no visible enemies. Speak a word of chaos anyway?",
+            true, 'n'))
+        {
+            return false;
+        }
+    }
+        
+    shuffle_array(targets);
+    
+    mprf("You invoke a word of chaos!");
+    for (auto mons : targets)
+    {
+        if (mons->no_tele())
+            continue;
+            
+        blink_away(mons, &you, false);
+        if (x_chance_in_y(pow, 500))
+            ensnare(mons);
+        if (x_chance_in_y(pow, 500))
+            do_slow_monster(*mons, &you, 20 + random2(pow));
+        if (x_chance_in_y(pow, 500))
+        {
+            mons->add_ench(mon_enchant(ENCH_FEAR, 0, &you));
+            behaviour_event(mons, ME_SCARE, &you);
+        }
+    }
+    
+    you.increase_duration(DUR_EXHAUSTED, 15 + random2(10));
+    drain_player(50, false, true);
+    return true;
 }

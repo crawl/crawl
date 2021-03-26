@@ -3419,6 +3419,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Demonspawn-only
     case ABIL_DAMNATION:
         return TILEG_ABILITY_HURL_DAMNATION;
+    case ABIL_WORD_OF_CHAOS:
+        return TILEG_ERROR; // TODO
     // Tengu, Draconians
     case ABIL_FLY:
         return TILEG_ABILITY_FLIGHT;

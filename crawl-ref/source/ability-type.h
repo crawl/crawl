@@ -33,6 +33,7 @@ enum ability_type
     // Species-specific abilities.
     // Demonspawn-only
     ABIL_DAMNATION,
+    ABIL_WORD_OF_CHAOS,
     // Tengu, Draconians
     ABIL_FLY,
 #if TAG_MAJOR_VERSION == 34

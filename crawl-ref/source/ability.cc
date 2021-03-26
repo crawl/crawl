@@ -310,6 +310,8 @@ static const ability_def Ability_List[] =
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
+    { ABIL_WORD_OF_CHAOS, "Word of Chaos",
+        6, 0, 0, {fail_basis::xl, 50, 1}, abflag::exhaustion|abflag::max_hp_drain },
 
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
         0, 0, 0, {}, abflag::instant | abflag::none },
@@ -2187,6 +2189,19 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         }
         break;
+        
+    case ABIL_WORD_OF_CHAOS:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to invoke a word of chaos.");
+            return spret::abort;
+        }
+        fail_check();
+        if (!word_of_chaos(40 + you.experience_level * 6))
+        {
+            return spret::abort;
+        }
+        break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())
@@ -3475,6 +3490,9 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
+    case ABIL_WORD_OF_CHAOS:
+        return you.get_mutation_level(MUT_WORD_OF_CHAOS) 
+                && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
     case ABIL_BLINK:
@@ -3551,6 +3569,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_FLY,
             ABIL_STOP_FLYING,
             ABIL_DAMNATION,
+            ABIL_WORD_OF_CHAOS,
             ABIL_END_TRANSFORMATION,
             ABIL_BLINK,
             ABIL_RENOUNCE_RELIGION,
