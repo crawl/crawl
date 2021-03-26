@@ -2460,8 +2460,7 @@ try_again:
 
     ret.clear();
     int absfacet = 0;
-    int ice_elemental = 0;
-    int fire_elemental = 0;
+    int elemental = 0;
     int cloud_producing = 0;
 
     set<const facet_def *> facets_used;
@@ -2490,11 +2489,8 @@ try_again:
 
                 if (i==0)
                 {
-                    if (m == MUT_COLD_RESISTANCE || m == MUT_CONDENSATION_SHIELD)
-                        ice_elemental++;
-
-                    if (m == MUT_HEAT_RESISTANCE || m == MUT_IGNITE_BLOOD)
-                        fire_elemental++;
+                    if (m == MUT_CONDENSATION_SHIELD || m == MUT_IGNITE_BLOOD)
+                        elemental++;
 
                     if (m == MUT_FOUL_STENCH || m == MUT_IGNITE_BLOOD)
                         cloud_producing++;
@@ -2505,7 +2501,7 @@ try_again:
         }
     }
 
-    if (ice_elemental + fire_elemental > 1)
+    if (elemental > 1)
         goto try_again;
 
     if (cloud_producing > 1)
