@@ -37,7 +37,7 @@ SHUFFLE: 34
 MONS:    training dummy hp:10 ; whip mundane
 MONS:    rat always_corpse
 MONS:    wyvern
-MONS:    endoplasm hp:10
+MONS:    endoplasm hp:12 name:ooze n_rpl n_des n_spe spells:.
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
 MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")
