@@ -2606,7 +2606,7 @@ static void _gain_innate_spells()
         auto spindex = find(begin(you.spells), end(you.spells), spell);
         if (spindex != end(you.spells))
             continue; // already learned that one
-        
+
         mprf("The power to cast %s wells up from within.", spell_title(spell));
         add_spell_to_memory(spell);
     }
