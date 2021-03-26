@@ -78,6 +78,14 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
+Word of Chaos ability
+
+Speaks a word of chaos, forcing enemies nearby to blink away from the user.
+Additionally, those affected may be slowed, ensnared, or terrified by the
+experience. Invoking a word of chaos is no easy feat and will drain the
+user somewhat. Additionally, there will be a short time before the ability
+can be used again.
+%%%%
 Cancel Portal Projectile ability
 
 Ends your Portal Projectile status.

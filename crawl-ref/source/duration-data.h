@@ -555,6 +555,11 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR, WHITE, "Elixir",
       "elixired", "elixir",
       "You are rapidly regenerating health and magic.", D_NO_FLAGS},
+    { DUR_WORD_OF_CHAOS_COOLDOWN,
+      YELLOW, "-Word",
+      "word of chaos cooldown", "",
+      "", D_NO_FLAGS,
+      {{ "You are ready to speak a word of chaos again." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

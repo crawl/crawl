@@ -33,6 +33,7 @@ enum ability_type
     // Species-specific abilities.
     // Demonspawn-only
     ABIL_DAMNATION,
+    ABIL_WORD_OF_CHAOS,
 #if TAG_MAJOR_VERSION == 34
     ABIL_FLY,
     ABIL_WISP_BLINK,

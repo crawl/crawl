@@ -1696,6 +1696,23 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_CORRUPTING_PRESENCE, 0, 2, mutflag::good, false,
+  "corrupting presence",
+
+  {"Your presence sometimes corrodes those you injure.",
+   "Your presence sometimes corrodes or deforms those you injure", ""},
+  {"You feel corrupt.", "Your corrupting presence intensifies.", ""},
+  {"", "", ""},
+},
+
+{ MUT_WORD_OF_CHAOS, 0, 1, mutflag::good, false,
+  "word of chaos",
+
+  {"You can speak a Word of Chaos.", "", ""},
+  {"Your tongue twists.", "", ""},
+  {"", "", ""},
+},
+
 { MUT_COLD_BLOODED, 0, 1, mutflag::bad, true,
   "cold-blooded",
 

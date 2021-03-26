@@ -4444,6 +4444,19 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
+        // Trigger corrupting presence
+        if (agent && agent->is_player() && alive()
+            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        {
+            if (one_chance_in(12))
+                this->corrode_equipment("");
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+            {
+                this->malmutate("");
+            }
+        }
+
         blame_damage(agent, amount);
 
         if (mons_is_fragile(*this) && !has_ench(ENCH_SLOWLY_DYING))
