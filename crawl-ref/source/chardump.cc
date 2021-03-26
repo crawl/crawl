@@ -1670,9 +1670,6 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     stash_file_name += ".lst";
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
 
-    string map_file_name = file_name + ".map";
-    dump_map(map_file_name.c_str());
-
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());
 
