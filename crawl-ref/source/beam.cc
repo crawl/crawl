@@ -3158,6 +3158,21 @@ void bolt::affect_player_enchantment(bool resistible)
                 mprf("You%s", you.resist_margin_phrase(margin).c_str());
             }
         }
+        
+        // punish the monster if we're a willful demon
+        if (you.get_mutation_level(MUT_DEMONIC_WILL))
+        {
+            monster* mon = monster_by_mid(source_id);
+            if (mon && mon->alive())
+            {
+                int damage_roll = 3 + random2(11);
+                mprf("Your will lashes out at %s%s", mon->observable() ? 
+                    mon->name(DESC_THE).c_str() : "something",
+                    attack_strength_punctuation(damage_roll).c_str());
+                mon->hurt(&you, damage_roll, BEAM_DAMNATION);
+            }
+        }
+        
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.
         if (flavour == BEAM_TELEPORT && player_in_branch(BRANCH_ABYSS))
