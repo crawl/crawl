@@ -2216,10 +2216,11 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
-        damage = mons_adjust_flavoured(mons, beam, damage);
+        damage = mons_adjust_flavoured(mons, beam, damage, false);
         mprf("%s is struck by an arc of lightning%s",
                 mons->name(DESC_THE).c_str(),
                 attack_strength_punctuation(damage).c_str());
+        damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (agent.is_player())
             _player_hurt_monster(*mons, damage, beam.flavour, false);
