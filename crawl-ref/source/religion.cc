@@ -3592,7 +3592,7 @@ static void _join_ru()
 }
 
 /// Setup for joining the furious barbarians of Trog.
-static void _join_trog()
+void join_trog_skills()
 {
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
@@ -3657,7 +3657,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_PAKELLAS, _join_pakellas },
 #endif
     { GOD_RU, _join_ru },
-    { GOD_TROG, _join_trog },
+    { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
 };
 
