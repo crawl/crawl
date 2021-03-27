@@ -781,11 +781,15 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = freeze_damage(pow).roll();
-    int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
+    // calculate the resist adjustment to punctuate
+    int hurted = mons_adjust_flavoured(mons, beam, orig_hurted, false);
     mprf("You freeze %s%s%s",
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but do no damage",
          attack_strength_punctuation(hurted).c_str());
+
+    // print the resist message and expose to the cold
+    mons_adjust_flavoured(mons, beam, orig_hurted);
 
     _player_hurt_monster(*mons, hurted, beam.flavour, false);
 
