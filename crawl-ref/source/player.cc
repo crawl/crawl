@@ -4178,7 +4178,7 @@ static double _poison_dur_to_aut(double dur)
     if (dur < poison_denom * poison_max_hp_aut * 10.0)
         return 10.0 * (poison_denom + log(dur / min_speed_dur) / decay);
     return 10.0 * (poison_denom + log(poison_max_hp_aut / poison_min_hp_aut) / decay)
-         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut * 10.0;
+         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut;
 }
 
 // The inverse of the above function, i.e. the amount of poison needed
