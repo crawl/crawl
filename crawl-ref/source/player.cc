@@ -1749,7 +1749,7 @@ int player_movement_speed()
         ? 10
         : form_base_movespeed(you.form);
 
-    if (you.in_water())
+    if (feat_is_water(env.grid(you.pos())))
     {
         if (you.form == transformation::hydra
             || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
@@ -1983,8 +1983,9 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
 
-    // Merfolk get a 25% evasion bonus in water.
-    if (you.in_water() && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+    // Merfolk get a 25% evasion bonus near water.
+    if (feat_is_water(env.grid(you.pos()))
+        && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
     {
         const int ev_bonus = max(2 * scale, prescaled_ev / 4);
         return prescaled_ev + ev_bonus;
@@ -3007,11 +3008,11 @@ int player_stealth()
 
     if (!you.airborne())
     {
-        if (you.in_water())
+        if (feat_is_water(env.grid(you.pos())))
         {
             if (you.has_mutation(MUT_NIMBLE_SWIMMER))
                 stealth += STEALTH_PIP;
-            else if (!you.can_swim() && !you.extra_balanced())
+            else if (you.in_water() && !you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
         else if (you.has_usable_hooves())

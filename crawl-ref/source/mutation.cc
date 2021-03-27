@@ -39,6 +39,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "terrain.h"
 #include "transform.h"
 #include "unicode.h"
 #include "xom.h"
@@ -415,9 +416,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (mut == MUT_DEMONIC_GUARDIAN && you.get_mutation_level(MUT_NO_LOVE))
         return mutation_activity_type::INACTIVE;
 
-    if (mut == MUT_NIMBLE_SWIMMER && you.has_innate_mutation(MUT_MERTAIL))
+    if (mut == MUT_NIMBLE_SWIMMER)
     {
-        if (you.has_mutation(MUT_MERTAIL) && you.fishtail)
+        if (feat_is_water(env.grid(you.pos())))
             return mutation_activity_type::FULL;
         else
             return mutation_activity_type::INACTIVE;
