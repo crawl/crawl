@@ -336,7 +336,7 @@ public:
     virtual int evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
-    virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int equip_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
     virtual bool rampaging(bool calc_unid = true, bool items = true) const;
 

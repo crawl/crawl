@@ -2910,8 +2910,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case POT_LIGNIFY:
             return you.is_lifeless_undead(temp);
         case POT_FLIGHT:
-            return you.permanent_flight()
-                   || you.racial_permanent_flight();
+            return you.permanent_flight();
         case POT_HEAL_WOUNDS:
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
@@ -2982,9 +2981,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you_worship(GOD_TROG);
 
         case RING_FLIGHT:
-            return you.permanent_flight()
-                   || you.racial_permanent_flight()
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
+            return you.permanent_flight(false);
 
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);

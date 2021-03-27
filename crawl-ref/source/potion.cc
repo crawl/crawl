@@ -323,7 +323,6 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);
         return you.airborne();
     }

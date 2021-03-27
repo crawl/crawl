@@ -299,8 +299,8 @@ mode you can directly target single monsters by use of the monster list. Use
 'Ctrl-L' to toggle this.
 
 Sometimes characters will be able to use special abilities, e.g. the Naga's
-ability to spit poison or the magical power to fly granted by a ring. These are
-accessed through the 'a' command.
+ability to spit poison or the magical power to turn invisible granted by a
+scarf of invisibility. These are accessed through the 'a' command.
 
 ****************************************
 D. Exploring the dungeon
@@ -1555,7 +1555,7 @@ Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They have low health, but large
   amounts of innate armour which increases further as they gain levels. They
-  eventually gain the ability to fly continuously.
+  eventually gain the ability to fly.
 
   Gargoyles' partially living form grants them immunity to poison, as well as
   resistance to electricity, and protection from some effects of necromancy.
@@ -1699,9 +1699,8 @@ Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
   feet, the Tengu can wear all types of armour except helmets and boots. Despite
-  their lack of wings, powerful Tengu can fly magically, and very powerful
-  members of this species can stay in the air indefinitely. Their movement speed
-  and evasion are increased slightly while flying.
+  their lack of wings, powerful Tengu can fly magically, and their movement
+  speed and evasion are increased slightly while flying.
 
   They are experts at all forms of fighting, including the magical arts of
   combat (conjurations, summonings and, to a lesser extent, necromancy). They
@@ -1920,8 +1919,8 @@ Grey Draconians
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
   good at air magic but feel cumbersome with earth magic. Their wings will
-  eventually grow larger, which allows them to fly continuously when combined
-  with their natural skill with air magic.
+  eventually grow larger, which allows them to fly when combined with their
+  natural skill with air magic.
 
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes in
@@ -2981,8 +2980,8 @@ rXXX
   levels of negative energy resistance), rC- (cold vulnerability).
 
 \+XXX
-  signifies an ability you can evoke via the 'a' command. E.g. +Fly (evocable,
-  temporary flight).
+  signifies an ability you can evoke via the 'a' command. E.g. +Inv (evocable,
+  temporary invisibility).
 
 \-XXX
   signifies a suppressed ability. E.g. -Cast (spellcasting forbidden).

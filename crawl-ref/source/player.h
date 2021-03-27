@@ -786,8 +786,7 @@ public:
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
-    bool cancellable_flight() const;
-    bool permanent_flight() const;
+    bool permanent_flight(bool include_equip=true) const;
     bool racial_permanent_flight() const;
     int get_noise_perception(bool adjusted = true) const;
     bool is_dragonkind() const override;

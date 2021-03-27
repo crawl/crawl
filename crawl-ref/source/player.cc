@@ -4805,6 +4805,9 @@ void enable_emergency_flight()
  */
 bool land_player(bool quiet)
 {
+    // re-update the equipment cache: any sources of flight from equipment?
+    you.attribute[ATTR_PERM_FLIGHT] = you.equip_flight() ? 1 : 0;
+
     // there was another source keeping you aloft
     if (you.airborne())
         return false;
@@ -4821,7 +4824,6 @@ bool land_player(bool quiet)
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false);
     return true;
@@ -4980,8 +4982,6 @@ player::player()
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
-    // Default to flying the first time you wear boots of flying.
-    attribute[ATTR_LAST_FLIGHT_STATUS] = 1;
     quiver.init(ENDOFPACK);
 
     last_timer_effect.init(0);
@@ -5249,20 +5249,12 @@ player::~player()
 
 bool player::airborne() const
 {
-    // Might otherwise be airborne, but currently stuck to the ground
     if (get_form()->forbids_flight())
         return false;
 
-    if (duration[DUR_FLIGHT]
+    return you.duration[DUR_FLIGHT]   // potions, tornado
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
-        || attribute[ATTR_PERM_FLIGHT]
-        || get_form()->enables_flight()
-        || has_mutation(MUT_FLOAT))
-    {
-        return true;
-    }
-
-    return false;
+        || permanent_flight(true);
 }
 
 bool player::is_banished() const
@@ -6443,17 +6435,6 @@ bool player::fights_well_unarmed(int heavy_armour_penalty)
         && x_chance_in_y(2, 1 + heavy_armour_penalty);
 }
 
-bool player::cancellable_flight() const
-{
-    return duration[DUR_FLIGHT] && !permanent_flight()
-           && !attribute[ATTR_FLIGHT_UNCANCELLABLE];
-}
-
-bool player::permanent_flight() const
-{
-    return attribute[ATTR_PERM_FLIGHT] || has_mutation(MUT_FLOAT);
-}
-
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
@@ -6461,9 +6442,25 @@ bool player::racial_permanent_flight() const
         || has_mutation(MUT_FLOAT);
 }
 
+/**
+ * Check for sources of flight from species, forms, and (optionally) equipment.
+ */
+bool player::permanent_flight(bool include_equip) const
+{
+    if (get_form()->forbids_flight())
+        return false;
+
+    return include_equip && attribute[ATTR_PERM_FLIGHT] // equipment
+        || racial_permanent_flight()                    // species muts
+        || get_form()->enables_flight();
+}
+
+/**
+ * Does the player get the tengu flight perks?
+ */
 bool player::tengu_flight() const
 {
-    // Only Tengu get perks for flying.
+    // XX could tengu just get MUT_FLOAT?
     return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 

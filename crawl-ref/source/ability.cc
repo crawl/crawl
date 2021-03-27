@@ -2188,18 +2188,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.go_berserk(true);
         break;
 
-    case ABIL_FLY:
-        fail_check();
-        // Te or Dr/Gr wings
-        if (you.racial_permanent_flight())
-        {
-            you.attribute[ATTR_PERM_FLIGHT] = 1;
-            float_player();
-        }
-        if (you.has_mutation(MUT_TENGU_FLIGHT))
-            mpr("You feel very comfortable in the air.");
-        break;
-
     // DEMONIC POWERS:
     case ABIL_DAMNATION:
         fail_check();
@@ -2235,28 +2223,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 #endif
 
-    case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
-        fail_check();
-        ASSERT(!get_form()->forbids_flight());
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-        {
-            bool standing = !you.airborne();
-            you.attribute[ATTR_PERM_FLIGHT] = 1;
-            if (standing)
-                float_player();
-            else
-                mpr("You feel more buoyant.");
-        }
-        else
-        {
-#if TAG_MAJOR_VERSION == 34
-            surge_power(you.spec_evoke());
-#endif
-            fly_player(
-                player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
-        }
-        break;
-
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2272,13 +2238,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.duration[DUR_PORTAL_PROJECTILE] = 0;
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
         mpr("You are no longer teleporting projectiles to their destination.");
-        break;
-
-    case ABIL_STOP_FLYING:
-        fail_check();
-        you.duration[DUR_FLIGHT] = 0;
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        land_player();
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -3488,19 +3447,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
                 && !you.vampire_alive
                 && you.form != transformation::bat;
-    case ABIL_FLY:
-        return you.racial_permanent_flight()
-            && !you.attribute[ATTR_PERM_FLIGHT]
-            && !you.has_mutation(MUT_FLOAT);
-    case ABIL_STOP_FLYING:
-        // handles both species and evoke flight
-        // if (you.racial_permanent_flight() && you.attribute[ATTR_PERM_FLIGHT])
-        //     return true;
-        // TODO: dbl check tengu flight
-        return you.airborne()
-            && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-            && !you.has_mutation(MUT_FLOAT);
-
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
@@ -3532,14 +3478,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                                 && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_FLIGHT:
-        return you.evokable_flight() && !you.get_mutation_level(MUT_NO_ARTIFICE)
-            // Has no effect on permanently flying species
-            && !you.racial_permanent_flight()
-            // you can still evoke perm flight if you have temporary flight
-            && (!you.airborne()
-                || !you.permanent_flight()
-                   && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING));
     default:
         // removed abilities handled here
         return false;

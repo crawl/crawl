@@ -416,7 +416,7 @@ bool Form::player_can_fly() const
 {
     return !forbids_flight()
            && (enables_flight()
-               || you.racial_permanent_flight() && you.permanent_flight());
+               || you.racial_permanent_flight()); // XX other cases??
 }
 
 /**
@@ -1393,17 +1393,17 @@ static bool _flying_in_new_form(transformation which_trans)
     if (get_form(which_trans)->forbids_flight())
         return false;
 
-    // If our flight is uncancellable (or tenguish) then it's not from evoking
-    if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-        || you.permanent_flight() && you.racial_permanent_flight())
-    {
+    // sources of permanent flight besides equipment
+    if (you.permanent_flight(false))
         return true;
-    }
 
+    // not airborne right now (XX does this handle emergency flight correctly?)
     if (!you.duration[DUR_FLIGHT] && !you.attribute[ATTR_PERM_FLIGHT])
         return false;
 
-    int sources = you.evokable_flight();
+    // Finally, do the calculation about what would be melded: are there equip
+    // sources left?
+    int sources = you.equip_flight();
     int sources_removed = 0;
     for (auto eq : _init_equipment_removal(which_trans))
     {

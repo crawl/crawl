@@ -701,7 +701,6 @@ static void _decrement_durations()
         else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             you.duration[DUR_FLIGHT] = 0;
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }

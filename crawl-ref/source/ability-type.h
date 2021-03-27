@@ -33,13 +33,10 @@ enum ability_type
     // Species-specific abilities.
     // Demonspawn-only
     ABIL_DAMNATION,
-    // Tengu, Draconians
+#if TAG_MAJOR_VERSION == 34
     ABIL_FLY,
-#if TAG_MAJOR_VERSION == 34
     ABIL_WISP_BLINK,
-#endif
     ABIL_STOP_FLYING,
-#if TAG_MAJOR_VERSION == 34
     ABIL_MUMMY_RESTORATION,
 #endif
     // Vampires
@@ -69,8 +66,8 @@ enum ability_type
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
-    ABIL_EVOKE_FLIGHT,
 #if TAG_MAJOR_VERSION == 34
+    ABIL_EVOKE_FLIGHT,
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,

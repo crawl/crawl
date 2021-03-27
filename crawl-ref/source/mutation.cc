@@ -33,7 +33,6 @@
 #include "mon-place.h"
 #include "notes.h"
 #include "output.h"
-#include "player-equip.h" // lose_permafly_source
 #include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
@@ -2118,7 +2117,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_BIG_WINGS:
-        lose_permafly_source();
+        land_player();
         break;
 
     case MUT_HORNS:

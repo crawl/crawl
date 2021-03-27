@@ -1598,9 +1598,8 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight = you.airborne()
-          && !you.racial_permanent_flight()
-          && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-          && (you.evokable_flight() == 1);
+                                        && !you.permanent_flight(false)
+                                        && you.equip_flight() == 1;
 
     const dungeon_feature_type feat = env.grid(you.pos());
 
@@ -1608,7 +1607,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
         && is_feat_dangerous(feat, false, true))
     {
         if (!quiet)
-            mpr("Losing flight right now would be fatal!");
+            mpr("Losing flight right now would be extremely painful!");
         return false;
     }
 

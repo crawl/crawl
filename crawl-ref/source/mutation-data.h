@@ -669,10 +669,10 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_TENGU_FLIGHT, 0, 1, mutflag::good, false,
-  "able to fly",
+  "nimble flight",
 
-  {"You can fly continuously.", "", ""},
-  {"You have gained the ability to fly.", "", ""},
+  {"Your magical nature lets you fly swiftly and evasively.", "", ""},
+  {"Your magical nature develops, letting you fly swiftly and evasively.", "", ""},
   {"", "", ""},
 },
 
@@ -848,7 +848,7 @@ static const mutation_def mut_data[] =
 { MUT_BIG_WINGS, 4, 1, mutflag::good, true,
   "big wings",
 
-  {"Your large and strong wings let you fly indefinitely.", "", ""},
+  {"Your large and strong wings let you fly.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
 },

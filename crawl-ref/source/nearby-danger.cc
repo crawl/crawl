@@ -453,7 +453,6 @@ void revive()
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;

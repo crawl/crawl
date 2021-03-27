@@ -12,9 +12,6 @@ bool unequip_item(equipment_type slot, bool msg=true, bool skip_effects=false);
 bool meld_slot(equipment_type slot);
 bool unmeld_slot(equipment_type slot);
 
-// XXX: find a better place for this.
-void lose_permafly_source();
-
 void equip_effect(equipment_type slot, int item_slot, bool unmeld, bool msg);
 void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg);
 

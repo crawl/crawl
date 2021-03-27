@@ -1082,7 +1082,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_YOU_POISON:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_FLYING:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
@@ -2027,17 +2026,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEW_ABILITY_ITEM:
         // Specialcase flight because it's a guaranteed trigger in the
         // tutorial.
-        if (you.evokable_flight())
+        if (you.equip_flight())
         {
-            text << "Flight will allow you to cross deep water or lava. To "
-                    "activate it, select the corresponding ability in the "
-                    "ability menu (<w>%</w>"
-#ifdef USE_TILE_LOCAL
-                    " or via <w>mouseclick</w> in the <w>command panel</w>"
-#endif
-                    "). Once flying, keep an eye on the status line and "
-                    "messages, as most forms of flight have a limited "
-                    "duration.";
+            text << "Flight will allow you to cross deep water or lava. Items "
+                    "that allow you to fly will activate automatically when "
+                    "worn.";
         }
         else
         {
@@ -2060,15 +2053,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
                 ") for details.";
         cmd.push_back(CMD_RESISTS_SCREEN);
-        break;
-
-    case HINT_FLYING:
-        if (you.evokable_flight())
-        {
-            text << "To stop flying, use the corresponding ability "
-                    "in the ability menu (<w>%</w>).";
-            cmd.push_back(CMD_USE_ABILITY);
-        }
         break;
 
             // TODO: rethink this v
