@@ -320,9 +320,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, {}, abflag::delay},
     { ABIL_REVIVIFY, "Revivify",
         0, 0, 0, {}, abflag::delay},
-
+#if TAG_MAJOR_VERSION == 34
     { ABIL_FLY, "Fly", 3, 0, 0, {fail_basis::xl, 42, 3}, abflag::none },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
+#endif
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
 
@@ -356,9 +357,9 @@ static const ability_def Ability_List[] =
 #if TAG_MAJOR_VERSION == 34
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
         0, 0, 0, {}, abflag::none },
-#endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
         1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
+#endif
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
         5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
@@ -1376,16 +1377,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // Doing these would outright kill the player.
     // (or, in the case of the stat-zeros, they'd at least be extremely
     // dangerous.)
-    if (abil.ability == ABIL_STOP_FLYING)
-    {
-        if (is_feat_dangerous(env.grid(you.pos()), false, true))
-        {
-            if (!quiet)
-                mpr("Stopping flight right now would be fatal!");
-            return false;
-        }
-    }
-    else if (abil.ability == ABIL_END_TRANSFORMATION)
+    if (abil.ability == ABIL_END_TRANSFORMATION)
     {
         if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
@@ -1422,13 +1414,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if ((abil.ability == ABIL_EVOKE_FLIGHT
-         || abil.ability == ABIL_TRAN_BAT
-         || abil.ability == ABIL_FLY)
-        && !flight_allowed(quiet))
-    {
+    if (abil.ability == ABIL_TRAN_BAT && !flight_allowed(quiet))
         return false;
-    }
 
 
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
@@ -3519,8 +3506,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_TRAN_BAT,
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
-            ABIL_FLY,
-            ABIL_STOP_FLYING,
             ABIL_DAMNATION,
             ABIL_END_TRANSFORMATION,
             ABIL_BLINK,
@@ -3530,8 +3515,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
-            ABIL_EVOKE_TURN_INVISIBLE,
-            ABIL_EVOKE_FLIGHT
+            ABIL_EVOKE_TURN_INVISIBLE
         };
 
     for (auto a : check_order)

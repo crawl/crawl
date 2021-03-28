@@ -3419,11 +3419,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Demonspawn-only
     case ABIL_DAMNATION:
         return TILEG_ABILITY_HURL_DAMNATION;
-    // Tengu, Draconians
-    case ABIL_FLY:
-        return TILEG_ABILITY_FLIGHT;
-    case ABIL_STOP_FLYING:
-        return TILEG_ABILITY_FLIGHT_END;
     // Vampires
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
@@ -3449,8 +3444,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
     case ABIL_EVOKE_TURN_VISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
-    case ABIL_EVOKE_FLIGHT:
-        return TILEG_ABILITY_EVOKE_FLIGHT;
     case ABIL_EVOKE_THUNDER:
         return TILEG_ABILITY_EVOKE_THUNDER;
 
