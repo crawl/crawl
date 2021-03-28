@@ -1756,7 +1756,7 @@ int player_movement_speed()
         {
             mv -= 4;
         }
-        else if (!you.can_swim())
+        else if (you.in_water() && !you.can_swim())
             mv += 6; // Wading through water is very slow.
     }
 
