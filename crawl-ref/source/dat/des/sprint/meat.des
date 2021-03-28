@@ -323,6 +323,9 @@
 
 function meatsprint_score (won)
     local time = you.turns()
+    if time > 1000 then
+        time = crawl.stepdown(time, 1000)
+    end
     local score = time * 100000
 
     if won then

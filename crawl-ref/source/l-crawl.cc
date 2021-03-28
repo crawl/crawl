@@ -31,7 +31,7 @@
 #include "religion.h"
 #include "sound.h"
 #include "state.h"
-#include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "throw.h"
 #include "tutorial.h"
@@ -1105,6 +1105,16 @@ LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_safe_checkint(ls, 1),
  * @function random_real
  */
 LUARET1(crawl_random_real, number, random_real())
+
+/*** Apply the crawl stepdown (step * log2(1 + value / step)) to a value.
+ * @tparam float value the value to apply the stepdown to
+ * @tparam float step the stepdown to appply
+ * @treturn number
+ * @function stepdown
+ */
+LUARET1(crawl_stepdown, number, stepdown(
+                    static_cast<double>(luaL_checknumber(ls, 1)),
+                    static_cast<double>(luaL_checknumber(ls, 1))))
 /*** Check if the player really wants to use their weapon.
  * @treturn boolean
  * @function weapon_check
@@ -1489,6 +1499,7 @@ static const struct luaL_reg crawl_clib[] =
     { "random_range",       crawl_random_range },
     { "div_rand_round",     crawl_div_rand_round },
     { "random_real",        crawl_random_real },
+    { "stepdown",           crawl_stepdown },
     { "worley",             crawl_worley },
     { "worley_diff",        crawl_worley_diff },
     { "split_bytes",        crawl_split_bytes },
