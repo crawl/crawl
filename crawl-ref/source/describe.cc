@@ -504,20 +504,20 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It allows you to eat raw meat even when not hungry.";
 #endif
     case AMU_MANA_REGENERATION:
-        return "It increases your magic regeneration.";
+        return "It increases your rate of magic regeneration.";
     case AMU_ACROBAT:
-        return "It helps you evade while moving and waiting.";
+        return "It increases your evasion while moving and waiting.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
     case AMU_GUARDIAN_SPIRIT:
-        return "It causes incoming damage to be split between your health and "
-               "magic.";
+        return "It causes incoming damage to be divided between your reserves "
+               "of health and magic.";
     case AMU_FAITH:
         return "It allows you to gain divine favour quickly.";
     case AMU_REFLECTION:
-        return "It shields you and reflects attacks.";
+        return "It reflects blocked missile attacks.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_INACCURACY:
         return "It reduces the accuracy of all your attacks.";
@@ -555,13 +555,11 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "poison", true},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_WILLPOWER, "It affects your willpower, "
-                          "your defense against some magical effects.", false},
         { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
         { ARTP_SEE_INVISIBLE, "It lets you see invisible.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
-        { ARTP_FLY, "It lets you fly.", false},
+        { ARTP_FLY, "It grants you flight.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISE, "It may make noises in combat.", false},
@@ -573,12 +571,13 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
-        { ARTP_RCORR, "It provides partial protection from all sources of acid and corrosion.",
+        { ARTP_REGENERATION, "It increases your rate of health regeneration.",
+          false},
+        { ARTP_RCORR, "It protects you from acid and corrosion.",
           false},
         { ARTP_RMUT, "It protects you from mutation.", false},
         { ARTP_CORRODE, "It may corrode you when you take damage.", false},
-        { ARTP_DRAIN, "It causes draining when unequipped.", false},
+        { ARTP_DRAIN, "It drains your maximum health when unequipped.", false},
         { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
@@ -633,6 +632,16 @@ static string _randart_descrip(const item_def &item)
             description += '\n';
             description += sdesc;
         }
+    }
+
+    if (known_proprt(ARTP_WILLPOWER))
+    {
+        const int stval = proprt[ARTP_WILLPOWER];
+        char buf[80];
+        snprintf(buf, sizeof buf, "\nIt %s%s your willpower.",
+                 (stval < -1 || stval > 1) ? "greatly " : "",
+                 (stval < 0) ? "decreases" : "increases");
+        description += buf;
     }
 
     if (known_proprt(ARTP_STEALTH))
@@ -1746,7 +1755,7 @@ static string _describe_armour(const item_def &item, bool verbose)
         switch (ego)
         {
         case SPARM_FIRE_RESISTANCE:
-            description += "It protects its wearer from heat.";
+            description += "It protects its wearer from fire.";
             break;
         case SPARM_COLD_RESISTANCE:
             description += "It protects its wearer from cold.";
@@ -1758,62 +1767,66 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It allows its wearer to see invisible things.";
             break;
         case SPARM_INVISIBILITY:
-            description += "When activated it hides its wearer from "
-                "the sight of others, but also drains their skills.";
+            description += "When activated it grants its wearer temporary "
+                           "invisibility, but also drains their maximum "
+                           "health.";
             break;
         case SPARM_STRENGTH:
-            description += "It increases the physical power of its wearer (+3 to strength).";
+            description += "It increases the strength of its wearer (Str +3).";
             break;
         case SPARM_DEXTERITY:
-            description += "It increases the dexterity of its wearer (+3 to dexterity).";
+            description += "It increases the dexterity of its wearer "
+                           "(Dex +3).";
             break;
         case SPARM_INTELLIGENCE:
-            description += "It makes you more clever (+3 to intelligence).";
+            description += "It increases the intelligence of its wearer "
+                           "(Int +3).";
             break;
         case SPARM_PONDEROUSNESS:
-            description += "It is very cumbersome, thus slowing your movement.";
+            description += "It is very cumbersome, slowing its wearer's "
+                           "movement.";
             break;
         case SPARM_FLYING:
-            description += "It can be activated to allow its wearer to "
-                "fly indefinitely.";
+            description += "It grants its wearer flight.";
             break;
         case SPARM_WILLPOWER:
-            description += "It increases its wearer's willpower, protecting against "
-                           "some magical effects.";
+            description += "It increases its wearer's willpower, protecting "
+                           "against certain magical effects.";
             break;
         case SPARM_PROTECTION:
-            description += "It protects its wearer from harm (+3 to AC).";
+            description += "It protects its wearer from most sources of "
+                           "damage (AC +3).";
             break;
         case SPARM_STEALTH:
             description += "It enhances the stealth of its wearer.";
             break;
         case SPARM_RESISTANCE:
-            description += "It protects its wearer from the effects "
-                "of both cold and heat.";
+            description += "It protects its wearer from the effects of both "
+                           "fire and cold.";
             break;
         case SPARM_POSITIVE_ENERGY:
-            description += "It protects its wearer from "
-                "the effects of negative energy.";
+            description += "It protects its wearer from the effects of "
+                           "negative energy.";
             break;
 
         // This is only for robes.
         case SPARM_ARCHMAGI:
-            description += "It increases the power of its wearer's "
-                "magical spells.";
+            description += "It increases the power of its wearer's magical "
+                           "spells.";
             break;
         case SPARM_PRESERVATION:
-            description += "It provides partial protection from all sources of "
-                "acid and corrosion.";
+            description += "It protects its wearer from the effects of acid "
+                           "and corrosion.";
             break;
 
         case SPARM_REFLECTION:
-            description += "It reflects blocked things back in the "
-                "direction they came from.";
+            description += "It reflects blocked missile attacks back in the "
+                           "direction they came from.";
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            description += "It shields its wearer from harm at the cost "
-                "of magical power.";
+            description += "It causes incoming damage to be divided between "
+                           "the wearer's reserves of health and magic.";
             break;
 
         case SPARM_NORMAL:
@@ -1826,8 +1839,9 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged "
-                           "weaponry, such as bows and javelins (Slay+4).";
+            description += "It improves its wearer's accuracy and damage with "
+                           "ranged weapons, such as bows and javelins "
+                           "(Slay +4).";
             break;
 
         // These are only for scarves.
@@ -1846,12 +1860,13 @@ static string _describe_armour(const item_def &item, bool verbose)
             break;
 
         case SPARM_SHADOWS:
-            description += "It shortens the distance the wearer can be seen at "
+            description += "It reduces the distance the wearer can be seen at "
                            "and can see.";
             break;
 
         case SPARM_RAMPAGING:
-            description += "Its wearer takes one free step when moving towards enemies.";
+            description += "Its wearer takes one free step when moving "
+                           "towards enemies.";
             break;
         }
     }

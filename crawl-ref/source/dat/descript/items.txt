@@ -20,9 +20,9 @@ be divided between the wearer's reserves of health and magic.
 %%%%
 amulet of magic regeneration
 
-An amulet that substantially increases the wearer's normal rate of magic
-regeneration. In order to function, it must first attune itself to the wearer's
-body with full reserves of magic.
+An amulet that increases the wearer's rate of magic regeneration. In order to
+function, it must first attune itself to the wearer's body with full reserves
+of magic.
 %%%%
 amulet of nothing
 
@@ -35,7 +35,7 @@ reflect any blocked ranged attacks back towards the attacker.
 %%%%
 amulet of regeneration
 
-An amulet that increases the wearer's natural regeneration rate. In order to
+An amulet that increases the wearer's rate of health regeneration. In order to
 function, it must first attune itself to the wearer's body at full health.
 %%%%
 amulet of the acrobat
@@ -728,8 +728,7 @@ cold.
 %%%%
 ring of flight
 
-A ring that allows its wearer to fly. Its power cannot be evoked while already
-airborne, making it ill-suited for longer trips above deadly liquid.
+A ring that grants its wearer flight.
 %%%%
 ring of ice
 
@@ -738,11 +737,11 @@ resistance to cold and enhances ice magic, but causes vulnerability to heat.
 %%%%
 ring of intelligence
 
-A ring that increases the mental ability of its wearer.
+A ring that increases the intelligence of its wearer.
 %%%%
 ring of resist corrosion
 
-A ring that provides partial protection from all sources of acid and corrosion.
+A ring that protects its wearer from the effects of acid and corrosion.
 %%%%
 ring of magical power
 
@@ -750,12 +749,11 @@ A ring that increases its wearer's reserves of magical power.
 %%%%
 ring of poison resistance
 
-A ring that provides protection from the effects of poisons and venom.
+A ring that protects its wearer from poison.
 %%%%
 ring of positive energy
 
-A ring that protects the life-force of its wearer from negative energy, making
-them partially immune to the draining effects of undead and necromantic magic.
+A ring that protects its wearer from the effects of negative energy.
 %%%%
 ring of protection
 
@@ -763,33 +761,33 @@ A ring that protects its wearer from most sources of damage.
 %%%%
 ring of protection from cold
 
-A ring that provides protection from cold.
+A ring that protects its wearer from cold.
 %%%%
 ring of protection from fire
 
-A ring that provides protection from fire.
+A ring that protects its wearer from fire.
 %%%%
 ring of willpower
 
-A ring that increases its wearer's willpower, helping to protect against
-certain magical effects.
+A ring that increases its wearer's willpower, protecting against certain
+magical effects.
 %%%%
 ring of see invisible
 
-A ring that allows its wearer to see those things hidden from view by magic.
+A ring that allows its wearer to see invisible things.
 %%%%
 ring of slaying
 
-A ring that increases the wearer's effectiveness with ranged weapons and melee
-attacks.
+A ring that increases the wearer's accuracy and damage with ranged weapons and
+melee attacks.
 %%%%
 ring of strength
 
-A ring that increases the physical strength of its wearer.
+A ring that increases the strength of its wearer.
 %%%%
 ring of wizardry
 
-A ring that increases the ability of its wearer to use magical spells.
+A ring that increases the success rate of its wearer's magical spells.
 %%%%
 robe
 
