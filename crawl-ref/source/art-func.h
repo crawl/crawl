@@ -666,7 +666,7 @@ static void _DEMON_AXE_unequip(item_def */*item*/, bool */*show_msgs*/)
 static void _WYRMBANE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     _equip_mpr(show_msgs,
-               species_is_draconian(you.species)
+               species::is_draconian(you.species)
                 || you.form == transformation::dragon
                    ? "You feel an uncomfortable desire to slay dragons."
                    : "You feel an overwhelming desire to slay dragons!");

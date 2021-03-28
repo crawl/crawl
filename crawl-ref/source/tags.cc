@@ -1366,7 +1366,7 @@ static void _tag_construct_char(writer &th)
     if (crawl_state.game_is_tutorial())
         marshallString2(th, crawl_state.map);
 
-    marshallString2(th, species_name(you.species));
+    marshallString2(th, species::name(you.species));
     marshallString2(th, you.religion ? god_name(you.religion) : "");
 
     // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
@@ -2501,7 +2501,7 @@ static void _tag_read_you(reader &th)
 {
     int count;
 
-    ASSERT(species_type_valid(you.species));
+    ASSERT(species::is_valid(you.species));
     ASSERT(job_type_valid(you.char_class));
     ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);

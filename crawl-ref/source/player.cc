@@ -229,8 +229,11 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 
     if (!msg.empty())
         mpr(msg);
-    else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
+    else if (species::likes_water(you.species) && feat_is_water(env.grid(p)))
+    {
+        // player normally likes water, but is in a form that doesn't
         mpr("You cannot enter water in your current form.");
+    }
     else
         canned_msg(MSG_UNTHINKING_ACT);
     return false;
@@ -623,7 +626,7 @@ bool player_in_connected_branch()
 bool player_likes_water(bool permanently)
 {
     return !permanently && you.can_water_walk()
-           || (species_likes_water(you.species) || !permanently)
+           || (species::likes_water(you.species) || !permanently)
                && form_likes_water();
 }
 
@@ -655,7 +658,7 @@ monster_type player_mons(bool transform)
             return mons;
     }
 
-    mons = player_species_to_mons_species(you.species);
+    mons = you.mons_species();
 
     if (mons == MONS_ORC)
     {
@@ -719,7 +722,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return MB_FALSE;
 
     // handles incorrect ring slots vs species
-    if (species_bans_eq(you.species, eq))
+    if (species::bans_eq(you.species, eq))
         return MB_FALSE;
 
     switch (eq)
@@ -2715,7 +2718,8 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    you.species = random_draconian_colour();
+                    // XX make seed stable by choosing at birth
+                    you.species = species::random_draconian_colour();
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
@@ -2741,7 +2745,7 @@ void level_change(bool skip_attribute_increase)
 #endif
                     mprf(MSGCH_INTRINSIC_GAIN,
                          "Your scales start taking on %s colour.",
-                         article_a(scale_type(you.species)).c_str());
+                         article_a(species::scale_type(you.species)).c_str());
 
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
@@ -2768,7 +2772,7 @@ void level_change(bool skip_attribute_increase)
                     check_training_targets();
 
                     // Tell the player about their new species
-                    for (auto &mut : fake_mutations(you.species, false))
+                    for (auto &mut : species::fake_mutations(you.species, false))
                         mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
                     // needs to be done early here, so HP doesn't look drained
@@ -2841,7 +2845,7 @@ void level_change(bool skip_attribute_increase)
 
         }
 
-        if (species_is_draconian(you.species) && !(you.experience_level % 3))
+        if (species::is_draconian(you.species) && !(you.experience_level % 3))
         {
             mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
             you.redraw_armour_class = true;
@@ -3366,7 +3370,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     }
 
     if (exp_apt == -99)
-        exp_apt = species_exp_modifier(you.species);
+        exp_apt = species::get_exp_modifier(you.species);
 
     return (unsigned int) ((level - 1) * apt_to_factor(exp_apt - 1));
 }
@@ -3795,7 +3799,7 @@ int get_real_hp(bool trans, bool drained)
           + (you.skill(SK_FIGHTING, 3, false, false) + 1) / 2;
 
     // Racial modifier.
-    hitp *= 10 + species_hp_modifier(you.species);
+    hitp *= 10 + species::get_hp_modifier(you.species);
     hitp /= 10;
 
     hitp += you.get_mutation_level(MUT_FLAT_HP) * 4;
@@ -3860,7 +3864,7 @@ int get_real_mp(bool include_items)
                - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
 //    enp = stepdown_value(enp, 9, 18, 45, 100)
-    enp += species_mp_modifier(you.species);
+    enp += species::get_mp_modifier(you.species);
 
     // This is our "rotted" base, applied after multipliers
     enp += you.mp_max_adj;
@@ -5284,7 +5288,7 @@ bool player::in_liquid() const
 
 bool player::can_swim(bool permanently) const
 {
-    return (species_can_swim(species)
+    return (species::can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
@@ -5341,7 +5345,7 @@ string player::shout_verb(bool directed) const
         return "howl";
 
     const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
-    return species_shout_verb(you.species, screaminess, directed);
+    return species::shout_verb(you.species, screaminess, directed);
 }
 
 /**
@@ -5710,7 +5714,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
 int player::racial_ac(bool temp) const
 {
     // drac scales suppressed in all serious forms, except dragon
-    if (species_is_draconian(species)
+    if (species::is_draconian(species)
         && (!player_is_shapechanged() || form == transformation::dragon
             || !temp))
     {
@@ -6187,7 +6191,7 @@ int player::res_water_drowning() const
     int rw = 0;
 
     if (is_unbreathing()
-        || species_can_swim(species) && !form_changed_physiology()
+        || species::can_swim(species) && !form_changed_physiology()
         || form == transformation::ice_beast
         || form == transformation::hydra)
     {
@@ -6280,7 +6284,7 @@ int player_willpower(bool calc_unid, bool temp)
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
 
-    int rm = you.experience_level * species_wl_modifier(you.species);
+    int rm = you.experience_level * species::get_wl_modifier(you.species);
 
     // randarts
     rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER, calc_unid);
@@ -6486,9 +6490,9 @@ bool player::spellcasting_unholy() const
  */
 undead_state_type player::undead_state(bool temp) const
 {
-    if (temp && you.form == transformation::lich)
+    if (temp && form == transformation::lich)
         return US_UNDEAD;
-    return species_undead_type(you.species);
+    return species::undead_type(species);
 }
 
 bool player::nightvision() const
@@ -6506,7 +6510,7 @@ reach_type player::reach_range() const
 
 monster_type player::mons_species(bool /*zombie_base*/) const
 {
-    return player_species_to_mons_species(species);
+    return species::to_mons_species(species);
 }
 
 bool player::poison(actor *agent, int amount, bool force)
@@ -6836,7 +6840,7 @@ bool player::has_tail(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (species_is_draconian(species)
+    if (species::is_draconian(species)
         || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
         || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
@@ -6902,7 +6906,7 @@ int player::arm_count() const
 {
     // XX transformations? arm count per se isn't used by much though.
 
-    return species_arm_count(species)
+    return species::arm_count(species)
                     - get_mutation_level(MUT_MISSING_HAND);
 }
 
@@ -7192,7 +7196,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return species_can_throw_large_rocks(species);
+    return species::can_throw_large_rocks(species);
 }
 
 bool player::can_smell() const
@@ -7668,7 +7672,7 @@ bool player::form_uses_xl() const
 
 bool player::wear_barding() const
 {
-    return species_wears_barding(you.species);
+    return species::wears_barding(species);
 }
 
 static int _get_potion_heal_factor()

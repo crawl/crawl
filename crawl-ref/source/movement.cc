@@ -898,7 +898,7 @@ void move_player_action(coord_def move)
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
                           : you.form != transformation::none   ? "walk" // XX
-                          : lowercase_first(species_walking_verb(you.species));
+                          : lowercase_first(species::walking_verb(you.species));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())

@@ -917,7 +917,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster& mon)
 {
-    if (!species_is_orcish(you.species) || you_worship(GOD_BEOGH))
+    if (!species::is_orcish(you.species) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon.type) == MONS_ORC
@@ -1308,7 +1308,7 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
+        || (mc == MONS_PLAYER_ILLUSION && species::is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
@@ -1354,7 +1354,7 @@ monster_type draco_or_demonspawn_subspecies(const monster& mon)
     if (mon.type == MONS_PLAYER_ILLUSION
         && mons_genus(mon.type) == MONS_DRACONIAN)
     {
-        return player_species_to_mons_species(mon.ghost->species);
+        return species::to_mons_species(mon.ghost->species);
     }
 
     return draco_or_demonspawn_subspecies(mon.type, mon.base_monster);
@@ -4359,9 +4359,11 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
-                      article_a(species_name(you.species, SPNAME_GENUS)));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
-    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, SPNAME_GENUS)));
+                article_a(species::name(you.species, species::SPNAME_GENUS)));
+    msg = replace_all(msg, "@player_genus@",
+                species::name(you.species, species::SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus_plural@",
+                pluralise(species::name(you.species, species::SPNAME_GENUS)));
 
     string foe_genus;
 
@@ -4369,7 +4371,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         ;
     else if (foe->is_player())
     {
-        foe_genus = species_name(you.species, SPNAME_GENUS);
+        foe_genus = species::name(you.species, species::SPNAME_GENUS);
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
@@ -4388,7 +4390,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@Foe@", "You");
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
-        msg = replace_all(msg, "@foe_species@", species_name(you.species));
+        msg = replace_all(msg, "@foe_species@", species::name(you.species));
         msg = replace_all(msg, "@foe_genus@", foe_genus);
         msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
         msg = replace_all(msg, "@foe_genus_plural@",
@@ -4684,7 +4686,7 @@ mon_body_shape get_mon_shape(const monster& mon)
 {
     monster_type base_type;
     if (mons_is_pghost(mon.type))
-        base_type = player_species_to_mons_species(mon.ghost->species);
+        base_type = species::to_mons_species(mon.ghost->species);
     else if (mons_is_zombified(mon))
         base_type = mon.base_monster;
     else

@@ -219,7 +219,7 @@ static void _give_ammo(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_THROWN:
-        if (species_can_throw_large_rocks(you.species))
+        if (species::can_throw_large_rocks(you.species))
             newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
         else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
             newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);

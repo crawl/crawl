@@ -1971,7 +1971,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (starts_with(species_skin_name(you.species), "bandage")
+    if (starts_with(species::skin_name(you.species), "bandage")
         && you_can_wear(EQ_BODY_ARMOUR, true))
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
@@ -1996,7 +1996,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (species_has_hair(you.species))
+    if (species::has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");

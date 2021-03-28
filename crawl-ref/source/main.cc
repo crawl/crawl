@@ -428,7 +428,7 @@ NORETURN static void _launch_game()
     {
         msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
-                    << species_name(you.species)
+                    << species::name(you.species)
                     << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
         // TODO: seeded sprint?
@@ -699,7 +699,7 @@ static void _take_starting_note()
 {
     ostringstream notestr;
     notestr << you.your_name << " the "
-            << species_name(you.species) << " "
+            << species::name(you.species) << " "
             << get_job_name(you.char_class)
             << " began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
@@ -1580,7 +1580,7 @@ static void _experience_check()
 {
     mprf("You are a level %d %s %s.",
          you.experience_level,
-         species_name(you.species).c_str(),
+         species::name(you.species).c_str(),
          get_job_name(you.char_class));
     int perc = get_exp_progress();
 
@@ -1646,7 +1646,7 @@ static void _do_remove_armour()
     if (you.has_mutation(MUT_NO_ARMOUR))
     {
         mprf("You can't remove your %s, sorry.",
-            species_skin_name(you.species).c_str());
+                            species::skin_name(you.species).c_str());
         return;
     }
 

@@ -153,7 +153,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
-    if (species_arm_count(you.species) > 2)
+    if (species::arm_count(you.species) > 2)
         r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
     if (slot >= r1 && slot <= r2)
         return;

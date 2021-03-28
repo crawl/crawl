@@ -3931,7 +3931,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     if (sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
         if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
@@ -4338,8 +4338,8 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        auto ring_slots = species_ring_slots(you.species, true);
-        equipment_type sac_ring_slot = species_sacrificial_arm(you.species);
+        auto ring_slots = species::ring_slots(you.species, true);
+        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
@@ -4584,7 +4584,7 @@ bool ru_do_sacrifice(ability_type sac)
     if (sac == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
         if (!you.has_innate_mutation(MUT_QUADRUMANOUS))

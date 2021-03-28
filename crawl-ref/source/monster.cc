@@ -2614,7 +2614,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    // TODO: shared code with species_skin_name for player species
+    // TODO: shared code with species::skin_name for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -6527,7 +6527,7 @@ bool monster::is_dragonkind() const
     if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
         return true;
 
-    if (mons_is_ghost_demon(type) && species_is_draconian(ghost->species))
+    if (mons_is_ghost_demon(type) && species::is_draconian(ghost->species))
         return true;
 
     return false;

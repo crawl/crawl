@@ -959,7 +959,10 @@ bool feat_destroys_items(dungeon_feature_type feat)
 bool feat_eliminates_items(dungeon_feature_type feat)
 {
     return feat_destroys_items(feat)
-           || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
+            // intentionally use the species version rather than the player
+            // version: switching to an amphibious form doesn't give you access
+            // to the items.
+            || feat == DNGN_DEEP_WATER && !species::likes_water(you.species);
 }
 
 static coord_def _dgn_find_nearest_square(
@@ -1665,7 +1668,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         if (you.can_water_walk() || form_likes_water())
             return;
 
-        if (species_likes_water(you.species) && !you.transform_uncancellable)
+        if (species::likes_water(you.species) && !you.transform_uncancellable)
         {
             emergency_untransform();
             return;

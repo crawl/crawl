@@ -182,13 +182,13 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 
 size_type player::body_size(size_part_type psize, bool base) const
 {
+    const auto charsize = species::size(species, psize);
     if (base)
-        return species_size(species, psize);
+        return charsize;
     else
     {
         size_type tf_size = get_form()->size;
-        return tf_size == SIZE_CHARACTER ? species_size(species, psize)
-                                         : tf_size;
+        return tf_size == SIZE_CHARACTER ? charsize : tf_size;
     }
 }
 
@@ -375,7 +375,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform, bool quiet) const
 {
     // Only ogres and trolls can wield large rocks (for sandblast).
-    if (!species_can_throw_large_rocks(you.species)
+    if (!can_throw_large_rocks()
         && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
         if (!quiet)
@@ -492,7 +492,7 @@ static string _hand_name_singular(bool temp)
         return "hand";
 
     // then fall back on the species name
-    return species_hand_name(you.species);
+    return species::hand_name(you.species);
 }
 
 // XX: this is distinct from hand_name because of the actor api
@@ -602,7 +602,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != nullptr)
         *can_plural = true;
 
-    string str = species_arm_name(species);
+    string str = species::arm_name(species);
 
     string adj;
     if (form == transformation::lich)
@@ -610,7 +610,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     else if (form == transformation::shadow)
         adj = "shadowy";
     else
-        adj = species_skin_name(species, true);
+        adj = species::skin_name(species, true);
 
     if (adj != "fleshy")
         str = adj + " " + str;

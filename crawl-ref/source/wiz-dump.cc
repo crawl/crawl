@@ -481,7 +481,7 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
                 race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
-            const species_type sp = find_species_from_string(race);
+            const species_type sp = species::from_str_loose(race);
             if (sp == SP_UNKNOWN)
             {
                 mprf("Unknown species: %s", race.c_str());

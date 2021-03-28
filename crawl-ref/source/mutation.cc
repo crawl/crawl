@@ -328,7 +328,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     {
         if (you.form == transformation::dragon)
         {
-            monster_type drag = dragon_form_dragon_type();
+            monster_type drag = species::dragon_form(you.species);
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
                 return mutation_activity_type::FULL;
             if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
@@ -728,10 +728,18 @@ static vector<string> _get_mutations(bool terse)
 
         if (you.form == transformation::dragon)
         {
-            if (!species_is_draconian(you.species))
-                result.push_back(terse ? "breathe fire" : _formmut("You can breathe fire."));
-            else if (!terse && draconian_breath(you.species) != ABIL_NON_ABILITY)
-                result.push_back(_formmut("Your breath weapon is enhanced in this form."));
+            if (!species::is_draconian(you.species)
+                || you.species == SP_BASE_DRACONIAN) // ugh
+            {
+                result.push_back(terse
+                    ? "breathe fire" : _formmut("You can breathe fire."));
+            }
+            else if (!terse
+                && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
+            {
+                result.push_back(
+                    _formmut("Your breath weapon is enhanced in this form."));
+            }
         }
 
         if (form_base_movespeed(you.form) < 10)
@@ -850,9 +858,9 @@ static vector<string> _get_mutations(bool terse)
     }
 
     // Innate abilities which haven't been implemented as mutations yet.
-    for (const string& str : fake_mutations(you.species, terse))
+    for (const string& str : species::fake_mutations(you.species, terse))
     {
-        if (species_is_draconian(you.species))
+        if (species::is_draconian(you.species))
             result.push_back(_dragon_abil(str, terse));
         else
             result.push_back(_innatemut(str, terse));
@@ -866,7 +874,7 @@ static vector<string> _get_mutations(bool terse)
         else
         {
             // XX generalize this code somehow?
-            const string scale_clause = string(scale_type(you.species))
+            const string scale_clause = string(species::scale_type(you.species))
                   + " scales are "
                   + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
 
@@ -878,7 +886,7 @@ static vector<string> _get_mutations(bool terse)
                                             : scale_clause.c_str(),
                            ac),
                         player_is_shapechanged()
-                        && !(species_is_draconian(you.species)
+                        && !(species::is_draconian(you.species)
                              && you.form == transformation::dragon)));
         }
     }
@@ -886,14 +894,14 @@ static vector<string> _get_mutations(bool terse)
     // player::can_swim includes other cases, e.g. extra-balanced species that
     // are not truly amphibious. Mertail has its own description that implies
     // amphibiousness.
-    if (species_can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
+    if (species::can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
     {
         result.push_back(_annotate_form_based(
                     terse ? "amphibious" : "You are amphibious.",
                     !form_likes_water(), terse));
     }
 
-    if (species_arm_count(you.species) > 2)
+    if (species::arm_count(you.species) > 2)
     {
         const bool rings_melded = !get_form()->slot_available(EQ_RING_EIGHT);
         const int arms = you.arm_count();
@@ -945,7 +953,7 @@ static vector<string> _get_mutations(bool terse)
     }
     // Could move this into species-data, but then the hack that assumes
     // _dragon_abil should get called on all draconian fake muts would break.
-    if (species_is_draconian(you.species))
+    if (species::is_draconian(you.species))
     {
         armour_mut = terse ? "unfitting armour"
             : "You cannot fit into any form of body armour.";
@@ -955,7 +963,7 @@ static vector<string> _get_mutations(bool terse)
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(_innatemut(armour_mut, terse));
 
-    if (!terse && species_stat_gain_multiplier(you.species) > 1)
+    if (!terse && species::get_stat_gain_multiplier(you.species) > 1)
         result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
 
     // vampire, form cases handled above
@@ -1476,7 +1484,7 @@ static int _body_covered()
     if (you.species == SP_NAGA)
         covered++;
 
-    if (species_is_draconian(you.species))
+    if (species::is_draconian(you.species))
         covered += 3;
 
     for (mutation_type scale : _all_scales)
@@ -1518,7 +1526,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // No bones for thin skeletal structure or horns.
-    if (!species_has_bones(you.species)
+    if (!species::has_bones(you.species)
         && (mutat == MUT_THIN_SKELETAL_STRUCTURE || mutat == MUT_HORNS))
     {
         return true;
@@ -1540,7 +1548,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.
-    if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
+    if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
     {
         return true;
@@ -1901,7 +1909,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_LARGE_BONE_PLATES:
             {
-                const string arms = pluralise(species_arm_name(you.species));
+                const string arms = pluralise(species::arm_name(you.species));
                 mprf(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "arms",
                                  arms).c_str());

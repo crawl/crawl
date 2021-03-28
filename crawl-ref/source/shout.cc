@@ -398,11 +398,12 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
     msg = replace_all(msg, "@player_god@",
                       you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus@",
+                species::name(you.species, species::SPNAME_GENUS));
     msg = replace_all(msg, "@a_player_genus@",
-                          article_a(species_name(you.species, SPNAME_GENUS)));
+                article_a(species::name(you.species, species::SPNAME_GENUS)));
     msg = replace_all(msg, "@player_genus_plural@",
-                      pluralise(species_name(you.species, SPNAME_GENUS)));
+                pluralise(species::name(you.species, species::SPNAME_GENUS)));
 
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);

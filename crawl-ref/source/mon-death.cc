@@ -1922,7 +1922,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
                         && (feat_has_solid_floor(env.grid(you.pos()))
                             || feat_is_watery(env.grid(you.pos()))
-                               && species_likes_water(you.species)))
+                               && species::likes_water(you.species)))
                     {
                         int thing_created = items(true, OBJ_POTIONS,
                                                   POT_MAGIC, 1, 0,

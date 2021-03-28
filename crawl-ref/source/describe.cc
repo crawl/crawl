@@ -1174,7 +1174,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
 static string _handedness_string(const item_def &item)
 {
     const bool quad = you.has_mutation(MUT_QUADRUMANOUS);
-    string handname = species_hand_name(you.species);
+    string handname = species::hand_name(you.species);
     if (quad)
         handname += "-pair";
 
@@ -5134,14 +5134,14 @@ string short_ghost_description(const monster *mon, bool abbrev)
     const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
 
     string desc = make_stringf("%s %s %s", rank,
-                               species_name(ghost.species).c_str(),
+                               species::name(ghost.species).c_str(),
                                get_job_name(ghost.job));
 
     if (abbrev || strwidth(desc) > 40)
     {
         desc = make_stringf("%s %s%s",
                             rank,
-                            get_species_abbrev(ghost.species),
+                            species::get_abbrev(ghost.species),
                             get_job_abbrev(ghost.job));
     }
 
@@ -5161,17 +5161,17 @@ string get_ghost_description(const monster_info &mi, bool concise)
          << skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         gspecies,
-                        species_has_low_str(gspecies), mi.i_ghost.religion)
+                        species::has_low_str(gspecies), mi.i_ghost.religion)
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
     if (concise)
     {
-        gstr << get_species_abbrev(gspecies)
+        gstr << species::get_abbrev(gspecies)
              << get_job_abbrev(mi.i_ghost.job);
     }
     else
     {
-        gstr << species_name(gspecies)
+        gstr << species::name(gspecies)
              << " "
              << get_job_name(mi.i_ghost.job);
     }

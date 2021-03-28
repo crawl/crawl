@@ -705,10 +705,10 @@ static bool _map_matches_layout_type(const map_def &map)
 
 static bool _map_matches_species(const map_def &map)
 {
-    if (!species_type_valid(you.species))
+    if (!species::is_valid(you.species))
         return true;
     return !map.has_tag("no_species_"
-           + lowercase_string(get_species_abbrev(you.species)));
+           + lowercase_string(species::get_abbrev(you.species)));
 }
 
 const map_def *find_map_by_name(const string &name)

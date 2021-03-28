@@ -117,9 +117,9 @@ void wizard_change_species()
         return;
     }
 
-    const species_type sp = find_species_from_string(specs);
+    const species_type sp = species::from_str_loose(specs);
 
-    // Means find_species_from_string couldn't interpret `specs`.
+    // Means from_str_loose couldn't interpret `specs`.
     if (sp == SP_UNKNOWN)
     {
         mpr("That species isn't available.");

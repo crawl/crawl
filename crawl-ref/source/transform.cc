@@ -427,11 +427,12 @@ bool Form::player_can_fly() const
  */
 bool Form::player_can_swim() const
 {
+    // XX this is kind of a mess w.r.t. player::can_swim
     const size_type player_size = size == SIZE_CHARACTER ?
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || (species_can_swim(you.species)
+           || (species::can_swim(you.species)
                         || you.get_mutation_level(MUT_UNBREATHING) >= 2)
                 && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
@@ -473,7 +474,7 @@ string Form::player_prayer_action() const
     if (!prayer_action.empty())
         return prayer_action;
     // Finally, default to your species' verb.
-    return species_prayer_action(you.species);
+    return species::prayer_action(you.species);
 }
 
 vector<string> Form::get_fakemuts(bool terse) const
@@ -669,12 +670,12 @@ public:
      */
     monster_type get_equivalent_mons() const override
     {
-        return dragon_form_dragon_type();
+        return species::dragon_form(you.species);
     }
 
     string get_transform_description() const override
     {
-        if (species_is_draconian(you.species))
+        if (species::is_draconian(you.species))
         {
             return make_stringf("a fearsome %s!",
                           mons_class_name(get_equivalent_mons()));
@@ -689,7 +690,7 @@ public:
      */
     int get_ac_bonus() const override
     {
-        if (species_is_draconian(you.species))
+        if (species::is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
     }
@@ -699,7 +700,7 @@ public:
      */
     int res_fire() const override
     {
-        switch (dragon_form_dragon_type())
+        switch (species::dragon_form(you.species))
         {
             case MONS_FIRE_DRAGON:
                 return 2;
@@ -715,7 +716,7 @@ public:
      */
     int res_cold() const override
     {
-        switch (dragon_form_dragon_type())
+        switch (species::dragon_form(you.species))
         {
             case MONS_ICE_DRAGON:
                 return 2;
@@ -1141,7 +1142,7 @@ bool form_likes_water(transformation form)
 {
     // Grey dracs can't swim, so can't statue form merfolk/octopodes
     // -- yet they can still survive in water.
-    if (species_likes_water(you.species)
+    if (species::likes_water(you.species)
         && (form == transformation::statue
             || !get_form(form)->forbids_swimming()))
     {

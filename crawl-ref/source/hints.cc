@@ -161,7 +161,7 @@ static string _print_hints_menu(hints_types type)
     }
 
     return make_stringf("%c - %s %s %s",
-            letter, species_name(_get_hints_species(type)).c_str(),
+            letter, species::name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
 

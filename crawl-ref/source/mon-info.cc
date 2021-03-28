@@ -666,7 +666,7 @@ monster_info::monster_info(const monster* m, int milev)
         ASSERT(m->ghost);
         ghost_demon& ghost = *m->ghost;
         i_ghost.species = ghost.species;
-        if (species_is_draconian(i_ghost.species) && ghost.xl < 7)
+        if (species::is_draconian(i_ghost.species) && ghost.xl < 7)
             i_ghost.species = SP_BASE_DRACONIAN;
         i_ghost.job = ghost.job;
         i_ghost.religion = ghost.religion;
@@ -1829,7 +1829,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 monster_type monster_info::draco_or_demonspawn_subspecies() const
 {
     if (type == MONS_PLAYER_ILLUSION && mons_genus(type) == MONS_DRACONIAN)
-        return player_species_to_mons_species(i_ghost.species);
+        return species::to_mons_species(i_ghost.species);
     return ::draco_or_demonspawn_subspecies(type, base_type);
 }
 

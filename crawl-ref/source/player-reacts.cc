@@ -173,7 +173,7 @@ static void _decrement_petrification(int delay)
     {
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
-        // flesh when not petrified. (Unfortunately, species_skin_name doesn't
+        // flesh when not petrified. (Unfortunately, species::skin_name doesn't
         // really work here..)
         const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
                                             "flesh" :

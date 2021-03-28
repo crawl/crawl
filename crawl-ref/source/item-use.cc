@@ -428,7 +428,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
         SAY(mprf("You can't wield that without your missing %s.",
-            species_arm_name(you.species).c_str()));
+            species::arm_name(you.species).c_str()));
         return false;
     }
 
@@ -858,7 +858,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (species_bans_eq(you.species, slot))
+    if (species::bans_eq(you.species, slot))
     {
         if (verbose)
         {
@@ -866,7 +866,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             // (But don't unconditionally ban armour with this mut.)
             // XX turn this mut into a two-level mutation?
             if (slot == EQ_BODY_ARMOUR
-                && species_mutation_level(you.species, MUT_BIG_WINGS))
+                && species::mutation_level(you.species, MUT_BIG_WINGS))
             {
                 mprf("Your wings%s won't fit in that.",
                     you.has_mutation(MUT_BIG_WINGS)
@@ -1115,7 +1115,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (species_is_draconian(you.species))
+            if (species::is_draconian(you.species))
             {
                 if (verbose)
                     mpr("You can't wear that with your reptilian head.");
@@ -1369,7 +1369,7 @@ bool takeoff_armour(int item)
 // Returns a list of possible ring slots.
 static vector<equipment_type> _current_ring_types()
 {
-    vector<equipment_type> ret = species_ring_slots(you.species,
+    vector<equipment_type> ret = species::ring_slots(you.species,
                                         you.has_mutation(MUT_MISSING_HAND));
 
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
