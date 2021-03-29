@@ -3400,8 +3400,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_MEPHITIC;
     case ABIL_BREATHE_ACID:
         return TILEG_ABILITY_BREATHE_ACID;
+#if TAG_MAJOR_VERSION == 34
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+#endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
     case ABIL_ROLLING_CHARGE:
