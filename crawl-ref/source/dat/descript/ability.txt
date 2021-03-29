@@ -128,7 +128,7 @@ may eventually cause glowing, nullifying the invisibility.
 %%%%
 Evoke Thunderclouds ability
 
-Create a mighty thunderclouds around the user.
+Creates a mighty thundercloud surrounding the user.
 %%%%
 End Transformation ability
 
