@@ -543,9 +543,9 @@ ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
 : item("cloak " .. coldres .. " w:15 / hat good_item " ..
 :   " / kite shield " .. coldres ..  " / tower shield " .. coldres ..
 :   " / nothing w:60")
-ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
-         potion of might / potion of flight / \
-         potion of heal wounds w:5 / any potion w:1
+ITEM:    potion of resistance ident:type w:5 / potion of mutation ident:type q:2 w:5 / \
+         potion of might ident:type / potion of flight ident:type / \
+         potion of heal wounds ident:type w:5 / any potion w:1
 SHUFFLE: defg
 NSUBST:  3 = 2 = 3 6:3 / *:3
 MAP

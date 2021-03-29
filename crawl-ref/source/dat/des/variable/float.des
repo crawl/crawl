@@ -2718,8 +2718,8 @@ MONS:    deep troll
 # Fortunately, we have a permanently invisible 2 already.
 MONS:    lorocyproca
 : end
-ITEM:    arbalest, bolt, potion of curing, potion of heal wounds
-ITEM:    potion of invisibility
+ITEM:    arbalest, bolt, potion of curing ident:type , potion of heal wounds ident:type
+ITEM:    potion of invisibility ident:type
 : if you.in_branch("Geh") then
 SUBST: defgh = .
 : end

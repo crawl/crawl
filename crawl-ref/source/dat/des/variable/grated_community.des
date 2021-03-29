@@ -214,9 +214,9 @@ MONS:  lich / w:4 ancient lich / w:4 dread lich / w:5 royal mummy
 KFEAT: * = altar_kikubaaqudgha / w:4 altar_sif_muna / w:1 altar_yredelemnul
 KITEM: " = gold, any wand / w:15 nothing, any scroll / nothing
 KFEAT: 8 = granite_statue / w:2 fountain_blood / w:1 floor
-: kitem("? = q:" .. crawl.random_range(1, 3) .. " scroll of torment /\
+: kitem("? = q:" .. crawl.random_range(1, 3) .. " scroll of torment ident:type /\
 :        nothing, any scroll / nothing")
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic /\
+: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic ident:type /\
 :        nothing, any potion / nothing")
 KITEM: & = book of necromancy / book of death / book of unlife / w:12 nothing
 KMONS: P = withered plant
@@ -226,8 +226,8 @@ KFEAT: * = altar_sif_muna / w:5 altar_ashenzari
 KITEM: " = gold, any potion / nothing, any potion / nothing, any potion /\
            nothing
 KFEAT: 8 = granite_statue / fountain_sparkling / fountain_blue / w:1 floor
-KITEM: ? = scroll of vulnerability / nothing, any scroll / nothing
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic /\
+KITEM: ? = scroll of vulnerability ident:type / nothing, any scroll / nothing
+: kitem("! = q:" .. crawl.random_range(1, 3) .. " potion of magic ident:type /\
 :        nothing, any potion / nothing")
 KITEM: & = book of power / book of party tricks / book of alchemy / nothing
 KMONS: P = plant
@@ -236,10 +236,10 @@ KMONS: P = plant
 MONS:  deep elf annihilator / draconian annihilator / draconian scorcher
 KFEAT: * = altar_vehumet / w:2 altar_makhleb
 KITEM: " = gold, wand of acid / wand of iceblast, \
-           potion of brilliance / nothing
+           potion of brilliance ident:type / nothing
 KFEAT: 8 = granite_statue / w:1 floor
-KITEM: ? = scroll of immolation / nothing, any scroll / nothing
-: kitem("! = q:" .. crawl.random_range(1, 3) .. " scroll of immolation /\
+KITEM: ? = scroll of immolation ident:type / nothing, any scroll / nothing
+: kitem("! = q:" .. crawl.random_range(1, 3) .. " scroll of immolation ident:type /\
 :        nothing, any potion / nothing")
 KITEM: & = book of fire / book of power / book of ice /\
        book of the tempests / w:12 nothing
