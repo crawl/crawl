@@ -6967,12 +6967,8 @@ bool player::can_see_invisible(bool calc_unid) const
 /// Can the player see invisible things without needing items' help?
 bool player::innate_sinv() const
 {
-    // Possible to have both with a temp mutation.
-    if (has_mutation(MUT_ACUTE_VISION)
-        && !has_mutation(MUT_BLURRY_VISION))
-    {
+    if (has_mutation(MUT_ACUTE_VISION))
         return true;
-    }
 
     // antennae give sInvis at 3
     if (get_mutation_level(MUT_ANTENNAE) == 3)

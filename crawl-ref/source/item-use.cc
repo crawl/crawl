@@ -2741,7 +2741,7 @@ static bool _is_cancellable_scroll(scroll_type scroll)
  *
  * Prints corresponding messages. (Thanks, canned_msg().)
  */
-bool player_can_read()
+static bool _player_can_read()
 {
     if (you.berserk())
     {
@@ -2775,7 +2775,7 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string.
  */
-string cannot_read_item_reason(const item_def &item)
+static string _cannot_read_item_reason(const item_def &item)
 {
     // can read books, except for manuals...
     if (item.base_type == OBJ_BOOKS)
@@ -2799,7 +2799,7 @@ string cannot_read_item_reason(const item_def &item)
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
         return "You cannot read scrolls while unable to breathe!";
 
-    // ru
+    // no reading while threatened (Ru/random mutation)
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
@@ -2893,7 +2893,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
  */
 void read(item_def* scroll)
 {
-    if (!player_can_read())
+    if (!_player_can_read())
         return;
 
     if (!scroll)
@@ -2902,7 +2902,7 @@ void read(item_def* scroll)
             return;
     }
 
-    const string failure_reason = cannot_read_item_reason(*scroll);
+    const string failure_reason = _cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
@@ -2910,7 +2910,7 @@ void read(item_def* scroll)
     }
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
-    // Handle player cancels before we waste time (with e.g. blurryvis)
+    // Handle player cancels before we waste time
     if (item_type_known(*scroll)) {
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
@@ -2947,15 +2947,6 @@ void read(item_def* scroll)
         }
     }
 
-    if (you.get_mutation_level(MUT_BLURRY_VISION)
-        && !i_feel_safe(false, false, true)
-        && !yesno("Really read with blurry vision while enemies are nearby?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -2966,27 +2957,16 @@ void read(item_def* scroll)
         return;
     }
 
-    // if we have blurry vision, we need to start a delay before the actual
-    // scroll effect kicks in.
-    if (you.get_mutation_level(MUT_BLURRY_VISION))
-    {
-        // takes 0.5, 1, 2 extra turns
-        const int turns = max(1, you.get_mutation_level(MUT_BLURRY_VISION) - 1);
-        start_delay<BlurryScrollDelay>(turns, *scroll);
-        if (you.get_mutation_level(MUT_BLURRY_VISION) == 1)
-            you.time_taken /= 2;
-    }
-    else
-        read_scroll(*scroll);
+    read_scroll(*scroll);
 }
 
 /**
  * Read the provided scroll.
  *
  * Does NOT check whether the player can currently read, whether the scroll is
- * currently useless, etc. Likewise doesn't handle blurry vision, setting
- * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
- * player chooses to cancel at the last moment.
+ * currently useless, etc. Likewise doesn't handle setting you.turn_is_over and
+ * other externals. DOES destroy one scroll, unless the player chooses to
+ * cancel at the last moment.
  *
  * @param scroll The scroll to be read.
  */
@@ -3026,10 +3006,7 @@ void read_scroll(item_def& scroll)
             break;
         }
 
-        const bool safely_cancellable
-            = alreadyknown && !you.get_mutation_level(MUT_BLURRY_VISION);
-
-        cancel_scroll = (controlled_blink(safely_cancellable)
+        cancel_scroll = (controlled_blink(alreadyknown)
                          == spret::abort) && alreadyknown;
 
         if (!cancel_scroll)

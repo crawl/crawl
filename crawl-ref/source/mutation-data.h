@@ -524,7 +524,8 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_BLURRY_VISION, 10, 3, mutflag::bad | mutflag::xom, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_BLURRY_VISION, 0, 3, mutflag::bad, false,
   "blurry vision",
 
   {"Scrolls take you a little longer to read.",
@@ -539,6 +540,7 @@ static const mutation_def mut_data[] =
    "Your vision sharpens a little.",
    "Your vision sharpens a little."},
 },
+#endif
 
 { MUT_MUTATION_RESISTANCE, 4, 3, mutflag::good, false,
   "mutation resistance",
@@ -1713,16 +1715,16 @@ static const mutation_def mut_data[] =
 { MUT_DRINK_SAFETY, 0, 1, mutflag::bad, false,
   "inability to drink while threatened",
 
-  {"You cannot drink potions while threatened.", "", ""},
-  {"You no longer can drink potions while threatened.", "", ""},
+  {"You sometimes lose the ability to drink potions when taking damage.", "", ""},
+  {"You lose the ability to drink potions when threatened.", "", ""},
   {"You can once more drink potions while threatened.", "", ""},
 },
 
-{ MUT_READ_SAFETY, 0, 1, mutflag::bad, false,
+{ MUT_READ_SAFETY, 10, 1, mutflag::bad | mutflag::xom, false,
   "inability to read while threatened",
 
-  {"You cannot read scrolls while threatened.", "", ""},
-  {"You can no longer read scrolls while threatened.", "", ""},
+  {"You sometimes lose the ability to read scrolls when taking damage.", "", ""},
+  {"You lose the ability to read scrolls when threatened.", "", ""},
   {"You can once more read scrolls while threatened.", "", ""},
 },
 
