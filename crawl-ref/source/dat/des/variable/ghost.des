@@ -474,8 +474,8 @@ ENDMAP
 NAME:    nzn_ghost_randoct
 DEPTH:   D:7-, Depths, Lair, Crypt, Spider, Zot
 ORIENT:  float
-ITEM:    potion of haste / scroll of blinking
-ITEM:    potion of heal wounds / scroll of teleportation
+ITEM:    potion of haste ident:type / scroll of blinking ident:type
+ITEM:    potion of heal wounds ident:type / scroll of teleportation ident:type
 MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
 MONS:    caustic shrike / juggernaut / titan
 MONS:    orb of fire / ancient lich w:5 / dread lich w:5
@@ -1712,7 +1712,7 @@ ENDMAP
 
 NAME:   gammafunk_ghost_hive
 DEPTH:  D:5-, Lair
-KITEM:  ' = potion of ambrosia
+KITEM:  ' = potion of ambrosia ident:type
 KMONS:  O = player ghost
 MONS:   killer bee, queen bee, hornet, meliai
 # Chance to make a partial wall in each of the full cells. Add 0-4 ambrosias.

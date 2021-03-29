@@ -183,8 +183,9 @@ function setup_loot (e)
                                  "pair of gloves good_item w:6 / helmet good_item w:4 / " ..
                                  "hat good_item w:2 / pair of boots good_item w:6 / " ..
                                  "fire dragon scales w:8")
-    e.item([[potion of berserk rage w:14 / potion of might w:5 /
-             potion of brilliance w:5 / potion of experience q:1 w:1 / potion of resistance]])
+    e.item([[potion of berserk rage ident:type w:14 / potion of might ident:type w:5 /
+             potion of brilliance ident:type w:5 / potion of experience ident:type q:1 w:1 / 
+             potion of resistance ident:type ]])
     e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5", "eveningstar w:2",
                                  "demon whip w:2", "great mace w:16", "demon blade w:2",
                                  "great sword w:16", "triple sword w:2", "broad axe w:3",

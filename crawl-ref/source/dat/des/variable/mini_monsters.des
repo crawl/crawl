@@ -111,7 +111,7 @@ MONS:   killer bee, meliai, queen bee, hornet
 KMASK:  1234*R = opaque
 KMONS:  *R = worm
 KITEM:  * = *
-KITEM:  R = potion of ambrosia
+KITEM:  R = potion of ambrosia ident:type
 SUBST:  ? : .w
 SUBST:  * : *:20 R:3
 # Since one has to dig the bees out, early meliai are fine.
@@ -146,7 +146,7 @@ NAME:   minivault_7
 TAGS:   uniq_beehive patrolling transparent
 DEPTH:  D:9-
 MONS:   queen bee, meliai, killer bee
-KITEM:  R = potion of ambrosia / nothing
+KITEM:  R = potion of ambrosia ident:type / nothing
 COLOUR: x = yellow
 TILE:   x = wall_wax
 : if you.absdepth() < 12 then
@@ -1762,7 +1762,7 @@ ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    box of beasts
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of summoning, scroll of summoning / nothing
+KITEM:   _ = scroll of summoning ident:type , scroll of summoning ident:type / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
@@ -3174,8 +3174,8 @@ DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes
 KMASK:   %$de = opaque
 KITEM:   R = gold
-ITEM:    scroll of teleportation q:2 / wand of digging
-ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
+ITEM:    scroll of teleportation ident:type q:2 / wand of digging
+ITEM:    scroll of teleportation ident:type q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111122
 SHUFFLE: %!'"
@@ -3388,7 +3388,7 @@ MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
 # TODO: this potion once was an apple, maybe just remove this with no apple
 # flavor possible?
-ITEM:    potion of ambrosia
+ITEM:    potion of ambrosia ident:type
 NSUBST:  1 = 2:1 / *:.
 NSUBST:  d = 2:d / *:.
 SUBST:   3 = 33.
@@ -3714,7 +3714,8 @@ KMONS:   o = unseen horror
 KMONS:   p = hornet
 KMONS:   q = goliath frog
 KMONS:   r = wolf spider
-KITEM:   e = any armour good_item / any weapon good_item / scroll of acquirement
+KITEM:   e = any armour good_item / any weapon good_item / \
+             scroll of acquirement ident:type
 SHUFFLE: bcdfghjklnopqr
 MAP
 .............
@@ -3742,7 +3743,7 @@ KMASK:   x = no_wall_fixup
 KMASK:   189%*|de<> = opaque
 KPROP:   189%*|de<> = no_tele_into
 ITEM:    wand of digging ident:type
-ITEM:    scroll of teleportation q:2
+ITEM:    scroll of teleportation ident:type q:2
 MAP
 ...........
 .vvnvvvnvv.

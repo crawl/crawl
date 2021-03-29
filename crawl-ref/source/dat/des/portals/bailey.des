@@ -458,9 +458,11 @@ TAGS:   bailey_axe no_rotate
 MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
-ITEM:   potion of curing / potion of heal wounds / potion of magic / potion of mutation /\
-        potion of might w:5 / potion of haste w:2 / potion of berserk rage w:3
-ITEM:   potion of experience q:1 / scroll of acquirement q:1
+ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
+        potion of magic ident:type / potion of mutation ident:type /\
+        potion of might ident:type w:5 / potion of haste ident:type w:2 / \
+        potion of berserk rage ident:type w:3
+ITEM:   potion of experience ident:type q:1 / scroll of acquirement ident:type q:1
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -623,12 +625,15 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 #
 # I believe that loot is a bit much, but other baileys suffer from that as
 # well... added the warlord in an attempt to make it more even.  --dpeg
-ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
-        potion of might w:5 / potion of brilliance w:5 / \
-        potion of magic w:5 / potion of haste w:5 / \
-        scroll of teleportation / scroll of blinking / scroll of identify / \
-        scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of experience q:1 / scroll of acquirement q:1
+ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
+        potion of resistance ident:type w:5 / \
+        potion of might ident:type w:5 / potion of brilliance ident:type w:5 / \
+        potion of magic ident:type w:5 / potion of haste ident:type w:5 / \
+        scroll of teleportation ident:type / scroll of blinking ident:type / \
+        scroll of identify ident:type / \
+        scroll of enchant weapon ident:type w:5 / \
+        scroll of enchant armour ident:type w:5
+ITEM:   potion of experience ident:type q:1 / scroll of acquirement ident:type q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord
@@ -768,8 +773,10 @@ SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
         good_item bardiche / good_item executioner's axe
-ITEM:   potion of experience q:1 / scroll of acquirement q:1 /\
-        scroll of enchant armour q:2 / scroll of enchant weapon q:3
+ITEM:   potion of experience ident:type q:1 / \
+        scroll of acquirement ident:type q:1 /\
+        scroll of enchant armour ident:type q:2 / \
+        scroll of enchant weapon ident:type q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -858,14 +865,16 @@ ENDMAP
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-ITEM:   scroll of acquirement q:1 / potion of experience q:1
-ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
-        potion of berserk rage w:3 / potion of haste w:2 /\
-        potion of invisibility w:3 / potion of resistance w:2
-ITEM:   scroll of brand weapon w:5 / scroll of acquirement q:1 w:5 /\
-        scroll of enchant weapon q:2
-ITEM:   scroll of enchant weapon / scroll of enchant armour /\
-        scroll of summoning
+ITEM:   scroll of acquirement ident:type q:1 / potion of experience ident:type q:1
+ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
+        potion of might ident:type w:5 / potion of berserk rage ident:type w:3 / \
+        potion of haste ident:type w:2 /\ potion of invisibility ident:type w:3 / \
+        potion of resistance ident:type w:2
+ITEM:   scroll of brand weapon ident:type w:5 / \
+        scroll of acquirement ident:type q:1 w:5 /\
+        scroll of enchant weapon ident:type q:2
+ITEM:   scroll of enchant weapon ident:type / scroll of enchant armour ident:type /\
+        scroll of summoning ident:type
 SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5
@@ -907,8 +916,10 @@ NSUBST: ! = 8:1 / *:.
 SUBST:  / = 12
 KITEM:  d = manual of armour / manual of fighting / manual of shields /\
             good_item bardiche / good_item executioner's axe
-KITEM:  e = potion of experience q:1 / scroll of acquirement q:1 /\
-            scroll of enchant armour q:2 / scroll of enchant weapon q:3
+KITEM:  e = potion of experience ident:type q:1 / \
+            scroll of acquirement ident:type q:1 / \
+            scroll of enchant armour ident:type q:2 / \
+            scroll of enchant weapon ident:type q:3
 NSUBST: d = 1:e / *:d|
 : bailey_setup(_G)
 MAP
@@ -1014,14 +1025,18 @@ KITEM:  d = any weapon
 KITEM:  D = any weapon good_item
 KITEM:  e = any armour
 KITEM:  E = any armour good_item
-KITEM:  f = potion of curing / potion of might / potion of brilliance / \
-            potion of attraction / potion of mutation w:30 / potion of flight w:20 / \
-            potion of lignification  / \
-            scroll of teleportation / scroll of identify w:35 / \
-            scroll of fear / scroll of noise w:30 / scroll of magic mapping
-KITEM:  F = scroll of enchant weapon q:2 / scroll of enchant armour q:2 /\
-            potion of heal wounds q:3 / potion of resistance q:2 /\
-            scroll of blinking q:2 / scroll of fog q:2 / potion of ambrosia q:2 /\
+KITEM:  f = potion of curing ident:type / potion of might ident:type / \ 
+            potion of brilliance ident:type / \
+            potion of attraction ident:type / potion of mutation ident:type w:30 / \ 
+            potion of flight ident:type w:20 / potion of lignification ident:type / \
+            scroll of teleportation ident:type / scroll of identify ident:type w:35 / \
+            scroll of fear ident:type / scroll of noise ident:type w:30 / \ 
+            scroll of magic mapping ident:type
+KITEM:  F = scroll of enchant weapon ident:type q:2 / \
+            scroll of enchant armour ident:type q:2 / \
+            potion of heal wounds ident:type q:3 / \ 
+            potion of resistance ident:type q:2 / scroll of blinking ident:type q:2 / \
+            scroll of fog ident:type q:2 / potion of ambrosia ident:type q:2 / \
             any good_item book w:30
 KITEM:  | = scroll of acquirement ident:type
 KITEM:  $ = gold
@@ -1089,12 +1104,18 @@ ENDMAP
 NAME:   bailey_axe_bossmonster_kennysheep
 ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
-ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
-            potion of might w:5 / potion of brilliance w:5 / \
-            potion of magic w:5 / potion of haste w:5 / \
-            scroll of teleportation / scroll of blinking / scroll of identify / \
-            scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of experience q:1 / scroll of acquirement q:1
+ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
+            potion of resistance ident:type w:5 / \
+            potion of might ident:type w:5 / \
+            potion of brilliance ident:type w:5 / \
+            potion of magic ident:type w:5 / potion of haste ident:type w:5 / \
+            scroll of teleportation ident:type / \ 
+            scroll of blinking ident:type/ \
+            scroll of identify ident:type / \
+            scroll of enchant weapon ident:type w:5 / \ 
+            scroll of enchant armour ident:type w:5
+ITEM:   potion of experience ident:type q:1 / \
+            scroll of acquirement ident:type q:1
 : easy_axe_fighter(_G)
 : kobold_axe_returning(_G)
 : hard_axe_fighter(_G)

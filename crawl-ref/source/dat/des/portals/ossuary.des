@@ -498,14 +498,17 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
          centaur zombie
 # mix of good items with useless ones
-ITEM:    scroll of noise w:20 / scroll of immolation / \
-         scroll of identify w:20 / \
-         potion of mutation w:5 / potion of ambrosia w:5 / \
-         potion of degeneration / potion of lignification / \
-         potion of flight / potion of curing w:15
+ITEM:    scroll of noise ident:type w:20 / scroll of immolation ident:type / \
+         scroll of identify ident:type w:20 / \
+         potion of mutation ident:type w:5 / \
+         potion of ambrosia ident:type w:5 / \
+         potion of degeneration ident:type / \
+         potion of lignification ident:type / \
+         potion of flight ident:type / potion of curing ident:type w:15
 # and sometimes mostly useless ones
-ITEM:    scroll of noise w:30 / scroll of immolation / \
-         potion of mutation w:5 / potion of degeneration w:40
+ITEM:    scroll of noise ident:type w:30 / scroll of immolation ident:type / \
+         potion of mutation ident:type w:5 / \
+         potion of degeneration ident:type w:40
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl
@@ -757,11 +760,14 @@ ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
-ITEM:    potion of curing / potion of heal wounds / potion of haste / \
-         potion of ambrosia w:5 / potion of mutation w:5 / \
-         scroll of identify / scroll of teleportation w:5 / \
-         scroll of blinking w:5 / scroll of holy word / \
-         scroll of noise
+ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
+         potion of haste ident:type / potion of ambrosia ident:type w:5 /\ 
+         potion of mutation ident:type w:5 / \
+         scroll of identify ident:type / \
+         scroll of teleportation ident:type w:5 / \
+         scroll of blinking ident:type w:5 / \
+         scroll of holy word ident:type/ \
+         scroll of noise ident:type
 SUBST:   M = 111.
 MONS:    mummy
 MONS:    centaur zombie / hobgoblin zombie / nothing w:20
