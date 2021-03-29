@@ -271,6 +271,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && proprt[ARTP_DEXTERITY] && !unmeld));
 
+    if (proprt[ARTP_FLY])
+        _flight_equip();
+
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
