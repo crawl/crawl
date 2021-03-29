@@ -75,12 +75,6 @@ Revivify ability
 Return to life, transitioning from bloodless to alive. This process renders
 the user temporarily frail.
 %%%%
-Fly ability
-
-Starts flight. During flight you can safely cross water and similar obstacles.
-Be warned, though, that some forms of flight are temporary and may expire at
-inopportune moments.
-%%%%
 Hurl Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
@@ -131,14 +125,6 @@ Evoke Invisibility ability
 
 Turns the user invisible. Turning invisible causes magical contamination and
 may eventually cause glowing, nullifying the invisibility.
-%%%%
-Evoke Flight ability
-
-<Fly ability>
-%%%%
-Stop Flying ability
-
-Stops flying.
 %%%%
 Evoke Thunderclouds ability
 
