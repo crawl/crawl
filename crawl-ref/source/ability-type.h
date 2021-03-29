@@ -18,9 +18,9 @@ enum ability_type
     ABIL_BREATHE_STEAM,
     ABIL_BREATHE_MEPHITIC,
     ABIL_BREATHE_ACID,
-    ABIL_BLINK,
     // Others
 #if TAG_MAJOR_VERSION == 34
+    ABIL_BLINK,
     ABIL_DELAYED_FIREBALL,
 #endif
     // Abort duration-based spells

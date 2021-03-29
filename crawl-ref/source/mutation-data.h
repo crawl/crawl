@@ -424,16 +424,14 @@ static const mutation_def mut_data[] =
    "You feel less sure on your feet.",
    "You feel less sure on your feet."},
 },
-#endif
 
-{ MUT_BLINK, 3, 1, mutflag::good, false,
+{ MUT_BLINK, 0, 1, mutflag::good, false,
   "blink",
 
   {"You can translocate small distances at will.", "", ""},
   {"You feel jittery.", "", ""},
   {"You no longer feel jittery.", "", ""},
 },
-#if TAG_MAJOR_VERSION == 34
 
 { MUT_STRONG_STIFF, 0, 3, mutflag::good, false,
   "strong stiff",

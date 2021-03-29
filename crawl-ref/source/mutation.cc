@@ -124,6 +124,7 @@ static vector<mutation_type> removed_mutations =
         MUT_NO_CHARM_MAGIC,
         MUT_MIASMA_IMMUNITY,
         MUT_BLURRY_VISION,
+        MUT_BLINK,
 #endif
     };
 
@@ -388,11 +389,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
-    if (you.form == transformation::tree
-        && (mut == MUT_BLINK || mut == MUT_TELEPORT))
-    {
+    if (you.form == transformation::tree && mut == MUT_TELEPORT)
         return mutation_activity_type::INACTIVE;
-    }
 #if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
          && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
@@ -1554,17 +1552,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    if (you.stasis())
-    {
-        // Formicids have stasis and so prevent mutations that would do nothing.
-        // Antennae provides SInv, so acute vision is pointless.
-        if (mutat == MUT_BERSERK
-            || mutat == MUT_BLINK
-            || mutat == MUT_TELEPORT)
-        {
-            return true;
-        }
-    }
+    // Formicids have stasis and so prevent mutations that would do nothing.
+    if (you.stasis() && (mutat == MUT_BERSERK || mutat == MUT_TELEPORT))
+        return true;
 
     if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
         return true;

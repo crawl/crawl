@@ -294,9 +294,6 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_POISON, "Spit Poison",
         0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
 
-    { ABIL_BLINK, "Blink", 0, 50, 0, {fail_basis::xl, -1}, abflag::none },
-    // ^ failure special-cased
-
     { ABIL_BREATHE_FIRE, "Breathe Fire",
         0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
     { ABIL_BREATHE_FROST, "Breathe Frost",
@@ -986,7 +983,6 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         return ability;
 
-    case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.stasis())
             return ABIL_NON_ABILITY;
@@ -1050,11 +1046,6 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         if (you.form == transformation::dragon)
             return base_chance - 20;
         return base_chance;
-
-    case ABIL_BLINK:
-        return 48 - (17 * you.get_mutation_level(MUT_BLINK))
-                  - you.experience_level / 2;
-        break;
 
     case ABIL_NEMELEX_DEAL_FOUR:
         return 70 - (you.piety * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
@@ -1621,7 +1612,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_movement_ability(quiet) &&
                                 palentonga_charge_possible(quiet, true);
 
-    case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
@@ -2165,8 +2155,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_EVOKE_BLINK:      // randarts
         fail_check();
-        // deliberate fall-through
-    case ABIL_BLINK:            // mutation
         return cast_blink(fail);
         break;
 
@@ -3443,8 +3431,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
-    case ABIL_BLINK:
-        return you.get_mutation_level(MUT_BLINK);
     // TODO: other god abilities
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
@@ -3508,7 +3494,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
             ABIL_END_TRANSFORMATION,
-            ABIL_BLINK,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_CANCEL_PPROJ,

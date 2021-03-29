@@ -7,10 +7,6 @@ Spit Poison ability
 
 Spits poison at a targeted creature.
 %%%%
-Blink ability
-
-Randomly translocates the user a short distance.
-%%%%
 Breathe Dispelling Energy ability
 
 Breathes a bolt of dispelling energy at a targeted creature, possibly removing
@@ -115,7 +111,7 @@ your destination.
 %%%%
 Evoke Blink ability
 
-<Blink ability>
+Randomly translocates the user a short distance.
 %%%%
 Evoke Berserk Rage ability
 
