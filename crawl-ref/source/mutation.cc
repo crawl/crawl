@@ -192,7 +192,6 @@ static const int conflict[][3] =
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
-
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
 };
@@ -285,14 +284,10 @@ static bool _is_valid_mutation(mutation_type mut)
     return mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1;
 }
 
-static const mutation_type _all_scales[] =
+static const mutation_type _ds_scales[] =
 {
     MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
-    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,
-#if TAG_MAJOR_VERSION == 34
-    MUT_ROUGH_BLACK_SCALES,
-#endif
+    MUT_LARGE_BONE_PLATES,          MUT_MOLTEN_SCALES,
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
@@ -300,9 +295,9 @@ static const mutation_type _all_scales[] =
     MUT_SHARP_SCALES,
 };
 
-static bool _is_covering(mutation_type mut)
+static bool _is_demonspawn_scale(mutation_type mut)
 {
-    return find(begin(_all_scales), end(_all_scales), mut) != end(_all_scales);
+    return find(begin(_ds_scales), end(_ds_scales), mut) != end(_ds_scales);
 }
 
 bool is_body_facet(mutation_type mut)
@@ -1475,40 +1470,23 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     return 0;
 }
 
-static int _body_covered()
-{
-    // Check how much of your body is covered by scales, etc.
-    // Note: this won't take into account forms, so is only usable for checking in general.
-    int covered = 0;
-
-    if (you.species == SP_NAGA)
-        covered++;
-
-    if (species::is_draconian(you.species))
-        covered += 3;
-
-    for (mutation_type scale : _all_scales)
-        covered += you.get_base_mutation_level(scale);
-
-    return covered;
-}
-
 bool physiology_mutation_conflict(mutation_type mutat)
 {
-    // If demonspawn, and mutat is a scale, see if they were going
-    // to get it sometime in the future anyway; otherwise, conflict.
-    if (you.species == SP_DEMONSPAWN && _is_covering(mutat)
-        && find(_all_scales, _all_scales+ARRAYSZ(_all_scales), mutat) !=
-                _all_scales+ARRAYSZ(_all_scales))
+    if (mutat == MUT_IRIDESCENT_SCALES)
     {
-        return none_of(begin(you.demonic_traits), end(you.demonic_traits),
-                       [=](const player::demon_trait &t) {
-                           return t.mutation == mutat;});
-    }
+        // No extra scales for most demonspawn, but monstrous demonspawn who
+        // wouldn't usually get scales can get regular ones randomly.
+        if (you.species == SP_DEMONSPAWN)
+        {
+            return any_of(begin(you.demonic_traits), end(you.demonic_traits),
+                          [=](const player::demon_trait &t) {
+                              return _is_demonspawn_scale(t.mutation);});
+        }
 
-    // Strict 3-scale limit.
-    if (_is_covering(mutat) && _body_covered() >= 3)
-        return true;
+        // No extra scales for draconians.
+        if (species::is_draconian(you.species))
+            return true;
+    }
 
     // Only species that already have tails can get this one. For merfolk it
     // would only work in the water, so skip it.
@@ -1563,8 +1541,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
     if ((you.has_innate_mutation(MUT_PAWS)
-                        || you.has_innate_mutation(MUT_TENTACLE_ARMS))
-         && mutat == MUT_CLAWS)
+         || you.has_innate_mutation(MUT_TENTACLE_ARMS))
+        && mutat == MUT_CLAWS)
     {
         return true;
     }
@@ -2627,8 +2605,6 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { -33, -33, 0 } },
     { 1, { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
-      { -33, -33, 0 } },
-    { 1, { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
       { -33, -33, 0 } },
