@@ -874,11 +874,7 @@ void slime_wall_damage(actor* act, int delay)
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
 
     if (act->is_player())
-    {
-        you.splash_with_acid(nullptr, strength, false,
-                            (walls > 1) ? "The walls burn you!"
-                                        : "The wall burns you!");
-    }
+        you.splash_with_acid(nullptr, strength, false);
     else
     {
         monster* mon = act->as_monster();
@@ -887,8 +883,9 @@ void slime_wall_damage(actor* act, int delay)
                                              roll_dice(2, strength));
         if (dam > 0 && you.can_see(*mon))
         {
-            mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
-                  mon->name(DESC_THE).c_str());
+            const char *verb = act->is_icy() ? "melt" : "burn";
+            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+                  verb, mon->name(DESC_THE).c_str());
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
     }
