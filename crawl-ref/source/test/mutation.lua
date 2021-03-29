@@ -37,22 +37,13 @@ local function test_basic_mutation_stuff()
     assert(you.get_base_mutation_level("frail") == you.get_base_mutation_level("frail", false, true, false))
     assert(you.get_base_mutation_level("frail", false, true) == you.get_base_mutation_level("frail", false, true))
 
-    -- test forced clearing for mutations that can coexist (type 0)
-    assert(you.mutate("regeneration", "basic mutation test", false))
-    assert(you.mutate("regeneration", "basic mutation test", false))
-    assert(you.mutate("slow metabolism", "basic mutation test", false))
-    assert(you.get_base_mutation_level("regeneration", true, true, true) == 0)
-    assert(you.get_base_mutation_level("slow metabolism", true, true, true) == 1)
-    assert(you.mutate("regeneration", "basic mutation test", false, false)) -- not forced, should end up with both?
-    assert(you.get_base_mutation_level("regeneration") == 1)
-
     -- test forced clearing for mutations that can't coexist (type -1)
     assert(you.mutate("fire resistance", "basic mutation test", false))
     assert(you.mutate("fire resistance", "basic mutation test", false))
     assert(not you.mutate("heat vulnerability", "basic mutation test", false, false)) -- non-forced mutation should fail
     assert(you.get_base_mutation_level("fire resistance") == 2)
     assert(you.get_base_mutation_level("heat vulnerability") == 0)
-    assert(you.mutate("heat vulnerability", "basic mutation test", false, true)) -- forced mutation should fully clear hooves
+    assert(you.mutate("heat vulnerability", "basic mutation test", false, true)) -- forced mutation should fully clear fire resistance
     assert(you.get_base_mutation_level("fire resistance") == 0)
     assert(you.get_base_mutation_level("heat vulnerability") == 1)
 
@@ -69,11 +60,6 @@ local function test_basic_mutation_stuff()
     ------------------
     -- test some physiology conflicts interactions (see mutation.cc:physiology_mutation_conflict)
     -- this isn't exhaustive
-    assert(you.mutate("icy blue scales", "basic mutation test"))
-    assert(you.mutate("iridescent scales", "basic mutation test"))
-    assert(you.mutate("large bone plates", "basic mutation test"))
-    assert(not you.mutate("molten scales", "basic mutation test")) -- three scale limit
-
     assert(not you.mutate("spit poison", "basic mutation test")) -- only for nagas
     -- could add other species conditions here using you.change_species
 
@@ -102,7 +88,7 @@ end
 
 -- TODO: better way to do this in lua so that it doesn't duplicate code
 local function simulate_mutation_pot()
-    remove = crawl.random_range(2, 6)
+    remove = crawl.random_range(2, 4)
     add = crawl.random_range(1, 3)
     for i=1, remove do
         you.delete_mutation("any", "mutation test")
