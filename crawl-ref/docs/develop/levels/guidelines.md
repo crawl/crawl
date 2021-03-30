@@ -62,6 +62,28 @@ The actual maps can be found in the following files:
 If a map is both big and complex, file under twisted.des.
 If a map is both plain and small, file under simple.des.
 
+## Guidelines for overflow temples
+
+Overflow temples are specific vaults used by the dungeon builder to guarantee
+altars to temple gods that did not get an altar in the Ecumenical Temple. In
+general these should avoid placing significant challenges (out of depth
+monsters) and leave the altar accessible without need for flight or blinks, as
+the purpose is to provide the player with a guaranteed altar.
+
+See the comments at the start of
+[crawl-ref/source/dat/des/altar/overflow.des](https://github.com/crawl/crawl/tree/master/crawl-ref/source/dat/des/altar/overflow.des) for the specific tagging scheme to use for overflow temples, either generic or devoted to particular gods.
+
+* If your vault places a single specific altar and is a plausible mini vault
+  tag it `uniq_altar_GODNAME` as well as the overflow temple tags
+* Whenever possible, don't add a depth specification to such a vault.
+* If a specific monster is necessary for theme, then constrain the vault to
+  that monster's depth.
+* If using a specific depth range, be sure that it's reasonable for your vault
+  to include D, and start by specifying `: overflow_depth(_G)`
+* If your vault is decor (even if it does not have the decor tag, if there
+  are no depth-appropriate monsters to fight, and no serious loot),
+  include `: interest_check(_G)` to ensure the vault is tagged appropriately
+
 ## Guidelines for creating serial vaults
 
 Sometimes, we want flavour (or also other) vaults to be placed several times,
