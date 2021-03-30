@@ -466,20 +466,20 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM, 6, 3, mutflag::bad | mutflag::xom, false,
+{ MUT_SCREAM, 6, 2, mutflag::bad | mutflag::xom, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
-   "You sometimes yell uncontrollably at your foes.",
-   "You frequently scream uncontrollably at your foes."},
+   "You frequently scream uncontrollably at your foes.",
+   ""},
 
   {"You feel the urge to shout.",
-   "You feel a strong urge to yell.",
-   "You feel a strong urge to scream."},
+   "You feel a strong urge to scream.",
+   ""},
 
   {"Your urge to shout disappears.",
-   "Your urge to yell lessens.",
-   "Your urge to scream lessens."},
+   "Your urge to scream lessens.",
+   ""},
 },
 
 { MUT_CLARITY, 6, 1, mutflag::good, false,
@@ -1292,20 +1292,20 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_POTION_HEAL, 3, 3, mutflag::bad, false,
+{ MUT_NO_POTION_HEAL, 3, 2, mutflag::bad, false,
   "no potion heal",
 
   {"Potions are less effective at restoring your health.",
-   "Potions are poor at restoring your health.",
-   "Potions cannot restore your health."},
+   "Potions cannot restore your health.",
+   ""},
 
   {"Your system partially rejects the healing effects of potions.",
-   "Your system mostly rejects the healing effects of potions.",
-   "Your system completely rejects the healing effects of potions."},
+   "Your system completely rejects the healing effects of potions.",
+   ""},
 
   {"Your system completely accepts the healing effects of potions.",
-   "Your system mostly accepts the healing effects of potions.",
-   "Your system partly accepts the healing effects of potions."},
+   "Your system partly accepts the healing effects of potions.",
+   ""},
 },
 
 // Scale mutations

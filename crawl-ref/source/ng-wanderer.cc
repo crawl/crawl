@@ -402,7 +402,7 @@ static void _good_potion_or_scroll()
             you.stasis() ? 0 : 1 },
         { { OBJ_POTIONS, POT_HEAL_WOUNDS },
             (you.has_mutation(MUT_NO_DRINK)
-             || you.get_mutation_level(MUT_NO_POTION_HEAL) >= 3) ? 0 : 1 },
+             || you.get_mutation_level(MUT_NO_POTION_HEAL) >= 2) ? 0 : 1 },
         { { OBJ_POTIONS, POT_HASTE },
             (you.has_mutation(MUT_NO_DRINK)
              || you.stasis()) ? 0 : 1 },

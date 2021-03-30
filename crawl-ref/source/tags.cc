@@ -3134,7 +3134,7 @@ static void _tag_read_you(reader &th)
                                         && you.species == SP_VINE_STALKER)
     {
         you.mutation[MUT_NO_POTION_HEAL] =
-                you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+                you.innate_mutation[MUT_NO_POTION_HEAL] = 2;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
@@ -3309,6 +3309,17 @@ static void _tag_read_you(reader &th)
     {
         you.mutation[MUT_ACID_RESISTANCE] = 1;
         you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_COMPRESS_BADMUTS)
+    {
+        if (you.mutation[MUT_SCREAM] > 2)
+            you.mutation[MUT_SCREAM] = 2;
+
+        if (you.species == SP_VINE_STALKER)
+            _fixup_species_mutations(MUT_NO_POTION_HEAL);
+        else if (you.mutation[MUT_NO_POTION_HEAL] > 2)
+            you.mutation[MUT_NO_POTION_HEAL] = 2;
     }
 
     // fully clean up any removed mutations

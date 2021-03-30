@@ -5345,7 +5345,7 @@ string player::shout_verb(bool directed) const
     if (you.duration[DUR_WEREBLOOD])
         return "howl";
 
-    const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
+    const int screaminess = get_mutation_level(MUT_SCREAM);
     return species::shout_verb(you.species, screaminess, directed);
 }
 
@@ -5358,10 +5358,7 @@ int player::shout_volume() const
 {
     const int base_noise = 12 + get_form()->shout_volume_modifier;
 
-    if (get_mutation_level(MUT_SCREAM))
-        return base_noise + 2 * (get_mutation_level(MUT_SCREAM) - 1);
-
-    return base_noise;
+    return base_noise + 2 * (get_mutation_level(MUT_SCREAM));
 }
 
 void player::god_conduct(conduct_type thing_done, int level)
@@ -7674,11 +7671,11 @@ bool player::wear_barding() const
 
 static int _get_potion_heal_factor()
 {
-    // healing factor is expressed in thirds, so default is 3/3 -- 100%.
-    int factor = 3;
+    // healing factor is expressed in halves, so default is 2/2 -- 100%.
+    int factor = 2;
 
     // start with penalties
-    factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
+    factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
     factor -= you.mutation[MUT_NO_POTION_HEAL];
 
     // then apply bonuses - Kryia's doubles potion healing
@@ -7692,7 +7689,7 @@ void print_potion_heal_message()
 {
     // Don't give multiple messages in weird cases with both enhanced
     // and reduced healing.
-    if (_get_potion_heal_factor() > 3)
+    if (_get_potion_heal_factor() > 2)
     {
         if (player_equip_unrand(UNRAND_KRYIAS))
         {
@@ -7706,7 +7703,7 @@ void print_potion_heal_message()
     }
     else if (_get_potion_heal_factor() == 0)
         mpr("Your system rejects the healing.");
-    else if (_get_potion_heal_factor() < 3)
+    else if (_get_potion_heal_factor() < 2)
         mpr("Your system partially rejects the healing.");
 }
 
@@ -7718,7 +7715,7 @@ bool player::can_potion_heal()
 
 int player::scale_potion_healing(int healing_amount)
 {
-    return div_rand_round(healing_amount * _get_potion_heal_factor(), 3);
+    return div_rand_round(healing_amount * _get_potion_heal_factor(), 2);
 }
 
 void player_open_door(coord_def doorpos)

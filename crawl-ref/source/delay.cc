@@ -1081,7 +1081,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             }
         }
         if (you.has_mutation(MUT_SCREAM)
-            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
+            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
         {
             yell(mon);
         }
