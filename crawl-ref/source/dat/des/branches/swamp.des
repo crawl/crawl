@@ -2177,7 +2177,6 @@ __ttt-v...ZZ.....ZZ...v-ttt__
 ENDMAP
 
 NAME:   cheibrodos_swamp_monstrosity
-DEPTH:  Swamp
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: float
 MONS:   tentacled monstrosity
@@ -2249,7 +2248,6 @@ MAP
 ENDMAP
 
 NAME:    nzn_swamp_blast_mining
-DEPTH:   Swamp
 TAGS:    no_pool_fixup
 WEIGHT:  5
 ITEM:    stone, tin of tremorstones
@@ -2277,7 +2275,6 @@ MAP
 ENDMAP
 
 NAME:   nzn_swamp_dancing_lights
-DEPTH:  Swamp
 TAGS:   transparent no_pool_fixup
 KMONS:  O = will-o-the-wisp
 NSUBST: D = W / w, E = O / W, F = W / w, H = O / W, J = W / w, K = O / W
