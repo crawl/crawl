@@ -2441,6 +2441,35 @@ xccc...D
 xxxxDDDx
 ENDMAP
 
+NAME:   kennysheep_orc_sif_temple
+TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
+TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
+DEPTH:  D, Orc
+: overflow_depth(_G)
+KFEAT:  _ = altar_sif_muna
+: if you.absdepth() < 6 then
+MONS:   orc wizard w:2 / nothing, orc
+: else
+MONS:   orc wizard / nothing, orc warrior
+: end
+MAP
+     xxxxx
+   xxxwwwxxx
+  xxwwwwwwwxx
+ xxww.vvv.wwxx
+ xww.nv_vn.wwx
+xxww.v111v.wwxx
+xwww.v1d1v.wwwx
+xxww.nv1vn.wwxx
+ xwwwWv+vWwwwx
+ xxwwWG.GWwwxx
+  xxww.2.wwxx
+   xxxG.Gxxx
+     x...x
+     xG.Gx
+       @
+ENDMAP
+
 
 ### Trog overflow altars ######################################################
 

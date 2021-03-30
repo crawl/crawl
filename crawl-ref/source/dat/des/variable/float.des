@@ -7761,30 +7761,6 @@ MAP
         @
 ENDMAP
 
-NAME:   kennysheep_orc_sif_temple
-ORIENT: float
-TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
-DEPTH:  D:6-10
-KFEAT:  C = altar_sif_muna
-MONS:   orc wizard / nothing, orc warrior
-MAP
-     xxxxx
-   xxxwwwxxx
-  xxwwwwwwwxx
- xxww.vvv.wwxx
- xww.nvCvn.wwx
-xxww.v111v.wwxx
-xwww.v1d1v.wwwx
-xxww.nv1vn.wwxx
- xwwwWv+vWwwwx
- xxwwWG.GWwwxx
-  xxww.2.wwxx
-   xxxG.Gxxx
-     x...x
-     xG.Gx
-       @
-ENDMAP
-
 NAME:   kennysheep_demon_hangout
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen no_trap_gen

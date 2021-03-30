@@ -351,7 +351,7 @@ ENDMAP
 
 NAME:    nzn_masters_of_martial_movement
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   D:9-12, Lair
+DEPTH:   Lair
 KFEAT:   D = altar_wu_jian
 KFEAT:   E = altar_uskayaw
 MONS:    patrolling boulder beetle
@@ -848,7 +848,6 @@ KFEAT:  ' = shaft trap
 KFEAT:  ~ = alarm trap / floor
 KFEAT:  ` = web trap / floor w:30
 : if you.absdepth() < 11 then
-KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
 SUBST:  5 = 25
 SUBST:  7 = 78
@@ -900,7 +899,6 @@ KFEAT:  78 = W
 KFEAT:  ' = shaft trap
 KFEAT:  ` = web trap / floor w:60
 : if you.absdepth() < 11 then
-KFEAT:  ? = altar_fedhas
 SUBST:  m : 1twx
 SUBST:  5 = 25
 SUBST:  7 = 78
@@ -2641,8 +2639,10 @@ ENDMAP
 NAME:    nzn_life_drinkers
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   D:8-, Crypt, Vaults, Depths
+: if not you.in_branch("D") then
 KFEAT:   D = altar_makhleb
 KFEAT:   E = altar_the_shining_one
+: end
 SHUFFLE: '/-
 NSUBST:  ' = D / 1=E, 1 = 1 / .
 SUBST:   A = V:50 Y
@@ -2912,7 +2912,7 @@ cccbcccc.@.ccccbccc
 ENDMAP
 
 NAME:   hangedman_tree_tricks
-DEPTH:  D:8-, !D:$
+DEPTH:  Lair, !Lair:$
 TAGS:   extra no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = oklob plant
