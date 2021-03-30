@@ -376,6 +376,7 @@ static const mutation_def mut_data[] =
   {"Your body's shape seems more normal.", "", ""},
 },
 
+// Naga only
 { MUT_SPIT_POISON, 8, 2, mutflag::good, false,
   "spit poison",
 
@@ -898,6 +899,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+// Palentonga only
 { MUT_ROLL, 8, 3, mutflag::good, true,
   "roll",
 
