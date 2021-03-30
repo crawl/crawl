@@ -52,13 +52,13 @@
 
 {{
 function interest_check(e)
-  if not you.in_branch("D") or you.absdepth() > 9 then
+  if not you.in_branch("D") or you.absdepth() > 10 then
     e.tags('extra')
   end
 end
 
 function overflow_depth(e)
-  e.depth("!D:1")
+  e.depth("!D:1-2")
 end
 
 function get_overflow_altar_count(e)
