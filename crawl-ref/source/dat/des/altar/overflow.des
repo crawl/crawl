@@ -5051,3 +5051,63 @@ MAP
  ..nnnnnnnnn..
   ...........
 ENDMAP
+
+NAME: mainiacjoe_overflow_two_lobes
+TAGS: temple_overflow_generic_2
+SUBST: l : lwo
+SUBST: b : bvt
+KMASK: w = no_pool_fixup
+KMASK: wl = no_monster_gen
+MAP
+  cccccc        cccccc
+ cc....ccc    ccc....cc
+ c.......cc  cc.......c
+cc.bbb....c  c....bbb.cc
+c....bbb..cccc..bbb....c
+c......bb..ll..bb......c
+c...B...b..ll..b...B...c
+c......bb..ll..bb......c
+c....bbb..+cc+..bbb....c
+cc.bbb....c@@c....bbb.cc
+ c.......cc  cc.......c
+ cc....ccc    ccc....cc
+  cccccc        cccccc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_catwalk_spiral
+TAGS:  temple_overflow_generic_2
+SUBST: w : wl
+KMASK: w = no_pool_fixup
+KMASK: wl = no_monster_gen
+MAP
+xxxxxx@xxxxxxxx
+xwwwww.wwwwwwwx
+xw.....w.....wx
+xw.wwwww.www.wx
+xw.w...w.wBw.wx
+xw.w.w.w.w.w.wx
+xw.wBw.w...w.wx
+xw.www.wwwww.wx
+xw.....w.....wx
+xwwwwwww.wwwwwx
+xxxxxxxx@xxxxxx
+ENDMAP
+
+NAME: mainiacjoe_overflow_small_starburst
+TAGS: temple_overflow_generic_1
+SUBST: c : cnvbtwl
+KMASK: w = no_pool_fixup
+KMASK: wl = no_monster_gen
+MAP
+   .........
+  ...........
+ ....cc.cc....
+...c..c.c..c...
+...cc.....cc...
+.......B.......
+...cc.....cc...
+...c..c.c..c...
+ ....cc.cc....
+  ...........
+   .........
+ENDMAP
