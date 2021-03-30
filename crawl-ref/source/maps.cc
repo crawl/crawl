@@ -843,6 +843,14 @@ public:
     const bool check_layout;
 };
 
+static bool _overflow_range(level_id place)
+{
+    // Intentionally not checked for the minimum, this is to exclude
+    // depth selection for overflow temples as mini vaults before the
+    // MAX_OVERFLOW_LEVEL
+    return place.branch == BRANCH_DUNGEON && place.depth <= MAX_OVERFLOW_LEVEL;
+}
+
 bool map_selector::depth_selectable(const map_def &mapdef) const
 {
     return mapdef.is_usable_in(place)
@@ -853,7 +861,8 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
            && !mapdef.has_tag("place_unique")
            && !mapdef.has_tag("tutorial")
            && (!mapdef.has_tag_prefix("temple_")
-               || mapdef.has_tag_prefix("uniq_altar_"))
+               || !_overflow_range(place)
+                  && mapdef.has_tag_prefix("uniq_altar_"))
            && _map_matches_species(mapdef)
            && (!check_layout || _map_matches_layout_type(mapdef));
 }

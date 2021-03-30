@@ -78,11 +78,9 @@ See the comments at the start of
 * Whenever possible, don't add a depth specification to such a vault.
 * If a specific monster is necessary for theme, then constrain the vault to
   that monster's depth.
-* If using a specific depth range, be sure that it's reasonable for your vault
-  to include D, and start by specifying `: overflow_depth(_G)`
 * If your vault is decor (even if it does not have the decor tag, if there
-  are no depth-appropriate monsters to fight, and no serious loot),
-  include `: interest_check(_G)` to ensure the vault is tagged appropriately
+  are no depth-scaling monsters to fight, and no serious loot),
+  include `: interest_check(_G)` to ensure the vault is tagged appropriately.
 
 ## Guidelines for creating serial vaults
 

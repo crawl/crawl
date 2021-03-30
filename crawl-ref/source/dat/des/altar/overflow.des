@@ -14,14 +14,8 @@
 #      Says the map will only ever be used for overflow temples to god FOO.
 #      (The 1 indicates there's only one god placed by this vault.)
 # TAG: uniq_altar_FOO
-#      If you also add this, then the map can be placed randomly even if
-#      that altar has been chosen at new-game time to be an overflow temple
-#      on a specific level. If it happens to be randomly placed before being
-#      generated specifically then it will only be placed once, rather than
-#      being placed a second time at the location chosen at new-game time.
-#
-#      This tag must be present in order for your vault to place as a mini
-#      vault.
+#      If you also add this, then the map can be placed randomly. Random
+#      placement will only occur after the deepest possible overflow depth.
 #
 # And there is a TAG if you want a single-altar map to a random god:
 #
@@ -37,12 +31,6 @@
 # mini vaults
 # - Add an interest_check(_G) if the vault is purely decorative to
 #   automatically apply an extra tag as needed.
-# - If specifying a depth that includes D, use the lua function
-#   overflow_depth(_G) to exclude the early dungeon. This should come after
-#   other depth declarations, e.g.
-#
-#   DEPTH:  D:1-8
-#   : overflow_depth(_G)
 #
 # If you want to check overflow temple placement in wizard mode, use the &:
 # command. The levels overflow temples are placed on, and which gods are
@@ -55,10 +43,6 @@ function interest_check(e)
   if not you.in_branch("D") or you.absdepth() > 10 then
     e.tags('extra')
   end
-end
-
-function overflow_depth(e)
-  e.depth("!D:1-2")
 end
 
 function get_overflow_altar_count(e)
@@ -365,14 +349,12 @@ MAP
 ENDMAP
 
 NAME:  slow_altar_1
-# worm depth
-DEPTH: D:2-5
-: overflow_depth(_G)
 TAGS:  patrolling no_monster_gen no_item_gen transparent
 TAGS:  uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 KMONS: _ = worm / mummy / iron imp
 KFEAT: _ = altar_cheibriados
 SUBST: x : xxxcccmnvb
+: interest_check(_G)
 MAP
 xxx..@..xxx
 xxx.....xxx
@@ -388,14 +370,12 @@ xxx..@..xxx
 ENDMAP
 
 NAME:    slow_altar_2
-# worm depth
-DEPTH:   D:2-5
-: overflow_depth(_G)
 TAGS:    patrolling no_monster_gen no_item_gen
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 KMONS:   _ = worm / mummy / iron imp
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
+: interest_check(_G)
 MAP
 x@@G@@x
 x.....x
@@ -413,12 +393,11 @@ NAME:   chei_slow_surprise
 TAGS:   uniq_altar_cheibriados temple_overflow_1
 TAGS:   temple_overflow_cheibriados transparent no_monster_gen
 TAGS:   transparent
-DEPTH:  D:2-5
-: overflow_depth(_G)
 WEIGHT: 5
 KMONS:  a = worm / mummy / iron imp
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
+: interest_check(_G)
 MAP
  ........
 ..xxxxxx..
@@ -435,11 +414,10 @@ ENDMAP
 NAME:   cheibrodos_worm_habitat
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 transparent
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
-DEPTH:  D:2-5
-: overflow_depth(_G)
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
 MONS:   worm
+: interest_check(_G)
 MAP
 .............
 .xxxxx.xxxxx.
@@ -459,11 +437,10 @@ ENDMAP
 NAME:   kennysheep_slug_shrine
 TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:   no_pool_fixup no_monster_gen transparent
-DEPTH:  D:1-5
-: overflow_depth(_G)
 MONS:   patrolling dart slug
 KMASK:  1 = opaque
 KFEAT:  _ = altar_cheibriados
+: interest_check(_G)
 MAP
   .WWW
  .WwwwWbb
@@ -511,7 +488,6 @@ ENDMAP
 NAME:  grunt_dithmenos_shadows
 TAGS:  uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH: D:5-
-: overflow_depth(_G)
 KFEAT: C = altar_dithmenos
 {{
   if you.absdepth() >= 14 then
@@ -812,7 +788,6 @@ NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
 TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
 DEPTH:   D, Lair
-: overflow_depth(_G)
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_tele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool
@@ -830,6 +805,7 @@ SUBST:   T = xt, U = xx
 SUBST:   " = .....5
 COLOUR:  . = green / none
 COLOUR:  ' = green
+: interest_check(_G)
 MAP
 ccccccccccccccccccccccc
 cxxxxxxxxxxxxxxxxxxxxxc
@@ -858,11 +834,11 @@ NAME:  fedhas_ov_isle_minmay
 TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas no_monster_gen
 TAGS:  transparent
 DEPTH: D, !D:$
-: overflow_depth(_G)
 MONS:  plant / bush w:5
 SUBST: 1 = 111t'''
 KFEAT: _ = altar_fedhas
 KMASK: _1'<> = opaque
+: interest_check(_G)
 MAP
      .....
    ...www...
@@ -914,7 +890,6 @@ NAME:  fedhas_bush_and_centaur_altar
 TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas transparent
 # Centaur depth
 DEPTH: D:5-13
-: overflow_depth(_G)
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP
@@ -933,7 +908,6 @@ TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas
 TAGS:   no_item_gen no_monster_gen no_trap_gen
 # Necrophage depth
 DEPTH:  D:4-8
-: overflow_depth(_G)
 MONS:   bush, plant, necrophage, zombie
 KFEAT:  _ = altar_fedhas
 FTILE:  '!12@ = floor_moss
@@ -1224,13 +1198,12 @@ NAME:    nicolae_hepliaklqana_monster_ancestors
 TAGS:    temple_overflow_hepliaklqana temple_overflow_1 transparent
 TAGS:    uniq_altar_hepliaklqana
 TAGS:    patrolling no_monster_gen no_trap_gen
-DEPTH:   D:1-8
-: overflow_depth(_G)
 MONS:    goblin, spectral goblin, kobold, spectral kobold, hobgoblin
 MONS:    spectral hobgoblin, orc
 KMONS:   D = spectral orc
 SHUFFLE: 12 / 34 / 56 / 7D
 KFEAT:   _ = altar_hepliaklqana
+: interest_check(_G)
 MAP
 xxxxxxxxx
 xxwwwwwxx
@@ -1380,7 +1353,6 @@ TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
 # zombies scale with depth so we'll let it place in Crypt, too, but with an
 # interest check
 DEPTH:  D:4-10, Crypt
-: overflow_depth(_G)
 MONS:   zombie, mummy, wight, necrophage
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
@@ -1512,7 +1484,6 @@ ENDMAP
 
 NAME:    demons_altar
 DEPTH:   D, Orc, !Orc:$
-: overflow_depth(_G)
 TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb
 TAGS:    transparent layout_rooms layout_city layout_open uniq_altar_makhleb
 KFEAT:   _ = altar_makhleb
@@ -1545,7 +1516,6 @@ NAME:  bloody_makhleb
 TAGS:  uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:  transparent decor
 DEPTH: D, Orc
-: overflow_depth(_G)
 KPROP: . = bloody / nothing
 KFEAT: _ = altar_makhleb
 KITEM: _ = robe, whip
@@ -1579,7 +1549,6 @@ NAME:   makhleb_blood_cavern_becter
 TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 # necrophage depth (contains hound too)
 DEPTH:  D:4-8
-: overflow_depth(_G)
 : if crawl.coinflip() then
 : dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound
@@ -1611,7 +1580,6 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen
 # hound depth
 DEPTH:  D:4-7
-: overflow_depth(_G)
 KFEAT:  _ = altar_makhleb
 KMONS:  _ = patrolling hound
 TILE:   c = wall_hall
@@ -1631,7 +1599,6 @@ TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 TAGS:   uniq_altar_makhleb
 # white imp depth
 DEPTH:  D:5-8
-: overflow_depth(_G)
 MONS:   iron imp w:1 / shadow imp w:1 / crimson imp
 KFEAT:  _ = altar_makhleb
 TILE:   c = wall_hall
@@ -1653,7 +1620,6 @@ NAME:   nzn_makhleb_speed_demon
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_makhleb
 TAGS:   uniq_altar_makhleb
 DEPTH:  D:7-11
-: overflow_depth(_G)
 WEIGHT: 2
 KFEAT:  _ = altar_makhleb
 KMONS:  _ = sixfirhy
@@ -1726,7 +1692,6 @@ TAGS:    no_rotate no_vmirror no_monster_gen no_item_gen
 TAGS:    uniq_altar_nemelex_xobeh
 # orc and ogre depth
 DEPTH:   D:3-7
-: overflow_depth(_G)
 : if you.depth() <= 4 then
 MONS:    orc ; club
 : else
@@ -1830,7 +1795,6 @@ NAME:    okawaru_metal_pillars_1_2
 TAGS:    temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:    transparent decor
 DEPTH:   D, Orc
-: overflow_depth(_G)
 WEIGHT:  7
 KFEAT:   _ = altar_okawaru
 SHUFFLE: v'
@@ -1848,7 +1812,6 @@ NAME:   okawaru_metal_pillars_3
 TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor
 DEPTH:  D, Orc
-: overflow_depth(_G)
 WEIGHT: 3
 KFEAT:  _ = altar_okawaru
 : interest_check(_G)
@@ -1959,7 +1922,6 @@ NAME:    okawaru_humans
 TAGS:    uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 TAGS:    no_monster_gen no_wall_fixup transparent
 DEPTH:   D:7-12
-: overflow_depth(_G)
 COLOUR:  1 = yellow, ' = yellow, x = white
 MONS:    human ; long sword . ring mail
 FTILE:   1'xO = floor_sandstone
@@ -2358,7 +2320,6 @@ ENDMAP
 
 NAME:   led_sif_book
 DEPTH:  D, Orc
-: overflow_depth(_G)
 TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KPROP:  1d = no_tele_into
@@ -2445,7 +2406,6 @@ NAME:   kennysheep_orc_sif_temple
 TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 DEPTH:  D, Orc
-: overflow_depth(_G)
 KFEAT:  _ = altar_sif_muna
 : if you.absdepth() < 6 then
 MONS:   orc wizard w:2 / nothing, orc
@@ -2491,7 +2451,6 @@ TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 TAGS:   transparent
 # begin at bear range
 DEPTH:  D:4-
-: overflow_depth(_G)
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
@@ -2539,7 +2498,6 @@ NAME:   trog_antimagical
 TAGS:   uniq_altar_trog temple_overflow_1 temple_overflow_trog patrolling
 # range of orc + orc warrior
 DEPTH:  D:3-12
-: overflow_depth(_G)
 WEIGHT: 4
 : if you.absdepth() > 5 then
 KMONS:  1 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
@@ -2573,7 +2531,6 @@ NAME:   trog_butcher_becter
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D, Orc, !Orc:$
-: overflow_depth(_G)
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
 MONS:   rat / frilled lizard / quokka w:20
@@ -2604,8 +2561,6 @@ ENDMAP
 NAME:   trog_hazing_becter
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
-DEPTH:  D:3-4
-: overflow_depth(_G)
 MONS:   goblin ; stone q:5 . animal skin / \
         hobgoblin ; stone q:5 . animal skin / \
         kobold ; stone q:5 | throwing net q:1 . animal skin
@@ -2614,6 +2569,7 @@ NSUBST: D = 6=1 / .
 SUBST:  . = d....
 KFEAT:  _ = altar_trog
 KFEAT:  m = iron_grate
+: interest_check(_G)
 MAP
   xxxxx
  xxmmmxx
@@ -2715,7 +2671,6 @@ TAGS:   temple_overflow_uskayaw temple_overflow_1 no_monster_gen transparent
 TAGS:   patrolling uniq_altar_uskayaw
 # kobold brigand depth
 DEPTH:  D:6-11
-: overflow_depth(_G)
 KMONS:  _ = kobold brigand band
 KFEAT:  _ = altar_uskayaw
 MAP
@@ -3171,7 +3126,6 @@ ENDMAP
 NAME:    xom_shifter_show
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 DEPTH:   D:7-
-: overflow_depth(_G)
 MONS:    shapeshifter hd:1
 KFEAT:   _ = altar_xom
 NSUBST:  . = 2:1 / 1:> / * = _...
@@ -3360,7 +3314,6 @@ TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   uniq_mausoleum_altar
 # see the kiku mausoleum altar for the depth
 DEPTH:  D:4-10, Crypt
-: overflow_depth(_G)
 MONS:   zombie, mummy, wight, necrophage
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4
@@ -3731,7 +3684,6 @@ TAGS: temple_overflow_the_shining_one uniq_altar_the_shining_one
 TAGS: temple_overflow_1 patrolling transparent no_monster_gen
 # imp ranges
 DEPTH: D:3-8
-: overflow_depth(_G)
 SUBST: c = ccc' s:2 z:2, + = ++'
 NSUBST: ' = 2:s / 2:z / 2:sz'' / *:'
 COLOUR: 'sz = yellow / none w:5

@@ -77,9 +77,6 @@ void initialise_branch_depths()
     initialise_brentry();
 }
 
-#define MIN_OVERFLOW_LEVEL 3
-#define MAX_OVERFLOW_LEVEL 10
-
 static void _use_overflow_temple(vector<god_type> temple_gods)
 {
     CrawlVector &overflow_temples
