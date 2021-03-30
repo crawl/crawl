@@ -4344,7 +4344,7 @@ KFEAT:   E = altar_sif_muna
 : if you.absdepth() <= 3 then
 {{
 local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)
-local weapons = {["spear"] = 1, ["handaxe"] = 1, ["mace"] = 1,
+local weapons = {["spear"] = 1, ["hand axe"] = 1, ["mace"] = 1,
                  ["falchion"] = 1}
 kitem("1 = " .. dgn.random_item_def(weapons, nil, "ego:none plus:" .. enchant))
 }}
