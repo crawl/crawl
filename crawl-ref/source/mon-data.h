@@ -1003,7 +1003,7 @@ static monsterentry mondata[] =
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_GOBLIN, MONS_HOBGOBLIN, MH_NATURAL, 0,
-    { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     1, 55,
     2, 10, MST_NO_SPELLS, true, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
