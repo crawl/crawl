@@ -1972,8 +1972,11 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
-    // If you have an active amulet of the acrobat and just moved or waited, get massive
-    // EV bonus.
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+        evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    // If you have an active amulet of the acrobat and just moved or waited,
+    // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
 

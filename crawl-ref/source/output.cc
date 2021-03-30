@@ -22,6 +22,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-name.h"
@@ -506,7 +507,9 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_active();
+    return you.duration[DUR_AGILITY]
+           || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+           || acrobat_boost_active();
 }
 
 static bool _boosted_sh()

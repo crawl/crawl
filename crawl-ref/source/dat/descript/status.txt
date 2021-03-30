@@ -646,10 +646,10 @@ damage and never miss.
 Storm status
 
 You are surrounded by a storm of heavenly clouds. While the storm rages, your
-combat accuracy and damage are substantially increased, and striking enemies
-with martial attacks increases this bonus. The storm weakens over time and
-fades away once the bonus reaches zero. The heavenly clouds prevent
-invisibility, and obscure the vision of those outside the storm.
+evasion and combat accuracy and damage are substantially increased, and
+striking enemies with martial attacks increases this bonus. The storm weakens
+over time and fades away once the bonus reaches zero. The heavenly clouds
+prevent invisibility, and obscure the vision of those outside the storm.
 %%%%
 SlowM status
 
