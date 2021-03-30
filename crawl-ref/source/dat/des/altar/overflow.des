@@ -4500,6 +4500,63 @@ xx..pxp..xx
  xxxxxxxxx
 ENDMAP
 
+NAME:  lemuel_tele_altar
+TAGS:  temple_overflow_generic_1 transparent decor
+SUBST: D = ^ x
+KFEAT: ^ = teleport trap
+KMASK: 'B = opaque
+MAP
+...........
+.xxxx^xxxx.
+.x'''''''x.
+.x'''''''x.
+.x'''''''x.
+.D'''B'''D.
+.x'''''''x.
+.x'''''''x.
+.x'''''''x.
+.xxxxDxxxx.
+...........
+ENDMAP
+
+NAME:  pf_just_have_faith
+WEIGHT: 1
+TAGS: no_monster_gen temple_overflow_generic_1
+KMASK: $ = no_trap_gen
+KFEAT: m = lava mimic
+# We use a statue mimic to stop autoexplore before the player reaches the lava.
+KFEAT: G = granite_statue mimic
+# The gold pulls an unspoiled player next to the mimics.
+KITEM: $ = gold q:3
+MAP
+xxxxx
+xl.lx
+x.B.x
+x.$.x
+xlmlx
+xl$lx
+xlmlx
+x.$.x
+x.G.x
+..@..
+ENDMAP
+
+NAME:   amcnicky_altar_gilded
+TAGS:   transparent no_monster_gen temple_overflow_generic_1
+SUBST: p = . $:5
+SUBST: q = . $:2
+MAP
+.........
+.mmmmmmm.
+.mqqqqqm.
+.mqpppqm.
+.+qpBpqm.
+.mqpppqm.
+.mqqqqqm.
+.mmmmmmm.
+.........
+ENDMAP
+
 NAME:   amethyst_overflow_temple_binary
 TAGS:   temple_overflow_generic_2
 SUBST:  p : .:15 c:10 g:3 n:2
@@ -4571,6 +4628,42 @@ ccTB.+@
 ccTB.+@
  cccpcc
    ccccc
+ENDMAP
+
+NAME:    jmf_multi_god_temple
+TAGS:    transparent temple_overflow_generic_2
+SHUFFLE: abc
+SUBST:   a:+, b:x, c:x
+MAP
+............
+.axxxxxxxxa.
+.x........x.
+.bT......Tb.
+.x..B..B..x.
+.cT......Tc.
+.xxxxmmxxxx.
+.xxx$$$$xxx.
+.xx0....0xx.
+..xx....xx..
+...xG..Gx...
+............
+ENDMAP
+
+NAME:  jmf_multi_god_temple2
+TAGS:  transparent temple_overflow_generic_2
+MAP
+............
+..vvvvvvvv..
+.vv......vv.
+.v..x..x..v.
+.v.Bx..xB.v.
+.v..x..x..v.
+.vT0x..x0Tv.
+.vvvx==xvvv.
+...Gx..xG...
+...+....+...
+...GxxxxG...
+............
 ENDMAP
 
 NAME: minmay_overflow_temple_star_quad

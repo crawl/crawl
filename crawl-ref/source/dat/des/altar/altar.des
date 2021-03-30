@@ -4,11 +4,14 @@
 #            maps are rather small.
 #            Some maps containing altars should *not* go in this file.
 #            These are
+#            * Vaults placing in D with Temple god altars.
+#              These should be overflow vaults instead, to give the dungeon
+#              builder control over early altar placement.
 #            * Branch-specific vaults
 #              (Beogh altar minivaults for Orc, for example)
 #              These go into the corresponding des-file of the branch.
 #            * Entry vaults with altars
-#              Use an entry_foo.des file.
+#              Don't make these, they encourage startscumming.
 #            * Overflow altars.
 #              (I.e. altars dedicated to Temple gods which can be used if the
 #              gods do not show up in the Temple).
@@ -21,80 +24,22 @@
 #            single, new file.
 #
 # Content:
-# I    Temples (Multi-altar vaults, containing two or more C)
-# II   General altars (containing a single C)
-# III  Altars to minor gods
+# I   General altars (containing a single C) placing outside of D
+# II  Altars to minor gods
 #
 ###############################################################################
 
-{{
-function interest_check(e)
-  if you.in_branch("D") then
-    if you.absdepth() > 9 then
-      e.tags('extra')
-    end
-  else
-    e.tags('extra')
-  end
-end
-
-}}
-
-default-depth: D, Depths
-
 ##############################################################################
-# I    Temples (Multi-altar vaults, containing two or more C)
-##############################################################################
-
-NAME:    jmf_multi_god_temple
-TAGS:    transparent
-SHUFFLE: abc
-SUBST:   a:+, b:x, c:x
-DEPTH:   D:8-, Vaults
-MAP
-............
-.axxxxxxxxa.
-.x9......9x.
-.bT......Tb.
-.x..C..C..x.
-.cT......Tc.
-.xxxxmmxxxx.
-.xxx$$$$xxx.
-.xx8....8xx.
-..xx....xx..
-...xG..Gx...
-............
-ENDMAP
-
-NAME:  jmf_multi_god_temple2
-TAGS:  transparent
-DEPTH: D:8-, Vaults
-MAP
-............
-..vvvvvvvv..
-.vv......vv.
-.v..x..x..v.
-.v.Cx..xC.v.
-.v..x..x..v.
-.vT8x..x8Tv.
-.vvvx==xvvv.
-...Gx99xG...
-...+*99*+...
-...GxxxxG...
-............
-ENDMAP
-
-##############################################################################
-# II   General altars (containing a single C)
+# I   General altars (containing a single C)
 ##############################################################################
 
 NAME:   basic_altar
 TAGS:   allow_dup extra no_monster_gen transparent decor
-DEPTH:  5-
+DEPTH:  1-
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake)
-CHANCE: 8% (D, Elf)
-CHANCE: 5% (Lair, Slime, Vaults, Crypt)
+CHANCE: 8% (Elf)
+CHANCE: 5% (Lair, Slime, Crypt)
 CHANCE: 1% (Zot)
 CHANCE: 0
 MAP
@@ -106,16 +51,15 @@ MAP
 ENDMAP
 
 NAME:   lemuel_altar_in_water
-DEPTH:  D:2-, Swamp, Shoals
+DEPTH:  Swamp, Shoals
 WEIGHT: 9
-TAGS:   transparent no_monster_gen no_rotate decor
+TAGS:   transparent no_monster_gen no_rotate decor extra
 : local brnd = crawl.random2(13)
 : if not is_validating() and brnd <= 10 then
 TAGS:   no_pool_fixup
 : end
 KPROP:  C = no_tele_into
 KMASK:  C = opaque
-: interest_check(_G)
 MAP
    .........
   ...wwwww...
@@ -131,10 +75,9 @@ MAP
 ENDMAP
 
 NAME:   lemuel_altar_in_water2
-TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  D:2-, Lair, Snake, Swamp, Shoals
+TAGS:   no_pool_fixup no_monster_gen decor extra
+DEPTH:  Lair, Snake, Swamp, Shoals
 WEIGHT: 1
-: interest_check(_G)
 MAP
    www
   wwwww
@@ -146,7 +89,7 @@ MAP
 ENDMAP
 
 NAME:  lemuel_oklob_altar
-DEPTH: D:6-, Lair, Snake, Shoals
+DEPTH: Lair, Snake, Shoals
 MONS:  oklob plant, plant
 MAP
  2
@@ -154,39 +97,15 @@ MAP
  2
 ENDMAP
 
-NAME:  lemuel_tele_altar
-TAGS:  transparent decor
-DEPTH: D:2-, Vaults
-SUBST: D = ^ x
-KFEAT: ^ = teleport trap
-KMASK: 'C = opaque
-MAP
-...........
-.xxxx^xxxx.
-.x'''''''x.
-.x'''''''x.
-.x'''''''x.
-.D'''C'''D.
-.x'''''''x.
-.x'''''''x.
-.x'''''''x.
-.xxxxDxxxx.
-...........
-ENDMAP
-
 NAME:  lemuel_statue_altar
-TAGS:  transparent decor
-DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt
-: if you.absdepth() < 10 then
-SUBST: F = G
-: end
+TAGS:  transparent decor extra
+DEPTH: Orc, Depths, Elf, Crypt
 SUBST: F = G:99 F:1
-: if you.in_branch("D") or you.in_branch("Orc") then
+: if you.in_branch("Orc") then
 KMONS: F = orange crystal statue / obsidian statue / ice statue
 : else
 KMONS: F = orange crystal statue
 : end
-: interest_check(_G)
 KMASK: _>C = opaque
 MAP
 .........
@@ -197,11 +116,11 @@ MAP
 ENDMAP
 
 NAME:   lemuel_upstairs_altar
-DEPTH:  D:2-, Vaults, Elf, Crypt
+TAGS:   extra
+DEPTH:  Elf, Crypt
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
 KMASK:  T = no_monster_gen
-: interest_check(_G)
 MAP
 ccccccc
 cT...Tc
@@ -215,7 +134,7 @@ ENDMAP
 # This is the generic version. A special version may occur for Orc, almost always
 # to Beogh. Only one of these can come up.
 NAME:  david_defended_altar_elf
-DEPTH: D:7-14, Elf
+DEPTH: Elf
 MONS:  patrolling deep elf pyromancer / w:30 nothing
 TAGS:  uniq_defended_altar transparent
 MAP
@@ -229,7 +148,7 @@ ENDMAP
 # The mix of deep and shallow water is intended to keep the centaurs from
 # escaping without requiring the player to be able to cross deep water.
 NAME:  lemuel_centaur_altar
-DEPTH: D:7-15, Shoals, Lair
+DEPTH: Shoals, Lair
 TAGS:  no_pool_fixup no_monster_gen
 MONS:  patrolling centaur
 MAP
@@ -246,14 +165,10 @@ xxx...@..xxxx
 ENDMAP
 
 NAME:  lemuel_angel_altar
-DEPTH: D:3-, Vaults
+DEPTH: Depths
 TAGS:  no_trap_gen
-: if you.absdepth() > 12 then
 MONS: patrolling Daeva / patrolling Angel
 KFEAT:  n = iron_grate
-: else
-MONS:  patrolling Angel
-: end
 KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
 KPROP: >"1_ = no_tele_into
 KMASK: . = !opaque
@@ -271,48 +186,8 @@ MAP
    .....
 ENDMAP
 
-NAME:  pf_just_have_faith
-DEPTH: D:4-
-WEIGHT: 1
-TAGS: no_monster_gen
-KMASK: $ = no_trap_gen
-KFEAT: m = lava mimic
-# We use a statue mimic to stop autoexplore before the player reaches the lava.
-KFEAT: G = granite_statue mimic
-# The gold pulls an unspoiled player next to the mimics.
-KITEM: $ = gold q:3
-MAP
-xxxxx
-xl.lx
-x.C.x
-x.$.x
-xlmlx
-xl$lx
-xlmlx
-x.$.x
-x.G.x
-..@..
-ENDMAP
-
-NAME:   amcnicky_altar_gilded
-TAGS:   transparent no_monster_gen
-DEPTH:  D:3-, Lair, Orc, Elf, Crypt
-SUBST: p = . $:5
-SUBST: q = . $:2
-MAP
-.........
-.mmmmmmm.
-.mqqqqqm.
-.mqpppqm.
-.+qpCpqm.
-.mqpppqm.
-.mqqqqqm.
-.mmmmmmm.
-.........
-ENDMAP
-
 ##############################################################################
-# III   Altars to minor gods
+# II   Altars to minor gods
 #
 # These are non-Temple gods like Beogh, Jiyva, Lugonu.
 ##############################################################################
@@ -324,7 +199,7 @@ ENDMAP
 #       access the altar early.
 #
 NAME:  lemuel_hellish_altar
-DEPTH: D:8-, Crypt, Geh
+DEPTH: Crypt, Geh
 TAGS:  no_monster_gen
 MONS:  rust devil / orange demon
 MONS:  hell beast / red devil
@@ -362,7 +237,7 @@ ENDMAP
 # respecting the kobolds + distortion/chaos theme. --gammafunk
 NAME:   due_chaos_kobolds
 TAGS:   patrolling no_monster_gen no_trap_gen
-DEPTH:  D:2-
+DEPTH:  D:3-
 ORIENT: float
 WEIGHT: 5
 # Either a Lucy theme or a Xom theme, setting the kobolds' weapon ego according
@@ -442,7 +317,7 @@ ENDMAP
 NAME:     amcnicky_altar_lugonu_corruption
 TAGS:     transparent no_monster_gen
 # Lugonu cares not about moderate vault placement
-DEPTH:    D:3-, Vaults, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
+DEPTH:    D:3-, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
             Spider, Snake, Swamp, Zot:1-4
 WEIGHT:   2
 : if crawl.coinflip() then
