@@ -1798,9 +1798,11 @@ void monster::apply_enchantment(const mon_enchant &me)
                 int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
                                           * dur,
                             BASELINE_DELAY * 10);
-                if (res_water_drowning() < 0)
-                    dam = dam * 3 / 2;
-                hurt(me.agent(), dam);
+                if (dam > 0)
+                {
+                    simple_monster_message(*this, " is asphyxiated!");
+                    hurt(me.agent(), dam);
+                }
             }
         }
         break;
