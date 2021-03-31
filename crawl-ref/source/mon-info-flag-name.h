@@ -98,7 +98,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_MUTE, "mute", "mute", "mute"},
     { MB_FROZEN, "frozen", "encased in ice", "frozen"},
     { MB_WATER_HOLD, "engulfed", "engulfed", "engulfed"},
-    { MB_WATER_HOLD_DROWN, "drowning", "unable to breathe", "drowning"},
+    { MB_WATER_HOLD_DROWN, "asphyxiating", "asphyxiating", "asphyxiating"},
     { MB_BURNING, "burning", "covered in liquid flames", "burning"},
     { MB_POISONED, "poisoned", "poisoned", "poisoned"},
     { MB_MORE_POISONED, "very poisoned", "very poisoned", "very poisoned"},

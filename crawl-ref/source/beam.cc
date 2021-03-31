@@ -2437,7 +2437,7 @@ void bolt::affect_endpoint()
             for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
-                if (mons && !mons->res_water_drowning())
+                if (mons && mons->res_water_drowning() <= 0)
                 {
                     simple_monster_message(*mons, " is engulfed in water.");
                     mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,

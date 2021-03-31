@@ -153,7 +153,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return get_trapping_net(mons.pos(), true) == NON_ITEM
                ? MB_WEBBED : MB_CAUGHT;
     case ENCH_WATER_HOLD:
-        if (mons.res_water_drowning())
+        if (mons.res_water_drowning() > 0)
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;

@@ -167,7 +167,7 @@ static void _escape_water_hold(monster& mons)
 {
     if (mons.has_ench(ENCH_WATER_HOLD))
     {
-        simple_monster_message(mons, " slips free of the water.");
+        simple_monster_message(mons, " is no longer engulfed.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
