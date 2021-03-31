@@ -126,6 +126,7 @@ private:
     void mons_do_eyeball_confusion();
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
+    void do_ooze_engulf();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

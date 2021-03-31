@@ -2159,6 +2159,14 @@ static const mutation_def mut_data[] =
      "You feel more vital."},
 },
 
+{ MUT_ENGULF, 0, 1, mutflag::good | mutflag::jiyva, true,
+  "engulf",
+
+    {"Your melee attacks may engulf your foes in ooze.", "", ""},
+    {"You begin exuding ooze.", "", ""},
+    {"You stop exuding ooze.", "", ""},
+}
+
 };
 
 static const mutation_category_def category_mut_data[] =
