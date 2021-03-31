@@ -27,34 +27,35 @@ MAP
 _
 ENDMAP
 
-NAME:   chequers_ecumenical_altar_simple
-: ecumenical_altar_setup(_G)
-TAGS:   transparent
+NAME:    chequers_ecumenical_altar_simple
+TAGS:    transparent
+SHUFFLE: GH
 SUBST: G : Gbt x:5
+: ecumenical_altar_setup(_G)
 MAP
 .....
-..G..
+.HGH.
 .G_G.
-..G..
+.HGH.
 .....
 ENDMAP
 
-NAME: chequers_ecumenical_altar_simple_redux
+NAME:    chequers_ecumenical_altar_simple_redux
+TAGS:    transparent
+SHUFFLE: GH
+SUBST:   G : Gbt x:5
 : ecumenical_altar_setup(_G)
-TAGS: transparent
-SUBST: G : Gbt x:5
 MAP
 .......
-...G...
-..G.G..
-.G._.G.
-..G.G..
-...G...
+..HGH..
+.HGHGH.
+.GH_HG.
+.HGHGH.
+..HGH..
 .......
 ENDMAP
 
 NAME:   chequers_ecumenical_altar_grove
-: ecumenical_altar_setup(_G)
 TAGS:   transparent
 WEIGHT: 5
 KMASK:  - = no_item_gen
@@ -65,7 +66,11 @@ SUBST:  - = tt.
 : set_feature_name("tree", "dead tree")
 TILE:    t = dngn_tree_dead
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+: elseif crawl.one_chance_in(4) then
+COLOUR: t = lightred / red w:4 / yellow w:4
+TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
+: ecumenical_altar_setup(_G)
 MAP
  ......
  .-.-.@..
@@ -83,7 +88,6 @@ MAP
 ENDMAP
 
 NAME: chequers_ecumenical_altar_lobes
-: ecumenical_altar_setup(_G)
 WEIGHT: 5
 KPROP:  tG = no_tele_into
 KMASK:  tGp = no_item_gen
@@ -91,6 +95,7 @@ KMASK:  tG = no_monster_gen
 NSUBST: + = 1:.
 SUBST:  ' : tGp, t = t:2 ., G = G:3 ., p = p:5 ., - = T U V .
 KMONS: p = plant
+: ecumenical_altar_setup(_G)
 MAP
    xxxxx    xxxxx
  xxx'-'xxxxxx'-'xxx
@@ -107,11 +112,11 @@ xxxtGpppp..ppppGtxxx
 ENDMAP
 
 NAME: chequers_ecumenical_altar_twisty
-: ecumenical_altar_setup(_G)
 TAGS: transparent
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
 SUBST: x : x:30 c t:1
+: ecumenical_altar_setup(_G)
 MAP
  x@x
  x.xx
@@ -127,10 +132,10 @@ xx.x
 ENDMAP
 
 NAME: chequers_ecumenical_altar_island
-: ecumenical_altar_setup(_G)
 SUBST: - = W:5 . t:5
 SUBST: s = W:5 .
 SUBST: S = w.
+: ecumenical_altar_setup(_G)
 MAP
 sssssssssssss
 sSSSSSSSSSSSs
