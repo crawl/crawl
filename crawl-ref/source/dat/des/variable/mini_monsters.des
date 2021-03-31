@@ -4425,7 +4425,7 @@ DEPTH:   D:1-3
 : if you.absdepth() > 1 then
 MONS:   ball python / nothing w:20, adder
 : else
-MONS:    ball python / nothing w:50, nothing / adder w:1
+MONS:    ball python / nothing w:50, ball python / nothing w:50
 : end
 MONS:    plant / nothing, fungus / nothing
 SUBST:   " = xxx3, ' = xx..13, 1 = 1 3:1
