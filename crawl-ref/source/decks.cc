@@ -92,7 +92,6 @@ deck_archetype deck_of_summoning =
 {
     { CARD_ELEMENTS,        5 },
     { CARD_SUMMON_DEMON,    5 },
-    { CARD_SUMMON_WEAPON,   5 },
     { CARD_SUMMON_FLYING,   5 },
     { CARD_RANGERS,         5 },
     { CARD_ILLUSION,        5 },
@@ -159,7 +158,6 @@ const char* card_name(card_type card)
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
-    case CARD_SUMMON_WEAPON:   return "the Dance";
     case CARD_SUMMON_FLYING:   return "Foxfire";
     case CARD_RANGERS:         return "the Rangers";
     case CARD_VITRIOL:         return "Vitriol";
@@ -1255,77 +1253,6 @@ static void _elements_card(int power)
 
 }
 
-static void _summon_dancing_weapon(int power)
-{
-    const int power_level = _get_power_level(power);
-
-    monster *mon =
-        create_monster(
-            mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_AUTOFOE).set_summoned(&you, power_level + 2, 0),
-            false);
-
-    if (!mon)
-    {
-        mpr("You see a puff of smoke.");
-        return;
-    }
-
-    // Override the weapon.
-    ASSERT(mon->weapon() != nullptr);
-    item_def& wpn(*mon->weapon());
-
-    switch (power_level)
-    {
-    case 0:
-        // Wimpy, negative-enchantment weapon.
-        wpn.plus = random2(3) - 2;
-        wpn.sub_type = random_choose(WPN_QUARTERSTAFF, WPN_HAND_AXE);
-
-        set_item_ego_type(wpn, OBJ_WEAPONS,
-                          random_choose(SPWPN_VENOM, SPWPN_NORMAL));
-        break;
-    case 1:
-        // This is getting good.
-        wpn.plus = random2(4) - 1;
-        wpn.sub_type = random_choose(WPN_LONG_SWORD, WPN_TRIDENT);
-
-        if (coinflip())
-        {
-            set_item_ego_type(wpn, OBJ_WEAPONS,
-                              random_choose(SPWPN_FLAMING, SPWPN_FREEZING));
-        }
-        else
-            set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
-        break;
-    default:
-        // Rare and powerful.
-        wpn.plus = random2(4) + 2;
-        wpn.sub_type = random_choose(WPN_DEMON_TRIDENT, WPN_EXECUTIONERS_AXE);
-
-        set_item_ego_type(wpn, OBJ_WEAPONS,
-                          random_choose(SPWPN_SPEED, SPWPN_ELECTROCUTION));
-    }
-
-    item_colour(wpn); // this is probably not needed
-
-    // sometimes give a randart instead
-    if (one_chance_in(3))
-    {
-        make_item_randart(wpn, true);
-        set_ident_flags(wpn, ISFLAG_KNOW_PROPERTIES| ISFLAG_KNOW_TYPE);
-    }
-
-    // Don't leave a trail of weapons behind. (Especially not randarts!)
-    mon->flags |= MF_HARD_RESET;
-
-    ghost_demon newstats;
-    newstats.init_dancing_weapon(wpn, power / 4);
-
-    mon->set_ghost(newstats);
-    mon->ghost_demon_init();
-}
-
 static void _summon_flying(int power)
 {
     const int power_level = _get_power_level(power);
@@ -1661,7 +1588,6 @@ void card_effect(card_type which_card,
     case CARD_SUMMON_DEMON:     _summon_demon_card(power); break;
     case CARD_ELEMENTS:         _elements_card(power); break;
     case CARD_RANGERS:          _summon_rangers(power); break;
-    case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power); break;
     case CARD_TORMENT:          _torment_card(); break;
     case CARD_CLOUD:            _cloud_card(power); break;

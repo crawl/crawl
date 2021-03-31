@@ -38,7 +38,9 @@ enum card_type
     CARD_ORB,                 // pure bursts of energy
     CARD_ELIXIR,              // restoration of hp and mp
     CARD_SUMMON_DEMON,        // dual demons
-    CARD_SUMMON_WEAPON,       // a dance partner
+#if TAG_MAJOR_VERSION == 34
+    CARD_SUMMON_WEAPON_REMOVED,  // removed
+#endif
     CARD_SUMMON_FLYING,       // swarms from the swamp
     CARD_WILD_MAGIC,          // miscasts for everybody
     CARD_STAIRS,              // moves stairs around
