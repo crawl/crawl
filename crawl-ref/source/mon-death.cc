@@ -1798,7 +1798,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
     // now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
-        && killer == KILL_YOU
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
         && gives_player_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
