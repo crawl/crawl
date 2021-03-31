@@ -904,7 +904,7 @@ public:
 
     bool form_uses_xl() const;
 
-    bool clear_far_engulf() override;
+    bool clear_far_engulf(bool force = false) override;
 
     int armour_class_with_one_sub(item_def sub) const;
 

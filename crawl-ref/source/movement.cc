@@ -234,12 +234,17 @@ void remove_ice_movement()
     }
 }
 
+string water_hold_substance()
+{
+    return you.props["water_hold_substance"].get_string();
+}
+
 void remove_water_hold()
 {
     if (you.duration[DUR_WATER_HOLD])
     {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
+        mprf("You slip free of the %s engulfing you.",
+             water_hold_substance().c_str());
         you.clear_far_engulf();
     }
 }

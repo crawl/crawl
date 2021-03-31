@@ -5855,13 +5855,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-
-    if (you.duration[DUR_WATER_HOLD])
-    {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
-        you.clear_far_engulf();
-    }
+    remove_water_hold();
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
