@@ -10,7 +10,7 @@
 #  sense of these levels, this serial vaults is intended to not
 #  provide a lot of cover for players.  The vaults do not appear
 #  individually.  Sometimes this serial vault contains a simple
-#  temple with a random alter.  There is also a chance of a
+#  temple with a faded altar.  There is also a chance of a
 #  portal to Hell, Pan, or the Abyss on deep (D:21-27) levels.
 #
 # There is a small chance (3.3% per selection = 0.1% total) that
@@ -42,6 +42,7 @@ function init_column_ruins(e)
   e.colour('G = lightgrey')
   e.subst('_ = .')
   e.set_feature_name("granite_statue", "broken pillar")
+  e.kfeat('B = altar_ecumenical')
 end
 
 function init_column_ruins_hut(e)
