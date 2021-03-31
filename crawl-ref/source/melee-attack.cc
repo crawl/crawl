@@ -2861,7 +2861,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender, true))
+        if (x_chance_in_y(2, 3)
+            && attacker->can_constrict(defender, true, true))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])

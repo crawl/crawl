@@ -426,7 +426,8 @@ public:
                                         bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender, bool direct) const;
+    bool can_constrict(const actor* defender, bool direct,
+                       bool engulf = false) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
     void accum_has_constricted();

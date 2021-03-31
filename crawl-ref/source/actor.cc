@@ -670,14 +670,14 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender, bool direct) const
+bool actor::can_constrict(const actor* defender, bool direct, bool engulf) const
 {
     ASSERT(defender); // XXX: change to actor &defender
 
     if (direct)
     {
-        return (!is_constricting() || has_usable_tentacle())
-               && !defender->is_constricted()
+        return (!is_constricting() || has_usable_tentacle() || engulf)
+               && (!defender->is_constricted() || engulf)
                && can_see(*defender)
                && !confused()
                && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
