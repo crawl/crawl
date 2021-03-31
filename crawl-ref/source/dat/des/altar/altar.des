@@ -7,6 +7,8 @@
 #            * Vaults placing in D with Temple god altars.
 #              These should be overflow vaults instead, to give the dungeon
 #              builder control over early altar placement.
+#            * Ecumenical altar vaults for D:1-3.
+#              Use ecumenical.des
 #            * Branch-specific vaults
 #              (Beogh altar minivaults for Orc, for example)
 #              These go into the corresponding des-file of the branch.
@@ -26,18 +28,8 @@
 # Content:
 # I   General altars (containing a single C) placing outside of D
 # II  Altars to minor gods
-# III Ecumenical altars
 #
 ###############################################################################
-
-{{
-function ecumenical_altar_setup(e)
-  e.depth("D:1-3")
-  e.tags("uniq_ecumenical_altar chance_ecumenical_altar extra")
-  e.chance(5000)
-  e.kfeat("_ = altar_ecumenical")
-end
-}}
 
 ##############################################################################
 # I   General altars (containing a single C)
@@ -413,143 +405,4 @@ MAP
 .1_1.
 ..1..
 .....
-ENDMAP
-
-##############################################################################
-# III  Ecumenical altars
-#
-# These place a faded altar which offers a random god in exchange for bonus
-# piety.
-#
-# Places one on D:1-3 87.5% of the time.
-##############################################################################
-
-### Ecumenical altars ########################################################
-
-NAME:   basic_ecumenical_altar
-TAGS:   transparent
-WEIGHT: 100
-: ecumenical_altar_setup(_G)
-MAP
-_
-ENDMAP
-
-NAME:   chequers_ecumenical_altar_simple
-: ecumenical_altar_setup(_G)
-TAGS:   transparent
-SUBST: G : Gbt x:5
-MAP
-.....
-..G..
-.G_G.
-..G..
-.....
-ENDMAP
-
-NAME: chequers_ecumenical_altar_simple_redux
-: ecumenical_altar_setup(_G)
-TAGS: transparent
-SUBST: G : Gbt x:5
-MAP
-.......
-...G...
-..G.G..
-.G._.G.
-..G.G..
-...G...
-.......
-ENDMAP
-
-NAME:   chequers_ecumenical_altar_grove
-: ecumenical_altar_setup(_G)
-TAGS:   transparent
-WEIGHT: 5
-KMASK:  - = no_item_gen
-KMASK:  - = no_monster_gen
-KPROP:  - = no_tele_into
-SUBST:  - = tt.
-: if crawl.one_chance_in(4) then
-: set_feature_name("tree", "dead tree")
-TILE:    t = dngn_tree_dead
-COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
-: end
-MAP
- ......
- .-.-.@..
---.-..-.--.
- .tttttt.--.
-.-t-...t.---.
-.tt.-tt.-t--.
--t--.-t--t-.
- ttt-.ttttt-.
- t.t.-.-t-t.
- -t._tttt-@.
- ttttt--tt.
--ttt--.---.
-...........
-ENDMAP
-
-NAME: chequers_ecumenical_altar_lobes
-: ecumenical_altar_setup(_G)
-WEIGHT: 5
-KPROP:  tG = no_tele_into
-KMASK:  tGp = no_item_gen
-KMASK:  tG = no_monster_gen
-NSUBST: + = 1:.
-SUBST:  ' : tGp, t = t:2 ., G = G:3 ., p = p:5 ., - = T U V .
-KMONS: p = plant
-MAP
-   xxxxx    xxxxx
- xxx'-'xxxxxx'-'xxx
-xxtGp_pGtxxtGp.pGtxx
-xxtGp.pGtxxtGp.pGtxx
-xxtGp.pGtxxtGp.pGtxx
-xxxxx+xxxxxxxx+xxxxx
-xtGpp..........ppGtx
-xxxtGpppp..ppppGtxxx
-  xxxxxtG..Gtxxxxx
-      xxx..xxx
-        x..x
-         @@
-ENDMAP
-
-NAME: chequers_ecumenical_altar_twisty
-: ecumenical_altar_setup(_G)
-TAGS: transparent
-WEIGHT: 5
-KFEAT:  _ = altar_ecumenical
-SUBST: x : x:30 c t:1
-MAP
- x@x
- x.xx
- xx.x
-xx.xx
-x.xx
-xx_xx
- xx.x
-xx.xx
-x.xx
-xx.x
- x@x
-ENDMAP
-
-NAME: chequers_ecumenical_altar_island
-: ecumenical_altar_setup(_G)
-SUBST: - = W:5 . t:5
-SUBST: s = W:5 .
-SUBST: S = w.
-MAP
-sssssssssssss
-sSSSSSSSSSSSs
-sSwwwwwwwwwSs
-sSwwwwwwwwwSs
-sSwWWWWwwwwSs
-sSWww--WwwwSs
-sSwWw-_-wwwSs
-sSwWw---wwwSs
-@.WwwwwwwwwSs
-sSwwwwwwwwwSs
-sSwwwwwwwwwSs
-sSSSSSSSSSSSs
-sssssssssssss
 ENDMAP
