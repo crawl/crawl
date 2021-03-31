@@ -573,7 +573,10 @@ void trap_def::trigger(actor& triggerer)
                 return !mons.no_tele() && monster_blink(&mons);
             }, pos);
         if (!you_trigger && you.see_cell_no_trans(pos))
+        {
             uncontrolled_blink();
+            interrupt_activity(activity_interrupt::teleport);
+        }
         // Don't chain disperse
         triggerer.blink();
         break;
