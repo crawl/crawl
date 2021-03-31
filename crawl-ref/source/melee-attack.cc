@@ -122,7 +122,8 @@ bool melee_attack::handle_phase_attempted()
             }
         }
         else if (weapon &&
-                (is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                ((is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                  && !silenced(you.pos()))
                  || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY))
                  && you.can_see(*defender))
         {
