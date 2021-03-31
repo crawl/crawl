@@ -2878,10 +2878,12 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (needs_message)
             {
-                mprf("%s %s %s in water!",
+                const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
+                mprf("%s %s %s%s!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb("engulf").c_str(),
-                     defender_name(true).c_str());
+                     defender_name(true).c_str(),
+                     watery ? " in water" : "");
             }
         }
 
