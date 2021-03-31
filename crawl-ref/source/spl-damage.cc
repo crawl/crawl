@@ -422,15 +422,6 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         monster_die(mon, KILL_YOU, NON_MONSTER);
 }
 
-static counted_monster_list _counted_monster_list_from_vector(
-    vector<monster *> affected_monsters)
-{
-    counted_monster_list mons;
-    for (auto mon : affected_monsters)
-        mons.add(mon);
-    return mons;
-}
-
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
     if (act->res_negative_energy() >= 3)
@@ -460,7 +451,7 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
     if (!seen_monsters.empty())
     {
         counted_monster_list mons_list =
-            _counted_monster_list_from_vector(seen_monsters);
+            counted_monster_list(seen_monsters);
         const string message = make_stringf("%s %s %s.",
                 mons_list.describe(DESC_THE).c_str(),
                 conjugate_verb("be", mons_list.count() > 1).c_str(), verb);
