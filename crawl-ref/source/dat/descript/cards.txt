@@ -110,12 +110,11 @@ vast room.
 Drawing this card will summon a dancing weapon. Its quality, brand, and
 friendliness are all affected by card power.
 %%%%
-Foxfire card
+the Swarms card
 
-The card depicts a swamp at night, suffused with an eerie glow.
+The card depicts a swarm of midday bees filled with humming noises.
 
-Drawing this card will summon forth flying swarms. Some of their members may
-be hostile.
+Drawing this card will summon forth bees swarms.
 %%%%
 the Rangers card
 
