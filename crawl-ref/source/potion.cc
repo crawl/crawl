@@ -151,7 +151,7 @@ public:
         if (!you.can_potion_heal())
         {
             if (reason)
-                *reason = "That would not heal you.";
+                *reason = "You cannot be healed by potions.";
             return false;
         }
         if (you.duration[DUR_DEATHS_DOOR])
