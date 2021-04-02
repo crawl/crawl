@@ -1332,7 +1332,7 @@ static void _summon_bee(int power)
     const int how_many = 1 + random2((power_level + 1) * 3);
 
     for (int i = 0; i < how_many; ++i)
-        _friendly(flytypes, 5 - power_level);
+        _friendly(MONS_KILLER_BEE, 3);
 }
 
 static void _summon_rangers(int power)
