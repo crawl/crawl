@@ -445,3 +445,113 @@ MAP
   ...xxt+txx...
     .........
 ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_vishouse
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+.............
+.....xxxxx..x
+..xxx---xG--x
+xx------xxxxx
+x--xxx--x---x
+x--x_x------x
+x--b-x--xx+xx
+x--+-x--x---x
+x--b-x--xGGGx
+xxxxxx.xxxxxx
+.............
+ENDMAP
+
+
+NAME:   shapermc_ecumenical_altar_mp_highgroup
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+SUBST: ^ = ^^.
+KFEAT:  ^ = web trap
+
+MAP
+xxxxxx-xxxxxx
+xG^--x-x--^Gx
+xxx-xx_xx-xxx
+x-----------x
+x^x---.---x^x
+xG^--...--^Gx
+xxxx.....xxxx
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_urbaneastern
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+KMONS:  p = plant
+KMONS:  f = fungus
+NSUBST: ' = 8=pf / 12=ppf... / .
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+...............
+.xxxxxxxxxxxxx.
+..x-'-x'x-'-x..
+..x-x-x'x-x-x..
+..'''''''''''..
+..x-x-x'x-x-x..
+..x-'-x_x-'-x..
+..x-x-x'x-x-x..
+..'''''''''''..
+..x-x-x'x-x-x..
+..x-'-x'x-'-x..
+.xxxxxxxxxxxxx.
+...............
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_ritualfount
+TAGS:   transparent no_monster_gen
+SUBST: ^ = TUV---
+SUBST: - = --.
+SUBST: G = GGG-
+SUBST: W = WWWWw.
+COLOUR: - = brown
+FTILE: -G = floor_rough_brown
+COLOUR: G = lightgrey
+KMONS: W = plant / nothing
+KMONS: p = plant
+KMONS: f = fungus
+NSUBST: ' = 8=pf. / 12=ppf... / .
+TILE: G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+......x....
+.-----x''''
+.-xxxxxx'W'
+.-x--x_x'W'
+.-x--x-xWW'
+'--WW-WWx''
+''W^^W''x''
+''W^^^W'x''
+'''WWWW'x''
+'''''''W'x'
+'''WWWW''x'
+ENDMAP
