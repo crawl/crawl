@@ -4319,14 +4319,13 @@ int poison_survival()
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
     // Calculate the poison amount at which regen starts to beat poison.
-    // adjust the natural scailing of min_hp_aut to match regen per aut
-    double min_poison_rate = poison_min_hp_aut / 100.0;
+    double min_poison_rate = poison_min_hp_aut;
     if (dd)
         min_poison_rate = 25.0/poison_denom;
     if (chei)
         min_poison_rate /= 1.5;
     int regen_beats_poison;
-    if (rr <= (int) (100.0 * min_poison_rate))
+    if (rr <= (int) min_poison_rate)
         regen_beats_poison = dd ? 25000 : 0;
     else
     {
@@ -4358,14 +4357,17 @@ int poison_survival()
         test_aut2 /= 1.5;
     }
 
-    const int test_amount1 = _poison_aut_to_dur(full_aut - test_aut1);
-    const int test_amount2 = _poison_aut_to_dur(full_aut - test_aut2);
+    // Don't do any correction if there's not much poison left
+    const int test_amount1 = test_aut1 < full_aut ?
+                             _poison_aut_to_dur(full_aut - test_aut1) : 0;
+    const int test_amount2 = test_aut2 < full_aut ?
+                             _poison_aut_to_dur(full_aut - test_aut2) : 0;
 
     int prediction1 = you.hp;
     int prediction2 = you.hp;
 
     // Don't look backwards in time.
-    if (test_aut1 > 0)
+    if (test_aut1 > 0.0)
         prediction1 -= (amount / 1000 - test_amount1 / 1000 - (predicted_regen - 1));
     prediction2 -= (amount / 1000 - test_amount2 / 1000 - predicted_regen);
 
