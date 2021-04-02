@@ -39,7 +39,7 @@ enum card_type
     CARD_ELIXIR,              // restoration of hp and mp
     CARD_SUMMON_DEMON,        // dual demons
     CARD_SUMMON_WEAPON,       // a dance partner
-    CARD_SUMMON_BEE,          // swarms of bee
+    CARD_SUMMON_BEE,          // swarm of bees
     CARD_WILD_MAGIC,          // miscasts for everybody
     CARD_STAIRS,              // moves stairs around
     CARD_WRATH,               // random godly wrath
