@@ -160,7 +160,7 @@ const char* card_name(card_type card)
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
     case CARD_SUMMON_WEAPON:   return "the Dance";
-    case CARD_SUMMON_BEE:      return "Swarm";
+    case CARD_SUMMON_BEE:      return "the Swarm";
     case CARD_RANGERS:         return "the Rangers";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_CLOUD:           return "the Cloud";
