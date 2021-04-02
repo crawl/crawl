@@ -1046,6 +1046,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_GNOLL:
         if (!level && item.is_type(OBJ_WEAPONS, WPN_HALBERD))
             item.sub_type = WPN_CLUB;
+        break;
 
     case MONS_WIGHT:
         if (coinflip())
