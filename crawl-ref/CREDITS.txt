@@ -163,6 +163,7 @@
     Kyle Fox
     freepotion
     Chris Galardi
+    Yitao Gao
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
@@ -198,6 +199,7 @@
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
+    Nick Johnstone
     Mikko Juola
     Kurt Kartaltepe
     Dominic Kempf
@@ -217,6 +219,7 @@
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
+    Christopher Landry
     Lantier
     Maciej Lapinski
     Nikolai Lavsky
@@ -249,6 +252,7 @@
     mikee
     Nathan Mills
     Andrew Minton
+    Mintice
     Byrel Mitchell
     Yer Mivvaggah
     Shawn M Moore
@@ -361,6 +365,7 @@
     Richard Wardin
     waylon531
     Steven Wheeler
+    WhiteShark
     Thomas Willem
     Evan Williams
     Jeremey Wilson
