@@ -837,7 +837,7 @@ TILE:    urand_zhor
 TILE_EQ: zhor
 COLD:    3
 BOOL:    seeinv
-INSCRIP: Englaciate
+INSCRIP: *Englaciate
 
 ENUM:    SALAMANDER
 NAME:    salamander hide armour
