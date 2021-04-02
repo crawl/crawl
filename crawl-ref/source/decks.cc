@@ -1329,7 +1329,6 @@ static void _summon_dancing_weapon(int power)
 static void _summon_bee(int power)
 {
     const int power_level = _get_power_level(power);
-    const monster_type flytypes = MONS_KILLER_BEE;
     const int how_many = 1 + random2((power_level + 1) * 3);
 
     for (int i = 0; i < how_many; ++i)
