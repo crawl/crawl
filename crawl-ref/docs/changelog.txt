@@ -1,4 +1,4 @@
-Stone Soup 0.27-a0 (through 0.27-a0-737-g0a99b99)
+Stone Soup 0.27-a0 (through 0.27-a0-877-gf2a7138)
 -------------------------------------------------
 
 Branches, Environment
@@ -8,8 +8,15 @@ Branches, Environment
 * Storm clouds no longer make noise.
 * After completing one Ziggurat the player is immune to the malevolence of Zot.
 * Swamp is now loud.
-* Many weaker monsters that previously appeared in Vaults no longer appear
-  there.
+* Many weaker monsters that previously appeared in Vaults and Depths
+  no longer appear in either branch.
+* Dungeon, Depths, and the Vestibule of Hell spawn tables are adjusted to
+  produce more depth appropriate monsters and less chaff.
+* A faded altar places with a very high chance on D:1-3.
+* A single random altar to a Temple god places with low chance on D:2.
+* Altar placement in early D has been revised, every god which can appear in
+the Ecumenical Temple is now guaranteed to have exactly one altar place either
+in the Temple branch or in an overflow vault on D:3-10.
 * Shops can now place on D:1-3.
 
 Character
@@ -44,6 +51,16 @@ Character
   using their HP. They also cannot learn spells from books;
   they instead get spells randomly and naturally, starting on
   XL 3 and continuing on every even level.
+* Species and form granted flight is always permanent
+* Scales mutations that provide distortion field, rF, rC, rPois, rElec, rCorr,
+  and +HP are now Demonspawn only.
+* Iridescent scales are removed from the Demonspawn pool and are available as a
+  random mutation.
+* Bone plates, thin skeletal structure, and sturdy frame no longer conflict.
+* The blurry vision mutation is removed; Ru's -Scroll mutation can occur as a
+  random mutation in its place.
+* The blink mutation is removed.
+* Shoutitis and No Potion Heal are reduced to 2 levels from 3.
 * Halflings are removed.
 
 Gods
@@ -63,8 +80,10 @@ Gods
     - 3* Clarity
     - 4* Passive scrying to radius 2, scaling with piety to radius 4 at 6*.
 * Cheibriados no longer hates quick blades.
+* A new Jiyva mutation allows players to engulf foes in ooze in melee.
 * The Elixir card no longer heals allies and always regenerates both health and
   magic, with duration scaling with power.
+* Heavenly Storm grants bonus EV and is a bit quieter.
 * Yredelemnul accepts nonliving worshippers again.
 * Zin's Sanctuary no longer applies holy word.
 
@@ -109,7 +128,9 @@ Monsters
     weakening gaze
 * Monster weapon delay is standardized at the monster's speed, certain monster
   base damages are adjusted to compensate.
-* Leopard Geckos, Eyes of Draining, and Death Oozes are removed
+* Oozes are renamed endoplasms, and cast freeze (but are weaker).
+* Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
+  and death oozes are removed
 
 
 Interface
@@ -142,10 +163,12 @@ Items
   aut.
 * Equipment is identified when visiting the square it is in, instead of
   requiring wear-identification.
-* The Vampire's tooth is reduced to +8
-* Rare scrolls, books, manuals, and enhancer staves can now spawn early
+* The Vampire's tooth is reduced to +8.
+* Rare scrolls, books, manuals, and enhancer staves can now spawn early.
+* Flight granting items cause you to fly at all times while equipped.
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
-  inaccuracy, scrolls of remove curse, and boots of running are removed.
+  inaccuracy, scrolls of remove curse, scrolls of random effects,
+  and boots of running are removed.
 
 Spells
 ------
@@ -161,6 +184,9 @@ Spells
   random foes in sight with the attacker's wielded weapon.
 * Airstrike no longer gets bonus damage against flying monsters.
 * Poisonous Vapours can no longer target empty space.
+* Blade Hands is now level 6 and appears only in the book of Transfigurations
+* Hydra Form is now level 5 and appears in the book of Changes and the Fen
+  Folio
 * Summon Demon and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
