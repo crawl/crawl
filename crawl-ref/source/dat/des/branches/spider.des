@@ -412,7 +412,7 @@ ENDMAP
 NAME:   nicolae_spider_cling_halls
 DEPTH:  Spider:2-, !Spider:$
 ORIENT: float
-TAGS:   no_pool_fixup extra
+TAGS:   no_pool_fixup extra decor
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., [ = [{()}], H = x_, J = xw
 KMASK:  Ww = no_monster_gen
@@ -436,31 +436,104 @@ HxxxxxxxxxxxxxH
  HHHHHHHHHHHHH
 ENDMAP
 
-NAME: nicolae_spider_cling_ruins
-DEPTH: Spider:2-
-ORIENT: float
-TAGS: no_pool_fixup extra
+NAME:    nicolae_spider_cling_ruins
+TAGS:    no_pool_fixup extra decor
+DEPTH:   Spider:2-
 SHUFFLE: [{(
-NSUBST: A = wx / x, B = wx / x, C = wx / x, D = wx / x, \
-        E = 2:w / x, F = 2:w / x, G = 2:w / x, H = 2:w / x, I = ' / 1:'x / x
-SUBST: X = x', ' = W..., Z = xw
-KMASK: Ww = no_monster_gen
+NSUBST:  D = wx / x, E = wx / x, F = wx / x, H = wx / x
+NSUBST:  J = 2=w / x, K = 2=w / x, L = 2=w / x, M = 2=w / x, N = ' / 'x / x
+SUBST:   O = x', ' = W..., P = xw
+KMASK:   Ww = no_monster_gen
 MAP
-xxxX'''''''Xxxx
-x'X'wwwwwww'X'x
-xX'XwEEEEEwX'Xx
-X'XXwwwwwwwXX'X
-'wwwZwAAAwZwww'
-'wHwwwwwwwwwFw'
-'wHwDw'I'wBwFw'
-'wHwDwI[IwBwFw'
-'wHwDw'I'wBwFw'
-'wHwwwwwwwwwFw'
-'wwwZwCCCwZwww'
-X'XXwwwwwwwXX'X
-xX'XwGGGGGwX'Xx
-x'X'wwwwwww'X'x
-xxxX'''''''Xxxx
+xxxO'''''''Oxxx
+x'O'wwwwwww'O'x
+xO'OwJJJJJwO'Ox
+O'OOwwwwwwwOO'O
+'wwwPwDDDwPwww'
+'wMwwwwwwwwwKw'
+'wMwHw'N'wEwKw'
+'wMwHwN[NwEwKw'
+'wMwHw'N'wEwKw'
+'wMwwwwwwwwwKw'
+'wwwPwFFFwPwww'
+O'OOwwwwwwwOO'O
+xO'OwLLLLLwO'Ox
+x'O'wwwwwww'O'x
+xxxO'''''''Oxxx
+ENDMAP
+
+NAME:  nicolae_spider_checkerboard
+TAGS:  decor transparent
+SUBST: D = x:30 ., E = x .:30
+MAP
+.E.xxx.E.xxx.E.
+E.ExxxE.ExxxE.E
+.E.DxD.E.DxD.E.
+xxD.E.DxD.E.Dxx
+xxxE.ExxxE.Exxx
+xxD.E.DxD.E.Dxx
+.E.DxD.E.DxD.E.
+E.ExxxE.ExxxE.E
+.E.DxD.E.DxD.E.
+xxD.E.DxD.E.Dxx
+xxxE.ExxxE.Exxx
+xxD.E.DxD.E.Dxx
+.E.DxD.E.DxD.E.
+E.ExxxE.ExxxE.E
+.E.xxx.E.xxx.E.
+ENDMAP
+
+NAME:    nicolae_spider_spiderdrome
+TAGS:    decor transparent
+SHUFFLE: pqrsz/PQRSZ/FHJay/KLMNO
+SUBST:   przs = ., q = x., PQKLFH = x, RMJD = xw, EZOy = w., SNa_ = x_
+CLEAR:   _
+MAP
+__________sss__________
+_xxxxxxxxxqpqxxxxxxxxx_
+_xDDDDDDDDDrDDDDDDDDDx_
+_xDEEEEEEEEzEEEEEEEEDx_
+_xDE...............EDx_
+_xDE...............EDx_
+_xDE..EEEEEEEEEEE..EDx_
+_xDE..EDDDDDDDDDE..EDQS
+_xDE..EDxxxxxxxDE..ZRPS
+_xDE..EDDDDDDDDDE..EDQS
+_xDE..EEEEEEEEEEE..EDx_
+_xDE...............EDx_
+_xDE...............EDx_
+_xDOEEEEEEEEEEEEEyEEDx_
+_LMDDDDDDDDDDDDDDJDDDx_
+NKLxxxxxxxxxxxxxHFHxxx_
+NN______________aaa____
+ENDMAP
+
+NAME:  nicolae_spider_twisty_arc_passages
+TAGS:  decor transparent
+SUBST: D = x..
+MAP
+     ......   ........
+    D...DD....D...DD......
+   xxD.DxxD.DDxD.DxxDD.DDD.
+  xxD..DxD.DxxxD..Dxxx.DxD.
+ .DD..DxxD.DxDD....DDxDxxD.
+ ...DDxxD..xxD..DDD.DxxxD..
+ .DDxxxD..DxD..DxxxD.DxD..
+.DxxxD....DxD.DxxDD..DxD.D
+..DDD.xxD.DxD.DxD.....D..D
+..DD..DxxDDxD..DD..DDDD...
+.DxxD..DxxDxxD.DxDDxxxxDD..
+ .DD..D.DD.xD..DxxxxDDDDxD.
+ .DD.D.....D.DD.DxxD....D..
+.DxxD..DDD.DDxxD.DxD.D..D..
+..DxxDDxxxDxxxD........DxD.
+.DxxxxxxDxxxDD.D..DDDDDxxD.
+..DDxxD.DxD......DxxxxxxxD.
+....DxxD.xxD.D..DxxDDDDDD.
+.DDD.DxD.DxD..DDxxD....Dx
+.DxD.DxD..D..DxxxD...Dxxx
+ DxD..D.D..D..DDD..D..D
+     .. ....  .......
 ENDMAP
 
 ###############################################################################
