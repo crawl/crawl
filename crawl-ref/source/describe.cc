@@ -3045,7 +3045,8 @@ static string _player_spell_stats(const spell_type spell)
     description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
-    if (damage_string != "") {
+    if (damage_string != "")
+    {
         description += make_stringf("\n%*s: ", padding, "Damage");
         description += damage_string;
     }

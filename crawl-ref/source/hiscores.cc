@@ -291,9 +291,8 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized) {
+    if (!hs_list_initalized)
         hiscores_read_to_memory();
-    }
 
     int i, total_entries;
 

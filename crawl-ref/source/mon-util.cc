@@ -2024,10 +2024,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.type = AT_HIT;
             attk.damage *= 2;
         }
-    } else if (mons_species(mon.type) == MONS_DRACONIAN
-            && mon.type != MONS_DRACONIAN
-            && attk.type == AT_NONE
-            && smc->attack[attk_number - 1].type != AT_NONE)
+    }
+    else if (mons_species(mon.type) == MONS_DRACONIAN
+             && mon.type != MONS_DRACONIAN
+             && attk.type == AT_NONE
+             && smc->attack[attk_number - 1].type != AT_NONE)
     {
         // Nonbase draconians inherit aux attacks from their base type.
         // Implicit assumption: base draconian types only get one aux

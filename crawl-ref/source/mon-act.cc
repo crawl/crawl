@@ -1216,14 +1216,16 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         // Master archers are always quite likely to shoot you, if they can.
         if (one_chance_in(10))
             return false;
-    } else if (launcher)
+    }
+    else if (launcher)
     {
         // Fellas with ranged weapons are likely to use them, though slightly
         // less likely than master archers. XXX: this is a bit silly and we
         // could probably collapse this chance and master archers' together.
         if (one_chance_in(5))
             return false;
-    } else if (!one_chance_in(3))
+    }
+    else if (!one_chance_in(3))
     {
         // Monsters with throwing weapons only use them one turn in three
         // if they're not master archers.

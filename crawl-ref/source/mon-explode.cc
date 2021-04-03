@@ -209,7 +209,9 @@ bool explode_monster(monster* mons, killer_type killer,
                     effect + ".";
         if (type == MONS_BENNU)
             boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
-    } else {
+    }
+    else
+    {
         if (!mons->has_ench(ENCH_INNER_FLAME))
         {
             msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "

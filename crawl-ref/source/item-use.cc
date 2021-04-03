@@ -2911,7 +2911,8 @@ void read(item_def* scroll)
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
     // Handle player cancels before we waste time
-    if (item_type_known(*scroll)) {
+    if (item_type_known(*scroll))
+    {
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
