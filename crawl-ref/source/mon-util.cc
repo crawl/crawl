@@ -820,9 +820,12 @@ bool mons_is_firewood(const monster& mon)
 bool mons_has_body(const monster& mon)
 {
     if (mon.type == MONS_FLYING_SKULL
-        || mon.type == MONS_CURSE_SKULL
+        || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
-        || mons_class_is_animated_weapon(mon.type))
+        || mon.type == MONS_DEATH_COB
+        || mon.type == MONS_ANIMATED_ARMOUR
+        || mons_class_is_animated_weapon(mon.type)
+        || mons_is_tentacle_or_tentacle_segment(mon.type))
     {
         return false;
     }
@@ -833,7 +836,6 @@ bool mons_has_body(const monster& mon)
     case 'v':
     case 'G':
     case '*':
-    case '%':
     case 'J':
         return false;
     }
