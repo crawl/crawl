@@ -95,7 +95,6 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_CHARMING, SPELL_CHARMING },
     { WAND_ACID, SPELL_CORROSIVE_BOLT },
     { WAND_MINDBURST, SPELL_MINDBURST },
-    { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
 };
 
 

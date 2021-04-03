@@ -636,6 +636,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
         {MISC_CONDENSER_VANE,
             (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
+        {MISC_XOMS_CHESSBOARD,
+            (you.seen_misc[MISC_XOMS_CHESSBOARD] ? 0 : 20)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -665,17 +667,15 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent */)
 {
-    // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        { WAND_ACID,            18 },
-        { WAND_ICEBLAST,        18 },
-        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },
-        { WAND_PARALYSIS,       8 },
-        { WAND_MINDBURST,  5 },
+        { WAND_ACID,            20 },
+        { WAND_ICEBLAST,        20 },
+        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 10 },
+        { WAND_PARALYSIS,       10 },
+        { WAND_MINDBURST,  8 },
         { WAND_POLYMORPH,       5 },
         { WAND_DIGGING,         5 },
-        { WAND_RANDOM_EFFECTS,  2 },
-        { WAND_FLAME,           1 },
+        { WAND_FLAME,           2 },
     };
 
     // Unknown wands get a huge weight bonus.

@@ -2320,9 +2320,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_RANDOM_BOLT:
         return cast_random_bolt(powc, beam, fail);
 
-    case SPELL_RANDOM_EFFECTS:
-        return cast_random_effects(powc, beam, fail);
-
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);
 

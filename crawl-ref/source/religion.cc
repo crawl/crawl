@@ -1250,7 +1250,6 @@ static int _pakellas_low_wand()
     static const vector<int> low_wands = {
         WAND_FLAME,
         WAND_POLYMORPH,
-        WAND_RANDOM_EFFECTS,
     };
 
     return _preferably_unseen_item(low_wands, _seen_wand);

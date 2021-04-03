@@ -5060,9 +5060,6 @@ bool bolt::ignores_monster(const monster* mon) const
 
 bool bolt::has_saving_throw() const
 {
-    if (aimed_at_feet)
-        return false;
-
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -5087,8 +5084,10 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
         return false;
+    case BEAM_POLYMORPH:
+        return !aimed_at_feet; // Self-poly doesn't check will
     case BEAM_VULNERABILITY:
-        return !one_chance_in(3);  // Ignores HR 1/3 of the time
+        return !one_chance_in(3);  // Ignores will 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
         return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:

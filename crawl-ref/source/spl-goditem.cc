@@ -1286,33 +1286,6 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
     beam.explode();
 }
 
-spret cast_random_effects(int pow, bolt& beam, bool fail)
-{
-    bolt tracer = beam;
-    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
-        return spret::abort;
-
-    fail_check();
-
-    // List of possible effects. Mostly debuffs, a few buffs to keep it
-    // exciting
-    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
-                                          5, ZAP_INVISIBILITY,
-                                          5, ZAP_MIGHT,
-                                          10, ZAP_CORONA,
-                                          15, ZAP_SLOW,
-                                          15, ZAP_MALMUTATE,
-                                          15, ZAP_PETRIFY,
-                                          10, ZAP_PARALYSE,
-                                          10, ZAP_CONFUSE,
-                                          10, ZAP_SLEEP);
-    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
-
-    zapping(zap, pow, beam, false);
-
-    return spret::success;
-}
-
 void majin_bo_vampirism(monster &mon, int damage)
 {
     if (!player_equip_unrand(UNRAND_MAJIN) || crawl_state.is_god_acting())

@@ -421,7 +421,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
@@ -665,6 +664,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
+        case MISC_XOMS_CHESSBOARD:
         default:
             valued += 200;
         }

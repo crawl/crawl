@@ -820,6 +820,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_LIGHTNING_REMOVED },
     { OBJ_WANDS,     WAND_SCATTERSHOT_REMOVED },
     { OBJ_WANDS,     WAND_CLOUDS_REMOVED },
+    { OBJ_WANDS,     WAND_RANDOM_EFFECTS_REMOVED },
     { OBJ_FOOD,      FOOD_CHUNK},
     { OBJ_FOOD,      FOOD_BREAD_RATION },
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
@@ -1442,7 +1443,6 @@ int wand_charge_value(int type)
         return 24;
 
     case WAND_FLAME:
-    case WAND_RANDOM_EFFECTS:
         return 32;
     }
 }
@@ -1476,8 +1476,6 @@ bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use it
-    case WAND_RANDOM_EFFECTS:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
