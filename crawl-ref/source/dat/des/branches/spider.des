@@ -1494,6 +1494,427 @@ ccccc...cc=cc...ccccc
     ccccc.@.ccccc
 ENDMAP
 
+NAME:   nicolae_spider_acid_house
+TAGS:   no_trap_gen patrolling no_monster_gen
+WEIGHT: 5
+MONS:   acid blob, entropy weaver, acid dragon, oklob plant
+NSUBST: MNO = 1=4, P = 3=% / 2=%* / *| / O, M = 2=3 / 2=3. / .
+NSUBST: N = 2 / 3 / 23.. / ., O = 1 / 2 / 3 / 2=3. / ., a = . / D, p = 2=. / D
+NSUBST: q = . / D, r = . / D, s = . / D, y = . / D, z = . / D
+SUBST:  D = x., - = x_
+CLEAR:  _
+MAP
+--------------
+-xxxxxxxxxxxx-
+-xDDDDxxDDDDx-
+-xDMMMrsNNNDx-
+-xDMMMrsNNNDx-
+-xDMMDxxDNNDx-
+.xxqqxxxxyyxx-
+@.appxxxxzzxx-
+@.apDxxxDOODx-
+.xxxxxxxPOOPx-
+ -----xxPOOPx-
+     --xPPPPx-
+      -xxxxxx-
+      --------
+ENDMAP
+
+NAME:  nicolae_spider_altar_of_dancing
+TAGS:  transparent
+MONS:  tarantella
+KFEAT: _ = altar_uskayaw
+SUBST: D = x., - = x-
+CLEAR: -
+MAP
+ -----
+--xxxx
+-xxDDx
+-xDD..@
+-xD.xx
+-xD.Dxxx---
+-xDD.DDxxx---
+-xxDD.DDxxxx-
+--xxDD.DDDDx-
+ --xxDD111Dx-
+  --xxD1_1Dx-
+   -xxD111Dx-
+   --xDDDDDx-
+    -xxxxxxx-
+    ---------
+ENDMAP
+
+NAME:   nicolae_spider_baby_got_redback
+TAGS:   patrolling
+MONS:   redback
+SUBST:  D = x., E = x'
+SUBST:  ' = 1.
+MAP
+   xxxxx
+ xxxEExxxx
+xxEE''Dxxxxx
+xE''''Dxxxxxx
+xE'''''Dxxxxxx
+xE''''..xDDxxx
+xE''''....DDxx
+xE''''.Dx..Dxx
+xxE'''.xxD.Dxx
+ xxEEEDxxD.Dxx
+..xxxxxxDD.Dxx
+@..DDDxDD..Dxx
+.....DDD..DDxx
+ xDD.....DDxx
+ xxDDDDDDDxx
+  xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_bug_shape
+TAGS:   transparent
+SUBST:  D = x:60 ., 0 = 0., M = 0, L = %%%%$$*..
+NSUBST: a = . / x
+MAP
+...................
+...................
+..DDDDDD.0.DDDDDD..
+.....0.DD.DD.0.....
+...DDD.xxaxx.DDD...
+..DD.DxaL.LaxD.DD..
+..D...xL.M.Lx...D..
+....0.a.M9M.a.0....
+..D...xL.M.Lx...D..
+..DD.DxaL.LaxD.DD..
+...DDD.xxaxx.DDD...
+.....0.DD.DD.0.....
+..DDDDDD.0.DDDDDD..
+...................
+...................
+ENDMAP
+
+NAME:   nicolae_spider_bzzzt
+DEPTH:  Spider
+SUBST:  D = xw, S = w., E = x.
+NSUBST: w = 2=1 / 2=1w / 2=2 / 2=2w / w
+KMONS:  1 = electric eel
+KMONS:  2 = spark wasp
+KFEAT:  12 = w
+MAP
+    xxxxx
+  xxxDDDxxx
+ xxDDwwwDDxx
+xxDwwSSSwwDxx
+xDwSS...SSwDxx
+@....EEE..SwDx
+@....EEE..SwDx
+xDwSS...SSwDxx
+xxDwwSSSwwDxx
+ xxDDwwwDDxx
+  xxxDDDxxx
+    xxxxx
+ENDMAP
+
+NAME:  nicolae_spider_claw_tunnel
+TAGS:  transparent
+SUBST: E = D:50 %. *:5, D = x .:50, - = x_
+CLEAR: _
+MAP
+ -------------------
+--xxxxxxxxxxxxxxxxx--
+-xxEEExxxEEExxxEEExx-
+-xDD.DDxDD.DDxDD.DDx-
+-xD.0.DxD.9.DxD.0.Dx-
+-xDD.DDxDD.DDxDD.DDx-
+-xxD.DxxxD.DxxxD.Dxx-
+.DDD.DDDDD.DDDDD.DDD.
+@...D.....D.....D...@
+.DDD.DDDDD.DDDDD.DDD.
+-xxD.DxxxD.DxxxD.Dxx-
+-xDD.DDxDD.DDxDD.DDx-
+-xD.0.DxD.9.DxD.0.Dx-
+-xDD.DDxDD.DDxDD.DDx-
+-xxEEExxxEEExxxEEExx-
+--xxxxxxxxxxxxxxxxx--
+ -------------------
+ENDMAP
+
+NAME:   nicolae_spider_eight_legs
+TAGS:   transparent
+NSUBST: 0 = 8=0 / .
+SUBST:  x = x:60 .
+MAP
+.............
+...x.x.x.x...
+...x.x.x.x...
+..xx.x.x.xx..
+.xx0x0x0x0xx.
+.x0xxxxxxx0x.
+.x0xxxxxxx0x.
+.xx0x0x0x0xx.
+..xx.x.x.xx..
+...x.x.x.x...
+...x.x.x.x...
+.............
+ENDMAP
+
+NAME:  nicolae_spider_jagged_tunnels
+TAGS:  transparent
+SUBST: D = x:75 0 .
+MAP
+..xxxxxxxxxx
+...DDDDDDDDx
+x.........Dx
+xD..DDDDD.Dxxxx
+xD.D.DxxD.DDDDx
+xD.DDDxDD....Dx
+xD.DxxxD.DDD.Dxxxx
+xD.DxDDDDDxD.DDDDx
+xD.DDD.DxxDD....Dx
+xD....DDxxD.DDD.Dx
+xDDDD.DxDDDDDxD.Dx
+xxxxD.DDD.DxxxD.Dx
+   xD....DDxDDD.Dx
+   xDDDD.DxxD.D.Dx
+   xxxxD.DDDDD..Dx
+      xD.........x
+      xDDDDDDDD...
+      xxxxxxxxxx..
+ENDMAP
+
+NAME:  nicolae_spider_nooks_and_crannies
+TAGS:  transparent
+KITEM: L = %
+KMONS: L = 0 / 0 band
+SUBST: D = x.
+MAP
+   ...........
+  ...DDD.D.....
+ ..DxDxDx.xD.D..
+..Dxxxxxx.xxx...
+.xxx.LxxD..xxD...
+...x..xxxx.DxxD..
+.xxxx.x....xx....
+.Dxx..xL.xxxxxD..
+.Dx..xxxxxD.LxDD.
+....xx.Lx....x.D.
+.Dxxx...x.xxxx.D.
+..DxD.xxx.....D..
+..Dxx...xxxxxD..
+ ..Dxxx.xDxDD..
+  ..DDD.D.D...
+   ..........
+ENDMAP
+
+NAME:  nicolae_spider_moth_buddies
+TAGS:  transparent
+SUBST: D = x.
+MONS:  moth of wrath
+MONS:  ghost moth
+MONS:  wolf spider / redback / tarantella / jumping spider / orb spider
+MAP
+  xxxxx...xxxxx
+ xx3.xx...xx.3xx
+xxD..D.....D..Dxx
+xD....3...3....Dx
+xD.1...DDD.....Dx
+xD.....DDD...2.Dx
+xD....3...3....Dx
+xxD..D.....D..Dxx
+ xx3.xx...xx.3xx
+  xxxxx...xxxxx
+ENDMAP
+
+NAME:    nicolae_spider_not_touching_you
+TAGS:    transparent
+MONS:    entropy weaver, ghost moth, moth of wrath, torpor snail, orb spider
+SHUFFLE: 1234
+SUBST:   1 = 115, 2 = 225, 3 = 335
+SUBST:   w = wwD, D = xx.
+MAP
+      ....
+      .DD.
+  .....DD.....
+  .DD......DD.
+  .DD......DD.
+  .....ww.....
+......1ww2......
+.DD..wwwwww..DD.
+.DD..wwwwww..DD.
+......4ww3......
+  .....ww.....
+  .DD......DD.
+  .DD......DD.
+  .....DD.....
+      .DD.
+      ....
+ENDMAP
+
+NAME:  nicolae_spider_orb_run
+TAGS:  no_pool_fixup transparent
+KMASK: '1 = opaque
+KMASK: '1 = no_monster_gen
+KMASK: '1 = no_item_gen
+KMASK: '1 = no_trap_gen
+KPROP: '1 = no_tele_into
+MONS:  orb spider
+SUBST: D = x., 0 = 000.
+MAP
+     xxxxxxxxxxx
+  xxxx'1'''''1'xxxx
+ xxxxxwwwxxxwwwxxxxx
+....xx....0....xx....
+xD.DxxD0DxxxD0DxxD.Dx
+xxD.xD.D.DxD.D.Dx.Dxx
+xD.DxxD.DxxxD.DxxD.Dx
+xxD.xD.D.DxD.D.Dx.Dxx
+xD.DxxD.DxxxD.DxxD.Dx
+xxD.xD.D.DxD.D.Dx.Dxx
+xD.DxxD0DxxxD0DxxD.Dx
+xxD0.....xxx.....0Dxx
+ xxxxxwwwxxxwwwxxxxx
+  xxxx'1'''''1'xxxx
+     xxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_paper_wasps
+TAGS:   no_item_gen no_trap_gen no_monster_gen patrolling
+ITEM:   any scroll
+MONS:   hornet, spark wasp
+SUBST:  E = x', D = x.
+NSUBST: ' = 2 / 122 / 2=12'' / ', ' = 2=d / 2=d. / .
+MAP
+  xxxx
+ xxxxxx
+xxEEEExx
+xxE''Exx
+xxx''Exx
+xD.xxxxx
+xD.Dxxxx
+xD.DDxD.@
+xxD....xx
+ xxDDxxx
+  xxxx
+ENDMAP
+
+NAME:   nicolae_spider_rock_and_or_roll
+TAGS:   no_trap_gen transparent
+KITEM:  R = large rock q:1
+MONS:   boulder beetle
+NSUBST: P = . / x., Q = . / x., E = 4=1 / 2=1' / x', ! = 4=x / 3=x' / '
+NSUBST: ' = 4=R / 6=R. / .
+SUBST:  - = x-
+CLEAR:  -
+MAP
+ --------
+--xxxxxxxx.@
+-xxEEEEEEQQ.
+-xEE''''''Qx
+-xE'!!!!!'Ex-
+-xE'!!!!!'Ex-
+-xE'!!!!!'Ex-
+-xE'!!!!!'Ex-
+-xE'!!!!!'Ex-
+-xP''''''EEx-
+ .PPEEEEEExx-
+ @.xxxxxxxx--
+   ---------
+ENDMAP
+
+NAME:   nicolae_spider_scorpion_nest
+TAGS:   no_trap_gen
+MONS:   emperor scorpion
+SUBST:  D = x., F = x'
+NSUBST: p = @ / x., q = . / x., r = . / x., ' = 3=1 / 3=1. / .
+MAP
+  xxxxxxxxxxx
+xxxDDDxxFFFFx
+pDDD.Dqr'''Fx
+p.D.D.qr'''Fx
+p..D.DxxFFFFx
+pDDDDDxxxxxxx
+xxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_some_kinda_spiderbox
+TAGS:   transparent
+NSUBST: E = . / D
+SUBST:  D = xx., 0 = 0. 9:2
+MAP
+...........
+.D.xDxDx.D.
+..DEDDDED..
+.xEx0x0xEx.
+.DD00000DD.
+.xDx000xDx.
+.DD00000DD.
+.xEx0x0xEx.
+..DEDDDED..
+.D.xDxDx.D.
+...........
+ENDMAP
+
+NAME:   nicolae_spider_swamp_cousins
+TAGS:   no_pool_fixup no_trap_gen transparent patrolling
+MONS:   ghost crab, vampire mosquito, tyrant leech
+NSUBST: . = 1 / 1. / 4=2 / 6=2. / 3=3 / 4=3.
+SUBST:  Z = wD, D = x., E = x', . = ...W, ' = .
+MAP
+xxxxxxxxxxxxx
+@EEExDZZZZZZxx
+E''EED.....ZZxx
+xEE'E....D..Zxxxx
+xxxE...D....DDxxxxx
+xxDDD...ZZ.D.DDxEEE
+xxD....ZZZZ...EEE'@
+ xZ..D.ZZZZ...E''EE
+ xZZ....ZZ..D..EEEx
+ xxZZ..D.......Dxxx
+ xxxZ.D...D...ZZxx
+ xxxEE.......ZZxx
+ xxEE'EDD...ZZxx
+ xxE'EExDDDZZxx
+  xE'EExxxxxxx
+  xEE@Exxx
+ENDMAP
+
+NAME:  nicolae_spider_undead_wolf_pack
+TAGS:  patrolling transparent
+MONS:  wolf spider / wolf spider zombie / wolf spider simulacrum \
+       / spectral wolf spider / nothing
+SUBST: D = x.
+MAP
+    .........
+  .............
+ ....DDD.DDD....
+ ...DxxD.DxxD...
+...DxxxD.DxxxD...
+..Dxx1xD.Dx1xxD..
+..Dx11xD.Dx11xD..
+..Dx11xD.Dx11xD..
+..Dx11xD.Dx11xD..
+..Dx11.D.D.11xD..
+..Dxx1.D.D.1xxD..
+...Dxx.....xxD...
+ ...DxxxxxxxD...
+ENDMAP
+
+NAME:  nicolae_spider_wall_of_niches
+TAGS:  transparent
+KMONS: a = 0 / 9 w:5 / nothing w:2
+KITEM: a = % / * w:2 / nothing
+SUBST: D = x.
+MAP
+       xxxxx
+    xxxxaxaxxxx
+   xxax.xxx.xaxx
+ xxx.xx.xxx.xx.xxx
+xxaxx.xx.D.xx.xxaxx
+x.xxxx.D...D.xxxx.x
+xx..xD...D...Dx..xx
+ xxx...DDDDD...xxx
+   ...DxxxxxD...
+    @..DDDDD..@
+      .......
+         @
+ENDMAP
 
 ###############################################################################
 #
