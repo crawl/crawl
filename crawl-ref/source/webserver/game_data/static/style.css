@@ -1336,3 +1336,17 @@ body {
     font-family: monospace;
     cursor: pointer;
 }
+
+/* consumables panel */
+#consumables {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    border: 2px solid #7d623c;
+    border-radius: 3px;
+}
+
+/* makes the empty panel immune to $.show() */
+#consumables.empty {
+    display: none !important;
+}
