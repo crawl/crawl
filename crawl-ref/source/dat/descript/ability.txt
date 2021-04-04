@@ -151,8 +151,9 @@ is increased by Invocations skill and piety.
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, and
-sickness, and increases and sustains your strength, intelligence and dexterity.
-The increases to your attributes are determined by Invocations skill.
+sickness, as well as the effects of clouds of foul pestilence. Your strength,
+intelligence and dexterity are also temporarily increased by a degree dependent
+on Invocations skill, and cannot be drained while the effect is active.
 %%%%
 Imprison ability
 

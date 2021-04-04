@@ -48,6 +48,9 @@ mutations:
     MUT_INNATE_CASTER: 1
     MUT_HP_CASTING: 1
     MUT_FLAT_HP: 1
+fake_mutations:
+  - long: You are immune to sickness and miasma.
+  - short: sickness immunity
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_TRANSMUTER

@@ -3867,8 +3867,7 @@ bool monster::res_sticky_flame() const
 bool monster::res_miasma(bool /*temp*/) const
 {
     if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
-        || get_mons_resist(*this, MR_RES_MIASMA)
-        || is_unbreathing())
+        || get_mons_resist(*this, MR_RES_MIASMA))
     {
         return true;
     }
