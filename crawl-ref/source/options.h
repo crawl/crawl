@@ -283,6 +283,13 @@ public:
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
 
+#ifdef USE_TILE_WEB
+    vector<object_class_type> consumables_panel; // types of items to show on the panel
+    vector<string> consumables_panel_filter;   // what should be filtered out
+    bool        show_unidentified_consumables; // whether to show unidentified items
+    int         consumables_panel_scale; // the scale factor for resizing the panel
+#endif
+
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
     unordered_set<spell_type, hash<int>> fire_order_spell;

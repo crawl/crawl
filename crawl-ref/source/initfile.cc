@@ -407,6 +407,8 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
+        new ListGameOption<string>(SIMPLE_NAME(consumables_panel_filter)),
+        new BoolGameOption(SIMPLE_NAME(show_unidentified_consumables), false),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -1183,6 +1185,13 @@ void game_options::reset_options()
 
 #ifdef USE_TILE_WEB
     tile_display_mode = "tiles";
+
+    consumables_panel.clear();
+    consumables_panel.emplace_back(OBJ_SCROLLS);
+    consumables_panel.emplace_back(OBJ_POTIONS);
+    consumables_panel.emplace_back(OBJ_MISCELLANY);
+
+    consumables_panel_scale = 100;
 #endif
 
     // map each colour to itself as default
@@ -2779,6 +2788,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "item_slot"
         && key != "ability_slot"
         && key != "sound" && key != "hold_sound" && key != "sound_file_path"
+#ifdef USE_TILE_WEB
+        && key != "consumables_panel_filter"
+#endif
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -3699,6 +3711,46 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
         {
             report_error("Expected a decimal value for tile_map_scale,"
+                " but got '%s'.", field.c_str());
+        }
+    }
+#endif
+#ifdef USE_TILE_WEB
+    else if (key == "consumables_panel")
+    {
+        // clear out the default list
+        consumables_panel.clear();
+
+        char32_t c;
+        for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
+        {
+            object_class_type type = item_class_by_sym(c);
+
+            if (type == OBJ_SCROLLS
+                || type == OBJ_POTIONS
+                || type == OBJ_WANDS
+                || type == OBJ_MISCELLANY)
+            {
+                consumables_panel.emplace_back(type);
+            }
+            else
+            {
+                report_error("Bad item type '%*s' for consumables_panel.\n",
+                             s, tp);
+            }
+        }
+    }
+    else if (key == "consumables_panel_scale")
+    {
+        float tmp_scale;
+        if (sscanf(field.c_str(), "%f", &tmp_scale))
+        {
+            consumables_panel_scale = min(1600, max(20,
+                                        static_cast<int>(tmp_scale * 100)));
+        }
+        else
+        {
+            report_error("Expected a decimal value for consumables_panel_scale,"
                 " but got '%s'.", field.c_str());
         }
     }
@@ -4711,6 +4763,25 @@ static void _write_minimap_colours()
     _write_vcolour("tile_window_col", Options.tile_window_col);
 }
 
+static void _write_consumables_panel_options()
+{
+    tiles.json_open_array("consumables_panel");
+    for (const auto &type : Options.consumables_panel)
+        tiles.json_write_int(type);
+    tiles.json_close_array();
+
+    tiles.json_open_array("consumables_panel_filter");
+    for (const auto &pattern : Options.consumables_panel_filter)
+        tiles.json_write_string(pattern);
+    tiles.json_close_array();
+
+    tiles.json_write_bool("show_unidentified_consumables",
+            Options.show_unidentified_consumables);
+
+    tiles.json_write_int("consumables_panel_scale",
+            Options.consumables_panel_scale);
+}
+
 void game_options::write_webtiles_options(const string& name)
 {
     tiles.json_open_object(name);
@@ -4760,6 +4831,8 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("glyph_mode_font_size", Options.glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
+
+    _write_consumables_panel_options();
 
     _write_minimap_colours();
 

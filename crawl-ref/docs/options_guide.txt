@@ -74,7 +74,9 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot
+                cloud_status, always_show_zot, consumables_panel,
+                consumables_panel_filter, show_unidentified_consumables,
+                consumables_panel_scale
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1622,6 +1624,29 @@ cloud_status = true
 always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
+
+consumables_panel = ?!}
+        The above is the default list of items to show on the consumables panel.
+        The valid symbols are
+        ?       Scrolls
+        !       Potions
+        /       Wands
+        }       Misc. items
+        If set to an empty string, the panel will be hidden permanently.
+        This option is only available on WebTiles.
+
+consumables_panel_filter += <regex>, <regex>, ...
+        (List option)
+        Any item matching the filter expression(s) will not be shown on the
+        consumables panel.
+        The file dat/defaults/misc.txt contains default settings.
+
+show_unidentified_consumables = false
+        When set to true, the consumables panel will show unidentified scrolls
+        and potions.
+
+consumables_panel_scale = 1.0
+        A scale factor to apply to the consumables panel.
 
 3-i     Colours (messages and menus)
 -----------------

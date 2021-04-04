@@ -63,6 +63,8 @@ something_under SOMETHING_UNDER
 new_stair NEW_STAIR
 new_transporter NEW_TRANSPORTER
 
+ellipsis ELLIPSIS
+
 %sdir misc
 out_of_sight MESH
 out_of_range OOR_MESH
