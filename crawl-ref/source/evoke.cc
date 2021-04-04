@@ -331,7 +331,8 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(env.grid(you.pos())))
+    if (feat_is_critical(env.grid(you.pos()))
+        || player_in_branch(BRANCH_ARENA))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;

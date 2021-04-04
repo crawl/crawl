@@ -5317,6 +5317,13 @@ void player::banish(const actor* /*agent*/, const string &who, const int power,
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
+    if (player_in_branch(BRANCH_ARENA))
+    {
+        simple_god_message(" prevents your banishment from the Arena!",
+                           GOD_OKAWARU);
+        return;
+    }
+
     if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
         mpr("You resist the pull of the Abyss.");

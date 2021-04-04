@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "coordit.h"
 #include "env.h"
+#include "god-abil.h"
 #include "items.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -311,6 +312,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     // Slime vaults on death.
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
+
+    // Clear all duel-related keys from clones.
+    if (mons->props.exists(OKAWARU_DUEL_TARGET_KEY))
+    {
+        mons->props.erase(OKAWARU_DUEL_TARGET_KEY);
+        mons->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
+    }
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)

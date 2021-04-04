@@ -793,6 +793,8 @@ static void _decrement_durations()
         _try_to_respawn_ancestor();
     }
 
+    okawaru_handle_duel();
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();

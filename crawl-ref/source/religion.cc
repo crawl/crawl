@@ -160,7 +160,8 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 3, "Okawaru will now gift you ammunition as you gain piety.",
              "Okawaru will no longer gift you ammunition.",
              "Okawaru will gift you ammunition as you gain piety." },
-        { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
+        { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
+        { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
         { 5, "Okawaru will now gift you equipment as you gain piety.",
              "Okawaru will no longer gift you equipment.",
              "Okawaru will gift you equipment as you gain piety." },
@@ -3192,6 +3193,8 @@ void excommunication(bool voluntary, god_type new_god)
             okawaru_remove_heroism();
         if (you.duration[DUR_FINESSE])
             okawaru_remove_finesse();
+        if (player_in_branch(BRANCH_ARENA))
+            okawaru_end_duel();
         break;
 
     default:

@@ -27,6 +27,7 @@
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
+#include "god-abil.h"
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -292,6 +293,14 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
+
+    // Transfer duel status over to the merge target.
+    if (initial_slime->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+    {
+        initial_slime->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+        merge_to->props[OKAWARU_DUEL_TARGET_KEY] = true;
+        merge_to->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    }
 
     // Merging costs the combined slime some energy. The idea is that if 2
     // slimes merge you can gain a space by moving away the turn after (maybe

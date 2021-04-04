@@ -715,6 +715,16 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_DUEL:
+        if (okawaru_duel_active())
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Duel";
+            inf.short_text   = "dueling";
+            inf.long_text    = "You are engaged in single combat.";
+        }
+        break;
+
     default:
         if (!found)
         {

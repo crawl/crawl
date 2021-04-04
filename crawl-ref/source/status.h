@@ -46,7 +46,8 @@ enum status_type
     STATUS_ZOT,
     STATUS_CURL,
     STATUS_MAXWELLS,
-    STATUS_LAST_STATUS = STATUS_MAXWELLS
+    STATUS_DUEL,
+    STATUS_LAST_STATUS = STATUS_DUEL
 };
 
 struct status_info

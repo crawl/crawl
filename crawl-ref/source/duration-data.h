@@ -559,6 +559,11 @@ static const duration_def duration_data[] =
       "on word of chaos cooldown", "word of chaos cooldown",
       "You are unable to speak a word of chaos.", D_NO_FLAGS,
       {{ "You are ready to speak a word of chaos again." }}},
+    { DUR_DUEL_COMPLETE, LIGHTGREY, "Duel",
+      "dueling", "duel complete",
+      "Your duel has come to an end.", D_EXPIRES,
+      {{ "", okawaru_end_duel },
+      { "Okawaru bids you farewell from the Arena.", 1 }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

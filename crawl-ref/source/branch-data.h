@@ -365,6 +365,18 @@ const Branch branches[NUM_BRANCHES] =
       BLACK, BLACK,
       '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 #endif
+
+    { BRANCH_ARENA, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_ARENA, DNGN_EXIT_ARENA, NUM_FEATURES,
+      "Arena", "the Arena", "Arena",
+      "You enter Okawaru's Arena!",
+      BLACK, BLACK,
+#if TAG_MAJOR_VERSION == 34
+      '"', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#else
+      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#endif
 };
 
 /*

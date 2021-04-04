@@ -336,6 +336,11 @@ Finesse status
 
 Your combat speed is greatly increased.
 %%%%
+Duel status
+
+You are dueling a foe in Okawaru's Arena, and will be returned whence you came
+if you are victorious.
+%%%%
 Prot status
 
 You are beseeching Elyvilon to save your life. If you are mortally wounded, the

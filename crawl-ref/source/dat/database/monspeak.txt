@@ -7425,3 +7425,17 @@ Gozag permabribe
 
 @The_monster@ grins @at_foe@ greedily, jangling a coin purse.
 %%%%
+####################
+# Okawaru duel keys
+####################
+spectator
+
+@The_monster@ jeers @_loudly_or_repeatedly_@ at you.
+
+@The_monster@ cheers @_loudly_or_repeatedly_@.
+
+VISUAL:@The_monster@ waves excitedly.
+
+w:70
+__NONE
+%%%%

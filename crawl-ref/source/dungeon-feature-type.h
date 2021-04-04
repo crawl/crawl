@@ -265,6 +265,9 @@ enum dungeon_feature_type
     DNGN_ENTER_VOLCANO,
     DNGN_ENTER_WIZLAB,
     DNGN_ENTER_DESOLATION,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_ARENA,
+#endif
 
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
@@ -282,6 +285,9 @@ enum dungeon_feature_type
     DNGN_EXIT_LABYRINTH,
 #endif
     DNGN_EXIT_DESOLATION,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_ARENA,
+#endif
 #if TAG_MAJOR_VERSION == 34
 
     DNGN_ALTAR_GOZAG,
@@ -322,6 +328,8 @@ enum dungeon_feature_type
     DNGN_PETRIFIED_TREE,
     DNGN_MANGROVE,
     DNGN_DEMONIC_TREE,
+    DNGN_ENTER_ARENA,
+    DNGN_EXIT_ARENA,
 #endif
 
     NUM_FEATURES

@@ -1068,6 +1068,8 @@ POP_DEPTHS,
 },
 #endif
 
+{ // Arena
+},
 
 };
 
@@ -1221,6 +1223,7 @@ static const vector<pop_entry> population_water[] =
 #if TAG_MAJOR_VERSION == 34
     GENERIC_WATER_POP, // Gauntlet
 #endif
+    GENERIC_WATER_POP, // Arena
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1323,6 +1326,7 @@ static const vector<pop_entry> population_lava[] =
 #if TAG_MAJOR_VERSION == 34
     GENERIC_LAVA_POP, // Gauntlet
 #endif
+    GENERIC_LAVA_POP, // Arena
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

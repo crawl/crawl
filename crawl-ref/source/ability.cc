@@ -420,6 +420,8 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_OKAWARU_FINESSE, "Finesse",
             5, 0, 3, {fail_basis::invo, 60, 4, 25}, abflag::none },
+        { ABIL_OKAWARU_DUEL, "Duel",
+            7, 0, 8, {fail_basis::invo, 80, 4, 20}, abflag::none },
 
         // Makhleb
         { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -2547,6 +2549,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
         break;
+
+    case ABIL_OKAWARU_DUEL:
+        return okawaru_duel(fail);
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     {

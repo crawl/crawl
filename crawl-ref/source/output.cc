@@ -1430,6 +1430,7 @@ static string _level_description_string_hud()
     // Indefinite articles
     else if (place.branch != BRANCH_PANDEMONIUM
              && place.branch != BRANCH_DESOLATION
+             && place.branch != BRANCH_ARENA
              && !is_connected_branch(place.branch))
     {
         short_name = article_a(short_name);

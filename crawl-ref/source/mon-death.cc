@@ -2198,11 +2198,17 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             // All this information may be lost by the time the monster revives.
             const int revives = (mons.props.exists(BENNU_REVIVES_KEY))
-                              ? mons.props[BENNU_REVIVES_KEY].get_byte() : 0;
+                                ? mons.props[BENNU_REVIVES_KEY].get_byte() : 0;
+            const bool duel = mons.props.exists(OKAWARU_DUEL_CURRENT_KEY);
             const beh_type att = mons.has_ench(ENCH_CHARM)
-                                     ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
+                                 ? BEH_HOSTILE : SAME_ATTITUDE(&mons);
 
-            bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe);
+            // Don't consider this a victory yet, and duel the new bennu.
+            if (duel)
+                mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
+
+            bennu_revive_fineff::schedule(mons.pos(), revives, att, mons.foe,
+                                          duel);
         }
     }
 
@@ -2337,6 +2343,20 @@ item_def* monster_die(monster& mons, killer_type killer,
         crawl_state.dec_mon_acting(&mons);
 
         return corpse;
+    }
+
+    // If there are other duel targets alive (due to a slime splitting), don't
+    // count this as winning the duel.
+    if (mons.props.exists(OKAWARU_DUEL_CURRENT_KEY))
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY) && *mi != &mons)
+            {
+                mons.props.erase(OKAWARU_DUEL_CURRENT_KEY);
+                break;
+            }
+        }
     }
 
     mons_remove_from_grid(mons);

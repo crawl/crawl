@@ -2858,6 +2858,10 @@ microbat
 
 A bat that, despite its name, is not any smaller than a megabat.
 %%%%
+spectator
+
+A follower of Okawaru, granted the honour of spectating a duel to the death.
+%%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
 

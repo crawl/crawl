@@ -596,6 +596,13 @@ void bennu_revive_fineff::fire()
                                                             : MG_NONE));
     if (newmons)
         newmons->props[BENNU_REVIVES_KEY].get_byte() = revives + 1;
+
+    // If we were dueling the original bennu, the duel continues.
+    if (duel)
+    {
+        newmons->props[OKAWARU_DUEL_TARGET_KEY] = true;
+        newmons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    }
 }
 
 void infestation_death_fineff::fire()

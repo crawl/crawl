@@ -429,6 +429,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_OSSUARY:
     case DNGN_EXIT_BAILEY:
     case DNGN_EXIT_DESOLATION:
+    case DNGN_EXIT_ARENA:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_ICE_CAVE:
         return TILE_DNGN_PORTAL_ICE_CAVE;
