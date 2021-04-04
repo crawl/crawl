@@ -10,6 +10,8 @@
 #
 ###############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 {{
 function ecumenical_altar_setup(e)
   e.depth("D:1-3")
@@ -554,4 +556,221 @@ MAP
 '''WWWW'x''
 '''''''W'x'
 '''WWWW''x'
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_pennies_from_heaven
+TAGS:  no_monster_gen transparent
+KITEM: _ = gold q:1
+KFEAT: W = shallow_water
+KITEM: W = gold q:1 / w:25 nothing
+: ecumenical_altar_setup(_G)
+MAP
+.....
+.WWW.
+.W_W.
+.WWW.
+.....
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_leap_of_faith
+KFEAT: ^ = shaft trap
+: ecumenical_altar_setup(_G)
+MAP
+xxx
+x_x
+x^x
+x@x
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_run_dry
+TAGS:  no_monster_gen transparent
+SUBST: V = V.
+: ecumenical_altar_setup(_G)
+MAP
+V.V.V
+.....
+V._.V
+.....
+V.V.V
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_heavens_door
+TAGS: no_monster_gen
+: if crawl.one_chance_in(5) then
+: door_vault_setup(_G)
+: end
+: ecumenical_altar_setup(_G)
+MAP
++++++
++++++
+++_++
++++++
++++++
+  @
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_blasted
+TAGS:  no_monster_gen transparent
+KITEM: _ = scroll of immolation ident:type
+SUBST: x = ..x
+SUBST: x : xc
+: ecumenical_altar_setup(_G)
+MAP
+.............
+.xxxxxxxxxxx.
+.xxxxxxxxxxx.
+.xx...x...xx.
+.xx.xx.xx.xx.
+.xx.xx.xx.xx.
+.xxx.._..xxx.
+.xx.xx.xx.xx.
+.xx.xx.xx.xx.
+.xx...x...xx.
+.xxxxx.xxxxx.
+.xxxxx+xxxxx.
+.............
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_lost_god
+TAGS:   no_monster_gen transparent
+SUBST:  x : x:20 c m:1
+NSUBST: a = 1:_ / *.
+: ecumenical_altar_setup(_G)
+MAP
+..............
+.x......x.....
+.xa....ax.a.x.
+.x......x...x.
+.a............
+.....a........
+.x...x..x.....
+.x.a.x.ax.....
+.x...x..xaxxx.
+............a.
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_crossroads
+TAGS:  no_monster_gen transparent
+KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft trap / \
+            net trap / A / > / Y w:2
+: ecumenical_altar_setup(_G)
+MAP
+@@@xxxxxxx@@@
+x...xxxxx...x
+xx...xxx...xx
+ xx...r...xx
+  xx.._..xx
+   xx...xx
+    x...x
+    x...x
+    x@@@x
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_zigzags
+TAGS:  no_monster_gen transparent
+SUBST: a : xcv, d : xcv, e : cvb
+: ecumenical_altar_setup(_G)
+MAP
+                             ddddddd
+                           ddd.....ddd
+       aaaaaaa           ddd.........ddd
+     aaa.....aaa       ddd.............ddd
+   aaa.........aaa.......................@
+ aaa.........................
+@.........................eee
+            eee.........eee
+              eee.._..eee
+                eeeeeee
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_inner_sanctum
+TAGS:   transparent
+NSUBST: e = 1:+ / *:c
+NSUBST: f = 1:+ / *:v
+SUBST:  v : vbtm
+: ecumenical_altar_setup(_G)
+MAP
+...........
+.ccccecccc.
+.c.......c.
+.c.......c.
+.c..vfv..c.
+.e..f_f..e.
+.c..vfv..c.
+.c.......c.
+.c.......c.
+.ccccecccc.
+...........
+ENDMAP
+
+# We want to avoid giving a player an immediate reroll for big piety
+# but the flavour of this one is too good.
+NAME:    hellmonk_ecumenical_altar_the_god_not_taken
+WEIGHT:  1
+:if crawl.one_chance_in(10) then
+COLOUR:  t = lightred / red w:3
+TILE:    t = dngn_tree_lightred / dngn_tree_red w:3
+:else
+COLOUR:  t = yellow / green w:3
+TILE:    t = dngn_tree_yellow / dngn_tree w:3
+:end
+: ecumenical_altar_setup(_G)
+MAP
+ ttt           ttt
+tt.tt         tt.tt
+t._.t         t._.t
+t...tt       tt...t
+tt...tt     tt...tt
+ tt...tt   tt...tt
+  tt...tt tt...tt
+   tt...ttt...tt
+    tt...t...tt
+     tt.....tt
+      tt...tt
+       t@@@t
+ENDMAP
+
+NAME:    hellmonk_ecumenical_altar_arch_garden
+TAGS:    transparent
+NSUBST:  A = 1:_ / *:A
+SUBST:   A = tGAA.
+SUBST:   . = ..'
+FTILE:   ._t = floor_grass
+COLOUR:  . = green
+FTILE:   'GA = floor_dirt
+COLOUR:  ' = brown
+: ecumenical_altar_setup(_G)
+MAP
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_watching_god
+TAGS:  transparent
+KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
+            great orb of eyes
+: ecumenical_altar_setup(_G)
+MAP
+...........
+.ccc...ccc.
+.c1n...n1c.
+.cnn...nnc.
+...........
+....._.....
+...........
+.cnn...nnc.
+.c1n...n1c.
+.ccc...ccc.
+...........
 ENDMAP
