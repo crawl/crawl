@@ -257,3 +257,327 @@ G.G-G.G
   .-.
   G-G
 ENDMAP
+
+NAME: hellmonk_ecumenical_altar_pennies_from_heaven
+: ecumenical_altar_setup(_G)
+TAGS:   no_monster_gen
+KITEM: _ = gold q:1
+KFEAT: W = shallow_water
+KITEM: W = gold q:1 / w:25 nothing
+MAP
+.....
+.WWW.
+.W_W.
+.WWW.
+.....
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_leap_of_faith
+: ecumenical_altar_setup(_G)
+KFEAT: ^ = shaft trap
+MAP
+xxx
+x_x
+x^x
+x@x
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_run_dry
+: ecumenical_altar_setup(_G)
+SUBST: V = V.
+MAP
+V.V.V
+.....
+V._.V
+.....
+V.V.V
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_heavens_door
+: ecumenical_altar_setup(_G)
+MAP
+ +++++
++++++++
++++++++
++++_+++
++++++++
++++++++
+ +++++
+   @
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_blasted
+: ecumenical_altar_setup(_G)
+KITEM: _ = scroll of immolation ident:type
+SUBST: x = .:15 x
+SUBST: x : xc
+MAP
+xxxxxxxxxxx
+xxxxxxxxxxx
+xx.......xx
+xx.......xx
+xx.......xx
+xx..._...xx
+xx.......xx
+xx.......xx
+xx.......xx
+xxxxx.xxxxx
+xxxxx+xxxxx
+     @
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_lost_god
+: ecumenical_altar_setup(_G)
+SUBST: x : x:20 c m:1
+NSUBST: a = 1:_ / *.
+FTILE: . = floor_pebble
+MAP
+..............
+.x......x...x.
+.xa....ax.a.x.
+.x......x...x.
+.a............
+.....a........
+.x...x..x.....
+.x.a.x.ax.....
+.x...x..xaxxx.
+............a.
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_crossroads
+: ecumenical_altar_setup(_G)
+KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft trap / \
+            net trap / A / > / Y w:2
+KMASK: r = no_monster_gen
+MAP
+@@@xxxxxxx@@@
+x...xxxxx...x
+xx...xxx...xx
+ xx...r...xx 
+  xx.._..xx 
+   xx...xx 
+    x...x 
+    x...x
+    x@@@x 
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_zigzags
+: ecumenical_altar_setup(_G)
+SUBST: a : xcv, d : xcv, e : cvb
+MAP
+                             ddddddd
+                           ddd.....ddd
+       aaaaaaa           ddd.........ddd
+     aaa.....aaa       ddd.............ddd
+   aaa.........aaa.......................@
+ aaa.........................
+@.........................eee
+            eee.........eee
+              eee.._..eee
+                eeeeeee
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_inner_sanctum
+: ecumenical_altar_setup(_G)
+NSUBST: d = 1:+ / *:x
+NSUBST: e = 1:+ / *:c
+NSUBST: f = 1:+ / *:v
+SUBST: v : vbtm
+MAP
+.................
+.xxxxxxxdxxxxxxx.
+.x.............x.
+.x.............x.
+.x..ccccecccc..x.
+.x..c.......c..x.
+.x..c.......c..x.
+.x..c..vfv..c..x.
+.d..e..f_f..e..d.
+.x..c..vfv..c..x.
+.x..c.......c..x.
+.x..c.......c..x.
+.x..ccccecccc..x.
+.x.............x.
+.x.............x.
+.xxxxxxxdxxxxxxx.
+.................
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_the_god_not_taken
+: ecumenical_altar_setup(_G)
+:if crawl.one_chance_in(10) then
+COLOUR:  t = lightred / red w:3
+:else
+COLOUR:  t = yellow / green w:3
+:end
+MAP
+ tttt         tttt 
+tt.ttt       ttt.tt
+t._.tt       tt._.t
+t...tt       tt...t
+t...tt       tt...t
+t...tt       tt...t
+tt...tt     tt...tt
+ tt...tt   tt...tt
+  tt...tt tt...tt
+   tt...ttt...tt
+    tt...t...tt
+     tt.....tt
+      tt...tt
+      tt...tt
+      tt@@@tt
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_arch_garden
+: ecumenical_altar_setup(_G)
+NSUBST: A = 1:_ / *:A
+SUBST: A = tGAA.
+SUBST: . = ..'
+FTILE:  ._t = floor_grass
+FTILE:  'GA = floor_dirt
+MAP
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_watching_god
+: ecumenical_altar_setup(_G)
+KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
+            great orb of eyes
+MAP
+ccc@@@ccc
+c1m...m1c
+cmm...mmc
+@.......@
+@..._...@
+@.......@
+cmm...mmc
+c1m...m1c
+ccc@@@ccc
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_dog_temple
+WEIGHT: 5
+: ecumenical_altar_setup(_G)
+TAGS:   no_monster_gen
+: if you.absdepth() > 2 and crawl.coinflip() then
+KMONS: a = hound
+: else
+KMONS: a = jackal band
+: end
+KFEAT: a = T
+MAP
+.......
+.G.a.G.
+.......
+.T._.T.
+.......
+.G.T.G.
+.......
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_prayer_group
+WEIGHT: 5
+: ecumenical_altar_setup(_G)
+SUBST: 1 = 1..
+: if you.absdepth() > 2 then
+MONS: orc priest w:2 / gnoll shaman w:3 / orc
+KITEM: _ = robe / amulet of faith w:1 / manual of invocations w:2
+: else
+MONS: hobgoblin / goblin / kobold / nothing w:20
+: end
+MAP
+ ccccccc
+cccG_Gccc
+cc..1..cc
+cc.1.1.cc
+c.1...1.c
+c..G1G..c
+c.......c
+c.......c
+c.......c
+cc.G.G.cc
+cc.....cc
+ cc...cc 
+ cc@@@cc
+ENDMAP
+
+#an ooze ate the god's name right off the altar
+NAME: hellmonk_ecumenical_altar_slurped_away
+WEIGHT: 5
+: ecumenical_altar_setup(_G)
+SUBST: x : xc, g = G.
+: if you.absdepth() > 2 and crawl.one_chance_in(3) then
+KMONS: _ = jelly
+KFEAT: + = runed_clear_door
+:else
+KMONS: _ = endoplasm
+:end
+MAP
+ @       @
+@+xxx xxx+@
+ x..xxx..x
+ x...g...x
+ xx.....xx
+  xg._.gx 
+ xx.....xx
+ x...g...x
+ x..xxx..x
+@+xxx xxx+@
+ @       @
+ENDMAP
+
+# some orcs have torn down the altar and replaced it with their own
+NAME: hellmonk_ecumenical_altar_defaced_shrine
+WEIGHT: 2
+: ecumenical_altar_setup(_G)
+TAGS:   no_monster_gen
+KFEAT: B = altar_beogh
+KPROP: B = no_tele_into
+SHUFFLE: d_
+NSUBST: 2 = 1:2 / *:.
+SUBST:  1 = 1..
+SUBST:  x : xc
+SUBST: . = .:90 '
+KPROP: ' = bloody
+KITEM: _ = stone q:1 / large rock q:1 w:3
+: if you.absdepth() > 1 then
+MONS: orc, orc / orc wizard w:1 / orc priest w:1
+:else
+MONS: rat, giant cockroach / dart slug
+:end
+{{
+  dgn.delayed_decay(_G, 'd', "human skeleton / kobold skeleton / elf skeleton"
+                             .. " / gnoll skeleton / ogre skeleton"
+                             .. " / naga skeleton / minotaur skeleton"
+                             .. " / merfolk skeleton / tengu skeleton"
+                             .. " / draconian skeleton")
+}}
+MAP
+       xxx
+       x_x
+  xxxxxx+xxxxxx
+  xxx...2...xxx
+  xx.1.....1.xx
+  x.....1.....x
+xxx....vlv....xxx
+xd+2...lBl...2+dx
+xxx....vlv....xxx
+  x..1.....1..x
+  xx....1....xx
+  xxx.......xxx
+  xxxx.....xxxx
+  xxxx.....xxxx
+  xxxx@@@@@xxxx
+ENDMAP
