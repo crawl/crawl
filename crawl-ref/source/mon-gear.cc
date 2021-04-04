@@ -1046,6 +1046,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_GNOLL:
         if (!level && item.is_type(OBJ_WEAPONS, WPN_HALBERD))
             item.sub_type = WPN_CLUB;
+        break;
 
     case MONS_WIGHT:
         if (coinflip())
@@ -1392,12 +1393,15 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             break;
         case MONS_KOBOLD_BRIGAND:
             weap_type  = MI_DART;
-            if (one_chance_in(3)) {
+            if (one_chance_in(3))
+            {
                 // Avoid increasing total amount of generated curare
                 // too much.
                 brand = SPMSL_CURARE;
                 qty = 1;
-            } else {
+            }
+            else
+            {
                 qty = random_range(2, 8);
                 brand = SPMSL_POISONED;
             }

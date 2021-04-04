@@ -6316,7 +6316,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
         mons->add_ench(chant_timer);
-        mons->speed_increment -= 30;
         return;
     }
 

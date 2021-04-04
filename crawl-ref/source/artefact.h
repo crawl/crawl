@@ -141,7 +141,7 @@ void artefact_set_property(item_def           &item,
 /// Type for the value of an artefact property
 enum artp_value_type
 {
-    ARTP_VAL_BOOL,  ///< bool (e.g. +Fly)
+    ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
     ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
     ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
                     ///      See \ref brand_type in item-prop-enum.h

@@ -2497,7 +2497,7 @@ Ctrl-A
   Toggle autopickup. Note that encounters with invisible monsters always turns
   autopickup off. You need to switch it on with Ctrl-A afterwards.
 
-|
+\|
   Toggle various display layers and overlays. (Console only)
 
 \`

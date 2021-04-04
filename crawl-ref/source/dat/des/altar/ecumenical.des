@@ -581,3 +581,166 @@ xxx....vlv....xxx
   xxxx.....xxxx
   xxxx@@@@@xxxx
 ENDMAP
+=======
+NAME:    shapermc_ecumenical_altar_notcrosses
+TAGS:    no_monster_gen transparent
+SHUFFLE: PQ
+SUBST:   P : cvb
+SUBST:   Q : mmWWl
+: ecumenical_altar_setup(_G)
+MAP
+ccccc+ccccc
+c....P....c
+c..QQPQQ..c
+c....P....c
+c....P....c
+c.QQQ_QQQ.c
+c....P....c
+c....P....c
+c..QQPQQ..c
+c....P....c
+ccccc+ccccc
+ENDMAP
+
+NAME:  shapermc_ecumenical_altar_starsandcircs
+TAGS:  no_monster_gen no_pool_fixup transparent
+SUBST: P : xxxxxccl
+SUBST: Q : WWW'l
+KPROP: ' = bloody
+: ecumenical_altar_setup(_G)
+MAP
+     ..@..
+    .PP.PP.
+   .P.Q.Q.P.
+  .P..Q.Q..P.
+ .PQQQQ.QQQQP.
+.P..Q.QwQ.Q..P.
+.P...Qw_wQ...P.
+.P...Qw.wQ...P.
+.P...Q.w.Q...P.
+.P..Q.Q.Q.Q..P.
+ .PQ.Q...Q.QP.
+  .@Q.....Q@.
+   .P.....P.
+    .PPPPP.
+     .....
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_totnotflames
+COLOUR: . = green / brown
+TAGS:   no_monster_gen transparent
+FTILE:  A. = floor_grass:20 / floor_dirt
+SUBST:  A = ATUV
+: ecumenical_altar_setup(_G)
+MAP
+    @t@
+    t.t
+   tt.t
+   t..t  t
+   t.tt tt@
+   t.t  t.t
+   t.tttt.t
+   t..tt..t
+    t.t.ttt
+@tt t...t
+t.ttt.A.tttt@
+t...t...tt..t
+tt........ttt
+ tt..G_G.tt
+  tttttttt
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_gd
+TAGS:   no_monster_gen transparent
+KMONS:  P = plant / fungus
+KMONS:  D = demonic plant / withered plant w:5
+NSUBST: ' = 15:P / 10:P.. / .
+NSUBST: - = 15:D / 10:D.. / .
+SUBST:  x : ccccvvbb
+: ecumenical_altar_setup(_G)
+MAP
+     .xxxxxxxxx.
+  .xxx''''x----xxx.
+  x'''''''x-------x
+ xx'''''''x-------xx.
+x'''''''''x---------x
+x'''''''''_---------x
+x'''''''''x---------x
+.xx'''''''x-------xx.
+  x'''''''x-------x
+  .xxx''''x----xxx.
+     .xxxxxxxxx.
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_hornbeckon
+TAGS:   no_monster_gen transparent
+KMONS:  p = plant
+KMONS:  f = fungus
+NSUBST: ' = 8:pf / 12=ppf... / .
+: ecumenical_altar_setup(_G)
+MAP
+....@....
+bxxbWbxxb
+x'''W'''x
+x''W'''xx
+xx'W''xx
+ x'W'xx
+ x'W'x
+ xxW'xx
+  x'W'x
+  xx-Wxx
+   x''Wx
+   x''Wxxxx
+   xx''._Gx
+    xxxxxxx
+ENDMAP
+
+NAME:    shapermc_ecumenical_altar_venn
+TAGS:    no_monster_gen transparent
+SHUFFLE: GV
+SUBST:   x : xxxxccvb
+: ecumenical_altar_setup(_G)
+MAP
+ .xxx.
+.x...x
+x..V.Gx
+x.V..xxx
+x...xAxGx.
+.xGx_x...x
+  xxx..V.x
+   xG.V..x
+    x...x.
+    .xxx.
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_flowoftime
+TAGS:   no_monster_gen transparent
+MONS:   plant
+MONS:   withered plant
+MONS:   demonic plant
+SUBST: ' = P.....
+SUBST: - = PPPPP.
+: if crawl.one_chance_in(20) then
+SUBST:  P : 2223
+: else
+SUBST:  P = 11222
+: end
+: ecumenical_altar_setup(_G)
+MAP
+xxb+bxx
+x'''''x
+x'''''x
+x'''''x
+x'''''x
+xb'''bx
+xbb'bbx
+xbb_bbx
+xbb-bbx
+xb---bx
+x-----x
+x-----x
+x-----x
+x-----x
+xxb+bxx
+ENDMAP
+

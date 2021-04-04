@@ -387,7 +387,8 @@ item_type::item_type(const item_def &item)
         sub_type = find(misc_types.begin(), misc_types.end(), item.sub_type)
                         - misc_types.begin();
         ASSERT(sub_type < (int) misc_types.size());
-    } else if (base_type == ITEM_POTIONS)
+    }
+    else if (base_type == ITEM_POTIONS)
     {
         sub_type = find(potion_types.begin(), potion_types.end(), item.sub_type)
                         - potion_types.begin();

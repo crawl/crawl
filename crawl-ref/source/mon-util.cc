@@ -820,9 +820,12 @@ bool mons_is_firewood(const monster& mon)
 bool mons_has_body(const monster& mon)
 {
     if (mon.type == MONS_FLYING_SKULL
-        || mon.type == MONS_CURSE_SKULL
+        || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
-        || mons_class_is_animated_weapon(mon.type))
+        || mon.type == MONS_DEATH_COB
+        || mon.type == MONS_ANIMATED_ARMOUR
+        || mons_class_is_animated_weapon(mon.type)
+        || mons_is_tentacle_or_tentacle_segment(mon.type))
     {
         return false;
     }
@@ -833,7 +836,6 @@ bool mons_has_body(const monster& mon)
     case 'v':
     case 'G':
     case '*':
-    case '%':
     case 'J':
         return false;
     }
@@ -2024,10 +2026,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.type = AT_HIT;
             attk.damage *= 2;
         }
-    } else if (mons_species(mon.type) == MONS_DRACONIAN
-            && mon.type != MONS_DRACONIAN
-            && attk.type == AT_NONE
-            && smc->attack[attk_number - 1].type != AT_NONE)
+    }
+    else if (mons_species(mon.type) == MONS_DRACONIAN
+             && mon.type != MONS_DRACONIAN
+             && attk.type == AT_NONE
+             && smc->attack[attk_number - 1].type != AT_NONE)
     {
         // Nonbase draconians inherit aux attacks from their base type.
         // Implicit assumption: base draconian types only get one aux

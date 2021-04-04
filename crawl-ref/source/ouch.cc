@@ -795,16 +795,15 @@ int do_shave_damage(int dam)
 
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
-// than 4% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage or <30% max health
-// current hp.
+// than 5% max hp. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 20% max health damage.
 static bool _is_damage_threatening (int damage_fraction_of_hp)
 {
-    int hp_fraction = you.hp * 100 / you.hp_max;
+    const int hp_fraction = you.hp * 100 / you.hp_max;
     return damage_fraction_of_hp > 5
             && hp_fraction <= 85
             && (damage_fraction_of_hp + random2(20) >= 20
-                || random2(100) < hp_fraction);
+                || random2(100) > hp_fraction);
 }
 
 // Palentongas curl up after the first time they've been hit in a round.
