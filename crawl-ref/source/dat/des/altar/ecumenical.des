@@ -581,7 +581,7 @@ xxx....vlv....xxx
   xxxx.....xxxx
   xxxx@@@@@xxxx
 ENDMAP
-=======
+
 NAME:    shapermc_ecumenical_altar_notcrosses
 TAGS:    no_monster_gen transparent
 SHUFFLE: PQ
@@ -743,4 +743,3 @@ x-----x
 x-----x
 xxb+bxx
 ENDMAP
-
