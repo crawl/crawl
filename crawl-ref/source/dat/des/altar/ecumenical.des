@@ -774,3 +774,102 @@ MAP
 .ccc...ccc.
 ...........
 ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_dog_temple
+WEIGHT: 5
+TAGS:   no_monster_gen
+KMONS:  a = jackal band
+KFEAT:  a = T
+: ecumenical_altar_setup(_G)
+MAP
+.......
+.G.a.G.
+.......
+.T._.T.
+.......
+.G.T.G.
+.......
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_prayer_group
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+MONS: hobgoblin / goblin / kobold / nothing w:60
+: ecumenical_altar_setup(_G)
+MAP
+ ccccccc
+cccG_Gccc
+cc..1..cc
+cc.1.1.cc
+c.1...1.c
+c..G1G..c
+c.......c
+cc.....cc
+cc.....cc
+ cc.G.cc
+  c...c
+  .....
+ENDMAP
+
+# an ooze ate the god's name right off the altar
+NAME:   hellmonk_ecumenical_altar_slurped_away
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+SUBST:  x : xc, g = G.
+KMONS:  _ = endoplasm
+: ecumenical_altar_setup(_G)
+MAP
++xxx xxx+
+x..xxx..x
+x...g...x
+xx.....xx
+ xg._.gx
+xx.....xx
+x...g...x
+x..xxx..x
++xxx xxx+
+ENDMAP
+
+# some orcs have torn down the altar and replaced it with their own
+NAME:   hellmonk_ecumenical_altar_defaced_shrine
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+KFEAT:  B = altar_beogh
+KPROP:  B = no_tele_into
+NSUBST: d = 1:_ / *:d
+SUBST:  1 = 1..
+SUBST:  x : xc
+SUBST:  . = .:90 '
+SUBST:  T = TV Y:1
+KPROP:  ' = bloody
+KITEM:  _ = stone q:1 / large rock q:1 w:3
+: if you.absdepth() > 1 then
+MONS: orc
+: else
+MONS: rat / giant cockroach / dart slug
+: end
+{{
+  dgn.delayed_decay(_G, 'd', "human skeleton / kobold skeleton / elf skeleton"
+                             .. " / gnoll skeleton / ogre skeleton"
+                             .. " / naga skeleton / minotaur skeleton"
+                             .. " / merfolk skeleton / tengu skeleton"
+                             .. " / draconian skeleton")
+}}
+: ecumenical_altar_setup(_G)
+MAP
+       xxx
+       xdx
+    xxxx+xxxx
+   xx...1...xx
+  xx.1.....1.xx
+  x.....1.....x
+xxx....vlv....xxx
+xd+1...lBl...1+dx
+xxx....vlv....xxx
+  x..1.....1..x
+  xx....1....xx
+   xx.......xx
+    xx.....xx
+     .......
+     ...T...
+ENDMAP
