@@ -1633,6 +1633,13 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    // Continue reciting.
+    if (mons->has_ench(ENCH_WORD_OF_RECALL))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
         simple_monster_message(*mons, " is lost in a daze.");

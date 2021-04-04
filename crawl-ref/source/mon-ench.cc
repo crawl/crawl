@@ -1757,13 +1757,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
-            speed_increment += me.duration;
             del_ench(en, true, false);
             if (you.can_see(*this))
-            {
-                mprf("%s chant is interrupted.",
-                     name(DESC_ITS).c_str());
-            }
+                mprf("%s chant is interrupted.", name(DESC_ITS).c_str());
             break;
         }
 
