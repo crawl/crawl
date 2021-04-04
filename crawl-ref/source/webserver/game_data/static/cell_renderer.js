@@ -1173,10 +1173,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             var h = info.ey - info.sy;
 
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
-            this.ctx.webkitImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
-            this.ctx.mozImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
