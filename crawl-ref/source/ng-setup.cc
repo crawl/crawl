@@ -444,8 +444,6 @@ static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
             return battlesphere_can_mirror(trigger);
         case SPELL_SPELLFORGED_SERVITOR:
             return spell_servitorable(trigger);
-        case SPELL_SUMMON_GUARDIAN_GOLEM:
-            return !!(get_spell_disciplines(trigger) & spschool::summoning);
         default:
             return true;
     }
