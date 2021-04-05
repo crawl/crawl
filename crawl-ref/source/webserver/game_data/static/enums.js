@@ -362,68 +362,6 @@ define(function () {
 
     exports.MF_SKIP = val++;
 
-    // Base types (object-class-type.h)
-    exports.base_type = {};
-    val = 0;
-    exports.base_type.OBJ_WEAPONS = val++;
-    exports.base_type.OBJ_MISSILES = val++;
-    exports.base_type.OBJ_ARMOUR = val++;
-    exports.base_type.OBJ_WANDS = val++;
-    exports.base_type.OBJ_FOOD = val++;
-    exports.base_type.OBJ_SCROLLS = val++;
-    exports.base_type.OBJ_JEWELLERY = val++;
-    exports.base_type.OBJ_POTIONS = val++;
-    exports.base_type.OBJ_BOOKS = val++;
-    exports.base_type.OBJ_STAVES = val++;
-    exports.base_type.OBJ_ORBS = val++;
-    exports.base_type.OBJ_MISCELLANY = val++;
-    exports.base_type.OBJ_CORPSES = val++;
-    exports.base_type.OBJ_GOLD = val++;
-    exports.base_type.OBJ_RODS = val++;
-    exports.base_type.OBJ_RUNES = val++;
-    exports.base_type.NUM_OBJECT_CLASSES = val++;
-    val = 100;
-    exports.base_type.OBJ_UNASSIGNED = val++;
-    exports.base_type.OBJ_RANDOM = val++;
-    exports.base_type.OBJ_DETECTED = val++;
-
-    // Sub types of misc items (item-prop-enum.h)
-    exports.misc_item_type = {};
-    val = 0;
-    exports.misc_item_type.MISC_BOTTLED_EFREET = val++;
-    exports.misc_item_type.MISC_FAN_OF_GALES = val++;
-    exports.misc_item_type.MISC_LAMP_OF_FIRE = val++;
-    exports.misc_item_type.MISC_STONE_OF_TREMORS = val++;
-    exports.misc_item_type.MISC_BUGGY_LANTERN_OF_SHADOWS = val++;
-    exports.misc_item_type.MISC_HORN_OF_GERYON = val++;
-    exports.misc_item_type.MISC_BOX_OF_BEASTS = val++;
-    exports.misc_item_type.MISC_CRYSTAL_BALL_OF_ENERGY = val++;
-    exports.misc_item_type.MISC_BUGGY_EBONY_CASKET = val++;
-    exports.misc_item_type.MISC_LIGHTNING_ROD = val++;
-    exports.misc_item_type.MISC_DECK_OF_ESCAPE = val++;
-    exports.misc_item_type.MISC_FIRST_DECK = exports.misc_item_type.MISC_DECK_OF_ESCAPE;
-    exports.misc_item_type.MISC_DECK_OF_DESTRUCTION = val++;
-    exports.misc_item_type.MISC_DECK_OF_DUNGEONS = val++;
-    exports.misc_item_type.MISC_DECK_OF_SUMMONING = val++;
-    exports.misc_item_type.MISC_DECK_OF_WONDERS = val++;
-    exports.misc_item_type.MISC_DECK_OF_PUNISHMENT = val++;
-    exports.misc_item_type.MISC_DECK_OF_WAR = val++;
-    exports.misc_item_type.MISC_DECK_OF_CHANGES = val++;
-    exports.misc_item_type.MISC_DECK_OF_DEFENCE = val++;
-    exports.misc_item_type.MISC_LAST_DECK = exports.misc_item_type.MISC_DECK_OF_DEFENCE;
-    exports.misc_item_type.MISC_RUNE_OF_ZOT = val++;
-    exports.misc_item_type.MISC_QUAD_DAMAGE = val++;
-    exports.misc_item_type.MISC_PHIAL_OF_FLOODS = val++;
-    exports.misc_item_type.MISC_SACK_OF_SPIDERS = val++;
-    exports.misc_item_type.MISC_ZIGGURAT = val++;
-    exports.misc_item_type.MISC_PHANTOM_MIRROR = val++;
-    exports.misc_item_type.MISC_DECK_OF_ODDITIES = val++;
-    exports.misc_item_type.MISC_XOMS_CHESSBOARD = val++;
-    exports.misc_item_type.MISC_TIN_OF_TREMORSTONES = val++;
-    exports.misc_item_type.MISC_CONDENSER_VANE = val++;
-    exports.misc_item_type.NUM_MISCELLANY = val++;
-    exports.misc_item_type.MISC_DECK_UNKNOWN = exports.misc_item_type.NUM_MISCELLANY;
-
     exports.reverse_lookup = function (e, value) {
         for (var prop in e)
         {
