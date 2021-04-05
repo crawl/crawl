@@ -425,8 +425,7 @@ TAGS:   no_monster_gen transparent
 MONS:   plant, gnoll
 SUBST: z = t111
 KITEM: E = never_decay human skeleton / gnoll skeleton / elf skeleton / dwarf skeleton
-: dgn.delayed_decay(_G, "e","hoblin skeleton / hobgoblin skeleton / kobold skeleton")
-FTILE: 1et'_  = floor_grass
+FTILE: 12t'_  = floor_grass
 : ecumenical_altar_setup(_G)
 MAP
       .....
