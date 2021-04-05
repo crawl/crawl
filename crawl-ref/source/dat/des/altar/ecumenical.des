@@ -419,3 +419,29 @@ x-----x
 x-----x
 xxb+bxx
 ENDMAP
+
+NAME:   dilly_ecumenical_altar_fadedgnrine
+TAGS:   no_monster_gen transparent
+MONS:   plant
+SUBST:  z = t111
+SUBST:  1 = 11.
+KITEM:  E = never_decay gnoll shaman skeleton / never_decay gnoll skeleton
+KPROP:  E = no_tele_into
+FTILE:  1Et'_  = floor_grass
+COLOUR: 1E'_ = green
+: ecumenical_altar_setup(_G)
+MAP
+      .....
+     ..ttt..
+    ..tt_tt..
+   ..ttz'ztt..
+  ..ttzz'zztt..
+  .ttzz1'1zztt.
+  .tz111'111zt.
+  .tzxxx+xxxzt.
+  .ttx.....xtt.
+  .tEm..G..mEt.
+  .ttx.....xtt.
+  ...xxt+txx...
+    .........
+ENDMAP
