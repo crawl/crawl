@@ -151,7 +151,7 @@ public:
         if (!you.can_potion_heal())
         {
             if (reason)
-                *reason = "That would not heal you.";
+                *reason = "You cannot be healed by potions.";
             return false;
         }
         if (you.duration[DUR_DEATHS_DOOR])
@@ -323,7 +323,6 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);
         return you.airborne();
     }

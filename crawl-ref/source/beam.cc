@@ -2437,7 +2437,7 @@ void bolt::affect_endpoint()
             for (const coord_def &coord : splash_coords)
             {
                 monster* mons = monster_at(coord);
-                if (mons && !mons->res_water_drowning())
+                if (mons && mons->res_water_drowning() <= 0)
                 {
                     simple_monster_message(*mons, " is engulfed in water.");
                     mons->add_ench(mon_enchant(ENCH_WATERLOGGED, 0, &you,
@@ -4530,7 +4530,7 @@ void bolt::knockback_actor(actor *act, int dam)
                      ? 7 + 0.27 * ench_power
                      : 17;
     const int weight = max_corpse_chunks(act->is_monster() ? act->type :
-                                   player_species_to_mons_species(you.species));
+                                                            you.mons_species());
 
     const coord_def oldpos = act->pos();
 

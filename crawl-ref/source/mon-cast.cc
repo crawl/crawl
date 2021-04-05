@@ -4367,21 +4367,24 @@ static bool _mons_cast_freeze(monster* mons)
     const int pow = mons_spellpower(*mons, SPELL_FREEZE);
 
     const int base_damage = freeze_damage(pow).roll();
-    int damage = 0;
+    const int damage = resist_adjust_damage(target, BEAM_COLD, base_damage);
 
+    if (you.can_see(*target))
+    {
+        mprf("%s %s frozen%s", target->name(DESC_THE).c_str(),
+                              target->conj_verb("are").c_str(),
+                              attack_strength_punctuation(damage).c_str());
+    }
+
+    // Resist messaging, needs to happen after so we get the correct message
+    // order; resist_adjust_damage is used to compute the punctuation.
     if (target->is_player())
-        damage = resist_adjust_damage(&you, BEAM_COLD, base_damage);
+        check_your_resists(base_damage, BEAM_COLD, "");
     else
     {
         bolt beam;
         beam.flavour = BEAM_COLD;
-        damage = mons_adjust_flavoured(target->as_monster(), beam, base_damage);
-    }
-
-    if (you.can_see(*target))
-    {
-        mprf("%s %s frozen.", target->name(DESC_THE).c_str(),
-                              target->conj_verb("are").c_str());
+        mons_adjust_flavoured(target->as_monster(), beam, base_damage);
     }
 
     target->hurt(mons, damage, BEAM_COLD, KILLED_BY_BEAM, "", "by Freeze");
@@ -6313,7 +6316,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
         mons->add_ench(chant_timer);
-        mons->speed_increment -= 30;
         return;
     }
 

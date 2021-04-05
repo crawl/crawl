@@ -291,9 +291,8 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized) {
+    if (!hs_list_initalized)
         hiscores_read_to_memory();
-    }
 
     int i, total_entries;
 
@@ -977,7 +976,7 @@ static string _species_name(int race)
     if (race < 0 || race >= NUM_SPECIES)
         return "Unknown (buggy) species!";
 
-    return species_name(static_cast<species_type>(race));
+    return species::name(static_cast<species_type>(race));
 }
 
 static const char* _species_abbrev(int race)
@@ -999,12 +998,12 @@ static const char* _species_abbrev(int race)
     if (race < 0 || race >= NUM_SPECIES)
         return "??";
 
-    return get_species_abbrev(static_cast<species_type>(race));
+    return species::get_abbrev(static_cast<species_type>(race));
 }
 
 static int _species_by_name(const string& name)
 {
-    int race = str_to_species(name);
+    int race = species::from_str(name);
 
     if (race != SP_UNKNOWN)
         return race;
@@ -1995,7 +1994,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
         if (god != GOD_NO_GOD
             // XX is this check really needed?
-            && !species_mutation_level(static_cast<species_type>(race), MUT_FORLORN))
+            && !species::mutation_level(static_cast<species_type>(race), MUT_FORLORN))
         {
             if (god == GOD_XOM)
             {
@@ -2240,7 +2239,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (starts_with(species_skin_name(
+            if (starts_with(species::skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
                 desc += "Turned to ash by lava";
@@ -2251,11 +2250,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_WATER:
-        if (species_is_undead(static_cast<species_type>(race)))
+        if (species::is_undead(static_cast<species_type>(race)))
         {
             if (terse)
                 desc = "fell apart";
-            else if (starts_with(species_skin_name(
+            else if (starts_with(species::skin_name(
                         static_cast<species_type>(race)), "bandage"))
             {
                 desc = "Soaked and fell apart";
@@ -2280,7 +2279,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species_is_unbreathing(static_cast<species_type>(race)))
+                 species::is_unbreathing(static_cast<species_type>(race)))
         {
             desc += "Forgot to exist";
         }
@@ -2314,7 +2313,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (species_is_undead(static_cast<species_type>(race)))
+            else if (species::is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";

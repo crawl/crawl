@@ -8,6 +8,9 @@ ae = <rune of Zot
 # Make it harder to miss out on zigfigs.
 ae += <figurine of a ziggurat
 
+# Autopickup good and emergency consumables by default.
+ae += <good_item
+
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as

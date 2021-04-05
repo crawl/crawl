@@ -704,6 +704,7 @@ static game_type _str_to_gametype(const string& s)
 }
 #endif
 
+// XX move to species.cc?
 static string _species_to_str(species_type sp)
 {
     if (sp == SP_RANDOM)
@@ -711,9 +712,10 @@ static string _species_to_str(species_type sp)
     else if (sp == SP_VIABLE)
         return "viable";
     else
-        return species_name(sp);
+        return species::name(sp);
 }
 
+// XX move to species.cc?
 static species_type _str_to_species(const string &str)
 {
     if (str == "random")
@@ -723,13 +725,13 @@ static species_type _str_to_species(const string &str)
 
     species_type ret = SP_UNKNOWN;
     if (str.length() == 2) // scan abbreviations
-        ret = get_species_by_abbrev(str.c_str());
+        ret = species::from_abbrev(str.c_str());
 
     // if we don't have a match, scan the full names
     if (ret == SP_UNKNOWN && str.length() >= 2)
-        ret = find_species_from_string(str, true);
+        ret = species::from_str_loose(str, true);
 
-    if (!is_starting_species(ret))
+    if (!species::is_starting_species(ret))
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)

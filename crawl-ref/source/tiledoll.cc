@@ -430,7 +430,7 @@ void fill_doll_equipment(dolls_data &result)
                     result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
                 }
             }
-            else if (species_is_draconian(you.species))
+            else if (species::is_draconian(you.species))
                 result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_DRAC;
             else
                 switch (you.get_mutation_level(MUT_HORNS))
@@ -490,7 +490,7 @@ void fill_doll_equipment(dolls_data &result)
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
-    if (species_is_draconian(you.species))
+    if (species::is_draconian(you.species))
     {
         tileidx_t base = 0;
         tileidx_t head = 0;

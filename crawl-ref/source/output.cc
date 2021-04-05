@@ -22,6 +22,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-name.h"
@@ -264,7 +265,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf("%s%s %.4s", get_species_abbrev(you.species),
+            cprintf("%s%s %.4s", species::get_abbrev(you.species),
                                  get_job_abbrev(you.char_class),
                                  god_name(you.religion).c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
@@ -506,7 +507,9 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_active();
+    return you.duration[DUR_AGILITY]
+           || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+           || acrobat_boost_active();
 }
 
 static bool _boosted_sh()
@@ -576,7 +579,7 @@ static int _count_digits(int val)
 static const equipment_type e_order[] =
 {
     EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
-    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
+    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
     EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
     EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
     EQ_RING_AMULET,
@@ -586,7 +589,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((species_arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
+    cprintf((species::arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -1246,7 +1249,7 @@ static void _redraw_title()
     // Minotaur [of God] [Piety]
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
-    string species = species_name(you.species);
+    string species = species::name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
@@ -1917,14 +1920,14 @@ static void _print_overview_screen_equip(column_composer& cols,
     for (equipment_type eqslot : e_order)
     {
         // leave space for all the ring slots
-        if (species_arm_count(you.species) > 2
+        if (species::arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
             && !you_can_wear(eqslot))
         {
             continue;
         }
 
-        if (species_arm_count(you.species) <= 2
+        if (species::arm_count(you.species) <= 2
             && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
         {
             continue;
@@ -1995,7 +1998,7 @@ static string _overview_screen_title(int sw)
     string title = make_stringf(" %s ", player_title().c_str());
 
     string species_job = make_stringf("(%s %s)",
-                                      species_name(you.species).c_str(),
+                                      species::name(you.species).c_str(),
                                       get_job_name(you.char_class));
 
     handle_real_time();
@@ -2010,8 +2013,9 @@ static string _overview_screen_title(int sw)
 
     if (linelength >= sw)
     {
-        species_job = make_stringf("(%s%s)", get_species_abbrev(you.species),
-                                             get_job_abbrev(you.char_class));
+        species_job = make_stringf("(%s%s)",
+                                    species::get_abbrev(you.species),
+                                    get_job_abbrev(you.char_class));
         linelength -= (char_width - strwidth(species_job));
     }
 

@@ -9,6 +9,8 @@
 ###############################################################################
 ###############################################################################
 
+: crawl_require("dlua/dungeon.lua")
+
 # Functionality for one of Grunt's vaults.
 {{
 function callback.grunt_lady_of_the_lake_trigger(data, triggerable, triggerer,
@@ -252,7 +254,7 @@ ENDMAP
 
 ###############################################################################
 #
-# <<2>> Non-entry, non-ending vaults.
+# <<2>> Decorative vaults.
 #
 ###############################################################################
 
@@ -1183,6 +1185,80 @@ MAP
  ........
 ENDMAP
 
+NAME:   nicolae_swamp_decorative_isthmus
+TAGS:   no_pool_fixup transparent decor
+ORIENT: float
+SUBST:  _ = t_, ' = w:50 ., D = t:50 w, Q = W:50 w
+CLEAR:  _
+MAP
+________________
+tttttttttttttttt
+tDD''QtDw..'Dttt
+t'ww.wtQQWwww'Qt
+wQQWwwwW.WwwwwW@
+wW.WQQWQQQWQQWQ.
+WQQQW.WwwQ...WQQ
+.QwQ..QwwQQQQQww
+@QwQQWQWwwwwwwDw
+QQDt'wWt...'tDtt
+tttttttttttttttt
+________________
+ENDMAP
+
+# Just a simple gag vault: A few people got their boots stuck in the mud here
+# and just left them behind. Sometimes generates bardings. I guess those get
+# stuck in the mud too.
+NAME:    nicolae_swamp_stuck_in_the_mud
+TAGS:    transparent
+SHUFFLE: Ss, Rr
+SUBST:   D = W., E = t..., SR = @, sr = t, M = tttW
+NSUBST:  W = 3=p / 3=pWW
+KITEM:   p = pair of boots
+KFEAT:   p = W
+MAP
+tttt    tttt
+S.EttttttE.R
+S..EtMMtE..R
+tE.DDWWDD.Et
+ttEDDWWDDEtt
+tE.DDWWDD.Et
+s..EtMMtE..r
+s.EttttttE.r
+tttt    tttt
+ENDMAP
+
+NAME:  nicolae_swamp_little_swirl
+TAGS:  decor
+SUBST: M = ..wt, D = t..
+MAP
+  ttttt
+ ttDDDttD.@.Dt
+ttD...MwM...Dtt
+tD...MwwwM...Dt
+tD...MwwwM...Dt
+tD...MwwwM...Dt
+ttD...MwM...Dtt
+ tD.@.DttDDDtt
+        ttttt
+ENDMAP
+
+NAME:    nicolae_swamp_long_stream
+TAGS:    decor
+ORIENT:  float
+SHUFFLE: Pp/Qq/Rr
+SUBST:   p = w, P = w_, QqRr = _
+CLEAR:   _
+MAP
+tttt
+t...@        RrrrrrR
+t.wwww  RrrrrrrRRRrrrrR       ttt
+t.wwwwRrrrR qqqqQ   RrrrrrR  ...t
+t..wwwwwqqqQq Qqqqq   qqqrrRwww..t
+tt... PppPqqq    QqqQQqQqqwwwwww.t
+ ttt   PpppP  PppppqqqqppppPwww..t
+         PppppppPPppppppP    @..tt
+           PPPP    PPPP       ttt
+ENDMAP
 
 ###############################################################################
 #
@@ -1606,27 +1682,26 @@ MAP
   --------------------
 ENDMAP
 
-NAME: nicolae_swamp_necromancer_hut
-SUBST: q = tW., r = W., W = zWW
-MONS: necromancer
-KMONS: z = swamp drake zombie / swamp worm zombie / \
-        water moccasin zombie / swamp dragon zombie / \
-        komodo dragon zombie / hornet zombie / alligator zombie / \
-        hydra zombie / tyrant leech zombie / hydra zombie / \
-        alligator simulacrum w:1 / swamp drake simulacrum w:1 / \
-        swamp dragon simulacrum w:1 / hydra simulacrum w:1
-# TODO: update this with bunyips, etc
-KFEAT: z = shallow_water
+NAME:  nicolae_swamp_necromancer_hut
+SUBST: m = xm, D = t_, q = tW., r = W., W = zW
+MONS:  necromancer
+KMONS: z = alligator zombie / swamp dragon zombie / hydra zombie / \
+           bunyip zombie / bog body w:5 / bloated husk w:5 / \
+           alligator simulacrum w:5 / swamp dragon simulacrum w:5 / \
+           hydra simulacrum w:5 / bunyip simulacrum w:5
+KFEAT: z = W
+CLEAR: _
 MAP
-  ttttttt
- ttxxxxxtt
-tqqx...xqqt
-tqrm.1.mrqt
-qqrx...xrqq
- rrxx+xxrr
-  r.z.z.r
-   .....
-    @@@
+  DDDDDDDDD
+ DDtttttttDD
+DDttxxxxxttDD
+Dtqqx...xqqtD
+Dtqrm.1.mrqtD
+Dqqrx...xrqqD
+ qrrxx+xxrrq
+  rr.z.z.rr
+    .....
+     @@@
 ENDMAP
 
 NAME:   nicolae_swamp_alligator_family
@@ -2177,7 +2252,6 @@ __ttt-v...ZZ.....ZZ...v-ttt__
 ENDMAP
 
 NAME:   cheibrodos_swamp_monstrosity
-DEPTH:  Swamp
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: float
 MONS:   tentacled monstrosity
@@ -2249,7 +2323,6 @@ MAP
 ENDMAP
 
 NAME:    nzn_swamp_blast_mining
-DEPTH:   Swamp
 TAGS:    no_pool_fixup
 WEIGHT:  5
 ITEM:    stone, tin of tremorstones
@@ -2277,7 +2350,6 @@ MAP
 ENDMAP
 
 NAME:   nzn_swamp_dancing_lights
-DEPTH:  Swamp
 TAGS:   transparent no_pool_fixup
 KMONS:  O = will-o-the-wisp
 NSUBST: D = W / w, E = O / W, F = W / w, H = O / W, J = W / w, K = O / W
@@ -2298,6 +2370,500 @@ wHHHF@@@JKKKw
 wwHww   wwKww
  www     www
 ENDMAP
+
+NAME:  nicolae_swamp_bloodsuckers_inc
+TAGS:  transparent patrolling no_monster_gen
+SUBST: E = W., D = Ww
+KFEAT: 1 = w
+KMONS: 1 = vampire mosquito w:15 / vampire mosquito band w:5 / nothing w:5
+KMONS: 2 = tyrant leech / nothing w:3
+KMONS: p = plant
+MAP
+ t.@.t
+ tpppttttttt
+tt.2tt.....tt
+t..EwEEEwE2.t
+t.Ew1DED1wE.t
+t2E1wDEDw1E2t
+t.Ew1DED1wE.t
+t.2EwEEEwE..t
+tt.....tt2.tt
+ tttttttpppt
+       t.@.t
+ENDMAP
+
+NAME:   nicolae_swamp_bunyip_nook
+NSUBST: W = 2=P / W
+SUBST:  ' = ..W
+KMONS:  pP = bunyip
+KFEAT:  P = W
+MAP
+    t.....t
+   tt..p..tt
+  tttt'''tttt
+ ttttt'''ttttt
+tttttt'''tttttt
+ttttt...ttttWPt
+ttt....ttttWWWt
+tt'''.tttWWWWWt
+tt'''ttt'''WWWt
+tt'''.p...'Wttt
+ tt......ttttt
+  ttttttttttt
+ENDMAP
+
+NAME:   nicolae_swamp_catching_bugs
+TAGS:   transparent patrolling
+SUBST:  D = w-, S = Wwww, t = tt.._, - = ...W
+NSUBST: ' = 2=1 / 2=1. / ., w = 5=2 / 5=2w / w
+KMONS:  1 = goliath frog
+KMONS:  2 = vampire mosquito / spark wasp w:2
+KFEAT:  2 = w
+CLEAR:  _
+MAP
+   t......t
+  t..----..t
+ t..-DSSD-..t
+t..-DSwwSD-..t
+..-DSSDDSSD-..
+.-DSSD''DSSD-.
+.-SwD''''DwS-.
+.-SwD''''DwS-.
+.-DSSD''DwSD-.
+..-DSSDDWSD-..
+t..-DSwwWD-..t
+ t..-DSSD-..t
+  t..----..t
+   t......t
+ENDMAP
+
+NAME:    nicolae_swamp_drake_lake
+TAGS:    transparent patrolling
+KMONS:   1 = death drake
+KMONS:   2 = swamp drake
+KMONS:   3 = rime drake
+SHUFFLE: DEFH/JKLN/OPQR
+SUBST:   DE = ., F = @, HJO = t, KLNPQR = _, M = tW
+NSUBST:  W = 1 / 11W. / 2=2 / 2=22W. / W.
+KFEAT:   123 = W
+CLEAR:   _
+MAP
+      RQQR
+      RPPR
+      RPPR
+    tttOOttt
+    tMWWWWMt
+   ttWWWWWWtt
+HHHtMWWMtWWMt
+FEEDWWtttMWWtt
+FEEDWWMtttMWMtNNN
+HHHtWWWttttWWJKKL
+   tMWWWMtMWWJKKL
+   ttMWWWWWWMtNNN
+    tttMWWWMtt
+      ttttttt
+ENDMAP
+
+# The ruins of a prison, left to flood and fall apart as the area was reclaimed
+# by the swamp. It appears to have been a particularly brutal prison, which may
+# explain all the restless dead.
+NAME:    nicolae_swamp_flooded_prison
+TAGS:    no_trap_gen patrolling
+ORIENT:  southeast
+KPROP:   " = no_tele_into
+KMASK:   " = no_monster_gen
+KMASK:   " = no_item_gen
+ITEM:    executioner's axe
+ITEM:    great sword / triple sword w:5 / great mace / eveningstar \
+         / glaive / bardiche / lajatang / arbalest w:5 / triple crossbow w:5
+ITEM:    chain mail / plate armour / crystal plate armour w:5 \
+         / kite shield / tower shield / helmet / pair of boots / pair of gloves
+ITEM:    wand of charming w:30 / wand of paralysis w:30 / any wand w:5 \
+         / wand of mindburst / lightning rod w:1
+ITEM:    large rock q:1
+KMONS:   1 = alligator / ghost crab w:5
+KMONS:   2 = bog body
+KMONS:   3 = ghoul
+KMONS:   4 = bloated husk
+KMONS:   5 = spectral spriggan rider / spectral spriggan berserker
+KMONS:   6 = freezing wraith / will-o-the-wisp w:5
+SUBST:   D = t., E = t-, - = - W:7 .:5, c = c:100 x
+SHUFFLE: dh
+NSUBST:  Z = 4=2 / 4 / 224, L = e / f / g, M = e / f / g, N = 3=5 / 3=5- / -
+NSUBST:  s = 2=5 / 2=5. / ., 6 = 6 / 6., J = ; / - / ;-
+KPROP:   dh = bloody
+KFEAT:   ; = iron_grate
+KFEAT:   "1 = w
+KFEAT:   24 = W
+FTILE:   ;- = floor_sandstone
+FTILE:   @efg35 = floor_sandstone / none
+FTILE:   'dr = floor_cobble_blood
+MAP
+      tttttttttttt..@@@...t
+ tttttttD....DttD...---..Dt
+ttttD...............---..tt
+ttt......DtD.......c;;;c.Dt
+tt.4.ttttttttD...ttct--c..t
+tWWWWwttttwwttw1wtwcNttcwwt
+tW...tt""tWWWttttt.ct--ctwt
+tW....t""t..s...t..c;;-cttt
+tw.sc-cc;c-;cc;-c.s.-3-.Dwt
+twD.cN-cWWc--cEN-...---..wt
+twt.--tcWZcNZc--cttwww-s.wt
+twttc--cWWc--cZ-ccccc;c.Dwt
+twttc;-c;;c-;c;;cLLLc-cD.wt
+twDDc----xx-N-t-J-3--NcDswt
+twD.;--N-ExtWtx-J----Nc.Dwt
+tws.cWWW--t--x-NJ-3-ttcD.wt
+tw..c;;cW;c;Nc-;cMMMc"cDswt
+t1.sc-Ec--c--c--ccccc;c..wt
+tw..cZ-c-Z--ZcNZc..s.s...wt
+tw..cN-ct-NWxc--c6'''''6.wt
+twW.c-cc;c-tt-;cc.'d'h'..wt
+ttWW.s..s..tt....6'''''6.wt
+twttWWW..DDtttD....s.s...wt
+twwtttwwwwwwwtwwwwwwwww1wwt
+ttttttttttttttttttttttttttt
+ENDMAP
+
+NAME:   nicolae_swamp_frolicking_bunyips
+MONS:   bunyip
+KMONS:  y = butterfly
+KMONS:  p = plant
+NSUBST: ' = 3=1 / 1. / y / 8=p / 8=W / .
+SUBST:  D = t., r = pW.
+MAP
+DDDtttttDDD
+DrtDDDDDtrD
+Dt'''''''tD
+tD'''''''Dt
+tD'''''''Dt
+tD'''''''Dt
+tD'''''''Dt
+tD'''''''Dt
+Dt'''''''tD
+DrtDDDDDt.r
+DDDtttttDr@
+ENDMAP
+
+NAME:    nicolae_swamp_husk_halls
+TAGS:    transparent
+DEPTH:   Swamp:2-
+ORIENT:  float
+KMONS:   1 = bloated husk
+KFEAT:   1 = W / .
+NSUBST:  1 = 2=1 / 2=1./ ., 0 = 2=0 / 2=0. / .
+SUBST:   { = {<, D = t., . = ...W, _ = t_
+SHUFFLE: {[(
+CLEAR:   _
+MAP
+   __tD@@Dt__
+   _ttD.1Dtt_
+   _ttD..Dtt_
+____ttD0.Dtt____
+_tttttD..Dttttt_
+ttttttt..ttttttt
+DDDDDtWWWWtDDDDD
+@1....W{[W..0..@
+@..0..W(<W....1@
+DDDDDtWWWWtDDDDD
+ttttttt..ttttttt
+_tttttD..Dttttt_
+____ttD.0Dtt____
+   _ttD..Dtt_
+   _ttD1.Dtt_
+   __tD@@Dt__
+ENDMAP
+
+# The way the terrain is laid out means that autoexplore should notice the
+# corpse through a window and stop before YOLOing into the hydra death house.
+NAME:   nicolae_swamp_necromancy_gone_wrong
+TAGS:   no_trap_gen patrolling
+KMASK:  'defgK = no_monster_gen
+KMASK:  'defgK = no_item_gen
+ITEM:   scimitar good_item ego:none / glaive good_item ego:none \
+        / broad axe good_item ego:none / staff of death / nothing w:40
+: item(dgn.good_aux_armour .. " / nothing w:60")
+ITEM:   scroll of brand weapon / scroll of fear / scroll of teleportation \
+        / scroll of blinking / nothing w:40
+ITEM:   randbook title:Reanimation_Made_Easy spells:animate_dead numspells:4 \
+            disc:necromancy
+MONS:   20-headed hydra zombie
+NSUBST: ' = 1 / 2=1' / d / e / f / g / K / '
+SUBST:  Q = t_, D = t., . = ...W
+: dgn.delayed_decay(_G, "K","human corpse")
+TILE:   x = wall_brick_vines
+FTILE:  'defgK = floor_sandstone / none w:5
+CLEAR:  _
+MAP
+ QttttttQ
+QttD.DtttQ
+Qt......ttQ
+ txm+mx.DttQ
+QQx'''x..DtQQ
+ Qm'''m.tttttQ
+tQx'''x..tD..@
+Qtxmxmxt.t..tD
+QQ QQQ tt.ttt
+ QQ Q QQtttQQ
+ENDMAP
+
+NAME:   nicolae_swamp_no_escape
+TAGS:   patrolling
+NSUBST: 2 = 3=2 / ...2, E = 1 / 3=3 / 2=4 / 2 / 23. / .
+SUBST:  D = t., . = ..W, _ = t_
+KMONS:  1 = thorn hunter
+KMONS:  2 = swamp worm
+KMONS:  3 = goliath frog / bunyip w:5 / alligator w:5
+KMONS:  4 = eleionoma
+KFEAT:  @1234 = W / .
+CLEAR:  _
+MAP
+    _____
+ _ttttttttt
+ tttDDDE.2@
+_ttDE.E...@
+_tD..E...2@
+_t..E.E...@
+_tD..E...2@
+_ttDE.E...@
+ tttDDDE.2@
+ _ttttttttt
+    _____
+ENDMAP
+
+NAME:  nicolae_swamp_nymph_family_reunion
+TAGS:  transparent patrolling
+SUBST: D = wwwwW., M = wwt, - = ....t, . = ....W
+KMONS: 1 = water nymph
+KMONS: 2 = eleionoma
+KFEAT: 1 = w
+MAP
+@.ttttt
+...-ttttt
+t...--tttt
+tD.-.---ttt
+tDD.-.2--tt
+twDD.-.2-ttt
+tMwDD.-.--tt
+tMMwDD.-.-tt
+tM1MwDD.-.-t
+ttM1MwDD...t
+ ttMMMwDD...
+  tttttttt.@
+ENDMAP
+
+# Some spriggan bandits have set up a secret hideout in the Swamp to stash
+# their ill-gotten loot.
+NAME:   nicolae_swamp_secret_spriggan_hideout
+TAGS:   no_monster_gen patrolling
+DEPTH:  Swamp, !Swamp:$
+ORIENT: northwest
+ITEM:   gold q:1 / gold q:2 / gold q:3 / gold q:4
+ITEM:   buckler w:30 / robe w:30 / swamp dragon scales w:20 \
+        / steam dragon scales / acid dragon scales / troll leather armour
+ITEM:   short sword / rapier / quick blade / long sword / scimitar \
+        / war axe / morningstar / eveningstar / trident / quarterstaff \
+        / lajatang
+ITEM:   any magical staff, any jewellery, any book, any wand
+MONS:   spriggan, spriggan rider, spriggan druid, spriggan berserker
+MONS:   spriggan air mage
+NSUBST: L = e / f / eeffhj$ / ghhijj$
+SUBST:  } = }]), O = c., D = tt., P = 112., Q = 1112, . = ...W
+# The shaft is just for flavor, to help hint at the notion of "go downstairs".
+# You can think of it as a "flavor shaft". Or a "flavor hole", if you prefer.
+KFEAT:  ^ = shaft trap
+MAP
+tttttttttttttttttttt
+tttD...3...Dtttttttt
+tt......c.OOctDDDttt
+tD.3Dcccc...ccOQDttt
+tD..cc..c.2.cd.cOttt
+t..Pc.}.c...c.>.cttt
+tP.tc..ccO.Occ.dcttt
+t..c.2cc.4.4.cc.cctt
+t.....tc.....c.d.ctt
+tP...2tc..5..c1.tctt
+tttOt.tc$$$$$ctt.dtt
+tttcccccLLLLLcc.DctD
+tDt.c.tccccccc1.....
+tD.1cQ^tc......tc..@
+tt.DO.ttc..Dc.DccDD.
+tDtD..OcttD.ccctttDD
+ttt  .@D.ccctttt
+ENDMAP
+
+NAME:   nicolae_swamp_soggy_hallways
+TAGS:   transparent
+KMONS:  0 = 0
+KMONS:  9 = 9
+KFEAT:  09@ = W
+SUBST:  0 = 00W, 9 = 990W, D = tWW
+NSUBST: P = W / t, Q = W / t, R = W / t, S = W / t
+MAP
+      tttt
+   ttttD9tttt
+t@@t0DQDWt0Dtttt
+tWWtWWQWDtWWSD0t
+tDWtDWQWDtDWSWWt
+tWWtWWQDWtWWSWDt
+tWDtWDQDWtWDSWWt
+tWWPDWtWDRDWtDWt
+tDWPWWtWDRWWtWWt
+tWWPWDtDWRWDtWDt
+t0DPWWtDWRWWtWWt
+ttttD0tWDRD0t@@t
+   tttt9Dtttt
+      tttt
+ENDMAP
+
+NAME:   nicolae_swamp_spooky_pond
+TAGS:   transparent no_monster_gen
+KMONS:  1 = fenstrider witch
+KMONS:  2 = bog body / will-o-the-wisp w:5
+KMONS:  3 = will-o-the-wisp
+KFEAT:  12 = w
+KFEAT:  3 = W
+NSUBST: 2 = 2=2 / 2w, 3 = 2=3 / S
+SUBST:  S = W., D = Ww, P = p.
+MAP
+    ttttttttttt
+   ttSSSS3SSSStt
+  tt..St.S.tS..tt
+ tt..SttSSSttS..tt
+ttt.SttWWWWWttS.ttt
+....StSWD2DWStS....
+@...3tSW212WSt3...@
+....StSWD2DWStS....
+ttt.SttWWWWWttS.ttt
+ tt..SttSSSttS..tt
+  tt..St.S.tS..tt
+   ttSSSS3SSSStt
+    ttttttttttt
+ENDMAP
+
+# The area has long since grown over, and the crystals' pattern is obscured,
+# but there is still power here, and magic users still gather...
+NAME:   nicolae_swamp_standing_stones
+TAGS:   patrolling no_pool_fixup
+ORIENT: float
+{{
+kitem("d = potion of magic w:30 / potion of brilliance w:30 / " ..
+      dgn.loot_potions)
+kitem("e = scroll of summoning w:30 / scroll of blinking w:30" ..
+      "/ scroll of vulnerability / " .. dgn.loot_scrolls)
+}}
+KITEM:  f = nothing w:150 / ring of wizardry / ring of intelligence \
+        / ring of willpower / amulet of magic regeneration / any jewellery
+KITEM:  2 = any book / any scroll
+KMONS:  1 = fenstrider witch
+KMONS:  2 = necromancer
+KMONS:  3 = spriggan druid
+KMONS:  4 = bog body
+KFEAT:  1 = w
+KFEAT:  4de = W
+SUBST:  q = tw, S = Ww, D = t., . = .:70 W
+MAP
+     ttttttttttttt
+ tttttwSSSwtt4WWWttt
+ tSt.D......ttWttWStt
+tt.....ttD....tt....t
+tS.D.ttqS...DDt..D...
+ttq..wtD..b......S..@
+ tt..Swww..t.SSttttw
+  tt...wwwSttttt..tt
+ tt.t...Dtttt.....3tt
+tt..3t..tt......t...t
+tq.b...tbWWWb...tbS.t
+tS...D.tefwwWWtttt..t
+twtD..Wtdw1wWtt.S...t
+twtt..Wbtttttb.t.Sttt
+twqtt.WWW...t...wtt4t
+twqtqtt...b.t.DwttWSt
+twtw.qttqt...t.wtWWtt
+ttS.2...DtD..wwWWWtt
+ tt.D.b.....Swbtttt
+  ttttttSDSttttt
+       ttttt
+ENDMAP
+
+NAME:   nicolae_swamp_super_fun_site
+TAGS:   transparent patrolling
+KMONS:  HZ = bloated husk
+NSUBST: D = t / .
+SUBST:  ' = ..t__, E = .Wt
+KFEAT:  H = W
+COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MARKER: H = lua:fog_machine { cloud_type = "foul pestilence", \
+            pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
+            size = 3, walk_dist = 1, excl_rad = 0}
+CLEAR:  _
+MAP
+ ''''''''
+'...D...t'
+'.ZEEEE..'
+'.EWWWWE.'
+'DEWHWWE.'
+'.EWWWWED'
+'.EEWWE..'
+'..EEEEZ.'
+'t..D....'
+ ''''.t''
+ENDMAP
+
+NAME:   nicolae_swamp_wisp_ring_woods
+TAGS:   no_pool_fixup transparent patrolling
+KMONS:  z = will-o-the-wisp
+NSUBST: P = 2=. / F / S, Q = 2=. / F / S, Z = 2=w / K, K = 6=t / w
+SUBST:  S = w., F = t., . = ..W
+KFEAT:  z = w
+MAP
+   ttt@.ttt
+  ttFPPPPFtt
+ ttF......Ftt
+ttF...SS...Ftt
+tF..SwwwwS..Ft
+tF..wzKKzw..Ft
+tF.SwKZZKwS.Ft
+tF.SwKZZKwS.Ft
+tF..wzKKzw..Ft
+tF..SwwwwS..Ft
+ttF...SS...Ftt
+ ttF......Ftt
+  ttFQQQQFtt
+   ttt.@ttt
+ENDMAP
+
+NAME:    nicolae_swamp_wrong_neighborhood
+TAGS:    transparent
+ORIENT:  float
+MONS:    shambling mangrove
+MONS:    eleionoma
+SHUFFLE: Pp/Qq/Rr, Qq
+NSUBST:  P = @ / 2=.W / K, p = @ / 2=.W / K, 2 = 2=2 / 2=2.
+SUBST:   Q : Kt, qRr = t, K = t., Z = t_
+CLEAR:   _
+MAP
+ZZtQQQQtZZtRRRRt
+Zttt..tttttt..tt
+ZttK.Kttttt..Ktt
+Zttt..KttttK..Kt
+ZtK.2..Kttttt2.t
+ttK..t.K.tKtK..t
+tt..ttK..t....Kt
+PtK.ttt.1.K.K.tt
+P...Kttt..tt.Ktp
+P..K.Kttt..t...p
+Ptt..tttK..tK..p
+ttK2..tt..Kttttp
+Zttt.K.t.2.K..tt
+ZtK....ttK...KtZ
+Ztt..Kttttt..ttZ
+ZtrrrrtZZtqqqqtZ
+ENDMAP
+
 
 ###############################################################################
 #

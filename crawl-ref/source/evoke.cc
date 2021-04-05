@@ -436,7 +436,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     map<actor *, coord_def> collisions;
 
     bool player_affected = false;
-    counted_monster_list affected_monsters;
+    vector<monster *> affected_monsters;
 
     for (actor *act : act_list)
     {
@@ -502,7 +502,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             {
                 act->as_monster()->speed_increment -= random2(6) + 4;
                 if (you.can_see(*act))
-                    affected_monsters.add(act->as_monster());
+                    affected_monsters.push_back(act->as_monster());
             }
             else
                 player_affected = true;
@@ -590,10 +590,11 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (!affected_monsters.empty())
     {
+        counted_monster_list affected = counted_monster_list(affected_monsters);
         const string message =
             make_stringf("%s %s blown away by the wind.",
-                         affected_monsters.describe().c_str(),
-                         conjugate_verb("be", affected_monsters.count() > 1).c_str());
+                         affected.describe().c_str(),
+                         conjugate_verb("be", affected.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message);
         else
@@ -603,6 +604,32 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     for (auto it : collisions)
         if (it.first->alive())
             it.first->collide(it.second, agent, pow);
+
+    bool did_disperse = false;
+    // Handle trap triggering, finally. A dispersal before we finish
+    // would lead to weird crashes and behavior in the preceeding.
+    for (auto m : affected_monsters)
+    {
+        if (!m->alive())
+            continue;
+        coord_def landing = m->pos();
+
+        // XXX: this doesn't properly fire lua position triggers
+        m->apply_location_effects(landing);
+
+        // Dispersal will fire the location effects for everything dispersed;
+        // it's still possible for something to get blown somewhere it needs
+        // a location effect and not subsequently dispersed but handling that
+        // is more trouble than this headache already is.
+        if (m->pos() != landing)
+        {
+            did_disperse = true;
+            break;
+        }
+    }
+
+    if (player_affected && !did_disperse)
+        you.apply_location_effects(you.pos());
 }
 
 static bool _phial_of_floods(dist *target)

@@ -289,7 +289,7 @@ xxxxxXXXXXXXxx
 ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
-TAGS:   patrolling no_monster_gen no_trap_gen
+TAGS:   patrolling no_monster_gen no_trap_gen transparent
 DEPTH:  D:11-, Lair, Orc
 : ice_cave_portal(_G)
 MONS:   ice devil
@@ -356,7 +356,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
-TAGS:   patrolling no_monster_gen
+TAGS:   patrolling no_monster_gen transparent
 DEPTH:  Elf, Snake
 WEIGHT: 6
 : ice_cave_portal(_G)
@@ -375,7 +375,7 @@ xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_one
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup transparent
 DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 : ice_cave_portal(_G)
 MONS:   ice statue
@@ -400,6 +400,7 @@ xxXX+XXxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_two
+TAGS:   transparent
 DEPTH:  Elf, Swamp, Snake, Shoals, Spider
 WEIGHT: 6
 : ice_cave_portal(_G)
@@ -439,7 +440,7 @@ xxxx@'''
 ENDMAP
 
 NAME:   portal_ice_cave_entry_frozen_things
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen transparent
 WEIGHT: 6
 DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 MONS:   freezing wraith, azure jelly

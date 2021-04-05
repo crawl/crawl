@@ -1,6 +1,12 @@
 ###############################################################################
-# spider.des: All maps and branch endings relating to the Spider Nest.
-# Bring lots of Raid!
+# spider.des: All maps and branch endings relating to the Spider.
+#
+# <<1>>      Entries
+# <<2>>      Decorative vaults
+# <<3>>      Monster-placing vaults
+# <<4>>      Spider end vaults
+#
+###############################################################################
 ###############################################################################
 
 # Functions for the spider trap
@@ -27,9 +33,12 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 }}
 
-##############################################################################
-# Spider Nest entry vaults
-##############################################################################
+###############################################################################
+#
+# <<1>> Spider entries.
+#       All must have the spider_entry tag and place an enter_spider feature.
+#
+###############################################################################
 
 NAME:   dummy_spider_entry
 TAGS:   spider_entry transparent
@@ -199,9 +208,266 @@ xxXXXXxxx..xx
    QQQX@@XX
 ENDMAP
 
-##############################################################################
-# Regular vaults (some adapted from the old portal vault)
-##############################################################################
+###############################################################################
+#
+# <<2>> Decorative vaults.
+#
+###############################################################################
+
+default-depth: Spider
+
+NAME:   hangedman_spider_mandibles
+TAGS:   extra transparent decor
+# 59 inside blocks, 59 outside blocks.
+NSUBST: x = 6:. / 9 = xx. / *:x
+NSUBST: z = 4:. / 4:' / 9 = xxx''. / *:x
+CLEAR:  '
+MAP
+      zzzzzzz
+     zz.....zz
+    zz...x...zz
+    z...xxx...z
+   zzx...x...xzz
+  @z.x.......x.z@
+ @z...xx...xx...z@
+ z.....xx.xx.....z
+ zx..xxx...xxx..xz
+zz.x.x.......x.x.zz
+z..xxx.......xxx..z
+z..xx....x....xx..z
+ z.x....xxx....x.z
+z..x....xxx....x..z
+z..xx....x....xx..z
+zz..xx.......xx..zz
+ zz.............zz
+  zzzz..@.@..zzzz
+ENDMAP
+
+# Bah, bu bah, bu ba-ba-ba ba-ba-ba baa, bu ba-ba-ba buh.
+NAME:    hangedman_spider_tarantella_strand
+TAGS:    extra transparent decor
+ORIENT:  north
+MONS:    tarantella
+# The size of the vault means this upped weight is actually akin
+# to the usual vault weight. The vault is highly random and ends
+# up being very unobtrusive for most Spider layouts, anyway.
+WEIGHT:  25
+# Very selectively, partially ruin the edge of the beats.
+NSUBST:  A = 1:. / 2 = X / *:x, B = 1:. / 2 = X / *:x
+NSUBST:  C = 1:. / 2 = X / *:x, D = 4:. / 4 = X / *:x
+NSUBST:  E = 1:X / *:x, F = 1:X / *:x, G = 1:X / *:x
+NSUBST:  H = 1:X / *:x, I = 1:X / *:x, J = 1:X / *:x
+NSUBST:  K = 1:X / *:x, L = 1:X / *:x, M = 1:X / *:x
+NSUBST:  N = 1:X / *:x, O = 1:X / *:x, P = 1:X / *:x
+# Even random trimming can have weighed styles to it.
+# TODO: the z SUBST here can generate pockets that will force a veto
+SUBST:   z : ^<>, ^ = xx', < = xx''', > = x'
+SUBST:   y : XYZ, X = xx., Y = xx..., Z = x.
+SUBST:   X : %*|, % = xxx.., * = x., | = xx...
+SUBST:   " : "`;, " = ..', ` = ...', ; = .'
+CLEAR:   '
+# The string here pushes the vault from the level border.
+MAP
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+xzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx
+xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................yzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................xyyyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzz
+.AAAA....BBBB.............1.........yzzzzzzzzzzzzzzzzzzzzzzzzz
+"AxxA.EE.BxxB.FF....................xyyyyyyyyyyyyyyyyyxzzzzzzz
+"AxxA.EE.BxxB.FF..GG.......JJ.........................yzzzzzzz
+.AAAA....BBBB.....GG.HH....JJ.KK......................xyyyyyyx
+.....................HH.II....KK.LL..CCCC....NN...............
+ .""..""..""..""........II.......LL..CxxC.MM.NN.OO.....DDDDDD.
+                 ....................CxxC.MM....OO.PP..DxxxxD.
+                 @"".""."".""."".""..CCCC..........PP..DxxxxD.
+                                    ...................DxxxxD.
+                                    @."".."".""."".""..DxxxxD.
+                                                      .DDDDDD.
+                                                      ........
+                                                      ...""...
+ENDMAP
+
+NAME:  nicolae_spider_webbed_stairs
+TAGS:  transparent decor
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+SHUFFLE: abcde/^._^^/..x^^/..x^x/.._x^/x^___/^x___/..^xx/x.xx^/^^__^/^^___/ \
+         ^._x^/x.^^^/..^^x/x._^x/^^x^_
+SUBST: ab = ., cde = ^
+KFEAT: ^ = web
+CLEAR: _
+MAP
+cdedc
+dabad
+ebsbe
+dabad
+cdedc
+ENDMAP
+
+NAME: nicolae_spider_circle_web
+TAGS: decor transparent extra
+MAP
+       ......x
+     ...xxxxxx..
+    ..xx.....xx..
+   .xx......x..xx.
+  .x....xxxxx....x.
+ ..x...x....xx...x..
+ .x...x....x..x...x.
+xxx..x...xxx...x..x..
+.x.xxx..x..xx...x..x.
+.x..x.xxx.x..x..x..x.
+.x..x..x.xxx.x..x..x.
+.x..x..x..x.xxx.x..x.
+.x..x...xx..x..xxx.x.
+..x..x...xxx...x..xxx
+ .x...x..x....x...x.
+ ..x...xx....x...x..
+  .x....xxxxx....x.
+   .xx..x......xx.
+    ..xx.....xx..
+     ..xxxxxx...
+       x......
+ENDMAP
+
+NAME:  nicolae_spider_webs_and_nodes
+TAGS:  decor transparent extra
+SUBST: D : .E, E : x .:5, F : .H, H : x .:5
+MAP
+             DDD
+          ..DEEED
+       .....DxxED
+    ......xxxExED
+ DDD...xxx...DDx..
+DEEExxx.x......x..
+DExxD....x.....x..
+DExED....x......x..
+ DDx.....xFF...xx..
+ ..x....FHxHxxx.x..
+ ..x....FxxxF....x..
+  ..x.xxxHxHF....x..
+  ..xx...FFx.....xDD
+  ..x......x....DExED
+   ..x.....x....DxxED
+   ..x......x.xxxEEED
+   ..xDD...xxx...DDD
+    DExExxx......
+    DExxD.....
+    DEEED..
+     DDD
+ENDMAP
+
+NAME:    nicolae_spider_stair_cavern
+TAGS:    decor
+DEPTH:   Spider:2-
+SHUFFLE: {[(
+SUBST:   D = .x, . = .:100 ^:5
+KFEAT:   ^ = web trap
+MAP
+  xxxxxxxxxx
+ xxDDDDDDDDxxx
+xxD.D...D.DDDxx
+xD.D.DDD.D..DDxx
+xDD.DDxDDDDD.DDxx
+xD.DDDxxxxxDD.DDxx
+xD.D.DDDDxxD.D.DDx
+xDD.D...DDxDD.D..@
+xxDDD.{..DxxDDDD.@
+xDD.D...DDxDD.D..@
+xD.D.DDDDxxD.D.DDx
+xD.DDDxxxxxDD.DDxx
+xDD.DDxDDDDD.DDxx
+xD.D.DDD.D..DDxx
+xxD.D...D.DDDxx
+ xxDDDDDDDDxxx
+  xxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_spider_cling_halls
+DEPTH:  Spider:2-, !Spider:$
+ORIENT: float
+TAGS:   no_pool_fixup extra
+NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
+SUBST:  ' = ..wx, . = W...., [ = [{()}], H = x_, J = xw
+KMASK:  Ww = no_monster_gen
+CLEAR: _
+MAP
+ Hxx.......xxH
+Hxxww'w'w'wwxxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJwwDwEwFwwJxH
+HxJww'w'w'wwJxH
+HxJww.....wwJxH
+HxJww..[..wwJxH
+HxJww.....wwJxH
+HxJwwwwwwwwwJxH
+HxJwwwwwwwwwJxH
+HxJJJJJJJJJJJxH
+HxxxxxxxxxxxxxH
+ HHHHHHHHHHHHH
+ENDMAP
+
+NAME: nicolae_spider_cling_ruins
+DEPTH: Spider:2-
+ORIENT: float
+TAGS: no_pool_fixup extra
+SHUFFLE: [{(
+NSUBST: A = wx / x, B = wx / x, C = wx / x, D = wx / x, \
+        E = 2:w / x, F = 2:w / x, G = 2:w / x, H = 2:w / x, I = ' / 1:'x / x
+SUBST: X = x', ' = W..., Z = xw
+KMASK: Ww = no_monster_gen
+MAP
+xxxX'''''''Xxxx
+x'X'wwwwwww'X'x
+xX'XwEEEEEwX'Xx
+X'XXwwwwwwwXX'X
+'wwwZwAAAwZwww'
+'wHwwwwwwwwwFw'
+'wHwDw'I'wBwFw'
+'wHwDwI[IwBwFw'
+'wHwDw'I'wBwFw'
+'wHwwwwwwwwwFw'
+'wwwZwCCCwZwww'
+X'XXwwwwwwwXX'X
+xX'XwGGGGGwX'Xx
+x'X'wwwwwww'X'x
+xxxX'''''''Xxxx
+ENDMAP
+
+###############################################################################
+#
+# <<3>> Monster-placing vaults.
+#
+###############################################################################
 
 NAME:    spiders_nest_a
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
@@ -294,7 +560,6 @@ ENDMAP
 # basket of spiders trap.
 NAME:   spiders_nest_spider_trap
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-DEPTH:  Spider
 NSUBST: * = 1:z / *:*
 KMONS:  M = fungus
 {{
@@ -536,7 +801,6 @@ ENDMAP
 # Some hornet vaults. Hornets eat spiders (and players).
 NAME:   spiders_nest_hornet_nest
 TAGS:   no_trap_gen uniq_wasphive
-DEPTH:  Spider
 MONS:   hornet
 NSUBST: 1 = 1:% / 1:1 / * = %1
 SUBST:  a = .a, A = a
@@ -559,7 +823,6 @@ ENDMAP
 
 NAME:   lemuel_hornet_nest
 TAGS:   uniq_hornetnest
-DEPTH:  Spider
 WEIGHT: 2
 MONS:   hornet
 SUBST:  1=1 .:15
@@ -587,7 +850,6 @@ ENDMAP
 
 NAME:   guppyfry_hornet_nest
 TAGS:   no_monster_gen no_trap_gen uniq_hornetnest
-DEPTH:  Spider
 MONS:   hornet / nothing
 SUBST:  - = wW.%
 MAP
@@ -712,7 +974,6 @@ ENDMAP
 
 # Misc minivaults
 NAME:   guppyfry_spider_mini_1
-DEPTH:  Spider
 MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 x@.xxxxxxxx.
@@ -730,7 +991,6 @@ xxx.@xxxxxxx
 ENDMAP
 
 NAME:   guppyfry_spider_mini_2
-DEPTH:  Spider
 MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 xx..xxxx..xx
@@ -747,7 +1007,6 @@ xx..xxxx..xx
 ENDMAP
 
 NAME:   guppyfry_spider_mini_3
-DEPTH:  Spider
 MONS:   jumping spider / redback w:15 / nothing w:5
 MAP
 W....WW....W
@@ -818,7 +1077,6 @@ sssxs^^^sxsss
 ENDMAP
 
 NAME:   nicolae_spider_nook
-DEPTH:  Spider
 TAGS:   no_monster_gen
 MONS:   wolf spider / redback w:15 / jumping spider / nothing w:5
 KITEM:  d = | w:5 / * w:20 / $
@@ -838,7 +1096,6 @@ ENDMAP
 
 # Demonic crawler nest, maybe with a demonic farmer
 NAME:   nicolae_crawler_farm
-DEPTH:  Spider
 TAGS:   no_monster_gen patrolling no_trap_gen
 MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
         iron imp w:10 / nothing w:50
@@ -861,7 +1118,6 @@ MAP
 ENDMAP
 
 NAME:   nicolae_spider_shape
-DEPTH:  Spider
 MAP
  ...........
  .xxx...xxx.
@@ -1021,142 +1277,7 @@ xxxxx^....xxxxxxxxh...^..xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_spider_circle_web
-TAGS: transparent extra
-DEPTH: Spider
-MAP
-       ......x
-     ...xxxxxx..
-    ..xx.....xx..
-   .xx......x..xx.
-  .x....xxxxx....x.
- ..x...x....xx...x..
- .x...x....x..x...x.
-xxx..x...xxx...x..x..
-.x.xxx..x..xx...x..x.
-.x..x.xxx.x..x..x..x.
-.x..x..x.xxx.x..x..x.
-.x..x..x..x.xxx.x..x.
-.x..x...xx..x..xxx.x.
-..x..x...xxx...x..xxx
- .x...x..x....x...x.
- ..x...xx....x...x..
-  .x....xxxxx....x.
-   .xx..x......xx.
-    ..xx.....xx..
-     ..xxxxxx...
-       x......
-ENDMAP
-
-NAME: nicolae_spider_webs_and_nodes
-TAGS: transparent extra
-DEPTH: Spider
-SUBST: A : .B, B : x .:5, C : .D, D : x .:5
-MAP
-             AAA
-          ..ABBBA
-       .....AxxBA
-    ......xxxBxBA
- AAA...xxx...AAx..
-ABBBxxx.x......x..
-ABxxA....x.....x..
-ABxBA....x......x..
- AAx.....xCC...xx..
- ..x....CDxDxxx.x..
- ..x....CxxxC....x..
-  ..x.xxxDxDC....x..
-  ..xx...CCx.....xAA
-  ..x......x....ABxBA
-   ..x.....x....AxxBA
-   ..x......x.xxxBBBA
-   ..xAA...xxx...AAA
-    ABxBxxx......
-    ABxxA.....
-    ABBBA..
-     AAA
-ENDMAP
-
-NAME: nicolae_spider_stair_cavern
-DEPTH: Spider:2-
-SHUFFLE: {[(
-SUBST: X = .x, . = .:100 ^:5
-KFEAT: ^ = web trap
-MAP
-  xxxxxxxxxx
- xxXXXXXXXXxxx
-xxX.X...X.XXXxx
-xX.X.XXX.X..XXxx
-xXX.XXxXXXXX.XXxx
-xX.XXXxxxxxXX.XXxx
-xX.X.XXXXxxX.X.XXx
-xXX.X...XXxXX.X..@
-xxXXX.{..XxxXXXX.@
-xXX.X...XXxXX.X..@
-xX.X.XXXXxxX.X.XXx
-xX.XXXxxxxxXX.XXxx
-xXX.XXxXXXXX.XXxx
-xX.X.XXX.X..XXxx
-xxX.X...X.XXXxx
- xxXXXXXXXXxxx
-  xxxxxxxxxx
-ENDMAP
-
-NAME: nicolae_spider_cling_halls
-DEPTH: Spider, !Spider:1, !Spider:$
-ORIENT: float
-TAGS: no_pool_fixup extra
-NSUBST: A = 2:w / *:x, B = 2:w / *:x, C = 2:w / *:x
-SUBST: ' = ..wx, . = W...., [ = [{()}], X = x_, Q = xw
-KMASK: Ww = no_monster_gen
-CLEAR: _
-MAP
- Xxx.......xxX
-Xxxww'w'w'wwxxX
-XxQwwAwBwCwwQxX
-XxQwwAwBwCwwQxX
-XxQwwAwBwCwwQxX
-XxQwwAwBwCwwQxX
-XxQwwAwBwCwwQxX
-XxQww'w'w'wwQxX
-XxQww.....wwQxX
-XxQww..[..wwQxX
-XxQww.....wwQxX
-XxQwwwwwwwwwQxX
-XxQwwwwwwwwwQxX
-XxQQQQQQQQQQQxX
-XxxxxxxxxxxxxxX
- XXXXXXXXXXXXX
-ENDMAP
-
-NAME: nicolae_spider_cling_ruins
-DEPTH: Spider, !Spider:1
-ORIENT: float
-TAGS: no_pool_fixup extra
-SHUFFLE: [{(
-NSUBST: A = wx / x, B = wx / x, C = wx / x, D = wx / x, \
-        E = 2:w / x, F = 2:w / x, G = 2:w / x, H = 2:w / x, I = ' / 1:'x / x
-SUBST: X = x', ' = W..., Z = xw
-KMASK: Ww = no_monster_gen
-MAP
-xxxX'''''''Xxxx
-x'X'wwwwwww'X'x
-xX'XwEEEEEwX'Xx
-X'XXwwwwwwwXX'X
-'wwwZwAAAwZwww'
-'wHwwwwwwwwwFw'
-'wHwDw'I'wBwFw'
-'wHwDwI[IwBwFw'
-'wHwDw'I'wBwFw'
-'wHwwwwwwwwwFw'
-'wwwZwCCCwZwww'
-X'XXwwwwwwwXX'X
-xX'XwGGGGGwX'Xx
-x'X'wwwwwww'X'x
-xxxX'''''''Xxxx
-ENDMAP
-
 NAME: nicolae_spider_hall_of_the_moth_king
-DEPTH: Spider
 ORIENT: west
 TAGS: transparent
 KMONS: M = moth of wrath / ghost moth / butterfly w:1
@@ -1179,122 +1300,6 @@ xxxxcccccccccccccccccccccc+ccx
 xxxxxxxxxxxxxxxxxxxxxxxxx.@.xx
 ENDMAP
 
-NAME:   hangedman_spider_mandibles
-TAGS:   extra transparent decor
-DEPTH:  Spider
-# 59 inside blocks, 59 outside blocks.
-NSUBST: x = 6:. / 9 = xx. / *:x
-NSUBST: z = 4:. / 4:' / 9 = xxx''. / *:x
-CLEAR:  '
-MAP
-      zzzzzzz
-     zz.....zz
-    zz...x...zz
-    z...xxx...z
-   zzx...x...xzz
-  @z.x.......x.z@
- @z...xx...xx...z@
- z.....xx.xx.....z
- zx..xxx...xxx..xz
-zz.x.x.......x.x.zz
-z..xxx.......xxx..z
-z..xx....x....xx..z
- z.x....xxx....x.z
-z..x....xxx....x..z
-z..xx....x....xx..z
-zz..xx.......xx..zz
- zz.............zz
-  zzzz..@.@..zzzz
-ENDMAP
-
-# Bah, bu bah, bu ba-ba-ba ba-ba-ba baa, bu ba-ba-ba buh.
-NAME:    hangedman_spider_tarantella_strand
-TAGS:    extra transparent decor
-DEPTH:   Spider
-ORIENT:  north
-MONS:    tarantella
-# The size of the vault means this upped weight is actually akin
-# to the usual vault weight. The vault is highly random and ends
-# up being very unobtrusive for most Spider layouts, anyway.
-WEIGHT:  25
-# Very selectively, partially ruin the edge of the beats.
-NSUBST:  A = 1:. / 2 = X / *:x, B = 1:. / 2 = X / *:x
-NSUBST:  C = 1:. / 2 = X / *:x, D = 4:. / 4 = X / *:x
-NSUBST:  E = 1:X / *:x, F = 1:X / *:x, G = 1:X / *:x
-NSUBST:  H = 1:X / *:x, I = 1:X / *:x, J = 1:X / *:x
-NSUBST:  K = 1:X / *:x, L = 1:X / *:x, M = 1:X / *:x
-NSUBST:  N = 1:X / *:x, O = 1:X / *:x, P = 1:X / *:x
-# Even random trimming can have weighed styles to it.
-# TODO: the z SUBST here can generate pockets that will force a veto
-SUBST:   z : ^<>, ^ = xx', < = xx''', > = x'
-SUBST:   y : XYZ, X = xx., Y = xx..., Z = x.
-SUBST:   X : %*|, % = xxx.., * = x., | = xx...
-SUBST:   " : "`;, " = ..', ` = ...', ; = .'
-CLEAR:   '
-# The string here pushes the vault from the level border.
-MAP
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-                             '
-xzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx
-xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-.................yzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-.................xyyyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzz
-.AAAA....BBBB.............1.........yzzzzzzzzzzzzzzzzzzzzzzzzz
-"AxxA.EE.BxxB.FF....................xyyyyyyyyyyyyyyyyyxzzzzzzz
-"AxxA.EE.BxxB.FF..GG.......JJ.........................yzzzzzzz
-.AAAA....BBBB.....GG.HH....JJ.KK......................xyyyyyyx
-.....................HH.II....KK.LL..CCCC....NN...............
- .""..""..""..""........II.......LL..CxxC.MM.NN.OO.....DDDDDD.
-                 ....................CxxC.MM....OO.PP..DxxxxD.
-                 @"".""."".""."".""..CCCC..........PP..DxxxxD.
-                                    ...................DxxxxD.
-                                    @."".."".""."".""..DxxxxD.
-                                                      .DDDDDD.
-                                                      ........
-                                                      ...""...
-ENDMAP
-
-NAME: nicolae_spider_webbed_stairs
-DEPTH: Spider
-TAGS: transparent decor
-: if you.depth() == 1 then
-SUBST: s = ]})
-: elseif you.depth() == dgn.br_depth(you.branch()) then
-SUBST: s = [{(
-: else
-SUBST: s = ]})[{(
-: end
-SHUFFLE: abcde/^._^^/..x^^/..x^x/.._x^/x^___/^x___/..^xx/x.xx^/^^__^/^^___/ \
-         ^._x^/x.^^^/..^^x/x._^x/^^x^_
-SUBST: ab = ., cde = ^
-KFEAT: ^ = web
-CLEAR: _
-MAP
-cdedc
-dabad
-ebsbe
-dabad
-cdedc
-ENDMAP
 
 ###############################################################################
 NAME:    spider_temple_joshua
@@ -1349,7 +1354,6 @@ xxxxx"x........x+xxxxx........x"xxxxx
 ENDMAP
 
 NAME: cheibrodos_spider_silkery
-DEPTH: Spider
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 MONS: entropy weaver, wolf spider, orb spider
@@ -1382,7 +1386,6 @@ ENDMAP
 
 NAME: cheibrodos_spider_deadly_dance
 TAGS: no_item_gen no_monster_gen
-DEPTH: Spider
 ORIENT: float
 MONS: dancing weapon ; short sword / dancing weapon ; mace \
       / dancing weapon ; war axe / dancing weapon ; trident \
@@ -1419,9 +1422,13 @@ ccccc...cc=cc...ccccc
 ENDMAP
 
 
-##############################################################################
-# Rune vaults
-##############################################################################
+###############################################################################
+#
+# <<4>> Spider ending vaults
+#
+###############################################################################
+
+default-depth:
 
 NAME:   spider_rune_water
 PLACE:  Spider:$

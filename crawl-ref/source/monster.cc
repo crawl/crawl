@@ -693,7 +693,7 @@ bool monster::is_silenced() const
             || has_ench(ENCH_MUTE)
             || (has_ench(ENCH_WATER_HOLD)
                 || has_ench(ENCH_WATERLOGGED))
-               && !res_water_drowning();
+               && res_water_drowning() <= 0;
 }
 
 bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
@@ -2360,7 +2360,9 @@ string monster::hand_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     string str;
-    char        ch = mons_base_char(type);
+    char ch = mons_base_char(mons_is_pghost(type)
+                             ? species::to_mons_species(ghost->species)
+                             : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2374,7 +2376,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED:
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
-        if (ch == 'T' || ch == 'd' || ch == 'n' || mons_is_demon(type))
+        if (ch == 'T' || ch == 'n' || mons_is_demon(type))
             str = "claw";
         break;
 
@@ -2485,7 +2487,10 @@ string monster::foot_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     string str;
-    char        ch = mons_base_char(type);
+
+    char ch = mons_base_char(mons_is_pghost(type)
+                             ? species::to_mons_species(ghost->species)
+                             : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2614,7 +2619,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    // TODO: shared code with species_skin_name for player species
+    // TODO: shared code with species::skin_name for player species
     switch (mons_genus(type))
     {
     case MONS_DRACONIAN:
@@ -6538,7 +6543,7 @@ bool monster::is_dragonkind() const
     if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
         return true;
 
-    if (mons_is_ghost_demon(type) && species_is_draconian(ghost->species))
+    if (mons_is_ghost_demon(type) && species::is_draconian(ghost->species))
         return true;
 
     return false;

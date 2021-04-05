@@ -832,7 +832,7 @@ void TilesFramework::do_layout()
      * XXX: don't layout unless we're in a game / arena
      * this is to prevent layout code from accessing `you` while it's invalid.
      */
-    if (!species_type_valid(you.species))
+    if (!species::is_valid(you.species))
     {
         /* HACK: some code called while loading the game calls mprf(), so even
          * if we're not ready to do an actual layout, we should still give the

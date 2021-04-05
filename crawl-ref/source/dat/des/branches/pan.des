@@ -202,7 +202,7 @@ end
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
     e.mons("common demon / base demonspawn w:2")
-    e.mons("lesser demon")
+    e.mons("common demon / nothing")
     if e.is_validating() then return end
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
         e.tags("luniq_hellpanabyss_threat_entry")
@@ -211,7 +211,7 @@ function pan_entry_vault_contents(e, glyph)
                       .. "   lorocyproca / tormentor / shadow demon")
     else
         e.subst("12 = .")
-        e.kmons(glyph .. " = lesser demon")
+        e.kmons(glyph .. " = common demon / nothing")
     end
 end
 

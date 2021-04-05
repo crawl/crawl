@@ -33,13 +33,13 @@
 #include "mon-place.h"
 #include "notes.h"
 #include "output.h"
-#include "player-equip.h" // lose_permafly_source
 #include "player-stats.h"
 #include "religion.h"
 #include "skills.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "terrain.h"
 #include "transform.h"
 #include "unicode.h"
 #include "xom.h"
@@ -123,6 +123,8 @@ static vector<mutation_type> removed_mutations =
         MUT_MUMMY_RESTORATION,
         MUT_NO_CHARM_MAGIC,
         MUT_MIASMA_IMMUNITY,
+        MUT_BLURRY_VISION,
+        MUT_BLINK,
 #endif
     };
 
@@ -161,7 +163,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_METABOLISM,         0},
 #endif
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,           0},
     { MUT_FAST,                MUT_SLOW,                    0},
 #if TAG_MAJOR_VERSION == 34
     { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,           1},
@@ -177,7 +178,6 @@ static const int conflict[][3] =
     { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,         1},
 #endif
     { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,           1},
     { MUT_BERSERK,             MUT_CLARITY,                 1},
     { MUT_FAST,                MUT_SLOW,                    1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
@@ -192,7 +192,6 @@ static const int conflict[][3] =
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,            -1},
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
     { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
-
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             -1},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              -1},
 };
@@ -285,14 +284,10 @@ static bool _is_valid_mutation(mutation_type mut)
     return mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1;
 }
 
-static const mutation_type _all_scales[] =
+static const mutation_type _ds_scales[] =
 {
     MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
-    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,
-#if TAG_MAJOR_VERSION == 34
-    MUT_ROUGH_BLACK_SCALES,
-#endif
+    MUT_LARGE_BONE_PLATES,          MUT_MOLTEN_SCALES,
     MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
     MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,              MUT_STURDY_FRAME,
@@ -300,9 +295,9 @@ static const mutation_type _all_scales[] =
     MUT_SHARP_SCALES,
 };
 
-static bool _is_covering(mutation_type mut)
+static bool _is_demonspawn_scale(mutation_type mut)
 {
-    return find(begin(_all_scales), end(_all_scales), mut) != end(_all_scales);
+    return find(begin(_ds_scales), end(_ds_scales), mut) != end(_ds_scales);
 }
 
 bool is_body_facet(mutation_type mut)
@@ -328,7 +323,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     {
         if (you.form == transformation::dragon)
         {
-            monster_type drag = dragon_form_dragon_type();
+            monster_type drag = species::dragon_form(you.species);
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
                 return mutation_activity_type::FULL;
             if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
@@ -394,11 +389,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
-    if (you.form == transformation::tree
-        && (mut == MUT_BLINK || mut == MUT_TELEPORT))
-    {
+    if (you.form == transformation::tree && mut == MUT_TELEPORT)
         return mutation_activity_type::INACTIVE;
-    }
 #if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
          && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
@@ -416,9 +408,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (mut == MUT_DEMONIC_GUARDIAN && you.get_mutation_level(MUT_NO_LOVE))
         return mutation_activity_type::INACTIVE;
 
-    if (mut == MUT_NIMBLE_SWIMMER && you.has_innate_mutation(MUT_MERTAIL))
+    if (mut == MUT_NIMBLE_SWIMMER)
     {
-        if (you.has_mutation(MUT_MERTAIL) && you.fishtail)
+        if (feat_is_water(env.grid(you.pos())))
             return mutation_activity_type::FULL;
         else
             return mutation_activity_type::INACTIVE;
@@ -728,10 +720,18 @@ static vector<string> _get_mutations(bool terse)
 
         if (you.form == transformation::dragon)
         {
-            if (!species_is_draconian(you.species))
-                result.push_back(terse ? "breathe fire" : _formmut("You can breathe fire."));
-            else if (!terse && draconian_breath(you.species) != ABIL_NON_ABILITY)
-                result.push_back(_formmut("Your breath weapon is enhanced in this form."));
+            if (!species::is_draconian(you.species)
+                || you.species == SP_BASE_DRACONIAN) // ugh
+            {
+                result.push_back(terse
+                    ? "breathe fire" : _formmut("You can breathe fire."));
+            }
+            else if (!terse
+                && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
+            {
+                result.push_back(
+                    _formmut("Your breath weapon is enhanced in this form."));
+            }
         }
 
         if (form_base_movespeed(you.form) < 10)
@@ -850,9 +850,9 @@ static vector<string> _get_mutations(bool terse)
     }
 
     // Innate abilities which haven't been implemented as mutations yet.
-    for (const string& str : fake_mutations(you.species, terse))
+    for (const string& str : species::fake_mutations(you.species, terse))
     {
-        if (species_is_draconian(you.species))
+        if (species::is_draconian(you.species))
             result.push_back(_dragon_abil(str, terse));
         else
             result.push_back(_innatemut(str, terse));
@@ -866,7 +866,7 @@ static vector<string> _get_mutations(bool terse)
         else
         {
             // XX generalize this code somehow?
-            const string scale_clause = string(scale_type(you.species))
+            const string scale_clause = string(species::scale_type(you.species))
                   + " scales are "
                   + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
 
@@ -878,7 +878,7 @@ static vector<string> _get_mutations(bool terse)
                                             : scale_clause.c_str(),
                            ac),
                         player_is_shapechanged()
-                        && !(species_is_draconian(you.species)
+                        && !(species::is_draconian(you.species)
                              && you.form == transformation::dragon)));
         }
     }
@@ -886,14 +886,14 @@ static vector<string> _get_mutations(bool terse)
     // player::can_swim includes other cases, e.g. extra-balanced species that
     // are not truly amphibious. Mertail has its own description that implies
     // amphibiousness.
-    if (species_can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
+    if (species::can_swim(you.species) && !you.has_innate_mutation(MUT_MERTAIL))
     {
         result.push_back(_annotate_form_based(
                     terse ? "amphibious" : "You are amphibious.",
                     !form_likes_water(), terse));
     }
 
-    if (species_arm_count(you.species) > 2)
+    if (species::arm_count(you.species) > 2)
     {
         const bool rings_melded = !get_form()->slot_available(EQ_RING_EIGHT);
         const int arms = you.arm_count();
@@ -945,7 +945,7 @@ static vector<string> _get_mutations(bool terse)
     }
     // Could move this into species-data, but then the hack that assumes
     // _dragon_abil should get called on all draconian fake muts would break.
-    if (species_is_draconian(you.species))
+    if (species::is_draconian(you.species))
     {
         armour_mut = terse ? "unfitting armour"
             : "You cannot fit into any form of body armour.";
@@ -955,7 +955,7 @@ static vector<string> _get_mutations(bool terse)
     if (!armour_mut.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(_innatemut(armour_mut, terse));
 
-    if (!terse && species_stat_gain_multiplier(you.species) > 1)
+    if (!terse && species::get_stat_gain_multiplier(you.species) > 1)
         result.push_back(_innatemut("Your attributes grow dramatically as you level up."));
 
     // vampire, form cases handled above
@@ -1467,40 +1467,23 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     return 0;
 }
 
-static int _body_covered()
-{
-    // Check how much of your body is covered by scales, etc.
-    // Note: this won't take into account forms, so is only usable for checking in general.
-    int covered = 0;
-
-    if (you.species == SP_NAGA)
-        covered++;
-
-    if (species_is_draconian(you.species))
-        covered += 3;
-
-    for (mutation_type scale : _all_scales)
-        covered += you.get_base_mutation_level(scale);
-
-    return covered;
-}
-
 bool physiology_mutation_conflict(mutation_type mutat)
 {
-    // If demonspawn, and mutat is a scale, see if they were going
-    // to get it sometime in the future anyway; otherwise, conflict.
-    if (you.species == SP_DEMONSPAWN && _is_covering(mutat)
-        && find(_all_scales, _all_scales+ARRAYSZ(_all_scales), mutat) !=
-                _all_scales+ARRAYSZ(_all_scales))
+    if (mutat == MUT_IRIDESCENT_SCALES)
     {
-        return none_of(begin(you.demonic_traits), end(you.demonic_traits),
-                       [=](const player::demon_trait &t) {
-                           return t.mutation == mutat;});
-    }
+        // No extra scales for most demonspawn, but monstrous demonspawn who
+        // wouldn't usually get scales can get regular ones randomly.
+        if (you.species == SP_DEMONSPAWN)
+        {
+            return any_of(begin(you.demonic_traits), end(you.demonic_traits),
+                          [=](const player::demon_trait &t) {
+                              return _is_demonspawn_scale(t.mutation);});
+        }
 
-    // Strict 3-scale limit.
-    if (_is_covering(mutat) && _body_covered() >= 3)
-        return true;
+        // No extra scales for draconians.
+        if (species::is_draconian(you.species))
+            return true;
+    }
 
     // Only species that already have tails can get this one. For merfolk it
     // would only work in the water, so skip it.
@@ -1518,7 +1501,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // No bones for thin skeletal structure or horns.
-    if (!species_has_bones(you.species)
+    if (!species::has_bones(you.species)
         && (mutat == MUT_THIN_SKELETAL_STRUCTURE || mutat == MUT_HORNS))
     {
         return true;
@@ -1540,7 +1523,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.
-    if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
+    if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
     {
         return true;
@@ -1555,8 +1538,8 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Felid paws cap MUT_CLAWS at level 1. And octopodes have no hands.
     if ((you.has_innate_mutation(MUT_PAWS)
-                        || you.has_innate_mutation(MUT_TENTACLE_ARMS))
-         && mutat == MUT_CLAWS)
+         || you.has_innate_mutation(MUT_TENTACLE_ARMS))
+        && mutat == MUT_CLAWS)
     {
         return true;
     }
@@ -1569,17 +1552,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    if (you.stasis())
-    {
-        // Formicids have stasis and so prevent mutations that would do nothing.
-        // Antennae provides SInv, so acute vision is pointless.
-        if (mutat == MUT_BERSERK
-            || mutat == MUT_BLINK
-            || mutat == MUT_TELEPORT)
-        {
-            return true;
-        }
-    }
+    // Formicids have stasis and so prevent mutations that would do nothing.
+    if (you.stasis() && (mutat == MUT_BERSERK || mutat == MUT_TELEPORT))
+        return true;
 
     if (you.innate_sinv() && mutat == MUT_ACUTE_VISION)
         return true;
@@ -1901,7 +1876,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_LARGE_BONE_PLATES:
             {
-                const string arms = pluralise(species_arm_name(you.species));
+                const string arms = pluralise(species::arm_name(you.species));
                 mprf(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "arms",
                                  arms).c_str());
@@ -2118,7 +2093,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_BIG_WINGS:
-        lose_permafly_source();
+        land_player();
         break;
 
     case MUT_HORNS:
@@ -2619,8 +2594,6 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { -33, -33, 0 } },
     { 1, { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
-      { -33, -33, 0 } },
-    { 1, { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
       { -33, -33, 0 } },
     { 1, { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
       { -33, -33, 0 } },

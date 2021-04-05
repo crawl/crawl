@@ -646,38 +646,6 @@ public:
     }
 };
 
-class BlurryScrollDelay : public Delay
-{
-    item_def& scroll;
-    bool was_prompted = false;
-
-    void start() override;
-    bool invalidated() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue reading the scroll.");
-    }
-
-    void finish() override;
-public:
-    BlurryScrollDelay(int dur, item_def& item) :
-                      Delay(dur), scroll(item)
-    { }
-
-    bool try_interrupt() override;
-
-    const char* name() const override
-    {
-        return "blurry_vision";
-    }
-
-    bool is_being_used(const item_def& item) const override
-    {
-        return &item == &scroll;
-    }
-};
-
 class ExsanguinateDelay : public Delay
 {
     bool was_prompted = false;

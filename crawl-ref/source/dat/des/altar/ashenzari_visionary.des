@@ -26,10 +26,8 @@ function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,ma
 end
 }}
 
-default-depth: D:2-12
-
 NAME: grunt_ashenzari_visionary
-TAGS: temple_overflow_ashenzari uniq_altar_ashenzari no_trap_gen no_monster_gen
+TAGS: temple_overflow_1 temple_overflow_ashenzari no_trap_gen no_monster_gen
 WEIGHT: 5
 SHUFFLE: ef
 # The branches should be in reverse order here so we don't select the

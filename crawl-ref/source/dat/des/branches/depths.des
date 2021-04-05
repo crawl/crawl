@@ -24,13 +24,13 @@ end
 
 NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
-MONS: centaur warrior, yaktaur / cyclops w:2
-KMONS: O = yaktaur captain / frost giant w:4
+MONS: tengu warrior ; longbow . arrow / tengu warrior ; arbalest . bolt
+KMONS: O = stone giant / frost giant w:4
 SUBST: - = ++c
 : depths_entry(_G)
 MAP
 ccccccccc
-c1+...+2c
+c1+...+1c
 c.c.O.c.c
 c.c...c.c
 c.cc-cc.c
@@ -43,14 +43,13 @@ cww...wwc
 cccc+cccc
 ENDMAP
 
-# The idea here is to keep the stone giant on the island until the player is
-# ready to deal with it, and therefore proceed to the Depths.
-# XXX: Fire giant doesn't run out of ammo and thus encourage scumming.
+# The idea here is to keep the giant on the island until the player is ready to
+# deal with it, and therefore proceed to the Depths.
 NAME: grunt_enter_depths_giant_problem
 TAGS: transparent
 SHUFFLE: JKLMN
 SUBST: J = l, K : ll., L : l., M : l.., N = .
-KMONS: O = patrolling fire giant
+KMONS: O = patrolling stone giant / patrolling fire giant
 : depths_entry(_G)
 WEIGHT: 12
 MAP
@@ -85,7 +84,7 @@ cc...2...cc...cc
 ENDMAP
 
 NAME: grunt_enter_depths_magical_seal
-KMONS: O = ogre mage band / necromancer band
+KMONS: O = necromancer band
 MONS: wizard / deep elf pyromancer w:5 / deep elf zephyrmancer w:5 / \
       orc sorcerer / naga mage
 : depths_entry(_G)
@@ -104,8 +103,8 @@ bb...1...bb
 ENDMAP
 
 NAME: gammafunk_enter_depths_forms
-MONS: ugly thing w:8 / shapeshifter / rakshasa w:2
-MONS: glowing orange brain / boggart band w:6, slime creature band
+MONS: ugly thing w:16 / very ugly thing w:2 / rakshasa w:4
+MONS: glowing orange brain / great orb of eyes, slime creature band
 MONS: glowing shapeshifter
 NSUBST: . = 4:1 / *:., 3 = 1:2 / 1:3
 : depths_entry(_G)
@@ -179,12 +178,11 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
 TAGS:    transparent
-MONS:    two-headed ogre w:14 / yaktaur w:4 / tengu warrior w:8 / \
+MONS:    deep troll w:14 / tengu warrior w:12 / \
          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
-MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight w:5 /\
-         deep elf archer w:5 / centaur warrior
+MONS:    wizard w:14 / tengu conjurer w:6 / necromancer w:14
 MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4
-KMONS:   O = ettin w:14 / yaktaur captain w:2 / glowing shapeshifter w:2
+KMONS:   O = ettin w:14 / stone giant w:2 / glowing shapeshifter w:2
 SUBST:   c : c:9 v:2 b:1
 SHUFFLE: 12 / 12 / 21
 : depths_entry(_G)

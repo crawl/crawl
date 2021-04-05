@@ -127,7 +127,7 @@ static void _curse_message(actor& target, actor* /*source*/,
     if (you.can_smell())
         messages.push_back("You smell decay.");
 
-    const string skin = species_skin_name(you.species).c_str();
+    const string skin = species::skin_name(you.species).c_str();
     if (starts_with(skin, "bandage"))
         messages.push_back("Your bandages flutter.");
     else
@@ -139,7 +139,7 @@ static void _curse_message(actor& target, actor* /*source*/,
     if (!silenced(you.pos()))
         messages.push_back("You hear strange and distant voices.");
 
-    if (species_has_bones(you.species))
+    if (species::has_bones(you.species))
         messages.push_back("Your bones ache.");
 
     mpr(*random_iterator(messages));

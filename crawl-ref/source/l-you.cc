@@ -64,7 +64,7 @@ LUARET1(you_name, string, you.your_name.c_str())
  * @treturn string
  * @function race
  */
-LUARET1(you_race, string, species_name(you.species).c_str())
+LUARET1(you_race, string, species::name(you.species).c_str())
 /*** Get name of player's background.
  * @treturn string
  * @function class
@@ -74,7 +74,7 @@ LUARET1(you_race, string, species_name(you.species).c_str())
  * @treturn string
  * @function hand
  */
- LUARET1(you_hand, string, species_hand_name(you.species).c_str())
+ LUARET1(you_hand, string, species::hand_name(you.species).c_str())
 /*** Is player in wizard mode?
  * @treturn boolean
  * @function wizard
@@ -605,7 +605,7 @@ LUARET1(you_constricting, boolean, you.is_constricting())
  */
 static int l_you_monster(lua_State *ls)
 {
-    const monster_type mons = player_species_to_mons_species(you.species);
+    const monster_type mons = you.mons_species();
 
     string name = mons_type_name(mons, DESC_PLAIN);
     lowercase(name);
@@ -622,7 +622,7 @@ static int l_you_monster(lua_State *ls)
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
-    string genus = species_name(you.species, SPNAME_GENUS);
+    string genus = species::name(you.species, species::SPNAME_GENUS);
     lowercase(genus);
     if (plural)
         genus = pluralise(genus);
@@ -1550,7 +1550,7 @@ LUAFN(you_delete_all_mutations)
 LUAFN(you_change_species)
 {
     string species = luaL_checkstring(ls, 1);
-    const species_type sp = find_species_from_string(species);
+    const species_type sp = species::from_str_loose(species);
 
     if (sp == SP_UNKNOWN)
     {
@@ -1591,7 +1591,7 @@ LUAFN(you_init)
     const string combo = luaL_checkstring(ls, 1);
     newgame_def ng;
     ng.type = GAME_TYPE_NORMAL;
-    ng.species = get_species_by_abbrev(combo.substr(0, 2).c_str());
+    ng.species = species::from_abbrev(combo.substr(0, 2).c_str());
     ng.job = get_job_by_abbrev(combo.substr(2, 2).c_str());
     ng.weapon = str_to_weapon(luaL_checkstring(ls, 2));
     setup_game(ng);

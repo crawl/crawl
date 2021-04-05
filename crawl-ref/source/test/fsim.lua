@@ -6,7 +6,7 @@ local function fsim_test()
 end
 
 local function fsim_setup()
-        you.init("mifi", "morningstar")
+        you.init("migl", "morningstar")
         you.set_xl(20)
         debug.flush_map_memory()
         debug.goto_place("D:1")

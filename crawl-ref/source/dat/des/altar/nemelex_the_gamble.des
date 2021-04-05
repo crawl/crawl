@@ -77,10 +77,9 @@ end
 }}
 
 NAME:   grunt_nemelex_the_gamble
-TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh no_trap_gen
+TAGS:   temple_overflow_nemelex_xobeh temple_overflow_1 no_trap_gen
 TAGS:   no_monster_gen no_item_gen
 WEIGHT: 2
-DEPTH:  D:2-13
 ITEM:   unobtainable any, unobtainable superb_item
 {{
     dgn.persist.nemelex_gamble_announced = false

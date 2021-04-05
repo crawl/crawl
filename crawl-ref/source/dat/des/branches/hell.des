@@ -31,7 +31,7 @@ function hell_water_abbrev(e, type, baseweight)
 end
 
 function hell_water_spawns(e)
-    e.kmons("P = " .. hell_water_abbrev(_G, "cane toad", 150) ..
+    e.kmons("P = " .. hell_water_abbrev(_G, "sea snake", 150) ..
                " / " .. hell_water_abbrev(_G, "alligator", 120) ..
                " / " .. hell_water_abbrev(_G, "anaconda", 130) ..
                " / " .. hell_water_abbrev(_G, "hydra", 230) ..
@@ -43,8 +43,7 @@ function hell_water_spawns(e)
 end
 
 function hell_lava_spawns(e)
-    e.kmons("~ = patrolling molten gargoyle w:5 / patrolling smoke demon w:5 / \
-                 patrolling fire elemental w:60")
+    e.kmons("~ = patrolling molten gargoyle w:5 / patrolling smoke demon w:5")
     e.kfeat("~l = l")
     e.kmask("l = no_monster_gen")
     e.nsubst("l = 6:~ / 4 = ~l / *:l")
@@ -57,7 +56,7 @@ default-depth: Depths, D:21-
 # Vestibule entries
 ##############################################################################
 
-# This replaces the hardcoded placement of a hell entrance on D:21-27;
+# This replaces the hardcoded placement of a hell entrance in Depths;
 # it also acts as the backup entrance and the entrance for encompass vault
 # placements.
 NAME:   hell_entry
@@ -74,8 +73,8 @@ ENDMAP
 NAME:   hellmouth_1
 ORIENT: float
 TAGS:   no_rotate
-MONS:   crimson imp / red devil / hellwing / hell hound
-MONS:   hellion / balrug / soul eater / smoke demon
+MONS:   sun demon / smoke demon / soul eater / hell hog
+MONS:   hellion / balrug / reaper / hell beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
@@ -110,8 +109,8 @@ NAME:   hellmouth_2
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen
-MONS:   crimson imp / red devil / hellwing / hell hound
-MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
+MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
+MONS:   hellion / balrug / reaper / hell beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
 ITEM:   ring of fire ident:type / Necronomicon / \
@@ -151,8 +150,8 @@ ENDMAP
 NAME:   hellmouth_3
 TAGS:   transparent
 ORIENT: float
-MONS:   crimson imp / red devil / hellwing / hell hound
-MONS:   hellion / balrug / soul eater / smoke demon
+MONS:   sun demon / hell knight / hell hog / soul eater / smoke demon
+MONS:   hellion / balrug / hell beast / hell knight
 ITEM:   demon blade / demon whip / demon trident / nothing
 KMASK:  12Ad = opaque
 SUBST:  ? : . l ?:40, ?=l.
@@ -185,18 +184,18 @@ NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_tele_into
-MONS:   ice devil / orange demon / red devil / w:5 rust devil / \
-        w:35 nothing
-MONS:   sun demon / soul eater / w:20 nothing
-MONS:   shadow demon / blizzard demon / hell beast
+MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
+        / neqoxec w:5 / w:50 nothing
+MONS:   blizzard demon / hell beast / cacodemon / green death / reaper \
+        / balrug / hellion w:5 / tormentor w:5 / nothing w:30
+MONS:
 ITEM:   skeleton
 KFEAT:  b = .
 KMONS:  A = obsidian statue
 MARKER: A = lua:fog_machine { cloud_type = "grey smoke", \
             pow_min = 20, pow_max = 30, delay = 50, \
             size = 1, walk_dist = 3, start_clouds = 1 }
-KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
-            / w:1 shadow imp
+KMONS:  b = w:100 nothing / w:4 common demon
 KPROP:  b = nothing / w:5 bloody
 KITEM:  b = nothing / w:1 gold
 MARKER: H = lua:props_marker { stop_explore = "statue" }
@@ -231,7 +230,7 @@ NAME: lightli_too_deep
 TAGS: no_monster_gen nolayout_encompass uniq_hell_entry_high
 ORIENT: northeast
 MONS: balrug
-MONS: sun demon
+MONS: sun demon / smoke demon
 : hell_entry_feature(_G, 'H')
 SUBST: y = x..
 SUBST: ; = %A.....l
@@ -264,7 +263,7 @@ WEIGHT: 6
 TAGS: nolayout_encompass uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
 NSUBST: + = 1:+ / 1:+x / *:x
-MONS: hell hog / hell hound, hell hound / nothing
+MONS: hellephant / hell hog, hell hog / nothing
 : hell_entry_tier(_G, "high")
 MAP
  xxx+xxx
@@ -298,11 +297,10 @@ NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high transparent
 : hell_entry_feature(_G, 'O')
 KMONS: O = hell beast
-MONS: simulacrum w:20 / freezing wraith / ice devil
-MONS: rust devil w:20 / iron troll
-MONS: red devil w:20 / hell hound / sun demon
-MONS: skeleton / zombie / skeletal warrior band / flying skull band / \
-      ancient champion band w:5 / soul eater
+MONS: quicksilver dragon simulacrum / blizzard demon / ice dragon
+MONS: iron troll / iron dragon
+MONS: hell beast / hell hog / balrug
+MONS: bone dragon / reaper / ancient champion band / soul eater w:20
 : hell_entry_tier(_G, "mid")
 MAP
   .....@.....
@@ -327,7 +325,7 @@ ENDMAP
 NAME:    hangedman_geh_valley
 WEIGHT:  4
 TAGS:    transparent uniq_hell_entry_geh
-KMONS:   O = red devil / crimson imp w:20 / nothing
+KMONS:   O = sun demon / balrug w:1 / nothing w:5
 SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
 SUBST:   = = c
@@ -409,7 +407,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = crimson imp ; wand of flame ident:type
+KMONS:  i = reaper ; wand of flame / balrug ; wand of flame ident:type
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank
@@ -434,7 +432,7 @@ ENDMAP
 NAME:    hangedman_coc_ice_floe
 WEIGHT:  7
 TAGS:    transparent no_pool_fixup uniq_hell_entry_coc
-KMONS:   O = ice devil / white imp w:20 / nothing
+KMONS:   O = blizzard demon w:5 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: ab / ab / ba
 SUBST:   a : xww, b = x
@@ -488,7 +486,7 @@ ENDMAP
 NAME:    hangedman_tar_grid_catacomb
 WEIGHT:  4
 TAGS:    transparent uniq_hell_entry_tar
-KMONS:   O = shadow imp w:20 / nothing
+KMONS:   O = soul eater w:5 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: o@O& / O&o@
 SUBST:   o = ., & = x
@@ -540,14 +538,13 @@ cc.cc......c
 ENDMAP
 
 # Inspired by the sad fish in tar_minmay river. They've never gotten a kill. :(
-# (They probably won't get a kill here, either.)
 NAME:   pf_hell_entry_tar_river
 TAGS:   transparent no_pool_fixup uniq_hell_entry_tar
 WEIGHT: 5
 COLOUR: . = magenta
 FTILE:  .O = floor_infernal_blank
-NSUBST: w = 5=F / *:w
-KMONS:  F = spectral swamp worm
+NSUBST: w = 2=F / 4=F. / w
+KMONS:  F = spectral caustic shrike
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : hell_entry_feature(_G, 'O')
@@ -573,7 +570,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_old
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 4
-KMONS: O = rust devil / iron imp w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 MAP
 ...................
@@ -596,7 +593,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_mu
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-KMONS: O = rust devil / iron imp w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -618,7 +615,7 @@ ENDMAP
 NAME: grunt_hell_entry_dis_grunt
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-KMONS: O = rust devil / iron imp w:20 / nothing
+KMONS: O = iron dragon w:5 / iron troll w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
@@ -761,7 +758,7 @@ FTILE:  =T3Dz+'; = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  ; = .
 KMONS:  3 = shadow wraith
-KMONS:  z = skeletal warrior / zombie / nothing
+KMONS:  z = vampire knight / phantasmal warrior / ancient champion / nothing
 KMONS:  D = shadow dragon
 KMONS:  2 = reaper / soul eater
 MAP
@@ -814,7 +811,8 @@ NAME: vestibule_tar_grunt_deathgaze
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
 KMONS: T = revenant / lich / shadow dragon
-MONS: ancient champion band, reaper / soul eater, skeletal warrior band
+MONS: ancient champion band, reaper / soul eater
+MONS: phantasmal warrior / vampire knight
 FTILE: +'T12 = floor_infernal_blank
 TILE: c = dngn_stone_dark
 MAP
@@ -865,10 +863,9 @@ NAME: vestibule_geh_mu
 TAGS: vestibule_geh
 KFEAT:  G=enter_gehenna
 SUBST:  L = l.
-KMONS:  5 = crimson imp
 KMONS:  2 = hellion
-KMONS:  3 = red devil
-KMONS:  2 = reaper / soul eater
+KMONS:  3 = sun demon / smoke demon
+KMONS:  2 = reaper / balrug / hell beast
 FTILE:  x'5a2V+ = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -876,7 +873,7 @@ lllllllllllllllllllllllllllllllll
  Lllllllllllllllllllllllllllllll
   LllxxxxxxxxxxxxxxxxxxxxxxxllL
    Lllxx'''''''''''''''''xxllL
-    Lllxx''5''''G''''5''xxllL
+    Lllxx''3''''G''''3''xxllL
      Lllxx'''''''''''''xxllL
       Lllxx''V''2''V''xxllL
        Lllxx'''''''''xxllL
@@ -900,8 +897,8 @@ KFEAT:   G = enter_gehenna
 SUBST:   ce = x, d : xlllLX., f : xlllLX., gi = ....m, m = mm.
 SUBST:   L = l., X = xl
 KMONS:   H = hellion
-KMONS:   m = crimson imp / red devil / smoke demon
-KMONS:   ' = hell beast / hell hound / hell hog / nothing w:140
+KMONS:   m = sun demon / smoke demon
+KMONS:   ' = hell beast / hell hog / nothing w:140
 FTILE:   AH' = floor_infernal_blank
 : hell_lava_spawns(_G)
 MAP
@@ -926,9 +923,8 @@ ENDMAP
 NAME: vestibule_geh_grunt_obsidian_fortress
 TAGS: vestibule_geh
 KFEAT: G = enter_gehenna
-MONS: balrug / hellion, sun demon / smoke demon
-MONS: red devil / orange demon / hell hound / hell hog
-MONS: red devil / orange demon / hell hound / hell hog
+MONS: balrug / hellion, hell beast / hell hog
+MONS: sun demon / smoke demon / hell knight
 NSUBST: 2 = 3:2 / *:.
 NSUBST: 3 = 3:3 / *:.
 FTILE: 123+G = floor_infernal_blank
@@ -1010,7 +1006,7 @@ SHUFFLE: ab
 SUBST:   a = I, b : w., W = w.
 KMONS:   I = ice statue
 KMONS:   3 = blizzard demon
-KMONS:   2 = ice devil / freezing wraith / white imp / nothing
+KMONS:   2 = ice dragon / freezing wraith
 : hell_water_spawns(_G)
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1034,7 +1030,7 @@ ENDMAP
 NAME: vestibule_coc_grunt_go_with_the_floe
 TAGS: vestibule_coc no_pool_fixup
 MONS: frost giant / blizzard demon / ice statue
-MONS: blizzard demon, ice devil / freezing wraith
+MONS: blizzard demon, ice dragon / freezing wraith
 NSUBST: 3 = 3:3 / *:.
 SUBST: W = wW.
 KFEAT: A = stone_arch
@@ -1088,7 +1084,7 @@ ENDMAP
 NAME: vestibule_dis_mu
 TAGS: vestibule_dis
 KFEAT:  D=enter_dis
-KMONS:  8 = iron golem
+KMONS:  8 = iron dragon
 KMONS:  3 = rust devil
 KMONS:  6 = war gargoyle
 FTILE:  'A+ = floor_infernal_blank
@@ -1117,8 +1113,8 @@ KFEAT:  D = enter_dis
 NSUBST: E = + / v, F = + / v, q = + / v, p = + / v, \
         B = 1:+ / 1:+vv / *:v, Z = 1:+ / 1:+v / *:v
 SUBST:  2 = 22., 3 = 33.
-KMONS:  1 = iron golem / iron dragon
-KMONS:  2 = rust devil / iron imp w:5
+KMONS:  1 = iron dragon
+KMONS:  2 = rust devil
 KMONS:  3 = war gargoyle / reaper w:5
 KFEAT:  H = G
 TILE:   GH = dngn_statue_iron_golem
@@ -1145,7 +1141,7 @@ ENDMAP
 NAME: vestibule_dis_grunt_castle
 TAGS: vestibule_dis
 MONS: war gargoyle / iron dragon, iron troll / iron golem
-MONS: rust devil / iron imp w:5
+MONS: rust devil
 NSUBST: D = 1:D / *:A
 KFEAT: D = enter_dis
 KFEAT: A = stone_arch

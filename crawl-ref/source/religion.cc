@@ -1529,7 +1529,8 @@ static bool _gift_sif_kiku_gift(bool forced)
         }
     }
     else if (forced
-             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100)
+             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
+                && coinflip())
     {
         // Sif Muna special: Keep quiet if acquirement fails
         // because the player already has seen all spells.
@@ -3178,7 +3179,7 @@ bool player_can_join_god(god_type which_god, bool temp)
         return false;
     }
 
-    if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
+    if (which_god == GOD_BEOGH && !species::is_orcish(you.species))
         return false;
 
     if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
@@ -3591,7 +3592,7 @@ static void _join_ru()
 }
 
 /// Setup for joining the furious barbarians of Trog.
-static void _join_trog()
+void join_trog_skills()
 {
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
@@ -3656,7 +3657,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_PAKELLAS, _join_pakellas },
 #endif
     { GOD_RU, _join_ru },
-    { GOD_TROG, _join_trog },
+    { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
 };
 
@@ -3986,8 +3987,6 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 bool god_loathes_spell(spell_type spell, god_type god)
 {
     if (spell == SPELL_NECROMUTATION && is_good_god(god))
-        return true;
-    if (spell == SPELL_STATUE_FORM && god == GOD_YREDELEMNUL)
         return true;
     return false;
 }

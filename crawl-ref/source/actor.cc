@@ -306,11 +306,12 @@ int actor::evokable_invis(bool calc_unid) const
 }
 
 // Return an int so we know whether an item is the sole source.
-int actor::evokable_flight(bool calc_unid) const
+int actor::equip_flight(bool calc_unid) const
 {
     if (is_player() && get_form()->forbids_flight())
         return 0;
 
+    // For the player, this is cached on ATTR_PERM_FLIGHT
     return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
            + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
            + scan_artefacts(ARTP_FLY, calc_unid);
@@ -669,14 +670,14 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender, bool direct) const
+bool actor::can_constrict(const actor* defender, bool direct, bool engulf) const
 {
     ASSERT(defender); // XXX: change to actor &defender
 
     if (direct)
     {
-        return (!is_constricting() || has_usable_tentacle())
-               && !defender->is_constricted()
+        return (!is_constricting() || has_usable_tentacle() || engulf)
+               && (!defender->is_constricted() || engulf)
                && can_see(*defender)
                && !confused()
                && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)

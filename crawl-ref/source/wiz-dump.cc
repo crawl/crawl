@@ -100,7 +100,7 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
     if (s == "Noisy" || s == "Stlth-")
         return RING_ATTENTION;
 #endif
-    if (s == "+Fly")
+    if (s == "Fly")
         return RING_FLIGHT;
     if (s == "rPois")
         return RING_POISON_RESISTANCE;
@@ -481,7 +481,7 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
                 race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
-            const species_type sp = find_species_from_string(race);
+            const species_type sp = species::from_str_loose(race);
             if (sp == SP_UNKNOWN)
             {
                 mprf("Unknown species: %s", race.c_str());

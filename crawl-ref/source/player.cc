@@ -229,8 +229,11 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 
     if (!msg.empty())
         mpr(msg);
-    else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
+    else if (species::likes_water(you.species) && feat_is_water(env.grid(p)))
+    {
+        // player normally likes water, but is in a form that doesn't
         mpr("You cannot enter water in your current form.");
+    }
     else
         canned_msg(MSG_UNTHINKING_ACT);
     return false;
@@ -623,7 +626,7 @@ bool player_in_connected_branch()
 bool player_likes_water(bool permanently)
 {
     return !permanently && you.can_water_walk()
-           || (species_likes_water(you.species) || !permanently)
+           || (species::likes_water(you.species) || !permanently)
                && form_likes_water();
 }
 
@@ -655,7 +658,7 @@ monster_type player_mons(bool transform)
             return mons;
     }
 
-    mons = player_species_to_mons_species(you.species);
+    mons = you.mons_species();
 
     if (mons == MONS_ORC)
     {
@@ -719,7 +722,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return MB_FALSE;
 
     // handles incorrect ring slots vs species
-    if (species_bans_eq(you.species, eq))
+    if (species::bans_eq(you.species, eq))
         return MB_FALSE;
 
     switch (eq)
@@ -1745,14 +1748,14 @@ int player_movement_speed()
         ? 10
         : form_base_movespeed(you.form);
 
-    if (you.in_water())
+    if (feat_is_water(env.grid(you.pos())))
     {
         if (you.form == transformation::hydra
             || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
         {
             mv -= 4;
         }
-        else if (!you.can_swim())
+        else if (you.in_water() && !you.can_swim())
             mv += 6; // Wading through water is very slow.
     }
 
@@ -1965,8 +1968,11 @@ static int _player_evasion_bonuses()
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
-    // If you have an active amulet of the acrobat and just moved or waited, get massive
-    // EV bonus.
+    if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
+        evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
+
+    // If you have an active amulet of the acrobat and just moved or waited,
+    // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
 
@@ -1979,8 +1985,9 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
 
-    // Merfolk get a 25% evasion bonus in water.
-    if (you.in_water() && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+    // Merfolk get a 25% evasion bonus near water.
+    if (feat_is_water(env.grid(you.pos()))
+        && you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
     {
         const int ev_bonus = max(2 * scale, prescaled_ev / 4);
         return prescaled_ev + ev_bonus;
@@ -2603,8 +2610,8 @@ static void _gain_innate_spells()
         if (spindex != end(you.spells))
             continue; // already learned that one
 
-        add_spell_to_memory(spell);
         mprf("The power to cast %s wells up from within.", spell_title(spell));
+        add_spell_to_memory(spell);
     }
 }
 
@@ -2710,7 +2717,8 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    you.species = random_draconian_colour();
+                    // XX make seed stable by choosing at birth
+                    you.species = species::random_draconian_colour();
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
@@ -2736,7 +2744,7 @@ void level_change(bool skip_attribute_increase)
 #endif
                     mprf(MSGCH_INTRINSIC_GAIN,
                          "Your scales start taking on %s colour.",
-                         article_a(scale_type(you.species)).c_str());
+                         article_a(species::scale_type(you.species)).c_str());
 
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
@@ -2763,7 +2771,7 @@ void level_change(bool skip_attribute_increase)
                     check_training_targets();
 
                     // Tell the player about their new species
-                    for (auto &mut : fake_mutations(you.species, false))
+                    for (auto &mut : species::fake_mutations(you.species, false))
                         mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
                     // needs to be done early here, so HP doesn't look drained
@@ -2836,7 +2844,7 @@ void level_change(bool skip_attribute_increase)
 
         }
 
-        if (species_is_draconian(you.species) && !(you.experience_level % 3))
+        if (species::is_draconian(you.species) && !(you.experience_level % 3))
         {
             mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
             you.redraw_armour_class = true;
@@ -3003,11 +3011,11 @@ int player_stealth()
 
     if (!you.airborne())
     {
-        if (you.in_water())
+        if (feat_is_water(env.grid(you.pos())))
         {
             if (you.has_mutation(MUT_NIMBLE_SWIMMER))
                 stealth += STEALTH_PIP;
-            else if (!you.can_swim() && !you.extra_balanced())
+            else if (you.in_water() && !you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
         else if (you.has_usable_hooves())
@@ -3361,7 +3369,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     }
 
     if (exp_apt == -99)
-        exp_apt = species_exp_modifier(you.species);
+        exp_apt = species::get_exp_modifier(you.species);
 
     return (unsigned int) ((level - 1) * apt_to_factor(exp_apt - 1));
 }
@@ -3790,7 +3798,7 @@ int get_real_hp(bool trans, bool drained)
           + (you.skill(SK_FIGHTING, 3, false, false) + 1) / 2;
 
     // Racial modifier.
-    hitp *= 10 + species_hp_modifier(you.species);
+    hitp *= 10 + species::get_hp_modifier(you.species);
     hitp /= 10;
 
     hitp += you.get_mutation_level(MUT_FLAT_HP) * 4;
@@ -3855,7 +3863,7 @@ int get_real_mp(bool include_items)
                - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
 //    enp = stepdown_value(enp, 9, 18, 45, 100)
-    enp += species_mp_modifier(you.species);
+    enp += species::get_mp_modifier(you.species);
 
     // This is our "rotted" base, applied after multipliers
     enp += you.mp_max_adj;
@@ -4166,7 +4174,7 @@ const double poison_max_hp_aut  = 5000.0;
 static double _poison_dur_to_aut(double dur)
 {
     const double min_speed_dur = poison_denom * poison_min_hp_aut * 10.0;
-    const double decay = log(poison_denom / poison_denom - 1.0);
+    const double decay = log(poison_denom / (poison_denom - 1.0));
     // Poison already at minimum speed.
     if (dur < min_speed_dur)
         return dur / poison_min_hp_aut;
@@ -4174,7 +4182,7 @@ static double _poison_dur_to_aut(double dur)
     if (dur < poison_denom * poison_max_hp_aut * 10.0)
         return 10.0 * (poison_denom + log(dur / min_speed_dur) / decay);
     return 10.0 * (poison_denom + log(poison_max_hp_aut / poison_min_hp_aut) / decay)
-         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut * 10.0;
+         + (dur - poison_denom * poison_max_hp_aut * 10.0) / poison_max_hp_aut;
 }
 
 // The inverse of the above function, i.e. the amount of poison needed
@@ -4184,10 +4192,10 @@ static double _poison_aut_to_dur(double aut)
     // Amount of time that poison lasts at minimum speed.
     if (aut < poison_denom * 10.0)
         return aut * poison_min_hp_aut;
-    const double decay = log(poison_denom / poison_denom - 1.0);
+    const double decay = log(poison_denom / (poison_denom - 1.0));
     // Amount of time that poison exactly at the maximum speed lasts.
     const double aut_from_max_speed = 10.0 * (poison_denom
-        + log(poison_max_hp_aut / poison_min_hp_aut) / log(decay));
+        + log(poison_max_hp_aut / poison_min_hp_aut) / decay);
     if (aut < aut_from_max_speed)
     {
         return 10.0 * poison_denom * poison_min_hp_aut
@@ -4313,11 +4321,11 @@ int poison_survival()
     if (chei)
         min_poison_rate /= 1.5;
     int regen_beats_poison;
-    if (rr <= (int) (100.0 * min_poison_rate))
+    if (rr <= (int) min_poison_rate)
         regen_beats_poison = dd ? 25000 : 0;
     else
     {
-        regen_beats_poison = 150 * rr;
+        regen_beats_poison = poison_denom * 10.0 * rr;
         if (chei)
             regen_beats_poison = 3 * regen_beats_poison / 2;
     }
@@ -4345,14 +4353,17 @@ int poison_survival()
         test_aut2 /= 1.5;
     }
 
-    const int test_amount1 = _poison_aut_to_dur(full_aut - test_aut1);
-    const int test_amount2 = _poison_aut_to_dur(full_aut - test_aut2);
+    // Don't do any correction if there's not much poison left
+    const int test_amount1 = test_aut1 < full_aut ?
+                             _poison_aut_to_dur(full_aut - test_aut1) : 0;
+    const int test_amount2 = test_aut2 < full_aut ?
+                             _poison_aut_to_dur(full_aut - test_aut2) : 0;
 
     int prediction1 = you.hp;
     int prediction2 = you.hp;
 
     // Don't look backwards in time.
-    if (test_aut1 > 0)
+    if (test_aut1 > 0.0)
         prediction1 -= (amount / 1000 - test_amount1 / 1000 - (predicted_regen - 1));
     prediction2 -= (amount / 1000 - test_amount2 / 1000 - predicted_regen);
 
@@ -4800,6 +4811,9 @@ void enable_emergency_flight()
  */
 bool land_player(bool quiet)
 {
+    // re-update the equipment cache: any sources of flight from equipment?
+    you.attribute[ATTR_PERM_FLIGHT] = you.equip_flight() ? 1 : 0;
+
     // there was another source keeping you aloft
     if (you.airborne())
         return false;
@@ -4816,7 +4830,6 @@ bool land_player(bool quiet)
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false);
     return true;
@@ -4826,18 +4839,19 @@ static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
     you.props.erase("water_holder");
+    you.props.erase("water_hold_substance");
 }
 
-bool player::clear_far_engulf()
+bool player::clear_far_engulf(bool force)
 {
     if (!you.duration[DUR_WATER_HOLD])
         return false;
 
     monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
-    if (!mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
+    if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
         if (you.res_water_drowning())
-            mpr("The water engulfing you falls away.");
+            mprf("The %s engulfing you falls away.", water_hold_substance().c_str());
         else
             mpr("You gasp with relief as air once again reaches your lungs.");
 
@@ -4975,8 +4989,6 @@ player::player()
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
-    // Default to flying the first time you wear boots of flying.
-    attribute[ATTR_LAST_FLIGHT_STATUS] = 1;
     quiver.init(ENDOFPACK);
 
     last_timer_effect.init(0);
@@ -5244,20 +5256,12 @@ player::~player()
 
 bool player::airborne() const
 {
-    // Might otherwise be airborne, but currently stuck to the ground
     if (get_form()->forbids_flight())
         return false;
 
-    if (duration[DUR_FLIGHT]
+    return you.duration[DUR_FLIGHT]   // potions, tornado
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
-        || attribute[ATTR_PERM_FLIGHT]
-        || get_form()->enables_flight()
-        || has_mutation(MUT_FLOAT))
-    {
-        return true;
-    }
-
-    return false;
+        || permanent_flight(true);
 }
 
 bool player::is_banished() const
@@ -5286,7 +5290,7 @@ bool player::in_liquid() const
 
 bool player::can_swim(bool permanently) const
 {
-    return (species_can_swim(species)
+    return (species::can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
@@ -5342,8 +5346,8 @@ string player::shout_verb(bool directed) const
     if (you.duration[DUR_WEREBLOOD])
         return "howl";
 
-    const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
-    return species_shout_verb(you.species, screaminess, directed);
+    const int screaminess = get_mutation_level(MUT_SCREAM);
+    return species::shout_verb(you.species, screaminess, directed);
 }
 
 /**
@@ -5355,10 +5359,7 @@ int player::shout_volume() const
 {
     const int base_noise = 12 + get_form()->shout_volume_modifier;
 
-    if (get_mutation_level(MUT_SCREAM))
-        return base_noise + 2 * (get_mutation_level(MUT_SCREAM) - 1);
-
-    return base_noise;
+    return base_noise + 2 * (get_mutation_level(MUT_SCREAM));
 }
 
 void player::god_conduct(conduct_type thing_done, int level)
@@ -5712,7 +5713,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
 int player::racial_ac(bool temp) const
 {
     // drac scales suppressed in all serious forms, except dragon
-    if (species_is_draconian(species)
+    if (species::is_draconian(species)
         && (!player_is_shapechanged() || form == transformation::dragon
             || !temp))
     {
@@ -6189,7 +6190,7 @@ int player::res_water_drowning() const
     int rw = 0;
 
     if (is_unbreathing()
-        || species_can_swim(species) && !form_changed_physiology()
+        || species::can_swim(species) && !form_changed_physiology()
         || form == transformation::ice_beast
         || form == transformation::hydra)
     {
@@ -6282,7 +6283,7 @@ int player_willpower(bool calc_unid, bool temp)
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
 
-    int rm = you.experience_level * species_wl_modifier(you.species);
+    int rm = you.experience_level * species::get_wl_modifier(you.species);
 
     // randarts
     rm += WL_PIP * you.scan_artefacts(ARTP_WILLPOWER, calc_unid);
@@ -6439,17 +6440,6 @@ bool player::fights_well_unarmed(int heavy_armour_penalty)
         && x_chance_in_y(2, 1 + heavy_armour_penalty);
 }
 
-bool player::cancellable_flight() const
-{
-    return duration[DUR_FLIGHT] && !permanent_flight()
-           && !attribute[ATTR_FLIGHT_UNCANCELLABLE];
-}
-
-bool player::permanent_flight() const
-{
-    return attribute[ATTR_PERM_FLIGHT] || has_mutation(MUT_FLOAT);
-}
-
 bool player::racial_permanent_flight() const
 {
     return get_mutation_level(MUT_TENGU_FLIGHT)
@@ -6457,9 +6447,25 @@ bool player::racial_permanent_flight() const
         || has_mutation(MUT_FLOAT);
 }
 
+/**
+ * Check for sources of flight from species, forms, and (optionally) equipment.
+ */
+bool player::permanent_flight(bool include_equip) const
+{
+    if (get_form()->forbids_flight())
+        return false;
+
+    return include_equip && attribute[ATTR_PERM_FLIGHT] // equipment
+        || racial_permanent_flight()                    // species muts
+        || get_form()->enables_flight();
+}
+
+/**
+ * Does the player get the tengu flight perks?
+ */
 bool player::tengu_flight() const
 {
-    // Only Tengu get perks for flying.
+    // XX could tengu just get MUT_FLOAT?
     return you.has_mutation(MUT_TENGU_FLIGHT) && airborne();
 }
 
@@ -6484,9 +6490,9 @@ bool player::spellcasting_unholy() const
  */
 undead_state_type player::undead_state(bool temp) const
 {
-    if (temp && you.form == transformation::lich)
+    if (temp && form == transformation::lich)
         return US_UNDEAD;
-    return species_undead_type(you.species);
+    return species::undead_type(species);
 }
 
 bool player::nightvision() const
@@ -6504,7 +6510,7 @@ reach_type player::reach_range() const
 
 monster_type player::mons_species(bool /*zombie_base*/) const
 {
-    return player_species_to_mons_species(species);
+    return species::to_mons_species(species);
 }
 
 bool player::poison(actor *agent, int amount, bool force)
@@ -6834,7 +6840,7 @@ bool player::has_tail(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (species_is_draconian(species)
+    if (species::is_draconian(species)
         || has_mutation(MUT_CONSTRICTING_TAIL, allow_tran)
         || fishtail // XX respect allow_tran
         || get_mutation_level(MUT_ARMOURED_TAIL, allow_tran)
@@ -6900,7 +6906,7 @@ int player::arm_count() const
 {
     // XX transformations? arm count per se isn't used by much though.
 
-    return species_arm_count(species)
+    return species::arm_count(species)
                     - get_mutation_level(MUT_MISSING_HAND);
 }
 
@@ -6961,12 +6967,8 @@ bool player::can_see_invisible(bool calc_unid) const
 /// Can the player see invisible things without needing items' help?
 bool player::innate_sinv() const
 {
-    // Possible to have both with a temp mutation.
-    if (has_mutation(MUT_ACUTE_VISION)
-        && !has_mutation(MUT_BLURRY_VISION))
-    {
+    if (has_mutation(MUT_ACUTE_VISION))
         return true;
-    }
 
     // antennae give sInvis at 3
     if (get_mutation_level(MUT_ANTENNAE) == 3)
@@ -7190,7 +7192,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return species_can_throw_large_rocks(species);
+    return species::can_throw_large_rocks(species);
 }
 
 bool player::can_smell() const
@@ -7666,16 +7668,16 @@ bool player::form_uses_xl() const
 
 bool player::wear_barding() const
 {
-    return species_wears_barding(you.species);
+    return species::wears_barding(species);
 }
 
 static int _get_potion_heal_factor()
 {
-    // healing factor is expressed in thirds, so default is 3/3 -- 100%.
-    int factor = 3;
+    // healing factor is expressed in halves, so default is 2/2 -- 100%.
+    int factor = 2;
 
     // start with penalties
-    factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
+    factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
     factor -= you.mutation[MUT_NO_POTION_HEAL];
 
     // then apply bonuses - Kryia's doubles potion healing
@@ -7689,7 +7691,7 @@ void print_potion_heal_message()
 {
     // Don't give multiple messages in weird cases with both enhanced
     // and reduced healing.
-    if (_get_potion_heal_factor() > 3)
+    if (_get_potion_heal_factor() > 2)
     {
         if (player_equip_unrand(UNRAND_KRYIAS))
         {
@@ -7703,7 +7705,7 @@ void print_potion_heal_message()
     }
     else if (_get_potion_heal_factor() == 0)
         mpr("Your system rejects the healing.");
-    else if (_get_potion_heal_factor() < 3)
+    else if (_get_potion_heal_factor() < 2)
         mpr("Your system partially rejects the healing.");
 }
 
@@ -7715,7 +7717,7 @@ bool player::can_potion_heal()
 
 int player::scale_potion_healing(int healing_amount)
 {
-    return div_rand_round(healing_amount * _get_potion_heal_factor(), 3);
+    return div_rand_round(healing_amount * _get_potion_heal_factor(), 2);
 }
 
 void player_open_door(coord_def doorpos)

@@ -1158,7 +1158,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(void)
+bool monster::clear_far_engulf(bool)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props["water_holder"].get_int() == mid)
@@ -1757,13 +1757,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
-            speed_increment += me.duration;
             del_ench(en, true, false);
             if (you.can_see(*this))
-            {
-                mprf("%s chant is interrupted.",
-                     name(DESC_ITS).c_str());
-            }
+                mprf("%s chant is interrupted.", name(DESC_ITS).c_str());
             break;
         }
 
@@ -1798,9 +1794,11 @@ void monster::apply_enchantment(const mon_enchant &me)
                 int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
                                           * dur,
                             BASELINE_DELAY * 10);
-                if (res_water_drowning() < 0)
-                    dam = dam * 3 / 2;
-                hurt(me.agent(), dam);
+                if (dam > 0)
+                {
+                    simple_monster_message(*this, " is asphyxiated!");
+                    hurt(me.agent(), dam);
+                }
             }
         }
         break;

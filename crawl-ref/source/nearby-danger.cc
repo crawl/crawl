@@ -94,17 +94,18 @@ bool mons_can_hurt_player(const monster* mon)
     //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
-    //
-    // This also doesn't account for explosion radii, which is a false positive
-    // for a player waiting near (but not in range of) their own fulminant
-    // prism
-    if (_mons_has_path_to_player(mon) || mons_blows_up(*mon))
+    if (_mons_has_path_to_player(mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
+    //
+    // This also doesn't account for explosion radii, which is a false positive
+    // for a player waiting near (but not in range of) their own fulminant
+    // prism
     if (you.see_cell_no_trans(mon->pos())
-        && (mons_has_ranged_attack(*mon)
+        && (mons_blows_up(*mon)
+            || mons_has_ranged_attack(*mon)
             || mons_has_ranged_spell(*mon, false, true)))
     {
         return true;
@@ -453,7 +454,6 @@ void revive()
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;

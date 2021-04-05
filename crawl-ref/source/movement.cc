@@ -234,12 +234,17 @@ void remove_ice_movement()
     }
 }
 
+string water_hold_substance()
+{
+    return you.props["water_hold_substance"].get_string();
+}
+
 void remove_water_hold()
 {
     if (you.duration[DUR_WATER_HOLD])
     {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
+        mprf("You slip free of the %s engulfing you.",
+             water_hold_substance().c_str());
         you.clear_far_engulf();
     }
 }
@@ -898,7 +903,7 @@ void move_player_action(coord_def move)
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
                           : you.form != transformation::none   ? "walk" // XX
-                          : lowercase_first(species_walking_verb(you.species));
+                          : lowercase_first(species::walking_verb(you.species));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())

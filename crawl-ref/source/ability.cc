@@ -294,9 +294,6 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_POISON, "Spit Poison",
         0, 0, 0, {fail_basis::xl, 20, 1}, abflag::breath },
 
-    { ABIL_BLINK, "Blink", 0, 50, 0, {fail_basis::xl, -1}, abflag::none },
-    // ^ failure special-cased
-
     { ABIL_BREATHE_FIRE, "Breathe Fire",
         0, 0, 0, {fail_basis::xl, 30, 1}, abflag::breath },
     { ABIL_BREATHE_FROST, "Breathe Frost",
@@ -320,9 +317,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, {}, abflag::delay},
     { ABIL_REVIVIFY, "Revivify",
         0, 0, 0, {}, abflag::delay},
-
+#if TAG_MAJOR_VERSION == 34
     { ABIL_FLY, "Fly", 3, 0, 0, {fail_basis::xl, 42, 3}, abflag::none },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, {}, abflag::none },
+#endif
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
     { ABIL_WORD_OF_CHAOS, "Word of Chaos",
@@ -358,9 +356,9 @@ static const ability_def Ability_List[] =
 #if TAG_MAJOR_VERSION == 34
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
         0, 0, 0, {}, abflag::none },
-#endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
         1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
+#endif
     { ABIL_EVOKE_THUNDER, "Evoke Thunderclouds",
         5, 0, 0, {fail_basis::evo, 60, 2}, abflag::none },
 
@@ -987,7 +985,6 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_NON_ABILITY;
         return ability;
 
-    case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.stasis())
             return ABIL_NON_ABILITY;
@@ -1051,11 +1048,6 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         if (you.form == transformation::dragon)
             return base_chance - 20;
         return base_chance;
-
-    case ABIL_BLINK:
-        return 48 - (17 * you.get_mutation_level(MUT_BLINK))
-                  - you.experience_level / 2;
-        break;
 
     case ABIL_NEMELEX_DEAL_FOUR:
         return 70 - (you.piety * 2 / 45) - you.skill(SK_INVOCATIONS, 9) / 2;
@@ -1378,16 +1370,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // Doing these would outright kill the player.
     // (or, in the case of the stat-zeros, they'd at least be extremely
     // dangerous.)
-    if (abil.ability == ABIL_STOP_FLYING)
-    {
-        if (is_feat_dangerous(env.grid(you.pos()), false, true))
-        {
-            if (!quiet)
-                mpr("Stopping flight right now would be fatal!");
-            return false;
-        }
-    }
-    else if (abil.ability == ABIL_END_TRANSFORMATION)
+    if (abil.ability == ABIL_END_TRANSFORMATION)
     {
         if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
@@ -1424,13 +1407,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if ((abil.ability == ABIL_EVOKE_FLIGHT
-         || abil.ability == ABIL_TRAN_BAT
-         || abil.ability == ABIL_FLY)
-        && !flight_allowed(quiet))
-    {
+    if (abil.ability == ABIL_TRAN_BAT && !flight_allowed(quiet))
         return false;
-    }
 
 
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
@@ -1636,7 +1614,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_movement_ability(quiet) &&
                                 palentonga_charge_possible(quiet, true);
 
-    case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
@@ -2180,26 +2157,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_EVOKE_BLINK:      // randarts
         fail_check();
-        // deliberate fall-through
-    case ABIL_BLINK:            // mutation
         return cast_blink(fail);
         break;
 
     case ABIL_EVOKE_BERSERK:    // randarts
         fail_check();
         you.go_berserk(true);
-        break;
-
-    case ABIL_FLY:
-        fail_check();
-        // Te or Dr/Gr wings
-        if (you.racial_permanent_flight())
-        {
-            you.attribute[ATTR_PERM_FLIGHT] = 1;
-            float_player();
-        }
-        if (you.has_mutation(MUT_TENGU_FLIGHT))
-            mpr("You feel very comfortable in the air.");
         break;
 
     // DEMONIC POWERS:
@@ -2250,28 +2213,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 #endif
 
-    case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
-        fail_check();
-        ASSERT(!get_form()->forbids_flight());
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-        {
-            bool standing = !you.airborne();
-            you.attribute[ATTR_PERM_FLIGHT] = 1;
-            if (standing)
-                float_player();
-            else
-                mpr("You feel more buoyant.");
-        }
-        else
-        {
-#if TAG_MAJOR_VERSION == 34
-            surge_power(you.spec_evoke());
-#endif
-            fly_player(
-                player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
-        }
-        break;
-
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2287,13 +2228,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         you.duration[DUR_PORTAL_PROJECTILE] = 0;
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
         mpr("You are no longer teleporting projectiles to their destination.");
-        break;
-
-    case ABIL_STOP_FLYING:
-        fail_check();
-        you.duration[DUR_FLIGHT] = 0;
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        land_player();
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -3470,8 +3404,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return count(god_abils.begin(), god_abils.end(), abil);
     }
 
-    if (species_is_draconian(you.species)
-                                && draconian_breath(you.species) == abil)
+    if (species::is_draconian(you.species)
+        && species::draconian_breath(you.species) == abil)
     {
         return !form_changed_physiology() || you.form == transformation::dragon;
     }
@@ -3503,23 +3437,10 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_VAMPIRISM) >= 2
                 && !you.vampire_alive
                 && you.form != transformation::bat;
-    case ABIL_FLY:
-        return you.racial_permanent_flight()
-            && !you.attribute[ATTR_PERM_FLIGHT]
-            && !you.has_mutation(MUT_FLOAT);
-    case ABIL_STOP_FLYING:
-        // handles both species and evoke flight
-        // if (you.racial_permanent_flight() && you.attribute[ATTR_PERM_FLIGHT])
-        //     return true;
-        // TODO: dbl check tengu flight
-        return you.airborne()
-            && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-            && !you.has_mutation(MUT_FLOAT);
-
     case ABIL_BREATHE_FIRE:
         // red draconian handled before the switch
         return you.form == transformation::dragon
-                            && dragon_form_dragon_type() == MONS_FIRE_DRAGON;
+                    && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -3528,8 +3449,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                 && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
-    case ABIL_BLINK:
-        return you.get_mutation_level(MUT_BLINK);
     // TODO: other god abilities
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
@@ -3550,14 +3469,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_TURN_INVISIBLE:
         return you.evokable_invis()
                                 && !you.get_mutation_level(MUT_NO_ARTIFICE);
-    case ABIL_EVOKE_FLIGHT:
-        return you.evokable_flight() && !you.get_mutation_level(MUT_NO_ARTIFICE)
-            // Has no effect on permanently flying species
-            && !you.racial_permanent_flight()
-            // you can still evoke perm flight if you have temporary flight
-            && (!you.airborne()
-                || !you.permanent_flight()
-                   && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING));
     default:
         // removed abilities handled here
         return false;
@@ -3599,20 +3510,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_TRAN_BAT,
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
-            ABIL_FLY,
-            ABIL_STOP_FLYING,
             ABIL_DAMNATION,
             ABIL_WORD_OF_CHAOS,
             ABIL_END_TRANSFORMATION,
-            ABIL_BLINK,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_CANCEL_PPROJ,
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
-            ABIL_EVOKE_TURN_INVISIBLE,
-            ABIL_EVOKE_FLIGHT
+            ABIL_EVOKE_TURN_INVISIBLE
         };
 
     for (auto a : check_order)

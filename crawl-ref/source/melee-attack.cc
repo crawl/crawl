@@ -122,7 +122,8 @@ bool melee_attack::handle_phase_attempted()
             }
         }
         else if (weapon &&
-                (is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                ((is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                  && !silenced(you.pos()))
                  || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY))
                  && you.can_see(*defender))
         {
@@ -405,6 +406,23 @@ void melee_attack::apply_black_mark_effects()
     }
 }
 
+void melee_attack::do_ooze_engulf()
+{
+    if (attacker->is_player()
+        && you.has_mutation(MUT_ENGULF)
+        && defender->alive()
+        && !defender->as_monster()->has_ench(ENCH_WATER_HOLD)
+        && attacker->can_constrict(defender, true, true)
+        && coinflip())
+    {
+        defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
+                                                     attacker, 1));
+        mprf("You engulf %s in ooze!", defender->name(DESC_THE).c_str());
+        // Smothers sticky flame.
+        defender->expose_to_element(BEAM_WATER, 0);
+    }
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -512,7 +530,10 @@ bool melee_attack::handle_phase_hit()
         return false;
 
     if (damage_done > 0)
+    {
         apply_black_mark_effects();
+        do_ooze_engulf();
+    }
 
     if (attacker->is_player())
     {
@@ -1471,7 +1492,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
     damage = martial_damage_mod(damage);
 
     // Palentonga rolling charge bonus
-    if (roll_dist > 0) {
+    if (roll_dist > 0)
+    {
         // + 1/3rd base per distance rolled, up to double at dist 3.
         const int extra_dam = damage * roll_dist / 3;
         damage += extra_dam > damage ? damage : extra_dam;
@@ -2860,12 +2882,15 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ENGULF:
-        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender, true))
+        if (x_chance_in_y(2, 3)
+            && attacker->can_constrict(defender, true, true))
         {
+            const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
             {
                 you.duration[DUR_WATER_HOLD] = 10;
                 you.props["water_holder"].get_int() = attacker->as_monster()->mid;
+                you.props["water_hold_substance"].get_string() = watery ? "water" : "ooze";
             }
             else if (defender->is_monster()
                      && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))
@@ -2878,10 +2903,11 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (needs_message)
             {
-                mprf("%s %s %s in water!",
+                mprf("%s %s %s%s!",
                      atk_name(DESC_THE).c_str(),
                      attacker->conj_verb("engulf").c_str(),
-                     defender_name(true).c_str());
+                     defender_name(true).c_str(),
+                     watery ? " in water" : "");
             }
         }
 

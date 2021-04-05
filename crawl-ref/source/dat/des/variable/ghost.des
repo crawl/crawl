@@ -38,7 +38,7 @@ function setup_hydra_weapon(e)
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
 
     local quality = crawl.one_chance_in(3) and "randart" or "good_item"
-    local weapon_def = random_item_def(weapons, egos, quality)
+    local weapon_def = dgn.random_item_def(weapons, egos, quality)
     e.kitem("O = " .. weapon_def)
 end
 
@@ -56,11 +56,11 @@ function wrathful_weapon(class, quality)
         error("Unknown weapon quality: " .. quality)
     end
 
-    return ghost_monster_weapon(class, egos, quality, '|')
+    return dgn.monster_weapon(class, egos, quality)
  end
 
 function disto_weapon(class, quality)
-    return ghost_monster_weapon(class, {["distortion"] = 1}, quality)
+    return dgn.monster_weapon(class, "distortion", quality)
 end
 }}
 
@@ -1465,15 +1465,14 @@ KMONS:   2 = spectral snapping turtle / spectral sea snake \
              / spectral alligator snapping turtle w:2
 KMONS:   E = water elemental
 {{
-kmons("F = merfolk ; " .. ghost_monster_weapon("merfolk", {["draining"] = 1}) ..
+kmons("F = merfolk ; " .. dgn.monster_weapon("merfolk", "draining") ..
       "    . throwing net w:3 | nothing w:9")
 local quality = crawl.one_chance_in(3) and "randart" or "good_item"
 kmons("3 = merfolk aquamancer ; " ..
-           ghost_monster_weapon("blademaster", {["electrocution"] = 1},
-               quality) ..
+      dgn.monster_weapon("blademaster", "electrocution", quality) ..
       "    . robe good_item")
 kmons("4 = merfolk impaler ; " ..
-           ghost_monster_weapon("impaler", {["draining"] = 1}, quality) ..
+      dgn.monster_weapon("impaler", "draining", quality) ..
       "    . robe good_item | leather armour good_item")
 }}
 KMONS:   5 = kraken
@@ -1664,8 +1663,8 @@ KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
 
     local egos = {["chaos"] = 10, ["venom"] = 10, ["draining"] = 10,
                   ["pain"] = 5, ["electrocution"] = 5, ["distortion"] = 5}
-    local basic_def = ghost_monster_weapon("kobold", egos)
-    local good_def = ghost_monster_weapon("kobold", egos,
+    local basic_def = dgn.monster_weapon("kobold", egos)
+    local good_def = dgn.monster_weapon("kobold", egos,
         crawl.coinflip() and "randart" or "good_item")
     kmons("K = kobold ; " .. basic_def)
     kmons("L = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 . " ..
@@ -1781,24 +1780,23 @@ KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
 # Define some gnolls with reach weapons.
 {{
     local basic_weapons = {["halberd"] = 1, ["spear"] = 1}
-    local sergeant_weapons = {["trident"] = 1, ["spear"] = 1}
+    local sgt_weapons = {["trident"] = 1, ["spear"] = 1}
     egos = {["venom"] = 15, ["vampirism"] = 5, ["pain"] = 5,
             ["electrocution"] = 5, ["chaos"] = 5}
 
-    local basic_def = random_item_def(basic_weapons, egos, "", "|")
-    local sergeant_basic_def = random_item_def(sergeant_weapons, egos, "", "|")
+    local basic_def = dgn.random_item_def(basic_weapons, egos, nil, "|")
+    local sgt_basic_def = dgn.random_item_def(sgt_weapons, egos, nil, "|")
 
     local quality = crawl.one_chance_in(3) and "randart" or "good_item"
-    local good_def = random_item_def(basic_weapons, egos, quality, "|")
-    local sergeant_good_def = random_item_def(sergeant_weapons, egos, quality,
-                                              "|")
+    local good_def = dgn.random_item_def(basic_weapons, egos, quality, "|")
+    local sgt_good_def = dgn.random_item_def(sgt_weapons, egos, quality, "|")
 
     kmons("E = gnoll ; " .. basic_def .. " . throwing net | nothing")
     kmons("F = gnoll ; " .. good_def .. " . throwing net | nothing")
-    kmons("H = gnoll sergeant ; " .. sergeant_basic_def ..
+    kmons("H = gnoll sergeant ; " .. sgt_basic_def ..
           "    . buckler | kite shield | nothing w:40" ..
           "    . ring mail | scale mail")
-    kmons("J = gnoll sergeant ; " .. sergeant_good_def ..
+    kmons("J = gnoll sergeant ; " .. sgt_good_def ..
           "    . buckler good_item | buckler randart w:5 " ..
           "        | kite shield good_item | kite shield randart w:5 " ..
           "    . ring mail good_item | ring mail randart w:5 " ..

@@ -259,7 +259,8 @@ monster* hepliaklqana_ancestor_mon()
  */
 bool ancestor_full_hp()
 {
-    if (you.religion == GOD_HEPLIAKLQANA) {
+    if (you.religion == GOD_HEPLIAKLQANA)
+    {
         monster* ancestor = monster_by_mid(hepliaklqana_ancestor());
         if (ancestor == nullptr)
             return true;

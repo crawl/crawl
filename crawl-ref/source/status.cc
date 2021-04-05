@@ -713,7 +713,8 @@ static void _describe_zot(status_info& inf)
     {
         inf.short_text = "bezotted";
         inf.long_text = "Zot is approaching!";
-    } else if (!Options.always_show_zot || !zot_clock_active())
+    }
+    else if (!Options.always_show_zot || !zot_clock_active())
         return;
 
     inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
