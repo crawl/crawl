@@ -420,12 +420,12 @@ x-----x
 xxb+bxx
 ENDMAP
 
-NAME:   dilly_ecumenical_altar_deadguardian
+NAME:   dilly_ecumenical_altar_fadedgnrine
 TAGS:   no_monster_gen transparent
-MONS:   plant, gnoll
+MONS:   plant, gnoll; nothing
 SUBST: z = t111
-KITEM: E = never_decay human skeleton / gnoll skeleton / elf skeleton / dwarf skeleton
-FTILE: 12t'_  = floor_grass
+KITEM: E = never_decay gnoll shaman skeleton / never_decay gnoll skeleton
+FTILE: 12Et'_  = floor_grass
 : ecumenical_altar_setup(_G)
 MAP
       .....
