@@ -505,7 +505,7 @@ MAP
 ............... 
 ENDMAP
 
-NAME:   shapermc_ecumenical_altar_mp_highgroup
+NAME:   shapermc_ecumenical_altar_mp_ritualfount
 TAGS:   transparent no_monster_gen
 SUBST: - = --.G
 SUBST: G = GGG-
@@ -516,8 +516,8 @@ COLOUR: G = lightgrey
 KMONS: W = plant / nothing
 KMONS: p = plant
 KMONS: f = fungus
-NSUBST: ' = 8:pf. / 12=ppf... / .
-NSUBST: ^ = 8:pfTUV / 4=TUV... / W
+NSUBST: ' = 8=pf. / 12=ppf... / .
+NSUBST: ^ = 8=pfTUV / 4=TUV... / W
 TILE: G = dngn_crumbled_column
 : set_feature_name("granite_statue", "broken pillar")
 : ecumenical_altar_setup(_G)
