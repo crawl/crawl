@@ -964,7 +964,11 @@ A glass window
 
 A pockmarked, ultra-hard glass window.
 %%%%
-# due_jungle_book (Lair:8)
+A petrified tree
+
+An ancient tree, long ago passed from biology into geology.
+%%%%
+# due_jungle_book (Lair:6)
 An elephant-shaped statue
 
 A worn granite statue depicting an elephant standing guard.

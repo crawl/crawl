@@ -235,6 +235,26 @@ ccccccccc
 ENDMAP
 
 ##############################################################
+NAME:    pf_arrival_petrified_forest
+TAGS:    arrival
+ORIENT:  float
+TILE: G = DNGN_PETRIFIED_TREE
+{{
+set_feature_name("granite_statue", "petrified tree")
+}}
+MAP
+  xxx
+xxxGxx
+xxG{Gxx
+xxG..Gxx
+xxx..Gxx
+@xG.Gxx@
+x..G.x.x
+xxxxx.xx
+@xxxxxxxxx
+ENDMAP
+
+##############################################################
 NAME:    onia_arrival_pyramid
 TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float

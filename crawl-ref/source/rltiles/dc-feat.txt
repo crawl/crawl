@@ -38,6 +38,10 @@ tree_fall8
 tree1_dead DNGN_TREE_DEAD
 tree2_dead
 
+tree_petrified1 DNGN_PETRIFIED_TREE
+tree_petrified2
+tree_petrified3
+
 %weight 10
 mangrove1 DNGN_MANGROVE
 %weight 8
