@@ -9,48 +9,29 @@ tree2
 tree3
 tree4
 tree5
-%weight 2
 tree6
-tree6_bright
-%weight 10
 tree7
 tree8
-%weight 6
 tree9
-%weight 10
 tree10
 tree11
-%weight 3
 tree12
-%weight 7
 tree13
-%weight 2
-tree14
-tree14a
-tree14b
-tree14c
-%weight 4
-tree15
-tree15a
-tree16
-%weight 10
 
 %variation DNGN_TREE yellow
-tree1_yellow DNGN_TREE_YELLOW
-tree2_yellow
-%weight 2
-tree6_yellow
-%weight 10
+tree_fall1 DNGN_TREE_YELLOW
+tree_fall4
+tree_fall5
+tree_fall9
 
 %variation DNGN_TREE lightred
-tree1_lightred DNGN_TREE_LIGHTRED
-tree2_lightred
+tree_fall2 DNGN_TREE_LIGHTRED
+tree_fall3
 
 %variation DNGN_TREE red
-tree1_red DNGN_TREE_RED
-tree2_red
-tree7_red
-tree10_red
+tree_fall6 DNGN_TREE_RED
+tree_fall7
+tree_fall8
 
 # this may need to change, but it should make things a bit simpler
 %variation DNGN_TREE darkgray
