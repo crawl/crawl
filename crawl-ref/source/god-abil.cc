@@ -4080,8 +4080,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            if (you.species == SP_DEMONSPAWN)
-                piety_gain += 28;
+            // Dj are guaranteed to lose their last spell, which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
+                piety_gain += 20;
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
             if (you.get_mutation_level(MUT_INEXPERIENCED))
