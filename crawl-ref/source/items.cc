@@ -65,6 +65,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "skills.h"
 #include "slot-select-mode.h"
 #include "sound.h"
 #include "spl-book.h"
@@ -1845,8 +1846,15 @@ static void _get_book(item_def& it)
     // This is mainly for save compat: if a manual generated somehow that is not
     // id'd, the following message is completely useless
     set_ident_flags(it, ISFLAG_IDENT_MASK);
-
     const skill_type sk = static_cast<skill_type>(it.plus);
+
+    if (is_useless_skill(sk))
+    {
+        mprf("You pick up %s. Unfortunately, it's quite useless to you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
     if (you.skill_manual_points[sk])
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     else
