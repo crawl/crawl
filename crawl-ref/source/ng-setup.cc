@@ -436,24 +436,28 @@ static void _free_up_slot(char letter)
     }
 }
 
-static bool _spell_has_trigger(spell_type to_trigger,
-                               const set<spell_type> &triggers)
+static bool _spell_triggered_by(spell_type to_trigger, spell_type trigger)
 {
     switch (to_trigger)
     {
-    case SPELL_BATTLESPHERE:
-        for (spell_type trigger : triggers)
-            if (battlesphere_can_mirror(trigger))
-                return true;
-        return false;
-    case SPELL_SPELLFORGED_SERVITOR:
-        for (spell_type trigger : triggers)
-            if (spell_servitorable(trigger))
-                return true;
-        return false;
-    default:
-        return true;
+        case SPELL_BATTLESPHERE:
+            return battlesphere_can_mirror(trigger);
+        case SPELL_SPELLFORGED_SERVITOR:
+            return spell_servitorable(trigger);
+        case SPELL_SUMMON_GUARDIAN_GOLEM:
+            return !!(get_spell_disciplines(trigger) & spschool::summoning);
+        default:
+            return true;
     }
+}
+
+static bool _spell_has_trigger(spell_type to_trigger,
+                               const set<spell_type> &triggers)
+{
+    for (spell_type trigger : triggers)
+        if (_spell_triggered_by(to_trigger, trigger))
+            return true;
+    return _spell_triggered_by(to_trigger, SPELL_NO_SPELL);
 }
 
 static void _setup_innate_spells()
