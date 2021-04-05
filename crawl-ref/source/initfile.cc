@@ -407,7 +407,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
-        new ListGameOption<string>(SIMPLE_NAME(consumables_panel_filter)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(consumables_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(show_unidentified_consumables), false),
 #endif
 #ifdef USE_FT
@@ -4763,25 +4763,6 @@ static void _write_minimap_colours()
     _write_vcolour("tile_window_col", Options.tile_window_col);
 }
 
-static void _write_consumables_panel_options()
-{
-    tiles.json_open_array("consumables_panel");
-    for (const auto &type : Options.consumables_panel)
-        tiles.json_write_int(type);
-    tiles.json_close_array();
-
-    tiles.json_open_array("consumables_panel_filter");
-    for (const auto &pattern : Options.consumables_panel_filter)
-        tiles.json_write_string(pattern);
-    tiles.json_close_array();
-
-    tiles.json_write_bool("show_unidentified_consumables",
-            Options.show_unidentified_consumables);
-
-    tiles.json_write_int("consumables_panel_scale",
-            Options.consumables_panel_scale);
-}
-
 void game_options::write_webtiles_options(const string& name)
 {
     tiles.json_open_object(name);
@@ -4832,7 +4813,8 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_bool("show_game_time", Options.show_game_time);
 
-    _write_consumables_panel_options();
+    tiles.json_write_int("consumables_panel_scale",
+            Options.consumables_panel_scale);
 
     _write_minimap_colours();
 

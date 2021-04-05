@@ -1119,6 +1119,39 @@ void TilesFramework::_send_player(bool force_full)
     finish_message();
 }
 
+// Checks if an item should be displayed on the consumables panel
+static bool _is_useful_consumable(const item_def &item, const string &name)
+{
+    const vector<object_class_type> &base_types = Options.consumables_panel;
+
+    if (item.quantity < 1
+        || base_types.empty()
+        || std::find(base_types.begin(), base_types.end(), item.base_type)
+           == base_types.end()
+        || (!Options.show_unidentified_consumables && !fully_identified(item)))
+    {
+        return false;
+    }
+
+    for (const text_pattern &p : Options.consumables_panel_filter)
+        if (p.matches(name))
+            return false;
+
+    return true;
+}
+
+// Returns the name of an item_def field to display on the consumables panel
+static string _qty_field_name(const item_def &item)
+{
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_ZIGGURAT
+        || item.base_type == OBJ_WANDS)
+    {
+        return "plus";
+    }
+    else
+        return "quantity";
+}
+
 void TilesFramework::_send_item(item_def& current, const item_def& next,
                                 bool force_full)
 {
@@ -1178,6 +1211,11 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         {
             json_write_string("name", name);
         }
+
+        json_write_string("qty_field",
+                          _is_useful_consumable(next, name)
+                          ? _qty_field_name(next)
+                          : "");
 
         const string prefix = item_prefix(next);
         const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);

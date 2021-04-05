@@ -5,9 +5,7 @@ function ($, cr, enums, options, player, icons, util) {
 
     var renderer, $canvas;
     var borders_width;
-    // Options
-    var base_types = [], filters = [], show_unidentified, scale;
-    var filters_text = "";
+    var scale;
 
     $(document).bind("game_init", function () {
         $canvas = $("#consumables");
@@ -19,22 +17,11 @@ function ($, cr, enums, options, player, icons, util) {
 
     function update()
     {
-        if (!base_types.length)
-        {
-            $canvas.addClass("empty");
-            return;
-        }
-
         // Filter
         var filtered_inv = Object.values(player.inv).filter(function(item) {
-            if (!item.quantity
-                || !base_types.includes(item.base_type)
-                || (!show_unidentified && !item.flags)
-                || filters.some(function(re) { return item.name.match(re); }))
-            {
-                return false;
-            }
-            else
+            if (!item.quantity) // Skip empty inventory slots
+                return false
+            else if (item.hasOwnProperty("qty_field") && item.qty_field)
                 return true;
         });
 
@@ -69,17 +56,10 @@ function ($, cr, enums, options, player, icons, util) {
                 renderer.draw_main(t, renderer.cell_width * idx * scale, 0, scale);
             });
 
-            var qty;
-
-            if (i.base_type === enums.base_type.OBJ_MISCELLANY
-                && i.sub_type !== enums.misc_item_type.MISC_ZIGGURAT)
-            {
-                qty = i.plus;
-            }
-            else
-                qty = i.plus || i.quantity;
-
-            renderer.draw_quantity(qty, renderer.cell_width * idx * scale, 0, scale);
+            var qty_field_name = i.qty_field;
+            if (i.hasOwnProperty(qty_field_name))
+                renderer.draw_quantity(i[qty_field_name],
+                                       renderer.cell_width * idx * scale, 0, scale);
         });
 
         if (available_width < required_width)
@@ -92,43 +72,11 @@ function ($, cr, enums, options, player, icons, util) {
     }
 
     options.add_listener(function () {
-        var update_required = false;
-
-        var new_base_types = options.get("consumables_panel");
-        if (base_types.toString() !== new_base_types.toString())
-        {
-            base_types = new_base_types;
-            update_required = true;
-        }
-
-        var new_filters = options.get("consumables_panel_filter");
-        if (filters_text !== new_filters.toString())
-        {
-            filters_text = new_filters.toString();
-
-            filters = [];
-            new_filters.forEach(function(pattern) {
-                filters.push(new RegExp(pattern));
-            });
-
-            update_required = true;
-        }
-
-        var new_show_unid = options.get("show_unidentified_consumables");
-        if (show_unidentified !== new_show_unid)
-        {
-            show_unidentified = new_show_unid;
-            update_required = true;
-        }
-
         var new_scale = options.get("consumables_panel_scale") / 100;
         if (scale !== new_scale)
         {
             scale = new_scale;
-            update_required = true;
-        }
-
-        if (update_required)
             update();
+        }
     });
 });
