@@ -1613,7 +1613,8 @@ bool word_of_chaos(int pow)
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi) 
     {
-        if (!mons_is_tentacle_or_tentacle_segment(mi->type))
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type) 
+                && !mi->friendly())
             targets.push_back(*mi);
     }
     
