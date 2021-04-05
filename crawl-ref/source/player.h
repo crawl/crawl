@@ -26,6 +26,7 @@
 #include "kills.h"
 #include "maybe-bool.h"
 #include "mon-holy-type.h"
+#include "monster-type.h"
 #include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
@@ -75,6 +76,21 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
+
+class unique_creature_list : public FixedBitVector<NUM_MONSTERS>
+{
+public:
+    inline void set(unsigned int i, bool value = true) override
+    {
+        if (i != MONS_MAGGIE && i != MONS_MARGERY)
+            FixedBitVector<NUM_MONSTERS>::set(i, value);
+        else
+        {
+            FixedBitVector<NUM_MONSTERS>::set(MONS_MARGERY, value);
+            FixedBitVector<NUM_MONSTERS>::set(MONS_MAGGIE, value);
+        }
+    }
+};
 
 class targeter;
 class Delay;
@@ -241,7 +257,7 @@ public:
 
     FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
     FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-    FixedBitVector<NUM_MONSTERS> unique_creatures;
+    unique_creature_list unique_creatures;
 
     KillMaster kills;
 
