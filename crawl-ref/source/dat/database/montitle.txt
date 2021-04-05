@@ -183,10 +183,6 @@ Margery title
 
 Margery the Dragonslayer
 %%%%
-Maud title
-
-Maud the Forgotten
-%%%%
 Maurice title
 
 Maurice the Thief
