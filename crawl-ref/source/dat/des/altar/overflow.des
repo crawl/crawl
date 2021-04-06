@@ -5052,8 +5052,332 @@ MAP
   ...........
 ENDMAP
 
-NAME: mainiacjoe_overflow_two_lobes
-TAGS: temple_overflow_generic_2
+NAME:   mainiacjoe_overflow_small_starburst
+TAGS:   temple_overflow_generic_1
+NSUBST: X: 1:. / *:x
+SUBST:  x: x.
+NSUBST: x = 1:@ / *:x
+SUBST:  c : cnvbtwl
+KMASK:  w = no_pool_fixup
+KMASK:  wl = no_monster_gen
+MAP
+xxxxXXXXXXXxxxx
+xxx.........xxx
+xx...cc.cc...xx
+x..c..c.c..c..X
+x..cc.....cc..X
+x......B......X
+x..cc.....cc..X
+x..c..c.c..c..X
+xx...cc.cc...xx
+xxx.........xxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_large_starburst
+TAGS:  temple_overflow_generic_2
+SUBST: b : cnvbtwl
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+ccccccc+ccccccc
+c.............c
+c.b.bbb.bbb.b.c
+c.b...b.b...b.c
+c.bbb.b.b.bbb.c
+c...b.b.b.b...c
+c.B.........B.c
+c...b.b.b.b...c
+c.bbb.b.b.bbb.c
+c.b...b.b...b.c
+c.b.bbb.bbb.b.c
+c.............c
+ccccccc+ccccccc
+ENDMAP
+
+NAME:   mainiacjoe_overflow_brackets
+TAGS:   temple_overflow_generic_1
+SUBST:  x: x.
+NSUBST: x = 1:@ / *:x
+SUBST:  c : cnvbt
+NSUBST: w = 1:. / *:w
+SUBST:  w : wl
+KMASK:  lw = no_monster_gen
+KMASK:  w = no_pool_fixup
+MAP
+xxxxxxxxxxxxx
+x...........x
+x.wwwwwwwww.x
+x.w.......w.x
+x.w.ccccc.w.x
+x.w.c.....w.x
+x.w.c.B.c.w.x
+x.w.....c.w.x
+x.w.ccccc.w.x
+x.w.......w.x
+x.wwwwwwwww.x
+x...........x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_boulevard
+TAGS:  temple_overflow_generic_1
+SUBST: P : cnvbtwl123
+SUBST: Q : cnvbtwl123
+MONS:  plant /  bush / fungus
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.............................
+@.PPPP..QQQQ..B..QQQQ..PPPP.@
+.............................
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_six_doors_small
+TAGS:  temple_overflow_generic_1
+SUBST: c : cnvbtwl
+SUBST: P : cnvbtwl
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+cccc+cccc
++.......+
+c.P...P.c
+c.P.B.P.c
+c.P...P.c
++.......+
+cccc+cccc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_tiny_flanked
+TAGS:  temple_overflow_generic_1
+SUBST: P : cnvbtwl123
+MONS:  plant, bush, fungus
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+.......
+.P.B.P.
+.......
+ENDMAP
+
+
+NAME:   mainiacjoe_overflow_cross_hatched
+TAGS:   temple_overflow_generic_1
+NSUBST: @ = 1:@ / *:x
+SUBST:  x : xcvbwl
+SUBST:  p : cnvbtwl123
+MONS:   plant, bush, fungus
+KMASK:  wl = no_monster_gen
+KMASK:  w = no_pool_fixup
+MAP
+@xxxxx@xxxxxx
+x...........x
+x.p.ppppp.p.x
+x.p.......p.x
+x.p.p...p.p.x
+@.p.p.B.p.p.x
+x.p.p...p.p.x
+x.p.......p.x
+x.p.ppppp.p.x
+x...........x
+xxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:  mainiacjoe_overflow_chevrons
+TAGS:  temple_overflow_generic_1
+SUBST: c : cvbn
+SUBST: p : cnvbtwl123G
+SUBST: q : cnvbtwl123
+MONS:  plant, bush, fungus
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
++cccccccccccc
+c...........c
+c...........c
+c..ppppppp..c
+c..ppppppp..c
+c..pp.......c
+c..pp.......c
+c..pp..qqqq.c
+c..pp..q....c
+c..pp..q.B..c
+c......q....c
+c...........c
+ccccccccccccc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_24_doors
+TAGS:  temple_overflow_generic_1
+SUBST: c : xcvbn
+MAP
+...............
+.ccc+cc+cc+ccc.
+.c.....c.....c.
+.c.....c.....c.
+.+cc+cc+cc+cc+.
+.c..c.....c..c.
+.c..c+ccc+c..c.
+.c..c.....c..c.
+.+..+..B..+..+.
+.c..c.....c..c.
+.c..c+ccc+c..c.
+.c..c.....c..c.
+.+cc+cc+cc+cc+.
+.c.....c.....c.
+.c.....c.....c.
+.ccc+cc+cc+ccc.
+...............
+ENDMAP
+
+NAME:   mainiacjoe_overflow_surrounded_room
+TAGS:   temple_overflow_generic_1
+NSUBST: X: 1:. / *:x
+SUBST:  x: x.
+NSUBST: x = 1:@ / *:x
+SUBST:  c : cnvb
+MAP
+xxxxxXXXXXXXxxxxx
+xxxxx.......xxxxx
+x.....ccccc.....X
+x.ccccc...ccccc.X
+x.+.....B.....+.X
+x.ccccc...ccccc.X
+x.....ccccc.....X
+xxxxx.......xxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_alcove_1
+TAGS:  temple_overflow_generic_1
+SUBST: c : xcnvb
+MAP
+ccccccc
+c.....c
+c..B..c
+cc...cc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_alcove_2
+TAGS:  temple_overflow_generic_1
+SUBST: c : xcnvb
+MAP
+ccccccc
+c.....c
+c..B..c
+c.....c
+c.c.c.c
+c.c.c.c
+ccc@ccc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_alcove_4
+TAGS:  temple_overflow_generic_1
+SUBST: c : xcnvb
+SUBST: p : cnvbt123wl
+MONS:  plant, bush, fungus
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+ccccccccc
+c.......c
+c.p.B.p.c
+c.p...p.c
+c.ppppp.c
+c.......c
+ccc+++ccc
+ENDMAP
+
+NAME:    mainiacjoe_overflow_concentric_impassable
+TAGS:    temple_overflow_generic_1
+NSUBST:  x = 1:@ / *:x
+NSUBST:  l = 1:. / *:l
+NSUBST:  w = 1:. / *:w
+KMASK:   wl = no_monster_gen
+KMASK:   w = no_pool_fixup
+SHUFFLE: wl
+MAP
+xxxxxxxxxxxxx
+x...........x
+x.lllllllll.x
+x.l.......l.x
+x.l.wwwww.l.x
+x.l.w...w.l.x
+x.l.w.B.w.l.x
+x.l.w...w.l.x
+x.l.wwwww.l.x
+x.l.......l.x
+x.lllllllll.x
+x...........x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_catwalk
+TAGS:  temple_overflow_generic_1
+SUBST: l : lw
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+xxxxxxxxxxxxxxx
+xlllllllllllllx
+xlllllllllllllx
+xlllllllllllllx
+xlllB.........@
+xlllllllllllllx
+xlllllllllllllx
+xlllllllllllllx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   mainiacjoe_overflow_paths
+TAGS:   temple_overflow_generic_1
+NSUBST: p = 1:@ / 1:c
+SUBST:  c : xcbvn
+SUBST:  w : lw
+KMASK:  wl = no_monster_gen
+KMASK:  w = no_pool_fixup
+MAP
+pcccccccccp
+c..wwwww..c
+c.w.....w.c
+c.w.www.w.c
+c.ww...ww.c
+c.ww.B.ww.c
+c.ww...ww.c
+c.w.www.w.c
+c.w.....w.c
+c..wwwww..c
+pcccccccccp
+ENDMAP
+
+NAME:   mainiacjoe_overflow_catch_the_wave
+TAGS:   temple_overflow_generic_2
+NSUBST: p = 1:@ / *:.
+NSUBST: q = 1:@ / *:.
+SUBST:  b : cnvbtwl123
+MONS:   plant, bush, fungus
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+q..........................p
+q...............bbbbb......p
+q.....B.......bbbbbbbbb....p
+q.........bbbbbb.....bbbb..p
+q.bbb...bbbbbb...bbb...bb..p
+q.bbbbbbbb.....bbbbbbb.....p
+q....bbb...bbbbbb...bbbbb..p
+q.bb.....bbbbbb.......bbb..p
+q.bbbbbbbbb.......B........p
+q...bbbbb..................p
+q..........................p
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  mainiacjoe_overflow_two_lobes
+TAGS:  temple_overflow_generic_2
 SUBST: l : lwo
 SUBST: b : bvt
 KMASK: w = no_pool_fixup
@@ -5093,21 +5417,70 @@ xwwwwwww.wwwwwx
 xxxxxxxx@xxxxxx
 ENDMAP
 
-NAME: mainiacjoe_overflow_small_starburst
-TAGS: temple_overflow_generic_1
-SUBST: c : cnvbtwl
-KMASK: w = no_pool_fixup
+NAME:  mainiacjoe_overflow_big_doors
+TAGS:  temple_overflow_generic_2
+SUBST: c : cvbn
+SUBST: p : nvbtwl123G
+MONS:  plant, bush, fungus
 KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
 MAP
-   .........
-  ...........
- ....cc.cc....
-...c..c.c..c...
-...cc.....cc...
-.......B.......
-...cc.....cc...
-...c..c.c..c...
- ....cc.cc....
-  ...........
-   .........
+      @@@
+cccccc+++cccccc
+c...+.....+...c
+c.B.+.ppp.+.B.c
+c...+.....+...c
+cccccc+++cccccc
+      @@@
+ENDMAP
+
+NAME:  mainiacjoe_overflow_swirl
+TAGS:  temple_overflow_generic_2
+SUBST: c : cvbn
+MAP
+       ccccc
+       c...c
+@      c.B.c
+ +cccccc...c
+ c...c.ccc.c
+ c.c.c....cc
+ c.c...cc.c
+ c.cc...c.c
+cc....c.c.c
+c.ccc.c...c
+c...cccccc+
+c.B.c      @
+c...c
+ccccc
+ENDMAP
+
+NAME:  mainiacjoe_overflow_divided_tiny
+TAGS:  temple_overflow_generic_2
+SUBST: c : xcvb
+SUBST: l : wl
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
++cccccccc
+c...l...c
+c.B.l.B.c
+c...l...c
+cccccccc+
+ENDMAP
+
+NAME:  mainiacjoe_overflow_alcove_3
+TAGS:  temple_overflow_generic_4
+SUBST: c : xcnvb
+SUBST: p : cnvbt123wl
+MONS:  plant, bush, fungus
+KMASK: wl = no_monster_gen
+KMASK: w = no_pool_fixup
+MAP
+ccccccc
+cB.c.Bc
+c.....c
+cc.p.cc
+c..p..c
+cB...Bc
+ccc.ccc
 ENDMAP
