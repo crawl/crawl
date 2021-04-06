@@ -2557,12 +2557,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
             zap_type ztype =
                 random_choose(ZAP_BOLT_OF_FIRE,
-                              ZAP_FIREBALL,
                               ZAP_LIGHTNING_BOLT,
                               ZAP_STICKY_FLAME,
                               ZAP_IRON_SHOT,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_ORB_OF_ELECTRICITY);
+                              ZAP_CORROSIVE_BOLT);
             zapping(ztype, power, beam);
         }
         break;
