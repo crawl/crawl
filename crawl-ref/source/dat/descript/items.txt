@@ -846,9 +846,9 @@ scroll of enchant armour
 
 A scroll that places an enchantment on a piece of armour chosen by the reader.
 Body armour and bardings can be enchanted up to the same value as their base
-AC. Bucklers, kite shields and tower shields can be enchanted up to +3, +5 or +8
-respectively, and other armour can be enchanted up to +2. Magical artefacts
-cannot be enchanted at all.
+armour rating. Bucklers, kite shields and tower shields can be enchanted up to
++3, +5 or +8 respectively, and other armour can be enchanted up to +2. Magical
+artefacts cannot be enchanted at all.
 %%%%
 scroll of enchant weapon
 

@@ -58,11 +58,11 @@ Your willpower is much stronger, protecting against many magical effects.
 %%%%
 Berserk status
 
-You are hasted, deal increased damage in combat, and have increased HP, but are
-unable to make most actions other than moving and attacking. The status will
-wear off very quickly unless you are attacking monsters, and when it expires
-you will be slowed and unable to berserk again for a short duration, and may be
-paralysed temporarily as well.
+You are hasted, deal increased damage in combat, and have increased health, but
+are unable to make most actions other than moving and attacking. The status
+will wear off very quickly unless you are attacking monsters, and when it
+expires you will be slowed and unable to berserk again for a short duration,
+and may be paralysed temporarily as well.
 %%%%
 -Berserk status
 
@@ -183,7 +183,7 @@ spellcasting success rate.
 %%%%
 Corr status
 
-You are corroded, reducing your damage in physical combat and your AC by an
+You are corroded, reducing your damage in physical combat and your armour by an
 amount depending on the severity of the corrosion.
 %%%%
 Flay status
