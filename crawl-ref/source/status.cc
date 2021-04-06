@@ -334,6 +334,12 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
+    case DUR_SLIMIFY:
+    {
+        inf.long_text = you.hands_act("are", "covered in slime.");
+        break;
+    }
+
     case DUR_POISONING:
         _describe_poison(inf);
         break;
@@ -476,14 +482,13 @@ bool fill_status_info(int status, status_info& inf)
         if (you.res_water_drowning())
         {
             inf.short_text   = "engulfed";
-            inf.long_text    = "You are engulfed in water.";
+            inf.long_text    = "You are engulfed.";
             inf.light_colour = DARKGREY;
         }
         else
         {
             inf.short_text   = "engulfed (cannot breathe)";
-            inf.long_text    = "You are engulfed in water and unable to "
-                                "breathe.";
+            inf.long_text    = "You are engulfed and unable to breathe.";
             inf.light_colour = RED;
         }
         break;
