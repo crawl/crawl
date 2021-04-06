@@ -288,6 +288,7 @@ public:
     vector<text_pattern> consumables_panel_filter; // what should be filtered out
     bool        show_unidentified_consumables; // whether to show unidentified items
     int         consumables_panel_scale;       // the scale factor for resizing the panel
+    string      consumables_panel_orientation; // whether to place the panel horizontally
 #endif
 
     int         fire_items_start; // index of first item for fire command

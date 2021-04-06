@@ -1192,6 +1192,7 @@ void game_options::reset_options()
     consumables_panel.emplace_back(OBJ_MISCELLANY);
 
     consumables_panel_scale = 100;
+    consumables_panel_orientation = "horizontal";
 #endif
 
     // map each colour to itself as default
@@ -3754,6 +3755,17 @@ void game_options::read_option_line(const string &str, bool runscript)
                 " but got '%s'.", field.c_str());
         }
     }
+    else if (key == "consumables_panel_orientation")
+    {
+        if (field != "horizontal" && field != "vertical")
+        {
+            report_error("Bad value for consumables_panel_orientation: %s"
+                         " (should be horizontal or vertical)",
+                         field.c_str());
+        }
+        else
+            consumables_panel_orientation = field;
+    }
 #endif
 
     // Catch-all else, copies option into map
@@ -4815,6 +4827,8 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_int("consumables_panel_scale",
             Options.consumables_panel_scale);
+    tiles.json_write_string("consumables_panel_orientation",
+            Options.consumables_panel_orientation);
 
     _write_minimap_colours();
 
