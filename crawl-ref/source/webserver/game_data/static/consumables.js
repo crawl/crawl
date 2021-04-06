@@ -5,15 +5,21 @@ function ($, cr, enums, options, player, icons, util) {
 
     var renderer, $canvas;
     var borders_width;
-    var scale;
+    // Options
+    var scale, orientation;
 
     $(document).bind("game_init", function () {
         $canvas = $("#consumables");
         renderer = new cr.DungeonCellRenderer();
+        borders_width = (parseInt($canvas.css("border-left-width"), 10) || 0) * 2;
+
         $canvas.on("update", update);
-        borders_width = (parseInt($canvas.css("border-left-width"), 10) || 0)
-                        + (parseInt($canvas.css("border-right-width"), 10) || 0);
     });
+
+    function _horizontal()
+    {
+        return orientation === "horizontal" ? true : false;
+    }
 
     function update()
     {
@@ -40,43 +46,79 @@ function ($, cr, enums, options, player, icons, util) {
         });
 
         // Render
-        var required_width = renderer.cell_width * filtered_inv.length * scale;
-        var available_width = $("#dungeon").width() - borders_width;
-        var max_cells = Math.floor(available_width / (renderer.cell_width * scale));
-        var panel_width = Math.min(required_width, available_width);
+        var cell_width = renderer.cell_width * scale;
+        var cell_height = renderer.cell_height * scale;
+        var cell_length = _horizontal() ? cell_width
+                                        : cell_height;
+        var required_length = cell_length * filtered_inv.length;
+        var available_length = _horizontal() ? $("#dungeon").width()
+                                             : $("#dungeon").height();
+        available_length -= borders_width;
+        var max_cells = Math.floor(available_length / cell_length);
+        var panel_length = Math.min(required_length, available_length);
 
-        util.init_canvas($canvas[0], panel_width, renderer.cell_height * scale);
+        util.init_canvas($canvas[0],
+                         _horizontal() ? panel_length : cell_width,
+                         _horizontal() ? cell_height : panel_length);
         renderer.init($canvas[0]);
 
         renderer.ctx.fillStyle = "black";
-        renderer.ctx.fillRect(0, 0, panel_width, renderer.cell_height * scale);
+        renderer.ctx.fillRect(0, 0,
+                              _horizontal() ? panel_length : cell_width,
+                              _horizontal() ? cell_height : panel_length);
 
-        filtered_inv.slice(0, max_cells).forEach(function(i, idx) {
-            i.tile.forEach(function(t) {
-                renderer.draw_main(t, renderer.cell_width * idx * scale, 0, scale);
+        filtered_inv.slice(0, max_cells).forEach(function(item, idx) {
+            var offset = cell_length * idx;
+            item.tile.forEach(function(tile) { // Draw item and brand tiles
+                renderer.draw_main(tile,
+                                   _horizontal() ? offset : 0,
+                                   _horizontal() ? 0 : offset,
+                                   scale);
             });
 
-            var qty_field_name = i.qty_field;
-            if (i.hasOwnProperty(qty_field_name))
-                renderer.draw_quantity(i[qty_field_name],
-                                       renderer.cell_width * idx * scale, 0, scale);
+            var qty_field_name = item.qty_field;
+            if (item.hasOwnProperty(qty_field_name))
+            {
+                renderer.draw_quantity(item[qty_field_name],
+                                       _horizontal() ? offset : 0,
+                                       _horizontal() ? 0 : offset,
+                                       scale);
+            }
         });
 
-        if (available_width < required_width)
+        if (available_length < required_length)
         {
             var ellipsis = icons.ELLIPSIS;
-            var x_pos = available_width - icons.get_tile_info(ellipsis).w * scale;
-            renderer.draw_icon(ellipsis, x_pos, 0, -2, -2, scale);
+            var x_pos = 0, y_pos = 0;
+
+            if (_horizontal())
+                x_pos = available_length - icons.get_tile_info(ellipsis).w * scale;
+            else
+                y_pos = available_length - icons.get_tile_info(ellipsis).h * scale;
+
+            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, scale);
         }
         $canvas.removeClass("empty");
     }
 
     options.add_listener(function () {
+        var update_required = false;
+
         var new_scale = options.get("consumables_panel_scale") / 100;
         if (scale !== new_scale)
         {
             scale = new_scale;
-            update();
+            update_required = true;
         }
+
+        var new_orientation = options.get("consumables_panel_orientation");
+        if (orientation !== new_orientation)
+        {
+            orientation = new_orientation;
+            update_required = true;
+        }
+
+        if (update_required)
+            update();
     });
 });
