@@ -528,7 +528,7 @@ static const duration_def duration_data[] =
       "sanguine armoured", "sanguine armour",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
-    { DUR_SPWPN_PROTECTION, 0, "protected", "protection aura", "",
+    { DUR_SPWPN_PROTECTION, 0, "under a protective aura", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
     { DUR_NO_HOP, YELLOW, "-Hop",
