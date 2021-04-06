@@ -1870,7 +1870,7 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::restore_hp))
                 {
-                    hp_heal = random2avg(you.skill_rdiv(SK_INVOCATIONS, 2), 2)
+                    hp_heal = random2avg(you.skill_rdiv(SK_INVOCATIONS, 3, 2), 2)
                         + random2(mons.get_experience_level());
                 }
                 if (you.species == SP_GHOUL
