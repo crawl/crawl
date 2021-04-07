@@ -1287,7 +1287,7 @@ static void _unmeld_equipment_type(equipment_type e)
     else if (item.base_type != OBJ_JEWELLERY)
     {
         // This could happen if the player was mutated during the form.
-        if (!can_wear_armour(item, false, false))
+        if (!can_wear_armour(item, false, true))
             force_remove = true;
 
         // If you switched weapons during the transformation, make
