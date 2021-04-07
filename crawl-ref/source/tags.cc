@@ -4363,7 +4363,7 @@ static void _tag_read_you_dungeon(reader &th)
     {
         const bool created = unmarshallBoolean(th);
 
-        if (j < NUM_MONSTERS)
+        if (j < NUM_MONSTERS && created)
             you.unique_creatures.set(j, created);
     }
 

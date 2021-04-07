@@ -71,6 +71,7 @@
 #include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
+#include "unique-creature-list-type.h"
 #ifdef WIZARD
 #include "wiz-dgn.h"
 #endif
@@ -189,7 +190,7 @@ static void _mark_solid_squares();
 
 // A mask of vaults and vault-specific flags.
 vector<vault_placement> Temp_Vaults;
-static FixedBitVector<NUM_MONSTERS> temp_unique_creatures;
+static unique_creature_list temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
@@ -4993,29 +4994,10 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
         _give_animated_weapon_ammo(*mon);
 }
 
-static bool _monster_type_is_already_spawned_unique(monster_type type)
-{
-    return mons_is_unique(type) && you.unique_creatures[type];
-}
-
-static bool _unique_conflicts_with_younger_or_older_version(monster_type type)
-{
-    if (type == MONS_MAGGIE
-       && _monster_type_is_already_spawned_unique(MONS_MARGERY))
-    {
-        return true;
-    }
-    else if (type == MONS_MARGERY
-       && _monster_type_is_already_spawned_unique(MONS_MAGGIE))
-        return true;
-
-    return false;
-}
-
 static bool _should_veto_unique(monster_type type)
 {
-    return _monster_type_is_already_spawned_unique(type)
-           || _unique_conflicts_with_younger_or_older_version(type);
+    // Already generated.
+    return mons_is_unique(type) && you.unique_creatures[type];
 }
 
 monster* dgn_place_monster(mons_spec &mspec, coord_def where,

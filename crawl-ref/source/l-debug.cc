@@ -27,6 +27,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tileview.h"
+#include "unique-creature-list-type.h"
 #include "unwind.h"
 #include "view.h"
 #include "wiz-dgn.h"
@@ -283,7 +284,7 @@ LUAFN(debug_handle_monster_move)
     return 0;
 }
 
-static FixedBitVector<NUM_MONSTERS> saved_uniques;
+static unique_creature_list saved_uniques;
 
 LUAFN(debug_save_uniques)
 {
@@ -318,7 +319,7 @@ static bool _check_uniques()
 {
     bool ret = true;
 
-    FixedBitVector<NUM_MONSTERS> uniques_on_level;
+    unique_creature_list uniques_on_level;
     for (monster_iterator mi; mi; ++mi)
         if (mons_is_unique(mi->type))
             uniques_on_level.set(mi->type);

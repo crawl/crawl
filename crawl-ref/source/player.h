@@ -36,6 +36,7 @@
 #include "timed-effect-type.h"
 #include "transformation.h"
 #include "uncancellable-type.h"
+#include "unique-creature-list-type.h"
 #include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
@@ -240,7 +241,7 @@ public:
 
     FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
     FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
-    FixedBitVector<NUM_MONSTERS> unique_creatures;
+    unique_creature_list unique_creatures;
 
     KillMaster kills;
 
