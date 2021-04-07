@@ -533,8 +533,7 @@ namespace arena
         for (int i = 0; i < MAX_MONSTERS; i++)
             to_respawn[i] = -1;
 
-        unwind_var< FixedBitVector<NUM_MONSTERS> >
-            uniq(you.unique_creatures);
+        unwind_var<unique_creature_list> uniq(you.unique_creatures);
 
         place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
         place_b = dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I);
