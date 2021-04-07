@@ -163,9 +163,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Maledictions
     SPELL_CORONA,
     SPELL_HIBERNATION,
+    SPELL_DAZZLING_FLASH,
     SPELL_CONFUSING_TOUCH,
     SPELL_TUKIMAS_DANCE,
-    SPELL_DAZZLING_FLASH,
 },
 
 {   // Book of Air
