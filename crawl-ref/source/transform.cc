@@ -1474,7 +1474,7 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-    if (!feat_dangerous_for_form(which_trans, feat))
+    if (!feat_dangerous_for_form(which_trans, feat) || you.duration[DUR_FLIGHT])
         return true;
 
     if (fail_reason)
