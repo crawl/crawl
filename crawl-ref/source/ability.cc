@@ -1405,10 +1405,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if (abil.ability == ABIL_TRAN_BAT && !flight_allowed(quiet))
-        return false;
-
-
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
     {
         if (!quiet)

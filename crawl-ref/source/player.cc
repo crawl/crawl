@@ -4745,11 +4745,6 @@ bool flight_allowed(bool quiet, string *fail_reason)
             : "You can't fly in this form.";
         success = false;
     }
-    else if (you.liquefied_ground() && you.duration[DUR_LIQUEFYING] == 0)
-    {
-        msg = "You can't fly while stuck in liquid ground.";
-        success = false;
-    }
 
     if (!success)
     {
