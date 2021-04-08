@@ -985,10 +985,21 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool allow_bonus)
+int spell_range(spell_type spell, int pow, bool allow_bonus, bool ignore_los)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
+    
+    if !(ignore_los)
+    int los_cap  = (int)you.current_vision;
+    else
+    	{ 
+    	if (you.species!=SP_KOBOLD)
+    		int los_cap  = (int)you.normal_vision;
+    	else
+    		int los_cap  = (int)you.normal_vision-3
+    }
+    
     ASSERT(maxrange >= minrange);
 
     // spells with no range have maxrange == minrange == -1
@@ -1007,15 +1018,15 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
     }
 
     if (minrange == maxrange)
-        return min(minrange, (int)you.current_vision);
+        return min(minrange, los_cap);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return min(maxrange, (int)you.current_vision);
+        return min(maxrange, los_cap);
 
     // Round appropriately.
-    return min((int)you.current_vision,
+    return min(los_cap,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
