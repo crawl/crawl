@@ -4523,11 +4523,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             else if (you.add_fearmonger(mons))
             {
                 retval = 1;
-
                 you.increase_duration(DUR_AFRAID, 10 + random2avg(pow / 10, 4));
-
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
             }
         }
     }
@@ -4573,9 +4569,6 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 simple_monster_message(**mi, " looks frightened!");
 
             behaviour_event(*mi, ME_SCARE, mons);
-
-            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                mons->add_ench(ENCH_FEAR_INSPIRING);
         }
     }
 

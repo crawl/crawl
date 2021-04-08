@@ -70,7 +70,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_REGENERATION,    MB_REGENERATION },
     { ENCH_STRONG_WILLED,   MB_STRONG_WILLED },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
-    { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
     { ENCH_DAZED,           MB_DAZED },
     { ENCH_MUTE,            MB_MUTE },
     { ENCH_BLIND,           MB_BLIND },
@@ -642,6 +641,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
+
+    if (you.afraid_of(m))
+        mb.set(MB_FEAR_INSPIRING);
 
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);

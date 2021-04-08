@@ -1400,7 +1400,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REGENERATION:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
     case ENCH_DAZED:
@@ -2023,9 +2022,9 @@ static const char *enchant_names[] =
     "regen",
     "magic_res", "mirror_dam",
 #if TAG_MAJOR_VERSION == 34
-    "stoneskin",
+    "stoneskin", "fear inspiring",
 #endif
-    "fear inspiring", "temporarily pacified",
+    "temporarily pacified",
 #if TAG_MAJOR_VERSION == 34
     "withdrawn", "attached",
 #endif
@@ -2229,7 +2228,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
