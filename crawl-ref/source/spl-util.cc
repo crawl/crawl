@@ -991,13 +991,13 @@ int spell_range(spell_type spell, int pow, bool allow_bonus, bool ignore_los)
     int maxrange = _seekspell(spell)->max_range;
     int los_cap  = (int)you.current_vision;
     if (ignore_los)
-    	{ 
-    	if (you.species!=SP_KOBOLD)
-    		los_cap  = (int)you.normal_vision;
-    	else
-    		los_cap  = (int)you.normal_vision-3;
+        {
+        if (you.species!=SP_KOBOLD)
+                los_cap  = (int)you.normal_vision;
+        else
+                los_cap  = (int)you.normal_vision-3;
     }
-    
+
     ASSERT(maxrange >= minrange);
 
     // spells with no range have maxrange == minrange == -1

@@ -837,19 +837,19 @@ void bolt::bounce()
         rg(*ai - ray.pos()) = cell_is_solid(*ai);
     ray.bounce(rg);
     extra_range_used += 2;
- 
+
     //Keep lenght of bounced Spells constant despite reduced los (scarf of shadows,Robe of Night)
     //Also small buff to Kolbolds making it easier for them to multizap opponents
     bolt boltcopy = *this;
     if (bounces == 1)
-    	{
-    	extra_range_used -= spell_range(boltcopy.origin_spell, boltcopy.ench_power,true,true)-range;
-    	
-    	if  (you.species==SP_KOBOLD)
-		extra_range_used -= 1;//Makes it easier for Kobolds to multizap opponents, (first zap is one cheaper), 
-				      //Spells with range>=los now get reflected back an even number of tiles this also looks cleaner
-    	}
- 
+        {
+        extra_range_used -= spell_range(boltcopy.origin_spell, boltcopy.ench_power,true,true)-range;
+
+        if  (you.species==SP_KOBOLD)
+                extra_range_used -= 1;//Makes it easier for Kobolds to multizap opponents, (first zap is one cheaper),
+                                      //Spells with range>=los now get reflected back an even number of tiles this also looks cleaner
+        }
+
     ASSERT(!cell_is_solid(ray.pos()));
 }
 
