@@ -23,7 +23,7 @@ end
 
 NAME:   basic_ecumenical_altar
 TAGS:   transparent
-WEIGHT: 200
+WEIGHT: 50
 : ecumenical_altar_setup(_G)
 MAP
 _
