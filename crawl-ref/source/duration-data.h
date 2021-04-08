@@ -45,6 +45,12 @@ static void _end_death_channel()
     }
 }
 
+static void _end_sticky_flame()
+{
+    you.props.erase("sticky_flame_source");
+    you.props.erase("sticky_flame_aux");
+}
+
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
@@ -221,7 +227,8 @@ static const duration_def duration_data[] =
     { DUR_LIQUID_FLAMES,
       RED, "Fire",
       "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_NO_FLAGS},
+      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
+      {{ "You are no longer on fire.", _end_sticky_flame }}},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",
@@ -413,7 +420,7 @@ static const duration_def duration_data[] =
     { DUR_FROZEN,
       RED, "Frozen",
       "frozen", "",
-      "You are partly encased in ice.", D_NO_FLAGS,
+      "You are partly encased in ice.", D_DISPELLABLE,
       {{ "The ice encasing you melts away." }, {}, true }},
     { DUR_SAP_MAGIC,
       RED, "Sap",
@@ -577,7 +584,7 @@ static const duration_def duration_data[] =
       {{ "Your icy envelope is restored.", _redraw_armour }}},
     { DUR_PARALYSIS_IMMUNITY, 0, "", "", "paralysis immunity", "", D_NO_FLAGS},
     { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
-    { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
+    { DUR_SICKENING, 0, "", "", "sickening", "", D_NO_FLAGS, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,

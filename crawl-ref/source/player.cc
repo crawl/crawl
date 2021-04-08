@@ -4445,12 +4445,8 @@ void dec_napalm_player(int delay)
 
     ouch(hurted * delay / BASELINE_DELAY, KILLED_BY_BURNING);
 
-    you.duration[DUR_LIQUID_FLAMES] -= delay;
-    if (you.duration[DUR_LIQUID_FLAMES] <= 0)
-    {
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
-    }
+    you.duration[DUR_LIQUID_FLAMES] =
+        max(0, you.duration[DUR_LIQUID_FLAMES] - delay);
 }
 
 bool slow_player(int turns)

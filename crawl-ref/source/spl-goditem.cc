@@ -507,6 +507,13 @@ void debuff_player()
             len = 0;
             heal_flayed_effect(&you);
         }
+        else if (duration == DUR_LIQUID_FLAMES)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You are no longer on fire.");
+            you.props.erase("sticky_flame_aux");
+            you.props.erase("sticky_flame_source");
+        }
         else if (len > 1)
         {
             len = 1;
