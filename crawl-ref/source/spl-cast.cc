@@ -2706,11 +2706,12 @@ string spell_power_string(spell_type spell)
         return make_stringf("%d%%", percent);
 }
 
-int calc_spell_range(spell_type spell, int power, bool allow_bonus)
+int calc_spell_range(spell_type spell, int power, bool allow_bonus,
+                     bool ignore_shadows)
 {
     if (power == 0)
         power = calc_spell_power(spell, true, false, false);
-    const int range = spell_range(spell, power, allow_bonus);
+    const int range = spell_range(spell, power, allow_bonus, ignore_shadows);
 
     return range;
 }
@@ -2729,7 +2730,7 @@ string spell_range_string(spell_type spell)
 
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0);
-    const int maxrange = spell_range(spell, cap);
+    const int maxrange = calc_spell_range(spell, cap, true, true);
 
     return range_string(range, maxrange, '@');
 }

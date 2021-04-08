@@ -838,6 +838,14 @@ void bolt::bounce()
     ray.bounce(rg);
     extra_range_used += 2;
 
+    // Keep length of bounced spells constant despite reduced los (scarf of
+    // shadows, Robe of Night)
+    if (bounces == 1)
+    {
+        extra_range_used -= spell_range(origin_spell, ench_power, true, true)
+                            - range;
+    }
+
     ASSERT(!cell_is_solid(ray.pos()));
 }
 
