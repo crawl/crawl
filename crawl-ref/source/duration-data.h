@@ -192,7 +192,7 @@ static const duration_def duration_data[] =
       }}}, 20},
     { DUR_CORONA, // Has custom long_text
       YELLOW, "Corona",
-      "coronaed", "corona",
+      "lit by a corona", "corona",
       "", D_DISPELLABLE,
       {{ "", []() {
           if (!you.backlit())
@@ -540,7 +540,7 @@ static const duration_def duration_data[] =
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
     { DUR_NO_HOP, YELLOW, "-Hop",
-      "can't hop", "no hop",
+      "unable to hop", "no hop",
       "You are unable to hop.", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
     { DUR_ACROBAT, 0, "",

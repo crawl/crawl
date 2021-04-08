@@ -435,6 +435,12 @@ string describe_player_cancellation()
     _dispellable_player_buffs(buffs);
     for (auto duration : buffs.durations)
     {
+        if (duration == DUR_TRANSFORMATION)
+        {
+            effects.push_back("transformed");
+            continue;
+        }
+
         status_info inf;
         if (fill_status_info(duration, inf) && !inf.short_text.empty())
         {
@@ -449,14 +455,28 @@ string describe_player_cancellation()
         STATUS_AIRBORNE,
         STATUS_SPEED,
         STATUS_INVISIBLE,
+        STATUS_BEHELD,
     };
     for (auto status : dispellable_statuses)
     {
         status_info inf;
         if (fill_status_info(status, inf) && !inf.short_text.empty())
         {
-            strip_suffix(inf.short_text, " (expiring)");
-            effects.push_back(inf.short_text);
+            if (status == STATUS_AIRBORNE)
+            {
+                if (!you.attribute[ATTR_PERM_FLIGHT]
+                    && !you.racial_permanent_flight())
+                {
+                    effects.push_back("flying");
+                }
+                else
+                    effects.push_back("buoyant");
+            }
+            else
+            {
+                strip_suffix(inf.short_text, " (expiring)");
+                effects.push_back(inf.short_text);
+            }
         }
     }
 
