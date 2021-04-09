@@ -1,10 +1,20 @@
 ###############################################################################
 # snake.des: All maps and branch endings relating to the Snake Pit.
+#
+# <<1>>      Entries
+# <<2>>      Decorative vaults
+# <<3>>      Monster-placing vaults
+# <<4>>      Snake end vaults
+#
+###############################################################################
 ###############################################################################
 
-##############################################################################
-# Snake Pit entry vaults
-##############################################################################
+###############################################################################
+#
+# <<1>> Snake entries.
+#       All must have the snake_entry tag and place an enter_snake feature.
+#
+###############################################################################
 
 NAME:   dummy_snake_entry
 TAGS:   snake_entry transparent
@@ -153,674 +163,16 @@ xx---.---xx
  xxxx@xxxx
 ENDMAP
 
-##############################################################################
-# Snake Pit specific non-ending non-entry vaults
-##############################################################################
+###############################################################################
+#
+# <<2>> Decorative vaults.
+#
+###############################################################################
 
-NAME:   minmay_snake_pond
-TAGS:   transparent
-DEPTH:  Snake
-MONS:   ball python w:3 / adder / water moccasin
-SUBST:  w = wwWW.1
-MAP
-  wwww
- WwwWww
-wwWWwwWw
-wWwwWWww
-wWwwwwWw
-wwwWwWww
- wWwWww
-  wwww
-ENDMAP
-
-NAME:   minmay_snake_river
-TAGS:   no_monster_gen generate_awake
-DEPTH:  Snake
-ORIENT: south
-# Black mambas can't swim, so none of those
-MONS:   ball python w:3 / adder / water moccasin / nothing w:5
-MONS:   anaconda / nothing w:5
-SUBST:  w = wwW
-KPROP:  12 = no_tele_into
-MAP
-xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
-xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
-xx211wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww112xxx
-xx211xwwwwwwwwwwwwxxxxxxxxxxxxxwwwwwwwwwwwwxxxxxxxxxxxwwwwwwwwwx112xxx
-xxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxxxxxwwwwxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   hangedman_venom_bottle
-TAGS:   patrolling transparent
-DEPTH:  Snake
-WEIGHT: 5
-KMONS:  123 = water moccasin / black mamba / nothing
-KMONS:  4 = guardian serpent
-KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of degeneration w:30 ident:type / nothing w:20
-KITEM:  4 = any weapon good_item ego:venom q:1 / \
-            any weapon good_item ego:venom q:2
-KFEAT:  1234 = shallow_water
-KMASK:  123 = no_monster_gen
-COLOUR: 1234 = lightgreen
-SUBST:  1 = 1 2:1 3:1
-MARKER: 2 = lua:fog_machine { cloud_type = "poison gas", pow_min = 5, \
-                pow_max = 30, delay = 30, size = 2, walk_dist = 2 }
-MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
-                pow_max = 20, delay = 40, size = 3 }
-MAP
-     ...
-    .....
-   ..+++..
-  ..m+2+m..
-  ..mm1mm..
- ..mm111mm..
-..mm11111mm..
-..mm11111mm..
-..mm11411mm..
-..mm11111mm..
-..mmm111mmm..
- ..mmmmmmm..
-  ....5....
-   .......
-ENDMAP
-
-NAME:   nicolae_snake_lava_pool
-TAGS:   transparent
-DEPTH:  Snake
-SUBST:  L = l1
-SUBST:  1 = 1.
-MONS:   adder / ball python / black mamba / anaconda w:5 / \
-        water moccasin / nothing w:40
-KMONS:  l = lava snake / nothing w:50
-KFEAT:  l = lava
-MAP
-    .......
-  ...........
- .............
- .....111.....
-.....1LLL1.....
-....1LlllL1....
-...1LlllllL1...
-...1LlllllL1...
-...1LlllllL1...
-....1LlllL1....
-.....1LLL1.....
- .....111.....
- .............
-  ...........
-    .......
-ENDMAP
-
-NAME:   nicolae_snake_springs
-TAGS:   transparent
-DEPTH:  Snake
-SUBST:  W = w1
-SUBST:  1 = 1.
-MONS:   adder / ball python / black mamba / anaconda w:5 / \
-        water moccasin w:15
-KMONS:  w = sea snake / nothing w:90
-KFEAT:  w = deep_water
-MAP
-    .......
-  ...........
- .............
- .....111.....
-.....1WWW1.....
-....1WwwwW1....
-...1WwwwwwW1...
-...1WwwwwwW1...
-...1WwwwwwW1...
-....1WwwwW1....
-.....1WWW1.....
- .....111.....
- .............
-  ...........
-    .......
-ENDMAP
-
-NAME:   nicolae_sea_snake_s
-MONS:   naga mage, naga
-ORIENT: float
-DEPTH:  Snake:2-3
-TAGS:   no_monster_gen
-SHUFFLE: {[(
-SHUFFLE: (<
-KFEAT:  q = w
-KMONS:  q = w:15 sea snake / w:5 nothing
-MAP
-xxxwwwwwwwxxxxxx
-@..wwwqwww.....xx
-@...wwwww.......xx
-@....wqw.........x
-x..2.www....x....x
-xx...wqw...xxx...x
- x...www...xxx...x
- x.2.wqw...xxx...x
- x...www...xxx...x
- x...wqw...xxx...x
- x.2.www...xxx...x
- x....w....xxx...x
- x.........xxx{.[x
- xx...1...xxxx...x
-  xx.....xx  xx(xx
-   xxxxxxx    xxx
-ENDMAP
-
-NAME:   nicolae_snake_horde_hoard
-DEPTH:  Snake
-KITEM:  s = $ / nothing w:25 / * w:1
-KMONS:  s = adder w:5 / ball python w:5 / black mamba / anaconda / \
-           water moccasin / sea snake w:1 / nothing w:20
-MAP
- xxxxxxx
-xxsssssxxxxxx
-xssssssss=..@
-xssssssss=.0@
-xssssssss=..@
-xxsssssxxxxxx
- xxxxxxx
-ENDMAP
-
-NAME:   nicolae_cobra_stairs
-DEPTH:  Snake:2-3
-ORIENT: float
-TAGS:   no_pool_fixup patrolling
-SHUFFLE: }])
-SUBST:  ) = >>)
-MONS:   guardian serpent, nagaraja, naga mage, naga warrior
-MAP
-       xxxxxxxx
-     xxx......xx
-   xxx..4.www.2xx
-xxxx.9....w3w...x
-@.....wwwwwWw...xx
-@..0.ww.....1...}x
-@..0.W.4.4.3.2..]x
-@..0.ww.....1...)x
-@.....wwwwwWw...xx
-xxxx.9....w3w...x
-   xxx..4.www.2xx
-     xxx......xx
-       xxxxxxxx
-ENDMAP
-
-NAME:   nicolae_snake_hallway
-DEPTH:  Snake
-ORIENT: float
-SUBST:  A : @xx
-SUBST:  B : @xx
-SUBST:  C : @xx
-SUBST:  T : TTTVVUY
-MONS:   naga, naga warrior
-MONS:   naga mage w:25 / nagaraja w:5
-MAP
-             xxxxxx
-           xxx.G.GxxxxxAAxx
-xxx      xxx.G..1..Gxx.1..xxx
-@Gxxx  xxx.G....1....G...T..xx
-@..Gxxxx.G.2...G.G.....3...1.C
-@..1.G.G.3.2.Gxxxx.G...3...1.C
-@G.1...2.3.Gxxx  xxx.G...T..xx
-xx.G...2.Gxxx      xxx.1..xxx
- xxx.G.Gxxx          xxBBxx
-   xxxxxx
-ENDMAP
-
-# The disgraced guardian serpent Aizul has been
-# demoted to watching the stairs.
-NAME:   nicolae_aizul_guard
-DEPTH:  Snake:2-3
-TAGS:   no_rotate no_hmirror no_vmirror transparent
-ORIENT: float
-SHUFFLE: ]})>
-SUBST:  ) = )>
-: if you.absdepth() > 14 then
-KMONS:  A = patrolling Aizul, patrolling nagaraja
-KMONS:  B = guardian serpent / nagaraja
-: else
-KMONS:  A = patrolling Aizul, patrolling guardian serpent
-KMONS:  B = naga mage / guardian serpent
-: end
-NSUBST: B = A / B
-MAP
- xxx.@.xxx
-xx.B...B.xx
-x.........x
-xB.......Bx
-....].>....
-@.........@
-....).}....
-xB.......Bx
-x.........x
-xx.B...B.xx
- xxx.@.xxx
-ENDMAP
-
-NAME:   nicolae_snake_shapes
-TAGS:   no_pool_fixup transparent
-DEPTH:  Snake
-NSUBST: 0 = 2:9 / 1:8 / *:0
-SUBST:  x : xcvmlwWb
-MAP
-      .....
-   ...........
- ......xxx......
- .......0x.......
-...xxx..xx..xxx...
-....0x..x0...0x...
-....xx..xxx..xx....
- ...x0...0x..x0....
- ...xxx..xx..xxx...
-  .......x0.......
-   ......xxx......
-     ...........
-        .....
-ENDMAP
-
-NAME:   nicolae_coiled_stairwell_down
-DEPTH:  Snake, !Snake:$
-TAGS:   uniq_coiled_stairwell
-SUBST:  } = }])>
-MAP
-  xxxxxxx
- xx.....xx
-xx.xxxxx.xx
-x.xx...xx.x
-x.x.xxx.x.x
-x.x.x}x.x.x
-x.xx..x.x.x
-xx.xxxx.x.x
- xx....xx.x
-  xxxxxx.xx
-    x...xx
-   xx.xxx
-   x.0.x
-   x...x
-   xx@xx
-ENDMAP
-
-NAME:   nicolae_coiled_stairwell_up
-DEPTH:  Snake:2-
-TAGS:   uniq_coiled_stairwell
-SUBST:  { = {[(<
-MAP
-  xxxxxxx
- xx.....xx
-xx.xxxxx.xx
-x.xx...xx.x
-x.x.xxx.x.x
-x.x.x{x.x.x
-x.xx..x.x.x
-xx.xxxx.x.x
- xx....xx.x
-  xxxxxx.xx
-    x...xx
-   xx.xxx
-   x.0.x
-   x...x
-   xx@xx
-ENDMAP
-
-NAME: nicolae_snakescales
-DEPTH: Snake
-ORIENT: float
-SUBST: 0 = 0., 9 = 9., 8 = 8.
-MAP
-        xxx       xxx       xxx
-       x...x     x...x     x...x
-      x.....x   x.....x   x.....x
-   xxx...0...xxx...9...xxx...0...xxx
-  x...x.....x...x.....x...x.....x...x
- x.....x...x.....x...x.....x...x.....x
-x...0...xxx...9...xxx...9...xxx...0..x
- x.....x...x.....x...x.....x...x.....x
-  x...x.....x...x.....x...x.....x...x
-   xxx...0...xxx...8...xxx...0...xxx
-  x...x.....x...x.....x...x.....x...x
- x.....x...x.....x...x.....x...x.....x
-x...0...xxx...9...xxx...9...xxx...0..x
- x.....x...x.....x...x.....x...x.....x
-  x...x.....x...x.....x...x.....x...x
-   xxx...0...xxx...8...xxx...0...xxx
-  x...x.....x...x.....x...x.....x...x
- x.....x...x.....x...x.....x...x.....x
-x...0...xxx...9...xxx...9...xxx...0..x
- x.....x...x.....x...x.....x...x.....x
-  x...x.....x...x.....x...x.....x...x
-   xxx...0...xxx...9...xxx...0...xx
-      x.....x   x.....x   x.....x
-       x...x     x...x     x...x
-        xxx       xxx       xxx
-ENDMAP
-
-NAME: nicolae_snake_nest
-TAGS: transparent
-DEPTH: Snake
-ORIENT: float
-MAP
-         .........
-    ......xx..xxx..
-  ...xxxxxx..xx.xx..
-.....x......xx...xx..
-.xx..xx...............
-..xx....xxxx..xxxx..x..
- ..x..xxx..x.....xx.xx..
- ..x..x....xx.x...x..x...
- ..x....xx....xx..x..xxx.
- .xx.xx.x......x.xx....x.
- .x..x..x..xxxxx.x.....x.
- .x..x..x.xx........x.xx.
- ....x..x....x..xxx.x....
- .xx.xx.xx...x.xx.x.xxx..
- .x...x..xxx.x....x...x.
- .xx..xx.....x....x.x.x.
- ..x...x.x...x..xxx.xxx.
-  .xx....xxxxx..........
-  ..x...........x..xx..
-   .x.xxx...xxx.x..x..
-   .x...xxxxx...x..x.
-   .............xxxx.
-     ..xx..xxxx......
-      ..xxxx..x.
-       .........
-ENDMAP
-
-NAME:    guppyfry_snake_island
-DEPTH:   Snake
-TAGS:   transparent
-MONS:  plant
-SUBST:   . = . W:1 1:1, - = . W:3 0:1 ~:1 %:1
-SHUFFLE: 0~
-SUBST:   ~ = .
-MAP
-@.WWWWWWWW.@
-.WWW.....WW.
-WWW--WW-00WW
-WW..WWWW..WW
-WWW--WWWW~WW
-WWWW..WWWWWW
-WWWWW--WWWWW
-W~WWWW..WWWW
-W--WWWW--WWW
-WW..WW..WWWW
-.WW----WWWW.
-@.WWWWWWWW.@
-ENDMAP
-
-####
-
-NAME:    hangedman_snake_corridor_cut
-TAGS:    no_monster_gen transparent
-DEPTH:   Snake
-MONS:    naga, patrolling naga mage
-MONS:    black mamba / anaconda, patrolling guardian serpent
-MONS:    patrolling adder / patrolling ball python / \
-         patrolling water moccasin w:5
-SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
-SHUFFLE: 1234 / 1234 / 1212 / 3434
-SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
-MAP
-xxxxxxxxx@5@xxx
-xccccccccc...xxx
-xc*2%...KxJ...xxx
-xc2*1...xxx.j..xxx
-xc%1....JxKk....xxx
-xcHxI.....kKxJ...xx
-@cxxx.i1.j.xxx.j..x
-5.IxHh..%..JxKk...@
-@...hHxI.1%..kKxJ.5
-x..i.xxx.i3.j.xxxc@
-xx...IxHh..%..JxKcx
-xxx....hHxI.3....cx
- xxx..i.xxx.i....cx
-  xxx...IxHh.....cx
-   xxx....hHxI.3%cx
-    xxx..i.xxx3*4cx
-     xxx...IxH%4*cx
-      xxx...ccccccx
-       xxx@5@xxxxxx
-ENDMAP
-
-NAME:    hangedman_snake_corridor_split
-TAGS:    no_monster_gen transparent allow_dup
-DEPTH:   Snake
-MONS:    naga, black mamba, naga warrior, anaconda, naga mage, guardian serpent
-SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12
-SHUFFLE: 34, 56, 3456 / 3456 / 3456 / 3535 / 4646 / 3636 / 4545 / 3434 / 5656
-MAP
-    xxxxxxx
-   xxxxxxxxx
-  xxxx...xxxx
-xxxxx..X..xxxx
-xxxx..X%X.3xxxxx
-xx1..X%..X.4xxxx
-xx2YY..x..X.0.xxxxxxxxx
-x..YY.xxx..YY.xxxxxxxxx.@.
-..X.21xxxx.*Y...xxxxxx..X@
-@X..xxxxxx...Y*.xxxx12.X..
-.@.xxxxxxxxx.YY..xxx.YY..x
-   xxxxxxxxx.0.X..x..YY2xx
-          xxxx6.X..%X..1xx
-          xxxxx5.X%X..xxxx
-            xxxx..X..xxxxx
-             xxxx...xxxx
-              xxxxxxxxx
-              xxxxxxxx
-ENDMAP
-
-NAME:    hangedman_snake_sidewinding
-TAGS:    allow_dup
-DEPTH:   Snake, !Snake:$, Zot, !Zot:$
-: if you.in_branch("Zot") then
-KMONS:  A = base draconian / green draconian w:4
-KMONS:  B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5
-KMONS:  C = nonbase green draconian / draconian annihilator
-KMONS:  D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
-            iron dragon w:5
-: else
-KMONS:  A = naga warrior / naga mage / naga
-KMONS:  B = black mamba w:6 / anaconda
-KMONS:  C = nagaraja / naga mage w:5 / guardian serpent w:5
-KMONS:  D = guardian serpent / anaconda w:2
-: end
-SHUFFLE: @123<= / &456"-, EF
-SUBST:   = = +, 1 = A, 2 = B, 3 = C, < : ~~_..., &E = x, - = c
-SUBST:   456 = ', "F = ., y : x:2 G:1 .:6, Y : z', Z : z', z : xc
-NSUBST:  * = **|, ~ = 1:( / 1:(<.., _ = 1:) / 1:)>.
-KMASK:   '%*d = no_monster_gen
-MAP
-x@@xxxxxxxxxxxxxxxxxxxx
-x""xxcccccccccccccccccx
-x..xxxcc13121'''%%%**cx
-xy..A%c--32z'''Z''BD*cx
-xy...B%--c1''z'''z'B%cx
-x4.xxxxxccc''z''zYz'%cx
-x..xxEExxccc'''zYz''%cx
-xy...EE.A%ccc'''z''Z'cx
-xy...FF..B%ccc'''''''cx
-x4.xxFFxxxxxccc''zz''cx
-x1.xxEExxEExxccc''''4cx
-xy...EE..EE.A%ccc''z5cx
-xy...FF..FF..B%ccc454cx
-x..xxFFxxFFxxxxxccc66cx
-x1.xxEExxEExxEExxc==4cx
-xy...EE..EE..EE.A%==ccx
-xy...FF..FF..FF..B%cccx
-x..xxFFxxFFxxFFxxxxxccx
-x<<xxxxxxxxxxxxxxxxxxcx
-x&&xxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME: nicolae_snake_serpentine_hallways
-TAGS: transparent extra
-DEPTH: Snake
-MAP
-        x@@@@xxxxx
-        x........xxx
-       xxx.........xx
-    xxxxxxxx........x
-xxxxxxxxxxxxxxxx....xx
-@..............xx....x
-@...............xx...x
-xxxxxxxxxxx......x...x
-xxxxx.....xxx...xx...x
-xxx.........xx.xx....x
-xx...........x+x....xx
-xx....x+x...........xx
-x....xx.xx.........xxx
-x...xx...xxx.....xxxxx
-x...x......xxxxxxxxxxx
-x...xx...............@
-x....xx..............@
-xx....xxxxxxxxxxxxxxxx
- x........xxxxxxxx
- xx.........xxx
-  xxx........x
-    xxxxx@@@@x
-ENDMAP
-
-NAME: nicolae_snake_linked_coils
-TAGS: transparent extra
-DEPTH: Snake
-SUBST: + : +x
-MAP
-    xxxxxxxxxxxxxx
-  xxx.....xxx....xxx
- xx.........+x.....xx
-xx...xxxxx...xxxx...xx
-@...xxxx.+xx..xxxx...@
-@..xxxxx..xx..xxxxx..@
-xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
-xxxxxxx..xxxx..xxxxxxx
-@..xxxxx..xx..xxxxx..@
-@...xxxx...x+.xxxx...@
-xx...xxxx...xxxxx...xx
- xx.....x+.........xx
-  xxx....xxx.....xxx
-    xxxxxxxxxxxxxx
-ENDMAP
-
-NAME: nicolae_snake_single_loop
-TAGS: transparent extra
-DEPTH: Snake
-MAP
- xxxxxxx
-xx.....xx
-x.......xx
-@...x...xxx
-@..xxx..xxxx
-xxxxxx..xxxxx
-xx...+..+...xx
-x....+..+....x
-x...xx..xx...x
-x..xxx..xxx..x
-x...x...xx...x
-x.......x....x
-xx.....xx...xx
- xxxxxxxx@@xx
-ENDMAP
-
-NAME: nicolae_snake_double_loop
-DEPTH: Snake
-TAGS: transparent extra
-SHUFFLE: AB, CD
-SUBST: AC = ., BD = +
-MAP
- xxxxxxx    xxxxxxx
-xx.....xxxxxx.....xx
-x.......xxxx.......x
-@...x...xxxx...x...x
-@..xxx..xxxx..xxx..x
-xxxxxxBBxxxxCCxxx..x
-xx...A..A..D..D....x
-x....A..A..D..D...xx
-x...xxBBxxxxCCxxxxxx
-x..xxx..xxxx..xxx..@
-x...x...xxxx...x...@
-x.......xxxx.......x
-xx.....xxxxxx.....xx
- xxxxxxx    xxxxxxx
-ENDMAP
-
-NAME: nicolae_snake_round_shape_thing
-TAGS: transparent extra
-DEPTH: Snake
-SHUFFLE: bc
-SUBST: a : x., b : x@, c : @
-MAP
-       xxbbbxx
-     xxx.....xxx
-    xx.........xx
-    x...........x
-   xx....xxx....xx
-   x....xxxxx....x
-   x...xxxxxxx...x
-   x...xxxxxxx...x
-  xx...xxxxxxx...xx
- xx.....xxxxx.....xx
-xx.......xxx.......xx
-c....a.........a....c
-c...aaa.......aaa...c
-c....a.........a....c
-xx.......xxx.......xx
- xx.....xxxxx.....xx
-  xx...xxxxxxx...xx
-   x...xxxxxxx...x
-   x...xxxxxxx...x
-   x....xxxxx....x
-   xx....xxx....xx
-    x...........x
-    xx.........xx
-     xxx.....xxx
-       xxbbbxx
-ENDMAP
-
-NAME: nicolae_snake_biting_tails
-TAGS: transparent extra
-DEPTH: Snake
-SUBST: G : GT
-MAP
-xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
-@...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
-xx....xx..........xxx.........xxx.........xx...x
- xxx.x......xxx....x....xxx....x....xxx..x.....x
-   xx.G....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
-   xx.....xxxxxxxx...xxxxxxxxx...xxxxxxxx.....xx
-   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....G.xx
-   x.....x..xxx....x....xxx....x....xxx......x.xxx
-   x...xx.........xxx.........xxx..........xx....xx
-   xxxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxx...@
-          xxxxxxx     xxxxxxx     xxxxxxx     xxxxx
-ENDMAP
-
-NAME: nicolae_snake_salamander_stairs
-DEPTH: Snake, !Snake:$
-: local level = you.depth() ; local weight = level * level
-KMONS: 1 = salamander
-SHUFFLE: ])}
-: kmons("2 = nothing w:21 / salamander w:" .. weight )
-NSUBST: l = 1 / 1:2 / 1:2l, a = 2:. / *:x, b = 2:. / *:x, c = @ / .
-SUBST: L = l.
-KPROP: 12l = no_cloud_gen
-KFEAT: 12 = l
-MAP
- xxxxxxxxxx
-xxllllL.a.bc
-x.llllL.a.bc
-x]llllL.a.bc
-x.llllL.a.bc
-xxllllL.a.bc
- xxxxxxxxxx
-ENDMAP
+default-depth: Snake
 
 NAME:    hangedman_snake_thin_pillar_pass
-TAGS:    extra transparent decor
-DEPTH:   Snake
+TAGS:    extra transparent
 WEIGHT:  6
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E = c...., ' = .
@@ -844,8 +196,7 @@ xx.cA..c..Ac.xx
 ENDMAP
 
 NAME:    hangedman_snake_wide_pillar_pass
-TAGS:    extra transparent decor
-DEPTH:   Snake
+TAGS:    extra transparent
 WEIGHT:  4
 SHUFFLE: @' / @' / @' / '@
 SUBST:   A : c.., B : c.., C : c.., D = cccc., E : c...., F : c...., ' = .
@@ -864,59 +215,10 @@ xxx...c.B.....c.....C.c...xxx
           xxx.'.xxx
 ENDMAP
 
-NAME: cheibrodos_snake_lava_hold
-DEPTH: Snake, !Snake:$
-TAGS: no_item_gen no_monster_gen patrolling
-ORIENT: float
-NSUBST: ' = 2:'l / *:'
-KFEAT: '" = lava
-KMONS: " = salamander mystic
-KMONS: ' = salamander
-
-MAP
-    ccccccccccccccc
-   ccccccccccccccccc
-  ccclclc'c'c'c'clccc
- cccll.............ccc
- ccll..lclclc.......cc
-cccl..lccccclc..clc..c
-cc"l..lc*$*ccl.clllc.+@
-cc'l....$|$Gcc.lllll.+@
-cc"l..lc*$*ccl.clllc.+@
-cccl..lccccclc..clc..c
- ccll..lclclc.......cc
- cccll.............ccc
-  ccclclc'c'c'c'clccc
-   ccccccccccccccccc
-    ccccccccccccccc
-ENDMAP
-
-NAME: cheibrodos_snake_ritualist_ritual
-DEPTH: Snake, !Snake:$
-TAGS: no_item_gen no_monster_gen no_pool_fixup patrolling transparent
-ORIENT: float
-MONS: naga mage / mana viper
-KMONS: - = naga ritualist
-KITEM: - = any good_item / any amulet
-MAP
-...........
-.wwwwwwwww.
-.w1.....1w.
-.w.ww.ww.w.
-.w.w...w.w.
-@..w.-.w..@
-.w.w...w.w.
-.w.ww.ww.w.
-.w1.....1w.
-.wwwwwwwww.
-...........
-ENDMAP
-
 # Somewhat vaguely inspired by a vault shape in
 # a draft of evilmike's for something else entirely.
 NAME:    hangedman_snake_pattern
-TAGS:    transparent decor extra
-DEPTH:   Snake
+TAGS:    transparent extra
 # Pillars, door positions, entrances.
 SHUFFLE: XYZ, aA-+ / aA-+ / aA-+ / Aa+- / Aa+-, ABCDE
 SUBST:   X : cx.., Y : cx...., Z = ., a = x, - : xx+, + : +++..
@@ -933,36 +235,34 @@ aa...X...xx..Z..--...X...xx..Z..aa
      xxExxxxxxDxxxxxxxxCxxxxxxBxxxxxxx
 ENDMAP
 
-NAME: nicolae_snake_squiggles
-TAGS: transparent extra decor
-DEPTH: Snake
-NSUBST: A = x / ., B = x / ., C = x / ., D = x / ., E = x / ., F = x / ., \
-        G = x / ., H = x / ., I = x / ., J = x / ., K = x / ., L = x / ., \
-        M = x / ., N = x / ., O = x / ., P = x / ., Q = x / ., R = x / ., \
-        S = x / ., T = x / ., U = x / ., V = x / ., W = x / ., X = x / .
+NAME:   nicolae_snake_squiggles
+TAGS:   transparent extra
+NSUBST: a = x / ., p = x / ., q = x / ., D = x / ., E = x / ., F = x / .
+NSUBST: r = x / ., H = x / ., s = x / ., J = x / ., K = x / ., L = x / .
+NSUBST: M = x / ., N = x / ., O = x / ., P = x / ., Q = x / ., R = x / .
+NSUBST: S = x / ., y = x / ., z = x / ., ' = x / ., " = x / ., - = x / .
 MAP
      .......
-    ..Xx.xA..
-   ..WxX.AxB..
-  ..VxW...BxC..
- ..UxV.. ..CxD..
-..TxU..   ..DxE..
-.SxT..     ..ExF.
+    ..-x.xa..
+   .."x-.axp..
+  ..'x"...pxq..
+ ..zx'.. ..qxD..
+..yxz..   ..DxE..
+.Sxy..     ..ExF.
 .xS..       ..Fx.
 ....         ....
-.xR..       ..Gx.
-.RxQ..     ..HxG.
-..QxP..   ..IxH..
- ..PxO.. ..JxI..
+.xR..       ..rx.
+.RxQ..     ..Hxr.
+..QxP..   ..sxH..
+ ..PxO.. ..Jxs..
   ..OxN...KxJ..
    ..NxM.LxK..
     ..Mx.xL..
      .......
 ENDMAP
 
-NAME: nicolae_large_snake_swirl
-TAGS: transparent
-DEPTH: Snake
+NAME:  nicolae_large_snake_swirl
+TAGS:  transparent
 : if you.depth() == 1 then
 SUBST: s = ]})
 : elseif you.depth() == dgn.br_depth(you.branch()) then
@@ -998,15 +298,708 @@ xx.........xxxx
      xxxxx
 ENDMAP
 
-NAME: cheibrodos_toxic_ritual
-DEPTH: Snake
-TAGS: no_item_gen no_monster_gen transparent
+NAME:  nicolae_coiled_stairwell_down
+TAGS:  uniq_coiled_stairwell
+DEPTH: Snake, !Snake:$
+SUBST: } = }])>
+MAP
+  xxxxxxx
+ xx.....xx
+xx.xxxxx.xx
+x.xx...xx.x
+x.x.xxx.x.x
+x.x.x}x.x.x
+x.xx..x.x.x
+xx.xxxx.x.x
+ xx....xx.x
+  xxxxxx.xx
+    x...xx
+   xx.xxx
+   x.0.x
+   x...x
+   xx@xx
+ENDMAP
+
+NAME:  nicolae_coiled_stairwell_up
+TAGS:  uniq_coiled_stairwell
+DEPTH: Snake:2-
+SUBST: { = {[(<
+MAP
+  xxxxxxx
+ xx.....xx
+xx.xxxxx.xx
+x.xx...xx.x
+x.x.xxx.x.x
+x.x.x{x.x.x
+x.xx..x.x.x
+xx.xxxx.x.x
+ xx....xx.x
+  xxxxxx.xx
+    x...xx
+   xx.xxx
+   x.0.x
+   x...x
+   xx@xx
+ENDMAP
+
+NAME:   nicolae_snake_nest
+TAGS:   transparent
 ORIENT: float
-MONS: green death, naga ritualist, naga mage, naga
-NSUBST: - = 2:2 / *:.
-NSUBST: _ = 2:2 / *:.
-NSUBST: ' = 1:3 / 2:4 / 3=34 / *:.
-NSUBST: " = 1:| / 3:* / 4=$%
+MAP
+         .........
+    ......xx..xxx..
+  ...xxxxxx..xx.xx..
+.....x......xx...xx..
+.xx..xx...............
+..xx....xxxx..xxxx..x..
+ ..x..xxx..x.....xx.xx..
+ ..x..x....xx.x...x..x...
+ ..x....xx....xx..x..xxx.
+ .xx.xx.x......x.xx....x.
+ .x..x..x..xxxxx.x.....x.
+ .x..x..x.xx........x.xx.
+ ....x..x....x..xxx.x....
+ .xx.xx.xx...x.xx.x.xxx..
+ .x...x..xxx.x....x...x.
+ .xx..xx.....x....x.x.x.
+ ..x...x.x...x..xxx.xxx.
+  .xx....xxxxx..........
+  ..x...........x..xx..
+   .x.xxx...xxx.x..x..
+   .x...xxxxx...x..x.
+   .............xxxx.
+     ..xx..xxxx......
+      ..xxxx..x.
+       .........
+ENDMAP
+
+NAME:  nicolae_snake_serpentine_hallways
+TAGS:  transparent extra
+MAP
+        x@@@@xxxxx
+        x........xxx
+       xxx.........xx
+    xxxxxxxx........x
+xxxxxxxxxxxxxxxx....xx
+@..............xx....x
+@...............xx...x
+xxxxxxxxxxx......x...x
+xxxxx.....xxx...xx...x
+xxx.........xx.xx....x
+xx...........x+x....xx
+xx....x+x...........xx
+x....xx.xx.........xxx
+x...xx...xxx.....xxxxx
+x...x......xxxxxxxxxxx
+x...xx...............@
+x....xx..............@
+xx....xxxxxxxxxxxxxxxx
+ x........xxxxxxxx
+ xx.........xxx
+  xxx........x
+    xxxxx@@@@x
+ENDMAP
+
+NAME:  nicolae_snake_linked_coils
+TAGS:  transparent extra
+SUBST: + : +x
+MAP
+    xxxxxxxxxxxxxx
+  xxx.....xxx....xxx
+ xx.........+x.....xx
+xx...xxxxx...xxxx...xx
+@...xxxx.+xx..xxxx...@
+@..xxxxx..xx..xxxxx..@
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+xxxxxxx..xxxx..xxxxxxx
+@..xxxxx..xx..xxxxx..@
+@...xxxx...x+.xxxx...@
+xx...xxxx...xxxxx...xx
+ xx.....x+.........xx
+  xxx....xxx.....xxx
+    xxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_snake_single_loop
+TAGS: transparent extra
+MAP
+ xxxxxxx
+xx.....xx
+x.......xx
+@...x...xxx
+@..xxx..xxxx
+xxxxxx..xxxxx
+xx...+..+...xx
+x....+..+....x
+x...xx..xx...x
+x..xxx..xxx..x
+x...x...xx...x
+x.......x....x
+xx.....xx...xx
+ xxxxxxxx@@xx
+ENDMAP
+
+NAME:    nicolae_snake_double_loop
+TAGS:    transparent extra
+SHUFFLE: AB, CD
+SUBST:   AC = ., BD = +
+MAP
+ xxxxxxx    xxxxxxx
+xx.....xxxxxx.....xx
+x.......xxxx.......x
+@...x...xxxx...x...x
+@..xxx..xxxx..xxx..x
+xxxxxxBBxxxxCCxxx..x
+xx...A..A..D..D....x
+x....A..A..D..D...xx
+x...xxBBxxxxCCxxxxxx
+x..xxx..xxxx..xxx..@
+x...x...xxxx...x...@
+x.......xxxx.......x
+xx.....xxxxxx.....xx
+ xxxxxxx    xxxxxxx
+ENDMAP
+
+NAME:    nicolae_snake_round_shape_thing
+TAGS:    transparent extra
+SHUFFLE: bc
+SUBST:   a : x., b : x@, c : @
+MAP
+       xxbbbxx
+     xxx.....xxx
+    xx.........xx
+    x...........x
+   xx....xxx....xx
+   x....xxxxx....x
+   x...xxxxxxx...x
+   x...xxxxxxx...x
+  xx...xxxxxxx...xx
+ xx.....xxxxx.....xx
+xx.......xxx.......xx
+c....a.........a....c
+c...aaa.......aaa...c
+c....a.........a....c
+xx.......xxx.......xx
+ xx.....xxxxx.....xx
+  xx...xxxxxxx...xx
+   x...xxxxxxx...x
+   x...xxxxxxx...x
+   x....xxxxx....x
+   xx....xxx....xx
+    x...........x
+    xx.........xx
+     xxx.....xxx
+       xxbbbxx
+ENDMAP
+
+NAME:  nicolae_snake_biting_tails
+TAGS:  transparent extra
+SUBST: G : GT
+MAP
+xxxxx     xxxxxxx     xxxxxxx     xxxxxxx
+@...xxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxxx
+xx....xx..........xxx.........xxx.........xx...x
+ xxx.x......xxx....x....xxx....x....xxx..x.....x
+   xx.G....xxxxxx.x...xxxxxxx.x...xxxxxxx.G....x
+   xx.....xxxxxxxx...xxxxxxxxx...xxxxxxxx.....xx
+   x....G.xxxxxxx...x.xxxxxxx...x.xxxxxx....G.xx
+   x.....x..xxx....x....xxx....x....xxx......x.xxx
+   x...xx.........xxx.........xxx..........xx....xx
+   xxxxxxxx.....xxx xxx.....xxx xxx.....xxxxxxx...@
+          xxxxxxx     xxxxxxx     xxxxxxx     xxxxx
+ENDMAP
+
+###############################################################################
+#
+# <<3>> Monster-placing vaults.
+#
+###############################################################################
+
+NAME:   minmay_snake_pond
+TAGS:   transparent
+MONS:   ball python w:3 / adder / water moccasin
+SUBST:  w = wwWW.1
+MAP
+  wwww
+ WwwWww
+wwWWwwWw
+wWwwWWww
+wWwwwwWw
+wwwWwWww
+ wWwWww
+  wwww
+ENDMAP
+
+NAME:   minmay_snake_river
+TAGS:   no_monster_gen generate_awake
+DEPTH:  Snake
+ORIENT: south
+# Black mambas can't swim, so none of those
+MONS:   ball python w:3 / adder / water moccasin / nothing w:5
+MONS:   anaconda / nothing w:5
+SUBST:  w = wwW
+KPROP:  12 = no_tele_into
+MAP
+xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
+xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
+xx211wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww112xxx
+xx211xwwwwwwwwwwwwxxxxxxxxxxxxxwwwwwwwwwwwwxxxxxxxxxxxwwwwwwwwwx112xxx
+xxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxxxxxwwwwxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   hangedman_venom_bottle
+TAGS:   patrolling transparent
+WEIGHT: 5
+KMONS:  123 = water moccasin / black mamba / nothing
+KMONS:  4 = guardian serpent
+KMONS:  5 = naga mage / nothing
+KITEM:  1235 = potion of degeneration w:30 ident:type / nothing w:20
+KITEM:  4 = any weapon good_item ego:venom q:1 / \
+            any weapon good_item ego:venom q:2
+KFEAT:  1234 = shallow_water
+KMASK:  123 = no_monster_gen
+COLOUR: 1234 = lightgreen
+SUBST:  1 = 1 2:1 3:1
+MARKER: 2 = lua:fog_machine { cloud_type = "poison gas", pow_min = 5, \
+                pow_max = 30, delay = 30, size = 2, walk_dist = 2 }
+MARKER: 3 = lua:fog_machine { cloud_type = "noxious fumes", pow_min = 5, \
+                pow_max = 20, delay = 40, size = 3 }
+MAP
+     ...
+    .....
+   ..+++..
+  ..m+2+m..
+  ..mm1mm..
+ ..mm111mm..
+..mm11111mm..
+..mm11111mm..
+..mm11411mm..
+..mm11111mm..
+..mmm111mmm..
+ ..mmmmmmm..
+  ....5....
+   .......
+ENDMAP
+
+NAME:   nicolae_snake_lava_pool
+TAGS:   transparent
+SUBST:  L = l1
+SUBST:  1 = 1.
+MONS:   adder / ball python / black mamba / anaconda w:5 / \
+        water moccasin / nothing w:40
+KMONS:  l = lava snake / nothing w:50
+KFEAT:  l = lava
+MAP
+    .......
+  ...........
+ .............
+ .....111.....
+.....1LLL1.....
+....1LlllL1....
+...1LlllllL1...
+...1LlllllL1...
+...1LlllllL1...
+....1LlllL1....
+.....1LLL1.....
+ .....111.....
+ .............
+  ...........
+    .......
+ENDMAP
+
+NAME:   nicolae_snake_springs
+TAGS:   transparent
+SUBST:  W = w1
+SUBST:  1 = 1.
+MONS:   adder / ball python / black mamba / anaconda w:5 / \
+        water moccasin w:15
+KMONS:  w = sea snake / nothing w:90
+KFEAT:  w = deep_water
+MAP
+    .......
+  ...........
+ .............
+ .....111.....
+.....1WWW1.....
+....1WwwwW1....
+...1WwwwwwW1...
+...1WwwwwwW1...
+...1WwwwwwW1...
+....1WwwwW1....
+.....1WWW1.....
+ .....111.....
+ .............
+  ...........
+    .......
+ENDMAP
+
+NAME:    nicolae_sea_snake_s
+TAGS:    no_monster_gen
+DEPTH:   Snake:2-, !Snake:$
+ORIENT:  float
+MONS:    naga mage, naga
+KMONS:   q = w:15 sea snake / w:5 nothing
+KFEAT:   q = w
+SHUFFLE: {[(
+SHUFFLE: (<
+MAP
+xxxwwwwwwwxxxxxx
+@..wwwqwww.....xx
+@...wwwww.......xx
+@....wqw.........x
+x..2.www....x....x
+xx...wqw...xxx...x
+ x...www...xxx...x
+ x.2.wqw...xxx...x
+ x...www...xxx...x
+ x...wqw...xxx...x
+ x.2.www...xxx...x
+ x....w....xxx...x
+ x.........xxx{.[x
+ xx...1...xxxx...x
+  xx.....xx  xx(xx
+   xxxxxxx    xxx
+ENDMAP
+
+NAME:   nicolae_snake_horde_hoard
+KITEM:  s = $ / nothing w:25 / * w:1
+KMONS:  s = adder w:5 / ball python w:5 / black mamba / anaconda / \
+           water moccasin / sea snake w:1 / nothing w:20
+MAP
+ xxxxxxx
+xxsssssxxxxxx
+xssssssss=..@
+xssssssss=.0@
+xssssssss=..@
+xxsssssxxxxxx
+ xxxxxxx
+ENDMAP
+
+NAME:    nicolae_cobra_stairs
+TAGS:    no_pool_fixup patrolling
+DEPTH:   Snake:2-, !Snake:$
+ORIENT:  float
+MONS:    guardian serpent, nagaraja, naga mage, naga warrior
+SHUFFLE: }])
+SUBST:   ) = >>)
+MAP
+       xxxxxxxx
+     xxx......xx
+   xxx..4.www.2xx
+xxxx.9....w3w...x
+@.....wwwwwWw...xx
+@..0.ww.....1...}x
+@..0.W.4.4.3.2..]x
+@..0.ww.....1...)x
+@.....wwwwwWw...xx
+xxxx.9....w3w...x
+   xxx..4.www.2xx
+     xxx......xx
+       xxxxxxxx
+ENDMAP
+
+NAME:   nicolae_snake_hallway
+ORIENT: float
+MONS:   naga, naga warrior
+MONS:   naga mage w:25 / nagaraja w:5
+SUBST:  A : @xx
+SUBST:  B : @xx
+SUBST:  C : @xx
+SUBST:  T : TTTVVUY
+MAP
+             xxxxxx
+           xxx.G.GxxxxxAAxx
+xxx      xxx.G..1..Gxx.1..xxx
+@Gxxx  xxx.G....1....G...T..xx
+@..Gxxxx.G.2...G.G.....3...1.C
+@..1.G.G.3.2.Gxxxx.G...3...1.C
+@G.1...2.3.Gxxx  xxx.G...T..xx
+xx.G...2.Gxxx      xxx.1..xxx
+ xxx.G.Gxxx          xxBBxx
+   xxxxxx
+ENDMAP
+
+# The disgraced guardian serpent Aizul has been
+# demoted to watching the stairs.
+NAME:    nicolae_aizul_guard
+TAGS:    no_rotate no_hmirror no_vmirror transparent
+DEPTH:   Snake:2-, !Snake:$
+ORIENT:  float
+: if you.absdepth() > 14 then
+KMONS:   D = patrolling Aizul, patrolling nagaraja
+KMONS:   E = guardian serpent / nagaraja
+: else
+KMONS:   D = patrolling Aizul, patrolling guardian serpent
+KMONS:   E = naga mage / guardian serpent
+: end
+SHUFFLE: ]})>
+SUBST:   ) = )>
+NSUBST:  E = D / E
+MAP
+ xxx.@.xxx
+xx.E...E.xx
+x.........x
+xE.......Ex
+....].>....
+@.........@
+....).}....
+xE.......Ex
+x.........x
+xx.E...E.xx
+ xxx.@.xxx
+ENDMAP
+
+NAME:   nicolae_snake_shapes
+TAGS:   no_pool_fixup transparent
+NSUBST: 0 = 2=9 / 1=8 / 0
+SUBST:  x : xcvmlwWb
+MAP
+      .....
+   ...........
+ ......xxx......
+ .......0x.......
+...xxx..xx..xxx...
+....0x..x0...0x...
+....xx..xxx..xx....
+ ...x0...0x..x0....
+ ...xxx..xx..xxx...
+  .......x0.......
+   ......xxx......
+     ...........
+        .....
+ENDMAP
+
+NAME:   nicolae_snakescales
+ORIENT: float
+SUBST:  0 = 0., 9 = 9., 8 = 8.
+MAP
+        xxx       xxx       xxx
+       x...x     x...x     x...x
+      x.....x   x.....x   x.....x
+   xxx...0...xxx...9...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...8...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...8...xxx...0...xxx
+  x...x.....x...x.....x...x.....x...x
+ x.....x...x.....x...x.....x...x.....x
+x...0...xxx...9...xxx...9...xxx...0..x
+ x.....x...x.....x...x.....x...x.....x
+  x...x.....x...x.....x...x.....x...x
+   xxx...0...xxx...9...xxx...0...xx
+      x.....x   x.....x   x.....x
+       x...x     x...x     x...x
+        xxx       xxx       xxx
+ENDMAP
+
+NAME:    guppyfry_snake_island
+TAGS:    transparent
+MONS:    plant
+SUBST:   . = . W:1 1:1, - = . W:3 0:1 ~:1 %:1
+SHUFFLE: 0~
+SUBST:   ~ = .
+MAP
+@.WWWWWWWW.@
+.WWW.....WW.
+WWW--WW-00WW
+WW..WWWW..WW
+WWW--WWWW~WW
+WWWW..WWWWWW
+WWWWW--WWWWW
+W~WWWW..WWWW
+W--WWWW--WWW
+WW..WW..WWWW
+.WW----WWWW.
+@.WWWWWWWW.@
+ENDMAP
+
+####
+
+NAME:    hangedman_snake_corridor_cut
+TAGS:    no_monster_gen transparent
+MONS:    naga, patrolling naga mage
+MONS:    black mamba / anaconda, patrolling guardian serpent
+MONS:    patrolling adder / patrolling ball python / \
+         patrolling water moccasin w:5
+SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
+SHUFFLE: 1234 / 1234 / 1212 / 3434
+SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
+MAP
+xxxxxxxxx@5@xxx
+xccccccccc...xxx
+xc*2%...KxJ...xxx
+xc2*1...xxx.j..xxx
+xc%1....JxKk....xxx
+xcHxI.....kKxJ...xx
+@cxxx.i1.j.xxx.j..x
+5.IxHh..%..JxKk...@
+@...hHxI.1%..kKxJ.5
+x..i.xxx.i3.j.xxxc@
+xx...IxHh..%..JxKcx
+xxx....hHxI.3....cx
+ xxx..i.xxx.i....cx
+  xxx...IxHh.....cx
+   xxx....hHxI.3%cx
+    xxx..i.xxx3*4cx
+     xxx...IxH%4*cx
+      xxx...ccccccx
+       xxx@5@xxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_corridor_split
+TAGS:    no_monster_gen transparent allow_dup
+MONS:    naga, black mamba, naga warrior, anaconda, naga mage, guardian serpent
+SUBST:   X : xxc, Y : x:33 c:66 w:1, 0 = 12
+SHUFFLE: 34, 56, 3456 / 3456 / 3456 / 3535 / 4646 / 3636 / 4545 / 3434 / 5656
+MAP
+    xxxxxxx
+   xxxxxxxxx
+  xxxx...xxxx
+xxxxx..X..xxxx
+xxxx..X%X.3xxxxx
+xx1..X%..X.4xxxx
+xx2YY..x..X.0.xxxxxxxxx
+x..YY.xxx..YY.xxxxxxxxx.@.
+..X.21xxxx.*Y...xxxxxx..X@
+@X..xxxxxx...Y*.xxxx12.X..
+.@.xxxxxxxxx.YY..xxx.YY..x
+   xxxxxxxxx.0.X..x..YY2xx
+          xxxx6.X..%X..1xx
+          xxxxx5.X%X..xxxx
+            xxxx..X..xxxxx
+             xxxx...xxxx
+              xxxxxxxxx
+              xxxxxxxx
+ENDMAP
+
+NAME:    hangedman_snake_sidewinding
+TAGS:    allow_dup
+DEPTH:   Snake, !Snake:$, Zot, !Zot:$
+: if you.in_branch("Zot") then
+KMONS:   A = base draconian / green draconian w:4
+KMONS:   B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5
+KMONS:   C = nonbase green draconian / draconian annihilator
+KMONS:   D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
+            iron dragon w:5
+: else
+KMONS:   A = naga warrior / naga mage / naga
+KMONS:   B = black mamba w:6 / anaconda
+KMONS:   C = nagaraja / naga mage w:5 / guardian serpent w:5
+KMONS:   D = guardian serpent / anaconda w:2
+: end
+SHUFFLE: @123<= / &456"-, EF
+SUBST:   = = +, 1 = A, 2 = B, 3 = C, < : ~~_..., &E = x, - = c
+SUBST:   456 = ', "F = ., y : x:2 G:1 .:6, Y : z', Z : z', z : xc
+NSUBST:  * = **|, ~ = 1:( / 1:(<.., _ = 1:) / 1:)>.
+KMASK:   '%*d = no_monster_gen
+MAP
+x@@xxxxxxxxxxxxxxxxxxxx
+x""xxcccccccccccccccccx
+x..xxxcc13121'''%%%**cx
+xy..A%c--32z'''Z''BD*cx
+xy...B%--c1''z'''z'B%cx
+x4.xxxxxccc''z''zYz'%cx
+x..xxEExxccc'''zYz''%cx
+xy...EE.A%ccc'''z''Z'cx
+xy...FF..B%ccc'''''''cx
+x4.xxFFxxxxxccc''zz''cx
+x1.xxEExxEExxccc''''4cx
+xy...EE..EE.A%ccc''z5cx
+xy...FF..FF..B%ccc454cx
+x..xxFFxxFFxxxxxccc66cx
+x1.xxEExxEExxEExxc==4cx
+xy...EE..EE..EE.A%==ccx
+xy...FF..FF..FF..B%cccx
+x..xxFFxxFFxxFFxxxxxccx
+x<<xxxxxxxxxxxxxxxxxxcx
+x&&xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_snake_salamander_stairs
+DEPTH:   Snake, !Snake:$
+KMONS:   1 = salamander
+: local level = you.depth() ; local weight = level * level
+: kmons("2 = nothing w:21 / salamander w:" .. weight )
+KFEAT:   12 = l
+SHUFFLE: ])}
+NSUBST:  l = 1 / 2 / 1=2l, a = 2=. / x, b = 2=. / x, c = @ / .
+SUBST:   L = l.
+MAP
+ xxxxxxxxxx
+xxllllL.a.bc
+x.llllL.a.bc
+x]llllL.a.bc
+x.llllL.a.bc
+xxllllL.a.bc
+ xxxxxxxxxx
+ENDMAP
+
+NAME:   cheibrodos_snake_lava_hold
+TAGS:   no_item_gen no_monster_gen patrolling
+DEPTH:  Snake, !Snake:$
+ORIENT: float
+KFEAT:  '"- = lava
+KMONS:  " = salamander mystic
+KMONS:  ' = salamander
+NSUBST: ' = 2:'l / *:'
+
+MAP
+    ccccccccccccccc
+   ccccccccccccccccc
+  ccclclc'c'c'c'clccc
+ cccll.............ccc
+ ccll..lclclc.......cc
+cccl..lccccclc..clc..c
+cc"l..lc*$*ccl.clllc.+@
+cc'l....$|$Gcc.lllll.+@
+cc"l..lc*$*ccl.clllc.+@
+cccl..lccccclc..clc..c
+ ccll..lclclc.......cc
+ cccll.............ccc
+  ccclclc'c'c'c'clccc
+   ccccccccccccccccc
+    ccccccccccccccc
+ENDMAP
+
+NAME:   cheibrodos_snake_ritualist_ritual
+TAGS:   no_item_gen no_monster_gen no_pool_fixup patrolling transparent
+DEPTH:  Snake, !Snake:$
+ORIENT: float
+MONS:   naga mage / mana viper
+KMONS:  - = naga ritualist
+KITEM:  - = any good_item / any amulet
+MAP
+...........
+.wwwwwwwww.
+.w1.....1w.
+.w.ww.ww.w.
+.w.w...w.w.
+@..w.-.w..@
+.w.w...w.w.
+.w.ww.ww.w.
+.w1.....1w.
+.wwwwwwwww.
+...........
+ENDMAP
+
+NAME:   cheibrodos_toxic_ritual
+TAGS:   no_item_gen no_monster_gen transparent
+ORIENT: float
+MONS:   green death, naga ritualist, naga mage, naga
+NSUBST: - = 2=2 / ., _ = 2=2 / ., ' = 3 / 2=4 / 3=34 / .
+NSUBST: " = | / 3=* / 4=$%
 MAP
 .............
 ..ccc...ccc..
@@ -1021,26 +1014,14 @@ MAP
 ......@......
 ENDMAP
 
-NAME:   skrybe_snakes_to_sticks
-TAGS:   no_item_gen transparent
-DEPTH:  Snake
-ORIENT: float
-ITEM:   club mundane / spear mundane / arrow mundane q:1
-KFEAT:  _ = altar_xom
-NSUBST: ' = 6:d / *:.
-MAP
-  '
- '''
-''_''
- '''
-  '
-ENDMAP
+###############################################################################
+#
+# <<4>> Snake ending vaults
+#
+###############################################################################
 
-################################################################################
-# Snake endings
-################################################################################
+default-depth:
 
-################################################################################
 # Snake Pit: the hunt
 NAME:    snake_hunt
 TAGS:    no_rotate
