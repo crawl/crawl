@@ -646,7 +646,19 @@ static void _add_formatted_help_menu(column_composer &cols)
         "<w>T</w>: Tiles key help\n"
 #endif
         "<w>V</w>: Version information\n"
+#ifndef __ANDROID__
         "<w>Home</w>: This screen\n");
+#else
+        "<w>Home</w>: This screen\n"
+        "\n"
+        "<h>Android Controls\n"
+        "\n"
+        "<w>Back key</w>: Alias for escape\n"
+        "<w>Volume keys</w>: Zoom dungeon & map\n"
+        "Touch with two fingers for scrolling.\n"
+        "Toggle keyboard icon controls the\n"
+        "virtual keyboard visibility.\n");
+#endif
 
     // TODO: generate this from the manual somehow
     cols.add_formatted(

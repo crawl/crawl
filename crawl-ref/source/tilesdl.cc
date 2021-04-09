@@ -50,23 +50,14 @@
 #include "view.h"
 #include "windowmanager.h"
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#include <GLES/gl.h>
-//#include <SDL_android.h>
-#endif
-
 #ifdef TARGET_OS_WINDOWS
 # include <windows.h>
 #endif
 
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
-#ifdef TOUCH_UI
-static int _screen_sizes[6][8] =
-#else
+#ifndef __ANDROID__
 static int _screen_sizes[4][8] =
-#endif
 {
     // Default
     {1024, 700, 3, 15, 16, 14, 15, 14},
@@ -76,12 +67,19 @@ static int _screen_sizes[4][8] =
     {800, 600, 2, 14, 11, 12, 13, 12},
     // Eee PC
     {800, 480, 2, 13, 12, 10, 13, 11}
-#ifdef TOUCH_UI
-    // puny mobile screens
-    ,{480, 320, 2, 9, 8, 8, 9, 8}
-    ,{320, 240, 1, 8, 8, 6, 8, 6} // :(
-#endif
 };
+#else
+// Extra values for viewport and map scale
+static int _screen_sizes[6][10] =
+{
+    {960, 768, 2, 18, 20, 18, 18, 18, 150, 110},
+    {800, 640, 2, 15, 17, 15, 15, 15, 140, 100},
+    {720, 576, 2, 13, 15, 13, 13, 13, 120, 80},
+    {640, 512, 1, 12, 14, 12, 12, 12, 100, 60},
+    {540, 432, 1, 10, 12, 10, 10, 10, 90, 50},
+    {480, 384, 1, 9, 11, 9, 9, 9, 80, 40}
+};
+#endif
 
 HiDPIState display_density(1,1,1);
 
@@ -262,7 +260,8 @@ void TilesFramework::do_map_display()
     do_layout(); // recalculate the viewport setup for zoom levels
     redraw_screen(false);
     update_screen();
-    m_region_tab->activate_tab(TAB_NAVIGATION);
+    if (!tiles.is_using_small_layout())
+        m_region_tab->activate_tab(TAB_NAVIGATION);
 }
 
 void TilesFramework::calculate_default_options()
@@ -272,8 +271,16 @@ void TilesFramework::calculate_default_options()
     int num_screen_sizes = ARRAYSZ(_screen_sizes);
     do
     {
+#ifndef __ANDROID__
         if (m_windowsz.x >= _screen_sizes[auto_size][0]
             && m_windowsz.y >= _screen_sizes[auto_size][1])
+#else
+        int adjust_scale = 1;
+        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/1080+1)
+            adjust_scale = Options.game_scale;
+        if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
+            && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
+#endif
         {
             break;
         }
@@ -289,6 +296,10 @@ void TilesFramework::calculate_default_options()
     AUTO(Options.tile_font_msg_size, 5);
     AUTO(Options.tile_font_tip_size, 6);
     AUTO(Options.tile_font_lbl_size, 7);
+# ifdef __ANDROID__
+    AUTO(Options.tile_viewport_scale, 8);
+    AUTO(Options.tile_map_scale, 9);
+# endif
 #undef AUTO
 
     m_tab_margin = Options.tile_font_lbl_size + 4;
@@ -302,9 +313,7 @@ bool TilesFramework::initialise()
 
     const char *icon_name =
 #ifdef DATA_DIR_PATH
-#ifndef __ANDROID__
     DATA_DIR_PATH
-#endif
 #endif
     "dat/tiles/stone_soup_icon-512x512.png";
 
@@ -359,8 +368,7 @@ bool TilesFramework::initialise()
     if (!fonts_initialized())
         return false;
 
-    const auto font = tiles.is_using_small_layout() ? m_crt_font : m_lbl_font;
-    m_init = TileRegionInit(m_image, font, TILE_X, TILE_Y);
+    m_init = TileRegionInit(m_image, m_lbl_font, TILE_X, TILE_Y);
     m_region_tile = new DungeonRegion(m_init);
     m_region_tab  = new TabbedRegion(m_init);
     m_region_inv  = new InventoryRegion(m_init);
@@ -379,20 +387,6 @@ bool TilesFramework::initialise()
                                          ARRAYSZ(ct_map_commands),
                                          "Navigation", "Navigate around map");
 
-#ifdef TOUCH_UI
-    if (tiles.is_using_small_layout())
-        m_region_tab->push_tab_button(CMD_EXPLORE, TILEG_CMD_EXPLORE);
-    TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
-    TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
-    TAB_ABILITY = m_region_tab->push_tab_region(m_region_abl, TILEG_TAB_ABILITY);
-    m_region_tab->push_tab_region(m_region_mon, TILEG_TAB_MONSTER);
-    TAB_COMMAND = m_region_tab->push_tab_region(m_region_cmd, TILEG_TAB_COMMAND);
-    m_region_tab->push_tab_region(m_region_cmd_meta,
-                                  TILEG_TAB_COMMAND2);
-    TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
-                                  TILEG_TAB_NAVIGATION);
-    m_region_tab->activate_tab(TAB_COMMAND);
-#else
     TAB_ITEM    = m_region_tab->push_tab_region(m_region_inv, TILEG_TAB_ITEM);
     TAB_SPELL   = m_region_tab->push_tab_region(m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->push_tab_region(m_region_mem, TILEG_TAB_MEMORISE);
@@ -405,7 +399,6 @@ bool TilesFramework::initialise()
     TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
                                                    TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
-#endif
 
     m_region_msg  = new MessageRegion(m_msg_font);
     m_region_stat = new StatRegion(m_stat_font);
@@ -625,34 +618,6 @@ int TilesFramework::getch_ck()
             switch (event.type)
             {
             case WME_ACTIVEEVENT:
-#ifdef __ANDROID__
-                // short-term: when crawl is 'iconified' in android,
-                // close it
-                if (/*event.active.state == 0x04 SDL_APPACTIVE &&*/ event.active.gain == 0)
-                {
-                    crawl_state.seen_hups++;
-                    return ESCAPE;
-                }
-                // long-term pseudo-code:
-                /*
-                if (event.active.state == SDL_APPACTIVE)
-                {
-                    if (event.active.gain == 0)
-                    {
-                        if (crawl_state.need_save)
-                            save_game(true);
-                        do_no_SDL_or_GL_calls();
-                    }
-                    else
-                    {
-                        reload_gl_textures();
-                        reset_gl_state();
-                        wm->set_mod_state(TILES_MOD_NONE);
-                        set_need_redraw();
-                    }
-                }
-                 */
-#else
                 // When game gains focus back then set mod state clean
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
@@ -660,7 +625,6 @@ int TilesFramework::getch_ck()
                     wm->set_mod_state(TILES_MOD_NONE);
                     set_need_redraw();
                 }
-#endif
                 break;
             case WME_KEYDOWN:
                 key        = event.key.keysym.sym;
@@ -854,7 +818,7 @@ void TilesFramework::do_layout()
     // if the screen estate is very small, or if the option is set, choose
     // a layout that is optimal for very small screens
     bool use_small_layout = is_using_small_layout();
-    bool message_overlay = Options.tile_force_overlay ? true : use_small_layout;
+    bool message_overlay = Options.tile_force_overlay;
 
     const int min_msg_h =
                 m_region_msg->grid_height_to_pixels(Options.msg_min_height);
@@ -864,7 +828,6 @@ void TilesFramework::do_layout()
 
     if (use_small_layout)
     {
-        // for now assuming that width > height:
         //   * dungeon view, on left, is full height of screen and square
         //   * message area is overlaid on dungeon view
         //   * command tabs are scaled to height of screen and put to far right
@@ -887,20 +850,8 @@ void TilesFramework::do_layout()
         m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
         //  * ox tells us the width of screen obscured by the tabs
         sidebar_pw = m_region_tab->grid_width_to_pixels(m_region_tab->ox) / 32
-                        + m_region_stat->font().max_width(10);
+                        + m_region_stat->font().max_width(9);
         m_stat_x_divider = m_windowsz.x - sidebar_pw;
-        // old logic, if we're going to impinge upon a nice square dregion
-        if (m_region_tile->grid_width_to_pixels(
-                            available_height_in_tiles) > m_stat_x_divider)
-        {
-            m_stat_x_divider =
-                m_region_tile->grid_width_to_pixels(available_height_in_tiles);
-        }
-        // always overlay message area on dungeon
-        message_y_divider = m_windowsz.y;
-
-        //printf("window x = %d; x div = %d; x button = +%d; x dreg = %d; font w = %d; y div = %d\n",m_windowsz.x,m_stat_x_divider,m_region_tab->ox,available_height_in_tiles*m_region_tile->dx,Options.tile_font_stat_size,message_y_divider);
-        //printf("m_region_tab dx = %d; ox = %d; wx = %d; sx = %d\n",m_region_tab->dx,m_region_tab->ox,m_region_tab->wx,m_region_tab->sx);
     }
     else
     {
@@ -919,47 +870,47 @@ void TilesFramework::do_layout()
         // message_y_divider is the horizontal line between dungeon view on
         // the top and message window at the bottom.
         m_stat_x_divider = m_windowsz.x - sidebar_pw - map_stat_margin;
+    }
 
-        // Then, the optimal situation without the overlay - we can fit both
-        // Options.view_max_height and at least Options.msg_min_height in the space.
+    // Then, the optimal situation without the overlay - we can fit both
+    // Options.view_max_height and at least Options.msg_min_height in the space.
 
-        if (max_tile_h + min_msg_h <= m_windowsz.y && !message_overlay)
+    if (max_tile_h + min_msg_h <= m_windowsz.y && !message_overlay)
+    {
+        message_y_divider = max_tile_h;
+        message_y_divider = max(message_y_divider, m_windowsz.y -
+            m_region_msg->grid_height_to_pixels(Options.msg_max_height));
+    }
+    else
+    {
+        int available_height_in_tiles = 0;
+        available_height_in_tiles =
+            (m_windowsz.y - (message_overlay ? 0 : min_msg_h))
+                    / m_region_tile->dy;
+
+        // If we can't fit the full LOS to the available space, try using the
+        // message overlay.
+        if (available_height_in_tiles < ENV_SHOW_DIAMETER)
         {
-            message_y_divider = max_tile_h;
-            message_y_divider = max(message_y_divider, m_windowsz.y -
-                m_region_msg->grid_height_to_pixels(Options.msg_max_height));
+            message_y_divider = m_windowsz.y;
+            message_overlay = true;
+
+            // If using message_overlay isn't enough, scale the dungeon region
+            // tiles to fit full LOS into the available space.
+            if (m_windowsz.y / m_region_tile->dy < ENV_SHOW_DIAMETER)
+            {
+                m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
+                m_region_tile->dx = m_region_tile->dy;
+            }
         }
         else
-        {
-            int available_height_in_tiles = 0;
-            available_height_in_tiles =
-                (m_windowsz.y - (message_overlay ? 0 : min_msg_h))
-                        / m_region_tile->dy;
-
-            // If we can't fit the full LOS to the available space, try using the
-            // message overlay.
-            if (available_height_in_tiles < ENV_SHOW_DIAMETER)
-            {
-                message_y_divider = m_windowsz.y;
-                message_overlay = true;
-
-                // If using message_overlay isn't enough, scale the dungeon region
-                // tiles to fit full LOS into the available space.
-                if (m_windowsz.y / m_region_tile->dy < ENV_SHOW_DIAMETER)
-                {
-                    m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
-                    m_region_tile->dx = m_region_tile->dy;
-                }
-            }
-            else
-                message_y_divider = m_windowsz.y - min_msg_h;
-        }
-
-        // Calculate message_y_divider. First off, if we have already decided to
-        // use the overlay, we can place the divider to the bottom of the screen.
-        if (message_overlay)
-            message_y_divider = m_windowsz.y;
+            message_y_divider = m_windowsz.y - min_msg_h;
     }
+
+    // Calculate message_y_divider. First off, if we have already decided to
+    // use the overlay, we can place the divider to the bottom of the screen.
+    if (message_overlay)
+        message_y_divider = m_windowsz.y;
 
     // stick message display to the bottom of the window
     int msg_height = m_windowsz.y-message_y_divider;
@@ -1029,23 +980,7 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    // automatically use small layout at low resolutions if TOUCH_UI enabled,
-    // otherwise only if forced to
-#ifdef TOUCH_UI
-    switch (Options.tile_use_small_layout)
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-    default:
-        Options.tile_use_small_layout = (m_windowsz.x<=480) ? MB_TRUE : MB_FALSE;
-        return Options.tile_use_small_layout == MB_TRUE;
-    }
-#else
     return Options.tile_use_small_layout == MB_TRUE;
-#endif
 }
 
 #define ZOOM_INC 10
@@ -1217,7 +1152,7 @@ void TilesFramework::layout_statcol()
 
         // place tabs (covering whole screen)
         m_region_tab->set_small_layout(true, m_windowsz);
-        m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
+        m_region_tab->resize_to_fit(m_windowsz.x-m_region_tab->ox, m_windowsz.y);
 
         // place tabs waay to the right (all offsets will be negative)
         m_region_tab->place(m_windowsz.x-m_region_tab->ox, 0);
@@ -1379,10 +1314,6 @@ void TilesFramework::redraw()
                 formatted_string(m_tooltip), min_pos, max_pos);
     }
     wm->swap_buffers();
-
-#ifdef __ANDROID__
-    glmanager->fixup_gl_state();
-#endif
 
     m_last_tick_redraw = wm->get_ticks();
 }

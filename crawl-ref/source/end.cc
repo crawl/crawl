@@ -516,7 +516,11 @@ NORETURN void end_game(scorefile_entry &se)
     vbox->add_child(scroller);
 
 #ifndef DGAMELAUNCH
+# ifndef __ANDROID__
     string morgue_dir = make_stringf("\nYou can find your morgue file in the '%s' directory.",
+# else
+    string morgue_dir = make_stringf("\nYou can find your morgue file in the \n'%s'\n directory.",
+# endif
             morgue_directory().c_str());
     vbox->add_child(make_shared<Text>(formatted_string::parse_string(morgue_dir)));
 #endif

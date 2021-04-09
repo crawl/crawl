@@ -1,0 +1,20 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:orientation="vertical"
+        android:baselineAligned="false">
+
+        <include layout="@layout/keyboard_lower"/>
+
+        <include layout="@layout/keyboard_upper"/>
+
+        <include layout="@layout/keyboard_ctrl"/>
+
+        <include layout="@layout/keyboard_numeric"/>
+
+    </RelativeLayout>
+
+</merge>

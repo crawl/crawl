@@ -18,9 +18,7 @@
 #include <string>
 
 #ifndef TARGET_OS_WINDOWS
-# ifndef __ANDROID__
-#  include <langinfo.h>
-# endif
+# include <langinfo.h>
 #endif
 #include <fcntl.h>
 #ifdef USE_UNIX_SIGNALS

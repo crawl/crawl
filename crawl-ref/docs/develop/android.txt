@@ -11,39 +11,29 @@ correctly. As with most Android applications, the build process is
 somewhat different from the traditional "./configure; make; make install"
 that you might expect.
 
-The Android port is known to build with the NDK's GCC 4.8 toolchain and
-clang toolchains.
+The Android port is known to build with the SDK for Android 11 (API level 30)
+and NDK version r22b.
 
 
 Build Process
 -------------
-
- * Get the latest Android SDK from http://developer.android.com/sdk/index.html
- * Run "android" and fetch the files for the android-12 platform
- * Get the latest Android NDK, r10c at time of writing:
-   http://developer.android.com/sdk/ndk/index.html
- * Configure your PATH. Assuming you've installed the SDK in $SDK and the
-   NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
+ * Download and install Android Studio:
+   https://developer.android.com/studio/
+ * Install the latest Android SDK and NDK in Android Studio.
+ * Enter the path to your installed SDK in the local.properties file:
+   crawl/crawl-ref/source/android-project/local.properties
  * Ensure that you have all of the dependent host libraries required to
-   use the SDK, NDK and build crawl's host tools. For a recent Ubuntu host
-   these are:
+   build crawl's host tools. For a recent Ubuntu host these are:
      - ia32-libs
      - build-essential
      - libpng-dev
- * If you don't have them already, you need Oracle's JDK and ant installed.
- * Run "NDK_TOOLCHAIN_VERSION=<version> make ANDROID=1 android", where
-   <version> is either a gcc version or clang (or clang-<version>).
+ * Run "make ANDROID=1 android"
 
-
-Project Structure
------------------
-At a high level, the SDL library and DCSS are laid out on disk as
-follows:
-
+The previous step will generate all the files and folders required for a
+complete Android project. You can use Android Studio to generate APK(s)
+or further development. Just open the project folder located in
 crawl-ref/source/android-project
-  bin/                # Where the final .apk is generated.
-  src/                # Java code that wraps the native game and libs
-  jni/                # Where contrib libraries live, including SDL.
+
 
 Technical Notes
 ---------------

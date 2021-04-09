@@ -1060,8 +1060,6 @@ ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
         in the message area, and the menu can be seen with '?' or '*'.
 
-        Setting this option to false has no effect in Android tiles builds.
-
 easy_floor_use = true
         If set to true, item interaction menus that allow using items from the
         ground will respond to switching from inventory items to floor items by
@@ -2057,6 +2055,10 @@ tile_window_ratio  = 1618
         The minimum width is determined by UI layout. This value is ignored in
         full screen mode. Set to a value <= 0 to disable.
 
+tile_window_minimum = true
+        Limit the minimum window size. It should only be disabled for testing
+        purposes.
+
 game_scale = 1
         An integer scale value between 1 and 8 that will increase the size of
         all UI elements. This can be used to simulate high-dpi rendering on
@@ -2125,6 +2127,10 @@ tile_single_column_menus = true
         insufficient space to show all items in a single column. This option
         is only available on local tiles; all menus on console and on WebTiles
         always list items in a single column, as if this option were enabled.
+
+tile_use_small_layout = auto
+        Alternative layout designed for very small screens. It is enabled by
+        default on Android.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf

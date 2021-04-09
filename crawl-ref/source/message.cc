@@ -1619,11 +1619,7 @@ void msgwin_got_input()
 int msgwin_get_line(string prompt, char *buf, int len,
                     input_history *mh, const string &fill)
 {
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
-#endif
 
     int ret;
     if (use_popup)
@@ -1871,11 +1867,7 @@ static void readkey_more(bool user_forced)
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)
-#ifdef TOUCH_UI
-           && keypress != CK_MOUSE_CLICK);
-#else
            && (user_forced || keypress != CK_MOUSE_CLICK));
-#endif
 
     if (key_is_escape(keypress))
         set_more_autoclear(true);

@@ -47,6 +47,7 @@
 #include "spl-goditem.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "throw.h"
 #include "transform.h"
@@ -2415,7 +2416,7 @@ static string _random_consonant_set(size_t c)
  */
 static void _test_scroll_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 
@@ -2442,7 +2443,7 @@ static void _test_scroll_names(const string& fname)
  */
 static void _test_jiyva_names(const string& fname)
 {
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_u(fname.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
 

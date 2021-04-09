@@ -1016,13 +1016,7 @@ void pickup_menu(int item_link)
     auto items = item_list_on_square(item_link);
     ASSERT(items.size());
 
-    string prompt = "Pick up what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
+    string prompt = "Pick up what? " + slot_description() + " (_ for help)";
 
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";

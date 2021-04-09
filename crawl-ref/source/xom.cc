@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
@@ -3659,7 +3660,7 @@ void debug_xom_effects()
         return;
     }
 
-    FILE *ostat = fopen("xom_debug.stat", "w");
+    FILE *ostat = fopen_u("xom_debug.stat", "w");
     if (!ostat)
     {
         mprf(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");

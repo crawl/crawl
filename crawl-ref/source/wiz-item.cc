@@ -42,6 +42,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "unicode.h"
@@ -1557,7 +1558,7 @@ static void _debug_rap_stats(FILE *ostat)
 
 void debug_item_statistics()
 {
-    FILE *ostat = fopen("items.stat", "a");
+    FILE *ostat = fopen_u("items.stat", "a");
 
     if (!ostat)
     {

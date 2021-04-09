@@ -1042,18 +1042,6 @@ void Menu::do_menu()
         done = !process_key(ev.key());
         return true;
     });
-#ifdef TOUCH_UI
-    auto menu_wrap_click = [this, &done](const MouseEvent& ev) {
-        if (!m_filter && ev.button() == MouseEvent::Button::Left)
-        {
-            done = !process_key(CK_TOUCH_DUMMY);
-            return true;
-        }
-        return false;
-    };
-    m_ui.title->on_mousedown_event(menu_wrap_click);
-    m_ui.more->on_mousedown_event(menu_wrap_click);
-#endif
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
@@ -1169,12 +1157,7 @@ bool Menu::process_key(int keyin)
         lastch = keyin;
         return false;
     }
-#ifdef TOUCH_UI
-    else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'
-             || keyin == CK_TOUCH_DUMMY))
-#else
     else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
-#endif
     {
         ASSERT(menu_action != ACT_MISC);
         if (menu_action == ACT_EXECUTE)
@@ -1186,12 +1169,7 @@ bool Menu::process_key(int keyin)
         update_title();
         return true;
     }
-#ifdef TOUCH_UI
-    else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'
-             || keyin == CK_TOUCH_DUMMY))
-#else
     else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
-#endif
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
@@ -1211,10 +1189,8 @@ bool Menu::process_key(int keyin)
     {
     case CK_REDRAW:
         return true;
-#ifndef TOUCH_UI
     case 0:
         return true;
-#endif
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
@@ -1356,13 +1332,6 @@ bool Menu::process_key(int keyin)
             show_specific_help(help_key());
         break;
 
-#ifdef TOUCH_UI
-    case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
-    case 0:               // do the same as <enter> key
-        if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
-            return true;
-        // seemingly intentional fallthrough
-#endif
     case CK_ENTER:
         // TODO: hover and multiselect?
         if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
@@ -2718,12 +2687,7 @@ string get_linebreak_string(const string& s, int maxcol)
 
 int ToggleableMenu::pre_process(int key)
 {
-#ifdef TOUCH_UI
-    if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end()
-        || key == CK_TOUCH_DUMMY)
-#else
     if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
-#endif
     {
         // Toggle all menu entries
         for (MenuEntry *item : items)
@@ -2749,11 +2713,7 @@ int ToggleableMenu::pre_process(int key)
         }
 
         // Don't further process the key
-#ifdef TOUCH_UI
-        return CK_TOUCH_DUMMY;
-#else
         return 0;
-#endif
     }
     return key;
 }

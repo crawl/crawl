@@ -196,12 +196,6 @@ enum KEYS
     CK_CTRL_PGDN,
     CK_CTRL_TAB,
 
-#ifdef TOUCH_UI
-    // extra numpad keys for zoom
-    CK_NUMPAD_PLUS,
-    CK_NUMPAD_MINUS,
-#endif
-
 #ifndef USE_TILE_LOCAL
     // TODO: unconditionally define these
     // numpad keys are still a mess; see unixcurses_defkeys for the source of

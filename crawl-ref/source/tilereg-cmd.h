@@ -54,8 +54,8 @@ static const command_type ct_action_commands[] =
     CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,
     CMD_INTERLEVEL_TRAVEL, CMD_SEARCH_STASHES,
     CMD_LOOKUP_HELP,
-#ifdef TOUCH_UI
-    CMD_SHOW_KEYBOARD,
+#ifdef __ANDROID__
+    CMD_TOGGLE_KEYBOARD,
 #endif
 };
 

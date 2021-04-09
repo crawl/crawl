@@ -1353,11 +1353,7 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
 static int _lookup_prompt()
 {
     // TODO: show this + the regex prompt in the same menu?
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
-#endif
 
     int ch = -1;
     const string lookup_type_prompts =

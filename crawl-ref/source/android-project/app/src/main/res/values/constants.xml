@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dungeon Crawl Stone Soup</string>
+    <dimen name="key_height">40dp</dimen>
+    <color name="key_tint1">#808080</color>
 </resources>

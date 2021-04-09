@@ -12,6 +12,7 @@
 #include <cstring>
 
 #include "stringutil.h"
+#include "syscalls.h"
 
 NORETURN void fail(const char *msg, ...)
 {
@@ -63,7 +64,7 @@ void dump_test_fails(string fails, string name)
     fprintf(stderr, "%s", fails.c_str());
 
     const string outfile = make_stringf("%s.out", name.c_str());
-    FILE *f = fopen(outfile.c_str(), "w");
+    FILE *f = fopen_u(outfile.c_str(), "w");
     if (!f)
         sysfail("can't write test output");
     fprintf(f, "%s", fails.c_str());

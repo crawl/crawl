@@ -3832,7 +3832,7 @@ static void _place_extra_vaults()
 static int _place_uniques()
 {
 #ifdef DEBUG_UNIQUE_PLACEMENT
-    FILE *ostat = fopen("unique_placement.log", "a");
+    FILE *ostat = fopen_u("unique_placement.log", "a");
     fprintf(ostat, "--- Looking to place uniques on %s\n",
                    level_id::current().describe().c_str());
 #endif

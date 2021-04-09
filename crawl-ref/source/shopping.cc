@@ -1010,7 +1010,7 @@ void ShopMenu::update_help()
         //You have 0 gold pieces.
         //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
         //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-#if defined(USE_TILE) && !defined(TOUCH_UI)
+#if defined(USE_TILE)
         "[<w>Esc</w>/<w>R-Click</w>] exit  "
 #else
         //               "/R-Click"

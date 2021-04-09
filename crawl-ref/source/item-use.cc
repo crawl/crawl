@@ -1440,8 +1440,6 @@ static int _prompt_ring_to_remove()
          "You're wearing all the rings you can. Remove which one?");
     mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
-    // FIXME: Needs TOUCH_UI version
-
     for (size_t i = 0; i < rings.size(); i++)
     {
         string m = "<w>";

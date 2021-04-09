@@ -1329,12 +1329,7 @@ static string _drop_prompt(bool as_menu_title, bool menu_autopickup_mode)
         prompt_base = "Drop what?                               ";
     else
         prompt_base = "Drop what? ";
-    return prompt_base + slot_description()
-#ifdef TOUCH_UI
-                          + " (<Enter> or tap header to drop)";
-#else
-                          + " (_ for help)";
-#endif
+    return prompt_base + slot_description() + " (_ for help)";
 }
 
 static string _drop_menu_titlefn(const Menu *m, const string &)

@@ -54,8 +54,32 @@
 #include "xom.h"
 
 
+static bool _is_using_small_layout()
+{
 #ifdef USE_TILE_LOCAL
+    return tiles.is_using_small_layout();
+#endif
+    return false;
+}
 
+static string _level_description_string_hud()
+{
+    const PlaceInfo& place = you.get_place_info();
+    string short_name = branches[place.branch].shortname;
+
+    if (brdepth[place.branch] > 1)
+        short_name += make_stringf(":%d", you.depth);
+    // Indefinite articles
+    else if (place.branch != BRANCH_PANDEMONIUM
+             && place.branch != BRANCH_DESOLATION
+             && !is_connected_branch(place.branch))
+    {
+        short_name = article_a(short_name);
+    }
+    return short_name;
+}
+
+#ifdef USE_TILE_LOCAL
 /*
  * this glorious piece of code works by:
     - overriding cgotoxy and cprintf
@@ -64,16 +88,31 @@
     - using the current state to decide what and where to actually
       render each part of the HUD
 
-  12345678901234567890
-1 Nameaname
-2 TrDk(Mak)
-3  St Dx In
-4  nn nn nn
-5  AC SH EV
-6  nn nn nn
-7 W: foobar
-8 Q: 20 baz
-9 XXXXXXXXX      status lights
+   123456789
+ 1 Nameaname
+ 2 TrDk
+ 3 Lugonu
+ 4 *.....
+ 5
+ 6 St Dx In
+ 7 nn nn nn
+ 8 AC SH EV
+ 9 nn nn nn
+10 XL Next
+11 10 25%
+12
+13 Noise
+14 ########
+15 Place
+16 Dungeo:10
+17 Time
+18 1234.5
+19
+20 W: foobar
+21 (20 baz)
+22 Abil: Bes
+23
+24 XXXXXXXXX      status lights
 .
 y  HPP MPP
  */
@@ -86,112 +125,161 @@ enum touchui_states
 {
     TOUCH_S_INIT  = 0x0,
     TOUCH_S_NULL  = 0x1,
-    TOUCH_T_MP    = 0x0104,
-    TOUCH_T_AC    = 0x0105,
-    TOUCH_T_EV    = 0x0106,
-    TOUCH_T_SH    = 0x0107,
-    TOUCH_T_STR   = 0x1305,
-    TOUCH_T_INT   = 0x1306,
-    TOUCH_T_DEX   = 0x1307,
-    TOUCH_V_PLACE = 0x1308,
-    TOUCH_T_HP    = 0x0103,
-    TOUCH_V_HP    = 0x0203, // dummy location
-    TOUCH_V_MP    = 0x0904,
-    TOUCH_V_AC    = 0x0505,
-    TOUCH_V_EV    = 0x0506,
-    TOUCH_V_SH    = 0x0507,
-    TOUCH_V_STR   = 0x1805,
-    TOUCH_V_INT   = 0x1806,
-    TOUCH_V_DEX   = 0x1807,
-    TOUCH_V_XL    = 0x0108,
-    TOUCH_T_WP    = 0x0109,
-    TOUCH_T_QV    = 0x010A,
-    TOUCH_V_WP    = 0x0209, // dummy
-    TOUCH_V_QV    = 0x020A, // dummy
     TOUCH_V_TITLE = 0x0101,
     TOUCH_V_TITL2 = 0x0102,
-    TOUCH_V_LIGHT = 0x010B,
+    TOUCH_V_GOD   = 0x0202, // dummy
+    TOUCH_V_GOD2  = 0x0302, // dummy
+    TOUCH_T_HP    = 0x0103,
+    TOUCH_V_HP    = 0x0203, // dummy
+    TOUCH_T_MP    = 0x0104,
+    TOUCH_V_MP    = 0x0204, // dummy
+    TOUCH_T_AC    = 0x0105,
+    TOUCH_V_AC    = 0x0505,
+    TOUCH_T_EV    = 0x0106,
+    TOUCH_V_EV    = 0x0506,
+    TOUCH_T_SH    = 0x0107,
+    TOUCH_V_SH    = 0x0507,
+    TOUCH_T_STR   = 0x1305,
+    TOUCH_V_STR   = 0x1805,
+    TOUCH_T_INT   = 0x1306,
+    TOUCH_V_INT   = 0x1806,
+    TOUCH_T_DEX   = 0x1307,
+    TOUCH_V_DEX   = 0x1807,
+    TOUCH_T_XL    = 0x0108,
+    TOUCH_V_XL    = 0x0508,
+    TOUCH_V_XL2   = 0x0E08,
+    TOUCH_T_PLACE = 0x1308,
+    TOUCH_V_PLACE = 0x1A08,
+    TOUCH_T_NOISE = 0x0109,
+    TOUCH_V_NOISE = 0x0809,
+    TOUCH_V_NOISW = 0x0B09, // wizard mode
+    TOUCH_V_NOISX = 0x1109, // extra wide
+    TOUCH_T_TIME  = 0x1309,
+    TOUCH_V_TIME  = 0x1909,
+    TOUCH_T_WP    = 0x010A,
+    TOUCH_V_WP    = 0x020A, // dummy
+    TOUCH_V_WP2   = 0x030A, // dummy
+    TOUCH_T_QV    = 0x010B,
+    TOUCH_V_QV    = 0x020B, // dummy
+    TOUCH_V_LIGHT = 0x010C,
 };
 touchui_states TOUCH_UI_STATE = TOUCH_S_INIT;
 static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
 {
-//    printf("go to (%d,%d): ",x,y);
-    if (tiles.is_using_small_layout())
+    if (_is_using_small_layout())
         TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
-//    printf("[%x]: ",TOUCH_UI_STATE);
     switch (TOUCH_UI_STATE)
     {
         case TOUCH_V_HP:
-        case TOUCH_T_MP:
+        case TOUCH_V_MP:
         case TOUCH_V_TITLE:
         case TOUCH_V_TITL2:
-        case TOUCH_V_XL:
-        case TOUCH_V_PLACE:
         case TOUCH_S_NULL:
             // no special behaviour for these
             break;
-        case TOUCH_T_STR:
+        case TOUCH_V_GOD:
             x = 1; y = 3;
             break;
-        case TOUCH_T_INT:
-            x = 4; y = 3;
-            break;
-        case TOUCH_T_DEX:
-            x = 7; y = 3;
-            break;
-        case TOUCH_T_AC:
-            x = 1; y = 5;
-            break;
-        case TOUCH_T_EV:
-            x = 4; y = 5;
-            break;
-        case TOUCH_T_SH:
-            x = 7; y = 5;
-            break;
-        case TOUCH_V_STR:
+        case TOUCH_V_GOD2:
             x = 1; y = 4;
             break;
-        case TOUCH_V_INT:
-            x = 4; y = 4;
+        case TOUCH_T_AC:
+            x = 1; y = 6;
             break;
-        case TOUCH_V_DEX:
-            x = 7; y = 4;
+        case TOUCH_T_EV:
+            x = 4; y = 6;
+            break;
+        case TOUCH_T_SH:
+            x = 7; y = 6;
             break;
         case TOUCH_V_AC:
-            x = 2; y = 6;
-            break;
-        case TOUCH_V_EV:
-            x = 5; y = 6;
-            break;
-        case TOUCH_V_SH:
-            x = 8; y = 6;
-            break;
-        case TOUCH_T_WP:
             x = 1; y = 7;
             break;
-        case TOUCH_T_QV:
-            x = 1; y = 8;
-            break;
-        case TOUCH_V_WP:
+        case TOUCH_V_EV:
             x = 4; y = 7;
             break;
-        case TOUCH_V_QV:
+        case TOUCH_V_SH:
+            x = 7; y = 7;
+            break;
+        case TOUCH_T_STR:
+            x = 1; y = 8;
+            break;
+        case TOUCH_T_INT:
             x = 4; y = 8;
             break;
-        case TOUCH_V_LIGHT:
+        case TOUCH_T_DEX:
+            x = 7; y = 8;
+            break;
+        case TOUCH_V_STR:
             x = 1; y = 9;
+            break;
+        case TOUCH_V_INT:
+            x = 4; y = 9;
+            break;
+        case TOUCH_V_DEX:
+            x = 7; y = 9;
+            break;
+        case TOUCH_T_XL:
+            x = 1; y = 10;
+            break;
+        case TOUCH_V_XL:
+            x = 1; y = 11;
+            break;
+        case TOUCH_V_XL2:
+            x = 4; y = 11;
+            break;
+        case TOUCH_T_NOISE:
+            x = 1; y = 13;
+            break;
+        case TOUCH_V_NOISE:
+            x = 1; y = 14;
+            break;
+        case TOUCH_V_NOISW:
+            x = 4; y = 14;
+            break;
+        case TOUCH_V_NOISX:
+            x = 9; y = 14;
+            break;
+        case TOUCH_T_PLACE:
+            x = 1; y = 15;
+            break;
+        case TOUCH_V_PLACE:
+            x = 1; y = 16;
+            break;
+        case TOUCH_T_TIME:
+            x = 1; y = 17;
+            break;
+        case TOUCH_V_TIME:
+            x = 1; y = 18;
+            break;
+        case TOUCH_T_WP:
+            x = 1; y = 20;
+            break;
+        case TOUCH_V_WP:
+            x = 4; y = 20;
+            break;
+        case TOUCH_V_WP2:
+            x = 1; y = 21;
+            break;
+        case TOUCH_T_QV:
+            x = 1; y = 22;
+            break;
+        case TOUCH_V_QV:
+            x = 4; y = 22;
+            break;
+        case TOUCH_V_LIGHT:
+            x = 1; y = 24;
             break;
         case TOUCH_T_HP:
             x = 2; y = crawl_view.hudsz.y;
             break;
-        case TOUCH_V_MP:
+        case TOUCH_T_MP:
             x = 6; y = crawl_view.hudsz.y;
             break;
         default:
             // reset state
             TOUCH_UI_STATE = TOUCH_S_INIT;
     }
-//    printf("(%d,%d): ",x,y);
     cgotoxy(x,y,region);
 }
 
@@ -199,21 +287,21 @@ static void _cprintf_touchui(const char *format, ...)
 {
     va_list args;
     string  buf;
+    vector<string> parts;
     va_start(args, format);
     buf = vmake_stringf(format, args);
 
     switch (TOUCH_UI_STATE)
     {
-        case TOUCH_T_MP:
         case TOUCH_V_TITL2:
-        case TOUCH_V_XL:
-        case TOUCH_V_PLACE:
         case TOUCH_S_NULL:
             // don't draw these
-//            printf("X! %s\n",buf.c_str());
             break;
         case TOUCH_T_HP:
             TOUCH_UI_STATE = TOUCH_V_HP;
+            break;
+        case TOUCH_T_MP:
+            TOUCH_UI_STATE = TOUCH_V_MP;
             break;
         case TOUCH_V_TITLE:
             cprintf("%s", you.your_name.c_str());
@@ -224,11 +312,40 @@ static void _cprintf_touchui(const char *format, ...)
             cprintf("%3s", buf.c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL;
             break;
+        case TOUCH_T_STR:
+        case TOUCH_T_INT:
+        case TOUCH_T_DEX:
+        case TOUCH_T_AC:
+        case TOUCH_T_EV:
+        case TOUCH_T_SH:
         case TOUCH_V_STR:
         case TOUCH_V_INT:
         case TOUCH_V_DEX:
-            // rjustify to 3 chars on these
-            cprintf("%3s", buf.c_str());
+        case TOUCH_V_AC:
+        case TOUCH_V_EV:
+        case TOUCH_V_SH:
+            buf = buf.substr(0,2);
+            trim_string(buf);
+            cprintf("%2s", buf.c_str());
+            break;
+        case TOUCH_T_XL:
+            cprintf("XL Next");
+            break;
+        case TOUCH_T_PLACE:
+            cprintf("Place");
+            break;
+        case TOUCH_V_PLACE:
+            parts = split_string(":", _level_description_string_hud());
+            if (parts.size() == 1)
+                cprintf("%-9s", parts[0].substr(0,9).c_str());
+            else
+                cprintf("%s:%s", parts[0].substr(0,8-parts[1].size()).c_str(), parts[1].c_str());
+            break;
+        case TOUCH_T_NOISE:
+            cprintf("Noise");
+            break;
+        case TOUCH_T_TIME:
+            cprintf("Time");
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
@@ -238,14 +355,8 @@ static void _cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_QV;
             cprintf("%s", buf.c_str());
             break;
-        case TOUCH_V_WP:
-        case TOUCH_V_QV:
-            // get rid of the hotkey; somewhat pointless in a touch-screen ui :)
-            cprintf(buf.substr(3,10).c_str());
-            break;
 
         default:
-//            printf("p: %s\n",buf.c_str());
             cprintf("%s", buf.c_str());
     }
     va_end(args);
@@ -265,13 +376,11 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf("%s%s %.4s", species::get_abbrev(you.species),
-                                 get_job_abbrev(you.char_class),
-                                 god_name(you.religion).c_str());
+            cprintf("%s%s", species::get_abbrev(you.species),
+                            get_job_abbrev(you.char_class));
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
             break;
         default:
-//            printf("q: %s\n",buf.c_str());
             nowrap_eol_cprintf("%s", buf.c_str());
     }
     va_end(args);
@@ -565,11 +674,17 @@ void update_turn_count()
     string time = Options.show_game_time
         ? make_stringf("%.1f", you.elapsed_time / 10.0)
         : make_stringf("%d", you.num_turns);
-    time += make_stringf(" (%.1f)",
-            (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0);
 
-    CPRINTF("%s",
-        chop_string(time, crawl_view.hudsz.x - turncount_start_x + 1).c_str());
+    if (!_is_using_small_layout())
+    {
+        time += make_stringf(" (%.1f)",
+                (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0);
+        CPRINTF("%s",
+            chop_string(time, crawl_view.hudsz.x - turncount_start_x + 1).c_str());
+    }
+    else
+        CPRINTF("%s", chop_string(time, 7).c_str());
+
     textcolour(LIGHTGREY);
 }
 
@@ -634,7 +749,7 @@ static void _print_stats_noise(int x, int y)
     bool silence = silenced(you.pos());
     int level = silence ? 0 : you.get_noise_perception(true);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf("Noise: ");
+    CPRINTF("Noise: ");
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
@@ -676,6 +791,9 @@ static void _print_stats_noise(int x, int y)
         Noise_Bar.horiz_bar_width = 9;
         bar_position = 7;
     }
+
+    if (_is_using_small_layout())
+        Noise_Bar.horiz_bar_width--;
 
     if (silence)
     {
@@ -784,12 +902,12 @@ static void _print_stats_mp(int x, int y)
     for (int i = 11-col; i > 0; i--)
         CPRINTF(" ");
 
-#ifdef TOUCH_UI
-    if (tiles.is_using_small_layout())
-        MP_Bar.vdraw(6, 10, you.magic_points, you.max_magic_points);
+#ifdef USE_TILE_LOCAL
+    if (_is_using_small_layout())
+        MP_Bar.vdraw(6, 25, you.magic_points, you.max_magic_points);
     else
 #endif
-    MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
+        MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 
     you.redraw_magic_points = false;
 }
@@ -835,8 +953,8 @@ static void _print_stats_hp(int x, int y)
         CPRINTF(" ");
 
 #ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout())
-        HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
+    if (_is_using_small_layout())
+        HP_Bar.vdraw(2, 25, you.hp, you.hp_max);
     else
 #endif
         HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
@@ -1000,8 +1118,16 @@ static void _print_stats_wp(int y)
         else
             lammo = you.launcher_action.get()->quiver_description(true);
 
-        const int trimmed_size = max_name_width - lammo.tostring().size() - 3;
-        CPRINTF("%s ", chop_string(text, trimmed_size).c_str());
+        if (!_is_using_small_layout())
+        {
+            const int trimmed_size = max_name_width - lammo.tostring().size() - 3;
+            CPRINTF("%s ", chop_string(text, trimmed_size).c_str());
+        }
+        else
+        {
+            CPRINTF("%s", chop_string(text, 9).c_str());
+            CGOTOXY(3, y, GOTO_STAT);
+        }
         textcolour(LIGHTGREY);
         CPRINTF("(");
         lammo.display();
@@ -1009,7 +1135,14 @@ static void _print_stats_wp(int y)
         CPRINTF(")");
     }
     else
+    {
         CPRINTF("%s", chop_string(text, max_name_width).c_str());
+        if (_is_using_small_layout())
+        {
+            CGOTOXY(3, y, GOTO_STAT);
+            CPRINTF("         ");
+        }
+    }
     textcolour(LIGHTGREY);
 
     you.wield_change  = false;
@@ -1026,7 +1159,7 @@ static void _print_stats_qv(int y)
 
     formatted_string qdesc = quiver::get_secondary_action()->quiver_description();
 #ifdef USE_TILE_LOCAL
-    const int max_width = crawl_view.hudsz.x - (tiles.is_using_small_layout() ? 0 : 4);
+    const int max_width = crawl_view.hudsz.x - (_is_using_small_layout() ? 0 : 4);
 #else
     const int max_width = crawl_view.hudsz.x - 4;
 #endif
@@ -1142,7 +1275,7 @@ static void _print_status_lights(int y)
 #endif
 
 #ifdef USE_TILE_LOCAL
-    if (!tiles.is_using_small_layout())
+    if (!_is_using_small_layout())
     {
 #endif
     size_t i_light = 0;
@@ -1216,12 +1349,7 @@ static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = you.your_name + " " + filtered_lang(player_title());
-    const bool small_layout =
-#ifdef USE_TILE_LOCAL
-                              tiles.is_using_small_layout();
-#else
-                              false;
-#endif
+    const bool small_layout = _is_using_small_layout();
 
     if (small_layout)
         title = you.your_name;
@@ -1247,7 +1375,7 @@ static void _redraw_title()
 
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
-    textcolour(small_layout && you.wizard ? LIGHTMAGENTA : YELLOW);
+    textcolour(small_layout && (you.wizard || you.explore) ? LIGHTMAGENTA : YELLOW);
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
     if (you.wizard && !small_layout)
         _draw_wizmode_flag("WIZARD");
@@ -1271,9 +1399,11 @@ static void _redraw_title()
             && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
         {
+            if (small_layout)
+                CGOTOXY(3, 2, GOTO_STAT);
             string godpiety = "**....";
             textcolour(DARKGREY);
-            if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+            if (small_layout || ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH))
                 NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
             clear_to_end_of_line();
         }
@@ -1285,7 +1415,14 @@ static void _redraw_title()
     }
     else
     {
-        string god = " of ";
+        string god;
+        if (small_layout)
+        {
+            CGOTOXY(2, 2, GOTO_STAT);
+            god = "";
+        }
+        else
+            god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                       : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
@@ -1293,7 +1430,12 @@ static void _redraw_title()
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
-        if (textwidth <= WIDTH)
+        if (small_layout)
+        {
+            CGOTOXY(3, 2, GOTO_STAT);
+            NOWRAP_EOL_CPRINTF("%s", piety.c_str());
+        }
+        else if (textwidth <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
         else if (textwidth == (WIDTH + 1))
         {
@@ -1302,7 +1444,7 @@ static void _redraw_title()
             NOWRAP_EOL_CPRINTF("%s", piety.c_str());
         }
         clear_to_end_of_line();
-        if (you_worship(GOD_GOZAG))
+        if (!small_layout && you_worship(GOD_GOZAG))
         {
             // "Mottled Draconian of Gozag  Gold: 99999" just fits
             _print_stats_gold(textwidth + 2, 2);
@@ -1376,6 +1518,8 @@ void print_stats()
         CGOTOXY(1, 8 - rows_hidden, GOTO_STAT);
         textcolour(Options.status_caption_colour);
         CPRINTF("XL: ");
+        if (_is_using_small_layout())
+            CGOTOXY(5, 8, GOTO_STAT);
         textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
         if (you.experience_level >= you.get_max_xl())
@@ -1383,7 +1527,10 @@ void print_stats()
         else
         {
             textcolour(Options.status_caption_colour);
-            CPRINTF("Next: ");
+            if (!_is_using_small_layout())
+                CPRINTF("Next: ");
+            else
+                CGOTOXY(14, 8, GOTO_STAT);
             textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
@@ -1420,23 +1567,6 @@ void print_stats()
 #endif
 }
 
-static string _level_description_string_hud()
-{
-    const PlaceInfo& place = you.get_place_info();
-    string short_name = branches[place.branch].shortname;
-
-    if (brdepth[place.branch] > 1)
-        short_name += make_stringf(":%d", you.depth);
-    // Indefinite articles
-    else if (place.branch != BRANCH_PANDEMONIUM
-             && place.branch != BRANCH_DESOLATION
-             && !is_connected_branch(place.branch))
-    {
-        short_name = article_a(short_name);
-    }
-    return short_name;
-}
-
 void print_stats_level()
 {
     int ypos = 8;
@@ -1448,10 +1578,12 @@ void print_stats_level()
         ypos--;
 #endif
 
-    cgotoxy(19, ypos, GOTO_STAT);
+    CGOTOXY(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
 
+    if (_is_using_small_layout())
+        CGOTOXY(26, ypos, GOTO_STAT);
     textcolour(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
     CPRINTF("(%d) ", env.absdepth0 + 1);

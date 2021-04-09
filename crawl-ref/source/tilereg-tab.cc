@@ -42,7 +42,10 @@ void TabbedRegion::set_icon_pos(int idx)
         start_y = max(m_tabs[i].max_y + 1, start_y);
     }
     m_tabs[idx].min_y = start_y;
-    m_tabs[idx].max_y = start_y + m_tabs[idx].height;
+    if (!m_use_small_layout)
+        m_tabs[idx].max_y = start_y + m_tabs[idx].height;
+    else
+        m_tabs[idx].max_y = start_y + m_tabs[idx].height*2; // spread half size tabs
 }
 
 void TabbedRegion::reset_icons(int from_idx)
@@ -162,6 +165,9 @@ void TabbedRegion::deactivate_tab()
 
     if (m_tabs[m_active].reg)
         m_tabs[m_active].reg->clear();
+
+    if (m_use_small_layout)
+        m_active = 0;
 }
 
 int TabbedRegion::active_tab() const
@@ -325,7 +331,7 @@ void TabbedRegion::on_resize()
         // on small layout we want to draw tab from top-right corner inwards (down and left)
         if (m_use_small_layout)
         {
-            reg_sx = (sx+ox) - ox*dx/32 - mx*tab.reg->dx;
+            reg_sx = 0;
             tab.reg->dx = dx;
             tab.reg->dy = dy;
         }
@@ -443,12 +449,14 @@ int TabbedRegion::find_tab(string tab_name) const
 void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &windowsz)
 {
     m_use_small_layout = use_small_layout;
+    reset_icons(0);
 
     if (m_tabs.size() == 0 || !use_small_layout)
         return;
 
     // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
-    int scale = 32 * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+    int scale = (32-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+    scale /= 2; // half size fits better
     dx = scale;
     dy = scale;
 }

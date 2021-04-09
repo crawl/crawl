@@ -37,6 +37,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "version.h"
 
@@ -1027,7 +1028,7 @@ void objstat_iteration_stats()
 static FILE * _open_stat_file(string stat_file)
 {
     FILE *stat_fh = nullptr;
-    stat_fh = fopen(stat_file.c_str(), "w");
+    stat_fh = fopen_u(stat_file.c_str(), "w");
 
     if (!stat_fh)
     {

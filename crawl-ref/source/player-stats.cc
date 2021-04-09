@@ -12,9 +12,6 @@
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
-#ifdef TOUCH_UI
-#include "menu.h"
-#endif
 #include "message.h"
 #include "monster.h"
 #include "notes.h"
@@ -27,10 +24,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#ifdef TOUCH_UI
-#include "rltiles/tiledef-gui.h"
-#include "tilepick.h"
-#endif
 #include "transform.h"
 
 int player::stat(stat_type s, bool nonneg) const
@@ -112,27 +105,6 @@ bool attribute_increase()
                                                   (statgain > 1) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
-#ifdef TOUCH_UI
-    learned_something_new(HINT_CHOOSE_STAT);
-    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE);
-    MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1,
-                                                        need_caps ? 'S' : 's');
-    s_me->add_tile(tile_def(TILEG_FIGHTING_ON));
-    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1,
-                                                        need_caps ? 'I' : 'i');
-    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON));
-    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1,
-                                                        need_caps ? 'D' : 'd');
-    d_me->add_tile(tile_def(TILEG_DODGING_ON));
-
-    pop.set_title(new MenuEntry("Increase Attributes", MEL_TITLE));
-    pop.add_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
-    pop.add_entry(status);
-    pop.add_entry(s_me);
-    pop.add_entry(i_me);
-    pop.add_entry(d_me);
-#else
     mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
@@ -147,7 +119,6 @@ bool attribute_increase()
     mprf(MSGCH_PROMPT, need_caps
         ? "Increase (S)trength, (I)ntelligence, or (D)exterity? "
         : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
-#endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 
     bool tried_lua = false;
@@ -165,16 +136,11 @@ bool attribute_increase()
         }
         else
         {
-#ifdef TOUCH_UI
-            pop.show();
-            keyin = pop.getkey();
-#else
             while ((keyin = getchm()) == CK_REDRAW)
             {
                 redraw_screen();
                 update_screen();
             }
-#endif
         }
         tried_lua = true;
 
@@ -209,16 +175,8 @@ bool attribute_increase()
         case 's':
         case 'i':
         case 'd':
-#ifdef TOUCH_UI
-            status->text = "Uppercase letters only, please.";
-#else
             mprf(MSGCH_PROMPT, "Uppercase letters only, please.");
-#endif
             break;
-#ifdef TOUCH_UI
-        default:
-            status->text = "Please choose an option below"; // too naggy?
-#endif
         }
     }
 }

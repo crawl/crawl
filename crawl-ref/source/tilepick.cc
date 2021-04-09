@@ -3367,8 +3367,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_SYMBOL_OF_TORMENT;
     case CMD_GAME_MENU:
         return TILEG_STARTUP_STONESOUP;
-#ifdef TOUCH_UI
-    case CMD_SHOW_KEYBOARD:
+#ifdef __ANDROID__
+    case CMD_TOGGLE_KEYBOARD:
         return TILEG_CMD_KEYBOARD;
 #endif
     default:

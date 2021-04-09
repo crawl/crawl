@@ -33,6 +33,7 @@
 #include "spl-miscast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -1541,7 +1542,7 @@ NORETURN void run_arena(const newgame_def& choice, const string &default_arena_t
         end(0, false, "Results file already open");
     // would be more elegant if arena_tee handled file open/close, but
     // that would need a bunch of refactoring of how the file is handled here.
-    arena::file = fopen("arena.result", "w");
+    arena::file = fopen_u("arena.result", "w");
     msg::arena_tee log(&arena::file);
 
     do
