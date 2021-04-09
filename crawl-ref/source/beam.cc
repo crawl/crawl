@@ -843,7 +843,7 @@ void bolt::bounce()
     bolt boltcopy = *this;
     if (bounces == 1)
         {
-        extra_range_used -= spell_range(boltcopy.origin_spell, boltcopy.ench_power,true,true)-range;
+        extra_range_used -= spell_range(boltcopy.origin_spell, boltcopy.ench_power,true,(int)you.normal_vision-you.get_mutation_level(MUT_NIGHTSTALKER))-range;
 
         if  (you.get_mutation_level(MUT_NIGHTSTALKER)==3)
         {

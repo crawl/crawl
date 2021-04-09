@@ -985,14 +985,10 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool allow_bonus, bool ignore_los)
+int spell_range(spell_type spell, int pow, bool allow_bonus, int range_cap)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
-    int los_cap  = (int)you.current_vision;
-    if (ignore_los)
-        los_cap  = (int)you.normal_vision-you.get_mutation_level(MUT_NIGHTSTALKER);
-
 
     ASSERT(maxrange >= minrange);
 
@@ -1012,15 +1008,15 @@ int spell_range(spell_type spell, int pow, bool allow_bonus, bool ignore_los)
     }
 
     if (minrange == maxrange)
-        return min(minrange, los_cap);
+        return min(minrange, range_cap);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return min(maxrange, los_cap);
+        return min(maxrange, range_cap);
 
     // Round appropriately.
-    return min(los_cap,
+    return min(range_cap,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
