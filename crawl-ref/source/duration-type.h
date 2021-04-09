@@ -218,5 +218,6 @@ enum duration_type
 #endif
     DUR_ATTRACTIVE,
     DUR_LOCKED_DOWN,
+    DUR_WORD_OF_CHAOS_COOLDOWN,
     NUM_DURATIONS
 };

@@ -1647,7 +1647,7 @@ bool word_of_chaos(int pow)
         }
     }
     
-    you.increase_duration(DUR_EXHAUSTED, 15 + random2(10));
+    you.increase_duration(DUR_WORD_OF_CHAOS_COOLDOWN, 15 + random2(10));
     drain_player(50, false, true);
     return true;
 }

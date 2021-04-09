@@ -326,7 +326,7 @@ static const ability_def Ability_List[] =
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
     { ABIL_WORD_OF_CHAOS, "Word of Chaos",
-        6, 0, 0, {fail_basis::xl, 50, 1}, abflag::exhaustion|abflag::max_hp_drain },
+        6, 0, 0, {fail_basis::xl, 50, 1}, abflag::max_hp_drain },
 
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
         0, 0, 0, {}, abflag::instant | abflag::none },
@@ -2214,9 +2214,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
         
     case ABIL_WORD_OF_CHAOS:
-        if (you.duration[DUR_EXHAUSTED])
+        if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
-            mpr("You're too exhausted to invoke a word of chaos.");
+            mpr("You're unable to invoke a word of chaos right now.");
             return spret::abort;
         }
         fail_check();
