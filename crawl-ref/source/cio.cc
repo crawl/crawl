@@ -188,6 +188,7 @@ void nowrap_eol_cprintf(const char *s, ...)
 static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
 {
     ASSERT(skiplines >= 0);
+    ASSERT(wrapcol >= 2); // prevent infinite loops in the while
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
@@ -208,12 +209,17 @@ static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
         if (avail > 0)
         {
             const string line = chop_string(buf.c_str() + linestart, avail, false);
-            linestart += line.length();
-            if (skiplines == 0)
-                cprintf("%s", line.c_str());
+            if (line.length() == 0)
+                linebreak = true; // buf begins with a widechar, cursor is at the edge
+            else
+            {
+                linestart += line.length();
+                if (skiplines == 0)
+                    cprintf("%s", line.c_str());
 
-            linebreak = skiplines == 0
-                        && line.length() >= static_cast<unsigned int>(avail);
+                linebreak = skiplines == 0
+                            && line.length() >= static_cast<unsigned int>(avail);
+            }
         }
         else
             linebreak = true; // cursor started at the end of a line
@@ -526,6 +532,7 @@ int line_reader::read_line_core(bool reset_cursor)
         pos = width;
 
     cur = buffer;
+    // XX shared code with calc_pos
     int cpos = 0;
     while (*cur && cpos < pos)
     {
@@ -774,12 +781,20 @@ void line_reader::calc_pos()
     const char *cp = buffer;
     char32_t c;
     int s;
+    int pos_on_line = start.x;
     while (cp < cur && (s = utf8towc(&c, cp)))
     {
-        // FIXME: this won't handle a CJK character wrapping prematurely
-        // (if there's only one space left)
+        const int c_width = wcwidth(c);
+        if (pos_on_line + c_width >= wrapcol + 1)
+        {
+            if (pos_on_line + c_width > wrapcol + 1)
+                p += 1; // account for early wrapping for a wide char
+            pos_on_line = 1;
+            continue;
+        }
         cp += s;
-        p += wcwidth(c);
+        p += c_width;
+        pos_on_line += c_width;
     }
     pos = p;
 }
@@ -827,6 +842,7 @@ void line_reader::insert_char_at_cursor(int ch)
         pos += w;
         cursorto(0);
         print_segment();
+        calc_pos();
         cursorto(pos);
     }
 }
@@ -864,6 +880,7 @@ int line_reader::process_key(int ch)
             int clear = pos < olen ? olen - pos : 0;
             print_segment(0, clear);
 
+            calc_pos();
             cursorto(pos);
         }
         break;
@@ -883,6 +900,7 @@ int line_reader::process_key(int ch)
             length = cur - buffer;
             *cur = 0;
             print_segment(length, erase); // only overprint
+            calc_pos();
             cursorto(pos);
         }
         break;
@@ -905,6 +923,7 @@ int line_reader::process_key(int ch)
 
             cursorto(pos);
             print_segment(cur - buffer, glyph_width);
+            calc_pos();
             cursorto(pos);
         }
         break;
@@ -943,6 +962,7 @@ int line_reader::process_key(int ch)
     case CONTROL('A'):
         pos = 0;
         cur = buffer;
+        calc_pos();
         cursorto(pos);
         break;
     case CK_END:
