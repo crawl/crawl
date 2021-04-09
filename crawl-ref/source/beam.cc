@@ -850,8 +850,11 @@ void bolt::bounce()
                 extra_range_used -= 1;//Makes it easier for kobolds to multizap opponents, (first zap is one cheaper),
                                       //Spells with range>=los now get reflected back an even number of tiles this also looks cleaner
         }
-        }
 
+        //Prevent bounced bolts from going outside of a radius of you.current_vision
+        extra_range_used += max(0.0,(ray.pos().x+ray.r.dir.x*(range-extra_range_used)-you.pos().x)-you.current_vision);
+        extra_range_used += max(0.0,(ray.pos().y+ray.r.dir.y*(range-extra_range_used)-you.pos().y)-you.current_vision);
+        }
     ASSERT(!cell_is_solid(ray.pos()));
 }
 
