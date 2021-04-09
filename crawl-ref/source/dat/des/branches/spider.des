@@ -217,7 +217,7 @@ ENDMAP
 default-depth: Spider
 
 NAME:   hangedman_spider_mandibles
-TAGS:   extra transparent decor
+TAGS:   extra transparent
 # 59 inside blocks, 59 outside blocks.
 NSUBST: x = 6:. / 9 = xx. / *:x
 NSUBST: z = 4:. / 4:' / 9 = xxx''. / *:x
@@ -245,7 +245,7 @@ ENDMAP
 
 # Bah, bu bah, bu ba-ba-ba ba-ba-ba baa, bu ba-ba-ba buh.
 NAME:    hangedman_spider_tarantella_strand
-TAGS:    extra transparent decor
+TAGS:    extra transparent
 ORIENT:  north
 MONS:    tarantella
 # The size of the vault means this upped weight is actually akin
@@ -309,7 +309,7 @@ xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 ENDMAP
 
 NAME:  nicolae_spider_webbed_stairs
-TAGS:  transparent decor
+TAGS:  transparent
 : if you.depth() == 1 then
 SUBST: s = ]})
 : elseif you.depth() == dgn.br_depth(you.branch()) then
@@ -331,7 +331,7 @@ cdedc
 ENDMAP
 
 NAME: nicolae_spider_circle_web
-TAGS: decor transparent extra
+TAGS: transparent extra
 MAP
        ......x
      ...xxxxxx..
@@ -357,7 +357,7 @@ xxx..x...xxx...x..x..
 ENDMAP
 
 NAME:  nicolae_spider_webs_and_nodes
-TAGS:  decor transparent extra
+TAGS:  transparent extra
 SUBST: D : .E, E : x .:5, F : .H, H : x .:5
 MAP
              DDD
@@ -384,7 +384,7 @@ DExED....x......x..
 ENDMAP
 
 NAME:    nicolae_spider_stair_cavern
-TAGS:    decor
+TAGS:
 DEPTH:   Spider:2-
 SHUFFLE: {[(
 SUBST:   D = .x, . = .:100 ^:5
@@ -412,7 +412,7 @@ ENDMAP
 NAME:   nicolae_spider_cling_halls
 DEPTH:  Spider:2-, !Spider:$
 ORIENT: float
-TAGS:   no_pool_fixup extra decor
+TAGS:   no_pool_fixup extra
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., [ = [{()}], H = x_, J = xw
 KMASK:  Ww = no_monster_gen
@@ -437,7 +437,7 @@ HxxxxxxxxxxxxxH
 ENDMAP
 
 NAME:    nicolae_spider_cling_ruins
-TAGS:    no_pool_fixup extra decor
+TAGS:    no_pool_fixup extra
 DEPTH:   Spider:2-
 SHUFFLE: [{(
 NSUBST:  D = wx / x, E = wx / x, F = wx / x, H = wx / x
@@ -463,7 +463,7 @@ xxxO'''''''Oxxx
 ENDMAP
 
 NAME:  nicolae_spider_checkerboard
-TAGS:  decor transparent
+TAGS:  transparent
 SUBST: D = x:30 ., E = x .:30
 MAP
 .E.xxx.E.xxx.E.
@@ -484,7 +484,7 @@ E.ExxxE.ExxxE.E
 ENDMAP
 
 NAME:    nicolae_spider_spiderdrome
-TAGS:    decor transparent
+TAGS:    transparent
 SHUFFLE: pqrsz/PQRSZ/FHJay/KLMNO
 SUBST:   przs = ., q = x., PQKLFH = x, RMJD = xw, EZOy = w., SNa_ = x_
 CLEAR:   _
@@ -509,7 +509,7 @@ NN______________aaa____
 ENDMAP
 
 NAME:  nicolae_spider_twisty_arc_passages
-TAGS:  decor transparent
+TAGS:  transparent
 SUBST: D = x..
 MAP
      ......   ........
