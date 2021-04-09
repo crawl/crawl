@@ -1,6 +1,13 @@
-################################################################################
-# shoals.des: All vaults for the Shoals.
-################################################################################
+###############################################################################
+# shoals.des: All maps and branch endings relating to the Shoals.
+#
+# <<1>>      Entries
+# <<2>>      Decorative vaults
+# <<3>>      Monster-placing vaults
+# <<4>>      Shoals end vaults
+#
+###############################################################################
+###############################################################################
 
 {{
 
@@ -68,9 +75,12 @@ function shoals_ice_setup(e)
 end
 }}
 
-##############################################################################
-# Shoals entry vaults
-##############################################################################
+###############################################################################
+#
+# <<1>> Snake entries.
+#       All must have the shoals_entry tag and place an enter_shoals feature.
+#
+###############################################################################
 
 NAME:   shoals_dummy_entry
 TAGS:   shoals_entry transparent
@@ -209,36 +219,16 @@ MAP
 ....xxxxxxx...@
 ENDMAP
 
-##############################################################################
-# Non-ending non-entry vaults
-##############################################################################
-
-###########################
-# Shoal Ruins - nothing special, just some flavor (Enne)
-# Appear rarely.
+###############################################################################
 #
-NAME:   overgrown_hall
-DEPTH:  Shoals
-WEIGHT: 2
-MONS:   plant, fungus
-MONS:   cyclops / stone giant w:2
-SUBST:  x = x:20 .
-SUBST:  G = G:40 .
-SUBST:  . = .:90 1:19 x:1
-SUBST:  1 = 1 2:1
-MAP
-xxxxxxxxxxx
-x.........x
-x.G.G.G.G.x
-+....3....+
-x.G.G.G.G.x
-x.........x
-xxxxxxxxxxx
-ENDMAP
+# <<2>> Decorative vaults.
+#
+###############################################################################
+
+default-depth: Shoals
 
 NAME:   overgrown_tower
-TAGS:   transparent
-DEPTH:  Shoals
+TAGS:   transparent extra
 WEIGHT: 2
 MONS:   plant, fungus
 SUBST:  x = x:60 . '
@@ -259,9 +249,290 @@ MAP
  '''''''''
 ENDMAP
 
+NAME:   shoals_oasis
+TAGS:   transparent extra
+WEIGHT: 1
+MONS:   plant
+SUBST:  . = 1:1 .
+SUBST:  W = W .
+SUBST:  w = W w
+SUBST:  _ = w
+MAP
+  ...
+ ..W..
+..WwW..
+.Ww_wW.
+..WwW..
+ ..W..
+  ...
+ENDMAP
+
+NAME: nicolae_shoals_seven_spires
+TAGS: transparent water_ok extra
+MAP
+     .....
+   ....c....
+  ....ccc....
+ ..c...c...c..
+ .ccc.....ccc.
+...c..   ..c...
+.....     .....
+..c..     ..c..
+.ccc.     .ccc.
+..c...   ...c..
+ .............
+ ....c...c....
+  ..ccc.ccc..
+   ..c...c..
+     .....
+ENDMAP
+
+NAME: nicolae_shoals_square_sea_wall
+TAGS: water_ok transparent extra
+MAP
+..............
+.cc..cccc..cc.
+.c..........c.
+...        ...
+...        ...
+.c.        .c.
+.c.        .c.
+.c.        .c.
+.c.        .c.
+...        ...
+...        ...
+.c..........c.
+.cc..cccc..cc.
+..............
+ENDMAP
+
+NAME: nicolae_shoals_circle_sea_wall
+TAGS: water_ok transparent extra
+MAP
+      .....
+    ..cc.cc..
+   .cc.....cc.
+  ....     ....
+ .c..       ..c.
+ .c.         .c.
+.c.           .c.
+.c.           .c.
+...           ...
+.c.           .c.
+.c.           .c.
+ .c.         .c.
+ .c..       ..c.
+  ....     ....
+   .cc.....cc.
+    ..cc.cc..
+      .....
+ENDMAP
+
+NAME: nicolae_shoals_cliffside_cave
+TAGS: water_ok no_pool_fixup transparent extra
+KPROP: ~' = no_tide
+SUBST: X = x., W = w.
+KFEAT: ~ = w
+MAP
+    xxxx
+  xxxxxxxx
+@XxxxxxxxxX@
+.Xxxx~~xxxX.
+.xxx''~~xxx.
+.xxx'''~~xx.
+.Xxxx'''~xX.
+.Xxxxx'~xx.W
+W.xxx'~xxx.w
+w.xx'~xxxX.w
+w.Xx'~xxxX.w
+w..xx'~xx.Ww
+ww.Xxx'~~.ww
+wwW......~ww
+ wwwwwwwwww
+ENDMAP
+
+NAME: nicolae_shoals_stone_sculpture_thing
+TAGS: water_ok transparent extra
+SHUFFLE: abde
+SUBST: ab = @, de = ., C : .c, y : .wc, z : .wc
+MAP
+    CbbC
+   cc..cc
+  ccz..zcc
+ ccyc..cycc
+Cczc....czcC
+a....ww....d
+a....ww....d
+Cczc....czcC
+ ccyc..cycc
+  ccz..zcc
+   cc..cc
+    CeeC
+ENDMAP
+
+NAME:    nicolae_shoals_arrival_archipelago
+TAGS:    transparent
+SHUFFLE: {[(<, abc, def
+SUBST:   a:@, de:., bcf:W
+MAP
+     wwwwb
+    www...b
+ wwwww..{..b
+wwwwwd.....w
+ww..dd....ww
+c....dwwffww
+c..(.wwwffww
+c....ee....w
+ww..eee.[..w
+wwwwwee....a
+  wwww....a
+    wwwwwa
+ENDMAP
+
+NAME:    nicolae_shoals_c_island
+TAGS:    water_ok no_pool_fixup
+DEPTH:   Shoals, !Shoals:$
+KPROP:   .wW}xtD = no_tide
+KFEAT:   D = any shop
+SHUFFLE: }])
+SUBST:   y = Ww, z = w
+MAP
+       xxxxxx
+    xtttttttxx
+  xtt.........xz
+ xx....WWWWW...xz
+ x...xwwwWwww...z
+ x..xwwwwWwwwww.z
+yx..xwwwWWWwwwwwz
+x..xxwwwW}Wwwwwwz
+xDx..wwwWWWwwww.z
+x..t.twwwwwwwww.z
+yttt.ttwwwwwww..z
+ tt....xxwwww...z
+  ttt..........yz
+   yyy........yz
+     yyy....yyz
+       yyyyyy
+ENDMAP
+
+NAME:  nicolae_shoals_dead_sea_scrolls
+SUBST: Z = PWs., p = P.., s = sW
+KITEM: d = any scroll w:30 / nothing w:20 / any randbook w:1
+KMONS: Ps = plant
+KPROP: .WwpPsd = no_tide
+KFEAT: y = w
+KFEAT: s = W
+MAP
+ xxxxx
+xxxxdxxxx
+xxddxPxxxxx
+xxddxpPxxxx
+xxxxxppppxx
+xxxpp...ppxx
+xxpp..ZZZZZxy
+xxpp.ZZwwwwwyy
+xxxp.ZZwwwwwyy
+xxxx..Zwwwwyyy
+ xxx..Zwwwwyyy
+  xx..Zwwwyyy
+    @@Zwwwyy
+ENDMAP
+
+NAME:    nicolae_shoals_island_circles
+ORIENT:  float
+TAGS:    transparent
+SHUFFLE: abc/xyz
+SUBST:   Z = Ww, ab = ., c = sG, xy = xx., z = x
+: if you.depth() == 1 then
+SUBST:   s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   s = [{(
+: else
+SUBST:   s = ]})[{(
+: end
+MAP
+              wwwwwww
+             wwwZZZwww
+     wwwwwwwwwwZ...Zwww
+    wwwZZZwwwwZ.....Zww
+   wwZZ...ZZwZ...a...Zw
+  wwZ.......ZZ..aaa..Zwwwww
+  wwZ...a...WW...a...ZZZZwww
+  wZ...aba...ZZ.....WZ...Zww
+  wZ..abcba..ZwZ...ZW.....Zw
+  wZ...aba...ZwwZZZwZ..a..Zw
+  wwZ...a...ZwwwwwwwZ.....Zw
+  wwZ.......ZwwwwwwwwZ...Zww
+  wwwZW...ZZwwwwwwwwwwZZWWwww
+ wwwZZWZZZwwwwwwwwwwwwwwZ.Zww
+wwwZ...ZwwwwwwwwwwwwwwwZ...Zw
+wwZ.....ZwwwwwwwwwwwwwwwZ.Zww
+wZ...a...ZwwwwwwwwwwwwwwwWwww
+wZ..aaa..ZwwwwwwwwwwwwwwZWZw
+wZ...a...Zwwwwwwwwwwwww  @
+wwZ.....Zwwwwwwwwwwww
+wwwZ...WWZZwwwwwwwww
+ wwwZZZZ...Zwwwwwww
+  wwwwZ.....Zwwwwww
+     wZ..a..ZwZwww
+     wZ.....WZ.ZwZ
+     wwZ...ZW...WW@
+     wwwZZZwwZ.ZwZ
+      wwwwwwwwZwww
+            wwwww
+ENDMAP
+
+
+NAME:  nicolae_shoals_loop_pool
+TAGS:  transparent
+KPROP: w- = no_tide
+SUBST: Y = yZ, y = x___, Z = w.___, - = .
+CLEAR: _
+MAP
+ yxxxyyY
+yxx-----Y
+yx--www--YZZZ
+yx-wwwww-....@
+yx-wwwwwxxxxxxy
+yx-wwwww-----xxy
+yx--www--www--xy
+yxx-----wwwww-xy
+ yxxxxxxwwwww-xy
+  @....-wwwww-xy
+   ZZZY--www--xy
+       Y-----xxy
+        Yyyxxxy
+ENDMAP
+
+###############################################################################
+#
+# <<3>> Monster-placing vaults.
+#
+###############################################################################
+
+# Shoal Ruins - nothing special, just some flavor (Enne)
+# Appear rarely.
+#
+NAME:   overgrown_hall
+WEIGHT: 2
+MONS:   plant, fungus
+MONS:   cyclops / stone giant w:2
+SUBST:  x = x:20 .
+SUBST:  G = G:40 .
+SUBST:  . = .:90 1:19 x:1
+SUBST:  1 = 1 2:1
+MAP
+xxxxxxxxxxx
+x.........x
+x.G.G.G.G.x
++....3....+
+x.G.G.G.G.x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
 NAME:   overgrown_statue
 TAGS:   transparent
-DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
 MONS:   ice statue / orange crystal statue / obsidian statue
@@ -283,28 +554,8 @@ MAP
   ........
 ENDMAP
 
-NAME:   shoals_oasis
-TAGS:   transparent
-DEPTH:  Shoals
-WEIGHT: 1
-MONS:   plant
-SUBST:  . = 1:1 .
-SUBST:  W = W .
-SUBST:  w = W w
-SUBST:  _ = w
-MAP
-  ...
- ..W..
-..WwW..
-.Ww_wW.
-..WwW..
- ..W..
-  ...
-ENDMAP
-
 NAME:   yaktaur_hedge
 TAGS:   transparent
-DEPTH:  Shoals
 MONS:   bush
 MONS:   yaktaur
 MAP
@@ -319,7 +570,6 @@ ENDMAP
 
 NAME:    hangedman_shoal_volcano
 TAGS:    no_monster_gen no_item_gen patrolling transparent
-DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance | buckler | nothing w:30
@@ -481,7 +731,6 @@ ENDMAP
 
 NAME: nicolae_shoals_undead_eyrie
 TAGS: transparent
-DEPTH: Shoals
 SUBST: y = ..xx1
 NSUBST: . = 4:1 / *:.
 MONS: harpy zombie w:30 / manticore zombie / bat zombie w:5
@@ -496,7 +745,6 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_mertower
-DEPTH: Shoals
 FHEIGHT: ;'b123 = 40
 KPROP: ;'b123 = no_tide
 KMONS: 1 = merfolk
@@ -518,7 +766,6 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_aquamancer_cove
-DEPTH: Shoals
 TAGS: no_monster_gen
 KMONS: 123 = merfolk aquamancer
 SUBST: X = x.
@@ -541,7 +788,6 @@ Xw1wwwwwww1wXx
 ENDMAP
 
 NAME: nicolae_shoals_kraken_intersection
-DEPTH: Shoals
 TAGS: transparent no_pool_fixup water_ok no_trap_gen
 SUBST: b = .w, z = x.
 KPROP: w1. = no_tide
@@ -564,28 +810,8 @@ ccxxz..zxxcc
  ccxx@@xxcc
 ENDMAP
 
-NAME: nicolae_shoals_arrival_archipelago
-DEPTH: Shoals
-SHUFFLE: {[(<, abc, def
-SUBST: a:@, de:., bcf:W
-MAP
-     wwwwb
-    www...b
- wwwww..{..b
-wwwwwd.....w
-ww..dd....ww
-c....dwwffww
-c..(.wwwffww
-c....ee....w
-ww..eee.[..w
-wwwwwee....a
-  wwww....a
-    wwwwwa
-ENDMAP
-
 NAME:    hangedman_shoals_cup_caves
 TAGS:    water_ok
-DEPTH:   Shoals
 MONS:    cyclops / stone giant w:2
 MONS:    merfolk siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
 SHUFFLE: 234560, ABC
@@ -631,58 +857,7 @@ wwyyZY..Yyyffyyw
     wwwwwwwwww
 ENDMAP
 
-NAME: nicolae_shoals_c_island
-DEPTH: Shoals, !Shoals:$
-TAGS: water_ok no_pool_fixup
-KPROP: .wW}xtC = no_tide
-SHUFFLE: }])
-SUBST: y = Ww, z = w
-KFEAT: C = any shop
-MAP
-       xxxxxx
-    xtttttttxx
-  xtt.........xz
- xx....WWWWW...xz
- x...xwwwWwww...z
- x..xwwwwWwwwww.z
-yx..xwwwWWWwwwwwz
-x..xxwwwW}Wwwwwwz
-xCx..wwwWWWwwww.z
-x..t.twwwwwwwww.z
-yttt.ttwwwwwww..z
- tt....xxwwww...z
-  ttt..........yz
-   yyy........yz
-     yyy....yyz
-       yyyyyy
-ENDMAP
-
-NAME: nicolae_shoals_dead_sea_scrolls
-DEPTH: Shoals
-SUBST: Z = PWs., p = P.., s = sW
-KMONS: Ps = plant
-KPROP: .WwpPsd = no_tide
-KFEAT: y = w
-KFEAT: s = W
-KITEM: d = any scroll w:30 / nothing w:20 / any randbook w:1
-MAP
- xxxxx
-xxxxdxxxx
-xxddxPxxxxx
-xxddxpPxxxx
-xxxxxppppxx
-xxxpp...ppxx
-xxpp..ZZZZZxy
-xxpp.ZZwwwwwyy
-xxxp.ZZwwwwwyy
-xxxx..Zwwwwyyy
- xxx..Zwwwwyyy
-  xx..Zwwwyyy
-    @@Zwwwyy
-ENDMAP
-
 NAME: nicolae_shoals_siren_and_animal_friends
-DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
 KMONS: f = bat w:5 / harpy / manticore w:5 / \
@@ -747,7 +922,6 @@ yyxxxxxrr.bwwwyy
 ENDMAP
 
 NAME: nicolae_shoals_wave_tunnel
-DEPTH: Shoals
 TAGS: water_ok transparent
 SUBST: b = .W, + = .++
 KMONS: m = merfolk / nothing w:5
@@ -823,114 +997,6 @@ xxr----WWmwW--rx
      xxxxxxxx
 ENDMAP
 
-NAME: nicolae_shoals_seven_spires
-TAGS: transparent water_ok extra
-DEPTH: Shoals
-MAP
-     .....
-   ....c....
-  ....ccc....
- ..c...c...c..
- .ccc.....ccc.
-...c..   ..c...
-.....     .....
-..c..     ..c..
-.ccc.     .ccc.
-..c...   ...c..
- .............
- ....c...c....
-  ..ccc.ccc..
-   ..c...c..
-     .....
-ENDMAP
-
-NAME: nicolae_shoals_square_sea_wall
-TAGS: water_ok transparent extra
-DEPTH: Shoals
-MAP
-..............
-.cc..cccc..cc.
-.c..........c.
-...        ...
-...        ...
-.c.        .c.
-.c.        .c.
-.c.        .c.
-.c.        .c.
-...        ...
-...        ...
-.c..........c.
-.cc..cccc..cc.
-..............
-ENDMAP
-
-NAME: nicolae_shoals_circle_sea_wall
-TAGS: water_ok transparent extra
-DEPTH: Shoals
-MAP
-      .....
-    ..cc.cc..
-   .cc.....cc.
-  ....     ....
- .c..       ..c.
- .c.         .c.
-.c.           .c.
-.c.           .c.
-...           ...
-.c.           .c.
-.c.           .c.
- .c.         .c.
- .c..       ..c.
-  ....     ....
-   .cc.....cc.
-    ..cc.cc..
-      .....
-ENDMAP
-
-NAME: nicolae_shoals_cliffside_cave
-TAGS: water_ok no_pool_fixup transparent extra
-DEPTH: Shoals
-KPROP: ~' = no_tide
-SUBST: X = x., W = w.
-KFEAT: ~ = w
-MAP
-    xxxx
-  xxxxxxxx
-@XxxxxxxxxX@
-.Xxxx~~xxxX.
-.xxx''~~xxx.
-.xxx'''~~xx.
-.Xxxx'''~xX.
-.Xxxxx'~xx.W
-W.xxx'~xxx.w
-w.xx'~xxxX.w
-w.Xx'~xxxX.w
-w..xx'~xx.Ww
-ww.Xxx'~~.ww
-wwW......~ww
- wwwwwwwwww
-ENDMAP
-
-NAME: nicolae_shoals_stone_sculpture_thing
-TAGS: water_ok transparent extra
-DEPTH: Shoals
-SHUFFLE: abde
-SUBST: ab = @, de = ., C : .c, y : .wc, z : .wc
-MAP
-    CbbC
-   cc..cc
-  ccz..zcc
- ccyc..cycc
-Cczc....czcC
-a....ww....d
-a....ww....d
-Cczc....czcC
- ccyc..cycc
-  ccz..zcc
-   cc..cc
-    CeeC
-ENDMAP
-
 NAME: wheals_shoals_ruined_temple
 TAGS: water_ok
 DEPTH: Shoals, !Shoals:$
@@ -1003,76 +1069,7 @@ MAP
     ..ccc...
 ENDMAP
 
-NAME: nicolae_shoals_island_circles
-DEPTH: Shoals
-ORIENT: float
-TAGS: decor transparent
-SHUFFLE: abc/xyz
-SUBST: Z = Ww, ab = ., c = sG, xy = xx., z = x
-: if you.depth() == 1 then
-SUBST: s = ]})
-: elseif you.depth() == dgn.br_depth(you.branch()) then
-SUBST: s = [{(
-: else
-SUBST: s = ]})[{(
-: end
-MAP
-              wwwwwww
-             wwwZZZwww
-     wwwwwwwwwwZ...Zwww
-    wwwZZZwwwwZ.....Zww
-   wwZZ...ZZwZ...a...Zw
-  wwZ.......ZZ..aaa..Zwwwww
-  wwZ...a...WW...a...ZZZZwww
-  wZ...aba...ZZ.....WZ...Zww
-  wZ..abcba..ZwZ...ZW.....Zw
-  wZ...aba...ZwwZZZwZ..a..Zw
-  wwZ...a...ZwwwwwwwZ.....Zw
-  wwZ.......ZwwwwwwwwZ...Zww
-  wwwZW...ZZwwwwwwwwwwZZWWwww
- wwwZZWZZZwwwwwwwwwwwwwwZ.Zww
-wwwZ...ZwwwwwwwwwwwwwwwZ...Zw
-wwZ.....ZwwwwwwwwwwwwwwwZ.Zww
-wZ...a...ZwwwwwwwwwwwwwwwWwww
-wZ..aaa..ZwwwwwwwwwwwwwwZWZw
-wZ...a...Zwwwwwwwwwwwww  @
-wwZ.....Zwwwwwwwwwwww
-wwwZ...WWZZwwwwwwwww
- wwwZZZZ...Zwwwwwww
-  wwwwZ.....Zwwwwww
-     wZ..a..ZwZwww
-     wZ.....WZ.ZwZ
-     wwZ...ZW...WW@
-     wwwZZZwwZ.ZwZ
-      wwwwwwwwZwww
-            wwwww
-ENDMAP
-
-
-NAME: nicolae_shoals_loop_pool
-DEPTH: Shoals
-TAGS: transparent decor
-KPROP: w- = no_tide
-SUBST: Y = yZ, y = x___, Z = w.___, - = .
-CLEAR: _
-MAP
- yxxxyyY
-yxx-----Y
-yx--www--YZZZ
-yx-wwwww-....@
-yx-wwwwwxxxxxxy
-yx-wwwww-----xxy
-yx--www--www--xy
-yxx-----wwwww-xy
- yxxxxxxwwwww-xy
-  @....-wwwww-xy
-   ZZZY--www--xy
-       Y-----xxy
-        Yyyxxxy
-ENDMAP
-
 NAME: nicolae_shoals_this_corrosion
-DEPTH: Shoals
 TAGS: water_ok no_item_gen
 NSUBST: % = 1:d / *:%%%%%*
 KMONS: 1 = oklob plant
@@ -1090,9 +1087,9 @@ xx1WW.xx
 ENDMAP
 
 # XXX: Rare teleport islets possibilities.
-NAME: nicolae_shoals_kraken_party
-DEPTH: Shoals, !Shoals:1
-TAGS: no_monster_gen no_trap_gen water_ok
+NAME:  nicolae_shoals_kraken_party
+TAGS:  no_monster_gen no_trap_gen water_ok
+DEPTH: Shoals:2-
 SUBST: { = {[(, . = ......wW, - = ...W
 KFEAT: 1 = w
 KMONS: 1 = kraken
@@ -1119,7 +1116,6 @@ MAP
 ENDMAP
 
 NAME: nicolae_shoals_water_shrine
-DEPTH: Shoals
 TAGS: water_ok no_monster_gen no_item_gen
 NSUBST: 1 = 3:A / 3:E / 1:AWW / 1:EWW, 2 = 2:N / 1:Nww / *:w
 KMONS: A = merfolk aquamancer
@@ -1145,7 +1141,6 @@ c  1W2w2W1  c
 ENDMAP
 
 NAME: nicolae_shoals_drake_roost
-DEPTH: Shoals
 TAGS: water_ok no_monster_gen no_tide patrolling
 SUBST: W = WWW w:6
 NSUBST: . = 2:s / 2:f / 2:i / 1:sfi / 2:sfi.. / *:.
@@ -1171,7 +1166,6 @@ ENDMAP
 
 NAME:    regret_index_shoals_crete
 TAGS:    no_monster_gen
-DEPTH:   Shoals
 MONS:    snapping turtle / elephant
 MONS:    faun, satyr, meliai, minotaur
 KMONS:   _ = merfolk javelineer
@@ -1234,7 +1228,6 @@ XwwwwwwwWWW@WW
 ENDMAP
 
 NAME: cheibrodos_shoals_epimethial_gifts
-DEPTH: Shoals
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 KPROP: . = no_tide
@@ -1261,7 +1254,6 @@ cccccc......t.
 ENDMAP
 
 NAME: cheibrodos_shoals_gigantism
-DEPTH: Shoals
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 MONS: titan, cyclops / w:3 stone giant / w:3 frost giant
@@ -1403,7 +1395,6 @@ MAP
 ENDMAP
 
 NAME:   nzn_prometheus_bound
-DEPTH:  Shoals
 MONS:   patrolling harpy
 KITEM:  e = book of fire ident:all
 KPROP:  nd = bloody
@@ -1415,12 +1406,17 @@ xndnx
  @1@
 ENDMAP
 
-##############################################################################
-# Branch ends.
+###############################################################################
+#
+# <<4>> Shoals ending vaults
+#
 # Note that the Shoals usually have a randomised end map, by placing many
 # copies of the same cave structures. Pre-made, non-encompass maps could also
 # work, though they're not used yet.
-##############################################################################
+#
+###############################################################################
+
+default-depth:
 
 NAME: shoals_end_simple
 ORIENT: float
