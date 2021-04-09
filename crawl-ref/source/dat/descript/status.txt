@@ -290,13 +290,15 @@ hampers your stealth.
 Engulf status
 
 {{
-    local desc = "You are engulfed in water"
+    local desc = "You are engulfed by an adjacent creature"
 
     if not you.res_drowning() then
         desc = desc .. " and are unable to breathe. You will take increasing"
                        .. " damage from asphyxiation every turn until you"
                        .. " escape. This makes reading scrolls, casting"
-                       .. " spells, and invoking divine abilities impossible"
+                       .. " spells, and invoking divine abilities impossible."
+                       .. " Moving away from the engulfing creature will end"
+                       .. " the effect"
     else
         desc = desc .. " but suffer no negative effects"
     end
@@ -644,10 +646,10 @@ damage and never miss.
 Storm status
 
 You are surrounded by a storm of heavenly clouds. While the storm rages, your
-combat accuracy and damage are substantially increased, and striking enemies
-with martial attacks increases this bonus. The storm weakens over time and
-fades away once the bonus reaches zero. The heavenly clouds prevent
-invisibility, and obscure the vision of those outside the storm.
+evasion and combat accuracy and damage are substantially increased, and
+striking enemies with martial attacks increases this bonus. The storm weakens
+over time and fades away once the bonus reaches zero. The heavenly clouds
+prevent invisibility, and obscure the vision of those outside the storm.
 %%%%
 SlowM status
 

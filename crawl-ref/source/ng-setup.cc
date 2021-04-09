@@ -219,7 +219,7 @@ static void _give_ammo(weapon_type weapon, int plus)
     switch (weapon)
     {
     case WPN_THROWN:
-        if (species_can_throw_large_rocks(you.species))
+        if (species::can_throw_large_rocks(you.species))
             newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, 4 + plus);
         else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
             newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 8 + 2 * plus);
@@ -630,6 +630,8 @@ static void _setup_generic(const newgame_def& ng,
     init_skill_order();
     init_can_currently_train();
     init_train();
+    if (you.religion == GOD_TROG)
+        join_trog_skills();
     init_training();
 
     // Apply autoinscribe rules to inventory.

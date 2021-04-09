@@ -336,7 +336,7 @@ public:
     virtual int evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
-    virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int equip_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
     virtual bool rampaging(bool calc_unid = true, bool items = true) const;
 
@@ -428,7 +428,8 @@ public:
                                         bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender, bool direct) const;
+    bool can_constrict(const actor* defender, bool direct,
+                       bool engulf = false) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
     void accum_has_constricted();
@@ -440,7 +441,7 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(bool direct) const = 0;
     virtual bool constriction_does_damage(bool direct) const = 0;
-    virtual bool clear_far_engulf() = 0;
+    virtual bool clear_far_engulf(bool force = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();

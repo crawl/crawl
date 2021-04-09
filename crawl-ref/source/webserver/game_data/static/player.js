@@ -15,7 +15,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "icy armour|protected from physical damage|sanguine armour|protection aura",
-        "ev": "agile|acrobat",
+        "ev": "agile|acrobat|heavenly storm",
         "sh": "divine shield",
     }
 

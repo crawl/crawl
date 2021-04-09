@@ -290,23 +290,6 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_FLASH_FREEZE,
-    "flash freeze",
-    200,
-    nullptr,
-    nullptr,
-    new dicedef_calculator<3, 7, 1, 12>,
-    new tohit_calculator<5, 1, 3>,
-    WHITE,
-    false,
-    BEAM_ICE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    0
-},
-
-{
     ZAP_SPIT_LAVA,
     "glob of lava",
     200,

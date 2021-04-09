@@ -52,6 +52,15 @@ static void _calc_hp_artefact()
         ouch(0, KILLED_BY_DRAINING);
 }
 
+static void _flight_equip()
+{
+    if (you.airborne()) // already aloft
+        mpr("You feel rather light.");
+    else
+        float_player();
+    you.attribute[ATTR_PERM_FLIGHT] = 1;
+}
+
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
 {
@@ -66,7 +75,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 }
 
 // Clear an equipment slot (possibly melded).
-bool unequip_item(equipment_type slot, bool msg)
+bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
 {
     ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(!you.melded[slot] || you.equip[slot] != -1);
@@ -78,10 +87,11 @@ bool unequip_item(equipment_type slot, bool msg)
     {
         you.equip[slot] = -1;
 
-        if (!you.melded[slot])
-            unequip_effect(slot, item_slot, false, msg);
-        else
+        if (you.melded[slot])
             you.melded.set(slot, false);
+        else if (!skip_effects)
+            unequip_effect(slot, item_slot, false, msg);
+
         ash_check_bondage();
         you.last_unequip = item_slot;
         you.gear_change = true;
@@ -143,7 +153,7 @@ static void _assert_valid_slot(equipment_type eq, equipment_type slot)
         return;
     ASSERT(eq == EQ_RINGS); // all other slots are unique
     equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
-    if (species_arm_count(you.species) > 2)
+    if (species::arm_count(you.species) > 2)
         r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
     if (slot >= r1 && slot <= r2)
         return;
@@ -261,6 +271,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && proprt[ARTP_DEXTERITY] && !unmeld));
 
+    if (proprt[ARTP_FLY])
+        _flight_equip();
+
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
@@ -343,12 +356,8 @@ static void _unequip_artefact_effect(item_def &item,
     notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], true);
     notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    true);
 
-    if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
-        && !you.evokable_flight())
-    {
-        you.duration[DUR_FLIGHT] = 0;
+    if (proprt[ARTP_FLY] != 0)
         land_player();
-    }
 
     if (proprt[ARTP_INVISIBLE] != 0)
         _unequip_invis();
@@ -752,37 +761,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_FLYING:
-            // If you weren't flying when you took off the boots, don't restart.
-            if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
-                || you.has_mutation(MUT_NO_ARTIFICE))
-            {
-                if (you.airborne())
-                {
-                    you.attribute[ATTR_PERM_FLIGHT] = 1;
-                    mpr("You feel rather light.");
-                }
-                else
-                {
-                    you.attribute[ATTR_PERM_FLIGHT] = 1;
-                    float_player();
-                }
-            }
-            if (!unmeld)
-            {
-                if (you.has_mutation(MUT_NO_ARTIFICE))
-                {
-                    mprf("Take your %s off to stop flying.",
-                         arm.name(DESC_BASENAME).c_str());
-                }
-                else
-                {
-                    mprf("(use the <w>%s</w>bility menu to %s flying)",
-                         command_to_string(CMD_USE_ABILITY).c_str(),
-                         you.attribute[ATTR_LAST_FLIGHT_STATUS]
-                             ? "stop or start" : "start or stop");
-                }
-            }
-
+            _flight_equip();
             break;
 
         case SPARM_WILLPOWER:
@@ -849,36 +828,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
     you.redraw_evasion = true;
 }
 
-/**
- * The player lost a source of permafly. End their flight if there was
- * no other source, evoking a ring of flight "for free" if possible.
- */
-void lose_permafly_source()
-{
-    const bool had_perm_flight = you.attribute[ATTR_PERM_FLIGHT];
-
-    if (had_perm_flight
-        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
-        && !you.racial_permanent_flight())
-    {
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        if (you.evokable_flight())
-        {
-            fly_player(
-                player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30),
-                true);
-        }
-    }
-
-    // since a permflight item can keep tempflight evocations going
-    // we should check tempflight here too
-    if (you.cancellable_flight() && !you.evokable_flight())
-        you.duration[DUR_FLIGHT] = 0;
-
-    if (had_perm_flight)
-        land_player(); // land_player() has a check for airborne()
-}
-
 static void _unequip_armour_effect(item_def& item, bool meld,
                                    equipment_type slot)
 {
@@ -933,11 +882,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     case SPARM_FLYING:
-        // Save current flight status so we can restore it on reequip
-        you.attribute[ATTR_LAST_FLIGHT_STATUS] =
-            you.attribute[ATTR_PERM_FLIGHT];
-
-        lose_permafly_source();
+        land_player();
         break;
 
     case SPARM_WILLPOWER:
@@ -1117,6 +1062,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             autotoggle_autopickup(false);
         break;
 
+    case RING_FLIGHT:
+        _flight_equip();
+        break;
+
     case RING_PROTECTION:
         you.redraw_armour_class = true;
         break;
@@ -1264,11 +1213,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_FLIGHT:
-        if (you.cancellable_flight() && !you.evokable_flight())
-        {
-            you.duration[DUR_FLIGHT] = 0;
-            land_player();
-        }
+        land_player();
         break;
 
     case RING_MAGICAL_POWER:

@@ -1260,7 +1260,6 @@ namespace quiver
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:
-        case ABIL_FLY:
         case ABIL_TRAN_BAT:
             return true;
         default:

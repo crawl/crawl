@@ -1319,7 +1319,10 @@ static void _wu_jian_increment_heavenly_storm()
 {
     int storm = you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
     if (storm < WU_JIAN_HEAVENLY_STORM_MAX)
+    {
         you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int()++;
+        you.redraw_evasion = true;
+    }
 }
 
 void wu_jian_heaven_tick()
@@ -1328,7 +1331,7 @@ void wu_jian_heaven_tick()
         if (!cell_is_solid(*ai))
             place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
 
-    noisy(15, you.pos());
+    noisy(12, you.pos());
 }
 
 void wu_jian_decrement_heavenly_storm()
@@ -1339,6 +1342,7 @@ void wu_jian_decrement_heavenly_storm()
     {
         you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int()--;
         you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
+        you.redraw_evasion = true;
     }
     else
         wu_jian_end_heavenly_storm();
@@ -1349,6 +1353,7 @@ void wu_jian_end_heavenly_storm()
 {
     you.props.erase(WU_JIAN_HEAVENLY_STORM_KEY);
     you.duration[DUR_HEAVENLY_STORM] = 0;
+    you.redraw_evasion = true;
     invalidate_agrid(true);
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }

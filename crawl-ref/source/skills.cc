@@ -1619,15 +1619,15 @@ skill_type str_to_skill_safe(const string &skill)
 
 static string _stk_weight(species_type species)
 {
-    if (species_size(species) == SIZE_LARGE)
+    if (species::size(species) == SIZE_LARGE)
         return "Heavy";
-    else if (species_size(species, PSIZE_BODY) == SIZE_LARGE)
+    else if (species::size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";
-    else if (species_size(species) == SIZE_SMALL || species == SP_TENGU)
+    else if (species::size(species) == SIZE_SMALL || species == SP_TENGU)
         return "Feather";
-    else if (species_size(species) == SIZE_LITTLE)
+    else if (species::size(species) == SIZE_LITTLE)
         return "Fly";
-    else if (species_is_elven(species))
+    else if (species::is_elven(species))
         return "Light";
     else
         return "Middle";
@@ -1642,6 +1642,8 @@ unsigned get_skill_rank(unsigned skill_lev)
                            (skill_lev <= 26) ? 3
                            /* level 27 */    : 4;
 }
+
+// XX should at least some of this be in species.cc?
 
 /**
  * What title will the player get at the given rank of the given skill?
@@ -1701,7 +1703,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SHORT_BLADES:
-            if (species_is_elven(species) && skill_rank == 5)
+            if (species::is_elven(species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1729,7 +1731,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_BOWS:
-            if (species_is_elven(species) && skill_rank == 5)
+            if (species::is_elven(species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1750,34 +1752,34 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         // For the below draconian titles, intentionally don't restrict
         // by drac colour to avoid frustrating players trying for these
         case SK_FIRE_MAGIC:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Fire Dragon";
             else if (species == SP_MUMMY && skill_rank == 5)
                 result = "Highly Combustible";
             break;
 
         case SK_ICE_MAGIC:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Ice Dragon";
             break;
 
         case SK_EARTH_MAGIC:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Iron Dragon";
             break;
 
         case SK_AIR_MAGIC:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Storm Dragon";
             break;
 
         case SK_POISON_MAGIC:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Swamp Dragon";
             break;
 
         case SK_HEXES:
-            if (species_is_draconian(species) && skill_rank == 5)
+            if (species::is_draconian(species) && skill_rank == 5)
                 result = "Faerie Dragon";
             break;
 
@@ -1811,12 +1813,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
     const map<string, string> replacements =
     {
-        { "Adj", species_name(species, SPNAME_ADJ) },
-        { "Genus", species_name(species, SPNAME_GENUS) },
-        { "genus", lowercase_string(species_name(species, SPNAME_GENUS)) },
+        { "Adj", species::name(species, species::SPNAME_ADJ) },
+        { "Genus", species::name(species, species::SPNAME_GENUS) },
+        { "genus", lowercase_string(species::name(species, species::SPNAME_GENUS)) },
         { "Genus_Short", species == SP_DEMIGOD ? "God" :
-                           species_name(species, SPNAME_GENUS) },
-        { "Walker", species_walking_verb(species) + "er" },
+                           species::name(species, species::SPNAME_GENUS) },
+        { "Walker", species::walking_verb(species) + "er" },
         { "Weight", _stk_weight(species) },
     };
 

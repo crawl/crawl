@@ -4976,6 +4976,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (!mspec.place.is_valid())
         mspec.place = level_id::current();
     bool chose_ood = false;
+    bool fuzz_ood  = true;
     const int starting_depth = mspec.place.depth;
 
     if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
@@ -4986,6 +4987,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             mspec.place.depth += 4 + mspec.place.depth;
         else if (type == RANDOM_MODERATE_OOD)
             mspec.place.depth += 5;
+        fuzz_ood = false;
         type = RANDOM_MONSTER;
     }
 
@@ -5016,7 +5018,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         else
         {
             level_id place = mspec.place;
-            type = pick_random_monster(mspec.place, mspec.monbase, &place);
+            type = pick_random_monster(mspec.place, mspec.monbase, &place,
+                                       fuzz_ood);
             if (place.depth > starting_depth + 5)
                 chose_ood = true;
         }

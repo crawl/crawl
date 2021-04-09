@@ -978,7 +978,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     fprintf(ostat, "%s %s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class), godname.c_str());
 
     // Print player equipment.

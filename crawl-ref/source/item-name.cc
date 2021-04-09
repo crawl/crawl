@@ -796,7 +796,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_DEXTERITY:             return "Dex";
         case RING_INTELLIGENCE:          return "Int";
         case RING_MAGICAL_POWER:         return "MP+9";
-        case RING_FLIGHT:                return "+Fly";
+        case RING_FLIGHT:                return "Fly";
         case RING_LIFE_PROTECTION:       return "rN+";
         case RING_WILLPOWER:             return "Will+";
         case AMU_REGENERATION:           return "Regen";
@@ -2540,6 +2540,23 @@ bool is_emergency_item(const item_def &item)
         default:
             return false;
         }
+    case OBJ_MISSILES:
+        // Missiles won't help Felids.
+        if (you.has_mutation(MUT_NO_GRASPING))
+            return false;
+
+        switch (item.sub_type)
+        {
+        case MI_DART:
+            return get_ammo_brand(item) == SPMSL_CURARE
+                   || get_ammo_brand(item) == SPMSL_BLINDING;
+        case MI_BOOMERANG:
+            return get_ammo_brand(item) == SPMSL_DISPERSAL;
+        case MI_THROWING_NET:
+            return true;
+        default:
+            return false;
+        }
     default:
         return false;
     }
@@ -2910,8 +2927,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case POT_LIGNIFY:
             return you.is_lifeless_undead(temp);
         case POT_FLIGHT:
-            return you.permanent_flight()
-                   || you.racial_permanent_flight();
+            return you.permanent_flight();
         case POT_HEAL_WOUNDS:
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
@@ -2982,9 +2998,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return you_worship(GOD_TROG);
 
         case RING_FLIGHT:
-            return you.permanent_flight()
-                   || you.racial_permanent_flight()
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
+            return you.permanent_flight(false);
 
         case RING_STEALTH:
             return you.get_mutation_level(MUT_NO_STEALTH);

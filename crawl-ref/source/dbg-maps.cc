@@ -211,7 +211,7 @@ static void _dungeon_places()
 
 static bool _build_dungeon()
 {
-    for (const level_id lid : generated_levels)
+    for (const level_id &lid: generated_levels)
     {
         you.where_are_you = lid.branch;
         you.depth = lid.depth;

@@ -4306,6 +4306,9 @@ ENDMAP
 
 NAME: minmay_the_grid_triangle_9x9_shrine
 TAGS: the_grid_triangle_9x9 unrand
+: if you.in_branch("D") then
+SUBST: " = G
+: end
 : if crawl.coinflip() then
 KFEAT: " = altar_fedhas
 KMONS: ' = plant

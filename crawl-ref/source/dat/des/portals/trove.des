@@ -123,7 +123,7 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="fire dragon scales", quant=d(3)+d(3)},
        {base="armour", type="ice dragon scales", quant=d(3)+d(3)} }
 
-  if you.race() ~= "Felid" and you.race() ~= "Octopode" and you.race() ~= "Draconian" then
+  if you.race() ~= "Felid" and you.race() ~= "Octopode" then
     for _, toll in ipairs(arm) do
       table.insert(prices, toll)
     end
@@ -785,7 +785,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_dr
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -804,7 +804,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_dr
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 MONS:    storm dragon zombie

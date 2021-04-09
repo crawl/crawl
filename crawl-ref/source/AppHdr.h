@@ -174,7 +174,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // Create .des and database cache files in a directory named with the
     // game version so that multiple save-compatible Crawl versions can
     // share the same savedir.
-    #define DGL_VERSIONED_CACHE_DIR
+    #define VERSIONED_CACHE_DIR
 
     // Update (text) database files safely; when a Crawl process
     // starts up and notices that a db file is out-of-date, it updates
@@ -240,6 +240,11 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // there are no false positives.
     // (A false positive would be possible with wizmode shenanigans.)
     #define WATCHDOG
+#endif
+
+// legacy name
+#ifdef DGL_VERSIONED_CACHE_DIR
+    #define VERSIONED_CACHE_DIR
 #endif
 
 #ifndef TIME_FN

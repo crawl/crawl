@@ -670,7 +670,7 @@ static string _get_base_savedir_path(const string &subpath = "")
 // should not be shared between different game versions.
 string savedir_versioned_path(const string &shortpath)
 {
-#ifdef DGL_VERSIONED_CACHE_DIR
+#ifdef VERSIONED_CACHE_DIR
     const string versioned_dir =
         _get_base_savedir_path(string("cache.") + Version::Long);
 #else

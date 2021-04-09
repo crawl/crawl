@@ -894,7 +894,7 @@ bool debug_check_ghost(const ghost_demon &ghost)
         return false;
     if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
         return false;
-    if (!species_type_valid(ghost.species))
+    if (!species::is_valid(ghost.species))
         return false;
     if (!job_type_valid(ghost.job))
         return false;

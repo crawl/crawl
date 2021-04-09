@@ -1753,15 +1753,22 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
     unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
     const bool is_targeted = !!(flags & spflag::targeting_mask);
 
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
+
     // XXX: This handles only some of the cases where spells need
     // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it). Hopefully, those will eventually be fixed. - bwr
     // TODO: what's the status of the above comment in 2020+?
     const bool use_targeter = is_targeted
-        || hitfunc && (target->fire_context // force static targeters when called in "fire" mode
-                       || Options.always_use_static_targeters
-                       || Options.force_targeter.count(spell) > 0);
+        || !god // Don't allow targeting spells cast by Xom
+           && hitfunc
+           && (target->fire_context // force static targeters when called in
+                                    // "fire" mode
+               || Options.always_use_static_targeters
+               || Options.force_targeter.count(spell) > 0);
 
     if (use_targeter)
     {
@@ -1865,10 +1872,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 #endif
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
-
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
 
     int fail = 0;
 #if TAG_MAJOR_VERSION == 34

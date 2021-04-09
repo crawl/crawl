@@ -422,15 +422,6 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
         monster_die(mon, KILL_YOU, NON_MONSTER);
 }
 
-static counted_monster_list _counted_monster_list_from_vector(
-    vector<monster *> affected_monsters)
-{
-    counted_monster_list mons;
-    for (auto mon : affected_monsters)
-        mons.add(mon);
-    return mons;
-}
-
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
     if (act->res_negative_energy() >= 3)
@@ -460,7 +451,7 @@ static void _los_spell_pre_damage_monsters(const actor* agent,
     if (!seen_monsters.empty())
     {
         counted_monster_list mons_list =
-            _counted_monster_list_from_vector(seen_monsters);
+            counted_monster_list(seen_monsters);
         const string message = make_stringf("%s %s %s.",
                 mons_list.describe(DESC_THE).c_str(),
                 conjugate_verb("be", mons_list.count() > 1).c_str(), verb);
@@ -781,11 +772,15 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     beam.thrower = KILL_YOU;
 
     const int orig_hurted = freeze_damage(pow).roll();
-    int hurted = mons_adjust_flavoured(mons, beam, orig_hurted);
+    // calculate the resist adjustment to punctuate
+    int hurted = mons_adjust_flavoured(mons, beam, orig_hurted, false);
     mprf("You freeze %s%s%s",
          mons->name(DESC_THE).c_str(),
          hurted ? "" : " but do no damage",
          attack_strength_punctuation(hurted).c_str());
+
+    // print the resist message and expose to the cold
+    mons_adjust_flavoured(mons, beam, orig_hurted);
 
     _player_hurt_monster(*mons, hurted, beam.flavour, false);
 
@@ -2212,10 +2207,11 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
-        damage = mons_adjust_flavoured(mons, beam, damage);
+        damage = mons_adjust_flavoured(mons, beam, damage, false);
         mprf("%s is struck by an arc of lightning%s",
                 mons->name(DESC_THE).c_str(),
                 attack_strength_punctuation(damage).c_str());
+        damage = mons_adjust_flavoured(mons, beam, damage);
 
         if (agent.is_player())
             _player_hurt_monster(*mons, damage, beam.flavour, false);

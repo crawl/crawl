@@ -560,7 +560,7 @@ public:
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);
 
-    bool clear_far_engulf() override;
+    bool clear_far_engulf(bool force = false) override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;

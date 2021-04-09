@@ -569,9 +569,8 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner) {
+        if (!mon_owner)
             known = you.spell_library[spell] ? "         yes" : "          no";
-        }
 
         description.cprintf("%s%d%s\n",
                             chop_string(schools, 30).c_str(),

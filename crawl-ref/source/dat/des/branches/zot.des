@@ -18,7 +18,7 @@ function zot_entry_setup(e)
     e.mons("fire dragon / ice dragon / storm dragon / \
             shadow dragon / bone dragon / golden dragon")
     e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / yaktaur captain / glowing shapeshifter w:5 / \
+    e.kmons("0 = ettin / tengu warrior / glowing shapeshifter w:5 / \
                  stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
     e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
                  spriggan air mage w:8 / deep troll earth mage w:8 / \

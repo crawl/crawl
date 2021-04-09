@@ -50,7 +50,7 @@
 
   local destroyer =
     "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe " ..
-    "never_corpse col:red generate_awake " ..
+    "never_corpse col:red tile:mons_destroyer generate_awake " ..
     "spells:blink_close.90.wizard " ..
     "; ring of slaying plus:200 ident:all " ..
     "no_pickup . great sword plus:9 ego:vorpal ident:all no_pickup"

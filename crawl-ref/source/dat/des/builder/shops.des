@@ -391,8 +391,10 @@ SUBST: G : YlG
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
 :   sword_of_zonguldrok w:1")
+: if not you.in_branch("D") then
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
+: end
 MAP
 ...   ...
 .G.a.s.G.
@@ -413,7 +415,9 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | ring of positive energy w:5 |\
    any armour ego:positive_energy w:5
+: if not you.in_branch("D") then
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
+: end
 KPROP: 1 = no_tele_into
 KMASK: 1 = opaque
 MONS: angel

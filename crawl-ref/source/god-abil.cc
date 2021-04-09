@@ -3931,7 +3931,7 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     if (sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
         if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
@@ -4338,15 +4338,13 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        auto ring_slots = species_ring_slots(you.species);
-        // the last one gets sacrificed: either EQ_LEFT_RING or EQ_RING_EIGHT
-        equipment_type ring_slot = ring_slots.back();
-        ring_slots.pop_back();
+        auto ring_slots = species::ring_slots(you.species, true);
+        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(ring_slot, true);
-        int ring_inv_slot = you.equip[ring_slot];
+        item_def* const ring = you.slot_item(sac_ring_slot, true);
+        int ring_inv_slot = you.equip[sac_ring_slot];
         bool open_ring_slot = false;
 
         // Drop your shield if there is one
@@ -4381,14 +4379,14 @@ static void _extra_sacrifice_code(ability_type sac)
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(ring_slot);
+            unequip_item(sac_ring_slot, true, true);
             if (open_ring_slot)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
                      (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                puton_ring(ring_inv_slot, false);
+                puton_ring(ring_inv_slot, false, false);
             }
         }
     }
@@ -4586,7 +4584,7 @@ bool ru_do_sacrifice(ability_type sac)
     if (sac == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
         if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
@@ -5857,13 +5855,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-
-    if (you.duration[DUR_WATER_HOLD])
-    {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
-        you.clear_far_engulf();
-    }
+    remove_water_hold();
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;

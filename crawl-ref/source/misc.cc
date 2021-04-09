@@ -122,6 +122,12 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
     return result;
 }
 
+counted_monster_list::counted_monster_list(vector<monster *> ms)
+{
+    for (auto mon : ms)
+        add(mon);
+}
+
 void counted_monster_list::add(const monster* mons)
 {
     const string name = mons->name(DESC_PLAIN);

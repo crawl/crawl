@@ -35,6 +35,7 @@ seraph MONS_SERAPH
 %sdir mon/sprint
 bag_of_meat MONS_BAG_OF_MEAT
 meatzerker MONS_MEATZERKER
+destroyer MONS_DESTROYER
 large_bag_of_meat MONS_LARGE_BAG_OF_MEAT
 meat_hydra MONS_MEAT_HYDRA
 scourge MONS_SCOURGE
@@ -440,15 +441,13 @@ bunyip MONS_BUNYIP
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
 guardian_golem MONS_GUARDIAN_GOLEM
-%rim 1
 iron_golem MONS_IRON_GOLEM
-toenail_golem MONS_TOENAIL_GOLEM
-%rim 0
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
 animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
+toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 
@@ -677,7 +676,9 @@ ophan MONS_OPHAN
 
 ## Hybrids ('H')
 %sdir mon/animals
+%rim 0
 manticore MONS_MANTICORE
+%rim 1
 %sdir mon/demihumanoids
 harpy MONS_HARPY
 sphinx MONS_SPHINX

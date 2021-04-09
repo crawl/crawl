@@ -1366,7 +1366,7 @@ static void _tag_construct_char(writer &th)
     if (crawl_state.game_is_tutorial())
         marshallString2(th, crawl_state.map);
 
-    marshallString2(th, species_name(you.species));
+    marshallString2(th, species::name(you.species));
     marshallString2(th, you.religion ? god_name(you.religion) : "");
 
     // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
@@ -2501,7 +2501,7 @@ static void _tag_read_you(reader &th)
 {
     int count;
 
-    ASSERT(species_type_valid(you.species));
+    ASSERT(species::is_valid(you.species));
     ASSERT(job_type_valid(you.char_class));
     ASSERT_RANGE(you.experience_level, 1, 28);
     ASSERT(you.religion < NUM_GODS);
@@ -2756,10 +2756,6 @@ static void _tag_read_you(reader &th)
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
-#if TAG_MAJOR_VERSION == 34
-    bool found_fly = false;
-    bool found_stop_flying = false;
-#endif
     for (int i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
@@ -2783,20 +2779,12 @@ static void _tag_read_you(reader &th)
             || a == ABIL_WISP_BLINK // was ABIL_FLY_II
                && th.getMinorVersion() < TAG_MINOR_0_12)
         {
-            if (found_fly)
-                a = ABIL_NON_ABILITY;
-            else
-                a = ABIL_FLY;
-            found_fly = true;
+            a = ABIL_NON_ABILITY;
         }
         if (a == ABIL_EVOKE_STOP_LEVITATING
             || a == ABIL_STOP_FLYING)
         {
-            if (found_stop_flying)
-                a = ABIL_NON_ABILITY;
-            else
-                a = ABIL_STOP_FLYING;
-            found_stop_flying = true;
+            a = ABIL_NON_ABILITY;
         }
 
         if (th.getMinorVersion() < TAG_MINOR_NO_JUMP)
@@ -3146,7 +3134,7 @@ static void _tag_read_you(reader &th)
                                         && you.species == SP_VINE_STALKER)
     {
         you.mutation[MUT_NO_POTION_HEAL] =
-                you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
+                you.innate_mutation[MUT_NO_POTION_HEAL] = 2;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
@@ -3321,6 +3309,17 @@ static void _tag_read_you(reader &th)
     {
         you.mutation[MUT_ACID_RESISTANCE] = 1;
         you.innate_mutation[MUT_ACID_RESISTANCE] = 1;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_COMPRESS_BADMUTS)
+    {
+        if (you.mutation[MUT_SCREAM] > 2)
+            you.mutation[MUT_SCREAM] = 2;
+
+        if (you.species == SP_VINE_STALKER)
+            _fixup_species_mutations(MUT_NO_POTION_HEAL);
+        else if (you.mutation[MUT_NO_POTION_HEAL] > 2)
+            you.mutation[MUT_NO_POTION_HEAL] = 2;
     }
 
     // fully clean up any removed mutations

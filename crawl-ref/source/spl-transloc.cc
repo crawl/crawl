@@ -156,7 +156,7 @@ void uncontrolled_blink(bool override_stasis)
  * @param target[out]   The target found, if any.
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
- *                      for e.g. ?blink with blurryvis)
+ *                      for e.g. read-identified ?blink)
  * @param verb          What kind of movement is this, exactly?
  *                      (E.g. 'blink', 'hop'.)
  * @param hitfunc       A hitfunc passed to the direction_chooser.
@@ -654,7 +654,7 @@ spret palentonga_charge(bool fail, dist *target)
  *
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
- *                      for e.g. ?blink with blurryvis)
+ *                      for e.g. read-identified ?blink)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
 spret controlled_blink(bool safe_cancel)

@@ -256,10 +256,10 @@ string god_title(god_type which_god, species_type which_species, int piety)
 
     const map<string, string> replacements =
     {
-        { "Adj", species_name(which_species, SPNAME_ADJ) },
-        { "Genus", species_name(which_species, SPNAME_GENUS) },
-        { "Walking", species_walking_verb(which_species) + "ing" },
-        { "Walker", species_walking_verb(which_species) + "er" },
+        { "Adj", species::name(which_species, species::SPNAME_ADJ) },
+        { "Genus", species::name(which_species, species::SPNAME_GENUS) },
+        { "Walking", species::walking_verb(which_species) + "ing" },
+        { "Walker", species::walking_verb(which_species) + "er" },
     };
 
     return replace_keys(title, replacements);

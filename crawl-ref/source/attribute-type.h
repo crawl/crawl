@@ -32,10 +32,10 @@ enum attribute_type
     ATTR_NOISES,
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
-#endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
+#endif
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
-    ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
+    ATTR_PERM_FLIGHT,          // Cache for flight from equipment
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
 #if TAG_MAJOR_VERSION == 34
@@ -90,9 +90,7 @@ enum attribute_type
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
 #if TAG_MAJOR_VERSION == 34
     ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
-#endif
     ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
-#if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
 #endif
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.

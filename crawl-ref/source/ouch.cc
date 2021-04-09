@@ -322,18 +322,6 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     }
 }
 
-static void _lose_level_abilities()
-{
-    if (you.attribute[ATTR_PERM_FLIGHT]
-        && !you.racial_permanent_flight()
-        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-    {
-        you.increase_duration(DUR_FLIGHT, 50, 100);
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        mprf(MSGCH_WARN, "You feel your flight won't last long.");
-    }
-}
-
 void lose_level()
 {
     // Because you.experience is unsigned long, if it's going to be
@@ -352,7 +340,6 @@ void lose_level()
 
     calc_hp();
     calc_mp();
-    _lose_level_abilities();
 
     char buf[200];
     sprintf(buf, "HP: %d/%d MP: %d/%d",
@@ -808,16 +795,15 @@ int do_shave_damage(int dam)
 
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
-// than 4% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage or <30% max health
-// current hp.
+// than 5% max hp. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 20% max health damage.
 static bool _is_damage_threatening (int damage_fraction_of_hp)
 {
-    int hp_fraction = you.hp * 100 / you.hp_max;
+    const int hp_fraction = you.hp * 100 / you.hp_max;
     return damage_fraction_of_hp > 5
             && hp_fraction <= 85
             && (damage_fraction_of_hp + random2(20) >= 20
-                || random2(100) < hp_fraction);
+                || random2(100) > hp_fraction);
 }
 
 // Palentongas curl up after the first time they've been hit in a round.

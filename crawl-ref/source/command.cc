@@ -299,7 +299,7 @@ void list_jewellery()
 {
     string jstr;
     int cols = get_number_of_cols() - 1;
-    bool split = species_arm_count(you.species) > 2 && cols > 84;
+    bool split = species::arm_count(you.species) > 2 && cols > 84;
 
     for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
