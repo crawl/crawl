@@ -5,11 +5,9 @@ Some of the Crawl developers hang out on the ##crawl-dev IRC channel on
 freenode (irc://freenode/##crawl-dev). You can ask them development related
 questions. Users with +v are the people with commit access.
 
-If you have a patch which is ready to commit, submitting it as a Github Pull
-Request will result in an IRC message about the PR.
+If you have a patch which is ready to commit, submitting it as a GitHub Pull
+Request will result in an IRC message about the pull request.
 
-https://github.com/crawl/crawl/pulls
+The IRC channel is logged publicly, old logs are available online:
 
-If you notice a bug, posting a report on Github will post the report to IRC.
-
-https://github.com/crawl/crawl/issues/new?assignees=&labels=&template=bug-report-for-dcss.md
+http://s-z.org/crawl-dev/#
