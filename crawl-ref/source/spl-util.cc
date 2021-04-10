@@ -990,6 +990,9 @@ int spell_range(spell_type spell, int pow, bool allow_bonus, int range_cap)
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
 
+    if (range_cap == -1)
+        range_cap = you.current_vision;
+
     ASSERT(maxrange >= minrange);
 
     // spells with no range have maxrange == minrange == -1

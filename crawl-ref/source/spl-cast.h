@@ -99,7 +99,7 @@ int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      int scale = 1);
-int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true);
+int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true, int range_cap = -1);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL, dist *_target = nullptr);
 
@@ -135,7 +135,7 @@ string spell_power_string(spell_type spell);
 string spell_damage_string(spell_type spell, bool evoked = false);
 int spell_acc(spell_type spell);
 string spell_range_string(spell_type spell);
-string range_string(int range, int maxrange, char32_t caster_char);
+string range_string(int range, int range_normal_vision, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);
 string spell_failure_rate_string(spell_type spell);
 string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);

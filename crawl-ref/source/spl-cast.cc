@@ -2715,11 +2715,13 @@ string spell_power_string(spell_type spell)
         return make_stringf("%d%%", percent);
 }
 
-int calc_spell_range(spell_type spell, int power, bool allow_bonus)
+int calc_spell_range(spell_type spell, int power, bool allow_bonus, int range_cap)
 {
+    if (range_cap == -1)
+        range_cap = you.current_vision;
     if (power == 0)
         power = calc_spell_power(spell, true, false, false);
-    const int range = spell_range(spell, power, allow_bonus);
+    const int range = spell_range(spell, power, allow_bonus, range_cap);
 
     return range;
 }
@@ -2738,9 +2740,10 @@ string spell_range_string(spell_type spell)
 
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0);
-    const int maxrange = spell_range(spell, cap);
+    const int range_normal_vision = calc_spell_range(spell, 0,true,you.normal_vision-you.get_mutation_level(MUT_NIGHTSTALKER));
+    const int maxrange = spell_range(spell, cap,true,you.normal_vision-you.get_mutation_level(MUT_NIGHTSTALKER));
 
-    return range_string(range, maxrange, '@');
+    return range_string(range, range_normal_vision, maxrange, '@');
 }
 
 /**
@@ -2755,13 +2758,13 @@ string spell_range_string(spell_type spell)
  *                      Usually @ for the player.
  * @return              See above.
  */
-string range_string(int range, int maxrange, char32_t caster_char)
+string range_string(int range, int range_normal_vision, int maxrange, char32_t caster_char)
 {
     if (range <= 0)
         return "N/A";
 
     return stringize_glyph(caster_char) + string(range - 1, '-')
-           + string(">") + string(maxrange - range, '.');
+           + string(">") +string(range_normal_vision - range, '~')+string(maxrange - range_normal_vision, '.');
 }
 
 string spell_schools_string(spell_type spell)

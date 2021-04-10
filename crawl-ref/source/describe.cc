@@ -3318,7 +3318,7 @@ static void _get_spell_description(const spell_type spell,
         if (spell == SPELL_CALL_DOWN_LIGHTNING)
             description += stringize_glyph(mons_char(mon_owner->type)) + "..---->";
         else
-            description += range_string(range, range, mons_char(mon_owner->type));
+            description += range_string(range, range, range, mons_char(mon_owner->type));
         description += "\n";
 
         // only display this if the player exists (not in the main menu)
