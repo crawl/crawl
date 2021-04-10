@@ -114,7 +114,7 @@ static const form_entry formdata[] =
     "a creature of crystalline ice.",
     EQF_PHYSICAL, MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     FormDuration(30, PS_DOUBLE, 100), 0, 0, SIZE_LARGE, 12,
-    5, 7, 0, true, 0, true, 12,
+    5, 12, 0, true, 0, true, 12,
     SPWPN_FREEZING, WHITE, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
     "", 0, "front paw", "paw", "bow your head before", "ice",
