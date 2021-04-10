@@ -1446,6 +1446,14 @@ LIFE:     1
 INSCRIP:  rMiasma
 BOOL:     drain, evil, special, no_upgrade
 
+NAME:     seven-league boots
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+# XXX TODO: tiles
+PLUS:     +3
+COLOUR:   ETC_ENCHANT
+INSCRIP:  Rampage+∞
+VALUE:    400
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

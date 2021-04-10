@@ -2280,6 +2280,9 @@ bool get_armour_rampaging(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
+    if (is_unrandom_artefact(arm, UNRAND_SEVEN_LEAGUE_BOOTS))
+        return true;
+
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
         return true;

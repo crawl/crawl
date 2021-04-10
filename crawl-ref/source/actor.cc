@@ -337,7 +337,8 @@ bool actor::rampaging(bool calc_unid, bool items) const
 {
     return items &&
            (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING, calc_unid)
-            || scan_artefacts(ARTP_RAMPAGING, calc_unid));
+            || scan_artefacts(ARTP_RAMPAGING, calc_unid)
+            || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,

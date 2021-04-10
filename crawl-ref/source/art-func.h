@@ -1600,3 +1600,11 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
                               "magical essence.");
     }
 }
+
+////////////////////////////////////////////////////
+
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
