@@ -9,7 +9,7 @@ TEMPLATE_TEST_CASE( "comma_separated_line", "[single-file]",
                     const char *[], vector<const char *>, const vector<string>,
                     list<const char *>, const list<const char *> )
 {
-    // TODO: also test with 
+    // TODO: also test with alternative values for comma and andc
     TestType several = { "foo", "bar", "baz" };
     TestType two = { "foo", "bar" };
     TestType one = { "foo" };
@@ -18,7 +18,7 @@ TEMPLATE_TEST_CASE( "comma_separated_line", "[single-file]",
     CHECK(comma_separated_line(begin(two), end(two)) == "foo and bar");
     CHECK(comma_separated_line(begin(one), end(one)) == *begin(one));
     CHECK(comma_separated_line(begin(one), begin(one)) == "");
-    
+
     CHECK(join_strings(begin(several), end(several)) == "foo bar baz");
     CHECK(join_strings(begin(two), end(two)) == "foo bar");
     CHECK(join_strings(begin(one), end(one)) == *begin(one));
