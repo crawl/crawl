@@ -89,7 +89,9 @@ KMONS:  p = withered plant
 SUBST:  t : tp
 TILE:   G = dngn_gravestone
 TILE:   t = dngn_tree_dead
+COLOUR: t = brown
 : set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("tree", "dead tree")
 FTILE:  -|*%$OGt = floor_pebble_brown / floor_pebble_darkgray
 : ghost_setup(_G)
 MAP
@@ -250,8 +252,10 @@ NSUBST:  d = d / |*--, e = e / |*--, f = |* / |*--, h = 2=|* / |*--
 SUBST:   qrs = G, Z = -, y = p, z = V, p : tp
 TILE:    G = dngn_gravestone
 TILE:    t = dngn_tree_dead
+COLOUR:  t = brown
 FTILE:   -de|*%$DFHpGt = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("tree", "dead tree")
 : ghost_setup(_G)
 MAP
   ccccccc
@@ -963,8 +967,10 @@ MONS:   ancient lich / dread lich
 NSUBST: - = 2=1 / 2=1- / 2 / 2=2- / 3 / -
 TILE:   G = dngn_gravestone
 TILE:   t = dngn_tree_dead
+COLOUR: t = brown
 FTILE:  GtO123498$*|- = floor_pebble_brown / floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("tree", "dead tree")
 : ghost_setup(_G)
 MAP
      .@.
@@ -1114,7 +1120,7 @@ NSUBST: ' = 1 / 122. / 244. / 5 / 6 / .
 : if crawl.one_chance_in(5) then
 :     if you.in_branch("Swamp") then
 KMONS:  p = withered plant / fungus
-COLOUR: t = lightgrey / darkgrey / brown
+COLOUR: t = lightgrey / brown / yellow
 TILE: t = dngn_tree_dead / dngn_tree_yellow w:5
 : set_feature_name("tree","dead tree")
 :     else

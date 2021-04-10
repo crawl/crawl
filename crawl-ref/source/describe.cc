@@ -2428,7 +2428,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 
     // mention that permanent trees are usually flammable
     // (expect for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_tree(feat) && !is_temp_terrain(pos)
+    if (feat_is_flammable(feat) && !is_temp_terrain(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         long_desc += "\nIt is susceptible to bolts of lightning";

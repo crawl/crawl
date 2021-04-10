@@ -985,6 +985,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
+    { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
     // Stone arches and doors
     { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
     { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
@@ -1288,6 +1289,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     case DNGN_SLIMY_WALL:
     case DNGN_CRYSTAL_WALL:
     case DNGN_TREE:
+    case DNGN_PETRIFIED_TREE:
         chance = 33;
         break;
 

@@ -238,20 +238,17 @@ ENDMAP
 NAME:    pf_arrival_petrified_forest
 TAGS:    arrival
 ORIENT:  float
-TILE: G = DNGN_PETRIFIED_TREE
-{{
-set_feature_name("granite_statue", "petrified tree")
-}}
+KFEAT:   t = petrified_tree
 MAP
   xxx
-xxxGxx
-xxG{Gxx
-xxG..Gxx
-xxx..Gxx
-@xG.Gxx@
-x..G.x.x
-xxxxx.xx
-@xxxxxxxxx
+xxxtxx
+xxt{txx
+xxt..txx
+xxx..txx
+@xt.txx@
+x..t.t.x
+xxxxt.xx
+xxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -1139,7 +1136,7 @@ ORIENT: float
 SUBST:  T : t.TTTTT
 SUBST:  T = t:66 .:33 >:1
 COLOUR: . = brown
-COLOUR: t = w:2 darkgrey / w:1 brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

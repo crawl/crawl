@@ -388,7 +388,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
     map_cell &cell(env.map_knowledge(c));
     const dungeon_feature_type grid = cell.feat();
 
-    if (feat_is_wall(grid) || grid == DNGN_TREE)
+    if (feat_is_wall(grid) || feat_is_tree(grid))
         return false;
 
     if (!ignore_danger && is_excluded(c))

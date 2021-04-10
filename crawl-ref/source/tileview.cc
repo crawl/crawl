@@ -1414,7 +1414,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
 
-    if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
+    if (feat_is_tree(feat) && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
     cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 

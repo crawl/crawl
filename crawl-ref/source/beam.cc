@@ -910,8 +910,8 @@ void bolt::digging_wall_effect()
 void bolt::burn_wall_effect()
 {
     dungeon_feature_type feat = env.grid(pos());
-    // Fire only affects trees.
-    if (!feat_is_tree(feat)
+    // Fire only affects things that can burn.
+    if (!feat_is_flammable(feat)
         || env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto"
         || !can_burn_trees()) // sanity
     {
@@ -968,6 +968,7 @@ void bolt::affect_wall()
         const bool god_relevant = you.religion == GOD_FEDHAS
                                   && can_burn_trees();
         const bool vetoed =
+            !feat_is_flammable(env.grid(pos())) &&
             env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
 
         // XXX: should check env knowledge for feat_is_tree()
@@ -2601,7 +2602,7 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
         return true;
 
     if (can_burn_trees())
-        return feat_is_tree(wall);
+        return feat_is_flammable(wall);
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
@@ -6168,7 +6169,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
         || feat_is_tree(dngn_feat)
-           && !can_burn_trees()
+           && (!feat_is_flammable(dngn_feat) || !can_burn_trees())
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue

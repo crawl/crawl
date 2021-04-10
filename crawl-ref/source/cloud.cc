@@ -448,7 +448,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
-        if (!feat_is_tree(env.grid(*ai)) || is_temp_terrain(*ai)
+        if (!feat_is_flammable(env.grid(*ai)) || is_temp_terrain(*ai)
             || x_chance_in_y(19, 20))
         {
             continue;

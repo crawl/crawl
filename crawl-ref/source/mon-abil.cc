@@ -808,7 +808,7 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
             continue; // no treeporting into summoned forests
 
         const dungeon_feature_type grid = env.grid(*di);
-        if (grid != DNGN_TREE)
+        if (!feat_is_tree(grid))
             continue;
         closest = dist;
 

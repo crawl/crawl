@@ -91,6 +91,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_PETRIFIED_TREE, "petrified tree", "petrified_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(DARKGREY),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
     DNGN_METAL_WALL, "metal wall", "metal_wall",
     DCHAR_WALL, DCHAR_WALL_MAGIC,
     COLOUR_IS(CYAN),
