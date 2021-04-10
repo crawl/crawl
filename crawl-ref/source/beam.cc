@@ -842,9 +842,11 @@ void bolt::bounce()
     //Also small buff to kobolds making it easier for them to multizap opponents
     bolt boltcopy = *this;
     if (bounces == 1)
+    {
         extra_range_used -= spell_range(boltcopy.origin_spell, boltcopy.ench_power,true,(int)you.normal_vision-you.get_mutation_level(MUT_NIGHTSTALKER))-range;
-    
+
     ASSERT(!cell_is_solid(ray.pos()));
+    }
 }
 
 void bolt::fake_flavour()
