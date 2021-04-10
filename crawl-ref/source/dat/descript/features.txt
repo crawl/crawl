@@ -854,10 +854,9 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
-# evilmike_haunted_forest (Crypt:5)
 A dead tree
 
-A tree, as dead as everything else here.
+The woody corpse of a tree, barren of leaves..
 %%%%
 # Dis:7
 An iron statue
