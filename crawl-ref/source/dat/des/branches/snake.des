@@ -83,28 +83,28 @@ ENDMAP
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair transparent
 ORIENT: float
-MONS:   ball python, adder, water moccasin, black mamba
+MONS:   water moccasin, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
-SUBST:  3 = 33444 .:50, 2 = 122333344 .:90, 1 = 122223333 .:90
+SUBST:  1 = 1 .:30, 2 = 122 .:30, D = 12 .:40
 KFEAT:  O = enter_snake_pit
 MAP
 xxxx.@1xxxxxxP@xxxxx
 xxxx1.PxxxxxP..xxxxx
 xxxxx..xxxxx1.xxxxxx
  xxxxP..xxxx..xxxxx
- xxxxP.1xxxx2..xxxx
+ xxxxP.1xxxxD..xxxx
 xxxxxx..Pxxxx1Pxxxxx
-xxxxxxx2.xxxP.xxxxxx
-xxxxxxxP1xx1..xxxxxx
-xxxxxxxx...3.xxxxxxx
-xxxxxxxP1..P1.xxxxxx
-xx21xxP..PO.P..2xx1P
-P.....1.3.1.xx.....@
+xxxxxxxD.xxxP.xxxxxx
+xxxxxxxP2xx1..xxxxxx
+xxxxxxxx...2.xxxxxxx
+xxxxxxxP2..P2.xxxxxx
+xxD1xxP..PO.P..Dxx1P
+P.....1.2.2.xx.....@
 @.1PxxxP..xxxx.Px1P.
-xxxxxxxx.1xxxx2xxxxx
+xxxxxxxx.1xxxxDxxxxx
 xxxxxxxx..Pxx..xxxx
 xxxxxxxx..PxxP.1xxx
- xxxxxx1.2xxxx..xxxx
+ xxxxxx1.Dxxxx..xxxx
  xxxxxxP.xxxxxx1..Px
 xxxxxxx.1xxxxxxxP...
 xxxxxx.@.Pxxxxxxxx.@
@@ -519,9 +519,12 @@ ENDMAP
 ###############################################################################
 
 NAME:   minmay_snake_pond
-TAGS:   transparent
-MONS:   ball python w:3 / adder / water moccasin
-SUBST:  w = wwWW.1
+TAGS:   transparent no_monster_gen
+KMONS:  1 = black mamba w:20 / mana viper w:5 / shock serpent w:5
+KMONS:  2 = anaconda / sea snake
+KFEAT:  1 = W
+KFEAT:  2 = w
+SUBST:  W = WWW1, w = wwwwwWWWW2
 MAP
   wwww
  WwwWww
@@ -535,17 +538,17 @@ ENDMAP
 
 NAME:   minmay_snake_river
 TAGS:   no_monster_gen generate_awake
-DEPTH:  Snake
 ORIENT: south
-# Black mambas can't swim, so none of those
-MONS:   ball python w:3 / adder / water moccasin / nothing w:5
-MONS:   anaconda / nothing w:5
+KITEM:  2 = * / nothing
+KITEM:  3 = |
+KMONS:  1 = sea snake / anaconda / nothing w:20
+KMONS:  23 = sea snake / anaconda
 SUBST:  w = wwW
 KPROP:  12 = no_tele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxx..@..xxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxxxxxxx
 xx211xxxxxxxxxxxxxxwwwWWWWWwwwwxxxxxxxxxxxxxwwwWWWWwwxxxxxxxxxxx112xxx
-xx211wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww112xxx
+xx311wwwwxxxxxwwwwwwwwwxxxxxwwwwwwwwxxxxwwwwwwxxxxwwwwwwxxxxxxww113xxx
 xx211xwwwwwwwwwwwwxxxxxxxxxxxxxwwwwwwwwwwwwxxxxxxxxxxxwwwwwwwwwx112xxx
 xxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxwwwwwwwxxxxxxxxxxxxxxxxwwwwxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -554,7 +557,7 @@ ENDMAP
 NAME:   hangedman_venom_bottle
 TAGS:   patrolling transparent
 WEIGHT: 5
-KMONS:  123 = water moccasin / black mamba / nothing
+KMONS:  123 = black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
 KITEM:  1235 = potion of degeneration w:30 ident:type / nothing w:20
@@ -586,12 +589,11 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_lava_pool
-TAGS:   transparent
-SUBST:  L = l1
-SUBST:  1 = 1.
-MONS:   adder / ball python / black mamba / anaconda w:5 / \
-        water moccasin / nothing w:40
-KMONS:  l = lava snake / nothing w:50
+TAGS:   transparent no_monster_gen
+SUBST:  L = l1, 1 = 1....
+MONS:   black mamba w:30 / anaconda / mana viper / shock serpent w:5
+KMONS:  l = salamander w:30 / salamander mystic / salamander tyrant w:5 \
+        / nothing w:400
 KFEAT:  l = lava
 MAP
     .......
@@ -612,11 +614,9 @@ MAP
 ENDMAP
 
 NAME:   nicolae_snake_springs
-TAGS:   transparent
-SUBST:  W = w1
-SUBST:  1 = 1.
-MONS:   adder / ball python / black mamba / anaconda w:5 / \
-        water moccasin w:15
+TAGS:   transparent no_monster_gen
+SUBST:  W = w1, 1 = 1....
+MONS:   black mamba w:30 / anaconda / mana viper / shock serpent w:5
 KMONS:  w = sea snake / nothing w:90
 KFEAT:  w = deep_water
 MAP
@@ -665,10 +665,11 @@ xx...wqw...xxx...x
    xxxxxxx    xxx
 ENDMAP
 
-NAME:   nicolae_snake_horde_hoard
-KITEM:  s = $ / nothing w:25 / * w:1
-KMONS:  s = adder w:5 / ball python w:5 / black mamba / anaconda / \
-           water moccasin / sea snake w:1 / nothing w:20
+NAME:  nicolae_snake_horde_hoard
+TAGS:  no_monster_gen
+KITEM: s = $ / nothing w:25 / * w:1
+KMONS: s = black mamba w:35 / anaconda / mana viper / shock serpent \
+           / sea snake w:5 / nothing w:100
 MAP
  xxxxxxx
 xxsssssxxxxxx
@@ -830,9 +831,8 @@ ENDMAP
 NAME:    hangedman_snake_corridor_cut
 TAGS:    no_monster_gen transparent
 MONS:    naga, patrolling naga mage
-MONS:    black mamba / anaconda, patrolling guardian serpent
-MONS:    patrolling adder / patrolling ball python / \
-         patrolling water moccasin w:5
+MONS:    anaconda / mana viper / shock serpent w:5, patrolling guardian serpent
+MONS:    patrolling black mamba
 SHUFFLE: hH / hH / hH, iI / iI / Ii, jJ / jJ / Jj, kK / kK / Kk
 SHUFFLE: 1234 / 1234 / 1212 / 3434
 SUBST:   hi = ., H : xx., I : xx., J : xx., K : xx., % = $%
@@ -928,21 +928,29 @@ x&&xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    nicolae_snake_salamander_stairs
+TAGS:    no_monster_gen
 DEPTH:   Snake, !Snake:$
-KMONS:   1 = salamander
-: local level = you.depth() ; local weight = level * level
-: kmons("2 = nothing w:21 / salamander w:" .. weight )
+: if you.depth() < 2 then
+KMONS:   1 = salamander mystic / salamander tyrant w:5
+KMONS:   2 = salamander / salamander mystic w:1 / nothing w:80
+: elseif you.depth() < 3 then
+KMONS:   1 = salamander mystic / salamander tyrant
+KMONS:   2 = salamander / salamander mystic w:2 / nothing w:50
+: else
+KMONS:   1 = salamander tyrant
+KMONS:   2 = salamander / salamander mystic w:5 / nothing w:45
+: end
 KFEAT:   12 = l
 SHUFFLE: ])}
-NSUBST:  l = 1 / 2 / 1=2l, a = 2=. / x, b = 2=. / x, c = @ / .
+NSUBST:  ' = 1 / l, D = 2=. / x, E = 2=. / x, F = @ / .
 SUBST:   L = l.
 MAP
  xxxxxxxxxx
-xxllllL.a.bc
-x.llllL.a.bc
-x]llllL.a.bc
-x.llllL.a.bc
-xxllllL.a.bc
+xx2222L.D.EF
+x.'222L.D.EF
+x]''22L.D.EF
+x.'222L.D.EF
+xx2222L.D.EF
  xxxxxxxxxx
 ENDMAP
 
@@ -950,25 +958,27 @@ NAME:   cheibrodos_snake_lava_hold
 TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  Snake, !Snake:$
 ORIENT: float
-KFEAT:  '"- = lava
-KMONS:  " = salamander mystic
-KMONS:  ' = salamander
-NSUBST: ' = 2:'l / *:'
+KFEAT:  DEF = lava
+KMONS:  D = salamander
+KMONS:  E = salamander mystic
+KMONS:  F = salamander tyrant
+SUBST:  E = El, H = EEEF, D = Dl
+NSUBST: ' = '''l
 
 MAP
     ccccccccccccccc
    ccccccccccccccccc
-  ccclclc'c'c'c'clccc
- cccll.............ccc
- ccll..lclclc.......cc
+  cccEcDcDcDcDcDcDccc
+ cccEl.............ccc
+ ccHl..lclclc.......cc
 cccl..lccccclc..clc..c
-cc"l..lc*$*ccl.clllc.+@
-cc'l....$|$Gcc.lllll.+@
-cc"l..lc*$*ccl.clllc.+@
+ccHl..lc*$*ccl.clllc.+@
+ccFl....$|$Gcc.lllll.+@
+ccHl..lc*$*ccl.clllc.+@
 cccl..lccccclc..clc..c
- ccll..lclclc.......cc
- cccll.............ccc
-  ccclclc'c'c'c'clccc
+ ccHl..lclclc.......cc
+ cccEl.............ccc
+  cccEcDcDcDcDcDcDccc
    ccccccccccccccccc
     ccccccccccccccc
 ENDMAP
