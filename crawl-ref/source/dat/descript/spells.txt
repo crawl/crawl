@@ -709,8 +709,7 @@ Hailstorm spell
 
 Conjures a cannonade of hail. The eye of the storm is wide enough that monsters
 adjacent to the caster are unaffected. Due to the strong impact and cutting
-edges a significant portion of its damage bypasses cold resistance. However,
-creatures made of pure ice are immune.
+edges a significant portion of its damage bypasses cold resistance.
 %%%%
 Haste Other spell
 
