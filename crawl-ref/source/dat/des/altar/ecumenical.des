@@ -260,6 +260,23 @@ G.G-G.G
   G-G
 ENDMAP
 
+NAME:    ebering_ecumenical_altar_petrified
+TAGS:    transparent
+KFEAT:   t = petrified_tree
+KMONS:   p = withered plant perm_ench:petrified
+SHUFFLE: tp
+SUBST:   p = pp.
+SUBST:   t = t.
+: ecumenical_altar_setup(_G)
+MAP
+ .pp.
+.ptt..
+ptp_tp
+ptpptp
+.pttp.
+ .pp.
+ENDMAP
+
 NAME:    shapermc_ecumenical_altar_notcrosses
 TAGS:    no_monster_gen transparent
 SHUFFLE: PQ
