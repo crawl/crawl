@@ -533,14 +533,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
-    case ENCH_OZOCUBUS_ARMOUR:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy armour evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
-        break;
-
     case ENCH_PARALYSIS:
         if (!quiet)
             simple_monster_message(*this, " is no longer paralysed.");
@@ -2038,7 +2030,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "deaths_door",
 #endif
-    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "rolling",
+#if TAG_MAJOR_VERSION == 34
+    "ozocubus_armour",
+#endif
+    "wretched", "screamed", "rune_of_recall",
     "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",

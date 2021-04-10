@@ -2826,18 +2826,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_LAVA:
     case BEAM_STICKY_FLAME:
     case BEAM_STEAM:
-        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        {
-            // The 10 here is from expose_player_to_element.
-            const int amount = strength ? strength : 10;
-            if (!lose_ench_levels(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                                  amount * BASELINE_DELAY, true)
-                && you.can_see(*this))
-            {
-                mprf("The heat melts %s icy armour.",
-                     apostrophise(name(DESC_THE)).c_str());
-            }
-        }
         if (has_ench(ENCH_ICEMAIL))
             del_ench(ENCH_ICEMAIL);
         break;
@@ -3331,8 +3319,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))

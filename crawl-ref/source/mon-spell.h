@@ -534,7 +534,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
-       { SPELL_OZOCUBUS_ARMOUR, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
       }
@@ -1553,7 +1552,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 10, MON_SPELL_WIZARD },
        { SPELL_OZOCUBUS_REFRIGERATION, 20, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
-       { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },

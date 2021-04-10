@@ -104,7 +104,9 @@ enum enchant_type
     ENCH_DEATHS_DOOR,
 #endif
     ENCH_ROLLING,        // Boulder Beetle in ball form
+#if TAG_MAJOR_VERSION == 34
     ENCH_OZOCUBUS_ARMOUR,
+#endif
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
     ENCH_WORD_OF_RECALL, // Chanting word of recall

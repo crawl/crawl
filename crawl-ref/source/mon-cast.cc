@@ -1725,8 +1725,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_SUMMON:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_DEATHS_DOOR:
-#endif
     case SPELL_OZOCUBUS_ARMOUR:
+#endif
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
     case SPELL_BATTLESPHERE:
@@ -6288,23 +6288,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _summon(*mons, MONS_HELL_SENTINEL, 2, slot);
         return;
 
-    case SPELL_OZOCUBUS_ARMOUR:
-    {
-        if (you.can_see(*mons))
-        {
-            mprf("A film of ice covers %s body!",
-                 apostrophise(mons->name(DESC_THE)).c_str());
-        }
-        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
-        const int rnd_power = random2(power); // sequence point
-        const int two_rnd_powers = rnd_power + random2(power);
-        mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
-                                   20 + two_rnd_powers,
-                                   mons));
-
-        return;
-    }
-
     case SPELL_WORD_OF_RECALL:
     {
         mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, 1, mons, 30);
@@ -7578,10 +7561,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         }
         return ai_action::good_or_bad(forest_near_enemy(mon));
 
-    case SPELL_OZOCUBUS_ARMOUR:
-        return ai_action::good_or_impossible(
-            !mon->is_insubstantial() && !mon->has_ench(ENCH_OZOCUBUS_ARMOUR));
-
     case SPELL_BATTLESPHERE:
         return ai_action::good_or_bad(!find_battlesphere(mon));
 
@@ -7926,6 +7905,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_DEATHS_DOOR:
     case SPELL_FULMINANT_PRISM:
     case SPELL_DAZZLING_FLASH:
+    case SPELL_OZOCUBUS_ARMOUR:
 #endif
     case SPELL_NO_SPELL:
         return ai_action::bad();

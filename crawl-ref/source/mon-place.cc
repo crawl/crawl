@@ -1237,14 +1237,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                                    GENDER_NEUTRAL);
     }
 
-    if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
-    {
-        const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
-        int rnd_power = random2(power);
-        rnd_power += random2(power);
-        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 20 + rnd_power, mon));
-    }
-
     if (mon->has_spell(SPELL_REPEL_MISSILES))
         mon->add_ench(ENCH_REPEL_MISSILES);
 

@@ -36,7 +36,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_TP,
     ENCH_LIQUEFYING,
     ENCH_INNER_FLAME,
-    ENCH_OZOCUBUS_ARMOUR,
     ENCH_WORD_OF_RECALL,
     ENCH_INJURY_BOND,
     ENCH_FLAYED,
