@@ -900,7 +900,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BLADE_HANDS, "Blade Hands",
     spschool::transmutation,
     spflag::helpful | spflag::chaotic | spflag::utility,
-    6,
+    5,
     200,
     -1, -1,
     4, 0,

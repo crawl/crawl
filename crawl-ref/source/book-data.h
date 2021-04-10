@@ -117,13 +117,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_WEREBLOOD,
     SPELL_SPIDER_FORM,
     SPELL_ICE_FORM,
-    SPELL_HYDRA_FORM,
+    SPELL_BLADE_HANDS,
 },
 
 {   // Book of Transfigurations
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
-    SPELL_BLADE_HANDS,
     SPELL_DRAGON_FORM,
 },
 
