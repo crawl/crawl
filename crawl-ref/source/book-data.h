@@ -40,7 +40,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FROZEN_RAMPARTS,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
-    SPELL_SUMMON_ICE_BEAST,
+    SPELL_ENGLACIATION,
 },
 
 {   // Book of Summonings
@@ -59,7 +59,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Ice
     SPELL_ICE_FORM,
-    SPELL_ENGLACIATION,
+    SPELL_SUMMON_ICE_BEAST,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
     SPELL_OZOCUBUS_REFRIGERATION,
