@@ -856,7 +856,7 @@ A wall decorated with images of death and destruction.
 %%%%
 A dead tree
 
-The woody corpse of a tree, barren of leaves..
+The dry remains of a long-dead tree.
 %%%%
 # Dis:7
 An iron statue
