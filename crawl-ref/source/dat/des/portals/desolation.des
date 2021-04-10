@@ -1286,6 +1286,89 @@ c%%..s...s.c
 cccccCCcs.CC
 ENDMAP
 
+# The petrified remnants of a forest within the realm.
+NAME:   desolation_ruin_ebering_petrified_1
+TAGS:   desolation_ruin transparent
+ORIENT: float
+KFEAT:  t = petrified_tree
+KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+NSUBST: p = 1:S / *:p
+SUBST:  X = tp.
+SUBST:  t = tt.
+SUBST:  p = p..
+MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
+ : desolation_ruins_setup(_G)
+MAP
+.....tttttt.
+.XXX2..tttt.
+.......p%%t.
+.tpttt..p%t.
+.pttt..2.pt.
+.ttt%pp..pt.
+.tt%%pp.....
+.tt1ppp..XX.
+.........XX.
+...t%%1t....
+...ttpppp...
+....ttt.tp..
+ENDMAP
+
+NAME:   desolation_ruin_ebering_petrified_2
+TAGS:   desolation_ruin transparent
+ORIENT: float
+KFEAT:  t = petrified_tree
+KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+SUBST:  X = tp.
+SUBST:  t = tt.
+SUBST:  p = p..
+MARKER: S = lua:fog_machine { cloud_type = "salt",  walk_dist=3, \
+                                  pow_min=6, pow_max=20, \
+                                  delay=5, size=5, spread_rate=5, }
+ : desolation_ruins_setup(_G)
+MAP
+tt..........
+.ttt....XXX.
+pp%tt...XXX.
+pp%2t...2...
+pp%tt.XXXX..
+.ttt%.XXXX..
+tt...1S.....
+...XX.%%%t..
+XX.XX.tp%ttt
+XX.XX.%tpt%.
+XX.XX..tt1..
+XX.XX..t....
+ENDMAP
+
+# Some vague duality in the twin gods
+NAME:   desolation_ruin_ebering_petrified_temple
+TAGS:   desolation_ruin transparent
+ORIENT: float
+KFEAT:  t = petrified_tree
+KMONS:  p = withered plant perm_ench:petrified / plant-shaped pillar of salt
+SUBST:  c = ccx...
+SUBST:  t = tt.
+SUBST:  p = p....
+ : desolation_ruins_setup(_G)
+MAP
+....ttcc....
+...tt%tcc...
+..tp%G%tcc..
+.tpp1%%tc.c.
+ttppp2tc..cc
+tpppptc....c
+tpppptc....c
+ttpptc2...cc
+.tptc%%1..c.
+..ttc%G%.c..
+...ttc%cc...
+....ttcc....
+ENDMAP
+
+
+
 
 ##############################################################################
 # The level itself
@@ -1301,9 +1384,10 @@ SHUFFLE:    ABCDEF
 SUBVAULT:   A : desolation_ruin
 SUBVAULT:   B : desolation_ruin
 SUBVAULT:   C : desolation_ruin
-SUBST:      DEF = .:1000 x:2 G:2 S:1
+SUBST:      DEF = .:1000 x:2 G:2 t:2 S:1
 SUBST:      . = .:1000 1:8
 SUBST:      X = x.
+KFEAT:      t = petrified_tree
 KFEAT:      < = exit_desolation
 KFEAT:      H = stone_arch
 KFEAT:      O = permarock_wall
