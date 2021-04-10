@@ -605,8 +605,8 @@ You have been transformed into a swirling mass of dark shadows. You are
 permanently invisible and are immune to poison, draining, torment, and hostile
 enchantments. All incoming damage is halved, and you bleed smoke on any
 incoming attack. However, your ability to deal damage in melee and with ranged
-attacks is halved, your spellcasting power is greatly hampered, and your skills
-are further drained when taking damage.
+attacks is halved, your spellcasting power is greatly hampered, and your
+maximum hit points are further drained when taking damage.
 %%%%
 Hydra status
 
