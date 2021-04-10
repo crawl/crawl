@@ -707,8 +707,8 @@ strength of which depends on the wielder's skill with Conjurations.
 %%%%
 Cigotuvi's embrace
 
-Armour borne of rotten flesh and bone and gristle, held intact by the will of a
-long-dead sorcerer. The dreadful energies within it call to the bodies of the
-recently dead, sucking them in, protecting the wearer with a cocoon of carrion.
-This protection only lasts a short time, however - the ward against decay holds
-true within, but not without.
+A suit of armour borne of rotten flesh and bone and gristle, held intact by the
+will of a long-dead sorcerer. The dreadful energies within it call to the bodies
+of the recently dead, protecting the wearer with a cocoon of carrion. This
+protection only lasts a short time, however - the ward against decay holds true
+within, but not without.
