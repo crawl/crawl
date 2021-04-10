@@ -974,7 +974,7 @@ stand in its way.
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
-magic. It specializes in ice magic and necromancy.
+magic.
 %%%%
 draconian monk
 
