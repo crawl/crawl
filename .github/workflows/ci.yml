@@ -148,6 +148,8 @@ jobs:
         build_type:
           - tiles
           - console
+          - tiles-universal
+          - console-universal
         build_opts:
           - ""
           - TILES=y
@@ -155,6 +157,10 @@ jobs:
           - build_type: tiles
             build_opts: ""
           - build_type: console
+            build_opts: TILES=y
+          - build_type: tiles-universal
+            build_opts: ""
+          - build_type: console-universal
             build_opts: TILES=y
     steps:
       - uses: actions/checkout@v2
