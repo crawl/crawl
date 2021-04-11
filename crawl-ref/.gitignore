@@ -43,6 +43,9 @@ noise-grid.html
 # From mac-crawl-build
 last-mac-build.version
 mac-app-zips
+crawl-arm64-apple-macos11
+crawl-x86_64-apple-macos10.12
+crawl-universal
 
 # Text editor generated junk (backup files and such)
 DEADJOE
