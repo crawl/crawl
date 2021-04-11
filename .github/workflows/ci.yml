@@ -148,8 +148,10 @@ jobs:
         build_type:
           - tiles
           - console
-          - tiles-universal
-          - console-universal
+          # These rules need an os 11.0 runner, which is not yet publicly available.
+          # https://github.com/actions/virtual-environments/issues/2486
+          #- tiles-universal
+          #- console-universal
         build_opts:
           - ""
           - TILES=y
