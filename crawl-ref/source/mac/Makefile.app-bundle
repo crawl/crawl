@@ -26,9 +26,9 @@ TILE_APP := y
 ZIP_QUALIFIER := -tiles
 else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
-EXECUTABLE_PATH := $(CRAWL_SRC)/$(CRAWL_BIN)
 ZIP_QUALIFIER := -console
 endif
+EXECUTABLE_PATH := $(CRAWL_SRC)/$(CRAWL_BIN)
 
 ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
 
