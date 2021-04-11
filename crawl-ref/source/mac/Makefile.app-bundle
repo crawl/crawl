@@ -7,23 +7,30 @@ CRAWL_SRC=$(CRAWL_BASE)/source
 ZIP_QUALIFIER :=
 ZIP_ARCH :=
 
-ifdef BUILD_UNIVERSAL
+ifdef BUILD_OLD_UNIVERSAL
 ZIP_ARCH := -universal
 endif
 
+ifdef BUILD_UNIVERSAL
+CRAWL_BIN=crawl-universal
+ZIP_ARCH := -universal
+else
+CRAWL_BIN=crawl
+endif
+
+# XX why doesn't this check for TILES?
 APP_NAME := Dungeon Crawl Stone Soup
 ifneq (,$(findstring tiles,$(MAKECMDGOALS)))
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Tiles
 TILE_APP := y
 ZIP_QUALIFIER := -tiles
-EXECUTABLE_PATH := $(CRAWL_SRC)/crawl
 else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
-EXECUTABLE_PATH := crawl
+EXECUTABLE_PATH := $(CRAWL_SRC)/$(CRAWL_BIN)
 ZIP_QUALIFIER := -console
 endif
 
-ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx.zip
+ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
 
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
 ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
@@ -70,9 +77,12 @@ $(BUNDLE_DIRNAME):
 # real executable from Contents/Resources, so an extra copy for the wrapper+
 # real thing.
 copy-executable:
+ifdef TILE_APP
 	cp $(EXECUTABLE_PATH) $(BUNDLE_DIRNAME)/Contents/MacOS/$(BUNDLE_NAME)
-ifndef TILE_APP
-	cp $(CRAWL_SRC)/crawl $(RESOURCES)
+else
+	# normalize the binary name for universal vs non-universal builds
+	cp $(EXECUTABLE_PATH) $(RESOURCES)/crawl
+	cp ./crawl $(BUNDLE_DIRNAME)/Contents/MacOS/$(BUNDLE_NAME)
 endif
 
 copy-resources:
