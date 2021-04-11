@@ -1946,9 +1946,6 @@ package-windows-zips: package-windows-tiles package-windows-console
 # building binaries for each target and then merging them with the `lipo`
 # utility.
 
-# XX get changes in MAC_TARGET to force clean-contrib? Sometimes it happens
-# but it's a bit inconsistent
-
 # these two targets rely heavily on passing flags to submakes
 crawl-x86_64-apple-macos10.12:
 ifeq ($(MAC_TARGET),)
@@ -1960,7 +1957,10 @@ ifeq ($(MAC_TARGET),)
 	+$(MAKE) MAC_TARGET=arm64-apple-macos11
 endif
 
-crawl-universal: crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.12
+crawl-universal:
+	# do these via submake so that -jn doesn't create havoc
+	+$(MAKE) crawl-arm64-apple-macos11
+	+$(MAKE) crawl-x86_64-apple-macos10.12
 	lipo -create -output crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.12
 
 clean-mac:
