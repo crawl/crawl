@@ -1203,10 +1203,11 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (!attacking
-        && you_worship(GOD_CHEIBRIADOS)
-        && ((one_chance_in(10) && player_equip_unrand(UNRAND_LIGHTNING_SCALES))
-             || (coinflip() && rampaged)))
+    if (you_worship(GOD_CHEIBRIADOS)
+        && (coinflip() && rampaged
+            || !attacking
+               && one_chance_in(10)
+               && player_equip_unrand(UNRAND_LIGHTNING_SCALES)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
