@@ -102,7 +102,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
         distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
         monster catch2-tests plug-and-play-tests \
-        crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.12 clean-mac
+        crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
 
 include Makefile.obj
 
@@ -441,7 +441,9 @@ INCLUDES_L += -Iutil -I.
 ifdef APPLE_PLATFORM
 
 ifdef MAC_TARGET
-	# support mac cross-compiling. As of Apr 2021, two valid values for this are:
+	# support mac cross-compiling. As of Apr 2021 on OS X 11, some example
+	# values for this that seem to work include:
+	#   x86_64-apple-macos10.7
 	#   x86_64-apple-macos10.12
 	#   arm64-apple-macos11
 	# leave MACOSX_MIN_VERSION unset, or there will be many warnings
@@ -1946,10 +1948,11 @@ package-windows-zips: package-windows-tiles package-windows-console
 # building binaries for each target and then merging them with the `lipo`
 # utility.
 
+# XX parameterise these in some less dumb way
 # these two targets rely heavily on passing flags to submakes
-crawl-x86_64-apple-macos10.12:
+crawl-x86_64-apple-macos10.7:
 ifeq ($(MAC_TARGET),)
-	+$(MAKE) MAC_TARGET=x86_64-apple-macos10.12
+	+$(MAKE) MAC_TARGET=x86_64-apple-macos10.7
 endif
 
 crawl-arm64-apple-macos11:
@@ -1960,11 +1963,11 @@ endif
 crawl-universal:
 	# do these via submake so that -jn doesn't create havoc
 	+$(MAKE) crawl-arm64-apple-macos11
-	+$(MAKE) crawl-x86_64-apple-macos10.12
-	lipo -create -output crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.12
+	+$(MAKE) crawl-x86_64-apple-macos10.7
+	lipo -create -output crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
 
 clean-mac:
-	$(RM) crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.12
+	$(RM) crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
 
 # XX is there a way to make these just respect TILES=y and have only 2 targets?
 mac-app-tiles-universal: crawl-universal
