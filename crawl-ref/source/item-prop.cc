@@ -2504,10 +2504,6 @@ bool gives_ability(const item_def &item)
     {
     case OBJ_WEAPONS:
         break;
-    case OBJ_JEWELLERY:
-        if (item.sub_type == RING_FLIGHT)
-            return true;
-        break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
@@ -2527,9 +2523,12 @@ bool gives_ability(const item_def &item)
         return false;
 
     // Check for evokable randart properties.
-    for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
-            return true;
+    if (artefact_property(item, ARTP_INVISIBLE)
+        || artefact_property(item, ARTP_BLINK)
+        || artefact_property(item, ARTP_BERSERK))
+    {
+        return true;
+    }
 
     // Unrands that grant an evokable ability.
     if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
