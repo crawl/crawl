@@ -540,57 +540,52 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
+    // Categorise items by whether they're quick to swap or not. Some artefact
+    // properties aren't appropriate on easily swappable items.
+    const bool non_swappable = item_class == OBJ_ARMOUR
+                               || item_class == OBJ_JEWELLERY
+                                  && jewellery_is_amulet(item);
 
     switch (prop)
     {
+        // weapons already have slaying
         case ARTP_SLAYING:
-            return item_class != OBJ_WEAPONS; // they already have slaying!
+            return item_class != OBJ_WEAPONS;
+        // prevent properties that conflict with naga innates
         case ARTP_POISON:
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-            // naga already have rPois & sInv!
+        case ARTP_RAMPAGING:
+            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
+        // prevent properties that conflict with each other
         case ARTP_CORRODE:
             return !extant_props[ARTP_RCORR];
         case ARTP_RCORR:
-            return item_class == OBJ_ARMOUR && !extant_props[ARTP_CORRODE];
-        case ARTP_REGENERATION:
-        case ARTP_PREVENT_SPELLCASTING:
-            return item_class == OBJ_ARMOUR; // limit availability to armour
+            return !extant_props[ARTP_CORRODE];
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_WEAPONS
+                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
+        case ARTP_BLINK:
+            return !extant_props[ARTP_PREVENT_TELEPORTATION];
+        case ARTP_PREVENT_TELEPORTATION:
+            return !extant_props[ARTP_BLINK] && non_swappable;
+        // only on melee weapons
         case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
-            // works poorly with ranged weapons
-        case ARTP_CAUSE_TELEPORTATION:
-            return item_class != OBJ_WEAPONS
-                   && !crawl_state.game_is_sprint()
-                   && !extant_props[ARTP_PREVENT_TELEPORTATION];
-            // no tele in sprint, and too annoying on weapons (swappable)
-            // and obv we shouldn't generate contradictory props
-        case ARTP_PREVENT_TELEPORTATION:
-            return !extant_props[ARTP_BLINK]
-                   && !extant_props[ARTP_CAUSE_TELEPORTATION]
-                   && item_class == OBJ_ARMOUR;
-            // armour only, and no contradictory props
-        case ARTP_BLINK:
-            return !extant_props[ARTP_PREVENT_TELEPORTATION];
-            // no contradictory props
-        case ARTP_MAGICAL_POWER:
-            return item_class != OBJ_WEAPONS
-                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
-            // not quite as interesting on armour, since you swap it less
-            // rings have 2 slots, so little swap pressure
+        // only on items that can't be quickly swapped
+        case ARTP_REGENERATION:
+        case ARTP_PREVENT_SPELLCASTING:
+        case ARTP_HARM:
+        case ARTP_INVISIBLE:
+            return non_swappable;
+        // prevent on armour (since it's swapped infrequently) and rings (since
+        // 2 slots reduces the pressure to swap)
         case ARTP_FRAGILE:
             return item_class != OBJ_ARMOUR
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
-        case ARTP_HARM:
-            return item_class == OBJ_ARMOUR;
-            // only get harm on delay equipment
-        case ARTP_RAMPAGING:
-            return item_class == OBJ_ARMOUR
-                   && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-            // only on delay equipment to prevent "toggle" swap behaviour
         default:
             return true;
     }
