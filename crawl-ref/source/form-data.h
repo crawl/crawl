@@ -283,6 +283,7 @@ static const form_entry formdata[] =
     }
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     transformation::hydra, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
@@ -295,6 +296,22 @@ static const form_entry formdata[] =
     { { "fast swimmer", "You swim very quickly." },
       { "devour", "You can devour living enemies to heal." }
     }
+},
+#endif
+
+{
+    transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
+    "a lightning-filled tempest!",
+    EQF_PHYSICAL, MR_RES_ELEC,
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    10, 10, 0, true, 0, true, -1,
+    SPWPN_ELECTROCUTION, YELLOW, "storm fists", { "hit", "buffet", "batter", "blast" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "bellow", 0, "", "", "place yourself before", "air",
+    { { "cleaving", "Your stormy fists strike out in all directions at once." },
+      { "", "You are incredibly evasive." }
+    }
 }
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

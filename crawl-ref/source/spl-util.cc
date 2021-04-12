@@ -1101,7 +1101,6 @@ bool spell_is_form(spell_type spell)
         case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_DRAGON_FORM:
-        case SPELL_HYDRA_FORM:
         case SPELL_ICE_FORM:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
@@ -1296,8 +1295,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_DRAGON_FORM:
-    case SPELL_HYDRA_FORM:
     case SPELL_ICE_FORM:
+    case SPELL_STORM_FORM:
     case SPELL_SPIDER_FORM:
         if (you.undead_state(temp) == US_UNDEAD)
             return "your undead flesh cannot be transformed.";
@@ -1876,7 +1875,8 @@ const set<spell_type> removed_spells =
     SPELL_CLOUD_CONE,
     SPELL_RING_OF_THUNDER,
     SPELL_TWISTED_RESURRECTION,
-    SPELL_RANDOM_EFFECTS
+    SPELL_RANDOM_EFFECTS,
+    SPELL_HYDRA_FORM,
 #endif
 };
 

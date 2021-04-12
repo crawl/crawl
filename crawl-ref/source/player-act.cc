@@ -876,6 +876,7 @@ int player::heads() const
     return 1; // not actually always true
 }
 
+
 bool player::is_dragonkind() const
 {
     if (actor::is_dragonkind())

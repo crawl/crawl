@@ -963,6 +963,31 @@ public:
     }
 };
 
+void set_airform_power(int pow)
+{
+    you.props[AIRFORM_POWER_KEY] = pow;
+}
+
+class FormStorm : public Form
+{
+private:
+    FormStorm() : Form(transformation::storm) { }
+    DISALLOW_COPY_AND_ASSIGN(FormStorm);
+public:
+    static const FormStorm &instance() { static FormStorm inst; return inst; }
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const override
+    {
+        int power = 0;
+        if (you.props.exists(AIRFORM_POWER_KEY))
+            power = you.props[AIRFORM_POWER_KEY].get_int();
+        return 2 + div_rand_round(power * 2, 5);
+    }
+};
+
 /**
  * Set the number of hydra heads that the player currently has.
  *
@@ -1054,7 +1079,10 @@ static const Form* forms[] =
 #endif
     &FormFungus::instance(),
     &FormShadow::instance(),
+#if TAG_MAJOR_VERSION == 34
     &FormHydra::instance(),
+#endif
+    &FormStorm::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1545,32 +1573,6 @@ static int _transform_duration(transformation which_trans, int pow)
 }
 
 /**
- * Print an appropriate message when the number of heads the player has
- * changes during a refresh of hydra form.
- */
-static void _print_head_change_message(int old_heads, int new_heads)
-{
-    if (old_heads == new_heads)
-        return;
-
-    const int delta = abs(old_heads - new_heads);
-    const bool plural = delta != 1;
-    if (old_heads > new_heads)
-    {
-        if (plural)
-            mprf("%d of your heads shrink away.", delta);
-        else
-            mpr("One of your heads shrinks away.");
-        return;
-    }
-
-    if (plural)
-        mprf("%d new heads grow.", delta);
-    else
-        mpr("A new head grows.");
-}
-
-/**
  * Is the player alive enough to become the given form?
  *
  * All undead can enter shadow form; vampires also can enter batform, and, when
@@ -1689,13 +1691,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             you.redraw_armour_class = true;
             // ^ could check more carefully for the exact cases, but I'm
             // worried about making the code too fragile
-
-            if (which_trans == transformation::hydra)
-            {
-                const int heads = you.heads();
-                set_hydra_form_heads(div_rand_round(pow, 10));
-                _print_head_change_message(heads, you.heads());
-            }
         }
 
         int dur = _transform_duration(which_trans, pow);
@@ -1792,8 +1787,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    if (which_trans == transformation::hydra)
-        set_hydra_form_heads(div_rand_round(pow, 10));
+    if (which_trans == transformation::storm)
+        set_airform_power(pow);
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
@@ -1996,6 +1991,8 @@ void untransform(bool skip_move)
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
         you.props.erase(HYDRA_FORM_HEADS_KEY);
+    if (you.props.exists(AIRFORM_POWER_KEY))
+        you.props.erase(AIRFORM_POWER_KEY);
 
     // We may have to unmeld a couple of equipment types.
     set<equipment_type> melded = _init_equipment_removal(old_form);

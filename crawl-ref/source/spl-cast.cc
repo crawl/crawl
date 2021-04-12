@@ -1297,7 +1297,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_STATUE_FORM:
     case SPELL_ICE_FORM:
     case SPELL_DRAGON_FORM:
-    case SPELL_HYDRA_FORM:
+    case SPELL_STORM_FORM:
     case SPELL_NECROMUTATION:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_WEREBLOOD:
@@ -2243,8 +2243,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ICE_FORM:
         return cast_transform(powc, transformation::ice_beast, fail);
 
-    case SPELL_HYDRA_FORM:
-        return cast_transform(powc, transformation::hydra, fail);
+    case SPELL_STORM_FORM:
+        return cast_transform(powc, transformation::storm, fail);
 
     case SPELL_DRAGON_FORM:
         return cast_transform(powc, transformation::dragon, fail);
@@ -2316,6 +2316,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);
+
+    case SPELL_BLINKBOLT:
+        return blinkbolt(powc, beam, fail);
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);

@@ -16,6 +16,8 @@
 #define APPENDAGE_KEY "beastly_appendages"
 #define APPENDAGE_LEVEL 2
 
+#define AIRFORM_POWER_KEY "airform_power"
+
 enum form_capability
 {
     FC_DEFAULT,
@@ -299,6 +301,7 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 string blade_parts(bool terse = false);
 void set_hydra_form_heads(int heads);
+void set_airform_power(int pow);
 const char* transform_name(transformation form = you.form);
 
 int form_hp_mod();

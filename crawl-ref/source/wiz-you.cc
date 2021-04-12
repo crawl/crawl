@@ -211,6 +211,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_LOCKED_DOWN] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
+        you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;

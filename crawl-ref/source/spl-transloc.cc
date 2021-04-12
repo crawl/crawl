@@ -1662,3 +1662,32 @@ spret word_of_chaos(int pow, bool fail)
     drain_player(50, false, true);
     return spret::success;
 }
+
+spret blinkbolt(int power, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You see nothing there to target!");
+        return spret::abort;
+    }
+
+    if (!player_tracer(ZAP_BLINKBOLT, power, beam))
+        return spret::abort;
+
+    fail_check();
+
+    beam.thrower = KILL_YOU_MISSILE;
+    zappy(ZAP_BLINKBOLT, power, false, beam);
+    beam.name = "shock of your passage";
+    beam.fire();
+    you.duration[DUR_BLINKBOLT_COOLDOWN] = 50 + random2(150);
+
+    return spret::success;
+}

@@ -820,3 +820,11 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Blinkbolt ability
+
+Turns the user into living lightning and zaps them at the chosen monster,
+dealing electric damage to everything in their path and depositing the user
+at the bolt's end. After using this ability, you will be unable to use it
+again for a short time.
+%%%%

@@ -756,17 +756,6 @@ Traps an enemy in a ring of blessed flame. These flames are especially
 dangerous to undead and demonic creatures, and have no effect on holy
 creatures.
 %%%%
-Hydra Form spell
-
-Transforms the caster into an amphibious, many-headed hydra for a brief
-duration. Its multiple heads strike in all directions. Foes slain by the
-gnashing teeth are instantly devoured, reinvigorating the caster in their
-reptilian rampage. The caster gains innate armour and increased health, and
-becomes resistant to poison.
-
-While transformed, any equipped weapons and armour are melded. The form's
-number of heads is fixed upon casting the spell, and increases with power.
-%%%%
 Iceblast spell
 
 Fires a large mass of ice, which explodes on impact. It affects even
@@ -1369,6 +1358,17 @@ immune monsters will be damaged by the physical impact of the stinger.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
+%%%%
+Storm Form spell
+
+Lets the caster walk through the air as a raging, lightning-filled tempest. The
+caster's melee attacks are strengthened, electrified, and strike all adjacent
+foes. The caster also flies, is more evasive, and resists electricity. They can
+launch themselves as a lightning bolt, blasting through everything in their way.
+The damage and evasion granted by storm form are highly dependent on the power
+with which it was cast.
+
+While transformed, any equipped weapons and armour are melded.
 %%%%
 Strip Willpower spell
 

@@ -594,92 +594,6 @@ bool melee_attack::handle_phase_aux()
 }
 
 /**
- * Devour a monster whole!
- *
- * @param defender  The monster in question.
- */
-static void _hydra_devour(monster &victim)
-{
-    mprf("You devour %s!",
-         victim.name(DESC_THE).c_str());
-
-    // give a clearer message for eating invisible things
-    if (!you.can_see(victim))
-    {
-        mprf("It tastes like %s.",
-             mons_type_name(mons_genus(victim.type), DESC_PLAIN).c_str());
-        // this could be the actual creature name, but it feels more
-        // 'flavourful' this way??
-        // feel free to just use the actual creature name if this has buggy
-        // edge cases or such
-    }
-    if (victim.has_ench(ENCH_STICKY_FLAME))
-        mprf("Spicy!");
-
-    // healing
-    if (!you.duration[DUR_DEATHS_DOOR])
-    {
-        const int healing = 1 + victim.get_experience_level() * 3 / 4
-                              + random2(victim.get_experience_level() * 3 / 4);
-        you.heal(healing);
-        calc_hp();
-        canned_msg(MSG_GAIN_HEALTH);
-        dprf("healed for %d (%d hd)", healing, victim.get_experience_level());
-    }
-
-    // and devour the corpse.
-    victim.props[NEVER_CORPSE_KEY] = true;
-}
-
-/**
- * Possibly devour the defender whole.
- *
- * @param defender  The defender in question.
- */
-static void _hydra_consider_devouring(monster &defender)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    dprf("considering devouring");
-
-    // shapeshifters are mutagenic
-    if (defender.is_shapeshifter())
-    {
-        // handle this carefully, so the player knows what's going on
-        mprf("You spit out %s as %s %s & %s in your mouth!",
-             defender.name(DESC_THE).c_str(),
-             defender.pronoun(PRONOUN_SUBJECTIVE).c_str(),
-             conjugate_verb("twist", defender.pronoun_plurality()).c_str(),
-             conjugate_verb("change", defender.pronoun_plurality()).c_str());
-        return;
-    }
-
-    dprf("shifter ok");
-
-    // Don't eat orcs, even heretics might be worth a miracle
-    if (you_worship(GOD_BEOGH)
-        && mons_genus(mons_species(defender.type)) == MONS_ORC)
-    {
-        return;
-    }
-
-    dprf("god ok");
-
-    // can't eat enemies that leave no corpses...
-    if (!mons_class_can_leave_corpse(mons_species(defender.type))
-        || defender.is_summoned()
-        || defender.flags & MF_HARD_RESET)
-    {
-        return;
-    }
-
-    dprf("corpse ok");
-
-    // chow down.
-    _hydra_devour(defender);
-}
-
-/**
  * Handle effects that fire when the defender (the target of the attack) is
  * killed.
  *
@@ -687,13 +601,6 @@ static void _hydra_consider_devouring(monster &defender)
  */
 bool melee_attack::handle_phase_killed()
 {
-    if (attacker->is_player() && you.form == transformation::hydra
-        && defender->is_monster() // better safe than sorry
-        && defender->type != MONS_NO_MONSTER) // already reset
-    {
-        _hydra_consider_devouring(*defender->as_monster());
-    }
-
     // Wyrmbane needs to be notified of deaths, including ones due to aux
     // attacks, but other users of melee_effects() don't want to possibly
     // be called twice. Adding another entry for a single artefact would
