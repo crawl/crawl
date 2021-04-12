@@ -955,7 +955,7 @@ static void _remove_amulet_of_faith(item_def &item)
 static void _equip_regeneration_item(const item_def &item)
 {
     equipment_type eq_slot = item_equip_slot(item);
-    // currently regen is only on the amulet and armour
+    // currently regen is only on amulets and armour
     bool plural = eq_slot == EQ_GLOVES || eq_slot == EQ_BOOTS;
     string item_name = is_artefact(item) ? get_artefact_name(item)
                                          : eq_slot == EQ_AMULET

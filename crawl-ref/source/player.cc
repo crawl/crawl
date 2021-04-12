@@ -1098,17 +1098,18 @@ static int _player_bonus_regen()
 {
     int rr = 0;
 
-    // Jewellery.
-    if (you.activated[EQ_AMULET])
-        rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
-
-    // Artefacts (artp_regen is only on armour) and troll leather armour
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    // Amulets, troll leather armour, and artefacts.
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
         if (you.melded[slot] || you.equip[slot] == -1 || !you.activated[slot])
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
-        if (armour_type_prop(arm.sub_type, ARMF_REGENERATION))
+        if (arm.base_type == OBJ_ARMOUR
+            && armour_type_prop(arm.sub_type, ARMF_REGENERATION))
+        {
+            rr += REGEN_PIP;
+        }
+        if (arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
             rr += REGEN_PIP;
         if (is_artefact(arm))
             rr += REGEN_PIP * artefact_property(arm, ARTP_REGENERATION);

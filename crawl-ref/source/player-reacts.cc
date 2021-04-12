@@ -835,24 +835,21 @@ static void _update_equipment_attunement_by_health()
     vector<string> eq_list;
     bool plural = false;
 
-    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_REGENERATION))
-    {
-        eq_list.push_back("amulet");
-        you.activated.set(EQ_AMULET);
-    }
-
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
         if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
-        if (armour_type_prop(arm.sub_type, ARMF_REGENERATION)
-            || is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION))
+        if (is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION)
+            || arm.base_type == OBJ_ARMOUR
+               && armour_type_prop(arm.sub_type, ARMF_REGENERATION)
+            || arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
         {
-            eq_list.push_back(
+            eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
+                slot == EQ_AMULET ? "amulet" :
                 slot != EQ_BODY_ARMOUR ?
                     item_slot_name(static_cast<equipment_type>(slot)) :
-                    is_artefact(arm) ? get_artefact_name(arm) : "armour");
+                    "armour");
 
             if (slot == EQ_GLOVES || slot == EQ_BOOTS)
                 plural = true;
