@@ -631,7 +631,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
         break;
 
     case SK_EVOCATIONS:
-        newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
+        newgame_make_item(OBJ_MISCELLANY, MISC_XOMS_CHESSBOARD, 1);
         break;
 
     case SK_DODGING:

@@ -3889,13 +3889,14 @@ colour_t item_def::miscellany_colour() const
             return WHITE;
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
-        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
         case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
         case MISC_CONDENSER_VANE:
             return WHITE;
+        case MISC_XOMS_CHESSBOARD:
+            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

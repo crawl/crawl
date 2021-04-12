@@ -33,14 +33,12 @@ tree_fall6 DNGN_TREE_RED
 tree_fall7
 tree_fall8
 
-# this may need to change, but it should make things a bit simpler
-%variation DNGN_TREE darkgray
-tree1_dead DNGN_TREE_DEAD
-tree2_dead
-
-tree_petrified1 DNGN_PETRIFIED_TREE
-tree_petrified2
-tree_petrified3
+%variation DNGN_TREE brown
+tree_dead1 DNGN_TREE_DEAD
+tree_dead2
+tree_dead3
+tree_dead4
+tree_dead5
 
 %weight 10
 mangrove1 DNGN_MANGROVE
@@ -48,6 +46,10 @@ mangrove1 DNGN_MANGROVE
 mangrove2
 %weight 5
 mangrove3
+
+tree_petrified1 DNGN_PETRIFIED_TREE
+tree_petrified2
+tree_petrified3
 
 
 ## doors

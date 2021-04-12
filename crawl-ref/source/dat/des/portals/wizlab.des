@@ -1055,8 +1055,9 @@ SUBST:      ? = txxx
 SUBST:      ! = t..
 NSUBST:     Z = Z / '
 MONS:       patrolling skeletal warrior, patrolling ancient champion
-COLOUR:     t = darkgrey / lightgrey
+COLOUR:     t = brown / lightgrey w:5
 TILE:       t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 2:e / 1:f / * = d:20 e:2

@@ -201,6 +201,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_TREE:
         return player_in_branch(BRANCH_SWAMP) ? TILE_DNGN_MANGROVE : TILE_DNGN_TREE;
+    case DNGN_PETRIFIED_TREE:
+        return TILE_DNGN_PETRIFIED_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -2592,6 +2594,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CONDENSER_VANE:
             return evoker_charges(item.sub_type) ? TILE_MISC_CONDENSER_VANE
                                                  : TILE_MISC_CONDENSER_VANE_INERT;
+
+    case MISC_XOMS_CHESSBOARD:
+            return _modrng(item.rnd, TILE_MISC_CHESSPIECE_FIRST, TILE_MISC_CHESSPIECE_LAST);
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:

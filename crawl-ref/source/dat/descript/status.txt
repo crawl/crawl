@@ -602,11 +602,11 @@ experience level instead of on Unarmed Combat skill.
 Shadow status
 
 You have been transformed into a swirling mass of dark shadows. You are
-permanently invisible and are immune to poison, draining, torment, and hostile
-enchantments. All incoming damage is halved, and you bleed smoke on any
-incoming attack. However, your ability to deal damage in melee and with ranged
-attacks is halved, your spellcasting power is greatly hampered, and your skills
-are further drained when taking damage.
+permanently invisible and are immune to poison, draining, and torment. All
+incoming damage is halved, you bleed smoke on any incoming attack, and you have
+infinite willpower. However, your ability to deal damage in melee and with
+ranged attacks is halved, your spellcasting power is greatly hampered, and your
+maximum health is further drained when taking damage.
 %%%%
 Hydra status
 

@@ -2139,7 +2139,7 @@ MONS:   nothing, nothing
 : end
 : if you.in_branch("Crypt") then
 SUBST:  x = c
-COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 FTILE:  - = floor_crypt
@@ -2547,7 +2547,7 @@ DEPTH:  Depths, Crypt
 MONS:   patrolling hell hog
 MONS:   apis skeleton, pearl dragon zombie
 MONS:   patrolling profane servitor, death knight
-COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
+COLOUR: G = lightgrey, t = w:5 lightgrey / brown, c = white
 FTILE:  t' = floor_pebble_brown
 TILE:   t = dngn_tree_dead, c = wall_stone_gray
 KFEAT:  _ = altar_yredelemnul

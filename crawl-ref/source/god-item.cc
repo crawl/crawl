@@ -213,8 +213,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH
-                  || item.sub_type == WAND_RANDOM_EFFECTS);
+        retval = (item.sub_type == WAND_POLYMORPH);
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION
@@ -225,7 +224,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         retval = _is_book_type(item, is_chaotic_spell);
         break;
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_BOX_OF_BEASTS);
+        retval = (item.sub_type == MISC_BOX_OF_BEASTS
+                  || item.sub_type == MISC_XOMS_CHESSBOARD);
         break;
     default:
         break;
@@ -255,8 +255,8 @@ static bool _is_potentially_hasty_item(const item_def& item)
             return true;
         }
         break;
-    case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_XOMS_CHESSBOARD)
             return true;
         break;
     default:

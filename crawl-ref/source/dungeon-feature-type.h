@@ -27,6 +27,9 @@ enum dungeon_feature_type
     DNGN_SEALED_CLEAR_DOOR,
 #endif
     DNGN_TREE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_PETRIFIED_TREE,               // tree but lrd-able
+#endif
 
     // Walls
     DNGN_METAL_WALL,
@@ -319,6 +322,7 @@ enum dungeon_feature_type
     DNGN_TRAP_PLATE,
     DNGN_TRAP_TELEPORT_PERMANENT,
     DNGN_TRAVEL_TRAIL,
+    DNGN_PETRIFIED_TREE,
 #endif
 
     NUM_FEATURES

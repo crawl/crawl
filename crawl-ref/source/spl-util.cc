@@ -1871,6 +1871,7 @@ const set<spell_type> removed_spells =
     SPELL_RING_OF_THUNDER,
     SPELL_TWISTED_RESURRECTION,
     SPELL_HYDRA_FORM,
+    SPELL_RANDOM_EFFECTS
 #endif
 };
 

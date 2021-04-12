@@ -1102,14 +1102,10 @@ static bool _handle_wand(monster& mons)
     if (item_type_removed(wand->base_type, wand->sub_type))
         return false;
 
-    // XXX: Teach monsters to use random effects
     // Digging is handled elsewhere so that sensible (wall) targets are
     // chosen.
-    if (wand->sub_type == WAND_RANDOM_EFFECTS
-        || wand->sub_type == WAND_DIGGING)
-    {
+    if (wand->sub_type == WAND_DIGGING)
         return false;
-    }
 
     bolt beem;
 

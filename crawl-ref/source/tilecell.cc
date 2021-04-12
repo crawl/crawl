@@ -355,7 +355,7 @@ static dungeon_feature_type _safe_feat(coord_def gc, crawl_view_buffer& vbuf)
 
 static bool _feat_is_mangrove(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP);
+    return feat_is_tree(feat) && player_in_branch(BRANCH_SWAMP);
 }
 
 static bool _is_seen_land(coord_def gc, crawl_view_buffer& vbuf)
@@ -395,7 +395,7 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     auto colour = cell.map_knowledge.feat_colour();
 
     // Treat trees in Swamp as though they were shallow water.
-    if (cell.mangrove_water && feat == DNGN_TREE)
+    if (cell.mangrove_water && feat_is_tree(feat))
         feat = DNGN_SHALLOW_WATER;
 
     if (!feat_is_water(feat) && !feat_is_lava(feat))
@@ -437,7 +437,7 @@ static bool _is_seen_wall(coord_def gc, crawl_view_buffer& vbuf)
 {
     const auto feat = _safe_feat(gc, vbuf);
     return (feat_is_opaque(feat) || feat_is_wall(feat))
-           && feat != DNGN_TREE && feat != DNGN_UNSEEN;
+           && !feat_is_tree(feat) && feat != DNGN_UNSEEN;
 }
 
 static void _pack_wall_shadows(const coord_def &gc, crawl_view_buffer& vbuf,

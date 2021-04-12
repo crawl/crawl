@@ -66,8 +66,8 @@ KPROP:  - = no_tele_into
 SUBST:  - = tt.
 : if crawl.one_chance_in(4) then
 : set_feature_name("tree", "dead tree")
-TILE:    t = dngn_tree_dead
-COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+TILE:   t = dngn_tree_dead
+COLOUR: t = w:5 lightgrey / brown
 : elseif crawl.one_chance_in(4) then
 COLOUR: t = lightred / red w:4 / yellow w:4
 TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -258,6 +258,23 @@ G.G-G.G
 G.G-G.G
   .-.
   G-G
+ENDMAP
+
+NAME:    ebering_ecumenical_altar_petrified
+TAGS:    transparent
+KFEAT:   t = petrified_tree
+KMONS:   p = withered plant perm_ench:petrified
+SHUFFLE: tp
+SUBST:   p = pp.
+SUBST:   t = t.
+: ecumenical_altar_setup(_G)
+MAP
+ .pp.
+.ptt..
+ptp_tp
+ptpptp
+.pttp.
+ .pp.
 ENDMAP
 
 NAME:    shapermc_ecumenical_altar_notcrosses

@@ -821,7 +821,6 @@ static bool _advise_use_wand()
         case WAND_ICEBLAST:
         case WAND_CHARMING:
         case WAND_ACID:
-        case WAND_RANDOM_EFFECTS:
         case WAND_MINDBURST:
             return true;
         }

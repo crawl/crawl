@@ -62,6 +62,7 @@ bool feat_is_trap(dungeon_feature_type feat);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
+bool feat_is_flammable(dungeon_feature_type feat);
 bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);

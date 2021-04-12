@@ -350,7 +350,7 @@ ENDMAP
 NAME:   ziggurat_pillar_centre_dead_trees
 TAGS:   ziggurat_pillar centered unrand no_exits
 SUBST:  T = t.
-COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR: t = w:5 lightgrey / brown
 TILE:   t = DNGN_TREE_DEAD
 MAP
  TTT

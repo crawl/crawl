@@ -2593,7 +2593,7 @@ TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
 TILE:    t = DNGN_TREE_DEAD
 TILE:    G = DNGN_GRAVESTONE
 COLOUR:  ' = brown / darkgrey
-COLOUR:  t = darkgrey
+COLOUR:  t = brown
 SUBST:   t = t.
 : set_feature_name("granite_statue", "adventurer's gravestone")
 MAP
@@ -3258,7 +3258,7 @@ TILE:   t = dngn_tree_dead, \
         G = dngn_gravestone
 : set_feature_name("granite_statue", "a gravestone")
 COLOUR: ? = darkgrey:20 / lightgrey, \
-        t = darkgrey
+        t = brown
 MAP
 .........
 ..?????..

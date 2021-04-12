@@ -143,7 +143,7 @@
 
       elseif s == "R" then i = { "amulet of reflection",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
-       "potion of resistance", "robe", "ring mail", "wand of random effects" }
+       "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "sling bullet", "scale mail", "book of summonings", "book of the sky",
@@ -168,7 +168,7 @@
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
        "war axe", "ring of willpower" }
 
-      elseif s == "X" then i = { "any" }
+      elseif s == "X" then i = { "piece from xom's chessboard" }
 
       elseif s == "Y" then i = { "young poisoner's handbook" }
 

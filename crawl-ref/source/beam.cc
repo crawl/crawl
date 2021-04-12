@@ -910,8 +910,8 @@ void bolt::digging_wall_effect()
 void bolt::burn_wall_effect()
 {
     dungeon_feature_type feat = env.grid(pos());
-    // Fire only affects trees.
-    if (!feat_is_tree(feat)
+    // Fire only affects things that can burn.
+    if (!feat_is_flammable(feat)
         || env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto"
         || !can_burn_trees()) // sanity
     {
@@ -968,6 +968,7 @@ void bolt::affect_wall()
         const bool god_relevant = you.religion == GOD_FEDHAS
                                   && can_burn_trees();
         const bool vetoed =
+            !feat_is_flammable(env.grid(pos())) &&
             env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
 
         // XXX: should check env knowledge for feat_is_tree()
@@ -2603,7 +2604,7 @@ bool bolt::can_affect_wall(const coord_def& p, bool map_knowledge) const
         return true;
 
     if (can_burn_trees())
-        return feat_is_tree(wall);
+        return feat_is_flammable(wall);
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
@@ -5061,9 +5062,6 @@ bool bolt::ignores_monster(const monster* mon) const
 
 bool bolt::has_saving_throw() const
 {
-    if (aimed_at_feet)
-        return false;
-
     switch (flavour)
     {
     case BEAM_HASTE:
@@ -5088,8 +5086,10 @@ bool bolt::has_saving_throw() const
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
         return false;
+    case BEAM_POLYMORPH:
+        return !aimed_at_feet; // Self-poly doesn't check will
     case BEAM_VULNERABILITY:
-        return !one_chance_in(3);  // Ignores HR 1/3 of the time
+        return !one_chance_in(3);  // Ignores will 1/3 of the time
     case BEAM_PARALYSIS:        // Giant eyeball paralysis is irresistible
         return !(agent() && agent()->type == MONS_FLOATING_EYE);
     default:
@@ -6170,7 +6170,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // those and simplify feat_is_wall() to return true for trees. -gammafunk
     if (feat_is_wall(dngn_feat)
         || feat_is_tree(dngn_feat)
-           && !can_burn_trees()
+           && (!feat_is_flammable(dngn_feat) || !can_burn_trees())
         || feat_is_closed_door(dngn_feat))
     {
         // Special case: explosion originates from rock/statue

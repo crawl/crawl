@@ -3309,6 +3309,7 @@ string feature_description_at(const coord_def& where, bool covering,
 #endif
 
     case DNGN_TREE:
+    case DNGN_PETRIFIED_TREE:
     {
         string desc = "";
         if (env.forest_awoken_until)

@@ -620,7 +620,6 @@ static const char* _wand_type_name(int wandtype)
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_CHARMING:     return "charming";
     case WAND_ACID:            return "acid";
-    case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_MINDBURST:       return "mindburst";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
@@ -959,9 +958,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
-#endif
+    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
 

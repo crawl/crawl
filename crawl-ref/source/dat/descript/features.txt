@@ -267,6 +267,10 @@ An awoken dead tree
 
 <An awoken tree>
 %%%%
+An awoken petrified tree
+
+<An awoken tree>
+%%%%
 An abandoned shop
 
 A shop that has been abandoned.
@@ -850,10 +854,9 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
-# evilmike_haunted_forest (Crypt:5)
 A dead tree
 
-A tree, as dead as everything else here.
+The dry remains of a long-dead tree.
 %%%%
 # Dis:7
 An iron statue
@@ -966,7 +969,8 @@ A pockmarked, ultra-hard glass window.
 %%%%
 A petrified tree
 
-An ancient tree, long ago passed from biology into geology.
+An ancient tree, long ago passed from biology into geology. While no longer
+wooden in a material sense, it retains the spiritual qualities of a tree.
 %%%%
 # due_jungle_book (Lair:6)
 An elephant-shaped statue

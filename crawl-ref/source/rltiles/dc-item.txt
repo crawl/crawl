@@ -576,8 +576,8 @@ i-lightning WAND_REMOVEME11
 i-polymorph WAND_POLYMORPH
 i-charming WAND_CHARMING
 i-acid WAND_ACID
-i-random_effects WAND_RANDOM_EFFECTS
 # start TAG_MAJOR_VERSION == 34
+i-random_effects WAND_REMOVEME14
 i-disintegration WAND_DISINTEGRATION
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12 WAND_ID_LAST
@@ -1099,6 +1099,13 @@ misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
+misc_pawn MISC_CHESSPIECE_FIRST
+misc_rook
+misc_knight
+misc_bishop
+misc_queen
+misc_king
+misc_thimble MISC_CHESSPIECE_LAST
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS

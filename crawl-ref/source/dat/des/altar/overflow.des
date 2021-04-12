@@ -1055,13 +1055,14 @@ ENDMAP
 
 ### Hepliaklqana overflow altars #############################################
 
-NAME: worldfamousw_hep_ancestral_shrine
-TAGS: uniq_altar_hepliaklqana temple_overflow_hepliaklqana temple_overflow_1
-TAGS: no_monster_gen no_item_gen no_pool_fixup
-KFEAT: _ = altar_hepliaklqana
+NAME:   worldfamousw_hep_ancestral_shrine
+TAGS:   uniq_altar_hepliaklqana temple_overflow_hepliaklqana temple_overflow_1
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+KFEAT:  _ = altar_hepliaklqana
 COLOUR: w = green
-TILE: G = dngn_gravestone
-TILE: t = DNGN_TREE_DEAD
+TILE:   G = dngn_gravestone
+COLOUR: t = brown
+TILE:   t = DNGN_TREE_DEAD
 {{
 set_feature_name("granite_statue", "a gravestone")
 set_feature_name("tree", "dead tree")
@@ -3112,7 +3113,7 @@ ENDMAP
 NAME:    xom_butterflies
 TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
-KITEM:   _ = wand of random effects w:40 / any wand
+KITEM:   _ = piece from Xom's chessboard
 COLOUR:  . = random
 NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
@@ -3359,7 +3360,7 @@ NSUBST: t = . / ttE
 SUBST:  E = tt.
 : nsubst( ". = " .. you.absdepth() .. "=1 / 1=1. / ." )
 KFEAT:  _ = altar_yredelemnul
-COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

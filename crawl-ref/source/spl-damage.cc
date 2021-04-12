@@ -985,6 +985,7 @@ static const map<dungeon_feature_type, feature_frag> fraggable_terrain = {
     { DNGN_CLEAR_STONE_WALL, { "rock", "wall" } },
     { DNGN_ORCISH_IDOL, { "rock", "stone idol" } },
     { DNGN_GRANITE_STATUE, { "rock", "statue" } },
+    { DNGN_PETRIFIED_TREE, { "rock", "petrified wood" } },
     // Stone arches and doors
     { DNGN_OPEN_DOOR, { "rock", "stone door frame" } },
     { DNGN_OPEN_CLEAR_DOOR, { "rock", "stone door frame" } },
@@ -1288,6 +1289,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     case DNGN_SLIMY_WALL:
     case DNGN_CRYSTAL_WALL:
     case DNGN_TREE:
+    case DNGN_PETRIFIED_TREE:
         chance = 33;
         break;
 
@@ -3138,22 +3140,6 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     beam.target     = where;
     beam.hit_verb   = "pelts";
 
-    monster *mons = monster_at(where);
-    if (mons && mons->is_icy())
-    {
-        string msg;
-        one_chance_in(20) ? msg = "%s dances in the hail." :
-                            msg = "%s is unaffected.";
-        if (you.can_see(*mons))
-            mprf(msg.c_str(), mons->name(DESC_THE).c_str());
-        else
-            mprf(msg.c_str(), "Something");
-
-        if (Options.use_animations & UA_BEAM)
-            beam.draw(where);
-        return;
-    }
-
     beam.fire();
 }
 
@@ -3167,8 +3153,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
       // actor guaranteed to be monster from usage,
       // but we'll verify it as a matter of good hygiene.
         const monster* mon = act->as_monster();
-        return mon && !mon->is_icy()
-            && !mons_is_firewood(*mon)
+        return mon && !mons_is_firewood(*mon)
             && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon))
             && !mons_is_projectile(*mon)
             && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
@@ -3177,7 +3162,8 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
     if (tracer)
     {
-        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS, true);
+             ri; ++ri)
         {
             if (grid_distance(you.pos(), *ri) == 1 || !in_bounds(*ri))
                 continue;
@@ -3201,7 +3187,8 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
     mpr("A cannonade of hail descends around you!");
 
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS, true);
+         ri; ++ri)
     {
         if (grid_distance(you.pos(), *ri) == 1 || !in_bounds(*ri))
             continue;

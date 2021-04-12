@@ -2793,7 +2793,7 @@ KMONS:  HZ = bloated husk
 NSUBST: D = t / .
 SUBST:  ' = ..t__, E = .Wt
 KFEAT:  H = W
-COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MARKER: H = lua:fog_machine { cloud_type = "foul pestilence", \
@@ -3331,6 +3331,7 @@ KMONS:   q = vampire knight
 KMONS:   L = patrolling the lernaean hydra zombie / patrolling the lernaean hydra skeleton
 KPROP:   q = bloody
 TILE:    E = WALL_UNDEAD, T = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE, x = WALL_BRICK_VINES
+COLOUR:  T = brown
 SUBST:   T = t
 SUBST:   E = c
 {{

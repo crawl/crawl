@@ -482,7 +482,8 @@ bool feat_is_diggable(dungeon_feature_type feat)
 {
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
-           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE
+           || feat == DNGN_PETRIFIED_TREE;
 }
 
 /** Is this feature a type of trap?
@@ -605,8 +606,16 @@ bool feat_is_player_altar(dungeon_feature_type grid)
  */
 bool feat_is_tree(dungeon_feature_type feat)
 {
+    return feat == DNGN_TREE || feat == DNGN_PETRIFIED_TREE;
+}
+
+/** Is this feature flammable?
+ */
+bool feat_is_flammable(dungeon_feature_type feat)
+{
     return feat == DNGN_TREE;
 }
+
 
 /** Is this feature made of metal?
  */

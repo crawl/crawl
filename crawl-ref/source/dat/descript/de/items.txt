@@ -683,10 +683,6 @@ wand of polymorph
 Ein magisches Gerät, das ein Wesen veranlasst, in eine andere Form umgemodelt
 zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
 %%%%
-wand of random effects
-
-Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
-%%%%
 whip
 
 Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den

@@ -188,7 +188,6 @@ void nowrap_eol_cprintf(const char *s, ...)
 static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
 {
     ASSERT(skiplines >= 0);
-    ASSERT(wrapcol >= 2); // prevent infinite loops in the while
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
