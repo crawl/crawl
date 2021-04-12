@@ -3155,6 +3155,24 @@ MAP
 ...........
 ENDMAP
 
+NAME: hellmonk_bongcloud_opening
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:5-, Depths, Orc, Elf
+NSUBST: G : 1:' / *:G
+KITEM: ' = piece from Xom's chessboard
+MAP
+..........
+.GGGGGGGG.
+.GGGG.GGG.
+..........
+.....G....
+.....G....
+..........
+.GGGGGGGG.
+.GGGG.GGG.
+..........
+ENDMAP
+
 NAME: nicolae_benzene_ring
 DEPTH: D:6-, Depths
 NSUBST: d = d / .
