@@ -3447,8 +3447,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
-    case ABIL_EVOKE_TURN_VISIBLE:
-        return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
     case ABIL_EVOKE_THUNDER:
         return TILEG_ABILITY_EVOKE_THUNDER;
 

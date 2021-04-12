@@ -972,9 +972,6 @@ static void _xom_do_potion(int /*sever*/)
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
-    if (pot == POT_INVISIBILITY)
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
-
     _note_potion_effect(pot);
 
     get_potion_effect(pot)->effect(true, 150);

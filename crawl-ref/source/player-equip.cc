@@ -288,31 +288,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         calc_mp();
 }
 
-/**
- * If player removes evocable invis and we need to clean things up, set
- * remaining Invis duration to 1 AUT and give the player contam equal to the
- * amount the player would receive if they waited the invis out.
- */
-static void _unequip_invis()
-{
-    if (you.duration[DUR_INVIS] > 1
-        && you.evokable_invis() == 0
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
-
-        // scale up contam by 120% just to ensure that ending invis early is
-        // worse than just resting it off.
-        mpr("You absorb a burst of magical contamination as your invisibility "
-             "abruptly ends!");
-        const int invis_duration_left = you.duration[DUR_INVIS] * 120 / 100;
-        const int remaining_contam = div_rand_round(
-            invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
-        );
-        contaminate_player(remaining_contam, true);
-        you.duration[DUR_INVIS] = 0;
-    }
-}
-
 static void _unequip_fragile_artefact(item_def& item, bool meld)
 {
     ASSERT(is_artefact(item));
@@ -358,9 +333,6 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_FLY] != 0)
         land_player();
-
-    if (proprt[ARTP_INVISIBLE] != 0)
-        _unequip_invis();
 
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
@@ -855,10 +827,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
             mpr("You feel less perceptive.");
             _mark_unseen_monsters();
         }
-        break;
-
-    case SPARM_INVISIBILITY:
-        _unequip_invis();
         break;
 
     case SPARM_STRENGTH:

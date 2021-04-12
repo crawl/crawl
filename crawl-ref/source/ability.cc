@@ -349,8 +349,6 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
         2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
 #if TAG_MAJOR_VERSION == 34
-    { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
-        0, 0, 0, {}, abflag::none },
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
         1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
 #endif
@@ -2182,15 +2180,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                               you.skill(SK_EVOCATIONS, 2) + 5));
         contaminate_player(1000 + random2(2000), true);
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_EVOKE_TURN_VISIBLE:
-        fail_check();
-        ASSERT(!you.attribute[ATTR_INVIS_UNCANCELLABLE]);
-        mpr("You feel less transparent.");
-        you.duration[DUR_INVIS] = 1;
-        break;
-#endif
 
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();

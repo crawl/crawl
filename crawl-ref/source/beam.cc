@@ -3288,7 +3288,6 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_INVISIBILITY:
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         potionlike_effect(POT_INVISIBILITY, ench_power);
         contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
