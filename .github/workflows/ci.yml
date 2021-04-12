@@ -165,6 +165,9 @@ jobs:
           - build_type: console-universal
             build_opts: TILES=y
     steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history
