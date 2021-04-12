@@ -1242,7 +1242,6 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
-        case ABIL_CANCEL_PPROJ:
         case ABIL_EXSANGUINATE:
         case ABIL_REVIVIFY:
         case ABIL_EVOKE_TURN_VISIBLE:

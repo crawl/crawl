@@ -27,8 +27,8 @@ enum ability_type
     ABIL_END_TRANSFORMATION,
 #if TAG_MAJOR_VERSION == 34
     ABIL_STOP_SINGING, // From song of slaying
-#endif
     ABIL_CANCEL_PPROJ,
+#endif
 
     // Species-specific abilities.
     // Demonspawn-only

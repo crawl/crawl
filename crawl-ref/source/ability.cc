@@ -324,9 +324,6 @@ static const ability_def Ability_List[] =
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
 
-    { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
-        0, 0, 0, {}, abflag::instant | abflag::none },
-
     { ABIL_DIG, "Dig", 0, 0, 0, {}, abflag::instant | abflag::none },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 0, {}, abflag::delay },
 
@@ -2205,13 +2202,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         break;
 
-    case ABIL_CANCEL_PPROJ:
-        fail_check();
-        you.duration[DUR_PORTAL_PROJECTILE] = 0;
-        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
-        mpr("You are no longer teleporting projectiles to their destination.");
-        break;
-
     case ABIL_END_TRANSFORMATION:
         fail_check();
         untransform();
@@ -3433,8 +3423,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return !you_worship(GOD_NO_GOD);
     case ABIL_CONVERT_TO_BEOGH:
         return env.level_state & LSTATE_BEOGH && can_convert_to_beogh();
-    case ABIL_CANCEL_PPROJ:
-        return you.duration[DUR_PORTAL_PROJECTILE];
     // pseudo-evocations from equipped items
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
@@ -3493,7 +3481,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_END_TRANSFORMATION,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
-            ABIL_CANCEL_PPROJ,
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
