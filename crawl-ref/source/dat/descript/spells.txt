@@ -23,6 +23,17 @@ Agony Range spell
 Cuts the resilience of a target creature in half. This damage is never directly
 lethal.
 %%%%
+Air Walk spell
+
+Transforms the caster into a raging vortex of wind and lightning. The
+caster's melee attacks are increased, electrified, and capable of cleaving all
+adjacent foes. The caster also becomes more evasive, resistant to electricity,
+and capable of flight. Lastly, they gain the ability to use blinkbolt.
+Both the melee damage and evasion benefits of air walk are highly dependent on
+the power with which it was cast.
+
+While transformed, any equipped weapons and armour are melded.
+%%%%
 Airstrike spell
 
 Causes the air around a creature to twist itself into a whirling vortex of
@@ -756,17 +767,6 @@ Holy Flames spell
 Traps an enemy in a ring of blessed flame. These flames are especially
 dangerous to undead and demonic creatures, and have no effect on holy
 creatures.
-%%%%
-Hydra Form spell
-
-Transforms the caster into an amphibious, many-headed hydra for a brief
-duration. Its multiple heads strike in all directions. Foes slain by the
-gnashing teeth are instantly devoured, reinvigorating the caster in their
-reptilian rampage. The caster gains innate armour and increased health, and
-becomes resistant to poison.
-
-While transformed, any equipped weapons and armour are melded. The form's
-number of heads is fixed upon casting the spell, and increases with power.
 %%%%
 Iceblast spell
 

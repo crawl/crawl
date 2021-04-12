@@ -1754,8 +1754,7 @@ int player_movement_speed()
 
     if (feat_is_water(env.grid(you.pos())))
     {
-        if (you.form == transformation::hydra
-            || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
+        if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
         {
             mv -= 4;
         }
@@ -1971,6 +1970,9 @@ static int _player_evasion_bonuses()
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
+        
+    if (you.props.exists(AIRFORM_POWER_KEY))
+        evbonus += you.props[AIRFORM_POWER_KEY].get_int() / 10;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
@@ -6186,8 +6188,7 @@ int player::res_water_drowning() const
 
     if (is_unbreathing()
         || species::can_swim(species) && !form_changed_physiology()
-        || form == transformation::ice_beast
-        || form == transformation::hydra)
+        || form == transformation::ice_beast)
     {
         rw++;
     }

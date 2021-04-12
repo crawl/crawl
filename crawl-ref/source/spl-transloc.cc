@@ -1606,3 +1606,29 @@ void attract_monsters()
         mons_relocated(mi);
     }
 }
+
+spret blinkbolt(int power, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+    
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You see nothing there to target!");
+        return spret::abort;
+    }
+    
+    if (!player_tracer(ZAP_BLINKBOLT, power, beam))
+        return spret::abort;
+    
+    fail_check();
+    
+    zapping(ZAP_BLINKBOLT, power, beam);
+    you.duration[DUR_BLINKBOLT_COOLDOWN] = 5 + random2(15);
+    
+    return spret::success;
+}

@@ -807,9 +807,9 @@ bool attack_cleaves(const actor &attacker, int which_attack)
     const item_def* weap = attacker.weapon(which_attack);
 
     return weap && item_attack_skill(*weap) == SK_AXES
-        || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
-                   || you.duration[DUR_CLEAVE]);
+        || attacker.is_player() 
+            && (you.form == transformation::air 
+                || you.duration[DUR_CLEAVE]);
 }
 
 /**

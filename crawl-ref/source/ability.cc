@@ -333,6 +333,7 @@ static const ability_def Ability_List[] =
     { ABIL_HOP, "Hop", 0, 0, 0, {}, abflag::none },
 
     { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
+    { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::breath },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1353,6 +1354,17 @@ static bool _can_hop(bool quiet)
     return _can_movement_ability(quiet);
 }
 
+static bool _can_blinkbolt(bool quiet)
+{
+    if (you.duration[DUR_BLINKBOLT_COOLDOWN])
+    {
+        if (!quiet)
+            mpr("You aren't ready to blinkbolt again yet.");
+        return false;
+    }
+    return true;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1610,6 +1622,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
                                 palentonga_charge_possible(quiet, true);
 
     case ABIL_EVOKE_BLINK:
+    case ABIL_BLINKBOLT:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
         if (no_tele_reason.empty())
@@ -1988,6 +2001,23 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return palentonga_charge(fail, target);
         else
             return spret::abort;
+        
+               
+    case ABIL_BLINKBOLT:
+        {
+            if(_can_blinkbolt(false))
+            {
+                int power = 0;
+                if (you.props.exists(AIRFORM_POWER_KEY))
+                    power = you.props[AIRFORM_POWER_KEY].get_int();
+                else
+                    return spret::abort;
+                return your_spells(SPELL_BLINKBOLT, power, false);
+            }
+            else
+                return spret::abort;
+        }
+
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -3423,6 +3453,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // red draconian handled before the switch
         return you.form == transformation::dragon
                     && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+    case ABIL_BLINKBOLT:
+        return you.form == transformation::air;
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
@@ -3490,6 +3522,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
+            ABIL_BLINKBOLT,
             ABIL_END_TRANSFORMATION,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
