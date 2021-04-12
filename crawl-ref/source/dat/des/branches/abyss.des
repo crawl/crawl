@@ -23,9 +23,9 @@ end
 
 function abyss_entry(e, glyph)
   e.tags("extra luniq_enter_abyss chance_enter_abyss")
-  e.depth_chance("Depths:1-3", 3333)
-  e.depth_chance("Depths:4",   10000)
-  e.depth_chance("Depths:5-",  3333)
+  e.depth_chance("Depths:1", 3333)
+  e.depth_chance("Depths:2", 10000)
+  e.depth_chance("Depths:3", 3333)
 -- start TAG_MAJOR_VERSION == 34
   e.depth_chance("D:21-24", 3333)
   e.depth_chance("D:25",    10000)
@@ -37,7 +37,7 @@ end
 
 ###############################################################################
 # Abyss entries.
-# 1/3 chance to appear on Depths floors and guaranteed on Depths:4.
+# 1/3 chance to appear on Depths floors and guaranteed on Depths:2.
 ###############################################################################
 
 default-depth: Depths, D:21-
