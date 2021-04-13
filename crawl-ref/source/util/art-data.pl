@@ -57,6 +57,7 @@ my %field_type = (
     NOTELEP  => "bool",
     NO_UPGRADE => "bool",
     POISON   => "bool",
+    RAMPAGE  => "bool",
     RANDAPP  => "bool",
     RCORR    => "bool",
     REGEN    => "num",
@@ -537,7 +538,7 @@ my @art_order = (
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-    "SH", "HARM", "\n",
+    "SH", "HARM", "RAMPAGE", "\n",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
