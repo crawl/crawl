@@ -1732,7 +1732,7 @@ ifndef NO_INLINE_DEPGEN
 	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
 
-icon.o: util/crawl.rc util/crawl.ico .cflags
+icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
