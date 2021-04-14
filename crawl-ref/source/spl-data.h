@@ -222,7 +222,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
     spflag::dir_or_target | spflag::helpful | spflag::selfench
-        | spflag::emergency | spflag::needs_tracer,
+        | spflag::emergency | spflag::escape | spflag::needs_tracer,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1669,7 +1669,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
     spschool::earth,
-    spflag::monster | spflag::emergency,
+    spflag::monster | spflag::emergency | spflag::escape,
     5,
     0,
     -1, -1,
@@ -1804,7 +1804,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INK_CLOUD, "Ink Cloud",
     spschool::conjuration | spschool::ice, // it's a water spell
-    spflag::monster | spflag::emergency | spflag::utility,
+    spflag::monster | spflag::emergency | spflag::escape | spflag::utility,
     7,
     0,
     -1, -1,
