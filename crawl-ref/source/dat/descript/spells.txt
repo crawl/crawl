@@ -1143,8 +1143,7 @@ Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them
 easier to dodge. Single-target attacks are much easier to repel than
-penetrating attacks. Each time a missile is repelled the spell has a chance of
-expiring, with a lower chance of expiry at high power.
+penetrating attacks.
 %%%%
 Resonance Strike spell
 

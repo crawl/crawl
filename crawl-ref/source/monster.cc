@@ -3147,15 +3147,6 @@ bool monster::missile_repulsion() const
     return has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL);
 }
 
-void monster::ablate_repulsion()
-{
-    if (has_ench(ENCH_REPEL_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd()))
-            del_ench(ENCH_REPEL_MISSILES);
-    }
-}
-
 /**
  * How many weapons of the given brand does this monster currently wield?
  *

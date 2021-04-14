@@ -270,9 +270,6 @@ public:
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded();
     virtual bool missile_repulsion() const = 0;
-    virtual void ablate_repulsion()
-    {
-    }
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;

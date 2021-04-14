@@ -512,7 +512,6 @@ public:
     void    shield_block_succeeded() override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
-    void    ablate_repulsion() override;
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const override { return 0; }
