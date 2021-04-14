@@ -1695,6 +1695,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = claw_and_tooth_titles[skill_rank];
             else if (species == SP_MUMMY && skill_rank == 5)
                 result = "Pharaoh";
+            else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
+                result = "Weightless Champion";
             else
             {
                 result = dex_better ? martial_arts_titles[skill_rank]
