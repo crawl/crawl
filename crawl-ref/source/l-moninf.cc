@@ -438,8 +438,8 @@ LUAFN(moninf_get_flags)
     MONINF(ls, 1, mi);
     lua_newtable(ls);
     int index = 0;
-    for( std::map<string,int>::iterator it = mi_flags.begin(); it != mi_flags.end(); ++it )
-        if( mi->is(it->second) )
+    for (std::map<string,int>::iterator it = mi_flags.begin(); it != mi_flags.end(); ++it)
+        if (mi->is(it->second))
         {
             lua_pushstring(ls, it->first.c_str());
             lua_rawseti(ls, -2, ++index);
