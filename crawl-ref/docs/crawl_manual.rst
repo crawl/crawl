@@ -1499,25 +1499,26 @@ Hill Orcs (HO)
   cousins (the Cave Orcs) possess below the ground, descend in search of plunder
   and adventure.
 
-  Hill Orcs are more robust than Humans. Their forte is brute-force fighting,
-  and they are skilled at using most hand weapons (particularly axes, with which
-  they are experts), though they are not particularly good at using missile
-  weapons. Hill Orcs are passable users of most types of magic and are
-  particularly skilled with Fire.
+  Hill Orcs are strong and robust. Their forte is brute-force fighting, and they
+  are skilled at using most hand weapons (particularly axes, with which they are
+  experts), though they are not particularly good at using missile weapons. Hill
+  Orcs are passable users of most types of magic and are particularly skilled
+  with fire.
 
-  Many Orcs feel superior to all other species and beings, and they have formed
-  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
-  can join Beogh even without an altar whenever an orc priest is in sight.
+  Hill Orcs have a strong connection to the gods and learn Invocations very
+  quickly. The Orc god Beogh is worshipped only by Orcs, and the orc priests of
+  the Dungeon preach that Beogh is indeed the only true god. Hill Orcs may
+  convert to Beogh even without an altar whenever an orc priest is in sight.
 
 Minotaurs (Mi)
-  The Minotaurs are yet another species of hybrids - Human bodies with bovine
+  The Minotaurs are a species of hybrids, posessing human bodies with bovine
   heads. They delve into the Dungeon because of their instinctive love of
   twisting passageways.
 
   Minotaurs are extremely good at all forms of physical combat, but are awful at
   using any type of magic. They can wear all armour except for some headgear.
-  When in close combat, Minotaurs tend to reflexively headbutt those who dare
-  attack them.
+  When in close combat, Minotaurs are able to reflexively headbutt those who
+  dare attack them.
 
 Merfolk (Mf)
   The Merfolk are a hybrid species of half-human, half-fish that typically live
@@ -1541,9 +1542,9 @@ Merfolk (Mf)
   very accomplished transmuters, but most other magic seems foreign to them.
 
 Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian race, walking on four feet and
-  swinging a powerful tail behind them. Their elephant-back armies terrorize the
-  lands outside the Dungeon.
+  The Palentongas are a large, scaled mammalian species, walking on four feet
+  and swinging a powerful tail behind them. Their elephant-back armies
+  terrorize the lands outside the Dungeon.
 
   Palentongas are best known for their powerful roll attack, curling up and
   rolling into a crashing melee attack against nearby foes. They're well suited
@@ -1570,10 +1571,10 @@ Draconians (Dr)
   variety of colours. This happens at an early stage in their career, and the
   colour is determined by chromosomes, not by behaviour.
 
-  Most types of Draconians have breath weapons or special resistances. Draconians
-  cannot wear body armour and advance very slowly in levels, but are reasonably
-  good at all skills other than missile weapons, and they develop natural
-  physical defenses that compensate for the lack of body armour, without
+  Most types of Draconians have breath weapons or special resistances.
+  Draconians cannot wear body armour and advance very slowly in levels, but are
+  reasonably good at all skills other than missile weapons, and they develop
+  natural physical defenses that compensate for the lack of body armour, without
   needing to train their Armour skill at all. Still, each colour has its own
   strengths and some have complementary weaknesses, which sometimes requires a
   bit of flexibility on the part of the player. They are good general-purpose
@@ -1590,23 +1591,23 @@ Trolls (Tr)
 
   They are incredibly strong, and regenerate rapidly from even the most terrible
   wounds. However, they are hopeless at spellcasting and learn most skills very
-  slowly.
+  slowly. Their large size prevents them from wearing most forms of armour.
 
 Ghouls (Gh)
   Ghouls are horrible undead creatures that sleep in their graves for years on
   end, only to rise and stalk the living. Slain foes heal these monstrous
   beings as they feast on the macabre energies released.
 
-  They aren't very good at doing most things, although they make decent unarmed
-  fighters with their claws and, due to their contact with the grave, can use
-  ice, earth and death magic without too many difficulties.
+  They learn most skills slowly, although they make decent unarmed fighters
+  with their claws. Due to their contact with the grave they can also learn to
+  use ice, earth, poison and necromantic magic without too many difficulties.
 
   Like other undead, ghouls are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
   susceptible to mutations.
 
 Gnolls (Gn)
-  Gnolls are a race of caniform humanoids originally hailing from the arid
+  Gnolls are a species of caniform humanoids originally hailing from the arid
   deserts and grasslands of the east. In recent history they have become
   unusually attracted to the Dungeon, establishing tribes around and even
   inside of it. Unfortunately their long stay in the Dungeon has exposed their
@@ -1615,12 +1616,10 @@ Gnolls (Gn)
   On the one hand, their bizarrely altered brains now have incredible
   proficiency at learning every skill. On the other, these same alterations
   have rendered Gnolls incapable of selective learning. They learn all skills
-  equally at the same time, so it's hard for them to learn more about any one
-  thing.
+  at the same time, so are generally unable to specialise in any one thing.
 
   In order to survive with this limitation, Gnolls use their universal
-  knowledge and excellent physical attributes of strength, intelligence, and
-  dexterity to take advantage of every resource they find in the Dungeon. They
+  knowledge to take advantage of every resource they find in the Dungeon. They
   also have powerful noses adapted to the Dungeon's scents, allowing them to
   easily locate where treasures lay hidden.
 
@@ -1640,32 +1639,30 @@ Humans (Hu)
   skills.
 
 Kobolds (Ko)
-  Kobolds are small, ugly creatures with few redeeming features. They are not
-  the sort of people you would want to spend much time with, unless you happened
-  to be a Kobold yourself.
+  Kobolds are small, mysterious creatures of unknown origin. They are well
+  suited to lurking in the darkness of the Dungeon, and have a reduced range of
+  vision which also reduces the range at which they can be seen by enemies.
 
-  They tend to be more agile and weaker than Humans, and are slightly more
-  talented at using most types of magic, particularly necromancy. They are
-  competent in combat, especially with short blades, maces or crossbows, and are
-  also very adept at using magical devices. Lurking in the darkness, enemies can
-  only see them from quite close (and vice versa!). Kobolds advance in levels as
-  quickly as Humans. Kobolds cannot wield large weapons.
+  They are competent in combat, especially with short blades, maces or
+  crossbows, and are comfortable with all forms of magic. They are also very
+  adept at using magical devices. Their small size makes them unable to wield
+  large weapons, but they are agile and stealthy, and advance in levels as
+  quickly as Humans.
 
 Demonspawn (Ds)
-  Demonspawn are horrible half-mortal, half-infernal creatures - the flip side
-  of the Demigods. Demonspawn can be created in any number of ways: magical
-  experiments, breeding, unholy pacts, etc. Although many Demonspawn may
-  initially be indistinguishable from those of pure mortal stock, they will
-  inevitably grow horns, scales or other unusual features. Powerful members of
-  this class of beings also develop a range of unholy abilities, which are
-  listed as mutations.
+  Demonspawn are horrible half-mortal, half-infernal creatures. Demonspawn can
+  be created in any number of ways: magical experiments, breeding, unholy pacts,
+  etc. Although many Demonspawn may initially be indistinguishable from those of
+  pure mortal stock, they will inevitably grow horns, scales or other unusual
+  features. Powerful members of this class of beings also develop a range of
+  unholy abilities, which are listed as mutations.
 
-  Demonspawn advance slowly in experience and learn most skills at about the
-  same rate as do Demigods. However, they are a little better at fighting
-  and conjurations and much better at necromancy and invocations. Note that
-  unlike Demigods, they can take on gods, although not all will accept them.
+  Demonspawn advance slowly in experience and learn most skills slightly slower
+  than Humans, although they are talented at some forms of magic. They learn
+  Invocations especially quickly, although the good gods will not accept their
+  worship due to their unholy nature.
 
-Djinni (Dj)
+Djinn (Dj)
   Djinn are beings of smokeless fire. They enter the world spontaneously and
   without explanation, born with a tireless hunger for knowledge and adventure.
   Djinn have a unique relationship with magic: rather than learning spells
@@ -1679,21 +1676,20 @@ Djinni (Dj)
 
   Djinn are middlingly competent at most forms of physical combat, but have
   a particular aptitude for spellcasting. Their Spellcasting skill grants
-  the same level of spell success and power that other races need multiple
+  the same level of spell success and power that other species need multiple
   skills to reach.
 
 Spriggans (Sp)
   Spriggans are small magical creatures distantly related to Elves. They love to
   frolic and cast mischievous spells.
 
-  They are poor fighters and have little physical resilience, though they are
-  incredibly skilled at dodging attacks. They are terrible at destructive
-  magic - conjurations, summonings, necromancy and elemental spells. On the
-  other hand, they are excellent at other forms of magic, and are very good at
-  moving silently and quickly. So great is their speed that a Spriggan can
-  overtake a centaur. Their size makes them unable to wear most armour. They
-  cannot wield large weapons, and even most smaller weapons require both hands
-  to be wielded by a Spriggan.
+  They are poor fighters and have little physical resilience, but they move
+  extremely quickly and stealthily, and are incredible at dodging attacks. They
+  are terrible at destructive magic - conjurations, summonings, necromancy and
+  elemental spells. On the other hand, they are excellent at other forms of
+  magic and at evoking magical items. Their size makes them unable to wear most
+  armour. They cannot wield large weapons, and even most smaller weapons require
+  both hands to be wielded by a Spriggan.
 
 Tengu (Te)
   The Tengu are an ancient and feared species of bird-people with a legendary
@@ -1709,11 +1705,12 @@ Tengu (Te)
   invocations. Their light avian bodies cannot sustain a great deal of injury.
 
 Deep Elves (DE)
-   This is an Elven species who long ago fled the overworld to live in darkness
-   underground. There, they developed their mental powers, evolving a natural
-   gift for all forms of magic (including necromancy and earth magic), and
-   adapted physically to their new environment, becoming shorter, weaker, and
-   losing all colouration. They are poor at melee combat and physical defense.
+   The Deep Elves are a species of Elves who long ago fled the overworld to live
+   in darkness underground. There, they developed their mental powers, evolving
+   a natural gift for all forms of magic, and adapted physically to their new
+   environment, becoming weaker and losing all colouration. They are poor at
+   melee combat and physical defense, although they are capable at using bows in
+   ranged combat.
 
 Ogres (Og)
   Ogres are huge, chunky creatures who are very strong and robust, but are not
@@ -1721,10 +1718,10 @@ Ogres (Og)
   use of magical devices. Ogres mature almost as quickly as Humans.
 
   Their preferred methods of avoiding beatings are dodging and the use of
-  shields, but they can also use armours made from magical hides, since these
-  accommodate their large frames. Ogres are proficient at using all types of
-  melee weapons, yet all sophisticated forms of missile combat are too awkward
-  for them. They are, however, good at throwing things, in particular boulders.
+  shields. Their large size prevents them from wearing most forms of armour.
+  Ogres are proficient at using all types of melee weapons, but all
+  sophisticated forms of missile combat are awkward for them. They are, however,
+  good at throwing things, in particular boulders.
 
 Deep Dwarves (DD)
   Deep Dwarves are short, hardy people who, unlike their extinct surface
@@ -1740,7 +1737,7 @@ Deep Dwarves (DD)
   Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
   damage. Offensively, they are skilled users of axes, crossbows, and slings.
   Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with invocations is great, and
+  by outsiders; because of this, their skill with Invocations is great, and
   they often rely on divine assistance for healing. They are most at home with
   the magic of earth and death, eventually gaining some resistance to the dark
   powers of necromancy.
@@ -1776,29 +1773,32 @@ Vine Stalkers (VS)
   spells' fuel with each voracious bite.
 
 Vampires (Vp)
-  Vampires are another form of undead, but with a peculiarity they may become
-  alive. A bloodless Vampire has the traits of an undead (immunity to poisons,
-  negative energy and torment, resistant to damage from the cold), but cannot
-  physically regenerate when monsters are in sight and are less resilient. On
-  the other hand, a Vampire full with blood will regenerate very quickly, but
-  will lose all undead powers. Upon growing, they learn to transform into
-  fast-moving bats. Unlike other undead species, they may be mutated normally
-  at all times.
+  Vampires are an undead species, with the ability to shift between bloodless
+  and alive forms at will. Bloodless Vampires can heal themselves by drinking
+  the blood of the living in combat, and have the traits of the undead (immunity
+  to poisons, negative energy and torment, and resistance to damage from cold),
+  but are much less resilient and cannot regenerate health when monsters are in
+  sight. On the other hand, a Vampire full with blood will regenerate very
+  quickly, but will lose all undead powers. Upon growing, they learn to
+  transform from their bloodless form into a fast-moving bat. Unlike other
+  undead species, they may be mutated normally at all times.
 
 Demigods (Dg)
   Demigods are mortals with some divine or angelic ancestry, however distant.
   Demigods look more or less like members of their mortal part's species, but
-  have excellent attributes (Str, Int, Dex) and are extremely robust. They can
-  also draw on great supplies of magical energy. On the downside, they advance
-  more slowly in experience than any other race, gain skills slightly less
-  quickly than Humans and, due to their status, cannot worship the various gods
-  and powers available to other races.
+  they are extremely robust and can draw on great supplies of magical energy.
+  They are able to sculpt their attributes to a far greater extent than any
+  other species, gaining substantial boosts to their choice of Strength,
+  Intelligence or Dexterity as they gain experience. On the downside, they
+  advance more slowly in experience than any other species, gain skills slightly
+  less quickly than Humans and, due to their status, refuse to worship any god.
 
 Formicids (Fo)
   The Formicids are a species of humanoid ants. Just like their tiny insect
   ancestors, the Formicids are well adept at earth work, both on the physical
-  and magical sides. Their abilities have been used to tunnel immense underground
-  communities and structures, many of which are tens of thousands of years old.
+  and magical sides. Their abilities have been used to tunnel immense
+  underground communities and structures, many of which are tens of thousands of
+  years old.
 
   Perhaps unfortunately, their strong ties to earth have left them completely
   impervious to being teleported or hasted; Formicids are tied to the earth with
@@ -1807,7 +1807,7 @@ Formicids (Fo)
   of nasty hexes and maledictions.
 
   With the ability to lift ten times their own weight, the Formicids have
-  strength rivaling that of ogres. This, along with the fact that they have four
+  strength rivaling that of Ogres. This, along with the fact that they have four
   arms, allows Formicid warriors to equip both a shield and a two-handed weapon
   at the same time.
 
@@ -1818,8 +1818,8 @@ Nagas (Na)
   Nagas are a hybrid species: Human from the waist up with a large snake tail
   instead of legs.
 
-  They are reasonably good at most things and advance in experience levels at
-  the same rate as Merfolk. They are naturally resistant to poisons, can see
+  They are reasonably good at most things and advance in experience levels
+  slightly slower than Humans. They are naturally resistant to poisons, can see
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
@@ -1828,13 +1828,13 @@ Nagas (Na)
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
 
-  Nagas can spit poison; the range, accuracy and damage of this poison increases
-  with the Naga's experience level.
+  Nagas can spit poison; the accuracy and damage of this poison increases with
+  the Naga's experience level.
 
 Octopodes (Op)
   These land-capable relatives of common octopuses can move about as fast as
   humans and yet retain the ability to swim underwater, although their dual
-  adaptation is not as good as that of the shapechanging merfolk.
+  adaptation is not as good as that of the shapechanging Merfolk.
 
   Octopodes have eight tentacle-shaped legs, and need four of them to move.
   While a tentacle lacks fingers, two tentacles are a rough equivalent of a
@@ -1857,7 +1857,7 @@ Felids (Fe)
   serious disadvantage due to their inability to use armour or weapons.
 
   Their agility and stealth are legendary, as is their ability to get to hard to
-  reach places. They move faster than most races, but don't run as fast as
+  reach places. They move faster than most species, but don't run as fast as
   Spriggans. Felids advance in levels very slowly. They are skilled with many
   forms of magic, though less so with raw elemental magic.
 
@@ -1865,7 +1865,7 @@ Felids (Fe)
   resurrected in a safe place, losing an experience level in the process.
 
 Barachim (Ba)
-  Barachim are an amphibious humanoid race, spawned at the dawn of time as
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
   servants for the gods. Inevitably, they rebelled and fled into the mortal
   world; but even uncounted years later, the darkness still flees at their
   approach, remembering those who they once served.
@@ -2004,7 +2004,7 @@ Wanderers
 
 Delvers
   Delvers have, through some mishap, found themselves several floors below the
-  surface of the dungeon. They're equipped with a wide variety of magical escape
+  surface of the Dungeon. They're equipped with a wide variety of magical escape
   tools, and are well advised to use them to travel to earlier dungeon floors as
   quickly as possible.
 
@@ -2016,7 +2016,7 @@ Zealots start the game already worshipping a god.
 Berserkers
   Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
   get the power to go berserk (as well as a number of other powers, should they
-  prove worthy), but who forbids the use of spell magic. They enter the dungeon
+  prove worthy), but who forbids the use of spell magic. They enter the Dungeon
   with a weapon of their choice, and dressed in animal skins.
 
 Abyssal Knights
@@ -2118,7 +2118,7 @@ Elementalists
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the dungeon where few creatures are immune to it. Their
+  shallower levels of the Dungeon where few creatures are immune to it. Their
   first book is the Young Poisoner's Handbook.
 
 ****************************************
@@ -2259,8 +2259,8 @@ Stealth
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
   which it hinders you. Examining a shield will show the amount of skill needed
-  to completely compensate for its encumbrance - larger races need less skill
-  and smaller races more.
+  to completely compensate for its encumbrance - larger species need less skill
+  and smaller species more.
 
 Invocations
   Affects your ability to call on your god for aid. Those skilled at Invocations

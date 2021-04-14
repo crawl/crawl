@@ -459,7 +459,6 @@ public:
             return false;
 
         effect();
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         return true;
     }
 };

@@ -1745,23 +1745,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-    // If you're invis from an item, warn that you're about to get an extra dose
-    // of contam from removing it. This check is rough, since we need to
-    // establish that the operation is a removal, the item being removed is in
-    // fact the +Invis one, and no other +Invis sources exist, and the player
-    // is currently invis from +Invis.
-    if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
-        && (
-                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
-                || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
-            )
-        && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
-        return true;
-    }
-
     return false;
 }
 

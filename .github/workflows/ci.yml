@@ -148,6 +148,10 @@ jobs:
         build_type:
           - tiles
           - console
+          # These rules need an os 11.0 runner, which is not yet publicly available.
+          # https://github.com/actions/virtual-environments/issues/2486
+          #- tiles-universal
+          #- console-universal
         build_opts:
           - ""
           - TILES=y
@@ -156,7 +160,14 @@ jobs:
             build_opts: ""
           - build_type: console
             build_opts: TILES=y
+          - build_type: tiles-universal
+            build_opts: ""
+          - build_type: console-universal
+            build_opts: TILES=y
     steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # all history

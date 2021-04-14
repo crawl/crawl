@@ -66,6 +66,10 @@
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
+# For various mac build tricks oriented at release builds see the various
+# mac-app-* targets as well as the crawl-universal target. (For normal dev
+# circumstances, none of this is needed.)
+#
 # There are a number of #defines that may be useful for downstream packaging
 # or custom server setups. See AppHdr.h for more details. Of note:
 #
@@ -97,7 +101,8 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 		clean-coverage clean-coverage-full \
         distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
-        monster catch2-tests plug-and-play-tests
+        monster catch2-tests plug-and-play-tests \
+        crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
 
 include Makefile.obj
 
@@ -255,6 +260,12 @@ ifdef msys
 	endif
 endif
 ifeq ($(uname_S),Darwin)
+ifdef MAC_TARGET
+	# for reasons I really cannot figure out, setting GAME later (when the
+	# other MAC_TARGET checks are done) really does not work.
+	GAME = crawl-$(MAC_TARGET)
+endif
+
 	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
@@ -426,22 +437,40 @@ endif
 
 INCLUDES_L += -Iutil -I.
 
+
 ifdef APPLE_PLATFORM
 
-ifdef BUILD_UNIVERSAL
-# [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
-CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
-CFLAGS_DEPCC_ARCH := -arch i386
-NO_INLINE_DEPGEN := YesPlease
+ifdef MAC_TARGET
+	# support mac cross-compiling. As of Apr 2021 on OS X 11, some example
+	# values for this that seem to work include:
+	#   x86_64-apple-macos10.7
+	#   x86_64-apple-macos10.12
+	#   arm64-apple-macos11
+	# leave MACOSX_MIN_VERSION unset, or there will be many warnings
+	CFLAGS_ARCH := -target $(MAC_TARGET)
+	# couldn't get setting GAME here to work?
 else
-CFLAGS_ARCH := -arch $(uname_M)
+ifdef BUILD_OLD_UNIVERSAL
+	# XX can be removed?
+	# [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
+	CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
+	CFLAGS_DEPCC_ARCH := -arch i386
+	NO_INLINE_DEPGEN := YesPlease
+else
+	CFLAGS_ARCH := -arch $(uname_M)
+	MACOSX_MIN_VERSION=10.7
+endif
 endif
 
-MACOSX_MIN_VERSION=10.7
-CC = $(GCC) $(CFLAGS_ARCH) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+# only set this when no -target is passed
+ifdef MACOSX_MIN_VERSION
+	CFLAGS_ARCH += -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+	CFLAGS_DEPCC_ARCH += -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+endif
+CC = $(GCC) $(CFLAGS_ARCH)
+CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH))
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
@@ -1544,7 +1573,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests clean-coverage-full
+       clean-plug-and-play-tests clean-coverage-full clean-mac
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1913,6 +1942,39 @@ package-windows-zips: package-windows-tiles package-windows-console
 #############################################################################
 # Building Mac app bundles
 #
+# apple silicon universal builds: just brute-force this with submake commands.
+# I couldn't see a cleaner way to do this within the Makefile structure,
+# relative to my current knowledge of how this can be done: it requires
+# building binaries for each target and then merging them with the `lipo`
+# utility.
+
+# XX parameterise these in some less dumb way
+# these two targets rely heavily on passing flags to submakes
+crawl-x86_64-apple-macos10.7:
+ifeq ($(MAC_TARGET),)
+	+$(MAKE) MAC_TARGET=x86_64-apple-macos10.7
+endif
+
+crawl-arm64-apple-macos11:
+ifeq ($(MAC_TARGET),)
+	+$(MAKE) MAC_TARGET=arm64-apple-macos11
+endif
+
+crawl-universal:
+	# do these via submake so that -jn doesn't create havoc
+	+$(MAKE) crawl-arm64-apple-macos11
+	+$(MAKE) crawl-x86_64-apple-macos10.7
+	lipo -create -output crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
+
+clean-mac:
+	$(RM) crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
+
+# XX is there a way to make these just respect TILES=y and have only 2 targets?
+mac-app-tiles-universal: crawl-universal
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles BUILD_UNIVERSAL=y
+
+mac-app-console-universal: crawl-universal
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle BUILD_UNIVERSAL=y
 
 mac-app-tiles: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles

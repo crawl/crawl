@@ -1346,6 +1346,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_FREEZING
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_DRAINING
@@ -2356,8 +2357,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "starvation" : "Starved to death";
         break;
 
-    case KILLED_BY_FREEZING:    // refrigeration spell
-        desc += terse? "frozen" : "Froze to death";
+    case KILLED_BY_FREEZING:    // Freeze, Fridge spells
+        desc += terse? "frozen" : "Frozen to death";
+        if (!terse && !death_source_desc().empty())
+            desc += " by " + death_source_desc();
         needs_damage = true;
         break;
 

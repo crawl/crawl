@@ -977,10 +977,8 @@ static void _describe_invisible(status_info& inf)
         inf.light_colour = _dur_colour(WHITE,
                                         dur_expiring(DUR_TRANSFORMATION));
     }
-    else if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
-        inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
     else
-        inf.light_colour = _dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
+        inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
     inf.light_text   = "Invis";
     inf.short_text   = "invisible";
     if (you.backlit())

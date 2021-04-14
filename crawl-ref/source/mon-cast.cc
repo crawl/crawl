@@ -3672,22 +3672,9 @@ static mon_spell_slot _find_spell_prospect(const monster &mons,
         return _pick_spell_from_list(hspell_pass, spflag::selfench);
 
     // Monsters that are fleeing or pacified and leaving the
-    // level will always try to choose an emergency spell.
+    // level will always try to choose an escape spell.
     if (mons_is_fleeing(mons) || mons.pacified())
-    {
-        const mon_spell_slot spell = _pick_spell_from_list(hspell_pass,
-                                                           spflag::emergency);
-        // Pacified monsters leaving the level will only
-        // try and cast escape spells.
-        if (spell.spell != SPELL_NO_SPELL
-            && mons.pacified()
-            && !testbits(get_spell_flags(spell.spell), spflag::escape))
-        {
-            return { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS };
-        }
-
-        return spell;
-    }
+        return _pick_spell_from_list(hspell_pass, spflag::escape);
 
     unsigned what = random2(200);
     unsigned int i = 0;
@@ -4387,7 +4374,7 @@ static bool _mons_cast_freeze(monster* mons)
         mons_adjust_flavoured(target->as_monster(), beam, base_damage);
     }
 
-    target->hurt(mons, damage, BEAM_COLD, KILLED_BY_BEAM, "", "by Freeze");
+    target->hurt(mons, damage, BEAM_COLD, KILLED_BY_FREEZING);
 
     if (target->alive())
         target->expose_to_element(BEAM_COLD, damage);

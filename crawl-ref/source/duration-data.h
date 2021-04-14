@@ -21,7 +21,6 @@ static void _end_invis()
         mprf(MSGCH_DURATION, "You feel more conspicuous.");
     else
         mprf(MSGCH_DURATION, "You flicker back into view.");
-    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
 }
 
 static void _end_corrosion()

@@ -3640,7 +3640,8 @@ static const sacrifice_def &_get_sacrifice_def(ability_type sac)
     return *sacrifice_data_map[sac];
 }
 
-/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists
+/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists.
+/// Abilities that map to a single mutation are not here!
 static map<const char*, vector<mutation_type>> sacrifice_vector_map =
 {
     /// Mutations granted by ABIL_RU_SACRIFICE_HEALTH
@@ -3701,10 +3702,61 @@ static const vector<mutation_type> _arcane_sacrifice_lists[] =
     _major_arcane_sacrifices,
 };
 
+// this function is for checks that can be done with the mutation_type alone.
+static bool _sac_mut_maybe_valid(mutation_type mut)
+{
+    // can't give the player this if they're already at max
+    if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
+        return false;
+
+    // can't give the player this if they have an innate mut that conflicts
+    if (mut_check_conflict(mut, true))
+        return false;
+
+    // Don't offer sacrifices of skills that a player already can't use.
+    if (!can_sacrifice_skill(mut))
+        return false;
+
+    // Special case a few weird interactions:
+
+    // Don't offer to sacrifice summoning magic when already hated by all.
+    if (mut == MUT_NO_SUMMONING_MAGIC
+        && you.get_mutation_level(MUT_NO_LOVE))
+    {
+        return false;
+    }
+
+    // Vampires can't get inhibited regeneration for some reason related
+    // to their existing regen silliness.
+    // Neither can deep dwarf, for obvious reasons.
+    if (mut == MUT_INHIBITED_REGENERATION
+        && you.has_mutation(MUT_VAMPIRISM))
+    {
+        return false;
+    }
+
+    // demonspawn can't get frail if they have a robust facet
+    if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
+        && any_of(begin(you.demonic_traits), end(you.demonic_traits),
+                  [] (player::demon_trait t)
+                  { return t.mutation == MUT_ROBUST; }))
+    {
+        return false;
+    }
+
+    // No potion heal doesn't affect mummies since they can't quaff potions
+    if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
+        return false;
+
+    return true;
+}
+
 /**
  * Choose a random mutation from the given list, only including those that are
  * valid choices for a Ru sacrifice. (Not already at the max level, not
  * conflicting with an innate mut.)
+ * N.b. this is *only* used for choosing among the sublists for sac health,
+ * essence, and purity.
  *
  * @param muts      The list of possible sacrifice mutations.
  * @return          A mutation from the list, or MUT_NON_MUTATION if no valid
@@ -3716,49 +3768,8 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
     mutation_type chosen_sacrifice = MUT_NON_MUTATION;
     for (auto mut : muts)
     {
-        // can't give the player this if they're already at max
-        if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
+        if (!_sac_mut_maybe_valid(mut))
             continue;
-
-        // can't give the player this if they have an innate mut that conflicts
-        if (mut_check_conflict(mut, true))
-            continue;
-
-        // Don't offer sacrifices of skills that a player already can't use.
-        if (!can_sacrifice_skill(mut))
-            continue;
-
-        // Special case a few weird interactions:
-
-        // Don't offer to sacrifice summoning magic when already hated by all.
-        if (mut == MUT_NO_SUMMONING_MAGIC
-            && you.get_mutation_level(MUT_NO_LOVE))
-        {
-            continue;
-        }
-
-        // Vampires can't get inhibited regeneration for some reason related
-        // to their existing regen silliness.
-        // Neither can deep dwarf, for obvious reasons.
-        if (mut == MUT_INHIBITED_REGENERATION
-            && you.has_mutation(MUT_VAMPIRISM))
-        {
-            continue;
-        }
-
-        // demonspawn can't get frail if they have a robust facet
-        if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
-            && any_of(begin(you.demonic_traits), end(you.demonic_traits),
-                      [] (player::demon_trait t)
-                      { return t.mutation == MUT_ROBUST; }))
-        {
-            continue;
-        }
-
-        // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
-            continue;
-
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
         // an explicit list, by giving each one a chance to be chosen equal to
@@ -3845,12 +3856,17 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
+    // for sacrifices other than health, essence, and arcana there is a
+    // deterministic mapping between the sacrifice_def and a mutation_type.
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && you.get_mutation_level(sacrifice.mutation))
+        && (you.get_mutation_level(sacrifice.mutation)
+            || !_sac_mut_maybe_valid(sacrifice.mutation)))
     {
         return false;
     }
 
+    // For health, essence, and arcana, we still need to choose from the
+    // sublists in sacrifice_vector_map.
     if (sacrifice.sacrifice_vector)
     {
         const char* key = sacrifice.sacrifice_vector;
@@ -3864,6 +3880,7 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
             return false;
     }
 
+    // finally, sacrifices may have custom validity checks.
     if (sacrifice.valid != nullptr && !sacrifice.valid())
         return false;
 
@@ -3919,6 +3936,12 @@ static int _piety_for_skill(skill_type skill)
     // them more piety for waiting longer before taking the sacrifice.
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return 0;
+
+    // This should be mostly redundant with other checks, but it's a useful
+    // sanitizer
+    if (is_useless_skill(skill))
+        return 0;
+
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
