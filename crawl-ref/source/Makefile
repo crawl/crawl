@@ -88,7 +88,12 @@
 #    them; you can also ask for a package with convenience libraries instead --
 #    we'll try to provide them somewhere in the near future.
 
-GAME = crawl
+# allow overriding GAME at the command line, intended for downstream packaging
+# processes. Not supported for MSYS2/cygwin builds, and will be overridden for
+# mac universal builds. This does not count as a change in build flags.
+ifndef GAME
+	GAME = crawl
+endif
 
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
