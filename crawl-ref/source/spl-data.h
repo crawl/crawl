@@ -29,7 +29,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
     spschool::translocation,
-    spflag::escape | spflag::emergency | spflag::utility | spflag::monster,
+    spflag::escape | spflag::utility | spflag::monster,
     5,
     0,
     -1, -1,
@@ -222,7 +222,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
     spflag::helpful | spflag::selfench
-        | spflag::emergency | spflag::escape,
+        | spflag::escape,
     6,
     200,
     -1, -1,
@@ -313,7 +313,7 @@ static const struct spell_desc spelldata[] =
     SPELL_TELEPORT_OTHER, "Teleport Other",
     spschool::translocation,
     spflag::dir_or_target | spflag::not_self | spflag::escape
-        | spflag::emergency | spflag::needs_tracer | spflag::WL_check,
+        | spflag::needs_tracer | spflag::WL_check,
     3,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -324,7 +324,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DEATHS_DOOR, "Death's Door",
     spschool::necromancy,
-    spflag::emergency | spflag::utility | spflag::no_ghost,
+    spflag::utility | spflag::no_ghost,
     9,
     200,
     -1, -1,
@@ -460,7 +460,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BLINK, "Blink",
     spschool::translocation,
-    spflag::escape | spflag::selfench | spflag::emergency | spflag::utility,
+    spflag::escape | spflag::selfench | spflag::utility,
     2,
     0,
     -1, -1,
@@ -471,7 +471,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BLINK_RANGE, "Blink Range", // XXX needs better name
     spschool::translocation,
-    spflag::escape | spflag::monster | spflag::selfench | spflag::emergency,
+    spflag::escape | spflag::monster | spflag::selfench,
     2,
     0,
     -1, -1,
@@ -482,7 +482,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BLINK_AWAY, "Blink Away",
     spschool::translocation,
-    spflag::escape | spflag::monster | spflag::emergency | spflag::selfench,
+    spflag::escape | spflag::monster | spflag::selfench,
     2,
     0,
     -1, -1,
@@ -584,7 +584,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::not_self | spflag::emergency,
+    spflag::dir_or_target | spflag::not_self,
     3,
     200,
     1, 1,
@@ -729,7 +729,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BANISHMENT, "Banishment",
     spschool::translocation,
     spflag::dir_or_target | spflag::unholy | spflag::chaotic | spflag::monster
-        | spflag::emergency | spflag::needs_tracer | spflag::WL_check,
+        | spflag::needs_tracer | spflag::WL_check,
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1301,7 +1301,7 @@ static const struct spell_desc spelldata[] =
     SPELL_MINOR_HEALING, "Minor Healing",
     spschool::necromancy,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::emergency | spflag::utility | spflag::not_evil,
+        | spflag::utility | spflag::not_evil,
     2,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1313,7 +1313,7 @@ static const struct spell_desc spelldata[] =
     SPELL_MAJOR_HEALING, "Major Healing",
     spschool::necromancy,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::emergency | spflag::utility | spflag::not_evil,
+        | spflag::utility | spflag::not_evil,
     6,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1325,7 +1325,7 @@ static const struct spell_desc spelldata[] =
     SPELL_WOODWEAL, "Woodweal",
     spschool::necromancy | spschool::transmutation,
     spflag::recovery | spflag::helpful | spflag::monster | spflag::selfench
-        | spflag::emergency | spflag::utility | spflag::not_evil,
+        | spflag::utility | spflag::not_evil,
     4,
     0,
     1, 1,
@@ -1507,7 +1507,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BLINK_OTHER, "Blink Other",
     spschool::translocation,
     spflag::dir_or_target | spflag::not_self | spflag::escape | spflag::monster
-        | spflag::emergency | spflag::needs_tracer,
+        | spflag::needs_tracer,
     2,
     0,
     LOS_RADIUS, LOS_RADIUS,
@@ -1669,7 +1669,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
     spschool::earth,
-    spflag::monster | spflag::emergency | spflag::escape,
+    spflag::monster | spflag::escape,
     5,
     0,
     -1, -1,
@@ -1804,7 +1804,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INK_CLOUD, "Ink Cloud",
     spschool::conjuration | spschool::ice, // it's a water spell
-    spflag::monster | spflag::emergency | spflag::escape | spflag::utility,
+    spflag::monster | spflag::escape | spflag::utility,
     7,
     0,
     -1, -1,
@@ -1815,7 +1815,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MIGHT, "Might",
     spschool::hexes,
-    spflag::helpful | spflag::selfench | spflag::emergency | spflag::utility
+    spflag::helpful | spflag::selfench | spflag::utility
                     | spflag::monster,
     3,
     200,
@@ -1861,7 +1861,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BROTHERS_IN_ARMS, "Brothers in Arms",
     spschool::summoning,
-    spflag::monster | spflag::emergency,
+    spflag::monster,
     6,
     0,
     -1, -1,
@@ -1942,7 +1942,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INJURY_MIRROR, "Injury Mirror",
     spschool::none,
     spflag::dir_or_target | spflag::helpful | spflag::selfench
-        | spflag::emergency | spflag::utility | spflag::monster,
+        | spflag::utility | spflag::monster,
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -1955,7 +1955,7 @@ static const struct spell_desc spelldata[] =
     spschool::necromancy,
     // n.b. marked as spflag::monster for wizmode purposes, but this spell is
     // called by the yred ability.
-    spflag::area | spflag::emergency | spflag::monster,
+    spflag::area | spflag::monster,
     6,
     0,
     -1, -1,

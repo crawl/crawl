@@ -36,7 +36,7 @@ enum class spflag
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
     hasty              = 0x00000800,      // counts as "hasty"
-    emergency          = 0x00001000,      // monsters use in emergencies
+                     //  0x00001000,
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
     area               = 0x00008000,      // area affect
