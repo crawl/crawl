@@ -1,0 +1,27 @@
+enum: JOB_DELVER
+name: "Delver"
+short_name: De
+category: Delver
+category_priority: 60
+str: 4
+int: 2
+dex: 6
+equipment:
+  - "leather armour"
+  - "scroll of fog"
+  - "scroll of magic mapping"
+  - "scroll of fear"
+  - "potion of haste"
+  - "wand of digging charges:3"
+recommended_species:
+  - SP_FELID
+  - SP_SPRIGGAN
+  - SP_KOBOLD
+  - SP_VAMPIRE
+  - SP_GNOLL
+skills:
+  SK_FIGHTNING: 3
+  SK_DODGING: 2
+  SK_STEALTH: 5
+  SK_WEAPON: 2
+create_enum: false
