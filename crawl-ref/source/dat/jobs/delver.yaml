@@ -1,7 +1,6 @@
 enum: JOB_DELVER
 name: "Delver"
 short_name: De
-category: Delver
 category_priority: 60
 str: 4
 int: 2

@@ -1,0 +1,26 @@
+enum: JOB_BRIGAND
+name: "Brigand"
+short_name: Br
+category_priority: 60
+str: 3
+int: 3
+dex: 6
+equipment:
+  - "dagger plus:2"
+  - "robe"
+  - "cloak"
+  - "dart ego: poisoned q:8"
+  - "dart ego:curare q:2"
+recommended_species:
+   -SP_TROLL
+   -SP_SPRIGGAN
+   -SP_DEMONSPAWN
+   -SP_VAMPIRE
+   -SP_VINE_STALKER
+skills:
+  SK_FIGHTING: 2
+  SK_DODGING: 1
+  SK_WEAPON: 2
+  SK_STEALTH: 4
+  SK_THROWING: 2
+create_enum: false
