@@ -4374,7 +4374,7 @@ static bool _mons_cast_freeze(monster* mons)
         mons_adjust_flavoured(target->as_monster(), beam, base_damage);
     }
 
-    target->hurt(mons, damage, BEAM_COLD, KILLED_BY_BEAM, "", "by Freeze");
+    target->hurt(mons, damage, BEAM_COLD, KILLED_BY_FREEZING);
 
     if (target->alive())
         target->expose_to_element(BEAM_COLD, damage);
