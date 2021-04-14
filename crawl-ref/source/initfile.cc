@@ -30,7 +30,6 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
-#include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
@@ -1082,7 +1081,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
 
-    confirm_butcher        = confirm_butcher_type::normal;
     easy_confirm           = easy_confirm_type::safe;
     allow_self_target      = confirm_prompt_type::prompt;
     skill_focus            = SKM_FOCUS_ON;
@@ -2864,15 +2862,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             allow_self_target = confirm_prompt_type::cancel;
         else if (field == "prompt")
             allow_self_target = confirm_prompt_type::prompt;
-    }
-    else if (key == "confirm_butcher")
-    {
-        if (field == "always")
-            confirm_butcher = confirm_butcher_type::always;
-        else if (field == "never")
-            confirm_butcher = confirm_butcher_type::never;
-        else if (field == "auto")
-            confirm_butcher = confirm_butcher_type::normal;
     }
     else if (key == "lua_file" && runscript)
     {

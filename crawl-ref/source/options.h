@@ -7,7 +7,6 @@
 #include "ability-type.h"
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
-#include "confirm-butcher-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
 #include "feature.h"
@@ -242,7 +241,6 @@ public:
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
-    confirm_butcher_type confirm_butcher; // When to prompt for butchery
     skill_focus_mode skill_focus; // is the focus skills available
     bool        auto_hide_spells; // hide new spells
 

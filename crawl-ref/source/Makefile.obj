@@ -360,7 +360,6 @@ command-type.h.o \
 compflag.h.o \
 conduct-type.h.o \
 config.h.o \
-confirm-butcher-type.h.o \
 confirm-prompt-type.h.o \
 coord-def.h.o \
 ctest.h.o \
