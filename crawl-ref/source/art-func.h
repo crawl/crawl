@@ -1374,6 +1374,31 @@ static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
     item->plus = 2;
 }
 
+static void _MOJO_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                actor* defender, bool mondied, int /*dam*/)
+{
+    /* in nethack, mojo does tremendous damage infrequently; we nod to that
+       here with a double-damage electrocution brand that happens half as
+       often as standard elec brand. */
+    if (defender->res_elec() >= 3 || mondied)
+        return;
+    if (one_chance_in(6))
+        {
+            int special_damage = 16 + random2(26);
+            const string punctuation =
+                    attack_strength_punctuation(special_damage);
+            mpr((defender->is_player())
+            ? make_stringf("You are electrocuted%s", punctuation.c_str())
+            : make_stringf("Lightning courses through %s%s",
+                            defender->name(DESC_THE).c_str(),
+                            punctuation.c_str()));
+            defender->hurt(attacker, special_damage, BEAM_ELECTRICITY);
+            if (defender->alive())
+                defender->expose_to_element(BEAM_ELECTRICITY, 2);
+        }
+
+}
+
 static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
