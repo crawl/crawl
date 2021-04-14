@@ -1455,6 +1455,16 @@ COLOUR:   ETC_ENCHANT
 INSCRIP:  Rampage+∞
 VALUE:    400
 
+# Mojo is what most Nethack players call it; easier than guessing at spelling.
+ENUM:     MOJO
+NAME:     Mjölnir
+OBJ:      OBJ_WEAPONS/WPN_MORNINGSTAR
+PLUS:     +9
+BRAND:    SPWPN_HOLY_WRATH
+COLOUR:   ETC_ELECTRICITY
+INSCRIP:  Thrown
+BOOL:     elec
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

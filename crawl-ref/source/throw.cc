@@ -492,8 +492,10 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         }
     }
 
-    returning = item.base_type == OBJ_MISSILES
-                && item.sub_type == MI_BOOMERANG;
+    returning = (item.base_type == OBJ_MISSILES
+                && item.sub_type == MI_BOOMERANG)
+                || (item.base_type == OBJ_WEAPONS
+                && is_unrandom_artefact(*launcher, UNRAND_MOJO));
 
     if (item.base_type == OBJ_MISSILES
         && get_ammo_brand(item) == SPMSL_EXPLODING)
