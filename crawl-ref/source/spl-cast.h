@@ -114,6 +114,7 @@ int hex_success_chance(const int mr, int powc, int scale,
 class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
 bool spell_has_targeter(spell_type spell);
+string target_desc(const monster_info& mi, spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                       bool evoked, targeter* hitfunc);
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
