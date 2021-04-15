@@ -390,8 +390,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_SENTINEL:
     case TILEP_MONS_IRONBOUND_CONVOKER:
     case TILEP_MONS_IRONBOUND_PRESERVER:
-    case TILEP_MONS_IRONBOUND_BEASTMASTER:
-    case TILEP_MONS_IRONBOUND_FROSTHEART:
     case TILEP_MONS_GARGOYLE:
     case TILEP_MONS_MOLTEN_GARGOYLE:
     case TILEP_MONS_WAR_GARGOYLE:
@@ -510,6 +508,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_2:
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST_3:
     case TILEP_MONS_FORMICID:
+    case TILEP_MONS_IRONBOUND_BEASTMASTER:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
@@ -525,6 +524,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_NIKOLA:
         *ofs_x = -4;
         *ofs_y = -3;
+        break;
+    case TILEP_MONS_IRONBOUND_FROSTHEART:
+        *ofs_x = -4;
+        *ofs_y = -1;
         break;
     case TILEP_MONS_ARACHNE_STAVELESS:
     case TILEP_MONS_MERFOLK_WATER:
