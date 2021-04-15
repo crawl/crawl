@@ -1498,7 +1498,7 @@ static vector<string> _desc_hit_chance(const monster_info& mi, targeter* hitfunc
     const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
     if (hit_pct == -1)
         return vector<string>{};
-    return vector<string>{make_stringf("%d%% to evade", 100 - hit_pct)};
+    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
