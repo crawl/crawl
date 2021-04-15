@@ -334,7 +334,7 @@ static int moninf_get_ev(lua_State *ls)
 static int moninf_get_target_desc(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    if (lua_isnone(ls, 2))
+    if (lua_isnone(ls, 2) or lua_isnil(ls, 2))
     {
         // default is target description with your current weapon
         ostringstream result;
