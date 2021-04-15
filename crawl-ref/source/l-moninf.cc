@@ -342,24 +342,20 @@ static int moninf_get_target_desc(lua_State *ls)
         lua_pushstring(ls, result.str().c_str());
         return 1;
     }
-    item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
-    if (item)
+    if (lua_isuserdata(ls, 2))
     {
         // to-hit with a thrown item
+        item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
         ranged_attack attk(&you, nullptr, item, is_pproj_active());
         string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
         lua_pushstring(ls, d.c_str());
         return 1;
     }
+    // target description for a spell
     spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
-    if (spell)
-    {
-        // target description for a spell
-        string desc = target_desc(*mi, spell);
-        lua_pushstring(ls, desc.c_str());
-        return 1;
-    }
-    return 0;
+    string desc = target_desc(*mi, spell);
+    lua_pushstring(ls, desc.c_str());
+    return 1;
 }
 
 
