@@ -875,7 +875,9 @@ void move_player_action(coord_def move)
 
     bool rampaged = false;
 
-    if (you.rampaging())
+    // Rampaging takes priority over normal Wu Jian movement, but not over
+    // Serpent's Lash.
+    if (you.rampaging() && !you.attribute[ATTR_SERPENTS_LASH])
     {
         switch (_rampage_forward(move))
         {
