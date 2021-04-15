@@ -2,6 +2,8 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include <cstring>
+#include <locale.h>
 
 #include "stringutil.h"
 
@@ -57,4 +59,58 @@ TEST_CASE( "comma_separated_fn with a non-string", "[single-file]")
 
     CHECK(comma_separated_fn(begin(numlist), end(numlist), fn) == "1, 2, 3 and 4");
     CHECK(comma_separated_fn(begin(numlist), end(numlist), fn_func) == "1, 2, 3 and 4");
+}
+
+TEST_CASE( "uppercase and lowercase", "[single-file]")
+{
+    for (int i = 0; i < 2; ++i) {
+        // Also try with a Turkish locale, where tolower("I") is not "i". Our uppercase
+        // and lowercase functions should ignore the locale for ASCII characters, because
+        // they are also used for things that aren't exactly "text".
+        if (i > 0)
+            setlocale(LC_ALL, "tr_TR");
+
+        // N.b. includes a capital I
+        const char orig[] = "mIxEdCaSe";
+        string in_s(orig);
+        const string in_cs(orig);
+        const char *in = in_s.c_str();
+
+        // First, the non-mutating versions.
+        CHECK(lowercase_string(in) == "mixedcase");
+        CHECK(lowercase_string(in_s) == "mixedcase");
+        CHECK(lowercase_string(in_cs) == "mixedcase");
+
+        // Ensure they didn't mutate the input, and abort the test case if they did.
+        REQUIRE(in_s == orig);
+        REQUIRE(strcmp(in, orig) == 0);
+
+        // Again for uppercasing
+        CHECK(uppercase_string(in) == "MIXEDCASE");
+        CHECK(uppercase_string(in_s) == "MIXEDCASE");
+        CHECK(uppercase_string(in_cs) == "MIXEDCASE");
+
+        REQUIRE(in_s == orig);
+        REQUIRE(strcmp(in, orig) == 0);
+
+        // Again for title-casing
+        CHECK(uppercase_first(in) == "MIxEdCaSe");
+        CHECK(uppercase_first(in_s) == "MIxEdCaSe");
+        CHECK(uppercase_first(in_cs) == "MIxEdCaSe");
+
+        REQUIRE(in_s == orig);
+        REQUIRE(strcmp(in, orig) == 0);
+
+        // Now the mutating versions
+        string s1(orig);
+        string &result = uppercase(s1);
+        CHECK(result == "MIXEDCASE");
+        // Verify identity
+        CHECK(&result == &s1);
+
+        string &result2 = lowercase(result);
+        CHECK(result2 == "mixedcase");
+        // Verify identity
+        CHECK(&result2 == &s1);
+    }
 }
