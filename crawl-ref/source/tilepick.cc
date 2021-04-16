@@ -3795,8 +3795,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
     {
         case JOB_FIGHTER:
             return TILEG_JOB_FIGHTER;
-        case JOB_WIZARD:
-            return TILEG_JOB_WIZARD;
+        case JOB_HEDGE_WIZARD:
+            return TILEG_JOB_HEDGE_WIZARD;
         case JOB_GLADIATOR:
             return TILEG_JOB_GLADIATOR;
         case JOB_NECROMANCER:

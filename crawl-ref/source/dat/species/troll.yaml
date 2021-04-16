@@ -58,7 +58,7 @@ recommended_jobs:
   - JOB_BERSERKER
   - JOB_WARPER
   - JOB_EARTH_ELEMENTALIST
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_UNARMED_COMBAT

@@ -49,7 +49,7 @@ recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_ARCANE_MARKSMAN
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS

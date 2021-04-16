@@ -359,7 +359,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, Wz, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option

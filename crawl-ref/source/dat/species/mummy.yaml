@@ -54,7 +54,7 @@ mutations:
   26:
     MUT_NECRO_ENHANCER: 1
 recommended_jobs:
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_CONJURER
   - JOB_NECROMANCER
   - JOB_ICE_ELEMENTALIST

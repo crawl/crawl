@@ -44,7 +44,7 @@ levelup_stat_frequency: 4
 levelup_stats:
   - int
 recommended_jobs:
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_CONJURER
   - JOB_SUMMONER
   - JOB_NECROMANCER

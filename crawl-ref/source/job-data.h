@@ -116,6 +116,16 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_DELVER, {
+    "De", "Delver",
+    4, 2, 6,
+    { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
+    { "leather armour", "scroll of fog", "scroll of magic mapping",
+      "scroll of fear", "potion of haste", "wand of digging charges:3" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },
+} },
+
 { JOB_EARTH_ELEMENTALIST, {
     "EE", "Earth Elementalist",
     0, 7, 5,
@@ -170,6 +180,17 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3}, },
 } },
 
+{ JOB_HEDGE_WIZARD, {
+    "HW", "Hedge Wizard",
+    2, 6, 4,
+    { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
+      SP_DJINNI, },
+    { "dagger", "robe", "hat", "book of Minor Magic" },
+    WCHOICE_NONE,
+    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
+      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
+} },
+
 { JOB_HUNTER, {
     "Hu", "Hunter",
     4, 3, 5,
@@ -189,16 +210,6 @@ static const map<job_type, job_def> job_data =
     WCHOICE_NONE,
     { { SK_ICE_MAGIC, 4 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
-} },
-
-{ JOB_DELVER, {
-    "De", "Delver",
-    4, 2, 6,
-    { SP_FELID, SP_SPRIGGAN, SP_KOBOLD, SP_VAMPIRE, SP_GNOLL },
-    { "leather armour", "scroll of fog", "scroll of magic mapping",
-      "scroll of fear", "potion of haste", "wand of digging charges:3" },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_DODGING, 2 }, { SK_STEALTH, 5 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_MONK, {
@@ -276,17 +287,6 @@ static const map<job_type, job_def> job_data =
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_TRANSLOCATIONS, 3 }, { SK_THROWING, 1 },
       { SK_WEAPON, 2 }, },
-} },
-
-{ JOB_WIZARD, {
-    "Wz", "Hedge Wizard",
-    2, 6, 4,
-    { SP_DEEP_ELF, SP_NAGA, SP_BASE_DRACONIAN, SP_OCTOPODE, SP_HUMAN,
-      SP_DJINNI, },
-    { "dagger", "robe", "hat", "book of Minor Magic" },
-    WCHOICE_NONE,
-    { { SK_DODGING, 2 }, { SK_STEALTH, 2 }, { SK_SPELLCASTING, 3 },
-      { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
 { JOB_SKALD, {

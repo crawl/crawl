@@ -44,7 +44,7 @@ recommended_jobs:
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
   - JOB_WARPER
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_VENOM_MAGE
 # start TAG_MAJOR_VERSION == 34
 create_enum: false
