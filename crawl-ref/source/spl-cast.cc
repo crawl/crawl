@@ -1262,9 +1262,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                               return you.pos() != p; });
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
-    case SPELL_RANDOM_BOLT:
-        return make_unique<targeter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow,
-                                          0, 0);
     case SPELL_INFESTATION:
         return make_unique<targeter_smite>(&you, range, 2, 2, false,
                                            [](const coord_def& p) -> bool {
@@ -2316,9 +2313,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
-
-    case SPELL_RANDOM_BOLT:
-        return cast_random_bolt(powc, beam, fail);
 
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);

@@ -1613,10 +1613,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
-    // Don't let it think that there are no susceptible monsters in range
-    if (spell == SPELL_RANDOM_BOLT)
-        zap = ZAP_DEBUGGING_RAY;
-
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
@@ -1836,6 +1832,7 @@ const set<spell_type> removed_spells =
     SPELL_PHASE_SHIFT,
     SPELL_POISON_CLOUD,
     SPELL_POISON_WEAPON,
+    SPELL_RANDOM_BOLT,
     SPELL_REARRANGE_PIECES,
     SPELL_RECALL,
     SPELL_REGENERATION,

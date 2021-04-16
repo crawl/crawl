@@ -1139,11 +1139,6 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
-Random Bolt spell
-
-Fires, at random, a bolt of venom, negative energy, fire, cold, dispelling
-energy, electricity, or acid.
-%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

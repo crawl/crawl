@@ -2261,8 +2261,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return true;
     }
 
-    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL
-         || flavour == BEAM_BOUNCY_TRACER)
+    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL)
         && feat_is_solid(feat)
         && !feat_is_tree(feat))
     {
@@ -6532,7 +6531,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
-    case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
     case BEAM_UNRAVELLING:           return "unravelling";

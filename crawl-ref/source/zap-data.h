@@ -1400,23 +1400,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_RANDOM_BOLT_TRACER,
-    "random bolt tracer",
-    200,
-    new dicedef_calculator<AUTOMATIC_HIT, 1, 0, 1>,
-    new tohit_calculator<AUTOMATIC_HIT>,
-    nullptr,
-    nullptr,
-    WHITE,
-    false,
-    BEAM_BOUNCY_TRACER,
-    DCHAR_FIRED_DEBUG,
-    true,
-    false,
-    0
-},
-
-{
     ZAP_UNRAVELLING,
     "unravelling",
     200,

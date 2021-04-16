@@ -1284,16 +1284,6 @@ static god_type _find_god(const monster &mons, mon_spell_slot_flags flags)
     return flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons.god;
 }
 
-static spell_type _random_bolt_spell()
-{
-    return random_choose(SPELL_VENOM_BOLT,
-                         SPELL_BOLT_OF_DRAINING,
-                         SPELL_BOLT_OF_FIRE,
-                         SPELL_LIGHTNING_BOLT,
-                         SPELL_QUICKSILVER_BOLT,
-                         SPELL_CORROSIVE_BOLT);
-}
-
 static spell_type _major_destruction_spell()
 {
     return random_choose(SPELL_BOLT_OF_FIRE,
@@ -1338,9 +1328,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     spell_type real_spell = spell_cast;
 
-    if (spell_cast == SPELL_RANDOM_BOLT)
-        real_spell = _random_bolt_spell();
-    else if (spell_cast == SPELL_MAJOR_DESTRUCTION)
+    if (spell_cast == SPELL_MAJOR_DESTRUCTION)
         real_spell = _major_destruction_spell();
     else if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {

@@ -2558,17 +2558,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RANDOM_BOLT, "Random Bolt",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
-    4,
-    200,
-    5, 5,
-    4, 0,
-    TILEG_RANDOM_BOLT,
-},
-
-{
     SPELL_GLACIATE, "Glaciate",
     spschool::conjuration | spschool::ice,
     spflag::dir_or_target | spflag::area | spflag::not_self
@@ -3517,6 +3506,7 @@ AXED_SPELL(SPELL_MELEE, "Melee")
 AXED_SPELL(SPELL_MISLEAD, "Mislead")
 AXED_SPELL(SPELL_PHASE_SHIFT, "Phase Shift")
 AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
+AXED_SPELL(SPELL_RANDOM_BOLT, "Random Bolt")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")
 AXED_SPELL(SPELL_RECALL, "Recall")
 AXED_SPELL(SPELL_REGENERATION, "Regeneration")

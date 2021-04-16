@@ -2087,7 +2087,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MNOLEG,
       {
-       { SPELL_RANDOM_BOLT, 13, MON_SPELL_MAGICAL },
        { SPELL_MALIGN_GATEWAY, 27, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_MAGICAL },
