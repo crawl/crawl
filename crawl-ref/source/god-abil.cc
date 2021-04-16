@@ -5625,7 +5625,8 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim == ancestor)
     {
-        mpr("You can't transfer your ancestor with themself.");
+        mprf("You can't transfer your ancestor with %s.",
+             ancestor->pronoun(PRONOUN_REFLEXIVE).c_str());
         return spret::abort;
     }
 

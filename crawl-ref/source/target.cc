@@ -712,7 +712,7 @@ bool targeter_transference::valid_aim(coord_def a)
         if (mons_is_hepliaklqana_ancestor(victim->type))
         {
             return notify_fail("You can't transfer your ancestor with "
-                               "themself.");
+                               + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
         }
         if (mons_is_tentacle_or_tentacle_segment(victim->type)
             || victim->is_stationary())
