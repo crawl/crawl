@@ -3214,6 +3214,14 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
     }
 
+    if (you.species == SP_DJINNI)
+    {
+        _fixup_species_mutations(MUT_INNATE_CASTER);
+        _fixup_species_mutations(MUT_FLOAT);
+        _fixup_species_mutations(MUT_HP_CASTING);
+        _fixup_species_mutations(MUT_FLAT_HP);
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)
     {
