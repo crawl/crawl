@@ -483,10 +483,12 @@ glove5
 
 ###### BOOTS
 %rim 1
-boots1_brown ARM_BOOTS
-boots2_jackboots
-boots3_stripe
-boots4_green
+boots1 ARM_BOOTS ARM_BOOTS_FIRST
+boots2 ARM_BOOTS_LAST
+boots_ego1 ARM_BOOTS_EGO_FIRST
+boots_ego2 ARM_BOOTS_EGO_LAST
+boots_art1 ARM_BOOTS_ART_FIRST
+boots_art2 ARM_BOOTS_ART_LAST
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
