@@ -1078,7 +1078,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     {
         if (mi->friendly() || mi->neutral())
             continue; // this should be enough to avoid penance?
-        if (mons_is_firewood(**mi))
+        if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
             continue;
         if (!you.can_see(**mi))
             continue;
