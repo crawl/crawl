@@ -43,7 +43,7 @@ service like github gist, dpaste, sprunge, or pastebin to share code snippets.
 
 ## Documentation and Formatting
 
-The [*coding conventions*](crawl-ref/docs/develop/coding_conventions.txt)
+The [*coding conventions*](crawl-ref/docs/develop/coding_conventions.md)
 document describes how Crawl’s C++ source code should be formatted. For
 documenting C++ code, we use
 [*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the
