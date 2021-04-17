@@ -85,6 +85,7 @@
  #include "tileview.h"
 #endif
 #include "transform.h"
+#include "travel.h"
 #include "unicode.h"
 #include "viewchar.h"
 
@@ -2416,13 +2417,34 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 break;
             }
         }
+
+        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+        {
+            if (is_unknown_stair(pos))
+            {
+                long_desc += "\nYou have not yet explored it and cannot tell ";
+                long_desc += "where it leads.";
+            }
+            else
+            {
+                long_desc +=
+                    make_stringf("\nYou can view the location it leads to by "
+                                 "examining it with <w>%s</w> and pressing "
+                                 "<w>%s</w>.",
+                                 command_to_string(CMD_DISPLAY_MAP).c_str(),
+                                 command_to_string(
+                                     feat_stair_direction(feat) ==
+                                         CMD_GO_UPSTAIRS ? CMD_MAP_PREV_LEVEL
+                                         : CMD_MAP_NEXT_LEVEL).c_str());
+            }
+        }
     }
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
     {
         long_desc +=
-            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+            make_stringf("\n(Pray here with <w>%s</w> to learn more.)\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
 
