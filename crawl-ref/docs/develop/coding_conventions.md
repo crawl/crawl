@@ -17,7 +17,7 @@ effectively" treatise.
 
 **Formatting**: Please use max 72 character width for your commit messages.
 Include a blank line between the title and the body. In vim, you can enforce
-this with `:set tw=72`, and then if needed is `gqap` to manually reflow a
+this with `:set tw=72`, and then if needed use `gqap` to manually reflow a
 paragraph.
 
 **Commit titles**: you should use a brief but informative commit message that
