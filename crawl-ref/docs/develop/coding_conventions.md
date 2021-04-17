@@ -99,7 +99,8 @@ else in this section is enforced. This script is run as a CI script, so
 your commits will error if they do not meet whitespace guidelines.
 
 **Note**: Existing Lua code in particular often has used 2 space indents. New
-Lua code should use 4 space indents; feel free to convert old code.
+Lua code should use 4 space indents; feel free to convert old code, but please
+do so in a separate commit from any actual code changes.
 
 Methods
 -------
