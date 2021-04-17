@@ -175,9 +175,8 @@ by Invocations skill.
 Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
-undead and demons and dealing damage to all other hostile creatures. The user's
-divine allies are never affected. The power of the blast is increased by
-Invocations skill.
+undead and demons and dealing damage to all other hostile creatures. The power
+of the blast is increased by Invocations skill.
 %%%%
 Summon Divine Warrior ability
 
