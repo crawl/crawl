@@ -9,8 +9,56 @@ codebase, as well as the conventions that new and/or modified code should
 conform to. It is explicitly not meant to be a didactic "how to program
 effectively" treatise.
 
-1 - Coding Conventions
-=====================
+* [1 - Commit conventions](#1---commit-conventions)
+* [2 - Coding conventions](#2---coding-conventions)
+
+1 - Commit conventions
+======================
+
+**Formatting**: Please use max 72 character width for your commit messages.
+Include a blank line between the title and the body. In vim, you can enforce
+this with `:set tw=72`, and then if needed is `gqap` to manually reflow a
+paragraph.
+
+**Commit titles**: you should use a brief but informative commit message that
+is interpretable by someone viewing only the commit message with no context.
+*Don't* use commit messages like `Fix bug`, *Do* use commit messages like
+`Fix Freeze death messages`. There is no specific prescribed format for the
+text but if you are in doubt, a convention like
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) is
+welcome and may be helpful. For example,
+`fix(tiles): Skip pre-layout message rendering`.
+
+**Commit body**: Your commit body should provide a description of the commit
+that is interpretable to someone reading just the commit message out of context.
+There may be circumstances where just the commit title can do all the work, but
+aside from these, the commit body should never be empty, and if you are unsure,
+it is better to provide a description. If you are submitting a PR, please
+include at least as much of a description in the commit messages as you do in
+the PR text (duplicating info is fine). Once the commit is merged, the PR
+discussion is hard to access for future contributors trying to understand a
+change, but the commit messages are immediate and tied to the change. If
+anything, it is better to be more verbose about what a commit does in the commit
+message than in the PR text!
+
+**Referencing issues and reporters**: It is good practice to reference any
+issues (either in the mantis bug tracker or in github) that are relevant to or
+addressed by the commit, in the commit message. For mantis, this should take the
+form of the issue number, and can appear in parentheses in the commit title if
+there is space. In the body, you can reference either the number (optionally
+with the word `mantis`) or directly link to the issue. For a github issue, you
+should prefix the number with `#` so that github will correctly link to it. If
+you write text like `Resolves #1234` github will automatically close the
+mentioned issue on merging, so if your commit does fully resolve an issue,
+please add this! This is safe to use in a PR or branch commit, the issue will
+only be closed on merging.
+
+If the report came from an individual, it is good practice to credit them,
+using the appropriate username format. If there is space this can be in the
+commit title. Example: `Simplify Cleansing Flame description (Yermak)`.
+
+2 - Coding Conventions
+======================
 
 **Why**: clean diffs, consistent readability patterns across a large
 codebase, and making life easier for others: e.g. contributors with
