@@ -2579,7 +2579,7 @@ bool is_good_item(const item_def &item)
     {
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_TORMENT)
-            return player_res_torment(false);
+            return player_res_torment();
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
@@ -2692,7 +2692,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
-            return !player_res_torment(false);
+            return !player_res_torment();
         case SCR_HOLY_WORD:
             return you.undead_or_demonic();
         default:

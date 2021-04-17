@@ -1035,13 +1035,15 @@ static const mutation_def mut_data[] =
   {"You feel more spiritual.","",""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 1, mutflag::good, false,
-  "50% torment resistance",
+  "torment resistance",
 
-  {"You are somewhat able to resist unholy torments (1 in 2 success).","",""},
+  {"You are somewhat able to resist unholy torments.","",""},
   {"You feel a strange anaesthesia.", "", ""},
   {"", "", ""},
 },
+#endif
 
 { MUT_PASSIVE_MAPPING, 3, 3, mutflag::good, false,
   "sense surroundings",

@@ -1461,21 +1461,12 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 /**
  * Is the player character immune to torment?
  *
- * @param random    Whether to include unreliable effects (stochastic resist)
- * @return          Whether the player resists a given instance of torment; if
- *                  random is passed, the result may vary from call to call.
+ * @return          Whether the player resists a given instance of torment.
  */
-bool player_res_torment(bool random)
+bool player_res_torment()
 {
     if (you.get_mutation_level(MUT_TORMENT_RESISTANCE) >= 2)
         return true;
-
-    if (random
-        && you.get_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-        && coinflip())
-    {
-        return true;
-    }
 
     return get_form()->res_neg() == 3
            || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive

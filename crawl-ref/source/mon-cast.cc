@@ -3260,7 +3260,7 @@ static bool _torment_vulnerable(const actor* victim)
     if (!victim)
         return false;
     if (victim->is_player())
-        return !player_res_torment(false);
+        return !player_res_torment();
 
     return !victim->res_torment();
 }
@@ -7709,7 +7709,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_SYMBOL_OF_TORMENT:
         if (you.visible_to(mon)
             && friendly
-            && !player_res_torment(false)
+            && !player_res_torment()
             && !player_kiku_res_torment())
         {
             return ai_action::bad();
