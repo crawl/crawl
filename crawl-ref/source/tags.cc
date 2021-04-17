@@ -3154,73 +3154,55 @@ static void _tag_read_you(reader &th)
         }
     }
 
-    // No minor version needed: all old felids should get MUT_PAWS.
-    if (you.species == SP_FELID)
-        _fixup_species_mutations(MUT_PAWS);
-
-    // TODO: can we just provide even more generic species mutation fixup code?
+    // fixup trick for species-specific mutations. Not safe for mutations that
+    // can also appear randomly, or have other uses. This ensures that
+    // if `s` should have `m`, then it does, and also if the player has `m`
+    // and is the wrong species, that they don't.
+    // TODO: can we automate this from the species def?
     // (There's a lot of weird interactions and special cases to worry about..)
-    if (you.species == SP_FORMICID)
-        _fixup_species_mutations(MUT_QUADRUMANOUS);
+    #define SP_MUT_FIX(m, s) if (you.has_mutation(m) || you.species == (s)) _fixup_species_mutations(m)
 
+    SP_MUT_FIX(MUT_QUADRUMANOUS, SP_FORMICID);
+    SP_MUT_FIX(MUT_NO_DRINK, SP_MUMMY);
+    SP_MUT_FIX(MUT_REFLEXIVE_HEADBUTT, SP_MINOTAUR);
+    SP_MUT_FIX(MUT_STEAM_RESISTANCE, SP_PALE_DRACONIAN);
+    SP_MUT_FIX(MUT_PAWS, SP_FELID);
+    SP_MUT_FIX(MUT_NO_GRASPING, SP_FELID);
+    SP_MUT_FIX(MUT_NO_ARMOUR, SP_FELID);
+    SP_MUT_FIX(MUT_MULTILIVED, SP_FELID);
+    SP_MUT_FIX(MUT_CONSTRICTING_TAIL, SP_NAGA);
+    SP_MUT_FIX(MUT_DISTRIBUTED_TRAINING, SP_GNOLL);
+    SP_MUT_FIX(MUT_MERTAIL, SP_MERFOLK);
+    SP_MUT_FIX(MUT_TENTACLE_ARMS, SP_OCTOPODE);
+    SP_MUT_FIX(MUT_VAMPIRISM, SP_VAMPIRE);
+    SP_MUT_FIX(MUT_FLOAT, SP_DJINNI);
+    SP_MUT_FIX(MUT_INNATE_CASTER, SP_DJINNI);
+    SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
+    SP_MUT_FIX(MUT_FLAT_HP, SP_DJINNI);
+    SP_MUT_FIX(MUT_FORLORN, SP_DEMIGOD);
+
+    if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
+        || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+    {
+        _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
+    }
+    if (you.species == SP_GARGOYLE || you.species == SP_MUMMY
+        || you.species == SP_GHOUL)
+    {
+        // not safe for SP_MUT_FIX because demonspawn use this and it doesn't
+        // handle ds muts
+        _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
+    }
     if (you.species == SP_MUMMY)
     {
-        _fixup_species_mutations(MUT_NO_DRINK);
-        // note that the following would not be reliable on a species that can
-        // mutate normally...
+        // not safe for SP_MUT_FIX
         _fixup_species_mutations(MUT_HEAT_VULNERABILITY);
     }
-
-    if (you.species == SP_MINOTAUR)
-        _fixup_species_mutations(MUT_REFLEXIVE_HEADBUTT);
-
-    if (you.species == SP_PALE_DRACONIAN)
-        _fixup_species_mutations(MUT_STEAM_RESISTANCE);
-
+    // not sure this is safe for SP_MUT_FIX, leaving it out for now
     if (you.species == SP_GREY_DRACONIAN)
         _fixup_species_mutations(MUT_UNBREATHING);
 
-    if (you.species == SP_FELID)
-    {
-        _fixup_species_mutations(MUT_NO_GRASPING);
-        _fixup_species_mutations(MUT_NO_ARMOUR);
-        _fixup_species_mutations(MUT_MULTILIVED);
-    }
-    // blanket fixup for this, just in case it is still lurking around on old
-    // characters
-    _fixup_species_mutations(MUT_FORLORN);
-
-    if (you.species == SP_NAGA)
-        _fixup_species_mutations(MUT_CONSTRICTING_TAIL);
-
-    if (you.species == SP_GNOLL)
-        _fixup_species_mutations(MUT_DISTRIBUTED_TRAINING);
-
-    if (you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
-        _fixup_species_mutations(MUT_NIMBLE_SWIMMER);
-
-    if (you.species == SP_MERFOLK)
-        _fixup_species_mutations(MUT_MERTAIL);
-
-    if (you.species == SP_OCTOPODE)
-        _fixup_species_mutations(MUT_TENTACLE_ARMS);
-
-    if (you.species == SP_VAMPIRE)
-        _fixup_species_mutations(MUT_VAMPIRISM);
-
-    if (you.has_innate_mutation(MUT_TORMENT_RESISTANCE)
-        || you.species == SP_GARGOYLE)
-    {
-        _fixup_species_mutations(MUT_TORMENT_RESISTANCE);
-    }
-
-    if (you.species == SP_DJINNI)
-    {
-        _fixup_species_mutations(MUT_INNATE_CASTER);
-        _fixup_species_mutations(MUT_FLOAT);
-        _fixup_species_mutations(MUT_HP_CASTING);
-        _fixup_species_mutations(MUT_FLAT_HP);
-    }
+    #undef SP_MUT_FIX
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
         && you.species == SP_NAGA)
