@@ -1239,9 +1239,9 @@ static const mutation_def mut_data[] =
 { MUT_TRANSLUCENT_SKIN, 0, 3, mutflag::good | mutflag::jiyva, true,
   "translucent skin",
 
-  {"Your translucent skin slightly reduces your foes' accuracy. (Stealth)",
-   "Your translucent skin reduces your foes' accuracy. (Stealth)",
-   "Your transparent skin significantly reduces your foes' accuracy. (Stealth)"},
+  {"Your translucent skin slightly reduces your foes' accuracy. (Stealth+)",
+   "Your translucent skin reduces your foes' accuracy. (Stealth+)",
+   "Your transparent skin significantly reduces your foes' accuracy. (Stealth+)"},
 
   {"Your skin becomes partially translucent.",
    "Your skin becomes more translucent.",
@@ -1460,9 +1460,9 @@ static const mutation_def mut_data[] =
 { MUT_THIN_SKELETAL_STRUCTURE, 2, 3, mutflag::good, false,
   "thin skeletal structure",
 
-  {"You have a somewhat thin skeletal structure. (Dex +2, Stealth)",
-   "You have a moderately thin skeletal structure. (Dex +4, Stealth+)",
-   "You have an unnaturally thin skeletal structure. (Dex +6, Stealth++)"},
+  {"You have a somewhat thin skeletal structure. (Dex +2, Stealth+)",
+   "You have a moderately thin skeletal structure. (Dex +4, Stealth++)",
+   "You have an unnaturally thin skeletal structure. (Dex +6, Stealth+++)"},
 
   {"Your bones become slightly less dense.",
    "Your bones become somewhat less dense.",

@@ -2997,9 +2997,8 @@ int player_stealth()
     stealth += (STEALTH_PIP / 3) * you.get_mutation_level(MUT_NIGHTSTALKER);
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_CAMOUFLAGE);
-    const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
-    if (how_transparent)
-        stealth += 15 * (how_transparent);
+    if (you.has_mutation(MUT_TRANSLUCENT_SKIN))
+        stealth += STEALTH_PIP;
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -3014,19 +3013,12 @@ int player_stealth()
     if (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive)
         stealth += STEALTH_PIP * 2;
 
-    if (!you.airborne())
+    if (feat_is_water(env.grid(you.pos())))
     {
-        if (feat_is_water(env.grid(you.pos())))
-        {
-            if (you.has_mutation(MUT_NIMBLE_SWIMMER))
-                stealth += STEALTH_PIP;
-            else if (you.in_water() && !you.can_swim() && !you.extra_balanced())
-                stealth /= 2;       // splashy-splashy
-        }
-        else if (you.has_usable_hooves())
-            stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
-        else if (you.has_mutation(MUT_PAWS))
-            stealth += 20; // XX why is this 2/5 of a regular STEALTH_PIP?
+        if (you.has_mutation(MUT_NIMBLE_SWIMMER))
+            stealth += STEALTH_PIP;
+        else if (you.in_water() && !you.can_swim() && !you.extra_balanced())
+            stealth /= 2;       // splashy-splashy
     }
 
     // If you've been tagged with Corona or are Glowing, the glow
