@@ -3160,7 +3160,7 @@ static void _tag_read_you(reader &th)
     // and is the wrong species, that they don't.
     // TODO: can we automate this from the species def?
     // (There's a lot of weird interactions and special cases to worry about..)
-    #define SP_MUT_FIX(m, s) if (you.has_mutation(m) || you.species == (s)) _fixup_species_mutations(m)
+    #define SP_MUT_FIX(m, s) if (you.has_innate_mutation(m) || you.species == (s)) _fixup_species_mutations(m)
 
     SP_MUT_FIX(MUT_QUADRUMANOUS, SP_FORMICID);
     SP_MUT_FIX(MUT_NO_DRINK, SP_MUMMY);
