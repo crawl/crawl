@@ -223,7 +223,8 @@ static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
         else
             linebreak = true; // cursor started at the end of a line
 
-        // No room for more lines, quit now.
+        // No room for more lines, quit now. As long as a linebreak happens
+        // whenever a write fails above, this should prevent infinite loops.
         if (pos.y >= sz.y)
         {
 #ifndef USE_TILE_LOCAL

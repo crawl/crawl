@@ -595,6 +595,10 @@ public:
     // write to screen (without refresh)
     void show()
     {
+        // skip if there is no layout yet
+        if (width() <= 0)
+            return;
+
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolour(LIGHTGREY);
