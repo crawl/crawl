@@ -46,7 +46,7 @@ mutations:
   13:
     MUT_HOP: 1
 fake_mutations:
-  - long: You can be seen from farther away. (+LOS)
+  - long: You have an extended range of vision and can be seen from far away.
     short: +LOS
 recommended_jobs:
   - JOB_FIGHTER
