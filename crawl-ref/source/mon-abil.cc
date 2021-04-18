@@ -1063,7 +1063,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
+        if (mons->hit_points * 2 < mons->max_hit_points
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(*mons, " overheats!");
