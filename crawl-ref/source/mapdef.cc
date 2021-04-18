@@ -29,6 +29,7 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
@@ -4235,6 +4236,17 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 // TODO: skip this error if the monspec is `nothing`
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
+            }
+            else if (mons_class_is_animated_weapon(type))
+            {
+                // The last clause catches weapons with multiple items.
+                auto item = mspec.items.get_item(0);
+                if (OBJ_MISCELLANY == item.base_type || EQ_WEAPON !=
+                    get_item_slot(item.base_type, item.sub_type))
+                {
+                    error = make_stringf("Monster '%s' needs a weapon.",
+                                         mon_str.c_str());
+                }
             }
         }
 
