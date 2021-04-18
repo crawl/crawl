@@ -1692,7 +1692,7 @@ static const mutation_def mut_data[] =
   "bedeviling",
 
   {"Your maledictions are enhanced.", "", ""},
-  {"You feel delightfully devilish.", "", ""},
+  {"You feel devilish.", "", ""},
   {"", "", ""},
 },
 
@@ -1700,7 +1700,7 @@ static const mutation_def mut_data[] =
   "corrupting presence",
 
   {"Your presence sometimes corrodes those you injure.",
-   "Your presence sometimes corrodes or deforms those you injure", ""},
+   "Your presence sometimes corrodes or deforms those you injure.", ""},
   {"You feel corrupt.", "Your corrupting presence intensifies.", ""},
   {"", "", ""},
 },
@@ -1716,7 +1716,7 @@ static const mutation_def mut_data[] =
 { MUT_DEMONIC_WILL, 0, 1, mutflag::good, false,
   "demonic willpower",
 
-  {"You punish those that try to bend your will (Will+).", "", ""},
+  {"You punish those that try to bend your will. (Will+)", "", ""},
   {"You feel willful.", "", ""},
   {"", "", ""},
 },
