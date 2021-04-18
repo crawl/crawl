@@ -215,9 +215,14 @@ function pan_entry_vault_contents(e, glyph)
     end
 end
 
-function pan_declare_demonic_rune()
-  crawl.mpr("The tension of great conflict fills the air!", "warning")
-  crawl.mpr("The demonic rune of Zot may be found here.")
+function pan_declare_demonic_rune(holy)
+  if holy then
+    crawl.mpr("The tension of great conflict fills the air!", "warning")
+    crawl.mpr("The demonic rune of Zot may be found here.")
+  else
+    crawl.mpr("A powerful Pandemonium lord resides here.", "warning")
+    crawl.mpr("It guards the demonic rune of Zot.")
+  end
 end
 
 function pan_highlights_setup(e)
@@ -2543,6 +2548,11 @@ KMONS:  6O = ghost moth
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:  m = iron_grate
 KFEAT:  { = {
@@ -2632,6 +2642,11 @@ KMONS:   O = pandemonium lord
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   { = {
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff / Gg / Hh
@@ -2705,6 +2720,11 @@ MONS:    tormentor, smoke demon, any demon
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   m = iron_grate
 KFEAT:   { = {
@@ -2771,6 +2791,11 @@ KMONS:  P = pandemonium lord
 KITEM:  O = superb_item / demonic rune of zot mimic
 : else
 KITEM:  O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT: 5 = W
 KFEAT: 6 = w
@@ -2860,6 +2885,11 @@ ITEM:    any potion
 KITEM:   O = superb_item / demonic rune of zot mimic
 : else
 KITEM:   O = demonic rune of zot
+epilogue{{
+if not you.have_rune("demonic") then
+  pan_declare_demonic_rune()
+end
+}}
 : end
 KFEAT:   D = granite_statue
 KFEAT:   X = rock_wall
@@ -3980,7 +4010,7 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
 epilogue{{
 if not you.have_rune("demonic") then
-  pan_declare_demonic_rune()
+  pan_declare_demonic_rune(true)
 end
 }}
 MAP
