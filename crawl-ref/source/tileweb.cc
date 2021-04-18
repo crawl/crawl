@@ -845,7 +845,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!you.duration[status])
                 continue;
-            inf.short_text = "divine shield";
+            inf.short_text = "divinely shielded";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
@@ -859,7 +859,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!acrobat_boost_active())
                 continue;
-            inf.short_text = "acrobat";
+            inf.short_text = "acrobatic";
         }
         else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;

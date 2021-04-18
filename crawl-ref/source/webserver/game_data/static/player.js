@@ -184,7 +184,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         else
             elem = inventory_item_desc(wielded);
 
-        if (player.has_status("corroded equipment"))
+        if (player.has_status("corroded"))
             elem.addClass("corroded_weapon");
 
         return elem;
@@ -236,7 +236,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded equipment"))
+        else if (type == "ac" && player.has_status("corroded"))
             elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)
