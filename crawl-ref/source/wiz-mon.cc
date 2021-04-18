@@ -14,6 +14,7 @@
 #include "areas.h"
 #include "cloud.h"
 #include "colour.h"
+#include "command.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
@@ -52,10 +53,16 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
+    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
+        return;
+    }
+
+    if (!strcmp(specs, "?"))
+    {
+        show_specific_help("wiz-monster");
         return;
     }
 
