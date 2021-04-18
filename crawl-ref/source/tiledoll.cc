@@ -299,6 +299,7 @@ void fill_doll_equipment(dolls_data &result)
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
+        case SP_DJINNI:  ch = TILEP_TRAN_STATUE_DJINN;    break;
         default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -316,6 +317,7 @@ void fill_doll_equipment(dolls_data &result)
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
+        case SP_DJINNI:  ch = TILEP_TRAN_LICH_DJINN;    break;
         default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
