@@ -1426,6 +1426,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             }
             return false;
         }
+        if (abil.ability == ABIL_WORD_OF_CHAOS)
+        {
+            if (!quiet)
+            {
+                mprf("You cannot speak a word of chaos while %s.",
+                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
+                                                  : "silenced");
+            }
+            return false;
+        }
     }
 
     const god_power* god_power = god_power_from_ability(abil.ability);
@@ -1605,6 +1615,15 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_ROLLING_CHARGE:
         return _can_movement_ability(quiet) &&
                                 palentonga_charge_possible(quiet, true);
+
+    case ABIL_WORD_OF_CHAOS:
+        if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
+        {
+            if (!quiet)
+                canned_msg(MSG_CANNOT_DO_YET);
+            return false;
+        }
+        return true;
 
     case ABIL_EVOKE_BLINK:
     {
@@ -2169,15 +2188,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         break;
 
     case ABIL_WORD_OF_CHAOS:
-        if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
-        {
-            mpr("You're unable to speak a word of chaos right now.");
-            return spret::abort;
-        }
-        fail_check();
-        if (!word_of_chaos(40 + you.experience_level * 6))
-            return spret::abort;
-        break;
+        return word_of_chaos(40 + you.experience_level * 6, fail);
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())

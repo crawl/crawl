@@ -1609,27 +1609,34 @@ void attract_monsters()
     }
 }
 
-bool word_of_chaos(int pow)
+spret word_of_chaos(int pow, bool fail)
 {
+    vector<monster *> visible_targets;
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_is_tentacle_or_tentacle_segment(mi->type)
-                && !mi->friendly())
+            && !mons_class_is_stationary(mi->type)
+            && !mons_is_conjured(mi->type)
+            && !mi->friendly())
         {
+            if (you.can_see(**mi))
+                visible_targets.push_back(*mi);
             targets.push_back(*mi);
         }
     }
 
-    if (targets.empty())
+    if (visible_targets.empty())
     {
-        if (!yesno("There are no visible enemies. Speak a word of chaos anyway?",
-            true, 'n'))
+        if (!yesno("You cannot see any enemies that you can affect. Speak a "
+                   "word of chaos anyway?", true, 'n'))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
     }
 
+    fail_check();
     shuffle_array(targets);
 
     mprf("You speak a word of chaos!");
@@ -1652,5 +1659,5 @@ bool word_of_chaos(int pow)
 
     you.increase_duration(DUR_WORD_OF_CHAOS_COOLDOWN, 15 + random2(10));
     drain_player(50, false, true);
-    return true;
+    return spret::success;
 }

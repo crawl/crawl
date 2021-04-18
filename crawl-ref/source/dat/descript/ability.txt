@@ -82,9 +82,9 @@ Word of Chaos ability
 
 Speaks a word of chaos, forcing enemies nearby to blink away from the user.
 Additionally, those affected may be slowed, ensnared, or terrified by the
-experience. Invoking a word of chaos is no easy feat and will drain the
-user somewhat. Additionally, there will be a short time before the ability
-can be used again.
+experience. Invoking a word of chaos is no easy feat and will drain the user's
+maximum health somewhat, and the ability then cannot be used again for a short
+time.
 %%%%
 Cancel Portal Projectile ability
 

@@ -557,8 +557,8 @@ static const duration_def duration_data[] =
       "You are rapidly regenerating health and magic.", D_NO_FLAGS},
     { DUR_WORD_OF_CHAOS_COOLDOWN,
       YELLOW, "-Word",
-      "word of chaos cooldown", "",
-      "", D_NO_FLAGS,
+      "on word of chaos cooldown", "word of chaos cooldown",
+      "You are unable to speak a word of chaos.", D_NO_FLAGS,
       {{ "You are ready to speak a word of chaos again." }}},
 
     // The following are visible in wizmode only, or are handled
