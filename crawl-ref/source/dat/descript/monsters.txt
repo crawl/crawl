@@ -535,6 +535,8 @@ ancestor
 A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 they seem somehow to resemble a warrior from the distantly remembered past.
+The memory and the memorialist fight in concert, each able to fire past the
+other.
 %%%%
 ancient champion
 
