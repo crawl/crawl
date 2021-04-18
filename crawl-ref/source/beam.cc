@@ -1033,7 +1033,7 @@ void bolt::affect_cell()
 
     // If the player can ever walk through walls, this will need
     // special-casing too.
-    bool hit_player = found_player();
+    bool hit_player = found_player() && !ignores_player();
     if (hit_player && can_affect_actor(&you))
     {
         const int prev_reflections = reflections;
@@ -3740,6 +3740,9 @@ void bolt::affect_player()
 {
     hit_count[MID_PLAYER]++;
 
+    if (ignores_player())
+        return;
+
     // Explosions only have an effect during their explosion phase.
     // Special cases can be handled here.
     if (is_explosion && !in_explosion_phase)
@@ -3748,10 +3751,6 @@ void bolt::affect_player()
         finish_beam();
         return;
     }
-
-    // Digging -- don't care.
-    if (flavour == BEAM_DIGGING)
-        return;
 
     if (is_tracer)
     {
@@ -4018,6 +4017,23 @@ void bolt::affect_player()
             you.duration[DUR_FROZEN] = (2 + random2(3)) * BASELINE_DELAY;
         }
     }
+}
+
+bool bolt::ignores_player() const
+{
+
+    // Digging -- don't care.
+    if (flavour == BEAM_DIGGING)
+        return true;
+
+    if (agent() && agent()->is_monster()
+        && mons_is_hepliaklqana_ancestor(agent()->as_monster()->type))
+    {
+        // friends!
+        return true;
+    }
+
+    return false;
 }
 
 int bolt::apply_AC(const actor *victim, int hurted)
