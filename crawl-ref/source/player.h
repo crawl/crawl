@@ -1000,7 +1000,6 @@ int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
 
-bool player_res_torment();
 bool player_kiku_res_torment();
 
 bool player_likes_water(bool permanently = false);

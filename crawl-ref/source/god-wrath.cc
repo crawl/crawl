@@ -648,7 +648,7 @@ static bool _kikubaaqudgha_retribution()
     if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 death curses of maximum power
-        if (!player_res_torment())
+        if (!you.res_torment())
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {

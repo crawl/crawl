@@ -1458,25 +1458,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     return re;
 }
 
-/**
- * Is the player character immune to torment?
- *
- * @return          Whether the player resists a given instance of torment.
- */
-bool player_res_torment()
-{
-    if (you.get_mutation_level(MUT_TORMENT_RESISTANCE) >= 2)
-        return true;
-
-    return get_form()->res_neg() == 3
-           || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
-           || you.petrified()
-#if TAG_MAJOR_VERSION == 34
-           || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
-#endif
-           ;
-}
-
 // Kiku protects you from torment to a degree.
 bool player_kiku_res_torment()
 {
@@ -6230,7 +6211,16 @@ int player::res_negative_energy(bool intrinsic_only) const
 
 bool player::res_torment() const
 {
-    return player_res_torment();
+    if (you.get_mutation_level(MUT_TORMENT_RESISTANCE) >= 2)
+        return true;
+
+    return get_form()->res_neg() == 3
+           || you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive
+           || you.petrified()
+#if TAG_MAJOR_VERSION == 34
+           || player_equip_unrand(UNRAND_ETERNAL_TORMENT)
+#endif
+           ;
 }
 
 bool player::res_tornado() const

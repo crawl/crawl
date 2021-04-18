@@ -1069,7 +1069,7 @@ void torment_player(const actor *attacker, torment_source_type taux)
 
     int hploss = 0;
 
-    if (!player_res_torment())
+    if (!you.res_torment())
     {
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
