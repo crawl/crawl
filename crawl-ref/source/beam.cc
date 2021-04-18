@@ -3221,11 +3221,11 @@ void bolt::affect_player_enchantment(bool resistible)
             monster* mon = monster_by_mid(source_id);
             if (mon && mon->alive())
             {
-                int damage_roll = 3 + random2(1 + div_rand_round(ench_power, 10));
-                mprf("Your will lashes out at %s%s", mon->observable() ?
-                    mon->name(DESC_THE).c_str() : "something",
-                    attack_strength_punctuation(damage_roll).c_str());
-                mon->hurt(&you, damage_roll, BEAM_DAMNATION);
+                const int dam = 3 + random2(1 + div_rand_round(ench_power, 10));
+                mprf("Your will lashes out at %s%s",
+                     mon->name(DESC_THE).c_str(),
+                     attack_strength_punctuation(dam).c_str());
+                mon->hurt(&you, dam);
             }
         }
 
