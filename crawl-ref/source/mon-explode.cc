@@ -132,6 +132,8 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     beam.origin_spell = SPELL_INNER_FLAME;
     beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE
                                                      : KILL_MON_MISSILE;
+    if (agent)
+        beam.source_id = agent->mid;
 }
 
 static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
