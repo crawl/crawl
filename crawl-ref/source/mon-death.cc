@@ -1870,8 +1870,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::restore_hp))
                 {
-                    hp_heal = mons.get_experience_level()
-                        + random2(mons.get_experience_level());
+                    hp_heal = (1 + mons.get_experience_level()) / 2
+                            + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
                     && mons.holiness() & MH_NATURAL
