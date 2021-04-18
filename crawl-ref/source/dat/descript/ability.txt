@@ -112,10 +112,11 @@ a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
-Roll at a foe with a clatter of scales, uncurl, and strike! The further you go,
-the more momentum will be added to the force of your strike. You roll with
-sufficient speed to dodge traps and harmful terrain along the way, but not at
-your destination.
+Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
+with increased accuracy. The greater the distance of the roll, the more
+momentum will be added to the force of your strike. You roll with sufficient
+speed to dodge traps and harmful terrain along the way, but not at your
+destination.
 %%%%
 Evoke Blink ability
 
