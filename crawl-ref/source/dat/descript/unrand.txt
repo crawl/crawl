@@ -16,10 +16,9 @@ Screaming Sword
 %%%%
 Wrath of Trog
 
-A bloodstained axe, forged by Trog himself to have exquisite sharpness and
-balance.  It was his favourite weapon, but was lost many centuries ago.
-It can induce a bloodthirsty berserker rage in warriors who use it in
-battle.
+A bloodstained axe that was the favourite weapon of the old god Trog, before it
+was lost. It induces a bloodthirsty berserker rage in warriors who use it in
+battle and enables them to dash towards their enemies.
 %%%%
 mace of Variability
 
