@@ -4710,7 +4710,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 
     // raise the delay if there's an active sacrifice, and more so the more
     // often you pass on a sacrifice and the more piety you have.
-    const int base_delay = 80;
+    const int base_delay = 90;
     int delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
     int added_delay;
     if (clear_timer)
