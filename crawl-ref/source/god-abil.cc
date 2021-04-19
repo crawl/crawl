@@ -4079,6 +4079,17 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
             break;
+        // words and drink cut off a lot of options if taken together
+        case ABIL_RU_SACRIFICE_DRINK:
+            if (you.get_mutation_level(MUT_READ_SAFETY))
+                piety_gain += 10;
+            break;
+        case ABIL_RU_SACRIFICE_WORDS:
+            if (you.get_mutation_level(MUT_DRINK_SAFETY))
+                piety_gain += 10;
+            else if (you.get_mutation_level(MUT_NO_DRINK)) 
+                piety_gain += 15; // extra bad for mummies
+            break;
         case ABIL_RU_SACRIFICE_DURABILITY:
             if (you.get_mutation_level(MUT_NO_DODGING))
                 piety_gain += 20;
