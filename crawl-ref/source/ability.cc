@@ -1332,11 +1332,19 @@ bool activate_ability()
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (!you.attribute[ATTR_HELD])
-        return true;
-    if (!quiet)
-        mprf("You cannot do that while %s.", held_status());
-    return false;
+    if (you.attribute[ATTR_HELD])
+    {
+        if (!quiet)
+            mprf("You cannot do that while %s.", held_status());
+        return false;
+    }
+    else if (you.is_stationary())
+    {
+        if (!quiet)
+            canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+    return true;
 }
 
 static bool _can_hop(bool quiet)
