@@ -256,9 +256,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                                   : MSG_MANA_DECREASE);
     }
 
-    if (proprt[ARTP_REGENERATION] && !unmeld
-        // If regen is an intrinsic property too, don't double print messages
-        && !armour_type_prop(item.sub_type, ARMF_REGENERATION))
+    if (proprt[ARTP_REGENERATION]
+        && !unmeld
+        // If regen is an intrinsic property too, don't double print messages.
+        && !item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
+        && (item.base_type != OBJ_ARMOUR
+            || !armour_type_prop(item.sub_type, ARMF_REGENERATION)))
     {
         _equip_regeneration_item(item);
     }
