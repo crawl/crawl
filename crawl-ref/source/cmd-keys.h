@@ -383,8 +383,10 @@
 // no good webtiles keys available for the main view case, and browser zoom
 // already more or less accomplishes this.
 {'=' - SDLK_a + 1, CMD_ZOOM_IN},  // Believe it or not, this is how we map SDL
-{'-' - SDLK_a + 1, CMD_ZOOM_OUT}, // ctrl scancodes...
+{'+' - SDLK_a + 1, CMD_ZOOM_IN},  // ctrl scancodes...
+{'-' - SDLK_a + 1, CMD_ZOOM_OUT},
 {'=' - SDLK_a + 1, CMD_MAP_ZOOM_IN},
+{'+' - SDLK_a + 1, CMD_MAP_ZOOM_IN},
 {'-' - SDLK_a + 1, CMD_MAP_ZOOM_OUT},
 #endif
 #ifdef USE_TILE
