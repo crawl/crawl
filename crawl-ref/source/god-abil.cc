@@ -4043,7 +4043,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 28;
+                piety_gain += 38;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
             break;
