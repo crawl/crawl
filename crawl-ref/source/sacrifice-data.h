@@ -171,7 +171,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your skill",
   "sacrificed skill",
 
-  40,
+  30,
   SK_NONE,
   nullptr,
   nullptr,

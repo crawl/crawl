@@ -3857,9 +3857,16 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
+    
+    // This mutation has 3 ranks and can be taken multiple times
+    if (sacrifice.mutation == MUT_UNSKILLED)
+    {
+        if (you.get_mutation_level(sacrifice.mutation) == 3)
+            return false;
+    }
     // for sacrifices other than health, essence, and arcana there is a
     // deterministic mapping between the sacrifice_def and a mutation_type.
-    if (sacrifice.mutation != MUT_NON_MUTATION
+    else if (sacrifice.mutation != MUT_NON_MUTATION
         && (you.get_mutation_level(sacrifice.mutation)
             || !_sac_mut_maybe_valid(sacrifice.mutation)))
     {
@@ -4072,6 +4079,10 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         case ABIL_RU_SACRIFICE_ARTIFICE:
             if (you.get_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
+            break;
+        case ABIL_RU_SACRIFICE_SKILL:
+            // give a small bonus if sacrifice skill is taken multiple times
+            piety_gain += 7 * you.get_mutation_level(mut);
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
             if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
