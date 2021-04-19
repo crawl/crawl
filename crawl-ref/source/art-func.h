@@ -508,7 +508,8 @@ static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _TROG_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You feel bloodthirsty!");
+    _equip_mpr(show_msgs, "You feel the exhaustion of battles past.");
+    player_end_berserk();
 }
 
 static void _TROG_unequip(item_def */*item*/, bool *show_msgs)

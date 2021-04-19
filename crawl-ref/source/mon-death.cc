@@ -1619,6 +1619,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             you.increase_duration(DUR_BERSERK, bonus);
             mpr("The necklace of Bloodlust glows a violent red.");
         }
+        else if (player_equip_unrand(UNRAND_TROG) && coinflip())
+        {
+            const int bonus = (2 + random2(4)) / 2;
+            you.increase_duration(DUR_BERSERK, bonus);
+            mpr("You feel the ancient rage of your axe.");
+        }
     }
 
     if (you.prev_targ == monster_killed)
