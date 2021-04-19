@@ -4053,7 +4053,8 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             else if (mut == MUT_WEAK_WILLED)
                 piety_gain += 38;
             else
-                piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
+                piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
+                                + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
