@@ -686,17 +686,17 @@ void update_vision_range()
     if (you.species == SP_BARACHI)
         you.normal_vision += 1;
 
+    // Nightstalker gives -1/-2/-3 to base LOS.
+    if (you.get_mutation_level(MUT_NIGHTSTALKER))
+        you.normal_vision -= you.get_mutation_level(MUT_NIGHTSTALKER);
+
     // Halo and umbra radius scale with you.normal_vision, so to avoid
-    // penalizing players with low LOS, don't shrink normal_vision.
+    // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
         you.current_vision -= 1;
-
-    // Nightstalker gives -1/-2/-3.
-    if (you.get_mutation_level(MUT_NIGHTSTALKER))
-        you.current_vision -= you.get_mutation_level(MUT_NIGHTSTALKER);
 
     // robe of Night.
     if (player_equip_unrand(UNRAND_NIGHT))
