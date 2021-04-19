@@ -2039,12 +2039,13 @@ tile_viewport_scale = 1.0
         A scale factor to apply to the dungeon view. The minimum value is 0.2
         and the maximum value is determined by resolution; zoom will be capped
         so that at a minimum, your line of sight is always visible. This can
-        also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='.
+        also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='
+        (or ctrl-'+' on some keyboards).
 
 tile_map_scale = 0.6
         A scale factor to apply to the dungeon view in map mode (X). This can
         also be adjusted in map mode in tiles with '{' and '}', as well as in
-        local tiles with ctrl-'-' and ctrl-'='.
+        local tiles with ctrl-'-' and ctrl-'=' (or ctrl-'+' on some keyboards).
 
 tile_cell_pixels = 32
         The width and height of tiles in the dungeon view at 1.0 scale, in
