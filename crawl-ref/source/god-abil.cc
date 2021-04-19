@@ -4040,8 +4040,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             if (mut == MUT_LOW_MAGIC)
             {
                 piety_gain += 10 + max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
-                                       max( you.skill_rdiv(SK_SPELLCASTING, 1, 2),
-                                            you.skill_rdiv(SK_EVOCATIONS, 1, 2)));
+                                       you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
                 piety_gain += 28;
