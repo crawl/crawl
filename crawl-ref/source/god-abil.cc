@@ -3858,8 +3858,9 @@ static bool _player_sacrificed_arcana()
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
     
-    // This mutation has 3 ranks and can be taken multiple times
-    if (sacrifice.mutation == MUT_UNSKILLED)
+    // These mutations have 3 ranks and can be taken multiple times
+    if (sacrifice.mutation == MUT_UNSKILLED
+        || sacrifice.mutation == MUT_INEXPERIENCED)
     {
         if (you.get_mutation_level(sacrifice.mutation) == 3)
             return false;
@@ -4120,18 +4121,18 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 15;
+                piety_gain += 12;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose their last spell, which is pretty sad too.
+            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
             if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 20;
+                piety_gain += 16;
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            if (you.get_mutation_level(MUT_INEXPERIENCED))
-                piety_gain += 15;
+            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            break;
 
         default:
             break;
