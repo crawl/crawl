@@ -2208,7 +2208,17 @@ static const mutation_def mut_data[] =
     {"Your melee attacks may engulf your foes in ooze.", "", ""},
     {"You begin exuding ooze.", "", ""},
     {"You stop exuding ooze.", "", ""},
-}
+},
+
+// Sadly console size restrictions prevent more than one level of this existing
+{ MUT_DAYSTALKER, 0, 1, mutflag::good, false,
+  "+LOS",
+
+    {"You have an extended range of vision and can be seen from far away.",
+      "", ""},
+    {"The darkness flees at your approach.", "", ""},
+    {"The shadows grow bolder once more.", "", ""},
+},
 
 };
 

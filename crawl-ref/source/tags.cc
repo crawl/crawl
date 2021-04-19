@@ -3180,6 +3180,7 @@ static void _tag_read_you(reader &th)
     SP_MUT_FIX(MUT_HP_CASTING, SP_DJINNI);
     SP_MUT_FIX(MUT_FLAT_HP, SP_DJINNI);
     SP_MUT_FIX(MUT_FORLORN, SP_DEMIGOD);
+    SP_MUT_FIX(MUT_DAYSTALKER, SP_BARACHI);
 
     if (you.has_innate_mutation(MUT_NIMBLE_SWIMMER)
         || you.species == SP_MERFOLK || you.species == SP_OCTOPODE)

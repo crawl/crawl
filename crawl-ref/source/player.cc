@@ -682,9 +682,10 @@ void update_vision_range()
 {
     you.normal_vision = LOS_DEFAULT_RANGE;
 
-    // Barachi have +1 base LOS.
-    if (you.species == SP_BARACHI)
-        you.normal_vision += 1;
+    // Daystalker gives +1 base LOS. (currently capped to one level for
+    // console reasons, a modular hud might someday permit more levels)
+    if (you.get_mutation_level(MUT_DAYSTALKER))
+        you.normal_vision += you.get_mutation_level(MUT_DAYSTALKER);
 
     // Nightstalker gives -1/-2/-3 to base LOS.
     if (you.get_mutation_level(MUT_NIGHTSTALKER))

@@ -43,11 +43,9 @@ mutations:
   1:
     MUT_SLOW: 1
     MUT_HOP: 1
+    MUT_DAYSTALKER: 1
   13:
     MUT_HOP: 1
-fake_mutations:
-  - long: You have an extended range of vision and can be seen from far away.
-    short: +LOS
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
