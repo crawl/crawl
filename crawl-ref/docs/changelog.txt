@@ -1,5 +1,5 @@
-Stone Soup 0.27-a0 (through 0.27-a0-877-gf2a7138)
--------------------------------------------------
+Stone Soup 0.27-a0 (through 0.27-a0-1047-gc940c04)
+--------------------------------------------------
 
 Branches, Environment
 ---------------------
@@ -15,9 +15,10 @@ Branches, Environment
 * A faded altar places with a very high chance on D:1-3.
 * A single random altar to a Temple god places with low chance on D:2.
 * Altar placement in early D has been revised, every god which can appear in
-the Ecumenical Temple is now guaranteed to have exactly one altar place either
-in the Temple branch or in an overflow vault on D:3-10.
+  the Ecumenical Temple is now guaranteed to have exactly one altar place either
+  in the Temple branch or in an overflow vault on D:3-10.
 * Shops can now place on D:1-3.
+* Guaranteed demonic rune vaults announce the presence of the demonic rune.
 
 Character
 ---------
@@ -37,6 +38,16 @@ Character
   - New facet: Malevolent magic. This facet gives a chance to paralyse enemies
       in a radius around the player equal to the mutation rank whenever a spell
       is cast. At the highest rank this also applies to wands.
+  - The Black Mark facet is revised to a disabling facet, offering a hex
+      enhancer at level 1; followed by black mark at level 2; then a permanent
+      radius 1 silence annulus around the player.
+  - The Hurl Damnation facet now gives "Demonic Will"" at level 1, providing
+      Will+ and dealing damnation damage to monsters that try but fail to hex
+      the player, and torment resistance at level 2.
+  - New facet: Corrupting Presence. The first two levels of this facet give a
+      chance to corrode, and then malmutate when the player damages a monster.
+      The third level gives an active ability Word of Chaos that blinks away
+      every monster in los and may also disable them.
 * Trolls now get only one level of the thick-skin mutation.
 * The strength damage modifier is simplified and derandomized. At 10 strength,
   a character does 100% of the damage their weapon and skill allow. Each point
@@ -54,8 +65,8 @@ Character
 * Species and form granted flight is always permanent
 * Scales mutations that provide distortion field, rF, rC, rPois, rElec, rCorr,
   and +HP are now Demonspawn only.
-* Iridescent scales are removed from the Demonspawn pool and are available as a
-  random mutation.
+* Iridescent scales and passive freeze are removed from the Demonspawn pool and
+  are available as random mutations.
 * Bone plates, thin skeletal structure, and sturdy frame no longer conflict.
 * The blurry vision mutation is removed; Ru's -Scroll mutation can occur as a
   random mutation in its place.
@@ -80,11 +91,17 @@ Gods
     - 3* Clarity
     - 4* Passive scrying to radius 2, scaling with piety to radius 4 at 6*.
 * Cheibriados no longer hates quick blades.
+* The player and Hepliaklqana ancestors can fire through one-another.
 * A new Jiyva mutation allows players to engulf foes in ooze in melee.
+* Makhleb's Major Destruction now fires all bolt-type spells and is stronger.
+* Makhleb's passive heal on kill is reduced in strength.
 * The Elixir card no longer heals allies and always regenerates both health and
   magic, with duration scaling with power.
+* The Foxfire card is renamed to the Swarm and now summons bees.
+* Vehumet now supports Poisonous Vapours
 * Heavenly Storm grants bonus EV and is a bit quieter.
-* Yredelemnul accepts nonliving worshippers again.
+* Yredelemnul accepts nonliving worshippers again, and permits the use of
+  statue form.
 * Zin's Sanctuary no longer applies holy word.
 
 Monsters
@@ -124,13 +141,15 @@ Monsters
   - Naga no longer cast force lance.
   - Nagaraja cast Dimension Anchor instead of Teleport Other.
   - Naga Mages gain an enchantment that turns an ally's poison into curare.
-  - New monster: salamander tyrant, a volcano-stoking spellcaster  with a
+  - New monster: salamander tyrant, a volcano-stoking spellcaster with a
     weakening gaze
 * Monster weapon delay is standardized at the monster's speed, certain monster
   base damages are adjusted to compensate.
 * Oozes are renamed endoplasms, and cast freeze (but are weaker).
+* Draconian Knights and Fannar no longer cast Ozocubu's Armour and have
+  higher base AC.
 * Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
-  and death oozes are removed
+  and death oozes are removed.
 
 
 Interface
@@ -166,9 +185,12 @@ Items
 * The Vampire's tooth is reduced to +8.
 * Rare scrolls, books, manuals, and enhancer staves can now spawn early.
 * Flight granting items cause you to fly at all times while equipped.
+* Pieces from Xom's chessboard are re-introduced as an XP-gated evokable which
+  provides a non-targeted version of the wand of random effects. Artificers
+  start with one instead of the wand.
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
-  inaccuracy, scrolls of remove curse, scrolls of random effects,
-  and boots of running are removed.
+  inaccuracy, scrolls of remove curse, scrolls of random uselessness, wands of
+  random effects, and boots of running are removed.
 
 Spells
 ------
@@ -187,6 +209,11 @@ Spells
 * Blade Hands is now level 6 and appears only in the book of Transfigurations
 * Hydra Form is now level 5 and appears in the book of Changes and the Fen
   Folio
+* Hailstorm now affects icy creatures.
+* Summon Ice Beast is moved from the book of Frost to the book of Ice.
+* Metabolic Englaciation is moved from the book of Ice to the book of Frost.
+* Static Discharge is now level 2.
+* Swiftness is now level 3.
 * Summon Demon and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
