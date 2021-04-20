@@ -2714,60 +2714,88 @@ ENDMAP
 
 ##############################################################################
 # Vaguely Jungle Book (R. Kipling) inspired.
-# When the anaconda is slain, the elephant statues will become dire elephants!
 #
-NAME:   due_jungle_book
-TAGS:   no_pool_fixup no_wall_fixup no_monster_gen
-ORIENT: north
-PLACE:  Lair:$
-MONS:   plant, elephant
+# This vault formerly released dire elephants from statues via a lua trigger
+# after the anaconda died, which was spoilery. I've revised it to have a
+# necromancy theme, with necromancers' Bind Soul being a somewhat analogous
+# on-death effect compared to the old vault. -gammafunk
+NAME:    due_jungle_book
+TAGS:    no_pool_fixup no_wall_fixup no_monster_gen patrolling
+PLACE:   Lair:$
+ORIENT:  north
+# A necromancy-themed loot item behind the obsidian statue.
+ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
+         / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
+         / demon blade ego:draining / sword of zonguldruk w:1 \
+         / great sword ego:draining / triple sword ego:draining \
+         / demon whip ego:pain w:5 / demon whip ego:draining w:5 \
+         / eveningstar ego:draining / scetpre of torment w:1 \
+         / great mace ego:draining / majin-bo w:1 / lajatang ego:draining \
+         / broad axe ego:draining / battleaxe ego:draining \
+         / executioner's axe ego:draining / shadow dragon scales \
+         / cigotuvi's embrace w:1 / amulet of regeneration randart \
+         / ring of positive energy randart / staff of death \
+         / book of necromancy / book of death / book of unlife \
+         / randbook owner:Kikubaaqudgh disc:necromancy \
+         / necronomicon w:1
+KMONS:   p = withered plant
+MONS:    elephant skeleton / elephant zombie / spectral elephant \
+         / elephant simulacrum / spectral cane toad / cane toad simulacrum
+MONS:    elephant, cane toad / death yak
+MONS:    spectral death yak / death yak simulacrum / dire elephant skeleton \
+         / dire elephant zombie / spectral dire elephant \
+         / dire elephant simulacrum
+MONS:    dire elephant, necromancer, obsidian statue
 # The anaconda's name is Kaa.
-KMONS:  S = anaconda
-KFEAT:  S = deep_water
-KITEM:  U = superb_item
-KITEM:  Q = superb_item
-KFEAT:  o = granite_statue
-KFEAT:  i = granite_statue
-SUBST:  X = xxx.., P = 1........., T = tttxxc
-KPROP:  U = no_tele_into
-{{
-function elephant_statue()
-  return
-end
-
-set_feature_name("granite_statue", "elephant-shaped statue")
-}}
-MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
-MARKER: o = lua:portal_desc { slaved_to="elephant" }
-MARKER: G = lua:props_marker { veto_destroy="veto" }
-MARKER: o = lua:monster_on_death { \
-            target="anaconda_guard", \
-            new_monster="generate_awake dire elephant", \
-            message_seen="The elephant guardians awaken!", \
-            message_unseen="You hear a distant trumpeting.", \
-            master_name="elephant", \
-            veto_destroy="veto", \
-         }
-COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant_jade
-TILE:   i = dngn_statue_elephant
+KMONS:   R = spectral anaconda
+KFEAT:   R = deep_water
+# Thin out elephant/dire elephant bands of central necromancers a bit.
+SUBST:   2 = 22., 5 = 55.
+# DE/FH/JK will always have a monster set, with one a guaranteed necromancer
+# plus band, next a 50% chance to be a # necromancer band, 50% chance to be
+# derived undead band, last guaranteed derived undead band. Necromancer band is
+# 4 live monsters on average, mostly elephants, sometimes other beasts mixed
+# in. Derived undead band is a stonger derived undead with 4 weaker ones on
+# average.
+SHUFFLE: DE / FH / JK
+SUBST:   D = 6, E = 2223-
+SHUFFLE: FH / '"
+SUBST:   F = 6, H = 2223-, 'J = 4
+NSUBST:  " = 2=1 / 11-, K = 2=1 / 11-
+# LM / NO / PQ each have 50% chance of being a derived undead band, 50% chance
+# of nothing.
+SHUFFLE: LM / NO / PQ
+SHUFFLE: LM / '"
+SUBST:   L = 4, '" = -
+NSUBST:  M = 2=1 / 11-
+SHUFFLE: NO / '"
+SUBST:   N = 4, '" = -
+NSUBST:  O = 2=1 / 11-
+SHUFFLE: PQ / '"
+SUBST:   P = 4, '" = -
+NSUBST:  Q = 2=1 / 11-
+SUBST:   a = tttxxc, p = p-, q = xxx--, - = -:200 ', ' = 12345
+COLOUR:  t = brown
+TILE:    t = dngn_tree_dead
+TILE:    G = dngn_statue_elephant
+: set_feature_name("tree", "dead tree")
 MAP
-  xxxxxxxxxxx
- xxxxxXX.XXXxx
-xxxxX.....PPXxx
-xxtt.........Xxx                           xxxx
-xttitxx.X..X..XxxcccccccccccccccccccccccxxxxT.xxx...@
-xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
-xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
-xttxcccc...c.P...+P.WwW+...%Qc.....+.....c.c...TTTx..
-xxccccccPc.ccccPGc.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
-xccccccc+c.P.PccccPwwwwco..%cc.22..cccc.P..c+ccccccc.
-xcc1...PPccccP.P.cWWWWPccccccc%...PcP.PPccccPP1..%cc.
-xcc......cccccccPcccW.ccco.occcP.ccc.ccccccc......cc.
-xccP.1..%ccttTccP.PcccccG.V.GcccccP.PccTttcc1....Pcc.
-xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
- TxTcccTt.......tcccccccc+++cccccccct.......tcccTt..@
-   @........@@...........@@@....T......@@..........@
+   xxxcccccccc
+  xxtttqqLqqqcc
+ xxttqppMMM-pqcc
+xxxttp---MM--pqcc                           ttttt
+xxtt--xxpq--q--qcccccccccccccccccccccccccccccaaGttp..@
+xtt7ttxccc++c++ccccccccccccccccccccccccccccaaaKKJttpp.
+xtdttxcccG--c--OOGcc-WWccGpppGccpppccQQ-----ppGKKGttt.
+xtttxccccp-pcp-OON+--WwW+-55%|cG-2--+QQQppc-cp-Kaaatp.
+xxxcccccc-c-ccccOGcpWwwR+-56**c|$22-cPpcccc---caaccc..
+xxccccccc+cp--pccccpwwwwcG5ppGc*%22-cccc---pc+ccccccc.
+xxccGEEpp-cccc---pcWWWWpccnnnccG62ppcp--pcccc-ppHHGcc.
+xxcc*DE--pccccccc-cccWpcccGpGcccppccc-cccccccp--HF*cc.
+xxccGEEpppccttaccp-pcccccGpYpGccnncp-pccattccpppHHGcc.
+ xxcccccccctp..pccc-----------------cccp..ptcccccccc.
+  axacccatp.....ptcccccccc+++cccccccctp....pptcccatp.@
+    @........@@...........@@@....a......@@..........@
 ENDMAP
 
 ##############################################################################
