@@ -1176,6 +1176,15 @@ void bolt::do_fire()
             break;
         }
 
+        // Non-exploding beams can't escape the player's sight (except digs)
+        if (YOU_KILL(thrower) && !is_explosion && !you.see_cell(pos())
+            && flavour != BEAM_DIGGING)
+        {
+            ray.regress();
+            extra_range_used++;
+            break;
+        }
+
         const dungeon_feature_type feat = env.grid(pos());
 
         if (in_bounds(target)
