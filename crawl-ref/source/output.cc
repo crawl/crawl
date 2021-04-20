@@ -2437,7 +2437,10 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
     const int rampage = you.rampaging(calc_unid);
-    out += _resist_composer("Rampage", cwidth, rampage) + "\n";
+    string rampage_string = _resist_composer("Rampage", cwidth, rampage) + "\n";
+    if (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+        rampage_string = replace_all(rampage_string, "+", "∞");
+    out += rampage_string;
 
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis();
