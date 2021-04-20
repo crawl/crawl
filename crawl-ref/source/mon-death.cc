@@ -2280,7 +2280,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
-    if (corpse && mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL))
         _make_derived_undead(&mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp

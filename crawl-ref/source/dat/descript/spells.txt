@@ -130,7 +130,7 @@ increases health, speed, and damage dealt in melee.
 %%%%
 Bind Souls spell
 
-Bestows an enchantment on other nearby living creatures that may cause them to
+Bestows an enchantment on other nearby living creatures that causes them to
 rise as simulacra after being slain.
 %%%%
 Black Mark spell
