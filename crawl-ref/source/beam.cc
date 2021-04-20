@@ -1176,9 +1176,10 @@ void bolt::do_fire()
             break;
         }
 
-        // Non-exploding beams can't escape the player's sight (except digs)
+        // Non-exploding true beams can't escape the player's sight (except
+        // digs)
         if (YOU_KILL(thrower) && !is_explosion && !you.see_cell(pos())
-            && flavour != BEAM_DIGGING)
+            && flavour != BEAM_DIGGING && !aimed_at_spot)
         {
             ray.regress();
             extra_range_used++;
