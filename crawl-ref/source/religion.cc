@@ -3533,13 +3533,14 @@ static void _join_gozag()
 /**
  * Choose an antique name for a Hepliaklqana-granted ancestor.
  *
- * @param female    Whether the ancestor is female or male.
+ * @param gender    The ancestor's gender.
  * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
  */
-static string _make_ancestor_name(bool female)
+static string _make_ancestor_name(gender_type gender)
 {
-    const string gender_name = female ? "female" : "male";
-    const string suffix = " " + gender_name + " name";
+    const string gender_name = gender == GENDER_MALE ? " male " :
+                               gender == GENDER_FEMALE ? " female " : " ";
+    const string suffix = gender_name + "name";
     const string name = getRandNameString("ancestor", suffix);
     return name.empty() ? make_name() : name;
 }
@@ -3550,10 +3551,12 @@ static void _join_hepliaklqana()
     // initial setup.
     if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
     {
-        const bool female = coinflip();
-        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(female);
-        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = female ? GENDER_FEMALE
-                                                         : GENDER_MALE;
+        const gender_type gender = random_choose(GENDER_NEUTRAL,
+                                                 GENDER_MALE,
+                                                 GENDER_FEMALE);
+
+        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
+        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
     }
 
     calc_hp(); // adjust for frailty
