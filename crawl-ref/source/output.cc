@@ -1786,10 +1786,14 @@ int update_monster_pane()
 // params:
 //  level : actual resistance level
 //  max : maximum number of levels of the resistance
-static string _itosym(int level, int max = 1)
+//  immune : overwrites normal pip display for full immunity
+static string _itosym(int level, int max = 1, bool immune = false)
 {
     if (max < 1)
         return "";
+
+    if (immune)
+        return "∞";
 
     string sym;
     bool spacing = (max >= 5) ? false : true;
@@ -1853,8 +1857,12 @@ int equip_name_to_slot(const char *s)
 
 // Colour the string according to the level of an ability/resistance.
 // Take maximum possible level into account.
-static const char* _determine_colour_string(int level, int max_level)
+static const char* _determine_colour_string(int level, int max_level,
+                                            bool immune = false)
 {
+    if (immune)
+        return "<lightgreen>";
+
     // No colouring for larger bars.
     if (max_level > 3)
         return "<lightgrey>";
@@ -2343,13 +2351,15 @@ static vector<formatted_string> _get_overview_stats()
 //          default is the most common case (1)
 //      pos_resist : false for "bad" resistances (no tele, random tele, *Rage),
 //          inverts the value for the colour choice
-static string _resist_composer(
-    const char * name, int spacing, int value, int max = 1, bool pos_resist = true)
+//      immune : overwrites normal pip display for full immunity
+static string _resist_composer(const char * name, int spacing, int value,
+                               int max = 1, bool pos_resist = true,
+                               bool immune = false)
 {
     string out;
-    out += _determine_colour_string(pos_resist ? value : -value, max);
+    out += _determine_colour_string(pos_resist ? value : -value, max, immune);
     out += chop_string(name, spacing);
-    out += _itosym(value, max);
+    out += _itosym(value, max, immune);
 
     return out;
 }
@@ -2373,14 +2383,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("rNeg", cwidth, rlife, 3) + "\n";
 
     const int rpois = player_res_poison(calc_unid);
-    string rpois_string = _resist_composer("rPois", cwidth, rpois) + "\n";
-    //XXX
-    if (rpois == 3)
-    {
-        rpois_string = replace_all(rpois_string, "+", "∞");
-        rpois_string = replace_all(rpois_string, "green", "lightgreen");
-    }
-    out += rpois_string;
+    out += _resist_composer("rPois", cwidth, rpois, 1, true, rpois == 3) + "\n";
 
     const int relec = player_res_electricity(calc_unid);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
@@ -2394,7 +2397,8 @@ static vector<formatted_string> _get_overview_resistances(
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
     const int rmagi = player_willpower(calc_unid) / WL_PIP;
-    out += _resist_composer("Will", cwidth, rmagi, 5) + "\n";
+    out += _resist_composer("Will", cwidth, rmagi, 5, true,
+                            player_willpower(calc_unid) == WILL_INVULN) + "\n";
 
     out += _stealth_bar(20) + "\n";
 
@@ -2437,7 +2441,9 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
     const int rampage = you.rampaging(calc_unid);
-    out += _resist_composer("Rampage", cwidth, rampage) + "\n";
+    out += _resist_composer("Rampage", cwidth, rampage, 1, true,
+                            player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+           + "\n";
 
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis();
