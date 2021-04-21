@@ -1693,6 +1693,22 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 }
 
 /**
+ * Returns the description displayed if targeting a monster with a spell.
+ * 
+ * @param mi     The targeted monster.
+ * @param spell  The spell being cast.
+ * @return       The displayed string.
+ **/
+string target_desc(const monster_info& mi, spell_type spell)
+{
+    int powc = calc_spell_power(spell, true);
+    const int range = calc_spell_range(spell, powc, false);
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
+    vector<string> d = _desc_hit_chance(mi, hitfunc.get());
+    return d.empty() ? "" : d[0];
+}
+
+/**
  * Targets and fires player-cast spells & spell-like effects.
  *
  * Not all of these are actually real spells; invocations, decks or misc.
