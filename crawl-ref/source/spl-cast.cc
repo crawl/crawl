@@ -1701,7 +1701,7 @@ static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags f
 
 /**
  * Returns the description displayed if targeting a monster with a spell.
- * 
+ *
  * @param mi     The targeted monster.
  * @param spell  The spell being cast.
  * @return       The displayed string.
