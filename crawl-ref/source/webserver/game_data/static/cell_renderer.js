@@ -1210,21 +1210,19 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 img_scale);
         },
 
-        draw_quantity: function(qty, x, y, img_scale)
+        draw_quantity: function(qty, x, y, font)
         {
-            // Copied from tilereg-grid.cc:GridRegion::draw_number()
-            qty = Math.max(0, Math.min(9999, qty));
+            qty = Math.max(0, Math.min(999, qty));
 
-            var offset_x = qty > 1999 ? 0 : 3;
-            var offset_y = 1;
-
-            qty.toString().split("").forEach(function(digit, idx) {
-                var t = icons.NUM0 + Number(digit);
-                this.draw_tile(t, x, y, icons, offset_x, offset_y,
-                    undefined, false,
-                    img_scale);
-                offset_x += icons.get_tile_info(t).w;
-            }, this);
+            this.ctx.fillStyle = "white";
+            this.ctx.font = font;
+            this.ctx.shadowColor = "black";
+            this.ctx.shadowBlur = 2;
+            this.ctx.shadowOffsetX = 1;
+            this.ctx.shadowOffsetY = 1;
+            this.ctx.textAlign = "left";
+            this.ctx.textBaseline = "top";
+            this.ctx.fillText(qty, x + 2, y + 2);
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)
