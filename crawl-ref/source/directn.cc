@@ -1533,17 +1533,17 @@ static void _push_back_if_nonempty(const string& str, vector<string>* vec)
         vec->push_back(str);
 }
 
-void direction_chooser::print_target_monster_description(bool &did_cloud) const
+string direction_chooser::target_description() const
 {
     // Do we see anything?
     const monster* mon = monster_at(target());
     if (!mon)
-        return;
+        return "";
 
     const bool visible = you.can_see(*mon);
     const bool exposed = _mon_exposed(mon);
     if (!visible && !exposed)
-        return;
+        return "";
 
     // OK, now we know that we have something to describe.
     vector<string> suffixes;
@@ -1567,13 +1567,19 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
     }
+    return text;
+}
 
-    mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
-         target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
-         text.c_str());
-
-    // If there's a cloud here, it's been described.
-    did_cloud = true;
+void direction_chooser::print_target_monster_description(bool &did_cloud) const
+{
+    string text = target_description();
+    if ( text > "" ) {
+        mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
+            target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
+            text.c_str());
+        // If there's a cloud here, it's been described.
+        did_cloud = true;
+    }
 }
 
 // FIXME: this should really take a cell as argument.

@@ -1750,6 +1750,29 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 }
 
 /**
+ * Returns the description displayed if targeting a monster with a spell.
+ * For the clua api
+ *
+ * @param mi     The targeted monster.
+ * @param spell  The spell being cast.
+ * @return       The displayed string.
+ **/
+string target_desc(const monster_info& mi, spell_type spell)
+{
+    int powc = calc_spell_power(spell, true);
+    const int range = calc_spell_range(spell, powc, false);
+    unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
+
+    if (!hitfunc)
+        return "";
+
+    desc_filter addl_desc = targeter_addl_desc(spell, powc,
+                                get_spell_flags(spell), hitfunc.get());
+    vector<string> d = addl_desc(mi);
+    return comma_separated_line(d.begin(), d.end());
+}
+
+/**
  * Targets and fires player-cast spells & spell-like effects.
  *
  * Not all of these are actually real spells; invocations, decks or misc.

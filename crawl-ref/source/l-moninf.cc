@@ -10,18 +10,23 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "env.h"
+#include "fight.h"
 #include "l-defs.h"
 #include "libutil.h" // map_find
 #include "mon-book.h"
 #include "mon-pick.h"
+#include "ranged-attack.h"
+#include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "throw.h"
 #include "transform.h"
 #include "math.h" // ceil
 #include "spl-zap.h" // calc_spell_power
 #include "evoke.h" // wand_mp_cost
 #include "describe.h" // describe_info, get_monster_db_desc
+#include "directn.h"
 
 #define MONINF_METATABLE "monster.info"
 
@@ -310,6 +315,67 @@ static int moninf_get_ev(lua_State *ls)
     if (!value && mi->base_ev != INT_MAX)
         value = mi->base_ev;
     lua_pushnumber(ls, ceil(value/5.0));
+    return 1;
+}
+
+/*** The string displayed if you target this monster.
+ * @treturn string targeting description of the monster
+ *   (such as "Sigmund, wielding a +0 scythe and wearing a +0 robe")
+ * @function target_desc
+ */
+static int moninf_get_target_desc(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    coord_def mp(mi->pos.x, mi->pos.y);
+    dist moves;
+    moves.target = mp;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.just_looking = true;
+    args.needs_path = false;
+    lua_pushstring(ls, direction_chooser(moves, args).target_description().c_str());
+    return 1;
+}
+
+/*** Returns the string displayed if you target this monster with your current weapon.
+ * @treturn string (such as "about 18% to evade your dagger")
+ * @function target_weapon
+ */
+static int moninf_get_target_weapon(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    ostringstream result;
+    describe_to_hit(*mi, result, false);
+    lua_pushstring(ls, result.str().c_str());
+    return 1;
+}
+
+/*** Returns the string displayed if you target this monster with a spell.
+ * @tparam string spell name
+ * @treturn string (such as "74% to hit")
+ * @function target_spell
+ */
+static int moninf_get_target_spell(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
+    string desc = target_desc(*mi, spell);
+    lua_pushstring(ls, desc.c_str());
+    return 1;
+}
+
+/*** Returns the string displayed if you target this monster with a thrown item.
+ * @tparam item object to be thrown
+ * @treturn string (such as "about 45% to hit")
+ * @function target_throw
+ */
+static int moninf_get_target_throw(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
+    ranged_attack attk(&you, nullptr, item, false);
+    string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
+    lua_pushstring(ls, d.c_str());
     return 1;
 }
 
@@ -752,6 +818,10 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(defeat_wl),
     MIREG(ac),
     MIREG(ev),
+    MIREG(target_desc),
+    MIREG(target_weapon),
+    MIREG(target_spell),
+    MIREG(target_throw),
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
