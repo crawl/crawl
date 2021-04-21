@@ -10,13 +10,17 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "env.h"
+#include "fight.h"
 #include "l-defs.h"
 #include "libutil.h" // map_find
 #include "mon-book.h"
 #include "mon-pick.h"
+#include "ranged-attack.h"
+#include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "throw.h"
 #include "transform.h"
 #include "math.h" // ceil
 #include "spl-zap.h" // calc_spell_power
@@ -318,6 +322,39 @@ static int moninf_get_ev(lua_State *ls)
     if (!value && mi->base_ev != INT_MAX)
         value = mi->base_ev;
     lua_pushnumber(ls, ceil(value/5.0));
+    return 1;
+}
+
+/*** The string displayed if you target this monster.
+ * Returns the string displayed if you target this monster with a weapon, spell, or item.
+ * @tparam[opt] string|item spell name (string) or item (item object); default=you.weapon()
+ * @treturn string targeting description
+ * @function target_desc
+ */
+static int moninf_get_target_desc(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    if (lua_isnone(ls, 2) or lua_isnil(ls, 2))
+    {
+        // default is target description with your current weapon
+        ostringstream result;
+        describe_to_hit(*mi, result, false);
+        lua_pushstring(ls, result.str().c_str());
+        return 1;
+    }
+    if (lua_isuserdata(ls, 2))
+    {
+        // to-hit with a thrown item
+        item_def *item = *(item_def **) luaL_checkudata(ls, 2, ITEM_METATABLE);
+        ranged_attack attk(&you, nullptr, item, is_pproj_active());
+        string d = make_stringf("%d%% to hit", to_hit_pct(*mi, attk, false));
+        lua_pushstring(ls, d.c_str());
+        return 1;
+    }
+    // target description for a spell
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 2), false);
+    string desc = target_desc(*mi, spell);
+    lua_pushstring(ls, desc.c_str());
     return 1;
 }
 
@@ -740,6 +777,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(defeat_wl),
     MIREG(ac),
     MIREG(ev),
+    MIREG(target_desc),
     MIREG(x_pos),
     MIREG(y_pos),
     MIREG(pos),
