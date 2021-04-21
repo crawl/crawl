@@ -1705,6 +1705,7 @@ MONS:    ogre ; giant club
 MONS:    endoplasm
 KFEAT:   _ = altar_nemelex_xobeh
 SHUFFLE:  12_
+COLOUR:  x = darkgray
 COLOUR:  12' = random
 TILE:    x = wall_pebble_darkgray
 MAP
@@ -1774,9 +1775,10 @@ TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
 TAGS:   uniq_altar_nemelex_xobeh
 KFEAT:  _ = altar_nemelex_xobeh
 :  if you.depth() ~= dgn.br_depth(you.branch()) then
-KFEAT:  o = shaft trap
+KFEAT:  a = shaft trap
 :  end
-NSUBST: ' = 6:o / *:.
+NSUBST: ' = 6:a / *:.
+COLOUR: x = darkgray
 TILE:   x = wall_pebble_darkgray
 : interest_check(_G)
 MAP
