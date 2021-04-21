@@ -2185,6 +2185,91 @@ xxxtt--tttttttxx
      xxxxxxxxxxx
 ENDMAP
 
+NAME:   the_hattery
+DEPTH:  D:7-14
+: if crawl.one_chance_in(8) then
+:   dgn.delayed_decay(_G, 'e', 'spriggan name:skinned n_adj n_spe n_des corpse')
+: else
+SUBST: =e = x
+: end
+SUBST: = = +
+ITEM:   hat
+MONS:   spriggan col:white name:hatter n_suf ; robe . dagger
+MAP
+xxxxxx
+xdd=ex
+x.xxxx
+x.1x
+x+xx
+ENDMAP
+
+NAME:   hangedman_fish_farm
+DEPTH:  D:9-14
+TAGS:   no_monster_gen no_pool_fixup patrolling
+KMONS:  A = merfolk ; spear
+KFEAT:  g = shallow_water
+ITEM:   throwing net / nothing
+:       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
+MAP
+xxxxxx
+x..ddx
++...Ax
+xWWWgx
+xxxxxx
+ENDMAP
+
+# An ogre roasts intruders over his little campfire.
+NAME:   grunt_ogre_cave
+DEPTH:  D:7-14
+WEIGHT: 15
+TAGS:   extra no_monster_gen no_trap_gen \
+        patrolling
+{{
+  local twochance = you.absdepth() - 8
+  local onechance = 7 - twochance
+  if twochance <= 0 then
+    mons("ogre")
+  elseif onechance <= 0 then
+    mons("two-headed ogre")
+  else
+    mons("ogre w:" .. onechance .. " / two-headed ogre w:" .. twochance)
+  end
+  dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
+                             .. ' / dwarf skeleton')
+}}
+ITEM:   throwing net
+MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
+                              pow_max = 10, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+ xxxxx
+xxxxxxx
+xx..gxx
+xx1Ogxx
+xxd..xx
+ xxx.xx
+ xx.xx
+ xx.xx
+xx.xx
+ .g.
+  @
+ENDMAP
+
+NAME:     blue_anna_alchemist
+DEPTH:    D:8-14
+KITEM:    p =  potion of degeneration w:5 ident:all \
+               / potion of ambrosia w:1 ident:all / nothing
+MONS:     kobold brigand ; wand of flame ident:type . short sword \
+              . dart ego:poisoned | dart ego:curare w:5
+MAP
+    c++c
+ccccc..ccccc
+cppc....cppc
+cp.+.1..+.pc
+cccc....cccc
+cccccccccccc
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -7638,6 +7723,94 @@ MAP
 .x.......x.
 .xxxx.xxxx.
 ...........
+ENDMAP
+
+# These next three are former food vaults
+NAME:   grunt_livestock
+DEPTH:  D:7-14
+TAGS:   extra no_monster_gen no_trap_gen patrolling
+MONS:   human ; animal skin . hand axe
+{{
+  local hog_weight = 14 - you.absdepth()
+  if hog_weight <= 0 then
+    mons("yak")
+  else
+    mons("hog w:" .. hog_weight .. " / yak w:1")
+  end
+}}
+KFEAT:  K = iron_grate
+KFEAT:  - = open_door
+MAP
+.xxxxxxx
+@+...edx
+.x...1dx
+ xKK-KKx
+ x2...2x
+ x.2.2.x
+ xxxxxxx
+ENDMAP
+
+NAME:    hangedman_stone_soup
+DEPTH:   D:10-14
+TAGS:    extra patrolling no_rotate no_vmirror
+# Branch representatives working together to cook some soup:
+# D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
+KMONS:   A = kobold
+KMONS:   B = orc
+KMONS:   C = deep elf pyromancer / deep elf zephyrmancer
+KMONS:   D = spriggan
+KMONS:   E = merfolk
+KMONS:   F = human
+KMONS:   G = necrophage
+KMONS:   H = crimson imp
+KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
+             mundane hand axe w:1 no_pickup
+KITEM:   b = gold / nothing w:12
+KFEAT:   1Yab = shallow_water
+KMASK:   1Yac = no_monster_gen
+MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
+                 pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
+MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
+                 delay = 10, size = 1, walk_dist = 0, excl_rad = 0 }
+NSUBST:  c = 2:a / *:b
+SHUFFLE: ABCDEFGH
+MAP
+ .......
+..A...B..
+..vv.vv..
+..vcccv..
+..vc1cv..
+..vcYcv..
+.CvvvvvD.
+...Z.Z...
+ .......
+ENDMAP
+
+NAME:     hangedman_ranch
+DEPTH:    D:8-14
+WEIGHT:   10
+TAGS:     no_monster_gen patrolling
+KMONS:    A = three-headed hydra / w:5 two-headed hydra
+KMONS:    B = dream sheep
+KMONS:    C = yak
+KMONS:    D = kobold brigand
+KMONS:    E = kobold brigand ; nothing
+KMONS:    F = plant
+KITEM:    E = falchion ego:flaming ident:type / \
+              hand axe ego:flaming ident:type
+KITEM:    I = halberd
+KFEAT:    EF = shallow_water
+MAP
+cccccccccc
+cAH+.....c
+cIDcD..BBc
+c+ccm+++cc
+x.WF.....x
+xFWW.t.t.x
+xWEF..t..x
+xFW..t.t.x
+xFFW..W..x
+xxxxx@xxxx
 ENDMAP
 
 NAME:   special_room
