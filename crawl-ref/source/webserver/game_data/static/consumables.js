@@ -6,7 +6,7 @@ function ($, cr, enums, options, player, icons, util) {
     var renderer, $canvas;
     var borders_width;
     // Options
-    var scale, orientation;
+    var scale, orientation, font;
 
     $(document).bind("game_init", function () {
         $canvas = $("#consumables");
@@ -82,7 +82,7 @@ function ($, cr, enums, options, player, icons, util) {
                 renderer.draw_quantity(item[qty_field_name],
                                        _horizontal() ? offset : 0,
                                        _horizontal() ? 0 : offset,
-                                       scale);
+                                       font);
             }
         });
 
@@ -115,6 +115,13 @@ function ($, cr, enums, options, player, icons, util) {
         if (orientation !== new_orientation)
         {
             orientation = new_orientation;
+            update_required = true;
+        }
+
+        var new_font = options.get("consumables_panel_font");
+        if (font !== new_font)
+        {
+            font = new_font;
             update_required = true;
         }
 
