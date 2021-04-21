@@ -428,8 +428,27 @@ LUAFN(moninf_get_is)
     return 1;
 }
 
+/*** Get the monster's flags.
+ * Returns all flags set for the moster, as a list of flag names.
+ * @treturn array
+ * @function flags
+ */
+LUAFN(moninf_get_flags)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (std::map<string,int>::iterator it = mi_flags.begin(); it != mi_flags.end(); ++it)
+        if (mi->is(it->second))
+        {
+            lua_pushstring(ls, it->first.c_str());
+            lua_rawseti(ls, -2, ++index);
+        }
+    return 1;
+}
+
 /*** Get the monster's spells.
- * Returns a the monster's spellbook. The spellbook is given
+ * Returns the monster's spellbook. The spellbook is given
  * as a list of spell names.
  * @treturn array
  * @function spells
@@ -706,6 +725,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(colour),
     MIREG(mname),
     MIREG(is),
+    MIREG(flags),
     MIREG(is_safe),
     MIREG(is_firewood),
     MIREG(stabbability),
