@@ -803,7 +803,7 @@ static vector<string> _get_mutations(bool terse)
         if (you.vampire_alive)
         {
             result.push_back(terse ? "alive" :
-                _formmut("Your natural rate of healing is unusually fast."));
+                _formmut("Your natural rate of healing is accelerated."));
         }
         else if (terse)
             result.push_back("bloodless");
