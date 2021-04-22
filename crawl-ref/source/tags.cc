@@ -1033,6 +1033,13 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
 
     if (x == DNGN_ENTER_LABYRINTH)
         x = DNGN_ENTER_GAUNTLET;
+
+    if (minor_version < TAG_MINOR_NEW_TREES
+        && you.where_are_you == BRANCH_SWAMP
+        && x == DNGN_TREE)
+    {
+        x = DNGN_MANGROVE;
+    }
 #else
     UNUSED(minor_version);
 #endif

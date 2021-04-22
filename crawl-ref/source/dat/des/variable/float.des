@@ -2874,6 +2874,7 @@ KITEM:    * = *
 KITEM:    6| = |
 KFEAT:    h3456DHJK%$*| = W
 KFEAT:    K = w
+KFEAT:    t = mangrove
 KPROP:    ~"DE = no_tele_into
 SHUFFLE:  FH / IJ
 SUBST:    i : ch, j : ch, ~' = hhhhW, -" = W, k = .

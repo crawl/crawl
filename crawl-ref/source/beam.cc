@@ -931,8 +931,8 @@ void bolt::burn_wall_effect()
     destroy_wall(pos());
     if (you.see_cell(pos()))
     {
-        if (player_in_branch(BRANCH_SWAMP))
-            emit_message("The tree smoulders and burns.");
+        if (feat == DNGN_MANGROVE)
+            emit_message("The mangrove smoulders and burns.");
         else
             emit_message("The tree burns like a torch!");
     }
@@ -943,8 +943,8 @@ void bolt::burn_wall_effect()
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
 
-    // Trees do not burn so readily in a wet environment.
-    if (player_in_branch(BRANCH_SWAMP))
+    // Mangroves do not burn so readily.
+    if (feat == DNGN_MANGROVE)
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());

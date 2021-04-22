@@ -258,6 +258,7 @@ enum tag_minor_version
     TAG_MINOR_UNCURSE,             // Remove curses from items
     TAG_MINOR_NEW_ASHENZARI,       // New Ashenzari
     TAG_MINOR_COMPRESS_BADMUTS,    // Reduce some mutations to 2 levels
+    TAG_MINOR_NEW_TREES,           // New tree types
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

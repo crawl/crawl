@@ -28,7 +28,8 @@ enum dungeon_feature_type
 #endif
     DNGN_TREE,
 #if TAG_MAJOR_VERSION > 34
-    DNGN_PETRIFIED_TREE,               // tree but lrd-able
+    DNGN_MANGROVE,                    // Swamp's tree type
+    DNGN_PETRIFIED_TREE,              // tree but lrd-able
 #endif
 
     // Walls
@@ -323,6 +324,7 @@ enum dungeon_feature_type
     DNGN_TRAP_TELEPORT_PERMANENT,
     DNGN_TRAVEL_TRAIL,
     DNGN_PETRIFIED_TREE,
+    DNGN_MANGROVE,
 #endif
 
     NUM_FEATURES

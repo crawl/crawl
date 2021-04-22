@@ -4455,14 +4455,14 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
         // do a second pass to remove tele closets consisting of deep water
         // created by the first pass -- which will not fill in deep water
         // because it is treated as impassable.
         // TODO: get zonify to prevent these?
         // TODO: does this come up anywhere outside of swamp?
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE,
-                                    _dgn_square_is_ever_passable);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE,
+                _dgn_square_is_ever_passable);
     }
 
     if (!make_no_exits)
@@ -5208,7 +5208,9 @@ static dungeon_feature_type _glyph_to_feat(int glyph)
            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-           (glyph == 't') ? DNGN_TREE :
+           // We make 't' correspond to the right tree type by branch.
+           (glyph == 't') ? player_in_branch(BRANCH_SWAMP)
+                          ? DNGN_MANGROVE : DNGN_TREE
            (glyph == '+') ? DNGN_CLOSED_DOOR :
            (glyph == '=') ? DNGN_RUNED_CLEAR_DOOR :
            (glyph == 'w') ? DNGN_DEEP_WATER :

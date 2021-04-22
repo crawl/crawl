@@ -1814,7 +1814,7 @@ NSUBST: ' = 1:h / 1:g / 2:c / 1:c' / 2:% / 2:%' / 5:p / 4:p' / *:'
 SUBST: ' = ....b
 KPROP: bc = bloody
 SUBST: b = ., . = ..W
-KFEAT: T = tree
+KFEAT: T = t
 KMONS: p = plant
 : kmons( "h = " .. heads .. "-headed hydra patrolling" )
 KITEM: g = any weapon good_item / any armour good_item / any jewellery good_item
@@ -2795,7 +2795,7 @@ SUBST:  ' = ..t__, E = .Wt
 KFEAT:  H = W
 COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
-: set_feature_name("tree", "dead tree")
+: set_feature_name("mangrove", "dead mangrove")
 MARKER: H = lua:fog_machine { cloud_type = "foul pestilence", \
             pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
             size = 3, walk_dist = 1, excl_rad = 0}

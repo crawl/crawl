@@ -253,6 +253,11 @@ A large tree. While in most places the dim light of the dungeon is not bright
 enough to sustain large plants, there are spots where, with the grace of
 Fedhas, trees as big as those on the surface can grow underground.
 %%%%
+A mangrove
+
+This tree is specially adapted for growing in swampy conditions. Its vines are
+too thick to see through.
+%%%%
 An awoken tree
 
 A large tree that has been enchanted to grant it some limited motility,
@@ -857,6 +862,10 @@ A wall decorated with images of death and destruction.
 A dead tree
 
 The dry remains of a long-dead tree.
+%%%%
+A dead mangrove
+
+The dry remains of a long-dead mangrove.
 %%%%
 # Dis:7
 An iron statue
