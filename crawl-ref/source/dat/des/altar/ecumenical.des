@@ -443,7 +443,7 @@ NAME:   dilly_ecumenical_altar_fadedgnrine
 TAGS:   no_monster_gen transparent
 MONS:   plant
 SUBST:  z = t111
-SUBST:  1 = 11.
+SUBST:  1 = 11'
 KITEM:  E = never_decay gnoll shaman skeleton / never_decay gnoll skeleton
 KPROP:  E = no_tele_into
 FTILE:  1Et'_  = floor_grass
