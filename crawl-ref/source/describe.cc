@@ -2461,8 +2461,10 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     if (feat_is_flammable(feat) && !is_temp_terrain(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
-        long_desc += "\nIt is susceptible to bolts of lightning";
-        long_desc += " and to sufficiently intense sources of fire.";
+        if (feat == DNGN_TREE)
+            long_desc += "\n" + getLongDescription("tree burning");
+        else if (feat == DNGN_MANGROVE)
+            long_desc += "\n" + getLongDescription("mangrove burning");
     }
 
     // mention that diggable walls are

@@ -1058,3 +1058,14 @@ This tree has been temporarily enchanted to grant it some limited motility,
 allowing it to lash out out at any adjacent enemies of the creature who awoke
 it.
 %%%%
+tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. The resulting blaze can flare up, spreading to areas nearby and igniting
+other trees.
+%%%%
+mangrove burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Mangroves do not burn as vigorously as normal trees, due to growing on
+swampy terrain, and leave behind shallow water after they smoulder.
