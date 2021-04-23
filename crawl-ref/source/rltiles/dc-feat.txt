@@ -52,6 +52,10 @@ tree_petrified2
 tree_petrified3
 
 
+# We put the berserk icon on the dngn tilesheet for rendering purposes.
+%sdir misc/icons
+berserk AWOKEN_OVERLAY
+
 ## doors
 %sdir dngn/doors
 closed_door DNGN_CLOSED_DOOR

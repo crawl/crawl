@@ -3206,13 +3206,19 @@ string feature_description_at(const coord_def& where, bool covering,
 
     string covering_description = "";
 
-    if (covering && you.see_cell(where) && is_icecovered(where))
-        covering_description = ", covered with ice";
-
-    if (covering && you.see_cell(where) && is_bloodcovered(where))
+    if (covering && you.see_cell(where))
     {
-        string prefix = covering_description.empty() ? ", " : " and ";
-        covering_description += prefix + "spattered with blood";
+        if (feat_is_tree(grid) && env.forest_awoken_until)
+            covering_description += ", awoken";
+
+        if (is_icecovered(where))
+            covering_description = ", covered with ice";
+
+        if (is_temp_terrain(where))
+            covering_description = ", summoned";
+
+        if (is_bloodcovered(where))
+            covering_description += ", spattered with blood";
     }
 
     // FIXME: remove desc markers completely; only Zin walls are left.
@@ -3303,20 +3309,6 @@ string feature_description_at(const coord_def& where, bool covering,
 #endif
     case DNGN_ENTER_SHOP:
         return shop_name(*shop_at(where));
-
-    case DNGN_TREE:
-    case DNGN_PETRIFIED_TREE:
-    {
-        string desc = "";
-        if (env.forest_awoken_until)
-            desc += "awoken ";
-        desc += grid == env.grid(where) ? raw_feature_description(where)
-                                   : _base_feature_desc(grid, trap);
-        if (is_temp_terrain(where))
-            desc += " (summoned)";
-        desc += covering_description;
-        return thing_do_grammar(dtype, desc);
-    }
 
     case DNGN_FLOOR:
         if (dtype == DESC_A)

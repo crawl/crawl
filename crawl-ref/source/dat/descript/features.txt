@@ -258,24 +258,6 @@ A mangrove
 This tree is specially adapted for growing in swampy conditions. Its vines are
 too thick to see through.
 %%%%
-An awoken tree
-
-A large tree that has been enchanted to grant it some limited motility,
-allowing it to lash out out at any adjacent enemies of the creature who awoke
-it.
-%%%%
-An awoken autumnal tree
-
-<An awoken tree>
-%%%%
-An awoken dead tree
-
-<An awoken tree>
-%%%%
-An awoken petrified tree
-
-<An awoken tree>
-%%%%
 An abandoned shop
 
 A shop that has been abandoned.
@@ -1069,4 +1051,10 @@ creatures. Each victim is only ever affected by one icy wall at a time.
 
 The creator of this icy covering and any of their allies can walk safely past
 this wall.
+%%%%
+awoken
+
+This tree has been temporarily enchanted to grant it some limited motility,
+allowing it to lash out out at any adjacent enemies of the creature who awoke
+it.
 %%%%

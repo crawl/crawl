@@ -2328,6 +2328,14 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     vector<extra_feature_desc> ret;
     const dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
+    if (feat_is_tree(feat) && env.forest_awoken_until)
+    {
+        ret.push_back({
+            "Awoken.",
+            getLongDescription("awoken"),
+            tile_def(TILE_AWOKEN_OVERLAY)
+        });
+    }
     if (feat_is_wall(feat) && env.map_knowledge(pos).flags & MAP_ICY)
     {
         ret.push_back({
