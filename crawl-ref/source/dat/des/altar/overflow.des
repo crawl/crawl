@@ -5254,7 +5254,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_alcove_1
 TAGS:  temple_overflow_generic_1
-SUBST: c : xcnvb
+SUBST: c : xcvbt
 MAP
 ccccccc
 c.....c
