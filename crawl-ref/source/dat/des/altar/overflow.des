@@ -5190,8 +5190,8 @@ ENDMAP
 NAME:  mainiacjoe_overflow_chevrons
 TAGS:  temple_overflow_generic_1
 SUBST: c : cvbn
-SUBST: p : cnvbtwl123G
-SUBST: q : cnvbtwl123
+SUBST: p : cnvbtwl123
+SUBST: q : cnvbtwl123G
 MONS:  plant, bush, fungus
 KMASK: wl = no_monster_gen
 KMASK: w = no_pool_fixup
