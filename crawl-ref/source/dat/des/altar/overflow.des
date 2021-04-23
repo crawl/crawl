@@ -5378,7 +5378,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_two_lobes
 TAGS:  temple_overflow_generic_2
-SUBST: l : lwo
+SUBST: l : lwn
 SUBST: b : bvt
 KMASK: w = no_pool_fixup
 KMASK: wl = no_monster_gen
