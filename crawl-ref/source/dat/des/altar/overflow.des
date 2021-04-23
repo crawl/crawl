@@ -5239,7 +5239,7 @@ TAGS:   temple_overflow_generic_1
 NSUBST: X: 1:. / *:x
 SUBST:  x: x.
 NSUBST: x = 1:@ / *:x
-SUBST:  c : cnvb
+SUBST:  c : cvb
 MAP
 xxxxxXXXXXXXxxxxx
 xxxxx.......xxxxx
