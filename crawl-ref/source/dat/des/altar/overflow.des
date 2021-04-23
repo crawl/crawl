@@ -4763,15 +4763,13 @@ SUBST: l : lw
 KMASK: wl = no_monster_gen
 KMASK: w = no_pool_fixup
 MAP
-xxxxxxxxxxxxxxx
-xlllllllllllllx
-xlllllllllllllx
-xlllllllllllllx
-xlllB.........@
-xlllllllllllllx
-xlllllllllllllx
-xlllllllllllllx
-xxxxxxxxxxxxxxx
+..............
+.llllllllllll.
+.llllllllll...
+.llB........G.
+.llllllllll...
+.llllllllllll.
+..............
 ENDMAP
 
 NAME:   mainiacjoe_overflow_paths
