@@ -5336,7 +5336,7 @@ ENDMAP
 NAME:   mainiacjoe_overflow_paths
 TAGS:   temple_overflow_generic_1
 NSUBST: p = 1:@ / 1:c
-SUBST:  c : xcbvn
+SUBST:  c : xcbvt
 SUBST:  w : lw
 KMASK:  wl = no_monster_gen
 KMASK:  w = no_pool_fixup
