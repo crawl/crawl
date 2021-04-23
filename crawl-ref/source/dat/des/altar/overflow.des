@@ -5436,7 +5436,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_swirl
 TAGS:  temple_overflow_generic_2
-SUBST: c : cvbn
+SUBST: c : cvb
 MAP
        ccccc
        c...c
