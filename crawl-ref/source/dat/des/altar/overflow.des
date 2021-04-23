@@ -4765,13 +4765,13 @@ ENDMAP
 
 NAME:   mainiacjoe_overflow_paths
 TAGS:   temple_overflow_generic_1
-NSUBST: p = 1:@ / 1:c
+TAGS:   transparent
 SUBST:  c : xcbvt
 SUBST:  w : lw
 KMASK:  wl = no_monster_gen
 KMASK:  w = no_pool_fixup
 MAP
-pcccccccccp
+@ccccccccc@
 c..wwwww..c
 c.w.....w.c
 c.w.www.w.c
@@ -4781,7 +4781,7 @@ c.ww...ww.c
 c.w.www.w.c
 c.w.....w.c
 c..wwwww..c
-pcccccccccp
+@ccccccccc@
 ENDMAP
 
 NAME:   mainiacjoe_overflow_small_starburst
