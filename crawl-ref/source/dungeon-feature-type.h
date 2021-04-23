@@ -29,6 +29,7 @@ enum dungeon_feature_type
     DNGN_TREE,
 #if TAG_MAJOR_VERSION > 34
     DNGN_MANGROVE,                    // Swamp's tree type
+    DNGN_DEMONIC_TREE,                // tree used in Abyss and Pan
     DNGN_PETRIFIED_TREE,              // tree but lrd-able
 #endif
 
@@ -325,6 +326,7 @@ enum dungeon_feature_type
     DNGN_TRAVEL_TRAIL,
     DNGN_PETRIFIED_TREE,
     DNGN_MANGROVE,
+    DNGN_DEMONIC_TREE,
 #endif
 
     NUM_FEATURES

@@ -608,14 +608,15 @@ bool feat_is_player_altar(dungeon_feature_type grid)
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return feat == DNGN_TREE || feat == DNGN_MANGROVE
-        || feat == DNGN_PETRIFIED_TREE;
+        || feat == DNGN_PETRIFIED_TREE || feat == DNGN_DEMONIC_TREE;
 }
 
 /** Is this feature flammable?
  */
 bool feat_is_flammable(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE || feat == DNGN_MANGROVE;
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE
+        || feat == DNGN_DEMONIC_TREE;
 }
 
 

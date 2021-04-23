@@ -51,6 +51,22 @@ tree_petrified1 DNGN_PETRIFIED_TREE
 tree_petrified2
 tree_petrified3
 
+tree_demonic1 DNGN_DEMONIC_TREE
+tree_demonic2
+tree_demonic3
+tree_demonic4
+tree_demonic5
+tree_demonic6
+tree_demonic7
+tree_demonic8
+tree_demonic9
+tree_demonic10
+tree_demonic11
+tree_demonic12
+tree_demonic13
+tree_demonic14
+tree_demonic15
+tree_demonic16
 
 # We put the berserk icon on the dngn tilesheet for rendering purposes.
 %sdir misc/icons

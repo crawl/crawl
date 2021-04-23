@@ -2465,6 +2465,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += "\n" + getLongDescription("tree burning");
         else if (feat == DNGN_MANGROVE)
             long_desc += "\n" + getLongDescription("mangrove burning");
+        else if (feat == DNGN_DEMONIC_TREE)
+            long_desc += "\n" + getLongDescription("demonic tree burning");
     }
 
     // mention that diggable walls are

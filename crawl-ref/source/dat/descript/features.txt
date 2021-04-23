@@ -258,6 +258,11 @@ A mangrove
 This tree is specially adapted for growing in swampy conditions. Its vines are
 too thick to see through.
 %%%%
+A demonic tree
+
+A tree hideously warped by the demonic forces of chaos. Despite its bizarre
+appearance and occasional, unsettling movement, it seems harmless.
+%%%%
 An abandoned shop
 
 A shop that has been abandoned.
@@ -1069,3 +1074,9 @@ mangrove burning
 It is susceptible to bolts of lightning and to sufficiently intense sources of
 fire. Mangroves do not burn as vigorously as normal trees, due to growing on
 swampy terrain, and leave behind shallow water after they smoulder.
+%%%%
+demonic tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Burning this tree releases a hostile demon and creates a cloud of pure
+chaos. The demon's strength will be greater for trees found at deeper depths.

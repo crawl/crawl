@@ -1290,6 +1290,7 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     case DNGN_CRYSTAL_WALL:
     case DNGN_TREE:
     case DNGN_MANGROVE:
+    case DNGN_DEMONIC_TREE:
     case DNGN_PETRIFIED_TREE:
         chance = 33;
         break;

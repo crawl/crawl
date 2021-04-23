@@ -5209,8 +5209,11 @@ static dungeon_feature_type _glyph_to_feat(int glyph)
            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
            // We make 't' correspond to the right tree type by branch.
-           (glyph == 't') ? player_in_branch(BRANCH_SWAMP)
-                          ? DNGN_MANGROVE : DNGN_TREE
+           (glyph == 't') ?
+               player_in_branch(BRANCH_SWAMP)          ? DNGN_MANGROVE :
+               player_in_branch(BRANCH_ABYSS)
+               || player_in_branch(BRANCH_PANDEMONIUM) ? DNGN_DEMONIC_TREE
+                                                       : DNGN_TREE :
            (glyph == '+') ? DNGN_CLOSED_DOOR :
            (glyph == '=') ? DNGN_RUNED_CLEAR_DOOR :
            (glyph == 'w') ? DNGN_DEEP_WATER :
