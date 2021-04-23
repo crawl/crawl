@@ -5419,7 +5419,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_big_doors
 TAGS:  temple_overflow_generic_2
-SUBST: c : cvbn
+SUBST: c : cvb
 SUBST: p : nvbtwl123G
 MONS:  plant, bush, fungus
 KMASK: wl = no_monster_gen
