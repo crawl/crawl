@@ -323,13 +323,20 @@ ENDMAP
 NAME:     amcnicky_altar_lugonu_corruption
 TAGS:     transparent no_monster_gen
 # Lugonu cares not about moderate vault placement
-DEPTH:    D:3-, Lair, Orc, Elf, Crypt, Depths, Slime:1-4, Shoals,\
-            Spider, Snake, Swamp, Zot:1-4
+DEPTH:    D:3-, Lair, Orc, Elf, Crypt, Depths, Slime, Shoals,\
+            Spider, Snake, Swamp, Zot
 WEIGHT:   2
+KMONS:    q = lurking_horror
+KFEAT:    p = altar_lugonu
+KFEAT:    r = enter_abyss
 : if crawl.coinflip() then
-SUBST:    ' = ccc'.
+SUBST:    ' = xxx'.
 : else
-SUBST:    ' = c'.
+SUBST:    ' = x'.
+: end
+: if you.in_branch("Swamp") then
+SUBST:    x = t
+KFEAT:    t = demonic_tree
 : end
 SUBST:    z = zz.
 # Ordered chaos, like the abyss builder
@@ -342,29 +349,25 @@ COLOUR:   uq : blue / green / cyan / red / magenta / brown / \
 COLOUR:   z : blue / green / cyan / red / magenta / brown / \
               lightblue / lightgreen / lightcyan / lightred / lightmagenta / \
               yellow
-COLOUR:   c : blue / green / cyan / red / magenta / brown / \
-              lightblue / lightgreen / lightcyan / lightred / lightmagenta / \
-              yellow
-FTILE:    'upqrzc : floor_nerves
+COLOUR:   x : blue / red / magenta / brown / lightgreen / lightred / \
+              lightmagenta / yellow / white
 NSUBST:   u = 1=p / 1=r / 1=q / 2=q...
-KFEAT:    p = altar_lugonu
-KFEAT:    r = enter_abyss
-KMONS:    q = lurking_horror
+FTILE:    'upqrzc : floor_nerves
 MARKER:   r = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, \
             size=1, pow_max=5, delay=10, buildup_amnt=7, buildup_time=7, \
             spread_rate=2, start_clouds=1, colour="purple" }
-TILE:     c : wall_abyss
+TILE:     x : wall_abyss
 MAP
- .'z'''c.
-.cc'z''cc.
-.c'z'z''''.
+ .'z'''x.
+.xx'z''xx.
+.x'z'z''''.
 .z''u'z''''.
 .'z'u''z'zz.
 .'uu'u''z''.
 .''u'''z''.
-.c''z'z'z''.
- .cc'z'z''c.
-  .c''z'''.
+.x''z'z'z''.
+ .xx'z'z''x.
+  .x''z'''.
    .'z'z'.
     .'z'.
 ENDMAP
