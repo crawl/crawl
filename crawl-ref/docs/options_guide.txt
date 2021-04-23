@@ -1600,8 +1600,10 @@ force_more_message += <regex>, <regex>
         (List option)
         Any message that contains a regex specified here will enforce a
         --More-- prompt, so it can be used to highlight really important
-        events. This option ignores the show_more option.
-        The syntax is identical to that of runrest_ignore_message (3-f).
+        events. This option ignores the show_more option. This option will
+        not interrupt travel delays by default; use runrest_stop_message
+        for that instead. The syntax is identical to that of
+        runrest_ignore_message (3-f).
 
 flash_screen_message += <regex>, <regex>
         (List option)
