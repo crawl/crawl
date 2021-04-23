@@ -252,7 +252,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         // Note that this spellpower multiplier for Vortex is based on Air
         // Elementals, which have low HD.
         pow = caster->as_monster()->get_hit_dice() * (is_vortex ? 12 : 4);
-    dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
@@ -295,7 +294,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         rdurs[r] = rdur;
         // power at the radius
         int rpow = div_rand_round(pow * cnt_open * rdur, cnt_all * 100);
-        dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
         if (!rpow)
             break;
 
