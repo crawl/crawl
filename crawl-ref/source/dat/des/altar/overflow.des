@@ -5213,7 +5213,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_24_doors
 TAGS:  temple_overflow_generic_1
-SUBST: c : xcvbn
+SUBST: c : xcvb
 MAP
 ...............
 .ccc+cc+cc+ccc.
