@@ -5137,7 +5137,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_six_doors_small
 TAGS:  temple_overflow_generic_1
-SUBST: c : cnvbtwl
+SUBST: c : cvbt
 SUBST: P : cnvbtwl
 KMASK: wl = no_monster_gen
 KMASK: w = no_pool_fixup
