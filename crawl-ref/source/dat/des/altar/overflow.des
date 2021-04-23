@@ -5470,7 +5470,7 @@ ENDMAP
 
 NAME:  mainiacjoe_overflow_alcove_3
 TAGS:  temple_overflow_generic_4
-SUBST: c : xcnvb
+SUBST: c : xcvb
 SUBST: p : cnvbt123wl
 MONS:  plant, bush, fungus
 KMASK: wl = no_monster_gen
