@@ -3163,7 +3163,11 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     if (grid == DNGN_FLOOR && dtype == DESC_A)
         dtype = DESC_THE;
 
-    return thing_do_grammar(dtype, desc);
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
+    return thing_do_grammar(dtype, desc, ignore_case);
 }
 
 string raw_feature_description(const coord_def &where)
@@ -3283,30 +3287,22 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, desc);
     }
 
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
     switch (grid)
     {
 #if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
-#endif
-    case DNGN_TRAP_ARROW:
-    case DNGN_TRAP_SPEAR:
-    case DNGN_TRAP_BLADE:
-    case DNGN_TRAP_DART:
-    case DNGN_TRAP_BOLT:
-    case DNGN_TRAP_NET:
-    case DNGN_TRAP_PLATE:
         return feature_description(grid, trap, covering_description, dtype);
-    case DNGN_ABANDONED_SHOP:
-        return thing_do_grammar(dtype, "an abandoned shop");
 
-    case DNGN_ENTER_SHOP:
-        return shop_name(*shop_at(where));
-
-#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
         return thing_do_grammar(dtype, "UNAMED PORTAL VAULT ENTRY");
 #endif
+    case DNGN_ENTER_SHOP:
+        return shop_name(*shop_at(where));
 
     case DNGN_TREE:
     case DNGN_PETRIFIED_TREE:
@@ -3330,7 +3326,8 @@ string feature_description_at(const coord_def& where, bool covering,
         const string featdesc = grid == env.grid(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
-        return thing_do_grammar(dtype, featdesc + covering_description);
+        return thing_do_grammar(dtype, featdesc + covering_description,
+                ignore_case);
     }
 }
 
