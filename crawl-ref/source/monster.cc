@@ -5804,7 +5804,6 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_CURING:
         return hit_points <= max_hit_points / 2
                || has_ench(ENCH_POISON)
-               || has_ench(ENCH_SICK)
                || has_ench(ENCH_CONFUSION);
     case POT_HEAL_WOUNDS:
         return hit_points <= max_hit_points / 2;
@@ -5846,7 +5845,7 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
         static const enchant_type cured_enchants[] =
         {
-            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION
+            ENCH_POISON, ENCH_CONFUSION
         };
 
         for (enchant_type cured : cured_enchants)

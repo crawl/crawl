@@ -1409,7 +1409,6 @@ static void _tag_construct_you(writer &th)
     marshallByte(th, you.berserk_penalty);
     marshallInt(th, you.abyss_speed);
 
-    marshallInt(th, you.disease);
     ASSERT(you.hp > 0 || you.pending_revival);
     marshallShort(th, you.pending_revival ? 0 : you.hp);
 
@@ -2564,7 +2563,11 @@ static void _tag_read_you(reader &th)
 
     you.abyss_speed = unmarshallInt(th);
 
-    you.disease         = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    // was you.disease
+    if (th.getMinorVersion() < TAG_MINOR_DISEASE)
+        unmarshallInt(th);
+#endif
     you.hp              = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     // was you.hunger

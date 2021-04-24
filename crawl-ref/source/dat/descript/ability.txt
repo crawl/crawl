@@ -342,9 +342,9 @@ Heals a small amount of health, depending on Invocations skill.
 %%%%
 Purification ability
 
-Purges your body of negative effects such as poison, confusion, slowness,
-petrification, and sickness, and fully restores any lost strength, dexterity or
-intelligence.
+Purges your body of poison, confusion, slowness, petrification, weakness, and
+sickness. Any drained strength, dexterity or intelligence will also be fully
+restored, along with any drained maximum health.
 %%%%
 Heal Other ability
 

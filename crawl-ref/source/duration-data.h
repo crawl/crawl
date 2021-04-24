@@ -591,7 +591,9 @@ static const duration_def duration_data[] =
     { DUR_SICKENING, 0, "", "", "sickening", "", D_NO_FLAGS, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
+    // Regeneration information handled separately.
+    { DUR_TROGS_HAND, 0, "", "strong-willed", "trogs hand",
+      "Your willpower is greatly increased.", D_EXPIRES,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
@@ -614,6 +616,8 @@ static const duration_def duration_data[] =
     { DUR_HEAVENLY_STORM, 0, "", "in a heavenly storm", "heavenly storm",
       "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
       {{ "", wu_jian_decrement_heavenly_storm }}},
+    { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
+      {{ "You feel your health improve." }}},
 
 
 #if TAG_MAJOR_VERSION == 34

@@ -780,36 +780,19 @@ static void _describe_glow(status_info& inf)
 
 static void _describe_regen(status_info& inf)
 {
-    const bool trogs_hand = you.duration[DUR_TROGS_HAND] > 0;
-    const bool no_heal = !player_regenerates_hp();
-
-    if (trogs_hand)
+    if (you.duration[DUR_TROGS_HAND])
     {
         inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_TROGS_HAND));
-        inf.light_text   = "Regen";
-        inf.light_text += " Will++";
-    }
-
-    if (no_heal || (you.disease && !trogs_hand))
-       inf.short_text = "non-regenerating";
-    else if (trogs_hand)
-    {
-        if (you.disease)
-        {
-            inf.short_text = "recuperating";
-            inf.long_text  = "You are recuperating from your illness.";
-        }
-        else
-        {
-            inf.short_text = "regenerating";
-            inf.long_text  = "You are regenerating.";
-        }
+        inf.light_text = "Regen Will++";
+        inf.short_text = "regenerating";
+        inf.long_text  = "You are regenerating.";
         _mark_expiring(inf, dur_expiring(DUR_TROGS_HAND));
     }
-    else if (you.has_mutation(MUT_VAMPIRISM) && you.vampire_alive)
+    else if (you.has_mutation(MUT_VAMPIRISM)
+             && you.vampire_alive
+             && !you.duration[DUR_SICKNESS])
     {
-        inf.short_text = you.disease ? "recuperating" : "regenerating";
-        inf.short_text += " quickly";
+        inf.short_text = "healing quickly";
     }
 }
 
@@ -879,17 +862,18 @@ static void _describe_airborne(status_info& inf)
 
 static void _describe_sickness(status_info& inf)
 {
-    if (you.disease)
+    if (you.duration[DUR_SICKNESS])
     {
         const int high = 120 * BASELINE_DELAY;
         const int low  =  40 * BASELINE_DELAY;
 
-        inf.light_colour   = _bad_ench_colour(you.disease, low, high);
+        inf.light_colour   = _bad_ench_colour(you.duration[DUR_SICKNESS],
+                                              low, high);
         inf.light_text     = "Sick";
 
-        string mod = (you.disease > high) ? "badly "  :
-                     (you.disease >  low) ? ""
-                                          : "mildly ";
+        string mod = (you.duration[DUR_SICKNESS] > high) ? "badly "  :
+                     (you.duration[DUR_SICKNESS] >  low) ? ""
+                                                         : "mildly ";
 
         inf.short_text = mod + "diseased";
         inf.long_text  = "You are " + mod + "diseased.";

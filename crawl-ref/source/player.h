@@ -147,7 +147,6 @@ public:
     FixedVector<int8_t, NUM_STATS> stat_loss;
     FixedVector<int8_t, NUM_STATS> base_stats;
 
-    int disease;
     uint8_t max_level;
     int hit_points_regeneration;
     int magic_points_regeneration;
@@ -1155,7 +1154,6 @@ bool land_player(bool quiet = false);
 void player_open_door(coord_def doorpos);
 void player_close_door(coord_def doorpos);
 
-void dec_disease_player(int delay);
 void player_end_berserk();
 
 void handle_player_drowning(int delay);

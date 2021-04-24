@@ -632,7 +632,8 @@ it. It also reduces magical contamination.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures poison and disease.
+A potion which restores a small amount of health, and cures poison and
+confusion.
 %%%%
 potion of degeneration
 

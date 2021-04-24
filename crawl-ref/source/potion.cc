@@ -79,8 +79,7 @@ public:
     {
         // cure status effects
         if (you.duration[DUR_CONF]
-            || you.duration[DUR_POISONING]
-            || you.disease)
+            || you.duration[DUR_POISONING])
         {
             return true;
         }
@@ -129,7 +128,6 @@ public:
         if (you.duration[DUR_POISONING])
             you.redraw_hit_points = true;
         you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
         you.duration[DUR_CONF] = 0;
         return true;
     }

@@ -2107,7 +2107,7 @@ static void _ancient_zyme_sicken(monster* mons)
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
-        if (!you.disease)
+        if (!you.duration[DUR_SICKNESS])
         {
             if (!you.duration[DUR_SICKENING])
             {

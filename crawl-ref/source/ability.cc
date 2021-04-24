@@ -1534,7 +1534,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_ELYVILON_PURIFICATION:
-        if (!you.disease && !you.duration[DUR_POISONING]
+        if (!you.duration[DUR_SICKNESS]
+            && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
             && !you.petrifying()
             && you.strength(false) == you.max_strength()

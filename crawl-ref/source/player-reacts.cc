@@ -1017,7 +1017,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

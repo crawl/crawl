@@ -173,8 +173,7 @@ without taking damage.
 %%%%
 Sick status
 
-You have been sickened, and your health will no longer regenerate. Sickness can
-be cured immediately by potions of curing.
+You have been sickened, and your health will no longer regenerate.
 %%%%
 Vertigo status
 

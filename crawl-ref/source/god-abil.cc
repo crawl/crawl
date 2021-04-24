@@ -1321,7 +1321,7 @@ void elyvilon_purification()
 {
     mpr("You feel purified!");
 
-    you.disease = 0;
+    you.duration[DUR_SICKNESS] = 0;
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
