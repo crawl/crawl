@@ -47,7 +47,7 @@ LUAFN(l_set_exclude)
  * Uses player-centered coordinates
  * @tparam int x
  * @tparam int y
- * @function del_eclude
+ * @function del_exclude
  */
 LUAFN(l_del_exclude)
 {
@@ -59,6 +59,25 @@ LUAFN(l_del_exclude)
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     del_exclude(p);
     return 0;
+}
+
+/*** Test for exclusion.
+ * Uses player-centered coordinates
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function is_excluded
+ */
+LUAFN(l_is_excluded)
+{
+    coord_def s;
+    s.x = luaL_safe_checkint(ls, 1);
+    s.y = luaL_safe_checkint(ls, 2);
+    const coord_def p = player2grid(s);
+    if (!_in_map_bounds(p))
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
+    PLUARET(boolean, is_excluded(p));
+    return 1;
 }
 
 /*** Can we get across this without swimming or flying?
@@ -146,6 +165,7 @@ static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
     { "del_exclude", l_del_exclude },
+    { "is_excluded", l_is_excluded },
     { "feature_traversable", l_feature_is_traversable },
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
