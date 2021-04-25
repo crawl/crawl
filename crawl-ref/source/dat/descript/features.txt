@@ -1078,4 +1078,4 @@ swampy terrain, and leave behind shallow water after they smoulder.
 demonic tree burning
 
 It is susceptible to bolts of lightning and to sufficiently intense sources of
-fire. Burning this tree releases creates a cloud of pure chaos.
+fire. Burning this tree releases a cloud of pure chaos instead of flames.
