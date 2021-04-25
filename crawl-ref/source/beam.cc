@@ -950,22 +950,9 @@ void bolt::burn_wall_effect()
     // Mangroves do not burn so readily.
     else if (feat == DNGN_MANGROVE)
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
-    // Demonic trees release a chaos cloud and a durably summoned hostile
-    // demon that scales with depth.
+    // Demonic trees produce a chaos cloud instead of fire.
     else if (feat == DNGN_DEMONIC_TREE)
-    {
         place_cloud(CLOUD_CHAOS, pos(), random2(30)+25, agent());
-
-        monster_type mtype = RANDOM_DEMON_COMMON;
-        if (x_chance_in_y(env.absdepth0, 27))
-            mtype = RANDOM_DEMON_GREATER;
-        mgen_data mg = mgen_data::hostile_at(mtype, true, you.pos());
-        mg.set_summoned(nullptr, 0, SPELL_NO_SPELL, GOD_NO_GOD);
-        mg.set_non_actor_summoner("a demonic tree");
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        if (create_monster(mg))
-            mpr("You sense a hostile presence.");
-    }
 
     obvious_effect = true;
 
