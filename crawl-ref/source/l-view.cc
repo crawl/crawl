@@ -99,6 +99,11 @@ LUAFN(view_is_safe_square)
         PLUARET(boolean, false);
         return 1;
     }
+    if (is_excluded(p))
+    {
+        PLUARET(boolean, false);
+        return 1;
+    }
     PLUARET(boolean, true);
     return 1;
 }
