@@ -2246,12 +2246,14 @@ KITEM:  N = scroll of teleportation q:3 ident:all w:20 \
 KMONS:  O = player ghost
 KFEAT:  O = enter_abyss
 KFEAT:  ^ = dispersal trap
-COLOUR: -apQ = magenta
+KFEAT:  tJ = demonic_tree
+SUBST:  c = c:40 v b t:5, . = '''.
+COLOUR: -apQJ = magenta
 RTILE:  x = wall_abyss
-FTILE:  -apQ = floor_nerves
+FTILE:  -'apPQntcbv = floor_nerves
 # Randomize transporter feature placement among set of specific locations on
 # 'P', using remaining instances for loot.
-NSUBST: P = P / S, Q = Q / R, R = R / k, S = S / .
+NSUBST: P = P / S, Q = Q / R, R = R / k, S = S / '
 NSUBST: k = d / e / f / g / h / i / j / -
 # Place some rocks and dispersal traps in the inner area and along the inner
 # wall, but with lower density along wall to make fewer choke points.
@@ -2348,6 +2350,7 @@ MONS:   great orb of eyes / glowing orange brain / very ugly thing \
         / cacodemon / hellion / apocalypse crab / glowing shapeshifter
 SUBST:  f = *, g = %$, hij= -
 NSUBST: - = qE / 2=1 / 2=1. / 2 / 2=2. / 3. / 4. / .
+FTILE:  'PSntcbv = floor_nerves_green
 : elseif you.in_branch("Orc") then
 MONS:   any common demon / ugly thing / large abomination / worldbinder / raiju
 MONS:   shapeshifter / rakshasa / thrashing horror / wizard / hell hog \
@@ -2359,6 +2362,7 @@ MONS:   lurking horror / wretched star / tentacled starspawn / cacodemon \
         / executioner w:2 / profane servitor w:2
 SUBST:  f = |*, g = *%, h = %$--, ij= -
 NSUBST: - = DH / 2=1 / 3=1. / 2 / 2=2. / 3 / 4. / .
+FTILE:  'PSntcbv = floor_nerves_brown
 : elseif you.in_branch("Shoals")
 :        or you.in_branch("Snake")
 :        or you.in_branch("Swamp")
@@ -2379,6 +2383,7 @@ kmons("q = merfolk impaler ; " .. disto_weapon("impaler", "randart") ..
       "    . robe good_item | leather armour good_item")
 }}
 NSUBST: - = q / -
+FTILE:  'PSntcbv = floor_nerves_yellow
 :     elseif you.in_branch("Snake") then
 {{
 kmons("q = naga warrior ; " .. disto_weapon("warrior", "randart") ..
@@ -2388,19 +2393,22 @@ kmons("r = nagaraja ; " .. disto_weapon("warrior", "randart") ..
       "    . robe good_item w:40 | barding good_item")
 }}
 NSUBST: - = qr / -
+FTILE:  'PSntcbv = floor_nerves_green
 :     elseif you.in_branch("Swamp") then
 {{
 kmons("q = spriggan druid ; " .. disto_weapon("druid", "randart") ..
       "    . robe good_item")
 }}
 # Potential druids need some trees!
-SUBST:  x = txxx
+SUBST:  x = Jxxx, cvb = c:30 v b t:15
 NSUBST: - = Eq / -
+FTILE:  'PSntcbv = floor_nerves_brown
 :     elseif you.in_branch("Spider") then
 # No good humanoids to wield distortion in Spider, so let's go with a narrative
 # of the player getting banished by a zot trap.
 KFEAT:  ~ = zot trap
 NSUBST: - = ~ / 2=~- / -
+FTILE:  'PSntcbv = floor_nerves_brown
 :     end
 # Common monster/loot placement for all Lair branches.
 SUBST:  fg = |*, h = *%, i = $%--, j= -
@@ -2421,6 +2429,7 @@ MONS:   tentacled monstrosity / starcursed mass / daeva god:Xom / executioner \
         / profane servitor / hellephant / hell sentinel
 SUBST:  fg = |*, h = *, i = $%, j= -
 NSUBST: - = Fq / 3=1 / 3=1. / 2=2 / 2=2. / 3 / 4 / 4. / .
+FTILE:  'PSntcbv = floor_nerves_cyan
 : elseif you.in_branch("Crypt") then
 {{
 kmons("q = ancient champion ; " .. disto_weapon("warrior", "randart") ..
@@ -2474,26 +2483,26 @@ MARKER: R = lua:transp_loc("abyssal_escape_exit")
 MARKER: S = lua:transp_dest_loc("abyssal_escape_exit")
 # Color weights similar to that used for rock in the Abyss.
 COLOUR: x = blue:13 / red:66 / magenta:50 / brown:90 / lightgreen:68 \
-            / lightred:110 / lightmagenta:38 / yellow / white / fire:6
+            / lightred:110 / lightmagenta:38 / yellow / white
 RTILE:  x = wall_abyss
 : ghost_setup(_G)
 MAP
      ....
    ...cc..  ..P..
  ...Pcccc....cnc.
-..ccnc-pcc..ccQc.
-.cc-Q-a-QnP.cp-c..
-.c-aaappcc..cc-cc.
-.cc-apccc...cc-pc.
-..cc-pc....cc-apc.
-..ccp-ccPcccp-pcc.
+..ccnc-pcc''ccQc.
+.cc-Q-a-QnP'cp-c..
+.c-aaappcc''cc-cc.
+.cc-apccc'''cc-pc.
+.'cc-pc''''cc-apc.
+.'ccp-ccPcccp-pcc.
 .ccpaa-cncpp-ccc..
-PnQ-aaa-Q-aaQnP..
-.cc-aaaaa-aa-cc..
+PnQ-aaa-Q-aaQnP'.
+.cc-aaaaa-aa-cc'.
 ..cc-aap-Q--a-cc..
- ..c-aa-cnccpa-cc.
- .ccp--ccP.cppa-c.
- .cpQccc...cccQcc.
+ .'c-aa-cnccpa-cc.
+ .ccp--ccP'cppa-c.
+ .cpQccc'''cccQcc.
  .ccnc.......cnc..
  ...P..     ..P..
 ENDMAP
