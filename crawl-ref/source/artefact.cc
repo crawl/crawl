@@ -575,9 +575,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
         case ARTP_PREVENT_SPELLCASTING:
-            if (item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
-                return false;
-            // fallthrough
         case ARTP_REGENERATION:
         case ARTP_HARM:
         case ARTP_INVISIBLE:
@@ -1509,6 +1506,9 @@ static bool _randart_is_redundant(const item_def &item,
 static bool _randart_is_conflicting(const item_def &item,
                                      artefact_properties_t &proprt)
 {
+    if (proprt[ARTP_PREVENT_SPELLCASTING] && proprt[ARTP_INTELLIGENCE] > 0)
+        return true;
+
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
         && is_demonic(item))
@@ -1516,6 +1516,7 @@ static bool _randart_is_conflicting(const item_def &item,
         return true;
     }
 
+    // jewellery only from here on in
     if (item.base_type != OBJ_JEWELLERY)
         return false;
 
@@ -1526,6 +1527,7 @@ static bool _randart_is_conflicting(const item_def &item,
 
     switch (item.sub_type)
     {
+    case AMU_MANA_REGENERATION:
     case RING_FIRE:
     case RING_ICE:
     case RING_WIZARDRY:
@@ -1533,6 +1535,7 @@ static bool _randart_is_conflicting(const item_def &item,
         conflicts = ARTP_PREVENT_SPELLCASTING;
         break;
 
+    // XX duplicated in _artp_can_go_on_item?
     case RING_RESIST_CORROSION:
         conflicts = ARTP_CORRODE;
         break;
