@@ -1219,6 +1219,63 @@ xxxxxxlllcc..+.._..+..ccllllxx
 ENDMAP
 ###############################################################################
 
+###############################################################################
+# A smoke and steam themed volcano
+NAME: hellmonk_smoking_crater
+TAGS: no_item_gen no_monster_gen
+ORIENT: encompass
+WEIGHT: 20
+MONS: steam dragon / steam dragon / smoke demon / hell hound
+MONS: sun demon, lindwurm
+SUBST: a = ..xxl, b = ..'xl, j = .x
+SUBST: 1 = ..1
+SUBST: 2 : 23
+NSUBST: $ = 1:h / *:$
+SUBST: $ = $$deef
+KITEM: h = scroll of fog q:2 ident:all w:99 / cloak of the thief w:1
+KMONS: h = fire dragon
+SUBST: ' = '.
+MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
+                                  pow_min=4, pow_max=10, \
+                                  delay=25, size=2, spread_rate=0, }
+:volcano_setup(_G)
+MAP
+            xxxxxxxxxxxxxxxx
+           xxxjjjjjjjjjjjjjxxx
+         xxx1...1.....1.....1xx
+       xxx....bbbbbbbbb.......xx
+      xx..2.bbbbbbbbbb.a.......xx
+     xx1.....1....1..axxx...'...xx
+    xx....xxxxaaaaaaaaxxxa1....1xx
+   xx..'.xxxxxa1..1.axxxxa...1..xx
+   x....xxxxxx.....xxxxxx......xx
+   x.1..xxxxxx1.'..xxxxx......xx
+   x....xxxxxxx.....xxx...1..ax
+   xG..Gxxxxxxxx.....bb......ax
+   x....xxxxxxxxa..1..b......ax
+   x2..2xxxxxxxxa.....b......ax
+   xG..Gxxxxxxxxa.....b.1....ax
+  ccc++cccxxxxxx.....bbb......xx
+ cc......ccxxx..1..xxxxx...1..xx
+cc........ccx.....xxxxxa......xx
+c...llll...cx..'..xxxxxxa.....xx
+cG.llllll.Gcxj....xxxxxa.....xx
+c$..llll..$cxj.1..xxxx..'...xx
+cc$$....$$ccxj....jjj....1.xx
+ cc$$$$$$ccxxj....j'.....xxx
+  ccc$$cccxxj....jj......xx
+    ccccxxxj.1..xxx....1.xx
+ xxxxxxxxjj.....xxj..'..xx
+xxx<xxx........xxj.....xx
+xx...xx..'....xxxj....xx
+x..A..x......xxxj..1.xx
+xx...xxjj..jjx....xxxx
+xxx....jj..jj..jjxx
+xxxxx.........xxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+###############################################################################
+
 ## Severe gimmicks. Weight 10, four present, ~4.17% chance each.
 
 ###############################################################################
