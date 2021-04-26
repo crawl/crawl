@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "areas.h"
 #include "cio.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -1990,6 +1991,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #endif
             break;
 
+        case MUT_SILENCE_AURA:
+            invalidate_agrid(true);
+            break;
+
         default:
             break;
         }
@@ -2104,6 +2109,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     case MUT_TALONS:
         // Recheck Ashenzari bondage in case our available slots changed.
         ash_check_bondage();
+        break;
+
+    case MUT_SILENCE_AURA:
+        invalidate_agrid(true);
         break;
 
     default:
