@@ -138,8 +138,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         }
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
+        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0
+            || artefact_property(item, ARTP_INTELLIGENCE) > 0)
+        {
             return false;
+        }
         break;
 
     case GOD_CHEIBRIADOS:
@@ -1512,8 +1515,11 @@ static bool _randart_is_conflicting(const item_def &item,
 {
     // see also _artp_can_go_on_item
 
-    if (proprt[ARTP_PREVENT_SPELLCASTING] && proprt[ARTP_INTELLIGENCE] > 0)
+    if (proprt[ARTP_PREVENT_SPELLCASTING]
+        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0)
+    {
         return true;
+    }
 
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH

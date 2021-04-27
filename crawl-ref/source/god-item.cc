@@ -416,36 +416,16 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
     // XXX: also check god_hates_item()?
     switch (which_god)
     {
-        case GOD_ELYVILON:
-            // Peaceful healer god: no weapons, no berserking.
-            if (item.base_type == OBJ_WEAPONS)
-                return false;
-            break;
-
-        case GOD_SIF_MUNA:
+        case GOD_ELYVILON: // Peaceful healer god: no weapons.
+        case GOD_SIF_MUNA: // The magic gods: no weapons.
         case GOD_VEHUMET:
-            // The magic gods: no weapons, no preventing spellcasting.
             if (item.base_type == OBJ_WEAPONS)
                 return false;
             break;
 
         case GOD_TROG:
-            // Anti-magic god: no spell use, no enhancing magic.
-            if (item.base_type == OBJ_BOOKS)
-                return false;
-
-            if (item.base_type == OBJ_JEWELLERY
-                && (item.sub_type == RING_WIZARDRY
-                    || item.sub_type == RING_ICE
-                    || item.sub_type == RING_MAGICAL_POWER))
-            {
-                return false;
-            }
-            break;
-
-        case GOD_CHEIBRIADOS:
-            // Slow god: no quick blades, no berserking.
-            if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
+            // Berserker god: weapons only.
+            if (item.base_type != OBJ_WEAPONS)
                 return false;
             break;
 
