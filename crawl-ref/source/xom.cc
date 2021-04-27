@@ -629,6 +629,9 @@ static void _try_brand_switch(const int item_index)
     if (get_weapon_brand(item) == SPWPN_NORMAL)
         return;
 
+    // TODO: shared code with _do_chaos_upgrade
+    mprf("%s erupts in a glittering mayhem of colour.",
+                            item.name(DESC_THE, false, false, false).c_str());
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
@@ -872,18 +875,11 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        description_level_type desc = mon->friendly() ? DESC_YOUR :
-                                                        DESC_THE;
-        string msg = apostrophise(mon->name(desc));
-
-        msg += " ";
-
-        msg += item.name(DESC_PLAIN, false, false, false);
-
-        msg += " is briefly surrounded by a scintillating aura of "
-               "random colours.";
-
-        mpr(msg);
+        const description_level_type desc = mon->friendly() ? DESC_YOUR
+                                                            : DESC_THE;
+        mprf("%s %s erupts in a glittering mayhem of colour.",
+            apostrophise(mon->name(desc)).c_str(),
+            item.name(DESC_PLAIN, false, false, false).c_str());
     }
 
     const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS
