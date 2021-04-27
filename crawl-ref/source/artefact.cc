@@ -532,6 +532,8 @@ static void _add_randart_weapon_brand(const item_def &item,
 static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                                  const artefact_properties_t &extant_props)
 {
+    // see also _randart_is_conflicting
+
     artefact_properties_t intrinsic_proprt;
     intrinsic_proprt.init(0);
     artefact_known_props_t _;
@@ -546,6 +548,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                                || item_class == OBJ_JEWELLERY
                                   && jewellery_is_amulet(item);
 
+    // warning: using some item calls may not work here, for example,
+    // get_weapon_brand; the `item` object is not fully set up.
     switch (prop)
     {
         // weapons already have slaying
@@ -564,7 +568,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return !extant_props[ARTP_CORRODE];
         case ARTP_MAGICAL_POWER:
             return item_class != OBJ_WEAPONS
-                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
+                   || extant_props[ARTP_BRAND] != SPWPN_ANTIMAGIC;
         case ARTP_BLINK:
             return !extant_props[ARTP_PREVENT_TELEPORTATION];
         case ARTP_PREVENT_TELEPORTATION:
@@ -1506,6 +1510,8 @@ static bool _randart_is_redundant(const item_def &item,
 static bool _randart_is_conflicting(const item_def &item,
                                      artefact_properties_t &proprt)
 {
+    // see also _artp_can_go_on_item
+
     if (proprt[ARTP_PREVENT_SPELLCASTING] && proprt[ARTP_INTELLIGENCE] > 0)
         return true;
 
