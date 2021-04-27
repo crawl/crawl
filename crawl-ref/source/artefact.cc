@@ -85,15 +85,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     switch (which_god)
     {
-    case GOD_ELYVILON:
-        // Peaceful healer god: no berserking.
-        if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
-        {
-            return false;
-        }
-        break;
-
     case GOD_ZIN:
         // Lawful god: no mutagenics.
         if (artefact_property(item, ARTP_CONTAM))
@@ -566,7 +557,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         // prevent properties that conflict with each other
         case ARTP_CORRODE:
-            return !extant_props[ARTP_RCORR];
+            return !extant_props[ARTP_RCORR] && !intrinsic_proprt[ARTP_RCORR];
         case ARTP_RCORR:
             return !extant_props[ARTP_CORRODE];
         case ARTP_MAGICAL_POWER:
@@ -582,6 +573,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
         case ARTP_PREVENT_SPELLCASTING:
+            if (item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
+                return false;
+            // fallthrough
         case ARTP_REGENERATION:
         case ARTP_HARM:
         case ARTP_INVISIBLE:
@@ -1528,36 +1522,11 @@ static bool _randart_is_conflicting(const item_def &item,
         return true;
     }
 
-    // jewellery only from here on in
-    if (item.base_type != OBJ_JEWELLERY)
-        return false;
-
-    if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
-        return true;
-
-    artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
-
-    switch (item.sub_type)
+    if (item.is_type(OBJ_JEWELLERY, RING_WIZARDRY)
+        && proprt[ARTP_INTELLIGENCE] < 0)
     {
-    case AMU_MANA_REGENERATION:
-    case RING_FIRE:
-    case RING_ICE:
-    case RING_WIZARDRY:
-    case RING_MAGICAL_POWER:
-        conflicts = ARTP_PREVENT_SPELLCASTING;
-        break;
-
-    // XX duplicated in _artp_can_go_on_item?
-    case RING_RESIST_CORROSION:
-        conflicts = ARTP_CORRODE;
-        break;
-    }
-
-    if (conflicts == ARTP_NUM_PROPERTIES)
-        return false;
-
-    if (proprt[conflicts] != 0)
         return true;
+    }
 
     return false;
 }
