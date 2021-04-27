@@ -3693,6 +3693,7 @@ SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
 KMASK:   189%*|de<> = opaque
+KPROP:   189%*|de<> = no_tele_into
 ITEM:    wand of digging ident:type
 ITEM:    scroll of teleportation q:2
 MAP
