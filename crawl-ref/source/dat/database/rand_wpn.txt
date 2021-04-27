@@ -20,6 +20,7 @@ w:7
 w:7
 @_anger_name_@
 %%%%
+# "Power" is not literally here, to prevent generating conflicts with the unrand
 _power_name_
 
 Big Damage
@@ -43,8 +44,6 @@ Magnificence
 Mastery
 
 Might
-
-Power
 
 Success
 
