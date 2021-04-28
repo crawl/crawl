@@ -2013,7 +2013,8 @@ void melee_attack::decapitate(int dam_type)
                              defender->as_monster()->hit_points, true);
         }
 
-        defender->hurt(attacker, INSTANT_DEATH);
+        if (!simu)
+            defender->hurt(attacker, INSTANT_DEATH);
 
         return;
     }
