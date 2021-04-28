@@ -1500,7 +1500,42 @@ static bool _handle_uskayaw_ability_unlocks()
     return success;
 }
 
-static bool _gift_sif_kiku_gift(bool forced)
+static bool _give_sif_gift(bool forced)
+{
+    // Smokeless fire and books don't get along.
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return false;
+
+    bool success = false;
+    // Break early if giving a gift now means it would be lost.
+    if (feat_eliminates_items(env.grid(you.pos())))
+        return false;
+
+    if (forced || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
+                && coinflip())
+    {
+        // Sif Muna special: Keep quiet if acquirement fails
+        // because the player already has seen all spells.
+        int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
+                                                 true, you.pos());
+        success = (item_index != NON_ITEM);
+    }
+
+    if (success)
+    {
+        simple_god_message(" grants you a gift!");
+        // included in default force_more_message
+
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        _inc_gift_timeout(40 + random2avg(19, 2));
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+    }
+
+    return success;
+}
+
+static bool _give_kiku_gift()
 {
     // Smokeless fire and books don't get along.
     if (you.has_mutation(MUT_INNATE_CASTER))
@@ -1514,31 +1549,15 @@ static bool _gift_sif_kiku_gift(bool forced)
 
     // Kikubaaqudgha gives the lesser Necromancy books in a quick
     // succession.
-    if (you_worship(GOD_KIKUBAAQUDGHA))
+    if (you.piety >= piety_breakpoint(0)
+        && you.num_total_gifts[you.religion] == 0)
     {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_NECROMANCY;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_DEATH;
-        }
+        gift = BOOK_NECROMANCY;
     }
-    else if (forced
-             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
-                && coinflip())
+    else if (you.piety >= piety_breakpoint(2)
+             && you.num_total_gifts[you.religion] == 1)
     {
-        // Sif Muna special: Keep quiet if acquirement fails
-        // because the player already has seen all spells.
-        if (you_worship(GOD_SIF_MUNA))
-        {
-            int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
-                                                     true, you.pos());
-            success = (item_index != NON_ITEM);
-        }
+        gift = BOOK_DEATH;
     }
 
     if (gift != NUM_BOOKS)
@@ -1546,11 +1565,8 @@ static bool _gift_sif_kiku_gift(bool forced)
         int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
                                   you.religion);
         // Replace a Kiku gift by a custom-random book.
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-        {
-            make_book_kiku_gift(env.item[thing_created],
-                                gift == BOOK_NECROMANCY);
-        }
+        make_book_kiku_gift(env.item[thing_created], gift == BOOK_NECROMANCY);
+
         if (thing_created == NON_ITEM)
             return false;
 
@@ -1567,9 +1583,6 @@ static bool _gift_sif_kiku_gift(bool forced)
 
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku.
-        if (!you_worship(GOD_KIKUBAAQUDGHA))
-            _inc_gift_timeout(40 + random2avg(19, 2));
         take_note(Note(NOTE_GOD_GIFT, you.religion));
     }
 
@@ -2082,8 +2095,11 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_KIKUBAAQUDGHA:
+            success = _give_kiku_gift();
+            break;
+
         case GOD_SIF_MUNA:
-            success = _gift_sif_kiku_gift(forced);
+            success = _give_sif_gift(forced);
             break;
 
         case GOD_VEHUMET:
