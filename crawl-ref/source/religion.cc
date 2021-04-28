@@ -1540,52 +1540,41 @@ static bool _give_kiku_gift()
     if (you.has_mutation(MUT_INNATE_CASTER))
         return false;
 
-    bool success = false;
-    book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    // Kikubaaqudgha gives the lesser Necromancy books in a quick
-    // succession.
-    if (you.piety >= piety_breakpoint(0)
-        && you.num_total_gifts[you.religion] == 0)
+    const bool first_gift = !you.num_total_gifts[you.religion];
+
+    // Kikubaaqudgha gives two Necromancy books in a quick succession.
+    if (you.piety < piety_breakpoint(0)
+        || !first_gift && you.piety < piety_breakpoint(2)
+        || you.num_total_gifts[you.religion] > 1)
     {
-        gift = BOOK_NECROMANCY;
-    }
-    else if (you.piety >= piety_breakpoint(2)
-             && you.num_total_gifts[you.religion] == 1)
-    {
-        gift = BOOK_DEATH;
+        return false;
     }
 
-    if (gift != NUM_BOOKS)
-    {
-        int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                  you.religion);
-        // Replace a Kiku gift by a custom-random book.
-        make_book_kiku_gift(env.item[thing_created], gift == BOOK_NECROMANCY);
+    int thing_created = items(true, OBJ_BOOKS, BOOK_NECROMANCY, 1, 0,
+                              you.religion);
 
-        if (thing_created == NON_ITEM)
-            return false;
+    if (thing_created == NON_ITEM)
+        return false;
 
-        move_item_to_grid(&thing_created, you.pos(), true);
+    // Replace a Kiku gift by a custom-random book.
+    make_book_kiku_gift(env.item[thing_created], first_gift);
+    move_item_to_grid(&thing_created, you.pos(), true);
 
-        if (thing_created != NON_ITEM)
-            success = true;
-    }
+    if (thing_created == NON_ITEM)
+        return false;
 
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
 
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-    }
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
 
-    return success;
+    return true;
 }
 
 static bool _handle_veh_gift(bool forced)
