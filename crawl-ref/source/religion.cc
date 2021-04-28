@@ -1506,33 +1506,32 @@ static bool _give_sif_gift(bool forced)
     if (you.has_mutation(MUT_INNATE_CASTER))
         return false;
 
-    bool success = false;
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    if (forced || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
-                && coinflip())
+    if (!forced && (you.piety < piety_breakpoint(4)
+                    || random2(you.piety) < 101 || coinflip()))
     {
-        // Sif Muna special: Keep quiet if acquirement fails
-        // because the player already has seen all spells.
-        int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
-                                                 true, you.pos());
-        success = (item_index != NON_ITEM);
+        return false;
     }
 
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
+    // Sif Muna special: Keep quiet if acquirement fails
+    // because the player already has seen all spells.
+    int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
+                                             true, you.pos());
+    if (item_index == NON_ITEM)
+        return false;
 
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        _inc_gift_timeout(40 + random2avg(19, 2));
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-    }
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
 
-    return success;
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    _inc_gift_timeout(40 + random2avg(19, 2));
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    return true;
 }
 
 static bool _give_kiku_gift()
