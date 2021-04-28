@@ -1534,7 +1534,7 @@ static bool _give_sif_gift(bool forced)
     return true;
 }
 
-static bool _give_kiku_gift()
+static bool _give_kiku_gift(bool forced)
 {
     // Smokeless fire and books don't get along.
     if (you.has_mutation(MUT_INNATE_CASTER))
@@ -1547,9 +1547,9 @@ static bool _give_kiku_gift()
     const bool first_gift = !you.num_total_gifts[you.religion];
 
     // Kikubaaqudgha gives two Necromancy books in a quick succession.
-    if (you.piety < piety_breakpoint(0)
-        || !first_gift && you.piety < piety_breakpoint(2)
-        || you.num_total_gifts[you.religion] > 1)
+    if (!forced && (you.piety < piety_breakpoint(0)
+                    || !first_gift && you.piety < piety_breakpoint(2)
+                    || you.num_total_gifts[you.religion] > 1))
     {
         return false;
     }
@@ -2083,7 +2083,7 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_KIKUBAAQUDGHA:
-            success = _give_kiku_gift();
+            success = _give_kiku_gift(forced);
             break;
 
         case GOD_SIF_MUNA:
