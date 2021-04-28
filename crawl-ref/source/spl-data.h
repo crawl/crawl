@@ -955,7 +955,7 @@ static const struct spell_desc spelldata[] =
     SPELL_NECROMUTATION, "Necromutation",
     spschool::transmutation | spschool::necromancy,
     spflag::helpful | spflag::chaotic,
-    8,
+    7,
     200,
     -1, -1,
     6, 0,
