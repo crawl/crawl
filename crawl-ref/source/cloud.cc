@@ -788,10 +788,10 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     const monster * const mons = monster_at(ctarget);
 
-    // Fedhas protects plants from damaging clouds placed by the player.
-    if (agent
-        && agent->deity() == GOD_FEDHAS
-        && fedhas_protects(mons)
+    // Fedhas protects plants from damaging clouds.
+    // XX demonic guardians? This logic mostly doesn't apply because protected
+    // monsters are also cloud immune, mostly
+    if (god_protects(agent, mons)
         && !actor_cloud_immune(*mons, cl_type))
     {
         return;
@@ -996,11 +996,11 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     const bool player = act.is_player();
 
     if (!player
-        && (you_worship(GOD_FEDHAS)
-            && fedhas_protects(act.as_monster())
+        && (god_protects(act.as_monster())
             || testbits(act.as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
-        && (act.as_monster()->friendly() || act.as_monster()->neutral()))
+        && (act.as_monster()->friendly() || act.as_monster()->neutral())
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
     {
         return true;
     }

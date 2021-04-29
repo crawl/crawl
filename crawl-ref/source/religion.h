@@ -117,6 +117,8 @@ bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster* target);
+bool god_protects(const actor *agent, const monster *target, bool quiet=true);
+bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 

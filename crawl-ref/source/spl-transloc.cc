@@ -1374,9 +1374,8 @@ static void _attract_actor(const actor* agent, actor* victim,
                            const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = agent->deity() == GOD_FEDHAS
-                             && victim->is_monster()
-                             && fedhas_protects(victim->as_monster());
+    const bool fedhas_prot = victim->is_monster()
+                                && god_protects(agent, victim->as_monster());
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))

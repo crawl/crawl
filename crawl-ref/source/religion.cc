@@ -2655,9 +2655,44 @@ static bool _fedhas_protects_species(monster_type mc)
 
 bool fedhas_protects(const monster *target)
 {
-    return target
-        ? _fedhas_protects_species(mons_base_type(*target))
-        : false;
+    return target && _fedhas_protects_species(mons_base_type(*target));
+}
+
+bool god_protects(const actor *agent, const monster *target, bool quiet)
+{
+    // The alignment check is to allow a penanced player to continue to fight 
+    // hostiles that would otherwise be protected, in case what they angered can
+    // fight back
+
+    const bool aligned = agent && target
+        && ((agent->is_player()
+                ? target->friendly()
+                : mons_atts_aligned(target->attitude,
+                                                agent->as_monster()->attitude))
+            || target->neutral());
+    // XX does it matter whether this just checks fedhas vs.
+    // the shoot_through_plants passive
+    if (aligned
+        && ((agent->is_player() || agent->as_monster()->friendly())
+                        && have_passive(passive_t::shoot_through_plants)
+            || agent->is_monster() && agent->deity() == GOD_FEDHAS) // purely theoretical?
+        && fedhas_protects(target))
+    {
+        if (!quiet && you.can_see(*target))
+        {
+            simple_god_message(
+                        make_stringf(" protects %s plant from harm.",
+                            agent->is_player() ? "your" : "a").c_str(),
+                        GOD_FEDHAS);
+        }
+        return true;
+    }
+    return false;
+}
+
+bool god_protects(const monster *target, bool quiet)
+{
+    return god_protects(&you, target, quiet);
 }
 
 // Fedhas neutralises most plants and fungi

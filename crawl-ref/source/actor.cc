@@ -930,11 +930,10 @@ string actor::resist_margin_phrase(int margin) const
 void actor::collide(coord_def newpos, const actor *agent, int pow)
 {
     actor *other = actor_at(newpos);
-    const bool fedhas_prot = agent && agent->deity() == GOD_FEDHAS
-                             && is_monster() && fedhas_protects(as_monster());
-    const bool fedhas_prot_other = agent && agent->deity() == GOD_FEDHAS
-                                   && other && other->is_monster()
-                                   && fedhas_protects(other->as_monster());
+    // TODO: should the first of these check agent?
+    const bool god_prot = god_protects(agent, as_monster());
+    const bool god_prot_other = other && god_protects(agent, other->as_monster());
+
     ASSERT(this != other);
     ASSERT(alive());
 
@@ -945,7 +944,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         return;
     }
 
-    if (is_monster() && !fedhas_prot)
+    if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     dice_def damage(2, 1 + pow / 10);
@@ -958,29 +957,27 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(),
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str());
-            if (fedhas_prot || fedhas_prot_other)
+            if (god_prot || god_prot_other)
             {
-                const bool both = fedhas_prot && fedhas_prot_other;
-                simple_god_message(
-                    make_stringf(" protects %s plant%s from harm.",
-                        agent->is_player() ? "your" :
-                        both ? "some" : "a",
-                        both ? "s" : "").c_str(), GOD_FEDHAS);
+                // do messaging at the right time.
+                // TODO: a bit ugly
+                god_protects(agent, as_monster(), false);
+                god_protects(agent, other->as_monster(), false);
             }
         }
 
-        if (other->is_monster() && !fedhas_prot_other)
+        if (other->is_monster() && !god_prot_other)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
 
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        if (other->alive() && !fedhas_prot_other)
+        if (other->alive() && !god_prot_other)
         {
             other->hurt(agent, other->apply_ac(damage.roll()),
                         BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
         }
-        if (alive() && !fedhas_prot)
+        if (alive() && !god_prot)
         {
             hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
                  KILLED_BY_COLLISION, thisname, othername);
@@ -1005,15 +1002,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(), conj_verb("stop").c_str());
         }
 
-        if (fedhas_prot)
-        {
-            simple_god_message(
-                make_stringf(" protects %s plant from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
-        }
+        if (god_prot)
+            god_protects(agent, as_monster(), false); // messaging
     }
 
-    if (!fedhas_prot)
+    if (!god_prot)
     {
         hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
              KILLED_BY_COLLISION, "", feature_description_at(newpos));

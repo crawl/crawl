@@ -394,11 +394,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 {
     ASSERT(mon.alive() || !god_conducts);
 
-    if (god_conducts && you.deity() == GOD_FEDHAS && fedhas_neutralises(mon))
-    {
-        simple_god_message(" protects your plant from harm.", GOD_FEDHAS);
+    if (god_conducts && god_protects(&mon, false))
         return;
-    }
 
     god_conduct_trigger conducts[3];
     if (god_conducts)
@@ -578,9 +575,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             verb = "frozen";
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
-                return act->is_player() || act->res_cold() < 3
-                       && !(caster->deity() == GOD_FEDHAS
-                            && fedhas_protects(act->as_monster()));
+                return (act != caster || act->res_cold() < 3)
+                       && !god_protects(caster, act->as_monster());
             };
             break;
 
@@ -604,8 +600,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             // prompt_verb = "sing" The singing sword prompts in melee-attack
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
-                       && !(caster->deity() == GOD_FEDHAS
-                            && fedhas_protects(act->as_monster()));
+                       && !god_protects(caster, act->as_monster());
             };
             break;
 
@@ -806,8 +801,7 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
         return spret::success; // still losing a turn
     }
 
-    if (!(have_passive(passive_t::shoot_through_plants)
-          && fedhas_protects(mons))
+    if (!god_protects(mons)
         && stop_attack_prompt(mons, false, you.pos()))
     {
         return spret::abort;
@@ -1349,8 +1343,7 @@ spret cast_shatter(int pow, bool fail)
     auto vulnerable = [](const actor *act) -> bool
     {
         return !act->is_player()
-               && !(have_passive(passive_t::shoot_through_plants)
-                    && fedhas_protects(act->as_monster()))
+               && !god_protects(act->as_monster())
                && _shatterable(act);
     };
     if (stop_attack_prompt(hitfunc, "attack", vulnerable))
@@ -1549,14 +1542,8 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
          mons->name(DESC_THE).c_str(),
          attack_strength_punctuation(dam).c_str());
 
-    if (agent->deity() == GOD_FEDHAS && fedhas_protects(mons))
-    {
-        simple_god_message(
-                    make_stringf(" protects %s plant from harm.",
-                        agent->is_player() ? "your" : "a").c_str(),
-                    GOD_FEDHAS);
+    if (god_protects(mons, false))
         return 0;
-    }
 
     if (agent->is_player())
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
@@ -1586,8 +1573,7 @@ spret cast_irradiate(int powc, actor* who, bool fail)
     auto vulnerable = [who](const actor *act) -> bool
     {
         return !act->is_player()
-               && !(who->deity() == GOD_FEDHAS
-                    && fedhas_protects(act->as_monster()));
+               && !god_protects(who, act->as_monster());
     };
 
     if (stop_attack_prompt(hitfunc, "irradiate", vulnerable))
@@ -1640,11 +1626,8 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
                         ? 0
                         : resist_adjust_damage(act, BEAM_FIRE, 40);
 
-        if (agent->deity() == GOD_FEDHAS && agent->is_player()
-            && fedhas_protects(act->as_monster()))
-        {
+        if (god_protects(agent, act->as_monster()))
             return 0;
-        }
 
         return mons_aligned(act, agent) ? -dam : dam;
     }
@@ -1773,17 +1756,8 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     if (damage <= 0)
         return 0;
 
-    if (agent && agent->deity() == GOD_FEDHAS && fedhas_protects(mon))
-    {
-        if (!tracer)
-        {
-            simple_god_message(
-                        make_stringf(" protects %s plant from harm.",
-                            agent->is_player() ? "your" : "a").c_str(),
-                        GOD_FEDHAS);
-        }
+    if (god_protects(agent, mon, tracer))
         return 0;
-    }
 
     mon->expose_to_element(BEAM_FIRE, damage);
 
@@ -2191,15 +2165,8 @@ static int _discharge_monsters(const coord_def &where, int pow,
     // rEelec monsters don't allow arcs to continue.
     else if (victim->res_elec() > 0)
         return 0;
-    else if (agent.deity() == GOD_FEDHAS
-             && fedhas_protects(victim->as_monster()))
-    {
-        simple_god_message(
-                    make_stringf(" protects %s plant from harm.",
-                        agent.is_player() ? "your" : "a").c_str(),
-                    GOD_FEDHAS);
+    else if (god_protects(&agent, victim->as_monster(), false))
         return 0;
-    }
     else
     {
         monster* mons = victim->as_monster();
@@ -2256,8 +2223,7 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude)
             {
                 // Harmless to these monsters, so don't prompt about them.
                 if (act->res_elec() > 0
-                    || you.deity() == GOD_FEDHAS
-                       && fedhas_protects(act->as_monster()))
+                    || god_protects(act->as_monster()))
                 {
                     continue;
                 }
@@ -2355,8 +2321,7 @@ spret cast_sandblast(int pow, bolt &beam, bool fail)
 
 static bool _elec_not_immune(const actor *act)
 {
-    return act->res_elec() < 3 && !(you_worship(GOD_FEDHAS)
-                                    && fedhas_protects(act->as_monster()));
+    return act->res_elec() < 3 && !god_protects(act->as_monster());
 }
 
 coord_def get_thunderbolt_last_aim(actor *caster)
@@ -3131,7 +3096,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
       // but we'll verify it as a matter of good hygiene.
         const monster* mon = act->as_monster();
         return mon && !mons_is_firewood(*mon)
-            && !(you_worship(GOD_FEDHAS) && fedhas_protects(mon))
+            && !god_protects(mon)
             && !mons_is_projectile(*mon)
             && !(mons_is_avatar(mon->type) && mons_aligned(&you, mon))
             && !testbits(mon->flags, MF_DEMONIC_GUARDIAN);
@@ -3208,8 +3173,7 @@ spret cast_imb(int pow, bool fail)
     {
         return !(act->is_monster()
                  && (mons_is_conjured(act->as_monster()->type)
-                     || (have_passive(passive_t::shoot_through_plants)
-                         && fedhas_protects(act->as_monster())))) ;
+                     || god_protects(act->as_monster())));
     };
 
     if (stop_attack_prompt(*hitfunc, "blast", vulnerable))

@@ -132,8 +132,7 @@ bool melee_attack::handle_phase_attempted()
             if (stop_attack_prompt(hitfunc, "attack",
                                    [](const actor *act)
                                    {
-                                       return !(you.deity() == GOD_FEDHAS
-                                       && fedhas_protects(act->as_monster()));
+                                       return !god_protects(act->as_monster());
                                    }, nullptr, defender->as_monster()))
             {
                 cancel_attack = true;
@@ -176,8 +175,7 @@ bool melee_attack::handle_phase_attempted()
             if (stop_attack_prompt(hitfunc, "attack",
                                    [](const actor *act)
                                    {
-                                       return !(you.deity() == GOD_FEDHAS
-                                       && fedhas_protects(act->as_monster()));
+                                       return !god_protects(act->as_monster());
                                    }, nullptr, defender->as_monster()))
             {
                 cancel_attack = true;
