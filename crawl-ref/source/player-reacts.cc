@@ -785,7 +785,7 @@ static void _decrement_durations()
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
-        && in_good_standing(GOD_HEPLIAKLQANA)
+        && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
     {
         _try_to_respawn_ancestor();
