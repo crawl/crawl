@@ -3143,20 +3143,6 @@ static void _display_tohit()
 #endif
 }
 
-static const char* _attack_delay_desc(int attack_delay)
-{
-    return (attack_delay >= 200) ? "extremely slow" :
-           (attack_delay >= 155) ? "very slow" :
-           (attack_delay >= 125) ? "quite slow" :
-           (attack_delay >= 105) ? "below average" :
-           (attack_delay >=  95) ? "average" :
-           (attack_delay >=  75) ? "above average" :
-           (attack_delay >=  55) ? "quite fast" :
-           (attack_delay >=  45) ? "very fast" :
-           (attack_delay >=  35) ? "extremely fast" :
-                                   "blindingly fast";
-}
-
 /**
  * Print a message indicating the player's attack delay with their current
  * weapon & its ammo (if applicable).
@@ -3182,16 +3168,12 @@ static void _display_attack_delay()
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
 
-    // Scale to fit the displayed weapon base delay, i.e.,
-    // normal speed is 100 (as in 100%).
-    int avg = 10 * delay;
-
-    _display_char_status(avg, "Your attack speed is %s%s%s",
-                         _attack_delay_desc(avg),
-                         at_min_delay ?
-                            " (and cannot be improved with additional weapon skill)" : "",
-                         you.adjusted_shield_penalty() ?
-                            " (and is slowed by your insufficient shield skill)" : "");
+    mprf("Your attack delay is about %.1f%s%s.",
+         delay / 10.0f,
+         at_min_delay ?
+            " (and cannot be improved with additional weapon skill)" : "",
+         you.adjusted_shield_penalty() ?
+            " (and is slowed by your insufficient shield skill)" : "");
 }
 
 // forward declaration
