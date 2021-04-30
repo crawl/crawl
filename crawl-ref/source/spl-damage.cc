@@ -1538,12 +1538,13 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     const dice_def dam_dice = irradiate_damage(pow);
     const int base_dam = dam_dice.roll();
     const int dam = mons->apply_ac(base_dam);
-    mprf("%s is blasted with magical radiation%s",
-         mons->name(DESC_THE).c_str(),
-         attack_strength_punctuation(dam).c_str());
 
     if (god_protects(mons, false))
         return 0;
+
+    mprf("%s is blasted with magical radiation%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(dam).c_str());
 
     if (agent->is_player())
         _player_hurt_monster(*mons, dam, BEAM_MMISSILE);
