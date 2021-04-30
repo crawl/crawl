@@ -707,6 +707,14 @@ bool melee_attack::handle_phase_killed()
     return attack::handle_phase_killed();
 }
 
+static void _handle_spectral_brand(const actor &attacker, const actor &defender)
+{
+    if (you.triggered_spectral || !defender.alive())
+        return;
+    you.triggered_spectral = true;
+    spectral_weapon_fineff::schedule(attacker, defender);
+}
+
 bool melee_attack::handle_phase_end()
 {
     if (!cleave_targets.empty() && !simu)
@@ -728,6 +736,15 @@ bool melee_attack::handle_phase_end()
         && attacker->as_monster()->has_ench(ENCH_ROLLING))
     {
         attacker->as_monster()->del_ench(ENCH_ROLLING);
+    }
+
+    if (attacker->is_player() && defender)
+    {
+        if (damage_brand == SPWPN_SPECTRAL)
+            _handle_spectral_brand(*attacker, *defender);
+        // Use the Nessos hack to give the player glaive of the guard spectral too
+        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
+            _handle_spectral_brand(*attacker, *defender);
     }
 
     return attack::handle_phase_end();

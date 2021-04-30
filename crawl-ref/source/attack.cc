@@ -43,8 +43,6 @@
 #include "transform.h"
 #include "xom.h"
 
-static void _handle_spectral_brand(const actor &attacker, const actor &defender);
-
 /*
  **************************************************
  *             BEGIN PUBLIC FUNCTIONS             *
@@ -142,15 +140,6 @@ bool attack::handle_phase_killed()
 
 bool attack::handle_phase_end()
 {
-    if (attacker->is_player() && defender)
-    {
-        if (damage_brand == SPWPN_SPECTRAL)
-            _handle_spectral_brand(*attacker, *defender);
-        // Use the Nessos hack to give the player glaive of the guard spectral too
-        if (weapon && is_unrandom_artefact(*weapon, UNRAND_GUARD))
-            _handle_spectral_brand(*attacker, *defender);
-    }
-
     return true;
 }
 
@@ -559,14 +548,6 @@ void attack::antimagic_affects_defender(int pow)
 {
     obvious_effect =
         enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
-}
-
-static void _handle_spectral_brand(const actor &attacker, const actor &defender)
-{
-    if (you.triggered_spectral || !defender.alive())
-        return;
-    you.triggered_spectral = true;
-    spectral_weapon_fineff::schedule(attacker, defender);
 }
 
 /// Whose skill should be used for a pain-weapon effect?
