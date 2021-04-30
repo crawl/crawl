@@ -2406,8 +2406,22 @@ static void _gain_piety_point()
 
         const int rank = piety_rank();
         take_note(Note(NOTE_PIETY_RANK, you.religion, rank));
+
+        // For messaging reasons, we want to get our ancestor before
+        // we get the associated recall / rename powers.
+        if (rank == rank_for_passive(passive_t::frail)) {
+            calc_hp(); // adjust for frailty
+            // In exchange for your hp, you get an ancestor!
+            const mgen_data mg = hepliaklqana_ancestor_gen_data();
+            delayed_monster(mg);
+            simple_god_message(make_stringf(" forms a fragment of your life essence"
+                                            " into the memory of your ancestor, %s!",
+                                            mg.mname.c_str()).c_str());
+        }
+
         for (const auto& power : get_god_powers(you.religion))
         {
+
             if (power.rank == rank
                 || power.rank == 7 && can_do_capstone_ability(you.religion))
             {
@@ -2607,6 +2621,15 @@ void lose_piety(int pgn)
         redraw_screen();
         update_screen();
 #endif
+
+        if (will_have_passive(passive_t::frail) && !have_passive(passive_t::frail))
+        {
+            // hep: just lost 1*
+            // remove companion (gained at same tier as frail)
+            add_daction(DACT_ALLY_HEPLIAKLQANA);
+            remove_all_companions(GOD_HEPLIAKLQANA);
+            calc_hp(); // adjust for frailty
+        }
     }
 
     if (you.piety > 0 && you.piety <= 5)
@@ -3620,15 +3643,6 @@ static void _join_hepliaklqana()
         you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
         you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
     }
-
-    calc_hp(); // adjust for frailty
-
-    // Complimentary ancestor upon joining.
-    const mgen_data mg = hepliaklqana_ancestor_gen_data();
-    delayed_monster(mg);
-    simple_god_message(make_stringf(" forms a fragment of your life essence"
-                                    " into the memory of your ancestor, %s!",
-                                    mg.mname.c_str()).c_str());
 }
 
 /// Setup when joining the gelatinous groupies of Jiyva.
