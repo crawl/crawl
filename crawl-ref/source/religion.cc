@@ -2653,11 +2653,21 @@ static bool _fedhas_protects_species(monster_type mc)
            && mons_class_holiness(mc) & MH_PLANT;
 }
 
+/// Whether fedhas would protect `target` from harm if called on to do so.
 bool fedhas_protects(const monster *target)
 {
     return target && _fedhas_protects_species(mons_base_type(*target));
 }
 
+/**
+ * Does some god protect monster `target` from harm triggered by `agent`?
+ * @param agent  The source of the damage. If nullptr, the damage has no source.
+ *               (Currently, no god does protect in this case.)
+ * @param target A monster that is the target of the damage.
+ * @param quiet  If false, do messaging to indicate that target has escaped
+ *               damage.
+ * @return       Whether target should escape damage.
+ */
 bool god_protects(const actor *agent, const monster *target, bool quiet)
 {
     // The alignment check is to allow a penanced player to continue to fight 
@@ -2687,15 +2697,32 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
         }
         return true;
     }
+
+    if (agent && target && agent->is_player()
+        && mons_is_hepliaklqana_ancestor(target->type))
+    {
+        // TODO: this message does not work very well for all sorts of attacks
+        // should this be a god message?
+        if (!quiet && you.can_see(*target))
+            mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
+        return true;
+    }
     return false;
 }
 
+/**
+ * Does some god protect monster `target` from harm triggered by the player?
+ * @param target A monster that is the target of the damage.
+ * @param quiet  If false, do messaging to indicate that target has escaped
+ *               damage.
+ * @return       Whether target should escape damage.
+ */
 bool god_protects(const monster *target, bool quiet)
 {
     return god_protects(&you, target, quiet);
 }
 
-// Fedhas neutralises most plants and fungi
+/// Whether Fedhas would set `target` to a neutral attitude
 bool fedhas_neutralises(const monster& target)
 {
     return mons_is_plant(target)

@@ -5074,7 +5074,7 @@ bool monster::can_go_frenzy(bool check_sleep) const
         return false;
 
     // These allies have a special loyalty
-    if (mons_is_hepliaklqana_ancestor(type)
+    if (god_protects(this)
         || testbits(flags, MF_DEMONIC_GUARDIAN))
     {
         return false;
@@ -6612,5 +6612,6 @@ bool monster::angered_by_attacks() const
             && type != MONS_SPELLFORGED_SERVITOR
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
-            && !mons_is_hepliaklqana_ancestor(type);
+            // allied fed plants, hep ancestor:
+            && !god_protects(this);
 }
