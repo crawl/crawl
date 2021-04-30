@@ -3038,6 +3038,21 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return true;
 
     case OBJ_MISCELLANY:
+        // One XP evoker is as good as two, so any extras are useless.
+        if (is_xp_evoker(item) && !in_inventory(item))
+        {
+            // for equipment, is it the same evoker?
+            for (const auto &item2 : you.inv)
+            {
+                if (item2.defined()
+                    && item2.base_type == item.base_type
+                    && item2.sub_type == item.sub_type)
+                {
+                    return true;
+                }
+            }
+        }
+
         switch (item.sub_type)
         {
 #if TAG_MAJOR_VERSION == 34
