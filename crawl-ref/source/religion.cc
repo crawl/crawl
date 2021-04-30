@@ -2670,7 +2670,7 @@ bool fedhas_protects(const monster *target)
  */
 bool god_protects(const actor *agent, const monster *target, bool quiet)
 {
-    // The alignment check is to allow a penanced player to continue to fight 
+    // The alignment check is to allow a penanced player to continue to fight
     // hostiles that would otherwise be protected, in case what they angered can
     // fight back
 
