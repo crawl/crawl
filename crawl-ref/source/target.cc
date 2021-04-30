@@ -840,7 +840,9 @@ bool targeter_cleave::set_aim(coord_def target)
     get_cleave_targets(*agent, target, act_targets);
     while (!act_targets.empty())
     {
-        targets.insert(act_targets.front()->pos());
+        actor *potential_target = act_targets.front();
+        if (agent->can_see(*potential_target))
+            targets.insert(potential_target->pos());
         act_targets.pop_front();
     }
     return true;
