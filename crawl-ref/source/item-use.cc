@@ -1172,7 +1172,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.has_mutation(MUT_NO_GRASPING))
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
         mpr("You can't wear anything.");
         return false;

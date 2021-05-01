@@ -1240,8 +1240,7 @@ bool melee_attack::player_gets_aux_punch()
         return false;
 
     // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2,
-                         6);
+    return x_chance_in_y(you.arm_count() > 2 ? 3 : 2, 6);
 }
 
 bool melee_attack::player_aux_test_hit()
