@@ -2364,14 +2364,16 @@ item_def* monster_die(monster& mons, killer_type killer,
         remove_companion(&mons);
         if (mons_is_hepliaklqana_ancestor(mons.type))
         {
-            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
             if (!you.can_see(mons))
             {
                 mprf("%s has departed this plane of existence.",
                      hepliaklqana_ally_name().c_str());
             }
-            // respawn in ~30-60 turns
-            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+
+            // respawn in ~30-60 turns, if there wasn't another ancestor through
+            // some strange circumstance (wizmode? bug?)
+            if (hepliaklqana_ancestor() == MID_NOBODY)
+                you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
     }
 
