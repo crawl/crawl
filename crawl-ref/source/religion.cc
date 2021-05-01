@@ -1748,6 +1748,36 @@ int hepliaklqana_ally_hp()
 }
 
 /**
+ * Choose an antique name for a Hepliaklqana-granted ancestor.
+ *
+ * @param gender    The ancestor's gender.
+ * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
+ */
+static string _make_ancestor_name(gender_type gender)
+{
+    const string gender_name = gender == GENDER_MALE ? " male " :
+                               gender == GENDER_FEMALE ? " female " : " ";
+    const string suffix = gender_name + "name";
+    const string name = getRandNameString("ancestor", suffix);
+    return name.empty() ? make_name() : name;
+}
+
+/// Setup when gaining a Hepliaklqana ancestor.
+static void _setup_hepliaklqana_ancestor()
+{
+    // initial setup.
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
+    {
+        const gender_type gender = random_choose(GENDER_NEUTRAL,
+                                                 GENDER_MALE,
+                                                 GENDER_FEMALE);
+
+        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
+        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
+    }
+}
+
+/**
  * Creates a mgen_data with the information needed to create the ancestor
  * granted by Hepliaklqana.
  *
@@ -1758,6 +1788,7 @@ int hepliaklqana_ally_hp()
  */
 mgen_data hepliaklqana_ancestor_gen_data()
 {
+    _setup_hepliaklqana_ancestor();
     const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
         (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
         MONS_ANCESTOR;
@@ -2409,7 +2440,8 @@ static void _gain_piety_point()
 
         // For messaging reasons, we want to get our ancestor before
         // we get the associated recall / rename powers.
-        if (rank == rank_for_passive(passive_t::frail)) {
+        if (rank == rank_for_passive(passive_t::frail))
+        {
             calc_hp(); // adjust for frailty
             // In exchange for your hp, you get an ancestor!
             const mgen_data mg = hepliaklqana_ancestor_gen_data();
@@ -3615,36 +3647,6 @@ static void _join_gozag()
     add_daction(DACT_GOLD_ON_TOP);
 }
 
-/**
- * Choose an antique name for a Hepliaklqana-granted ancestor.
- *
- * @param gender    The ancestor's gender.
- * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
- */
-static string _make_ancestor_name(gender_type gender)
-{
-    const string gender_name = gender == GENDER_MALE ? " male " :
-                               gender == GENDER_FEMALE ? " female " : " ";
-    const string suffix = gender_name + "name";
-    const string name = getRandNameString("ancestor", suffix);
-    return name.empty() ? make_name() : name;
-}
-
-/// Setup when joining the devoted followers of Hepliaklqana.
-static void _join_hepliaklqana()
-{
-    // initial setup.
-    if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
-    {
-        const gender_type gender = random_choose(GENDER_NEUTRAL,
-                                                 GENDER_MALE,
-                                                 GENDER_FEMALE);
-
-        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
-        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
-    }
-}
-
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3726,7 +3728,6 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
-    { GOD_HEPLIAKLQANA, _join_hepliaklqana },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power
