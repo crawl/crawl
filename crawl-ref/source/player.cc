@@ -6461,7 +6461,7 @@ void player::expose_to_element(beam_type element, int _strength,
 
 void player::blink()
 {
-    cast_blink();
+    uncontrolled_blink();
 }
 
 void player::teleport(bool now, bool wizard_tele)
