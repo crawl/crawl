@@ -388,6 +388,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_ratio), 1618, INT_MIN, INT_MAX),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),

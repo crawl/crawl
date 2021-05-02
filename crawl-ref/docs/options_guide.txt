@@ -2016,11 +2016,25 @@ tile_tag_pref = (none| named | enemy | tutorial )
                        and of named enemy monsters
         Examples for named monsters are uniques and ghosts.
 
-tile_window_width  = -90
 tile_window_height = -90
-        The width and height of the window, in pixels. If set to zero, it
-        will auto-size the window. If set to a negative number (default), it
-        will use the screen's resolution, minus the given value.
+tile_window_width  = -90
+        Options for setting the width and height of the window, in pixels. When
+        positive, these set the window size directly. When set to 0, the window
+        is auto-sized. When set to a negative number, these values will be
+        interpreted as the screen's resolution minus the given value. The width
+        may be overridden by `tile_window_ratio`, below, in which case
+        `tile_window_width` is used as a maximum width. On some window
+        managers, the position of OS user interface elements may enforce
+        smaller values for these. For example, on MacOS the window will not
+        overlap with the dock or menu bar.
+
+tile_window_ratio  = 1618
+        When set to a positive value, tiles will use this value to determine
+        the window width as a ratio of the window height, scaled by 1000. In
+        particular: w = h * tile_window_ratio / 1000.
+        If this value is set, `tile_window_width` is used as a maximum width.
+        The minimum width is determined by UI layout. This value is ignored in
+        full screen mode. Set to a value <= 0 to disable.
 
 game_scale = 1
         An integer scale value between 1 and 8 that will increase the size of
