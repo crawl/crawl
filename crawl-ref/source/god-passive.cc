@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -554,7 +555,7 @@ int ash_scry_radius()
         return 0;
 
     // Radius 2 starting at 4* increasing to 4 at 6*
-    return piety_rank() - 2;
+    return min(piety_rank() - 2, get_los_radius());
 }
 
 static bool _two_handed()
