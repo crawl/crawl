@@ -9278,14 +9278,16 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall passable
+TAGS:   vaults_hard preserve_wall
+: if you.in_branch("Vaults") then
+TAGS:   passable
+: end
 # This must not place on a branch end so it can place a downhatch.
 DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-KPROP:  1DEFHJR|*$efm = no_tele_into
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
 item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
