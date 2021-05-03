@@ -67,7 +67,7 @@ spret conjure_flame(int pow, bool fail)
         // action.
         cloud = cloud_at(you.pos());
         cloud->decay = player_speed() + 1;
-        mpr("The fire begins to smolder!");
+        mpr("The fire begins to smoulder!");
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
 

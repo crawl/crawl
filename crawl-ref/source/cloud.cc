@@ -291,7 +291,7 @@ static const cloud_data clouds[] = {
       true,                                       // opacity
     },
     // CLOUD_EMBERS,
-    { "smoldering embers", "embers",
+    { "smouldering embers", "embers",
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
