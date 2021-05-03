@@ -417,6 +417,8 @@ static string _colourize(string base, colour_t col)
 {
     if (col < NUM_TERM_COLOURS)
     {
+        if (col == BLACK)
+            col = DARKGRAY;
         const string col_name = colour_to_str(col);
         return make_stringf("<%s>%s</%s>",
                             col_name.c_str(), base.c_str(), col_name.c_str());
@@ -541,7 +543,6 @@ static void _describe_book(const spellbook_contents &book,
             // looks nicer than Lehudib's Crystal S
             spell_name = "Crystal Spear";
         }
-
         description += formatted_string::parse_string(
                 make_stringf("%c - %s%s%s%s", spell_letter,
                              chop_string(spell_name, chop_len).c_str(),

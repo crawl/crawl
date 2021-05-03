@@ -1410,6 +1410,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SPIT_ACID:
     case SPELL_ACID_SPLASH:
     case SPELL_ELECTRICAL_BOLT:
+    case SPELL_DISPEL_UNDEAD_RANGE:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1420,11 +1421,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_ENERGY_BOLT:
         zappy(spell_to_zap(real_spell), power, true, beam);
         beam.short_name = "energy";
-        break;
-
-    case SPELL_DISPEL_UNDEAD_RANGE:
-        beam.flavour  = BEAM_DISPEL_UNDEAD;
-        beam.damage   = dice_def(3, min(6 + power / 10, 40));
         break;
 
     case SPELL_MALMUTATE:
