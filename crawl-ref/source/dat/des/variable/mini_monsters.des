@@ -7619,7 +7619,100 @@ HHH.....FFF
    .EEE.
 ENDMAP
 
+NAME:   hellmonk_guarded_unrand_seven_league_boots
+TAGS:   transparent no_monster_gen
+DEPTH:  D:10-, Lair, Depths
+WEIGHT: 3
+SUBST:  D = FFW, H : IF, I : cx
+NSUBST: F = 1:J / 1:J. / 1:9 / 9=0.. / *:.
+FTILE:  E = floor_ice
+COLOUR: E = white
+FTILE:  .08Jd = floor_grass
+KITEM:  d = seven-league_boots no_pickup
+KMONS:  d = guardian serpent
+: if you.branch() == "Depths" then
+KMONS:  J = vampire knight
+: elseif you.branch() == "Lair" then
+KMONS:  J = boulder beetle
+: else
+KMONS:  J = phantasmal warrior
+: end
+MAP
+        xxxxxxxxx
+     xxxxWWEEEWWxxxx
+   xxxWDDWWWWWWWWWWxxx
+  xxWWWDHDWWWWWWWWWWWxx
+ xxWWWDFFFDWWWWDDFFDDWxx
+ xWWDDHFFHFDWWDFFIFFFHFx
+xxWWWDFHFFDWWWDFFIFFFFFxx
+xWWWWDFHFDWWIWWWDFIFFFFFx
+@WWWDFFHDWWIIWWWDFIFFFFdx
+xWWWWDIDWWWWWWWDDDHFFFFFx
+xxWWWDIFFDWWWWDDFHDFFDDxx
+ xWWDIFFFDWWWWDFFHFDDWWx
+ xxWWDIFFDWWDWDFHFFDWWxx
+  xxWWDDDWWWWWWDFDDWWxx
+   xxxWWDWWWWWWWDWWxxx
+     xxxxWEEEEEWxxxx
+        xxxxxxxxx
+ENDMAP
 
+NAME:   hellmonk_guarded_unrand_zhor
+TAGS:   transparent no_monster_gen
+DEPTH:  D:7-12, Lair:1-3
+WEIGHT: 5
+ITEM:   skin_of_zhor no_pickup, box of beasts
+MONS:   rime drake
+NSUBST: d = 1:d / *:1
+KFEAT: ~ = closed_clear_door
+SUBST:  1 = 1.., e = e..
+: if you.branch() == "Lair" then
+MONS:   torpor snail
+: else
+SUBST:  2 = 1
+: end
+MAP
+            nnnn
+           nndenn
+          nn1.nn
+         nn.1nn
+    nnnnnn..nn
+   nnd.nn.1nn
+    nn..1.nn
+     nn22nn
+    nn..nn
+   nn1..1nn
+  nn..nn..nn
+ nn...11...nn
+nn~nnnnnnn~nnn
+  @       @
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_vitality_bloodlust
+TAGS:   transparent
+DEPTH:  D:7-11
+WEIGHT: 2
+ITEM:   amulet_of_vitality no_pickup / necklace_of_bloodlust no_pickup
+MONS:   deep troll
+COLOUR: x. = lightred
+NSUBST: 1 = 2:1 / *:.
+TILE:   x = wall_pebble_red
+FTILE:  .d1 = floor_pebble_lightred
+MAP
+    @
+   x.x
+  xx.xx
+ xx...xx
+xx.....xx
+x.......x
+x..1.1..x
+x.......x
+x1.....1x
+x...1...x
+xx1...1xx
+ xx.d.xx
+  xxxxx
+ENDMAP
 
 ###################################################################
 #
