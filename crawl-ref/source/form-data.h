@@ -232,7 +232,6 @@ static const form_entry formdata[] =
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
     {
         {"insubstial", "Your tiny insubstantial body is highly resistant to most damage types." },
-        {"wisp movement", "You do not have full control over your movement and may randomly blink."} // XX mark as badmut
     }
 },
 

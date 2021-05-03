@@ -2172,8 +2172,6 @@ int form_base_movespeed(transformation tran)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
         return 7;
-    else if (tran == transformation::wisp)
-        return 8;
     else
         return 10;
 }
