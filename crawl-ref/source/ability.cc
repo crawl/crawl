@@ -3487,7 +3487,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_SHAFT_SELF,
             ABIL_HOP,
             ABIL_ROLLING_CHARGE,
-            ABIL_BREATHE_POISON,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
             ABIL_BREATHE_FROST,
