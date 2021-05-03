@@ -679,7 +679,8 @@ A potion which greatly increases the power of the drinker's melee attacks.
 potion of mutation
 
 A potion which mutates the drinker, removing several mutations then
-granting a few mutations, at least one beneficial.
+granting a few random mutations, which are likely (but not guaranteed) to be
+beneficial.
 %%%%
 potion of resistance
 
