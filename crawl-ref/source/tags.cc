@@ -3214,8 +3214,12 @@ static void _tag_read_you(reader &th)
         _fixup_species_mutations(MUT_HEAT_VULNERABILITY);
     }
     // not sure this is safe for SP_MUT_FIX, leaving it out for now
-    if (you.species == SP_GREY_DRACONIAN)
+    if (you.species == SP_GREY_DRACONIAN || you.species == SP_GARGOYLE
+        || you.species == SP_GHOUL || you.species == SP_MUMMY
+        || you.species == SP_VAMPIRE)
+    {
         _fixup_species_mutations(MUT_UNBREATHING);
+    }
 
     #undef SP_MUT_FIX
 

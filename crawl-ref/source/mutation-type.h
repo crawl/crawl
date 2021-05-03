@@ -143,7 +143,9 @@ enum mutation_type
     MUT_TOUGH_SKIN,
     MUT_WEAK,
     MUT_WILD_MAGIC,
+#if TAG_MAJOR_VERSION == 34
     MUT_UNBREATHING,
+#endif
     MUT_ACIDIC_BITE,
     MUT_EYEBALLS,
 #if TAG_MAJOR_VERSION == 34

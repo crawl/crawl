@@ -111,7 +111,7 @@ Form::Form(const form_entry &fe)
       can_cast(fe.can_cast), spellcasting_penalty(fe.spellcasting_penalty),
       unarmed_hit_bonus(fe.unarmed_hit_bonus), uc_colour(fe.uc_colour),
       uc_attack_verbs(fe.uc_attack_verbs),
-      can_bleed(fe.can_bleed), breathes(fe.breathes),
+      can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
@@ -432,9 +432,8 @@ bool Form::player_can_swim() const
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || (species::can_swim(you.species)
-                        || you.get_mutation_level(MUT_UNBREATHING) >= 2)
-                && can_swim != FC_FORBID
+           || species::can_swim(you.species)
+              && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 

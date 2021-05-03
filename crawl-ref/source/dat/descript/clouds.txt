@@ -11,9 +11,9 @@ If placed near or over water, the heat will generate steam nearby.
 %%%%
 noxious fumes cloud
 
-A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming confused by the gases, unless resistant to poison.
-Tougher, more experienced creatures are less likely to be affected.
+A cloud of vile, choking fumes. Any creature spending time in it will be at
+risk of becoming confused by the gases, unless resistant to poison. Tougher,
+more experienced creatures are less likely to be affected.
 %%%%
 freezing vapour cloud
 

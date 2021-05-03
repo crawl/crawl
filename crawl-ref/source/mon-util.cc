@@ -3330,7 +3330,7 @@ static habitat_type _mons_class_habitat(monster_type mc,
         // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
         size_type st = (me ? me->size
                            : get_monster_data(MONS_PROGRAM_BUG)->size);
-        if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
+        if (ht == HT_LAND && st >= SIZE_GIANT)
             ht = HT_AMPHIBIOUS;
     }
     return ht;
@@ -3470,15 +3470,8 @@ bool mons_is_seeking(const monster& m)
 
 bool mons_is_unbreathing(monster_type mc)
 {
-    const mon_holy_type holi = mons_class_holiness(mc);
-
-    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        return true;
-
-    if (mons_class_is_slime(mc))
-        return true;
-
-    return mons_class_flag(mc, M_UNBREATHING);
+    return bool(mons_class_holiness(mc) & (MH_UNDEAD | MH_NONLIVING
+                                           | MH_PLANT));
 }
 
 // Either running in fear, or trapped and unable to do so (but still wishing to)

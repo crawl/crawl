@@ -1864,17 +1864,12 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     poison_monster(mons, agent, levels, false);
 
-    int hurted = 0;
+    int hurted = roll_dice(levels, 6);
 
-    if (!mons->is_unbreathing())
+    if (hurted)
     {
-        hurted = roll_dice(levels, 6);
-
-        if (hurted)
-        {
-            simple_monster_message(*mons, " convulses.");
-            mons->hurt(agent, hurted, BEAM_POISON);
-        }
+        simple_monster_message(*mons, " convulses.");
+        mons->hurt(agent, hurted, BEAM_POISON);
     }
 
     if (mons->alive())
@@ -2003,18 +1998,13 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
     poison_player(roll_dice(levels, 12) + 1, source_name, name);
 
-    int hurted = 0;
+    int hurted = roll_dice(levels, 6);
 
-    if (!you.is_unbreathing())
+    if (hurted)
     {
-        hurted = roll_dice(levels, 6);
-
-        if (hurted)
-        {
-            mpr("You have difficulty breathing.");
-            ouch(hurted, KILLED_BY_CURARE, agent->mid,
-                 "curare-induced apnoea");
-        }
+        mpr("You have difficulty breathing.");
+        ouch(hurted, KILLED_BY_CURARE, agent->mid,
+             "curare-induced apnoea");
     }
 
     slow_player(10 + random2(levels + random2(3 * levels)));
@@ -2895,7 +2885,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_acid() >= 3;
 
     case BEAM_MEPHITIC:
-        return mon->res_poison() > 0 || mon->is_unbreathing();
+        return mon->res_poison() > 0;
 
     default:
         return false;
@@ -2944,8 +2934,8 @@ bool bolt::harmless_to_player() const
         // With clarity, meph still does a tiny amount of damage (1d3 - 1).
         // Normally we'd just ignore it, but we shouldn't let a player
         // kill themselves without a warning.
-        return player_res_poison(false) > 0 || you.is_unbreathing()
-            || you.clarity(false) && you.hp > 2;
+        return player_res_poison(false) > 0
+               || you.clarity(false) && you.hp > 2;
 
     case BEAM_ELECTRICITY:
         return player_res_electricity(false);

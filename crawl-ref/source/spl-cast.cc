@@ -1556,7 +1556,7 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
 
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
-    if (!mi.mresists & MR_RES_POISON || mons_is_unbreathing(mi.type))
+    if (!mi.mresists & MR_RES_POISON)
         return vector<string>{"not susceptible"};
 
     int pct_chance = 2;

@@ -5217,7 +5217,6 @@ bool player::can_swim(bool permanently) const
 {
     return (species::can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
-            || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
                 && form_can_swim();
 }
@@ -6015,7 +6014,7 @@ mon_holy_type player::holiness(bool temp) const
     // Alive Vampires are MH_NATURAL
     if (is_lifeless_undead(temp))
         holi = MH_UNDEAD;
-    else if (species == SP_GARGOYLE || species == SP_DJINNI)
+    else if (species::is_nonliving(you.species))
         holi = MH_NONLIVING;
     else
         holi = MH_NATURAL;
@@ -6070,14 +6069,14 @@ int player::how_chaotic(bool /*check_spells_god*/) const
 /**
  * Does the player need to breathe?
  *
- * Pretty much only matters for mephitic clouds, & confusing spores, & curare.
+ * Pretty much only matters for confusing spores and drowning damage.
  *
  * @return  Whether the player has no need to breathe.
  */
 bool player::is_unbreathing() const
 {
-    return !get_form()->breathes || petrified()
-        || get_mutation_level(MUT_UNBREATHING);
+    return is_nonliving() || is_lifeless_undead()
+           || form == transformation::tree;
 }
 
 bool player::is_insubstantial() const

@@ -268,12 +268,10 @@ bool monster::submerged() const
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = env.grid(p);
-    return (mons_genus(type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(*this) == MONS_GREY_DRACONIAN)
-                || grid == DNGN_SHALLOW_WATER
-                   && (mons_genus(type) == MONS_NAGA // tails, not feet
-                       || mons_genus(type) == MONS_SALAMANDER
-                       || body_size(PSIZE_BODY) >= SIZE_LARGE);
+    return grid == DNGN_SHALLOW_WATER
+           && (mons_genus(type) == MONS_NAGA // tails, not feet
+               || mons_genus(type) == MONS_SALAMANDER
+               || body_size(PSIZE_BODY) >= SIZE_LARGE);
 }
 
 bool monster::extra_balanced() const

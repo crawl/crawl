@@ -956,7 +956,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
                 || player_equip_unrand(UNRAND_FROSTBITE);
         case CLOUD_MEPHITIC:
-            return act.res_poison() > 0 || act.is_unbreathing();
+            return act.res_poison() > 0;
         case CLOUD_POISON:
             return act.res_poison() > 0;
         case CLOUD_STEAM:

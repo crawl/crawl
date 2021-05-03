@@ -193,8 +193,6 @@ public:
 
     /// has blood (used for sublimation and bloodsplatters)
     const form_capability can_bleed;
-    /// see player::is_unbreathing
-    const bool breathes;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
     // ugh

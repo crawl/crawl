@@ -606,6 +606,7 @@ static const mutation_def mut_data[] =
    "You feel frail."},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_UNBREATHING, 0, 2, mutflag::good, true,
   "unbreathing",
 
@@ -614,6 +615,7 @@ static const mutation_def mut_data[] =
   {"You feel breathless.", "", ""},
   {"", "", ""},
 },
+#endif
 
 { MUT_TORMENT_RESISTANCE, 0, 2, mutflag::good, false,
   "torment resistance",

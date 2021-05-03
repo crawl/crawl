@@ -2280,7 +2280,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species::is_unbreathing(static_cast<species_type>(race)))
+                 (species::is_undead(static_cast<species_type>(race))
+                  || species::is_nonliving(static_cast<species_type>(race))))
         {
             desc += "Forgot to exist";
         }

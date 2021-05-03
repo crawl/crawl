@@ -946,7 +946,9 @@ Causes confusion in all who gaze upon the caster.
 %%%%
 Mephitic Cloud spell
 
-Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
+Conjures up a short-lived cloud of noxious fumes, which may cause confusion in
+any creature not resistant to poison. Tougher, more experienced creatures are
+less likely to be affected.
 %%%%
 Mesmerise spell
 
