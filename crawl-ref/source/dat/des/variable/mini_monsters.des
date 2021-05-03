@@ -7481,20 +7481,20 @@ TILE:   F = wall_ice
 TILE:   H = wall_marble
 SUBST:  F : x, H : c
 MAP
-         DDbEE
-        DDEdDEE
-       DDE...DEEE
-        DDD2EEE
-          D.E
-        EEE.DDD
-      EEE1...1DDD
-     EEG..D.E..GDD
-      EEE.....DDD
-        EE...DD
-         EE.DD
-          D.E
-         ED.ED
-          D@E
+    DDbEE
+   DDEdDEE
+  DDE...DEEE
+   DDD2EEE
+     D.E
+   EEE.DDD
+ EEE1...1DDD
+EEG..D.E..GDD
+ EEE.....DDD
+   EE...DD
+    EE.DD
+     D.E
+    ED.ED
+     D@E
 ENDMAP
 
 NAME:   hellmonk_guarded_unrand_vines
@@ -7515,6 +7515,112 @@ xx'....'''WW't'....'xx
   ..'xxxxd2'dxxxx'..
         xxxxxx
 ENDMAP
+
+NAME:   hellmonk_guarded_unrand_frostbite
+TAGS:   transparent no_monster_gen
+DEPTH:  D:7-12
+WEIGHT: 5
+ITEM:   frostbite no_pickup
+MONS:   white imp, freezing wraith
+TILE:   D = wall_ice
+FTILE:  . = floor_ice
+COLOUR: . = white
+SUBST:  D : x, 1 = 1., 2 = 2.
+NSUBST: d = 1:d / *:W
+NSUBST: E = 2:2 / *:.
+MAP
+          DDDDDD
+       DDDDE11EDDDD
+ DDDDDDD11......11DDDDDDD
+DDWE..................EWDD
+ DDD..1.2...DddD.2.1..DDD
+ DW...DD..DddDDW..DD...WD
+DDD2.DDD.1WDDDDW1.DDD.2DDD
+ DW...DD..WDDWWD..DD...WD
+ DDD......DWWD........DDD
+DDW....................WDD
+ DDDDDDD..........DDDDDDD
+       D++++++++++D
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_rift
+TAGS:   transparent
+DEPTH:  D:13-, Depths
+WEIGHT: 3
+ITEM:   rift no_pickup
+KFEAT:  t = demonic_tree
+MONS:   wizard, starcursed mass / tentacled starspawn
+NSUBST: D = 1:d / *:2
+SUBST:  c : ctttn, 1 = 1..
+SUBST:  E = xxxcvlWbtTG_....
+KFEAT:  t = demonic_tree
+KFEAT:  _ = altar_lugonu / enter_abyss
+MAP
+   c       c       c
+   c       c       c
+  ccc     ccc     ccc
+ ccDcc   ccDcc   ccDcc
+ccE.Ecc ccE.Ecc ccE.Ecc
+ c...c   c...c   c...c
+ c.1.c   c.1.c   c.1.c
+ c...c   c...c   c...c
+ c...c   c...c   c...c
+ c...c   cE.Ec   c...c
+ c..EcccccE.EcccccE..c
+ c..EEcccEE2EEcccEE..c
+ c1....1..._...1....1c
+ cc......EE.EE......cc
+  ccccccccE1Ecccccccc
+        ccE.Ecc
+         c...c
+         c...c
+         c...c
+         cE1Ec
+         c...c
+         c...c
+         c...c
+         cE.Ec
+         c...c
+         c...c
+         c...c
+         c@@@c
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_lears
+TAGS:   transparent
+DEPTH:  D:6-
+WEIGHT: 5
+ITEM:   lear's_hauberk no_pickup, hat plus:-2 ident:all
+ITEM:   helmet plus:-2 ident:all, chain mail plus:-2 ident:all
+ITEM:   pair of boots plus:-2 ident:all
+ITEM:   pair of gloves plus:-2 ident:all
+NSUBST: D = 1:d / 1:e / 1:f / 1:g / 1:h / 1:i
+SUBST:  E : xcv, F : xcv, H : xcv, G = G.., T : T...
+: if you.absdepth() < 8 then
+MONS:   troll
+: elseif you.absdepth() < 13 then
+MONS:   tengu warrior
+:else
+MONS:   minotaur
+: end
+MAP
+   .EEE.
+   .EDE.
+....E+E....
+FFF.....HHH
+FDF.G.G.HDH
+FF+..T..+HH
+....G1G....
+HH+..T..+FF
+HDH.G.G.FDF
+HHH.....FFF
+....E+E....
+   .EDE.
+   .EEE.
+ENDMAP
+
+
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
