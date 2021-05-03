@@ -7313,6 +7313,7 @@ NSUBST: ' = 1:2 / *:1
 MONS: efreet, hellion
 SUBST: K = c
 :end
+SUBST:  c : cv
 NSUBST: D = 1:2 / 1:1 / *:.
 MAP
            ccc    ccccccc
@@ -7381,6 +7382,139 @@ MAP
     ........
 ENDMAP
 
+# this vault gives the item to a monster instead of placing it normally
+NAME:   hellmonk_guarded_unrand_dark_maul
+TAGS:   transparent no_monster_gen
+DEPTH:  D:8-12, Orc, Depths
+WEIGHT: 5
+MONS:   ogre ; dark maul
+: if you.branch() == "Depths" then
+MONS:   juggernaut / titan / iron giant w:5
+: elseif you.branch() == "orc" then
+MONS:   two-headed ogre / orc warlord / stone giant
+: else
+MONS:   two-headed ogre / orc knight
+: end
+SUBST: D = 2..
+MAP
+                    @@
+vvvvvvvvvvvvvvvvvvvv++v
+v.2+.....D......D..v..v
+v..+..v.........v..v..v
+v..v..v....D....v..v..v
+v..v..v...v.v...v..v..v
+v..v..v..D.1.D..v..v..v
+v..v..v...v.v...v..v..v
+v..v..v....D....v..v..v
+v..v..v.........v..+..v
+v..v..D......D.....+2.v
+v++vvvvvvvvvvvvvvvvvvvv
+ @@
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_gong
+TAGS:   transparent no_monster_gen
+DEPTH:  D:7-12
+WEIGHT: 5
+ITEM:   shield_of_the_gong no_pickup
+MONS:   vault sentinel
+KFEAT:  ^ = alarm trap
+SUBST:  ' = ^....
+MAP
+      ^@^
+     vv+vv
+   vvv^.^vvv
+  vv^'''''^vv
+  v^'''''''^v
+ vv'''vvv'''vv
+ v..'v...v'..v
+ v1.v..d..v.1v
+ v..'v...v'..v
+ vv'''vvv'''vv
+  v^'''''''^v
+  vv^'''''^vv
+   vvv^.^vvv
+     vv+vv
+      ^@^
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_night
+TAGS:   transparent no_monster_gen
+DEPTH:  D:7-12
+WEIGHT: 5
+ITEM:   robe_of_night no_pickup
+MONS:   dream sheep, shadow
+SUBST:  c : ccv
+SUBST:  1 = 1.
+FTILE:  .12d+ = floor_limestone
+COLOUR: .12d+ = yellow
+MAP
+    cccccc
+  ccc1...ccc
+ cc1.....2dcc
+ c.....ccccc
+cc..1ccc
+c1..cc
+c...c
+c.2.c
+c...c
+c1..cc
+cc..1ccc
+ c.....ccccc
+ cc1.......+@
+  ccc1...ccc
+    cccccc
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_gyre_and_gimble
+TAGS:   transparent no_monster_gen
+DEPTH:  D:6-10, Elf
+WEIGHT: 5
+ITEM:   gyre no_pickup
+: if you.branch() == "Elf" then
+MONS:   deep elf blademaster, deep elf blademaster
+: else
+MONS:   two-headed ogre, spriggan
+: end
+SUBST:  E : cv, D : FH
+TILE:   F = wall_ice
+TILE:   H = wall_marble
+SUBST:  F : x, H : c
+MAP
+         DDbEE
+        DDEdDEE
+       DDE...DEEE
+        DDD2EEE
+          D.E
+        EEE.DDD
+      EEE1...1DDD
+     EEG..D.E..GDD
+      EEE.....DDD
+        EE...DD
+         EE.DD
+          D.E
+         ED.ED
+          D@E
+ENDMAP
+
+NAME:   hellmonk_guarded_unrand_vines
+TAGS:   transparent ruin_lair
+DEPTH:  D:7-11, Lair:1-3
+WEIGHT: 5
+ITEM:   robe_of_vines no_pickup
+MONS:   plant, hydra
+NSUBST: d = 1:d / *:1
+SUBST:  ' = 1..
+MAP
+        xxxxxx
+  ..'xxxxd'2dxxxx'..
+ ''..'x'x'.....x'..''    
+xx'...''t'WW'''....'xx
+xx'....'''WW't'....'xx     
+ ''..'x.....'x'x'..''    
+  ..'xxxxd2'dxxxx'..
+        xxxxxx
+ENDMAP
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
