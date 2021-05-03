@@ -289,30 +289,27 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 {
     rng::subgenerator item_rng;
 
-    static const weapon_list GOBLIN_WEAPONS = // total 10
-    {   { WPN_DAGGER,           3 },
-        { WPN_CLUB,             3 },
-        { NUM_WEAPONS,          4 }, };   // 60% chance of weapon
+    static const weapon_list GOBLIN_WEAPONS =
+    {   { WPN_DAGGER,           1 },
+        { WPN_CLUB,             1 }};
     static const weapon_list GNOLL_WEAPONS = // total 30
     {   { WPN_SPEAR,            8 },
         { WPN_HALBERD,          4 },
-        { WPN_CLUB,             4 },
-        { WPN_WHIP,             4 },
-        { WPN_FLAIL,            4 },
-        { NUM_WEAPONS,          6 } };    // 80% chance of weapon
+        { WPN_CLUB,             6 },
+        { WPN_WHIP,             6 },
+        { WPN_FLAIL,            6 } };
     static const weapon_list ORC_WEAPONS = // total 525 (!)
-    {   { WPN_CLUB,             70 },
-        { WPN_DAGGER,           60 },
+    {   { WPN_CLUB,            100 },
+        { WPN_DAGGER,           80 },
         { WPN_FLAIL,            60 },
-        { WPN_HAND_AXE,         60 },
-        { WPN_SHORT_SWORD,      40 },
+        { WPN_SHORT_SWORD,      60 },
+        { WPN_HAND_AXE,         80 },
+        { WPN_WHIP,             45 },
         { WPN_MACE,             40 },
-        { WPN_WHIP,             30 },
         { WPN_TRIDENT,          20 },
         { WPN_FALCHION,         20 },
         { WPN_WAR_AXE,          14 },
-        { WPN_MORNINGSTAR,      6 },
-        { NUM_WEAPONS,          105 } }; // 80% chance of weapon
+        { WPN_MORNINGSTAR,      6 } };
     static const weapon_list DE_KNIGHT_WEAPONS = // total 83 (?)
     {   { WPN_LONG_SWORD,       22 },
         { WPN_SHORT_SWORD,      22 },
@@ -441,10 +438,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_DIRE_FLAIL,       2 }, };
 
     static const map<monster_type, mon_weapon_spec> primary_weapon_specs = {
-        { MONS_HOBGOBLIN,
-            { { { WPN_CLUB,             3 },
-                { NUM_WEAPONS,          2 },
-        } } },
         { MONS_ROBIN,
             { { { WPN_CLUB,             35 },
                 { WPN_DAGGER,           30 },
@@ -597,10 +590,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_PURPLE_DRACONIAN,        { NAGA_WEAPONS } },
         { MONS_GREY_DRACONIAN,          { NAGA_WEAPONS } },
         { MONS_TENGU,                   { NAGA_WEAPONS } },
-        { MONS_NAGA_RITUALIST,
-            { { { WPN_DAGGER,           12 },
-                { WPN_SCIMITAR,         5 },
-        }, { 2, 1, 4 }, { { SPWPN_VENOM, 1 } } } },
+        { MONS_NAGA_RITUALIST,          { NAGA_WEAPONS } },
         { MONS_TIAMAT,
             { { { WPN_BARDICHE,         1 },
                 { WPN_DEMON_TRIDENT,    1 },
@@ -641,8 +631,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_WAR_AXE,          3 },
                 { WPN_MORNINGSTAR,      3 },
         } } },
-        { MONS_IRONBRAND_CONVOKER,      { IRON_WEAPONS } },
-        { MONS_IRONHEART_PRESERVER,     { IRON_WEAPONS } },
+        { MONS_IRONBOUND_CONVOKER,      { IRON_WEAPONS } },
+        { MONS_IRONBOUND_PRESERVER,     { IRON_WEAPONS } },
         { MONS_SIGMUND, { { { WPN_SCYTHE, 1 } } } },
         { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
@@ -652,6 +642,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_TWO_HEADED_OGRE,         { DOUBLE_OGRE_WEAPONS } },
         { MONS_IRON_GIANT,              { DOUBLE_OGRE_WEAPONS } },
+        { MONS_IRONBOUND_BEASTMASTER,
+            { { { WPN_WHIP,             5 },
+                { WPN_QUARTERSTAFF,     4 },
+                { WPN_DEMON_WHIP,       1 },
+        } } },
+        { MONS_IRONBOUND_THUNDERHULK,
+            { { { WPN_DIRE_FLAIL,       9 },
+                { WPN_GREAT_MACE,       1 },
+        } } },
         { MONS_ETTIN,
             { { { WPN_DIRE_FLAIL,       9 },
                 { WPN_GREAT_MACE,       1 },
@@ -992,7 +991,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     };
 
     bool force_item = false;
-    bool force_uncursed = false;
 
     string floor_tile = "";
     string equip_tile = "";
@@ -1020,19 +1018,19 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     switch (type)
     {
     case MONS_KOBOLD:
-    case MONS_BIG_KOBOLD:
-        if (x_chance_in_y(3, 5))     // give hand weapon
+    case MONS_KOBOLD_BRIGAND:
+        if (one_chance_in(30) && level > 2)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_HAND_CROSSBOW;
+            break;
+        }
+        else     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
                                            WPN_SHORT_SWORD, WPN_SHORT_SWORD,
                                            WPN_CLUB,        WPN_WHIP);
-        }
-        else if (one_chance_in(30) && level > 2)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HAND_CROSSBOW;
-            break;
         }
         break;
 
@@ -1045,6 +1043,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         }
         break;
 
+    case MONS_GNOLL:
+        if (!level && item.is_type(OBJ_WEAPONS, WPN_HALBERD))
+            item.sub_type = WPN_CLUB;
+        break;
+
     case MONS_WIGHT:
         if (coinflip())
         {
@@ -1054,17 +1057,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             if (one_chance_in(5))
                 set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         }
-
-        if (one_chance_in(3))
-            do_curse_item(item);
-        break;
-
-    case MONS_DEEP_ELF_ARCHER:
-    case MONS_VASHNIA:
-    case MONS_NAGA_SHARPSHOOTER:
-    case MONS_SATYR:
-    case MONS_SONJA:
-        force_uncursed = true;
         break;
 
     case MONS_JORGRUN:
@@ -1267,12 +1259,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     if (force_item)
         item_set_appearance(i);
 
-    if (force_uncursed)
-    {
-        do_uncurse_item(i);
-        set_ident_flags(i, ISFLAG_KNOW_CURSE); // despoiler
-    }
-
     if (!is_artefact(env.item[thing_created]) && !floor_tile.empty())
     {
         ASSERT(!equip_tile.empty());
@@ -1396,15 +1382,28 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             {
                 weap_type  = MI_DART;
                 qty = random_range(2, 8);
-                brand = got_curare_roll(level) ? SPMSL_CURARE : SPMSL_POISONED;
+                brand = SPMSL_POISONED;
                 break;
             }
-            // intentional fallthrough
-        case MONS_BIG_KOBOLD:
             if (x_chance_in_y(2, 5))
             {
                 weap_type  = MI_STONE;
                 qty = 1 + random2(5);
+            }
+            break;
+        case MONS_KOBOLD_BRIGAND:
+            weap_type  = MI_DART;
+            if (one_chance_in(3))
+            {
+                // Avoid increasing total amount of generated curare
+                // too much.
+                brand = SPMSL_CURARE;
+                qty = 1;
+            }
+            else
+            {
+                qty = random_range(2, 8);
+                brand = SPMSL_POISONED;
             }
             break;
 
@@ -1488,7 +1487,11 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
-            if (!level || !one_chance_in(20))
+            if (!level || coinflip())
+                break;
+            // deliberate fall-through
+        case MONS_IRONBOUND_BEASTMASTER:
+            if (!one_chance_in(10))
                 break;
             // deliberate fall-through to harold
 
@@ -1818,6 +1821,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_GRUM:
     case MONS_SPRIGGAN_BERSERKER:
+    case MONS_IRONBOUND_BEASTMASTER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;
@@ -1871,8 +1875,10 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
         break;
 
+    case MONS_IRONBOUND_THUNDERHULK:
     case MONS_VAULT_SENTINEL:
-    case MONS_IRONBRAND_CONVOKER:
+    case MONS_IRONBOUND_CONVOKER:
+    case MONS_IRONBOUND_FROSTHEART:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;
@@ -1984,7 +1990,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_TENGU_WARRIOR:
-    case MONS_IRONHEART_PRESERVER:
+    case MONS_IRONBOUND_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_RING_MAIL);
         break;

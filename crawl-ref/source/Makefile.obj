@@ -316,6 +316,7 @@ catch2-tests/test_ng-init-branches.o \
 catch2-tests/test_player.o \
 catch2-tests/test_player_fixture.o \
 catch2-tests/test_randbook.o \
+catch2-tests/test_stringutil.o \
 catch2-tests/test_species.o \
 catch2-tests/test_tags.o \
 catch2-tests/test_ui.o \
@@ -389,8 +390,6 @@ enchant-type.h.o \
 endianness.h.o \
 energy-use-type.h.o \
 enum.h.o \
-eq-type-flags.h.o \
-eq-type.h.o \
 equipment-type.h.o \
 errors.h.o \
 externs.h.o \

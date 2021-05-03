@@ -204,7 +204,7 @@ KMONS:   8 = yaktaur / nothing w:5
 KMONS:   9 = deep elf knight / deep elf archer
 KMONS:   0 = deep elf pyromancer / deep elf zephyrmancer / nothing
 KMONS:   A = boggart / kobold demonologist
-KMONS:   B = big kobold / kobold w:5
+KMONS:   B = kobold brigand / kobold w:5
 KMONS:   C = skeletal warrior
 KMONS:   D = skeleton
 KMASK:   @` = !no_item_gen
@@ -325,13 +325,13 @@ ENDMAP
 NAME:     skrybe_vaults_entry_preservation
 TAGS:     vaults_entry transparent
 ORIENT:   float
-MONS:     vault guard
 SHUFFLE:  AI , BJ , CK , DL
 SUBST:    A = v , B = v , C = v , D = v
 SUBST:    I = + , J = + , K = + , L = +
 SUBST:    E = vvm , F = vvm, G = vvm, H = vvm
+SHUFFLE:  vc
 KFEAT:    O = enter_vaults
-KMONS:    O = ironheart preserver
+KMONS:    O = ironbound preserver
 NSUBST:   $ = 1:O / *=.$%
 MAP
         @@
@@ -2280,7 +2280,7 @@ TAGS:    vaults_end_quadrant_prize vaults_end_quadrant_prize_mall unrand
 SHUFFLE: AB, CD
 SUBST:   A=+, B:xx+, C:xxx+, D:xxxx+
 NSUBST:  S = 2:S / 1:O / *:RRU9
-KFEAT:   S = jewellery shop / antique armour shop / gadget shop
+KFEAT:   S = jewellery shop / antique armour shop / distillery shop
 KFEAT:   R = general shop / book shop / scroll shop / antique weapon shop / distillery shop
 KFEAT:   U = stone_arch
 NSUBST:  ' = 22:9 / *:.

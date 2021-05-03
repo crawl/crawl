@@ -112,6 +112,7 @@ LUAFN(view_is_safe_square)
 LUAFN(view_can_reach)
 {
     COORDSHOW(s, 1, 2)
+    // TODO: refactor this to use can_reach_attack_between()
     const int x_distance  = abs(s.x);
     const int y_distance  = abs(s.y);
     if (x_distance > 2 || y_distance > 2)

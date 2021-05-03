@@ -1219,6 +1219,61 @@ xxxxxxlllcc..+.._..+..ccllllxx
 ENDMAP
 ###############################################################################
 
+###############################################################################
+# A smoke and steam themed volcano
+NAME:   hellmonk_smoking_crater
+TAGS:   no_item_gen no_monster_gen
+ORIENT: encompass
+WEIGHT: 20
+KITEM:  4 = scroll of fog q:2 ident:all w:20 / cloak of the thief w:1
+MONS:   steam dragon / steam dragon / smoke demon / hell hound
+MONS:   sun demon, lindwurm
+KMONS:  4 = fire dragon
+SUBST:  a = ..xxl, p = ..'xl, q = .x, ' = '.
+SUBST:  1 = ..1, D = 2., 2 : 23
+NSUBST: $ = 4 / $
+SUBST:  $ = $$deef
+MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
+                              pow_min=4, pow_max=10, delay=25, size=2, \
+                              spread_rate=0, }
+:volcano_setup(_G)
+MAP
+            xxxxxxxxxxxxxxxx
+           xxxjjjjjjjjjjjjjxxx
+         xxx1...1.....1.....1xx
+       xxx....ppppppppp..D....xx
+      xx..2.pppppppppp.a.......xx
+     xx1.....1....1..axxx...'...xx
+    xx....xxxxaaaaaaaaxxxa1....1xx
+   xx..'.xxxxxa1..1.axxxxa...1..xx
+   x....xxxxxx.....xxxxxx......xx
+   x.1..xxxxxx1.'..xxxxx......xx
+   x....xxxxxxx..D..xxx...1..ax
+   xG..Gxxxxxxxx.....pp......ax
+   x....xxxxxxxxa..1..p......ax
+   x2..2xxxxxxxxa.....p......ax
+   xG..Gxxxxxxxxa.....p.1....ax
+  ccc++cccxxxxxx.....ppp......xx
+ cc......ccxxx..1..xxxxx...1..xx
+cc........ccx.....xxxxxa......xx
+c...llll...cx..'..xxxxxxa.....xx
+cG.llllll.Gcxj....xxxxxa.....xx
+c$..llll..$cxj.1..xxxx..'...xx
+cc$$....$$ccxj....jjj....1.xx
+ cc$$$$$$ccxxj....j'.....xxx
+  ccc$$cccxxj....jj......xx
+    ccccxxxj.1..xxx....1.xx
+ xxxxxxxxjj.....xxj..'..xx
+xxx<xxx........xxj.....xx
+xx...xx..'....xxxj....xx
+x..A..x......xxxj..1.xx
+xx...xxjj..jjx....xxxx
+xxx....jj..jj..jjxx
+xxxxx.........xxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+###############################################################################
+
 ## Severe gimmicks. Weight 10, four present, ~4.17% chance each.
 
 ###############################################################################

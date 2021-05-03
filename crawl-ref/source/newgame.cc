@@ -150,7 +150,7 @@ string newgame_char_description(const newgame_def& ng)
     else if (_is_random_job(ng.job))
     {
         const string j = (ng.job == JOB_RANDOM ? "Random " : "Recommended ");
-        return j + species_name(ng.species);
+        return j + species::name(ng.species);
     }
     else if (_is_random_species(ng.species))
     {
@@ -158,14 +158,14 @@ string newgame_char_description(const newgame_def& ng)
         return s + get_job_name(ng.job);
     }
     else
-        return species_name(ng.species) + " " + get_job_name(ng.job);
+        return species::name(ng.species) + " " + get_job_name(ng.job);
 }
 
 static string _welcome(const newgame_def& ng)
 {
     string text;
     if (ng.species != SP_UNKNOWN)
-        text = species_name(ng.species);
+        text = species::name(ng.species);
     if (ng.job != JOB_UNKNOWN)
     {
         if (!text.empty())
@@ -207,7 +207,7 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
 
     if (!is_starting_job(ng.job)) // VIABLE, RANDOM, UNKNOWN, or disabled
     {
-        ng.species = random_starting_species();
+        ng.species = species::random_starting_species();
         return;
     }
 
@@ -239,7 +239,7 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
         return;
     }
 
-    if (!is_starting_species(ng.species)) // VIABLE, RANDOM, UNKNOWN, or disabled
+    if (!species::is_starting_species(ng.species)) // VIABLE, RANDOM, UNKNOWN, or disabled
     {
         ng.job = random_starting_job();
         return;
@@ -250,7 +250,7 @@ static void _resolve_job(newgame_def& ng, const newgame_def& ng_choice)
     if (ng_choice.job == JOB_VIABLE)
     {
         erase_if(candidate_jobs, [&](const job_type job) {
-            return !species_recommends_job(ng.species, job);
+            return !species::recommends_job(ng.species, job);
         });
     }
     else
@@ -287,7 +287,7 @@ static void _resolve_species_job(newgame_def& ng, const newgame_def& ng_choice)
 static string _highlight_pattern(const newgame_def& ng)
 {
     if (ng.species != SP_UNKNOWN)
-        return species_name(ng.species) + "  ";
+        return species::name(ng.species) + "  ";
 
     if (ng.job == JOB_UNKNOWN)
         return "";
@@ -296,7 +296,7 @@ static string _highlight_pattern(const newgame_def& ng)
 
     for (const auto sp : playable_species())
         if (species_allowed(ng.job, sp) == CC_UNRESTRICTED)
-            ret += species_name(sp) + "  |";
+            ret += species::name(sp) + "  |";
 
     if (!ret.empty())
         ret.resize(ret.size() - 1);
@@ -338,7 +338,7 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
 // reroll characters until the player accepts one of them or quits.
 static bool _reroll_random(newgame_def& ng)
 {
-    string specs = chop_string(species_name(ng.species), 79, false);
+    string specs = chop_string(species::name(ng.species), 79, false);
 
     formatted_string prompt;
     prompt.cprintf("You are a%s %s %s.",
@@ -436,8 +436,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
                 if (character.length() == 4)
                 {
                     choice.species =
-                        get_species_by_abbrev(
-                            character.substr(0, 2).c_str());
+                        species::from_abbrev(character.substr(0, 2).c_str());
                     choice.job =
                         get_job_by_abbrev(
                             character.substr(2, 2).c_str());
@@ -446,11 +445,11 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
                 {
                     for (const auto sp : playable_species())
                     {
-                        if (starts_with(character, species_name(sp)))
+                        if (starts_with(character, species::name(sp)))
                         {
                             choice.species = sp;
                             string temp =
-                                character.substr(species_name(sp).length());
+                                character.substr(species::name(sp).length());
                             choice.job = str_to_job(trim_string(temp));
                             break;
                         }
@@ -554,7 +553,7 @@ static void _choose_name(newgame_def& ng, newgame_def& choice)
     bool good_name = true;
     bool cancel = false;
 
-    string specs = chop_string(species_name(ng.species), 79, false);
+    string specs = chop_string(species::name(ng.species), 79, false);
 
     formatted_string title;
     title.cprintf("You are a%s %s %s.",
@@ -1559,7 +1558,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (this_species == SP_UNKNOWN)
             break;
 
-        if (ng.job == JOB_UNKNOWN && !is_starting_species(this_species))
+        if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;
 
         if (ng.job != JOB_UNKNOWN
@@ -1585,7 +1584,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
             letter,
             this_species,
             item_status,
-            species_name(this_species),
+            species::name(this_species),
             tile_def(tileidx_player_species(this_species, recommended)),
             is_active_item,
             pos
@@ -1663,20 +1662,21 @@ static void _construct_weapon_menu(const newgame_def& ng,
         switch (wpn_type)
         {
         case WPN_UNARMED:
-            choices.emplace_back(SK_UNARMED_COMBAT, species_has_claws(ng.species) ? "claws" : "unarmed");
+            choices.emplace_back(SK_UNARMED_COMBAT,
+                        species::has_claws(ng.species) ? "claws" : "unarmed");
             break;
         case WPN_THROWN:
         {
             // We don't support choosing among multiple thrown weapons.
             tileidx_t tile = 0;
-            if (species_can_throw_large_rocks(ng.species))
+            if (species::can_throw_large_rocks(ng.species))
             {
                 thrown_name = "large rocks";
 #ifdef USE_TILE
                 tile = TILE_MI_LARGE_ROCK;
 #endif
             }
-            else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
+            else if (species::size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
             {
                 thrown_name = "boomerangs";
 #ifdef USE_TILE
@@ -1879,7 +1879,10 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                 return true;
             case M_DEFAULT_CHOICE:
                 if (defweapon != WPN_UNKNOWN)
+                {
                     ng_choice.weapon = defweapon;
+                    break;
+                }
                 // No default weapon defined.
                 // This case should never happen in those cases but just in case
                 return true;
@@ -1938,7 +1941,7 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
                                             species_type species)
 {
     const bool fighter = job == JOB_FIGHTER;
-    const size_type size = species_size(species, PSIZE_TORSO);
+    const size_type size = species::size(species, PSIZE_TORSO);
 
     // TODO: actually query itemprop for one-handedness.
     switch (wp)
@@ -2048,7 +2051,7 @@ static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
                            const newgame_def& defaults)
 {
     // No weapon use at all. The actual item will be removed later.
-    if (ng.species == SP_FELID)
+    if (species::mutation_level(ng.species, MUT_NO_GRASPING))
         return true;
 
     if (!job_has_weapon_choice(ng.job))

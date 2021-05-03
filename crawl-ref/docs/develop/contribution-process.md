@@ -91,8 +91,9 @@ would prefer this to be limited to small changes like vaults or artwork.
 
 1. You clone the crawl repository and make your changes in a branch on your
    cloned repository.
-    * Observe the code style guidelines and commit message style guidelines (72
-      char width, line between title and body, bug # or reporter in title).
+    * Observe the [code style guidelines](coding_conventions.md) and [commit
+      message style guidelines](coding_conventions.md#1---commit-conventions)
+      (72 char width, line between title and body, bug # or reporter in title).
     * Include a commit message with meaningful content for every commit. It's
       fine if a PR comment duplicates this, but the priority for explaining the
       changes should be in the commit messages themselves.

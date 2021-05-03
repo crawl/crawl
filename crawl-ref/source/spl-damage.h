@@ -26,8 +26,6 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
-spret vampiric_drain(int pow, monster* mons, bool fail);
-dice_def vampiric_drain_damage(int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
 dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, const dist &beam, bool fail);
@@ -79,9 +77,8 @@ dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
-spret cast_random_bolt(int pow, bolt& beam, bool fail = false);
-
-vector<coord_def> get_ignition_blast_sources(const actor *agent);
+vector<coord_def> get_ignition_blast_sources(const actor *agent,
+                                             bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);

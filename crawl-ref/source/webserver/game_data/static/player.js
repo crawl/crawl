@@ -14,9 +14,9 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
     };
 
     var defense_boosters = {
-        "ac": "icy armour|protected from physical damage|sanguine armour|protection aura",
-        "ev": "agile|acrobat",
-        "sh": "divine shield",
+        "ac": "ice-armoured|protected from physical damage|sanguine armoured|under a protective aura",
+        "ev": "agile|acrobatic|in a heavenly storm",
+        "sh": "divinely shielded",
     }
 
     /**
@@ -184,7 +184,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         else
             elem = inventory_item_desc(wielded);
 
-        if (player.has_status("corroded equipment"))
+        if (player.has_status("corroded"))
             elem.addClass("corroded_weapon");
 
         return elem;
@@ -236,7 +236,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             elem.addClass("degenerated_defense");
         else if (player.has_status(defense_boosters[type]))
             elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded equipment"))
+        else if (type == "ac" && player.has_status("corroded"))
             elem.addClass("degenerated_defense");
         else if (type == "sh" && player.god == "Qazlal"
                  && player.piety_rank > 0)

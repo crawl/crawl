@@ -63,7 +63,8 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
     {
         { MON_SPELL_NATURAL, "natural" },
         { MON_SPELL_MAGICAL, "magical" },
-        { MON_SPELL_PRIEST,  "divine" },
+        { MON_SPELL_PRIEST,  "divine"  },
+        { MON_SPELL_VOCAL,   "natural" },
     };
 
     return lookup(descriptors, type, "buggy");
@@ -73,18 +74,17 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
  * What type of effects is this spell type vulnerable to?
  *
  * @param type              The type of spell-ability; e.g. MON_SPELL_MAGICAL.
- * @param silencable        Whether any of the spells are subject to Silence
- *                          despite being non-wizardly and non-priestly.
  * @return                  A description of the spell's vulnerabilities.
  */
-static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
-                                            bool silencable)
+static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
 {
-    if (type == MON_SPELL_NATURAL && !silencable)
+    if (type == MON_SPELL_NATURAL)
         return "";
-    silencable |= type == MON_SPELL_WIZARD || type == MON_SPELL_PRIEST;
-    const bool antimagicable
-        = type == MON_SPELL_WIZARD || type == MON_SPELL_MAGICAL;
+    const bool silencable = type == MON_SPELL_WIZARD
+                            || type == MON_SPELL_PRIEST
+                            || type == MON_SPELL_VOCAL;
+    const bool antimagicable = type == MON_SPELL_WIZARD
+                               || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
     return make_stringf(", which are affected by%s%s%s",
                         silencable ? " silence" : "",
@@ -97,17 +97,13 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  * with?
  *
  * @param type              The type of book(s); e.g. MON_SPELL_MAGICAL.
- * @param has_silencable    Whether any of the spells are subject to Silence
- *                          despite being non-wizardly and non-priestly.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
-static string _booktype_header(mon_spell_slot_flag type,
-                               bool has_silencable, bool pronoun_plural)
+static string _booktype_header(mon_spell_slot_flag type, bool pronoun_plural)
 {
-    const string vulnerabilities =
-        _ability_type_vulnerabilities(type, has_silencable);
+    const string vulnerabilities = _ability_type_vulnerabilities(type);
 
     if (type == MON_SPELL_WIZARD)
     {
@@ -147,17 +143,11 @@ static void _monster_spellbooks(const monster_info &mi,
 
     spellbook_contents output_book;
 
-    const bool has_silencable = any_of(begin(book_slots), end(book_slots),
-        [](const mon_spell_slot& slot)
-        {
-            return slot.flags & MON_SPELL_NO_SILENT;
-        });
-
     output_book.label +=
         "\n" +
         uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
         " " +
-        _booktype_header(type, has_silencable, mi.pronoun_plurality());
+        _booktype_header(type, mi.pronoun_plurality());
 
     // Does the monster have a spell that allows them to cast Abjuration?
     bool mons_abjure = false;
@@ -201,6 +191,7 @@ spellset monster_spellset(const monster_info &mi)
     static const mon_spell_slot_flag book_flags[] =
     {
         MON_SPELL_NATURAL,
+        MON_SPELL_VOCAL,
         MON_SPELL_MAGICAL,
         MON_SPELL_PRIEST,
         MON_SPELL_WIZARD,
@@ -374,6 +365,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
 
     switch (spell)
     {
+        case SPELL_FREEZE:
+            return freeze_damage(pow);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -402,6 +395,18 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
 
 static colour_t _spell_colour(spell_type spell)
 {
+    switch (spell)
+    {
+        case SPELL_FREEZE:
+        case SPELL_GLACIATE:
+            return WHITE;
+        case SPELL_WATERSTRIKE:
+            return LIGHTBLUE;
+        case SPELL_IOOD:
+            return LIGHTMAGENTA;
+        default:
+            break;
+    }
     const zap_type zap = spell_to_zap(spell);
     if (zap == NUM_ZAPS)
         return COL_UNKNOWN;
@@ -412,6 +417,8 @@ static string _colourize(string base, colour_t col)
 {
     if (col < NUM_TERM_COLOURS)
     {
+        if (col == BLACK)
+            col = DARKGRAY;
         const string col_name = colour_to_str(col);
         return make_stringf("<%s>%s</%s>",
                             col_name.c_str(), base.c_str(), col_name.c_str());
@@ -536,7 +543,6 @@ static void _describe_book(const spellbook_contents &book,
             // looks nicer than Lehudib's Crystal S
             spell_name = "Crystal Spear";
         }
-
         description += formatted_string::parse_string(
                 make_stringf("%c - %s%s%s%s", spell_letter,
                              chop_string(spell_name, chop_len).c_str(),
@@ -564,9 +570,8 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner) {
+        if (!mon_owner)
             known = you.spell_library[spell] ? "         yes" : "          no";
-        }
 
         description.cprintf("%s%d%s\n",
                             chop_string(schools, 30).c_str(),

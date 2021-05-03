@@ -38,6 +38,7 @@
 #include "species-type.h"
 #include "spl-goditem.h"
 #include "stat-type.h"
+#include "stringutil.h"
 
 static void _do_msg(actor& target, string player_msg, string mon_seen_msg,
                     string mon_unseen_msg)
@@ -126,13 +127,19 @@ static void _curse_message(actor& target, actor* /*source*/,
     if (you.can_smell())
         messages.push_back("You smell decay.");
 
-    if (you.species == SP_MUMMY)
+    const string skin = species::skin_name(you.species).c_str();
+    if (starts_with(skin, "bandage"))
         messages.push_back("Your bandages flutter.");
+    else
+    {
+        messages.push_back(make_stringf("Your %s prickle%s.",
+                        skin.c_str(), ends_with(skin, "s") ? "" : "s"));
+    }
 
     if (!silenced(you.pos()))
         messages.push_back("You hear strange and distant voices.");
 
-    if (!(you.species == SP_OCTOPODE || you.species == SP_FORMICID))
+    if (species::has_bones(you.species))
         messages.push_back("Your bones ache.");
 
     mpr(*random_iterator(messages));

@@ -54,7 +54,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to_floor(coord_def pos);
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat);
 
 actor* actor_at(const coord_def& c)
 {
@@ -482,7 +482,8 @@ bool feat_is_diggable(dungeon_feature_type feat)
 {
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
-           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE
+           || feat == DNGN_PETRIFIED_TREE;
 }
 
 /** Is this feature a type of trap?
@@ -504,7 +505,8 @@ bool feat_is_water(dungeon_feature_type feat)
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
            || feat == DNGN_OPEN_SEA
-           || feat == DNGN_TOXIC_BOG;
+           || feat == DNGN_TOXIC_BOG
+           || feat == DNGN_MANGROVE;
 }
 
 /** Does this feature have enough water to keep water-only monsters alive in it?
@@ -586,7 +588,7 @@ dungeon_feature_type altar_for_god(god_type god)
 
 /** Is this feature an altar to any god?
  */
-bool feat_is_altar(dungeon_feature_type grid)
+FEATFN_MEMOIZED(feat_is_altar, grid)
 {
     return feat_altar_god(grid) != GOD_NO_GOD;
 }
@@ -605,8 +607,18 @@ bool feat_is_player_altar(dungeon_feature_type grid)
  */
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE;
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE
+        || feat == DNGN_PETRIFIED_TREE || feat == DNGN_DEMONIC_TREE;
 }
+
+/** Is this feature flammable?
+ */
+bool feat_is_flammable(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE
+        || feat == DNGN_DEMONIC_TREE;
+}
+
 
 /** Is this feature made of metal?
  */
@@ -654,7 +666,7 @@ bool feat_is_reachable_past(dungeon_feature_type feat)
  *  @param feat the feature.
  *  @returns true for altars, stairs/portals, and malign gateways (???).
  */
-bool feat_is_critical(dungeon_feature_type feat)
+FEATFN_MEMOIZED(feat_is_critical, feat)
 {
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
@@ -874,11 +886,7 @@ void slime_wall_damage(actor* act, int delay)
     const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
 
     if (act->is_player())
-    {
-        you.splash_with_acid(nullptr, strength, false,
-                            (walls > 1) ? "The walls burn you!"
-                                        : "The wall burns you!");
-    }
+        you.splash_with_acid(nullptr, strength, false);
     else
     {
         monster* mon = act->as_monster();
@@ -887,8 +895,9 @@ void slime_wall_damage(actor* act, int delay)
                                              roll_dice(2, strength));
         if (dam > 0 && you.can_see(*mon))
         {
-            mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
-                  mon->name(DESC_THE).c_str());
+            const char *verb = act->is_icy() ? "melt" : "burn";
+            mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
+                  verb, mon->name(DESC_THE).c_str());
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
     }
@@ -925,6 +934,28 @@ void feat_splash_noise(dungeon_feature_type feat)
     }
 }
 
+FEATFN_MEMOIZED(feat_suppress_blood, feat)
+{
+    if (feat_is_tree(feat))
+        return true;
+
+    if (feat == DNGN_DRY_FOUNTAIN)
+        return true;
+
+    // covers shops and altars
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
+        return true;
+
+    if (feat == DNGN_MALIGN_GATEWAY)
+        return true;
+
+    if (feat == DNGN_TRAP_SHAFT)
+        return true;
+
+    return false;
+
+}
+
 /** Does this feature destroy any items that fall into it?
  */
 bool feat_destroys_items(dungeon_feature_type feat)
@@ -937,7 +968,10 @@ bool feat_destroys_items(dungeon_feature_type feat)
 bool feat_eliminates_items(dungeon_feature_type feat)
 {
     return feat_destroys_items(feat)
-           || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
+            // intentionally use the species version rather than the player
+            // version: switching to an amphibious form doesn't give you access
+            // to the items.
+            || feat == DNGN_DEEP_WATER && !species::likes_water(you.species);
 }
 
 static coord_def _dgn_find_nearest_square(
@@ -1643,7 +1677,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         if (you.can_water_walk() || form_likes_water())
             return;
 
-        if (species_likes_water(you.species) && !you.transform_uncancellable)
+        if (species::likes_water(you.species) && !you.transform_uncancellable)
         {
             emergency_untransform();
             return;
@@ -1852,7 +1886,8 @@ void destroy_wall(const coord_def& p)
     if (is_bloodcovered(p))
         env.pgrid(p) &= ~(FPROP_BLOODY);
 
-    _revert_terrain_to_floor(p);
+    _revert_terrain_to(p,
+            env.grid(p) == DNGN_MANGROVE ? DNGN_SHALLOW_WATER : DNGN_FLOOR);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -1945,9 +1980,12 @@ bool is_boring_terrain(dungeon_feature_type feat)
     if (!is_notable_terrain(feat))
         return true;
 
-    // Altars in the temple are boring.
-    if (feat_is_altar(feat) && player_in_branch(BRANCH_TEMPLE))
+    // Altars in the temple are boring, as are any you can never use.
+    if (feat_is_altar(feat) && (player_in_branch(BRANCH_TEMPLE)
+        || !player_can_join_god(feat_altar_god(feat), false)))
+    {
         return true;
+    }
 
     // Only note the first entrance to the Abyss/Pan/Hell
     // which is found.
@@ -2029,17 +2067,9 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
-/// What terrain type do destroyed feats become, in the current branch?
-static dungeon_feature_type _destroyed_feat_type()
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 {
-    return player_in_branch(BRANCH_SWAMP) ?
-        DNGN_SHALLOW_WATER :
-        DNGN_FLOOR;
-}
-
-static bool _revert_terrain_to_floor(coord_def pos)
-{
-    dungeon_feature_type newfeat = _destroyed_feat_type();
+    dungeon_feature_type newfeat = feat;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
         if (marker->get_type() == MAT_TERRAIN_CHANGE)
@@ -2052,7 +2082,7 @@ static bool _revert_terrain_to_floor(coord_def pos)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == _destroyed_feat_type())
+                && newfeat == feat)
             {
                 env.markers.remove(tmarker);
             }

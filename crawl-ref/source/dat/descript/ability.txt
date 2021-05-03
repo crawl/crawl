@@ -7,10 +7,6 @@ Spit Poison ability
 
 Spits poison at a targeted creature.
 %%%%
-Blink ability
-
-Randomly translocates the user a short distance.
-%%%%
 Breathe Dispelling Energy ability
 
 Breathes a bolt of dispelling energy at a targeted creature, possibly removing
@@ -75,12 +71,6 @@ Revivify ability
 Return to life, transitioning from bloodless to alive. This process renders
 the user temporarily frail.
 %%%%
-Fly ability
-
-Starts flight. During flight you can safely cross water and similar obstacles.
-Be warned, though, that some forms of flight are temporary and may expire at
-inopportune moments.
-%%%%
 Hurl Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
@@ -88,9 +78,13 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
-Cancel Portal Projectile ability
+Word of Chaos ability
 
-Ends your Portal Projectile status.
+Speaks a word of chaos, forcing enemies nearby to blink away from the user.
+Additionally, those affected may be slowed, ensnared, or terrified by the
+experience. Invoking a word of chaos is no easy feat and will drain the user's
+maximum health somewhat, and the ability then cannot be used again for a short
+time.
 %%%%
 Heal Wounds ability
 
@@ -114,14 +108,15 @@ a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
-Roll at a foe with a clatter of scales, uncurl, and strike! The further you go,
-the more momentum will be added to the force of your strike. You roll with
-sufficient speed to dodge traps and harmful terrain along the way, but not at
-your destination.
+Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
+with increased accuracy. The greater the distance of the roll, the more
+momentum will be added to the force of your strike. You roll with sufficient
+speed to dodge traps and harmful terrain along the way, but not at your
+destination.
 %%%%
 Evoke Blink ability
 
-<Blink ability>
+Randomly translocates the user a short distance.
 %%%%
 Evoke Berserk Rage ability
 
@@ -132,17 +127,9 @@ Evoke Invisibility ability
 Turns the user invisible. Turning invisible causes magical contamination and
 may eventually cause glowing, nullifying the invisibility.
 %%%%
-Evoke Flight ability
-
-<Fly ability>
-%%%%
-Stop Flying ability
-
-Stops flying.
-%%%%
 Evoke Thunderclouds ability
 
-Create a mighty thunderclouds around the user.
+Creates a mighty thundercloud surrounding the user.
 %%%%
 End Transformation ability
 
@@ -159,13 +146,14 @@ and unclean will be affected by powerful and damaging effects, undead and
 demons will be affected by weaker rebukes, and any other intelligent creatures
 will have confusion sown amongst them, with heretics and priests of gods other
 than Zin being punished much more strongly. The effectiveness of the recitation
-is increased by Invocations skill.
+is increased by Invocations skill and piety.
 %%%%
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, and
-sickness, and increases and sustains your strength, intelligence and dexterity.
-The increases to your attributes are determined by Invocations skill.
+sickness, as well as the effects of clouds of foul pestilence. Your strength,
+intelligence and dexterity are also temporarily increased by a degree dependent
+on Invocations skill, and cannot be drained while the effect is active.
 %%%%
 Imprison ability
 
@@ -193,9 +181,8 @@ by Invocations skill.
 Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
-undead and demons and dealing damage to all other hostile creatures. The user's
-allies are never affected. The power of the blast is increased by Invocations
-skill.
+undead and demons and dealing damage to all other hostile creatures. The power
+of the blast is increased by Invocations skill.
 %%%%
 Summon Divine Warrior ability
 
@@ -356,9 +343,9 @@ Heals a small amount of health, depending on Invocations skill.
 %%%%
 Purification ability
 
-Purges your body of negative effects such as poison, confusion, slowness,
-petrification, and sickness, and fully restores any lost strength, dexterity or
-intelligence.
+Purges your body of poison, confusion, slowness, petrification, weakness, and
+sickness. Any drained strength, dexterity or intelligence will also be fully
+restored, along with any drained maximum health.
 %%%%
 Heal Other ability
 
@@ -540,18 +527,15 @@ Cure Bad Mutation ability
 Removes a randomly selected bad mutation.
 %%%%
 # Ashenzari
-Scrying ability
+Curse Item ability
 
-Provides astral sight, allowing you to see through walls.
+Curses a chosen equipped item, binding it to the wearer until the curse
+and the item both are broken. Cursed items can no longer be enchanted or
+modified.
 %%%%
-Transfer Knowledge ability
+Shatter The Chains ability
 
-Sacrifices part of one of your skills to improve another. The transfer will
-take place gradually as you gain experience.
-%%%%
-End Transfer Knowledge ability
-
-Aborts an ongoing skill transfer.
+Destroys a chosen cursed equipped item, relieving the wearer of the curse.
 %%%%
 # Dithmenos
 Shadow Step ability
@@ -566,7 +550,7 @@ are permanently invisible and are immune to poison, draining, and torment.
 All incoming damage is halved, you bleed smoke on any incoming attack, and
 you have infinite willpower. However, your ability to deal damage in melee
 and with ranged attacks is halved, your spellcasting power is greatly
-hampered, and your skills are further drained when taking damage.
+hampered, and your maximum health is further drained when taking damage.
 Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag
@@ -713,8 +697,7 @@ decreased by one. This will likely cause you to lose ranks in trained skills.
 %%%%
 Sacrifice an Eye ability
 
-Sacrifices an eye, causing you to have a much harder time hitting targets, as
-if wearing an amulet of inaccuracy.
+Sacrifices an eye, causing you to have a much harder time hitting targets.
 %%%%
 Sacrifice Resistance ability
 
@@ -771,10 +754,6 @@ Donate Gold ability
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
 %%%%
-Curse Item ability
-
-Curses a chosen item, at the cost of a scroll of remove curse.
-%%%%
 Recall Ancestor ability
 
 Recalls your ancestor from anywhere in the dungeon to your immediate
@@ -825,15 +804,16 @@ the landing spot and taking two turns to complete the motion.
 Serpent's Lash ability
 
 Allows you to move at supernatural speeds, making any normal movements up to a
-distance of two tiles instantly. Martial attacks performed under the effect of
+distance of two tiles instant. Martial attacks performed under the effect of
 Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability
 
-Invokes a storm of heavenly clouds. While the storm rages, your combat
-accuracy and damage are substantially increased, and striking enemies with
-martial attacks increases this bonus. The storm weakens over time and fades
-away once the bonus reaches zero. The heavenly clouds prevent invisibility, and obscure the vision of those outside the storm.
+Invokes a storm of heavenly clouds. While the storm rages, your evasion and
+combat accuracy and damage are substantially increased, and striking enemies
+with martial attacks increases this bonus. The storm weakens over time and
+fades away once the bonus reaches zero. The heavenly clouds prevent
+invisibility, and obscure the vision of those outside the storm.
 %%%%
 Hop ability
 

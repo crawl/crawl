@@ -5,7 +5,7 @@ adjective: Ghoulish
 difficulty: Simple
 difficulty_priority: 30
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: 1
@@ -49,7 +49,7 @@ levelup_stats:
 mutations:
   1:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 3
-    MUT_TORMENT_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 2
     MUT_INHIBITED_REGENERATION: 1
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1

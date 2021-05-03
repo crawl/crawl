@@ -39,15 +39,16 @@ aptitudes:
   poison_magic: -1
   invocations: False
   evocations: -1
-str: 11
-int: 12
-dex: 11
-# No natural stat gain (double chosen instead)
+str: 9
+int: 10
+dex: 9
+# No natural stat gain (quadruple chosen instead)
 levelup_stats: []
 levelup_stat_frequency: 28
 mutations:
   1:
     MUT_HIGH_MAGIC: 1
+    MUT_FORLORN: 1
 recommended_jobs:
   - JOB_TRANSMUTER
   - JOB_CONJURER

@@ -32,7 +32,6 @@ function general_item_setup(e)
           potion of berserk rage ident:all /\
           potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
-          scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of fog ident:all /\
           scroll of fear ident:all / scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
@@ -218,49 +217,48 @@ KITEM:    a = potion of curing q:4 ident:all, \
               potion of invisibility q:1 ident:all, \
               potion of magic q:2 ident:all
 KITEM:    b = scroll of blinking q:1 ident:all, \
-              scroll of amnesia q:2 ident:all, \
-              scroll of remove curse q:3 ident:all
+              scroll of amnesia q:2 ident:all
 KITEM:    d = wand of iceblast charges:10 ident:all /\
               wand of acid charges:10 ident:all, \
-KITEM:    e = rapier plus:2 ego:electrocution ident:all not_cursed /\
-           rapier plus:2 ego:draining ident:all not_cursed /\
-           rapier plus:2 ego:venom ident:all not_cursed /\
-           rapier plus:2 ego:distortion ident:all not_cursed /\
-           rapier plus:2 good_item ident:all not_cursed, \
-           war axe plus:3 ego:freezing ident:all not_cursed /\
-           war axe plus:3 ego:vorpal ident:all not_cursed /\
-           war axe plus:3 good_item ident:all not_cursed w:5 /\
-           broad axe plus:1 ego:freezing ident:all not_cursed /\
-           broad axe plus:1 ego:vorpal ident:all not_cursed /\
-           broad axe plus:1 good_item ident:all not_cursed w:5, \
-           dire flail plus:2 ego:protection ident:all not_cursed /\
-           dire flail plus:2 ego:vorpal ident:all not_cursed /\
-           dire flail plus:2 good_item ident:all not_cursed w:5 /\
-           morningstar plus:2 ego:protection ident:all not_cursed /\
-           morningstar plus:2 ego:vorpal ident:all not_cursed /\
-           morningstar plus:2 good_item ident:all not_cursed w:5, \
-           halberd plus:2 ego:protection ident:all not_cursed /\
-           halberd plus:2 ego:venom ident:all not_cursed /\
-           halberd plus:2 good_item ident:all not_cursed w:5, \
-           lajatang plus:0 ident:all not_cursed /\
-           quarterstaff plus:4 ego:speed ident:all not_cursed w:15 /\
-           quarterstaff plus:4 good_item ident:all not_cursed w:5, \
-           scimitar plus:2 ego:flaming ident:all not_cursed /\
-           scimitar plus:2 ego:holy_wrath not_cursed ident:all /\
-           scimitar plus:2 good_item not_cursed ident:all
-KITEM:    f = pair of gloves mundane ident:all not_cursed /\
-           pair of boots mundane ident:all not_cursed /\
-           helmet mundane ident:all not_cursed /\
-           cloak mundane ident:all not_cursed
-KITEM:    g = chain mail plus:1 ident:all not_cursed w:20 /\
-           ring mail plus:2 ident:all not_cursed /\
-           scale mail plus:1 ident:all not_cursed /\
-           plate armour plus:0 ident:all not_cursed
-KITEM:    h = ring of protection plus:2 ident:all not_cursed /\
-           ring of evasion plus:2 ident:all not_cursed /\
-           ring of strength plus:3 ident:all not_cursed /\
-           ring of intelligence plus:3 ident:all not_cursed /\
-           ring of dexterity plus:3 ident:all not_cursed
+KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
+           rapier plus:2 ego:draining ident:all /\
+           rapier plus:2 ego:venom ident:all /\
+           rapier plus:2 ego:distortion ident:all /\
+           rapier plus:2 good_item ident:all, \
+           war axe plus:3 ego:freezing ident:all /\
+           war axe plus:3 ego:vorpal ident:all /\
+           war axe plus:3 good_item ident:all w:5 /\
+           broad axe plus:1 ego:freezing ident:all /\
+           broad axe plus:1 ego:vorpal ident:all /\
+           broad axe plus:1 good_item ident:all w:5, \
+           dire flail plus:2 ego:protection ident:all /\
+           dire flail plus:2 ego:vorpal ident:all /\
+           dire flail plus:2 good_item ident:all w:5 /\
+           morningstar plus:2 ego:protection ident:all /\
+           morningstar plus:2 ego:vorpal ident:all /\
+           morningstar plus:2 good_item ident:all w:5, \
+           halberd plus:2 ego:protection ident:all /\
+           halberd plus:2 ego:venom ident:all /\
+           halberd plus:2 good_item ident:all w:5, \
+           lajatang plus:0 ident:all /\
+           quarterstaff plus:4 ego:speed ident:all w:15 /\
+           quarterstaff plus:4 good_item ident:all w:5, \
+           scimitar plus:2 ego:flaming ident:all /\
+           scimitar plus:2 ego:holy_wrath ident:all /\
+           scimitar plus:2 good_item ident:all
+KITEM:    f = pair of gloves mundane ident:all /\
+           pair of boots mundane ident:all /\
+           helmet mundane ident:all /\
+           cloak mundane ident:all
+KITEM:    g = chain mail plus:1 ident:all w:20 /\
+           ring mail plus:2 ident:all /\
+           scale mail plus:1 ident:all /\
+           plate armour plus:0 ident:all
+KITEM:    h = ring of protection plus:2 ident:all /\
+           ring of evasion plus:2 ident:all /\
+           ring of strength plus:3 ident:all /\
+           ring of intelligence plus:3 ident:all /\
+           ring of dexterity plus:3 ident:all
 : line_setup(_G)
 MAP
 xxxxxxxxxx
@@ -339,10 +337,10 @@ ENDMAP
 NAME:     items_3
 TAGS:     items_3
 KITEM:    a = gold
-KITEM:    b = pair of gloves mundane ident:all not_cursed /\
-           pair of boots mundane ident:all not_cursed /\
-           helmet mundane ident:all not_cursed /\
-           cloak mundane ident:all not_cursed
+KITEM:    b = pair of gloves mundane ident:all /\
+           pair of boots mundane ident:all /\
+           helmet mundane ident:all /\
+           cloak mundane ident:all
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -404,49 +402,49 @@ ENDMAP
 
 NAME:     items_4
 TAGS:     items_4
-KITEM:    a = ring of protection from fire ident:all not_cursed /\
-          ring of protection from cold ident:all not_cursed /\
-          ring of willpower ident:all not_cursed /\
-          ring of fire ident:all not_cursed /\
-          ring of ice ident:all not_cursed /\
-          ring of see invisible ident:all not_cursed /\
-          ring of poison resistance ident:all not_cursed /\
-          any jewellery ident:all not_cursed
+KITEM:    a = ring of protection from fire ident:all /\
+          ring of protection from cold ident:all /\
+          ring of willpower ident:all /\
+          ring of fire ident:all /\
+          ring of ice ident:all /\
+          ring of see invisible ident:all /\
+          ring of poison resistance ident:all /\
+          any jewellery ident:all
 KITEM:    b = any weapon level:27 ident:all /\
-          broad axe plus:3 not_cursed ident:all /\
-          battleaxe plus:1 not_cursed ident:all /\
-          executioner's axe plus:0 not_cursed ident:all w:3 /\
-          glaive plus:1 not_cursed ident:all /\
-          bardiche plus:0 not_cursed ident:all w:3 /\
-          dire flail plus:3 not_cursed ident:all /\
-          great mace plus:1 not_cursed ident:all /\
-          demon whip plus:1 not_cursed ident:all w:5 /\
-          giant spiked club plus:1 not_cursed ident:all /\
-          quick blade plus:3 not_cursed ident:all /\
-          great sword plus:1 not_cursed ident:all /\
-          double sword plus:1 not_cursed ident:all /\
-          demon blade plus:1 not_cursed ident:all w:3 /\
-          triple sword plus:0 not_cursed ident:all w:3 /\
-          lajatang plus:1 not_cursed ident:all /\
-          longbow plus:1 not_cursed ident:all /\
-          triple crossbow plus:0 not_cursed ident:all /\
+          broad axe plus:3 ident:all /\
+          battleaxe plus:1 ident:all /\
+          executioner's axe plus:0 ident:all w:3 /\
+          glaive plus:1 ident:all /\
+          bardiche plus:0 ident:all w:3 /\
+          dire flail plus:3 ident:all /\
+          great mace plus:1 ident:all /\
+          demon whip plus:1 ident:all w:5 /\
+          giant spiked club plus:1 ident:all /\
+          quick blade plus:3 ident:all /\
+          great sword plus:1 ident:all /\
+          double sword plus:1 ident:all /\
+          demon blade plus:1 ident:all w:3 /\
+          triple sword plus:0 ident:all w:3 /\
+          lajatang plus:1 ident:all /\
+          longbow plus:1 ident:all /\
+          triple crossbow plus:0 ident:all /\
           any weapon good_item ident:all w:30
 KITEM:    d = any armour level:27 ident:all /\
-          pair of gloves plus:1 ident:all not_cursed /\
-          pair of boots plus:1 ident:all not_cursed /\
-          helmet plus:1 ident:all not_cursed /\
-          cloak plus:1 ident:all not_cursed /\
-          chain mail plus:3 ident:all not_cursed w:20 /\
-          ring mail plus:2 ident:all not_cursed /\
-          scale mail plus:3 ident:all not_cursed /\
-          plate armour plus:2 ident:all not_cursed /\
-          fire dragon scales plus:1 not_cursed ident:all /\
-          ice dragon scales plus:1 not_cursed ident:all /\
-          swamp dragon scales plus:0 not_cursed ident:all /\
-          acid dragon scales plus:0 not_cursed ident:all /\
-          storm dragon scales plus:0 not_cursed ident:all w:5 /\
-          shadow dragon scales plus:0 not_cursed ident:all w:5 /\
-          tower shield plus:1 not_cursed ident:all /\
+          pair of gloves plus:1 ident:all /\
+          pair of boots plus:1 ident:all /\
+          helmet plus:1 ident:all /\
+          cloak plus:1 ident:all /\
+          chain mail plus:3 ident:all w:20 /\
+          ring mail plus:2 ident:all /\
+          scale mail plus:3 ident:all /\
+          plate armour plus:2 ident:all /\
+          fire dragon scales plus:1 ident:all /\
+          ice dragon scales plus:1 ident:all /\
+          swamp dragon scales plus:0 ident:all /\
+          acid dragon scales plus:0 ident:all /\
+          storm dragon scales plus:0 ident:all w:5 /\
+          shadow dragon scales plus:0 ident:all w:5 /\
+          tower shield plus:1 ident:all /\
           any armour good_item ident:all w:20
 KITEM:    e = any weapon good_item ident:all
 KITEM:    f = any armour good_item ident:all
@@ -579,73 +577,73 @@ ENDMAP
 
 NAME:     items_5
 TAGS:     items_5
-KITEM:    a = ring of slaying plus:2 ident:all not_cursed /\
-          amulet of regeneration ident:all not_cursed /\
-          ring of protection plus:4 ident:all not_cursed /\
-          ring of evasion plus:4 ident:all not_cursed /\
-          ring of strength plus:6 ident:all not_cursed /\
-          ring of intelligence plus:6 ident:all not_cursed /\
-          ring of dexterity plus:6 ident:all not_cursed /\
-          ring of wizardry ident:all not_cursed /\
-          any jewellery ident:all not_cursed
-KITEM:    b = battleaxe plus:4 ego:none not_cursed ident:all /\
-    battleaxe plus:1 good_item not_cursed ident:all /\
-    executioner's axe plus:2 ego:none not_cursed ident:all /\
-    executioner's axe plus:0 good_item not_cursed ident:all /\
-    broad axe plus:7 ego:none not_cursed ident:all /\
-    broad axe plus:3 good_item not_cursed ident:all /\
-    glaive plus:4 ego:none not_cursed ident:all /\
-    glaive plus:2 good_item not_cursed ident:all /\
-    scythe plus:9 ego:none not_cursed ident:all /\
-    scythe plus:6 good_item not_cursed ident:all /\
-    bardiche plus:2 ego:none not_cursed ident:all /\
-    bardiche plus:0 good_item not_cursed ident:all /\
-    demon trident plus:4 ego:none not_cursed ident:all /\
-    demon trident plus:1 good_item not_cursed ident:all /\
-    great mace plus:4 ego:none not_cursed ident:all /\
-    great mace plus:1 good_item not_cursed ident:all /\
-    giant spiked club plus:4 ego:none not_cursed ident:all /\
-    giant spiked club plus:1 good_item not_cursed ident:all /\
-    demon whip plus:4 ego:none not_cursed ident:all /\
-    demon whip plus:1 good_item not_cursed ident:all /\
-    double sword plus:4 ego:none not_cursed ident:all /\
-    double sword plus:1 good_item not_cursed ident:all /\
-    triple sword plus:2 ego:none not_cursed ident:all /\
-    triple sword plus:0 good_item not_cursed ident:all /\
-    demon blade plus:4 ego:none not_cursed ident:all /\
-    demon blade plus:1 good_item not_cursed ident:all /\
-    great sword plus:4 ego:none not_cursed ident:all /\
-    great sword plus:1 good_item not_cursed ident:all /\
-    lajatang plus:4 ego:none not_cursed ident:all /\
-    lajatang plus:1 good_item not_cursed ident:all /\
-    longbow plus:3 good_item not_cursed ident:all w:15 /\
-    triple crossbow plus:0 good_item not_cursed ident:all w:15
-KITEM:    d = plate armour plus:5 not_cursed ident:all /\
-    plate armour plus:3 good_item not_cursed ident:all /\
-    chain mail plus:5 not_cursed ident:all w:20 /\
-    chain mail plus:2 good_item not_cursed ident:all w:20 /\
-    robe plus:4 not_cursed ident:all /\
-    robe plus:1 good_item not_cursed ident:all /\
-    fire dragon scales plus:3 not_cursed ident:all /\
-    ice dragon scales plus:3 not_cursed ident:all /\
-    swamp dragon scales plus:1 not_cursed ident:all /\
-    acid dragon scales plus:1 not_cursed ident:all /\
-    storm dragon scales plus:2 not_cursed ident:all w:5 /\
-    shadow dragon scales plus:2 not_cursed ident:all w:5 /\
-    gold dragon scales plus:0 not_cursed ident:all /\
-    pair of gloves plus:1 not_cursed ident:all /\
-    pair of gloves plus:0 good_item not_cursed ident:all /\
-    pair of boots plus:1 not_cursed ident:all /\
-    pair of boots plus:0 good_item not_cursed ident:all /\
-    helmet plus:1 not_cursed ident:all /\
-    helmet plus:0 good_item not_cursed ident:all /\
-    cloak plus:1 not_cursed ident:all /\
-    cloak plus:0 good_item not_cursed ident:all /\
-    hat plus:1 not_cursed ident:all /\
-    hat plus:0 good_item not_cursed ident:all /\
-    tower shield plus:3 not_cursed ident:all /\
-    tower shield plus:0 good_item not_cursed ident:all /\
-    barding plus:2 not_cursed ident:all w:5
+KITEM:    a = ring of slaying plus:2 ident:all /\
+          amulet of regeneration ident:all /\
+          ring of protection plus:4 ident:all /\
+          ring of evasion plus:4 ident:all /\
+          ring of strength plus:6 ident:all /\
+          ring of intelligence plus:6 ident:all /\
+          ring of dexterity plus:6 ident:all /\
+          ring of wizardry ident:all /\
+          any jewellery ident:all
+KITEM:    b = battleaxe plus:4 ego:none ident:all /\
+    battleaxe plus:1 good_item ident:all /\
+    executioner's axe plus:2 ego:none ident:all /\
+    executioner's axe plus:0 good_item ident:all /\
+    broad axe plus:7 ego:none ident:all /\
+    broad axe plus:3 good_item ident:all /\
+    glaive plus:4 ego:none ident:all /\
+    glaive plus:2 good_item ident:all /\
+    scythe plus:9 ego:none ident:all /\
+    scythe plus:6 good_item ident:all /\
+    bardiche plus:2 ego:none ident:all /\
+    bardiche plus:0 good_item ident:all /\
+    demon trident plus:4 ego:none ident:all /\
+    demon trident plus:1 good_item ident:all /\
+    great mace plus:4 ego:none ident:all /\
+    great mace plus:1 good_item ident:all /\
+    giant spiked club plus:4 ego:none ident:all /\
+    giant spiked club plus:1 good_item ident:all /\
+    demon whip plus:4 ego:none ident:all /\
+    demon whip plus:1 good_item ident:all /\
+    double sword plus:4 ego:none ident:all /\
+    double sword plus:1 good_item ident:all /\
+    triple sword plus:2 ego:none ident:all /\
+    triple sword plus:0 good_item ident:all /\
+    demon blade plus:4 ego:none ident:all /\
+    demon blade plus:1 good_item ident:all /\
+    great sword plus:4 ego:none ident:all /\
+    great sword plus:1 good_item ident:all /\
+    lajatang plus:4 ego:none ident:all /\
+    lajatang plus:1 good_item ident:all /\
+    longbow plus:3 good_item ident:all w:15 /\
+    triple crossbow plus:0 good_item ident:all w:15
+KITEM:    d = plate armour plus:5 ident:all /\
+    plate armour plus:3 good_item ident:all /\
+    chain mail plus:5 ident:all w:20 /\
+    chain mail plus:2 good_item ident:all w:20 /\
+    robe plus:4 ident:all /\
+    robe plus:1 good_item ident:all /\
+    fire dragon scales plus:3 ident:all /\
+    ice dragon scales plus:3 ident:all /\
+    swamp dragon scales plus:1 ident:all /\
+    acid dragon scales plus:1 ident:all /\
+    storm dragon scales plus:2 ident:all w:5 /\
+    shadow dragon scales plus:2 ident:all w:5 /\
+    gold dragon scales plus:0 ident:all /\
+    pair of gloves plus:1 ident:all /\
+    pair of gloves plus:0 good_item ident:all /\
+    pair of boots plus:1 ident:all /\
+    pair of boots plus:0 good_item ident:all /\
+    helmet plus:1 ident:all /\
+    helmet plus:0 good_item ident:all /\
+    cloak plus:1 ident:all /\
+    cloak plus:0 good_item ident:all /\
+    hat plus:1 ident:all /\
+    hat plus:0 good_item ident:all /\
+    tower shield plus:3 ident:all /\
+    tower shield plus:0 good_item ident:all /\
+    barding plus:2 ident:all w:5
 : line_setup(_G)
 : general_item_setup(_G)
 MAP
@@ -780,91 +778,91 @@ ENDMAP
 NAME:     items_6
 TAGS:     items_6
 ORIENT:   encompass
-KITEM:    a = amulet of faith randart not_cursed ident:all /\
-    amulet of guardian spirit randart not_cursed ident:all /\
-    amulet of magic regeneration randart not_cursed ident:all /\
-    amulet of reflection randart not_cursed ident:all /\
-    amulet of regeneration randart ident:all not_cursed /\
-    ring of slaying plus:3 randart ident:all not_cursed /\
-    any jewellery randart level:27 not_cursed ident:all w:40 /\
-    ring of protection from fire randart ident:all not_cursed /\
-    ring of protection from cold randart ident:all not_cursed /\
-    ring of willpower randart ident:all not_cursed /\
-    ring of fire randart ident:all not_cursed /\
-    ring of ice randart ident:all not_cursed /\
-    ring of see invisible randart ident:all not_cursed /\
-    ring of poison resistance randart ident:all not_cursed /\
-    ring of slaying plus:3 ident:all not_cursed /\
-    ring of resist corrosion randart ident:all not_cursed /\
-    ring of protection plus:3 randart ident:all not_cursed /\
-    ring of evasion plus:3 randart ident:all not_cursed /\
-    ring of strength plus:3 randart ident:all not_cursed /\
-    ring of intelligence plus:3 randart ident:all not_cursed /\
-    ring of dexterity plus:3 randart ident:all not_cursed /\
-    ring of wizardry ident:all randart not_cursed
-KITEM:    b = battleaxe plus:5 good_item not_cursed ident:all /\
-    battleaxe plus:5 randart not_cursed ident:all w:5 /\
-    executioner's axe plus:5 good_item not_cursed ident:all /\
-    executioner's axe plus:5 randart not_cursed ident:all w:5 /\
-    broad axe plus:5 good_item not_cursed ident:all /\
-    broad axe plus:5 randart not_cursed ident:all w:5 /\
-    glaive plus:5 good_item not_cursed ident:all /\
-    glaive plus:5 randart not_cursed ident:all w:5 /\
-    scythe plus:11 good_item not_cursed ident:all /\
-    scythe plus:11 randart not_cursed ident:all w:5 /\
-    bardiche plus:5 good_item not_cursed ident:all /\
-    bardiche plus:5 randart not_cursed ident:all w:5 /\
-    demon trident plus:5 good_item not_cursed ident:all /\
-    demon trident plus:5 randart not_cursed ident:all w:5 /\
-    great mace plus:5 good_item not_cursed ident:all /\
-    great mace plus:5 randart not_cursed ident:all w:5 /\
-    giant spiked club plus:5 good_item not_cursed ident:all /\
-    giant spiked club plus:5 randart not_cursed ident:all w:5 /\
-    demon whip plus:5 good_item not_cursed ident:all /\
-    demon whip plus:5 randart not_cursed ident:all w:5 /\
-    double sword plus:5 good_item not_cursed ident:all /\
-    double sword plus:5 randart not_cursed ident:all w:5 /\
-    triple sword plus:5 good_item not_cursed ident:all /\
-    triple sword plus:5 randart not_cursed ident:all w:5 /\
-    demon blade plus:5 good_item not_cursed ident:all /\
-    demon blade plus:5 randart not_cursed ident:all w:5 /\
-    great sword plus:5 good_item not_cursed ident:all /\
-    great sword plus:5 randart not_cursed ident:all w:5 /\
-    lajatang plus:5 good_item not_cursed ident:all /\
-    lajatang plus:5 randart not_cursed ident:all w:5 /\
-    longbow plus:5 ego:vorpal not_cursed ident:all w:15 /\
-    triple crossbow plus:5 good_item not_cursed ident:all w:15
-KITEM:    d = plate armour plus:6 not_cursed ident:all /\
-    plate armour plus:4 good_item not_cursed ident:all /\
-    chain mail plus:6 not_cursed ident:all /\
-    chain mail plus:4 good_item not_cursed ident:all /\
-    robe plus:4 ego:resistance not_cursed ident:all /\
-    fire dragon scales plus:6 not_cursed ident:all /\
-    ice dragon scales plus:6 not_cursed ident:all /\
-    swamp dragon scales plus:4 not_cursed ident:all /\
-    swamp dragon scales plus:2 good_item not_cursed ident:all /\
-    acid dragon scales plus:4 not_cursed ident:all /\
-    acid dragon scales plus:2 good_item not_cursed ident:all /\
-    quicksilver dragon scales not_cursed ident:all w:5 /\
-    storm dragon scales plus:5 not_cursed ident:all w:5 /\
-    storm dragon scales plus:3 good_item not_cursed ident:all w:5 /\
-    shadow dragon scales plus:5 not_cursed ident:all w:5 /\
-    shadow dragon scales plus:3 good_item not_cursed ident:all w:5 /\
-    gold dragon scales plus:4 not_cursed ident:all /\
-    gold dragon scales plus:0 good_item not_cursed ident:all /\
-    pair of gloves plus:2 not_cursed ident:all /\
-    pair of gloves plus:0 good_item not_cursed ident:all /\
-    pair of boots plus:2 not_cursed ident:all /\
-    pair of boots plus:0 good_item not_cursed ident:all /\
-    helmet plus:2 not_cursed ident:all /\
-    helmet plus:0 good_item not_cursed ident:all /\
-    cloak plus:2 not_cursed ident:all /\
-    cloak plus:0 good_item not_cursed ident:all /\
-    hat plus:2 not_cursed ident:all /\
-    hat plus:0 good_item not_cursed ident:all /\
-    tower shield plus:5 not_cursed ident:all /\
-    tower shield plus:3 good_item not_cursed ident:all /\
-    barding plus:4 not_cursed ident:all w:5
+KITEM:    a = amulet of faith randart ident:all /\
+    amulet of guardian spirit randart ident:all /\
+    amulet of magic regeneration randart ident:all /\
+    amulet of reflection randart ident:all /\
+    amulet of regeneration randart ident:all /\
+    ring of slaying plus:3 randart ident:all /\
+    any jewellery randart level:27 ident:all w:40 /\
+    ring of protection from fire randart ident:all /\
+    ring of protection from cold randart ident:all /\
+    ring of willpower randart ident:all /\
+    ring of fire randart ident:all /\
+    ring of ice randart ident:all /\
+    ring of see invisible randart ident:all /\
+    ring of poison resistance randart ident:all /\
+    ring of slaying plus:3 ident:all /\
+    ring of resist corrosion randart ident:all /\
+    ring of protection plus:3 randart ident:all /\
+    ring of evasion plus:3 randart ident:all /\
+    ring of strength plus:3 randart ident:all /\
+    ring of intelligence plus:3 randart ident:all /\
+    ring of dexterity plus:3 randart ident:all /\
+    ring of wizardry ident:all randart
+KITEM:    b = battleaxe plus:5 good_item ident:all /\
+    battleaxe plus:5 randart ident:all w:5 /\
+    executioner's axe plus:5 good_item ident:all /\
+    executioner's axe plus:5 randart ident:all w:5 /\
+    broad axe plus:5 good_item ident:all /\
+    broad axe plus:5 randart ident:all w:5 /\
+    glaive plus:5 good_item ident:all /\
+    glaive plus:5 randart ident:all w:5 /\
+    scythe plus:11 good_item ident:all /\
+    scythe plus:11 randart ident:all w:5 /\
+    bardiche plus:5 good_item ident:all /\
+    bardiche plus:5 randart ident:all w:5 /\
+    demon trident plus:5 good_item ident:all /\
+    demon trident plus:5 randart ident:all w:5 /\
+    great mace plus:5 good_item ident:all /\
+    great mace plus:5 randart ident:all w:5 /\
+    giant spiked club plus:5 good_item ident:all /\
+    giant spiked club plus:5 randart ident:all w:5 /\
+    demon whip plus:5 good_item ident:all /\
+    demon whip plus:5 randart ident:all w:5 /\
+    double sword plus:5 good_item ident:all /\
+    double sword plus:5 randart ident:all w:5 /\
+    triple sword plus:5 good_item ident:all /\
+    triple sword plus:5 randart ident:all w:5 /\
+    demon blade plus:5 good_item ident:all /\
+    demon blade plus:5 randart ident:all w:5 /\
+    great sword plus:5 good_item ident:all /\
+    great sword plus:5 randart ident:all w:5 /\
+    lajatang plus:5 good_item ident:all /\
+    lajatang plus:5 randart ident:all w:5 /\
+    longbow plus:5 ego:vorpal ident:all w:15 /\
+    triple crossbow plus:5 good_item ident:all w:15
+KITEM:    d = plate armour plus:6 ident:all /\
+    plate armour plus:4 good_item ident:all /\
+    chain mail plus:6 ident:all /\
+    chain mail plus:4 good_item ident:all /\
+    robe plus:4 ego:resistance ident:all /\
+    fire dragon scales plus:6 ident:all /\
+    ice dragon scales plus:6 ident:all /\
+    swamp dragon scales plus:4 ident:all /\
+    swamp dragon scales plus:2 good_item ident:all /\
+    acid dragon scales plus:4 ident:all /\
+    acid dragon scales plus:2 good_item ident:all /\
+    quicksilver dragon scales ident:all w:5 /\
+    storm dragon scales plus:5 ident:all w:5 /\
+    storm dragon scales plus:3 good_item ident:all w:5 /\
+    shadow dragon scales plus:5 ident:all w:5 /\
+    shadow dragon scales plus:3 good_item ident:all w:5 /\
+    gold dragon scales plus:4 ident:all /\
+    gold dragon scales plus:0 good_item ident:all /\
+    pair of gloves plus:2 ident:all /\
+    pair of gloves plus:0 good_item ident:all /\
+    pair of boots plus:2 ident:all /\
+    pair of boots plus:0 good_item ident:all /\
+    helmet plus:2 ident:all /\
+    helmet plus:0 good_item ident:all /\
+    cloak plus:2 ident:all /\
+    cloak plus:0 good_item ident:all /\
+    hat plus:2 ident:all /\
+    hat plus:0 good_item ident:all /\
+    tower shield plus:5 ident:all /\
+    tower shield plus:3 good_item ident:all /\
+    barding plus:4 ident:all w:5
 KITEM:     e = potion of haste q:5 ident:all
 KITEM:     f = potion of magic q:5 ident:all
 : line_setup(_G)
@@ -993,8 +991,8 @@ ENDMAP
 
 NAME:     slime_end
 TAGS:     slime_end
-KMONS:    1 = azure jelly / acid blob w:20 / death ooze / floating eye w:4 /\
-              golden eye w:4 / eye of draining w:2
+KMONS:    1 = azure jelly / acid blob w:20 / rockslime / floating eye w:4 /\
+              golden eye w:4 / quicksilver ooze w:4
 KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen

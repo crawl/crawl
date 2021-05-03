@@ -80,7 +80,7 @@
 # * evil:     Is treated as an evil item (hated by good gods).
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
-# * fly:      Lets wearer evoke flight ability.
+# * fly:      Grants wearer flight.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises. Should be given its own set of noises
@@ -102,6 +102,24 @@
 #             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
+
+# DESCRIP: Description of powers of the artefact which are specific to this
+# artefact, not provided by the fields in this file. Use DBRAND for unusual
+# brands.
+#
+# The description of a power can be split across more than one line. The
+# subsequent lines should be just below the first one, and should start with
+# a space (with no header name).
+#
+# If there are multiple powers, subsequent powers can be added with a +.
+#
+# Example:
+# DESCRIP: It enhances your template magic.
+# + It gives you a regex malus.
+
+# DBRAND: Description of a brand which is specific to this artefact.
+#
+# The syntax for this is identical to DESCRIP.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO". The
@@ -145,8 +163,8 @@
 # WILL:     Willpower increase/decrease.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
-# REGEN:    Health regeneration, in units of HP healed every 25 aut
-#           (2.5 normal turns).
+# REGEN:    Health regeneration, in units of HP healed every 10 aut
+#           (1 normal turn).
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -221,6 +239,11 @@ VALUE:   800
 
 NAME:    staff of Olgreb
 INSCRIP: rPois∞
+DESCRIP: It enhances your poison magic.
++It grants immunity to poison.
++It can be evoked to poison those around you for a time.
+DBRAND: It may poison the flesh of those it strikes, and is more effective with
+ a high Evocations skill.
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_POISON
@@ -241,7 +264,7 @@ NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
 # it's a quick blade made from a tooth -> no TYPE
 FB_BRAND: SPWPN_VAMPIRISM
-PLUS:    +12
+PLUS:    +8
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
@@ -450,6 +473,8 @@ TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 INSCRIP:  spectral,
+DBRAND:   When it strikes, its spirit leaps out and fights alongside the
+ wielder.
 
 ENUM:     ZEALOT_SWORD
 NAME:     zealot's sword
@@ -690,6 +715,8 @@ TILE:     urand_storm_bow
 TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
 INSCRIP:  penet
+DBRAND:   Ammo fired by it passes through the targets it hits, potentially
+ hitting all targets in its path until it reaches maximum range.
 
 NAME:    tower shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_TOWER_SHIELD
@@ -810,7 +837,7 @@ TILE:    urand_zhor
 TILE_EQ: zhor
 COLD:    3
 BOOL:    seeinv
-INSCRIP: Englaciate
+INSCRIP: *Englaciate
 
 ENUM:    SALAMANDER
 NAME:    salamander hide armour
@@ -824,6 +851,9 @@ FIRE:    2
 COLD:    -2
 BOOL:    special
 INSCRIP: Flames
+DESCRIP: It surrounds you with a cloud of flames.
++It grants immunity to clouds of flame.
++It enhances your fire magic.
 
 NAME:    gauntlets of War
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
@@ -952,7 +982,8 @@ LIFE:     1
 BOOL:     elec
 
 NAME:    amulet of the Air
-OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
+INSCRIP: Inacc
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
 EV:      5
@@ -1053,12 +1084,12 @@ FB_BRAND: SPWPN_PAIN
 BOOL:     evil, seeinv, fly, drain
 
 NAME:     lightning scales
+INSCRIP:  swift
 OBJ:      OBJ_ARMOUR/ARM_BARDING
 PLUS:     +6
 TILE:     urand_lightning_scales
 TILE_EQ:  lightning_scales
 COLOUR:   ETC_ELECTRICITY
-BRAND:    SPARM_RUNNING
 BOOL:     elec
 
 ENUM:     BLACK_KNIGHT_HORSE
@@ -1158,6 +1189,7 @@ TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
 VALUE:    400
+DESCRIP:  It enables you to equip an extra ring.
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1312,7 +1344,7 @@ COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
 INSCRIP: NoPotionHeal
-REGEN:   7
+REGEN:   3
 VALUE:   800
 
 ENUM:    KRYIAS
@@ -1372,6 +1404,11 @@ ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
 OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP:  freeze,
+DBRAND:   It has been specially enchanted to freeze those struck by it, causing
+ extra injury to most foes and up to half again as much damage against
+ particularly susceptible opponents.
+DESCRIP:  It becomes more effective when it hits something. This effect fades
+ over time.
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
@@ -1408,6 +1445,15 @@ TILE_EQ:  bplate_green
 LIFE:     1
 INSCRIP:  rMiasma
 BOOL:     drain, evil, special, no_upgrade
+
+NAME:     seven-league boots
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+TILE:     urand_seven_league_boots
+TILE_EQ:  seven_league_boots
+PLUS:     +3
+COLOUR:   ETC_ENCHANT
+INSCRIP:  Rampage+∞
+VALUE:    400
 
 # This entry must always be last.
 ENUM:   DUMMY2

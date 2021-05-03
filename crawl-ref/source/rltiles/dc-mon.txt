@@ -33,6 +33,13 @@ serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/holy
 seraph MONS_SERAPH
 %sdir mon/sprint
+bag_of_meat MONS_BAG_OF_MEAT
+meatzerker MONS_MEATZERKER
+destroyer MONS_DESTROYER
+large_bag_of_meat MONS_LARGE_BAG_OF_MEAT
+meat_hydra MONS_MEAT_HYDRA
+scourge MONS_SCOURGE
+meatlord MONS_MEATLORD
 unspeakable MONS_UNSPEAKABLE
 
 ### Animals
@@ -40,10 +47,6 @@ unspeakable MONS_UNSPEAKABLE
 
 ## Insects ('a')
 giant_cockroach MONS_GIANT_COCKROACH
-%rim 1
-worker_ant MONS_WORKER_ANT
-soldier_ant MONS_SOLDIER_ANT
-queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 %rim 1
@@ -106,7 +109,6 @@ meliai MONS_MELIAI
 
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
-leopard_gecko MONS_LEOPARD_GECKO
 iguana MONS_IGUANA
 basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
@@ -439,15 +441,13 @@ bunyip MONS_BUNYIP
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
 guardian_golem MONS_GUARDIAN_GOLEM
-%rim 1
 iron_golem MONS_IRON_GOLEM
-toenail_golem MONS_TOENAIL_GOLEM
-%rim 0
 ushabti MONS_USHABTI
 peacekeeper MONS_PEACEKEEPER
 saltling MONS_SALTLING
 animated_armour MONS_ANIMATED_ARMOUR
 %rim 1
+toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 
@@ -556,8 +556,10 @@ wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
 vault_warden MONS_VAULT_WARDEN
 vault_sentinel MONS_VAULT_SENTINEL
-ironbrand_convoker MONS_IRONBRAND_CONVOKER
-ironheart_preserver MONS_IRONHEART_PRESERVER
+ironbound_convoker MONS_IRONBOUND_CONVOKER
+ironbound_preserver MONS_IRONBOUND_PRESERVER
+ironbound_frostheart MONS_IRONBOUND_FROSTHEART
+ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -660,7 +662,6 @@ ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 %sdir mon/eyes
 %rim 1
 floating_eye MONS_FLOATING_EYE
-eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
 mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
@@ -675,7 +676,9 @@ ophan MONS_OPHAN
 
 ## Hybrids ('H')
 %sdir mon/animals
+%rim 0
 manticore MONS_MANTICORE
+%rim 1
 %sdir mon/demihumanoids
 harpy MONS_HARPY
 sphinx MONS_SPHINX
@@ -746,7 +749,7 @@ asterion MONS_ASTERION
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
 %sdir mon/amorphous
-ooze MONS_OOZE
+endoplasm MONS_ENDOPLASM
 %rim 0
 jelly MONS_JELLY
 slime_creature MONS_SLIME_CREATURE
@@ -754,10 +757,11 @@ slime_creature2
 slime_creature3
 slime_creature4
 slime_creature5
+rockslime MONS_ROCKSLIME
+quicksilver_ooze MONS_QUICKSILVER_OOZE
 %rim 1
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
-death_ooze MONS_DEATH_OOZE
 
 ## Kobolds ('K')
 %sdir mon/unique
@@ -765,7 +769,7 @@ sonja MONS_SONJA
 pikel MONS_PIKEL
 %sdir mon/humanoids
 kobold MONS_KOBOLD
-big_kobold MONS_BIG_KOBOLD
+kobold_brigand MONS_KOBOLD_BRIGAND
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
@@ -807,6 +811,7 @@ nagaraja MONS_NAGARAJA
 %sdir mon/demihumanoids
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
+salamander_tyrant MONS_SALAMANDER_TYRANT
 guardian_serpent MONS_GUARDIAN_SERPENT
 
 ## Ogres ('O')
@@ -819,6 +824,7 @@ ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 ogre_mage MONS_OGRE_MAGE
+ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 %rim 1
 
 ## Plants ('P')
@@ -866,7 +872,9 @@ deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
 deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
 ## From moon base wizlab
+%rim 0
 moon_troll MONS_MOON_TROLL
+%rim 1
 
 ## Vampires ('V')
 %sdir mon/undead
@@ -1145,6 +1153,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 statue_form_palentonga TRAN_STATUE_PALENTONGA
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
+statue_form_djinn TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -1161,6 +1170,7 @@ lich_form_humanoid TRAN_LICH_HUMANOID
 lich_form_palentonga TRAN_LICH_PALENTONGA
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
+lich_form_djinn TRAN_LICH_DJINN
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 tree_form TRAN_TREE

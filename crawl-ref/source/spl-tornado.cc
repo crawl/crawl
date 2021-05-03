@@ -110,10 +110,7 @@ static void _set_tornado_durations()
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
     if (!get_form()->forbids_flight())
-    {
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
-        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
-    }
 }
 
 spret cast_tornado(int /*powc*/, bool fail)
@@ -138,7 +135,7 @@ spret cast_tornado(int /*powc*/, bool fail)
 
     you.props["tornado_since"].get_int() = you.elapsed_time;
     _set_tornado_durations();
-    if (you.species == SP_TENGU)
+    if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
     return spret::success;
@@ -255,7 +252,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         // Note that this spellpower multiplier for Vortex is based on Air
         // Elementals, which have low HD.
         pow = caster->as_monster()->get_hit_dice() * (is_vortex ? 12 : 4);
-    dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
@@ -298,7 +294,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         rdurs[r] = rdur;
         // power at the radius
         int rpow = div_rand_round(pow * cnt_open * rdur, cnt_all * 100);
-        dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
         if (!rpow)
             break;
 
@@ -367,7 +362,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                         bool standing = !you.airborne();
                         if (standing)
                             mpr("The vortex of raging winds lifts you up.");
-                        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
                         you.duration[DUR_FLIGHT]
                             = max(you.duration[DUR_FLIGHT], 20);
                         if (standing)
@@ -489,8 +483,7 @@ void cancel_tornado(bool tloc)
             // Tornado ended by using something stairslike, so the destination
             // is safe
             you.duration[DUR_FLIGHT] = 0;
-            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
-            if (you.species == SP_TENGU)
+            if (you.has_mutation(MUT_TENGU_FLIGHT))
                 you.redraw_evasion = true;
         }
     }

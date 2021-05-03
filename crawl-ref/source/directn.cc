@@ -320,7 +320,11 @@ void direction_chooser::print_key_hints() const
     else
     {
         if (moves.fire_context)
-            prompt += moves.fire_context->fire_key_hints() + "\n";
+        {
+            const string hint = moves.fire_context->fire_key_hints();
+            if (!hint.empty())
+                prompt += hint + "\n";
+        }
         string direction_hint = "";
         if (!behaviour->targeted())
             direction_hint = "Dir - look around, f - activate";
@@ -784,13 +788,12 @@ static void _get_nearby_items(vector<item_def> &list_items,
                                 bool need_path, int range, targeter *hitfunc)
 {
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (need_path && _blocked_ray(*ri))
             continue;
 
         const int oid = you.visible_igrd(*ri);
@@ -809,13 +812,12 @@ static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
     vector <text_pattern> &filters = Options.monster_item_view_features;
-    for (radius_iterator ri(you.pos(),
-                            you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
             continue;
 
-        if (need_path && (!you.see_cell(*ri) || _blocked_ray(*ri)))
+        if (need_path && _blocked_ray(*ri))
             continue;
 
         // Do we want to aim at this because its the feature, not because
@@ -2127,23 +2129,20 @@ bool direction_chooser::process_command(command_type command)
     case CMD_TARGET_DESCRIBE: describe_target(); break;
     case CMD_TARGET_HELP:     show_help();       break;
 
-    case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
-    case CMD_TARGET_CYCLE_QUIVER_FORWARD:
-    case CMD_TARGET_SELECT_ACTION:
-        if (moves.fire_context)
+    default:
+        if (moves.fire_context
+            && moves.fire_context->targeter_handles_key(command))
         {
             // because of the somewhat convoluted way in which action selection
-            // is handled, this can only be handled if the direction chooser
-            // has been called via a quiver::action. Otherwise, we ignore these
-            // commands.
+            // is handled, some commands can only be handled if the direction
+            // chooser has been called via a quiver::action. Otherwise, we
+            // ignore these commands.
             moves.isValid = false;
             moves.isCancel = true;
             moves.cmd_result = static_cast<int>(command);
             loop_done = true;
+            break;
         }
-        break; // otherwise, ignore
-
-    default:
         // Some blocks of keys with similar handling.
         handle_movement_key(command, &loop_done);
         handle_wizard_command(command, &loop_done);
@@ -3164,7 +3163,11 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     if (grid == DNGN_FLOOR && dtype == DESC_A)
         dtype = DESC_THE;
 
-    return thing_do_grammar(dtype, desc);
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
+    return thing_do_grammar(dtype, desc, ignore_case);
 }
 
 string raw_feature_description(const coord_def &where)
@@ -3203,13 +3206,19 @@ string feature_description_at(const coord_def& where, bool covering,
 
     string covering_description = "";
 
-    if (covering && you.see_cell(where) && is_icecovered(where))
-        covering_description = ", covered with ice";
-
-    if (covering && you.see_cell(where) && is_bloodcovered(where))
+    if (covering && you.see_cell(where))
     {
-        string prefix = covering_description.empty() ? ", " : " and ";
-        covering_description += prefix + "spattered with blood";
+        if (feat_is_tree(grid) && env.forest_awoken_until)
+            covering_description += ", awoken";
+
+        if (is_icecovered(where))
+            covering_description = ", covered with ice";
+
+        if (is_temp_terrain(where))
+            covering_description = ", summoned";
+
+        if (is_bloodcovered(where))
+            covering_description += ", spattered with blood";
     }
 
     // FIXME: remove desc markers completely; only Zin walls are left.
@@ -3284,43 +3293,22 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, desc);
     }
 
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
     switch (grid)
     {
 #if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
-#endif
-    case DNGN_TRAP_ARROW:
-    case DNGN_TRAP_SPEAR:
-    case DNGN_TRAP_BLADE:
-    case DNGN_TRAP_DART:
-    case DNGN_TRAP_BOLT:
-    case DNGN_TRAP_NET:
-    case DNGN_TRAP_PLATE:
         return feature_description(grid, trap, covering_description, dtype);
-    case DNGN_ABANDONED_SHOP:
-        return thing_do_grammar(dtype, "an abandoned shop");
 
-    case DNGN_ENTER_SHOP:
-        return shop_name(*shop_at(where));
-
-#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
         return thing_do_grammar(dtype, "UNAMED PORTAL VAULT ENTRY");
 #endif
-
-    case DNGN_TREE:
-    {
-        string desc = "";
-        if (env.forest_awoken_until)
-            desc += "awoken ";
-        desc += grid == env.grid(where) ? raw_feature_description(where)
-                                   : _base_feature_desc(grid, trap);
-        if (is_temp_terrain(where))
-            desc += " (summoned)";
-        desc += covering_description;
-        return thing_do_grammar(dtype, desc);
-    }
+    case DNGN_ENTER_SHOP:
+        return shop_name(*shop_at(where));
 
     case DNGN_FLOOR:
         if (dtype == DESC_A)
@@ -3330,7 +3318,8 @@ string feature_description_at(const coord_def& where, bool covering,
         const string featdesc = grid == env.grid(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
-        return thing_do_grammar(dtype, featdesc + covering_description);
+        return thing_do_grammar(dtype, featdesc + covering_description,
+                ignore_case);
     }
 }
 
@@ -3342,15 +3331,9 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
     if (weap && (!ident || item_type_known(*weap)))
-    {
-        name1 = weap->name(DESC_A, false, false, true,
-                           false, ISFLAG_KNOW_CURSE);
-    }
+        name1 = weap->name(DESC_A, false, false, true, false);
     if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
-    {
-        name2 = alt->name(DESC_A, false, false, true,
-                          false, ISFLAG_KNOW_CURSE);
-    }
+        name2 = alt->name(DESC_A, false, false, true, false);
 
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
@@ -3359,8 +3342,7 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     {
         item_def dup = *weap;
         ++dup.quantity;
-        name1 = dup.name(DESC_A, false, false, true, true,
-                         ISFLAG_KNOW_CURSE);
+        name1 = dup.name(DESC_A, false, false, true, true);
         name2.clear();
     }
 

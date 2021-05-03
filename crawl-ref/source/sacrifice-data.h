@@ -37,7 +37,7 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_WORDS, MUT_NO_READ,
+{ ABIL_RU_SACRIFICE_WORDS, MUT_READ_SAFETY,
   "sacrifice your ability to read while threatened",
   "sacrificed words",
 
@@ -47,14 +47,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DRINK, MUT_NO_DRINK,
+{ ABIL_RU_SACRIFICE_DRINK, MUT_DRINK_SAFETY,
   "sacrifice your ability to drink while threatened",
   "sacrificed drink",
 
   30,
   SK_NONE,
   nullptr,
-  []() { return you.species != SP_MUMMY; },
+  []() { return !you.has_mutation(MUT_NO_DRINK); },
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
@@ -137,14 +137,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
+{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR_SKILL,
   "sacrifice your Armour skill",
   "sacrificed armour",
 
   30,
   SK_ARMOUR,
   nullptr,
-  []() { return you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE; },
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,

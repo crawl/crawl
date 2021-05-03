@@ -22,6 +22,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-name.h"
@@ -264,7 +265,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf("%s%s %.4s", get_species_abbrev(you.species),
+            cprintf("%s%s %.4s", species::get_abbrev(you.species),
                                  get_job_abbrev(you.char_class),
                                  god_name(you.religion).c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
@@ -506,7 +507,9 @@ static bool _boosted_ac()
 
 static bool _boosted_ev()
 {
-    return you.duration[DUR_AGILITY] || acrobat_boost_active();
+    return you.duration[DUR_AGILITY]
+           || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+           || acrobat_boost_active();
 }
 
 static bool _boosted_sh()
@@ -586,7 +589,7 @@ static void _print_stats_equip(int x, int y)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    cprintf((species::arm_count(you.species) > 2) ? "Eq: " : "Equip: ");
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
@@ -1083,6 +1086,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DEATHS_DOOR,
         DUR_BERSERK_COOLDOWN,
         DUR_EXHAUSTED,
+        DUR_WORD_OF_CHAOS_COOLDOWN,
         DUR_DEATHS_DOOR_COOLDOWN,
         DUR_QUAD_DAMAGE,
         STATUS_SERPENTS_LASH,
@@ -1246,11 +1250,12 @@ static void _redraw_title()
     // Minotaur [of God] [Piety]
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
-    string species = species_name(you.species);
+    string species = species::name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
-        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+        if (you.char_class == JOB_MONK
+            && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
         {
             string godpiety = "**....";
@@ -1781,10 +1786,14 @@ int update_monster_pane()
 // params:
 //  level : actual resistance level
 //  max : maximum number of levels of the resistance
-static string _itosym(int level, int max = 1)
+//  immune : overwrites normal pip display for full immunity
+static string _itosym(int level, int max = 1, bool immune = false)
 {
     if (max < 1)
         return "";
+
+    if (immune)
+        return "∞";
 
     string sym;
     bool spacing = (max >= 5) ? false : true;
@@ -1848,8 +1857,12 @@ int equip_name_to_slot(const char *s)
 
 // Colour the string according to the level of an ability/resistance.
 // Take maximum possible level into account.
-static const char* _determine_colour_string(int level, int max_level)
+static const char* _determine_colour_string(int level, int max_level,
+                                            bool immune = false)
 {
+    if (immune)
+        return "<lightgreen>";
+
     // No colouring for larger bars.
     if (max_level > 3)
         return "<lightgrey>";
@@ -1915,14 +1928,15 @@ static void _print_overview_screen_equip(column_composer& cols,
 
     for (equipment_type eqslot : e_order)
     {
-        if (you.species == SP_OCTOPODE
+        // leave space for all the ring slots
+        if (species::arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
             && !you_can_wear(eqslot))
         {
             continue;
         }
 
-        if (you.species != SP_OCTOPODE
+        if (species::arm_count(you.species) <= 2
             && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
         {
             continue;
@@ -1968,7 +1982,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.form == transformation::blade_hands)
         {
-            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
+            const bool plural = you.arm_count() > 1;
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS && you.wear_barding())
@@ -1993,7 +2007,7 @@ static string _overview_screen_title(int sw)
     string title = make_stringf(" %s ", player_title().c_str());
 
     string species_job = make_stringf("(%s %s)",
-                                      species_name(you.species).c_str(),
+                                      species::name(you.species).c_str(),
                                       get_job_name(you.char_class));
 
     handle_real_time();
@@ -2008,8 +2022,9 @@ static string _overview_screen_title(int sw)
 
     if (linelength >= sw)
     {
-        species_job = make_stringf("(%s%s)", get_species_abbrev(you.species),
-                                             get_job_abbrev(you.char_class));
+        species_job = make_stringf("(%s%s)",
+                                    species::get_abbrev(you.species),
+                                    get_job_abbrev(you.char_class));
         linelength -= (char_width - strwidth(species_job));
     }
 
@@ -2148,26 +2163,29 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();
 
-    entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_drained())
-        entry.cprintf("MP:   ");
-    else
-        entry.cprintf("Magic:  ");
-
-    if (_boosted_mp())
-        entry.textcolour(LIGHTBLUE);
-    else
-        entry.textcolour(HUD_VALUE_COLOUR);
-
-    entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
-    if (you.species == SP_DEEP_DWARF
-        && get_real_mp(false) != you.max_magic_points)
+    if (!you.has_mutation(MUT_HP_CASTING))
     {
-        entry.cprintf(" (%d)", get_real_mp(false));
-    }
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        if (player_drained())
+            entry.cprintf("MP:   ");
+        else
+            entry.cprintf("Magic:  ");
 
-    cols.add_formatted(0, entry.to_colour_string(), false);
-    entry.clear();
+        if (_boosted_mp())
+            entry.textcolour(LIGHTBLUE);
+        else
+            entry.textcolour(HUD_VALUE_COLOUR);
+
+        entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
+        if (you.species == SP_DEEP_DWARF
+            && get_real_mp(false) != you.max_magic_points)
+        {
+            entry.cprintf(" (%d)", get_real_mp(false));
+        }
+
+        cols.add_formatted(0, entry.to_colour_string(), false);
+        entry.clear();
+    }
 
     entry.textcolour(HUD_CAPTION_COLOUR);
     if (player_drained())
@@ -2290,17 +2308,20 @@ static vector<formatted_string> _get_overview_stats()
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
 
-    entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Spells: ");
+    if (!you.has_mutation(MUT_INNATE_CASTER))
+    {
+        entry.textcolour(HUD_CAPTION_COLOUR);
+        entry.cprintf("Spells: ");
 
-    entry.textcolour(HUD_VALUE_COLOUR);
-    entry.cprintf("%d/%d levels left",
-                  player_spell_levels(), player_total_spell_levels());
+        entry.textcolour(HUD_VALUE_COLOUR);
+        entry.cprintf("%d/%d levels left",
+                      player_spell_levels(), player_total_spell_levels());
 
-    cols.add_formatted(3, entry.to_colour_string(), false);
-    entry.clear();
+        cols.add_formatted(3, entry.to_colour_string(), false);
+        entry.clear();
+    }
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
         entry.cprintf("Lives:  ");
@@ -2330,13 +2351,15 @@ static vector<formatted_string> _get_overview_stats()
 //          default is the most common case (1)
 //      pos_resist : false for "bad" resistances (no tele, random tele, *Rage),
 //          inverts the value for the colour choice
-static string _resist_composer(
-    const char * name, int spacing, int value, int max = 1, bool pos_resist = true)
+//      immune : overwrites normal pip display for full immunity
+static string _resist_composer(const char * name, int spacing, int value,
+                               int max = 1, bool pos_resist = true,
+                               bool immune = false)
 {
     string out;
-    out += _determine_colour_string(pos_resist ? value : -value, max);
+    out += _determine_colour_string(pos_resist ? value : -value, max, immune);
     out += chop_string(name, spacing);
-    out += _itosym(value, max);
+    out += _itosym(value, max, immune);
 
     return out;
 }
@@ -2360,14 +2383,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("rNeg", cwidth, rlife, 3) + "\n";
 
     const int rpois = player_res_poison(calc_unid);
-    string rpois_string = _resist_composer("rPois", cwidth, rpois) + "\n";
-    //XXX
-    if (rpois == 3)
-    {
-        rpois_string = replace_all(rpois_string, "+", "∞");
-        rpois_string = replace_all(rpois_string, "green", "lightgreen");
-    }
-    out += rpois_string;
+    out += _resist_composer("rPois", cwidth, rpois, 1, true, rpois == 3) + "\n";
 
     const int relec = player_res_electricity(calc_unid);
     out += _resist_composer("rElec", cwidth, relec) + "\n";
@@ -2381,7 +2397,8 @@ static vector<formatted_string> _get_overview_resistances(
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
     const int rmagi = player_willpower(calc_unid) / WL_PIP;
-    out += _resist_composer("Will", cwidth, rmagi, 5) + "\n";
+    out += _resist_composer("Will", cwidth, rmagi, 5, true,
+                            player_willpower(calc_unid) == WILL_INVULN) + "\n";
 
     out += _stealth_bar(20) + "\n";
 
@@ -2424,7 +2441,9 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
     const int rampage = you.rampaging(calc_unid);
-    out += _resist_composer("Rampage", cwidth, rampage) + "\n";
+    out += _resist_composer("Rampage", cwidth, rampage, 1, true,
+                            player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
+           + "\n";
 
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis();
@@ -2540,134 +2559,6 @@ string dump_overview_screen(bool full_id)
     return text;
 }
 
-static string _annotate_form_based(string desc, bool suppressed)
-{
-    if (suppressed)
-        return "<darkgrey>(" + desc + ")</darkgrey>";
-    else
-        return desc;
-}
-
-static string _dragon_abil(string desc)
-{
-    const bool supp = form_changed_physiology()
-                      && you.form != transformation::dragon;
-    return _annotate_form_based(desc, supp);
-}
-
-string mutation_overview()
-{
-    string mtext;
-    vector<string> mutations;
-
-    const char* size_adjective = get_size_adj(you.body_size(PSIZE_BODY), true);
-    if (size_adjective)
-        mutations.emplace_back(size_adjective);
-
-    for (const string& str : fake_mutations(you.species, true))
-    {
-        if (species_is_draconian(you.species))
-            mutations.push_back(_dragon_abil(str));
-        else if (you.species == SP_MERFOLK)
-        {
-            mutations.push_back(
-                _annotate_form_based(str, form_changed_physiology()));
-        }
-        else if (you.species == SP_MINOTAUR)
-        {
-            mutations.push_back(
-                _annotate_form_based(str, !form_keeps_mutations()));
-        }
-        else
-            mutations.push_back(str);
-    }
-
-    // a bit more stuff
-    if (you.species == SP_OGRE || you.species == SP_TROLL
-        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
-    {
-        mutations.emplace_back("unfitting armour");
-    }
-
-    if (you.species == SP_OCTOPODE)
-    {
-        mutations.push_back(_annotate_form_based("amphibious",
-                                                 !form_likes_water()));
-        mutations.push_back(_annotate_form_based(
-            make_stringf("%d rings", you.has_tentacles(false)),
-            !get_form()->slot_available(EQ_RING_EIGHT)));
-        mutations.push_back(_annotate_form_based(
-            make_stringf("constrict %d", you.has_tentacles(false)),
-            !form_keeps_mutations()));
-    }
-
-    if (you.can_water_walk())
-        mutations.emplace_back("walk on water");
-
-    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
-        mutations.emplace_back("reduced essence");
-
-    string current;
-    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const mutation_type mut = static_cast<mutation_type>(i);
-        if (!you.has_mutation(mut))
-            continue;
-
-        const int current_level = you.get_mutation_level(mut);
-        const int base_level = you.get_base_mutation_level(mut);
-        const bool lowered = current_level < base_level;
-        const int temp_levels = you.get_base_mutation_level(mut, false, true, false); // only temp levels
-        const int ordinary_levels = you.get_base_mutation_level(mut, true, false, true); // excluding temp levels
-
-        const int max_levels = mutation_max_levels(mut);
-
-        current = mutation_name(mut);
-
-        if (max_levels > 1)
-        {
-            // add on any numeric levels
-            ostringstream ostr;
-            ostr << " ";
-            if (ordinary_levels == 0) // only temporary levels are present
-                ostr << temp_levels;
-            else
-            {
-                // at least some non-temporary levels
-                ostr << ordinary_levels;
-                if (temp_levels)
-                    ostr << "[+" << temp_levels << "]";
-            }
-            current += ostr.str();
-        }
-
-        // bracket the whole thing
-        if (ordinary_levels == 0)
-            current = "[" + current + "]";
-
-        if (!current.empty())
-        {
-            if (current_level == 0) // suppressed by form
-                current = "(" + current + ")";
-            if (lowered)
-                current = "<darkgrey>" + current + "</darkgrey>";
-            mutations.push_back(current);
-        }
-    }
-
-    if (you.racial_ac(false))
-        mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
-
-    if (mutations.empty())
-        mtext += "no striking features";
-    else
-    {
-        mtext += comma_separated_line(mutations.begin(), mutations.end(),
-                                     ", ", ", ");
-    }
-    return mtext;
-}
-
 /// Creates rows of short descriptions for current status effects, mutations,
 /// and runes/Orbs of Zot.
 string _status_mut_rune_list(int sw)
@@ -2702,7 +2593,7 @@ string _status_mut_rune_list(int sw)
     // print mutation information
     text += "<w>A:</w> ";
 
-    text += mutation_overview();
+    text += terse_mutation_list();
 
     // print the Orb
     if (player_has_orb())

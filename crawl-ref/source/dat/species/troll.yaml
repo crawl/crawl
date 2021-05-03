@@ -47,7 +47,7 @@ levelup_stats:
   - str
 mutations:
   1:
-    MUT_TOUGH_SKIN: 3
+    MUT_TOUGH_SKIN: 1
     MUT_REGENERATION: 1
     MUT_CLAWS: 3
     MUT_SHAGGY_FUR: 1

@@ -153,6 +153,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
     mgen_data mg = _pal_data(MONS_ANIMATED_ARMOUR, 2, god,
                              SPELL_ANIMATE_ARMOUR);
+    mg.hd = 15 + div_rand_round(pow, 10);
     monster* spirit = create_monster(mg);
     if (!spirit)
     {
@@ -165,7 +166,6 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
     fake_armour.base_type = OBJ_ARMOUR;
     fake_armour.sub_type = armour->sub_type;
     fake_armour.quantity = 1;
-    fake_armour.plus = pow / 10;
     fake_armour.rnd = armour->rnd;
     fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
     item_set_appearance(fake_armour);
@@ -342,9 +342,10 @@ static void _place_dragon()
         if (!dragon)
             continue;
 
-        dec_mp(mp_cost);
+        pay_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
             mpr("A dragon arrives to answer your call!");
+        finalize_mp_cost();
 
         // The dragon is allowed to act immediately here
         dragon->flags &= ~MF_JUST_SUMMONED;
@@ -627,6 +628,7 @@ bool tukima_affects(const actor &target)
            && !is_range_weapon(*wpn)
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
+           // XX use god_protects here. But, need to know the caster too...
            && !mons_is_hepliaklqana_ancestor(target.type);
 }
 
@@ -1105,9 +1107,6 @@ coord_def find_gateway_location(actor* caster)
 {
     vector<coord_def> points;
 
-    bool xray = you.xray_vision;
-    you.xray_vision = false;
-
     for (coord_def delta : Compass)
     {
         coord_def test = coord_def(-1, -1);
@@ -1126,8 +1125,6 @@ coord_def find_gateway_location(actor* caster)
             points.push_back(test);
         }
     }
-
-    you.xray_vision = xray;
 
     if (points.empty())
         return coord_def(0, 0);
@@ -1464,11 +1461,6 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
     {
         ASSERT(mons_skeleton(zombie_type));
-        if (as == &you)
-        {
-            mpr("The flesh is too rotten for a proper zombie; "
-                "only a skeleton remains.");
-        }
         mon = MONS_SKELETON;
     }
 
@@ -1563,11 +1555,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     {
         *motions_r |= DEAD_ARE_HOPPING;
     }
-    else if (mons_genus(zombie_type)    == MONS_WORKER_ANT
-             || mons_base_char(zombie_type) == 's') // many genera
-    {
+    else if (mons_base_char(zombie_type) == 's') // many genera
         *motions_r |= DEAD_ARE_CRAWLING;
-    }
     else
         *motions_r |= DEAD_ARE_WALKING;
 
@@ -1704,7 +1693,6 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
             {
                 butcher_corpse(*si);
                 mpr("Before your eyes, flesh is ripped from the corpse!");
-                request_autopickup();
                 // Only convert the top one.
             }
 
@@ -1935,6 +1923,14 @@ spell_type player_servitor_spell()
         if (you.has_spell(spell) && raw_spell_fail(spell) < 50)
             return spell;
     return SPELL_NO_SPELL;
+}
+
+bool spell_servitorable(spell_type to_serve)
+{
+    for (const spell_type spell : servitor_spells)
+        if (spell == to_serve)
+            return true;
+    return false;
 }
 
 /**
@@ -2193,13 +2189,13 @@ bool aim_battlesphere(actor* agent, spell_type spell)
 
         // Pick a random baddie in LOS
         vector<actor *> targets;
-        for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
-            actor * foe = actor_at(*ri);
-            if (foe && battlesphere->can_see(*foe)
-                    && !mons_aligned(agent, foe))
+            if (battlesphere->can_see(**ai)
+                && !mons_aligned(agent, *ai)
+                && (ai->is_player() || !mons_is_firewood(*ai->as_monster())))
             {
-                targets.push_back(foe);
+                targets.push_back(*ai);
             }
         }
 
@@ -2497,62 +2493,6 @@ monster* find_spectral_weapon(const actor* agent)
         return nullptr;
 }
 
-bool weapon_can_be_spectral(const item_def *wpn)
-{
-    return wpn && is_weapon(*wpn) && !is_range_weapon(*wpn)
-        && !is_special_unrandom_artefact(*wpn);
-}
-
-// Now used for the spectral ego, so it lacks certain parameters
-void cast_spectral_weapon(actor *agent, int pow, god_type god)
-{
-    ASSERT(agent);
-
-    const int dur = min(2 + random2(1 + div_rand_round(pow, 25)), 4);
-    item_def* wpn = agent->weapon();
-
-    // Remove any existing spectral weapons. Only one should be alive at any
-    // given time.
-    monster *old_mons = find_spectral_weapon(agent);
-    if (old_mons)
-        end_spectral_weapon(old_mons, false);
-
-    mgen_data mg(MONS_SPECTRAL_WEAPON,
-                 agent->is_player() ? BEH_FRIENDLY
-                                    : SAME_ATTITUDE(agent->as_monster()),
-                 agent->pos(),
-                 agent->mindex());
-    mg.set_summoned(agent, dur, 0, god);
-    mg.props[TUKIMA_WEAPON] = *wpn;
-    mg.props[TUKIMA_POWER] = pow;
-
-    monster *mons = create_monster(mg);
-    if (!mons)
-        return;
-
-    if (agent->is_player())
-        mpr("You draw out your weapon's spirit!");
-    else
-    {
-        if (you.can_see(*agent) && you.can_see(*mons))
-        {
-            string buf = " draws out ";
-            buf += agent->pronoun(PRONOUN_POSSESSIVE);
-            buf += " weapon's spirit!";
-            simple_monster_message(*agent->as_monster(), buf.c_str());
-        }
-        else if (you.can_see(*mons))
-            simple_monster_message(*mons, " appears!");
-
-        mons->props["band_leader"].get_int() = agent->mid;
-        mons->foe = agent->mindex();
-        mons->target = agent->pos();
-    }
-
-    mons->summoner = agent->mid;
-    agent->props["spectral_weapon"].get_int() = mons->mid;
-}
-
 void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 {
     // Should only happen if you dismiss it in wizard mode, I think
@@ -2577,83 +2517,6 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
     if (!killed)
         monster_die(*mons, KILL_RESET, NON_MONSTER);
-}
-
-bool trigger_spectral_weapon(actor* agent, const actor* target)
-{
-    monster *spectral_weapon = find_spectral_weapon(agent);
-
-    // Don't try to attack with a nonexistent spectral weapon
-    if (!spectral_weapon || !spectral_weapon->alive())
-    {
-        agent->props.erase("spectral_weapon");
-        return false;
-    }
-
-    // Likewise if the target is the spectral weapon itself
-    if (target->as_monster() == spectral_weapon)
-        return false;
-
-    // Clear out any old orders.
-    reset_spectral_weapon(spectral_weapon);
-
-    spectral_weapon->props[SW_TARGET_MID].get_int() = target->mid;
-    spectral_weapon->props[SW_READIED] = true;
-
-    return true;
-}
-
-// Called at the start of each round. Cancels attack order given in the
-// previous round, if the weapon was not able to execute them fully
-// before the next player action
-void reset_spectral_weapon(monster* mons)
-{
-    if (!mons || mons->type != MONS_SPECTRAL_WEAPON)
-        return;
-
-    if (mons->props.exists(SW_TRACKING))
-    {
-        mons->props.erase(SW_TRACKING);
-        mons->props.erase(SW_READIED);
-        mons->props.erase(SW_TARGET_MID);
-
-        return;
-    }
-
-    // If an attack has been readied, begin tracking.
-    if (mons->props.exists(SW_READIED))
-        mons->props[SW_TRACKING] = true;
-    else
-        mons->props.erase(SW_TARGET_MID);
-}
-
-/* Confirms the spectral weapon can and will attack the given defender.
- *
- * Checks the target, and that we haven't attacked yet.
- * Then consumes our ready state, preventing further attacks.
- */
-bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
-{
-    // No longer tracking towards the target.
-    mons->props.erase(SW_TRACKING);
-
-    // Is the defender our target?
-    if (mons->props.exists(SW_TARGET_MID)
-        && (mid_t)mons->props[SW_TARGET_MID].get_int() == defender->mid
-        && mons->props.exists(SW_READIED))
-    {
-        // Consume our ready state and attack
-        mons->props.erase(SW_READIED);
-        return true;
-    }
-
-    // Expend the weapon's energy, as it can't attack
-    int energy = mons->action_energy(EUT_ATTACK);
-    ASSERT(energy > 0);
-
-    mons->speed_increment -= energy;
-
-    return false;
 }
 
 static void _setup_infestation(bolt &beam, int pow)
@@ -3101,7 +2964,25 @@ spret fedhas_grow_oklob(bool fail)
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
+    bool see_space = false;
+    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+            continue;
+        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+            continue;
+        see_space = true;
+        break;
+    }
+
+    if (agent.is_player() && !see_space)
+    {
+        mpr("There is not enough space to conjure foxfire!");
+        return spret::abort;
+    }
+
     fail_check();
+
     int created = 0;
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)

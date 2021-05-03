@@ -702,7 +702,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     {
         tip = you.your_name;
         tip += " (";
-        tip += get_species_abbrev(you.species);
+        tip += species::get_abbrev(you.species);
         tip += get_job_abbrev(you.char_class);
         tip += ")";
     }

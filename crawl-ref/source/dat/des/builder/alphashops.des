@@ -106,7 +106,7 @@
        "potion of haste", "scroll of holy word", "manual of hexes", "hat",
        "helmet", "book of hexes" }
 
-      elseif s == "I" then i = { "amulet of inaccuracy", "ring of ice",
+      elseif s == "I" then i = { "ring of ice",
        "scroll of immolation", "ice dragon scales", "book of ice",
        "potion of invisibility", "ring of intelligence", "scroll of identify",
        "wand of iceblast", "manual of invocations", "manual of ice magic" }
@@ -143,9 +143,7 @@
 
       elseif s == "R" then i = { "amulet of reflection",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
-       "potion of resistance", "robe", "ring mail",
-       "scroll of random uselessness", "scroll of remove curse",
-       "wand of random effects" }
+       "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "sling bullet", "scale mail", "book of summonings", "book of the sky",
@@ -158,9 +156,8 @@
        "manual of spellcasting", "manual of summonings", "stone" }
 
       elseif s == "T" then i = { "book of the tempests", "scroll of torment",
-       "book of transfigurations", "ring of teleportation",
-       "scroll of teleportation", "triple sword", "triple crossbow",
-       "troll leather armour", "manual of throwing",
+       "book of transfigurations", "scroll of teleportation", "triple sword",
+        "triple crossbow", "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
        "trident", "throwing net", "tower shield", "tin of tremorstones" }
 
@@ -171,7 +168,7 @@
       elseif s == "W" then i = { "ring of wizardry", "book of the warp", "whip",
        "war axe", "ring of willpower" }
 
-      elseif s == "X" then i = { "any" }
+      elseif s == "X" then i = { "piece from xom's chessboard" }
 
       elseif s == "Y" then i = { "young poisoner's handbook" }
 

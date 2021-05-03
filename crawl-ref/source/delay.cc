@@ -184,22 +184,6 @@ bool EquipOffDelay::try_interrupt()
     return false;
 }
 
-bool BlurryScrollDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep reading the scroll?", false, 0, false))
-        {
-            mpr("You stop reading the scroll.");
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
-}
-
 bool AscendingStairsDelay::try_interrupt()
 {
     mpr("You stop ascending the stairs.");
@@ -360,29 +344,6 @@ static command_type _get_running_command()
     return direction_to_command(you.running.pos.x, you.running.pos.y);
 }
 
-/**
- * Can the player currently read the given scroll?
- *
- * Prints corresponding messages if the answer is false.
- *
- * @param inv_slot      The scroll in question.
- * @return              false if the player is confused, berserk, silenced,
- *                      etc; true otherwise.
- */
-static bool _can_read_scroll(const item_def& scroll)
-{
-    // prints its own messages
-    if (!player_can_read())
-        return false;
-
-    const string illiteracy_reason = cannot_read_item_reason(scroll);
-    if (illiteracy_reason.empty())
-        return true;
-
-    mpr(illiteracy_reason);
-    return false;
-}
-
 void clear_macro_process_key_delay()
 {
     if (dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
@@ -420,11 +381,6 @@ void PasswallDelay::start()
 void ShaftSelfDelay::start()
 {
     mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
-}
-
-void BlurryScrollDelay::start()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You begin reading the scroll.");
 }
 
 void ExsanguinateDelay::start()
@@ -543,16 +499,6 @@ bool MultidropDelay::invalidated()
     return false;
 }
 
-bool BlurryScrollDelay::invalidated()
-{
-    if (!_can_read_scroll(scroll))
-    {
-        you.time_taken = 0;
-        return true;
-    }
-    return false;
-}
-
 void MultidropDelay::tick()
 {
     if (!drop_item(items[0].slot, items[0].quantity))
@@ -656,11 +602,6 @@ void JewelleryOnDelay::finish()
 void EquipOnDelay::finish()
 {
     const unsigned int old_talents = your_talents(false).size();
-
-    set_ident_flags(equip, ISFLAG_IDENT_MASK);
-    if (is_artefact(equip))
-        equip.flags |= ISFLAG_NOTED_ID;
-
     const bool is_amulet = equip.base_type == OBJ_JEWELLERY;
     const equipment_type eq_slot = is_amulet ? EQ_AMULET :
                                                get_armour_slot(equip);
@@ -772,23 +713,6 @@ void PasswallDelay::finish()
 void ShaftSelfDelay::finish()
 {
     you.do_shaft_ability();
-}
-
-void BlurryScrollDelay::finish()
-{
-    // Make sure the scroll still exists, the player isn't confused, etc
-    if (_can_read_scroll(scroll))
-    {
-        read_scroll(scroll);
-        // we are now probably out of sync with regular world_reacts timing, so
-        // trigger any fineffs that might have been caused by reading this
-        // scroll, e.g. torment vs. TRJ. Otherwise they'd have to wait until
-        // the next world_reacts.
-        // TODO: is there a more general condition that this can be triggered
-        // under? it might impact other obscure cases, e.g. passwalling with
-        // spiny.
-        fire_final_effects();
-    }
 }
 
 void DropItemDelay::finish()
@@ -1157,7 +1081,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             }
         }
         if (you.has_mutation(MUT_SCREAM)
-            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
+            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
         {
             yell(mon);
         }
@@ -1296,7 +1220,7 @@ bool interrupt_activity(activity_interrupt ai,
 // Must match the order of activity_interrupt.h!
 static const char *activity_interrupt_names[] =
 {
-    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "hungry", "message",
+    "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
     "sense_monster", "mimic"
 };

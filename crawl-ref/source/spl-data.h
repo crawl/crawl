@@ -222,7 +222,7 @@ static const struct spell_desc spelldata[] =
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
     spflag::dir_or_target | spflag::helpful | spflag::selfench
-        | spflag::emergency | spflag::needs_tracer,
+        | spflag::emergency | spflag::escape | spflag::needs_tracer,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -447,6 +447,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CALL_DOWN_LIGHTNING, "Call Down Lightning",
+    spschool::conjuration | spschool::air,
+    spflag::target | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_BLINK, "Blink",
     spschool::translocation,
     spflag::escape | spflag::selfench | spflag::emergency | spflag::utility,
@@ -573,8 +584,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::not_self | spflag::emergency
-        | spflag::selfench,
+    spflag::dir_or_target | spflag::not_self | spflag::emergency,
     3,
     200,
     1, 1,
@@ -833,7 +843,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SWIFTNESS, "Swiftness",
     spschool::air,
     spflag::hasty | spflag::selfench | spflag::utility,
-    2,
+    3,
     100,
     -1, -1,
     2, 0,
@@ -890,7 +900,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BLADE_HANDS, "Blade Hands",
     spschool::transmutation,
     spflag::helpful | spflag::chaotic | spflag::utility,
-    5,
+    6,
     200,
     -1, -1,
     4, 0,
@@ -934,7 +944,7 @@ static const struct spell_desc spelldata[] =
     SPELL_HYDRA_FORM, "Hydra Form",
     spschool::transmutation,
     spflag::helpful | spflag::chaotic | spflag::utility,
-    6,
+    5,
     200,
     -1, -1,
     6, 0,
@@ -1135,7 +1145,7 @@ static const struct spell_desc spelldata[] =
     SPELL_DISCHARGE, "Static Discharge",
     spschool::conjuration | spschool::air,
     spflag::area,
-    3,
+    2,
     100,
     1, 1,
     3, 0,
@@ -1659,7 +1669,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
     spschool::earth,
-    spflag::monster | spflag::emergency,
+    spflag::monster | spflag::emergency | spflag::escape,
     5,
     0,
     -1, -1,
@@ -1794,7 +1804,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INK_CLOUD, "Ink Cloud",
     spschool::conjuration | spschool::ice, // it's a water spell
-    spflag::monster | spflag::emergency | spflag::utility,
+    spflag::monster | spflag::emergency | spflag::escape | spflag::utility,
     7,
     0,
     -1, -1,
@@ -2371,6 +2381,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CREEPING_FROST, "Creeping Frost",
+    spschool::conjuration | spschool::ice,
+    spflag::dir_or_target | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_LEGENDARY_DESTRUCTION, "Legendary Destruction",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::needs_tracer,
@@ -2534,17 +2555,6 @@ static const struct spell_desc spelldata[] =
     6, 6,
     6, 0,
     TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
-    SPELL_RANDOM_BOLT, "Random Bolt",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
-    4,
-    200,
-    5, 5,
-    4, 0,
-    TILEG_RANDOM_BOLT,
 },
 
 {
@@ -2866,6 +2876,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_WEAKENING_GAZE, "Weakening Gaze",
+    spschool::hexes,
+    spflag::target | spflag::not_self | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_DEATH_RATTLE, "Death Rattle",
     spschool::conjuration | spschool::necromancy | spschool::air,
     spflag::dir_or_target | spflag::monster,
@@ -3118,17 +3139,6 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
     TILEG_ABILITY_QAZLAL_UPHEAVAL,
-},
-
-{
-    SPELL_RANDOM_EFFECTS, "Random Effects",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
-    4,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    4, 0,
-    TILEG_ERROR,
 },
 
 {
@@ -3386,6 +3396,62 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
+    spschool::translocation,
+    spflag::no_ghost,
+    5,
+    100,
+    -1, -1,
+    5, 0,
+    TILEG_MANIFOLD_ASSAULT,
+},
+
+{
+    SPELL_GOAD_BEASTS, "Goad Beasts",
+    spschool::hexes,
+    spflag::area | spflag::monster | spflag::selfench,
+    6,
+    0,
+    -1, -1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_CONCENTRATE_VENOM, "Concentrate Venom",
+    spschool::poison,
+    spflag::dir_or_target | spflag::not_self | spflag::helpful
+        | spflag::needs_tracer | spflag::utility | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_ERUPTION, "Eruption",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::target | spflag::not_self | spflag::needs_tracer | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_PYROCLASTIC_SURGE, "Pyroclastic Surge",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::dir_or_target | spflag::monster,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3440,6 +3506,7 @@ AXED_SPELL(SPELL_MELEE, "Melee")
 AXED_SPELL(SPELL_MISLEAD, "Mislead")
 AXED_SPELL(SPELL_PHASE_SHIFT, "Phase Shift")
 AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
+AXED_SPELL(SPELL_RANDOM_BOLT, "Random Bolt")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")
 AXED_SPELL(SPELL_RECALL, "Recall")
 AXED_SPELL(SPELL_REGENERATION, "Regeneration")
@@ -3479,6 +3546,7 @@ AXED_SPELL(SPELL_SUMMON_SWARM, "Summon swarm")
 AXED_SPELL(SPELL_CLOUD_CONE, "Cloud Cone")
 AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
 AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
+AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 #endif
 
 };

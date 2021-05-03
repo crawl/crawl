@@ -682,11 +682,6 @@ scroll of noise
 Denne drilske skriftrulle som ofte sniges ned i en troldmands rygsæk af en
 lusket lærling, laver et værre spektakel.
 %%%%
-scroll of random uselessness
-
-Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
-lykkes overhovedet at få den til at virke.
-%%%%
 scroll of remove curse
 
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
@@ -905,10 +900,6 @@ wand of polymorph
 
 En magisk anordning som omskaber et væsen til en anden form. Den er særligt
 effektiv mod formskiftende væsener.
-%%%%
-wand of random effects
-
-En magisk anordning, som kan producere en lang række effekter.
 %%%%
 whip
 

@@ -454,15 +454,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
         // Forest should now be 1.0 in the center of the range, 0.0 at the end
         if (jitter < (forest * 0.5))
-        {
-            if (is_river)
-            {
-                if (forest > 0.5 && wet > 0.5)
-                    feat = DNGN_TREE;
-            }
-            else
-                feat = DNGN_TREE;
-        }
+            feat = DNGN_DEMONIC_TREE;
     }
 
     // City

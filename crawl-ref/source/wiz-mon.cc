@@ -111,6 +111,13 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
 
+    if (mons_class_requires_band(type) && !mspec.band)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "That monster can only be created with a band.");
+        return;
+    }
+
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
@@ -151,9 +158,9 @@ void wizard_create_spec_monster_name()
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",
                         input_str, sizeof(input_str));
 
-        species_type sp_id = get_species_by_abbrev(input_str);
+        species_type sp_id = species::from_abbrev(input_str);
         if (sp_id == SP_UNKNOWN)
-            sp_id = str_to_species(input_str);
+            sp_id = species::from_str(input_str);
         if (sp_id == SP_UNKNOWN)
         {
             mpr("No such species, making it Human.");
@@ -531,8 +538,8 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_MAGICAL,    "M" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
+                { MON_SPELL_VOCAL,      "V" },
                 { MON_SPELL_BREATH,     "br" },
-                { MON_SPELL_NO_SILENT,  "ns" },
                 { MON_SPELL_INSTANT,    "in" },
                 { MON_SPELL_NOISY,      "noi" },
             };

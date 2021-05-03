@@ -803,11 +803,6 @@ scroll of magic mapping
 
 Ce parchemin révèle les environs de celui qui le lit.
 %%%%
-scroll of random uselessness
-
-Il est facile d'être aveuglé par le sentiment d'accomplissement que l'on a à
-faire marcher ce parchemin, au vu de sa particulière inutilité.
-%%%%
 scroll of remove curse
 
 Lire ce parchemin permet de libérer les objets que vous portez ou tenez en main
@@ -935,10 +930,6 @@ wand of polymorph
 
 Un instrument magique qui métamorphose la créature ciblée en une autre
 créature. Ceci est particulièrement efficace contre les changeurs de forme.
-%%%%
-wand of random effects
-
-Un instrument magique qui peut produire une grande variété d'effets.
 %%%%
 whip
 

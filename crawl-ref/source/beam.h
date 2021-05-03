@@ -192,6 +192,7 @@ public:
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p, bool map_knowledge = false) const;
     bool ignores_monster(const monster* mon) const;
+    bool ignores_player() const;
     bool can_knockback(const actor &act, int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?

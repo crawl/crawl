@@ -124,8 +124,7 @@ function choose_mset_1(e)
   local rnd = crawl.random2(132)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / floating eye w:5 / golden eye w:5 /\
-               eye of draining w:5")
+    e.kmons("1 = jelly w:15 / endoplasm / slime creature w:5 / floating eye w:5 / golden eye w:5")
 -- Snake
   elseif rnd < 19 then
     e.kmons("1 = ball python / adder / water moccasin w:5 / naga w:2")
@@ -211,8 +210,8 @@ function choose_mset_2(e)
   local rnd = crawl.random2(141)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / slime creature /\
-               floating eye w:5 / golden eye w:5 / eye of draining w:5 /\
+    e.kmons("1 = jelly w:15 / endoplasm / slime creature /\
+               floating eye w:5 / golden eye w:5 /\
                eye of devastation w:5 / shining eye w:5")
 -- Snake
   elseif rnd < 19 then
@@ -306,10 +305,10 @@ function choose_mset_3(e)
   local rnd = crawl.random2(116)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / slime creature w:30 /\
-               floating eye w:2 / golden eye w:5 / eye of draining w:2 /\
+    e.kmons("1 = jelly w:15 / endoplasm / slime creature w:30 /\
+               floating eye w:2 / golden eye w:5 / quicksilver ooze w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
-               death ooze / azure jelly w:5 / great orb of eyes w:5 /\
+               rockslime / azure jelly w:5 / great orb of eyes w:5 /\
                glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then
@@ -436,9 +435,9 @@ local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:5 / slime creature w:30 /\
-               floating eye w:2 / golden eye w:4 / eye of draining w:2 /\
+               floating eye w:2 / golden eye w:4 / quicksilver ooze w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
-               death ooze / azure jelly / great orb of eyes w:4 /\
+               rockslime / azure jelly / great orb of eyes w:4 /\
                glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then
@@ -724,42 +723,42 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
-KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
-              fire dragon scales mundane not_cursed ident:all plus:5, \
-              ice dragon scales mundane not_cursed ident:all plus:5, \
-              storm dragon scales mundane not_cursed ident:all plus:5, \
-              shadow dragon scales mundane not_cursed ident:all plus:5, \
-              gold dragon scales mundane not_cursed ident:all plus:5, \
-              crystal plate armour mundane not_cursed ident:all plus:5
-KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
-              kite shield mundane not_cursed ident:all plus:3, \
-              tower shield mundane not_cursed ident:all plus:3
-KITEM:    D = broad axe mundane not_cursed ident:all plus:5, \
-              battleaxe mundane not_cursed ident:all plus:5, \
-              executioner's axe mundane not_cursed ident:all plus:5
-KITEM:    E = demon trident mundane not_cursed ident:all plus:5, \
-              bardiche mundane not_cursed ident:all plus:5
-KITEM:    F = demon whip mundane not_cursed ident:all plus:5, \
-              great mace mundane not_cursed ident:all plus:5, \
-              giant club mundane not_cursed ident:all plus:5, \
-              giant spiked club mundane not_cursed ident:all plus:5
-KITEM:    G = dagger mundane not_cursed ident:all plus:5, \
-              rapier mundane not_cursed ident:all plus:5, \
-              quick blade mundane not_cursed ident:all plus:5
-KITEM:    H = demon blade mundane not_cursed ident:all plus:5, \
-              double sword mundane not_cursed ident:all plus:5, \
-              great sword mundane not_cursed ident:all plus:5, \
-              triple sword mundane not_cursed ident:all plus:5
-KITEM:    I = lajatang mundane not_cursed ident:all plus:5
-KITEM:    J = hand crossbow mundane not_cursed ident:all plus:5, \
+KITEM:    B = plate armour mundane ident:all plus:5, \
+              fire dragon scales mundane ident:all plus:5, \
+              ice dragon scales mundane ident:all plus:5, \
+              storm dragon scales mundane ident:all plus:5, \
+              shadow dragon scales mundane ident:all plus:5, \
+              gold dragon scales mundane ident:all plus:5, \
+              crystal plate armour mundane ident:all plus:5
+KITEM:    C = buckler mundane ident:all plus:3, \
+              kite shield mundane ident:all plus:3, \
+              tower shield mundane ident:all plus:3
+KITEM:    D = broad axe mundane ident:all plus:5, \
+              battleaxe mundane ident:all plus:5, \
+              executioner's axe mundane ident:all plus:5
+KITEM:    E = demon trident mundane ident:all plus:5, \
+              bardiche mundane ident:all plus:5
+KITEM:    F = demon whip mundane ident:all plus:5, \
+              great mace mundane ident:all plus:5, \
+              giant club mundane ident:all plus:5, \
+              giant spiked club mundane ident:all plus:5
+KITEM:    G = dagger mundane ident:all plus:5, \
+              rapier mundane ident:all plus:5, \
+              quick blade mundane ident:all plus:5
+KITEM:    H = demon blade mundane ident:all plus:5, \
+              double sword mundane ident:all plus:5, \
+              great sword mundane ident:all plus:5, \
+              triple sword mundane ident:all plus:5
+KITEM:    I = lajatang mundane ident:all plus:5
+KITEM:    J = hand crossbow mundane ident:all plus:5, \
               bolt q:1000 mundane ident:all, \
-              arbalest mundane not_cursed ident:all plus:5, \
-              triple crossbow mundane not_cursed ident:all plus:5, \
-              shortbow mundane not_cursed ident:all plus:5, \
+              arbalest mundane ident:all plus:5, \
+              triple crossbow mundane ident:all plus:5, \
+              shortbow mundane ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
-              longbow mundane not_cursed ident:all plus:5, \
-              hunting sling mundane not_cursed ident:all plus:5, \
-              fustibalus mundane not_cursed ident:all plus:5, \
+              longbow mundane ident:all plus:5, \
+              hunting sling mundane ident:all plus:5, \
+              fustibalus mundane ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \
@@ -773,7 +772,6 @@ KITEM:    K = potion of curing q:9 ident:all, \
               potion of brilliance q:2 ident:all
 KITEM:    L = scroll of blinking q:3 ident:all, \
               scroll of fear q:2 ident:all, \
-              scroll of remove curse q:5 ident:all, \
               scroll of identify q:5 ident:all, \
               scroll of holy word q:1 ident:all, \
               scroll of fog q:7 ident:all, \
@@ -781,13 +779,13 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
 KITEM:    N = wand of acid ident:all charges:7, \
               wand of iceblast ident:all charges:7, \
               wand of mindburst ident:all charges:7
-KITEM:    P = ring of strength not_cursed ident:all plus:6, \
-              ring of strength not_cursed ident:all plus:6, \
-              ring of intelligence not_cursed ident:all plus:6, \
-              ring of intelligence not_cursed ident:all plus:6, \
-              ring of dexterity not_cursed ident:all plus:6, \
-              ring of dexterity not_cursed ident:all plus:6, \
-              ring of flight not_cursed ident:all
+KITEM:    P = ring of strength ident:all plus:6, \
+              ring of strength ident:all plus:6, \
+              ring of intelligence ident:all plus:6, \
+              ring of intelligence ident:all plus:6, \
+              ring of dexterity ident:all plus:6, \
+              ring of dexterity ident:all plus:6, \
+              ring of flight ident:all
 KITEM:    R = obsidian_axe ident:all, \
               shield_of_the_gong ident:all, \
               maxwells_patent_armour ident:all, \

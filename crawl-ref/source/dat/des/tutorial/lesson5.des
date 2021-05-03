@@ -31,11 +31,11 @@ COLOUR:  ABCDEFHI = lightblue
 FTILE:   ABCDEFHI = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
-ITEM:    mace mundane not_cursed
+ITEM:    mace mundane
 ITEM:    book of clouds
 MONS:    rat always_corpse
-MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
-MONS:    gnoll ; mace ego:none not_cursed
+MONS:    hobgoblin ; short sword ego:none | w:5 mace ego:none
+MONS:    gnoll ; mace ego:none
 MONS:    orc wizard spells:magic_dart.35.wizard;blink.18.wizard
 MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")

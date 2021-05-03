@@ -1218,7 +1218,7 @@ ENDMAP
 NAME:   lemuel_slime
 DEPTH:  D:6-, Lair
 ORIENT: float
-MONS:   w:20 ooze / jelly / fungus
+MONS:   w:20 endoplasm / jelly / fungus
 MONS:   slime creature / oklob plant
 MAP
 xxxxxxxxxx
@@ -1268,8 +1268,8 @@ ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   giant cockroach w:30 / butterfly w:20
-MONS:   worker ant
-MONS:   killer bee / scorpion / soldier ant w:5
+MONS:   scorpion
+MONS:   killer bee / scorpion / vampire mosquito w:5
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1451,7 +1451,7 @@ NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair:1-, !Lair:$
 ORIENT:  float
 TAGS:    transparent no_pool_fixup
-MONS:    leopard gecko / frilled lizard, iguana, komodo dragon
+MONS:    frilled lizard, iguana, komodo dragon
 MONS:    rime drake / swamp drake
 MONS:    adder, water moccasin
 SUBST:   4 = 34
@@ -1814,7 +1814,7 @@ DEPTH:  Depths
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
-MONS:   golden eye / eye of draining w:2
+MONS:   golden eye
 MONS:   glowing orange brain
 MAP
 ...................................
@@ -2228,7 +2228,11 @@ ENDMAP
 NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen transparent
 ORIENT: float
+: if you.in_branch("Depths") then
+MONS: tengu warrior ; longbow . arrow, stone giant / deep elf master archer
+: else
 MONS:   centaur, centaur warrior
+: end
 DEPTH:  D:6-, Depths
 : if you.in_branch("D") then
 SUBST:  1 = ..1
@@ -2294,7 +2298,7 @@ ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake floating eye, eye of devastation, glowing orange brain
-MONS:    generate_awake golden eye, slime creature, jelly
+MONS:    generate_awake golden eye, slime creature, acid blob w:1 / nothing w:40
 KFEAT:   > = shaft trap
 KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
@@ -2380,15 +2384,15 @@ NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
-MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
+MONS:    deep elf archer w:15 / orc warlord w:7 / \
          deep elf pyromancer / deep elf zephyrmancer / deep troll / \
-         boggart w:5 / efreet w:5 / rakshasa w:5 / wizard / necromancer / \
-         spriggan rider w:5 / vampire
-MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
-         skeletal warrior / yaktaur captain w:5 / ogre mage / \
+         hell hog w:5 / rakshasa / wizard / necromancer / \
+         spriggan rider w:5 / vampire knight / nothing w:8
+MONS:    orc high priest / naga warrior / nagaraja / \
+         skeletal warrior / stone giant w:5 / wizard w:20 / \
          deep elf knight w:5 / deep elf archer w:5 / phantasmal warrior / \
-         spriggan berserker / guardian serpent w:5 / harpy w:5 / \
-         salamander mystic
+         spriggan berserker / guardian serpent w:5 / caustic shrike w:1 / \
+         salamander mystic / nothing w:4
 MONS:    fire giant / frost giant / stone giant w:5 / ettin / \
          hell knight w:5 / orc warlord / minotaur / \
          vampire knight / vampire mage / ghoul w:5 / base draconian / \
@@ -2448,10 +2452,10 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
-MONS:    fire dragon / ice dragon / lindwurm / hell hound
-MONS:    death yak / manticore / catoblepas / dire elephant
-MONS:    hydra / anaconda / hornet w:2 / redback w:3 / wolf spider w:5 / harpy
-MONS:    spriggan druid, spriggan rider
+MONS:    fire dragon / ice dragon / lindwurm / hell hog
+MONS:    caustic shrike w:1 / catoblepas / dire elephant / emperor scorpion / nothing w:3
+MONS:    12-headed hydra / anaconda / ghost moth w:2 / wolf spider w:8 / harpy / moth of wrath
+MONS:    spriggan druid, spriggan rider / spriggan defender / nothing
 MONS:    sphinx / hell beast w:5 / caustic shrike w:5
 ITEM:    gold / nothing w:80
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
@@ -2515,7 +2519,7 @@ KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
 KMONS: N = deep elf knight w:5 / deep elf archer w:5 / \
            deep elf annihilator w:5 / deep elf death mage / \
            deep elf pyromancer / deep elf zephyrmancer / deep elf sorcerer
-KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
+KMONS: L = black mamba / catoblepas w:5 / basilisk / lindwurm / boulder beetle
 KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
            alligator
 KMONS: A = alligator snapping turtle w:5 / merfolk avatar / merfolk aquamancer / \
@@ -2524,7 +2528,7 @@ KMONS: K = nagaraja w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
 KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
            tarantella
-KMONS: M = acid blob w:5 / azure jelly / jelly w:15 / great orb of eyes
+KMONS: M = acid blob w:5 / azure jelly / slime creature w:15 / great orb of eyes
 KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
            skeletal warrior
 KMONS: C = skeletal warrior / bone dragon / vampire / lich w:5
@@ -2677,7 +2681,7 @@ ENDMAP
 NAME:   grunt_double_whammy
 ORIENT: float
 DEPTH:  Depths, !Depths:$
-MONS:   ettin / two-headed ogre
+MONS:   ettin / deep troll
 MONS:   deep elf blademaster / ettin
 MAP
    cccccccc     cccccccc
@@ -2843,10 +2847,9 @@ NAME:     gammafunk_depths_water_palace
 DEPTH:    Depths, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
-KMONS:    1 = centaur warrior / yaktaur captain / centaur warrior \
-              / ettin / stone giant / spriggan berserker
+KMONS:    1 = deep elf archer w:20 / ettin / stone giant w:20 / spriggan berserker
 KMONS:    2 = wizard / deep troll earth mage / spriggan air mage \
-              / deep elf annihilator / deep troll earth mage / boggart band
+              / deep elf annihilator / deep troll earth mage / deep elf knight
 KMONS:    3 = fire dragon / ice dragon / iron dragon / storm dragon
 KMONS:    4 = tengu reaver / spriggan air mage / sphinx
 KMONS:    5 = golden dragon / quicksilver dragon / storm dragon
@@ -2871,6 +2874,7 @@ KITEM:    * = *
 KITEM:    6| = |
 KFEAT:    h3456DHJK%$*| = W
 KFEAT:    K = w
+KFEAT:    t = mangrove
 KPROP:    ~"DE = no_tele_into
 SHUFFLE:  FH / IJ
 SUBST:    i : ch, j : ch, ~' = hhhhW, -" = W, k = .
@@ -2939,7 +2943,7 @@ ENDMAP
 
 NAME: cheibrodos_poisonous_passages
 DEPTH: Depths, !Depths:$
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen transparent
 ORIENT: float
 : local brnd = crawl.random2(15)
 : if brnd >= 10 then
@@ -2958,6 +2962,7 @@ MONS: reaper ; scythe ego:venom / w:8 green death \
 KMONS: A = lich
 KFEAT: A = stone_arch
 KPROP: '? = no_tele_into
+KMASK: '? = opaque
 NSUBST: - = 4:| / 4:* / 4:% / *:.
 MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
         pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
@@ -3067,7 +3072,7 @@ MONS:    necromancer ; \
          robe ego:resistance w:1
 MONS:    fire giant ; battleaxe ego:freezing
 MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin simulacrum, efreet, deep elf pyromancer / deep elf zephyrmancer
+MONS:    ettin simulacrum, hell hog, deep elf pyromancer / deep elf zephyrmancer
 KITEM:   d = triple crossbow ego:flaming ident:type, *
 KITEM:   e = lajatang ego:freezing ident:type, *
 SHUFFLE: 12, 34, 5df / 6eF, {[(<
@@ -3755,9 +3760,10 @@ TAGS: no_item_gen no_monster_gen
 ORIENT: float
 KPROP: w;W = no_tele_into
 MONS: kobold ; club / kobold ; dagger, hobgoblin ; club
-MONS: big kobold ; club | w:3 dagger ego:venom | w:3 dagger ego:draining \
-                   | w:3 dagger ego:speed
-NSUBST: - = 2:1 / 2=12., " = 3:1 / 3=12., ' = 1:3 / 1=3. / 1=1., ` = 1=*% / *:%
+MONS: kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
+          . club | w:3 dagger ego:venom | w:3 dagger ego:draining \
+              | w:3 dagger ego:speed
+NSUBST: - = 2=1 / 2=12., " = 3=1 / 3=12. / ., ' = 3 / 3. / 1. / ., ` = *% / %
 SUBST: ; = WWWw
 MAP
                WWWWW
@@ -3776,9 +3782,9 @@ TAGS: no_item_gen no_monster_gen no_tele_into
 DEPTH: D:2-8
 ORIENT: float
 : if you.absdepth() > 4 then
-MONS: kobold / big kobold w:6, ooze / jelly, slime creature
+MONS: kobold / kobold brigand w:6, endoplasm / jelly, slime creature
 : else
-MONS: kobold, ooze, jelly
+MONS: kobold, endoplasm, jelly
 : end
 {{
 dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
@@ -3972,13 +3978,13 @@ MONS: mana viper, orc knight ; battleaxe | great mace | broad axe \
           | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
           | w:3 broad axe ego:antimagic . plate armour \
           | plate armour ego:willpower
-MONS: stone giant / iron troll / w:5 ettin
+MONS: deep troll / iron troll / w:5 ettin
 MONS: spriggan berserker ; rapier | quick blade | demon whip \
           | w:3 rapier ego:antimagic | w:3 quick blade ego:antimagic \
           | w:3 demon whip ego:antimagic
 MONS: spriggan defender ; quick blade ego:antimagic \
           | demon whip ego:antimagic, quicksilver dragon
-KMONS: T = yaktaur captain
+KMONS: T = stone giant
 KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
@@ -3987,7 +3993,7 @@ KMONS: Y = orc knight ; battleaxe | great mace | broad axe \
                | w:3 battleaxe ego:antimagic | w:3 great mace ego:antimagic \
                | w:3 broad axe ego:antimagic . plate armour \
                | plate armour ego:willpower
-KMONS: U = stone giant / iron troll / w:5 ettin
+KMONS: U = deep troll / iron troll / w:5 ettin
 KMONS: r = lich w:40 / ancient lich / dread lich
 KMONS: E = w:3 plant / nothing
 KITEM: r = |
@@ -4050,7 +4056,7 @@ MONS:    necromancer / vampire mage / vampire knight / deep elf death mage \
 MONS:    revenant / ancient champion / lich, ancient lich / dread lich
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("D") then
-MONS:    eye of draining
+MONS:    floating eye
 MONS:    boggart / kobold demonologist / deep elf pyromancer w:5 / \
          deep elf zephyrmancer w:5 / tengu conjurer
 MONS:    wizard / necromancer / orc sorcerer / ogre mage
@@ -4140,7 +4146,7 @@ NSUBST:  ' = de / 2=|* / * / %$-- / -, - = 4=1 / 6=1. / 2=2. / .
 MONS:    slime creature
 MONS:    glowing orange brain / great orb of eyes / eye of devastation \
          / golden eye / shining eye
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = d / e / 2=|* / *% / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 :   end
@@ -4149,7 +4155,7 @@ NSUBST:  - = 4=1 / 6=1. / 2 / 2. / 2=3. / .
 MONS:    slime creature
 MONS:    glowing orange brain / shining eye / floating eye / golden eye \
          / eye of devastation
-MONS:    acid blob / azure jelly / death ooze
+MONS:    acid blob / azure jelly / rockslime
 NSUBST:  ' = 2=d / f / 3=|* / * / %$-- / -
 NSUBST:  - = 4=1 / 6=1. / 2 / 2=2. / 3=3 / 4=3. / .
 : end
@@ -4335,7 +4341,7 @@ ORIENT: float
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
 ITEM:   wand of iceblast / wand of acid
-ITEM:   wand of random effects / wand of mindburst / wand of paralysis \
+ITEM:   wand of mindburst / wand of paralysis \
         / wand of charming / wand of polymorph w:5
 MONS: shadow imp, orc priest, kobold demonologist
 MONS: deep elf knight / fire crab / orc high priest / orc sorcerer
@@ -4443,7 +4449,7 @@ SUBST: D = 1., E = 2.
 NSUBST: 3 = 2:3 / 3.
 {{
 dgn.delayed_decay(_G, '-', 'troll skeleton / minotaur skeleton ' ..
-                           '/ deep dwarf skeleton / centaur skeleton')
+                           '/ deep dwarf skeleton / ogre skeleton')
 }}
 MAP
 ccccccccccc
@@ -4582,7 +4588,7 @@ DEPTH:  D:8-12
 ORIENT: float
 KMONS:  1 = kobold demonologist
 KMONS:  2 = shadow imp
-KMONS:  k = kobold / big kobold w:3
+KMONS:  k = kobold / kobold brigand w:3
 KMONS:  u = kobold skeleton / kobold zombie
 KITEM:  ?1 = kobold skeleton
 : dgn.delayed_decay(_G, '?1', 'kobold skeleton')
@@ -4776,7 +4782,7 @@ DEPTH:  D:8-, Lair, Spider
 ORIENT: float
 ITEM:   pair of boots ego:rampaging ident:all
 ITEM:   pair of boots ego:rampaging good_item ident:all
-ITEM:   pair of boots ego:rampaging randart ident:all
+ITEM:   pair of boots randart ident:all
 MONS:   boulder beetle, torpor snail
 : if you.in_branch("D") then
 :     if you.depth() < 11 then
@@ -7756,30 +7762,6 @@ MAP
         @
 ENDMAP
 
-NAME:   kennysheep_orc_sif_temple
-ORIENT: float
-TAGS:   no_item_gen no_monster_gen no_trap_gen no_pool_fixup
-DEPTH:  D:6-10
-KFEAT:  C = altar_sif_muna
-MONS:   orc wizard / nothing, orc warrior
-MAP
-     xxxxx
-   xxxwwwxxx
-  xxwwwwwwwxx
- xxww.vvv.wwxx
- xww.nvCvn.wwx
-xxww.v111v.wwxx
-xwww.v1d1v.wwwx
-xxww.nv1vn.wwxx
- xwwwWv+vWwwwx
- xxwwWG.GWwwxx
-  xxww.2.wwxx
-   xxxG.Gxxx
-     x...x
-     xG.Gx
-       @
-ENDMAP
-
 NAME:   kennysheep_demon_hangout
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen no_trap_gen
@@ -9234,7 +9216,10 @@ ENDMAP
 NAME:    gammafunk_its_a_trap
 TAGS:    no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
-TAGS:    vaults_hard preserve_wall passable
+TAGS:    vaults_hard preserve_wall
+: if you.in_branch("Vaults") then
+TAGS:    passable
+: end
 DEPTH:   Crypt, D:$, Depths, Elf, Snake, Spider, Pan, Vaults, Zot
 ORIENT:  float
 KMASK:   ^ = no_item_gen
@@ -9293,14 +9278,16 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall passable
+TAGS:   vaults_hard preserve_wall
+: if you.in_branch("Vaults") then
+TAGS:   passable
+: end
 # This must not place on a branch end so it can place a downhatch.
 DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-KPROP:  1DEFHJR|*$efm = no_tele_into
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
 item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..
@@ -9423,7 +9410,7 @@ MONS:    wizard / boggart / deep elf annihilator / deep elf demonologist \
 MONS:    patrolling juggernaut
 MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
          iron troll w:5 / ettin w:5
-MONS:    boggart / deep elf annihilator / deep elf demonologist / titan \
+MONS:    tengu conjurer / deep elf annihilator / deep elf demonologist / titan \
          / deep elf sorcerer / spriggan air mage / lich / vampire mage
 : end
 MONS:    generate_awake moth of wrath, deep troll earth mage

@@ -24,41 +24,52 @@ const enchant_type dispellable_enchantments[] =
     ENCH_FEAR,
     ENCH_CONFUSION,
     ENCH_CORONA,
-    ENCH_SILVER_CORONA,
+    ENCH_STICKY_FLAME,
     ENCH_CHARM,
     ENCH_PARALYSIS,
+    ENCH_SICK,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_REGENERATION,
+    ENCH_STRONG_WILLED,
+    ENCH_LOWERED_WL,
+    ENCH_SILENCE,
     ENCH_TP,
+    ENCH_LIQUEFYING,
     ENCH_INNER_FLAME,
-    ENCH_OZOCUBUS_ARMOUR,
+    ENCH_WORD_OF_RECALL,
     ENCH_INJURY_BOND,
+    ENCH_FLAYED,
+    ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
     ENCH_TOXIC_RADIANCE,
+    ENCH_FIRE_VULN,
+    ENCH_POISON_VULN,
     ENCH_AGILE,
+    ENCH_FROZEN,
     ENCH_BLACK_MARK,
     ENCH_SAP_MAGIC,
+    ENCH_CORROSION,
     ENCH_REPEL_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
-    ENCH_PAIN_BOND,
-    ENCH_IDEALISED,
-    ENCH_INSANE,
+    ENCH_BRILLIANCE_AURA,
+    ENCH_EMPOWERED_SPELLS,
     ENCH_BOUND_SOUL,
+    ENCH_INFESTATION,
+    ENCH_STILL_WINDS,
+    ENCH_CONCENTRATE_VENOM,
 };
 
 bool player_is_debuffable();
+bool player_is_cancellable();
+string describe_player_cancellation();
 void debuff_player();
 bool monster_is_debuffable(const monster &mon);
 void debuff_monster(monster &mon);
 
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
-bool remove_curse(bool alreadyknown = true, const string &pre_msg = "");
-#if TAG_MAJOR_VERSION == 34
-bool curse_item(bool armour, const string &pre_msg = "");
-#endif
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);

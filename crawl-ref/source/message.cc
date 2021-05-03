@@ -595,6 +595,10 @@ public:
     // write to screen (without refresh)
     void show()
     {
+        // skip if there is no layout yet
+        if (width() <= 0)
+            return;
+
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolour(LIGHTGREY);
@@ -1991,7 +1995,7 @@ void canned_msg(canned_message_type which_message)
         {
             const char* when =
             (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 mprf("Your mouth is %s empty.", when);
             else if (you.has_usable_claws(true))
                 mprf("You are %s empty-clawed.", when);
@@ -2018,9 +2022,6 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_DISORIENTED:
             mpr("You feel momentarily disoriented.");
-            break;
-        case MSG_TOO_HUNGRY:
-            mpr("You're too hungry.");
             break;
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
@@ -2053,8 +2054,13 @@ void canned_msg(canned_message_type which_message)
             mpr("You feel your power returning.");
             break;
         case MSG_MAGIC_DRAIN:
-            mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+        {
+            if (you.has_mutation(MUT_HP_CASTING))
+                mpr("You feel momentarily drained.");
+            else
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
+        }
         case MSG_SOMETHING_IN_WAY:
             mpr("There's something in the way.");
             break;

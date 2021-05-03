@@ -113,7 +113,6 @@ enum monster_info_flags
     MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
-    MB_OZOCUBUS_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
 #endif
@@ -195,6 +194,9 @@ enum monster_info_flags
     MB_CLOUD_RING_MIASMA,
     MB_WITHERING,
     MB_CRUMBLING,
+    MB_ALLY_TARGET,
+    MB_CANT_DRAIN,
+    MB_CONCENTRATE_VENOM,
     NUM_MB_FLAGS
 };
 
@@ -353,6 +355,7 @@ struct monster_info : public monster_info_base
 
     int randarts(artefact_prop_type ra_prop) const;
     bool can_see_invisible() const;
+    bool nightvision() const;
     int willpower() const;
     int lighting_modifiers() const;
 

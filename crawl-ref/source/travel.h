@@ -68,7 +68,7 @@ bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
 
-void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
+void fill_travel_point_distance(const coord_def& youpos,
                      vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);
@@ -501,20 +501,12 @@ public:
     // position) and destination.
     void set_src_dst(const coord_def &src, const coord_def &dst);
 
-    // Request that the point distance array be annotated with magic numbers for
-    // excludes and waypoints.
-    void set_annotate_map(bool annotate);
-
-    // Sets the travel_distance_grid_t to use instead of travel_point_distance.
-    void set_distance_grid(travel_distance_grid_t distgrid);
-
-    // Set feature vector to use; if non-nullptr, also sets annotate_map to true.
+    // Set feature vector to use; if non-nullptr, also sets annotate_map to
+    // true.
     void set_feature_vector(vector<coord_def> *features);
 
     // Extract features without pathfinding
     void get_features();
-
-    const set<coord_def> get_unreachables() const;
 
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
@@ -524,19 +516,13 @@ public:
     // pathfind was not called with RMODE_EXPLORE or RMODE_EXPLORE_GREEDY.
     const coord_def explore_target() const;
 
-    // Nearest greed-inducing square. Return value is undefined if
-    // pathfind was not called with RMODE_EXPLORE_GREEDY.
-    const coord_def greedy_square() const;
-
-    // Nearest unexplored territory. Return value is undefined if
-    // pathfind was not called with RMODE_EXPLORE or
-    // RMODE_EXPLORE_GREEDY.
-    const coord_def unexplored_square() const;
-
     inline void set_ignore_danger()
     {
         ignore_danger = true;
     }
+
+    // Determine if the level is fully explored, when called after pathfind().
+    int explore_status();
 
 protected:
     bool is_greed_inducing_square(const coord_def &c) const;
@@ -606,10 +592,6 @@ protected:
     set<coord_def> unreachables;
 
     travel_distance_col *point_distance;
-
-    // How many points are we currently considering? We start off with just one
-    // point, and spread outwards like a flood-filler.
-    int points;
 
     // How many points we'll consider next iteration.
     int next_iter_points;

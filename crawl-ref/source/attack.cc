@@ -269,7 +269,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     modifiers -= 5 * attacker->inaccuracy();
 
     if (attacker->confused())
-        modifiers -= 5;
+        modifiers += CONFUSION_TO_HIT_MALUS;
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -288,7 +288,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
         // This can only help if you're visible!
         const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
-            modifiers -= 2 * how_transparent;
+            modifiers += TRANSLUCENT_SKIN_TO_HIT_MALUS * how_transparent;
 
         // defender backlight bonus and umbra penalty.
         if (defender->backlit(false))
@@ -966,7 +966,7 @@ void attack::stab_message()
         if (coinflip())
         {
             mprf("You %s %s from a blind spot!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         else
@@ -984,13 +984,13 @@ void attack::stab_message()
         else
         {
             mprf("You %s %s from behind!",
-                  (you.species == SP_FELID) ? "pounce on" : "strike",
+                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
                   defender->name(DESC_THE).c_str());
         }
         break;
     case 2:
     case 1:
-        if (you.species == SP_FELID && coinflip())
+        if (you.has_mutation(MUT_PAWS) && coinflip())
         {
             mprf("You pounce on the unaware %s!",
                  defender->name(DESC_PLAIN).c_str());
@@ -1209,11 +1209,9 @@ int attack::calc_damage()
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
             if (wpn_damage_plus >= 0)
-                damage += random2(wpn_damage_plus);
+                damage += random2(1 + wpn_damage_plus);
             else
                 damage -= random2(1 - wpn_damage_plus);
-
-            damage -= 1 + random2(3);
         }
 
         damage_max += attk_damage;
@@ -1600,15 +1598,6 @@ bool attack::apply_damage_brand(const char *what)
         defender->splash_with_acid(attacker, 3);
         break;
 
-    case SPWPN_SPECTRAL:
-        if (attacker->is_player())
-        {
-            const monster* mon = defender->as_monster();
-            if (mon && !mons_is_firewood(*mon))
-                handle_spectral_brand();
-        }
-        break;
-
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
@@ -1636,15 +1625,6 @@ bool attack::apply_damage_brand(const char *what)
     // was always a bit of a hack.
     if (attacker->type == MONS_NESSOS && weapon && is_range_weapon(*weapon))
         apply_poison_damage_brand();
-
-    // Use the Nessos hack to give the player glaive of the guard spectral too
-    if (attacker->is_player() && weapon
-        && is_unrandom_artefact(*weapon, UNRAND_GUARD))
-    {
-        const monster* mon = defender->as_monster();
-        if (mon && !mons_is_firewood(*mon))
-            handle_spectral_brand();
-    }
 
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);

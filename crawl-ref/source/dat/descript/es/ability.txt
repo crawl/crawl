@@ -410,20 +410,6 @@ Cure Bad Mutation ability
 
 Se elimina una mutación perjudicial al azar.
 %%%%
-Scrying ability
-
-Ganas visión astral para ver a través de los muros. Esto no es suficiente para
-permitirte apuntar hechizos o habilidades, incluso aquellos que funcionarían a
-través del vidrio.
-%%%%
-Transfer Knowledge ability
-
-Sacrifica una parte de una de tus capacidades para mejorar otra.
-%%%%
-End Transfer Knowledge ability
-
-Cancelas una transferencia de capacidades.
-%%%%
 Renounce Religion ability
 
 Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente

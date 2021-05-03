@@ -27,7 +27,6 @@ Airstrike spell
 
 Causes the air around a creature to twist itself into a whirling vortex of
 meteorological fury. It does more damage to targets surrounded by empty space.
-It is especially effective against flying enemies.
 %%%%
 Alistair's Intoxication spell
 
@@ -41,7 +40,7 @@ Animate Armour spell
 
 Call upon the spirit of your worn armour to fight alongside you. The spirit moves
 slowly, but draws strength from the inherent protection of your own armour. At
-higher power, the spirit's protective enchantments grow stronger.
+higher power, the spirit becomes more durable.
 %%%%
 Animate Dead spell
 
@@ -131,7 +130,7 @@ increases health, speed, and damage dealt in melee.
 %%%%
 Bind Souls spell
 
-Bestows an enchantment on other nearby living creatures that may cause them to
+Bestows an enchantment on other nearby living creatures that causes them to
 rise as simulacra after being slain.
 %%%%
 Black Mark spell
@@ -142,11 +141,23 @@ deplete magical power.
 %%%%
 Blade Hands spell
 
-Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage significantly.
+{{
+    local hands = you.hand() .. "s"
+    local description =
+               "Causes long, scythe-shaped blades to grow from the " ..
+               "caster's " .. hands .. ", increasing melee damage " ..
+               "significantly.\n\nWhile transformed, equipped weapons, " ..
+               "shields, and gloves are melded, and casting spells " ..
+               "becomes somewhat more difficult."
 
-While transformed, any equipped weapons are melded, and casting spells becomes
-somewhat more difficult.
+    if hands == "paws" then
+        return description .. " In addition, the clacking of blades " ..
+               "on the ground makes the caster slightly less stealthy."
+    else
+        return description
+    end
+}}
+
 %%%%
 Blink Allies Away spell
 
@@ -235,6 +246,20 @@ Call Canine Familiar spell
 
 Summons a solitary canine to the caster's aid.
 %%%%
+Call Down Damnation spell
+
+Blasts a targeted enemy with damnation, with no direct line of fire required.
+These unholy forces harm the victim and anyone adjacent, and are not affected
+by any means of protection, such as armour or resistances. However, certain
+creatures, usually those able to invoke damnation themselves, are entirely
+unscathed by damnation.
+%%%%
+Call Down Lightning spell
+
+Blasts a targeted enemy with lightning, with no direct line of fire required.
+The targeting magics need distance to function, so enemies that are adjacent
+or nearly adjacent cannot be struck by this.
+%%%%
 Call Imp spell
 
 Calls forth a minor demon from the pits of Hell.
@@ -289,7 +314,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that may knock back airborne targets.
+Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
 Cleansing Flame spell
 
@@ -298,6 +323,11 @@ Cleansing Flame spell
 Cold Breath spell
 
 Exhales a focused blast of icy-cold air. It may knock back airborne targets.
+%%%%
+Concentrate Venom spell
+
+Intensifies the natural venom of the target monster. Poisonous bites and spit
+become intense enough to slow and asphyxiate.
 %%%%
 Confuse spell
 
@@ -353,6 +383,11 @@ Corrupting Pulse spell
 Instills a corruption within all visible targets, temporarily mutating their
 bodies in an adverse fashion. It cannot affect artificial beings, and the
 undead will decompose if affected.
+%%%%
+Creeping Frost spell
+
+Calls forth freezing cold from the walls. Any enemies of the caster standing
+next to those walls will be frozen and will find their movements slowed.
 %%%%
 Crystal Bolt spell
 
@@ -533,6 +568,10 @@ nor on areas that lack solid floor, like deep water or lava. The transformation
 is temporary and cannot be sustained out of the caster's sight. Spellpower will
 increase how long the bog lingers.
 %%%%
+Eruption spell
+
+Splits the earth to draw up a localized, short-lived volcano under the target.
+%%%%
 Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
@@ -661,13 +700,16 @@ Greater Servant of Makhleb spell
 
 Summons a major demon.
 %%%%
+Goad Beasts spell
+
+Provokes nearby beasts to act faster. The effect is fleeting, but repeated use
+can move even the most stubborn mule.
 %%%%
 Hailstorm spell
 
 Conjures a cannonade of hail. The eye of the storm is wide enough that monsters
 adjacent to the caster are unaffected. Due to the strong impact and cutting
-edges a significant portion of its damage bypasses cold resistance. However,
-creatures made of pure ice are immune.
+edges a significant portion of its damage bypasses cold resistance.
 %%%%
 Haste Other spell
 
@@ -691,14 +733,6 @@ dies.
 Heal Other spell
 
 Heals a nearby ally.
-%%%%
-Call Down Damnation spell
-
-Blasts a targeted enemy with damnation, with no direct line of fire required.
-These unholy forces harm the victim and anyone adjacent, and are not affected
-by any means of protection, such as armour or resistances. However, certain
-creatures, usually those able to invoke damnation themselves, are entirely
-unscathed by damnation.
 %%%%
 Hurl Damnation spell
 
@@ -888,6 +922,13 @@ Malmutate spell
 Bestows a mutation on a target. The mutation is almost always harmful. It
 cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
+Manifold Assault spell
+
+Launches melee attacks against multiple visible enemies, warping space into
+paradoxical configurations to allow one swing to be in many places. The effect
+is too imprecise to allow stabbing unsuspecting foes. At high power, it can be
+used to strike more enemies at once.
+%%%%
 Mara Summon spell
 
 Weaves illusions of the caster. Such illusions have the same physical prowess
@@ -970,7 +1011,7 @@ Creates a large cloud of noxious fumes, which may cause confusion.
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything nearby for as long as the spell lasts.
+everything in line of sight for as long as the spell lasts.
 %%%%
 Orb of Destruction spell
 
@@ -1089,21 +1130,20 @@ Primal Wave spell
 Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
+Pyroclastic Surge spell
+
+Draws searing flames from lava. Any enemies of the caster standing
+next to or above lava will be burned.
+%%%%
 Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
-%%%%
-Random Bolt spell
-
-Fires, at random, a bolt of venom, negative energy, fire, cold, dispelling
-energy, electricity, or acid.
 %%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them
 easier to dodge. Single-target attacks are much easier to repel than
-penetrating attacks. Each time a missile is repelled the spell has a chance of
-expiring, with a lower chance of expiry at high power.
+penetrating attacks.
 %%%%
 Resonance Strike spell
 
@@ -1603,6 +1643,11 @@ Waterstrike spell
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
 %%%%
+Weakening Gaze spell
+
+Irresistably weakens a creature's melee attacks for a period of time,
+requiring line of sight but not not line of fire.
+%%%%
 Wereblood spell
 
 Transforms some of the caster's blood into that of a were-beast. Each
@@ -1629,5 +1674,7 @@ after a short delay.
 %%%%
 Yara's Violent Unravelling spell
 
-Tears apart the bonds that bind enchantments to the target creature,
-transforming the magic into a spray of deadly, mutagenic radiation.
+If cast upon a creature already blessed (or cursed) with magical enchantments,
+those enchantments will be torn apart, transforming into a spray of
+destructive mutagenic radiation. The victim and anyone adjacent will be
+blasted and heavily deformed, weakening them and reducing their armour.

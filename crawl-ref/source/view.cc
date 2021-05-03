@@ -44,6 +44,7 @@
 #include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-abil.h" // boris_covet_orb
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-poly.h"
@@ -156,6 +157,12 @@ void seen_monsters_react(int stealth)
             {
                 mi->props.erase(ELVEN_ENERGIZE_KEY);
                 elven_twin_energize(*mi);
+            }
+            else if (mi->type == MONS_BORIS && player_has_orb()
+                     && !mi->props.exists(BORIS_ORB_KEY))
+            {
+                mi->props[BORIS_ORB_KEY] = true;
+                boris_covet_orb(*mi);
             }
 #if TAG_MAJOR_VERSION == 34
             else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
@@ -453,7 +460,7 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
     {
         if (!mons_is_tentacle_or_tentacle_segment(mon->type)
             && !mons_is_conjured(mon->type)
-            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
+            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
         {
             yell(mon);
             return;
@@ -1072,7 +1079,7 @@ static void player_view_update()
     vector<coord_def> update_excludes;
     bool need_update = false;
 
-    for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
         update_flags flags = player_view_update_at(*ri);
         if (flags & update_flag::affect_excludes)

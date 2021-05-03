@@ -275,8 +275,8 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(rest_wait_percent), 100, 0, 100),
         new IntGameOption(SIMPLE_NAME(pickup_menu_limit), 1),
         new IntGameOption(SIMPLE_NAME(view_delay), DEFAULT_VIEW_DELAY, 0),
-        new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 3),
-        new IntGameOption(SIMPLE_NAME(fail_severity_to_quiver), 3, -1, 1),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_confirm), 3, -1, 5),
+        new IntGameOption(SIMPLE_NAME(fail_severity_to_quiver), 3, -1, 5),
         new IntGameOption(SIMPLE_NAME(travel_delay), USING_DGL ? -1 : 20,
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(rest_delay), USING_DGL ? -1 : 0,
@@ -289,7 +289,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
-        new IntGameOption(SIMPLE_NAME(dump_message_count), 20),
+        new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
@@ -388,6 +388,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_window_ratio), 1618, INT_MIN, INT_MAX),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
@@ -704,6 +705,7 @@ static game_type _str_to_gametype(const string& s)
 }
 #endif
 
+// XX move to species.cc?
 static string _species_to_str(species_type sp)
 {
     if (sp == SP_RANDOM)
@@ -711,9 +713,10 @@ static string _species_to_str(species_type sp)
     else if (sp == SP_VIABLE)
         return "viable";
     else
-        return species_name(sp);
+        return species::name(sp);
 }
 
+// XX move to species.cc?
 static species_type _str_to_species(const string &str)
 {
     if (str == "random")
@@ -723,13 +726,13 @@ static species_type _str_to_species(const string &str)
 
     species_type ret = SP_UNKNOWN;
     if (str.length() == 2) // scan abbreviations
-        ret = get_species_by_abbrev(str.c_str());
+        ret = species::from_abbrev(str.c_str());
 
     // if we don't have a match, scan the full names
     if (ret == SP_UNKNOWN && str.length() >= 2)
-        ret = find_species_from_string(str, true);
+        ret = species::from_str_loose(str, true);
 
-    if (!is_starting_species(ret))
+    if (!species::is_starting_species(ret))
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)
@@ -876,8 +879,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_revivify = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hungry, hit_monster, "
-                            "sense_monster",
+        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
 

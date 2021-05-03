@@ -3,6 +3,8 @@
 #include "coord-def.h"
 #include "defines.h"
 #include "fixedvector.h"
+#include "maybe-bool.h"
+#include <unordered_map>
 #include <vector>
 
 using std::vector;
@@ -33,6 +35,7 @@ protected:
     // protected methods
     bool calc_path_to_neighbours();
     bool traversable(const coord_def& p);
+    bool traversable_memoized(const coord_def& p);
     int  travel_cost(coord_def npos);
     bool mons_traversable(const coord_def& p);
     int  mons_travel_cost(coord_def npos);
@@ -72,4 +75,6 @@ protected:
     int prev[GXM][GYM];
 
     FixedVector<vector<coord_def>, GXM * GYM> hash;
+
+    maybe_bool traversable_cache[GXM][GYM];
 };

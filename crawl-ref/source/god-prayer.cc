@@ -89,6 +89,8 @@ static bool _pray_ecumenical_altar()
 
         if (you_worship(GOD_RU))
             you.props[RU_SACRIFICE_PROGRESS_KEY] = 9999;
+        else if (you_worship(GOD_ASHENZARI))
+            you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 9999;
         else if (you_worship(GOD_XOM))
             xom_is_stimulated(200, XM_INTRIGUED, true);
         else
@@ -113,7 +115,7 @@ void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (you.species == SP_DEMIGOD)
+    if (you.has_mutation(MUT_FORLORN))
     {
         mpr("A being of your status worships no god.");
         return;
@@ -227,10 +229,7 @@ static slurp_gain _sacrifice_one_item_noncount(const item_def& item)
     const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
-    const int value = (item.base_type == OBJ_CORPSES ?
-                          50 * stepdown_value(max(1,
-                          max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
-                      (is_worthless_consumable(item) ? 1 : shop_value));
+    const int value = is_worthless_consumable(item) ? 1 : shop_value;
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);

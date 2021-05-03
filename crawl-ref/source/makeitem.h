@@ -12,7 +12,6 @@ static const int NO_AGENT = -1;
 // item_def::plus is a short
 constexpr short GOOD_STAT_RING_PLUS = 6;
 constexpr short GOOD_RING_PLUS = 4;
-constexpr short BAD_RING_PLUS = -4;
 
 int create_item_named(string name, coord_def pos, string *error);
 
@@ -31,6 +30,8 @@ bool is_missile_brand_ok(int type, int brand, bool strict);
 
 int determine_nice_weapon_plusses(int item_level);
 brand_type determine_weapon_brand(const item_def& item, int item_level);
+
+void set_artefact_brand(item_def &item, int brand);
 
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);

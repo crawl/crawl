@@ -754,9 +754,11 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, AMU_THE_GOURMAND },
     { OBJ_JEWELLERY, AMU_HARM },
     { OBJ_JEWELLERY, AMU_RAGE },
+    { OBJ_JEWELLERY, AMU_INACCURACY },
     { OBJ_JEWELLERY, RING_REGENERATION },
     { OBJ_JEWELLERY, RING_SUSTAIN_ATTRIBUTES },
     { OBJ_JEWELLERY, RING_TELEPORT_CONTROL },
+    { OBJ_JEWELLERY, RING_TELEPORTATION },
     { OBJ_JEWELLERY, RING_ATTENTION },
     { OBJ_JEWELLERY, RING_STEALTH },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
@@ -799,7 +801,12 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
-    { OBJ_SCROLLS,   SCR_RECHARGING},
+    { OBJ_SCROLLS,   SCR_RECHARGING },
+    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
+    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
+    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_SCROLLS,   SCR_REMOVE_CURSE },
+    { OBJ_SCROLLS,   SCR_RANDOM_USELESSNESS },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -813,9 +820,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_LIGHTNING_REMOVED },
     { OBJ_WANDS,     WAND_SCATTERSHOT_REMOVED },
     { OBJ_WANDS,     WAND_CLOUDS_REMOVED },
-    { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
-    { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
-    { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_WANDS,     WAND_RANDOM_EFFECTS_REMOVED },
     { OBJ_FOOD,      FOOD_CHUNK},
     { OBJ_FOOD,      FOOD_BREAD_RATION },
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
@@ -829,19 +834,6 @@ const set<pair<object_class_type, int> > removed_items =
 bool item_type_removed(object_class_type base, int subtype)
 {
     return removed_items.count({ base, subtype }) != 0;
-}
-
-// Some convenient functions to hide the bit operations and create
-// an interface layer between the code and the data in case this
-// gets changed again. - bwr
-
-//
-// Item cursed status functions:
-//
-bool item_known_cursed(const item_def &item)
-{
-    return _full_ident_mask(item) & ISFLAG_KNOW_CURSE
-           && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
 // If item is a new unrand, takes a note of it and returns true.
@@ -867,132 +859,26 @@ bool item_is_cursable(const item_def &item)
 {
     if (!item_type_has_curses(item.base_type))
         return false;
-    if (item_known_cursed(item))
+    if (item.cursed())
         return false;
-    return true;
-}
-
-// Curses a random player inventory item.
-bool curse_an_item()
-{
-    // allowing these would enable mummy scumming
-    if (have_passive(passive_t::want_curses))
-    {
-        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-             god_name(you.religion).c_str());
-        return false;
-    }
-
-    int count = 0;
-    item_def *found = nullptr;
-
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (!item_is_cursable(item))
-            continue;
-
-        // Item is valid for cursing, so we'll give it a chance.
-        count++;
-        if (one_chance_in(count))
-            found = &item;
-    }
-
-    // Any item to curse?
-    if (!found)
-        return false;
-
-    do_curse_item(*found, false);
-
     return true;
 }
 
 void auto_id_inventory()
 {
-    for (auto &item : you.inv)
-        if (item.defined())
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        item_def &item = you.inv[slot];
+        if (item.defined() && !fully_identified(item))
+        {
             god_id_item(item, false);
-}
-
-void do_curse_item(item_def &item, bool quiet)
-{
-    // Already cursed?
-    if (item.flags & ISFLAG_CURSED)
-        return;
-
-    if (!is_weapon(item) && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY)
-    {
-        return;
-    }
-
-    if (!quiet)
-    {
-        mprf("Your %s glows black for a moment.",
-             item.name(DESC_PLAIN).c_str());
-
-        // If we get the message, we know the item is cursed now.
-        item.flags |= ISFLAG_KNOW_CURSE;
-    }
-
-    item.flags |= ISFLAG_CURSED;
-
-    // Xom is amused by the player's items being cursed, especially if
-    // they're worn/equipped.
-    if (in_inventory(item))
-    {
-        int amusement = 50;
-
-        if (item_is_equipped(item))
-        {
-            amusement *= 2;
-
-            if (you.equip[EQ_WEAPON] == item.link)
-            {
-                // Redraw the weapon.
-                you.wield_change = true;
-            }
-
-            ash_check_bondage();
-            auto_id_inventory();
+            item_def * moved = auto_assign_item_slot(item);
+            // We moved the item to later in the pack, so don't
+            // miss what we swapped with.
+            if (moved != nullptr && moved->link > slot)
+                --slot;
         }
-
-        xom_is_stimulated(amusement);
     }
-}
-
-/**
- * Attempt to un-curse the given item.
- *
- * @param item      The item in question.
- * @param check_bondage     Whether to update the player's Ash bondage status.
- *                          (Ash ?rc delays this until later.)
- */
-void do_uncurse_item(item_def &item, bool check_bondage)
-{
-    const bool in_inv = in_inventory(item);
-    if (!item.cursed())
-    {
-        if (in_inv)
-            item.flags |= ISFLAG_KNOW_CURSE;
-        return;
-    }
-
-    if (in_inv)
-    {
-        if (you.equip[EQ_WEAPON] == item.link)
-        {
-            // Redraw the weapon.
-            you.wield_change = true;
-        }
-        item.flags |= ISFLAG_KNOW_CURSE;
-    }
-    item.flags &= (~ISFLAG_CURSED);
-
-    if (check_bondage && in_inv)
-        ash_check_bondage();
 }
 
 /**
@@ -1140,15 +1026,9 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
     case OBJ_WANDS:
-        flagset = ISFLAG_KNOW_TYPE;
-        break;
     case OBJ_STAVES:
-        flagset = ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
-        break;
     case OBJ_JEWELLERY:
-        flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-        if (jewellery_has_pluses(item))
-            flagset |= ISFLAG_KNOW_PLUSES;
+        flagset = ISFLAG_KNOW_TYPE;
         break;
     case OBJ_MISCELLANY:
         flagset = 0;
@@ -1563,7 +1443,6 @@ int wand_charge_value(int type)
         return 24;
 
     case WAND_FLAME:
-    case WAND_RANDOM_EFFECTS:
         return 32;
     }
 }
@@ -1597,8 +1476,6 @@ bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use it
-    case WAND_RANDOM_EFFECTS:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
@@ -1913,11 +1790,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
     return item_attack_skill(wpn);
 }
 
-// True if item is a staff that deals extra damage based on Evocations skill.
+// True if item is a staff that deals extra damage based on Evocations skill,
+// or has an evocations-based passive effect (staff of Wucad Mu).
 bool staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-        || is_unrandom_artefact(item, UNRAND_OLGREB))
+        || is_unrandom_artefact(item, UNRAND_OLGREB)
+        || is_unrandom_artefact(item, UNRAND_WUCAD_MU))
     {
         return true;
     }
@@ -1938,8 +1817,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     // evokers allow training.
     if (item_is_evokable(item, false, false, true)
         || item.base_type == OBJ_JEWELLERY
-           && gives_ability(item)
-        || is_unrandom_artefact(item, UNRAND_SALAMANDER))
+           && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1961,12 +1839,13 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
 
     if (item_is_evokable(item, false, false, false)
         || staff_uses_evocations(item)
-        || item.base_type == OBJ_WEAPONS && gives_ability(item)
-        || item.base_type == OBJ_WEAPONS
-           && get_weapon_brand(item) == SPWPN_SPECTRAL)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
+
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
+        skills.insert(SK_NECROMANCY);
 
     const skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING)
@@ -2222,6 +2101,8 @@ bool ring_has_stackable_effect(const item_def &item)
     case RING_WIZARDRY:
     case RING_FIRE:
     case RING_ICE:
+    case RING_WILLPOWER:
+    case RING_MAGICAL_POWER:
         return true;
 
     default:
@@ -2396,6 +2277,9 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
 bool get_armour_rampaging(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    if (is_unrandom_artefact(arm, UNRAND_SEVEN_LEAGUE_BOOTS))
+        return true;
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
@@ -2620,10 +2504,6 @@ bool gives_ability(const item_def &item)
     {
     case OBJ_WEAPONS:
         break;
-    case OBJ_JEWELLERY:
-        if (item.sub_type == RING_FLIGHT)
-            return true;
-        break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
@@ -2643,9 +2523,12 @@ bool gives_ability(const item_def &item)
         return false;
 
     // Check for evokable randart properties.
-    for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
-            return true;
+    if (artefact_property(item, ARTP_INVISIBLE)
+        || artefact_property(item, ARTP_BLINK)
+        || artefact_property(item, ARTP_BERSERK))
+    {
+        return true;
+    }
 
     // Unrands that grant an evokable ability.
     if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
@@ -2896,8 +2779,6 @@ void seen_item(const item_def &item)
     item_def& malleable_item = const_cast<item_def &>(item);
 
     malleable_item.flags |= ISFLAG_SEEN;
-    if (have_passive(passive_t::identify_items))
-        malleable_item.flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.tithe_state)
     {
         malleable_item.plus = (you_worship(GOD_ZIN)) ? TS_FULL_TITHE

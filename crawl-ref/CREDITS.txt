@@ -163,6 +163,7 @@
     Kyle Fox
     freepotion
     Chris Galardi
+    Yitao Gao
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
@@ -198,6 +199,7 @@
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
+    Nick Johnstone
     Mikko Juola
     Kurt Kartaltepe
     Dominic Kempf
@@ -217,6 +219,7 @@
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
+    Christopher Landry
     Lantier
     Maciej Lapinski
     Nikolai Lavsky
@@ -249,6 +252,7 @@
     mikee
     Nathan Mills
     Andrew Minton
+    Mintice
     Byrel Mitchell
     Yer Mivvaggah
     Shawn M Moore
@@ -288,6 +292,7 @@
     Paul Pollack
     Poroing
     Iago Porto
+    Alexander Posch
     psywombats
     pubby
     Ashley Elizabeth Raine
@@ -313,6 +318,7 @@
     Sebastian Salman
     Petri Salminen
     Sandman25
+    Sastreii
     Brett Scarborough
     Roderick Schertler
     sdynet
@@ -361,8 +367,10 @@
     Richard Wardin
     waylon531
     Steven Wheeler
+    WhiteShark
     Thomas Willem
     Evan Williams
+    Mara Williamson
     Jeremey Wilson
     wjchen
     ximxim

@@ -535,6 +535,8 @@ ancestor
 A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 they seem somehow to resemble a warrior from the distantly remembered past.
+The memory and the memorialist fight in concert, each able to fire past the
+other.
 %%%%
 ancient champion
 
@@ -633,10 +635,6 @@ bennu
 A sacred, self-created sunbird, representative of rebirth. It has ascended
 past the cycles of life and death, and calls upon aspects of both, rising forth
 from death in a burst of unholy flame.
-%%%%
-big kobold
-
-A kobold that is bigger and tougher than the ordinary kobold, and often armed.
 %%%%
 black bear
 
@@ -849,10 +847,6 @@ death knight
 
 A warrior-priest of Yredelemnul, chanting fearful supplications to its dark god.
 %%%%
-death ooze
-
-A putrid undead mass of decaying flesh that spurts pestilent slime.
-%%%%
 death scarab
 
 A hideous swarming undead insect, exuding death and decay and feeding on the
@@ -982,7 +976,7 @@ stand in its way.
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
-magic. It specializes in ice magic and necromancy.
+magic.
 %%%%
 draconian monk
 
@@ -1090,6 +1084,12 @@ emperor scorpion
 A giant scorpion with a massive barb on its tail dripping deadly venom. It is
 one of the largest arachnids known to exist.
 %%%%
+endoplasm
+
+A glob of grey sludge that has somehow developed a rudimentary awareness and
+limited motility. It periodically draws heat from its surroundings to sustain
+itself, freezing enemies unfortunate enough to be adjacent at the time.
+%%%%
 entropy weaver
 
 A gaunt humanoid with flaking, pale chitin. Its spindly limbs are capable of
@@ -1108,10 +1108,6 @@ scythe-like blades.
 eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.
-%%%%
-eye of draining
-
-A hovering horror that waxes strong on magic.
 %%%%
 faun
 
@@ -1324,10 +1320,6 @@ An ancient undead sorcerer, exhumed by the living divines Sheza and Sargol and
 forced to labour night and day to anchor them to the world. Even after the fall
 of the divine twins, it works to resurrect its fallen masters.
 %%%%
-halfling
-
-A humanoid of diminutive stature.
-%%%%
 harpy
 
 A bird-like creature with a human face that roams the coasts endlessly, feared
@@ -1448,6 +1440,11 @@ ice statue
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
+ironbound frostheart
+
+An emaciated warrior-mage, bound to guard long-coveted treasures. It calls
+forth deadly frost from its surrounds, freezing foes that are next to walls.
+%%%%
 iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
@@ -1492,15 +1489,26 @@ iron troll
 A great troll, mighty of limb and plated with thick scales that resemble
 lightly rusted iron, especially in their hardness.
 %%%%
-ironbrand convoker
+ironbound thunderhulk
+
+A brutish figure, hastily armoured in scraps of leather and metal to combat
+a fearsome intruder. On its back is an antique, arcane 'lightning rod', which
+calls down thunder on distant foes, although it cannot hit nearby targets.
+%%%%
+ironbound convoker
 
 A guardian mage clad in pattern-etched armour. It can recite words of power
 to summon distant allies and imbue them with unnatural might.
 %%%%
-ironheart preserver
+ironbound preserver
 
 A towering, muscular figure, capable of safeguarding its allies by selflessly
 accepting a portion of the injuries inflicted upon them.
+%%%%
+ironbound beastmaster
+
+A cruel and wild brute who growls in the language of the untamed. It conditions
+beasts for combat with nets and malice, and spurs them to fight its foes.
 %%%%
 jackal
 
@@ -1551,6 +1559,11 @@ A small, greyish creature with the look and temperament of a feral dog. No one
 knows for sure where kobolds come from, but ancient demon-gods, evil spirits,
 and meddling wizards have all been suggested as culprits.
 %%%%
+kobold brigand
+
+A kobold that is bigger and tougher than the ordinary kobold, with a penchant
+for underhanded tactics.
+%%%%
 kobold demonologist
 
 A kobold in league with demonic powers, able to call forth beings from the
@@ -1580,10 +1593,6 @@ lemure
 
 An accursed soul magically bound to hellish servitude for the highest bidder.
 If its master is slain, it will be freed, departing this realm with gratitude.
-%%%%
-leopard gecko
-
-A brightly-coloured lizard with huge, sharp teeth.
 %%%%
 lich
 
@@ -1782,11 +1791,6 @@ oklob sapling
 A young oklob plant. It is more fragile than the mature specimen, but the acid
 it sprays is just as deadly.
 %%%%
-ooze
-
-A glob of grey sludge that has somehow developed a rudimentary awareness and
-limited motility.
-%%%%
 ophan
 
 A creature from the heavenly realms. It consists of a wheel within a wheel, and
@@ -1944,13 +1948,6 @@ quasit
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws
 are engraved with cursing runes that stiffen muscles.
 %%%%
-queen ant
-
-A bloated ant, covered in thick chitinous armour and possessing a strong
-poison. It is the sovereign of the colony and, when not disturbed, is
-constantly laying eggs. Once capable of flight, it has long since shed its
-wings; only rudimentary stubs remain.
-%%%%
 queen bee
 
 A ruler of a swarm of bees, even larger and more dangerous than its many
@@ -1961,6 +1958,11 @@ quicksilver dragon
 A long and sinuous dragon, seemingly more neck and tail than anything else. Its
 skin shines like molten mercury, magical energies arc from its pointed snout,
 and it moves with terrifying swiftness.
+%%%%
+quicksilver ooze
+
+A thin coating of shining, reflective goo, covering a great area and rushing
+forward with startling speed. Enchantments slide off it like water.
 %%%%
 quokka
 
@@ -2023,6 +2025,12 @@ river rat
 A rodent with hair of a most peculiar green colour, and a powerful bite. It
 tends to form great swarms with its kin.
 %%%%
+rockslime
+
+An oozing avalanche, scouring the ground beneath it as it rumbles forward.
+It consumes only the metal and bone from its victims, using them to reinforce
+itself even further.
+%%%%
 the Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
@@ -2047,6 +2055,12 @@ salamander mystic
 
 A member of the salamander's scholarly caste, possessed of lesser size and
 strength, but wise in the ways of magic.
+%%%%
+salamander tyrant
+
+An intimidating volcano lord. It commands the magma of its realm as an
+extension of its body, and the majesty of its gaze can weaken even the proudest
+challenger.
 %%%%
 saltling
 
@@ -2194,12 +2208,6 @@ snapping turtle
 
 A belligerent testudine with an armoured carapace. Its neck is surprisingly
 extensible and can reach out and bite from afar.
-%%%%
-soldier ant
-
-A tough ant with a disproportionately large head, strong mandibles, and a
-vicious sting capable of injecting painful venom. It is a soldier, and thus
-tasked with protecting the colony from invaders.
 %%%%
 soul eater
 
@@ -2585,12 +2593,6 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles. It roams the dungeon
 in search of prey, which it kills with its deadly venom.
-%%%%
-worker ant
-
-A wingless black insect with sharp mandibles capable of injecting a deadly
-poison. It is a worker, and thus tasked with gathering food — any living being
-it encounters is a potential meal.
 %%%%
 worldbinder
 
@@ -2995,6 +2997,11 @@ sulfuric acid blob
 vault guard captain
 
 <vault guard>
+%%%%
+ooze
+
+A glob of grey sludge that has somehow developed a rudimentary awareness and
+limited motility.
 %%%%
 ### Meatsprint
 bag of meat

@@ -173,7 +173,8 @@ static void _decrement_petrification(int delay)
     {
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
-        // flesh when not petrified
+        // flesh when not petrified. (Unfortunately, species::skin_name doesn't
+        // really work here..)
         const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
                                             "flesh" :
                                             get_form()->flesh_equivalent;
@@ -583,7 +584,8 @@ static void _decrement_durations()
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != transformation::bat
+    if (you.get_mutation_level(MUT_VAMPIRISM) < 2
+        || you.form != transformation::bat
         || you.transform_uncancellable)
     {
         if (form_can_fly()
@@ -699,7 +701,6 @@ static void _decrement_durations()
         else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             you.duration[DUR_FLIGHT] = 0;
             you.props.erase(EMERGENCY_FLIGHT_KEY);
         }
@@ -784,7 +785,7 @@ static void _decrement_durations()
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
-        && in_good_standing(GOD_HEPLIAKLQANA)
+        && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
     {
         _try_to_respawn_ancestor();
@@ -834,24 +835,21 @@ static void _update_equipment_attunement_by_health()
     vector<string> eq_list;
     bool plural = false;
 
-    if (!you.activated[EQ_AMULET] && you.wearing(EQ_AMULET, AMU_REGENERATION))
-    {
-        eq_list.push_back("amulet");
-        you.activated.set(EQ_AMULET);
-    }
-
-    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_WORN; ++slot)
     {
         if (you.melded[slot] || you.equip[slot] == -1 || you.activated[slot])
             continue;
         const item_def &arm = you.inv[you.equip[slot]];
-        if (armour_type_prop(arm.sub_type, ARMF_REGENERATION)
-            || is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION))
+        if (is_artefact(arm) && artefact_property(arm, ARTP_REGENERATION)
+            || arm.base_type == OBJ_ARMOUR
+               && armour_type_prop(arm.sub_type, ARMF_REGENERATION)
+            || arm.is_type(OBJ_JEWELLERY, AMU_REGENERATION))
         {
-            eq_list.push_back(
+            eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
+                slot == EQ_AMULET ? "amulet" :
                 slot != EQ_BODY_ARMOUR ?
                     item_slot_name(static_cast<equipment_type>(slot)) :
-                    is_artefact(arm) ? get_artefact_name(arm) : "armour");
+                    "armour");
 
             if (slot == EQ_GLOVES || slot == EQ_BOOTS)
                 plural = true;
@@ -992,8 +990,6 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == transformation::wisp && !you.stasis())
-            uncontrolled_blink();
     }
 
     abyss_maybe_spawn_xp_exit();
@@ -1019,7 +1015,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

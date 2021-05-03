@@ -28,11 +28,9 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          ["No God"]="amulet of faith ident:type",
          Ashenzari="ring of see invisible ident:type",
          Beogh="orc corpse",
-         Cheibriados="potion of haste ident:type q:2-4 /\
-              good_item quick blade",
+         Cheibriados="potion of haste ident:type q:2-4",
          Dithmenos="scroll of noise ident:type q:2-4",
          Elyvilon="book of Necromancy / book of Death / book of Unlife",
-         Fedhas="randbook owner:Lugonu spells:Recall numspells:1",
          Gozag="randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
          Kikubaaqudgha="rat corpse / kobold corpse",
          ["the Shining One"]="good_item " .. weapon .. " ego:pain ident:type /\

@@ -60,15 +60,14 @@ function callback.oka_populate_cages (data, triggerable, triggerer, marker, ev)
   -- These are Okawaru's warriors, depth-weighted as though they are 9s.
   local monsters = ""
   if you.absdepth() < 11 then
-      monsters = "orc warrior w:15 / two-headed ogre w:5 / cyclops w:10"
-                 .. " / centaur warrior w:10 / naga warrior w:10"
+      monsters = "orc warrior w:15 / two-headed ogre w:5 / cyclops"
+                 .. " / centaur warrior / naga warrior"
   elseif you.absdepth() < 16 then
-      monsters = "orc knight w:15 / two-headed ogre w:5 / cyclops w:10"
-                 .. " / centaur warrior w:10 / naga warrior w:10"
+      monsters = "orc knight w:15 / two-headed ogre w:5 / cyclops"
+                 .. " / centaur warrior / naga warrior"
   else
-     monsters = "orc knight w:15 / stone giant w:10 / fire giant w:10"
-                 .. " / frost giant w:10 / centaur warrior w:10"
-                 .. " / naga warrior w:10"
+      monsters = "orc knight w:15 / stone giant / fire giant / frost giant"
+                 .. " / titan w:1 / naga warrior"
   end
   for slave in iter.slave_iterator("mons_spawn", 1) do
     local dude = dgn.create_monster(slave.x, slave.y, monsters)

@@ -61,12 +61,12 @@ MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
          bullet / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
-MONS:    kobold; club / big kobold w:1; club | short sword w:2 / nothing
+MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW.
 SUBST:   5 = 2 1:2 .:24
 SHUFFLE: ABCD
 KITEM:   D = gold
-KMONS:   D = hobgoblin / kobold / gnoll / big kobold
+KMONS:   D = hobgoblin / kobold / gnoll
 SUBST:   ABC = 2
 SHUFFLE: 12 / 34
 MAP
@@ -433,7 +433,7 @@ ENDMAP
 NAME:   minmay_haunted_quarter
 ORIENT: northwest
 DEPTH:  Depths, !Depths:$
-KMONS:  w = wraith / freezing wraith / shadow wraith / phantasmal warrior / \
+KMONS:  w = shadow wraith / phantasmal warrior / \
             flayed ghost / nothing w:950
 KFEAT:  w = w
 MAP
@@ -680,8 +680,8 @@ MARKER: z = lua:fog_machine { \
 MONS:   gargoyle, earth elemental, air elemental
 MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
 KMONS:  A = wizard
-KMONS:  B = orc sorcerer
-KMONS:  C = ogre mage
+KMONS:  B = deep elf pyromancer
+KMONS:  C = deep elf zephyrmancer
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich
 KMONS:  F = ancient lich / Boris w:2, ancient lich / dread lich
@@ -874,7 +874,7 @@ NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
 DEPTH:  Depths, !Depths:$
-MONS:   flayed ghost w:5 / phantasmal warrior w:5 / wraith / shadow / shadow wraith
+MONS:   flayed ghost w:5 / phantasmal warrior w:5 / shadow wraith / eidolon
 MONS:   ghost moth, Jory, vampire knight
 MONS:   vampire mosquito
 NSUBST: A = 3:v / *:+, B = 3:v / *:+
@@ -1138,25 +1138,19 @@ NAME:    evilmike_iron_armoury
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  southeast
 DEPTH:   D:11-, Depths
-: if you.absdepth() < 16 then
+: if you.in_branch("D") then
 MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
 MONS:    orc warrior w:20 / centaur warrior
 MONS:    orc warrior, patrolling orc knight w:8 / patrolling orc warlord w:2
-: elseif you.absdepth() < 21 then
-MONS:    orc warrior w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         centaur warrior w:4
-MONS:    orc knight w:12 / deep elf knight w:3 / deep elf archer w:3 / \
-         centaur warrior w:4 / yaktaur captain w:2
-MONS:    orc knight, patrolling orc warlord
-: elseif you.absdepth() < 26 then
+: elseif you.in_branch("Depths") and you.depth() < 4 then
+MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:5 / \
+         / yaktaur captain w:2
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         centaur warrior w:4 / yaktaur captain w:2
-MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         yaktaur captain w:6
+         stone giant w:6
 MONS:    orc warlord, patrolling deep elf blademaster
 : else
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
-         yaktaur captain w:6
+         stone giant w:6
 MONS:    orc warlord w:4 / deep elf blademaster w:1 / \
          deep elf master archer w:3
 MONS:    deep elf blademaster, patrolling draconian knight
@@ -1524,7 +1518,7 @@ ORIENT: northeast
 TAGS:   no_monster_gen transparent
 DEPTH:  D:7-14
 KFEAT:  W = open_sea
-MONS:   ogre, orc warrior, gnoll shaman, centaur, big kobold
+MONS:   ogre, orc warrior, gnoll shaman, centaur, kobold brigand
 KMONS:  8 = orc warrior band
 KMONS:  9 = gnoll shaman band
 KMONS:  p = plant
@@ -1573,7 +1567,7 @@ NAME:   kennysheep_kobold_camp
 ORIENT: north
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-9
-MONS:   big kobold, kobold
+MONS:   kobold brigand, kobold
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
@@ -1729,7 +1723,7 @@ ORIENT: north
 TAGS:   no_monster_gen
 DEPTH:  D:6-9
 MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
-        big kobold / orc warrior w:5 / ogre / gnoll sergeant, \
+        kobold brigand / orc warrior w:5 / ogre / gnoll sergeant, \
         orc priest / orc wizard / gnoll shaman / centaur
 NSUBST: . = 4:2 / 20:1 / 5:3
 NSUBST: . = 8:% / 2:* / 10:$
@@ -1800,7 +1794,7 @@ NAME:    kennysheep_kobold_grotto
 DEPTH:   D:13-, !D:$
 TAGS:    no_monster_gen
 ORIENT:  northwest
-MONS:    big kobold, patrolling kobold demonologist, kobold, plant
+MONS:    kobold brigand, patrolling kobold demonologist, kobold, plant
 MONS:    lesser demon, obsidian statue
 KMONS:   g = bush
 SHUFFLE: !'
@@ -1808,7 +1802,7 @@ NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
 NSUBST:  ' = 2:C / *:.
 NSUBST:  . = 10:3 / 4:5
 SUBST:  .z = .:200 W:35 4:20
-: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
+: dgn.delayed_decay(_G, 'C', 'spriggan corpse / spriggan skeleton')
 KPROP:  -C = bloody
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2144,7 +2138,7 @@ NAME:    regret_index_dithmenos_brocken_genspenst
 TAGS:    no_monster_gen no_item_gen no_rotate patrolling
 DEPTH:   Depths, !Depths:$, Tar, !Tar:$
 ORIENT:  south
-MONS:    shadow, boggart, rakshasa, shadow wraith
+MONS:    shadow wraith / nothing, vampire mage / nothing, rakshasa, shadow wraith
 MONS:    vampire knight, shadow demon, shadow dragon
 KMONS:   9 = glowing shapeshifter / spriggan defender / deep elf annihilator
 KMONS:   8 = bone dragon / reaper / doom hound
@@ -2278,7 +2272,7 @@ NAME: cheibrodos_cascadia
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 DEPTH: Depths
 ORIENT: northwest
-MONS: wizard, ice devil, ice dragon , frost giant, blizzard demon, lich
+MONS: wizard, freezing wraith, ice dragon, frost giant, blizzard demon, lich
 KPROP: -Tp =  no_tele_into
 KMONS: I = ice statue
 KMONS: " = ancient lich / dread lich

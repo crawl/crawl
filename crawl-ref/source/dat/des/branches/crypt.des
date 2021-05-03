@@ -515,30 +515,6 @@ cccc+c+cccc
 ENDMAP
 
 ##############################################################################
-# death oozes - they're sort of like garden slugs
-NAME:   minigarden_bobbens
-TAGS:   transparent
-DEPTH:  Crypt
-MONS:   death ooze
-KFEAT:  f = .
-KMONS:  f = withered plant
-NSUBST: p = 2:f / * = f:2 .:1
-NSUBST: 1 = 1:3 / * = 1:3 .:1
-MAP
-..........
-..p1pp.p..
-.pp.pp..p.
-.ppp.1.p..
-..p1pp.p..
-...pppp1..
-.p.pfffp..
-..ppfffp..
-..p.1p1p..
-.1.p..pp..
-..........
-ENDMAP
-
-##############################################################################
 # Lich vault
 NAME:  weyrava_lich_vault
 DEPTH: Crypt
@@ -1014,6 +990,7 @@ SUBST:   HIJKL = t, M = ., F = 1:30 0
 NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
+COLOUR:  t = brown
 MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
@@ -1814,16 +1791,18 @@ ORIENT: encompass
 PLACE:  Crypt:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate
 SUBST:  T = t.
+SUBST:  t = ttttu
 SUBST:  v = cccc.-
-COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+COLOUR: t = w:5 lightgrey / brown
 COLOUR: x'D = white
 COLOUR: G = lightgrey
 COLOUR: "2 = brown
 NSUBST: . = 68:p / *:.
 KMONS:  p = withered plant
-FTILE:  .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
+FTILE:  .tuT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
 FTILE:  '_D = FLOOR_SANDSTONE
 TILE:   x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
+KFEAT:  u = petrified_tree
 SUBST:  x: c, -'": ., ?: |
 SUBST:  D = +, d = cc+
 NSUBST: * = 12:* / 12:% / *:$

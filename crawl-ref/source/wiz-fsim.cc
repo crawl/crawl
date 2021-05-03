@@ -147,7 +147,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
             defend ? "Defense" : "Attack",
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
             iter_limit,
@@ -157,7 +157,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 static void _write_you(FILE * o)
 {
     fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
-            species_name(you.species).c_str(),
+            species::name(you.species).c_str(),
             get_job_name(you.char_class),
             you.experience_level,
             you.strength(),
@@ -223,7 +223,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
     {
         if (!_equip_weapon(weapon, abort))
         {
-            int item = create_item_named("mundane not_cursed ident:all " + weapon,
+            int item = create_item_named("mundane ident:all " + weapon,
                                          you.pos(), &error);
             if (item == NON_ITEM)
                 return false;
@@ -364,6 +364,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     const coord_def you_start_pos = you.pos();
 
     unwind_var<int> mon_hp(mon.hit_points, mon.max_hit_points);
+    unwind_var<int> mon_heads(mon.num_heads, mon.num_heads);
     // 999 is arbitrary
     unwind_var<int> max_hp_override(you.hp_max, 999);
     unwind_var<int> hp_override(you.hp, you.hp_max);

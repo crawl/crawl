@@ -93,7 +93,7 @@ deck_archetype deck_of_summoning =
     { CARD_ELEMENTS,        5 },
     { CARD_SUMMON_DEMON,    5 },
     { CARD_SUMMON_WEAPON,   5 },
-    { CARD_SUMMON_FLYING,   5 },
+    { CARD_SUMMON_BEE,      5 },
     { CARD_RANGERS,         5 },
     { CARD_ILLUSION,        5 },
 };
@@ -160,7 +160,7 @@ const char* card_name(card_type card)
     case CARD_ELEMENTS:        return "the Elements";
     case CARD_SUMMON_DEMON:    return "the Pentagram";
     case CARD_SUMMON_WEAPON:   return "the Dance";
-    case CARD_SUMMON_FLYING:   return "Foxfire";
+    case CARD_SUMMON_BEE:      return "the Swarm";
     case CARD_RANGERS:         return "the Rangers";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_CLOUD:           return "the Cloud";
@@ -942,6 +942,7 @@ static int _get_power_level(int power)
 
     // other functions in this file will break if this assertion is violated
     ASSERT(power_level >= 0 && power_level <= 2);
+    dprf("power level: %d", power_level);
     return power_level;
 }
 
@@ -1167,45 +1168,8 @@ static void _elixir_card(int power)
 {
     int power_level = _get_power_level(power);
 
-    you.duration[DUR_ELIXIR_HEALTH] = 0;
-    you.duration[DUR_ELIXIR_MAGIC] = 0;
-
-    switch (power_level)
-    {
-    case 0:
-        if (coinflip())
-            you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
-        break;
-    case 1:
-        if (you.hp * 2 < you.hp_max)
-            you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
-        else
-            you.set_duration(DUR_ELIXIR_MAGIC, 10);
-        break;
-    default:
-        you.set_duration(DUR_ELIXIR_HEALTH, 10);
-        you.set_duration(DUR_ELIXIR_MAGIC, 10);
-    }
-
-    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-        mpr("You begin rapidly regenerating health and magic.");
-    else if (you.duration[DUR_ELIXIR_HEALTH])
-        mpr("You begin rapidly regenerating.");
-    else
-        mpr("You begin rapidly regenerating magic.");
-
-    apply_visible_monsters([=](monster& mon)
-    {
-        if (mon.wont_attack())
-        {
-            const int hp = mon.max_hit_points / (4 - power_level);
-            if (mon.heal(hp + random2avg(hp, 2)))
-               simple_monster_message(mon, " is healed.");
-        }
-        return true;
-    });
+    you.set_duration(DUR_ELIXIR, 1 + 3 * power_level + random2(3));
+    mpr("You begin rapidly regenerating health and magic.");
 }
 
 // Special case for *your* god, maybe?
@@ -1362,43 +1326,13 @@ static void _summon_dancing_weapon(int power)
     mon->ghost_demon_init();
 }
 
-static void _summon_flying(int power)
+static void _summon_bee(int power)
 {
     const int power_level = _get_power_level(power);
-
-    const monster_type flytypes[] =
-    {
-        MONS_WYVERN, MONS_KILLER_BEE,
-        MONS_VAMPIRE_MOSQUITO, MONS_HORNET
-    };
-    const int num_flytypes = ARRAYSZ(flytypes);
-
-    // Choose what kind of monster.
-    monster_type result;
-    const int how_many = 2 + random2(3) + power_level * 3;
-    bool hostile_invis = false;
-
-    do
-    {
-        result = flytypes[random2(num_flytypes - 2) + power_level];
-    }
-    while (is_good_god(you.religion) && result == MONS_VAMPIRE_MOSQUITO);
+    const int how_many = 1 + random2((power_level + 1) * 3);
 
     for (int i = 0; i < how_many; ++i)
-    {
-        const bool hostile = one_chance_in(power_level + 4);
-
-        create_monster(
-            mgen_data(result,
-                      hostile ? BEH_HOSTILE : BEH_FRIENDLY, you.pos(), MHITYOU,
-                      MG_AUTOFOE).set_summoned(&you, 3, 0));
-
-        if (hostile && mons_class_flag(result, M_INVIS) && !you.can_see_invisible())
-            hostile_invis = true;
-    }
-
-    if (hostile_invis)
-        mpr("You sense the presence of something unfriendly.");
+        _friendly(MONS_KILLER_BEE, 3);
 }
 
 static void _summon_rangers(int power)
@@ -1698,7 +1632,7 @@ void card_effect(card_type which_card,
     case CARD_ELEMENTS:         _elements_card(power); break;
     case CARD_RANGERS:          _summon_rangers(power); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power); break;
-    case CARD_SUMMON_FLYING:    _summon_flying(power); break;
+    case CARD_SUMMON_BEE:       _summon_bee(power); break;
     case CARD_TORMENT:          _torment_card(); break;
     case CARD_CLOUD:            _cloud_card(power); break;
     case CARD_STORM:            _storm_card(power); break;

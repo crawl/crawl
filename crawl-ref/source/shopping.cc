@@ -270,9 +270,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
-        if (item_known_cursed(item))
-            valued -= 30;
-
         break;
 
     case OBJ_MISSILES:          // ammunition
@@ -336,7 +333,6 @@ unsigned int item_value(item_def item, bool ident)
             const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
-            case SPARM_RUNNING:
             case SPARM_ARCHMAGI:
             case SPARM_RESISTANCE:
                 valued += 250;
@@ -393,9 +389,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
-        if (item_known_cursed(item))
-            valued -= 30;
-
         break;
 
     case OBJ_WANDS:
@@ -428,7 +421,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
@@ -531,7 +523,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 35;
                 break;
 
-            case SCR_REMOVE_CURSE:
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
@@ -547,7 +538,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_NOISE:
-            case SCR_RANDOM_USELESSNESS:
                 valued += 10;
                 break;
             }
@@ -555,16 +545,12 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_JEWELLERY:
-        if (item_known_cursed(item))
-            valued -= 30;
-
         if (!item_type_known(item))
             valued += 50;
         else
         {
             // Variable-strength rings.
-            if (item_ident(item, ISFLAG_KNOW_PLUSES)
-                && jewellery_type_has_plusses(item.sub_type))
+            if (jewellery_type_has_plusses(item.sub_type))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)
@@ -637,15 +623,9 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
                     break;
-
-                case AMU_INACCURACY:
-                    valued -= 300;
-                    break;
-                    // got to do delusion!
                 }
             }
 
@@ -684,6 +664,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
+        case MISC_XOMS_CHESSBOARD:
         default:
             valued += 200;
         }
@@ -775,7 +756,6 @@ bool is_worthless_consumable(const item_def &item)
         case SCR_CURSE_JEWELLERY:
 #endif
         case SCR_NOISE:
-        case SCR_RANDOM_USELESSNESS:
             return true;
         default:
             return false;
@@ -837,12 +817,12 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
     origin_purchased(item);
 
-    if (shoptype_identifies_stock(shop.type))
+    if (shoptype_identifies_stock(shop.type)
+        || item_type_is_equipment(item.base_type))
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item, true);
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        identify_item(item);
     }
 
     // Shopkeepers will place goods you can't carry outside the shop.
@@ -871,16 +851,16 @@ static string _hyphenated_letters(int how_many, char first)
 
 enum shopping_order
 {
-    ORDER_DEFAULT,
+    ORDER_TYPE,
+    ORDER_DEFAULT = ORDER_TYPE,
     ORDER_PRICE,
     ORDER_ALPHABETICAL,
-    ORDER_TYPE,
     NUM_ORDERS
 };
 
 static const char * const shopping_order_names[NUM_ORDERS] =
 {
-    "default", "price", "name", "type"
+    "type", "price", "name"
 };
 
 static shopping_order operator++(shopping_order &x)
@@ -986,6 +966,7 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     set_tag("shop");
 
     init_entries();
+    resort();
 
     update_help();
 
@@ -1186,13 +1167,27 @@ void ShopMenu::resort()
 {
     switch (order)
     {
-    case ORDER_DEFAULT:
-        sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b)
-             {
-                 return a->data < b->data;
-             });
+    case ORDER_TYPE:
+    {
+        const bool id = shoptype_identifies_stock(shop.type);
+        // Using a map to sort reduces the number of item->name() calls.
+        multimap<const string, MenuEntry *> list;
+        for (const auto entry : items)
+        {
+            const auto item = dynamic_cast<ShopEntry*>(entry)->item;
+            if (is_known_artefact(*item))
+                list.insert({item->name(DESC_QUALNAME, false, id), entry});
+            else
+            {
+                list.insert({item->name(DESC_DBNAME, false, id) + " "
+                     + item->name(DESC_PLAIN, false, id), entry});
+            }
+        }
+        items.clear();
+        for (auto &entry : list)
+            items.push_back(entry.second);
         break;
+    }
     case ORDER_PRICE:
         sort(begin(items), end(items),
              [this](MenuEntry* a, MenuEntry* b)
@@ -1208,18 +1203,6 @@ void ShopMenu::resort()
                  const bool id = shoptype_identifies_stock(shop.type);
                  return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
                         < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
-             });
-        break;
-    case ORDER_TYPE:
-        sort(begin(items), end(items),
-             [](MenuEntry* a, MenuEntry* b) -> bool
-             {
-                 const auto ai = dynamic_cast<ShopEntry*>(a)->item;
-                 const auto bi = dynamic_cast<ShopEntry*>(b)->item;
-                 if (ai->base_type == bi->base_type)
-                     return ai->sub_type < bi->sub_type;
-                 else
-                     return ai->base_type < bi->base_type;
              });
         break;
     case NUM_ORDERS:
@@ -1420,11 +1403,11 @@ string shop_type_name(shop_type type)
             return "Armour";
         case SHOP_JEWELLERY:
             return "Jewellery";
-        case SHOP_EVOKABLES:
-            return "Gadget";
         case SHOP_BOOK:
             return "Book";
 #if TAG_MAJOR_VERSION == 34
+        case SHOP_EVOKABLES:
+            return "Gadget";
         case SHOP_FOOD:
             return "Removed Food";
 #endif
@@ -1524,10 +1507,12 @@ static const char *shop_types[] =
     "antique armour",
     "antiques",
     "jewellery",
-    "gadget",
+#if TAG_MAJOR_VERSION == 34
+    "removed gadget",
+#endif
     "book",
 #if TAG_MAJOR_VERSION == 34
-    "food",
+    "removed food",
 #endif
     "distillery",
     "scroll",
@@ -1541,6 +1526,10 @@ static const char *shop_types[] =
  */
 shop_type str_to_shoptype(const string &s)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (s == "removed gadget" || s == "removed food")
+        return SHOP_UNASSIGNED;
+#endif
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
 
@@ -2105,7 +2094,7 @@ formatted_string ShoppingListMenu::calc_title()
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
     fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s, total %d gold",
+    fs.cprintf("%d %s%s, total cost %d gp",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1 ? "s" : "",
                 total_cost);
@@ -2467,9 +2456,8 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return desc;
 }
 
-// Item name without curse-status or inscription.
+// Item name without inscription.
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
-    return item.name(DESC_PLAIN, false, ident, false, false,
-                     ISFLAG_KNOW_CURSE);
+    return item.name(DESC_PLAIN, false, ident, false, false);
 }

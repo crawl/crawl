@@ -96,6 +96,7 @@ public:
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
+    virtual bool can_burrow() const = 0;
 
     virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
             bool is_habitable(const coord_def &pos) const;
@@ -194,7 +195,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate(bool temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool can_bleed(bool allow_tran = true) const = 0;
+    virtual bool can_bleed(bool temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow, bool allow_immobile = true) = 0;
@@ -269,9 +270,6 @@ public:
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded();
     virtual bool missile_repulsion() const = 0;
-    virtual void ablate_repulsion()
-    {
-    }
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;
@@ -283,7 +281,7 @@ public:
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness(bool temp = true) const = 0;
-    virtual bool undead_or_demonic() const = 0;
+    virtual bool undead_or_demonic(bool temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
@@ -321,7 +319,6 @@ public:
                          vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
     virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
-    virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
@@ -333,10 +330,10 @@ public:
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
-    virtual int evokable_invis(bool calc_unid = true) const;
+    virtual bool evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
-    virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int equip_flight(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
     virtual bool rampaging(bool calc_unid = true, bool items = true) const;
 
@@ -344,6 +341,9 @@ public:
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const = 0;
     virtual bool ground_level() const;
+
+    virtual bool is_dragonkind() const;
+    virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
@@ -366,6 +366,8 @@ public:
     virtual int halo_radius() const = 0;
     // Silence radius.
     virtual int silence_radius() const = 0;
+    // Demonspawn silence radius
+    virtual int demon_silence_radius() const = 0;
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
@@ -423,7 +425,8 @@ public:
                                         bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender, bool direct) const;
+    bool can_constrict(const actor* defender, bool direct,
+                       bool engulf = false) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
     void accum_has_constricted();
@@ -435,7 +438,7 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(bool direct) const = 0;
     virtual bool constriction_does_damage(bool direct) const = 0;
-    virtual bool clear_far_engulf() = 0;
+    virtual bool clear_far_engulf(bool force = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();

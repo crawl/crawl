@@ -200,7 +200,7 @@ ENDMAP
 
 NAME:   sprint2_early_9
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   worker ant
+MONS:   scorpion
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -248,13 +248,12 @@ ENDMAP
 
 NAME:   sprint2_shoproom
 TAGS:   sprint2_shoproom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-NSUBST: a = 1:b / 1:c / 2:d / 2:e / 1:f / 1:g / 2:h / 1:i / *:a
+NSUBST: a = 1:b / 1:c / 2:d / 2:e / 1:f / 2:h / 1:i / *:a
 KFEAT:  a = any shop
 KFEAT:  b = book shop
 KFEAT:  c = antique weapon shop
 KFEAT:  d = antique armour shop
 KFEAT:  e = distillery shop
-KFEAT:  g = gadget shop
 KFEAT:  h = jewellery shop
 KFEAT:  i = scroll shop
 MAP
@@ -544,7 +543,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_1
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   soldier ant
+MONS:   water moccasin
 KITEM:  $ = gold q:81
 MAP
 11

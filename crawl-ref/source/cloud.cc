@@ -291,7 +291,7 @@ static const cloud_data clouds[] = {
       true,                                       // opacity
     },
     // CLOUD_EMBERS,
-    { "smoldering embers", "embers",
+    { "smouldering embers", "embers",
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
@@ -448,7 +448,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
-        if (!feat_is_tree(env.grid(*ai)) || is_temp_terrain(*ai)
+        if (!feat_is_flammable(env.grid(*ai)) || is_temp_terrain(*ai)
             || x_chance_in_y(19, 20))
         {
             continue;
@@ -626,18 +626,7 @@ void manage_clouds()
         }
 #endif
 
-        // This was initially 40, but that was far too spammy.
-        if (cloud.type == CLOUD_STORM
-            && x_chance_in_y(you.time_taken, 400) && !actor_at(cloud.pos))
-        {
-            const bool you_see = you.see_cell(cloud.pos);
-            if (you_see && !you_worship(GOD_QAZLAL))
-                mpr("Lightning arcs down from a storm cloud!");
-            noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
-                  you_see || you_worship(GOD_QAZLAL) ? nullptr
-                  : "You hear a mighty clap of thunder!");
-        }
-        else if (cloud.type == CLOUD_SPECTRAL)
+        if (cloud.type == CLOUD_SPECTRAL)
             _handle_spectral_cloud(cloud);
 
         _cloud_interacts_with_terrain(cloud);
@@ -799,10 +788,10 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     const monster * const mons = monster_at(ctarget);
 
-    // Fedhas protects plants from damaging clouds placed by the player.
-    if (agent
-        && agent->deity() == GOD_FEDHAS
-        && fedhas_protects(mons)
+    // Fedhas protects plants from damaging clouds.
+    // XX demonic guardians? This logic mostly doesn't apply because protected
+    // monsters are also cloud immune, mostly
+    if (god_protects(agent, mons)
         && !actor_cloud_immune(*mons, cl_type))
     {
         return;
@@ -969,11 +958,11 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_MEPHITIC:
             return act.res_poison() > 0 || act.is_unbreathing();
         case CLOUD_POISON:
-            return act.res_poison() > 0 || act.is_unbreathing();
+            return act.res_poison() > 0;
         case CLOUD_STEAM:
             return act.res_steam() > 0;
         case CLOUD_MIASMA:
-            return act.res_miasma() || act.is_unbreathing();
+            return act.res_miasma();
         case CLOUD_PETRIFY:
             return act.res_petrify();
         case CLOUD_SPECTRAL:
@@ -1007,11 +996,11 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     const bool player = act.is_player();
 
     if (!player
-        && (you_worship(GOD_FEDHAS)
-            && fedhas_protects(act.as_monster())
+        && (god_protects(act.as_monster())
             || testbits(act.as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
-        && (act.as_monster()->friendly() || act.as_monster()->neutral()))
+        && (act.as_monster()->friendly() || act.as_monster()->neutral())
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
     {
         return true;
     }
@@ -1335,11 +1324,6 @@ static int _actor_cloud_damage(const actor *act,
             mpr("Lightning from the thunderstorm strikes something you cannot "
                 "see.");
         }
-        noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), act->pos(),
-              act->is_player() || you.see_cell(act->pos())
-              || you_worship(GOD_QAZLAL)
-                ? nullptr
-                : "You hear a clap of thunder!");
 
         return lightning_dam;
 

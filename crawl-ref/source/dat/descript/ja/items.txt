@@ -536,11 +536,6 @@ scroll of magic mapping
 
 この巻き物は読んだ者の周辺の地形を明らかにする。
 %%%%
-scroll of random uselessness
-
-この巻き物は何らかの機能を持っているかのように振る舞い、 uselessness of this
-scroll by the sense of achievement you get from getting it to work at all.
-%%%%
 scroll of remove curse
 
 この巻物を読み上げると、あなたの装備中のアイテムから呪いが取り除かれる。
@@ -630,8 +625,4 @@ wand of digging
 wand of polymorph
 
 対象を別の形態に変化させる魔法の道具だ。特に不定形の生物に対して有効だ。
-%%%%
-wand of random effects
-
-変化に富んだ効果を引き起こす魔法の道具だ。
 %%%%

@@ -167,7 +167,7 @@ static void _escape_water_hold(monster& mons)
 {
     if (mons.has_ench(ENCH_WATER_HOLD))
     {
-        simple_monster_message(mons, " slips free of the water.");
+        simple_monster_message(mons, " is no longer engulfed.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
@@ -459,7 +459,7 @@ static void _set_mons_move_dir(const monster* mons,
     ASSERT(delta);
 
     // Some calculations.
-    if ((mons_class_flag(mons->type, M_BURROWS)
+    if ((mons->can_burrow()
          || _mons_can_cast_dig(mons, false))
         && mons->foe == MHITYOU)
     {
@@ -954,22 +954,9 @@ static bool _handle_reaching(monster* mons)
     }
 
     const coord_def foepos(foe->pos());
-    const coord_def delta(foepos - mons->pos());
-    const int grid_distance(delta.rdist());
-    const coord_def first_middle(mons->pos() + delta / 2);
-    const coord_def second_middle(foepos - delta / 2);
-
-    if (grid_distance == 2
+    if (can_reach_attack_between(mons->pos(), foepos)
         // The monster has to be attacking the correct position.
-        && mons->target == foepos
-        // With a reaching attack with a large enough range:
-        && delta.rdist() <= range
-        // And with no dungeon furniture in the way of the reaching
-        // attack;
-        && (feat_is_reachable_past(env.grid(first_middle))
-            || feat_is_reachable_past(env.grid(second_middle)))
-        // The foe should be on the map (not stepped from time).
-        && in_bounds(foepos))
+        && mons->target == foepos)
     {
         ret = true;
 
@@ -1115,14 +1102,10 @@ static bool _handle_wand(monster& mons)
     if (item_type_removed(wand->base_type, wand->sub_type))
         return false;
 
-    // XXX: Teach monsters to use random effects
     // Digging is handled elsewhere so that sensible (wall) targets are
     // chosen.
-    if (wand->sub_type == WAND_RANDOM_EFFECTS
-        || wand->sub_type == WAND_DIGGING)
-    {
+    if (wand->sub_type == WAND_DIGGING)
         return false;
-    }
 
     bolt beem;
 
@@ -1173,7 +1156,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     }
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
-        && mons->type != MONS_SPECTRAL_THING)
+        && mons->type != MONS_SPECTRAL_THING
+        && !mons_class_is_animated_weapon(mons->type))
     {
         return false;
     }
@@ -1223,19 +1207,21 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             return false;
     }
 
-    if (prefer_ranged_attack && mons->is_archer())
+    if (prefer_ranged_attack)
     {
         // Master archers are always quite likely to shoot you, if they can.
         if (one_chance_in(10))
             return false;
-    } else if (launcher)
+    }
+    else if (launcher)
     {
         // Fellas with ranged weapons are likely to use them, though slightly
         // less likely than master archers. XXX: this is a bit silly and we
         // could probably collapse this chance and master archers' together.
         if (one_chance_in(5))
             return false;
-    } else if (!one_chance_in(3))
+    }
+    else if (!one_chance_in(3))
     {
         // Monsters with throwing weapons only use them one turn in three
         // if they're not master archers.
@@ -1444,7 +1430,6 @@ static void _pre_monster_move(monster& mons)
     }
 
     reset_battlesphere(&mons);
-    reset_spectral_weapon(&mons);
 
     fedhas_neutralise(&mons);
     slime_convert(&mons);
@@ -1504,17 +1489,6 @@ static void _pre_monster_move(monster& mons)
         mons.add_ench(ENCH_SHAPESHIFTER);
 
     mons.check_speed();
-
-    // spellforged servitors lose an extra random2(16) energy per turn, often
-    // causing them to skip a turn. Show this message to give the player some
-    // feedback on what is going on when a servitor skips an attack due to
-    // random energy loss (otherwise, it just sits there silently).
-    // TODO: could this effect be implemented in some way other than energy?
-    if (mons.type == MONS_SPELLFORGED_SERVITOR && mons.foe != MHITNOT
-        && !mons.has_action_energy())
-    {
-        simple_monster_message(mons, " hums quietly as it recharges.");
-    }
 }
 
 void handle_monster_move(monster* mons)
@@ -1650,6 +1624,13 @@ void handle_monster_move(monster* mons)
             && ++mons->move_spurt / 8 % 3 != 2  // but are not helpless
         || mons->type == MONS_JIANGSHI // similarly, but more irregular (48 of 90)
             && (++mons->move_spurt / 6 % 3 == 1 || mons->move_spurt / 3 % 5 == 1))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
+    // Continue reciting.
+    if (mons->has_ench(ENCH_WORD_OF_RECALL))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2122,11 +2103,11 @@ static void _ancient_zyme_sicken(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !mons->wont_attack()
-        && you.undead_state() == US_ALIVE
+        && !you.res_miasma()
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
-        if (!you.disease)
+        if (!you.duration[DUR_SICKNESS])
         {
             if (!you.duration[DUR_SICKENING])
             {
@@ -2261,10 +2242,9 @@ static void _post_monster_move(monster* mons)
 
     const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
     if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
-        && !mons_is_avatar(mons->type)
-        && !find_spectral_weapon(mons))
+        && !mons_is_avatar(mons->type))
     {
-        cast_spectral_weapon(mons, mons->get_experience_level() * 4, mons->god);
+        // TODO: implement monster spectral ego
     }
 
     if (mons->foe != MHITNOT && mons_is_wandering(*mons) && mons_is_batty(*mons))
@@ -2874,7 +2854,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
     if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
-           && (mons_class_flag(mons->type, M_BURROWS) || digs)
+           && (mons->can_burrow() || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
            && !feat_is_critical(target_grid)
@@ -3503,7 +3483,7 @@ static bool _monster_move(monster* mons)
         }
     }
 
-    const bool burrows = mons_class_flag(mons->type, M_BURROWS);
+    const bool burrows = mons->can_burrow();
     const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);

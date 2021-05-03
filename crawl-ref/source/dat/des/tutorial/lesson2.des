@@ -32,12 +32,12 @@ KFEAT:   n = iron_grate
 COLOUR:  deBCDFG = lightblue
 RTILE:   c = wall_vines
 FTILE:   dBCDFG = tutorial_pad
-ITEM:    quarterstaff mundane not_cursed
+ITEM:    quarterstaff mundane
 SHUFFLE: 34
-MONS:    training dummy hp:10 ; whip mundane not_cursed
+MONS:    training dummy hp:10 ; whip mundane
 MONS:    rat always_corpse
 MONS:    wyvern
-MONS:    ooze hp:10
+MONS:    endoplasm hp:12 name:ooze n_rpl n_des n_spe spells:.
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
 MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")
@@ -98,7 +98,7 @@ MONS:    training dummy hp:2 ; stone q:10
 MONS:    rat always_corpse
 MONS:    worm
 ITEM:    boomerang mundane q:10
-ITEM:    shortbow mundane not_cursed
+ITEM:    shortbow mundane
 ITEM:    arrow mundane q:30
 MARKER:  d = lua:tutorial2.msg("boomerangs")
 MARKER:  A = lua:tutorial2.msg("throwing")

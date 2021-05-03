@@ -46,10 +46,13 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool beneficial = false,
             mutation_permanence_class mutclass = MUTCLASS_NORMAL);
 
-void display_mutations();
 int mut_check_conflict(mutation_type mut, bool innate_only = false);
 mutation_activity_type mutation_activity_level(mutation_type mut);
+
+void display_mutations();
 string describe_mutations(bool center_title);
+string terse_mutation_list();
+
 int get_mutation_cap(mutation_type mut);
 void validate_mutations(bool debug_msg=false);
 

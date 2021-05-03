@@ -133,7 +133,8 @@ namespace quiver
         bool af_hp_check = false;
         bool af_mp_check = false;
         if (!clua.callfn("af_hp_is_low", ">b", &af_hp_check)
-            || uses_mp() && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
+            || uses_mp()
+               && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
@@ -142,7 +143,10 @@ namespace quiver
         if (af_hp_check)
             mpr("You are too injured to fight recklessly!");
         else if (af_mp_check)
-            mpr("You are too depleted to draw on your mana recklessly!");
+        {
+            mprf("You are too depleted to draw on your %s recklessly!",
+                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+        }
         return af_hp_check || af_mp_check;
     }
 
@@ -259,6 +263,20 @@ namespace quiver
         return key_hint;
     }
 
+    bool action_cycler::targeter_handles_key(command_type c) const
+    {
+        // TODO: factor these out of the menu code into methods on this class?
+        switch (c)
+        {
+        case CMD_TARGET_SELECT_ACTION:
+        case CMD_TARGET_CYCLE_QUIVER_FORWARD:
+        case CMD_TARGET_CYCLE_QUIVER_BACKWARD:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     // Get a sorted list of items to show in the fire interface.
     //
     // If ignore_inscription_etc, ignore =f and Options.fire_items_start.
@@ -357,7 +375,7 @@ namespace quiver
                     // bit here and only use this for unarmed/forms. See
                     // melee_attack::set_attack_verb for the real thing.
                     const int dt = you.damage_type();
-                    if (dt | DVORP_CLAWING || dt | DVORP_TENTACLE)
+                    if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
                         return "attack";
                 }
                 return "punch";
@@ -726,7 +744,7 @@ namespace quiver
 
         virtual bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -781,7 +799,9 @@ namespace quiver
             // TODO: refactor throw_it into here?
             throw_it(*this);
 
-            // TODO: eliminate this?
+            // Update the legacy quiver history data structure
+            // TODO: eliminate this? History should be stored per quiver, not
+            // globally
             you.m_quiver_history.on_item_fired(you.inv[ammo_slot],
                     !target.fire_context || !target.fire_context->autoswitched);
 
@@ -955,7 +975,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (you.species == SP_FELID)
+            if (you.has_mutation(MUT_NO_GRASPING))
                 return false;
             if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
                 return false;
@@ -1222,10 +1242,8 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
-        case ABIL_CANCEL_PPROJ:
         case ABIL_EXSANGUINATE:
         case ABIL_REVIVIFY:
-        case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_ZIN_DONATE_GOLD:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
@@ -1240,7 +1258,6 @@ namespace quiver
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         // not entirely pseudo, but doesn't make a lot of sense to quiver:
-        case ABIL_FLY:
         case ABIL_TRAN_BAT:
             return true;
         default:
@@ -1248,7 +1265,7 @@ namespace quiver
         }
     }
 
-    bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
+    static bool _ability_quiver_range_check(ability_type abil, bool quiet=true)
     {
         // Hacky: do some quiver-specific range checks for the sake of
         // autofight. We can't approach this like spells (which are marked
@@ -1751,7 +1768,10 @@ namespace quiver
             switch (you.inv[wand_slot].unrand_idx)
             {
             case UNRAND_DISPATER:
-                return enough_hp(14, quiet) && enough_mp(4, quiet); // TODO: code duplication...
+                // TODO: code duplication...
+                if (you.has_mutation(MUT_HP_CASTING))
+                    return enough_hp(18, quiet);
+                return enough_hp(14, quiet) && enough_mp(4, quiet);
             case UNRAND_OLGREB:
                 return enough_mp(4, quiet); // TODO: code duplication...
             default:
@@ -1938,7 +1958,7 @@ namespace quiver
     shared_ptr<action> find_action_from_launcher(const item_def *item)
     {
         // Felids have no use for launchers or ammo.
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return make_shared<ammo_action>(-1);
 
         int slot = -1;
@@ -2219,7 +2239,7 @@ namespace quiver
         if ((f & flag) && !(flag & done))
         {
             _flag_to_action_types(action_types, flag);
-            done &= flag;
+            done |= flag;
         }
     }
 
@@ -2231,6 +2251,10 @@ namespace quiver
         // Construct the type order from Options.fire_order:
         vector<shared_ptr<action>> action_types;
         int done = 0x0;
+        // Produce an ordering of the broad classes, each corresponding to one
+        // or more subtypes of ammo_action. Classes are responsible for ordering
+        // within this, though currently only launchers and throwing implement
+        // sub-ordering.
         // This doesn't support ordering ammo subtypes interleaved with anything
         // else
         vector<int> flags_to_check =
@@ -2326,7 +2350,7 @@ namespace quiver
         return set(next(dir, allow_disabled));
     }
 
-    void action_cycler::on_actions_changed()
+    void action_cycler::on_actions_changed(bool check_autoswitch)
     {
         if (!get()->is_valid())
         {
@@ -2334,7 +2358,7 @@ namespace quiver
             if (r && r->is_valid())
                 set(r, true);
         }
-        else if (autoswitched)
+        else if (check_autoswitch && autoswitched)
         {
             auto r = ammo_to_action(you.m_quiver_history.get_last_ammo(get()->get_launcher()));
             if (r && r->is_valid())
@@ -2503,7 +2527,7 @@ namespace quiver
               // regular species can force-quiver any (non-equipped) item, but
               // felids have a more limited selection, so we need to directly
               // calculate it.
-              any_items(you.species == SP_FELID
+              any_items(you.has_mutation(MUT_NO_GRASPING)
                 ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
                 : inv_count() > 0)
         {
@@ -2683,8 +2707,11 @@ namespace quiver
             if (!a || !a->is_valid())
                 force_restore_initial = true;
 
-            what_happened = a ? static_cast<command_type>(a->target.cmd_result)
-                              : CMD_NO_CMD;
+            what_happened =
+                a && targeter_handles_key(
+                                static_cast<command_type>(a->target.cmd_result))
+                        ? static_cast<command_type>(a->target.cmd_result)
+                        : CMD_NO_CMD;
 
             switch (what_happened)
             {
@@ -2908,10 +2935,10 @@ namespace quiver
             unmarshallItem(inf, m_last_used_of_type[i]);
     }
 
-    void on_actions_changed()
+    void on_actions_changed(bool check_autoswitch)
     {
-        you.quiver_action.on_actions_changed();
-        you.launcher_action.on_actions_changed();
+        you.quiver_action.on_actions_changed(check_autoswitch);
+        you.launcher_action.on_actions_changed(check_autoswitch);
     }
 
     void set_needs_redraw()

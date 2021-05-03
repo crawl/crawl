@@ -45,17 +45,14 @@ mutations:
   1:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 3
     MUT_COLD_RESISTANCE: 1
-    MUT_TORMENT_RESISTANCE: 1
+    MUT_TORMENT_RESISTANCE: 2
     MUT_UNBREATHING: 1
+    MUT_NO_DRINK: 1
+    MUT_HEAT_VULNERABILITY: 1
   13:
     MUT_NECRO_ENHANCER: 1
   26:
     MUT_NECRO_ENHANCER: 1
-fake_mutations:
-  - long: You do not drink.
-    short: no potions
-  - long: Your flesh is vulnerable to fire.
-    short: fire vulnerability
 recommended_jobs:
   - JOB_WIZARD
   - JOB_CONJURER

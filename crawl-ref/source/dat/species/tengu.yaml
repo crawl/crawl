@@ -4,7 +4,7 @@ name: Tengu
 difficulty: Intermediate
 difficulty_priority: 50
 species_flags:
-  - hairless
+  - SPF_NO_HAIR
 aptitudes:
   xp: 0
   hp: -2

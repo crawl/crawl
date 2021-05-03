@@ -3771,10 +3771,10 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                         cur_spells[i].flags |= MON_SPELL_WIZARD;
                     if (slot_vals[j] == "priest")
                         cur_spells[i].flags |= MON_SPELL_PRIEST;
+                    if (slot_vals[j] == "vocal")
+                        cur_spells[i].flags |= MON_SPELL_VOCAL;
                     if (slot_vals[j] == "breath")
                         cur_spells[i].flags |= MON_SPELL_BREATH;
-                    if (slot_vals[j] == "no silent")
-                        cur_spells[i].flags |= MON_SPELL_NO_SILENT;
                     if (slot_vals[j] == "instant")
                         cur_spells[i].flags |= MON_SPELL_INSTANT;
                     if (slot_vals[j] == "noisy")
@@ -4958,7 +4958,9 @@ int str_to_ego(object_class_type item_type, string ego_str)
 {
     const char* armour_egos[] =
     {
+#if TAG_MAJOR_VERSION == 34
         "running",
+#endif
         "fire_resistance",
         "cold_resistance",
         "poison_resistance",
@@ -5278,9 +5280,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         int id = 0;
         for (const auto &is : ids)
         {
-            if (is == "curse")
-                id |= ISFLAG_KNOW_CURSE;
-            else if (is == "type")
+            if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
             else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;
@@ -5322,8 +5322,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
-    if (strip_tag(s, "not_cursed"))
-        result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
     if (strip_tag(s, "unobtainable"))

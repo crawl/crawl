@@ -173,12 +173,6 @@ bool monster::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_BLIND && !mons_can_be_blinded(type))
         return false;
 
-    if (ench.ench == ENCH_FLIGHT && has_ench(ENCH_LIQUEFYING))
-    {
-        del_ench(ENCH_LIQUEFYING);
-        invalidate_agrid();
-    }
-
     // If we have never changed shape, mark us as shapeshifter, so that
     // "goblin perm_ench:shapeshifter" reverts on death.
     if (ench.ench == ENCH_SHAPESHIFTER)
@@ -537,14 +531,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " is no longer moving slowly.");
         calc_speed();
-        break;
-
-    case ENCH_OZOCUBUS_ARMOUR:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy armour evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
         break;
 
     case ENCH_PARALYSIS:
@@ -1032,6 +1018,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " stops rolling and uncurls.");
         break;
 
+    case ENCH_CONCENTRATE_VENOM:
+        if (!quiet)
+            simple_monster_message(*this, " no longer looks unusually toxic.");
+        break;
+
     default:
         break;
     }
@@ -1153,7 +1144,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     return false;
 }
 
-bool monster::clear_far_engulf(void)
+bool monster::clear_far_engulf(bool)
 {
     if (you.duration[DUR_WATER_HOLD]
         && (mid_t) you.props["water_holder"].get_int() == mid)
@@ -1401,7 +1392,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REGENERATION:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
     case ENCH_DAZED:
@@ -1752,13 +1742,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
-            speed_increment += me.duration;
             del_ench(en, true, false);
             if (you.can_see(*this))
-            {
-                mprf("%s chant is interrupted.",
-                     name(DESC_ITS).c_str());
-            }
+                mprf("%s chant is interrupted.", name(DESC_ITS).c_str());
             break;
         }
 
@@ -1793,9 +1779,11 @@ void monster::apply_enchantment(const mon_enchant &me)
                 int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
                                           * dur,
                             BASELINE_DELAY * 10);
-                if (res_water_drowning() < 0)
-                    dam = dam * 3 / 2;
-                hurt(me.agent(), dam);
+                if (dam > 0)
+                {
+                    simple_monster_message(*this, " is asphyxiated!");
+                    hurt(me.agent(), dam);
+                }
             }
         }
         break;
@@ -2026,9 +2014,9 @@ static const char *enchant_names[] =
     "regen",
     "magic_res", "mirror_dam",
 #if TAG_MAJOR_VERSION == 34
-    "stoneskin",
+    "stoneskin", "fear inspiring",
 #endif
-    "fear inspiring", "temporarily pacified",
+    "temporarily pacified",
 #if TAG_MAJOR_VERSION == 34
     "withdrawn", "attached",
 #endif
@@ -2042,7 +2030,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "deaths_door",
 #endif
-    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "rolling",
+#if TAG_MAJOR_VERSION == 34
+    "ozocubus_armour",
+#endif
+    "wretched", "screamed", "rune_of_recall",
     "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
@@ -2094,7 +2086,7 @@ static const char *enchant_names[] =
 #endif
     "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
-    "ring_acid", "ring_miasma",
+    "ring_acid", "ring_miasma", "concentrate_venom",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2232,7 +2224,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
@@ -2247,6 +2238,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_SAP_MAGIC:
     case ENCH_STILL_WINDS:
+    case ENCH_CONCENTRATE_VENOM:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

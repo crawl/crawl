@@ -845,7 +845,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!you.duration[status])
                 continue;
-            inf.short_text = "divine shield";
+            inf.short_text = "divinely shielded";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
@@ -859,7 +859,7 @@ static bool _update_statuses(player_info& c)
             inf = status_info();
             if (!acrobat_boost_active())
                 continue;
-            inf.short_text = "acrobat";
+            inf.short_text = "acrobatic";
         }
         else if (!fill_status_info(status, inf)) // this will reset inf itself
             continue;
@@ -939,7 +939,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.job_title, filtered_lang(player_title()),
                    "title");
     _update_int(force_full, c.wizard, you.wizard, "wizard");
-    _update_string(force_full, c.species, species_name(you.species),
+    _update_string(force_full, c.species, species::name(you.species),
                    "species");
     string god = "";
     if (you_worship(GOD_JIYVA))
@@ -951,7 +951,7 @@ void TilesFramework::_send_player(bool force_full)
     uint8_t prank = 0;
     if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+    else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)
              && !had_gods())
     {
         prank = 2;
@@ -986,7 +986,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.dex, (int8_t) you.dex(false), "dex");
     _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         _update_int(force_full, c.lives, you.lives, "lives");
         _update_int(force_full, c.deaths, you.deaths, "deaths");

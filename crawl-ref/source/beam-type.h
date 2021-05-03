@@ -75,7 +75,9 @@ enum beam_type                  // bolt::flavour
     BEAM_INFESTATION,
     BEAM_AGONY,
     BEAM_VILE_CLUTCH,
-    BEAM_LAST_ENCHANTMENT = BEAM_VILE_CLUTCH,
+    BEAM_VAMPIRIC_DRAINING,
+    BEAM_CONCENTRATE_VENOM,
+    BEAM_LAST_ENCHANTMENT = BEAM_CONCENTRATE_VENOM,
 
     BEAM_MEPHITIC,
     BEAM_AIR,
@@ -87,8 +89,6 @@ enum beam_type                  // bolt::flavour
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
-    BEAM_BOUNCY_TRACER,           // Used for random bolt tracer (bounces as
-                                  // crystal bolt, but irresistible).
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,

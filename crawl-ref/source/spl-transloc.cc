@@ -14,11 +14,14 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "god-abil.h" // fedhas_passthrough for palentonga charge
 #include "item-prop.h"
 #include "items.h"
@@ -40,7 +43,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h" // cancel_tornado
-#include "spl-summoning.h" // trigger_spectral_weapon for palentonga charge
+#include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -153,7 +156,7 @@ void uncontrolled_blink(bool override_stasis)
  * @param target[out]   The target found, if any.
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
- *                      for e.g. ?blink with blurryvis)
+ *                      for e.g. read-identified ?blink)
  * @param verb          What kind of movement is this, exactly?
  *                      (E.g. 'blink', 'hop'.)
  * @param hitfunc       A hitfunc passed to the direction_chooser.
@@ -632,15 +635,14 @@ spret palentonga_charge(bool fail, dist *target)
     if (you.attribute[ATTR_HELD])
         return spret::success;
 
-    const int base_delay = you.time_taken;
+    const int base_delay =
+        div_rand_round(you.time_taken * player_movement_speed(), 10);
 
     melee_attack charge_atk(&you, target_mons);
     charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
     charge_atk.attack();
-    if (you.props.exists("spectral_weapon"))
-        trigger_spectral_weapon(&you, target_mons);
 
-    // Normally this is 10 aut (times haste, etc), but slow weapons
+    // Normally this is 10 aut (times haste, chei etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
     you.time_taken = max(you.time_taken, base_delay);
 
@@ -653,7 +655,7 @@ spret palentonga_charge(bool fail, dist *target)
  *
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
- *                      for e.g. ?blink with blurryvis)
+ *                      for e.g. read-identified ?blink)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
 spret controlled_blink(bool safe_cancel)
@@ -784,7 +786,7 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
     }
 
 #ifdef USE_TILE
-    if (you.species == SP_MERFOLK)
+    if (you.has_innate_mutation(MUT_MERTAIL))
     {
         const dungeon_feature_type new_grid = env.grid(you.pos());
         const dungeon_feature_type old_grid = env.grid(old_pos);
@@ -1044,6 +1046,94 @@ spret cast_portal_projectile(int pow, bool fail)
     return spret::success;
 }
 
+string weapon_unprojectability_reason()
+{
+    if (!you.weapon())
+        return "";
+    const item_def &it = *you.weapon();
+    // These all cause attack prompts, which are awkward to handle.
+    // TODO: support these!
+    static const vector<int> forbidden_unrands = {
+        UNRAND_POWER,
+        UNRAND_DEVASTATOR,
+        UNRAND_VARIABILITY,
+        UNRAND_SINGING_SWORD,
+        UNRAND_TORMENT,
+        UNRAND_ARC_BLADE,
+    };
+    for (int urand : forbidden_unrands)
+    {
+        if (is_unrandom_artefact(it, urand))
+        {
+            return make_stringf("%s would react catastrophically with paradoxical space!",
+                                you.weapon()->name(DESC_THE, false, false, false, false, ISFLAG_KNOW_PLUSES).c_str());
+        }
+    }
+    return "";
+}
+
+spret cast_manifold_assault(int pow, bool fail, bool real)
+{
+    vector<monster*> targets;
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->friendly() || mi->neutral())
+            continue; // this should be enough to avoid penance?
+        if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
+            continue;
+        if (!you.can_see(**mi))
+            continue;
+        targets.emplace_back(*mi);
+    }
+
+    if (targets.empty())
+    {
+        if (real)
+            mpr("You can't see anything to attack.");
+        return spret::abort;
+    }
+
+    if (real)
+    {
+        const string unproj_reason = weapon_unprojectability_reason();
+        if (unproj_reason != "")
+        {
+            mprf("%s", unproj_reason.c_str());
+            return spret::abort;
+        }
+    }
+
+    if (!real)
+        return spret::success;
+
+    if (!wielded_weapon_check(you.weapon()))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("Space momentarily warps into an impossible shape!");
+
+    const int initial_time = you.time_taken;
+
+    shuffle_array(targets);
+    const size_t max_targets = 2 + div_rand_round(pow, 50);
+    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    {
+        // Somewhat hacky: reset attack delay before each attack so that only the final
+        // attack ends up actually setting time taken. (No quadratic effects.)
+        you.time_taken = initial_time;
+
+        melee_attack atk(&you, targets[i]);
+        atk.is_projected = true;
+        atk.attack();
+
+        if (you.hp <= 0 || you.pending_revival)
+            break;
+    }
+
+    return spret::success;
+}
+
 spret cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
@@ -1284,9 +1374,8 @@ static void _attract_actor(const actor* agent, actor* victim,
                            const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = agent->deity() == GOD_FEDHAS
-                             && victim->is_monster()
-                             && fedhas_protects(victim->as_monster());
+    const bool fedhas_prot = victim->is_monster()
+                                && god_protects(agent, victim->as_monster());
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
@@ -1354,7 +1443,8 @@ static void _attract_actor(const actor* agent, actor* victim,
 
 bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
 {
-    bool affected = false;
+    vector <actor *> victims;
+
     for (actor_near_iterator ai(pos, LOS_SOLID); ai; ++ai)
     {
         if (*ai == agent || ai->is_stationary() || ai->pos() == pos)
@@ -1364,13 +1454,24 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow)
         if (range > gravitas_range(pow))
             continue;
 
-        const int strength = ((pow + 100) / 20) / (range*range);
-
-        affected = true;
-        _attract_actor(agent, *ai, pos, pow, strength);
+        victims.push_back(*ai);
     }
 
-    return affected;
+    if (victims.empty())
+        return false;
+
+    near_to_far_sorter sorter = {you.pos()};
+    sort(victims.begin(), victims.end(), sorter);
+
+    for (actor * ai : victims)
+    {
+        const int range = (pos - ai->pos()).rdist();
+        const int strength = ((pow + 100) / 20) / (range*range);
+
+        _attract_actor(agent, ai, pos, pow, strength);
+    }
+
+    return true;
 }
 
 spret cast_gravitas(int pow, const coord_def& where, bool fail)
@@ -1469,11 +1570,15 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
  */
 void attract_monsters()
 {
+    vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (!_can_beckon(**mi) || mi->friendly())
-            continue;
+        if (!mi->friendly() && _can_beckon(**mi))
+            targets.push_back(*mi);
 
+    near_to_far_sorter sorter = {you.pos()};
+    sort(targets.begin(), targets.end(), sorter);
+
+    for (monster *mi : targets) {
         const int orig_dist = grid_distance(you.pos(), mi->pos());
         if (orig_dist <= 1)
             continue;
@@ -1486,7 +1591,7 @@ void attract_monsters()
         for (int i = 0; i < max_move && i < orig_dist - 1; i++)
             ray.advance();
 
-        while (!_can_move_mons_to(**mi, ray.pos()) && ray.pos() != mi->pos())
+        while (!_can_move_mons_to(*mi, ray.pos()) && ray.pos() != mi->pos())
             ray.regress();
 
         if (ray.pos() == mi->pos())
@@ -1499,6 +1604,59 @@ void attract_monsters()
         mprf("%s is pulled toward you!", mi->name(DESC_THE).c_str());
 
         mi->apply_location_effects(old_pos);
-        mons_relocated(*mi);
+        mons_relocated(mi);
     }
+}
+
+spret word_of_chaos(int pow, bool fail)
+{
+    vector<monster *> visible_targets;
+    vector<monster *> targets;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mons_class_is_stationary(mi->type)
+            && !mons_is_conjured(mi->type)
+            && !mi->friendly())
+        {
+            if (you.can_see(**mi))
+                visible_targets.push_back(*mi);
+            targets.push_back(*mi);
+        }
+    }
+
+    if (visible_targets.empty())
+    {
+        if (!yesno("You cannot see any enemies that you can affect. Speak a "
+                   "word of chaos anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+    shuffle_array(targets);
+
+    mprf("You speak a word of chaos!");
+    for (auto mons : targets)
+    {
+        if (mons->no_tele())
+            continue;
+
+        blink_away(mons, &you, false);
+        if (x_chance_in_y(pow, 500))
+            ensnare(mons);
+        if (x_chance_in_y(pow, 500))
+            do_slow_monster(*mons, &you, 20 + random2(pow));
+        if (x_chance_in_y(pow, 500))
+        {
+            mons->add_ench(mon_enchant(ENCH_FEAR, 0, &you));
+            behaviour_event(mons, ME_SCARE, &you);
+        }
+    }
+
+    you.increase_duration(DUR_WORD_OF_CHAOS_COOLDOWN, 15 + random2(10));
+    drain_player(50, false, true);
+    return spret::success;
 }

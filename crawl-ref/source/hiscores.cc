@@ -83,7 +83,7 @@ static string _score_file_name()
     if (!SysEnv.scorefile.empty())
         ret = SysEnv.scorefile;
     else
-        ret = Options.shared_dir + "scores";
+        ret = catpath(Options.shared_dir, "scores");
 
     ret += crawl_state.game_type_qualifier();
     if (crawl_state.game_is_sprint() && !crawl_state.map.empty())
@@ -94,7 +94,8 @@ static string _score_file_name()
 
 static string _log_file_name()
 {
-    return Options.shared_dir + "logfile" + crawl_state.game_type_qualifier();
+    return catpath(Options.shared_dir,
+        "logfile" + crawl_state.game_type_qualifier());
 }
 
 int hiscores_new_entry(const scorefile_entry &ne)
@@ -290,9 +291,8 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized) {
+    if (!hs_list_initalized)
         hiscores_read_to_memory();
-    }
 
     int i, total_entries;
 
@@ -339,8 +339,8 @@ static void _show_morgue(scorefile_entry& se)
     morgue_file.set_more();
 
     string morgue_base = morgue_name(se.get_name(), se.get_death_time());
-    string morgue_path = morgue_directory()
-                         + strip_filename_unsafe_chars(morgue_base) + ".txt";
+    string morgue_path = catpath(morgue_directory(),
+                            strip_filename_unsafe_chars(morgue_base) + ".txt");
     FILE* morgue = lk_open("r", morgue_path);
 
     if (!morgue) // TODO: add an error message
@@ -970,7 +970,13 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
-    return species_name(static_cast<species_type>(race));
+    // Guard against an ASSERT in get_species_def; it's really bad if the game
+    // crashes at this point while trying to clean up a dead/quit player.
+    // (This doesn't seem to even impact what is shown in the score list?)
+    if (race < 0 || race >= NUM_SPECIES)
+        return "Unknown (buggy) species!";
+
+    return species::name(static_cast<species_type>(race));
 }
 
 static const char* _species_abbrev(int race)
@@ -988,12 +994,16 @@ static const char* _species_abbrev(int race)
     case OLD_SP_LAVA_ORC: return "LO";
     }
 
-    return get_species_abbrev(static_cast<species_type>(race));
+    // see note in _species_name: don't ASSERT in get_species_def.
+    if (race < 0 || race >= NUM_SPECIES)
+        return "??";
+
+    return species::get_abbrev(static_cast<species_type>(race));
 }
 
 static int _species_by_name(const string& name)
 {
-    int race = str_to_species(name);
+    int race = species::from_str(name);
 
     if (race != SP_UNKNOWN)
         return race;
@@ -1336,11 +1346,12 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_FREEZING
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_DRAINING
             || death_type == KILLED_BY_BURNING
-            || death_type == KILLED_BY_SPORE
+            || death_type == KILLED_BY_DEATH_EXPLOSION
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
@@ -1379,7 +1390,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
 
         const description_level_type desc =
-            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_A;
+            death_type == KILLED_BY_DEATH_EXPLOSION ? DESC_PLAIN : DESC_A;
 
         death_source_name = mons->name(desc, death);
 
@@ -1982,7 +1993,9 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
+        if (god != GOD_NO_GOD
+            // XX is this check really needed?
+            && !species::mutation_level(static_cast<species_type>(race), MUT_FORLORN))
         {
             if (god == GOD_XOM)
             {
@@ -2227,20 +2240,26 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (race == SP_MUMMY)
+            if (starts_with(species::skin_name(
+                        static_cast<species_type>(race)), "bandage"))
+            {
                 desc += "Turned to ash by lava";
+            }
             else
                 desc += "Took a swim in molten lava";
         }
         break;
 
     case KILLED_BY_WATER:
-        if (you.undead_state())
+        if (species::is_undead(static_cast<species_type>(race)))
         {
             if (terse)
                 desc = "fell apart";
-            else if (race == SP_MUMMY)
+            else if (starts_with(species::skin_name(
+                        static_cast<species_type>(race)), "bandage"))
+            {
                 desc = "Soaked and fell apart";
+            }
             else
                 desc = "Sank and fell apart";
         }
@@ -2261,7 +2280,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species_is_unbreathing(static_cast<species_type>(race)))
+                 species::is_unbreathing(static_cast<species_type>(race)))
         {
             desc += "Forgot to exist";
         }
@@ -2295,7 +2314,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (species_is_undead(static_cast<species_type>(race)))
+            else if (species::is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";
@@ -2338,8 +2357,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "starvation" : "Starved to death";
         break;
 
-    case KILLED_BY_FREEZING:    // refrigeration spell
-        desc += terse? "frozen" : "Froze to death";
+    case KILLED_BY_FREEZING:    // Freeze, Fridge spells
+        desc += terse? "frozen" : "Frozen to death";
+        if (!terse && !death_source_desc().empty())
+            desc += " by " + death_source_desc();
         needs_damage = true;
         break;
 
@@ -2460,7 +2481,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
-    case KILLED_BY_SPORE:
+    case KILLED_BY_DEATH_EXPLOSION:
         if (terse)
         {
             if (death_source_name.empty())
@@ -2732,7 +2753,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += make_stringf("... %s by %s",
                          death_type == KILLED_BY_COLLISION ? "caused" :
-                         auxkilldata == "by angry trees"   ? "awakened"
+                         auxkilldata == "by angry trees"   ? "awakened" :
+                         auxkilldata == "by Freeze"        ? "generated"
                                                            : "invoked",
                          death_source_name.c_str());
                 desc += _hiscore_newline_string();
@@ -2806,7 +2828,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         }
     }
 
-    if (death_type == KILLED_BY_SPORE && !terse && !auxkilldata.empty())
+    if (death_type == KILLED_BY_DEATH_EXPLOSION && !terse && !auxkilldata.empty())
     {
         desc += "... ";
         desc += auxkilldata;
@@ -2971,8 +2993,8 @@ void mark_milestone(const string &type, const string &milestone,
     lastmilestone = milestone;
     lastturn      = you.num_turns;
 
-    const string milestone_file =
-        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
+    const string milestone_file = catpath(
+        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();

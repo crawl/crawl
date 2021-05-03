@@ -280,11 +280,6 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose body/animal_skin
 %finish SP_RECOMMENDED_GNOLL
 %start
-%compose base/halfling_m
-%compose body/animal_skin
-%compose hair/short_black
-%finish SP_RECOMMENDED_HALFLING
-%start
 %compose base/human_f
 %compose body/animal_skin
 %compose hair/short_black
@@ -344,6 +339,10 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose base/vine_stalker_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_VINE_STALKER
+%start
+%compose base/djinni_f
+%compose body/animal_skin
+%finish SP_RECOMMENDED_DJINNI
 %syn LAST_RECOMMENDED_SPECIES
 
 %sdir gui/backgrounds
@@ -360,7 +359,6 @@ enum:SP_RECOMMENDED_BARACHI SP_BARACHI
 enum:SP_RECOMMENDED_GARGOYLE SP_GARGOYLE
 enum:SP_RECOMMENDED_GHOUL SP_GHOUL
 enum:SP_RECOMMENDED_GNOLL SP_GNOLL
-enum:SP_RECOMMENDED_HALFLING SP_HALFLING
 enum:SP_RECOMMENDED_HUMAN SP_HUMAN
 enum:SP_RECOMMENDED_KOBOLD SP_KOBOLD
 enum:SP_RECOMMENDED_MERFOLK SP_MERFOLK
@@ -375,4 +373,5 @@ enum:SP_RECOMMENDED_TENGU SP_TENGU
 enum:SP_RECOMMENDED_TROLL SP_TROLL
 enum:SP_RECOMMENDED_VAMPIRE SP_VAMPIRE
 enum:SP_RECOMMENDED_VINE_STALKER SP_VINE_STALKER
+enum:SP_RECOMMENDED_DJINNI SP_DJINNI
 %syn LAST_SPECIES

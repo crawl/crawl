@@ -85,15 +85,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     switch (which_god)
     {
-    case GOD_ELYVILON:
-        // Peaceful healer god: no berserking.
-        if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
-        {
-            return false;
-        }
-        break;
-
     case GOD_ZIN:
         // Lawful god: no mutagenics.
         if (artefact_property(item, ARTP_CONTAM))
@@ -138,16 +129,16 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         }
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
+        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0
+            || artefact_property(item, ARTP_INTELLIGENCE) > 0)
+        {
             return false;
+        }
         break;
 
     case GOD_CHEIBRIADOS:
         // Slow god: no speed, no berserking.
-        if (brand == SPWPN_SPEED)
-            return false;
-
-        if (ego == SPARM_RUNNING)
+        if (brand == SPWPN_SPEED || ego == SPARM_RAMPAGING)
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
@@ -202,7 +193,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
     name = replace_all(name, "@player_name@", you.your_name);
 
     name = replace_all(name, "@player_species@",
-                 species_name(you.species, SPNAME_GENUS));
+                 species::name(you.species, species::SPNAME_GENUS));
 
     if (name.find("@branch_name@", 0) != string::npos)
     {
@@ -535,6 +526,8 @@ static void _add_randart_weapon_brand(const item_def &item,
 static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
                                  const artefact_properties_t &extant_props)
 {
+    // see also _randart_is_conflicting
+
     artefact_properties_t intrinsic_proprt;
     intrinsic_proprt.init(0);
     artefact_known_props_t _;
@@ -543,57 +536,57 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
+    // Categorise items by whether they're quick to swap or not. Some artefact
+    // properties aren't appropriate on easily swappable items.
+    const bool non_swappable = item_class == OBJ_ARMOUR
+                               || item_class == OBJ_JEWELLERY
+                                  && jewellery_is_amulet(item);
 
+    // warning: using some item calls may not work here, for example,
+    // get_weapon_brand; the `item` object is not fully set up.
     switch (prop)
     {
+        // weapons already have slaying
         case ARTP_SLAYING:
-            return item_class != OBJ_WEAPONS; // they already have slaying!
+            return item_class != OBJ_WEAPONS;
+        // prevent properties that conflict with naga innates
         case ARTP_POISON:
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-            // naga already have rPois & sInv!
+        case ARTP_RAMPAGING:
+            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
+        // prevent properties that conflict with each other
         case ARTP_CORRODE:
-            return !extant_props[ARTP_RCORR];
+            return !extant_props[ARTP_RCORR] && !intrinsic_proprt[ARTP_RCORR];
         case ARTP_RCORR:
-            return item_class == OBJ_ARMOUR && !extant_props[ARTP_CORRODE];
-        case ARTP_REGENERATION:
-        case ARTP_PREVENT_SPELLCASTING:
-            return item_class == OBJ_ARMOUR; // limit availability to armour
+            return !extant_props[ARTP_CORRODE];
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_WEAPONS
+                   || extant_props[ARTP_BRAND] != SPWPN_ANTIMAGIC;
+        case ARTP_BLINK:
+            return !extant_props[ARTP_PREVENT_TELEPORTATION];
+        case ARTP_PREVENT_TELEPORTATION:
+            return !extant_props[ARTP_BLINK] && non_swappable;
+        // only on melee weapons
         case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
-            // works poorly with ranged weapons
-        case ARTP_CAUSE_TELEPORTATION:
-            return item_class != OBJ_WEAPONS
-                   && !crawl_state.game_is_sprint()
-                   && !extant_props[ARTP_PREVENT_TELEPORTATION];
-            // no tele in sprint, and too annoying on weapons (swappable)
-            // and obv we shouldn't generate contradictory props
-        case ARTP_PREVENT_TELEPORTATION:
-            return !extant_props[ARTP_BLINK]
-                   && !extant_props[ARTP_CAUSE_TELEPORTATION]
-                   && item_class == OBJ_ARMOUR;
-            // armour only, and no contradictory props
-        case ARTP_BLINK:
-            return !extant_props[ARTP_PREVENT_TELEPORTATION];
-            // no contradictory props
-        case ARTP_MAGICAL_POWER:
-            return item_class != OBJ_WEAPONS
-                   || get_weapon_brand(item) != SPWPN_ANTIMAGIC;
-            // not quite as interesting on armour, since you swap it less
-            // rings have 2 slots, so little swap pressure
+        case ARTP_PREVENT_SPELLCASTING:
+            if (item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
+                return false;
+            // fallthrough
+        case ARTP_REGENERATION:
+        case ARTP_HARM:
+        case ARTP_INVISIBLE:
+            // only on items that can't be quickly swapped
+            return non_swappable;
+        // prevent on armour (since it's swapped infrequently) and rings (since
+        // 2 slots reduces the pressure to swap)
         case ARTP_FRAGILE:
             return item_class != OBJ_ARMOUR
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
-        case ARTP_HARM:
-            return item_class == OBJ_ARMOUR;
-            // only get harm on delay equipment
-        case ARTP_RAMPAGING:
-            return item_class == OBJ_ARMOUR
-                   && !item.is_type(OBJ_ARMOUR, ARM_BARDING);
-            // only on delay equipment to prevent "toggle" swap behaviour
         default:
             return true;
     }
@@ -664,7 +657,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Inv", ARTP_VAL_BOOL, 15,    // ARTP_INVISIBLE,
         []() { return 1; }, nullptr, 0, 0 },
-    { "+Fly", ARTP_VAL_BOOL, 15,    // ARTP_FLY,
+    { "Fly", ARTP_VAL_BOOL, 15,    // ARTP_FLY,
         []() { return 1; }, nullptr, 0, 0 },
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
@@ -683,7 +676,7 @@ static const artefact_prop_data artp_data[] =
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
-    { "*Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
+    { "Contam", ARTP_VAL_POS, 20,   // ARTP_CONTAM
         nullptr, []() { return 1; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
@@ -723,7 +716,7 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "*Corrode", ARTP_VAL_BOOL, 25, // ARTP_CORRODE,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
+    { "Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
@@ -1461,10 +1454,6 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_STEALTH;
         break;
 
-    case RING_TELEPORTATION:
-        provides = ARTP_CAUSE_TELEPORTATION;
-        break;
-
     case RING_EVASION:
         provides = ARTP_EVASION;
         break;
@@ -1497,10 +1486,6 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_RCORR;
         break;
 
-    case AMU_INACCURACY:
-        provides = ARTP_SLAYING;
-        break;
-
     case AMU_REGENERATION:
         provides = ARTP_REGENERATION;
         break;
@@ -1522,6 +1507,14 @@ static bool _randart_is_redundant(const item_def &item,
 static bool _randart_is_conflicting(const item_def &item,
                                      artefact_properties_t &proprt)
 {
+    // see also _artp_can_go_on_item
+
+    if (proprt[ARTP_PREVENT_SPELLCASTING]
+        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0)
+    {
+        return true;
+    }
+
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
         && is_demonic(item))
@@ -1529,40 +1522,11 @@ static bool _randart_is_conflicting(const item_def &item,
         return true;
     }
 
-    if (item.base_type != OBJ_JEWELLERY)
-        return false;
-
-    if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
-        return true;
-
-    artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
-
-    switch (item.sub_type)
+    if (item.is_type(OBJ_JEWELLERY, RING_WIZARDRY)
+        && proprt[ARTP_INTELLIGENCE] < 0)
     {
-    case RING_FIRE:
-    case RING_ICE:
-    case RING_WIZARDRY:
-    case RING_MAGICAL_POWER:
-        conflicts = ARTP_PREVENT_SPELLCASTING;
-        break;
-
-    case RING_RESIST_CORROSION:
-        conflicts = ARTP_CORRODE;
-        break;
-
-    case RING_TELEPORTATION:
-#if TAG_MAJOR_VERSION == 34
-    case RING_TELEPORT_CONTROL:
-#endif
-        conflicts = ARTP_PREVENT_TELEPORTATION;
-        break;
-    }
-
-    if (conflicts == ARTP_NUM_PROPERTIES)
-        return false;
-
-    if (proprt[conflicts] != 0)
         return true;
+    }
 
     return false;
 }
@@ -1679,6 +1643,61 @@ bool make_item_randart(item_def &item, bool force_mundane)
     return true;
 }
 
+static string _ashenzari_artefact_name(item_def &item)
+{
+    const int old_orig = item.orig_monnum;
+
+    item.orig_monnum = -GOD_ASHENZARI;
+
+    int tries = 100;
+    string name;
+    do
+    {
+        name = _artefact_name_lookup(item, "Ashenzari");
+    }
+    while (--tries > 0 && strwidth(name) > 25);
+
+    item.orig_monnum = old_orig;
+
+    return item_base_name(item) + " " + (name.empty() ? "of Ashenzari" : name);
+}
+
+void make_ashenzari_randart(item_def &item)
+{
+    if (item.base_type != OBJ_WEAPONS
+        && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY)
+    {
+        return;
+    }
+
+    // This item already is a randart, just rename
+    if (item.flags & ISFLAG_RANDART)
+    {
+        set_artefact_name(item, _ashenzari_artefact_name(item));
+        return;
+    }
+
+    // Too special, will just be cursed
+    if (item.flags & ISFLAG_UNRANDART)
+        return;
+
+    const int brand = item.brand;
+
+    // Ash randarts get no props
+    _artefact_setup_prop_vectors(item);
+    item.flags |= ISFLAG_RANDART;
+    item.flags |= ISFLAG_KNOW_PROPERTIES;
+
+    if (item.brand != SPWPN_NORMAL)
+        set_artefact_brand(item, brand);
+
+    set_artefact_name(item, _ashenzari_artefact_name(item));
+    item.props[ARTEFACT_APPEAR_KEY].get_string() =
+        make_artefact_name(item, true);
+
+}
+
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;
@@ -1773,7 +1792,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
-    else if (unrand_index == UNRAND_WOE && you.species != SP_FELID
+    else if (unrand_index == UNRAND_WOE && !you.has_mutation(MUT_NO_GRASPING)
              && !you.could_wield(item, true, true))
     {
         // always wieldable, always 2-handed

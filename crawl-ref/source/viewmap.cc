@@ -363,7 +363,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
     features.clear();
 
     if (on_level)
-        find_travel_pos(you.pos(), nullptr, nullptr, &features);
+        fill_travel_point_distance(you.pos(), &features);
     else
     {
         travel_pathfind tp;

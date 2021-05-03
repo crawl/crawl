@@ -1,5 +1,6 @@
 #pragma once
 
+#include "actor.h"
 #include "coord-circle.h"
 #include "los-type.h"
 
@@ -87,6 +88,25 @@ private:
     coord_def center;
     los_type los;
     coord_def current;    // storage for operator->
+};
+
+/**
+ * @class vision_iterator
+ * Iterator over coordinates in view of a certain actor.
+ *
+ * Uses the actor's see_cell method, which includes checks for scrying-like
+ * effects as well as respecting the los_type
+ */
+class vision_iterator : public radius_iterator
+{
+public:
+    explicit vision_iterator(const actor& _who) :
+        radius_iterator(_who.pos(), LOS_NONE), who(_who) {};
+
+    void operator ++ ();
+    void operator ++ (int);
+private:
+    const actor& who;
 };
 
 class adjacent_iterator : public iterator<forward_iterator_tag, coord_def>

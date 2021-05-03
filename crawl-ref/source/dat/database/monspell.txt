@@ -106,6 +106,17 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
+Creeping Frost cast
+
+@The_monster@ calls freezing cold from the walls.
+%%%%
+Goad Beasts cast
+
+@The_monster@ goads on nearby beasts.
+%%%%
+ironbound thunderhulk cast
+
+Electricity crackles from @the_monster@'s apparatus.
 %%%%
 Mara Summon cast
 
@@ -181,9 +192,13 @@ Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
 %%%%
-Chant Fire Storm cast
+Pyroclastic Surge cast
 
-@The_monster@ begins to chant a fire storm spell!
+@The_monster@ calls gouts of flame from the lava!
+%%%%
+Eruption cast
+
+@The_monster@ rends the earth beneath you!
 %%%%
 Chant Word of Entropy cast
 
@@ -305,6 +320,10 @@ unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
+Freeze cast
+
+@The_monster@ freezes @target@.
+%%%%
 Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame @at@ @target@.
@@ -340,6 +359,10 @@ Slug Dart cast
 Paralysis Gaze cast
 
 @The_monster@ gazes piercingly through @target@!
+%%%%
+Weakening Gaze cast
+
+@The_monster@ gazes fiercely through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################

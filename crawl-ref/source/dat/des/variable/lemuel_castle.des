@@ -12,87 +12,112 @@
 # left empty (spaces).
 
 {{
--- configuration for Lemuel Castle vault and its subvaults
-function castle_lemuel_subvault_setup(e)
-         e.tags("no_monster_gen");
-         e.tags("no_rotate");
-         e.colour("? = brown")
-         e.ftile("? = floor_mud")
-         e.kfeat("? = floor")
-         e.kfeat("~ = alarm trap w:1 / floor")
-         e.subst("X = c +:1")
-         e.subst("8 = 89")
-         e.tile("c = wall_stone_smooth")
-         e.ftile(".~*XG|+$ = floor_cobble_blood")
-         e.ftile("12348 = floor_cobble_blood")
-         e.ftile("= = floor_cobble_blood")
-         e.kfeat(", = floor")
-         e.kfeat("m = iron_grate")
-         if you.absdepth() < 7 then
-            e.subst("* = ...$")
-            e.subst("| = *.")
-            e.mons("gnoll")
-            e.mons("gnoll / gnoll shaman w:5")
-            e.mons("ogre / gnoll sergeant")
-            e.mons("jackal")
-            e.mons("gnoll")
-            e.mons("jackal")
-         elseif you.absdepth () < 15 then
-            e.subst("* : *$")
-            e.subst("| : %*")
-            e.mons("orc");
-            e.mons("orc knight w:2 / orc priest w:3 / orc warrior")
-            e.mons("orc sorcerer / orc warlord / orc knight")
-            e.mons("warg")
-            e.mons("orc")
-            e.mons("warg")
-         elseif you.absdepth () < 24 then
-            e.subst("* : *$")
-            e.subst("| = |*")
-            e.mons("deep elf pyromancer / deep elf zephyrmancer")
-            e.mons("deep elf knight w:5 / deep elf archer w:5 / "
-                   .. "deep elf pyromancer w:15 / deep elf zephyrmancer w:15")
-            e.mons("deep elf annihilator / deep elf sorcerer / "
-                   .. "deep elf high priest / deep elf death mage / "
-                   .. "deep elf demonologist")
-            e.mons("nothing")
-            e.mons("deep elf pyromancer / deep elf zephyrmancer")
-            e.mons("nothing")
-         elseif you.absdepth () < 27 then
-            e.subst("* = *$")
-            e.mons("two-headed ogre / cyclops / deep troll / ogre mage w:5")
-            e.mons("ettin / fire giant / frost giant / stone giant / \
-                    deep troll shaman w:5")
-            e.mons("titan")
-            e.mons("nothing")
-            e.mons("cyclops")
-            e.mons("yak / death yak w:5")
-            e.mons("plant / w:1 bush")
-         else
-            e.subst("* = *$")
-            e.subst("w : wl")
-            e.nsubst("1 = 14:1 / *:.")
-            e.mons("red draconian / white draconian / green draconian / \
-                    black draconian / purple draconian / nothing w:30")
-            e.mons("yellow draconian monk / purple draconian annihilator / \
-                    green draconian monk / golden dragon w:5")
-            e.mons("red draconian scorcher / white draconian knight / \
-                    purple draconian stormcaller / black draconian shifter")
-            e.mons("lindwurm / wind drake w:5 / death drake w:5 / \
-                    swamp drake / nothing w:5")
-            e.mons("red draconian / green draconian / white draconian / \
-                    black draconian / purple draconian")
-            e.mons("lindwurm / wind drake w:5 / death drake w:5 / \
-                    swamp drake / nothing w:5")
-            e.mons("plant / w:1 bush")
+-- Configuration for the Lemuel Castle vault and its subvaults. Monsters on
+-- slots 1-3 are used exclusively in the subvaults, slot 4 is used in both
+-- subvaults and the parent vault, and 5 and 6 are used exclusively in the
+-- parent vault.
+function castle_lemuel_setup(e)
+    if you.in_branch("D") then
+        if you.depth() < 6 then
+           e.mons("gnoll / orc")
+           e.mons("gnoll / orc / orc wizard w:2 / gnoll shaman w:2"
+                  .. " / orc priest w:1")
+           e.mons("ogre / gnoll sergeant / kobold brigand")
+           e.mons("jackal / hound w:5 / howler monkey w:5")
+           e.mons("gnoll / orc")
+           e.mons("jackal")
+           e.subst("* = $$$%")
+           e.subst("| = *%%%")
+        elseif you.depth() < 9 then
+           e.mons("orc / gnoll / orc wizard / orc priest / ogre")
+           e.mons("gnoll shaman / gnoll sergeant / orc warrior"
+                  .. " / kobold brigand")
+           e.mons("troll / two-headed ogre / cyclops / kobold demonologist")
+           e.mons("hound / howler monkey / warg w:5")
+           e.mons("orc / gnoll / ogre")
+           e.mons("hound / howler monkey")
+           e.subst("* = %$")
+           e.subst("| = *%")
+        elseif you.depth() < 12 then
+           e.mons("orc wizard / orc priest / gnoll shaman / gnoll sergeant"
+                  .. " / kobold brigand / orc warrior")
+           e.mons("troll / two-headed ogre / kobold demonologist / cyclops w:5")
+           e.mons("deep elf pyromancer / orc knight / orc sorcerer / ogre mage")
+           e.mons("warg / hell hound w:2")
+           e.mons("orc wizard / orc priest / gnoll shaman / gnoll sergeant")
+           e.mons("howler monkey / warg")
+           e.subst("* = %")
+           e.subst("| = *")
+        elseif you.depth() < 14 then
+           e.mons("gnoll sergeant / orc warrior / two-headed ogre / troll"
+                  .. " / kobold demonologist")
+           e.mons("cyclops / deep elf pyromancer / tengu warrior"
+                  .. " / tengu conjurer")
+           e.mons("orc knight / ogre mage / orc sorcerer / orc high priest"
+                  .. " / deep elf knight / deep elf archer"
+                  .. " / deep elf zephyrmancer")
+           e.mons("warg w:15 / hell hound / raiju w:5")
+           e.mons("gnoll sergeant / orc warrior / troll")
+           e.mons("howler monkey / warg w:50")
+           e.subst("* = %*")
+           e.subst("| = |*")
+        else
+           e.mons("two-headed ogre / troll / kobold demonologist / cyclops"
+                  .. " / deep elf pyromancer / tengu warrior / tengu conjurer")
+           e.mons("orc knight w:60 / ogre mage / orc sorcerer / orc high priest"
+                  .. " / deep elf knight / deep elf archer"
+                  .. " / deep elf zephyrmancer")
+           e.mons("orc warlord / deep troll earth mage / fire giant"
+                  .. " / frost giant / tengu reaver / deep elf annihilator"
+                  .. " / deep elf high priest")
+           e.mons("warg / hell hound / raiju")
+           e.mons("two-headed ogre / troll / cyclops / tengu warrior")
+           e.mons("warg / hell hound")
         end
-        e.mons("plant")
-        if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-            e.kfeat("3 = enter_zot")
-            -- Ugly hack to get around kfeat overwriting the mons definition.
-            e.kmons("3 = red draconian scorcher / white draconian knight / "
-                    .. "purple draconian stormcaller / black draconian shifter")
-        end
+    else
+       -- Places draconians and other Zot-themed monsters along with the Zot
+       -- entry on the final floor of Depths.
+       if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+           e.kmons("1 = red draconian / white draconian / green draconian"
+                   .. " / black draconian / purple draconian")
+           e.kmons("2 = yellow draconian monk / purple draconian annihilator"
+                   .. " / green draconian monk / golden dragon w:5")
+           e.kmons("3 = red draconian scorcher / white draconian knight"
+                   .. " / purple draconian shifter"
+                   .. " / black draconian stormcaller")
+           e.kmons("4 = tentacled monstrosity / quicksilver dragon"
+                   .. " / golden dragon")
+           e.kmons("5 = red draconian / green draconian / white draconian"
+                   .. " / black draconian / purple draconian")
+           e.kmons("6 = fire dragon / ice dragon / death drake / storm dragon"
+                   .. " / shadow dragon")
+           e.kfeat("3 = enter_zot")
+           e.subst("w : wl")
+       -- Depths uses a theme of mostly large/giant monsters.
+       else
+           e.mons("deep troll / iron troll / deep troll shaman / ettin"
+                  .. " / stone giant / deep troll earth mage")
+           e.mons("stone giant / deep troll earth mage / fire giant"
+                  .. " / frost giant / juggernaut")
+           e.mons("titan")
+           e.mons("storm dragon / shadow dragon / quicksilver dragon"
+                  .. " / golden dragon / tentacled monstrosity"
+                  .. " / caustic shrike")
+           e.mons("deep troll / iron troll / deep troll shaman / ettin")
+           e.mons("fire dragon / ice dragon / death drake / spark wasp"
+                  .. " / sphinx")
+       end
+   end
+   e.kmons("p = plant / fungus w:1")
+   e.kfeat("~ = alarm trap w:1 / floor")
+   e.kfeat("m = iron_grate")
+   e.subst("D = c +:1")
+   e.subst("8 = 89")
+   e.colour("? = brown")
+   e.ftile("? = floor_mud")
+   e.tile("c = wall_stone_smooth")
+   e.ftile("DG+|*$.~ = floor_cobble_blood")
+   e.ftile("12348 = floor_cobble_blood")
 end
 }}
 
@@ -101,37 +126,35 @@ end
 # Lemuel Castle Interior Subvaults
 ###############################################################################
 
-############################################################
 # Lemuel Castle Interior original
 NAME:   lemuel_castle_interior_original
-TAGS:   lemuel_castle_interior
-: castle_lemuel_subvault_setup(_G)
+TAGS:   lemuel_castle_interior unrand
+: castle_lemuel_setup(_G)
 MAP
 +c....+~......+..+......~+.***c+
 .c||..ccccccccc++ccccccccc.***c.
-1c||2.c1...1..1321..1...1c.***c1
-.cccccc..1...211112...1..cccccc.
-.+....+....1...22...1....+....+.
-.+....+..1...1....1...1..+....+.
-.cccccccccccccc++cccccccccccXcc.
+1c||2.c1......1321......1c.$$$c1
+.cccccc.......2112.......cccccc.
+.+....+..1.....22.....1..+....+.
+.+....+......1....1......+....+.
+.cccccccccccccc++cccccccccccDcc.
 1c1.1..ccccccc....ccccccc..m..c1
 .c.2...+.....+....+.....+..+.8c.
 +c1.1..ccccccc....ccccccc..m..c+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
-############################################################
 # Lemuel Castle Interior : Carwin Interior #1
 NAME:   lemuel_castle_interior_carwin_1
-TAGS:   lemuel_castle_interior
-: castle_lemuel_subvault_setup(_G)
+TAGS:   lemuel_castle_interior unrand
+: castle_lemuel_setup(_G)
 MAP
 +c....+........cc........+...*c+
 .c.11.ccc+cccccccccccc+ccc..2.c.
-.c|.2.X*m.1..........1.m|c....c.
+.c|.2.D*m.1..........1.m|c....c.
 .ccm+mc|m.....1111.....m|cm+mcc.
 ......c|m..1...22......m*c..1...
-......c.+....1132.2....+.X..1...
+......c.+....1132.2....+.D..1...
 .cccccccccccccccccccccccccccccc.
 .c........1..m....m..1........c.
 .+.12........+....+..........2+.
@@ -139,79 +162,77 @@ MAP
   cccccccccccc++++cccccccccccc
 ENDMAP
 
-############################################################
 # Lemuel Castle Interior : Carwin Interior #2
 NAME:   lemuel_castle_interior_carwin_2
-TAGS:   lemuel_castle_interior
-: castle_lemuel_subvault_setup(_G)
+TAGS:   lemuel_castle_interior unrand
+: castle_lemuel_setup(_G)
 SUBST:  $ = $:5 .
 ITEM:   nothing w:20 / potion of ambrosia ident:type
 MAP
-+c....+.......1.............$*c+
-...1..cccccccccccccccccccccccXc.
++c....+.......1.............*|c+
+...1..cccccccccccccccccccccccDc.
 cc....c......cG..Gc.1.......c|c1
 *cc++cc..cG..+....+...12....m|c.
 |....~12.cG..+....+...23....+.c.
 $....~.2.....c....c...12....m*c.
-*cc++ccccccccc....ccccccc++ccXc+
+*cc++ccccccccc....ccccccc++ccDc+
 cc~~~~c.m444dc....c2..$c.~~.....
 ...12.c.cm4mmc....c$cc.c12......
 +c....+...2..c....c...........c+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
-############################################################
 # Lemuel Castle Interior : Carwin Interior #3
 NAME:   lemuel_castle_interior_carwin_3
-TAGS:   lemuel_castle_interior
-: castle_lemuel_subvault_setup(_G)
+TAGS:   lemuel_castle_interior unrand
+: castle_lemuel_setup(_G)
 SUBST:  $ = $:5 .
 MAP
-+c....+...*c$*|cc|*$cccccc$...c+
++c....+...*c*||cc||*cccccc$...c+
 .c.1..ccccccmc1321cmcccccc....c.
 .c..2........c.12.c...........c.
 .cc++c.........ww.....2..1c++cc.
 .....c.2.......ww.........c.....
 .2...c...1...c..$.c...1...c..1..
-.ccccc+cccccccccXcccccccc+ccccc.
+.ccccc+cccccccccDcccccccc+ccccc.
 .c.1.c.~..1..+....+2....~.c2..c.
 .~.c$c.~2....c....c.....~.c$c1~.
 +c..2c.~..1..c....c..1..~.c...c+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
-############################################################################
+# Main vault.
 NAME:     lemuel_castle_with_subvaults
-TAGS:     layout_city transparent
+TAGS:     layout_city transparent no_monster_gen no_rotate
 DEPTH:    D:3-, Depths
 PLACE:    Depths:$
 ORIENT:   northwest
-: castle_lemuel_subvault_setup(_G)
-SUBVAULT: A : lemuel_castle_interior
-SUBST:    A = .
+: castle_lemuel_setup(_G)
+SUBVAULT: E : lemuel_castle_interior
+SUBST:    E = .
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x,,,,,,7,,,,,,,,,,,,,,,,,6,6,,,,,,7,,,,,,,,,,,,,,,,x
-x,,,,,,,,,,,,,,7,,,,,,,,6,6,6,,,7,,,,,,,,,,,,,7,,,,x
+x,,,,,,p,,,,,,,,,,,,,,,,,6,6,,,,,,p,,,,,,,,,,,,,,,,x
+x,,,,,,,,,,,,,,p,,,,,,,,6,6,6,,,p,,,,,,,,,,,,,p,,,,x
 x,,,,wwwwwwwwwwwwwwwwwwwwWwwwwwwwwwwwwwwwwwwwww,,,,x
 x,,,,wwwwwwwwwwwwwwwwwwwwWwwwwwwwwwwwwwwwwwwwww,,,,x
 x,,,,wwccnccwwwwwwwwwwwwwWwwwwwwwwwwwwwwccnccww,,,,x
 x,,,,wwc1.1c4....4.......4......4....4..c1.1cww,,,,x
-x,,,,wwc.1.cXccccccccccccccccccccccccccXc.1.cww7,,,x
-x,,,,wwcccAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcccww,,,,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,7,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,WWW.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.WWW,,,,x
-x,7,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,www.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.www,,,,x
-x,,,,wwcccAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcccww7,,,x
-x,,,7wwc.1.cAAAAAAAAAAAAAAAAAAAAAAAAAAAAc.1.cww,,,,x
+x,,,,wwc.1.cDccccccccccccccccccccccccccDc.1.cwwp,,,x
+x,,,,wwcccEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEcccww,,,,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,p,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,WWW.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.WWW,,,,x
+x,p,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,www.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.www,,,,x
+x,,,,wwcccEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEcccwwp,,,x
+x,,,pwwc.1.cEEEEEEEEEEEEEEEEEEEEEEEEEEEEc.1.cww,,,,x
 x,,,,wwc1.1c............................c1.1cww,,,,x
 x,,,,wwccnccwwwwwwwwwwww????wwwwwwwwwwwwccnccww,,,,x
 x,,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww,,,,x
-x7,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww,,,,x
-x,,,,,,,,,,,,,,,,,,656,,,@,,,,656,,,,,,,,,,,,7,,,,,x
+xp,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww,,,,x
+x,,,,,,,,,,,,,,,,,,656,,,@,,,,656,,,,,,,,,,,,p,,,,,x
 ENDMAP

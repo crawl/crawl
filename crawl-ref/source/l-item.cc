@@ -13,6 +13,7 @@
 #include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -381,9 +382,7 @@ IDEFN(ego, do_ego)
  */
 IDEF(cursed)
 {
-    bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
-                       && item->cursed();
-    lua_pushboolean(ls, cursed);
+    lua_pushboolean(ls, item && item->cursed());
     return 1;
 }
 
@@ -966,6 +965,20 @@ IDEF(inscription)
     return 1;
 }
 
+/*** Item description string, as displayed in the game UI.
+ * @field description string
+ */
+IDEF(description)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushstring(ls, get_item_description(*item, true, false).c_str());
+
+    return 1;
+}
+
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1063,8 +1076,6 @@ IDEFN(inc_quantity, do_inc_quantity)
 static iflags_t _str_to_item_status_flags(string flag)
 {
     iflags_t flags = 0;
-    if (flag.find("curse") != string::npos)
-        flags &= ISFLAG_KNOW_CURSE;
     // type is dealt with using item_type_known.
     //if (flag.find("type") != string::npos)
     //    flags &= ISFLAG_KNOW_TYPE;
@@ -1619,6 +1630,7 @@ static ItemAccessor item_attrs[] =
     { "encumbrance",       l_item_encumbrance },
     { "is_in_shop",        l_item_is_in_shop },
     { "inscription",       l_item_inscription },
+    { "description",       l_item_description },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

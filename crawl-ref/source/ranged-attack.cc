@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
@@ -224,10 +225,7 @@ bool ranged_attack::handle_phase_dodged()
     if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
-        {
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-            defender->ablate_repulsion();
-        }
 
         if (defender->is_player())
             count_action(CACT_DODGE, DODGE_REPEL);
@@ -355,8 +353,7 @@ int ranged_attack::calc_base_unarmed_damage()
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
-    return 18 + attacker->get_hit_dice() * hd_mult / 6;
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)

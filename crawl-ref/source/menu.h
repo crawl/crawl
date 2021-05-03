@@ -103,6 +103,7 @@ public:
     vector<int> hotkeys;
     MenuEntryLevel level;
     bool preselected;
+    bool indent_no_hotkeys;
     void *data;
 
 #ifdef USE_TILE
@@ -116,7 +117,9 @@ public:
                int hotk = 0,
                bool preselect = false) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), preselected(preselect), data(nullptr)
+        hotkeys(), level(lev), preselected(preselect),
+        indent_no_hotkeys(false),
+        data(nullptr)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :

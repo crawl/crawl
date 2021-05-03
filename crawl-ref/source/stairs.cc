@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "ability.h"
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
@@ -249,12 +250,19 @@ static void _clear_prisms()
             mons.reset();
 }
 
+static void _complete_zig()
+{
+    if (!zot_immune())
+        mpr("You have passed through the Ziggurat. Zot will hunt you nevermore.");
+    you.zigs_completed++;
+}
+
 void leaving_level_now(dungeon_feature_type stair_used)
 {
     if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
         if (you.depth == 27)
-            you.zigs_completed++;
+            _complete_zig();
         mark_milestone("zig.exit", make_stringf("left a ziggurat at level %d.",
                        you.depth));
     }
@@ -440,17 +448,13 @@ static void _rune_effect(dungeon_feature_type ftype)
 static void _gauntlet_effect()
 {
     // already doomed
-    if (you.species == SP_FORMICID)
+    if (you.stasis())
         return;
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (you.has_mutation(MUT_TELEPORT, true)
-        || you.wearing(EQ_RINGS, RING_TELEPORTATION, true)
-        || you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, true))
-    {
+    if (player_teleport(false))
         mpr("You feel stable on this floor.");
-    }
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,
@@ -870,8 +874,11 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // Warn Formicids if they cannot shaft here
-    if (you.species == SP_FORMICID && !is_valid_shaft_level())
+    if (player_has_ability(ABIL_SHAFT_SELF, true)
+                                && !is_valid_shaft_level())
+    {
         mpr("Beware, you cannot shaft yourself on this level.");
+    }
 
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 

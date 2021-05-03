@@ -905,7 +905,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power        Failure   Level" "\n";
+        text += " Your Spells              Type           Power      Damage    Failure   Level" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -938,13 +938,18 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                spell_line = chop_string(spell_line, 54);
+                spell_line = chop_string(spell_line, 52);
+
+                const string spell_damage = spell_damage_string(spell);
+                spell_line += spell_damage.length() ? spell_damage : "N/A";
+
+                spell_line = chop_string(spell_line, 62);
 
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
 
-                spell_line = chop_string(spell_line, 66);
+                spell_line = chop_string(spell_line, 74);
 
-                spell_line += make_stringf("%-5d", spell_difficulty(spell));
+                spell_line += make_stringf("%d", spell_difficulty(spell));
 
                 spell_line += "\n";
 
@@ -963,7 +968,7 @@ static void _sdump_spells(dump_params &par)
     {
         verb = par.se? "contained" : "contains";
         text += "Your spell library " + verb + " the following spells:\n\n";
-        text += " Spells                   Type           Power        Failure   Level" "\n";
+        text += " Spells                   Type           Power      Damage    Failure   Level" "\n";
 
         auto const library = get_sorted_spell_list(true, false);
 
@@ -997,16 +1002,21 @@ static void _sdump_spells(dump_params &par)
             else
                 spell_line += "Unusable";
 
-            spell_line = chop_string(spell_line, 54);
+            spell_line = chop_string(spell_line, 52);
+
+            const string spell_damage = spell_damage_string(spell);
+            spell_line += spell_damage.length() ? spell_damage : "N/A";
+
+            spell_line = chop_string(spell_line, 62);
 
             if (memorisable)
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
             else
                 spell_line += "N/A";
 
-            spell_line = chop_string(spell_line, 66);
+            spell_line = chop_string(spell_line, 74);
 
-            spell_line += make_stringf("%-5d", spell_difficulty(spell));
+            spell_line += make_stringf("%d", spell_difficulty(spell));
 
             spell_line += "\n";
 
@@ -1659,9 +1669,6 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     stash_file_name = file_name;
     stash_file_name += ".lst";
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
-
-    string map_file_name = file_name + ".map";
-    dump_map(map_file_name.c_str());
 
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());

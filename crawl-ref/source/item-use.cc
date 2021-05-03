@@ -251,16 +251,6 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-static string _weird_smell()
-{
-    return getMiscString("smell_name");
-}
-
-static string _weird_sound()
-{
-    return getMiscString("sound_name");
-}
-
 /**
  * Prompt use of an item from either player inventory or the floor.
  *
@@ -412,6 +402,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
+        && player_equip_unrand(UNRAND_DEMON_AXE)
+        && you.beheld())
+    {
+        SAY(mpr("Your thirst for blood prevents you from unwielding your "
+                "weapon!"));
+        return false;
+    }
+
+    if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
@@ -428,7 +427,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mpr("You can't wield that without your missing limb."));
+        SAY(mprf("You can't wield that without your missing %s.",
+            species::arm_name(you.species).c_str()));
         return false;
     }
 
@@ -847,10 +847,10 @@ static string _cant_wear_barding_reason(bool ignore_temporary)
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
-    if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
+    if (base_type != OBJ_ARMOUR || you.has_mutation(MUT_NO_ARMOUR))
     {
         if (verbose)
-            mpr("You can't wear that.");
+            mpr("You can't wear that!");
 
         return false;
     }
@@ -858,19 +858,22 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
-    {
-        if (verbose)
-            mpr("You can't wear that!");
-        return false;
-    }
-
-    if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
+    if (species::bans_eq(you.species, slot))
     {
         if (verbose)
         {
-            mprf("Your wings%s won't fit in that.", you.has_mutation(MUT_BIG_WINGS)
-                 ? "" : ", even vestigial as they are,");
+            // *if* the species bans body armour, then blame it on wings.
+            // (But don't unconditionally ban armour with this mut.)
+            // XX turn this mut into a two-level mutation?
+            if (slot == EQ_BODY_ARMOUR
+                && species::mutation_level(you.species, MUT_BIG_WINGS))
+            {
+                mprf("Your wings%s won't fit in that.",
+                    you.has_mutation(MUT_BIG_WINGS)
+                        ? "" : ", even vestigial as they are,");
+            }
+            else
+                mpr("You can't wear that!");
         }
         return false;
     }
@@ -889,7 +892,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
                 mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
@@ -903,7 +906,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            if (you.species == SP_OCTOPODE)
+            if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
             {
@@ -918,6 +921,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
+        if (you.wear_barding())
+        {
+            if (verbose)
+                mpr("The hauberk won't fit over your tail.");
+            return false;
+        }
+
         if (!player_has_feet(!ignore_temporary))
         {
             if (verbose)
@@ -963,8 +973,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!get_form()->slot_available(s)
-                    || s == EQ_BOOTS && you.wear_barding())
+                if (!get_form()->slot_available(s))
                 {
                     if (verbose)
                     {
@@ -1016,7 +1025,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (verbose)
             {
                 mprf("You can't wear a glove with your huge claw%s!",
-                     you.get_mutation_level(MUT_MISSING_HAND) ? "" : "s");
+                     you.arm_count() == 1 ? "" : "s");
             }
             return false;
         }
@@ -1042,10 +1051,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                if (you.species == SP_NAGA)
+                if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!");
+                    mpr("Boots don't fit your feet!"); // palentonga
             }
             return false;
         }
@@ -1054,6 +1063,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You don't currently have feet!");
+            return false;
+        }
+
+        if (you.get_mutation_level(MUT_FLOAT))
+        {
+            if (verbose)
+                mpr("You have no feet!"); // or legs
             return false;
         }
     }
@@ -1099,7 +1115,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (species_is_draconian(you.species))
+            if (species::is_draconian(you.species))
             {
                 if (verbose)
                     mpr("You can't wear that with your reptilian head.");
@@ -1156,7 +1172,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
         mpr("You can't wear anything.");
         return false;
@@ -1353,31 +1369,16 @@ bool takeoff_armour(int item)
 // Returns a list of possible ring slots.
 static vector<equipment_type> _current_ring_types()
 {
-    vector<equipment_type> ret;
-    if (you.species == SP_OCTOPODE)
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            const equipment_type slot = (equipment_type)(EQ_RING_ONE + i);
+    vector<equipment_type> ret = species::ring_slots(you.species,
+                                        you.has_mutation(MUT_MISSING_HAND));
 
-            if (you.get_mutation_level(MUT_MISSING_HAND)
-                && slot == EQ_RING_EIGHT)
-            {
-                continue;
-            }
-
-            if (get_form()->slot_available(slot))
-                ret.push_back(slot);
-        }
-    }
-    else
-    {
-        if (you.get_mutation_level(MUT_MISSING_HAND) == 0)
-            ret.push_back(EQ_LEFT_RING);
-        ret.push_back(EQ_RIGHT_RING);
-    }
     if (player_equip_unrand(UNRAND_FINGER_AMULET))
         ret.push_back(EQ_RING_AMULET);
+
+    erase_if(ret, [](const equipment_type &e)
+        {
+            return !get_form()->slot_available(e);
+        });
     return ret;
 }
 
@@ -1597,9 +1598,8 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight = you.airborne()
-          && !you.racial_permanent_flight()
-          && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-          && (you.evokable_flight() == 1);
+                                        && !you.permanent_flight(false)
+                                        && you.equip_flight() == 1;
 
     const dungeon_feature_type feat = env.grid(you.pos());
 
@@ -1607,7 +1607,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
         && is_feat_dangerous(feat, false, true))
     {
         if (!quiet)
-            mpr("Losing flight right now would be fatal!");
+            mpr("Losing flight right now would be extremely painful!");
         return false;
     }
 
@@ -2186,7 +2186,6 @@ bool remove_ring(int slot, bool announce)
         else
             mpr("It's stuck to you!");
 
-        set_ident_flags(you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE);
         return false;
     }
 
@@ -2244,21 +2243,20 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (you_drinkless())
+    if (!you.can_drink(false))
     {
         mpr("You can't drink.");
+        return;
+    }
+    else if (!you.can_drink(true))
+    {
+        mpr("You cannot drink potions in your current state!");
         return;
     }
 
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.duration[DUR_NO_POTIONS])
-    {
-        mpr("You cannot drink potions in your current state!");
         return;
     }
 
@@ -2617,13 +2615,6 @@ static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
         if (item.link == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
-            && item.link == you.equip[EQ_AMULET]
-            && !item_known_cursed(item))
-        {
-            learned_something_new(HINT_INACCURACY);
-        }
-
         const int target_link = item.link;
         item_def* moved_target = auto_assign_item_slot(item);
         if (moved_target != nullptr && moved_target->link == link)
@@ -2702,62 +2693,10 @@ static int _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     return result ? 1 : 0;
 }
 
-void random_uselessness()
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    switch (random2(8))
-    {
-    case 0:
-    case 1:
-        mprf("The dust glows %s!", weird_glowing_colour().c_str());
-        break;
-
-    case 2:
-        if (you.weapon())
-        {
-            mprf("%s glows %s for a moment.",
-                 you.weapon()->name(DESC_YOUR).c_str(),
-                 weird_glowing_colour().c_str());
-        }
-        else
-        {
-            mpr(you.hands_act("glow", weird_glowing_colour()
-                                      + " for a moment."));
-        }
-        break;
-
-    case 3:
-        if (you.species == SP_MUMMY)
-            mpr("Your bandages flutter.");
-        else // if (you.can_smell())
-            mprf("You smell %s.", _weird_smell().c_str());
-        break;
-
-    case 4:
-        mpr("You experience a momentary feeling of inescapable doom!");
-        break;
-
-    case 5:
-        if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
-            mpr("Your brain hurts!");
-        else if (you.species == SP_MUMMY || coinflip())
-            mpr("Your ears itch!");
-        else
-            mpr("Your nose twitches suddenly!");
-        break;
-
-    case 6:
-    case 7:
-        mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
-        noisy(2, you.pos());
-        break;
-    }
-}
-
 static void _vulnerability_scroll()
 {
-    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, 400);
+    const int dur = 30 + random2(20);
+    mon_enchant lowered_wl(ENCH_LOWERED_WL, 1, &you, dur * BASELINE_DELAY);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -2774,7 +2713,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_WL, 40, 0, "Magic quickly surges around you.");
+    you.set_duration(DUR_LOWERED_WL, dur, 0,
+                     "Magic quickly surges around you.");
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -2783,7 +2723,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BLINKING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
-           || scroll == SCR_REMOVE_CURSE
 #if TAG_MAJOR_VERSION == 34
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
@@ -2802,7 +2741,7 @@ static bool _is_cancellable_scroll(scroll_type scroll)
  *
  * Prints corresponding messages. (Thanks, canned_msg().)
  */
-bool player_can_read()
+static bool _player_can_read()
 {
     if (you.berserk())
     {
@@ -2836,7 +2775,7 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string.
  */
-string cannot_read_item_reason(const item_def &item)
+static string _cannot_read_item_reason(const item_def &item)
 {
     // can read books, except for manuals...
     if (item.base_type == OBJ_BOOKS)
@@ -2860,7 +2799,7 @@ string cannot_read_item_reason(const item_def &item)
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
         return "You cannot read scrolls while unable to breathe!";
 
-    // ru
+    // no reading while threatened (Ru/random mutation)
     if (you.duration[DUR_NO_SCROLLS])
         return "You cannot read scrolls in your current state!";
 
@@ -2888,10 +2827,9 @@ string cannot_read_item_reason(const item_def &item)
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
         case SCR_IDENTIFY:
+            if (have_passive(passive_t::want_curses))
+                return _no_items_reason(OSEL_CURSED_WORN);
             return _no_items_reason(OSEL_UNIDENT, true);
-
-        case SCR_REMOVE_CURSE:
-            return _no_items_reason(OSEL_CURSED_WORN);
 
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
@@ -2955,7 +2893,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
  */
 void read(item_def* scroll)
 {
-    if (!player_can_read())
+    if (!_player_can_read())
         return;
 
     if (!scroll)
@@ -2964,7 +2902,7 @@ void read(item_def* scroll)
             return;
     }
 
-    const string failure_reason = cannot_read_item_reason(*scroll);
+    const string failure_reason = _cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
@@ -2972,8 +2910,9 @@ void read(item_def* scroll)
     }
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
-    // Handle player cancels before we waste time (with e.g. blurryvis)
-    if (item_type_known(*scroll)) {
+    // Handle player cancels before we waste time
+    if (item_type_known(*scroll))
+    {
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
@@ -3009,15 +2948,6 @@ void read(item_def* scroll)
         }
     }
 
-    if (you.get_mutation_level(MUT_BLURRY_VISION)
-        && !i_feel_safe(false, false, true)
-        && !yesno("Really read with blurry vision while enemies are nearby?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -3028,27 +2958,16 @@ void read(item_def* scroll)
         return;
     }
 
-    // if we have blurry vision, we need to start a delay before the actual
-    // scroll effect kicks in.
-    if (you.get_mutation_level(MUT_BLURRY_VISION))
-    {
-        // takes 0.5, 1, 2 extra turns
-        const int turns = max(1, you.get_mutation_level(MUT_BLURRY_VISION) - 1);
-        start_delay<BlurryScrollDelay>(turns, *scroll);
-        if (you.get_mutation_level(MUT_BLURRY_VISION) == 1)
-            you.time_taken /= 2;
-    }
-    else
-        read_scroll(*scroll);
+    read_scroll(*scroll);
 }
 
 /**
  * Read the provided scroll.
  *
  * Does NOT check whether the player can currently read, whether the scroll is
- * currently useless, etc. Likewise doesn't handle blurry vision, setting
- * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
- * player chooses to cancel at the last moment.
+ * currently useless, etc. Likewise doesn't handle setting you.turn_is_over and
+ * other externals. DOES destroy one scroll, unless the player chooses to
+ * cancel at the last moment.
  *
  * @param scroll The scroll to be read.
  */
@@ -3078,10 +2997,6 @@ void read_scroll(item_def& scroll)
 
     switch (which_scroll)
     {
-    case SCR_RANDOM_USELESSNESS:
-        random_uselessness();
-        break;
-
     case SCR_BLINKING:
     {
         const string reason = you.no_tele_reason(true, true);
@@ -3092,10 +3007,7 @@ void read_scroll(item_def& scroll)
             break;
         }
 
-        const bool safely_cancellable
-            = alreadyknown && !you.get_mutation_level(MUT_BLURRY_VISION);
-
-        cancel_scroll = (controlled_blink(safely_cancellable)
+        cancel_scroll = (controlled_blink(alreadyknown)
                          == spret::abort) && alreadyknown;
 
         if (!cancel_scroll)
@@ -3105,16 +3017,6 @@ void read_scroll(item_def& scroll)
 
     case SCR_TELEPORTATION:
         you_teleport();
-        break;
-
-    case SCR_REMOVE_CURSE:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            remove_curse(false);
-        }
-        else
-            cancel_scroll = !remove_curse(true, pre_succ_msg);
         break;
 
     case SCR_ACQUIREMENT:
@@ -3178,7 +3080,7 @@ void read_scroll(item_def& scroll)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
-        bad_effect = !player_res_torment(false);
+        bad_effect = !you.res_torment();
         break;
 
     case SCR_IMMOLATION:
@@ -3201,31 +3103,6 @@ void read_scroll(item_def& scroll)
         bad_effect = true;
         break;
     }
-
-#if TAG_MAJOR_VERSION == 34
-    case SCR_CURSE_WEAPON:
-    {
-        // Not you.weapon() because we want to handle melded weapons too.
-        item_def * const weapon = you.slot_item(EQ_WEAPON, true);
-        if (!weapon || !is_weapon(*weapon) || weapon->cursed())
-        {
-            bool plural = false;
-            const string weapon_name =
-                weapon ? weapon->name(DESC_YOUR)
-                       : "Your " + you.hand_name(true, &plural);
-            mprf("%s very briefly gain%s a black sheen.",
-                 weapon_name.c_str(), plural ? "" : "s");
-        }
-        else
-        {
-            // Also sets wield_change.
-            do_curse_item(*weapon, false);
-            learned_something_new(HINT_YOU_CURSED);
-            bad_effect = true;
-        }
-        break;
-    }
-#endif
 
     case SCR_ENCHANT_WEAPON:
         if (!alreadyknown)
@@ -3272,16 +3149,11 @@ void read_scroll(item_def& scroll)
             (_handle_enchant_armour(alreadyknown, pre_succ_msg) == -1);
         break;
 #if TAG_MAJOR_VERSION == 34
-    // Should always be identified by Ashenzari.
+    case SCR_CURSE_WEAPON:
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
-    {
-        const bool armour = which_scroll == SCR_CURSE_ARMOUR;
-        cancel_scroll = !curse_item(armour, pre_succ_msg);
-        break;
-    }
-
     case SCR_RECHARGING:
+    case SCR_RANDOM_USELESSNESS:
     {
         mpr("This item has been removed, sorry!");
         cancel_scroll = true;
@@ -3315,25 +3187,25 @@ void read_scroll(item_def& scroll)
             mpr("It is a scroll of amnesia.");
             // included in default force_more_message (to show it before menu)
         }
-        if (you.spell_no == 0)
-            mpr("You feel forgetful for a moment.");
-        else
+        if (you.spell_no == 0 || you.has_mutation(MUT_INNATE_CASTER))
         {
-            bool done;
-            bool aborted;
-            do
-            {
-                aborted = cast_selective_amnesia() == -1;
-                done = !aborted
-                       || alreadyknown
-                       || crawl_state.seen_hups
-                       || yesno("Really abort (and waste the scroll)?",
-                                false, 0);
-                cancel_scroll = aborted && alreadyknown;
-            } while (!done);
-            if (aborted)
-                canned_msg(MSG_OK);
+            mpr("You feel forgetful for a moment.");
+            break;
         }
+        bool done;
+        bool aborted;
+        do
+        {
+            aborted = cast_selective_amnesia() == -1;
+            done = !aborted
+                   || alreadyknown
+                   || crawl_state.seen_hups
+                   || yesno("Really abort (and waste the scroll)?",
+                            false, 0);
+            cancel_scroll = aborted && alreadyknown;
+        } while (!done);
+        if (aborted)
+            canned_msg(MSG_OK);
         break;
 
     default:

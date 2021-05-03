@@ -645,36 +645,34 @@ end
 -- List of useful scrolls, with some reasonable weights.
 -- When changing the list or the weights, please keep the total weight at 1000.
 dgn.good_scrolls = [[
-    w:85  scroll of identify no_pickup /
-    w:38  scroll of identify no_pickup q:2 /
-    w:10  scroll of identify no_pickup q:3 /
+    w:120 scroll of identify no_pickup /
+    w:55  scroll of identify no_pickup q:2 /
+    w:15  scroll of identify no_pickup q:3 /
     w:85  scroll of teleportation no_pickup /
-    w:38  scroll of teleportation no_pickup q:2 /
+    w:45  scroll of teleportation no_pickup q:2 /
     w:10  scroll of teleportation no_pickup q:3 /
     w:85  scroll of fog no_pickup /
     w:33  scroll of fog no_pickup q:2 /
-    w:85  scroll of remove curse no_pickup /
-    w:38  scroll of remove curse no_pickup q:2 /
     w:95  scroll of enchant weapon no_pickup /
-    w:38  scroll of enchant weapon no_pickup q:2 /
+    w:40  scroll of enchant weapon no_pickup q:2 /
     w:54  scroll of blinking no_pickup /
     w:22  scroll of blinking no_pickup q:2 /
     w:54  scroll of enchant armour no_pickup /
     w:22  scroll of enchant armour no_pickup q:2 /
-    w:33  scroll of magic mapping no_pickup /
-    w:11  scroll of magic mapping no_pickup q:2 /
-    w:33  scroll of amnesia no_pickup /
-    w:11  scroll of amnesia no_pickup q:2 /
+    w:45  scroll of magic mapping no_pickup /
+    w:20  scroll of magic mapping no_pickup q:2 /
+    w:40  scroll of amnesia no_pickup /
+    w:15  scroll of amnesia no_pickup q:2 /
     w:33  scroll of holy word no_pickup q:1 /
     w:11  scroll of holy word no_pickup q:2 /
-    w:22  scroll of silence no_pickup q:1 /
-    w:5   scroll of silence no_pickup q:2 /
+    w:30  scroll of silence no_pickup q:1 /
+    w:10   scroll of silence no_pickup q:2 /
     w:11  scroll of acquirement no_pickup q:1 /
     w:4   scroll of acquirement no_pickup q:2 /
     w:1   scroll of acquirement no_pickup q:3 /
-    w:11  scroll of brand weapon no_pickup q:1 /
-    w:11  scroll of torment no_pickup q:1 /
-    w:11  scroll of vulnerability no_pickup
+    w:15  scroll of brand weapon no_pickup q:1 /
+    w:15  scroll of torment no_pickup q:1 /
+    w:15  scroll of vulnerability no_pickup
     ]]
 
 -- Some scroll and potions with weights that are used as nice loot. These lists
@@ -724,33 +722,60 @@ dgn.randart_aux_armour = "cloak randart / helmet randart / hat randart " ..
 -- Make an item definition that will randomly choose from combinations of the
 -- given tables of weighted item types and optional egos.
 --
--- @param items     A table with weapon names as keys and weights as values.
--- @param egos      An optional table with ego names as keys and weights as
---                  values.
+-- @param items     A table or string giving the possible item types. If a
+--                  string, all items will be of that type. If a table, the
+--                  keys must be item type strings and the values integer
+--                  weights. The resulting item definition will contain all
+--                  combinations from the items and egos arguments based on
+--                  weights from both tables.
+-- @param egos      A string, a table, or nil giving the possible item egos. If
+--                  a string, all items will have that ego. If a table, the
+--                  keys must be ego strings and the values integer weights.
+--                  The resulting item definition will contain all combinations
+--                  from the items and egos arguments based on weights from
+--                  both tables. If nil, no egos will be specified for the
+--                  items.
 -- @param args      An optional string of arguments to use on every item entry.
---                  Should not have leading or trailing whitespace.
+--                  Should not have leading or trailing whitespace. Most common
+--                  use is for 'randart' or 'good_item', but any valid item
+--                  definition modifier works.
 -- @param separator An optional separator to use between the item entries.
 --                  Defaults to '/', which is appropriate for ITEM statements.
---                  Use '|' if making item statements for use with MONS.
--- @returns A string containing the item definition.
-function random_item_def(items, egos, args, separator)
+--                  Use '|' if making statements for use with MONS or KMONS.
+--
+-- @returns         A string containing the item definition.
+function dgn.random_item_def(items, egos, args, separator)
+    if type(items) == "string" then
+        items = {[items] = 1}
+    elseif type(items) ~= "table" then
+        error("The items argument must be a string or table")
+    end
+
+    if type(egos) == "string" then
+        egos = {[egos] = 1}
+    elseif egos ~= nil and type(items) ~= "table" then
+        error("The egos argument must be a string, a table, or nil")
+    end
+
     args = args ~= nil and " " .. args or ""
     separator = separator ~= nil and separator or '/'
+
     local item_def
     items_list = util.sorted_weight_table(items)
-
     for i, item_pair in ipairs(items_list) do
         iname = item_pair[1]
         iweight = item_pair[2]
-        -- If we have egos, define an item spec with all item+ego
-        -- combinations, each with weight scaled by item rarity and ego
-        -- rarity.
+        -- If we have egos, define an item spec with all item+ego combinations,
+        -- each with weight scaled by item rarity and ego rarity.
         if egos ~= nil then
             egos_list = util.sorted_weight_table(egos)
             for j, ego_pair in ipairs(egos_list) do
                 ename = ego_pair[1]
                 eweight = ego_pair[2]
+                -- Ignore impossible weapon+ego combinations.
                 if (not iname:find("demon") or ename ~= "holy_wrath")
+                   and (not iname:find("sacred scourge")
+                        or ename == "holy wrath")
                    and (not iname:find("quick blade") or ename ~= "speed") then
                     def = iname .. args .. " ego:" .. ename .. " w:" ..
                           math.floor(iweight * eweight)
@@ -773,6 +798,92 @@ function random_item_def(items, egos, args, separator)
         end
     end
     return item_def
+end
+
+-- Weapon sets for vault monsters that need their weapons specialized in some
+-- way. These are based on the sets defined in mon-gear.cc, but have more
+-- variety more favourable weights for the better weapon types. To use this,
+-- see the function dgn.monster_weapon() below.
+dgn.monster_weapons = {
+    ["kobold"] =      {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
+                       ["whip"] = 10},
+    ["gnoll"] =       {["spear"] = 10, ["halberd"] = 5, ["whip"] = 5,
+                       ["flail"] = 5},
+    ["sergeant"] =    {["spear"] = 5, ["trident"] = 10},
+
+    -- Ogre adds the other two-handed maces along with the usual clubs.
+    ["ogre"] =        {["dire flail"] = 5, ["great mace"] = 10,
+                       ["giant club"] = 10, ["giant spiked club"] = 10},
+
+    -- Warrior and knight are based on orc warrior and orc kight, respectively,
+    -- but with more types and include higher-end weapons at smaller weights.
+    ["warrior"] =     {["short sword"] = 5, ["rapier"] = 10,
+                       ["long sword"] = 10, ["scimitar"] = 5,
+                       ["great sword"] = 10, ["hand axe"] = 5,
+                       ["war axe"] = 10, ["broad axe"] = 5,
+                       ["battleaxe"] = 10, ["spear"] = 5, ["trident"] = 10,
+                       ["halberd"] = 10, ["glaive"] = 5, ["whip"] = 5,
+                       ["mace"] = 10, ["flail"] = 10, ["morningstar"] = 5,
+                       ["dire flail"] = 10, ["great mace"] = 5,
+                       ["quarterstaff"] = 10},
+    ["knight"] =      {["scimitar"] = 15, ["demon blade"] = 5,
+                       ["double sword"] = 5, ["great sword"] = 15,
+                       ["triple sword"] = 5, ["war axe"] = 5,
+                       ["broad axe"] = 10, ["battleaxe"] = 15,
+                       ["executioner's axe"] = 5, ["demon trident"] = 5,
+                       ["glaive"] = 10, ["bardiche"] = 5, ["morningstar"] = 10,
+                       ["demon whip"] = 5, ["eveningstar"] = 5,
+                       ["dire flail"] = 10, ["great mace"] = 10,
+                       ["lajatang"] = 5},
+
+    -- Spriggan sets. Rider gets a small chance for demon trident, and druid
+    -- gets and equal chance for lajatang.
+    ["spriggan"] =    {["dagger"] = 1, ["short sword"] = 1, ["rapier"] = 2},
+    ["rider"] =       {["spear"] = 5, ["trident"] = 10, ["demon trident"] = 2},
+    ["druid"] =       {["quarterstaff"] = 10, ["lajatang"] = 10},
+    ["berserker"] =   {["rapier"] = 10, ["quick blade"] = 5, ["war axe"] = 5,
+                       ["broad axe"] = 10, ["morningstar"] = 10,
+                       ["morningstar"] = 10, ["demon whip"] = 5,
+                       ["quarterstaff"] = 10, ["lajatang"] = 5},
+    ["defender"] =    {["rapier"] = 10, ["quick blade"] = 10,
+                       ["morningstar"] = 10, ["demon whip"] = 10,
+                       ["lajatang"] = 10},
+
+    ["merfolk"] =     {["spear"] = 10, ["trident"] = 10, ["halberd"] = 5,
+                       ["glaive"] = 5},
+    ["impaler"] =     {["trident"] = 15, ["demon trident"] = 5},
+
+    ["elf knight"] =  {["long sword"] = 10, ["scimitar"] = 20,
+                       ["demon blade"] = 5},
+    ["blademaster"] = {["rapier"] = 20, ["quick blade"] = 5},
+}
+
+-- Make a monster weapon equipment string based on the table of monster class
+-- weapon weights in the dgn.monster_weapons table.
+--
+-- @param class     A string, which should be a key in the dgn.monster_weapons
+--                  table.
+-- @param egos      A string, a table, or nil giving the possible weapon egos.
+--                  If a string, all weapons will have that ego. If a table,
+--                  the keys must be ego strings and the values integer
+--                  weights. The resulting weapon definition will contain all
+--                  combinations from the items and egos arguments based on
+--                  weights from both tables. If nil, no egos will be specified
+--                  for the weapons.
+-- @param args      An optional string of arguments to use on every weapon
+--                  entry. Should not have leading or trailing whitespace.
+--                  Most common use is for 'randart' or 'good_item', but any
+--                  valid item definition modifier works.
+--
+-- @returns         A string containing the weapon definition. Append the
+--                  resulting string to the monster definition after a
+--                  semicolon.
+function dgn.monster_weapon(class, egos, args)
+    if dgn.monster_weapons[class] == nil then
+        error("Unknown weapon class: " .. class)
+    end
+
+    return dgn.random_item_def(dgn.monster_weapons[class], egos, quality, '|')
 end
 
 -- Returns true if point1 is inside radius(X, point2).

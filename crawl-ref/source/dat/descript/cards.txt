@@ -37,8 +37,7 @@ the Elixir card
 
 The card depicts a smug smile formed out of nine chalices.
 
-Drawing this card rapidly restores the user's health or magic, or both at high power
-levels. It will also heal their allies.
+Drawing this card rapidly restores the user's health and magic.
 %%%%
 the Cloud card
 
@@ -111,12 +110,11 @@ vast room.
 Drawing this card will summon a dancing weapon. Its quality, brand, and
 friendliness are all affected by card power.
 %%%%
-Foxfire card
+the Swarm card
 
-The card depicts a swamp at night, suffused with an eerie glow.
+The card depicts a bear surrounded by a swarm of bees. It hums ominously.
 
-Drawing this card will summon forth flying swarms. Some of their members may
-be hostile.
+Drawing this card will summon bees.
 %%%%
 the Rangers card
 

@@ -18,7 +18,7 @@ function zot_entry_setup(e)
     e.mons("fire dragon / ice dragon / storm dragon / \
             shadow dragon / bone dragon / golden dragon")
     e.mons("patrolling nonbase draconian")
-    e.kmons("0 = ettin / yaktaur captain / glowing shapeshifter w:5 / \
+    e.kmons("0 = ettin / tengu warrior / glowing shapeshifter w:5 / \
                  stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
     e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
                  spriggan air mage w:8 / deep troll earth mage w:8 / \
@@ -917,9 +917,8 @@ MONS:   elephant / w:5 dire elephant / w:2 hellephant
 MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
-SUBST:  % = !:10 ?:4 .:20
+SUBST:  % = !:10 .:20
 KITEM:  ! = club / nothing
-KITEM:  ? = wand of random effects
 COLOUR: " : yellow
 MAP
      ................

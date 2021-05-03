@@ -65,18 +65,13 @@ Features
  >< - escape hatches - you can leave the level by these but will usually
       not land on stairs/hatches
 
- ^ - random trap. Deprecated.
- ~ - random trap suitable for the branch and depth the map is being used.
-     Deprecated.
-
  A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
  C - Random altar.
 
  G - Granite statue (does nothing) - you can see through but not walk through.
-     Also, sight-based effects like smiting work past granite statues, as does
-     apportation.
+     Also, sight-based effects like smiting work past granite statues.
  I - orcish idol. As granite statue, generally used for theme.
 
  T - Water fountain
@@ -94,7 +89,7 @@ Items
  | - superb quality item, the highest quality level. It's a special class
      above the "*" glyph, similar to the "good_item" modifier described
      below, but with a different distribution of item classes: this glyph
-     generates only weapons, armour, jewellery, books, staves, rods, and
+     generates only weapons, armour, jewellery, books, staves, and
      miscellaneous items.
  d-k - item array item. See section below on ITEM: arrays for more info.
 
@@ -310,8 +305,8 @@ PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.
           The branches need to use the official abbreviations also used e.g. in
           the overmap (Ctrl-O): D, Temple, Orc, Elf, Lair, Swamp, Shoals,
-          Spider, Snake, Slime, Vaults, Blade, Crypt, Forest, Tomb, Hell, Dis,
-          Geh, Coc, Tar, Zot.
+          Spider, Snake, Slime, Vaults, Crypt, Tomb, Hell, Dis, Geh, Coc, Tar,
+          Zot.
 
           PLACE can also be used to specify arbitrary places, like D:3, which
           will force the map (or one of the maps with PLACE: D:3) to be picked
@@ -474,7 +469,7 @@ LFLOORTILE: (tile name string, e.g. "floor_tomb")
           this level. If the tile specified has variations, those will be
           used automatically.
 
-LROCKTILE: (tile name string, e.g. "wall_hive")
+LROCKTILE: (tile name string, e.g. "wall_wax")
           Same as LFLOORTILE, but for rock walls.
 
 ITEM:     (list of items, separated by comma)
@@ -484,7 +479,7 @@ ITEM:     (list of items, separated by comma)
           builder sees a "d" in the vault definition, the second will be used
           for "e"s, etc. Positions are comma-separated; several ITEM: lines
           are possible as well. The following defines letters "d" - "g":
-            ITEM: stone, ring mail, meat ration, ring of hunger
+            ITEM: stone, ring mail, potion of haste, ring of ice
 
           Positions can contain multiple possibilities, one of which the
           builder will choose randomly. Separate such multiple possibilities
@@ -496,18 +491,18 @@ ITEM:     (list of items, separated by comma)
           possibility is
           [possibility's weight: / sum of all weight:s in that array position]
 
-          For example, the following line makes letter "d" into a bread ration
-          with 50% chance, or apple or orange with 25% chance each:
+          For example, the following line makes letter "d" into a cloak with
+          50% chance, or hat or helmet with 25% chance each:
 
-            ITEM: bread ration / w:5 apple / w:5 orange
+            ITEM: cloak / w:5 hat / w:5 helmet
 
           Modifiers:
           * "q:N" sets the item quantity to N (if N > 0). Does nothing
              if the item is not stackable.
           * "charges:N" sets the number of charges for wands.
-          * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
-            jewellery (such as rings of intelligence or slaying), and
-            throwing nets.
+          * "plus:N" sets the item plus for weapons, armour, and jewellery
+            (such as rings of intelligence or slaying). Do not override fixed
+            plusses for jewellery unless you know what you are doing.
           * "no_uniq" prevents the item from being turned into an artefact,
             unless cancelled by an "allow_uniq" modifier.
           * "good_item" makes the builder try to make the item a good one
@@ -528,13 +523,8 @@ ITEM:     (list of items, separated by comma)
             "good_item"). If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
             vault's level number).
-          * "damaged" sets the item plusses to -1..-4. This modifier (and
-            the corresponding effect of the "cursed" modifier) does not
+          * "damaged" sets the item plusses to -1..-4. This modifier does not
             affect jewellery.
-          * "cursed" gets a curse plus plusses as in "damaged"; but the latter
-            may be overridden with "mundane", "good_item", "level:N", etc.
-          * "not_cursed" forces an item to have any curse placed on it to be
-            removed.
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item". A lone "%" may be used as an alias for "any".
           * "useful" tries to select an item usable by the player, but may
@@ -561,7 +551,6 @@ ITEM:     (list of items, separated by comma)
              to be +0.
           * "ident:" will make the item pre-identified. You need to specify
             a "|"-separated list of what is to be known:
-            * "curse"
             * "type"
             * "pluses"
             * "properties"
@@ -587,28 +576,27 @@ ITEM:     (list of items, separated by comma)
 
           Corpses
           -------
-          You can create corpses, skeletons and chunks using
-          "<monster> corpse", "<monster> skeleton", or "<monster> chunk".
+          You can create corpses and skeletons using "<monster> corpse" or
+          "<monster> skeleton".
 
-          For instance: "rat corpse", "18-headed hydra skeleton",
-          "griffon chunk".
+          For instance: "rat corpse", "18-headed hydra skeleton".
 
-          Corpses, skeletons and chunks are by default created with maximum
-          freshness (210). They may still rot away before the player finds your
-          vault. To prevent corpses from decaying, you can define them using a
+          Corpses and skeletons are by default created with maximum freshness
+          (210). They may still rot away before the player finds your vault.
+          To prevent corpses from decaying, you can define them using a
           "never_decay" property as:
 
-          ITEM: never_decay griffon corpse
+          ITEM: never_decay human corpse
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.
           Instead, you can set corpses to stay fresh until seen by the
           player with a delayed_decay marker. Instead of:
 
-             KITEM: e = griffon corpse / griffon skeleton
+             KITEM: e = orc corpse / orc skeleton
 
           you'd use:
-             : dgn.delayed_decay(_G, "e","griffon corpse / griffon skeleton")
+             : dgn.delayed_decay(_G, "e","orc corpse / orc skeleton")
 
           (Note the leading ":" - this is a Lua call).
 
@@ -617,11 +605,11 @@ ITEM:     (list of items, separated by comma)
           player enters LOS of the square in question. When triggered,
           it clears the "never_decay" property, allowing the item to
           start decaying normally. Note that this does not work with
-          "/ nothing" alternatives (or other non-chunk, non-corpse items);
+          "/ nothing" alternatives (or other non-corpse items);
           for those cases, use SUBST with a second glyph and KITEM.
 
-          If you need to put additional non-corpse, non-chunk items at
-          the same location, use delayed_decay_extra:
+          If you need to put additional non-corpse items at the same location,
+          use delayed_decay_extra:
              : dgn.delayed_decay_extra(_G, "e", "human corpse", "mace, shield")
 
           IMPORTANT: the delayed_decay line should always come after any
@@ -634,7 +622,7 @@ ITEM:     (list of items, separated by comma)
           -------------------
           You can specify fixed artefacts, e.g. the scythe of curses, by
           naming them: "KITEM: e = scythe of curses". If the desired unrand's
-          names has something between double quotes, use that: e.g, bloodbane.
+          names has something between double quotes, use that: e.g, rift.
 
           If this unrand has already been placed, a randart of the same type
           will be created instead. Staff unrands, since they have no
@@ -684,14 +672,6 @@ ITEM:     (list of items, separated by comma)
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
 
-          Decks
-          -----
-          You can specify decks with like this:
-          "deck", "ornate deck", "deck of war", "legendary deck of wonders"
-
-          Note the following synonyms:
-          common = plain, rare = ornate
-
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
@@ -718,7 +698,7 @@ MONS:     (list of monsters)
 
           Individual monsters may be prefixed with the "generate_awake"
           (without the quotes). Use this sparingly:
-              MONS: generate_awake goliath beetle
+              MONS: generate_awake boulder beetle
 
           Individual monsters may be prefixed with the "patrolling"
           (without the quotes). Use this sparingly:
@@ -785,7 +765,7 @@ MONS:     (list of monsters)
               MONS: place:Vaults:5 spectre
 
           The available modifiers are "zombie", "skeleton",
-          "simulacrum", "spectre" and "chimera".
+          "simulacrum", and "spectre".
 
           If a monster is a member of a band, you can request that it
           be eligible for band members by adding the keyword "band" to
@@ -801,9 +781,9 @@ MONS:     (list of monsters)
           name with a semi-colon and then with an item list as described
           in ITEM:, but with slashes replaced with pipes and commas replaced
           with periods. For example:
-              MONS: orc ; sabre | quick blade . chain mail | plate armour
+              MONS: orc ; rapier | quick blade . chain mail | plate armour
 
-          will generate an orc wielding either a sabre or a quick blade
+          will generate an orc wielding either a rapier or a quick blade
           and wearing either chain mail or plate armour. Randarts and
           ego items are only generated if they are explicitly requested.
           Note that any items that the monster was originally generated
@@ -838,7 +818,7 @@ MONS:     (list of monsters)
           and then using the glyph "1" multiple times will result in multiple
           "Durwent the Kobold"s).
 
-          There are three different modifiers that by used on a name:
+          There are three different modifiers that can be used on a name:
           name_adjective, name_suffix and name_replace. name_adjective
           makes the name act as an adjective. For example:
               MONS: kobold name:ugly name_adjective
@@ -944,7 +924,7 @@ MONS:     (list of monsters)
           a puff of smoke. Using non-summoning spells will also have no effect.
 
           Tagging a monster with "seen" will override the system and force that
-          player to be marked as already viewed; this means that it won't
+          monster to be marked as already viewed; this means that it won't
           generate messages such as "XYZ comes into view".
 
           Overriding Monster Spells:
@@ -1001,7 +981,7 @@ MONS:     (list of monsters)
           if created from a lua trigger.
 
           MONS: orc perm_ench:blind perm_ench:mad
-          MONS: sheep ench:sticky_flame
+          MONS: dream sheep ench:sticky_flame
           MONS: stone giant dur:1 ench:berserk
 
 
@@ -1114,7 +1094,7 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
           If COLOUR is also specified and there is a coloured variation
           of this tile, then it will be used.
 
-RTILE:    x = wall_hive:15 / wall_lair / none
+RTILE:    x = wall_wax:15 / wall_lair / none
           Identical to FTILE, but for rock walls. Not useful for anything
           but the rock wall feature.
 
@@ -1344,11 +1324,11 @@ KMONS:    ? = orc priest / w:3 deep elf priest
           KMONS: also allows you to specify alternative monsters if the
           primary monster you want to place is unavailable (because it
           is a unique that was already generated). For instance, if you want
-          to generate one of Terence, Michael or Erica or a generic human
+          to generate one of Terence, Maggie or Erica or a generic human
           (whoever is available, in that order, you can use):
-            KMONS: n = Terence, Michael, Erica, human
+            KMONS: n = Terence, Maggie, Erica, human
           Or if you want to pick randomly:
-            KMONS: n = Terence / Michael / Erica, human
+            KMONS: n = Terence / Maggie / Erica, human
 
           KMONS overrides the normal meaning of the glyph: In the absence
           of further declarations,
@@ -1443,19 +1423,16 @@ KPROP:    x = bloody
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 
-          Two additional named properties exist, but should be avoided:
+          One more named property exists, but should be avoided:
 
           * "highlight": The square will be highlighted in the X map in wizard
             mode, and will appear in dumps as "?". For debugging use only; this
             property should be removed before submitting vaults.
-          * "mold": The square is covered with mold. This property is reserved
-            for use by ballistomycetes and should in general not be set by
-            vaults.
 
           Properties can also be used as tags to apply to the entire vault:
             TAGS: no_tele_into no_tide
 
-KITEM:    ? = potion of healing / potion of restore abilities
+KITEM:    ? = potion of curing / potion of haste
           KITEM: places the specified item at all occurrences of the
           placeholder. It can be combined with KFEAT: and KMONS: lines for
           the same placeholder.
@@ -1468,7 +1445,7 @@ KITEM:    ? = potion of healing / potion of restore abilities
             KITEM: ? = q:100 gold
 
           KITEM: allows you to place multiple items on the same square:
-            KITEM: ? = bread ration, potion of water, potion of porridge
+            KITEM: ? = potion of curing, potion of haste, potion of magic
 
           KITEM overrides the normal meaning of the glyph: In the absence
           of further declarations,
@@ -1498,8 +1475,7 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
                        size_buildup_time = 1000 }
 
           Feature names used in markers must be names matching the names in
-          the source code. There's a full list of feature names in section I
-          (Feature names) at the end of this document.
+          feature-data.h, e.g. "escape_hatch_up".
 
           An important note about markers is that they are also considered map
           transforms along with SUBST, NSUBST and SHUFFLE. You usually want
@@ -1622,33 +1598,33 @@ Handling long lines
 For most map headers, you can split long lines by ending the line that will be
 continued on the next line with \ as:
 
-KMONS: * = orc ; sabre | quick blade . chain mail | scale mail / \
+KMONS: * = orc ; rapier | quick blade . chain mail | scale mail / \
            goblin ; dagger
 
 If you're using continuation lines for comma-separated lists of monsters or
 items, split your line after the comma, not before. For example:
 
 Wrong:
-        ITEM: potion of healing \
+        ITEM: potion of curing \
               , potion of haste
 Right:
-        ITEM: potion of healing, \
+        ITEM: potion of curing, \
               potion of haste
 
 But in general, it is preferable to use multiple ITEM or MONS lines if you're
 splitting comma-separated values:
 
 Preferred:
-        ITEM: potion of healing
+        ITEM: potion of curing
         ITEM: potion of haste
 
 Spaces before the \ of the continued line are significant, leading spaces of
 the next (continuing) line are not. In other words, given:
 
 ITEM: potion of\
-      healing
+      curing
 
-Crawl will see "potion ofhealing", not "potion of healing".
+Crawl will see "potion ofcuring", not "potion of curing".
 
 Assigning multiple glyphs at once
 ---------------------------------

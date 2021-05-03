@@ -563,6 +563,7 @@ public:
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
+    int         tile_window_ratio;
     maybe_bool  tile_use_small_layout;
 #endif
     int         tile_cell_pixels;

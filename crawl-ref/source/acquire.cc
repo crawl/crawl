@@ -556,9 +556,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
     int result = 0;
 
     // Rings are (number of usable rings) times as common as amulets.
-    // XXX: unify this with the actual check for ring slots
-    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
-                       - (you.get_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+    const int ring_num = you.arm_count();
 
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
@@ -638,6 +636,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
             (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
         {MISC_CONDENSER_VANE,
             (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
+        {MISC_XOMS_CHESSBOARD,
+            (you.seen_misc[MISC_XOMS_CHESSBOARD] ? 0 : 20)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -667,17 +667,15 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent */)
 {
-    // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        { WAND_ACID,            18 },
-        { WAND_ICEBLAST,        18 },
-        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 8 },
-        { WAND_PARALYSIS,       8 },
-        { WAND_MINDBURST,  5 },
+        { WAND_ACID,            20 },
+        { WAND_ICEBLAST,        20 },
+        { WAND_CHARMING,     you.get_mutation_level(MUT_NO_LOVE) ? 0 : 10 },
+        { WAND_PARALYSIS,       10 },
+        { WAND_MINDBURST,  8 },
         { WAND_POLYMORPH,       5 },
         { WAND_DIGGING,         5 },
-        { WAND_RANDOM_EFFECTS,  2 },
-        { WAND_FLAME,           1 },
+        { WAND_FLAME,           2 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -730,7 +728,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.species == SP_FELID)
+    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR))
         return OBJ_RANDOM;
 
     int type_wanted = OBJ_RANDOM;
@@ -917,6 +915,8 @@ static bool _acquire_manual(item_def &book)
                     choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
+    // Preidentify.
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return true;
 }
@@ -1314,12 +1314,6 @@ int acquirement_create_item(object_class_type class_wanted,
         else if (quant > 1)
             acq_item.quantity = quant;
 
-        // Remove curse flag from item, unless worshipping Ashenzari.
-        if (have_passive(passive_t::want_curses))
-            do_curse_item(acq_item, true);
-        else
-            do_uncurse_item(acq_item);
-
         if (acq_item.base_type == OBJ_BOOKS)
         {
             if (!_do_book_acquirement(acq_item, agent))
@@ -1344,13 +1338,6 @@ int acquirement_create_item(object_class_type class_wanted,
             case RING_EVASION:
             case RING_SLAYING:
                 acq_item.plus = GOOD_RING_PLUS;
-                break;
-
-            case RING_TELEPORTATION:
-            case AMU_INACCURACY:
-                // These are the only truly bad pieces of jewellery.
-                if (!one_chance_in(9))
-                    make_item_randart(acq_item);
                 break;
 
             default:
@@ -1681,22 +1668,36 @@ static item_def _acquirement_item_def(object_class_type item_type)
     return item;
 }
 
-static void _make_acquirement_items()
+vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 {
     vector<object_class_type> rand_classes;
 
-    if (you.species != SP_FELID)
+    if (!you.has_mutation(MUT_NO_ARMOUR))
+        rand_classes.emplace_back(OBJ_ARMOUR);
+
+    if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_ARMOUR);
         rand_classes.emplace_back(OBJ_STAVES);
     }
 
     rand_classes.emplace_back(OBJ_JEWELLERY);
     rand_classes.emplace_back(OBJ_BOOKS);
 
-    const int num_wanted = min(3, (int) rand_classes.size());
+    // dungeon generation
+    if (!scroll)
+    {
+        rand_classes.emplace_back(OBJ_MISCELLANY);
+        rand_classes.emplace_back(OBJ_WANDS);
+    }
     shuffle_array(rand_classes);
+    return rand_classes;
+}
+
+static void _make_acquirement_items()
+{
+    vector<object_class_type> rand_classes = shuffled_acquirement_classes(true);
+    const int num_wanted = min(3, (int) rand_classes.size());
 
     CrawlVector &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
     acq_items.empty();

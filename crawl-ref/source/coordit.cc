@@ -301,6 +301,20 @@ void radius_iterator::operator++(int)
     ++(*this);
 }
 
+void vision_iterator::operator++()
+{
+    do
+    {
+        radius_iterator::operator++();
+    }
+    while (*this && !who.see_cell(**this));
+}
+
+void vision_iterator::operator++(int)
+{
+    ++(*this);
+}
+
 /*
  *  adjacent iterator
  */

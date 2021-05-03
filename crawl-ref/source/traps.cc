@@ -448,10 +448,10 @@ static const vector<pair<function<void ()>, int>> zot_effects = {
     { [] { lose_stat(STAT_RANDOM, 1 + random2avg(5, 2)); }, 4 },
     { [] { contaminate_player(7000 + random2avg(13000, 2), false); }, 4 },
     { [] { you.paralyse(nullptr, 2 + random2(4), "a Zot trap"); }, 1 },
-    { [] { dec_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
+    { [] { drain_mp(you.magic_points); canned_msg(MSG_MAGIC_DRAIN); }, 2 },
     { [] { you.petrify(nullptr); }, 1 },
-    { [] { you.increase_duration(DUR_LOWERED_WL, random2(20), 20,
-                "You feel weak-willed."); }, 4 },
+    { [] { you.increase_duration(DUR_LOWERED_WL, 5 + random2(15), 20,
+                "Your willpower is stripped away!"); }, 4 },
     { [] { mons_word_of_recall(nullptr, 2 + random2(3)); }, 3 },
     { [] {
               mgen_data mg = mgen_data::hostile_at(RANDOM_DEMON_GREATER,
@@ -573,7 +573,10 @@ void trap_def::trigger(actor& triggerer)
                 return !mons.no_tele() && monster_blink(&mons);
             }, pos);
         if (!you_trigger && you.see_cell_no_trans(pos))
+        {
             you.blink();
+            interrupt_activity(activity_interrupt::teleport);
+        }
         // Don't chain disperse
         triggerer.blink();
         break;

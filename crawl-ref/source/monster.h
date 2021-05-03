@@ -267,6 +267,7 @@ public:
     bool     extra_balanced_at(const coord_def p) const;
     bool     extra_balanced() const override;
     bool     can_pass_through_feat(dungeon_feature_type grid) const override;
+    bool     can_burrow() const override;
     bool     is_habitable_feat(dungeon_feature_type actual_grid) const override;
     bool     shove(const char* name = "") override;
 
@@ -369,7 +370,7 @@ public:
     monster_type mons_species(bool zombie_base = false) const override;
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
-    bool undead_or_demonic() const override;
+    bool undead_or_demonic(bool /*temp*/ = true) const override;
     bool is_holy() const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
@@ -427,6 +428,7 @@ public:
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
+    int demon_silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
     bool petrified() const override;
@@ -510,7 +512,6 @@ public:
     void    shield_block_succeeded() override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
-    void    ablate_repulsion() override;
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const override { return 0; }
@@ -551,13 +552,14 @@ public:
 
     bool is_illusion() const;
     bool is_divine_companion() const;
-    // Jumping spiders (jump instead of blink)
+    bool is_dragonkind() const override;
+    int  dragon_level() const override;
     bool is_jumpy() const;
 
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
     void remove_summons(bool check_attitude = false);
 
-    bool clear_far_engulf() override;
+    bool clear_far_engulf(bool force = false) override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;

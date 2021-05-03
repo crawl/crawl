@@ -122,6 +122,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "stairs.h"
 #include "startup.h"
@@ -427,7 +428,7 @@ NORETURN static void _launch_game()
     {
         msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
-                    << species_name(you.species)
+                    << species::name(you.species)
                     << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
         // TODO: seeded sprint?
@@ -575,33 +576,57 @@ static void _show_commandline_options_help()
 #endif
 }
 
+static string _wanderer_equip_str()
+{
+    return "the following items: "
+        + comma_separated_fn(begin(you.inv), end(you.inv),
+                         [] (const item_def &item) -> string
+                         {
+                             return item.name(DESC_A, false, true);
+                         }, ", ", ", ", mem_fn(&item_def::defined));
+}
+
+static string _wanderer_spell_str()
+{
+    return comma_separated_fn(begin(you.spells), end(you.spells),
+                              [] (const spell_type spell) -> string
+                              {
+                                  return spell_title(spell);
+                              },
+                              ", ", ", ",
+                              // Don't include empty spell slots
+                              [] (const spell_type spell) -> bool
+                              {
+                                  return spell != SPELL_NO_SPELL;
+                              });
+}
+
+static void _djinn_announce_spells()
+{
+    const string equip_str = you.char_class == JOB_WANDERER ?
+                                        _wanderer_equip_str():
+                                        "";
+    const string spell_str = you.spell_no ?
+                                "the following spells memorised: " + _wanderer_spell_str() :
+                                "";
+    if (spell_str.empty() && equip_str.empty())
+        return;
+
+    const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
+    mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+}
+
 // Announce to the message log and make a note of the player's starting items,
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str =
-        "the following items: "
-        + comma_separated_fn(begin(you.inv), end(you.inv),
-                             [] (const item_def &item) -> string
-                             {
-                                 return item.name(DESC_A, false, true);
-                             }, ", ", ", ", mem_fn(&item_def::defined));
+    const string equip_str = _wanderer_equip_str();
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
         "; and the following spell memorised: "
-        + comma_separated_fn(begin(you.spells), end(you.spells),
-                             [] (const spell_type spell) -> string
-                             {
-                                 return spell_title(spell);
-                             },
-                             ", ", ", ",
-                             // Don't include empty spell slots
-                             [] (const spell_type spell) -> bool
-                             {
-                                 return spell != SPELL_NO_SPELL;
-                             });
+        + _wanderer_spell_str();
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
@@ -674,7 +699,7 @@ static void _take_starting_note()
 {
     ostringstream notestr;
     notestr << you.your_name << " the "
-            << species_name(you.species) << " "
+            << species::name(you.species) << " "
             << get_job_name(you.char_class)
             << " began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));
@@ -694,7 +719,9 @@ static void _take_starting_note()
     }
 #endif
 
-    if (you.char_class == JOB_WANDERER)
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        _djinn_announce_spells();
+    else if (you.char_class == JOB_WANDERER)
         _wanderer_note_equipment();
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
@@ -1553,7 +1580,7 @@ static void _experience_check()
 {
     mprf("You are a level %d %s %s.",
          you.experience_level,
-         species_name(you.species).c_str(),
+         species::name(you.species).c_str(),
          get_job_name(you.char_class));
     int perc = get_exp_progress();
 
@@ -1568,7 +1595,7 @@ static void _experience_check()
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_MULTILIVED))
     {
         int xl = you.experience_level;
         // calculate the "real" level
@@ -1595,7 +1622,7 @@ static void _experience_check()
 
     if (!crawl_state.game_is_sprint())
     {
-        if (player_has_orb())
+        if (zot_immune())
             msg::stream << "You are forever immune to Zot's power.";
         else if (player_in_branch(BRANCH_ABYSS))
             msg::stream << "You have unlimited time to explore this branch.";
@@ -1616,9 +1643,10 @@ static void _experience_check()
 
 static void _do_remove_armour()
 {
-    if (you.species == SP_FELID)
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
-        mpr("You can't remove your fur, sorry.");
+        mprf("You can't remove your %s, sorry.",
+                            species::skin_name(you.species).c_str());
         return;
     }
 
@@ -2306,6 +2334,14 @@ static void _update_still_winds()
     end_still_winds();
 }
 
+static void _check_spectral_weapon()
+{
+    if (!you.triggered_spectral)
+        if (monster* sw = find_spectral_weapon(&you))
+            end_spectral_weapon(sw, false, true);
+    you.triggered_spectral = false;
+}
+
 void world_reacts()
 {
     // All markers should be activated at this point.
@@ -2345,6 +2381,7 @@ void world_reacts()
     _check_banished();
     _check_sanctuary();
     _check_trapped();
+    _check_spectral_weapon();
 
     run_environment_effects();
 

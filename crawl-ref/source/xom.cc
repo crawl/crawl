@@ -629,6 +629,9 @@ static void _try_brand_switch(const int item_index)
     if (get_weapon_brand(item) == SPWPN_NORMAL)
         return;
 
+    // TODO: shared code with _do_chaos_upgrade
+    mprf("%s erupts in a glittering mayhem of colour.",
+                            item.name(DESC_THE, false, false, false).c_str());
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
@@ -872,18 +875,11 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        description_level_type desc = mon->friendly() ? DESC_YOUR :
-                                                        DESC_THE;
-        string msg = apostrophise(mon->name(desc));
-
-        msg += " ";
-
-        msg += item.name(DESC_PLAIN, false, false, false);
-
-        msg += " is briefly surrounded by a scintillating aura of "
-               "random colours.";
-
-        mpr(msg);
+        const description_level_type desc = mon->friendly() ? DESC_YOUR
+                                                            : DESC_THE;
+        mprf("%s %s erupts in a glittering mayhem of colour.",
+            apostrophise(mon->name(desc)).c_str(),
+            item.name(DESC_PLAIN, false, false, false).c_str());
     }
 
     const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS
@@ -971,9 +967,6 @@ static void _xom_do_potion(int /*sever*/)
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
-
-    if (pot == POT_INVISIBILITY)
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
 
     _note_potion_effect(pot);
 
@@ -1484,11 +1477,8 @@ static vector<coord_def> _xom_scenery_candidates()
     vector<coord_def> candidates;
     vector<coord_def> closed_doors;
     vector<coord_def> open_doors;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
-        if (!you.see_cell(*ri))
-            continue;
-
         dungeon_feature_type feat = env.grid(*ri);
         if (feat_is_fountain(feat))
             candidates.push_back(*ri);
@@ -1974,7 +1964,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (you.species == SP_MUMMY && you_can_wear(EQ_BODY_ARMOUR, true))
+    if (starts_with(species::skin_name(you.species), "bandage")
+        && you_can_wear(EQ_BODY_ARMOUR, true))
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -1998,7 +1989,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (species_has_hair(you.species))
+    if (species::has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");
@@ -3029,7 +3020,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
                 return XOM_BAD_DRAINING;
             // else choose something else
         }
-        else if (!player_res_torment(false))
+        else if (!you.res_torment())
             return XOM_BAD_TORMENT;
         // else choose something else
     }

@@ -95,7 +95,6 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_CHARMING, SPELL_CHARMING },
     { WAND_ACID, SPELL_CORROSIVE_BOLT },
     { WAND_MINDBURST, SPELL_MINDBURST },
-    { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
 };
 
 
@@ -415,7 +414,12 @@ static spell_list _get_spell_list(bool just_check = false,
     if (available_spells.empty())
     {
         if (!just_check)
-            mprf(MSGCH_PROMPT, "Your library has no spells.");
+        {
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                mprf(MSGCH_PROMPT, "You need no library to learn spells.");
+            else
+                mprf(MSGCH_PROMPT, "Your library has no spells.");
+        }
         return mem_spells;
     }
 
@@ -604,11 +608,11 @@ protected:
     {
         return formatted_string::parse_string(
                     make_stringf("<w>Spells %s                 Type                          %sLevel",
-                        current_action == action::cast ? "(Cast)" :
-                        current_action == action::memorise ? "(Memorise)" :
-                        current_action == action::describe ? "(Describe)" :
-                        current_action == action::hide ? "(Hide)    " :
-                            "(Show)    ",
+                        current_action == action::cast ? "(Cast)    "
+                        : current_action == action::memorise ? "(Memorise)"
+                        : current_action == action::describe ? "(Describe)"
+                        : current_action == action::hide ? "(Hide)    "
+                        : "(Show)    ",
                         you.divine_exegesis ? "" : "Failure  "));
     }
 
@@ -774,7 +778,18 @@ private:
             if (spell_hidden != show_hidden)
                 continue;
 
-            const int colour = entry_colour(spell);
+            // TODO: it might be cleaner to reorder and put unavailable spells
+            // under a different category
+            // n.b. this memorise code only checks spell-specific constraints,
+            // so it adds hotkeys e.g. if you lack the spell levels. Not sure
+            // if this is intentional.
+            const bool unavailable = current_action == action::memorise &&
+                                        !you_can_memorise(spell.spell)
+                                || current_action == action::cast &&
+                                    spell_is_useless(spell.spell, true, true);
+
+            const colour_t colour = unavailable ? (colour_t) DARKGRAY
+                                                : entry_colour(spell);
 
             ostringstream desc;
             desc << "<" << colour_to_str(colour) << ">";
@@ -798,15 +813,12 @@ private:
             desc << spell.difficulty;
 
             MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
-            // don't add a hotkey if you can't memorise/cast it
-                    (current_action == action::memorise &&
-                        !you_can_memorise(spell.spell))
-                     || current_action == action::cast &&
-                        spell_is_useless(spell.spell, true, true)
-                     ? ' ' : char(hotkey));
+                    // don't add a hotkey if you can't memorise/cast it
+                    unavailable ? 0 : char(hotkey));
             // But do increment hotkeys anyway, to keep the hotkeys consistent.
             ++hotkey;
 
+            me->indent_no_hotkeys = true;
             me->colour = colour;
             me->add_tile(tile_def(tileidx_spell(spell.spell)));
 
@@ -830,7 +842,13 @@ public:
         // Actual text handled by calc_title
         set_title(new MenuEntry(""), true, true);
 
-        if (!you.divine_exegesis)
+        if (you.divine_exegesis)
+        {
+            spell_levels_str = make_stringf(
+                "<lightgreen>Select a spell to cast with Divine Exegesis: %d MP available</lightgreen>",
+                you.magic_points);
+        }
+        else
         {
             spell_levels_str = make_stringf("<lightgreen>%d spell level%s"
                         "</lightgreen>", player_spell_levels(),
@@ -838,9 +856,8 @@ public:
                                                     ? "s left" : " left ");
             if (player_spell_levels() < 9)
                 spell_levels_str += " ";
-
-            set_more(formatted_string::parse_string(spell_levels_str + "\n"));
         }
+        set_more(formatted_string::parse_string(spell_levels_str + "\n"));
 
 #ifdef USE_TILE_LOCAL
         FontWrapper *font = tiles.get_crt_font();

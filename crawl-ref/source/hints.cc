@@ -161,7 +161,7 @@ static string _print_hints_menu(hints_types type)
     }
 
     return make_stringf("%c - %s %s %s",
-            letter, species_name(_get_hints_species(type)).c_str(),
+            letter, species::name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
 
@@ -293,11 +293,11 @@ static species_type _get_hints_species(unsigned int type)
     switch (type)
     {
     case HINT_BERSERK_CHAR:
-        return SP_MINOTAUR;
+        return SP_HILL_ORC;
     case HINT_MAGIC_CHAR:
         return SP_DEEP_ELF;
     case HINT_RANGER_CHAR:
-        return SP_HALFLING;
+        return SP_MINOTAUR;
     default:
         // Use something fancy for debugging.
         return SP_TENGU;
@@ -821,7 +821,6 @@ static bool _advise_use_wand()
         case WAND_ICEBLAST:
         case WAND_CHARMING:
         case WAND_ACID:
-        case WAND_RANDOM_EFFECTS:
         case WAND_MINDBURST:
             return true;
         }
@@ -1082,8 +1081,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_YOU_POISON:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_FLYING:
-    case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
@@ -1211,10 +1208,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (Hints.hints_type == HINT_BERSERK_CHAR)
         {
             text << "\nYou should probably stick with axes. Checking other "
-                    "axes' enchantments can be worthwhile, but weapons can be "
-                    "cursed and difficult to remove, so unless you have a "
-                    "scroll of remove curse, only wield weapons you're ready "
-                    "to be stuck with!";
+                    "axes' enchantments can be worthwhile, though!";
         }
         break;
 
@@ -1270,16 +1264,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_REMOVE_ARMOUR);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_CENTAUR ||
-#endif
-            you.species == SP_MINOTAUR)
+        if (you.get_innate_mutation_level(MUT_HORNS) > 0)
         {
-            text << "\nNote that as a " << species_name(you.species)
-                 << " you will be unable to wear "
-                 << (you.species == SP_CENTAUR ? "boots" : "helmets")
-                 << ".";
+            text << "\nNote that because of your horns you will be unable"
+                    " to wear helmets. "
+                    "(Type <w>%</w> to see a list of your mutations and "
+                    "innate abilities.)";
+            cmd.push_back(CMD_DISPLAY_MUTATIONS);
         }
         break;
 
@@ -1757,8 +1748,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_YOU_CURSED:
         text << "Cursed equipment, once worn or wielded, cannot be dropped or "
-                "removed. Scrolls of remove curse will remove all curses "
-                "from your current equipment.";
+                "removed. Ashenzari will allow you to remove curses.";
         break;
 
     case HINT_REMOVED_CURSE:
@@ -2035,17 +2025,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEW_ABILITY_ITEM:
         // Specialcase flight because it's a guaranteed trigger in the
         // tutorial.
-        if (you.evokable_flight())
+        if (you.equip_flight())
         {
-            text << "Flight will allow you to cross deep water or lava. To "
-                    "activate it, select the corresponding ability in the "
-                    "ability menu (<w>%</w>"
-#ifdef USE_TILE_LOCAL
-                    " or via <w>mouseclick</w> in the <w>command panel</w>"
-#endif
-                    "). Once flying, keep an eye on the status line and "
-                    "messages, as most forms of flight have a limited "
-                    "duration.";
+            text << "Flight will allow you to cross deep water or lava. Items "
+                    "that allow you to fly will activate automatically when "
+                    "worn.";
         }
         else
         {
@@ -2068,26 +2052,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
                 ") for details.";
         cmd.push_back(CMD_RESISTS_SCREEN);
-        break;
-
-    case HINT_FLYING:
-        if (you.evokable_flight())
-        {
-            text << "To stop flying, use the corresponding ability "
-                    "in the ability menu (<w>%</w>).";
-            cmd.push_back(CMD_USE_ABILITY);
-        }
-        break;
-
-    case HINT_INACCURACY:
-        text << "Not all items are useful, and some of them are outright "
-                "harmful. Press <w>%</w> ";
-#ifdef USE_TILE_LOCAL
-        text << "or <w>click</w> on your equipped amulet to remove it.";
-#else
-        text << "to remove your amulet.";
-#endif
-        cmd.push_back(CMD_REMOVE_JEWELLERY);
         break;
 
             // TODO: rethink this v
@@ -3017,11 +2981,10 @@ string hints_describe_item(const item_def &item)
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
-            if (item_known_cursed(item) && !long_text)
+            if (item.cursed() && !long_text)
             {
                 ostr << "\n\nOnce wielded, a cursed weapon can't be "
-                        "unwielded until the curse has been lifted by "
-                        "reading a scroll of remove curse.";
+                        "unwielded until the curse has been lifted.";
 
                 Hints.hints_events[HINT_YOU_CURSED] = false;
             }
@@ -3087,9 +3050,9 @@ string hints_describe_item(const item_def &item)
             }
             else
 #endif
-            if (you.species == SP_MINOTAUR && is_hard_helmet(item))
+            if (you.get_innate_mutation_level(MUT_HORNS) > 0 && is_hard_helmet(item))
             {
-                ostr << "As a Minotaur you cannot wear helmets. "
+                ostr << "Because of your horns you cannot wear helmets. "
                         "(Type <w>%</w> to see a list of your mutations and "
                         "innate abilities.)";
                 cmd.push_back(CMD_DISPLAY_MUTATIONS);
@@ -3148,11 +3111,10 @@ string hints_describe_item(const item_def &item)
             }
             if (wearable)
             {
-                if (item_known_cursed(item))
+                if (item.cursed())
                 {
                     ostr << "\nA cursed piece of armour, once worn, cannot be "
-                            "removed again until the curse has been lifted by "
-                            "reading a scroll of remove curse.";
+                            "removed again until the curse has been lifted.";
                 }
                 if (gives_resistance(item))
                 {
@@ -3226,11 +3188,11 @@ string hints_describe_item(const item_def &item)
             cmd.push_back(CMD_WEAR_JEWELLERY);
             cmd.push_back(CMD_REMOVE_JEWELLERY);
 
-            if (item_known_cursed(item))
+            if (item.cursed())
             {
                 ostr << "\nA cursed piece of jewellery will stick to its "
                         "wearer when equipped, and cannot be removed until "
-                        "you read a scroll of remove curse.";
+                        "the curse is lifted.";
             }
             if (gives_resistance(item))
             {

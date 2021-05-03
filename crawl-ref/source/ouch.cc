@@ -173,12 +173,23 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
-            int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
-            pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
-            poison_player(pois, source, kaux);
 
-            if (player_res_poison() > 0)
-                canned_msg(MSG_YOU_RESIST);
+            if (beam->origin_spell == SPELL_SPIT_POISON &&
+                beam->agent(true)->is_monster() &&
+                beam->agent(true)->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM))
+            {
+                curare_actor(beam->agent(), &you, 2, "concentrated venom",
+                             beam->agent(true)->name(DESC_PLAIN));
+            }
+            else
+            {
+                int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
+                pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
+                poison_player(pois, source, kaux);
+
+                if (player_res_poison() > 0)
+                    canned_msg(MSG_YOU_RESIST);
+            }
         }
 
         break;
@@ -264,14 +275,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
-    case BEAM_AIR:
-    {
-        // Airstrike.
-        if (you.airborne())
-            hurted += hurted / 2;
-        break;
-    }
-
     default:
         break;
     }                           // end switch
@@ -319,18 +322,6 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     }
 }
 
-static void _lose_level_abilities()
-{
-    if (you.attribute[ATTR_PERM_FLIGHT]
-        && !you.racial_permanent_flight()
-        && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-    {
-        you.increase_duration(DUR_FLIGHT, 50, 100);
-        you.attribute[ATTR_PERM_FLIGHT] = 0;
-        mprf(MSGCH_WARN, "You feel your flight won't last long.");
-    }
-}
-
 void lose_level()
 {
     // Because you.experience is unsigned long, if it's going to be
@@ -349,7 +340,6 @@ void lose_level()
 
     calc_hp();
     calc_mp();
-    _lose_level_abilities();
 
     char buf[200];
     sprintf(buf, "HP: %d/%d MP: %d/%d",
@@ -729,7 +719,7 @@ static void _maybe_corrode()
 static void _maybe_slow()
 {
     int slow_sources = you.scan_artefacts(ARTP_SLOW);
-    if (x_chance_in_y(slow_sources, 100))
+    for (int degree = binomial(slow_sources, 1); degree > 0; degree--)
         slow_player(10 + random2(5));
 }
 
@@ -805,16 +795,15 @@ int do_shave_damage(int dam)
 
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
-// than 4% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage or <30% max health
-// current hp.
+// than 5% max hp. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 20% max health damage.
 static bool _is_damage_threatening (int damage_fraction_of_hp)
 {
-    int hp_fraction = you.hp * 100 / you.hp_max;
+    const int hp_fraction = you.hp * 100 / you.hp_max;
     return damage_fraction_of_hp > 5
             && hp_fraction <= 85
             && (damage_fraction_of_hp + random2(20) >= 20
-                || random2(100) < hp_fraction);
+                || random2(100) > hp_fraction);
 }
 
 // Palentongas curl up after the first time they've been hit in a round.
@@ -830,7 +819,7 @@ static void _consider_curling(kill_method_type death_type)
     {
         case KILLED_BY_MONSTER:
         case KILLED_BY_BEAM:
-        case KILLED_BY_SPORE:
+        case KILLED_BY_DEATH_EXPLOSION:
         case KILLED_BY_TRAP:
         case KILLED_BY_BOUNCE:
         case KILLED_BY_REFLECTION:
@@ -926,7 +915,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         // Check _is_damage_threatening separately for read and drink so they
         // don't always trigger in unison when you have both.
-        if (you.get_mutation_level(MUT_NO_READ))
+        if (you.get_mutation_level(MUT_READ_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -937,7 +926,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
         }
 
-        if (you.get_mutation_level(MUT_NO_DRINK))
+        if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -962,7 +951,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             mp = min(mp, you.magic_points);
 
             dam -= mp;
-            dec_mp(mp);
+            drain_mp(mp);
 
             // Wake players who took fatal damage exactly equal to current HP,
             // but had it reduced below fatal threshhold by spirit shield.
@@ -999,14 +988,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.hp > 0 && dam > 0)
         {
-            if (Options.hp_warning
-                && you.hp <= (you.hp_max * Options.hp_warning) / 100
-                && (death_type != KILLED_BY_POISON || poison_is_lethal()))
-            {
-                flash_view_delay(UA_HP, RED, 50);
-                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
-                dungeon_events.fire_event(DET_HP_WARNING);
-            }
+            if (death_type != KILLED_BY_POISON || poison_is_lethal())
+                flush_hp();
 
             hints_healing_check();
 

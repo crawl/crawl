@@ -210,18 +210,12 @@ static string _beogh_bless_melee_weapon(monster* mon)
     {
         blessed = true;
     }
-    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+    // Enchant it. (Lower odds at high weapon enchantment.)
     if (!x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
         && enchant_weapon(wpn, true))
     {
         set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
         blessed = true;
-    }
-    if (wpn.cursed())
-    {
-        do_uncurse_item(wpn);
-        if (!blessed)
-            return "uncursed armament";
     }
 
     if (!blessed)
@@ -256,18 +250,12 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         {
            blessed = true;
         }
-        // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+        // Enchant it. (Lower odds at high weapon enchantment.)
         if (!x_chance_in_y(launcher.plus, MAX_WPN_ENCHANT)
             && enchant_weapon(launcher, true))
         {
             set_ident_flags(launcher, ISFLAG_KNOW_PLUSES);
             blessed = true;
-        }
-        if (launcher.cursed())
-        {
-            do_uncurse_item(launcher);
-            if (!blessed)
-                return "uncursed armament";
         }
 
         // Otherwise gift ammunition.

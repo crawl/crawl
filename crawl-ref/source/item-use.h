@@ -35,8 +35,6 @@ bool puton_ring(item_def &to_puton, bool allow_prompt = true,
 
 void read(item_def* scroll = nullptr);
 void read_scroll(item_def& scroll);
-bool player_can_read();
-string cannot_read_item_reason(const item_def &item);
 
 bool remove_ring(int slot = -1, bool announce = false);
 
@@ -58,6 +56,5 @@ bool item_is_worn(int inv_slot);
 
 bool enchant_weapon(item_def &wpn, bool quiet);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
-void random_uselessness();
 
 void prompt_inscribe_item();

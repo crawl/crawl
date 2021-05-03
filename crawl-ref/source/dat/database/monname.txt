@@ -241,6 +241,12 @@ Zorug
 %%%%
 # Ancestor names, split by gender & culture.
 # FR: asian names
+ancestor name
+
+@ancestor male name@
+
+@ancestor female name@
+%%%%
 ancestor male name
 
 @_west_european_male_name_@

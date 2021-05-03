@@ -290,23 +290,6 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_FLASH_FREEZE,
-    "flash freeze",
-    200,
-    nullptr,
-    nullptr,
-    new dicedef_calculator<3, 7, 1, 12>,
-    new tohit_calculator<5, 1, 3>,
-    WHITE,
-    false,
-    BEAM_ICE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    0
-},
-
-{
     ZAP_SPIT_LAVA,
     "glob of lava",
     200,
@@ -1120,6 +1103,23 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
+    ZAP_VAMPIRIC_DRAINING,
+    "",
+    200,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<2, 6, 1, 14>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    BLACK,
+    true,
+    BEAM_VAMPIRIC_DRAINING,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    0
+},
+
+{
     ZAP_MINDBURST,
     "",
     100,
@@ -1397,23 +1397,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     true,
     false,
     6
-},
-
-{
-    ZAP_RANDOM_BOLT_TRACER,
-    "random bolt tracer",
-    200,
-    new dicedef_calculator<AUTOMATIC_HIT, 1, 0, 1>,
-    new tohit_calculator<AUTOMATIC_HIT>,
-    nullptr,
-    nullptr,
-    WHITE,
-    false,
-    BEAM_BOUNCY_TRACER,
-    DCHAR_FIRED_DEBUG,
-    true,
-    false,
-    0
 },
 
 {
@@ -1742,6 +1725,23 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     BEAM_DEVASTATION,
     DCHAR_FIRED_ZAP,
     true,
+    false,
+    0
+},
+
+{
+    ZAP_MIGHT,
+    "",
+    100,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    BLACK,
+    true,
+    BEAM_MIGHT,
+    NUM_DCHAR_TYPES,
+    false,
     false,
     0
 },

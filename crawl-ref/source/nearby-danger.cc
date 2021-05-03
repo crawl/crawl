@@ -94,17 +94,18 @@ bool mons_can_hurt_player(const monster* mon)
     //        It should, for the purposes of i_feel_safe. [rob]
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
-    //
-    // This also doesn't account for explosion radii, which is a false positive
-    // for a player waiting near (but not in range of) their own fulminant
-    // prism
-    if (_mons_has_path_to_player(mon) || mons_blows_up(*mon))
+    if (_mons_has_path_to_player(mon))
         return true;
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
+    //
+    // This also doesn't account for explosion radii, which is a false positive
+    // for a player waiting near (but not in range of) their own fulminant
+    // prism
     if (you.see_cell_no_trans(mon->pos())
-        && (mons_has_ranged_attack(*mon)
+        && (mons_blows_up(*mon)
+            || mons_has_ranged_attack(*mon)
             || mons_has_ranged_spell(*mon, false, true)))
     {
         return true;
@@ -193,8 +194,11 @@ vector<monster* > get_nearby_monsters(bool want_move,
     vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    for (vision_iterator ri(you); ri; ++ri)
     {
+        if (ri->distance_from(you.pos()) > range)
+            continue;
+
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
@@ -436,7 +440,6 @@ void revive()
     // doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
-    you.disease = 0;
     you.magic_contamination = 0;
     restore_stat(STAT_ALL, 0, true);
 
@@ -449,15 +452,11 @@ void revive()
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
-    if (you.duration[DUR_SCRYING])
-        you.xray_vision = false;
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 

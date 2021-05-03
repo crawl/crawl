@@ -102,6 +102,82 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
 }
 
 /**
+ * Return the base to-hit bonus that a monster with the given HD gets.
+ * @param hd               The hit dice (level) of the monster.
+ * @param skilled    Does the monster have bonus to-hit from the fighter or archer flag?
+ * @param ranged      Is this attack ranged or melee?
+ *
+ * @return         A base to-hit value, before equipment, statuses, etc.
+ */
+int mon_to_hit_base(int hd, bool skilled, bool ranged)
+{
+    if (ranged)
+    {
+        const int hd_mult = skilled ? 15 : 9;
+        return 18 + hd * hd_mult / 6;
+    }
+    const int hd_mult = skilled ? 25 : 15;
+    return 18 + hd * hd_mult / 10;
+}
+
+int mon_shield_bypass(int hd)
+{
+    return 15 + hd * 2 / 3;
+}
+
+/**
+ * Return the odds of a monster attack with the given to-hit bonus hitting the given ev with the
+ * given EV, rounded to the nearest percent.
+ *
+ * TODO: deduplicate with to_hit_pct().
+ *
+ * @return                  To-hit percent between 0 and 100 (inclusive).
+ */
+int mon_to_hit_pct(int to_land, int ev)
+{
+    if (to_land >= AUTOMATIC_HIT)
+        return 100;
+
+    if (ev <= 0)
+        return 100 - MIN_HIT_MISS_PERCENTAGE / 2;
+
+    ++to_land; // per calc_to_hit()
+
+    int hits = 0;
+    for (int ev1 = 0; ev1 < ev; ev1++)
+        for (int ev2 = 0; ev2 < ev; ev2++)
+            hits += max(0, to_land - (ev1 + ev2));
+
+    double hit_chance = ((double)hits) / (to_land * ev * ev);
+
+    // Apply Bayes Theorem to account for auto hit and miss.
+    hit_chance = hit_chance * (1 - MIN_HIT_MISS_PERCENTAGE / 200.0)
+              + (1 - hit_chance) * MIN_HIT_MISS_PERCENTAGE / 200.0;
+
+    return (int)(hit_chance*100);
+}
+
+int mon_beat_sh_pct(int bypass, int sh)
+{
+    if (sh <= 0)
+        return 100;
+
+    sh *= 2; // per shield_bonus()
+
+    int hits = 0;
+    for (int sh1 = 0; sh1 < sh; sh1++)
+    {
+        for (int sh2 = 0; sh2 < sh; sh2++)
+        {
+            int adj_sh = (sh1 + sh2) / (3*2) - 1;
+            hits += max(0, bypass - adj_sh);
+        }
+    }
+    const int denom = sh * sh * bypass;
+    return hits * 100 / denom;
+}
+
+/**
  * Switch from a bad weapon to melee.
  *
  * This function assumes some weapon is being wielded.
@@ -217,10 +293,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (did_hit)
             *did_hit = attk.did_hit;
 
-        // A spectral weapon attacks whenever the player does
-        if (!simu && you.props.exists("spectral_weapon"))
-            trigger_spectral_weapon(&you, defender);
-
         if (!simu && will_have_passive(passive_t::shadow_attacks))
             dithmenos_shadow_melee(defender);
 
@@ -230,15 +302,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
     // about unpredictable or weird results from players.
-
-    // If this is a spectral weapon check if it can attack
-    if (attacker->type == MONS_SPECTRAL_WEAPON
-        && !confirm_attack_spectral_weapon(attacker->as_monster(), defender))
-    {
-        // Pretend an attack happened,
-        // so the weapon doesn't advance unecessarily.
-        return true;
-    }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack()
         ? attacker->heads() + MAX_NUM_ATTACKS - 1
@@ -361,10 +424,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         fire_final_effects();
     }
-
-    // A spectral weapon attacks whenever the player does
-    if (!simu && attacker->props.exists("spectral_weapon"))
-        trigger_spectral_weapon(attacker, defender);
 
     return true;
 }
@@ -539,6 +598,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_NEG:
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
+        case BEAM_VAMPIRIC_DRAINING:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -588,6 +648,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
                                      || flavour == BEAM_MALIGN_OFFERING
+                                     || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
                                      || flavour == BEAM_POISON
                                      // just the resistible part
@@ -605,7 +666,8 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
-                     || flavour == BEAM_MALIGN_OFFERING)
+                     || flavour == BEAM_MALIGN_OFFERING
+                     || flavour == BEAM_VAMPIRIC_DRAINING)
             {
                 resistible /= res * 2;
             }
@@ -811,7 +873,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  */
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number,
-                           wu_jian_attack_type wu_jian_attack)
+                           wu_jian_attack_type wu_jian_attack,
+                           bool is_projected)
 {
     if (attacker.is_player())
     {
@@ -832,12 +895,14 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
     {
         actor* def = targets.front();
 
-        if (def && def->alive() && !_dont_harm(attacker, *def) && adjacent(attacker.pos(), def->pos()))
+        if (def && def->alive() && !_dont_harm(attacker, *def)
+            && (is_projected || adjacent(attacker.pos(), def->pos())))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
 
             attck.wu_jian_attack = wu_jian_attack;
+            attck.is_projected = is_projected;
             attck.attack();
         }
         targets.pop_front();
@@ -1179,4 +1244,20 @@ bool otr_stop_summoning_prompt(string verb)
         canned_msg(MSG_OK);
         return true;
     }
+}
+
+bool can_reach_attack_between(coord_def source, coord_def target)
+{
+    const coord_def delta(target - source);
+    const int grid_distance(delta.rdist());
+    const coord_def first_middle(source + delta / 2);
+    const coord_def second_middle(target - delta / 2);
+
+    return grid_distance == 2
+        // And with no dungeon furniture in the way of the reaching
+        // attack;
+        && (feat_is_reachable_past(env.grid(first_middle))
+            || feat_is_reachable_past(env.grid(second_middle)))
+        // The foe should be on the map (not stepped from time).
+        && in_bounds(target);
 }

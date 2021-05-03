@@ -76,8 +76,8 @@ enum enchant_type
     ENCH_MIRROR_DAMAGE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_MAGIC_ARMOUR,
-#endif
     ENCH_FEAR_INSPIRING,
+#endif
     ENCH_PORTAL_PACIFIED,
 #if TAG_MAJOR_VERSION == 34
     ENCH_WITHDRAWN,
@@ -104,7 +104,9 @@ enum enchant_type
     ENCH_DEATHS_DOOR,
 #endif
     ENCH_ROLLING,        // Boulder Beetle in ball form
+#if TAG_MAJOR_VERSION == 34
     ENCH_OZOCUBUS_ARMOUR,
+#endif
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
     ENCH_WORD_OF_RECALL, // Chanting word of recall
@@ -194,6 +196,7 @@ enum enchant_type
     ENCH_RING_OF_DRAINING,
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
+    ENCH_CONCENTRATE_VENOM,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

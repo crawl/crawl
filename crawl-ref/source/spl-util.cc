@@ -31,11 +31,13 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
@@ -405,7 +407,8 @@ bool del_spell_from_memory(spell_type spell)
 bool spell_is_direct_explosion(spell_type spell)
 {
     return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
-           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL
+           || spell == SPELL_ERUPTION;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -485,6 +488,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
+        || spell == SPELL_MANIFOLD_ASSAULT
         || spell == SPELL_ABSOLUTE_ZERO) // n.b. not an area spell
     {
         return true;
@@ -981,10 +985,15 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool allow_bonus)
+int spell_range(spell_type spell, int pow,
+                bool allow_bonus, bool ignore_shadows)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
+
+    const int range_cap = ignore_shadows ? you.normal_vision
+                                         : you.current_vision;
+
     ASSERT(maxrange >= minrange);
 
     // spells with no range have maxrange == minrange == -1
@@ -1003,15 +1012,15 @@ int spell_range(spell_type spell, int pow, bool allow_bonus)
     }
 
     if (minrange == maxrange)
-        return min(minrange, (int)you.current_vision);
+        return min(minrange, range_cap);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return min(maxrange, (int)you.current_vision);
+        return min(maxrange, range_cap);
 
     // Round appropriately.
-    return min((int)you.current_vision,
+    return min(range_cap,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
@@ -1119,9 +1128,9 @@ bool casting_is_useless(spell_type spell, bool temp)
 }
 
 /**
- * Casting-specific checks that are involved when casting any spell. Includes
- * MP (which does use the spell level if provided), confusion state, banned
- * schools.
+ * Casting-specific checks that are involved when casting any spell or larger
+ * groups of spells (e.g. entire schools). Includes MP (which does use the
+ * spell level if provided), confusion state, banned schools.
  *
  * @param spell      The spell in question.
  * @param temp       Include checks for volatile or temporary states
@@ -1135,13 +1144,57 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         if (you.duration[DUR_CONF] > 0)
             return "you're too confused to cast spells.";
 
-        if (!enough_mp(spell_mana(spell), true, false))
-            return "you don't have enough magic to cast that spell.";
+        if (spell_difficulty(spell) > you.experience_level)
+            return "you aren't experienced enough to cast this spell.";
+
+        if (you.has_mutation(MUT_HP_CASTING))
+        {
+            // TODO: deduplicate with enough_hp()
+            if (you.duration[DUR_DEATHS_DOOR])
+                return "you cannot pay life while functionally dead.";
+            if (!enough_hp(spell_mana(spell), true, false))
+                return "you don't have enough health to cast this spell.";
+        }
+        else if (!enough_mp(spell_mana(spell), true, false))
+            return "you don't have enough magic to cast this spell.";
+
+        if (spell == SPELL_SUBLIMATION_OF_BLOOD
+            && you.magic_points == you.max_magic_points)
+        {
+            if (you.has_mutation(MUT_HP_CASTING))
+                return "your magic and health are inextricable.";
+            return "your reserves of magic are already full.";
+        }
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
     if (cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
+
+    // TODO: these checks were in separate places, but is this already covered
+    // by cannot_use_schools?
+    if (get_spell_disciplines(spell) & spschool::summoning
+        && you.get_mutation_level(MUT_NO_LOVE))
+    {
+        return "you cannot coerce anything to answer your summons.";
+    }
+
+    // other Ru spells not affected by the school checks
+    switch (spell)
+    {
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_DEATH_CHANNEL:
+    case SPELL_SIMULACRUM:
+    case SPELL_INFESTATION:
+    case SPELL_TUKIMAS_DANCE:
+        if (you.get_mutation_level(MUT_NO_LOVE))
+            return "you cannot coerce anything to obey you.";
+        break;
+    default:
+        break;
+    }
+
 
     return "";
 }
@@ -1203,29 +1256,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!prevent && temp && spell_no_hostile_in_range(spell))
         return "you can't see any hostile targets that would be affected.";
 
-    // other Ru spells not affected by the school check; handle these separately
-    // since they may have other constraints
-    switch (spell)
-    {
-    case SPELL_ANIMATE_DEAD:
-    case SPELL_ANIMATE_SKELETON:
-    case SPELL_DEATH_CHANNEL:
-    case SPELL_SIMULACRUM:
-    case SPELL_INFESTATION:
-    case SPELL_TUKIMAS_DANCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
-            return "you cannot coerce anything to obey you.";
-        break;
-    default:
-        break;
-    }
-
     switch (spell)
     {
     case SPELL_BLINK:
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return "your stasis prevents you from teleporting.";
 
         if (temp && you.no_tele(false, false, true))
@@ -1233,7 +1269,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SWIFTNESS:
-        if (you.species == SP_FORMICID)
+        if (you.stasis())
             return "your stasis precludes magical swiftness.";
 
         if (temp)
@@ -1270,6 +1306,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_EXCRUCIATING_WOUNDS:
+        if (is_useless_skill(SK_NECROMANCY))
+            return "you lack the necromantic skill to inflict true pain.";
         if (temp
             && (!you.weapon()
                 || you.weapon()->base_type != OBJ_WEAPONS
@@ -1277,12 +1315,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "you aren't wielding a brandable weapon.";
         }
-        // intentional fallthrough
+        // intentional fallthrough to portal projectile
     case SPELL_PORTAL_PROJECTILE:
-        if (you.species == SP_FELID)
+        if (you.has_mutation(MUT_NO_GRASPING))
             return "this spell is useless without hands.";
         break;
-
     case SPELL_LEDAS_LIQUEFACTION:
         if (temp && you.duration[DUR_LIQUEFYING])
             return "you need to wait for the ground to become solid again.";
@@ -1320,16 +1357,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_SUBLIMATION_OF_BLOOD:
-        // XXX: write player_can_bleed(bool temp) & use that
-        if (you.species == SP_GARGOYLE
-            || you.species == SP_GHOUL
-            || you.species == SP_MUMMY
-            || (temp && !form_can_bleed(you.form)))
-        {
+        if (!you.can_bleed(temp))
             return "you have no blood to sublime.";
-        }
-        if (you.magic_points == you.max_magic_points && temp)
-            return "your reserves of magic are already full.";
         break;
 
     case SPELL_TORNADO:
@@ -1435,14 +1464,19 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no body armour to summon the spirit of.";
         break;
 
+    case SPELL_MANIFOLD_ASSAULT:
+    {
+        if (temp)
+        {
+            const string unproj_reason = weapon_unprojectability_reason();
+            if (unproj_reason != "")
+                return unproj_reason;
+        }
+    }
+        break;
+
     default:
         break;
-    }
-
-    if (get_spell_disciplines(spell) & spschool::summoning
-        && you.get_mutation_level(MUT_NO_LOVE))
-    {
-        return "you cannot coerce anything to answer your summons.";
     }
 
     return "";
@@ -1561,6 +1595,9 @@ bool spell_no_hostile_in_range(spell_type spell)
      case SPELL_INTOXICATE:
          return cast_intoxicate(-1, false, true) == spret::abort;
 
+    case SPELL_MANIFOLD_ASSAULT:
+         return cast_manifold_assault(-1, false, false) == spret::abort;
+
     default:
         break;
     }
@@ -1581,10 +1618,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
-    // Don't let it think that there are no susceptible monsters in range
-    if (spell == SPELL_RANDOM_BOLT)
-        zap = ZAP_DEBUGGING_RAY;
-
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
@@ -1804,6 +1837,7 @@ const set<spell_type> removed_spells =
     SPELL_PHASE_SHIFT,
     SPELL_POISON_CLOUD,
     SPELL_POISON_WEAPON,
+    SPELL_RANDOM_BOLT,
     SPELL_REARRANGE_PIECES,
     SPELL_RECALL,
     SPELL_REGENERATION,
@@ -1838,7 +1872,8 @@ const set<spell_type> removed_spells =
     SPELL_DARKNESS,
     SPELL_CLOUD_CONE,
     SPELL_RING_OF_THUNDER,
-    SPELL_TWISTED_RESURRECTION
+    SPELL_TWISTED_RESURRECTION,
+    SPELL_RANDOM_EFFECTS
 #endif
 };
 

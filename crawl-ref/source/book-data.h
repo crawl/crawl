@@ -40,7 +40,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FROZEN_RAMPARTS,
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_HAILSTORM,
-    SPELL_SUMMON_ICE_BEAST,
+    SPELL_ENGLACIATION,
 },
 
 {   // Book of Summonings
@@ -59,7 +59,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Ice
     SPELL_ICE_FORM,
-    SPELL_ENGLACIATION,
+    SPELL_SUMMON_ICE_BEAST,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
     SPELL_OZOCUBUS_REFRIGERATION,
@@ -70,7 +70,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BECKONING,
     SPELL_GRAVITAS,
     SPELL_TELEPORT_OTHER,
-    SPELL_GOLUBRIAS_PASSAGE,
+    SPELL_MANIFOLD_ASSAULT,
 },
 
 {   // Book of Hexes
@@ -117,13 +117,13 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_WEREBLOOD,
     SPELL_SPIDER_FORM,
     SPELL_ICE_FORM,
-    SPELL_BLADE_HANDS,
+    SPELL_HYDRA_FORM,
 },
 
 {   // Book of Transfigurations
     SPELL_IRRADIATE,
     SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
+    SPELL_BLADE_HANDS,
     SPELL_DRAGON_FORM,
 },
 
@@ -131,8 +131,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CORPSE_ROT,
     SPELL_STONE_ARROW,
     SPELL_SUMMON_FOREST,
-    SPELL_NOXIOUS_BOG,
     SPELL_HYDRA_FORM,
+    SPELL_NOXIOUS_BOG,
     SPELL_SUMMON_HYDRA,
 },
 
@@ -170,8 +170,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Air
     SPELL_SHOCK,
-    SPELL_SWIFTNESS,
     SPELL_DISCHARGE,
+    SPELL_SWIFTNESS,
     SPELL_AIRSTRIKE,
     SPELL_LIGHTNING_BOLT,
 },
@@ -186,6 +186,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Warp
     SPELL_GRAVITAS,
     SPELL_PORTAL_PROJECTILE,
+    SPELL_GOLUBRIAS_PASSAGE,
+    SPELL_MANIFOLD_ASSAULT,
     SPELL_DISPERSAL,
     SPELL_DISJUNCTION,
 },
@@ -289,8 +291,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Burglary
-    SPELL_SWIFTNESS,
     SPELL_PASSWALL,
+    SPELL_SWIFTNESS,
     SPELL_GOLUBRIAS_PASSAGE,
     SPELL_LRD,
     SPELL_INVISIBILITY,

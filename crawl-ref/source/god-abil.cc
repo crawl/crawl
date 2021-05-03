@@ -13,6 +13,8 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "artefact.h"
+#include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -20,8 +22,10 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
+#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -172,8 +176,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
-    if (wpn.cursed())
-        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -1267,7 +1269,6 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
@@ -1276,7 +1277,6 @@ void zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
-
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1
@@ -1321,7 +1321,7 @@ void elyvilon_purification()
 {
     mpr("You feel purified!");
 
-    you.disease = 0;
+    you.duration[DUR_SICKNESS] = 0;
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
@@ -1398,7 +1398,8 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_FROZEN_RAMPARTS
         || spell == SPELL_ABSOLUTE_ZERO
-        || spell == SPELL_NOXIOUS_BOG)
+        || spell == SPELL_NOXIOUS_BOG
+        || spell == SPELL_POISONOUS_VAPOURS)
     {
         return true;
     }
@@ -1571,28 +1572,6 @@ bool beogh_gift_item()
                                     shield ? MSLOT_SHIELD :
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON;
-
-    // need to remove any curses so that drop_item won't fail
-    item_def* item_to_drop = mons->mslot_item(mslot);
-    if (item_to_drop && item_to_drop->cursed())
-    {
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                item_to_drop->name(DESC_THE).c_str());
-        do_uncurse_item(*item_to_drop);
-    }
-
-    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
-    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
-        && shield_slot
-        && mons->hands_reqd(gift) == HANDS_TWO
-        && shield_slot->cursed())
-    {
-        // TODO: this doesn't seem to describe the shield as uncursed to the
-        // player. The weapon case works properly.
-        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
-                                shield_slot->name(DESC_THE).c_str());
-        do_uncurse_item(*shield_slot);
-    }
 
     item_def *floor_item = mons->take_item(item_slot, mslot);
     if (!floor_item)
@@ -2190,69 +2169,198 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     mpr("You return to the normal time flow.");
 }
 
-bool ashenzari_transfer_knowledge()
+struct curse_data
 {
-    if (you.transfer_skill_points > 0 && !ashenzari_end_transfer())
-        return false;
+    string name;
+    string abbr;
+    vector<skill_type> boosted;
+};
 
-    while (true)
-    {
-        skill_menu(SKMF_RESKILL_FROM);
-        if (is_invalid_skill(you.transfer_from_skill))
-        {
-            redraw_screen();
-            update_screen();
-            return false;
-        }
+static map<curse_type, curse_data> _ashenzari_curses =
+{
+    { CURSE_MELEE, {
+        "Melee Combat", "Melee",
+        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
+            SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
+    } },
+    { CURSE_RANGED, {
+        "Ranged Combat", "Range",
+        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
+    } },
+    { CURSE_ELEMENTS, {
+        "Elements", "Elem",
+        { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
+    } },
+    { CURSE_ALCHEMY, {
+        "Alchemy", "Alch",
+        { SK_POISON_MAGIC, SK_TRANSMUTATIONS },
+    } },
+    { CURSE_COMPANIONS, {
+        "Companions", "Comp",
+        { SK_SUMMONINGS, SK_NECROMANCY },
+    } },
+    { CURSE_BEGUILING, {
+        "Beguiling", "Bglg",
+        { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
+    } },
+    { CURSE_SELF, {
+        "Introspection", "Self",
+        { SK_FIGHTING, SK_SPELLCASTING },
+    } },
+    { CURSE_FORTITUDE, {
+        "Fortitude", "Fort",
+        { SK_ARMOUR, SK_SHIELDS },
+    } },
+    { CURSE_CUNNING, {
+        "Cunning", "Cun",
+        { SK_DODGING, SK_STEALTH },
+    } },
+    { CURSE_EVOCATIONS, {
+        "Evocations", "Evo",
+        { SK_EVOCATIONS },
+    } },
+};
 
-        you.transfer_skill_points = skill_transfer_amount(
-                                                    you.transfer_from_skill);
+static bool _can_use_curse(const curse_data& c)
+{
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            return true;
 
-        skill_menu(SKMF_RESKILL_TO);
-        if (is_invalid_skill(you.transfer_to_skill))
-        {
-            you.transfer_from_skill = SK_NONE;
-            you.transfer_skill_points = 0;
-            continue;
-        }
-
-        break;
-    }
-
-    // We reset the view to force view transfer next time.
-    you.skill_menu_view = SKM_NONE;
-
-    mprf("As you forget about %s, you feel ready to understand %s.",
-         skill_name(you.transfer_from_skill),
-         skill_name(you.transfer_to_skill));
-
-    you.transfer_total_skill_points = you.transfer_skill_points;
-
-    redraw_screen();
-    update_screen();
-    return true;
+    return false;
 }
 
-bool ashenzari_end_transfer(bool finished, bool force)
+string curse_name(const CrawlStoreValue& c)
 {
-    if (!force && !finished)
+    return _ashenzari_curses[static_cast<curse_type>(c.get_int())].name;
+}
+
+string curse_abbr(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.abbr;
+}
+
+const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    return c.boosted;
+}
+
+static string ashenzari_curse_knowledge_list()
+{
+    if (!you_worship(GOD_ASHENZARI))
+        return "";
+
+    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    return lowercase_string(comma_separated_fn(curses.begin(), curses.end(),
+                              curse_name));
+}
+
+string desc_curse_skills(const CrawlStoreValue& curse)
+{
+    const curse_data& c =
+        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
+
+    vector<skill_type> trainable;
+
+    for (skill_type sk : c.boosted)
+        if (you.can_currently_train[sk])
+            trainable.push_back(sk);
+
+    return c.name + ": "
+           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
+}
+
+/**
+ * Choose skills to boost accompanying the current curse.
+ */
+static void _choose_curse_knowledge()
+{
+    // This loop choses two available skills without replacement,
+    // it is a two element version of a resivoir sampling algorithm.
+    //
+    // If Ashenzari curses need some fancier weighting this is the
+    // place to do that weighting.
+    curse_type first_choice = NUM_CURSES;
+    curse_type second_choice = NUM_CURSES;
+    int valid_curses = 0;
+    for (auto const& curse : _ashenzari_curses)
     {
-        mprf("You are currently transferring knowledge from %s to %s.",
-             skill_name(you.transfer_from_skill),
-             skill_name(you.transfer_to_skill));
-        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
-            return false;
+        if (_can_use_curse(curse.second))
+        {
+            ++valid_curses;
+            if (valid_curses == 1)
+                first_choice = curse.first;
+            else if (valid_curses == 2)
+            {
+                second_choice = curse.first;
+                if (coinflip())
+                    swap(first_choice, second_choice);
+            }
+            else if (one_chance_in(valid_curses))
+                first_choice = curse.first;
+            else if (one_chance_in(valid_curses - 1))
+                second_choice = curse.first;
+        }
     }
 
-    mprf("You %s forgetting about %s and learning about %s.",
-         finished ? "have finished" : "stop",
-         skill_name(you.transfer_from_skill),
-         skill_name(you.transfer_to_skill));
-    you.transfer_from_skill = SK_NONE;
-    you.transfer_to_skill = SK_NONE;
-    you.transfer_skill_points = 0;
-    you.transfer_total_skill_points = 0;
-    return true;
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
+    CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+
+    if (first_choice != NUM_CURSES)
+        curses.push_back(first_choice);
+    if (second_choice != NUM_CURSES)
+        curses.push_back(second_choice);
+
+    // It's not an error for this to be empty, curses are still useful for
+    // piety alone
+}
+
+/**
+ * Offer a new curse to the player, letting them know their new curse is
+ * available.
+ */
+void ashenzari_offer_new_curse()
+{
+    // No curse at full piety, since shattering resets the curse timer anyway
+    if (piety_rank() > 5)
+        return;
+
+    _choose_curse_knowledge();
+
+    you.props[AVAILABLE_CURSE_KEY] = true;
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    const string curse_names = ashenzari_curse_knowledge_list();
+    const string offer_string = curse_names.empty() ? "" :
+                                (" of " + curse_names);
+
+    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+                    " and a curse%s.", offer_string.c_str());
+}
+
+static void _do_curse_item(item_def &item)
+{
+    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
+    item.flags |= ISFLAG_CURSED;
+
+    if (you.equip[EQ_WEAPON] == item.link)
+    {
+        // Redraw the weapon.
+        you.wield_change = true;
+    }
+
+    for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
+    {
+        add_inscription(item,
+                curse_abbr(static_cast<curse_type>(curse.get_int())));
+        item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
+    }
 }
 
 /**
@@ -2260,18 +2368,13 @@ bool ashenzari_end_transfer(bool finished, bool force)
  *
  * This is the core logic behind Ash's Curse Item ability.
  * Player can abort without penalty.
- * Player can curse any cursable item (not just worn ones).
+ * Player can curse only worn items.
  *
- * @param num_rc Number of remove curse scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item(int num_rc)
+bool ashenzari_curse_item()
 {
-    ASSERT(num_rc > 0);
-    const string prompt_msg = make_stringf(
-            "Curse which item? (%d remove curse scroll%s left)"
-            " (Esc to abort)",
-            num_rc, num_rc == 1 ? "" : "s");
+    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
@@ -2287,8 +2390,73 @@ bool ashenzari_curse_item(int num_rc)
         return false;
     }
 
-    do_curse_item(item, false);
-    learned_something_new(HINT_YOU_CURSED);
+    _do_curse_item(item);
+    make_ashenzari_randart(item);
+    ash_check_bondage();
+
+    you.props.erase(CURSE_KNOWLEDGE_KEY);
+    you.props.erase(AVAILABLE_CURSE_KEY);
+
+    return true;
+}
+
+/**
+ * Give a prompt to uncurse (and destroy an item).
+ *
+ * Player can abort without penalty.
+ *
+ * @return      Whether the player uncursed anything.
+ */
+bool ashenzari_uncurse_item()
+{
+    int item_slot = prompt_invent_item("Uncurse and destroy which item?",
+                                       menu_type::invlist,
+                                       OSEL_CURSED_WORN, OPER_ANY,
+                                       invprompt_flag::escape_only);
+    if (prompt_failed(item_slot))
+        return false;
+
+    item_def& item(you.inv[item_slot]);
+
+    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
+        && you.equip[EQ_RING_AMULET] != -1)
+    {
+        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
+                           "the amulet's finger first!");
+        return false;
+    }
+
+    if (item_is_melded(item))
+    {
+        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+                           "melded with your body!",
+             item.name(DESC_THE).c_str());
+        return false;
+    }
+
+    if (!yesno(make_stringf("Really remove and destroy %s?%s",
+                            item.name(DESC_THE).c_str(),
+                            you.props.exists(AVAILABLE_CURSE_KEY) ?
+                                " Ashenzari will withdraw the offered vision "
+                                "and curse!"
+                                : "").c_str(),
+                            false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
+    unequip_item(item_equip_slot(you.inv[item_slot]));
+    ash_check_bondage();
+
+    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
+    if (you.props.exists(AVAILABLE_CURSE_KEY))
+    {
+        simple_god_message(" withdraws the vision and curse.");
+        you.props.erase(AVAILABLE_CURSE_KEY);
+    }
+
     return true;
 }
 
@@ -2488,7 +2656,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
-        // Even god powers cannot override racial berserk/haste restrictions.
+        // Check cases where a potion is permanently useless to the player
+        // species - temporarily useless potions can still be offered.
         if (*which == POT_BERSERK_RAGE
             && !you.can_go_berserk(true, false, true, nullptr, false))
         {
@@ -2496,6 +2665,11 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         }
         if (*which == POT_HASTE && you.stasis())
             continue;
+        if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
+            continue;
+        if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
+            continue;
+
         // Don't add potions which are already in the list
         bool dup = false;
         for (unsigned int i = 0; i < vec.size(); i++)
@@ -2874,18 +3048,20 @@ bool gozag_call_merchant()
     {
         shop_type type = static_cast<shop_type>(i);
 #if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD)
+        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
             continue;
 #endif
-        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
             continue;
-        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
-            continue;
-        if (you.species == SP_FELID &&
+
+        if (you.has_mutation(MUT_NO_ARMOUR) &&
             (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE
-             || type == SHOP_WEAPON
-             || type == SHOP_WEAPON_ANTIQUE))
+             || type == SHOP_ARMOUR_ANTIQUE))
+        {
+            continue;
+        }
+        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
+            && you.has_mutation(MUT_NO_GRASPING))
         {
             continue;
         }
@@ -3465,7 +3641,8 @@ static const sacrifice_def &_get_sacrifice_def(ability_type sac)
     return *sacrifice_data_map[sac];
 }
 
-/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists
+/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists.
+/// Abilities that map to a single mutation are not here!
 static map<const char*, vector<mutation_type>> sacrifice_vector_map =
 {
     /// Mutations granted by ABIL_RU_SACRIFICE_HEALTH
@@ -3526,10 +3703,61 @@ static const vector<mutation_type> _arcane_sacrifice_lists[] =
     _major_arcane_sacrifices,
 };
 
+// this function is for checks that can be done with the mutation_type alone.
+static bool _sac_mut_maybe_valid(mutation_type mut)
+{
+    // can't give the player this if they're already at max
+    if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
+        return false;
+
+    // can't give the player this if they have an innate mut that conflicts
+    if (mut_check_conflict(mut, true))
+        return false;
+
+    // Don't offer sacrifices of skills that a player already can't use.
+    if (!can_sacrifice_skill(mut))
+        return false;
+
+    // Special case a few weird interactions:
+
+    // Don't offer to sacrifice summoning magic when already hated by all.
+    if (mut == MUT_NO_SUMMONING_MAGIC
+        && you.get_mutation_level(MUT_NO_LOVE))
+    {
+        return false;
+    }
+
+    // Vampires can't get inhibited regeneration for some reason related
+    // to their existing regen silliness.
+    // Neither can deep dwarf, for obvious reasons.
+    if (mut == MUT_INHIBITED_REGENERATION
+        && you.has_mutation(MUT_VAMPIRISM))
+    {
+        return false;
+    }
+
+    // demonspawn can't get frail if they have a robust facet
+    if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
+        && any_of(begin(you.demonic_traits), end(you.demonic_traits),
+                  [] (player::demon_trait t)
+                  { return t.mutation == MUT_ROBUST; }))
+    {
+        return false;
+    }
+
+    // No potion heal doesn't affect mummies since they can't quaff potions
+    if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
+        return false;
+
+    return true;
+}
+
 /**
  * Choose a random mutation from the given list, only including those that are
  * valid choices for a Ru sacrifice. (Not already at the max level, not
  * conflicting with an innate mut.)
+ * N.b. this is *only* used for choosing among the sublists for sac health,
+ * essence, and purity.
  *
  * @param muts      The list of possible sacrifice mutations.
  * @return          A mutation from the list, or MUT_NON_MUTATION if no valid
@@ -3541,42 +3769,8 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
     mutation_type chosen_sacrifice = MUT_NON_MUTATION;
     for (auto mut : muts)
     {
-        // can't give the player this if they're already at max
-        if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
+        if (!_sac_mut_maybe_valid(mut))
             continue;
-
-        // can't give the player this if they have an innate mut that conflicts
-        if (mut_check_conflict(mut, true))
-            continue;
-
-        // Special case a few weird interactions:
-
-        // Don't offer to sacrifice summoning magic when already hated by all.
-        if (mut == MUT_NO_SUMMONING_MAGIC
-            && you.get_mutation_level(MUT_NO_LOVE))
-        {
-            continue;
-        }
-
-        // Vampires can't get inhibited regeneration for some reason related
-        // to their existing regen silliness.
-        // Neither can deep dwarf, for obvious reasons.
-        if (mut == MUT_INHIBITED_REGENERATION && you.species == SP_VAMPIRE)
-            continue;
-
-        // demonspawn can't get frail if they have a robust facet
-        if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
-            && any_of(begin(you.demonic_traits), end(you.demonic_traits),
-                      [] (player::demon_trait t)
-                      { return t.mutation == MUT_ROBUST; }))
-        {
-            continue;
-        }
-
-        // No potion heal doesn't affect mummies since they can't quaff potions
-        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
-            continue;
-
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
         // an explicit list, by giving each one a chance to be chosen equal to
@@ -3663,12 +3857,17 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
+    // for sacrifices other than health, essence, and arcana there is a
+    // deterministic mapping between the sacrifice_def and a mutation_type.
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && you.get_mutation_level(sacrifice.mutation))
+        && (you.get_mutation_level(sacrifice.mutation)
+            || !_sac_mut_maybe_valid(sacrifice.mutation)))
     {
         return false;
     }
 
+    // For health, essence, and arcana, we still need to choose from the
+    // sublists in sacrifice_vector_map.
     if (sacrifice.sacrifice_vector)
     {
         const char* key = sacrifice.sacrifice_vector;
@@ -3682,6 +3881,7 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
             return false;
     }
 
+    // finally, sacrifices may have custom validity checks.
     if (sacrifice.valid != nullptr && !sacrifice.valid())
         return false;
 
@@ -3728,18 +3928,21 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
  */
 static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 {
-    // XXX: this does a really silly dance back and forth between school &
-    // spelltype.
-    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
-    return spelltype_short_name(school);
+    return skill_abbr(arcane_mutation_to_skill(mutation));
 }
 
 static int _piety_for_skill(skill_type skill)
 {
     // Gnolls didn't have a choice about training the skill, so don't give
     // them more piety for waiting longer before taking the sacrifice.
-    if (you.species == SP_GNOLL)
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return 0;
+
+    // This should be mostly redundant with other checks, but it's a useful
+    // sanitizer
+    if (is_useless_skill(skill))
+        return 0;
+
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
@@ -3752,10 +3955,10 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     if (sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             piety_gain += _piety_for_skill(SK_BOWS);
     }
     return piety_gain;
@@ -3872,7 +4075,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (you.get_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
@@ -3901,8 +4104,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            if (you.species == SP_DEMONSPAWN)
-                piety_gain += 28;
+            // Dj are guaranteed to lose their last spell, which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
+                piety_gain += 20;
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
             if (you.get_mutation_level(MUT_INEXPERIENCED))
@@ -4159,17 +4363,13 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        equipment_type ring_slot;
-
-        if (you.species == SP_OCTOPODE)
-            ring_slot = EQ_RING_EIGHT;
-        else
-            ring_slot = EQ_LEFT_RING;
+        auto ring_slots = species::ring_slots(you.species, true);
+        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(ring_slot, true);
-        int ring_inv_slot = you.equip[ring_slot];
+        item_def* const ring = you.slot_item(sac_ring_slot, true);
+        int ring_inv_slot = you.equip[sac_ring_slot];
         bool open_ring_slot = false;
 
         // Drop your shield if there is one
@@ -4194,36 +4394,24 @@ static void _extra_sacrifice_code(ability_type sac)
         // And one ring
         if (ring != nullptr)
         {
-            if (you.species == SP_OCTOPODE)
-            {
-                for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
-                {
-                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
-                    {
-                        open_ring_slot = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                if (!you.slot_item(static_cast<equipment_type>(
-                    EQ_RIGHT_RING), true))
+            // XX does not handle an open slot on the finger amulet
+            for (const auto &eq : ring_slots)
+                if (!you.slot_item(eq, true))
                 {
                     open_ring_slot = true;
+                    break;
                 }
-            }
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(ring_slot);
+            unequip_item(sac_ring_slot, true, true);
             if (open_ring_slot)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
-                     (you.species == SP_OCTOPODE ? "another" : "your other"),
+                     (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                puton_ring(ring_inv_slot, false);
+                puton_ring(ring_inv_slot, false, false);
             }
         }
     }
@@ -4421,10 +4609,10 @@ bool ru_do_sacrifice(ability_type sac)
     if (sac == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
-        if (you.species != SP_FORMICID)
+        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
             _ru_kill_skill(SK_BOWS);
     }
 
@@ -4942,12 +5130,13 @@ int pakellas_surge_devices()
     if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
         return 0;
 
+    // XXX TODO: support djinn here (HP_CASTING, pay_mp, etc)
     const int mp = min(you.magic_points, min(9, max(3,
                        1 + random2avg(you.piety * 9 / piety_breakpoint(5),
                                       2))));
 
     const int severity = div_rand_round(mp, 3);
-    dec_mp(mp);
+    drain_mp(mp);
     you.duration[DUR_DEVICE_SURGE] = 0;
     if (severity == 0)
     {
@@ -5388,7 +5577,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || mons_is_hepliaklqana_ancestor(mon->type))
+        if (!mon || god_protects(mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -5437,7 +5626,8 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim == ancestor)
     {
-        mpr("You can't transfer your ancestor with themself.");
+        mprf("You can't transfer your ancestor with %s.",
+             ancestor->pronoun(PRONOUN_REFLEXIVE).c_str());
         return spret::abort;
     }
 
@@ -5457,8 +5647,7 @@ spret hepliaklqana_transference(bool fail)
     const bool uninhabitable = victim && !victim->is_habitable(destination);
     if (uninhabitable && victim_visible)
     {
-        mprf("%s can't be transferred into %s.",
-             victim->name(DESC_THE).c_str(), feat_type_name(env.grid(destination)));
+        mprf("%s can't be transferred there.", victim->name(DESC_THE).c_str());
         return spret::abort;
     }
 
@@ -5628,11 +5817,10 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
 
-    monster* beholder = you.get_beholder(target);
+    monster* beholder = you.get_beholder(wall_jump_landing_spot);
     if (beholder)
     {
-        error_ret = make_stringf("You cannot move your %s away from %s to wall jump!",
-             you.foot_name(true).c_str(),
+        error_ret = make_stringf("You cannot wall jump away from %s!",
              beholder->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5640,7 +5828,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
     if (fearmonger)
     {
-        error_ret = make_stringf("You are too afraid to wall jump closer to %s!",
+        error_ret = make_stringf("You cannot wall jump closer to %s!",
              fearmonger->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5692,13 +5880,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
     wu_jian_wall_jump_effects();
-
-    if (you.duration[DUR_WATER_HOLD])
-    {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
-        you.clear_far_engulf();
-    }
+    remove_water_hold();
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;

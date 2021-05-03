@@ -1469,7 +1469,10 @@ string MenuEntry::get_text(const bool) const
             preselected ? '+' : '-',
             text.c_str());
     }
-    return text;
+    else if (level == MEL_ITEM && indent_no_hotkeys)
+        return "     " + text;
+    else
+        return text;
 }
 
 MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,

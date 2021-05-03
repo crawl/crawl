@@ -433,4 +433,21 @@ protected:
     }
 };
 
+class spectral_weapon_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &) const override { return false; };
+    void fire() override;
+
+    static void schedule(const actor &attack, const actor &defend)
+    {
+        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
+    }
+protected:
+    spectral_weapon_fineff(const actor &attack, const actor &defend)
+        : final_effect(&attack, &defend, coord_def())
+    {
+    }
+};
+
 void fire_final_effects();

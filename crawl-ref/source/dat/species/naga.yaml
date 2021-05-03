@@ -4,7 +4,8 @@ name: Naga
 difficulty: Advanced
 difficulty_priority: 60
 species_flags:
-  - small_torso
+  - SPF_SMALL_TORSO
+  - SPF_BARDING
 aptitudes:
   xp: 0
   hp: 2
@@ -28,6 +29,7 @@ dex: 6
 levelup_stat_frequency: 4
 mutations:
   1:
+    MUT_CONSTRICTING_TAIL: 1
     MUT_ACUTE_VISION: 1
     MUT_SLOW: 2
     MUT_DEFORMED: 1
@@ -35,8 +37,6 @@ mutations:
     MUT_POISON_RESISTANCE: 1
   13:
     MUT_CONSTRICTING_TAIL: 1
-fake_mutations:
-  - long: You cannot wear boots.
 recommended_jobs:
   - JOB_BERSERKER
   - JOB_TRANSMUTER
@@ -50,5 +50,5 @@ recommended_jobs:
 create_enum: false
 # end TAG_MAJOR_VERSION
 
-walking_verb: Slid
+walking_verb: Slither
 altar_action: coil in front of

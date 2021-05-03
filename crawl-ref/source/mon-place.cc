@@ -664,6 +664,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
 
+    if (mons_class_requires_band(mg.cls) && ! mg.flags & MG_PERMIT_BANDS)
+        return 0;
+
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return 0;
 
@@ -1234,14 +1237,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                                    GENDER_NEUTRAL);
     }
 
-    if (mon->has_spell(SPELL_OZOCUBUS_ARMOUR))
-    {
-        const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
-        int rnd_power = random2(power);
-        rnd_power += random2(power);
-        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 20 + rnd_power, mon));
-    }
-
     if (mon->has_spell(SPELL_REPEL_MISSILES))
         mon->add_ench(ENCH_REPEL_MISSILES);
 
@@ -1464,13 +1459,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                           mg.props[TUKIMA_POWER].get_int() : 100);
         }
         else
-        {
-            // Spectral weapons are placed at pretty high power.
-            // They shouldn't ever be placed in a normal game.
-            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                       mg.props.exists(TUKIMA_POWER) ?
-                                           mg.props[TUKIMA_POWER].get_int() : 100);
-        }
+            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)));
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
@@ -1759,8 +1748,10 @@ struct band_set
     vector<band_info> bands;
 };
 
+// We handle Vaults centaur warriors specially.
 static const band_conditions centaur_band_condition
-    = { 3, 10, []() { return !player_in_branch(BRANCH_SHOALS); }};
+    = { 3, 10, []() { return !player_in_branch(BRANCH_SHOALS)
+                          && !player_in_branch(BRANCH_VAULTS); }};
 
 // warrior & mage spawn alone more frequently at shallow depths of Snake
 static const band_conditions naga_band_condition
@@ -1791,11 +1782,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ORC_WIZARD,      { {}, {{ BAND_ORCS, {2, 5} }}}},
     { MONS_ORC_PRIEST,      { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
     { MONS_ORC_WARRIOR,     { {}, {{ BAND_ORC_WARRIOR, {2, 5} }}}},
-    { MONS_ORC_WARLORD,     { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
+    { MONS_ORC_WARLORD,     { {0, 0, [](){ return !player_in_branch(BRANCH_VAULTS); }},
+                                         {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_SAINT_ROKA,      { {}, {{ BAND_ORC_KNIGHT, {8, 16}, true }}}},
     { MONS_ORC_KNIGHT,      { {}, {{ BAND_ORC_KNIGHT, {3, 7}, true }}}},
     { MONS_ORC_HIGH_PRIEST, { {}, {{ BAND_ORC_KNIGHT, {4, 8}, true }}}},
-    { MONS_BIG_KOBOLD,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
+    { MONS_KOBOLD_BRIGAND,      { {0, 4}, {{ BAND_KOBOLDS, {2, 8} }}}},
     { MONS_KILLER_BEE,      { {}, {{ BAND_KILLER_BEES, {2, 6} }}}},
     { MONS_CAUSTIC_SHRIKE,  { {}, {{ BAND_CAUSTIC_SHRIKE, {2, 5} }}}},
     { MONS_SHARD_SHRIKE,    { {}, {{ BAND_SHARD_SHRIKE, {1, 4} }}}},
@@ -1849,7 +1841,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_HOG,             { {}, {{ BAND_HOGS, {1, 4} }}}},
     { MONS_VAMPIRE_MOSQUITO, { {}, {{ BAND_VAMPIRE_MOSQUITOES, {1, 4} }}}},
     { MONS_FIRE_BAT,        { {}, {{ BAND_FIRE_BATS, {1, 4} }}}},
-    { MONS_DEEP_TROLL_EARTH_MAGE, { {}, {{ BAND_DEEP_TROLLS, {3, 6} }}}},
+    { MONS_DEEP_TROLL_EARTH_MAGE, { {}, {{ BAND_DEEP_TROLL_SHAMAN, {3, 6} }}}},
     { MONS_DEEP_TROLL_SHAMAN, { {}, {{ BAND_DEEP_TROLL_SHAMAN, {3, 6} }}}},
     { MONS_HELL_HOG,        { {}, {{ BAND_HELL_HOGS, {2, 4} }}}},
     { MONS_BOGGART,         { {}, {{ BAND_BOGGARTS, {2, 5} }}}},
@@ -1867,6 +1859,9 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
+    { MONS_PEACEKEEPER,     { { 0, 0, []() {
+        return player_in_branch(BRANCH_VAULTS); }},
+                                  {{ BAND_GOLEMS, {2, 4}, true }}}},
     // Journey -- Added Draconian Packs
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
@@ -1902,9 +1897,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_TARANTELLA,      { {2}, {{ BAND_TARANTELLA, {1, 5} }}}},
     { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
                                    { BAND_VAULT_WARDEN, {2, 5}, true }}}},
-    { MONS_IRONHEART_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true },
-                                    { BAND_DEEP_ELF_HIGH_PRIEST, {3, 7}, true },
-                                    { BAND_OGRE_MAGE_EXTERN, {4, 8}, true }}}},
+    { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true }}}},
     { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
     { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
     { MONS_SOJOBO,          { {}, {{ BAND_SOJOBO, {2, 3}, true }}}},
@@ -1916,6 +1909,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3} }}}},
     { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
     { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
+    { MONS_SALAMANDER_TYRANT, { {}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
     { MONS_MONSTROUS_DEMONSPAWN, { {2, 0, []() {
         return !player_in_branch(BRANCH_WIZLAB); // hack for wizlab_wucad_mu
     }},                             {{ BAND_MONSTROUS_DEMONSPAWN, {1, 3}}}}},
@@ -1947,10 +1941,6 @@ static const map<monster_type, band_set> bands_by_leader = {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
     }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
-    { MONS_EYE_OF_DRAINING, { {0, 0, []() {
-        return branch_has_monsters(you.where_are_you)
-            || !vault_mon_types.empty();
-    }},                           {{ BAND_RANDOM_SINGLE, {1, 2} }}}},
     { MONS_MELIAI,          { {}, {{ BAND_MELIAI, {2, 3} }}}},
     { MONS_DANCING_WEAPON,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;
@@ -1958,6 +1948,12 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_MOLTEN_GARGOYLE,  { {0, 0, []() {
         return you.where_are_you == BRANCH_DESOLATION;
     }},                            {{ BAND_MOLTEN_GARGOYLES, {2, 3} }}}},
+    { MONS_IRONBOUND_BEASTMASTER, { {}, {{ BAND_DIRE_ELEPHANTS, {1, 3}, true },
+                                        { BAND_LINDWURMS, {1, 4}, true}}}},
+    { MONS_WIZARD,  { {0, 0, []() {
+        return player_in_branch(BRANCH_VAULTS);
+    }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
+
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
@@ -2023,6 +2019,24 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
         }
         break;
     }
+
+    // Per-branch hacks. TODO: move this into the main branch structure
+    // (probably moving conditionals inside band_info?)
+    case MONS_CENTAUR_WARRIOR:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_CENTAUR_WARRIORS;
+            band_size = random_range(2, 4);
+        }
+        break;
+
+    case MONS_ORC_WARLORD:
+        if (player_in_branch(BRANCH_VAULTS))
+        {
+            band = BAND_ORC_WARLORD;
+            band_size = random_range(2, 4);
+        }
+        break;
 
     case MONS_SATYR:
         if (!one_chance_in(3))
@@ -2108,6 +2122,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_HELL_HOGS,           {{{MONS_HELL_HOG, 1}}}},
     { BAND_HELL_RATS,           {{{MONS_HELL_RAT, 1}}}},
     { BAND_JIANGSHI,            {{{MONS_JIANGSHI, 1}}}},
+    { BAND_LINDWURMS,           {{{MONS_LINDWURM, 1}}}},
     { BAND_ALLIGATOR,           {{{MONS_ALLIGATOR, 1}}}},
     { BAND_DEATH_YAKS,          {{{MONS_DEATH_YAK, 1}}}},
     { BAND_GREEN_RATS,          {{{MONS_RIVER_RAT, 1}}}},
@@ -2115,6 +2130,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_GOLDEN_EYE,          {{{MONS_GOLDEN_EYE, 1}}}},
     { BAND_HELL_HOUNDS,         {{{MONS_HELL_HOUND, 1}}}},
     { BAND_KILLER_BEES,         {{{MONS_KILLER_BEE, 1}}}},
+    { BAND_ORC_WARLORD,         {{{MONS_ORC_KNIGHT, 1}}}},
     { BAND_SALAMANDERS,         {{{MONS_SALAMANDER, 1}}}},
     { BAND_SPARK_WASPS,         {{{MONS_SPARK_WASP, 1}}}},
     { BAND_UGLY_THINGS,         {{{MONS_UGLY_THING, 1}}}},
@@ -2123,11 +2139,13 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
+    { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},
     { BAND_DANCING_WEAPONS,     {{{MONS_DANCING_WEAPON, 1}}}},
     { BAND_SLIME_CREATURES,     {{{MONS_SLIME_CREATURE, 1}}}},
     { BAND_SPRIGGAN_RIDERS,     {{{MONS_SPRIGGAN_RIDER, 1}}}},
+    { BAND_CENTAUR_WARRIORS,    {{{MONS_CENTAUR_WARRIOR, 1}}}},
     { BAND_MOLTEN_GARGOYLES,    {{{MONS_MOLTEN_GARGOYLE, 1}}}},
     { BAND_SKELETAL_WARRIORS,   {{{MONS_SKELETAL_WARRIOR, 1}}}},
     { BAND_THRASHING_HORRORS,   {{{MONS_THRASHING_HORROR, 1}}}},
@@ -2136,6 +2154,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_EXECUTIONER,         {{{MONS_ABOMINATION_LARGE, 1}}}},
     { BAND_VASHNIA,             {{{MONS_NAGA_SHARPSHOOTER, 1}}}},
     { BAND_PHANTASMAL_WARRIORS, {{{MONS_PHANTASMAL_WARRIOR, 1}}}},
+    { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 1}}}},
     { BAND_DEEP_ELF_KNIGHT,     {{{MONS_DEEP_ELF_AIR_MAGE, 46},
                                   {MONS_DEEP_ELF_FIRE_MAGE, 46},
                                   {MONS_DEEP_ELF_KNIGHT, 24},
@@ -2168,6 +2187,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                  {{MONS_DEATH_YAK, 1}}}},
     { BAND_VERY_UGLY_THINGS,    {{{MONS_UGLY_THING, 3},
                                   {MONS_VERY_UGLY_THING, 4}}}},
+    { BAND_GOLEMS,              {{{MONS_WAR_GARGOYLE, 1},
+                                  {MONS_CRYSTAL_GUARDIAN, 1}}}},
     { BAND_ORCS,                {{{MONS_ORC_PRIEST, 6},
                                   {MONS_ORC_WIZARD, 7},
                                   {MONS_ORC, 35}}}},
@@ -2190,7 +2211,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                  {{MONS_TWO_HEADED_OGRE, 1},
                                   {MONS_OGRE, 2}}}},
     { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
-                                  {MONS_BIG_KOBOLD, 2},
+                                  {MONS_KOBOLD_BRIGAND, 2},
                                   {MONS_KOBOLD_DEMONOLOGIST, 1}}}},
     // Favour tougher naga suited to melee, compared to normal naga bands
     { BAND_GUARDIAN_SERPENT,    {{{MONS_NAGA_MAGE, 5}, {MONS_NAGA_WARRIOR, 10}},
@@ -2217,9 +2238,6 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_MUMMY, 1}}}},
     { BAND_MERFOLK_AQUAMANCER,  {{{MONS_MERFOLK, 4},
                                   {MONS_WATER_ELEMENTAL, 11}}}},
-    { BAND_DEEP_TROLLS,         {{{MONS_DEEP_TROLL, 18},
-                                  {MONS_DEEP_TROLL_EARTH_MAGE, 3},
-                                  {MONS_DEEP_TROLL_SHAMAN, 3}}}},
     { BAND_DEEP_TROLL_SHAMAN,   {{{MONS_DEEP_TROLL, 18},
                                   {MONS_IRON_TROLL, 8},
                                   {MONS_DEEP_TROLL_EARTH_MAGE, 3},
@@ -2239,13 +2257,17 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_DEMONIC_CRAWLER, 2}}}},
 
     { BAND_VAULT_WARDEN,        {{{MONS_VAULT_SENTINEL, 4},
-                                  {MONS_IRONBRAND_CONVOKER, 6},
-                                  {MONS_IRONHEART_PRESERVER, 5}},
+                                  {MONS_IRONBOUND_CONVOKER, 6},
+                                  {MONS_IRONBOUND_PRESERVER, 5},
+                                  {MONS_IRONBOUND_FROSTHEART, 3},
+                                  {MONS_IRONBOUND_THUNDERHULK, 2}},
         // one fancy pal, and a 50% chance of another
                                 {{MONS_VAULT_SENTINEL, 4},
-                                 {MONS_IRONBRAND_CONVOKER, 6},
-                                 {MONS_IRONHEART_PRESERVER, 5},
-                                 {MONS_VAULT_GUARD, 15}},
+                                 {MONS_IRONBOUND_CONVOKER, 6},
+                                 {MONS_IRONBOUND_PRESERVER, 5},
+                                 {MONS_IRONBOUND_FROSTHEART, 3},
+                                 {MONS_IRONBOUND_THUNDERHULK, 2},
+                                 {MONS_VAULT_GUARD, 20}},
 
                                 {{MONS_VAULT_GUARD, 1}}}},
 
@@ -2332,7 +2354,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
 
     // one supporter, and maybe more
     { BAND_SALTLINGS,           {{{MONS_GUARDIAN_SERPENT, 1},
-                                  {MONS_IRONBRAND_CONVOKER, 1},
+                                  {MONS_IRONBOUND_CONVOKER, 1},
                                   {MONS_RAGGED_HIEROPHANT, 2},
                                   {MONS_SERVANT_OF_WHISPERS, 2},
                                   {MONS_PEACEKEEPER, 2}},
@@ -2342,7 +2364,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_SERVANT_OF_WHISPERS, 5},
                                   {MONS_PEACEKEEPER, 5},
                                   {MONS_MOLTEN_GARGOYLE, 5},
-                                  {MONS_IRONBRAND_CONVOKER, 2},
+                                  {MONS_IRONBOUND_CONVOKER, 2},
                                   {MONS_GUARDIAN_SERPENT, 2},
                                   {MONS_IMPERIAL_MYRMIDON, 2}}}},
 };

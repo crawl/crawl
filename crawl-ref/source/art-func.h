@@ -32,7 +32,6 @@
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
-#include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "god-conduct.h"   // did_god_conduct
 #include "god-passive.h"   // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
@@ -183,8 +182,13 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
-    const int hp_cost = 14;
-    const int mp_cost = 4;
+    int hp_cost = 14;
+    int mp_cost = 4;
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        hp_cost += mp_cost;
+        mp_cost = 0;
+    }
 
     if (!enough_hp(hp_cost, true))
     {
@@ -200,8 +204,8 @@ static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* u
     }
 
     *did_work = true;
-    dec_hp(hp_cost, false);
-    dec_mp(mp_cost);
+    pay_hp(hp_cost);
+    pay_mp(mp_cost);
 
     int power = you.skill(SK_EVOCATIONS, 8);
 
@@ -209,8 +213,8 @@ static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* u
         == spret::abort)
     {
         *unevokable = true;
-        inc_hp(hp_cost);
-        inc_mp(mp_cost, true);
+        refund_hp(hp_cost);
+        refund_mp(mp_cost);
 
         redraw_screen();
         update_screen();
@@ -218,6 +222,7 @@ static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* u
     }
 
     mpr("You feel the staff feeding on your energy!");
+    finalize_mp_cost(hp_cost);
     practise_evoking(random_range(1, 2));
 
     return false;
@@ -270,9 +275,18 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
 // targeter work
 static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
 {
-    const int mp_cost = 4;
+    const int cost = 4;
 
-    if (!enough_mp(mp_cost, false))
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        if (!enough_hp(cost, true))
+        {
+            mpr("You're too close to death to use this item.");
+            *unevokable = true;
+            return true;
+        }
+    }
+    else if (!enough_mp(cost, false))
     {
         *unevokable = true;
         return true;
@@ -282,7 +296,7 @@ static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* une
         return false;
 
     *did_work = true;
-    dec_mp(mp_cost);
+    pay_mp(cost);
 
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
@@ -291,13 +305,14 @@ static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* une
         target) == spret::abort)
     {
         *unevokable = true;
-        inc_mp(mp_cost, true);
+        refund_mp(cost);
 
         redraw_screen();
         update_screen();
         return false;
     }
 
+    finalize_mp_cost();
     practise_evoking(1);
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
@@ -464,6 +479,18 @@ static void _PRUNE_world_reacts(item_def */*item*/)
 
 ////////////////////////////////////////////////////
 
+static void _LIGHTNING_SCALES_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel lightning quick.");
+}
+
+static void _LIGHTNING_SCALES_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You feel rather sluggish.");
+}
+
+////////////////////////////////////////////////////
+
 static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");
@@ -496,13 +523,13 @@ static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 
 static void _VAMPIRES_TOOTH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    if (you.undead_state() == US_ALIVE && you.species == SP_VAMPIRE)
+    if (!you.has_mutation(MUT_VAMPIRISM))
+        _equip_mpr(show_msgs, "You feel strangely empty.");
+    else if (you.vampire_alive)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
     }
-    else if (you.species != SP_VAMPIRE)
-        _equip_mpr(show_msgs, "You feel strangely empty.");
     // else let player-equip.cc handle message
 }
 
@@ -639,53 +666,21 @@ static void _DEMON_AXE_unequip(item_def */*item*/, bool */*show_msgs*/)
 static void _WYRMBANE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     _equip_mpr(show_msgs,
-               species_is_draconian(you.species)
+               species::is_draconian(you.species)
                 || you.form == transformation::dragon
                    ? "You feel an uncomfortable desire to slay dragons."
                    : "You feel an overwhelming desire to slay dragons!");
 }
 
-static bool is_dragonkind(const actor *act)
-{
-    if (mons_genus(act->mons_species()) == MONS_DRAGON
-        || mons_genus(act->mons_species()) == MONS_DRAKE
-        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
-    {
-        return true;
-    }
-
-    if (act->is_player())
-        return you.form == transformation::dragon;
-
-    // Else the actor is a monster.
-    const monster* mon = act->as_monster();
-
-    if (mons_is_zombified(*mon)
-        && (mons_genus(mon->base_monster) == MONS_DRAGON
-            || mons_genus(mon->base_monster) == MONS_DRAKE
-            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
-    {
-        return true;
-    }
-
-    if (mons_is_ghost_demon(mon->type)
-        && species_is_draconian(mon->ghost->species))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
-    if (!defender || !is_dragonkind(defender))
+    if (!defender || !defender->is_dragonkind())
         return;
 
     // Since the target will become a DEAD MONSTER if it dies due to the extra
     // damage to dragons, we need to grab this information now.
-    int hd = min(defender->get_experience_level(), 18);
+    const int hd = defender->dragon_level();
     string name = defender->name(DESC_THE);
 
     if (!mondied)
@@ -703,12 +698,8 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                         : !defender->alive();
     }
 
-    if (!mondied || defender->is_summoned()
-        || (defender->is_monster()
-            && testbits(defender->as_monster()->flags, MF_NO_REWARD)))
-    {
+    if (!mondied || !hd)
         return;
-    }
 
     // The cap can be reached by:
     // * iron dragon, golden dragon, pearl dragon (18)
@@ -888,6 +879,13 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
     if (!mondied)
         defender->hurt(attacker, defender->stat_hp());
+
+    if (defender->as_monster()->can_bleed())
+    {
+        blood_spray(defender->pos(), defender->as_monster()->type,
+                    random_range(5, 10));
+    }
+    defender->as_monster()->flags |= MF_EXPLODE_KILL;
 }
 
 ///////////////////////////////////////////////////
@@ -1341,10 +1339,10 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    if (you.undead_state() == US_ALIVE && you.species == SP_VAMPIRE)
-        _equip_mpr(show_msgs, "You feel a powerful hunger.");
-    else if (you.species != SP_VAMPIRE)
+    if (!you.has_mutation(MUT_VAMPIRISM))
         _equip_mpr(show_msgs, "You feel very empty.");
+    else if (you.vampire_alive)
+        _equip_mpr(show_msgs, "You feel a powerful hunger.");
     // else let player-equip.cc handle message
 }
 
@@ -1589,4 +1587,24 @@ static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
         _equip_mpr(show_msgs, "Your spectral weapon disappears as you unwield.");
         end_spectral_weapon(spectral_weapon, false, true);
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
+                            bool /*unmeld*/)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        _equip_mpr(show_msgs, "The staff is unable to connect with your "
+                              "magical essence.");
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
 }

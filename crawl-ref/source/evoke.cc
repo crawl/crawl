@@ -180,22 +180,24 @@ static bool _lightning_rod(dist *preselect)
 void black_drac_breath()
 {
     const int num_shots = roll_dice(2, 1 + you.experience_level / 7);
-    const int range = you.experience_level / 3 + 5; // 5--14
-    const int power = 25 + you.experience_level; // 25-52
+    const int range = you.experience_level / 3 + 5; // 5-14
+    const int power = 25 + (you.form == transformation::dragon
+                            ? 2 * you.experience_level : you.experience_level);
     for (int i = 0; i < num_shots; ++i)
         _spray_lightning(range, power);
 }
 
 /**
- * Returns the MP cost of zapping a wand:
- *     3 if player has MP-powered wands and enough MP available,
- *     1-2 if player has MP-powered wands and only 1-2 MP left,
- *     0 otherwise.
+ * Returns the MP cost of zapping a wand, depending on the player's MP-powered wands
+ * level and their available MP (or HP, if they're a djinn).
  */
 int wand_mp_cost()
 {
+    const int cost = you.get_mutation_level(MUT_MP_WANDS) * 3;
+    if (you.has_mutation(MUT_HP_CASTING))
+        return min(you.hp - 1, cost);
     // Update mutation-data.h when updating this value.
-    return min(you.magic_points, you.get_mutation_level(MUT_MP_WANDS) * 3);
+    return min(you.magic_points, cost);
 }
 
 int wand_power()
@@ -245,6 +247,7 @@ void zap_wand(int slot, dist *_target)
 
     const int mp_cost = wand_mp_cost();
     const int power = wand_power();
+    pay_mp(mp_cost);
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
@@ -252,9 +255,13 @@ void zap_wand(int slot, dist *_target)
     spret ret = your_spells(spell, power, false, &wand, _target);
 
     if (ret == spret::abort)
+    {
+        refund_mp(mp_cost);
         return;
+    }
     else if (ret == spret::fail)
     {
+        refund_mp(mp_cost);
         canned_msg(MSG_NOTHING_HAPPENS);
         you.turn_is_over = true;
         return;
@@ -262,7 +269,7 @@ void zap_wand(int slot, dist *_target)
 
     // Spend MP.
     if (mp_cost)
-        dec_mp(mp_cost, false);
+        finalize_mp_cost();
 
     // Take off a charge.
     wand.charges--;
@@ -365,21 +372,9 @@ static bool _make_zig(item_def &zig)
     return true;
 }
 
-struct dist_sorter
-{
-    coord_def pos;
-    bool operator()(const actor* a, const actor* b)
-    {
-        return a->pos().distance_from(pos) > b->pos().distance_from(pos);
-    }
-};
-
 static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 {
     int dist = 1 + random2(pow / 20);
-
-    if (victim->airborne())
-        dist++;
 
     if (victim->body_size(PSIZE_BODY) < SIZE_MEDIUM)
         dist++;
@@ -427,7 +422,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         act_list.push_back(*ai);
     }
 
-    dist_sorter sorter = {agent->pos()};
+    far_to_near_sorter sorter = {agent->pos()};
     sort(act_list.begin(), act_list.end(), sorter);
 
     bolt wind_beam;
@@ -441,7 +436,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     map<actor *, coord_def> collisions;
 
     bool player_affected = false;
-    counted_monster_list affected_monsters;
+    vector<monster *> affected_monsters;
 
     for (actor *act : act_list)
     {
@@ -507,7 +502,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             {
                 act->as_monster()->speed_increment -= random2(6) + 4;
                 if (you.can_see(*act))
-                    affected_monsters.add(act->as_monster());
+                    affected_monsters.push_back(act->as_monster());
             }
             else
                 player_affected = true;
@@ -595,10 +590,11 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (!affected_monsters.empty())
     {
+        counted_monster_list affected = counted_monster_list(affected_monsters);
         const string message =
             make_stringf("%s %s blown away by the wind.",
-                         affected_monsters.describe().c_str(),
-                         conjugate_verb("be", affected_monsters.count() > 1).c_str());
+                         affected.describe().c_str(),
+                         conjugate_verb("be", affected.count() > 1).c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message);
         else
@@ -608,6 +604,32 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     for (auto it : collisions)
         if (it.first->alive())
             it.first->collide(it.second, agent, pow);
+
+    bool did_disperse = false;
+    // Handle trap triggering, finally. A dispersal before we finish
+    // would lead to weird crashes and behavior in the preceeding.
+    for (auto m : affected_monsters)
+    {
+        if (!m->alive())
+            continue;
+        coord_def landing = m->pos();
+
+        // XXX: this doesn't properly fire lua position triggers
+        m->apply_location_effects(landing);
+
+        // Dispersal will fire the location effects for everything dispersed;
+        // it's still possible for something to get blown somewhere it needs
+        // a location effect and not subsequently dispersed but handling that
+        // is more trouble than this headache already is.
+        if (m->pos() != landing)
+        {
+            did_disperse = true;
+            break;
+        }
+    }
+
+    if (player_affected && !did_disperse)
+        you.apply_location_effects(you.pos());
 }
 
 static bool _phial_of_floods(dist *target)
@@ -739,8 +761,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !mons_is_firewood(m)
-        && !(have_passive(passive_t::shoot_through_plants)
-                                && fedhas_protects(&m))
+        && !god_protects(&m)
         && !always_shoot_through_monster(&you, m);
 }
 
@@ -965,6 +986,77 @@ static spret _condenser()
     mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
 
     return spret::success;
+}
+
+static bool _xoms_chessboard()
+{
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    vector<monster *> targets;
+    bool see_target = false;
+
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->friendly() || mi->neutral())
+            continue;
+        if (mons_is_firewood(**mi))
+            continue;
+        if (you.can_see(**mi))
+            see_target = true;
+
+        targets.emplace_back(*mi);
+    }
+
+    if (!see_target
+        && !yesno("You can't see anything. Try to make a move anyway?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
+
+    const int power =
+        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2, surge);
+
+    mpr("You make a move on Xom's chessboard...");
+
+    if (targets.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return true;
+    }
+
+    bolt beam;
+    const monster * target = *random_iterator(targets);
+    beam.source = target->pos();
+    beam.target = target->pos();
+
+    // List of possible effects. Mostly debuffs, a few buffs to keep it
+    // exciting
+    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
+                                          5, ZAP_INVISIBILITY,
+                                          5, ZAP_MIGHT,
+                                          10, ZAP_CORONA,
+                                          15, ZAP_SLOW,
+                                          15, ZAP_MALMUTATE,
+                                          15, ZAP_PETRIFY,
+                                          10, ZAP_PARALYSE,
+                                          10, ZAP_CONFUSE,
+                                          10, ZAP_SLEEP);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+
+    return zapping(zap, power, beam, false) == spret::success;
 }
 
 
@@ -1295,6 +1387,18 @@ bool evoke_item(int slot, dist *preselect)
                     practise_evoking(1);
                     break;
             }
+            break;
+
+        case MISC_XOMS_CHESSBOARD:
+            if (_xoms_chessboard())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The chess piece greys!");
+                practise_evoking(1);
+            }
+            else
+                return false;
             break;
 
         default:

@@ -93,6 +93,16 @@ bool actor::is_habitable(const coord_def &_pos) const
     return is_habitable_feat(env.grid(_pos));
 }
 
+bool actor::is_dragonkind() const {
+    return mons_class_is_draconic(mons_species());
+}
+
+int actor::dragon_level() const {
+    if (!is_dragonkind())
+        return 0;
+    return min(get_experience_level(), 18);
+}
+
 bool actor::handle_trap()
 {
     trap_def* trap = trap_at(pos());
@@ -192,7 +202,8 @@ void actor::shield_block_succeeded()
 
 int actor::inaccuracy() const
 {
-    return wearing(EQ_AMULET, AMU_INACCURACY);
+    const item_def *amu = slot_item(EQ_AMULET);
+    return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
 }
 
 bool actor::res_corr(bool calc_unid, bool items) const
@@ -222,12 +233,6 @@ bool actor::holy_wrath_susceptible() const
 bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
-}
-
-// permaswift effects like boots of running and lightning scales
-bool actor::run(bool calc_unid, bool items) const
-{
-    return items && wearing_ego(EQ_BOOTS, SPARM_RUNNING, calc_unid);
 }
 
 bool actor::angry(bool calc_unid, bool items) const
@@ -294,18 +299,19 @@ bool actor::evokable_berserk(bool calc_unid) const
     return scan_artefacts(ARTP_BERSERK, calc_unid);
 }
 
-int actor::evokable_invis(bool calc_unid) const
+bool actor::evokable_invis(bool calc_unid) const
 {
     return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
-           + scan_artefacts(ARTP_INVISIBLE, calc_unid);
+           || scan_artefacts(ARTP_INVISIBLE, calc_unid);
 }
 
 // Return an int so we know whether an item is the sole source.
-int actor::evokable_flight(bool calc_unid) const
+int actor::equip_flight(bool calc_unid) const
 {
     if (is_player() && get_form()->forbids_flight())
         return 0;
 
+    // For the player, this is cached on ATTR_PERM_FLIGHT
     return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
            + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
            + scan_artefacts(ARTP_FLY, calc_unid);
@@ -331,7 +337,8 @@ bool actor::rampaging(bool calc_unid, bool items) const
 {
     return items &&
            (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING, calc_unid)
-            || scan_artefacts(ARTP_RAMPAGING, calc_unid));
+            || scan_artefacts(ARTP_RAMPAGING, calc_unid)
+            || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
@@ -664,14 +671,14 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender, bool direct) const
+bool actor::can_constrict(const actor* defender, bool direct, bool engulf) const
 {
     ASSERT(defender); // XXX: change to actor &defender
 
     if (direct)
     {
-        return (!is_constricting() || has_usable_tentacle())
-               && !defender->is_constricted()
+        return (!is_constricting() || has_usable_tentacle() || engulf)
+               && (!defender->is_constricted() || engulf)
                && can_see(*defender)
                && !confused()
                && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
@@ -923,11 +930,10 @@ string actor::resist_margin_phrase(int margin) const
 void actor::collide(coord_def newpos, const actor *agent, int pow)
 {
     actor *other = actor_at(newpos);
-    const bool fedhas_prot = agent && agent->deity() == GOD_FEDHAS
-                             && is_monster() && fedhas_protects(as_monster());
-    const bool fedhas_prot_other = agent && agent->deity() == GOD_FEDHAS
-                                   && other && other->is_monster()
-                                   && fedhas_protects(other->as_monster());
+    // TODO: should the first of these check agent?
+    const bool god_prot = god_protects(agent, as_monster());
+    const bool god_prot_other = other && god_protects(agent, other->as_monster());
+
     ASSERT(this != other);
     ASSERT(alive());
 
@@ -938,7 +944,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         return;
     }
 
-    if (is_monster() && !fedhas_prot)
+    if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     dice_def damage(2, 1 + pow / 10);
@@ -951,29 +957,27 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(),
                  conj_verb("collide").c_str(),
                  other->name(DESC_THE).c_str());
-            if (fedhas_prot || fedhas_prot_other)
+            if (god_prot || god_prot_other)
             {
-                const bool both = fedhas_prot && fedhas_prot_other;
-                simple_god_message(
-                    make_stringf(" protects %s plant%s from harm.",
-                        agent->is_player() ? "your" :
-                        both ? "some" : "a",
-                        both ? "s" : "").c_str(), GOD_FEDHAS);
+                // do messaging at the right time.
+                // TODO: a bit ugly
+                god_protects(agent, as_monster(), false);
+                god_protects(agent, other->as_monster(), false);
             }
         }
 
-        if (other->is_monster() && !fedhas_prot_other)
+        if (other->is_monster() && !god_prot_other)
             behaviour_event(other->as_monster(), ME_WHACK, agent);
 
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        if (other->alive() && !fedhas_prot_other)
+        if (other->alive() && !god_prot_other)
         {
             other->hurt(agent, other->apply_ac(damage.roll()),
                         BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
         }
-        if (alive() && !fedhas_prot)
+        if (alive() && !god_prot)
         {
             hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
                  KILLED_BY_COLLISION, thisname, othername);
@@ -998,15 +1002,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(), conj_verb("stop").c_str());
         }
 
-        if (fedhas_prot)
-        {
-            simple_god_message(
-                make_stringf(" protects %s plant from harm.",
-                    agent->is_player() ? "your" : "a").c_str(), GOD_FEDHAS);
-        }
+        if (god_prot)
+            god_protects(agent, as_monster(), false); // messaging
     }
 
-    if (!fedhas_prot)
+    if (!god_prot)
     {
         hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
              KILLED_BY_COLLISION, "", feature_description_at(newpos));

@@ -128,10 +128,12 @@ static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
     beam.name        = "fiery explosion";
     beam.colour      = RED;
     beam.ex_size     = (size > SIZE_BIG) ? 2 : 1;
-    beam.source_name = origin.name(DESC_A, true);
+    beam.source_name = origin.name(DESC_PLAIN, true);
     beam.origin_spell = SPELL_INNER_FLAME;
     beam.thrower     = (agent && agent->is_player()) ? KILL_YOU_MISSILE
                                                      : KILL_MON_MISSILE;
+    if (agent)
+        beam.source_id = agent->mid;
 }
 
 static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
@@ -209,7 +211,9 @@ bool explode_monster(monster* mons, killer_type killer,
                     effect + ".";
         if (type == MONS_BENNU)
             boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
-    } else {
+    }
+    else
+    {
         if (!mons->has_ench(ENCH_INNER_FLAME))
         {
             msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
@@ -229,7 +233,7 @@ bool explode_monster(monster* mons, killer_type killer,
             mons_add_blame(mons, "hexed by " + agent->name(DESC_A, true));
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
-        beam.aux_source = "exploding inner flame";
+        beam.aux_source = "ignited by their inner flame";
         inner_flame = true;
     }
 

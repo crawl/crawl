@@ -91,6 +91,7 @@ void lose_item_stack(const coord_def& where);
 
 string item_message(vector<const item_def *> const &items);
 void item_check();
+void identify_item(item_def& item);
 void request_autopickup(bool do_pickup = true);
 void id_floor_items();
 

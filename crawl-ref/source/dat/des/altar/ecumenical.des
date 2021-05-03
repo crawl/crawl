@@ -1,0 +1,892 @@
+###############################################################################
+# ecumenical.des: This file contains the vaults that place faded altars and
+#                 are a part of the D:1-3 chance group for placing such an
+#                 altar. Vaults that use ecumenical altars for decorative
+#                 reasons should not be in this file.
+#
+# See the section in docs/develop/levels/guidelines.md for guidelines on
+# creating new vaults. Every vault in this file should call
+# ecumenical_altar_setup to set the chance.
+#
+###############################################################################
+
+: crawl_require('dlua/vault.lua')
+
+{{
+function ecumenical_altar_setup(e)
+  e.depth("D:1-3")
+  e.tags("uniq_ecumenical_altar chance_ecumenical_altar extra")
+  e.chance(5000)
+  e.kfeat("_ = altar_ecumenical")
+end
+}}
+
+NAME:   basic_ecumenical_altar
+TAGS:   transparent
+WEIGHT: 50
+: ecumenical_altar_setup(_G)
+MAP
+_
+ENDMAP
+
+NAME:    chequers_ecumenical_altar_simple
+TAGS:    transparent
+SHUFFLE: GH
+SUBST: G : Gbt x:5
+: ecumenical_altar_setup(_G)
+MAP
+.....
+.HGH.
+.G_G.
+.HGH.
+.....
+ENDMAP
+
+NAME:    chequers_ecumenical_altar_simple_redux
+TAGS:    transparent
+SHUFFLE: GH
+SUBST:   G : Gbt x:5
+: ecumenical_altar_setup(_G)
+MAP
+.......
+..HGH..
+.HGHGH.
+.GH_HG.
+.HGHGH.
+..HGH..
+.......
+ENDMAP
+
+NAME:   chequers_ecumenical_altar_grove
+TAGS:   transparent
+WEIGHT: 5
+KMASK:  - = no_item_gen
+KMASK:  - = no_monster_gen
+KPROP:  - = no_tele_into
+SUBST:  - = tt.
+: if crawl.one_chance_in(4) then
+: set_feature_name("tree", "dead tree")
+TILE:   t = dngn_tree_dead
+COLOUR: t = w:5 lightgrey / brown
+: elseif crawl.one_chance_in(4) then
+COLOUR: t = lightred / red w:4 / yellow w:4
+TILE:   t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+: end
+: ecumenical_altar_setup(_G)
+MAP
+ ......
+ .-.-.@..
+--.-..-.--.
+ .tttttt.--.
+.-t-...t.---.
+.tt.-tt.-t--.
+-t--.-t--t-.
+ ttt-.ttttt-.
+ t.t.-.-t-t.
+ -t._tttt-@.
+ ttttt--tt.
+-ttt--.---.
+...........
+ENDMAP
+
+NAME: chequers_ecumenical_altar_lobes
+WEIGHT: 5
+KPROP:  tG = no_tele_into
+KMASK:  tGp = no_item_gen
+KMASK:  tG = no_monster_gen
+NSUBST: + = 1:.
+SUBST:  ' : tGp, t = t:2 ., G = G:3 ., p = p:5 ., - = T U V .
+KMONS: p = plant
+: ecumenical_altar_setup(_G)
+MAP
+   xxxxx    xxxxx
+ xxx'-'xxxxxx'-'xxx
+xxtGp_pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
+xxxxx+xxxxxxxx+xxxxx
+xtGpp..........ppGtx
+xxxtGpppp..ppppGtxxx
+  xxxxxtG..Gtxxxxx
+      xxx..xxx
+        x..x
+         @@
+ENDMAP
+
+NAME: chequers_ecumenical_altar_twisty
+TAGS: transparent
+WEIGHT: 5
+KFEAT:  _ = altar_ecumenical
+SUBST: x : x:30 c t:1
+: ecumenical_altar_setup(_G)
+MAP
+ x@x
+ x.xx
+ xx.x
+xx.xx
+x.xx
+xx_xx
+ xx.x
+xx.xx
+x.xx
+xx.x
+ x@x
+ENDMAP
+
+NAME: chequers_ecumenical_altar_island
+SUBST: - = W:5 . t:5
+SUBST: s = W:5 .
+SUBST: S = w.
+: ecumenical_altar_setup(_G)
+MAP
+sssssssssssss
+sSSSSSSSSSSSs
+sSwwwwwwwwwSs
+sSwwwwwwwwwSs
+sSwWWWWwwwwSs
+sSWww--WwwwSs
+sSwWw-_-wwwSs
+sSwWw---wwwSs
+@.WwwwwwwwwSs
+sSwwwwwwwwwSs
+sSwwwwwwwwwSs
+sSSSSSSSSSSSs
+sssssssssssss
+ENDMAP
+
+NAME:   ebering_ecumenical_altar_webs
+TAGS:   transparent
+NSUBST: ^ = 4=^. / 4=^..
+KFEAT:  ^ = web trap
+: ecumenical_altar_setup(_G)
+MAP
+^^^
+^_^
+^^^
+ENDMAP
+
+NAME: ebering_ecumenical_altar_mist
+TAGS:   transparent
+MARKER: _ = lua:fog_machine { cloud_type = "thin mist", pow_min = 5, \
+                              pow_max = 10, delay = 20, size = 1, \
+                              spread_rate = 15, walk_dist = 2 }
+: ecumenical_altar_setup(_G)
+MAP
+...
+._.
+...
+ENDMAP
+
+NAME:  ebering_ecumenical_altar_box
+TAGS:  transparent
+SUBST:  x : xcvb
+: ecumenical_altar_setup(_G)
+MAP
+.......
+.xx.xx.
+.x...x.
+..._...
+.x...x.
+.xx.xx.
+.......
+ENDMAP
+
+NAME:  ebering_ecumenical_altar_hall
+TAGS:  transparent
+SUBST: G : btAGTUV Y:1
+: ecumenical_altar_setup(_G)
+MAP
+xxxxxxx
+xGxGxGx
+@.._..@
+xGxGxGx
+xxxxxxx
+ENDMAP
+
+NAME:  ebering_ecumenical_altar_sacrificial
+TAGS:  transparent
+KITEM: _ = dagger mundane
+SUBST: ' = ''.
+KPROP: ' = bloody
+: ecumenical_altar_setup(_G)
+MAP
+'''''
+'''''
+''_''
+'''''
+'''''
+ENDMAP
+
+NAME:   ebering_ecumenical_altar_rust
+TAGS:   transparent
+KITEM:  _ = any weapon damaged
+KFEAT:  a = iron_grate
+NSUBST: ' = 2=va / 4=va. / .
+: ecumenical_altar_setup(_G)
+MAP
+'''
+'_'
+'''
+ENDMAP
+
+NAME:  ebering_ecumenical_altar_abandoned
+TAGS:  transparent
+KFEAT: s = abandoned_shop
+: ecumenical_altar_setup(_G)
+MAP
+._.
+...
+V.S
+ENDMAP
+
+NAME:   ebering_ecumenical_altar_ruins
+WEIGHT: 5
+TAGS:   transparent
+SUBST:  G = GGG-
+SUBST:  - = --.
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+MAP
+  G-G
+  .-.
+G.G-G.G
+---_---
+G.G-G.G
+  .-.
+  G-G
+ENDMAP
+
+NAME:    ebering_ecumenical_altar_petrified
+TAGS:    transparent
+KFEAT:   t = petrified_tree
+KMONS:   p = withered plant perm_ench:petrified
+SHUFFLE: tp
+SUBST:   p = pp.
+SUBST:   t = t.
+: ecumenical_altar_setup(_G)
+MAP
+ .pp.
+.ptt..
+ptp_tp
+ptpptp
+.pttp.
+ .pp.
+ENDMAP
+
+NAME:    shapermc_ecumenical_altar_notcrosses
+TAGS:    no_monster_gen transparent
+SHUFFLE: PQ
+SUBST:   P : cvb
+SUBST:   Q : mmWWl
+: ecumenical_altar_setup(_G)
+MAP
+ccccc+ccccc
+c....P....c
+c..QQPQQ..c
+c....P....c
+c....P....c
+c.QQQ_QQQ.c
+c....P....c
+c....P....c
+c..QQPQQ..c
+c....P....c
+ccccc+ccccc
+ENDMAP
+
+NAME:  shapermc_ecumenical_altar_starsandcircs
+TAGS:  no_monster_gen no_pool_fixup transparent
+SUBST: P : xxxxxccl
+SUBST: Q : WWW'l
+KPROP: ' = bloody
+: ecumenical_altar_setup(_G)
+MAP
+     ..@..
+    .PP.PP.
+   .P.Q.Q.P.
+  .P..Q.Q..P.
+ .PQQQQ.QQQQP.
+.P..Q.QwQ.Q..P.
+.P...Qw_wQ...P.
+.P...Qw.wQ...P.
+.P...Q.w.Q...P.
+.P..Q.Q.Q.Q..P.
+ .PQ.Q...Q.QP.
+  .@Q.....Q@.
+   .P.....P.
+    .PPPPP.
+     .....
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_totnotflames
+COLOUR: . = green / brown
+TAGS:   no_monster_gen transparent
+FTILE:  A. = floor_grass:20 / floor_dirt
+SUBST:  A = ATUV
+: ecumenical_altar_setup(_G)
+MAP
+    @t@
+    t.t
+   tt.t
+   t..t  t
+   t.tt tt@
+   t.t  t.t
+   t.tttt.t
+   t..tt..t
+    t.t.ttt
+@tt t...t
+t.ttt.A.tttt@
+t...t...tt..t
+tt........ttt
+ tt..G_G.tt
+  tttttttt
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_gd
+TAGS:   no_monster_gen transparent
+KMONS:  P = plant / fungus
+KMONS:  D = demonic plant / withered plant w:5
+NSUBST: ' = 15:P / 10:P.. / .
+NSUBST: - = 15:D / 10:D.. / .
+SUBST:  x : ccccvvbb
+: ecumenical_altar_setup(_G)
+MAP
+     .xxxxxxxxx.
+  .xxx''''x----xxx.
+  x'''''''x-------x
+ xx'''''''x-------xx.
+x'''''''''x---------x
+x'''''''''_---------x
+x'''''''''x---------x
+.xx'''''''x-------xx.
+  x'''''''x-------x
+  .xxx''''x----xxx.
+     .xxxxxxxxx.
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_hornbeckon
+TAGS:   no_monster_gen transparent
+KMONS:  p = plant
+KMONS:  f = fungus
+NSUBST: ' = 8:pf / 12=ppf... / .
+: ecumenical_altar_setup(_G)
+MAP
+....@....
+bxxbWbxxb
+x'''W'''x
+x''W'''xx
+xx'W''xx
+ x'W'xx
+ x'W'x
+ xxW'xx
+  x'W'x
+  xx-Wxx
+   x''Wx
+   x''Wxxxx
+   xx''._Gx
+    xxxxxxx
+ENDMAP
+
+NAME:    shapermc_ecumenical_altar_venn
+TAGS:    no_monster_gen transparent
+SHUFFLE: GV
+SUBST:   x : xxxxccvb
+: ecumenical_altar_setup(_G)
+MAP
+ .xxx.
+.x...x
+x..V.Gx
+x.V..xxx
+x...xAxGx.
+.xGx_x...x
+  xxx..V.x
+   xG.V..x
+    x...x.
+    .xxx.
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_flowoftime
+TAGS:   no_monster_gen transparent
+MONS:   plant
+MONS:   withered plant
+MONS:   demonic plant
+SUBST: ' = P.....
+SUBST: - = PPPPP.
+: if crawl.one_chance_in(20) then
+SUBST:  P : 2223
+: else
+SUBST:  P = 11222
+: end
+: ecumenical_altar_setup(_G)
+MAP
+xxb+bxx
+x'''''x
+x'''''x
+x'''''x
+x'''''x
+xb'''bx
+xbb'bbx
+xbb_bbx
+xbb-bbx
+xb---bx
+x-----x
+x-----x
+x-----x
+x-----x
+xxb+bxx
+ENDMAP
+
+NAME:   dilly_ecumenical_altar_fadedgnrine
+TAGS:   no_monster_gen transparent
+MONS:   plant
+SUBST:  z = t111
+SUBST:  1 = 11'
+KITEM:  E = never_decay gnoll shaman skeleton / never_decay gnoll skeleton
+KPROP:  E = no_tele_into
+FTILE:  1Et'_  = floor_grass
+COLOUR: 1E'_ = green
+: ecumenical_altar_setup(_G)
+MAP
+      .....
+     ..ttt..
+    ..tt_tt..
+   ..ttz'ztt..
+  ..ttzz'zztt..
+  .ttzz1'1zztt.
+  .tz111'111zt.
+  .tzxxx+xxxzt.
+  .ttx.....xtt.
+  .tEm..G..mEt.
+  .ttx.....xtt.
+  ...xxt+txx...
+    .........
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_vishouse
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+.............
+.....xxxxx..x
+..xxx---xG--x
+xx------xxxxx
+x--xxx--x---x
+x--x_x------x
+x--b-x--xx+xx
+x--+-x--x---x
+x--b-x--xGGGx
+xxxxxx.xxxxxx
+.............
+ENDMAP
+
+
+NAME:   shapermc_ecumenical_altar_mp_highgroup
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+SUBST: ^ = ^^.
+KFEAT:  ^ = web trap
+
+MAP
+xxxxxx-xxxxxx
+xG^--x-x--^Gx
+xxx-xx_xx-xxx
+x-----------x
+x^x---.---x^x
+xG^--...--^Gx
+xxxx.....xxxx
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_urbaneastern
+TAGS:   transparent no_monster_gen
+SUBST:  - = --.
+SUBST:  G = GGG-
+COLOUR: - = brown
+FTILE:  -G = floor_rough_brown
+COLOUR: G = lightgrey
+KMONS:  p = plant
+KMONS:  f = fungus
+NSUBST: ' = 8=pf / 12=ppf... / .
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+...............
+.xxxxxxxxxxxxx.
+..x-'-x'x-'-x..
+..x-x-x'x-x-x..
+..'''''''''''..
+..x-x-x'x-x-x..
+..x-'-x_x-'-x..
+..x-x-x'x-x-x..
+..'''''''''''..
+..x-x-x'x-x-x..
+..x-'-x'x-'-x..
+.xxxxxxxxxxxxx.
+...............
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_mp_ritualfount
+TAGS:   transparent no_monster_gen
+SUBST: ^ = TUV---
+SUBST: - = --.
+SUBST: G = GGG-
+SUBST: W = WWWWw.
+COLOUR: - = brown
+FTILE: -G = floor_rough_brown
+COLOUR: G = lightgrey
+KMONS: W = plant / nothing
+KMONS: p = plant
+KMONS: f = fungus
+NSUBST: ' = 8=pf. / 12=ppf... / .
+TILE: G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+: ecumenical_altar_setup(_G)
+
+MAP
+......x....
+.-----x''''
+.-xxxxxx'W'
+.-x--x_x'W'
+.-x--x-xWW'
+'--WW-WWx''
+''W^^W''x''
+''W^^^W'x''
+'''WWWW'x''
+'''''''W'x'
+'''WWWW''x'
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_pennies_from_heaven
+TAGS:  no_monster_gen transparent
+KITEM: _ = gold q:1
+KFEAT: W = shallow_water
+KITEM: W = gold q:1 / w:25 nothing
+: ecumenical_altar_setup(_G)
+MAP
+.....
+.WWW.
+.W_W.
+.WWW.
+.....
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_leap_of_faith
+KFEAT: ^ = shaft trap
+: ecumenical_altar_setup(_G)
+MAP
+xxx
+x_x
+x^x
+x@x
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_run_dry
+TAGS:  no_monster_gen transparent
+SUBST: V = V.
+: ecumenical_altar_setup(_G)
+MAP
+V.V.V
+.....
+V._.V
+.....
+V.V.V
+ENDMAP
+
+NAME: hellmonk_ecumenical_altar_heavens_door
+TAGS: no_monster_gen
+: if crawl.one_chance_in(5) then
+: door_vault_setup(_G)
+: end
+: ecumenical_altar_setup(_G)
+MAP
++++++
++++++
+++_++
++++++
++++++
+  @
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_blasted
+TAGS:  no_monster_gen transparent
+KITEM: _ = scroll of immolation ident:type
+SUBST: x = ..x
+SUBST: x : xc
+: ecumenical_altar_setup(_G)
+MAP
+.............
+.xxxxxxxxxxx.
+.xxxxxxxxxxx.
+.xx...x...xx.
+.xx.xx.xx.xx.
+.xx.xx.xx.xx.
+.xxx.._..xxx.
+.xx.xx.xx.xx.
+.xx.xx.xx.xx.
+.xx...x...xx.
+.xxxxx.xxxxx.
+.xxxxx+xxxxx.
+.............
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_lost_god
+TAGS:   no_monster_gen transparent
+SUBST:  x : x:20 c m:1
+NSUBST: a = 1:_ / *.
+: ecumenical_altar_setup(_G)
+MAP
+..............
+.x......x.....
+.xa....ax.a.x.
+.x......x...x.
+.a............
+.....a........
+.x...x..x.....
+.x.a.x.ax.....
+.x...x..xaxxx.
+............a.
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_crossroads
+TAGS:  no_monster_gen transparent
+KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft trap / \
+            net trap / A / > / Y w:2
+: ecumenical_altar_setup(_G)
+MAP
+@@@xxxxxxx@@@
+x...xxxxx...x
+xx...xxx...xx
+ xx...r...xx
+  xx.._..xx
+   xx...xx
+    x...x
+    x...x
+    x@@@x
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_zigzags
+TAGS:  no_monster_gen transparent
+SUBST: a : xcv, d : xcv, e : cvb
+: ecumenical_altar_setup(_G)
+MAP
+                             ddddddd
+                           ddd.....ddd
+       aaaaaaa           ddd.........ddd
+     aaa.....aaa       ddd.............ddd
+   aaa.........aaa.......................@
+ aaa.........................
+@.........................eee
+            eee.........eee
+              eee.._..eee
+                eeeeeee
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_inner_sanctum
+TAGS:   transparent
+NSUBST: e = 1:+ / *:c
+NSUBST: f = 1:+ / *:v
+SUBST:  v : vbtm
+: ecumenical_altar_setup(_G)
+MAP
+...........
+.ccccecccc.
+.c.......c.
+.c.......c.
+.c..vfv..c.
+.e..f_f..e.
+.c..vfv..c.
+.c.......c.
+.c.......c.
+.ccccecccc.
+...........
+ENDMAP
+
+# We want to avoid giving a player an immediate reroll for big piety
+# but the flavour of this one is too good.
+NAME:    hellmonk_ecumenical_altar_the_god_not_taken
+WEIGHT:  1
+:if crawl.one_chance_in(10) then
+COLOUR:  t = lightred / red w:3
+TILE:    t = dngn_tree_lightred / dngn_tree_red w:3
+:else
+COLOUR:  t = yellow / green w:3
+TILE:    t = dngn_tree_yellow / dngn_tree w:3
+:end
+: ecumenical_altar_setup(_G)
+MAP
+ ttt           ttt
+tt.tt         tt.tt
+t._.t         t._.t
+t...tt       tt...t
+tt...tt     tt...tt
+ tt...tt   tt...tt
+  tt...tt tt...tt
+   tt...ttt...tt
+    tt...t...tt
+     tt.....tt
+      tt...tt
+       t@@@t
+ENDMAP
+
+NAME:    hellmonk_ecumenical_altar_arch_garden
+TAGS:    transparent
+NSUBST:  A = 1:_ / *:A
+SUBST:   A = tGAA.
+SUBST:   . = ..'
+FTILE:   ._t = floor_grass
+COLOUR:  . = green
+FTILE:   'GA = floor_dirt
+COLOUR:  ' = brown
+: ecumenical_altar_setup(_G)
+MAP
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+.............
+.............
+A..A..A..A..A
+ENDMAP
+
+NAME:  hellmonk_ecumenical_altar_watching_god
+TAGS:  transparent
+KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
+            great orb of eyes
+: ecumenical_altar_setup(_G)
+MAP
+...........
+.ccc...ccc.
+.c1n...n1c.
+.cnn...nnc.
+...........
+....._.....
+...........
+.cnn...nnc.
+.c1n...n1c.
+.ccc...ccc.
+...........
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_dog_temple
+WEIGHT: 5
+TAGS:   no_monster_gen
+KMONS:  a = jackal band
+KFEAT:  a = T
+: ecumenical_altar_setup(_G)
+MAP
+.......
+.G.a.G.
+.......
+.T._.T.
+.......
+.G.T.G.
+.......
+ENDMAP
+
+NAME:   hellmonk_ecumenical_altar_prayer_group
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+MONS: hobgoblin / goblin / kobold / nothing w:60
+: ecumenical_altar_setup(_G)
+MAP
+ ccccccc
+cccG_Gccc
+cc..1..cc
+cc.1.1.cc
+c.1...1.c
+c..G1G..c
+c.......c
+cc.....cc
+cc.....cc
+ cc.G.cc
+  c...c
+  .....
+ENDMAP
+
+# an ooze ate the god's name right off the altar
+NAME:   hellmonk_ecumenical_altar_slurped_away
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+SUBST:  x : xc, g = G.
+KMONS:  _ = endoplasm
+: ecumenical_altar_setup(_G)
+MAP
++xxx xxx+
+x..xxx..x
+x...g...x
+xx.....xx
+ xg._.gx
+xx.....xx
+x...g...x
+x..xxx..x
++xxx xxx+
+ENDMAP
+
+# some orcs have torn down the altar and replaced it with their own
+NAME:   hellmonk_ecumenical_altar_defaced_shrine
+WEIGHT: 5
+TAGS:   no_monster_gen transparent
+KFEAT:  B = altar_beogh
+KPROP:  B = no_tele_into
+NSUBST: d = 1:_ / *:d
+SUBST:  1 = 1..
+SUBST:  x : xc
+SUBST:  . = .:90 '
+SUBST:  T = TV Y:1
+KPROP:  ' = bloody
+KITEM:  _ = stone q:1 / large rock q:1 w:3
+: if you.absdepth() > 1 then
+MONS: orc
+: else
+MONS: rat / giant cockroach / dart slug
+: end
+{{
+  dgn.delayed_decay(_G, 'd', "human skeleton / kobold skeleton / elf skeleton"
+                             .. " / gnoll skeleton / ogre skeleton"
+                             .. " / naga skeleton / minotaur skeleton"
+                             .. " / merfolk skeleton / tengu skeleton"
+                             .. " / draconian skeleton")
+}}
+: ecumenical_altar_setup(_G)
+MAP
+       xxx
+       xdx
+    xxxx+xxxx
+   xx...1...xx
+  xx.1.....1.xx
+  x.....1.....x
+xxx....vlv....xxx
+xd+1...lBl...1+dx
+xxx....vlv....xxx
+  x..1.....1..x
+  xx....1....xx
+   xx.......xx
+    xx.....xx
+     .......
+     ...T...
+ENDMAP

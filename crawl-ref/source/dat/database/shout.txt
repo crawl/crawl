@@ -290,10 +290,6 @@ Wanderer player ghost
 
 @__DEMON_TAUNT@
 %%%%
-'a'
-
-VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
-%%%%
 'cap-G'
 
 VISUAL:@The_monster@ turns @possessive@ gaze towards you.

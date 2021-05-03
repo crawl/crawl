@@ -692,6 +692,19 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
+bool mons_class_is_draconic(monster_type mc)
+{
+    switch (mons_genus(mc))
+    {
+        case MONS_DRAGON:
+        case MONS_DRAKE:
+        case MONS_DRACONIAN:
+            return true;
+        default:
+            return false;
+    }
+}
+
 /**
  * Can killing this class of monster ever reward xp?
  *
@@ -807,9 +820,12 @@ bool mons_is_firewood(const monster& mon)
 bool mons_has_body(const monster& mon)
 {
     if (mon.type == MONS_FLYING_SKULL
-        || mon.type == MONS_CURSE_SKULL
+        || mons_species(mon.type) == MONS_CURSE_SKULL // including Murray
         || mon.type == MONS_CURSE_TOE
-        || mons_class_is_animated_weapon(mon.type))
+        || mon.type == MONS_DEATH_COB
+        || mon.type == MONS_ANIMATED_ARMOUR
+        || mons_class_is_animated_weapon(mon.type)
+        || mons_is_tentacle_or_tentacle_segment(mon.type))
     {
         return false;
     }
@@ -820,7 +836,6 @@ bool mons_has_body(const monster& mon)
     case 'v':
     case 'G':
     case '*':
-    case '%':
     case 'J':
         return false;
     }
@@ -904,7 +919,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster& mon)
 {
-    if (!species_is_orcish(you.species) || you_worship(GOD_BEOGH))
+    if (!species::is_orcish(you.species) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon.type) == MONS_ORC
@@ -1016,6 +1031,11 @@ bool mons_is_slime(const monster& mon)
 bool herd_monster(const monster& mon)
 {
     return mons_class_flag(mon.type, M_HERD);
+}
+
+bool mons_class_requires_band(monster_type mc)
+{
+    return mons_class_flag(mc, M_REQUIRE_BAND);
 }
 
 // Plant or fungus or really anything with
@@ -1290,7 +1310,7 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
+        || (mc == MONS_PLAYER_ILLUSION && species::is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
@@ -1336,7 +1356,7 @@ monster_type draco_or_demonspawn_subspecies(const monster& mon)
     if (mon.type == MONS_PLAYER_ILLUSION
         && mons_genus(mon.type) == MONS_DRACONIAN)
     {
-        return player_species_to_mons_species(mon.ghost->species);
+        return species::to_mons_species(mon.ghost->species);
     }
 
     return draco_or_demonspawn_subspecies(mon.type, mon.base_monster);
@@ -2006,10 +2026,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
             attk.type = AT_HIT;
             attk.damage *= 2;
         }
-    } else if (mons_species(mon.type) == MONS_DRACONIAN
-            && mon.type != MONS_DRACONIAN
-            && attk.type == AT_NONE
-            && smc->attack[attk_number - 1].type != AT_NONE)
+    }
+    else if (mons_species(mon.type) == MONS_DRACONIAN
+             && mon.type != MONS_DRACONIAN
+             && attk.type == AT_NONE
+             && smc->attack[attk_number - 1].type != AT_NONE)
     {
         // Nonbase draconians inherit aux attacks from their base type.
         // Implicit assumption: base draconian types only get one aux
@@ -2690,7 +2711,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
-    case MONS_WHITE_DRACONIAN:   sp = SPELL_CHILLING_BREATH; break;
+    case MONS_WHITE_DRACONIAN:   sp = SPELL_COLD_BREATH; break;
     case MONS_DRACONIAN:
     case MONS_GREY_DRACONIAN:    sp = SPELL_NO_SPELL; break;
     case MONS_PALE_DRACONIAN:    sp = SPELL_STEAM_BALL; break;
@@ -3640,6 +3661,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_MIGHT:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_CONCENTRATE_VENOM:
         return true;
 
     default:
@@ -3750,6 +3772,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
     case SPELL_BLINK_CLOSE:
+    case SPELL_VAMPIRIC_DRAINING:
         return false;
 
     default:
@@ -4216,7 +4239,10 @@ mon_inv_type item_to_mslot(const item_def &item)
 
 monster_type royal_jelly_ejectable_monster()
 {
-    return random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
+    return random_choose(MONS_ACID_BLOB,
+                         MONS_AZURE_JELLY,
+                         MONS_ROCKSLIME,
+                         MONS_QUICKSILVER_OOZE);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.
@@ -4336,9 +4362,11 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
-                      article_a(species_name(you.species, SPNAME_GENUS)));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
-    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, SPNAME_GENUS)));
+                article_a(species::name(you.species, species::SPNAME_GENUS)));
+    msg = replace_all(msg, "@player_genus@",
+                species::name(you.species, species::SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus_plural@",
+                pluralise(species::name(you.species, species::SPNAME_GENUS)));
 
     string foe_genus;
 
@@ -4346,7 +4374,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         ;
     else if (foe->is_player())
     {
-        foe_genus = species_name(you.species, SPNAME_GENUS);
+        foe_genus = species::name(you.species, species::SPNAME_GENUS);
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
@@ -4365,7 +4393,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         msg = replace_all(msg, "@Foe@", "You");
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
-        msg = replace_all(msg, "@foe_species@", species_name(you.species));
+        msg = replace_all(msg, "@foe_species@", species::name(you.species));
         msg = replace_all(msg, "@foe_genus@", foe_genus);
         msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
         msg = replace_all(msg, "@foe_genus_plural@",
@@ -4661,7 +4689,7 @@ mon_body_shape get_mon_shape(const monster& mon)
 {
     monster_type base_type;
     if (mons_is_pghost(mon.type))
-        base_type = player_species_to_mons_species(mon.ghost->species);
+        base_type = species::to_mons_species(mon.ghost->species);
     else if (mons_is_zombified(mon))
         base_type = mon.base_monster;
     else
@@ -5085,17 +5113,6 @@ void debug_monspells()
                                               bknm, spell_name.c_str(),
                                               category, flag);
                     }
-                }
-
-                COMPILE_CHECK(MON_SPELL_NO_SILENT > MON_SPELL_LAST_CATEGORY);
-                static auto NO_SILENT_CATEGORIES =
-                    MON_SPELL_SILENCE_MASK & ~MON_SPELL_NO_SILENT;
-                if (flag == MON_SPELL_NO_SILENT
-                    && (category & NO_SILENT_CATEGORIES))
-                {
-                    fails += make_stringf("Spellbook %s has spell %s marked "
-                                          "MON_SPELL_NO_SILENT redundantly\n",
-                                          bknm, spell_name.c_str());
                 }
 
                 COMPILE_CHECK(MON_SPELL_NOISY > MON_SPELL_LAST_CATEGORY);

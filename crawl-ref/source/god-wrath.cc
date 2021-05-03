@@ -352,11 +352,16 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if (wrath_value < 2)       { wrath_type = 0; }
-    else if (wrath_value < 4)  { wrath_type = 1; }
-    else if (wrath_value < 8)  { wrath_type = 2; }
-    else if (wrath_value < 16) { wrath_type = 3; }
-    else                       { wrath_type = 4; }
+    if (wrath_value < 2)
+        wrath_type = 0;
+    else if (wrath_value < 4)
+        wrath_type = 1;
+    else if (wrath_value < 8)
+        wrath_type = 2;
+    else if (wrath_value < 16)
+        wrath_type = 3;
+    else
+        wrath_type = 4;
 
     // Strip away extra speed
     dec_haste_player(10000);
@@ -643,7 +648,7 @@ static bool _kikubaaqudgha_retribution()
     if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 death curses of maximum power
-        if (!player_res_torment(false))
+        if (!you.res_torment())
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
@@ -818,7 +823,7 @@ static bool _trog_retribution()
         }
 
         _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls firey rage upon you!");
+                           god, " hurls fiery rage upon you!");
         _reset_avatar(*avatar);
     }
 
@@ -972,7 +977,7 @@ static bool _sif_muna_retribution()
     case 8:
         if (you.magic_points > 0)
         {
-            dec_mp(you.magic_points);
+            drain_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
@@ -1248,15 +1253,15 @@ static void _jiyva_summon_slimes()
     const monster_type slimes[] =
     {
         MONS_FLOATING_EYE,
-        MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
+        MONS_ROCKSLIME,
+        MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
-        MONS_DEATH_OOZE,
         MONS_SLIME_CREATURE,
     };
 

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "ability-type.h"
+#include "command-type.h"
 #include "format.h"
 #include "spell-type.h"
 #include "tiles.h" // for tile_def
@@ -146,13 +147,14 @@ namespace quiver
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
-        void on_actions_changed();
+        void on_actions_changed(bool check_autoswitch=false);
         virtual void set_needs_redraw();
         shared_ptr<action> find_last_valid();
 
         void target();
         shared_ptr<action> do_target();
-        string fire_key_hints() const;
+        virtual string fire_key_hints() const;
+        virtual bool targeter_handles_key(command_type c) const;
 
         bool autoswitched;
     protected:
@@ -176,7 +178,7 @@ namespace quiver
     };
 
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
-    void on_actions_changed();
+    void on_actions_changed(bool check_autoswitch=false);
     void on_weapon_changed();
 
     // TODO: perhaps this should be rolled into action_cycler?

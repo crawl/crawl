@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "corpse.h"
 #include "database.h"
+#include "delay.h"
 #include "dgn-shoals.h"
 #include "dgn-event.h"
 #include "env.h"
@@ -731,7 +732,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_SILENCE:
         case ENCH_LOWERED_WL: case ENCH_SOUL_RIPE: case ENCH_ANTIMAGIC:
-        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
+        case ENCH_REGENERATION: case ENCH_STRONG_WILLED:
         case ENCH_MIRROR_DAMAGE: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_BREATH_WEAPON: case ENCH_WRETCHED:
@@ -1299,13 +1300,19 @@ static int& _zot_clock()
 
 static bool _zot_clock_active_in(branch_type br)
 {
-    return br != BRANCH_ABYSS && !player_has_orb() && !crawl_state.game_is_sprint();
+    return br != BRANCH_ABYSS && !zot_immune() && !crawl_state.game_is_sprint();
 }
 
 // Is the zot clock running, or is it paused or stopped altogether?
 bool zot_clock_active()
 {
     return _zot_clock_active_in(you.where_are_you);
+}
+
+// Has the player stopped the zot clock?
+bool zot_immune()
+{
+    return player_has_orb() || you.zigs_completed;
 }
 
 int turns_until_zot_in(branch_type br)
@@ -1423,6 +1430,7 @@ void incr_zot_clock()
     }
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
+    interrupt_activity(activity_interrupt::force);
 }
 
 void set_turns_until_zot(int turns_left)

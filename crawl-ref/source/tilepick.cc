@@ -139,9 +139,9 @@ tileidx_t tileidx_shop(const shop_struct *shop)
             return TILE_SHOP_ARMOUR;
         case SHOP_JEWELLERY:
             return TILE_SHOP_JEWELLERY;
+#if TAG_MAJOR_VERSION == 34
         case SHOP_EVOKABLES:
             return TILE_SHOP_GADGETS;
-#if TAG_MAJOR_VERSION == 34
         case SHOP_FOOD:
             return TILE_SHOP_FOOD;
 #endif
@@ -200,7 +200,13 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ORCISH_IDOL:
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_TREE:
-        return player_in_branch(BRANCH_SWAMP) ? TILE_DNGN_MANGROVE : TILE_DNGN_TREE;
+        return TILE_DNGN_TREE;
+    case DNGN_MANGROVE:
+        return TILE_DNGN_MANGROVE;
+    case DNGN_PETRIFIED_TREE:
+        return TILE_DNGN_PETRIFIED_TREE;
+    case DNGN_DEMONIC_TREE:
+        return TILE_DNGN_DEMONIC_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -2593,6 +2599,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
             return evoker_charges(item.sub_type) ? TILE_MISC_CONDENSER_VANE
                                                  : TILE_MISC_CONDENSER_VANE_INERT;
 
+    case MISC_XOMS_CHESSBOARD:
+            return _modrng(item.rnd, TILE_MISC_CHESSPIECE_FIRST, TILE_MISC_CHESSPIECE_LAST);
+
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
@@ -3400,8 +3409,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_MEPHITIC;
     case ABIL_BREATHE_ACID:
         return TILEG_ABILITY_BREATHE_ACID;
+#if TAG_MAJOR_VERSION == 34
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+#endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
     case ABIL_ROLLING_CHARGE:
@@ -3412,18 +3423,13 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
-    case ABIL_CANCEL_PPROJ:
-        return TILEG_ABILITY_CANCEL_PPROJ;
 
     // Species-specific abilities.
     // Demonspawn-only
     case ABIL_DAMNATION:
         return TILEG_ABILITY_HURL_DAMNATION;
-    // Tengu, Draconians
-    case ABIL_FLY:
-        return TILEG_ABILITY_FLIGHT;
-    case ABIL_STOP_FLYING:
-        return TILEG_ABILITY_FLIGHT_END;
+    case ABIL_WORD_OF_CHAOS:
+        return TILEG_ERROR; // TODO
     // Vampires
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
@@ -3447,10 +3453,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
-    case ABIL_EVOKE_TURN_VISIBLE:
-        return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
-    case ABIL_EVOKE_FLIGHT:
-        return TILEG_ABILITY_EVOKE_FLIGHT;
     case ABIL_EVOKE_THUNDER:
         return TILEG_ABILITY_EVOKE_THUNDER;
 
@@ -3608,12 +3610,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Ashenzari
     case ABIL_ASHENZARI_CURSE:
         return TILEG_ABILITY_ASHENZARI_CURSE;
-    case ABIL_ASHENZARI_SCRYING:
-        return TILEG_ABILITY_ASHENZARI_SCRY;
-    case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
-        return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE;
-    case ABIL_ASHENZARI_END_TRANSFER:
-        return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE_END;
     // Dithmenos
     case ABIL_DITHMENOS_SHADOW_STEP:
         return TILEG_ABILITY_DITHMENOS_SHADOW_STEP;
@@ -3864,8 +3860,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_HUMAN;
         case SP_DEEP_ELF:
             return TILEG_SP_DEEP_ELF;
-        case SP_HALFLING:
-            return TILEG_SP_HALFLING;
         case SP_HILL_ORC:
             return TILEG_SP_HILL_ORC;
         case SP_KOBOLD:
@@ -3914,6 +3908,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_BARACHI;
         case SP_GNOLL:
             return TILEG_SP_GNOLL;
+        case SP_DJINNI:
+            return TILEG_SP_DJINNI;
         default:
             return TILEP_ERROR;
     }
@@ -4061,7 +4057,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     const int etype = enchant_to_int(item);
 
-    // XXX: only helmets and robes have variants, but it would be nice
+    // XXX: only helmets, robes and boots have variants, but it would be nice
     // if this weren't hardcoded.
     if (tile == TILE_THELM_HELM)
     {
@@ -4095,6 +4091,24 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
                 break;
             default:
                 tile = _modrng(item.rnd, TILE_ARM_ROBE_FIRST, TILE_ARM_ROBE_LAST);
+        }
+        return tile;
+    }
+
+    if (tile == TILE_ARM_BOOTS)
+    {
+        switch (etype)
+        {
+            case 1:
+            case 2:
+            case 3:
+                tile = _modrng(item.rnd, TILE_ARM_BOOTS_EGO_FIRST, TILE_ARM_BOOTS_EGO_LAST);
+                break;
+            case 4:
+                tile = _modrng(item.rnd, TILE_ARM_BOOTS_ART_FIRST, TILE_ARM_BOOTS_ART_LAST);
+                break;
+            default:
+                tile = _modrng(item.rnd, TILE_ARM_BOOTS_FIRST, TILE_ARM_BOOTS_LAST);
         }
         return tile;
     }

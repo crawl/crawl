@@ -130,7 +130,7 @@ const string &InvEntry::get_dbname() const
 
 bool InvEntry::is_cursed() const
 {
-    return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
+    return item->cursed();
 }
 
 bool InvEntry::is_glowing() const
@@ -522,7 +522,7 @@ string no_selectables_message(int item_selector)
     case OSEL_BEOGH_GIFT:
         return "You aren't carrying anything you can give to a follower.";
     case OSEL_CURSABLE:
-        return "You don't have any cursable items.";
+        return "You aren't wearing any cursable items.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
     case OSEL_QUIVER_ACTION:
@@ -558,12 +558,12 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         const equipment_type eq = item_equip_slot(item);
         if (eq != EQ_NONE)
         {
-            if (item_known_cursed(item))
+            if (item.cursed())
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED);
             else
                 tileset.emplace_back(TILE_ITEM_SLOT_EQUIP);
         }
-        else if (item_known_cursed(item))
+        else if (item.cursed())
             tileset.emplace_back(TILE_ITEM_SLOT_CURSED);
 
         tileidx_t base_item = tileidx_known_base_item(idx);
@@ -1122,8 +1122,7 @@ bool item_is_selected(const item_def &i, int selector)
         return is_enchantable_armour(i, true);
 
     case OSEL_CURSED_WORN:
-        return i.cursed() && item_is_equipped(i)
-               && (&i != you.weapon() || is_weapon(i));
+        return i.cursed() && item_is_equipped(i);
 
 #if TAG_MAJOR_VERSION == 34
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -1153,7 +1152,7 @@ bool item_is_selected(const item_def &i, int selector)
                 && !item_is_equipped(i);
 
     case OSEL_CURSABLE:
-        return item_is_cursable(i);
+        return item_is_equipped(i) && item_is_cursable(i);
 
     case OSEL_UNCURSED_WORN_RINGS:
         return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY
@@ -1655,7 +1654,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
 
     // Curses first.
-    if (item_known_cursed(item)
+    if (item.cursed()
         && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
             || oper == OPER_PUTON || oper == OPER_WEAR))
     {
@@ -1743,23 +1742,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_EVOKE && god_hates_item(item))
     {
         penance = true;
-        return true;
-    }
-
-    // If you're invis from an item, warn that you're about to get an extra dose
-    // of contam from removing it. This check is rough, since we need to
-    // establish that the operation is a removal, the item being removed is in
-    // fact the +Invis one, and no other +Invis sources exist, and the player
-    // is currently invis from +Invis.
-    if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
-        && (
-                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
-                || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
-            )
-        && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
         return true;
     }
 
@@ -2084,7 +2066,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    return is_weapon(item) && you.species != SP_FELID;
+    return is_weapon(item) && !you.has_mutation(MUT_NO_GRASPING);
 }
 
 /// Does the item only serve to produce summons or allies?

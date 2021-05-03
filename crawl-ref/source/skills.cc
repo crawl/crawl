@@ -63,55 +63,55 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
-static const char *skill_titles[NUM_SKILLS][6] =
+static const char *skill_titles[NUM_SKILLS][7] =
 {
-  //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
-    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
-    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician"},
-    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
-    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
-    {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
-    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
-    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
-    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
-    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},
-    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista"},
-    {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
-    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
-    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},
+  //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27       skill abbr
+    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror",    "Fgt"},
+    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician",   "SBl"},
+    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster",  "LBl"},
+    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac",   "Axs"},
+    {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher", "M&F"},
+    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine", "Pla"},
+    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff", "Stv"},
+    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult", "Slg"},
+    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Bws"},
+    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest", "Crb"},
+    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista", "Thr"},
+    {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable", "Arm"},
+    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible",   "Ddg"},
+    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja",        "Sth"},
 #if TAG_MAJOR_VERSION == 34
-    {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
+    {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician",   "Stb"},
 #endif
-    {"Shields",        "Shield-Bearer", "Blocker",         "Peltast",         "Hoplite",        "@Adj@ Barricade"},
+    {"Shields",        "Shield-Bearer", "Blocker",         "Peltast",         "Hoplite",        "@Adj@ Barricade", "Shd"},
 #if TAG_MAJOR_VERSION == 34
-    {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
+    {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master", "Trp"},
 #endif
     // STR based fighters, for DEX/martial arts titles see below. Felids get their own category, too.
-    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
+    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion", "UC"},
 
-    {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
-    {"Conjurations",   "Conjurer",      "Destroyer",       "Devastator",      "Ruinous",        "Annihilator"},
-    {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
+    {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage",     "Spc"},
+    {"Conjurations",   "Conjurer",      "Destroyer",       "Devastator",      "Ruinous",        "Annihilator",  "Conj"},
+    {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder",  "Hex"},
 #if TAG_MAJOR_VERSION == 34
-    {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
+    {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker", "Chrm"},
 #endif
-    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender"},
-    {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
-    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
-    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
+    {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Worldbinder",    "Planerender",  "Summ"},
+    {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death", "Necr"},
+    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@", "Tloc"},
+    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@", "Tmut"},
 
-    {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
-    {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator"},
-    {"Air Magic",      "Gusty",         "Zephyrmancer",    "Stormcaller",     "Cloud Mage",     "Meteorologist"},
-    {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator"},
-    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer"},
+    {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist",  "Fire"},
+    {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator",  "Ice"},
+    {"Air Magic",      "Gusty",         "Zephyrmancer",    "Stormcaller",     "Cloud Mage",     "Meteorologist", "Air"},
+    {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator", "Erth"},
+    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer", "Pois"},
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Gozag's case, gold.
     // or, in U's case, invocations skill.
-    {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
-    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
+    {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate",     "Invo"},
+    {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer",  "Evo"},
 };
 
 static const char *martial_arts_titles[6] =
@@ -363,10 +363,6 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
             update_player_symbol();
         }
     }
-
-    // Identify weapon pluses.
-    if (exsk <= SK_THROWING)
-        auto_id_inventory();
 }
 
 int calc_skill_level_change(skill_type sk, int starting_level, int sk_points)
@@ -496,15 +492,10 @@ static void _check_skills_to_show()
     you.skills_to_show.clear();
 }
 
-static bool _player_is_gnoll()
-{
-    return you.species == SP_GNOLL;
-}
-
 static void _check_skills_to_hide()
 {
     // Gnolls can't stop training skills.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return;
 
     _check_inventory_skills();
@@ -542,7 +533,7 @@ void update_can_currently_train()
 
 bool skill_default_shown(skill_type sk)
 {
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return true;
 
     switch (sk)
@@ -594,8 +585,8 @@ void init_train()
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
-            const bool gnoll_enable = _player_is_gnoll() &&
-                                !is_removed_skill((skill_type) i);
+            const bool gnoll_enable = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+                                        && !is_removed_skill((skill_type) i);
             // Skills are on by default in auto mode and off in manual.
             you.train[i] = (training_status) (gnoll_enable
                                                 || you.auto_training);
@@ -737,7 +728,7 @@ bool check_selected_skills()
 
     mpr("You need to enable at least one skill for training.");
     // Training will be fixed up on load if this ASSERT triggers.
-    ASSERT(!_player_is_gnoll());
+    ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
     more();
     reset_training();
     skill_menu();
@@ -756,7 +747,7 @@ void reset_training()
 {
     // Disable this here since we don't want any autotraining related skilling
     // changes for Gnolls.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         you.auto_training = false;
 
     // We clear the values in the training array. In auto mode they are set
@@ -766,8 +757,11 @@ void reset_training()
     {
         // skill_trained doesn't work for gnolls, but all existent skills
         // will be set as enabled here.
-        if (!_player_is_gnoll() && (you.auto_training || !skill_trained(i)))
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+            && (you.auto_training || !skill_trained(i)))
+        {
             you.training[i] = 0;
+        }
         else
             you.training[i] = you.train[i];
     }
@@ -820,7 +814,7 @@ void reset_training()
     }
 
     _scale_array(you.training, 100, you.auto_training);
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         // we use the full set of skills to calculate gnoll percentages,
         // but they don't actually get to train sacrificed skills.
@@ -881,7 +875,7 @@ int _gnoll_total_skill_cost();
 void train_skills(bool simu)
 {
     int cost, exp;
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         do
         {
@@ -953,7 +947,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         if (you.training[i] > 0)
         {
             sk_exp[i] = you.training[i] * exp / 100;
-            if (sk_exp[i] < cost && !_player_is_gnoll())
+            if (sk_exp[i] < cost && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             {
                 // One skill has a too low training to be trained at all.
                 // We skip the first phase and go directly to the random
@@ -969,7 +963,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     {
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
-        if (_player_is_gnoll())
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             reverse(training_order.begin(), training_order.end());
         else
             shuffle_array(training_order);
@@ -977,7 +971,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         {
             int gain = 0;
 
-            if (_player_is_gnoll())
+            if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
                 sk_exp[sk] = exp;
             while (sk_exp[sk] >= cost && you.training[sk])
             {
@@ -987,7 +981,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
                 ASSERT(exp >= 0);
                 if (_level_up_check(sk, simu))
                     sk_exp[sk] = 0;
-                if (_player_is_gnoll())
+                if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
                     break;
             }
 
@@ -1003,7 +997,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     // with random_choose_weighted.
     while (exp >= cost)
     {
-        if (_player_is_gnoll())
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             break;
         int gain;
         skill_type sk = SK_NONE;
@@ -1046,7 +1040,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (total_gain[sk] && !simu && !_player_is_gnoll())
+            if (total_gain[sk] && !simu
+                && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             {
                 dprf(DIAG_SKILLS, "Trained %s by %d.",
                      skill_name(sk), total_gain[sk]);
@@ -1273,7 +1268,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
 
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         int useless_count = _useless_skill_count();
         int total_count = _total_skill_count();
@@ -1562,8 +1557,8 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
     const int ranged_target = min(max((int) target, 0), 270);
     if (announce && ranged_target != (int) training_targets[sk])
     {
-        if (_player_is_gnoll())
-            mprf("Gnolls can't set training targets!");
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            mprf("You can't set training targets!");
         else if (ranged_target == 0)
             mprf("Clearing the skill training target for %s.", skill_name(sk));
         else
@@ -1584,6 +1579,11 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
 const char *skill_name(skill_type which_skill)
 {
     return skill_titles[which_skill][0];
+}
+
+const char * skill_abbr(skill_type which_skill)
+{
+    return skill_titles[which_skill][6];
 }
 
 /**
@@ -1619,15 +1619,15 @@ skill_type str_to_skill_safe(const string &skill)
 
 static string _stk_weight(species_type species)
 {
-    if (species_size(species) == SIZE_LARGE)
+    if (species::size(species) == SIZE_LARGE)
         return "Heavy";
-    else if (species_size(species, PSIZE_BODY) == SIZE_LARGE)
+    else if (species::size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";
-    else if (species_size(species) == SIZE_SMALL || species == SP_TENGU)
+    else if (species::size(species) == SIZE_SMALL || species == SP_TENGU)
         return "Feather";
-    else if (species_size(species) == SIZE_LITTLE)
+    else if (species::size(species) == SIZE_LITTLE)
         return "Fly";
-    else if (species_is_elven(species))
+    else if (species::is_elven(species))
         return "Light";
     else
         return "Middle";
@@ -1642,6 +1642,8 @@ unsigned get_skill_rank(unsigned skill_lev)
                            (skill_lev <= 26) ? 3
                            /* level 27 */    : 4;
 }
+
+// XX should at least some of this be in species.cc?
 
 /**
  * What title will the player get at the given rank of the given skill?
@@ -1683,19 +1685,27 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
+        case SK_POLEARMS:
+            if (species == SP_PALENTONGA && skill_rank == 5)
+                result = "Prickly Pangolin";
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
-            {
                 result = claw_and_tooth_titles[skill_rank];
-                break;
+            else if (species == SP_MUMMY && skill_rank == 5)
+                result = "Pharaoh";
+            else if (!dex_better && species == SP_DJINNI && skill_rank == 5)
+                result = "Weightless Champion";
+            else
+            {
+                result = dex_better ? martial_arts_titles[skill_rank]
+                                    : skill_titles[best_skill][skill_rank];
             }
-            result = dex_better ? martial_arts_titles[skill_rank]
-                                : skill_titles[best_skill][skill_rank];
-
             break;
 
         case SK_SHORT_BLADES:
-            if (species_is_elven(species) && skill_rank == 5)
+            if (species::is_elven(species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1703,19 +1713,27 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_INVOCATIONS:
-            if (species == SP_DEMONSPAWN
-                && skill_rank == 5
-                && is_evil_god(god))
-            {
+            if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";
-                break;
-            }
+            else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
+                result = "Rolling Thunder";
+            else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Forbidden One";
+            else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
+                result = "Black Lotus";
+            else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
+                result = "Rockslime";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
+            else if (species == SP_BARACHI)
+            {
+                // C.f. the barachi species lore, true believers!
+                result = "God-Hated";
+            }
             break;
 
         case SK_BOWS:
-            if (species_is_elven(species) && skill_rank == 5)
+            if (species::is_elven(species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1727,9 +1745,56 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Ogre Mage";
             break;
 
+        case SK_CONJURATIONS:
+            // Stay safe, Winslem :(
+            if (species == SP_TROLL && skill_rank > 3)
+                result = "Wallbreaker";
+            break;
+
+        // For the below draconian titles, intentionally don't restrict
+        // by drac colour to avoid frustrating players trying for these
+        case SK_FIRE_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Fire Dragon";
+            else if (species == SP_MUMMY && skill_rank == 5)
+                result = "Highly Combustible";
+            break;
+
+        case SK_ICE_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Ice Dragon";
+            break;
+
+        case SK_EARTH_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Iron Dragon";
+            break;
+
+        case SK_AIR_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Storm Dragon";
+            break;
+
+        case SK_POISON_MAGIC:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Swamp Dragon";
+            break;
+
+        case SK_HEXES:
+            if (species::is_draconian(species) && skill_rank == 5)
+                result = "Faerie Dragon";
+            break;
+
+        case SK_TRANSLOCATIONS:
+            if (species == SP_FORMICID && skill_rank == 5)
+                result = "Teletunneler";
+            break;
+
         case SK_NECROMANCY:
             if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "Petite Mort";
+            else if (species == SP_VINE_STALKER && skill_rank == 5)
+                result = "Corpseflower";
             else if (god == GOD_KIKUBAAQUDGHA)
                 result = god_title(god, species, piety);
             break;
@@ -1750,12 +1815,12 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
     const map<string, string> replacements =
     {
-        { "Adj", species_name(species, SPNAME_ADJ) },
-        { "Genus", species_name(species, SPNAME_GENUS) },
-        { "genus", lowercase_string(species_name(species, SPNAME_GENUS)) },
+        { "Adj", species::name(species, species::SPNAME_ADJ) },
+        { "Genus", species::name(species, species::SPNAME_GENUS) },
+        { "genus", lowercase_string(species::name(species, species::SPNAME_GENUS)) },
         { "Genus_Short", species == SP_DEMIGOD ? "God" :
-                           species_name(species, SPNAME_GENUS) },
-        { "Walker", species_walking_verb(species) + "er" },
+                           species::name(species, species::SPNAME_GENUS) },
+        { "Walker", species::walking_verb(species) + "er" },
         { "Weight", _stk_weight(species) },
     };
 
@@ -1860,34 +1925,45 @@ bool is_removed_skill(skill_type skill)
     return false;
 }
 
+static map<skill_type, mutation_type> skill_sac_muts = {
+    { SK_AIR_MAGIC,      MUT_NO_AIR_MAGIC },
+    { SK_FIRE_MAGIC,     MUT_NO_FIRE_MAGIC },
+    { SK_EARTH_MAGIC,    MUT_NO_EARTH_MAGIC },
+    { SK_ICE_MAGIC,      MUT_NO_ICE_MAGIC },
+    { SK_POISON_MAGIC,   MUT_NO_POISON_MAGIC },
+    { SK_HEXES,          MUT_NO_HEXES_MAGIC },
+    { SK_TRANSLOCATIONS, MUT_NO_TRANSLOCATION_MAGIC },
+    { SK_TRANSMUTATIONS, MUT_NO_TRANSMUTATION_MAGIC },
+    { SK_CONJURATIONS,   MUT_NO_CONJURATION_MAGIC },
+    { SK_NECROMANCY,     MUT_NO_NECROMANCY_MAGIC },
+    { SK_SUMMONINGS,     MUT_NO_SUMMONING_MAGIC },
+
+    { SK_DODGING,        MUT_NO_DODGING },
+    { SK_ARMOUR,         MUT_NO_ARMOUR_SKILL },
+    { SK_EVOCATIONS,     MUT_NO_ARTIFICE },
+    { SK_STEALTH,        MUT_NO_STEALTH },
+};
+
+bool can_sacrifice_skill(mutation_type mut)
+{
+    for (auto sac : skill_sac_muts)
+        if (sac.second == mut)
+            return species_apt(sac.first) != UNUSABLE_SKILL;
+    return true;
+}
+
 bool is_useless_skill(skill_type skill)
 {
-    if (is_removed_skill(skill)
-        || (skill == SK_AIR_MAGIC && you.get_mutation_level(MUT_NO_AIR_MAGIC))
-        || (skill == SK_CONJURATIONS
-            && you.get_mutation_level(MUT_NO_CONJURATION_MAGIC))
-        || (skill == SK_EARTH_MAGIC
-            && you.get_mutation_level(MUT_NO_EARTH_MAGIC))
-        || (skill == SK_FIRE_MAGIC && you.get_mutation_level(MUT_NO_FIRE_MAGIC))
-        || (skill == SK_HEXES && you.get_mutation_level(MUT_NO_HEXES_MAGIC))
-        || (skill == SK_ICE_MAGIC && you.get_mutation_level(MUT_NO_ICE_MAGIC))
-        || (skill == SK_NECROMANCY
-            && you.get_mutation_level(MUT_NO_NECROMANCY_MAGIC))
-        || (skill == SK_POISON_MAGIC
-            && you.get_mutation_level(MUT_NO_POISON_MAGIC))
-        || (skill == SK_SUMMONINGS
-            && you.get_mutation_level(MUT_NO_SUMMONING_MAGIC))
-        || (skill == SK_TRANSLOCATIONS
-            && you.get_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
-        || (skill == SK_TRANSMUTATIONS
-            && you.get_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-        || (skill == SK_DODGING && you.get_mutation_level(MUT_NO_DODGING))
-        || (skill == SK_ARMOUR && you.get_mutation_level(MUT_NO_ARMOUR))
-        || (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND))
-        || (skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
-            && you.species != SP_FORMICID)
-        || (skill == SK_EVOCATIONS && you.get_mutation_level(MUT_NO_ARTIFICE))
-        || (skill == SK_STEALTH && you.get_mutation_level(MUT_NO_STEALTH))
+    if (is_removed_skill(skill))
+        return true;
+    auto mut = skill_sac_muts.find(skill);
+    if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
+        return true;
+    // shields isn't in the big map because shields being useless doesn't
+    // imply that missing hand is meaningless.
+    if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
+        || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
+                            && !you.has_innate_mutation(MUT_QUADRUMANOUS)
     )
     {
         return true;
@@ -1979,7 +2055,7 @@ float species_apt_factor(skill_type sk, species_type sp)
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
     // Gnolls do not have crosstraining.
-    if (_player_is_gnoll())
+    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return {};
 
     switch (sk)
@@ -2092,132 +2168,6 @@ void dump_skills(string &text)
     }
 }
 
-int skill_transfer_amount(skill_type sk)
-{
-    ASSERT(!is_invalid_skill(sk));
-    if (you.skill_points[sk] < 1000)
-        return you.skill_points[sk];
-    else
-        return max<int>(1000, you.skill_points[sk] / 2);
-}
-
-// Transfer skill points from one skill to another (Ashenzari transfer
-// knowledge ability). If simu, it just simulates the transfer and don't
-// change anything. It returns the new level of tsk.
-int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
-                          bool simu, bool boost)
-{
-    ASSERT(!_player_is_gnoll());
-    ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
-
-    const int penalty = 90; // 10% XP penalty
-    int total_skp_lost   = 0; // skill points lost in fsk.
-    int total_skp_gained = 0; // skill points gained in tsk.
-    int fsk_level = you.skills[fsk];
-    int tsk_level = you.skills[tsk];
-    int fsk_points = you.skill_points[fsk];
-    int tsk_points = you.skill_points[tsk];
-    int fsk_ct_points = you.ct_skill_points[fsk];
-    int tsk_ct_points = you.ct_skill_points[tsk];
-
-    if (!simu && you.ct_skill_points[fsk] > 0)
-    {
-        dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
-             skill_name(fsk), you.ct_skill_points[fsk]);
-    }
-
-    // We need to transfer by small steps and update skill levels each time
-    // so that cross-training is handled properly.
-    while (total_skp_lost < skp_max
-           && (simu || total_skp_lost < (int)you.transfer_skill_points))
-    {
-        int skp_lost = min(20, skp_max - total_skp_lost);
-        int skp_gained = skp_lost * penalty / 100;
-
-        ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
-
-        int ct_penalty = skp_lost * you.ct_skill_points[fsk]
-                          / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
-        ct_penalty = min<int>(ct_penalty, you.ct_skill_points[fsk]);
-        you.ct_skill_points[fsk] -= ct_penalty;
-        skp_lost += ct_penalty;
-
-        if (!simu)
-        {
-            skp_lost = min<int>(skp_lost, you.transfer_skill_points
-                                          - total_skp_lost);
-        }
-
-        total_skp_lost += skp_lost;
-        change_skill_points(fsk, -skp_lost, false);
-
-        // If reducing fighting would reduce your maxHP to 0 or below,
-        // we cancel the last step and end the transfer.
-        if (fsk == SK_FIGHTING && get_real_hp(false, false) <= 0)
-        {
-            change_skill_points(fsk, skp_lost, false);
-            total_skp_lost -= skp_lost;
-            if (!simu)
-                you.transfer_skill_points = total_skp_lost;
-            break;
-        }
-
-        total_skp_gained += skp_gained;
-
-        if (fsk != tsk)
-        {
-            change_skill_points(tsk, skp_gained, false);
-            if (you.skills[tsk] == MAX_SKILL_LEVEL)
-                break;
-        }
-    }
-
-    int new_level = you.skill(tsk, 10, !boost);
-    // Restore the level
-    you.skills[fsk] = fsk_level;
-    you.skills[tsk] = tsk_level;
-
-    if (simu)
-    {
-        you.skill_points[fsk] = fsk_points;
-        you.skill_points[tsk] = tsk_points;
-        you.ct_skill_points[fsk] = fsk_ct_points;
-        you.ct_skill_points[tsk] = tsk_ct_points;
-    }
-    else
-    {
-        // Perform the real level up
-        check_skill_level_change(fsk);
-        check_skill_level_change(tsk);
-        if ((int)you.transfer_skill_points < total_skp_lost)
-            you.transfer_skill_points = 0;
-        else
-            you.transfer_skill_points -= total_skp_lost;
-
-        dprf(DIAG_SKILLS, "skill %s lost %d points",
-             skill_name(fsk), total_skp_lost);
-        dprf(DIAG_SKILLS, "skill %s gained %d points",
-             skill_name(tsk), total_skp_gained);
-        if (you.ct_skill_points[fsk] > 0)
-        {
-            dprf(DIAG_SKILLS, "ct_skill_points[%s]: %d",
-                 skill_name(fsk), you.ct_skill_points[fsk]);
-        }
-
-        if (you.transfer_skill_points == 0
-            || you.skills[tsk] == MAX_SKILL_LEVEL)
-        {
-            ashenzari_end_transfer(true);
-        }
-        else
-        {
-            dprf(DIAG_SKILLS, "%d skill points left to transfer",
-                 you.transfer_skill_points);
-        }
-    }
-    return new_level;
-}
-
 skill_state::skill_state() :
         skill_cost_level(0), total_experience(0), auto_training(true),
         exp_available(0), saved(false)
@@ -2294,12 +2244,15 @@ void fixup_skills()
             // gnolls have everything existent enabled, so that the
             // training percentage is calculated correctly. (Useless
             // skills still won't be trained for them.)
-            if (_player_is_gnoll() && !is_removed_skill(sk))
+            if (you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+                && !is_removed_skill(sk))
+            {
                 you.train[sk] = TRAINING_ENABLED;
+            }
             else
                 you.train[sk] = TRAINING_DISABLED;
         }
-        else if (_player_is_gnoll())
+        else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             you.train[sk] = TRAINING_ENABLED;
         you.skill_points[sk] = min(you.skill_points[sk],
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
@@ -2308,8 +2261,11 @@ void fixup_skills()
     init_can_currently_train();
     reset_training();
 
-    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level) && !_player_is_gnoll())
+    if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
+        && !you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    {
         skill_menu(SKMF_EXPERIENCE);
+    }
 
     check_training_targets();
 }
@@ -2324,7 +2280,7 @@ void fixup_skills()
 bool can_enable_skill(skill_type sk, bool override)
 {
     // TODO: should this check you.skill_points or you.skills?
-    return !_player_is_gnoll()
+    return !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
        && you.skills[sk] < MAX_SKILL_LEVEL
        && !is_useless_skill(sk)
        && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));

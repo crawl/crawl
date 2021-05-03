@@ -54,7 +54,6 @@
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
-#include "potion.h" // you_drinkless for pakellas compat
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
@@ -436,8 +435,6 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     if (o == NON_ITEM)
         return;
     item_def& item = env.item[o];
-
-    do_uncurse_item(item);
 
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
@@ -1268,7 +1265,11 @@ static bool _mons_reaped(actor &killer, monster& victim)
     }
 
     if (you.can_see(victim))
-        mprf("%s turns into a zombie!", victim.name(DESC_THE).c_str());
+    {
+        mprf("%s turns into a %s!", victim.name(DESC_THE).c_str(),
+                                    zombie->type == MONS_ZOMBIE ? "zombie"
+                                                                : "skeleton");
+    }
     else if (you.can_see(*zombie))
         mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 
@@ -1797,7 +1798,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
     // now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
-        && killer == KILL_YOU
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
         && gives_player_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
@@ -1869,8 +1870,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::restore_hp))
                 {
-                    hp_heal = mons.get_experience_level()
-                        + random2(mons.get_experience_level());
+                    hp_heal = (1 + mons.get_experience_level()) / 2
+                            + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
                     && mons.holiness() & MH_NATURAL
@@ -1913,7 +1914,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 // perhaps this should go to its own function
                 if (mp_heal
                     && have_passive(passive_t::bottle_mp)
-                    && !you_drinkless(false))
+                    && you.can_drink(false))
                 {
                     simple_god_message(" collects the excess magic power.");
                     you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
@@ -1921,7 +1922,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
                         && (feat_has_solid_floor(env.grid(you.pos()))
                             || feat_is_watery(env.grid(you.pos()))
-                               && species_likes_water(you.species)))
+                               && species::likes_water(you.species)))
                     {
                         int thing_created = items(true, OBJ_POTIONS,
                                                   POT_MAGIC, 1, 0,
@@ -2279,7 +2280,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
-    if (corpse && mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL))
         _make_derived_undead(&mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp
@@ -2363,14 +2364,16 @@ item_def* monster_die(monster& mons, killer_type killer,
         remove_companion(&mons);
         if (mons_is_hepliaklqana_ancestor(mons.type))
         {
-            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
             if (!you.can_see(mons))
             {
                 mprf("%s has departed this plane of existence.",
                      hepliaklqana_ally_name().c_str());
             }
-            // respawn in ~30-60 turns
-            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+
+            // respawn in ~30-60 turns, if there wasn't another ancestor through
+            // some strange circumstance (wizmode? bug?)
+            if (hepliaklqana_ancestor() == MID_NOBODY)
+                you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
     }
 
@@ -2773,7 +2776,7 @@ void pikel_band_neutralise()
         }
     }
     string final_msg;
-    if (visible_minions > 0)
+    if (visible_minions > 0 && you.num_turns > 0)
     {
         if (you.get_mutation_level(MUT_NO_LOVE))
         {
@@ -2831,7 +2834,7 @@ void hogs_to_humans()
     }
 
     string final_msg;
-    if (any > 0)
+    if (any > 0 && you.num_turns > 0)
     {
         final_msg = make_stringf("No longer under Kirke's spell, the %s %s %s!",
                                  any > 1 ? "hogs return to their"
@@ -2896,6 +2899,9 @@ monster* mons_find_elven_twin_of(const monster* mons)
 **/
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index)
 {
+    if (killer == KILL_DISMISSED || killer == KILL_RESET)
+        return;
+
     // Sometimes, if you pacify one twin near a staircase, they leave
     // in the same turn. Convert, in those instances. The strict_neutral check
     // is intended to cover the slimify case, we don't want to pacify the other

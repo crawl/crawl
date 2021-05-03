@@ -35,7 +35,7 @@ Main steps
 
 3.) Now you can start tweaking the code. Depending on your coding background
     you may want to experiment with smaller changes first. If you intend to
-    submit the patch to the dev team, please skim coding_conventions.txt.
+    submit the patch to the dev team, please skim coding_conventions.md.
     Following these guidelines will save us some time later when integrating
     the patch.
 

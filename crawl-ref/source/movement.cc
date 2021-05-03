@@ -13,6 +13,7 @@
 #include "movement.h"
 
 #include "abyss.h"
+#include "art-enum.h"
 #include "bloodspatter.h"
 #include "cloud.h"
 #include "coord.h"
@@ -29,6 +30,7 @@
 #include "items.h"
 #include "message.h"
 #include "mon-act.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -233,12 +235,17 @@ void remove_ice_movement()
     }
 }
 
+string water_hold_substance()
+{
+    return you.props["water_hold_substance"].get_string();
+}
+
 void remove_water_hold()
 {
     if (you.duration[DUR_WATER_HOLD])
     {
-        mpr("You slip free of the water engulfing you.");
-        you.props.erase("water_holder");
+        mprf("You slip free of the %s engulfing you.",
+             water_hold_substance().c_str());
         you.clear_far_engulf();
     }
 }
@@ -572,15 +579,12 @@ static spret _rampage_forward(coord_def move)
         return spret::fail;
     }
 
-    const int tracer_range = you.current_vision;
-    const int rampage_distance = 1;
 
     // This logic assumes that the relative coord_def move is from [-1,1].
     // If the move_player_action() calls are ever rewritten in a way that
     // breaks this assumption, these targeters will need to be updated.
+    const int tracer_range = you.current_vision;
     const coord_def tracer_target = you.pos() + (move * tracer_range);
-    const coord_def rampage_destination = you.pos() + (move * rampage_distance);
-    const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
 
     // Setup the rampage tracer beam.
     bolt beam;
@@ -603,7 +607,7 @@ static spret _rampage_forward(coord_def move)
     beam.is_targeting    = true;
     beam.fire();
 
-    const monster* valid_target = nullptr;
+    monster* valid_target = nullptr;
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
     for (coord_def p : beam.path_taken)
@@ -612,7 +616,7 @@ static spret _rampage_forward(coord_def move)
         if (!you.see_cell_no_trans(p))
             return spret::fail;
 
-        const monster* mon = monster_at(p);
+        monster* mon = monster_at(p);
         // Check for a plausible target at this cell.
         // If there's no monster, a Fedhas ally, or an invis monster,
         // perform terrain checks and if they pass keep going.
@@ -643,6 +647,14 @@ static spret _rampage_forward(coord_def move)
     }
     if (!valid_target)
         return spret::fail;
+
+    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const int rampage_distance = enhanced
+        ? grid_distance(you.pos(), valid_target->pos()) - 1
+        : 1;
+
+    const coord_def rampage_destination = you.pos() + (move * rampage_distance);
+    const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
 
     // Reset the beam target to the actual rampage_destination distance.
     beam.target = rampage_destination;
@@ -710,14 +722,24 @@ static spret _rampage_forward(coord_def move)
     const monster* current = monster_at(you.pos());
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
-        mprf("You rampage quickly through the %s towards %s!",
+        mprf("You %s quickly through the %s towards %s!",
+             enhanced ? "stride" : "rampage",
              mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
              valid_target->name(DESC_THE, true).c_str());
     }
     else
-        mprf("You rampage towards %s!", valid_target->name(DESC_THE, true).c_str());
+    {
+        mprf("You %s towards %s!",
+             enhanced ? "stride" : "rampage",
+             valid_target->name(DESC_THE, true).c_str());
+    }
+
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
+
+    // No full-LOS stabbing.
+    if (enhanced)
+        behaviour_event(valid_target, ME_ALERT, &you, you.pos());
 
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_barbs_damage(true);
@@ -853,7 +875,9 @@ void move_player_action(coord_def move)
 
     bool rampaged = false;
 
-    if (you.rampaging())
+    // Rampaging takes priority over normal Wu Jian movement, but not over
+    // Serpent's Lash.
+    if (you.rampaging() && !you.attribute[ATTR_SERPENTS_LASH])
     {
         switch (_rampage_forward(move))
         {
@@ -892,12 +916,12 @@ void move_player_action(coord_def move)
         return;
     }
 
+    // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
                           : you.form == transformation::spider ? "crawl"
-                          : (you.species == SP_NAGA
-                             && form_keeps_mutations())        ? "slither"
-                                                               : "walk";
+                          : you.form != transformation::none   ? "walk" // XX
+                          : lowercase_first(species::walking_verb(you.species));
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -1181,10 +1205,11 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (!attacking
-        && you_worship(GOD_CHEIBRIADOS)
-        && ((one_chance_in(10) && you.run())
-             || (one_chance_in(2) && rampaged)))
+    if (you_worship(GOD_CHEIBRIADOS)
+        && (coinflip() && rampaged
+            || !attacking
+               && one_chance_in(10)
+               && player_equip_unrand(UNRAND_LIGHTNING_SCALES)))
     {
         did_god_conduct(DID_HASTY, 1, true);
     }

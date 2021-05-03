@@ -810,10 +810,6 @@ amulet of guardian spirit
 
 <amulet>
 %%%%
-amulet of inaccuracy
-
-<amulet>
-%%%%
 amulet of magic regeneration
 
 <amulet>
@@ -1959,7 +1955,7 @@ oklob sapling
 
 <oklob plant>
 %%%%
-ooze
+endoplasm
 
 “Sea horses floundering in the slimy mud,
  Tossed up their heads, and dashed the ooze about them.”
@@ -2300,10 +2296,6 @@ ring of strength
 “That which does not kill us makes us stronger.”
     -Friedrich Nietzsche
 %%%%
-ring of teleportation
-
-<ring>
-%%%%
 ring of wizardry
 
 <ring>
@@ -2419,14 +2411,6 @@ scroll of magic mapping
 <scroll>
 %%%%
 scroll of noise
-
-<scroll>
-%%%%
-scroll of random uselessness
-
-<scroll>
-%%%%
-scroll of remove curse
 
 <scroll>
 %%%%

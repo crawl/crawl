@@ -228,8 +228,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return !_is_true_equipped_item(item);
     }
 
-    // Mummies can't do anything with potions.
-    if (you.species == SP_MUMMY)
+    if (!you.can_drink())
         return item.base_type != OBJ_POTIONS;
 
     // In all other cases you can use the item in some way.
@@ -367,7 +366,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_GRASPING))
                 {
                     _handle_wield_tip(tmp, cmd);
                     if (is_throwable(&you, item))
@@ -398,7 +397,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                 break;
 #endif
             case OBJ_ARMOUR:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_ARMOUR))
                 {
                     tmp += "Wear (%)";
                     cmd.push_back(CMD_WEAR_ARMOUR);
@@ -417,7 +416,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                 cmd.push_back(CMD_REMOVE_JEWELLERY);
                 break;
             case OBJ_MISSILES:
-                if (you.species != SP_FELID)
+                if (!you.has_mutation(MUT_NO_GRASPING))
                 {
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
@@ -427,13 +426,10 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                if (you.species != SP_FELID)
-                {
-                    tmp += "Evoke (%)";
-                    cmd.push_back(CMD_EVOKE);
-                    if (wielded)
-                        _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                }
+                tmp += "Evoke (%)";
+                cmd.push_back(CMD_EVOKE);
+                if (wielded)
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item) && item_is_spellbook(item)
