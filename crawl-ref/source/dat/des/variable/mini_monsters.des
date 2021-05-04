@@ -3825,24 +3825,48 @@ x..xxx;;;;;.;;;;;.;;;;;xxx..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# Updated to not hide the loot area behind opaque walls and to scale numbers of
+# monsters/loot in the chamber with depth of placement. -gammafunk
 NAME:   wad_dig_loot
 TAGS:   transparent
-DEPTH:  D:8-, Depths, !Depths:$
+DEPTH:  D:8-, Elf, Depths, !Depths:$
 WEIGHT: 4
-KMASK:  %*8 = opaque
+KPROP:  %*8DEF = no_tele_into
+KMASK:  %*|8aDEF' = opaque
+KITEM:  EF = *
+KMONS:  EF = 8
+KMONS:  p = plant
+SHUFFLE: DE
+# Before D:12, a dig wand is required to access the loot area. From D:12, add a
+# digging monster. Add another 8 in Elf and one more again for Depths. Add one
+# more loot item with each added monster.
+: if you.in_branch("D") and you.depth() >= 12 then
+KITEM:  D = |
+KMONS:  D = deep troll earth mage
+SUBST:  EF = '
+: elseif you.in_branch("Elf") then
+KITEM:  D = |
+KMONS:  D = deep elf elementalist
+SUBST:  F = '
+: elseif you.in_branch("Depths") then
+KITEM:  D = |
+KMONS:  D = deep troll earth mage / cacodemon
+# D:8-11
+: else
+SUBST:  DE = v, F = '
+: end
 FTILE:  " = floor_pebble_brown
 COLOUR: " = brown
-MONS:   plant
 MAP
 @....vvvvv..G.@
-.""".vvvvv1....
+.""".vvvvvp....
 .."..vvvvv.."0.
 .....vvvvv.""".
 ..G..vvvvv.....
 vvvvv.....vvvvv
-vvvvv."...xx*xv
-vvvvv."".G.x%8v
-vvvvv."...xx*xv
+vvvvv."...vv*Dv
+vvvvv."".GmF%8v
+vvvvv."...vv*Ev
 vvvvv0....vvvvv
 ENDMAP
 
