@@ -1574,8 +1574,8 @@ static const mutation_def mut_data[] =
 { MUT_IGNITE_BLOOD, 0, 3, mutflag::good, false,
   "ignite blood",
 
-  {"Your demonic aura sometimes causes spilled blood to erupt in flames",
-   "Your demonic aura often causes spilled blood to erupt in flames",
+  {"Your demonic aura sometimes causes spilled blood to erupt in flames.",
+   "Your demonic aura often causes spilled blood to erupt in flames.",
    "Your demonic aura causes all spilled blood to erupt in flames."},
   {"Your blood heats up.",
    "Your blood runs red-hot!",
