@@ -511,10 +511,10 @@ default-depth: IceCv
 # can try to clear the whole cave. The cavey parts should have no chokepoints.
 
 # Foes: animals + frost giant (or rare draconian) & an ice statue.
+# The hard variant places tougher animals and ends with a shard shrike
 # Loot: heavy weapons and rC gear wearable by big races,
 #       plus some useful potions in the freezer.
 NAME:    ice_cave_small_giant
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
@@ -523,6 +523,15 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
+: if dgn.persist.ice_cave_hard then
+MONS:   death yak / dire elephant / manticore / catoblepas w:5 /\
+        apis w:2
+MONS:   death yak generate_awake / dire elephant generate_awake /\
+        manticore generate_awake
+MONS:   rime drake / frost giant w:5 / ironbound frostheart w:5
+MONS:   ice dragon, shard shrike
+MONS:   nothing / orange crystal statue w:2
+:else
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
          yak generate_awake
@@ -530,6 +539,7 @@ MONS:    polar bear, rime drake
 MONS:    frost giant / white draconian w:1 ; \
          battleaxe ego:freezing . cloak
 MONS:    ice statue
+:end
 ITEM:    giant club / giant spiked club / great mace w:9 / \
          battleaxe w:7 / glaive w:8 / halberd w:8 / great sword w:6 / \
          nothing w:58
@@ -548,7 +558,7 @@ ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
          potion of might / potion of flight / \
          potion of heal wounds w:5 / any potion w:1
 SHUFFLE: defg
-NSUBST:  3 = 2 = 3 6:3 / *:3
+NSUBST:  3 = 2 = 3 6:3 / 4:4 / *:3
 MAP
                   xxxxx        xxxxxxxx
                 xxx...xxxx  xxxx13....xx
@@ -595,9 +605,9 @@ xx"x"xxxx""x"xxxxxx"1.....xx xxwwxx...A...x
 ENDMAP
 
 # Foes: ice beasts, rime drakes, ice dragons & ice statues.
+# Hard variant places a lot of dragons and draconians
 # Loot: some gold, jewellery (approximately three rings).
 NAME:    ice_cave_small_dragons
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
@@ -605,8 +615,13 @@ WEIGHT:  6
 SHUFFLE: "'
 SUBST:   " = . , ' : x .:1
 : ice_cave_appearance(_G)
+: if dgn.persist.ice_cave_hard then
+MONS:   rime drake, rime drake generate_awake, ice dragon
+MONS:   golden dragon, white draconian / white draconian knight w:2
+:else
 MONS:    ice beast, ice beast generate_awake, rime drake
 MONS:    ice dragon, ice statue
+:end
 ITEM:    any jewellery
 ITEM:    any jewellery good_item
 NSUBST:  d = 1:d / * = d $:15 .:5, e = 1:e / * = e $:5 .:5
@@ -654,9 +669,9 @@ xx...1.131.1....x'''xxxxxxxxxxxxxx'''x""x
 ENDMAP
 
 # Foes: mostly in the undead vein, plus a necromancer and an ice statue.
+# The hard version places a lich. Have fun!
 # Loot: ice magic loot, gear of cold resistance (one piece).
 NAME:    ice_cave_small_necro
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
@@ -666,6 +681,16 @@ KFEAT:   - = alarm trap
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
 : ice_cave_item_attributes(_G)
+: if dgn.persist.ice_cave_hard then
+MONS:   ice devil
+MONS:   freezing wraith
+MONS:   necromancer / blizzard demon w:2
+: savage_simulacrum(_G)
+: mons(savage_ice)
+MONS: lich
+: cruel_simulacrum(_G)
+: mons(cruel_ice)
+:else
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
@@ -675,6 +700,7 @@ MONS:    freezing wraith
 :   " . wand of acid | wand of iceblast | nothing")
 : savage_simulacrum(_G)
 : mons(savage_ice)
+:end
 MONS:    ice statue
 ITEM:    wand of iceblast ident:type, ring of ice / staff of cold
 ITEM:    book of ice / book of frost / randbook disc:ice numspells:6 w:2
@@ -1113,14 +1139,21 @@ ENDMAP
 #
 # These rely on devious placement of ice statues and forcing players to face
 # them (if they want loot, that is).
+# The hard variant places much nastier monsters and an orange crystal statue
 # Was called ice_cave_statue_garden_teleport
 NAME:   ice_cave_statue_garden_transporter
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
+: ice_cave_random_monster_list_undead_demon(_G)
+: if dgn.persist.ice_cave_hard then
+MONS:   freezing wraith, orange crystal statue
+KMONS:  34 = white very ugly thing
+NSUBST: 2 = 1:2 / *:G
+:else
 MONS:   ice beast, ice statue
 KMONS:  34 = white ugly thing
+:end
 KITEM:  *! = *
 MARKER: P = lua:transp_loc("statue_garden_first")
 MARKER: Q = lua:transp_dest_loc("statue_garden_first")
@@ -1128,20 +1161,34 @@ MARKER: R = lua:transp_loc("statue_garden_second")
 MARKER: S = lua:transp_dest_loc("statue_garden_second")
 : ice_cave_appearance(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx...GPG...xxxxxxxxxxxccccccccccccc...!R!...ccc
-xx...%.%.%...xxxxxxxxxxcccccccccccc...G.|.G...cc
-xx....*S*....xxxxxxxxxxcccccccccccc....!.!....cc
-x......*......xxxxxxxxxccccccccccc......!......c
-x.1..G.3.G..1.xxxxxxxxxccccccccccc....2...2....c
-x.............xxxxxxxxxccccccccccc......4......c
-xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
-xx...........xxxxxxxxxxcccccccccccc...........cc
-xx.1...A...1.xxxxxxxxxxcccccccccccc.....Q.....cc
-xxx.........xxxxxxxxxxxccccccccccccc.........ccc
-xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
-xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
-xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
+ccccccccccccccccccccccc
+ccc...!R!...ccccccccccc
+cc...G.|.G...cccccccccc
+cc....!.!....cccccccccc
+c......!......ccccccccc
+c....2...2....ccccccccc
+c......4......ccccccccc
+cc...........cccccccccc
+cc...........cccccccccc
+cc.....Q.....cccccccccc
+ccc.........ccccccccccc
+cccc...<...cccccccccccc
+ccccc.....ccccccccccccc
+cccccnnnnnccccccccccccc
+xxxxxnnnnnxxxxxxxxxxxxx
+xxx...GPG...xxxxxxxxxxx
+xx...%.%.%...xxxxxxxxxx
+xx....*S*....xxxxxxxxxx
+x......*......xxxxxxxxx
+x.1..G.3.G..1.xxxxxxxxx
+x.............xxxxxxxxx
+xx..1.....1..xxxxxxxxxx
+xx...........xxxxxxxxxx
+xx.1...A...1.xxxxxxxxxx
+xxx.........xxxxxxxxxxx
+xxxx...<...xxxxxxxxxxxx
+xxxxx.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   ice_cave_statue_garden_chambered
