@@ -4680,100 +4680,177 @@ MAP
   ...P...
 ENDMAP
 
-# Based on the idea of the former vault boulder_indie by mumra, originally
-# suggested by ZorbaBeta. Reworked from that lua trap vault into something more
-# conventional, but with much more detail.
+# Based on the idea of the former vault called boulder_indie, made by mumra,
+# originally suggested by ZorbaBeta, which was a lua trap vault that placed a
+# boulder beetle in a long corridor. This vault uses a similar concept, but
+# places the boulder beetles in a non-spoilery way and greatly enhances the
+# theme and detail.
 NAME:    gammafunk_indiana_jones
 TAGS:    no_monster_gen no_trap_gen
 DEPTH:   D:8-, Lair
 ORIENT:  float
-ITEM:    whip good_item, hat good_item, any jewellery good_item
-ITEM:    whip randart / demon whip w:1, hat randart, any jewellery randart
-ITEM:    demon whip good_item
-KITEM:   k = any jewellery randart, gold, gold
-MONS:    boulder beetle
-KMONS:   K = lava snake
+# Item qualities that can upgrade with depth.
+ITEM:    whip good_item w:20 / snakebite w:1
+ITEM:    whip randart w:15 / demon whip w:4 / snakebite w:1
+ITEM:    demon whip good_item, hat good_item, hat randart
+ITEM:    any jewellery good_item, any jewellery randart
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+# We use boulder beetles at every depth, and lava snakes need a shared marker
+# definition, so defined here.
+KMONS:   2 = boulder beetle
+KMONS:   L = lava snake
 KMONS:   p = plant
-KFEAT:   ~ = closed_clear_door
-KFEAT:   ^ = zot trap
-KFEAT:   K = l
+KFEAT:   KL = l
+# Outer rock with normal tile, and inner chamber statues for Tomb theme in late
+# Dungeon and Spider.
 KFEAT:   a = x
-SHUFFLE: deF
+KFEAT:   qr = G
+# Randomize corpse and corpse loot loctions.
+SHUFFLE: dgF
+# Replace a small number of outer chamber walls with floor or trap.
+SUBST:   E = xD
+NSUBST:  H = D / x
 : if you.in_branch("D") then
-CLEAR:   '"
-:     if you.depth() < 11 then
-MONS:    redback
-# D must always be either floor or a trap (later depths) so that players can
-# see somewhat into the vault from the runed door. E and H always have one tile
-# turned to floor or (later) a trap. In the final treasure room, we initially
-# place flame clouds on L and place lava snakes. At later depths we use traps +
-# spiders instead.
-SUBST:   D = ., MN = L
-NSUBST:  - = 2 / 2=2. / ., E = . / x, H = . / x, J = 1 / ., l = K / 2=Kl / l
+:     if you.depth() < 12 then
+KMONS:   1 = redback / jumping spider w:5
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+# Outer chamber: place monsters and traps. We add one more monster and one half
+# more trap on-average with each depth increase condition. The D glyph will
+# always be either floor or a trap so that players can see somewhat into the
+# vault from the runed door.
+NSUBST:  D = ^- / -, - = 2=1 / 2=1. / .
+# Boulder beetle gate: We add one half more boulder beetle with each depth
+# increase condition.
+NSUBST:  J = 2 / 2. / .
+# Inner chamber: place gold and potion/scroll loot, adding one half more of
+# each on average with each depth increase condition. Also add one half more
+# lava snake and one half more lindwurm with each depth increase.
+NSUBST:  O = k. / $. / ., K = L / 2=LK / K, M = 3 / .
+# The "ruins" theme for earlier Dungeon and Lair.
+FTILE:   dgik$F123KLN^-.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+TILE:    r = dngn_statue_ancient_evil
 :     elseif you.depth() < 14 then
-MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-SUBST:   d = g, e = h, f = i, D = ., MN = L
-NSUBST:  - = 2=2 / 2=2. / ., E = . / x, H = . / x, J = 1 / 2=1.
-NSUBST:  l = 2=K / 2=Kl / l
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+SUBST:   d = e
+NSUBST:  D = ^ / 2=^- / -, - = 4=1 / 4=1. / .
+NSUBST:  J = 2=2 / 2=2. / .
+SUBST:   i = j
+NSUBST:  N = $ / ., O = 2=k / $, M = 2=3 / 3. / ., K = 2=L / 3=LK / K
+FTILE:   egjk$F123KL^.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+TILE:    r = dngn_statue_ancient_evil
 :     else
-MONS:   redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, f = L, D = ^..., N = i
-NSUBST:  - = 2=2 / 4=2. / ., E = ^ / x, H = ^... / x, J = 2=1 / 1. / .
-# 3 M locations available for monsters on D:14-15, so always place one monster
-# on an L location that doesn't get a trap.
-NSUBST:  L = ^ / 2^ / M, M = 2 / 2.
+# We replace the ruins theme with the Tomb theme for D:14-15 and Spider.
+# Spectrals and death scarabs place in the inner chamber, with miasma cloud
+# generators replacing lava + fire clouds.
+KMONS:   1 = redback / jumping spider / tarantella / wolf spider
+KMONS:   Q = spectral wolf spider
+KMONS:   3 = death scarab
+KFEAT:   3^ = zot trap w:20 / net trap / dispersal trap
+SUBST:   d = f
+NSUBST:  D = ^ / 3=^- / -, - = 4=1 / 6=1. / .
+NSUBST:  J = 2=2 / 2.
+# Inner chamber: we have 4 available M squares for traps/scarabs.
+SUBST:   i = j
+NSUBST:  O = 2=k / k$, N = 2=$ / M, M = 2=3 / 3., K = 2=Q / 4=QP / P
+# Set Tomb theme visuals. Rock becomes stone, and set tombish tiles for floor,
+# wall, and statues, the latter being themed as sarcophagi.
+SUBST:   x = c
+TILE:    c = wall_tomb
+COLOUR:  rc = yellow
+TILE:    r = dngn_sarcophagus_pedestal_right
+FTILE:   fgjk$F123PQ^.rc = floor_sandstone
+FTILE:   = = floor_sandstone
+: set_feature_name("granite_statue", "sarcophagus")
 :     end
 : elseif you.in_branch("Lair") then
-# Add a border of ruined rock for Lair and Spider, adding plants for Lair.
-SUBST:   d = g, ' = a:9 p:1 ', " = @
-CLEAR:   '
-:     if you.depth() < 5 then
-MONS:   redback / jumping spider / tarantella / wolf spider
-SUBST:   D = ., MN = L
-NSUBST:  - = 2 / 3=2. / ., E = . / x, H = . / x, J = 1 / 1. / .
-NSUBST:  l = K / 3=Kl / l
+KMONS:   3 = lindwurm
+KFEAT:   3^ = net trap / dispersal trap
+:     if you.depth() < 4 then
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+NSUBST:  D = 2=^- / -, - = 2=1 / 4=1. / .
+NSUBST:  J = 2 / 2=2. / .
+NSUBST:  O = $ / k / ., K = L / 3=LK / K, M = 3 / 3. / .
 :     else
-MONS:    redback / jumping spider / tarantella w:5 / wolf spider w:5
-# Introduce zot traps and spiders in the final chamber from Lair:5-6, D:14-,
-# and Spider. Move jewellery from f to N. We want the traps to be adjacent to
-# the door so they're likely to actually trigger. Non-trapped tiles become M,
-# which we use to randomize monsters. 4 M locations available for Lair:5-6.
-SUBST:   e = h, f = L, D = ., N = f
-NSUBST:  - = 2=2 / 2=2. / ., E = ^. / x, H = . / x, J = 1 / 2=1., L = ^ / M
-NSUBST:  M = 2 / 2.
+KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
+# We start upgrading quality of one of three weapon, hat, or jewellery items
+# with each depth increase.
+SUBST:   d = e
+NSUBST:  D = ^ / ^- / -, - = 3=1 / 4=1. / .
+NSUBST:  J = 2 / 3=2. / .
+NSUBST:  O = $ / k / $k, K = 2=L / 2=LK / K, M = 3 / 2=3. / .
 :     end
+# Add a border of ruined rock and plants for Lair.
+SUBST:   ' = a:9 p:1 '
+TILE:    r = dngn_statue_ancient_evil
+FTILE:   degik$F123KLN^.rxc = floor_pebble_yellow
+FTILE:   = = floor_pebble_yellow
+TILE:    x = wall_brick_brown_vines
+# Spider
 : else
-MONS:    redback w:5 / jumping spider / tarantella / wolf spider
-SUBST:   d = j, e = h, J = 1, f = L, D = ^., N = k, ' = a', " = @
-NSUBST:  - = 2=2 / 5=2. / ., E = ^ / x, H = ^.. / x, L = 2=^ / 2
-# 2 M locations available for Spider.
-SUBST:   M = 2
-CLEAR:   '
+KITEM:   N = $
+KMONS:   1 = jumping spider / tarantella / wolf spider / emperor scorpion w:5
+KMONS:   Q = spectral wolf spider / spectral emperor scorpion
+KMONS:   3N = death scarab
+KFEAT:   3^ = zot trap w:20 / net trap / dispersal trap
+SUBST:   d = f, g = h
+NSUBST:  D = 2=^ / 2=^- / -, - = 5=1 / 6=1. / .
+NSUBST:  J = 3=2 / 2.
+# Inner chamber: of of the six M+N squares, we use three for gold, additionally
+# placing a scarab on one, two for scarabs plus traps, and one more for 50%
+# chance of scarab + trap.
+SUBST:   i = j, O = k
+NSUBST:  K = 3=Q / 3=QP / P, NM = 2=$ / N / 2=3 / 3.
+# A border of ruined rock for Spider, but without plants. Then set up Tomb
+# theme for the interior.
+SUBST:   ' = a', x = c
+TILE:    c = wall_tomb
+COLOUR:  rc = yellow
+TILE:    r = dngn_sarcophagus_pedestal_right
+FTILE:   fhjk$F123NPQ^.rc = floor_sandstone
+: set_feature_name("granite_statue", "sarcophagus")
 : end
-MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                   pow_max = 100, delay = 10, size = 1, walk_dist = 0, \
-                   excl_rad = 0 }
+TILE:    q = dngn_statue_ancient_hero
+CLEAR:   '
+MARKER:  K = lua:fog_machine { cloud_type = "flame", pow_max = 20, \
+                 delay_min = 30, delay_max = 50, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  L = lua:fog_machine { cloud_type = "flame", pow_max = 20, \
+                 delay_min = 30, delay_max = 50, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  P = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+                 pow_max= 20, delay = 10, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
+MARKER:  Q = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 10, \
+                 pow_max = 20, delay = 10, size = 1, walk_dist = 0, \
+                 excl_rad = 0 }
 : dgn.delayed_decay(_G, 'F', 'human corpse')
-TILE:   x = wall_brick_brown_vines
-FTILE:  .^~defghijkFL12xc = floor_pebble_yellow
 MAP
-'''''''"'''''''''
-'aaaaaa@aaaaaaaa'
-'accccc=cccaaaaa'
+'''''''@'''''''''
+'aaaaapaaaaaaaaa'
+'aaaaaqpqaaaaaaa'
+'acxxxx=xxcaaaaa'
 'acxx---xxcaaaaa'
 'acx-xxxDxccaaaa'
 'acxx---dxxcccaa'
 'accxxxEFExxxcca'
-'aacccxxEe--xxca'
+'aacccxxEg--xxca'
 'aaaaccxxHHH-xca'
-'aaaaccxx---xxca'
-'aaaacxx-xxxxcca'
-'aaaacx~~~xcccaa'
-'aaaccxJJJxccaaa'
-'aaacxxn~nxxcaaa'
-'aaacxlLfLlxcaaa'
-'aaacxlMNMlxcaaa'
-'aaacxlllllxcaaa'
+'aaaacxxx---xxca'
+'aaaccx---xxxcca'
+'aaacxx===xxccaa'
+'aaacxJJJJJxcaaa'
+'aaacxx===xxcaaa'
+'aaacxKMMMKxcaaa'
+'aaacxKNNNKxcaaa'
+'aaacxKOOOKxcaaa'
+'aaacxKrirKxcaaa'
 'aaacxxxxxxxcaaa'
 'aaacccccccccaaa'
 'aaaaaaaaaaaaaaa'
