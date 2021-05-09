@@ -1519,8 +1519,12 @@ static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     bool did_wu_jian_attacks = false;
 
-    if (you.pos() == old_pos || you.duration[DUR_CONF])
+    if (you.pos() == old_pos
+        || you.duration[DUR_CONF]
+        || you.weapon() && !is_melee_weapon(*you.weapon()))
+    {
         return did_wu_jian_attacks;
+    }
 
     if (have_passive(passive_t::wu_jian_lunge))
         did_wu_jian_attacks = _wu_jian_lunge(old_pos);
