@@ -890,3 +890,150 @@ xxx....vlv....xxx
      .......
      ...T...
 ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
+TAGS:   no_monster_gen no_item_gen no_rotate
+KMONS:  p = plant / fungus
+KMONS:  b = butterfly
+KITEM:  ! = never_decay human skeleton, robe mundane, quarterstaff mundane
+SUBST:  ? = pbW
+: ecumenical_altar_setup(_G)
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxt_txxxxxx
+xxxxp.!...pxxxx
+xxxp..?W?..pxxx
+xxxx..?W?..xxxx
+xxxxxp...pxxxxx
+xxxxxxx.xxxxxxx
+xxxxxp.xxpxxxxx
+xxxxxxp...xxxxx
+xx..pxxxxp.xxxx
+x.xx....xxx.pxx
+xp.xxxxx...pxxx
+xx.x...xxxxxxxx
+xxx.xpx.x..xxxx
+xxxxxxxp.xx.pxx
+xxxxxxxxxxxx@xx
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_angels_and_demons
+TAGS:  transparent
+KFEAT: p = granite_statue
+KFEAT: q = granite_statue
+TILE:  G = dngn_crumbled_column
+TILE:  p = dngn_statue_angel
+TILE:  q = dngn_statue_demonic_bust
+FTILE: -_Gpq = floor_hall
+: ecumenical_altar_setup(_G)
+MAP
+.......................
+.........ccccc.........
+....ccccccp-pcccccc....
+.pcccG-G-G---G-G-Gcccq.
+@.+--------_--------+.@
+.pcccG-G-G---G-G-Gcccq.
+....ccccccq-qcccccc....
+.........ccccc.........
+.......................
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_drowned_temple
+TAGS:  transparent
+MONS:  spectral goblin / spectral hobgoblin / \
+       spectral kobold / spectral gnoll 
+TILE:  G : dngn_statue_angel / dngn_statue_demonic_bust / \
+           dngn_statue_wraith / dngn_statue_mermaid / \
+           dngn_statue_ancient_hero / dngn_statue_ancient_evil
+SUBST: . = . W
+SUBST: - = - W
+SUBST: ~ = W:20 .
+SUBST: | = p:20 W
+SUBST: - = -:20 W
+SUBST: x = x:35 W
+FTILE: -1 = floor_pebble
+KFEAT: p = granite_statue
+TILE:  p = dngn_crumbled_column
+: ecumenical_altar_setup(_G)
+MAP
+.................
+..xxxx.....xxxx..
+..xG~xxxxxxx~Gx..
+..x~~~~~_~~~~~x..
+..xxx~|~1~|~xxx..
+ ...x~~~-~~~x...
+  ..x~|~-~|~x..
+  ..x~~~-~~~x..
+  ..x~|~-~|~x..
+  ..x~~~-~~~x..
+  ..x~|~-~|~x..
+  ..xx~~-~~xx..
+   ..xx+++xx..
+    .........
+     ..@@@..
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_grove
+TAGS:  transparent
+MONS:  butterfly
+KMONS: p = plant / fungus / toadstool
+SUBST: # = g t p 1:5
+SUBST: - = .:20 g t p 
+SUBST: . = .g
+FTILE: _gtp1 = floor_grass
+: ecumenical_altar_setup(_G)
+MAP
+ ....... 
+.-------.
+.-#####-.
+.-#####-.
+.-##_##-.
+.-#####-.
+.-#####-.
+.-------.
+ ....... 
+ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_sealed_demon
+TAGS:   no_monster_gen no_rotate transparent
+KMONS:  ? = crimson imp perm_ench:slow perm_ench:weak / \
+            white imp perm_ench:slow perm_ench:weak / \
+            iron imp perm_ench:slow perm_ench:weak / \
+            shadow imp perm_ench:slow perm_ench:weak / \
+            ufetubus perm_ench:slow perm_ench:weak / \
+            quasit perm_ench:slow perm_ench:weak
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "a crumbling pillar")
+FTILE: - = floor_pebble_darkgray
+: ecumenical_altar_setup(_G)
+MAP
+...........
+....ccc....
+..ccccccc..
+..cG.A.Gc..
+..c--_--c..
+..c.-?-.c..
+..c.---.c..
+..cG.-.Gc..
+..ccG.Gcc..
+...cc+cc...
+....@@@....
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_statues
+TAGS:  no_rotate transparent
+TILE:  G : DNGN_STATUE_CENTAUR / DNGN_STATUE_SNAIL / DNGN_STATUE_CAT / \
+           DNGN_STATUE_MERMAID / DNGN_STATUE_NAGA / DNGN_STATUE_DRAGON / \
+           DNGN_STATUE_ANGEL / DNGN_STATUE_ELEPHANT / DNGN_STATUE_WRAITH / \
+           DNGN_STATUE_IMP / DNGN_STATUE_CEREBOV / DNGN_STATUE_DEMONIC_BUST / \
+           DNGN_STATUE_ORB_GUARDIAN / DNGN_STATUE_AXE / DNGN_STATUE_POLEARM / \
+           DNGN_STATUE_ANCIENT_HERO / DNGN_STATUE_ANCIENT_EVIL
+: ecumenical_altar_setup(_G)
+MAP
+.......
+.......
+..G.G..
+..._...
+.......
+.......
+ENDMAP
