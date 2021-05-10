@@ -124,8 +124,9 @@ bool monster_habitable_grid(const monster* mon,
 {
     // Zombified monsters enjoy the same habitat as their original,
     // except lava-based monsters.
-    const monster_type mt = fixup_zombie_type(mon->type,
-                                              mons_base_type(*mon));
+    const monster_type mt = mons_is_job(mon->type)
+        ? draco_or_demonspawn_subspecies(*mon)
+        : fixup_zombie_type(mon->type, mons_base_type(*mon));
 
     bool type_safe = monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN);
     return type_safe ||

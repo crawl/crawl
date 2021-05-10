@@ -4249,7 +4249,11 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
  */
 string _monster_habitat_description(const monster_info& mi)
 {
-    switch (mons_habitat_type(mi.type, mi.base_type))
+    const monster_type type = mons_is_job(mi.type)
+                              ? mi.draco_or_demonspawn_subspecies()
+                              : mi.type;
+
+    switch (mons_habitat_type(type, mi.base_type))
     {
     case HT_AMPHIBIOUS:
         return uppercase_first(make_stringf("%s can travel through water.\n",

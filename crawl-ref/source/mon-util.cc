@@ -3337,15 +3337,18 @@ static habitat_type _mons_class_habitat(monster_type mc,
 }
 
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
-                               bool real_amphibious) {
+                               bool real_amphibious)
+{
     return _mons_class_habitat(fixup_zombie_type(t, base_t),
                                real_amphibious);
 }
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
 {
-    return mons_habitat_type(mon.type, mons_base_type(mon),
-                              real_amphibious);
+    const monster_type type = mons_is_job(mon.type)
+        ? draco_or_demonspawn_subspecies(mon) : mon.type;
+
+    return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
 }
 
 habitat_type mons_class_primary_habitat(monster_type mc)
@@ -3358,7 +3361,10 @@ habitat_type mons_class_primary_habitat(monster_type mc)
 
 habitat_type mons_primary_habitat(const monster& mon)
 {
-    return mons_class_primary_habitat(mons_base_type(mon));
+    const monster_type type = mons_is_job(mon.type)
+        ? draco_or_demonspawn_subspecies(mon) : mons_base_type(mon);
+
+    return mons_class_primary_habitat(type);
 }
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
