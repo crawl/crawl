@@ -1008,3 +1008,135 @@ x.xxxGx
 x'...'x
 xxxxx+x
 ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
+TAGS:   transparent
+KMONS:  p = plant / fungus
+: dgn.delayed_decay_extra(_G, "!", "human skeleton", "robe mundane")
+SUBST:  ? = pW
+: ecumenical_altar_setup(_G)
+MAP
+   xxxxx
+ xxxt_txxx
+xxp.!...pxx
+xp..?W?..px
+xx..?W?..xx
+ xxp...pxx
+  xxx.xxx
+  xp.xxpx
+   xp...xx
+   xxxxp.x
+ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_angels_and_demons
+TAGS:   transparent
+KFEAT:  p = granite_statue
+KFEAT:  q = granite_statue
+TILE:   p = dngn_statue_angel
+TILE:   q = dngn_statue_demonic_bust
+COLOUR: pq = white
+COLOUR: - = lightgray
+FTILE:  -_pq = floor_hall
+: set_feature_name("granite_statue", "otherworldly statue")
+: ecumenical_altar_setup(_G)
+MAP
+   .......
+   .ccccc.
+....cp-qc....
+.pccc---cccq.
+.-+---_---+-.
+.pccc---cccq.
+....cp-qc....
+   .ccccc.
+   .......
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_drowned_temple
+TAGS:  transparent no_monster_gen
+MONS:  spectral goblin / spectral hobgoblin / \
+       spectral kobold
+TILE:  G : dngn_statue_mermaid
+: set_feature_name("granite_statue", "merfolk statue")
+SUBST: . = . W
+SUBST: - = - W
+SUBST: ~ = W:20 .
+SUBST: | = p:20 W
+SUBST: x = x:35 W
+FTILE: -1G = floor_pebble
+: ecumenical_altar_setup(_G)
+MAP
+...............
+.xxxx.....xxxx.
+.xG~xxxxxxx~Gx.
+.x~~~~~_~~~~~x.
+.xxx~|~1~|~xxx.
+...x~~~-~~~x...
+  .x~|~-~|~x.
+  .xx~~-~~xx.
+   .xx+++xx..
+   .........
+ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_grove
+TAGS:   transparent
+KMONS:  p = plant / fungus
+SUBST:  # = g t p
+SUBST:  - = .:20 g p
+SUBST:  . = .g
+COLOUR: g = green / lightgreen
+FTILE:  _gtp = floor_grass
+: ecumenical_altar_setup(_G)
+MAP
+ .......
+.-------.
+.-#####-.
+.-#####-.
+.-#-_##-.
+.--####-.
+.-#####-.
+.-------.
+ .......
+ENDMAP
+
+NAME:   dreamdust_ecumenical_altar_sealed_demon
+TAGS:   transparent no_item_gen
+WEIGHT: 5
+KMASK:  ? = opaque
+KPROP:  ? = no_tele_into
+KMONS:  ? = any demon perm_ench:petrified generate_awake
+KMONS:  p = demonic plant
+TILE:   G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+FTILE:  G_vn?- = floor_demonic_red
+COLOUR: G-? = red
+: ecumenical_altar_setup(_G)
+MAP
+.........
+...ccc...
+.ccc_ccc.
+.cG---Gc.
+.c-vnv-c.
+.c-n?n-c.
+.c-vnv-c.
+.cG---Gc.
+.ccc+ccc.
+...p.p...
+.........
+ENDMAP
+
+NAME:  dreamdust_ecumenical_altar_statues
+TAGS:  transparent
+TILE:  G : DNGN_STATUE_CENTAUR / DNGN_STATUE_SNAIL / DNGN_STATUE_CAT / \
+           DNGN_STATUE_MERMAID / DNGN_STATUE_NAGA / DNGN_STATUE_DRAGON / \
+           DNGN_STATUE_ANGEL / DNGN_STATUE_ELEPHANT / DNGN_STATUE_WRAITH / \
+           DNGN_STATUE_IMP / DNGN_STATUE_CEREBOV / DNGN_STATUE_DEMONIC_BUST / \
+           DNGN_STATUE_ORB_GUARDIAN / DNGN_STATUE_AXE / DNGN_STATUE_POLEARM / \
+           DNGN_STATUE_ANCIENT_HERO / DNGN_STATUE_ANCIENT_EVIL
+: ecumenical_altar_setup(_G)
+MAP
+.....
+.G.G.
+.._..
+.....
+.....
+ENDMAP
