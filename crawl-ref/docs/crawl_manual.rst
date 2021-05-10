@@ -2909,7 +2909,8 @@ commands:
 !a
   Prompt before attacking when wielding this item. Non-weapons and ranged
   weapons prompt automatically. Also, if you answer 'y', you won't be prompted
-  again until you switch weapons.
+  again until you switch weapons. To reset this prompt while keeping the
+  current weapon wielded, use 'w' and select the current weapon.
 
 !d
   Prompt before dropping this item.

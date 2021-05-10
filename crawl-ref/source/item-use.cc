@@ -629,6 +629,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             to_wield = nullptr;
     }
 
+    // Reset the warning counter. We do this before the rewield check to
+    // provide a (slightly hacky) way to let players reset this without
+    // unwielding. (TODO: better ui?)
+    you.received_weapon_warning = false;
+
     if (to_wield && to_wield == you.weapon())
     {
         if (Options.equip_unequip)
@@ -639,9 +644,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return true;
         }
     }
-
-    // Reset the warning counter.
-    you.received_weapon_warning = false;
 
     if (!to_wield)
     {
