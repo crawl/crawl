@@ -1541,11 +1541,16 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
                            "hits into a mindless rage, attacking friend and "
-                           "foe alike.";
+                           "foe alike.\n"
+                           "The chance of successfully applying its effect "
+                           "increases with Throwing and Stealth skill.";
+
             break;
         case SPMSL_BLINDING:
             description += "It is tipped with a substance that causes "
-                           "blindness and brief confusion.";
+                           "blindness and brief confusion.\n"
+                           "The chance of successfully applying its effect "
+                           "increases with Throwing and Stealth skill.";
             break;
         case SPMSL_DISPERSAL:
             description += "It causes any target it hits to blink, with a "
