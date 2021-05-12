@@ -18,7 +18,9 @@ zombie_snake MONS_ZOMBIE_SNAKE
 zombie_worm MONS_ZOMBIE_WORM
 zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider_large MONS_ZOMBIE_SPIDER_LARGE
+%rim 0
 zombie_dragon MONS_ZOMBIE_DRAGON
+%rim 1
 zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_drake MONS_ZOMBIE_DRAKE
 zombie_hydra1 MONS_ZOMBIE_HYDRA
