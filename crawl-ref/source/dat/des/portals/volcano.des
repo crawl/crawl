@@ -1330,6 +1330,43 @@ EEEEEEEEEEEEEEEDDDDDEEEEEEEEEEEEEEE
              xxG.<.Gxx
               xxxxxxx        
 ENDMAP
+###############################################################################
+
+###############################################################################
+# Deep Elf Pyromancer volcano
+NAME:   hellmonk_pyromancer_palace
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 20
+ORIENT: encompass
+:volcano_setup(_G)
+MONS:   fire elemental / hell hound, deep elf pyromancer
+MONS:   deep elf archer ; shortbow ego:flaming . arrow
+SUBST:  $ = $$$defg, 1 = .11, 2 = .22
+KPROP:  l = no_tele_into
+MAP
+         llll
+       xllccllx
+      xllccccllx
+      xllnA<nllx
+     xllcc..ccllx
+     xlln....nllx
+    xllcc+cccccllx
+    xlln..c2..nllx
+   xllcc..c..2ccllx
+   xlln..cc.l..nllx
+  xllcc..n.....ccllx
+  xlln1.1c.1...2nllx
+ xllcc..cc+cccc+ccllx
+ xlln1.1c1..2n...nllx
+xllcc+ccc...cc1..ccll
+xlln...c....+..l.2nll
+llcc.l1n..1cc..1..ccll
+lln2.1.+...n.2...12nll
+lccccccccccccccccc+ccl
+ln$$$$$$$$+2..1.....nl
+lc$$$$$$$$+32..1....cl
+lccccccccccccccccccccl
+ENDMAP
 
 ###############################################################################
 
