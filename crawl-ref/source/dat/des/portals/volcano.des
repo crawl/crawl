@@ -1239,7 +1239,7 @@ MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
 :volcano_setup(_G)
 MAP
             xxxxxxxxxxxxxxxx
-           xxxjjjjjjjjjjjjjxxx
+           xxxqqqqqqqqqqqqqxxx
          xxx1...1.....1.....1xx
        xxx....ppppppppp..D....xx
       xx..2.pppppppppp.a.......xx
@@ -1257,18 +1257,18 @@ MAP
  cc......ccxxx..1..xxxxx...1..xx
 cc........ccx.....xxxxxa......xx
 c...llll...cx..'..xxxxxxa.....xx
-cG.llllll.Gcxj....xxxxxa.....xx
-c$..llll..$cxj.1..xxxx..'...xx
-cc$$....$$ccxj....jjj....1.xx
- cc$$$$$$ccxxj....j'.....xxx
-  ccc$$cccxxj....jj......xx
-    ccccxxxj.1..xxx....1.xx
- xxxxxxxxjj.....xxj..'..xx
-xxx<xxx........xxj.....xx
-xx...xx..'....xxxj....xx
-x..A..x......xxxj..1.xx
-xx...xxjj..jjx....xxxx
-xxx....jj..jj..jjxx
+cG.llllll.Gcxq....xxxxxa.....xx
+c$..llll..$cxq.1..xxxx..'...xx
+cc$$....$$ccxq....qqq....1.xx
+ cc$$$$$$ccxxq....q'.....xxx
+  ccc$$cccxxq....qq......xx
+    ccccxxxq.1..xxx....1.xx
+ xxxxxxxxqq.....xxq..'..xx
+xxx<xxx........xxq.....xx
+xx...xx..'....xxxq....xx
+x..A..x......xxxq..1.xx
+xx...xxqq..qqx....xxxx
+xxx....qq..qq..qqxx
 xxxxx.........xxxx
 xxxxxxxxxxxxxxx
 ENDMAP
