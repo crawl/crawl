@@ -342,6 +342,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %start
 %compose base/djinni_f
 %compose body/animal_skin
+%compose hair/part2_red
 %finish SP_RECOMMENDED_DJINNI
 %syn LAST_RECOMMENDED_SPECIES
 
