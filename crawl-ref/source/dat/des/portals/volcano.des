@@ -1274,6 +1274,65 @@ xxxxxxxxxxxxxxx
 ENDMAP
 ###############################################################################
 
+###############################################################################
+# Zot tub redux
+# Bonus points for shattering out and dying to an orb of fire
+NAME:   hellmonk_zot_springs
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 20
+ORIENT: encompass
+:volcano_setup(_G)
+KFEAT:  FMNX = W
+MARKER: X = lua:fog_machine { cloud_type="steam", \
+            pow_min = 2, pow_max = 10, delay = 25, \
+            size = 2, walk_dist = 3, spread_rate= 10 }
+KMONS:  F = orb of fire att:neutral
+MONS:   gargoyle / salamander / cyclops, molten gargoyle
+KMONS:  M = red draconian / hell knight / wizard ; robe ego:fire_resistance
+KMONS:  N = molten gargoyle / salamander mystic / efreet / \
+        deep elf pyromancer ; robe ego:fire_resistance / \
+        orc knight ; dire flail ego:flaming . chain mail ego:fire_resistance
+COLOUR: DE = white
+FTILE:  K1DGT$ = floor_marble
+TILE:   E = wall_marble
+SUBST:  J = $, $ = $$$d, d = defgg, 1 = D11, 2 = .22, K = 1, E = c
+NSUBST: M = 1:M / 6:N. / *:W, H = 1:W / *:x
+MAP
+    xxxxxxxlllllllllllllllllxxxxx
+    xJddddxllnnnxxxxxxxnnnllxdddx
+    xJ.JxxxllnFnWMWxWMWnFnllxxx.x
+    xx2xx....nnnWWHxWWWnnn....x.x
+     x.x...xxWXWWWxWWWXWxx.2.x2.x
+     xx.2.xWWWWWMHHWWWWMWWx...xxx
+     x...xWWWWWWWHWWWMWWWx....x
+     x.2xxWMWWWWWHWWWWWWWx...xx
+     xx...xWWWMWWHWWMWWWx..2xx
+      xxx..xxWWWWHWWWWx....xx
+        xxx..xWWWxWWWx..xxxx
+          xx...x.x.x...xx
+           xx....x....xx
+  EEEEEEEEEEEE++EEE++EEEEEEEEEEEE
+  EDDDDDD1DDDDDDEEEDDDDDD1DDDDDDE
+  E1DDDDDDDDD1DDEEEDD1DDDDDDDDD1E
+  EDDEEE+EE+EEEEEEEEEEE+EE+EEEDDE
+  EDDEEE$EE$EEEGDKDGEEE$EE$EEEDDE
+  EDDEEEEEEEEEEDDDDDEEEEEEEEEEDDE
+EEEDDEEEEEEEEEEDDDDDEEEEEEEEEEDDEEE
+EWWD1DDDDDDDDDDDDTDDDDDDDDDDDD1DWWE
+EWWDD1DDDDDDDDDGDDDGDDDDDDDDD1DDWWE
+EEEEEEEEEEEEEEEDDDDDEEEEEEEEEEEEEEE
+            EEE++E++EEE
+             xG.....Gx
+             x.......x
+             x.......x
+             xG..A..Gx
+             x.......x
+             xxG.<.Gxx
+              xxxxxxx        
+ENDMAP
+
+###############################################################################
+
 ## Severe gimmicks. Weight 10, four present, ~4.17% chance each.
 
 ###############################################################################
