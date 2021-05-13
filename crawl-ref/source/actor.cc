@@ -344,8 +344,6 @@ bool actor::rampaging(bool calc_unid, bool items) const
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
                     int stab_bypass, bool for_real) const
 {
-    dprf(DIAG_COMBAT, "apply_ac %s ac=%d gdr=%d damage=%d max_damage=%d ac_type=%d stab_bypass=%d", name(), armour_class(), gdr_perc(), damage, max_damage, ac_type, stab_bypass);
-
     int ac = max(armour_class() - stab_bypass, 0);
     int gdr = gdr_perc();
     int saved = 0;
@@ -380,7 +378,6 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         die("invalid AC rule");
     }
 
-    dprf(DIAG_COMBAT, "         %s saved=%d ac=%d gdr=%d after=%d", saved, ac, gdr, max(saved, min(gdr * max_damage / 100, ac / 2)));
     saved = max(saved, min(gdr * max_damage / 100, ac / 2));
     if (for_real && (damage > 0) && (saved >= damage) && is_player())
     {
