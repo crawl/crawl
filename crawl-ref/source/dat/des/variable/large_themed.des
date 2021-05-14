@@ -2344,3 +2344,78 @@ xxxx-xx..xx....xx-xxx-x
 xxxxxxxxx-x.....xxxxxxx
 xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
+
+NAME:   dreamdust_goblin_forest_village
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:3-5
+ORIENT: north
+WEIGHT: 5
+KMONS:  1 = goblin 
+KMONS:  2 = goblin ; mace
+KMONS:  3 = worm / frilled lizard / quokka
+KMONS:  4 = goblin ; spear
+KMONS:  5 = goblin perm_ench:paralysis
+KMONS:  6 = killer bee
+KMONS:  7 = goblin ; robe . quarterstaff | any magical staff
+KMONS:  8 = robin band, \
+            hobgoblin ; chain mail . rapier | long sword | flail | trident
+KMONS:  ? = goblin / nothing
+KMONS:  P = plant / nothing
+KMONS:  f = fungus w:20 / nothing
+KMONS:  b = bush
+ITEM:   potion of ambrosia q:1, any weapon
+KITEM:  $ = gold / any
+KITEM:  6 = potion of ambrosia q:1
+KFEAT:  _ = altar_ecumenical
+KFEAT:  ( = iron_grate
+KFEAT:  | = granite_statue
+TILE:   | = dngn_crumbled_column
+KFEAT:  g = granite_statue
+TILE:   g = dngn_gravestone
+KFEAT:  z = x
+COLOUR: z = yellow
+TILE:   z = wall_wax
+FTILE:  -T = floor_pebble_lightgray
+FTILE:  f = floor_mud
+MAP
+        ttttttttttttttttttt
+       ttttttttttttttttttttt
+      tt.......bWUWb.......tt
+     tt..xxxx...bWb...xxxx..tt
+    tt...xG$xxxmxxxmxxx$Gx...tt
+   ttP...x$??....8....??$x...Ptt
+  ttP....xx.............xx....Ptt
+ ttP......x....xx+xx....x......Ptt
+ttP..PP..xxxx..x...x..xxxx..PP..Ptt
+ttP..PP..x?.+..+...+..+.?x..PP..Ptt
+ttP..PP..x$?xxxxx+xxxxx?$x..PP..Ptt
+ttP......xxxx...G-G...xxxx......Ptt
+ttP..............-..............Ptt
+tt...............-..............Ptt
+tt..((((xxx...PP.-....xxxxx.....Ptt
+tt..(...+.x...PP.-.xxxx._.xg-g..Ptt
+tt.((..(x+xxx.PP.-.x..+.?.x?-?..Ptt
+tt.(.zz.x.55x.PP.-.x??x|?|xg-g..Ptt
+tt.(z66zx...x.PP.-.x$7x???x.-...Ptt
+tt.(.zz.m.1.x....-.xxxx|.|xg-g..Ptt
+tt.(((((xdx.+-----....x...x.-...Ptt
+tt......xxxxx....-....xx+xx.-...Ptt
+tt...PP..........-.....b-b..-...Ptt
+tt...PP.....PP...------------....tt
+tt...............-...............tt
+tt.(((((xxxx.....-.....xxxx.4fff.tt
+tt.(W3.xx$.xx...-T-...xx.?xx.fWf.tt
+tt.(33.+.1..+---T-T---+.4.$x.fWf4tt
+tt.(333xx?.xx...-T-...xx..xx.fWf.tt
+tt.(((((xxxx.....-.....xxxx..fff.tt
+tt...............-...............tt
+tt..PPP.....-----------.....PPP..tt
+tt..PPP....x+x...-...x+x....PPP..tt
+tt........xx.xx..-..xx.xx.......tt
+ tt......xx.1.xx.-.xxe2exx.....tt
+  tt.....xx1$1xx.-.xxvlvxx....tt
+   tt.....xxxxx..-..xxxxx....tt
+    tttt........t-t.......tttt
+     tttttt......-.....tttttt
+       ttttttt...@..ttttttt
+ENDMAP
