@@ -134,6 +134,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt&);
 static void _cast_call_down_lightning(monster &caster, mon_spell_slot, bolt&);
 static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt&);
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&);
+static void _flay(const monster &caster, actor &defender, int damage);
 static void _cast_still_winds(monster &caster, mon_spell_slot, bolt&);
 static void _mons_summon_elemental(monster &caster, mon_spell_slot, bolt&);
 static bool _los_spell_worthwhile(const monster &caster, spell_type spell);
@@ -4987,22 +4988,14 @@ static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
 
     int damage_taken = 0;
     if (defender->is_player())
-    {
-        damage_taken = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
-        damage_taken = min(damage_taken,
-                           max(0, you.hp - 25 - random2(15)));
-    }
+        damage_taken = max(0, you.hp * 25 / 100 - 1);
     else
     {
         monster* mon = defender->as_monster();
-
-        damage_taken = (6 + (mon->hit_points * 18 / mon->max_hit_points))
-                       * mon->max_hit_points / 100;
-        damage_taken = min(damage_taken,
-                           max(0, mon->hit_points - 25 - random2(15)));
+        damage_taken = max(0, mon->hit_points * 25 / 100 - 1);
     }
 
-    flay(caster, *defender, damage_taken);
+    _flay(caster, *defender, damage_taken);
 }
 
 /**
@@ -5013,9 +5006,9 @@ static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
  * @param defender  The thing being flayed.
  * @param damage    How much flaying damage to do.
  */
-void flay(const monster &caster, actor &defender, int damage)
+static void _flay(const monster &caster, actor &defender, int damage)
 {
-    if (damage < 10)
+    if (damage <= 0)
         return;
 
     bool was_flayed = false;
