@@ -2419,3 +2419,55 @@ tt........xx.xx..-..xx.xx.......tt
      tttttt......-.....tttttt
        ttttttt...@..ttttttt
 ENDMAP
+
+NAME:   dreamdust_drowning_in_the_deep
+TAGS:   no_monster_gen 
+DEPTH:  Depths, !Depths:$
+ORIENT: float
+WEIGHT: 5
+KFEAT:  ?-EM = W
+KMONS:  E = elemental wellspring
+KMONS:  M = merfolk avatar
+KMONS:  ? = spectral deep troll w:20 / water elemental / \
+            merfolk siren w:1 / merfolk avatar w:1
+KITEM:  ? = deep troll skeleton, star_item w:20 / any good_item / nothing w:20
+: dgn.delayed_decay_extra(_G, '?', 'deep troll skeleton', 'star_item w:20 / any good_item / nothing w:20')
+KFEAT:  O = altar_ecumenical
+TILE:   G = dngn_statue_wraith / dngn_statue_mermaid
+FTILE:  OGT = dngn_shallow_water
+COLOUR: c = white
+MAP
+ cccccccccccccccccccccccc
+ ccccccccc--EM--ccccccccc
+ c??------------------??c
+ c?c+c--c+cccccccc--c+c?c
+ c-c?c--c--c--+-?c--c?c-c
+ c-ccc--c??c??c-?c--ccc-c
+ c------c?-+--cc+c------c
+ c-c+c--c??c--c??c--c+c-c
+ c-c?c--cccc++cccc--c?c-c
+ c?ccc--------------ccc?c
+ c?--------------------?c
+ c-cc+ccc--T--T--ccccc+cc
+ c-c----c---??---c?-----c
+ c-c????c--T??T--c??----c
+ c-cccc+c--------c+cccccc
+ c-c??--c--------c---G?Gc
+ c-cccccc--------c---?O?c
+ c??-------------c---G?Gc
+ ccccccccc------ccccccccc
+       cccc++++cccc
+        ccG----Gcc
+        cc--??--cc
+         cc----cc
+          c----c
+          c----c
+          c.-?.c
+          c....c
+          c....c
+          c....c
+          c....c
+          c....c
+          c....c
+          cc@@cc
+ENDMAP
