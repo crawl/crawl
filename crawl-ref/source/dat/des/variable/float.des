@@ -4879,6 +4879,43 @@ xxxxxx@xxxxxx
 ENDMAP
 
 ##############################################################################
+NAME:   dreamdust_brigand_ammo_cache
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:4-8
+ORIENT: float
+WEIGHT: 5
+MONS:   kobold, kobold brigand, bush 
+KITEM:  ? = stone q:20 / dart q:5 / boomerang q:5 / javelin q:3 / \
+            throwing net q:2 / arrow q:10 / bolt q:10 / sling bullet q:10
+MAP
+ tttttttt
+ tccccccttt
+ tc????ccct
+ tc????+.ct
+ tcccccc+ct
+ tc..22..ct
+ tc+cccccct
+ tc..2...ct
+ tcc....cct
+ ttcc++cctt
+  tt3..3tt
+   tt22tt
+  tt..tt
+ tt..tt
+tt.1tt
+tt..tt
+ tt..tt
+  tt1.tt
+   tt..tt
+    tt..tt
+    tt.1tt
+   tt..tt
+  tt..tt
+ tt.ttt
+tt@tt
+ENDMAP
+
+##############################################################################
 # Rooms
 NAME:    minmay_opposing_rooms
 DEPTH:   D:4-
