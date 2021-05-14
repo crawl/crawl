@@ -2212,11 +2212,11 @@ string wu_jian_random_sifu_name()
 {
     switch (random2(7))
     {
-        case 0: return "Deng Ai";
-        case 1: return "Jiang Wei";
-        case 2: return "Zhang Bao";
+        case 0: return "Yunchang";
+        case 1: return "Lu Zhishen";
+        case 2: return "Xiang Ba";
         case 3: return "Ma Yunglu";
-        case 4: return "Sun Luban";
+        case 4: return "Hu Sanniang";
         case 5: return "Gene Jian Bin";
         case 6: return "Cai Fang";
         default: return "Bug";
