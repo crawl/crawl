@@ -5937,7 +5937,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
   * useful when the AC roll is inferior to it. Therefore a higher GDR means
   * more damage reduced, but also more often.
   *
-  * \f[ GDR = 16 \times (AC)^\frac{1}{2} \f]
+  * \f[ GDR = 16 \times (AC)^\frac{1}{4} \f]
   *
   * \return GDR as a percentage.
   **/
