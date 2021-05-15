@@ -3857,7 +3857,7 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
-    
+
     // These mutations have 3 ranks and can be taken multiple times
     if (sacrifice.mutation == MUT_UNSKILLED
         || sacrifice.mutation == MUT_INEXPERIENCED)
@@ -4100,7 +4100,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         case ABIL_RU_SACRIFICE_WORDS:
             if (you.get_mutation_level(MUT_DRINK_SAFETY))
                 piety_gain += 10;
-            else if (you.get_mutation_level(MUT_NO_DRINK)) 
+            else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
