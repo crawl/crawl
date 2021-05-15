@@ -949,7 +949,6 @@ SUBST: . = . W
 SUBST: - = - W
 SUBST: ~ = W:20 .
 SUBST: | = p:20 W
-SUBST: - = -:20 W
 SUBST: x = x:35 W
 FTILE: -1 = floor_pebble
 KFEAT: p = granite_statue
