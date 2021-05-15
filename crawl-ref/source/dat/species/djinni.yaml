@@ -5,7 +5,7 @@ short_name: Dj
 difficulty: Intermediate
 difficulty_priority: 70
 aptitudes:
-  xp: 0
+  xp: 1
   hp: -1
   mp_mod: 0
   mr: 4
@@ -19,7 +19,7 @@ aptitudes:
   bows: -2
   crossbows: -2
   throwing: -2
-  spellcasting: -2
+  spellcasting: -3
   dodging: 1
   fire_magic: False
   ice_magic: False

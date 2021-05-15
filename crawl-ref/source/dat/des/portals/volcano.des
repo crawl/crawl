@@ -1239,7 +1239,7 @@ MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
 :volcano_setup(_G)
 MAP
             xxxxxxxxxxxxxxxx
-           xxxjjjjjjjjjjjjjxxx
+           xxxqqqqqqqqqqqqqxxx
          xxx1...1.....1.....1xx
        xxx....ppppppppp..D....xx
       xx..2.pppppppppp.a.......xx
@@ -1257,21 +1257,117 @@ MAP
  cc......ccxxx..1..xxxxx...1..xx
 cc........ccx.....xxxxxa......xx
 c...llll...cx..'..xxxxxxa.....xx
-cG.llllll.Gcxj....xxxxxa.....xx
-c$..llll..$cxj.1..xxxx..'...xx
-cc$$....$$ccxj....jjj....1.xx
- cc$$$$$$ccxxj....j'.....xxx
-  ccc$$cccxxj....jj......xx
-    ccccxxxj.1..xxx....1.xx
- xxxxxxxxjj.....xxj..'..xx
-xxx<xxx........xxj.....xx
-xx...xx..'....xxxj....xx
-x..A..x......xxxj..1.xx
-xx...xxjj..jjx....xxxx
-xxx....jj..jj..jjxx
+cG.llllll.Gcxq....xxxxxa.....xx
+c$..llll..$cxq.1..xxxx..'...xx
+cc$$....$$ccxq....qqq....1.xx
+ cc$$$$$$ccxxq....q'.....xxx
+  ccc$$cccxxq....qq......xx
+    ccccxxxq.1..xxx....1.xx
+ xxxxxxxxqq.....xxq..'..xx
+xxx<xxx........xxq.....xx
+xx...xx..'....xxxq....xx
+x..A..x......xxxq..1.xx
+xx...xxqq..qqx....xxxx
+xxx....qq..qq..qqxx
 xxxxx.........xxxx
 xxxxxxxxxxxxxxx
 ENDMAP
+###############################################################################
+
+###############################################################################
+# Zot tub redux
+# Bonus points for shattering out and dying to an orb of fire
+NAME:   hellmonk_zot_springs
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 20
+ORIENT: encompass
+:volcano_setup(_G)
+KMONS:  D = orb of fire att:neutral
+MONS:   gargoyle / salamander / cyclops, molten gargoyle
+KMONS:  3 = red draconian / hell knight / wizard ; robe ego:fire_resistance
+KMONS:  4 = salamander mystic / efreet / \
+        deep elf pyromancer ; robe ego:fire_resistance / \
+        orc knight ; dire flail ego:flaming . chain mail ego:fire_resistance
+FTILE:  GT1E$- = floor_marble
+COLOUR: c1E$- = white
+SUBST:  h = $, $ = $$$d, d = defgg, 1 = 11-, 2 = .22, E = 1
+NSUBST: 3 = 3 / 4=4W / W, F = W / x
+KFEAT:  DH34 = W
+MARKER: H = lua:fog_machine { cloud_type="steam", pow_min = 2, pow_max = 10, \
+                delay = 25, size = 2, walk_dist = 3, spread_rate= 10 }
+TILE:   c = wall_marble
+MAP
+    xxxxxxxlllllllllllllllllxxxxx
+    xhddddxllnnnxxxxxxxnnnllxdddx
+    xh.hxxxllnDnW3WxW3WnDnllxxx.x
+    xx2xx....nnnWWFxWWWnnn....x.x
+     x.x...xxWHWWWxWWWHWxx.2.x2.x
+     xx.2.xWWWWW3FFWWWW3WWx...xxx
+     x...xWWWWWWWFWWW3WWWx....x
+     x.2xxW3WWWWWFWWWWWWWx...xx
+     xx...xWWW3WWFWW3WWWx..2xx
+      xxx..xxWWWWFWWWWx....xx
+        xxx..xWWWxWWWx..xxxx
+          xx...x.x.x...xx
+           xx....x....xx
+  cccccccccccc++ccc++cccccccccccc
+  c------1------ccc------1------c
+  c1---------1--ccc--1---------1c
+  c--ccc+cc+ccccccccccc+cc+ccc--c
+  c--ccc$cc$cccG-E-Gccc$cc$ccc--c
+  c--cccccccccc-----cccccccccc--c
+ccc--cccccccccc-----cccccccccc--ccc
+cWW-1------------T------------1-WWc
+cWW--1---------G---G---------1--WWc
+ccccccccccccccc-----ccccccccccccccc
+            ccc++c++ccc
+             xG.....Gx
+             x.......x
+             x.......x
+             xG..A..Gx
+             x.......x
+             xxG.<.Gxx
+              xxxxxxx
+ENDMAP
+###############################################################################
+
+###############################################################################
+# Deep Elf Pyromancer volcano
+NAME:   hellmonk_pyromancer_palace
+TAGS:   no_item_gen no_monster_gen
+WEIGHT: 20
+ORIENT: encompass
+:volcano_setup(_G)
+MONS:   fire elemental / hell hound, deep elf pyromancer
+MONS:   deep elf archer ; shortbow ego:flaming . arrow
+SUBST:  $ = $$$defg, 1 = .11, 2 = .22
+KPROP:  - = no_tele_into
+KFEAT:  - = l
+MAP
+         ----
+       x--cc--x
+      x--cccc--x
+      x--nA<n--x
+     x--cc..cc--x
+     x--n....n--x
+    x--cc+ccccc--x
+    x--n..c2..n--x
+   x--cc..c..2cc--x
+   x--n..cc.l..n--x
+  x--cc..n.....cc--x
+  x--n1.1c.1...2n--x
+ x--cc..cc+cccc+cc--x
+ x--n1.1c1..2n...n--x
+x--cc+ccc...cc1..cc--
+x--n...c....+..l.2n--
+--cc.l1n..1cc..1..cc--
+--n2.1.+...n.2...12n--
+-ccccccccccccccccc+cc-
+-n$$$$$$$$+2..1.....n-
+-c$$$$$$$$+32..1....c-
+-cccccccccccccccccccc-
+ENDMAP
+
 ###############################################################################
 
 ## Severe gimmicks. Weight 10, four present, ~4.17% chance each.
