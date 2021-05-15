@@ -1115,7 +1115,7 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
-TILE:       W = dngn_gravestone_ornate
+TILE:       W = dngn_zonguldrok_shrine
 TILE:       G = dngn_gravestone
 SUBST:      LZ = '
 LFLOORTILE: floor_tomb
@@ -1805,10 +1805,10 @@ MARKER:     H = lua:transp_dest_loc("moon_troll_entry")
 MARKER:     _ = lua:transp_loc("moon_troll_exit")
 MARKER:     & = lua:transp_dest_loc("moon_troll_exit")
 KFEAT:      J = crystal_wall
-TILE:       c = wall_volcanic_blue
+TILE:       c = wall_moon
 LFLOORTILE: floor_pebble_lightblue
 LFLOORCOL:  lightblue
-LROCKTILE:  wall_volcanic_blue
+LROCKTILE:  wall_moon
 COLOUR:     b = silver
 COLOUR:     J = disjunction
 COLOUR:     c = blue

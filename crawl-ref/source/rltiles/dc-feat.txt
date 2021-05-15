@@ -232,7 +232,7 @@ statue_iron DNGN_STATUE_IRON
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
-gravestone_ornate DNGN_GRAVESTONE_ORNATE
+zshrine DNGN_ZONGULDROK_SHRINE
 
 # start TAG_MAJOR_VERSION == 34
 teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
