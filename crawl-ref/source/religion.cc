@@ -2867,6 +2867,12 @@ static void _ash_uncurse()
     }
 }
 
+int excom_xp_docked()
+{
+    return exp_needed(min<int>(you.max_level, 27) + 1)
+         - exp_needed(min<int>(you.max_level, 27));
+}
+
 void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -3033,8 +3039,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3058,8 +3063,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ASHENZARI:
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _ash_uncurse();
         break;
@@ -3082,8 +3086,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
         shopping_list.remove_dead_shops();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3124,8 +3127,7 @@ void excommunication(bool voluntary, god_type new_god)
                            old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 #endif
@@ -3138,8 +3140,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_ALLY_HEPLIAKLQANA);
         remove_all_companions(GOD_HEPLIAKLQANA);
 
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                    - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
