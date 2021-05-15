@@ -3857,19 +3857,10 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
-
-    // These mutations have 3 ranks and can be taken multiple times
-    if (sacrifice.mutation == MUT_UNSKILLED
-        || sacrifice.mutation == MUT_INEXPERIENCED)
-    {
-        if (you.get_mutation_level(sacrifice.mutation) == 3)
-            return false;
-    }
     // for sacrifices other than health, essence, and arcana there is a
     // deterministic mapping between the sacrifice_def and a mutation_type.
-    else if (sacrifice.mutation != MUT_NON_MUTATION
-        && (you.get_mutation_level(sacrifice.mutation)
-            || !_sac_mut_maybe_valid(sacrifice.mutation)))
+    if (sacrifice.mutation != MUT_NON_MUTATION
+        && !_sac_mut_maybe_valid(sacrifice.mutation))
     {
         return false;
     }
