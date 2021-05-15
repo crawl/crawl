@@ -4820,6 +4820,99 @@ MAP
 .cccccccccc
 ENDMAP
 
+NAME:   dreamdust_iron_pagoda_of_wu_jian
+TAGS:   no_monster_gen no_item_gen 
+TAGS:   no_rotate no_vmirror
+DEPTH:  D:4-, Depths
+ORIENT: float
+WEIGHT: 5
+: if you.in_branch("D") then
+:     if you.depth() < 7 then
+KMONS:  1 = gnoll ; robe . \
+            quarterstaff | lajatang w:1 | nothing w:5
+KITEM:  ? = any manual / any scroll q:3
+:     else
+KMONS:  1 : ogre ; robe . \
+            quarterstaff | lajatang w:2 | nothing w:5 / \
+	    human ; robe . \
+            quarterstaff | lajatang w:2 | nothing w:5
+KITEM:  ? = any manual / any scroll q:3
+:     end
+: else
+KMONS:  1 = minotaur ; robe . \
+            quarterstaff | lajatang w:5
+KITEM:  ? = any manual
+: end
+SUBST:  1 = 11-
+KFEAT:  O = altar_wu_jian
+TILE:   G = dngn_statue_dragon
+COLOUR: c = red
+FTILE:  O?1- = floor_iron
+MAP
+     ...
+    ..v..
+    .vvv.
+   ..vOv..
+....vv?vv....
+.vvvv1-1vvvv.
+....v-1-v....
+  ..v---v..
+....v1-1v....
+.vvvvv-vvvvv.
+...vv-1-vv...
+ ..vv---vv..
+ ..vv---vv..
+...vv1-1vv...
+.vvvvv-vvvvv.
+...vv-1-vv...
+ ..vv---vv..
+ ..vv---vv..
+ ..vv---vv..
+...vv---vv...
+.ccccc+ccccc.
+.cccG+++Gccc.
+.....@@@.....
+ENDMAP
+
+NAME:   dreamdust_vampire_manor
+TAGS:   no_monster_gen no_item_gen no_rotate
+DEPTH:  D:6-
+ORIENT: float
+WEIGHT: 5
+: if you.depth() < 13 then
+KITEM:  V = any amulet / any amulet randart w:2
+KMONS:  V = vampire ; short sword | rapier | quick blade w:1 / \
+            vampire ; long sword | scimitar | demon blade w:1
+: else
+KITEM:  V = any amulet good_item / any amulet randart w:3
+KMONS:  V = vampire mage ; short sword good_item | quick blade w:2 / \
+            vampire knight ; \
+            long sword good_item | great sword | demon blade w:2
+: end
+KMONS:  - = bat / vampire bat / nothing w:30
+TILE:   G : dngn_statue_demonic_bust / \
+            dngn_statue_imp / dngn_statue_wraith
+FTILE:  VY- = floor_hall
+COLOUR: c = darkgray
+TILE:   c = wall_hall_darkgray
+MAP
+ .....       .....
+ .ccc.... ....ccc.
+ .c-cccc...cccc-c.
+ .cc---ccccc---cc.
+ ..c-c-c-V-c-c-c..
+  .c-c-cY-Yc-c-c.
+  .c-c-c---c-c-c.
+  .c-c-cY-Yc-c-c.
+  .c-c-cc+cc-c-c.
+  .c-cc-----cc-c.
+  .c--ccccccc--c.
+  .ccc-------ccc.
+  ...c-cc+cc-c...
+    .cccG.Gccc.
+    .....@.....
+ENDMAP
+
 
 ###############################################################################
 #
