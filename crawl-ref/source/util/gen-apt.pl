@@ -137,6 +137,7 @@ sub aptitude_table
         for my $abbr (@skill_abbrevs)
         {
             my $skill = find_skill($sp, abbr_to_skill($abbr)) || 0;
+            $skill = $skill + 5 unless $skill == -99 || $abbr eq 'HP' || $abbr eq 'MP' || $abbr eq 'WL';
 
             my $pos = index($headers, " $abbr");
             die "Could not find $abbr in $headers?\n" if $pos == -1;
@@ -147,7 +148,7 @@ sub aptitude_table
                 $line .= " " x ($pos - length($line));
             }
 
-            my $fmt = "%+3d";
+            my $fmt = "%3d";
             $fmt = "%3d" if $skill == 0;
             if ($skill == -99)
             {
@@ -157,7 +158,7 @@ sub aptitude_table
             if ($abbr eq 'HP')
             {
                 $skill = $skill * 10;
-                $fmt = "%+3d%%";
+                $fmt = "%3d%%";
             }
             $line .= sprintf($fmt, $skill);
         }

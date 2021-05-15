@@ -569,7 +569,7 @@ Dodging or Stealth. See Appendix `3. List of Skills`_ for a detailed
 description of all skills present in Crawl. The ease with which a character
 learns a skill depends solely on species. These aptitudes are displayed when
 viewing your skills, and a full table can be viewed in aptitudes.txt (also from
-the help screen during play via '?%').
+the help screen during play via '?%'). Aptitudes generally range from 0 to 10.
 
 You can see your character's skills by pressing the 'm' key; the higher the
 level of a skill, the better you are at it. All characters start with a few
@@ -1470,7 +1470,7 @@ the species.
           which allow them to make extra attacks.
 
 .. note:: Humans are a useful reference point when considering other species:
-          they have 0 for almost all aptitudes; have no special abilities,
+          they have 5 for almost all aptitudes; have no special abilities,
           weakness, or constraints against using certain types of equipment;
           move normally; and gain experience and willpower at a "typical"
           rate. However, you will see that they are categorized as an

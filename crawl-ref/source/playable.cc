@@ -99,7 +99,7 @@ static JsonNode *_species_apts(species_type sp)
         const skill_type sk(static_cast<skill_type>(i));
         const int apt(species_apt(sk, sp));
         if (apt != UNUSABLE_SKILL)
-            json_append_member(apts, skill_name(sk), json_mknumber(apt));
+            json_append_member(apts, skill_name(sk), json_mknumber(apt + 5));
     }
     return apts;
 }

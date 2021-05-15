@@ -9,24 +9,24 @@ two other ways:
 - Look at which combinations of species and background are recommended.
 
  --  no aptitude (cannot learn this skill at all)
- -5  abysmal aptitude
- -4  terrible aptitude (learning half as fast as at 0 aptitude)
- -3  very poor aptitude
- -2  poor aptitude
- -1  slightly disfavoured aptitude
-  0  standard aptitude
- +1  slightly favoured aptitude
- +2  strong aptitude
- +3  very strong aptitude
- +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
- +5  exceptional aptitude
+  0  abysmal aptitude
+  1  terrible aptitude (learning half as fast as at 5 aptitude)
+  2  very poor aptitude
+  3  poor aptitude
+  4  slightly disfavoured aptitude
+  5  standard aptitude
+  6  slightly favoured aptitude
+  7  strong aptitude
+  8  very strong aptitude
+  9  outstanding aptitude (learning twice as fast as at 5 aptitude)
+ 10  exceptional aptitude
 
 There are four special values: HP, MP, Experience and Willpower:
 - The HP value indicates the percentage of hit points gained per experience
   level, 100% being the Human standard.
 - The MP value indicates a fixed additive modifier to magic points.
 - The Experience value indicates how much experience has to be earned in
-  order to gain a new experience level, +1 being the Human standard. These
+  order to gain a new experience level, 6 being the Human standard. These
   values use the same scale as the skill aptitudes.
 - The Willpower value indicates resistance to many magical effects per
   experience level, +3 being the Human standard.

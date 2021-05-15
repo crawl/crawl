@@ -300,22 +300,21 @@ string SkillMenuEntry::get_prefix()
 
 void SkillMenuEntry::set_aptitude()
 {
-    string text = "<white>";
 
     const bool manual = you.skill_manual_points[m_sk] > 0;
     const int apt = species_apt(m_sk, you.species);
 
-    if (apt != 0)
-        text += make_stringf("%+d", apt);
-    else
-        text += make_stringf(" %d", apt);
+    const string color = apt < -2 ? "lightred"
+                        : apt > 2 ? "lightgreen"
+                        : "white";
 
-    text += "</white> ";
+    string text =
+        make_stringf("<%s>%2d</%s> ", color.c_str(), apt + 5, color.c_str());
 
     if (manual)
     {
         skm.set_flag(SKMF_MANUAL);
-        text += "<lightred>+4</lightred>";
+        text += "<lightblue>+4</lightblue>";
     }
 
     m_aptitude->set_text(text);
@@ -449,7 +448,7 @@ void SkillMenuEntry::set_cost()
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
     if (you.skill_manual_points[m_sk])
-        m_progress->set_fg_colour(LIGHTRED);
+        m_progress->set_fg_colour(LIGHTBLUE);
     else
         m_progress->set_fg_colour(CYAN);
 
@@ -577,7 +576,7 @@ string SkillMenuSwitch::get_help()
                "<cyan>cyan</cyan>";
         if (skm.is_set(SKMF_MANUAL))
         {
-            result += " (or <lightred>red</lightred> if enhanced by a "
+            result += " (or <lightblue>blue</lightblue> if enhanced by a "
                       "manual)";
         }
         result += ".\n";
@@ -1424,7 +1423,7 @@ void SkillMenu::set_default_help()
             text += "The species aptitude is in <white>white</white>. ";
 
         if (is_set(SKMF_MANUAL))
-            text += "Bonus from skill manuals is in <lightred>red</lightred>. ";
+            text += "Bonus from skill manuals is in <lightblue>blue</lightblue>. ";
     }
 
     m_help->set_text(text);
