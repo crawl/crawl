@@ -157,7 +157,7 @@ sub aptitude_table
             }
             if ($abbr eq 'HP')
             {
-                $skill = $skill * 10;
+                $skill = $skill * 10 + 100;
                 $fmt = "%3d%%";
             }
             $line .= sprintf($fmt, $skill);
