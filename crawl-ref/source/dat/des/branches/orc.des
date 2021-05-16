@@ -1403,19 +1403,16 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  Orc
 ORIENT: float
 WEIGHT: 3
-KMONS:  ? = nothing w:5 / \
-            orc name:pious name_adjective god:zin ; nothing
-KMONS:  1 = patrolling orc warrior \
-            name:devout name_adjective god:zin
-KMONS:  2 = orc knight \
-            name:orthodox name_adjective god:zin
+KMONS:  ? = nothing w:5 / orc god:zin ; nothing
+KMONS:  1 = patrolling orc warrior god:zin
+KMONS:  2 = orc knight god:zin
 KMONS:  3 = orc high priest \
             name:of_Zin name_suffix god:zin ; any weapon ego:holy_wrath \
             spells:smiting.30.priest;heal_other.20.priest;\
             minor_healing.20.priest
 KMONS:  b = bush
 SUBST:  t = tb.
-KITEM:  $ = gold q:100
+KITEM:  $ = gold
 KFEAT:  # = iron_grate
 KFEAT:  O = altar_zin
 TILE:   G = dngn_statue_angel
@@ -1425,19 +1422,19 @@ FTILE:  -T'23$GO = floor_limestone
 COLOUR: c = white
 TILE:   c = wall_church
 MAP
-     #########################
-      #......................##
-      #..xxx..xxx..ttt..ccccc.##
-      #..x?x..x?x..ttt?.c$$$c..##
-     ##..x+x..x+x.....cccc+cccc.##
-     #1.....--...1..gcc''''2'Gcc.##
-   @--------TT-------+'''''''3Oc.##
-     #1.....--...1..gcc''''2'Gcc.##
-     ##..x+x..x+x.....cccc+cccc.##
-      #..x?x..x?x..ttt?.c$$$c..##
-      #..xxx..xxx..ttt..ccccc.##
-      #......................##
-     #########################
+      xxxxxxxxxxxxxxxxxxxxxxxx
+      x......................xx
+      x..xxx..xxx..ttt..ccccc.xx
+     .x..x?x..x?x..ttt?.c$$$c..xx
+    .##..x+x..x+x.....cccc+cccc.xx
+    .#1.....--...1..gcc''''2'Gcc.xx
+   @--------TT-------+'''''''3Oc.xx
+    .#1.....--...1..gcc''''2'Gcc.xx
+    .##..x+x..x+x.....cccc+cccc.xx
+     .x..x?x..x?x..ttt?.c$$$c..xx
+      x..xxx..xxx..ttt..ccccc.xx
+      x......................xx
+      xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
