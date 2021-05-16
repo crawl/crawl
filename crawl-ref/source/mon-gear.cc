@@ -1429,14 +1429,11 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             qty = random_range(4, 7);
             break;
 
+        // Sprint-only.
         case MONS_CHUCK:
             weap_type  = MI_LARGE_ROCK;
-#if TAG_MAJOR_VERSION == 34
-            brand = SPMSL_RETURNING;
-            qty = 2;
-#else
-            qty = 8;
-#endif
+            brand = SPMSL_CHAOS;
+            qty = random_range(2, 4);
             break;
 
         case MONS_POLYPHEMUS:
