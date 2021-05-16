@@ -2708,11 +2708,6 @@ Cloud Mage
 A strange wizard who has attained mastery over clouds, making deft and
 foreboding mystic gestures.
 %%%%
-devout orc warrior
-
-An experienced orc soldier who has rejected Beogh and Orcish society in favour
-of the purity and discipline of Zin.
-%%%%
 Hellbinder
 
 A mighty spellcaster wreathed in arcane energies, muttering profane
@@ -2918,11 +2913,6 @@ An exalted servant of Zin and the leader of a small, reclusive sect.
 It is said that a human priest once visited the Orcish lands to preach the
 Word of Zin, only to be martyred. Perhaps it was not in vain...
 %%%%
-orthodox orc knight
-
-A zealous knight of Zin. It commands its sect brethren in battle, rousing them
-to greater, more fanatical efforts with its righteous shouts.
-%%%%
 petrified plant
 
 An ordinary plant that has been turned to stone.
@@ -2936,10 +2926,6 @@ phase spider
 
 An otherworldly spider that can move short and medium distances by briefly
 shifting between the planes of reality, in order to better ensnare its prey.
-%%%%
-pious orc
-
-A rare orcish adherent of Zin.
 %%%%
 pristine statue
 
