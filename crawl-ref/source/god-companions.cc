@@ -154,27 +154,25 @@ bool recall_offlevel_ally(mid_t mid)
         return true; // still successfully recalled!
 
     // Catch up time for off-level monsters
-    // (We move the player away so that we don't get expiry
-    // messages for things that supposed wore off ages ago)
-    const coord_def old_pos = you.pos();
-    you.moveto(coord_def(0, 0));
-
-    int turns = you.elapsed_time - comp->timestamp;
-    // Note: these are auts, not turns, thus healing is 10 times as fast as
-    // for other monsters, confusion goes away after a single turn, etc.
-
-    mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
-
-    if (turns >= 10 && mons->alive())
+    // (Suppress messages so that we don't get expiry messages for things that
+    // supposedly wore off ages ago)
     {
-        // Remove confusion manually (so that the monster
-        // doesn't blink after being recalled)
-        mons->del_ench(ENCH_CONFUSION, true);
-        mons->timeout_enchantments(turns / 10);
+        msg::suppress msg;
+
+        int turns = you.elapsed_time - comp->timestamp;
+        // Note: these are auts, not turns, thus healing is 10 times as fast as
+        // for other monsters, confusion goes away after a single turn, etc.
+
+        mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
+
+        if (turns >= 10 && mons->alive())
+        {
+            // Remove confusion manually (so that the monster
+            // doesn't blink after being recalled)
+            mons->del_ench(ENCH_CONFUSION, true);
+            mons->timeout_enchantments(turns / 10);
+        }
     }
-    you.moveto(old_pos);
-    // Do this after returning the player to the proper position
-    // because it uses player position
     recall_orders(mons);
 
     return true;
