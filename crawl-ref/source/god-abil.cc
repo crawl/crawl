@@ -1587,8 +1587,7 @@ bool beogh_gift_item()
 
     dprf("is_ranged weap: %d", range_weapon);
     if (range_weapon)
-        gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
-
+        gift_ammo_to_orc(mons);
 
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
@@ -3860,8 +3859,7 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
     // for sacrifices other than health, essence, and arcana there is a
     // deterministic mapping between the sacrifice_def and a mutation_type.
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && (you.get_mutation_level(sacrifice.mutation)
-            || !_sac_mut_maybe_valid(sacrifice.mutation)))
+        && !_sac_mut_maybe_valid(sacrifice.mutation))
     {
         return false;
     }
@@ -4040,13 +4038,13 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             if (mut == MUT_LOW_MAGIC)
             {
                 piety_gain += 10 + max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
-                                       max( you.skill_rdiv(SK_SPELLCASTING, 1, 2),
-                                            you.skill_rdiv(SK_EVOCATIONS, 1, 2)));
+                                       you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 28;
+                piety_gain += 38;
             else
-                piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
+                piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
+                                + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
@@ -4074,11 +4072,26 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             if (you.get_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
             break;
+        case ABIL_RU_SACRIFICE_SKILL:
+            // give a small bonus if sacrifice skill is taken multiple times
+            piety_gain += 7 * you.get_mutation_level(mut);
+            break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
             if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
+            break;
+        // words and drink cut off a lot of options if taken together
+        case ABIL_RU_SACRIFICE_DRINK:
+            if (you.get_mutation_level(MUT_READ_SAFETY))
+                piety_gain += 10;
+            break;
+        case ABIL_RU_SACRIFICE_WORDS:
+            if (you.get_mutation_level(MUT_DRINK_SAFETY))
+                piety_gain += 10;
+            else if (you.get_mutation_level(MUT_NO_DRINK))
+                piety_gain += 15; // extra bad for mummies
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
             if (you.get_mutation_level(MUT_NO_DODGING))
@@ -4099,18 +4112,18 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 15;
+                piety_gain += 12;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose their last spell, which is pretty sad too.
+            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
             if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 20;
+                piety_gain += 16;
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            if (you.get_mutation_level(MUT_INEXPERIENCED))
-                piety_gain += 15;
+            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            break;
 
         default:
             break;
@@ -4416,7 +4429,7 @@ static void _extra_sacrifice_code(ability_type sac)
         }
     }
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
-        adjust_level(-RU_SAC_XP_LEVELS);
+        level_change();
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
     {
         uint8_t saved_skills[NUM_SKILLS];
@@ -4687,7 +4700,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 
     // raise the delay if there's an active sacrifice, and more so the more
     // often you pass on a sacrifice and the more piety you have.
-    const int base_delay = 80;
+    const int base_delay = 90;
     int delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
     int added_delay;
     if (clear_timer)

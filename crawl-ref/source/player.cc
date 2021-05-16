@@ -3256,6 +3256,13 @@ bool player::cloud_immune(bool calc_unid, bool items) const
         || actor::cloud_immune(calc_unid, items);
 }
 
+/**
+ * How much XP does it take to reach the given XL from 0?
+ *
+ *  @param lev          The XL to reach.
+ *  @param exp_apt      The XP aptitude to use. If -99, use the current species'.
+ *  @return     The total number of XP points needed to get to the given XL.
+ */
 unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
@@ -3299,6 +3306,11 @@ unsigned int exp_needed(int lev, int exp_apt)
     //  25      810195    111860   8470
     //  26      930525    120330   8470
     //  27     1059325    128800   8470
+
+    // If you've sacrificed experience, XP costs are adjusted as if
+    // you were still your original (higher) level.
+    if (exp_apt == -99)
+        lev += RU_SAC_XP_LEVELS * you.get_mutation_level(MUT_INEXPERIENCED);
 
     switch (lev)
     {
@@ -5937,7 +5949,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
   * useful when the AC roll is inferior to it. Therefore a higher GDR means
   * more damage reduced, but also more often.
   *
-  * \f[ GDR = 16 \times (AC)^\frac{1}{2} \f]
+  * \f[ GDR = 16 \times (AC)^\frac{1}{4} \f]
   *
   * \return GDR as a percentage.
   **/

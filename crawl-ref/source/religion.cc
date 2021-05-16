@@ -1500,80 +1500,81 @@ static bool _handle_uskayaw_ability_unlocks()
     return success;
 }
 
-static bool _gift_sif_kiku_gift(bool forced)
+static bool _give_sif_gift(bool forced)
 {
     // Smokeless fire and books don't get along.
     if (you.has_mutation(MUT_INNATE_CASTER))
         return false;
 
-    bool success = false;
-    book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    // Kikubaaqudgha gives the lesser Necromancy books in a quick
-    // succession.
-    if (you_worship(GOD_KIKUBAAQUDGHA))
+    if (!forced && (you.piety < piety_breakpoint(4)
+                    || random2(you.piety) < 101 || coinflip()))
     {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_NECROMANCY;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_DEATH;
-        }
-    }
-    else if (forced
-             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
-                && coinflip())
-    {
-        // Sif Muna special: Keep quiet if acquirement fails
-        // because the player already has seen all spells.
-        if (you_worship(GOD_SIF_MUNA))
-        {
-            int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
-                                                     true, you.pos());
-            success = (item_index != NON_ITEM);
-        }
+        return false;
     }
 
-    if (gift != NUM_BOOKS)
+    // Sif Muna special: Keep quiet if acquirement fails
+    // because the player already has seen all spells.
+    int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
+                                             true, you.pos());
+    if (item_index == NON_ITEM)
+        return false;
+
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
+
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    _inc_gift_timeout(40 + random2avg(19, 2));
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    return true;
+}
+
+static bool _give_kiku_gift(bool forced)
+{
+    // Smokeless fire and books don't get along.
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return false;
+
+    // Break early if giving a gift now means it would be lost.
+    if (feat_eliminates_items(env.grid(you.pos())))
+        return false;
+
+    const bool first_gift = !you.num_total_gifts[you.religion];
+
+    // Kikubaaqudgha gives two Necromancy books in a quick succession.
+    if (!forced && (you.piety < piety_breakpoint(0)
+                    || !first_gift && you.piety < piety_breakpoint(2)
+                    || you.num_total_gifts[you.religion] > 1))
     {
-        int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                  you.religion);
-        // Replace a Kiku gift by a custom-random book.
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-        {
-            make_book_kiku_gift(env.item[thing_created],
-                                gift == BOOK_NECROMANCY);
-        }
-        if (thing_created == NON_ITEM)
-            return false;
-
-        move_item_to_grid(&thing_created, you.pos(), true);
-
-        if (thing_created != NON_ITEM)
-            success = true;
+        return false;
     }
 
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
+    int thing_created = items(true, OBJ_BOOKS, BOOK_NECROMANCY, 1, 0,
+                              you.religion);
 
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku.
-        if (!you_worship(GOD_KIKUBAAQUDGHA))
-            _inc_gift_timeout(40 + random2avg(19, 2));
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-    }
+    if (thing_created == NON_ITEM)
+        return false;
 
-    return success;
+    // Replace a Kiku gift by a custom-random book.
+    make_book_kiku_gift(env.item[thing_created], first_gift);
+    move_item_to_grid(&thing_created, you.pos(), true);
+
+    if (thing_created == NON_ITEM)
+        return false;
+
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
+
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    return true;
 }
 
 static bool _handle_veh_gift(bool forced)
@@ -2113,8 +2114,11 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_KIKUBAAQUDGHA:
+            success = _give_kiku_gift(forced);
+            break;
+
         case GOD_SIF_MUNA:
-            success = _gift_sif_kiku_gift(forced);
+            success = _give_sif_gift(forced);
             break;
 
         case GOD_VEHUMET:
@@ -2867,6 +2871,12 @@ static void _ash_uncurse()
     }
 }
 
+int excom_xp_docked()
+{
+    return exp_needed(min<int>(you.max_level, 27) + 1)
+         - exp_needed(min<int>(you.max_level, 27));
+}
+
 void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -3033,8 +3043,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3058,8 +3067,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ASHENZARI:
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _ash_uncurse();
         break;
@@ -3082,8 +3090,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
         shopping_list.remove_dead_shops();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3124,8 +3131,7 @@ void excommunication(bool voluntary, god_type new_god)
                            old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 #endif
@@ -3138,8 +3144,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_ALLY_HEPLIAKLQANA);
         remove_all_companions(GOD_HEPLIAKLQANA);
 
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                    - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 

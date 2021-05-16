@@ -945,16 +945,21 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             if (!act.is_player())
                 return act.res_fire() >= 3;
             return player_equip_unrand(UNRAND_SALAMANDER)
-                || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
-                || you.has_mutation(MUT_IGNITE_BLOOD)
-                || player_equip_unrand(UNRAND_FIRESTARTER);
+#if TAG_MAJOR_VERSION == 34
+                   || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
+#endif
+                   || player_equip_unrand(UNRAND_FIRESTARTER)
+                   || you.has_mutation(MUT_IGNITE_BLOOD);
         case CLOUD_HOLY:
             return act.res_holy_energy() >= 3;
         case CLOUD_COLD:
             if (!act.is_player())
                 return act.res_cold() >= 3;
-            return you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
-                || player_equip_unrand(UNRAND_FROSTBITE);
+            return player_equip_unrand(UNRAND_FROSTBITE)
+#if TAG_MAJOR_VERSION == 34
+                   || you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
+#endif
+                   ;
         case CLOUD_MEPHITIC:
             return act.res_poison() > 0;
         case CLOUD_POISON:

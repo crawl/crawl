@@ -1731,6 +1731,7 @@ static const mutation_def mut_data[] =
   {"You feel warm-blooded.", "", ""},
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_FLAME_CLOUD_IMMUNITY, 0, 1, mutflag::good, false,
   "flame cloud immunity",
 
@@ -1746,7 +1747,6 @@ static const mutation_def mut_data[] =
   {"You feel less concerned about cold.", "", ""},
   {"", "", ""},
 },
-#if TAG_MAJOR_VERSION == 34
 
 { MUT_SUSTAIN_ATTRIBUTES, 0, 1, mutflag::good, false,
     "sustain attributes",

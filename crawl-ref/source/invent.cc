@@ -1110,10 +1110,6 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_WIELD:
         return item_is_wieldable(i);
 
-    case OBJ_SCROLLS:
-        return itype == OBJ_SCROLLS
-               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
-
     case OSEL_EVOKABLE:
         // assumes valid link...would break with evoking from floor?
         return item_is_evokable(i, true) && item_is_evokable(i, true, false);//evoke_check(i.link, true);

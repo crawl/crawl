@@ -1351,21 +1351,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             }
         }
 
-        switch (mon->type)
-        {
-            case MONS_DEEP_ELF_MASTER_ARCHER:
-                // Master archers get double ammo - archery is their only attack
-                env.item[thing_created].quantity *= 2;
-                break;
-
-            case MONS_JOSEPH:
-                env.item[thing_created].quantity += 2 + random2(7);
-                break;
-
-            default:
-                break;
-        }
-
         give_specific_item(mon, thing_created);
     }
     else
@@ -1410,7 +1395,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_SONJA:
             weap_type = MI_DART;
             brand = SPMSL_CURARE;
-            qty = random_range(4, 10);
+            qty = random_range(2, 5);
             break;
 
         case MONS_SPRIGGAN_RIDER:
@@ -1418,7 +1403,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             {
                 weap_type = MI_DART;
                 brand = SPMSL_CURARE;
-                qty = random_range(2, 8);
+                qty = random_range(1, 4);
             }
             break;
 
@@ -1444,14 +1429,11 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             qty = random_range(4, 7);
             break;
 
+        // Sprint-only.
         case MONS_CHUCK:
             weap_type  = MI_LARGE_ROCK;
-#if TAG_MAJOR_VERSION == 34
-            brand = SPMSL_RETURNING;
-            qty = 2;
-#else
-            qty = 8;
-#endif
+            brand = SPMSL_CHAOS;
+            qty = random_range(2, 4);
             break;
 
         case MONS_POLYPHEMUS:
@@ -1462,7 +1444,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_MERFOLK_JAVELINEER:
         case MONS_MINOTAUR:
             weap_type  = MI_JAVELIN;
-            qty        = random_range(9, 23, 2);
+            qty        = random_range(5, 12);
             if (one_chance_in(3))
                 level = ISPEC_GOOD_ITEM;
             break;

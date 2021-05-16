@@ -155,10 +155,8 @@ static void _gift_weapon_to_orc(monster* orc, int weapon_type)
  * Attempt to give a follower appropriate ammo.
  *
  * @param[in] orc               The orc to give ammo to.
- * @param[in] initial_gift      Whether this is starting ammo or a restock.
- * (Give more ammo when restocking than initially.)
  */
-void gift_ammo_to_orc(monster* orc, bool initial_gift)
+void gift_ammo_to_orc(monster* orc)
 {
     const item_def* launcher = orc->launcher();
 
@@ -173,9 +171,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     if (ammo.sub_type == MI_STONE)
         ammo.sub_type = MI_SLING_BULLET; // ugly special case
 
-    ammo.quantity = 30 + random2(10);
-    if (initial_gift || !launcher)
-        ammo.quantity /= 2;
+    ammo.quantity = 10 + random2(10);
 
     const item_def* old_ammo = orc->missiles();
     // don't give a drop message - it'd come before the bless message
@@ -294,7 +290,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         return ""; // ?
     }
 
-    gift_ammo_to_orc(mon, true);
+    gift_ammo_to_orc(mon);
     if (mon->missiles() == nullptr)
         dprf("Couldn't give initial ammo to follower");
     return "ranged armament";
