@@ -151,7 +151,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice one of your ",
   "sacrificed a hand",
 
-  60,
+  65,
   SK_SHIELDS,
   nullptr,
   nullptr,
