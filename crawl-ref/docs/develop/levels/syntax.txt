@@ -96,10 +96,12 @@ Items
 Monsters
 --------
  0 - normal monster
- 9 - +5 depth monster
- 8 - (+2) * 2 depth monster (aargh!).
+ 9 - random monster from placement_depth + 5 ("moderate out-of-depth")
+ 8 - random monster from (placement_depth + 2) * 2 ("super out-of-depth")
  1-7 - monster array monster. See section below on MONS: arrays for more
      information
+
+Both 8 and 9 in early dungeon (through D:8) are capped to 2 * placement_depth.
 
 H.   Header information
 =======================

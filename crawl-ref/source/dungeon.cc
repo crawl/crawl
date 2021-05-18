@@ -4981,14 +4981,17 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
     {
-        if (brdepth[mspec.place.branch] <= 1)
-            ; // no OODs here
-        else if (type == RANDOM_SUPER_OOD)
-            mspec.place.depth += 4 + mspec.place.depth;
-        else if (type == RANDOM_MODERATE_OOD)
-            mspec.place.depth += 5;
-        if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
-            mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+        // don't do OOD depth adjustment for portal branches
+        if (brdepth[mspec.place.branch] > 1)
+        {
+            if (type == RANDOM_SUPER_OOD)
+                mspec.place.depth = mspec.place.depth * 2 + 4; // TODO: why?
+            else if (type == RANDOM_MODERATE_OOD)
+                mspec.place.depth += 5;
+
+            if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
+                mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+        }
         fuzz_ood = false;
         type = RANDOM_MONSTER;
     }
