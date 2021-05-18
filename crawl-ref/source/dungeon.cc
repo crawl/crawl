@@ -4987,6 +4987,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             mspec.place.depth += 4 + mspec.place.depth;
         else if (type == RANDOM_MODERATE_OOD)
             mspec.place.depth += 5;
+        if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
+            mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
         fuzz_ood = false;
         type = RANDOM_MONSTER;
     }
