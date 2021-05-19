@@ -1398,6 +1398,53 @@ x1...1...1x
 xxx..@..xxx
 ENDMAP
 
+NAME:   dreamdust_imprisoned_elves
+TAGS:   no_monster_gen no_item_gen no_rotate no_tele_into
+ORIENT: float
+DEPTH:  Orc
+WEIGHT: 5
+KFEAT:  # = iron_grate
+KMONS:  b = deep elf blademaster perm_ench:weak
+KMONS:  k = deep elf knight perm_ench:weak
+: if crawl.coinflip() then
+# Imprisoned
+KMONS:  O = orc warlord
+KMONS:  o = orc warrior
+NSUBST: - = 10:o / *:.
+NSUBST: ? = 1:b / *:?
+NSUBST: ? = 4:k / *:?
+: dgn.delayed_decay(_G, "?", "elf corpse / elf skeleton")
+: else
+# Jailbreak!
+SUBST:  # = #.
+NSUBST: - = 1:b / *:-
+NSUBST: - = 4:k / *:-
+NSUBST: - = 10:- / *:.
+NSUBST: ? = 5:? / *:.
+: dgn.delayed_decay_extra(_G, "O", "orc corpse", "plate armour, \
+: battleaxe / dire flail / great mace / great sword / glaive")
+: dgn.delayed_decay_extra(_G, "-", "orc corpse", "chain mail, \
+: short sword / long sword / trident")
+: dgn.delayed_decay(_G, "?", "elf skeleton")
+: end
+MAP
+           ..........
+           .cccccccc.
+           .cI-O--Ic.
+           .c------c.
+............cI----Ic............
+.cccccccccccccc++cccccccccccccc.
+.c----------+------+----------c.
+.c#c#c#c#c#cc------cc#c#c#c#c#c.
+.c?c?c?c?c?cc------cc?c?c?c?c?c.
+.cccccccccccc------cccccccccccc.
+............c------c............
+           .cc....cc.
+           ..cc++cc..
+            .Ic++cI.
+            ...@@...
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #
