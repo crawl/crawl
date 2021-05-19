@@ -252,6 +252,34 @@ tt--ttt---ttt
      ttttt
 ENDMAP
 
+# Get out of his swamp!
+NAME:   dreamdust_swamp_ogre_entry
+TAGS:   swamp_entry transparent
+KFEAT:  O = enter_swamp
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 1, walk_dist = 1, spread_rate= 33 }
+MONS:   ogre perm_ench:berserk
+: dgn.delayed_decay(_G, "?","swamp worm corpse")
+TILE:   x = wall_brick_vines
+TILE:   t = dngn_mangrove
+: set_feature_name("tree", "a mangrove")
+SUBST:  ~ = WW.
+MAP
+   ttttt
+  ttttttt 
+ tttxxxttt
+ tttx?xttt
+ tt~x1x~tt
+ tt~~~~~tt
+ tt~~O~~tt
+ tt~~~~~tt
+  tt~~~tt
+  tt~~~tt
+   tt~tt
+    t@t
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -2862,6 +2890,22 @@ Zttt.K.t.2.K..tt
 ZtK....ttK...KtZ
 Ztt..Kttttt..ttZ
 ZtrrrrtZZtqqqqtZ
+ENDMAP
+
+# Get out of his swamp!
+NAME:   dreamdust_swamp_ogre_arrival
+TAGS:   transparent
+DEPTH:  Swamp:1
+MONS:   ogre perm_ench:berserk
+: dgn.delayed_decay(_G, "?","swamp worm corpse")
+TILE:   x = wall_brick_vines
+MAP
+.xxx.
+.x?x.
+.x1x.
+.....
+ ...
+  {
 ENDMAP
 
 
