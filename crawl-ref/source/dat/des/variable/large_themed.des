@@ -2344,3 +2344,68 @@ xxxx-xx..xx....xx-xxx-x
 xxxxxxxxx-x.....xxxxxxx
 xxxxxxxxxxx.@@@..xxxxxx
 ENDMAP
+
+NAME:   dreamdust_gargoyle_castle
+TAGS:   no_monster_gen no_item_gen no_rotate
+ORIENT: southwest
+DEPTH:  D:14-, Depths
+FTILE:  - = floor_pebble_lightgray
+KITEM:  $ = star_item / superb_item
+# Two variations in Dungeon
+: if you.in_branch("D") then
+	: if crawl.coinflip() then
+KMONS:  . = gargoyle / nothing w:40
+KMONS:  ! = war gargoyle / nothing w:40
+TILE:   G : dngn_statue_imp
+KFEAT:  ~ = w
+COLOUR: c = lightgrey
+TILE:   c = wall_pebble_lightgray
+        : else
+KMONS:  . = molten gargoyle / nothing w:50
+KMONS:  ! = war gargoyle / nothing w:40
+TILE:   G : dngn_statue_cerebov
+KFEAT:  ~ = l
+KFEAT:  c = v
+	:end
+: else
+# Two variations in Depths
+	: if crawl.coinflip() then
+KMONS:  . = gargoyle / war gargoyle w:5 / \
+            peacekeeper w:2 / nothing w:40
+KMONS:  ! = iron golem / nothing w:30
+TILE:   G : dngn_statue_imp
+KFEAT:  ~ = w
+COLOUR: c = lightgrey
+TILE:   c = wall_pebble_lightgray
+        : else
+KMONS:  . = molten gargoyle / war gargoyle w:3 / \
+            peacekeeper w:2 / nothing w:40
+KMONS:  ! = iron golem / nothing w:30
+TILE:   G : dngn_statue_cerebov
+KFEAT:  ~ = l
+KFEAT:  c = v
+	: end
+: end
+MAP
+xx          .@@.
+xx          .--.
+xx          G--G
+xx          .--.
+xx          G--G
+xx~~~~~~~~~~~--~~~~~~~~~~~~~
+xx~~~~~~~~~~~--~~~~~~~~~~~~~~
+xx~ccccccccc++++cccccccccc~~~
+xxcG.....................Gc~~
+xxc.ccccccccccccccccccccc.c~~
+xxc.c...+..........+$$$$c.c~~
+xxc.c...c....!!....cccccc.c~~
+xxc.+...c..........+....c.c~~
+xxccccccc+ccccccccccc...c.c~~
+xxcG------c........+....c.c~~
+xxc-ccccccc+ccccccccccccc.c~~
+xxc-cG...................Gc~~
+xx~~cccccccccccccccccccccc~~~
+xx~~~~~~~~~~~~~~~~~~~~~~~~~~
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
