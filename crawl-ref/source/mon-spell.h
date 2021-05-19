@@ -607,7 +607,7 @@ static const mon_spellbook mspell_list[] =
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {
-        { SPELL_SLUG_DART, 40, MON_SPELL_NATURAL },
+        { SPELL_SLUG_DART, 60, MON_SPELL_NATURAL },
       }
     },
 

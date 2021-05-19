@@ -1439,7 +1439,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     25,
     nullptr,
     nullptr,
-    new dicedef_calculator<2, 4, 1, 25>,
+    new dicedef_calculator<2, 3, 1, 25>,
     new tohit_calculator<14, 1, 35>,
     CYAN, // match slug's own colour
     false,
