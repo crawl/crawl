@@ -378,6 +378,32 @@ xxxxxxxxx
 @.......@
 xxxxxxxxx
 ENDMAP
+
+NAME:   dreamdust_roach_infestation
+TAGS:   no_monster_gen transparent
+DEPTH:  D:3-5
+KMONS:  ! = giant cockroach / nothing w:1
+KITEM:  ! = gold / any / nothing w:80
+KMONS:  ? = giant cockroach / nothing w:40
+KITEM:  ? = gold / any / nothing w:50
+FTILE:  - = floor_pebble_lightgray
+MAP
+   ...................
+   .xxxxx.xxxxx.xxxxx.
+   .x???x.x???x.x???x.
+   .x...x.x...x.x...x.
+   .xx+xx.xx+xx.xx+xx.
+ -----------------------
+ .xx+xx..xx+++xx..xx+xx.
+ .x...x.xx!!!!!xx.x...x.
+ .x???x.x!!!!!!!x.x???x.
+ .xxxxx.x!!!!!!!x.xxxxx.
+ .......x!!!!!!!x.......
+       .xxxxxxxxx.
+       ...........
+ENDMAP
+
+
 ###############################################################################
 #
 # <<2>> Vertebrae
