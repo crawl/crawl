@@ -4820,6 +4820,99 @@ MAP
 .cccccccccc
 ENDMAP
 
+NAME:   dreamdust_venomous_pit
+TAGS:   no_monster_gen no_item_gen
+TAGS:   no_rotate no_vmirror
+ORIENT: float
+DEPTH:  D:5-8
+WEIGHT: 5
+TILE:   x = wall_snake
+FTILE:  .!? = floor_snake_a
+# Skeletons and loot at the bottom of the pit
+: dgn.delayed_decay_extra(_G, "?", "rat skeleton / quokka skeleton / \
+: goblin skeleton / hobgoblin skeleton / kobold skeleton / orc skeleton / \
+: gnoll skeleton / human skeleton", "gold / any w:20")
+# Decide which species is in the pit
+: if crawl.coinflip() then
+KMONS:  !? = adder / nothing
+: else
+KMONS:  !? = scorpion / nothing
+: end
+MAP
+ x@@x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+ x..x
+xx..xx
+x....x
+x!!!!x
+x!!!!x
+x????x
+xx??xx
+ xxxx
+ENDMAP
+
+# A wizard or a witch is trying to concoct gu poison.
+# https://en.wikipedia.org/wiki/Gu_(poison)
+# So far they've only succeeded in creating a demonic crawler.
+NAME:   dreamdust_gu_poison
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:12-, Swamp
+ORIENT: float
+WEIGHT: 5
+MARKER: 1 = lua:fog_machine { cloud_type = "poison gas", pow_min = 5, \
+                pow_max = 30, delay = 30, size = 2, walk_dist = 2 }
+KMONS:  1 = demonic crawler
+KMONS:  p = withered plant
+TILE:   x = wall_brick_vines
+SUBST:  - = -.
+: dgn.delayed_decay(_G,"-","scorpion corpse / hornet corpse / redback corpse")
+: if you.in_branch("D") then
+	: if crawl.coinflip() then
+KMONS:  2 = wizard ; staff of poison | Young Poisoner's Handbook
+	: else
+# The foolish wizard went in to check the result...
+: dgn.delayed_decay_extra(_G,"?","wizard corpse","staff of poison / \
+: Young Poisoner's Handbook")
+KMONS:  2 = nothing
+	: end
+: else
+# In the Swamp
+KMONS:  2 = fenstrider witch ; Young Poisoner's Handbook . \
+            Fen Folio | nothing w:20
+: end
+MAP
+  .....
+ .xxxxx.
+ .x---x.
+ .x---x.
+ .x-1-x.
+ .x---x.
+ .x---x.
+ .xx?xx.
+ ..x+x..
+ .xxAxx.
+ .xp2px.
+ .x...x.
+ .xx+xx.
+  .p@p.
+ENDMAP
+
 
 ###############################################################################
 #
