@@ -1541,7 +1541,6 @@ bool spell_no_hostile_in_range(spell_type spell)
         return false;
 
     case SPELL_CHAIN_LIGHTNING:
-    case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
@@ -1597,6 +1596,10 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_MANIFOLD_ASSAULT:
          return cast_manifold_assault(-1, false, false) == spret::abort;
+
+    case SPELL_OZOCUBUS_REFRIGERATION:
+         return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
+             == spret::abort;
 
     default:
         break;

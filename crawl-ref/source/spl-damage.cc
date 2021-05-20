@@ -505,7 +505,7 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
         set_attack_conducts(conducts, target, you.can_see(target));
 
     int hurted = actual ? beam.damage.roll()
-                        // Monsters use the average for foe calculations.
+                        // Tracers use the average for damage calculations.
                         : (1 + beam.damage.num * beam.damage.size) / 2;
     hurted = mons_adjust_flavoured(&target, beam, hurted,
                  // Drain life doesn't apply drain effects.
@@ -539,6 +539,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                                          const actor* agent, bool actual,
                                          bool fail, int* damage_done)
 {
+    const bool player_caster = agent && agent->is_player();
     const monster* mons = agent ? agent->as_monster() : nullptr;
 
     const zap_type zap = spell_to_zap(spell);
@@ -566,8 +567,10 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             verb = "frozen";
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
-                return (act != caster || act->res_cold() < 3)
-                       && !god_protects(caster, act->as_monster());
+                return (act != caster
+                        // Player's don't get immunity with rC+++.
+                        && (act->is_player() || act->res_cold() < 3))
+                        && !god_protects(caster, act->as_monster());
             };
             break;
 
@@ -604,41 +607,41 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         return (*vulnerable)(&you, act);
     };
 
-    if (agent && agent->is_player())
+    if (actual)
     {
-        ASSERT(actual);
-
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        // Singing Sword's spell shouldn't give a prompt at this time.
-        if (spell != SPELL_SONIC_WAVE)
+        if (player_caster)
         {
-            if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc))
-                return spret::abort;
+            targeter_radius hitfunc(&you, LOS_NO_TRANS);
+            // Singing Sword's spell shouldn't give a prompt at this time.
+            if (spell != SPELL_SONIC_WAVE)
+            {
+                if (stop_attack_prompt(hitfunc, prompt_verb, vul_hitfunc))
+                    return spret::abort;
 
-            fail_check();
+                fail_check();
+            }
+
+            mpr(player_msg);
+            flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+
+            if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+            {
+                mpr("You feel very cold.");
+                you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+            }
         }
-
-        mpr(player_msg);
-        flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
-
-        // No self damage from ozo's, but we do get -Potion
-        if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+        else
         {
-            mpr("You feel very cold.");
-            you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
-        }
-    }
-    else if (actual)
-    {
-        if (!agent)
-            mpr(global_msg);
-        else if (you.can_see(*agent))
-            simple_monster_message(*mons, mons_vis_msg);
-        else if (you.see_cell(agent->pos()))
-            mpr(mons_invis_msg);
+            if (!agent)
+                mpr(global_msg);
+            else if (you.can_see(*agent))
+                simple_monster_message(*mons, mons_vis_msg);
+            else if (you.see_cell(agent->pos()))
+                mpr(mons_invis_msg);
 
-        if (!agent || you.see_cell(agent->pos()))
-            flash_view_delay(UA_MONSTER, beam.colour, 300);
+            if (!agent || you.see_cell(agent->pos()))
+                flash_view_delay(UA_MONSTER, beam.colour, 300);
+        }
     }
 
     bool affects_you = false;
@@ -713,8 +716,11 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     if (damage_done)
         *damage_done = total_damage;
 
-    if (actual)
+    // Players checking whether to cast will do so if the tracer did any
+    // damage.
+    if (actual || player_caster && total_damage > 0)
         return spret::success;
+
     return mons_should_fire(beam) ? spret::success : spret::abort;
 }
 
