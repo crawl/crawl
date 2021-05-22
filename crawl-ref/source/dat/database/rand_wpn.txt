@@ -1506,8 +1506,6 @@ Arbiter
 
 Arcanum
 
-Banisher
-
 Concordance
 
 Conservator
