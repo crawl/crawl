@@ -2751,7 +2751,8 @@ void mons_load_spells(monster& mon)
     for (const mon_spellbook &spbook : mspell_list)
         if (spbook.type == book)
         {
-            mon.spells = spbook.spells;
+            mon.spells.insert(mon.spells.end(),
+                                spbook.spells.begin(), spbook.spells.end());
             break;
         }
 }
