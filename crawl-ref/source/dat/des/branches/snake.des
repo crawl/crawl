@@ -512,6 +512,399 @@ xx....xx..........xxx.........xxx.........xx...x
           xxxxxxx     xxxxxxx     xxxxxxx     xxxxx
 ENDMAP
 
+NAME:    nicolae_snake_serpentine_bazaar
+TAGS:    no_pool_fixup transparent
+KFEAT:   a = weapon shop
+KFEAT:   p = armour shop
+KFEAT:   q = antiques shop
+KFEAT:   r = jewellery shop
+KFEAT:   s = distillery shop
+KFEAT:   y = scroll shop
+KFEAT:   z = general shop
+KFEAT:   - = abandoned_shop
+# Odds of X non-abandoned shops: 3 = 3/8 ; 4 = 3/8 ; 5 = 3/16 ; 6 = 1/16
+SHUFFLE: DEF
+SUBST:   F : FSSS, S : GGGtTU, Z : GGGtTU
+NSUBST:  DEF = a / p / q / r / s / y
+SHUFFLE: apqrsyz-
+MAP
+    ............
+    ..xxxxxxxx..
+    .xxxxxxxxxx.
+    ........Zxx.
+.............xx.....
+..xxxxxxxx...xxxxx..
+.xxxxxxxxxx...xxxxx.
+.xxF....Dxx.....Exx.
+.xx......x.......xx.
+.xx..ww......ww..xx.
+.xx..ww......ww..xx.
+.xx.......x......xx.
+.xxE.....xxD....Fxx.
+.xxxxx...xxxxxxxxxx.
+..xxxxx...xxxxxxxx..
+.....xx.............
+    .xxZ........
+    .xxxxxxxxxx.
+    ..xxxxxxxx..
+    ............
+ENDMAP
+
+NAME:  nicolae_snake_slithery_corners
+TAGS:  extra transparent
+SUBST: D : TGG., E : TGG., F : TGG.
+MAP
+     ccc
+c@@@ccccc@@@cc
+c...ccccc...cccc
+c...ccccc...ccccc
+c....ccc....cccccc
+cc....c....ccccccc
+ccc...c...ccccccccc
+ccc..DcF..ccccccccc
+ccc...c...ccccc...@
+cc....c....ccc....@
+c....ccc..........@
+c...cccc........ccc
+cE..cccccc..F..ccccc
+c...cccccccccccccccc
+c....ccccc..D..ccccc
+cc....ccc.......ccc
+ c................@
+ cc........ccc....@
+  ccc..E..ccccc...@
+    ccccccccccccccc
+ENDMAP
+
+NAME:  nicolae_snake_slithery_hallway
+TAGS:  extra transparent
+SUBST: D : TGG., E : TGG., F : TGG.
+MAP
+  cccccccccccccccccccccccccccccccccc
+ cc..F..ccccc..D..ccccc..E..ccccc..@
+cc.......ccc.......ccc.......ccc...@
+@..................................@
+@...ccc.......ccc.......ccc.......cc
+@..ccccc..E..ccccc..D..ccccc..F..cc
+cccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   nicolae_snake_snake_lake
+TAGS:   extra transparent
+KMONS:  1 = plant
+KFEAT:  1 = . w:40 / W
+NSUBST: t = . / t
+SUBST:  ' = 1 W .:60, t = t:80 1 . W:5
+MAP
+         .......   .......   .......
+        .............................
+    .....ttttttt...ttttttt...ttttttt..
+   .....tt'''''tt.tt'''''tt.tt'''''tt..
+  ..ttttt'''''''ttt'''''''ttt'''''''tt..
+ ..tt'''''wwwww'''''wwwww'''''wwww'''t..
+..tt'''''wwwwwww'''wwwwwww'''wwwwww''t..
+..t'''wwwwwwwwwwwwwwwwwwwwwwwwwwwww''t..
+..t''wwwwwwwwwwwwwwwwwwwwwwwwwwwww'''t..
+..t''wwwwww'''wwwwwww'''wwwwwww'''''tt..
+..t'''wwww''''.wwwww'''''wwwww'''''tt..
+..tt'''''''ttt'''''''ttt'''''''ttttt..
+ ..tt'''''tt.tt'''''tt.tt'''''tt.....
+  ..ttttttt...ttttttt...ttttttt.....
+   .............................
+    .......   .......   .......
+ENDMAP
+
+# Although sometimes it's not a hallway.
+NAME:  nicolae_snake_yet_another_twisty_hallway
+TAGS:  extra transparent
+: if crawl.one_chance_in(5) then
+SUBST: x = -, . = x, @- = .
+: end
+SUBST: x : x:50 c:30 b, ' = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+@'........xxx.....xxx...........xx
+@..........x.......x.............x
+xxxxxxxxx..x..xxx..x..xxxxxxxxx..x
+xx....xxx..x..xxx..x..xx....xxx..x
+x......xx..x..xx...x..x......xx..x
+x..xx......x..x...xx..x..xx......x
+x..xxx....xx..x..xxx..x..xxx....xx
+x..xxxxxxxxx..x..xxx..x..xxxxxxxxx
+x.............x.......x..........@
+xx...........xxx.....xxx........'@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Gridmaze is a series of decor vaults inspired by the layout_grid_maze variant
+# that have two-block-thick walls with rounded corners. The cleared notches
+# around the outside edge give opportunities to connect up with the walls in
+# the rest of the level.
+
+NAME:    nicolae_snake_gridmaze_big_u
+TAGS:    extra transparent
+SHUFFLE: DEFHJ, KL/MN, KL, OPQRSZ, apqrsy, z-
+SUBST:   DEFHKMz = x, JLNPQRSZpqrsy- = ., Oa = _
+CLEAR:   _
+MAP
+.....OO..........yy.....
+..xxxxxxxx----xxxxxxxx..
+.xxxxxxxxxx--xxxxxxxxxx.
+.xx......zz..zz......xx.
+.xx......zz..zz......xx.
+Pxx...x..zx--xxxxx...xxs
+Pxx..xx..xx---xxxxx..xxs
+.xx..xx..xx......xx..xx.
+.xx..xx..xx......xx..xx.
+.xx..xxLLxx..xNNNxx..xx.
+.xx..KxLLxK..MxNNxM..xx.
+Qxx..KK..KK..MM..MM..xxr
+Qxx..KK..KK..MM..MM..xxr
+.xx..KxLLxxxxxxNNxM..xx.
+.xx..xxLLLxxxxNNNxx..xx.
+.xx..xx..........xx..xx.
+.xx..xx..........xx..xx.
+Rxx..xxxxxxxxxxxxxx..xxq
+Rxx...xxxxxxxxxxxx...xxq
+.xx..................xx.
+.xx..................xx.
+.xxJJJHHHHFFFFEEEEDDDxx.
+..xJJxxHHxxFFxxEExxDDx..
+.....SS..ZZ..aa..pp.....
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_entwining
+TAGS:    extra transparent
+SHUFFLE: DE/FH, DE, JK, LM, NOPQRSZap
+SUBST:   HDJL = x, FEKMOPQRSZap = ., N = _
+CLEAR:   _
+MAP
+...PP..QQ..RR..SS..ZZ...
+..xxxxxxxxxxxxxxxxxxxx..
+.xxxxxxxxxxxxxxxxxxxxxx.
+Oxx..................xxa
+Oxx..................xxa
+.xx...xxxxDDDDxxxxL..xx.
+.xx..xxxxxxDDxxxxxM..xx.
+Nxx..xx..EE..EE..MM..xxp
+Nxx..xx..EE..EE..MM..xxp
+.xxxxxx..ExDDxE..MxLLxx.
+..xxxx...xxDDxx..xLLLLM.
+.........xx..xx.........
+.........xx..xx.........
+.KJJJJx..xxFFxx...xxxx..
+.xxJJxK..HxFFxH..xxxxxx.
+pxx..KK..HH..HH..xx..xxN
+pxx..KK..HH..HH..xx..xxN
+.xx..KxxxxxFFxxxxxx..xx.
+.xx..JxxxxFFFFxxxx...xx.
+axx..................xxO
+axx..................xxO
+.xxxxxxxxxxxxxxxxxxxxxx.
+..xxxxxxxxxxxxxxxxxxxx..
+...ZZ..SS..RR..QQ..PP...
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_spiral
+TAGS:    extra transparent
+SHUFFLE: DE/FH/JK/LM/pq, DE, NO, PQRSZa
+SUBST:   DFJLNp = x, EHKMOQRSZaq = ., P = _
+CLEAR:   _
+MAP
+.................PP.....
+.qxqqqxxxxLLLLxxxxxxxx..
+.pxqqxxxxxxLLxxxxxxxxxx.
+.pp..pp..MM..MM......xx.
+.pp..pp..MM..MM......xx.
+.pxqqxp..MxLLxxxxx...xxQ
+.xxqqxx..xxLLLxxxxx..xxQ
+.xx..xx..xx......xx..xx.
+.xx..xx..xx......xx..xx.
+.xxEExx..xxOOON..xxKKxx.
+.DxEExD..NxOOxx..JxKKxJ.
+.DD..DD..NN..xx..JJ..JJ.
+.DD..DD..NN..xx..JJ..JJ.
+.DxEExD..Nxxxxx..JxKKxJ.
+.xxEExx..Oxxxx...xxKKxx.
+.xx..xx..........xx..xx.
+.xx..xx..........xx..xx.
+axx..xxxxxFFFFxxxxx..xxR
+axx...xxxxxFFxxxxx...xxR
+.xx......HH..HH......xx.
+.xx......HH..HH......xx.
+.xxxxxxxxxxFFxxxxxxxxxx.
+..xxxxxxxxFFFFxxxxxxxx..
+.....ZZ..........SS.....
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_squiggle
+TAGS:    extra transparent
+: if crawl.one_chance_in(3) then
+SUBST:   DHK = x, EFJ = .
+: elseif crawl.coinflip() then
+SUBST:   EHJ = x, DFK = .
+: else
+SUBST:   FJK = x, DEH = .
+: end
+SHUFFLE: LMNOPQRSZ
+SUBST:   L = _, MNOPQRSZ = .
+CLEAR:   _
+MAP
+...NN......OO......PP...
+..xxxx....xxxx....xxxx..
+.xxxxxx..xxxxxx..xxxxxx.
+Mxx..xx..xx..xx..xx..xxQ
+Mxx..xx..xx..xx..xx..xxQ
+.xx..xxxxxx..xxxxxx..xx.
+.xx...xxxx....xxxx...xx.
+Lxx..................xxR
+Lxx..................xxR
+.xxx...EKKKKH...xxxxxxx.
+..xxx..xxKKxJ..xxxxxxx..
+.......HH..JJ..xx.......
+.......HH..JJ..xx.......
+..xxxxxxx..Jxxxxx..xxx..
+.xxxxxxx...Dxxxx....xxx.
+Rxx..................xxL
+Rxx..................xxL
+.xx...xxxx....xxxx...xx.
+.xx..xxxxxx..xxxxxx..xx.
+Qxx..xx..xx..xx..xx..xxM
+Qxx..xx..xx..xx..xx..xxM
+.xxxxxx..xxxxxx..xxxxxx.
+..xxxx....xxxx....xxxx..
+...PP......OO......NN...
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_swirls
+TAGS:    extra transparent
+SHUFFLE: DE, FH, JKLMNO
+SUBST:   DF = x, EHKLMNO = ., J = _
+CLEAR:   _
+MAP
+...NN..............MM...
+..xxxxxxxx...xxxxxxxxx..
+.xxxxxxxxxx...xxxxxxxxx.
+Oxx......xx..........xxL
+Oxx......xx..........xxL
+.xxxxx...xxHHHxxxx...xx.
+..xxxxx..FxHHxxxxxx..xx.
+.....xx..FF......xx..xxK
+.....xx..FF......xx..xxK
+..xxxxx..Fxxxxxxxxx..xx.
+.xxxxx...Hxxxxxxxx...xx.
+Jxx..................xxJ
+Jxx..................xxJ
+.xx...xxxxxxxxE...xxxxx.
+.xx..xxxxxxxxxD..xxxxx..
+Kxx..xx......DD..xx.....
+Kxx..xx......DD..xx.....
+.xx..xxxxxxEExD..xxxxx..
+.xx...xxxxEEExx...xxxxx.
+Lxx..........xx......xxO
+Lxx..........xx......xxO
+.xxxxxxxxx...xxxxxxxxxx.
+..xxxxxxxxx...xxxxxxxx..
+...MM..............NN...
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_tees
+TAGS:    extra transparent
+SHUFFLE: DE, FH, JK, LM, NOPQRSZ
+SUBST:   DFJL = x, EHKMOPQRSZ = ., N = _
+CLEAR:   _
+MAP
+...RR......QQ......PP...
+..xxxxxxxxxxxxxMMMxxxx..
+.xxxxxxxxxxxxxMMMxxxxxx.
+Sxx..............LL..xxO
+Sxx..............LL..xxO
+.xxxxx....xxxxxxxxL..xx.
+..xxxxx..xxxxxxxxxM..xx.
+.....xx..xx..........xxN
+.....xx..xx..........xxN
+.DEEExx..xxxxxxxxxH..xx.
+.xxEExD...xxxxxxxxF..xx.
+Zxx..DD..........FF..xxZ
+Zxx..DD..........FF..xxZ
+.xx..Dxxxxxxxx...FxHHxx.
+.xx..Exxxxxxxxx..xxHHHF.
+Nxx..........xx..xx.....
+Nxx..........xx..xx.....
+.xx..Kxxxxxxxxx..xxxxx..
+.xx..Jxxxxxxxx....xxxxx.
+Oxx..JJ..............xxS
+Oxx..JJ..............xxS
+.xxxxxxKKKxxxxxxxxxxxxx.
+..xxxxKKKxxxxxxxxxxxxx..
+...PP......QQ......RR...
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_waves
+TAGS:    extra transparent
+SHUFFLE: DE, FH, JKLMNOPQ
+SUBST:   DF = x, EHKLMNOPQ = ., J = _
+CLEAR:   _
+MAP
+...NN......OO......PP...
+..xxxxH...xxxx....xxxx..
+.xxxxxF..xxxxxx..xxxxxx.
+.xx..FF..xx..xx..xx..xx.
+.xx..FF..xx..xx..xx..xx.
+.xxHHxxxxxx..xxxxxx..xx.
+.FHHHHxxxx....xxxx...xx.
+.....................xxQ
+.....................xxQ
+..xxxxx.....xxxxx....xx.
+.xxxxxxx...xxxxxxx...xx.
+.xx...xx...xx...xx...xx.
+.xx...xx...xx...xx...xx.
+.xx...xxxxxxx...xxDDDxx.
+.xx....xxxxx....EDDDDxE.
+Mxx..................EE.
+Mxx..................EE.
+.xx...xxxx....xxxx...Ex.
+.xx..xxxxxx..xxxxxx..xx.
+.xx..xx..xx..xx..xx..xx.
+.xx..xx..xx..xx..xx..xx.
+.xxxxxx..xxxxxx..xxxxxx.
+..xxxx....xxxx....xxxx..
+...LL......KK......JJ...
+ENDMAP
+
+NAME:    nicolae_snake_gridmaze_zigzag
+TAGS:    extra transparent
+SHUFFLE: DE, FH, JK, LMNOP
+SUBST:   DFJ = x, EHKMNOP = ., L = _
+CLEAR:   _
+MAP
+.....LL..........MM.....
+..xxxxxxxx....xxxxxxxx..
+.xxxxxxxxxx..xxxxxxxxxx.
+Pxx......xx..xx......xxN
+Pxx......xx..xx......xxN
+.xxHHxH..xxxxxx...xxxxx.
+.FxHHxF...xxxx...xxxxx..
+.FF..FF..........xx.....
+.FF..FF..........xx.....
+.FxHHxxxxxKKKKxxxxx...xO
+.xxHHHxxxxxKKxxxxx...xxO
+.xx......JJ..JJ......xx.
+.xx......JJ..JJ......xx.
+Oxx...xxxxxKKxxxxxEEExx.
+Ox...xxxxxKKKKxxxxxEExD.
+.....xx..........DD..DD.
+.....xx..........DD..DD.
+..xxxxx...xxxx...DxEExD.
+.xxxxx...xxxxxx..ExEExx.
+Nxx......xx..xx......xxP
+Nxx......xx..xx......xxP
+.xxxxxxxxxx..xxxxxxxxxx.
+..xxxxxxxx....xxxxxxxx..
+.....MM..........LL.....
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.
@@ -979,6 +1372,612 @@ MAP
 .ccAcc.ccAcc.
 ..ccc...ccc..
 ......@......
+ENDMAP
+
+NAME:    nicolae_snake_attic_fulla_snakes
+DEPTH:   Snake, !Snake:$
+ORIENT:  northeast
+KITEM:   2 = *
+KITEM:   3 = |
+KITEM:   4 = $
+KMONS:   123 = anaconda / black mamba / shock serpent / mana viper / \
+         sea snake / water moccasin
+KMONS:   4 = guardian serpent
+SUBST:   ' = 1 .:25
+SHUFFLE: }])
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx'''''xxxxxxxxxxxxx.4%%*x
+xxxxxxxx'''''''''xxxxxxxxx''.4%*|x
+xxxxxxx'''''''''''xxxxxxx'''.4%%*x
+xxxxx.'''''xxx''''''xxx'''''.xxxxx
+x.....'''xxxxxxx'''''''''''xxxxxxx
+x.}...''xxxxxxxxx'''''''''xxxxxxxx
+x.....xxxxxxxxxxxxx'''''xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:   nicolae_snake_boneroom
+TAGS:   transparent
+MONS:   naga ritualist band / naga sharpshooter band / naga warrior band \
+        / naga mage band / nagaraja w:5
+NSUBST: E = . / 1, F = . / 1, q = | / 2=* / 3=% / $.
+MAP
+xxx+xxxxxxxxxxxxxxxxxxxxxxx
+xcc.ccccccccccccccccccccccx
+xcc.ccc.c.c.c.c.c.c.c.c.ccx
+xc...c...................cx
+xcc.ccc.E.c.c..E..c.c.E.ccx
+xc...c....ccc.....ccc....cx
+xcc.ccc.ccc.ccc.cccqccc.ccx
+xc...cq.qc...c...cq.qc...cx
+xcc.ccc.ccc.c+c.ccc.ccc.ccx
+xc...cq.qc...c...cq.qc...cx
+xcc.cccqccc.ccc.ccc.ccc.ccx
+xc....ccc.....ccc....c...cx
+xcc.F.c.c..F..c.c.F.ccc.ccx
+xc...................c...cx
+xcc.c.c.c.c.c.c.c.c.ccc.ccx
+xcccccccccccccccccccccc.ccx
+xxxxxxxxxxxxxxxxxxxxxxx+xxx
+ENDMAP
+
+NAME:   nicolae_snake_bzzzt
+KMONS:  1 = electric eel
+KMONS:  2 = shock serpent
+KFEAT:  1 = w
+SUBST:  S = w', E = x'
+NSUBST: w = 2=1 / 4=1www / w, ' = 2=2 / 4=2... / .
+MAP
+   xxxxxxx
+  xxwwwwwxx
+ xxwwSSSwwxx
+xxwwSS'SSwwxx
+xwwSS'''SSSwx
+@..''EEE''Swx
+@..''EEE''Swx
+xwwSS'''SSSwx
+xxwwSS'SSwwxx
+ xxwwSSSwwxx
+  xxwwwwwxx
+   xxxxxxx
+ENDMAP
+
+NAME: nicolae_snake_coiling_death
+TAGS: transparent
+MONS: naga sharpshooter band
+MONS: naga warrior band / naga mage band / naga ritualist band
+MAP
+       cccc  cccc  cccc
+      cc..cccc..cccc..cc
+    ..c....cc....cc....c
+   ..c.....c.....c.....c.
+  ..c.....c.....c.....c..
+@..c..2..c..1..c..2..c..@
+..c.....c.....c.....c..
+.c.....c.....c.....c..
+ c....cc....cc....c..
+ cc..cccc..cccc..cc
+  cccc  cccc  cccc
+ENDMAP
+
+NAME:    nicolae_snake_crotalidae_crossing
+TAGS:    transparent
+ORIENT:  float
+KMONS:   0 = 0 / 0 band
+: if you.depth() == 1 then
+SUBST:   S = )}]
+: elseif you.depth_fraction() < 1 then
+SUBST:   S = (){}[]
+: else
+SUBST:   S = ({[
+: end
+SHUFFLE: DE
+SUBST:   D = c, E = ., 0 = 00.
+MAP
+@.0.cc                 cc.0.@
+.....cc               cc.....
+0.cE..cc             cc..cc.0
+..cE...cc           cc..DEE..
+c..DcE..cc         cc...c...c
+cc...Dc..cc       cc...DE..cc
+ cc...ED..cc     cc...Ec..cc
+  cc...c...cc   cc..EcD..cc
+   cc..ED...cc cc..cD...cc
+    cc..cE...ccc..DE...cc
+     cc..DcE..c...c...cc
+      cc...Dc...DDE..cc
+       cc..Dc.0.cc..cc
+        cc.........cc
+         cc.0.S.0.cc
+        cc.........cc
+       cc..cc.0.cD..cc
+      cc..EDD...cD...cc
+     cc...c...c..EcD..cc
+    cc...ED..ccc...Ec..cc
+   cc...Dc..cc cc...DE..cc
+  cc..DcE..cc   cc...c...cc
+ cc..cE...cc     cc..DE...cc
+cc..ED...cc       cc..cD...cc
+c...c...cc         cc..EcD..c
+..EED..cc           cc...Ec..
+0.cc..cc             cc..Ec.0
+.....cc               cc.....
+@.0.cc                 cc.0.@
+ENDMAP
+
+NAME:   nicolae_snake_dead_anacondas
+TAGS:   no_pool_fixup transparent no_monster_gen patrolling
+KMONS:  1 = anaconda skeleton / anaconda zombie
+KMONS:  2 = anaconda skeleton w:5 / anaconda zombie w:5 / spectral anaconda \
+        / anaconda simulacrum
+KFEAT:  2 = W / . w:30
+NSUBST: D = 2=% / 2=* / *| / -'
+# About 18.5 snek on-average.
+SUBST:  ' = 2:40 W .:50, - = xwW.
+MAP
+  xxxxxxx
+ xxxxxxxxx..@
+xxxDDD--xx...x
+xxDD''''-xx1.x
+xxD''''''.+..x
+xxD''''''-xxxx
+xxD''''''-xxxx
+xxD''''''.+..x
+xxDD''''-xx1.x
+xxxDDD--xx...x
+ xxxxxxxxx..@
+  xxxxxxx
+ENDMAP
+
+NAME:    nicolae_snake_ghostly_warrior_ritual
+TAGS:    patrolling transparent
+MONS:    naga ritualist / naga mage, naga warrior
+MONS:    phantasmal warrior / spectral naga warrior w:3
+SUBST:   D : bc, E : bc
+NSUBST:  F = 3=2 / 3=3 / 23
+MAP
+..............
+......EE......
+..DDWWEEWWDD..
+..DD......DD..
+..W..F.F...W..
+..W......F.W..
+.EE.F.1....EE.
+.EE......F.EE.
+..W.F......W..
+..W...F.F..W..
+..DD......DD..
+..DDWWEEWWDD..
+......EE......
+..............
+ENDMAP
+
+NAME:   nicolae_snake_guarding_the_ruins
+TAGS:   patrolling transparent
+MONS:   naga / salamander / nothing w:5, naga warrior band
+NSUBST: D = . / x, E = . / x, F = . / x, H = . / x, J = . / x, K = . / x, \
+        L = . / x, M = . / x, N = . / x, O = . / x, P = . / x, Q = . / x
+SUBST:  x = x:30 .
+MAP
+cc...........cc
+ccDDDcJJJcEEEcc
+.D...J...J...E.
+.D.1.J.1.J.1.E.
+.D...J...J...E.
+.cMMMcNNNcKKKc.
+.M...Q...O...K.
+.M.1.Q.2.O.1.K.
+.M...Q...O...K.
+.cMMMcPPPcKKKc.
+.H...L...L...F.
+.H.1.L.1.L.1.F.
+.H...L...L...F.
+ccHHHcLLLcFFFcc
+cc...........cc
+ENDMAP
+
+# Noun, herptile (plural herptiles)
+# 1. (zoology, chiefly ecology) A reptile or amphibian.
+# - Wiktionary
+NAME:   nicolae_snake_herptile_family_reunion
+TAGS:   no_pool_fixup patrolling transparent
+MONS:   anaconda / black mamba / shock serpent / mana viper / sea snake / \
+        guardian serpent
+MONS:   goliath frog, alligator, snapping turtle, alligator snapping turtle
+MONS:   hydra
+NSUBST: D = 2 / 3 / 4 / 5 / E.
+SUBST:  - = x:25 .:25 w W E:5, E = 1:80 2345 .:80
+MAP
+                xxxxxxxx
+            xxxxxx----xxxxxx
+        xxxxxxxxx-..D.-xxxxxxxxx
+    xxxxxxxxxxxxx-.--.-xxxxxxxxxxxxx
+xxxxxx----xxxxxx-..xx..-xxxxxx----xxxxxx
+xxx---....---xxx-DxxxxD-xxx---....---xxx
+x--...E..E...--x-.-xx-.-x--...E..E...--x
+-.E.x-....-x.D.-.E.--...-.D.x-....-x.E.-
+..-xxx----xxx-.....--.6...-xxx----xxx-.@
+@.-xxx----xxx-...6.--.....-xxx----xxx-..
+-.E.x-....-x.D.-...--.E.-.D.x-....-x.E.-
+x--...E..E...--x-.-xx-.-x--...E..E...--x
+xxx---....---xxx-DxxxxD-xxx---....---xxx
+xxxxxx----xxxxxx-..xx..-xxxxxx----xxxxxx
+    xxxxxxxxxxxxx-.--.-xxxxxxxxxxxxx
+        xxxxxxxxx-.D..-xxxxxxxxx
+            xxxxxx----xxxxxx
+                xxxxxxxx
+ENDMAP
+
+NAME:    nicolae_snake_mages_go_home
+TAGS:    transparent
+MONS:    mana viper
+MONS:    naga w:20 ; any weapon ego:antimagic / \
+            naga warrior ; any weapon ego:antimagic / \
+            salamander ; any weapon ego:antimagic
+SHUFFLE: DE/FH
+SUBST:   M = 1:30 2:5 .:80, N = 2:30 1:5 .:80
+SUBST:   D = c, E = %:30 *:20 .:40, FH = .:100 1 2
+MAP
+  xxxbbb@@@bbbxxx
+ xxbbbM.N.N.Mbbbxx
+xxbb.M.N.N.N.M.bbxx
+xbbE..MFFFFFM..Ebbx
+xbDDDDD.HFH.DDDDDbx
+xbE.M.N.HFH.N.M.Ebx
+xbEM.N.NHFHN.N.MEbx
+xbE.M.N.HFH.N.M.Ebx
+xbDDDDD.HFH.DDDDDbx
+xbbE..MFFFFFM..Ebbx
+xxbb.M.N.N.N.M.bbxx
+ xxbbbM.N.N.Mbbbxx
+  xxxbbb@@@bbbxxx
+ENDMAP
+
+NAME:    nicolae_snake_magic_snake_eye
+TAGS:    patrolling transparent
+ITEM:    any book, any wand / any magical staff, any jewellery / any wand
+ITEM:    any scroll, any potion
+MONS:    naga mage / naga ritualist / naga sharpshooter / salamander mystic
+MONS:    nagaraja / salamander tyrant
+MONS:    naga mage band / naga ritualist band / naga sharpshooter band / \
+         salamander mystic band
+SHUFFLE: dD / eE / fF / gG, gG / hH
+SUBST:   D = ., E = ., F = ., G = g.., H = h..
+NSUBST:  J = 1 / 2=1.. / 3 / ., K = 2=1 / 2=1.. / 2 / 3 / .
+NSUBST:  L = 2=1 / 2=1.. / 2 / 3 / .
+MAP
+xxxxxxx       xxxxxxx
+xxxxxccccc+cccccxxxxx
+xxxxcc.Ddc.ceE.ccxxxx
+xxxcc.KDcc.ccEL.ccxxx
+xxcc....c...c....ccxx
+xxc..K.cc.J.cc.L..cxx
+xcc....c.....c....ccx
+xc..K..c..J..c..L..cx
+xc.....c.....c.....cx
+xc..K..+..J..+..L..cx
+xc.....c.....c.....cx
+xc..K..c..J..c..L..cx
+xcc....c.....c....ccx
+xxc..K.cc.J.cc.L..cxx
+xxcc....c...c....ccxx
+xxxcc.KFcc.ccGL.ccxxx
+xxxxcc.Ffc.cgG.ccxxxx
+xxxxxccccc+cccccxxxxx
+xxxxxxx       xxxxxxx
+ENDMAP
+
+NAME:   nicolae_snake_naga_rites
+TAGS:   patrolling transparent
+KMONS:  1* = black mamba w:15 / mana viper / anaconda w:5
+KMONS:  2 = naga ritualist
+KMONS:  3 = naga ritualist band
+KITEM:  2 = |
+KITEM:  * = *
+# Seven 1s on-average.
+SUBST:  S = 2...
+MAP
+ xxxxxxxxxxxxx
+ xxxxxcccccxxx
+ xxxxxcSSScxxx
+ xxxccc.c.cccxxxxxxxxxxxxx
+xxxxcS..S..Scccccccccxxxxx
+.Gccc.cScSc.ccc1...1cccccx
+..c...S.S.S..Sc.....c%**cx
+@.+.cScSc1cScS+..3..+%*2cx
+..c...S.S.S..Sc.....c%**cx
+.Gccc.cScSc.ccc1...1cccccx
+xxxxcS..S..Scccccccccxxxxx
+ xxxccc.c.cccxxxxxxxxxxxxx
+ xxxxxcSSScxxx
+ xxxxxcccccxxx
+ xxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_snake_omega
+TAGS:    no_pool_fixup transparent
+# It is intentional that sometimes the front doors merge into a big 1x4 door.
+SHUFFLE: MNO
+SUBST:   D : GTUw%0., E : GTUw%0., F : GTUw%0., H : GTUw%0., J : GTUw%0.
+SUBST:   M : +, N : 0, O : ., 0 = 0009., 9 = 9998., % = %:70 *:30 .:20 |
+SUBST:   w : w:50 l
+MAP
+  cccc.@.cc
+ cc%Fcc...cc
+ cE...cc.0Hc
+cc..0..cc.cc
+cD.9w0..c+cJ
+c%9www..MNO@
+c%9www..MNO@
+cD.9w0..c+cJ
+cc..0..cc.cc
+ cE...cc.0Hc
+ cc%Fcc...cc
+  cccc.@.cc
+ENDMAP
+
+NAME:    nicolae_snake_salamander_fort
+TAGS:    patrolling transparent
+KMONS:   1 = salamander tyrant band
+KMONS:   2 = salamander / salamander mystic w:5
+KFEAT:   12 = l
+SHUFFLE: DEFH, EFHJKLMNOPQRSZa, pqrsy
+SUBST:   D : ., EFHJKpq : v, LMNOPrs : l, Q : lv, R : lv, S : lv, Z : lv
+SUBST:   a : lv, y : lv, * = **|, ~ = 2 l:6
+MAP
+..............
+.vvDDEEFFHHvv.
+.v....~l....v.
+.a.~l....l~.J.
+.a.lvvvvvvl.J.
+.Z..q****r..K.
+.Zl.q.1l.r.~K.
+.S~.p.ll.s.lL.
+.S..p....s..L.
+.R.lv..yyvl.M.
+.R.~l....l~.M.
+.v....l~....v.
+.vvQQPPOONNvv.
+..............
+ENDMAP
+
+NAME:   nicolae_snake_salamander_jacuzzi
+TAGS:   transparent
+KMONS:  L = salamander
+KFEAT:  L = l
+NSUBST: D = + / +c / +cc
+SUBST:  l = Ll, E : cGl
+MAP
+xx           xx
+xxx         xxx
+ xxxcccDcccxxx
+  xccc...cccx
+  ccE.....Ecc
+  cc.......cc
+  c...lll...c
+  +...lll...D
+  c...lll...c
+  cc.......cc
+  ccE.....Ecc
+  xccc...cccx
+ xxxcccDcccxxx
+xxx         xxx
+xx           xx
+ENDMAP
+
+NAME:  nicolae_snake_salamander_zone
+TAGS:  transparent
+KITEM: 2 = *
+KITEM: 3 = |
+KMONS: 1S = salamander
+KMONS: 2 = salamander / nothing w:5
+KMONS: 3 = salamander mystic
+KFEAT: S = l
+SUBST: l = l:170 S
+MAP
+          v
+       ...v...
+     ...llvll...
+   @..lllllllll..@
+   .llllllvllllll.
+  ..llllvvv..llll..
+  .lllvvv3v....lll.
+ ..lllv222v.1..lll..
+ .lllvv%%%v..1..lll.
+ .lllv$$$vv.....lll.
+vvvlv+vvvv+v+vvvvlvvv
+ .lll.....vv.llllll.
+ .lll.1...v.1.lllll.
+ ..lll.1..vl...lll..
+  .lll..1.vll...ll.
+  ..llll..vlll.....
+   .llllllvllll...
+   @..lllllllll..@
+     ...llvll...
+       ...v...
+          v
+ENDMAP
+
+# A little treat for the intersection of the "Herpetology"/"DCSS" Venn diagram
+# Layout adapted from graphics of snake head scales found at
+# https://www.virginiaherpetologicalsociety.com/identification-keys/ \
+# id-keys-snakes/virginia_snake_identification.htm
+NAME:   nicolae_snake_scaly_snakehead
+TAGS:   no_pool_fixup patrolling transparent
+KMONS:  12 = guardian serpent / naga w:20 / salamander / anaconda w:20 / \
+             naga warrior / black mamba w:20 / mana viper / nothing w:80
+KMONS:  3 = naga mage / naga ritualist / naga sharpshooter / shock serpent / \
+            salamander mystic / nothing w:40
+KMONS:  4 = nagaraja / salamander tyrant
+KITEM:  2 = %:15 / * / |:5 / nothing w:5
+NSUBST: 4 = 2=4 / 34
+SUBST:  D = 13
+MAP
+ cccccccccccccc
+ c2..c1c..2c2.ccc
+ccc..c..cccc..c1ccc
+c3.c.ccc.wwwcc.c.1ccc
+c...c.2.cwwwc1c.cc.1c
+c2.c.....cccc.c.c.cccc
+ccc.4..3.c.2cc.cc.w.1c
+c2c2.....c..c.D..cc.cc
+c.c..D.3..ccc...c1.c.c.....l
+cc.c.....c...c.2c..c..c...l.
+c24.ccccc..D.cccccc.D.clll.@
+cc.c.....c...c.2c1.c..c...l.
+c.c..D.3..ccc...c..c.c.....l
+c2c2.....c..c.D..cc.cc
+ccc.4..3.c.2cc.cc.w.1c
+c2.c.....cccc.c.c.cccc
+c...c.2.cwwwc1c.cc.1c
+c3.c.ccc.wwwcc.c.1ccc
+ccc..c..cccc..c1ccc
+ c2..c1c..2c2.ccc
+ cccccccccccccc
+ENDMAP
+
+NAME:    nicolae_snake_shooting_gallery
+TAGS:    no_pool_fixup transparent
+DEPTH:   Snake, !Snake:$
+ORIENT:  float
+ITEM:    shortbow / longbow w:4 / hand crossbow / arbalest w:3 \
+         / triple crossbow w:1
+ITEM:    arrow / bolt
+MONS:    naga sharpshooter
+SUBST:   s = 1'
+SHUFFLE: }])
+KMASK:   1dew'+}]) = opaque
+MAP
+ xxxxxxxxx.@@@.xxxxxxxxx
+xxxxxxxxxxx...xxxxxxxxxxx
+xx.......xx...xx.......xx
+xx.....................xx
+xx.....................xx
+xx.....................xx
+xx....wwwwwwwwwwwww....xx
+xx....wwwwwwwwwwwww....xx
+xx....ww1'''s'''1ww....xx
+xxx...ww'ccccccc'ww...xxx
+.xx...ww'ceeeeec'ww...xx.
+@.....ww'+''s''c'ww.....@
+@.....wws+''1'}csww.....@
+@.....ww'+''s''c'ww.....@
+.xx...ww'cdddddc'ww...xx.
+xxx...ww'ccccccc'ww...xxx
+xx....ww1'''s'''1ww....xx
+xx....wwwwwwwwwwwww....xx
+xx....wwwwwwwwwwwww....xx
+xx.....................xx
+xx.....................xx
+xx.....................xx
+xx.......xx...xx.......xx
+xxxxxxxxxxx...xxxxxxxxxxx
+ xxxxxxxxx.@@@.xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_snake_snakes_in_the_grass
+TAGS:   transparent
+KMONS:  1 = plant
+KFEAT:  1 = . w:30 / W
+KFEAT:  . = . w:50 / W
+SUBST:  ' = 0 ':200
+SUBST:  F = tt''0, - = _', ' = 1.
+CLEAR:  _
+MAP
+    --------
+  ---''''''---
+ --''''''''''--
+ -''''''''''''-
+--''''''''''''--
+-''''''''''''''-
+-'''''FFFF'''''-
+-'''''FttF'''''-
+-'''''FttF'''''-
+-'''''FFFF'''''-
+-''''''''''''''-
+--''''''''''''--
+ -''''''''''''-
+ --''''''''''--
+  ---''''''---
+    --------
+ENDMAP
+
+NAME:  nicolae_snake_snakewalk
+TAGS:  transparent
+KMONS: 0 = 0 / 0 band
+KMONS: 9 = 9 / 9 band
+KMONS: 8 = 8 / 8 band
+SUBST: 0 = 00., 9 = 99.
+MAP
+     ccccccc         ccccccc
+   ccc.....ccc     ccc.....ccc
+  cc....9....cc   cc....8....cc
+ cc...........cc cc...........cc
+cc..0.ccccc.0..ccc..0.ccccc.0..cc
+cc...ccccccc...ccc...ccccccc...cc
+c...ccccccccc...c...ccccccccc...c@@@ ccc
+c.0.cc.ccc.cc.0.c.9.cc|ccc*cc.9.c...cc.cc
+c...+...c...+...c...+...c...+...c...+...c
+cc.cc...c.9.cc*ccc|cc.9.c.0.cc.ccc.cc.0.c
+ ccc @@@c...ccccccccc...c...ccccccccc...c
+        cc...ccccccc...ccc...ccccccc...cc
+        cc..0.ccccc.0..ccc..0.ccccc.0..cc
+         cc...........cc cc...........cc
+          cc....8....cc   cc....9....cc
+           ccc.....ccc     ccc.....ccc
+             ccccccc         ccccccc
+ENDMAP
+
+NAME:  nicolae_snake_storage_room
+TAGS:  patrolling transparent
+KMONS: 0 = 0 / 0 band
+KMONS: 9 = 9 / 9 band
+KMONS: 8 = 8 / 8 band
+SUBST: 0 = 0:50 9 .:60, 9 = 9:50 8
+MAP
+ cccccccc
+cccccccccc
+cc9..%*|cc.....@
+cc.8.%*|cc......
+cc..9ccccc..cc..
+cc..ccccc0..cc..
+cc.0....0.09....
+cc0....0..90....
+ccccc.0.cc..0cccc
+ ccccc.0cc.0cccccc
+    cc9.0.0.cc||cc
+    cc.9.0..cc**cc
+    ccccc...cc%%cc
+     ccccc..c9..cc
+        cc.0..8.cc
+        cc0....9cc
+        cccccccccc
+         cccccccc
+ENDMAP
+
+NAME:    nicolae_snake_unarmed_stairs_patrol
+DEPTH:   Snake, !Snake:$
+TAGS:    transparent
+ORIENT:  float
+MONS:    guardian serpent
+MONS:    anaconda w:20 / black mamba w:20 / shock serpent / mana viper / \
+         sea snake w:5
+SUBST:   2 = 2:30 1:5 .:35
+SHUFFLE: )]}>>
+MAP
+     xxxxxxxxx
+  xxxxcccccccxxxx
+xxxccccG222Gccccxxxx
+xcccG.2.....2.Gccc.@
+xc)...2.....2....c..
+xc]...1..G..1....+.@
+xc}...2.....2....c..
+xcccG.2.....2.Gccc.@
+xxxccccG222Gccccxxxx
+  xxxxcccccccxxxx
+     xxxxxxxxx
 ENDMAP
 
 ###############################################################################
