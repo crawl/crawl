@@ -2306,9 +2306,9 @@ ENDMAP
 
 NAME:   nzn_swamp_stair_ambush
 DEPTH:  Swamp:2-, !Swamp:$
-NSUBST: 1 = 3 / 1, 2 = 4 / 2
 MONS:   goliath frog / swamp worm, hydra / w:5 eleionoma, bunyip
 MONS:   spriggan druid
+NSUBST: 1 = 3 / 11W., 2 = 4 / 22W.
 MAP
     @
     1t
