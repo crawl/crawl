@@ -2434,3 +2434,50 @@ cc...cc..cc......cc..cc......cc..cc...cc
                  @....@
                    cc
 ENDMAP
+
+################################################################################
+# this vault takes its monster theme from snake ziggurat floors
+
+NAME:   hellmonk_snake_rune_quicksilver_temple
+PLACE:  Snake:$
+ORIENT: north
+MONS:   naga sharpshooter / guardian serpent / nagaraja / salamander tyrant
+MONS:   quicksilver dragon
+TILE:   G = dngn_statue_dragon
+KITEM:  O = serpentine rune of Zot
+# ten high tier monsters and ten normal spawns on average
+SUBST:  1 = ..1
+NSUBST: . = 20 = 0. / *:.
+MAP
+              ccccc
+             cc2O2cc
+            ccG.1.Gcc 
+            cc..c..cc
+           cc...c...cc
+           cc..ccc..cc
+     ccccccc1.ccccc.1ccccccc
+    cccc.1cc...c.c...cc1.cccc
+   cc......cc...1...cc......cc
+  cc...cc...ccG...Gcc...cc...cc
+ cc..ccccc.c+.......+c.ccccc..cc
+cc..cc1G.ccc..cc+cc..ccc.G1cc..cc
+c1..c.....c1.cc...cc.1c.....c..1c
+c...cG.T..+..c1.G.1c..+..T.Gc...c
+cc..c1....c..c..1..c..c....1c..cc
+c...cc..1cc..cc...cc..cc1..cc...c
+c....cc+cc...ccc+ccc...cc+cc....c
+cc.....1....ccc...ccc....1.....cc
+ cc....c...ccc..G..ccc...c....cc
+  cc..cccc1ccc1...1ccc1cccc..cc
+   c1..cc...ccc...ccc...cc..1c
+   cc..cc...cccc+cccc...cc..cc
+    c..ccc..ccc.1.ccc..ccc..c
+    c...c....c.....c....c...c
+    cc1......G.....G......1cc
+     cccc.......T.......cccc
+        cc..cc'''''cc..cc
+         ccccc'''''ccccc
+             cc'''cc
+             cc'''cc
+              G@@@G
+ENDMAP
