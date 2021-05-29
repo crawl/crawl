@@ -1,13 +1,15 @@
 ##############################################################################
 # mini_monsters.des: This is the place for minivaults with monsters.
-#           So all vaults in this file should have no ORIENT lines but they
-#           should contain MONS or KMONS lines.
 #
-#           Vaults with ORIENT lines are stored in float.des or large.des.
-#           Minivaults without monsters go to mini_features.des.
-#           Maps for the Vaults branch, including Vaults:8 are in vaults.des.
+# So all vaults in this file should have no ORIENT lines but they should
+# contain MONS or KMONS lines.
+
+# Additionally, maps that only place in one branch where that branch is not
+# Dungeon or Depths should go in the corresponding branch DES file. Vaults with
+# ORIENT lines are stored in float.des or large.des. Minivaults without
+# monsters go to mini_features.des.
 #
-#
+# Sections:
 # <<1>> Invertebrae        (insects, spiders, worms)
 # <<2>> Vertebrae          (mammals, reptiles, also serpents, dragons)
 # <<3>> Humanoids          (including centaurs, spriggans)
@@ -76,22 +78,6 @@ default-depth: D:9-, Depths, Elf
 #       Insects, spiders, worms
 #
 ###############################################################################
-
-NAME:  minmay_lizard_pond
-TAGS:  transparent
-DEPTH: D:1-2
-KMONS: 1 = frilled lizard
-KFEAT: 1 = W
-SUBST: W = WWW1
-MAP
- ......
-..WWWW.
-.WWWWW..
-.WWWWWW.
-.WWWWWW.
-..WWWW..
- ......
-ENDMAP
 
 NAME:    eino_jars
 TAGS:    patrolling uniq_beehive transparent
@@ -378,12 +364,29 @@ xxxxxxxxx
 @.......@
 xxxxxxxxx
 ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
 #       Mammals, reptiles, also dragons, serpents.
 #
 ###############################################################################
+
+NAME:  minmay_lizard_pond
+TAGS:  transparent
+DEPTH: D:1-2
+KMONS: 1 = frilled lizard
+KFEAT: 1 = W
+SUBST: W = WWW1
+MAP
+ ......
+..WWWW.
+.WWWWW..
+.WWWWWW.
+.WWWWWW.
+..WWWW..
+ ......
+ENDMAP
 
 NAME:  minmay_rat_gold_closets
 TAGS:  transparent
@@ -1098,6 +1101,50 @@ xx$$$Dx..x
   xxDD.xx
    xxx@x
 ENDMAP
+
+NAME:    hangedman_snake_sidewinding
+TAGS:    allow_dup
+DEPTH:   Snake, !Snake:$, Zot, !Zot:$
+: if you.in_branch("Zot") then
+KMONS:   A = base draconian / green draconian w:4
+KMONS:   B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5
+KMONS:   C = nonbase green draconian / draconian annihilator
+KMONS:   D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
+            iron dragon w:5
+: else
+KMONS:   A = naga warrior / naga mage / naga
+KMONS:   B = black mamba w:6 / anaconda
+KMONS:   C = nagaraja / naga mage w:5 / guardian serpent w:5
+KMONS:   D = guardian serpent / anaconda w:2
+: end
+SHUFFLE: @123<= / &456"-, EF
+SUBST:   = = +, 1 = A, 2 = B, 3 = C, < : ~~_..., &E = x, - = c
+SUBST:   456 = ', "F = ., y : x:2 G:1 .:6, Y : z', Z : z', z : xc
+NSUBST:  * = **|, ~ = 1:( / 1:(<.., _ = 1:) / 1:)>.
+KMASK:   '%*d = no_monster_gen
+MAP
+x@@xxxxxxxxxxxxxxxxxxxx
+x""xxcccccccccccccccccx
+x..xxxcc13121'''%%%**cx
+xy..A%c--32z'''Z''BD*cx
+xy...B%--c1''z'''z'B%cx
+x4.xxxxxccc''z''zYz'%cx
+x..xxEExxccc'''zYz''%cx
+xy...EE.A%ccc'''z''Z'cx
+xy...FF..B%ccc'''''''cx
+x4.xxFFxxxxxccc''zz''cx
+x1.xxEExxEExxccc''''4cx
+xy...EE..EE.A%ccc''z5cx
+xy...FF..FF..B%ccc454cx
+x..xxFFxxFFxxxxxccc66cx
+x1.xxEExxEExxEExxc==4cx
+xy...EE..EE..EE.A%==ccx
+xy...FF..FF..FF..B%cccx
+x..xxFFxxFFxxFFxxxxxccx
+x<<xxxxxxxxxxxxxxxxxxcx
+x&&xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 
 ###############################################################################
 #
