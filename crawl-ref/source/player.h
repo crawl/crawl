@@ -1139,6 +1139,7 @@ bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_berserk_recovery_player(int delay);
+void dec_amplify_damage_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);

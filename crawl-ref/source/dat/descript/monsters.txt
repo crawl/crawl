@@ -693,6 +693,13 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
+bouda
+
+A gnoll witch possessed by a spirit of spite which wreaks a dreadful curse upon
+the all who approach this accursed creature: all pain experienced is amplified.
+The witches wild chanting and ululations whips their fellow gnolls into a
+panicked haste- lest they suffer the bouda's curse themselves.
+%%%%
 boulder beetle
 
 A grey beetle with an almost impenetrable rocky carapace. When at some distance
@@ -1254,11 +1261,6 @@ gnoll sergeant
 
 A commander of a pack of gnolls. Scars on its stout body give evidence of how
 it earned its rank.
-%%%%
-gnoll shaman
-
-A haggard old gnoll, wise and wicked. Its strange chants and ululations send
-other gnolls into a wild frenzy.
 %%%%
 goblin
 

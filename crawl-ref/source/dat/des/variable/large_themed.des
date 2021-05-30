@@ -1518,9 +1518,9 @@ ORIENT: northeast
 TAGS:   no_monster_gen transparent
 DEPTH:  D:7-14
 KFEAT:  W = open_sea
-MONS:   ogre, orc warrior, gnoll shaman, centaur, kobold brigand
+MONS:   ogre, orc warrior, bouda, centaur, kobold brigand
 KMONS:  8 = orc warrior band
-KMONS:  9 = gnoll shaman band
+KMONS:  9 = bouda band
 KMONS:  p = plant
 KMONS:  P = fungus
 FTILE: ' = floor_sand
@@ -1724,7 +1724,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:6-9
 MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
         kobold brigand / orc warrior w:5 / ogre / gnoll sergeant, \
-        orc priest / orc wizard / gnoll shaman / centaur
+        orc priest / orc wizard / bouda / centaur
 NSUBST: . = 4:2 / 20:1 / 5:3
 NSUBST: . = 8:% / 2:* / 10:$
 FTILE: 'pt = floor_grass

@@ -4498,6 +4498,28 @@ void dec_berserk_recovery_player(int delay)
     }
 }
 
+void dec_amplify_damage_player(int delay)
+{
+    if (!you.duration[DUR_AMPLIFY_DAMAGE])
+        return;
+
+    if (you.evil_eye_amplified())
+    {
+        you.duration[DUR_AMPLIFY_DAMAGE] = 1;
+        return;
+    }
+
+    if (you.props.exists(EVIL_EYE_AMPED_KEY))
+        you.props.erase(EVIL_EYE_AMPED_KEY);
+
+    if (you.duration[DUR_AMPLIFY_DAMAGE] <= BASELINE_DELAY)
+    {
+        mprf(MSGCH_DURATION,
+             "You feel less easy to hurt.");
+        you.duration[DUR_AMPLIFY_DAMAGE] = 0;
+    }
+}
+
 bool haste_player(int turns, bool rageext)
 {
     ASSERT(!crawl_state.game_is_arena());

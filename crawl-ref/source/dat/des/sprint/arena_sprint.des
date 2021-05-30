@@ -225,7 +225,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "rat / quokka / river rat / w:2 hell rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
-                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
+                "gnoll w:35 / hound w:5 / gnoll sergeant / bouda / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
@@ -272,7 +272,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "jackal w:1 / hound w:5 / wolf w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "bullfrog w:20 / blink frog w:6 / cane toad w:6 / prince ribbit w:2",
-                "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
+                "gnoll / bouda / gnoll sergeant / hound / wolf",
                 -- Gimmicks
                 "neqoxec", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"

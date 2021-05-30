@@ -760,6 +760,15 @@ void monster::timeout_enchantments(int levels)
             }
             break;
 
+        case ENCH_AMPLIFY_DAMAGE:
+            if (!evil_eye_amplified())
+            {
+                del_ench(entry.first);
+                if (props.exists(EVIL_EYE_AMPED_KEY))
+                    props.erase(EVIL_EYE_AMPED_KEY);
+            }
+            break;
+
         case ENCH_INVIS:
             if (!mons_class_flag(type, M_INVIS))
                 lose_ench_levels(entry.second, levels);

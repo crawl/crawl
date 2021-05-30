@@ -905,6 +905,30 @@ bool actor::torpor_slowed() const
     return false;
 }
 
+/**
+ *  Is the actor having damage amplified by an evil eye effect?
+ */
+bool actor::evil_eye_amplified() const
+{
+    if (!props.exists(EVIL_EYE_AMPED_KEY) || is_sanctuary(pos()))
+    {
+        return false;
+    }
+
+    for (monster_near_iterator ri(pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        const monster *mons = *ri;
+        if (mons && mons->type == MONS_BOUDA
+            && !is_sanctuary(mons->pos())
+            && !mons_aligned(mons, this))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 string actor::resist_margin_phrase(int margin) const
 {
     if (willpower() == WILL_INVULN)

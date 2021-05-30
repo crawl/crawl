@@ -157,6 +157,10 @@ static const duration_def duration_data[] =
       {{ "You feel a little less agile now.", []() {
           you.redraw_evasion = true;
       }}}},
+    { DUR_AMPLIFY_DAMAGE,
+      RED, "AmpDam",
+      "taking extra damage", "amplified damage",
+      "You are taking extra damage.", D_NO_FLAGS},
     { DUR_BERSERK,
       BLUE, "Berserk",
       "berserking", "berserk",

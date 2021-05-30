@@ -1778,7 +1778,7 @@ ITEM:    any manual
 ITEM:    any jewellery, any jewellery good_item, any jewellery randart
 KMONS:   p = plant
 KMONS:   O = player ghost
-MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
+MONS:    gnoll, bouda, gnoll sergeant, grum band
 KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
                 wand of charming | wand of paralysis | \
                 wand of mindburst \

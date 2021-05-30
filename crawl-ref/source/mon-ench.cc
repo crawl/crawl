@@ -1113,6 +1113,14 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
             props.erase(TORPOR_SLOWED_KEY);
     }
 
+    if (en == ENCH_AMPLIFY_DAMAGE)
+    {
+        if(evil_eye_amplified())
+           actdur = min(actdur, me.duration - 1);
+        else
+            props.erase(EVIL_EYE_AMPED_KEY);
+    }
+
     if (lose_ench_duration(me, actdur))
         return true;
 
@@ -2086,7 +2094,7 @@ static const char *enchant_names[] =
 #endif
     "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
-    "ring_acid", "ring_miasma", "concentrate_venom",
+    "ring_acid", "ring_miasma", "concentrate_venom", "amplified_damage",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2296,6 +2304,10 @@ int mon_enchant::calc_duration(const monster* mons,
 
     case ENCH_BREATH_WEAPON:
         // Must be set by creature.
+        return 0;
+
+    case ENCH_AMPLIFY_DAMAGE:
+        // Must be set by aura
         return 0;
 
     case ENCH_PORTAL_TIMER:

@@ -4357,7 +4357,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for scarf of harm
+        // Apply damage multipliers for scarf of harm and amplify damage
         if (amount != INSTANT_DEATH)
         {
             // +30% damage when the opponent has harm
@@ -4366,6 +4366,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             // +20% damage when self has harm
             else if (extra_harm())
                 amount = amount * 6 / 5;
+            // +30% damage when the monster is taking amplified damage
+            if (has_ench(ENCH_AMPLIFY_DAMAGE))
+                amount = amount * 13 / 10;
         }
 
         // Apply damage multipliers for quad damage

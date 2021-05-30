@@ -968,7 +968,7 @@ gnoll sergeant
 Un chef de bande gnoll. Les cicatrices qui courent sur son corps robuste
 témoignent de la manière dont il a obtenu son rang.
 %%%%
-gnoll shaman
+bouda
 
 Un vieux gnoll blême, sage et mauvais. Ses chants étranges et ses youyous font
 entrer les autres gnolls dans une frénésie sauvage.

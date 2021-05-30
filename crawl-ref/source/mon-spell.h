@@ -211,12 +211,11 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('g') Small humanoids.
-    {  MST_GNOLL_SHAMAN,
+    {  MST_BOUDA,
       {
-       { SPELL_CORONA, 11, MON_SPELL_PRIEST },
-       { SPELL_HEAL_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_HASTE_OTHER, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_THROW_FLAME, 15, MON_SPELL_MAGICAL },
+       { SPELL_VAMPIRIC_DRAINING, 15, MON_SPELL_MAGICAL },
+       { SPELL_HUNTING_CALL, 60, MON_SPELL_VOCAL },
       }
     },
 

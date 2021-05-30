@@ -768,6 +768,14 @@ static int _apply_extra_harm(int dam, mid_t source)
     return dam;
 }
 
+static int _amplify_damage(int dam)
+{
+    if (you.duration[DUR_AMPLIFY_DAMAGE])
+        return dam * 13 / 10; //+30% damage when amplified
+
+    return dam;
+}
+
 void reset_damage_counters()
 {
     you.turn_damage = 0;
@@ -859,9 +867,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     int drain_amount = 0;
 
-    // Multiply damage if scarf of harm is in play
+    // Multiply damage if scarf of harm or amplify damage is in play
     if (dam != INSTANT_DEATH)
+    {
         dam = _apply_extra_harm(dam, source);
+        dam = _amplify_damage(dam);
+    }
 
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)

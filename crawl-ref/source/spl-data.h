@@ -2777,6 +2777,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HUNTING_CALL, "Hunting Call",
+    spschool::hexes,
+    spflag::area | spflag::monster | spflag::selfench,
+    6,
+    0,
+    -1, -1,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_SEAL_DOORS, "Seal Doors",
     spschool::hexes,
     spflag::area | spflag::monster | spflag::selfench,

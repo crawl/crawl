@@ -247,6 +247,8 @@ public:
 
 #define TORPOR_SLOWED_KEY "torpor_slowed"
     bool torpor_slowed() const;
+#define EVIL_EYE_AMPED_KEY "evil_eye_amplified"
+    bool evil_eye_amplified() const;
 
     virtual int heads() const = 0;
 

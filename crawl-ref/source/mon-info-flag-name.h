@@ -96,6 +96,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_FLEEING, "fleeing", "fleeing", "fleeing"},
     { MB_DAZED, "dazed", "dazed", "dazed"},
     { MB_MUTE, "mute", "mute", "mute"},
+    { MB_AMPLIFY_DAMAGE, "suffering", "taking extra damage", "suffering"},
     { MB_FROZEN, "frozen", "encased in ice", "frozen"},
     { MB_WATER_HOLD, "engulfed", "engulfed", "engulfed"},
     { MB_WATER_HOLD_DROWN, "asphyxiating", "asphyxiating", "asphyxiating"},

@@ -635,6 +635,7 @@ static void _decrement_durations()
     dec_channel_player(delay);
     dec_slow_player(delay);
     dec_berserk_recovery_player(delay);
+    dec_amplify_damage_player(delay);
     dec_haste_player(delay);
 
     for (int i = 0; i < NUM_STATS; ++i)

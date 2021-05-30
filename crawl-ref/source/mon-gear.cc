@@ -486,7 +486,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
-        { MONS_GNOLL_SHAMAN,
+        { MONS_BOUDA,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
         } } },
@@ -1768,7 +1768,7 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_GNOLL_SHAMAN:
+    case MONS_BOUDA:
     case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_ROBE, ARM_LEATHER_ARMOUR);

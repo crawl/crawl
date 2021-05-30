@@ -734,6 +734,10 @@ Heal Other spell
 
 Heals a nearby ally.
 %%%%
+Hunting Call spell
+
+Inspires nearby allies to quicken their movement.
+%%%%
 Hurl Damnation spell
 
 <Hurl Damnation ability>

@@ -20,7 +20,7 @@ function castle_lemuel_setup(e)
     if you.in_branch("D") then
         if you.depth() < 6 then
            e.mons("gnoll / orc")
-           e.mons("gnoll / orc / orc wizard w:2 / gnoll shaman w:2"
+           e.mons("gnoll / orc / orc wizard w:2 / bouda w:2"
                   .. " / orc priest w:1")
            e.mons("ogre / gnoll sergeant / kobold brigand")
            e.mons("jackal / hound w:5 / howler monkey w:5")
@@ -30,7 +30,7 @@ function castle_lemuel_setup(e)
            e.subst("| = *%%%")
         elseif you.depth() < 9 then
            e.mons("orc / gnoll / orc wizard / orc priest / ogre")
-           e.mons("gnoll shaman / gnoll sergeant / orc warrior"
+           e.mons("bouda / gnoll sergeant / orc warrior"
                   .. " / kobold brigand")
            e.mons("troll / two-headed ogre / cyclops / kobold demonologist")
            e.mons("hound / howler monkey / warg w:5")
@@ -39,12 +39,12 @@ function castle_lemuel_setup(e)
            e.subst("* = %$")
            e.subst("| = *%")
         elseif you.depth() < 12 then
-           e.mons("orc wizard / orc priest / gnoll shaman / gnoll sergeant"
+           e.mons("orc wizard / orc priest / bouda / gnoll sergeant"
                   .. " / kobold brigand / orc warrior")
            e.mons("troll / two-headed ogre / kobold demonologist / cyclops w:5")
            e.mons("deep elf pyromancer / orc knight / orc sorcerer / ogre mage")
            e.mons("warg / hell hound w:2")
-           e.mons("orc wizard / orc priest / gnoll shaman / gnoll sergeant")
+           e.mons("orc wizard / orc priest / bouda / gnoll sergeant")
            e.mons("howler monkey / warg")
            e.subst("* = %")
            e.subst("| = *")

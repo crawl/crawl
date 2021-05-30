@@ -2187,6 +2187,45 @@ static void _torpor_snail_slow(monster* mons)
     }
 }
 
+/**
+ * Apply the amplify damage debuff.
+ *
+ * @param mons      The monster applying the effect.
+ */
+static void _amplify_damage_aura(monster* mons)
+{
+    if (is_sanctuary(mons->pos()) || mons->attitude != ATT_HOSTILE
+        || mons->has_ench(ENCH_CHARM))
+    {
+        return;
+    }
+
+    if (!is_sanctuary(you.pos()) && cell_see_cell(you.pos(),
+        mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.duration[DUR_AMPLIFY_DAMAGE])
+        {
+            mprf("Being near the %s amplifies your suffering.",
+                  mons->name(DESC_THE).c_str());
+        }
+
+        if (you.duration[DUR_AMPLIFY_DAMAGE] <= 1)
+            you.set_duration(DUR_AMPLIFY_DAMAGE, 1);
+        you.props[EVIL_EYE_AMPED_KEY] = true;
+    }
+
+    for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
+    {
+        monster *m = *ri;
+        if (m && !mons_aligned(mons, m) && !is_sanctuary(m->pos())
+            && !mons->has_ench(ENCH_AMPLIFY_DAMAGE))
+        {
+            m->add_ench(mon_enchant(ENCH_AMPLIFY_DAMAGE, 0, mons, 1));
+            m->props[EVIL_EYE_AMPED_KEY] = true;
+        }
+    }
+}
+
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
@@ -2202,6 +2241,9 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
+
+    if(mons->type == MONS_BOUDA)
+        _amplify_damage_aura(mons);
 
     if (mons->type == MONS_WATER_NYMPH)
     {

@@ -94,6 +94,10 @@ Battlecry cast
 
 @The_monster@ roars a battlecry!
 %%%%
+Hunting Call cast
+
+@The_monster@ barks out a call to the hunt!
+%%%%
 Blinkbolt cast
 
 @The_monster@ bursts into living lightning!
