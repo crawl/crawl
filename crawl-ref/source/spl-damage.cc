@@ -696,19 +696,29 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         int this_damage = _los_spell_damage_monster(agent, *m, beam, actual);
         total_damage += this_damage;
 
-        if (!actual && mons)
+        if (!actual)
         {
-            if (mons_atts_aligned(m->attitude, mons->attitude))
+            if (mons)
             {
-                beam.friend_info.count++;
-                beam.friend_info.power +=
-                    (m->get_hit_dice() * this_damage / avg_damage);
-            }
-            else
+                if (mons_atts_aligned(m->attitude, mons->attitude))
+                {
+                    beam.friend_info.count++;
+                    beam.friend_info.power +=
+                        (m->get_hit_dice() * this_damage / avg_damage);
+                }
+                else
+                {
+                    beam.foe_info.count++;
+                    beam.foe_info.power +=
+                        (m->get_hit_dice() * this_damage / avg_damage);
+                }
+            } else if (player_caster
+                       && this_damage
+                       && !m->wont_attack()
+                       && mons_is_threatening(*m))
             {
                 beam.foe_info.count++;
-                beam.foe_info.power +=
-                    (m->get_hit_dice() * this_damage / avg_damage);
+                beam.foe_info.power++;
             }
         }
     }
@@ -716,9 +726,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     if (damage_done)
         *damage_done = total_damage;
 
-    // Players checking whether to cast will do so if the tracer did any
-    // damage.
-    if (actual || player_caster && total_damage > 0)
+    if (actual)
         return spret::success;
 
     return mons_should_fire(beam) ? spret::success : spret::abort;
