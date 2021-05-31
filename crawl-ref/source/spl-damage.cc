@@ -686,6 +686,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     if (actual && !affected_monsters.empty())
         _los_spell_pre_damage_monsters(agent, affected_monsters, verb);
 
+    bool will_affect_foes = false;
     for (auto m : affected_monsters)
     {
         // Watch out for invalidation. Example: Ozocubu's refrigeration on
@@ -695,6 +696,12 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         int this_damage = _los_spell_damage_monster(agent, *m, beam, actual);
         total_damage += this_damage;
+
+        if (!will_affect_foes && this_damage > 0
+            && !m->wont_attack() && mons_is_threatening(*m))
+        {
+            will_affect_foes = true;
+        }
 
         if (!actual && mons)
         {
@@ -717,8 +724,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         *damage_done = total_damage;
 
     // Players checking whether to cast will do so if the tracer did any
-    // damage.
-    if (actual || player_caster && total_damage > 0)
+    // damage to at least one hostile monster.
+    if (actual || player_caster && will_affect_foes)
         return spret::success;
 
     return mons_should_fire(beam) ? spret::success : spret::abort;
