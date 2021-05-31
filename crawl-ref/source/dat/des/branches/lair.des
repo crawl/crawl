@@ -3198,3 +3198,55 @@ xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
                  xxxxxxxxxxxx
                      xxxxxxx
 ENDMAP
+
+###############################################################################
+# An abyssal version of the forest ending
+# monster set drawn from weaker abyss spawns and lair branch abyssal visitors
+NAME:   hellmonk_lair_end_abyssal_woods
+PLACE:  Lair:$
+ORIENT: northwest
+MONS:   blink frog / basilisk w:3, small abomination
+MONS:   shapeshifter / chaos spawn / smoke demon / ynoxinul
+MONS:   ancient zyme, thrashing horror / large abomination w:1
+MONS:   spriggan ; rapier ego:distortion
+SUBST:  T = tt..., 6 = 6d
+NSUBST: 1 = 5:1 / *:1.., 2 = 4:2 / *:2..
+NSUBST: 4 = 1:4 / *:3, ' = 3:5 / 3:d / 5 = 5543d. / *:.
+NSUBST: % = 2:| / 3:* / *:%
+KFEAT:  t = demonic_tree
+KFEAT:  > = enter_abyss
+KFEAT:  _ = altar_lugonu
+{{
+  dgn.delayed_decay(_G, 'd', "spriggan skeleton / wolf skeleton w:3"
+                             .. " / polar bear skeleton w:2"
+                             .. " / black bear skeleton w:2")
+}}
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttt..6..tt.2ttttttt
+ttttttt..tttt.tttTttttttttttt22...tt.....222tttt
+ttttttT.TT..4....TttttttttT......tttttt1....24ttt
+ttttt.......d...tTttttttt1...11ttttttttt..ttttttt
+tttt...tt..TT11Ttttttttt2.....1tttttTTt..tttttttt
+ttt...tttttttt1..ttttt...111tt222tt......2tttttt
+ttt..ttttttttttt.2.tt.4.11ttttt2....TTtTT..ttt
+ttT......tttttttt..T...1tttttttttt4ttttttt12ttt
+tt..t.....ttttttt...2Tttttt6%>%%ttttttttttT4tt
+tt11ttt22...tttt..2tttttt%'''''tttttttttt..tt
+tt1Tttttt...ttt...ttttttttt''_''%ttttttt..ttt
+tT1ttttttt2.tt...ttttttttt%''''tttttttttT..ttt
+tt11ttttt....111TtttttttTtttt''tt'''.tt.41tttt
+tt..ttttttt.111......ttT..%tt''''''T....TTtt
+ttt..ttttttttttttt....t2..5%tt''''TTT.ttttt
+tttT...Tttttttttttttt.42ttttttttt'''..tttt
+tttt..Tttttttttttttttttttttttttt%%''ttttt
+ttttT..Tttttttttttttttt       ttttttttt
+ttttt...ttttttttttt            ttttttt
+tttttT...tttttttttt               ttt
+ttttttt.@ttt
+ttttttt
+tttt
+tt
+t
+ENDMAP
