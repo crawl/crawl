@@ -5408,7 +5408,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         const int dam = damage.roll();
         if (you.see_cell(mon->pos()))
         {
-            const bool plural = mon->num_heads > 1;
+            const bool plural = mon->heads() > 1;
             mprf("%s mind%s blasted%s",
                  mon->name(DESC_ITS).c_str(),
                  plural ? "s are" : " is",
