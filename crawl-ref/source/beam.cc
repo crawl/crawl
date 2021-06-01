@@ -5408,8 +5408,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         const int dam = damage.roll();
         if (you.see_cell(mon->pos()))
         {
-            mprf("%s mind is blasted%s",
+            const bool plural = mon->num_heads > 1;
+            mprf("%s mind%s blasted%s",
                  mon->name(DESC_ITS).c_str(),
+                 plural ? "s are" : " is",
                  attack_strength_punctuation(dam).c_str());
             obvious_effect = true;
         }
