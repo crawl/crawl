@@ -1023,8 +1023,8 @@ KMONS:  8 = meliai
 KITEM:  8 = %
 KFEAT:  a = x
 : wad_woods_setup(_G, "med", 5, false, 0, 0, 0)
-: if (you.branch() == "Lair" and you.absdepth() < 14)
-:  or you.absdepth() < 12 then
+: if you.in_branch("Lair") and you.depth() < 4
+:  or you.in_branch("D") and you.depth() < 12 then
 SUBST:  8 = 6
 : end
 KMASK:  W = no_monster_gen

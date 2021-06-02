@@ -68,7 +68,7 @@ function theme.room_material(wall_type)
 
     wall_type = wall_type or 'x'
 
-    if you.branch() == "Dis" then
+    if you.in_branch("Dis") then
         return 'x'  -- Will be converted to metal
     elseif crawl.one_chance_in(250) then
         return 'b'

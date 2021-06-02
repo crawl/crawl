@@ -1752,8 +1752,8 @@ withered plant
 
 这株植物的生命力已被吸干，然而它的躯壳仍然完好。它的尸体就一直在这里，
 没有被食草动物吃掉——本来喜欢吃植物的小动物对它却避之惟恐不及。而且，
-看上去这株植物死了已经有好几 {{ if you.branch() == "Crypt" or you.branch() ==
-"Tomb" then return "个世纪"; else return "年"; end }} 了。
+看上去这株植物死了已经有好几 {{ if you.branch("Crypt") or you.branch("Tomb")
+then return "个世纪"; else return "年"; end }} 了。
 %%%%
 zot statue
 

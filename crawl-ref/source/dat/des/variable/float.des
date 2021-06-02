@@ -3603,7 +3603,7 @@ NAME: cheibrodos_quadrivalence
 DEPTH: D:12-, Depths
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: float
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS: smoke demon / sun demon, balrug / w:2 nothing
 MONS: ynoxinul , blizzard demon / w:2 nothing
 : else
@@ -3638,7 +3638,7 @@ NAME: cheibrodos_tormentor_scu
 DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
@@ -3677,7 +3677,7 @@ NAME: cheibrodos_forgotten_conduit
 DEPTH: Spider, Snake
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 MONS: w:5 wolf spider / tarantella / redback,  demonic crawler / orb spider
 MONS: spark wasp
 : else

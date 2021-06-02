@@ -40,7 +40,7 @@
 
 {{
 function interest_check(e)
-  if not you.in_branch("D") or you.absdepth() > 10 then
+  if not you.in_branch("D") or you.depth() > 10 then
     e.tags('extra')
   end
 end
@@ -490,10 +490,10 @@ TAGS:  uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH: D:5-
 KFEAT: C = altar_dithmenos
 {{
-  if you.absdepth() >= 14 then
+  if you.absdepth() >= 9 then
      mons("shadow")
   else
-     local imp_weight = 9 - you.absdepth()
+     local imp_weight = 9 - you.depth()
      if imp_weight > 0 then
          local phantom_weight = 9 - imp_weight
          mons("phantom w:" .. phantom_weight ..
