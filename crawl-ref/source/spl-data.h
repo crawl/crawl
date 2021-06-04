@@ -221,7 +221,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
-    spflag::dir_or_target | spflag::helpful | spflag::selfench
+    spflag::helpful | spflag::selfench
         | spflag::emergency | spflag::escape | spflag::needs_tracer,
     6,
     200,

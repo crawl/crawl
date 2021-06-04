@@ -821,8 +821,8 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns a targeted creature invisible. Turning invisible causes magical
-contamination and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible. Turning invisible causes magical contamination
+and may eventually cause glowing, nullifying the invisibility.
 %%%%
 Invisibility Other spell
 

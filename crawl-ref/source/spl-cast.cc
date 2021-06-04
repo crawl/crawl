@@ -1846,9 +1846,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
             return spret::abort;
         }
-
-        if (target->isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
-            return spret::abort;
     }
 
     if (evoked_wand)
@@ -2279,6 +2276,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DEATHS_DOOR:
         return cast_deaths_door(powc, fail);
+
+    case SPELL_INVISIBILITY:
+        return cast_invisibility(powc, fail);
 
     // Escape spells.
     case SPELL_BLINK:

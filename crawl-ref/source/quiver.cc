@@ -1025,7 +1025,6 @@ namespace quiver
                         // targeting for that case; the behavior involved in
                         // listing it here just finds the closest targetable
                         // monster.
-        case SPELL_INVISIBILITY: // targeted, but not to enemies. (Should this allow quivering at all?)
         case SPELL_APPORTATION: // Apport doesn't target monsters at all
             return true;
         default:
