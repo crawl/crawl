@@ -1722,7 +1722,11 @@ item_def* monster_die(monster& mons, killer_type killer,
                 silent = true;
             }
             else
+            {
+                simple_monster_message(mons, " turns to gold and falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 killer = KILL_RESET;
+            }
         }
 
         if (was_banished && !summoned_it && !hard_reset
