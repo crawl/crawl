@@ -784,7 +784,10 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     _player_hurt_monster(*mons, hurted, beam.flavour, false);
 
     if (mons->alive())
+    {
         mons->expose_to_element(BEAM_COLD, orig_hurted);
+        you.pet_target = mons->mindex();
+    }
 
     return spret::success;
 }
@@ -837,6 +840,9 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
          hurted ? "" : " but does no damage",
          attack_strength_punctuation(hurted).c_str());
     _player_hurt_monster(*mons, hurted, pbeam.flavour);
+
+    if (mons->alive())
+        you.pet_target = mons->mindex();
 
     return spret::success;
 }
@@ -1177,7 +1183,11 @@ spret cast_fragmentation(int pow, const actor *caster,
         }
 
         if (caster->is_player())
+        {
             _player_hurt_monster(*mon, dam, BEAM_MINDBURST);
+            if (mon->alive())
+                you.pet_target = mon->mindex();
+        }
         else if (dam)
             mon->hurt(caster, dam, BEAM_MINDBURST);
     }
