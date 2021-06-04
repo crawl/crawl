@@ -1664,24 +1664,9 @@ void handle_monster_move(monster* mons)
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
-            if (gozag_gold_in_los(mons))
-            {
-                simple_monster_message(*mons,
-                    " becomes distracted by the nearby gold, dreaming of "
-                    "imaginary riches.");
-            }
-            else if (you.gold > 0)
-            {
-                simple_monster_message(*mons,
-                    " becomes distracted by your gold, dreaming of "
-                    "imaginary riches.");
-            }
-            else
-            {
-                // Just in case!
-                simple_monster_message(*mons,
-                            " is distracted by dreams of imaginary riches.");
-            }
+            simple_monster_message(*mons,
+                " is distracted by your dazzling golden aura, dreaming of "
+                "imaginary riches.");
 
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
