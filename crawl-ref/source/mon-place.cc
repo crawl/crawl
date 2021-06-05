@@ -1868,7 +1868,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
     { MONS_PEACEKEEPER,     { { 0, 0, []() {
         return player_in_branch(BRANCH_VAULTS); }},
-                                  {{ BAND_GOLEMS, {2, 4}, true }}}},
+                                  {{ BAND_GOLEMS, {1, 3}, true }}}},
     // Journey -- Added Draconian Packs
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
