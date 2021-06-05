@@ -7108,6 +7108,14 @@ bool player::cannot_act() const
     return asleep() || cannot_move();
 }
 
+
+bool player::can_feel_fear(bool include_unknown) const
+{
+    // XXX: monsters are immune to fear when berserking.
+    // should players also be?
+    return you.holiness() & MH_NATURAL && (!include_unknown || !you.clarity());
+}
+
 bool player::can_throw_large_rocks() const
 {
     return species::can_throw_large_rocks(species);

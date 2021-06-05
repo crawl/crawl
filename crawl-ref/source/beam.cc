@@ -1677,16 +1677,17 @@ static bool _monster_resists_mass_enchantment(monster* mons,
                                               bool* did_msg)
 {
     // Assuming that the only mass charm is control undead.
-    if (wh_enchant == ENCH_CHARM)
+    if (wh_enchant == ENCH_FEAR)
     {
-        if (you.get_mutation_level(MUT_NO_LOVE))
-            return true;
-
         if (mons->friendly())
             return true;
 
-        if (!(mons->holiness() & MH_UNDEAD))
+        if (!mons->can_feel_fear(true))
+        {
+            if (simple_monster_message(*mons, " is unaffected."))
+                *did_msg = true;
             return true;
+        }
 
         int res_margin = mons->check_willpower(pow);
         if (res_margin > 0)
@@ -1702,11 +1703,6 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     else if (wh_enchant == ENCH_INSANE
              || mons->holiness() & MH_NATURAL)
     {
-        if (wh_enchant == ENCH_FEAR
-            && mons->friendly())
-        {
-            return true;
-        }
 
         if (wh_enchant == ENCH_INSANE
             && !mons->can_go_frenzy())

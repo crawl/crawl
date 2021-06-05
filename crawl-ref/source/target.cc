@@ -1893,6 +1893,7 @@ targeter_fear::targeter_fear()
 bool targeter_fear::affects_monster(const monster_info& mon)
 {
     return mon.willpower() != WILL_INVULN
+           && mon.can_feel_fear
            && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
 }
 

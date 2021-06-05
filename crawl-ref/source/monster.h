@@ -436,6 +436,7 @@ public:
     bool liquefied_ground() const override;
     int natural_regen_rate() const;
     int off_level_regen_rate() const;
+    bool can_feel_fear(bool include_unknown) const override;
 
     bool friendly() const;
     bool neutral() const;

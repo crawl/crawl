@@ -573,6 +573,7 @@ monster_info::monster_info(const monster* m, int milev)
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
     can_go_frenzy = m->can_go_frenzy(false);
+    can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune(false))
