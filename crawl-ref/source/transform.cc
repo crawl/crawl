@@ -1327,13 +1327,33 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
             equip_effect(e, you.equip[e], true, true);
 }
 
+static bool _lears_takes_slot(equipment_type eq)
+{
+    return eq >= EQ_HELMET && eq <= EQ_BOOTS
+        || eq == EQ_BODY_ARMOUR;
+}
+
+static bool _form_melds_lears(transformation which_trans)
+{
+    for (equipment_type eq : _init_equipment_removal(which_trans))
+        if (_lears_takes_slot(eq))
+            return true;
+    return false;
+}
+
 void unmeld_one_equip(equipment_type eq)
 {
-    if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (_lears_takes_slot(eq))
     {
         const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
         if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
+        {
+            // Don't unmeld lears when de-fishtailing if you're in
+            // a form that should keep it melded.
+            if (_form_melds_lears(you.form))
+                return;
             eq = EQ_BODY_ARMOUR;
+        }
     }
 
     set<equipment_type> e;
@@ -1343,7 +1363,7 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
-    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (player_equip_unrand(UNRAND_LEAR) && _lears_takes_slot(eq))
         eq = EQ_BODY_ARMOUR;
 
     set<equipment_type> r;
@@ -2025,6 +2045,19 @@ void untransform(bool skip_move)
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
+    // If you're a mer in water, boots stay melded even after the form ends.
+    if (you.fishtail)
+    {
+        melded.erase(EQ_BOOTS);
+        const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
+        if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
+        {
+            // I hate you, King Lear.
+            melded.erase(EQ_HELMET);
+            melded.erase(EQ_GLOVES);
+            melded.erase(EQ_BODY_ARMOUR);
+        }
+    }
     _unmeld_equipment(melded);
 
     // Update skill boosts for the current state of equipment melds
