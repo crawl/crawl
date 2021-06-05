@@ -989,7 +989,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
     else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
              && !ignore_temporary
-             && player_equip_unrand(UNRAND_LEAR))
+             && player_equip_unrand(UNRAND_LEAR, true))
     {
         // The explanation is iffy for loose headgear, especially crowns:
         // kings loved hooded hauberks, according to portraits.

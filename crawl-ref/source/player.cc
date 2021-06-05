@@ -1002,7 +1002,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
 // Returns true if the indicated unrandart is equipped
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-bool player_equip_unrand(int unrand_index)
+bool player_equip_unrand(int unrand_index, bool include_melded)
 {
     const unrandart_entry* entry = get_unrand_entry(unrand_index);
     equipment_type   slot  = get_item_slot(entry->base_type,
@@ -1014,7 +1014,7 @@ bool player_equip_unrand(int unrand_index)
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(slot, include_melded))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
@@ -1029,7 +1029,7 @@ bool player_equip_unrand(int unrand_index)
             if (slots == EQ_AMULET)
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), include_melded))
                 && is_unrandom_artefact(*item)
                 && item->unrand_idx == unrand_index)
             {
@@ -1051,7 +1051,7 @@ bool player_equip_unrand(int unrand_index)
         if (slot <= EQ_NONE || slot >= NUM_EQUIP)
             die("invalid slot: %d", slot);
         // Check a specific slot.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(slot, include_melded))
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
         {
