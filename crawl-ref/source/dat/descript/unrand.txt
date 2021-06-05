@@ -440,9 +440,8 @@ beating on such a gong can grant the wearer spiritual protection.
 %%%%
 amulet of the Air
 
-A sky-blue amulet. It must have been given its many protective properties by a
-powerful air mage, although it seems the one thing they lacked was a steady
-hand.
+A sky-blue amulet, suffused with enchantments that protect the wearer and make
+their Air spells more powerful. Its creator lacked just one thing: a steady hand.
 %%%%
 ring of Shadows
 

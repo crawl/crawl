@@ -1619,8 +1619,11 @@ int player_spec_air()
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
 
-    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
+    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF)
+        || player_equip_unrand(UNRAND_AIR))
+    {
         sa++;
+    }
 
     return sa;
 }
