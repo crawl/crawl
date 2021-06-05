@@ -323,9 +323,7 @@ static peeve_map divine_peeves[] =
     // GOD_VEHUMET,
     peeve_map(),
     // GOD_OKAWARU,
-    {
-        { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
-    },
+    peeve_map(),
     // GOD_MAKHLEB,
     peeve_map(),
     // GOD_SIF_MUNA,
