@@ -1591,6 +1591,8 @@ bool check_old_item_warning(const item_def& item,
         return true;
 
     // now ask
+    if (old_item.cursed())
+        prompt += "and destroy ";
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
     if (penance)
@@ -1649,10 +1651,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (_has_warning_inscription(item, oper))
         return true;
 
-    // Curses first.
+    // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
     if (item.cursed()
-        && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
-            || oper == OPER_PUTON || oper == OPER_WEAR))
+        && (oper == OPER_WIELD && is_weapon(item)
+            || oper == OPER_PUTON || oper == OPER_WEAR
+            || oper == OPER_TAKEOFF || oper == OPER_REMOVE))
     {
         return true;
     }
