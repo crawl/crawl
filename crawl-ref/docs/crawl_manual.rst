@@ -1200,35 +1200,42 @@ experienced players around ready to give advice on equipment choices, tight
 spots, or other dilemmas. The Discord has a relay to the Sequell IRC bot that
 provides helpful information and statistics about the game.
 
-Some players also frequent the #crawl channel on the Libera IRC network, which
-is also the home of Sequell and other info bots. For those interested in game
+Some players frequent the #crawl channel on the Libera IRC network, which is
+also the home of Sequell and other info bots. For those interested in game
 development, see the #crawl-dev channel, which is frequented by many members of
 the game's development team.
 
 History
 ========================================
 
-The history of Crawl is somewhat convoluted: Crawl was created in 1995 by Linley
-Henzell. Linley based Crawl loosely on Angband and NetHack, but avoided several
-annoying aspects of these games, and added a lot of original ideas of his own.
-Crawl was a hit, and Linley produced Crawl versions up to 3.30 in March 1999.
-Further work was then carried out by a group of developers who released 3.40 in
-February 2000. Of them, Brent Ross emerged as the single maintainer, producing
-versions until 4.0 beta 26 in 2002. After a long period of silent work, he went
-a great step by releasing 4.1.2 alpha in August 2005. This alpha contained a lot
-of good ideas, but was nearly unplayable due to balance issues. In the meantime,
-several patchers appeared, improving Crawl's interface tremendously. Several of
-them formed a new devteam; reasoning that rebalancing 4.1.2 was a very difficult
-task, they decided to fork Crawl 4.0 beta 26 and selectively include good ideas
-from 4.1.2 and other sources. This fork is Stone Soup, and is the game this
-manual describes. Stone Soup's release versions were restarted at 0.1 to avoid
-confusion with the existing plethora of Crawl versions.
+Crawl began as Linley's Dungeon Crawl, created in 1995 by Linley Henzell.
+Linley based Crawl on popular roguelikes of the time, namely Moria, Hack, and
+NetHack, also taking inspiration from traditional RPGs like Ultima IV. The
+object of your quest in Crawl, the Orb of Zot, was taken from Wizard's Castle,
+a text adventure written in BASIC.
 
-It should be mentioned that there have been other Crawl variants over the years,
-among them Ax-Crawl, Tile Crawl and Dungeon Crawl Alternative.
+Linley produced Crawl versions up to 3.30, released in March 1999. Further work
+was then carried out by a group of developers who released 3.40 in February
+2000. Of these developers, Brent Ross emerged as the single maintainer,
+producing versions until 4.0 beta 26 in 2002. Brent released an alpha version
+4.1 in August 2005, which vastly overhauled the codebase and reworked many of
+the game's aspects, but also considerably increased its difficulty. By this
+point, Brent no longer had enough free time to develop Crawl. Hence Darshan
+Shaligram, who had previously contributed many UI improvements, recruited
+longtime player Erik Piper to start a new project and continue development.
 
-The object of your quest in Crawl (the Orb of Zot) was taken from Wizard's
-Castle, a text adventure written in BASIC.
+Darshan and Erik aimed to incorporate ideas from the 4.1 alpha and produce a
+more balanced an enjoyable game. Calling their project "Dungeon Crawl: Stone
+Soup" in reference to their collaborative process, they pulled many 4.1
+improvements into the 4.0 beta 26 codebase, play-testing and adjusting the
+results. Dungeon Crawl: Stone Soup version 0.1 was released to USENET in
+September 2006, with many additional developers subsequently joining the team.
+See Darshan's own account of the project's creation here:
+
+  https://crawl.develz.org/wordpress/the-dawn-of-stone-soup
+
+The development of Crawl proceeds to this day, with a team of many developers
+and hundreds of contributors.
 
 ****************************************
 M. Macros, options, performance
