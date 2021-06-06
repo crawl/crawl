@@ -427,7 +427,7 @@ jobs:
         run: ccache -s
 
   notify_irc:
-    name: "Notify ##crawl-dev of build failure"
+    name: "Notify #crawl-dev of build failure"
     needs:
       - linting
       - build_linux

@@ -1,10 +1,10 @@
 Guide to Crawl's options
 ========================
 
-This document explains all of the options in the latest version of
-Dungeon Crawl Stone Soup. If you get stuck or some things don't seem to
-work properly, ask for help in ##crawl on freenode, or on the Crawl
-forums at http://crawl.develz.org/tavern/.
+This document explains all of the options in the latest version of Dungeon
+Crawl Stone Soup. If you get stuck or some things don't seem to work properly,
+ask for help in any of the community discussion resources described at
+http://crawl.develz.org/.
 
 The contents of this text are:
 

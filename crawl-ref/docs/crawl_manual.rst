@@ -32,8 +32,8 @@ You can also read these documents while playing Crawl by hitting '?' at the help
 menu. A list of frequently asked questions about gameplay and design can be
 accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can interact with
-others over a server. Connecting to a server opens several interesting options.
+While Crawl is strictly a single player game, you can interact with others over
+a server. Connecting to a server opens several interesting options.
 
 You can:
 
@@ -44,14 +44,10 @@ You can:
 - take part in the semiannual tournament
 - play the most recent development version
 
-A full list of available servers and information on how to connect to them can
-be found at: http://crawl.develz.org/wordpress/howto
+See the Crawl website to find an online server, links to download the game for
+offline play, and other community resources:
 
-The servers carry no guarantees, though they are generally always running.
-
-There is also a lively IRC channel dedicated to Crawl at ##crawl on irc.freenode.net.
-You can ask for help and there will always be someone to watch your game and
-give hints if you happen to play on a server.
+  http://crawl.develz.org/
 
 ****************************************
 B. Starting screen
@@ -1167,39 +1163,50 @@ These are listed in purple on the list of mutations, and marked as temporary.
 L. Licence, contact, history
 ****************************************
 
-Licence
-  See licence.txt for information about Crawl's licensing. Most of the game's
-  components are licensed under version 2 or later of the GNU General Public
-  License; those that aren't are under compatible licenses.
+See licence.txt for information about Crawl's licensing. Most of the game's
+components are licensed under version 2 or later of the GNU General Public
+License; those that aren't are under compatible licenses.
 
 Disclaimer
   This software is provided as is, with absolutely no warranty express or
   implied. Use of it is at the sole risk of the user. No liability is accepted
   for any damage to the user or to any of the user's possessions.
 
+Contact and community information
+========================================
+
+Crawl's homepage is at:
+
+  http://crawl.develz.org
+
+Use this page for direct links to downloads of the most recent version. You can
+also submit bug reports on the Github issue tracker at:
+
+  https://github.com/crawl/crawl/issues
+
 If you'd like to discuss Crawl, a good place to do so is the #dcss channel
 of the Roguelikes Discord:
 
   https://discord.gg/GtT7xMe
 
-All topics related to this game usually meet a warm response, including tales of
-runes seized, victories (especially first victories), and sad stories of deceased
-characters. There are also usually experienced players around ready to give
-advice on equipment choices, tight spots, or other dilemmas, and a bot provides
-helpful information and statistics about the game.
+There's also an active subreddit for game discussion:
 
-Some players, especially those on the online servers, also frequent ##crawl on
-the freenode IRC network, which contains similar bots.
+  https://www.reddit.com/r/dcss/
 
-Stone Soup's homepage is at:
+In both of these communities, topics related to this game usually meet a warm
+response, including tales of runes seized, victories (especially first
+victories), and sad stories of deceased characters. There are also usually
+experienced players around ready to give advice on equipment choices, tight
+spots, or other dilemmas. The Discord has a relay to the Sequell IRC bot that
+provides helpful information and statistics about the game.
 
-  http://crawl.develz.org
+Some players also frequent the #crawl channel on the Libera IRC network, which
+is also the home of Sequell and other info bots. For those interested in game
+development, see the #crawl-dev channel, which is frequented by many members of
+the game's development team.
 
-Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports there at https://crawl.develz.org/mantis if you have an
-account, or on the Github issue tracker at:
-
-  https://github.com/crawl/crawl/issues
+History
+========================================
 
 The history of Crawl is somewhat convoluted: Crawl was created in 1995 by Linley
 Henzell. Linley based Crawl loosely on Angband and NetHack, but avoided several
