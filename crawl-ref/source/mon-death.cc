@@ -1785,13 +1785,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         _druid_final_boon(&mons);
     }
-    else if (mons.type == MONS_ELEMENTAL_WELLSPRING
-             && mons.mindex() == killer_index)
-    {
-        if (!silent)
-            simple_monster_message(mons, " exhausts itself and dries up.");
-        silent = true;
-    }
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);

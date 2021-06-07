@@ -2187,20 +2187,23 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
-    if (mons->type == MONS_WATER_NYMPH)
+    if (mons->type == MONS_WATER_NYMPH
+        || mons->type == MONS_ELEMENTAL_WELLSPRING)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (feat_has_solid_floor(env.grid(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
-                if (env.grid(*ai) != DNGN_SHALLOW_WATER && env.grid(*ai) != DNGN_FLOOR
+                if (env.grid(*ai) != DNGN_SHALLOW_WATER
+                    && env.grid(*ai) != DNGN_FLOOR
                     && you.see_cell(*ai))
                 {
                     mprf("%s watery aura covers %s.",
                          apostrophise(mons->name(DESC_THE)).c_str(),
                          feature_description_at(*ai, false, DESC_THE).c_str());
                 }
-                temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
+                temp_change_terrain(*ai, DNGN_SHALLOW_WATER,
+                                    random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD, mons);
             }
     }

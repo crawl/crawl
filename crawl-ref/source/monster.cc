@@ -5434,14 +5434,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
         && !monster_habitable_grid(this, env.grid(pos()))
         && !has_ench(ENCH_AQUATIC_LAND))
     {
-        // Elemental wellsprings always have water beneath them
-        if (type == MONS_ELEMENTAL_WELLSPRING)
-        {
-            temp_change_terrain(pos(), DNGN_SHALLOW_WATER, 100,
-                                TERRAIN_CHANGE_FLOOD, this);
-        }
-        else
-            add_ench(ENCH_AQUATIC_LAND);
+        add_ench(ENCH_AQUATIC_LAND);
     }
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))

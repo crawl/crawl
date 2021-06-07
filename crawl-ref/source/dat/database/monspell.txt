@@ -596,6 +596,10 @@ Primal Wave elemental wellspring cast
 
 A torrent of water rises up through @the_monster@!
 %%%%
+Summon Water Elementals elemental wellspring cast
+
+Water spirits pour forth from @the_monster@!
+%%%%
 Invisibility shadow cast
 
 @The_monster@ slips into darkness.

@@ -4070,17 +4070,9 @@ bool handle_mon_spell(monster* mons)
                                        mons->get_ench(ENCH_SAP_MAGIC).agent(),
                                        6 * BASELINE_DELAY));
         }
-        // Wellsprings "cast" from their own hp.
-        if (spell_cast == SPELL_PRIMAL_WAVE
-            && mons->type == MONS_ELEMENTAL_WELLSPRING)
-        {
-            mons->hurt(mons, 5 + random2(15));
-            if (mons->alive())
-                _summon(*mons, MONS_WATER_ELEMENTAL, 3, spell_slot);
-        }
     }
 
-    // Reflection, fireballs, wellspring self-damage, etc.
+    // Reflection, fireballs, etc.
     if (!mons->alive())
         return true;
 

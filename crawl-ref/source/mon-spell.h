@@ -830,6 +830,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_ELEMENTAL_WELLSPRING,
       {
        { SPELL_PRIMAL_WAVE, 65, MON_SPELL_MAGICAL },
+       { SPELL_WATER_ELEMENTALS, 65, MON_SPELL_MAGICAL },
       }
     },
 
