@@ -2197,27 +2197,30 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
-static void _vampiric_draining_effect(actor* victim, actor* agent, int damage)
+static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(*victim))
+    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim))
         return;
 
-    mprf("%s %s life force from %s%s",
-         agent->name(DESC_THE).c_str(),
-         agent->conj_verb("draw").c_str(),
-         victim->name(DESC_THE).c_str(),
-         attack_strength_punctuation(damage).c_str());
+    if (you.can_see(victim) || you.can_see(agent))
+    {
+        mprf("%s %s life force from %s%s",
+             agent.name(DESC_THE).c_str(),
+             agent.conj_verb("draw").c_str(),
+             victim.name(DESC_THE).c_str(),
+             attack_strength_punctuation(damage).c_str());
+    }
 
-    const int drain_amount = victim->hurt(agent, damage,
-                                          BEAM_VAMPIRIC_DRAINING,
-                                          KILLED_BY_BEAM, "",
-                                          "by vampiric draining");
+    const int drain_amount = victim.hurt(&agent, damage,
+                                         BEAM_VAMPIRIC_DRAINING,
+                                         KILLED_BY_BEAM, "",
+                                         "by vampiric draining");
 
-    if (agent->is_monster())
+    if (agent.is_monster())
     {
         const int hp_gain = drain_amount * 2 / 3;
-        if (agent->heal(hp_gain))
-            simple_monster_message(*agent->as_monster(), " is healed by the life force!");
+        if (agent.heal(hp_gain))
+            simple_monster_message(*agent.as_monster(), " is healed by the life force!");
     }
     else
     {
@@ -3482,7 +3485,7 @@ void bolt::affect_player_enchantment(bool resistible)
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
         if (dam && actor_is_susceptible_to_vampirism(you))
         {
-            _vampiric_draining_effect(&you, agent(), dam);
+            _vampiric_draining_effect(you, *agent(), dam);
             obvious_effect = true;
         }
         else
@@ -5368,7 +5371,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
         if (dam && actor_is_susceptible_to_vampirism(*mon))
         {
-            _vampiric_draining_effect(mon, agent(), dam);
+            _vampiric_draining_effect(*mon, *agent(), dam);
             obvious_effect = true;
             return MON_AFFECTED;
         }
