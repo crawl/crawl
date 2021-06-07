@@ -1665,8 +1665,7 @@ void handle_monster_move(monster* mons)
         if (bernoulli(gold, 3.0/100.0))
         {
             simple_monster_message(*mons,
-                " is distracted by your dazzling golden aura, dreaming of "
-                "imaginary riches.");
+                " is distracted by your dazzling golden aura.");
 
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
