@@ -1801,6 +1801,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
+        if (you.hp < you.hp_max && !mons_is_object(mons.type))
+        {
+            const int hp = you.hp;
+            you.heal(random_range(1, 3));
+            if (you.hp > hp)
+                mpr("You feel a bit better.");
+        }
     }
 
     switch (killer)

@@ -350,8 +350,8 @@ randomly blinked away from you.
 %%%%
 Slay status
 
-You have the blood of a were-beast, providing bonuses to your ranged and melee
-attacks which increase every time you slay a foe in combat.
+You have the blood of a were-beast, healing you and providing bonuses to
+your ranged and melee attacks which increase every time you slay a foe.
 %%%%
 Toxic status
 
