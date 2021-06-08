@@ -73,6 +73,7 @@
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
 static bool _monster_move(monster* mons);
+static bool _monster_swaps_places(monster* mon, const coord_def& delta);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -2689,14 +2690,6 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
-    if (mpusher->type == MONS_WANDERING_MUSHROOM
-        && mpushee->type == MONS_TOADSTOOL
-        || mpusher->type == MONS_TOADSTOOL
-           && mpushee->type == MONS_WANDERING_MUSHROOM)
-    {
-        return true;
-    }
-
     // Foxfires can always be pushed
     if (mpushee->type == MONS_FOXFIRE)
         return !mons_aligned(mpushee, mpusher); // But allies won't do it
@@ -2954,12 +2947,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         if (!summon_can_attack(mons, targ))
             return false;
 
-        if (targmonster->type == MONS_TOADSTOOL
-            && mons->type == MONS_WANDERING_MUSHROOM)
-        {
-            return true;
-        }
-
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(*targmonster) && mons->target != targ)
@@ -3124,8 +3111,7 @@ static void _jelly_grows(monster& mons)
     _jelly_divide(mons);
 }
 
-bool monster_swaps_places(monster* mon, const coord_def& delta,
-                          bool takes_time, bool apply_effects)
+static bool _monster_swaps_places(monster* mon, const coord_def& delta)
 {
     if (delta.origin())
         return false;
@@ -3152,19 +3138,14 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
     if (!mon->swap_with(m2))
         return false;
 
-    if (takes_time)
-    {
-        _swim_or_move_energy(*mon);
-        _swim_or_move_energy(*m2);
-    }
+    _swim_or_move_energy(*mon);
+    _swim_or_move_energy(*m2);
 
     mon->check_redraw(m2->pos(), false);
-    if (apply_effects)
-        mon->apply_location_effects(m2->pos());
+    mon->apply_location_effects(m2->pos());
 
     m2->check_redraw(mon->pos(), false);
-    if (apply_effects)
-        m2->apply_location_effects(mon->pos());
+    m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context = SC_NONE;
@@ -3574,11 +3555,7 @@ static bool _monster_move(monster* mons)
                 && !(mons->has_ench(ENCH_INSANE)
                      || mons->confused()))
             {
-                bool takes_time = !(mons->type == MONS_WANDERING_MUSHROOM
-                                    && targ->type == MONS_TOADSTOOL
-                                    || mons->type == MONS_TOADSTOOL
-                                       && targ->type == MONS_WANDERING_MUSHROOM);
-                ret = monster_swaps_places(mons, mmov, takes_time);
+                ret = _monster_swaps_places(mons, mmov);
             }
             else
             {

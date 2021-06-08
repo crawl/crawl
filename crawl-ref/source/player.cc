@@ -417,13 +417,6 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, env.grid(loc));
 
-    if (monster_at(loc)
-        && monster_at(loc)->type == MONS_TOADSTOOL
-        && mons->type == MONS_WANDERING_MUSHROOM)
-    {
-        swap = monster_habitable_grid(mons, env.grid(loc));
-    }
-
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
     {
