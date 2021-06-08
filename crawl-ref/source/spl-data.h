@@ -268,7 +268,7 @@ static const struct spell_desc spelldata[] =
     spschool::conjuration | spschool::ice | spschool::air,
     spflag::target | spflag::area | spflag::needs_tracer
         | spflag::cloud,
-    6,
+    5,
     200,
     5, 5,
     6, 2,
