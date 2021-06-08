@@ -629,7 +629,9 @@ spret palentonga_charge(bool fail, dist *target)
         return spret::success;
 
     // manually apply noise
-    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+    // this silence check feels kludgy - perhaps could check along the whole route..?
+    if (!silenced(target_pos))
+        behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
 
     // We got webbed/netted at the destination, bail on the attack.
     if (you.attribute[ATTR_HELD])
