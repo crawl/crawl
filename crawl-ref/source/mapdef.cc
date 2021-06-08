@@ -4239,10 +4239,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
             else if (mons_class_is_animated_weapon(type))
             {
-                // The last clause catches weapons with multiple items.
                 auto item = mspec.items.get_item(0);
-                if (OBJ_MISCELLANY == item.base_type || EQ_WEAPON !=
-                    get_item_slot(item.base_type, item.sub_type))
+                const auto *unrand = item.ego < SP_FORBID_EGO
+                    ? get_unrand_entry(-item.ego) : nullptr;
+                const auto base = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->base_type : item.base_type;
+                const auto sub = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->sub_type : item.sub_type;
+
+                if (get_item_slot(base, sub) != EQ_WEAPON)
                 {
                     error = make_stringf("Monster '%s' needs a weapon.",
                                          mon_str.c_str());
