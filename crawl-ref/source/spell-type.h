@@ -134,9 +134,6 @@ enum spell_type : int
     SPELL_STATUE_FORM,
     SPELL_ICE_FORM,
     SPELL_DRAGON_FORM,
-#if TAG_MAJOR_VERISON == 34
-    SPELL_HYDRA_FORM,
-#endif
 #if TAG_MAJOR_VERSION > 34
     SPELL_IRRADIATE,
 #endif
