@@ -458,6 +458,7 @@ jobs:
           echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
         with:
+          server: irc.libera.chat
           channel: ${{ secrets.IRC_CHANNEL }}
           nickname: dcss-ci
           message: ${{ steps.message.outputs.message }}
