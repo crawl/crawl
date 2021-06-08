@@ -988,6 +988,8 @@ public:
     }
 };
 
+#if TAG_MAJOR_VERSION == 34
+
 /**
  * Set the number of hydra heads that the player currently has.
  *
@@ -1053,6 +1055,7 @@ public:
     }
 
 };
+#endif
 
 static const Form* forms[] =
 {
