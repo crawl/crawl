@@ -117,7 +117,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_WEREBLOOD,
     SPELL_SPIDER_FORM,
     SPELL_ICE_FORM,
-    SPELL_STORM_FORM,
 },
 
 {   // Book of Transfigurations
