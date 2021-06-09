@@ -1116,10 +1116,12 @@ NAME:    grunt_forest_small_clearings
 TAGS:    transparent extra decor
 DEPTH:   Lair
 MONS:    plant / bush
-KMASK:   G = no_monster_gen
+KPROP:   G = no_tele_into
 SHUFFLE: Ww. / ''` / ''`
 SUBST:   t = t.., '` = 1:49 .:405
-SUBST:   G = w., W = WW., w = wwW
+SUBST:   G = w-, W = WW., w = wwW
+KMASK:   w- = no_monster_gen
+KMASK:   w- = opaque
 MAP
  tt@@@tt
 t.......t

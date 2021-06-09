@@ -7241,7 +7241,7 @@ MAP
 ENDMAP
 
 NAME:    chequers_guarded_unrand_mask_of_the_dragon
-TAGS:    no_monster_gen no_trap_gen transparent
+TAGS:    no_monster_gen no_trap_gen
 DEPTH:   Zot, !Zot:$
 WEIGHT:  3
 ITEM:    mask_of_the_dragon no_pickup
@@ -7254,7 +7254,8 @@ SHUFFLE: PQd|*$ / SRDEFH
 SUBST:   DEFH = -
 # Place monsters randomly.
 # 3 of each dragon (and up to 4 random extras), 3 ghost moth, 3 moth of wrath
-NSUBST:  - = 3=1 / 3=2 / 3=3 / 4=123... / 3=4 / 3=5 / .
+NSUBST:  - = 3=1 / 3=2 / 3=3 / 4=123--- / 3=4 / 3=5 / -
+KMASK: . = !opaque
 # Place transporters
 MARKER:  P = lua:transp_loc("mask_of_the_dragon_entry")
 MARKER:  Q = lua:transp_dest_loc("mask_of_the_dragon_entry")

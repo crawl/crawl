@@ -7066,6 +7066,9 @@ ORIENT: float
 SUBST:  9 = 9....
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  + : + G:1
+# in case the loot chamber gets closed off by a statue:
+KPROP:  * = no_tele_into
+KMASK:  * = opaque
 MAP
 ...........................
 .ccc9xxx9xxx9x9xxx9xxx9ccc.
@@ -7733,9 +7736,11 @@ KFEAT:  ~ = floor
 MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant
-NSUBST: p = 3=xcbtvmnw.' / 5:P
-NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'
-NSUBST: x = 15=Pxcbtvmnw
+# TODO: this can still rarely place isolated regions because of the relatively
+# uncontrolled wall placement here
+NSUBST: p = 3=xcbtvmnW.' / 5:P
+NSUBST: . = 30=PxcbtvmnW / 5:. / 50:'
+NSUBST: x = 15=PxcbtvmnW
 NSUBST: ` = 3:'
 MARKER: C = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 15, \
