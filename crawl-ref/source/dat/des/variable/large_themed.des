@@ -2347,23 +2347,24 @@ ENDMAP
 
 NAME:   dreamdust_goblin_forest_village
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:3-5
+DEPTH:  D:2-5
 ORIENT: north
 WEIGHT: 5
 KMONS:  1 = goblin 
 KMONS:  2 = goblin ; mace
 KMONS:  3 = worm / frilled lizard / quokka
-KMONS:  4 = goblin ; spear
+KMONS:  4 = goblin ; scythe
 KMONS:  5 = goblin perm_ench:paralysis
 KMONS:  6 = killer bee
 KMONS:  7 = goblin ; robe . quarterstaff | any magical staff
 KMONS:  8 = robin band, \
-            hobgoblin ; chain mail . rapier | long sword | flail | trident
+            hobgoblin ; chain mail . buckler . \
+            rapier | scimitar | flail | trident
 KMONS:  ? = goblin / nothing
 KMONS:  P = plant / nothing
 KMONS:  f = fungus w:20 / nothing
 KMONS:  b = bush
-ITEM:   potion of ambrosia q:1, any weapon
+ITEM:   potion of ambrosia q:2 no_pickup, any weapon no_pickup
 KITEM:  $ = gold / any
 KITEM:  6 = potion of ambrosia q:1
 KFEAT:  _ = altar_ecumenical
