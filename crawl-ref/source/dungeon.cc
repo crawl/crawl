@@ -1190,7 +1190,7 @@ static void _mask_vault(const vault_placement &place, unsigned mask,
                         function<bool(const coord_def &)> skip_fun = nullptr)
 {
     for (vault_place_iterator vi(place); vi; ++vi)
-        if (!skip_fun || !skip_fun(vi.vault_pos())) // alert: `skip_fun` takes vault coords
+        if (!skip_fun || !skip_fun(*vi))
             env.level_map_mask(*vi) |= mask;
 }
 
@@ -1237,12 +1237,15 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         else if (!transparent)
         {
             // mask everything except for any marked vault exits as opaque.
-            // (If there's some use for opaque exits, this would be possible
-            // to do with an explicit mask -- but this may lead to vault
-            // placements where e.g. an exit leads to a wall. With one exit,
-            // it may lead to isolated opaque vaults.)
+            // This uses vault exits marked by @, +, = on the vault edge, and
+            // in a pinch, spaces in floats that are necessary for exits.
+            // (This is overridden by explicit masking, or no_exits.)
             _mask_vault(place, MMT_OPAQUE,
-                [&place](const coord_def &c) { return place.is_exit(c); });
+                [&place](const coord_def &c)
+                {
+                    return !place.map.has_tag("no_exits")
+                        && count(place.exits.begin(), place.exits.end(), c);
+                });
         }
     }
 
