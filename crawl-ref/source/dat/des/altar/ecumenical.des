@@ -893,6 +893,7 @@ ENDMAP
 
 NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
 TAGS:   no_monster_gen no_item_gen no_rotate
+WEIGHT: 5
 KMONS:  p = plant / fungus
 KMONS:  b = butterfly
 KITEM:  ! = never_decay human skeleton, robe mundane, quarterstaff mundane
@@ -994,29 +995,28 @@ MAP
 ENDMAP
 
 NAME:   dreamdust_ecumenical_altar_sealed_demon
-TAGS:   no_monster_gen no_rotate transparent
-KMONS:  ? = crimson imp perm_ench:slow perm_ench:weak / \
-            white imp perm_ench:slow perm_ench:weak / \
-            iron imp perm_ench:slow perm_ench:weak / \
-            shadow imp perm_ench:slow perm_ench:weak / \
-            ufetubus perm_ench:slow perm_ench:weak / \
-            quasit perm_ench:slow perm_ench:weak
+TAGS:   no_monster_gen no_item_gen no_rotate
+WEIGHT: 5
+KMONS:  ? = any demon perm_ench:petrified
+KMONS:  p = withered plant
 TILE:   G = dngn_crumbled_column
 : set_feature_name("granite_statue", "a crumbling pillar")
-FTILE: - = floor_pebble_darkgray
+FTILE:  G_vn?- = floor_demonic_red
+TILE:   c = wall_stone_white
+TILE:   v = dngn_silver_wall
 : ecumenical_altar_setup(_G)
 MAP
-...........
-....ccc....
-..ccccccc..
-..cG.A.Gc..
-..c--_--c..
-..c.-?-.c..
-..c.---.c..
-..cG.-.Gc..
-..ccG.Gcc..
-...cc+cc...
-....@@@....
+.........
+...ccc...
+.ccc_ccc.
+.cG---Gc.
+.c-vnv-c.
+.c-n?n-c.
+.c-vnv-c.
+.cG---Gc.
+.ccc+ccc.
+...p.p...
+....@....
 ENDMAP
 
 NAME:  dreamdust_ecumenical_altar_statues
