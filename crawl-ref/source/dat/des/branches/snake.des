@@ -811,7 +811,7 @@ ENDMAP
 
 NAME:    nicolae_snake_gridmaze_tees
 TAGS:    extra transparent
-SHUFFLE: DE, FH, JK, LM, NOPQRSZ
+SHUFFLE: DE/FH/JK/LM, DE, FH, JK, NOPQRSZ
 SUBST:   DFJL = x, EHKMOPQRSZ = ., N = _
 CLEAR:   _
 MAP
