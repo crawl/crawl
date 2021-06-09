@@ -446,6 +446,7 @@ SUBST:  z = t111
 SUBST:  1 = 11'
 KITEM:  E = never_decay gnoll shaman skeleton / never_decay gnoll skeleton
 KPROP:  E = no_tele_into
+KMASK:  E = opaque
 FTILE:  1Et'_  = floor_grass
 COLOUR: 1E'_ = green
 : ecumenical_altar_setup(_G)
@@ -777,6 +778,7 @@ NAME:  hellmonk_ecumenical_altar_watching_god
 TAGS:  transparent
 KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
             great orb of eyes
+KMASK: 1 = opaque
 : ecumenical_altar_setup(_G)
 MAP
 ...........
@@ -853,6 +855,7 @@ WEIGHT: 5
 TAGS:   no_monster_gen transparent
 KFEAT:  B = altar_beogh
 KPROP:  B = no_tele_into
+KMASK:  B = opaque
 NSUBST: d = 1:_ / *:d
 SUBST:  1 = 1..
 SUBST:  x : xc

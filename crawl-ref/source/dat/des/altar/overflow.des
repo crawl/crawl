@@ -1537,6 +1537,7 @@ TAGS:  transparent
 KFEAT: _ = altar_makhleb
 KPROP: 12 = no_tele_into
 KMASK: 12 = no_trap_gen
+KMASK: 12 = opaque
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
 : interest_check(_G)
@@ -1656,7 +1657,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   transparent decor no_rotate
+TAGS:   decor no_rotate
 TAGS:   layout_rooms layout_city layout_open
 KPROP:  abcdefghBR' = no_tele_into
 KFEAT:  _ = altar_nemelex_xobeh
@@ -2985,7 +2986,7 @@ ENDMAP
 # weapons are just plain.
 NAME:   nicolae_wu_jian_glorious_leap
 TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen
-TAGS:   transparent uniq_altar_wu_jian
+TAGS:   uniq_altar_wu_jian
 WEIGHT: 5
 KITEM:  I = any weapon level:-2
 KITEM:  i = any weapon
