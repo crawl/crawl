@@ -147,8 +147,7 @@ Blade Hands spell
                "Causes long, scythe-shaped blades to grow from the " ..
                "caster's " .. hands .. ", increasing melee damage " ..
                "significantly.\n\nWhile transformed, equipped weapons, " ..
-               "shields, and gloves are melded, and casting spells " ..
-               "becomes somewhat more difficult."
+               "shields, and gloves are melded."
 
     if hands == "paws" then
         return description .. " In addition, the clacking of blades " ..

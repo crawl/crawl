@@ -89,7 +89,7 @@ static const form_entry formdata[] =
     "",
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 20, true, 22,
+    0, 0, 0, true, 0, true, 22,
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",
