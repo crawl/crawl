@@ -7471,8 +7471,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         if (mon->no_tele(true, false))
             return ai_action::impossible();
         else // Prefer to keep a polar vortex going rather than blink.
-            return ai_action::good_or_bad(!mon->has_ench(ENCH_POLAR_VORTEX)
-                                        && !mon->has_ench(ENCH_VORTEX));
+            return ai_action::good_or_bad(!mon->has_ench(ENCH_POLAR_VORTEX));
 
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
