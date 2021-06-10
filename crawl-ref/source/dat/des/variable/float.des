@@ -8082,11 +8082,13 @@ DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 : if you.in_branch("D") then
+ITEM: randbook / any scroll / short sword / pair of gloves
 MONS: deep elf pyromancer w:8 / fire elemental w:5 / nothing, wizard
 : else
+ITEM: randbook / any scroll / short sword / pair of gloves \
+kite shield
 MONS: wizard w:5 / fire elemental w:5 / nothing, lich
 : end
-ITEM: randbook / any scroll
 SUBST: - = .lx
 MAP
 llllll

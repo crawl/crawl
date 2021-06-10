@@ -211,6 +211,7 @@ MONS:  rust devil / orange demon
 MONS:  hell beast / red devil
 MONS:  iron imp
 MONS:  hellion
+KPROP: 1234_ = no_tele_into
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L
@@ -221,7 +222,6 @@ SUBST: L = l.
 SUBST: _ = _ P:1
 KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
-KPROP: 1234_ = no_tele_into
 MAP
 ....LLLLL.....
 ..LlllllllL...

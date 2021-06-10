@@ -1894,6 +1894,7 @@ ENDMAP
 NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 KFEAT: _ = altar_okawaru
+KPROP: 1 = no_tele_into
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
 : interest_check(_G)
@@ -3064,7 +3065,7 @@ ENDMAP
 
 NAME:   tgw_xom
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
-TAGS:   uniq_altar_xom
+TAGS:   uniq_altar_xom no_tele_into
 KFEAT:  _ = altar_xom
 MONS:   place:D:1
 MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
@@ -3206,6 +3207,7 @@ ENDMAP
 NAME:   led_xom_imps
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
 MONS:   crimson imp, crimson imp ; dagger ego:chaos
+KPROP:  1 = no_tele_into
 NSUBST: 1 = 2 / 1
 KFEAT:  _ = altar_xom
 KFEAT:  ^ = teleport trap / dispersal trap

@@ -779,6 +779,7 @@ TAGS:  transparent
 KMONS: 1 = floating eye / golden eye / shining eye / eye of devastation / \
             great orb of eyes
 KMASK: 1 = opaque
+KPROP: 1 = no_tele_into
 : ecumenical_altar_setup(_G)
 MAP
 ...........

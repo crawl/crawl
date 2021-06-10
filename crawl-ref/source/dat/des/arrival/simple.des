@@ -2094,6 +2094,7 @@ ENDMAP
 
 NAME:   giann_bridges
 TAGS:   arrival no_monster_gen
+KPROP:  W = no_tele_into
 MONS:   plant
 ORIENT: float
 MAP

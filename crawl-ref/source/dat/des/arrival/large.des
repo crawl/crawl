@@ -883,11 +883,11 @@ NAME:   lightli_arrival_farm
 ORIENT: float
 TAGS:   no_monster_gen arrival
 MONS:   plant
+KPROP:  F1 = no_tele_into
 SUBST:  1 = 1:2 t:2 .:1
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 1, size = 1, \
                               excl_rad = -1 }
-KPROP:  F1 = no_tele_into
 MAP
          xxxxxxx
          x..{..x
