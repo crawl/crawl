@@ -915,6 +915,23 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 },
 
 {
+    ZAP_STUNNING_BURST,
+    "stunning burst",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 8, 1, 20>,
+    new tohit_calculator<15, 1, 10>,
+    LIGHTCYAN,
+    false,
+    BEAM_STUN_BOLT,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    8
+},
+
+{
     ZAP_ORB_OF_ELECTRICITY,
     "orb of electricity",
     200,

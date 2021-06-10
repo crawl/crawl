@@ -3946,7 +3946,6 @@ bool monster::res_torment() const
 bool monster::res_polar_vortex() const
 {
     return has_ench(ENCH_POLAR_VORTEX)
-           || has_ench(ENCH_VORTEX)
            || get_mons_resist(*this, MR_RES_VORTEX) > 0;
 }
 

@@ -216,13 +216,9 @@ static int _rdam(int rage)
         return rage * 10 - 50;
 }
 
-static int _vortex_age(const actor *caster, bool is_vortex = false)
+static int _vortex_age(const actor *caster)
 {
-    string name;
-    if (is_vortex)
-        name = "vortex_since";
-    else
-        name = "polar_vortex_since";
+    const string name = "polar_vortex_since";
     if (caster->props.exists(name.c_str()))
         return you.elapsed_time - caster->props[name.c_str()].get_int();
     return 100; // for permanent vortices
@@ -238,23 +234,20 @@ static int _age_needed(int r)
     return sqr(r) * 7 / 5;
 }
 
-void polar_vortex_damage(actor *caster, int dur, bool is_vortex)
+void polar_vortex_damage(actor *caster, int dur)
 {
-    ASSERT(!(is_vortex && caster->is_player()));
-
     if (!dur)
         return;
 
     int pow;
-    const int max_radius = is_vortex ? VORTEX_RADIUS : POLAR_VORTEX_RADIUS;
+    const int max_radius = POLAR_VORTEX_RADIUS;
 
     // Not stored so unwielding that staff will reduce damage.
     if (caster->is_player())
         pow = calc_spell_power(SPELL_POLAR_VORTEX, true);
     else
-        // Note that this spellpower multiplier for Vortex is based on Air
-        // Elementals, which have low HD.
-        pow = caster->as_monster()->get_hit_dice() * (is_vortex ? 12 : 4);
+        // XXX TODO: use the normal spellpower calc functions
+        pow = caster->as_monster()->get_hit_dice() * 4;
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
@@ -262,7 +255,7 @@ void polar_vortex_damage(actor *caster, int dur, bool is_vortex)
     const coord_def old_player_pos = you.pos();
     coord_def new_player_pos = old_player_pos;
 
-    int age = _vortex_age(caster, is_vortex);
+    int age = _vortex_age(caster);
     ASSERT(age >= 0);
 
     vector<coord_def>     move_avail; // legal destinations
@@ -378,15 +371,13 @@ void polar_vortex_damage(actor *caster, int dur, bool is_vortex)
                             || !victim->is_monster()
                             || !god_protects(caster, victim->as_monster(), true)))
                     {
-                        const int dice = is_vortex ? 9 : 12;
-                        const int base_dmg = div_rand_round(roll_dice(dice, rpow), 15);
-                        const beam_type typ = is_vortex ? BEAM_AIR : BEAM_ICE;
+                        const int base_dmg = div_rand_round(roll_dice(12, rpow), 15);
                         const int post_res_dmg
-                            = resist_adjust_damage(victim, typ,base_dmg);
+                            = resist_adjust_damage(victim, BEAM_ICE, base_dmg);
                         const int post_ac_dmg
                             = victim->apply_ac(post_res_dmg, 0, ac_type::proportional);
                         dprf("damage done: %d", post_ac_dmg);
-                        victim->hurt(caster, post_ac_dmg, typ, KILLED_BY_BEAM,
+                        victim->hurt(caster, post_ac_dmg, BEAM_ICE, KILLED_BY_BEAM,
                                      "", "vortex");
                     }
                 }

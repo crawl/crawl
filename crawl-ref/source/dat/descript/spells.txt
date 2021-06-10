@@ -1381,6 +1381,12 @@ Strip Willpower spell
 Greatly reduces the target's willpower, making them more vulnerable to a
 variety of magical effects.
 %%%%
+Stunning Burst spell
+
+Fires a weak electrical burst which, on impact, causes very brief paralysis.
+Willpower is of no use against this effect, but resistance to electricity can
+sometimes prevent it.
+%%%%
 Sublimation of Blood spell
 
 Converts some of the caster's blood into magical energy. The process is painful
@@ -1617,14 +1623,6 @@ Makes a targeted creature more vulnerable to poison.
 Volley of Thorns spell
 
 Launches a small hail of sharp thorns.
-%%%%
-Vortex spell
-
-Turns the air near the caster into a mighty, short-lived vortex, doing
-tremendous damage to everyone caught in it. Those affected will also be swept
-up into the air and tossed around. Only the eye of the storm is a safe place,
-and it follows the caster. After the vortex fades, it cannot be called forth
-again for a short time.
 %%%%
 Wall of Brambles spell
 

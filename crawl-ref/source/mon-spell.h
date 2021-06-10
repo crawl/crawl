@@ -823,7 +823,7 @@ static const mon_spellbook mspell_list[] =
     // ('E') Elementals.
     {  MST_AIR_ELEMENTAL,
       {
-       { SPELL_VORTEX, 80, MON_SPELL_NATURAL},
+       { SPELL_STUNNING_BURST, 50, MON_SPELL_NATURAL},
       }
     },
 

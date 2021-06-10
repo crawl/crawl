@@ -1411,6 +1411,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_ACID_SPLASH:
     case SPELL_ELECTRICAL_BOLT:
     case SPELL_DISPEL_UNDEAD_RANGE:
+    case SPELL_STUNNING_BURST:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1725,7 +1726,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
     case SPELL_POLAR_VORTEX:
-    case SPELL_VORTEX:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
     case SPELL_BLACK_MARK:
@@ -5388,27 +5388,23 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     }
 }
 
-static void _mons_vortex(monster *mons, bool is_vortex = false)
+static void _mons_vortex(monster *mons)
 {
-    const int dur = is_vortex ? 30 : 60;
-    const string desc = is_vortex ? "vortex" : "freezing vortex";
-    const string prop = is_vortex ? "vortex_since" : "polar_vortex_since";
-    const enchant_type ench = is_vortex ? ENCH_VORTEX : ENCH_POLAR_VORTEX;
-
     if (you.can_see(*mons))
     {
         bool flying = mons->airborne();
-        mprf("A %s appears %s%s%s!",
-             desc.c_str(),
+        mprf("A freezing vortex appears %s%s%s!",
              flying ? "around " : "and lifts ",
              mons->name(DESC_THE).c_str(),
              flying ? "" : " up!");
     }
     else if (you.see_cell(mons->pos()))
-        mprf("A %s appears out of thin air!", desc.c_str());
+        mpr("A freezing vortex appears out of thin air!");
 
-    mons->props[prop.c_str()].get_int() = you.elapsed_time;
-    mon_enchant me(ench, 0, mons, dur);
+    const int ench_dur = 60;
+
+    mons->props["polar_vortex_since"].get_int() = you.elapsed_time;
+    mon_enchant me(ENCH_POLAR_VORTEX, 0, mons, ench_dur);
     mons->add_ench(me);
 
     if (mons->has_ench(ENCH_FLIGHT))
@@ -5418,7 +5414,7 @@ static void _mons_vortex(monster *mons, bool is_vortex = false)
         mons->update_ench(me2);
     }
     else
-        mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, dur));
+        mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, ench_dur));
 }
 
 /**
@@ -5992,12 +5988,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_POLAR_VORTEX:
     {
         _mons_vortex(mons);
-        return;
-    }
-
-    case SPELL_VORTEX:
-    {
-        _mons_vortex(mons, true);
         return;
     }
 
@@ -7707,14 +7697,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_POLAR_VORTEX:
         if (mon->has_ench(ENCH_POLAR_VORTEX) || mon->has_ench(ENCH_POLAR_VORTEX_COOLDOWN))
-            return ai_action::impossible();
-        else if (you.visible_to(mon) && friendly && !(mon->holiness() & MH_DEMONIC))
-            return ai_action::bad(); // don't zap player (but demons are rude)
-        else
-            return ai_action::good_or_bad(_trace_los(mon, _vortex_vulnerable));
-
-    case SPELL_VORTEX:
-        if (mon->has_ench(ENCH_VORTEX) || mon->has_ench(ENCH_VORTEX_COOLDOWN))
             return ai_action::impossible();
         else if (you.visible_to(mon) && friendly && !(mon->holiness() & MH_DEMONIC))
             return ai_action::bad(); // don't zap player (but demons are rude)

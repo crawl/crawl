@@ -599,6 +599,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
         case BEAM_THUNDER:
+        case BEAM_STUN_BOLT:
             return defender->res_elec();
         case BEAM_NEG:
         case BEAM_PAIN:

@@ -3164,17 +3164,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_VORTEX, "Vortex",
-    spschool::air,
-    spflag::area | spflag::monster,
-    5,
-    200,
-    VORTEX_RADIUS, VORTEX_RADIUS,
-    5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
-},
-
-{
     SPELL_BORGNJORS_VILE_CLUTCH, "Borgnjor's Vile Clutch",
     spschool::necromancy | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,
@@ -3441,6 +3430,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_STUNNING_BURST, "Stunning Burst",
+    spschool::conjuration | spschool::air,
+    spflag::target | spflag::needs_tracer | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    8, 8,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3538,6 +3538,7 @@ AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
 AXED_SPELL(SPELL_ABSOLUTE_ZERO, "Absolute Zero")
+AXED_SPELL(SPELL_VORTEX, "Vortex")
 #endif
 
 };

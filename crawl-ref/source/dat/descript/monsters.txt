@@ -514,7 +514,7 @@ subterranean spaces.
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
-swirling vortex of air.
+lightning-spitting spirit, stunning foes with its crackling bursts.
 %%%%
 alligator
 
@@ -2431,7 +2431,7 @@ long on brawn, its thick knobbly hide heals rapidly from most wounds.
 %%%%
 twister
 
-A whirling vortex of turbulent air.
+A whirling vortex of frost.
 %%%%
 two-headed ogre
 
@@ -2820,7 +2820,8 @@ An enormous, bloated bat.
 %%%%
 greater air elemental
 
-<air elemental>
+A mighty spirit drawn from the elemental plane of air, surrounded by a
+deadly vortex of frost.
 %%%%
 ice bat
 

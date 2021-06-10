@@ -1706,19 +1706,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-    case ENCH_VORTEX:
-        polar_vortex_damage(this, speed_to_duration(speed), true);
-        if (decay_enchantment(en))
-        {
-            add_ench(ENCH_VORTEX_COOLDOWN);
-            if (you.can_see(*this))
-            {
-                mprf("The winds around %s start to calm down.",
-                     name(DESC_THE).c_str());
-            }
-        }
-        break;
-
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
@@ -1814,7 +1801,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_POLAR_VORTEX_COOLDOWN:
-    case ENCH_VORTEX_COOLDOWN:
         if (decay_enchantment(en))
         {
             remove_vortex_clouds(mid);
@@ -2339,9 +2325,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_POLAR_VORTEX_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
-        break;
-    case ENCH_VORTEX_COOLDOWN:
-        cturn = random_range(7, 17) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * 10 / _mod_speed(10, mons->speed);
