@@ -1781,6 +1781,29 @@ x...xbmbx...x
 @...xb+bx...@
 ENDMAP
 
+# RIP Twisted Resurrection
+NAME:   dreamdust_macabre_mage
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Elf
+KFEAT:  A = stone_arch
+KMONS:  A = deep elf death mage ; staff of death . robe good_item
+KMONS:  #. = nothing w:50 / \
+             small abomination / large abomination w:1
+FTILE:  # = floor_demonic_red
+MAP
+xxxxxxxxxxx
+x#.......#x
+x.#.###.#.x
+x..#...#..x
+x.#.#.#.#.x
+x.#..A..#.x
+x.#.#.#.#.x
+x..#...#..x
+x.#.###.#.x
+x#.......#x
+xxxxx+xxxxx
+ENDMAP
+
 
 ##############################################################################
 ##############################################################################
