@@ -121,6 +121,8 @@ local output_to_base = "placement-"
 
 local force = args["-force"] ~= nil
 
+local tele_zones = args["-tele-zones"] ~= nil
+
 -- fill_level will fail all minivaults, because their connectivity check fails.
 -- In principle, this could be changed in maps.cc:_find_minivault_place, by only
 -- doing the _connected_minivault_place check if check_place is true, but this
@@ -139,6 +141,8 @@ local force_skip = util.set{
     "uniq_ignacio",
     -- this one has a validation check that always fails in test cases(??)
     "gauntlet_exit_mini_maze",
+    "pf_just_have_faith", -- uses mimics that this code fails to detect
+
 }
 
 local force_connectivity_ok = util.set{
@@ -233,7 +237,7 @@ local function generate_map(map)
             crawl.message("   Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to)
         end
         if z ~= 1 then
-            local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones)"
+            local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
             if dump then
                 crawl.stderr("    Failing vault output to: " .. output_to)
             end
@@ -241,6 +245,32 @@ local function generate_map(map)
                 crawl.stderr("(Force skipped) " .. connectivity_err)
             else
                 assert(z == 1, connectivity_err)
+            end
+        end
+        if tele_zones then
+            -- we need some kind of stairs so that vaults that place no stairs
+            -- don't count as a closet. We can't assume a baseline of 1 because
+            -- some vaults *do* place stairs, in which case an additional
+            -- closet will count as 1. Unclear if this position works for all
+            -- vaults...
+            dgn.fill_grd_area(1, 1, 1, 1, 'stone_stairs_up_i')
+            z = dgn.count_tele_zones()
+            if dump then
+                -- just rewrite it
+                debug.dump_map(output_to, builder_log)
+            end
+            if z >= 1 then
+                local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+                if dump then
+                    crawl.stderr("    Failing vault output to: " .. output_to)
+                end
+                -- anything that has connectivity problems will have tele
+                -- closets, skip the same list
+                if force_connectivity_ok[map_to_test] then
+                    crawl.stderr("(Force skipped) " .. connectivity_err)
+                else
+                    assert(z == 0, connectivity_err)
+                end
             end
         end
     end

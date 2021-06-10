@@ -846,8 +846,20 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && (trap->type == TRAP_TELEPORT_PERMANENT
                           || trap->type == TRAP_DISPERSAL));
     }
-    else
-        return feat_is_traversable(feat);
+    else // the mimic check here relies on full placement operating, e.g. not &L
+        return feat_is_traversable(feat) || feature_mimic_at(c);
+}
+
+static bool _dgn_square_is_tele_connected(const coord_def &c)
+{
+    // all solid features get marked with no_tele_into, including doors, so
+    // undo this more or less so that this function can be used for connectivity
+    // checking; except when the entire vault is notele
+    const bool vault_notele = dgn_vault_at(c)
+                    && dgn_vault_at(c)->map.has_tag("no_tele_into");
+    return (!(env.pgrid(c) & FPROP_NO_TELE_INTO)
+                            || !vault_notele && feat_is_solid(env.grid(c)))
+        && dgn_square_travel_ok(c);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
@@ -1144,6 +1156,16 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
     return nzones - ngood;
 }
 
+int dgn_count_tele_zones(bool choose_stairless)
+{
+    dprf("Counting teleport zones");
+    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
+                                    DNGN_UNSEEN, _dgn_square_is_tele_connected);
+}
+
+// Count number of mutually isolated zones. If choose_stairless, only count
+// zones with no stairs in them. If fill is set to anything other than
+// DNGN_UNSEEN, chosen zones will be filled with the provided feature.
 int dgn_count_disconnected_zones(bool choose_stairless,
                                  dungeon_feature_type fill)
 {
