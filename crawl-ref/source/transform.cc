@@ -986,6 +986,8 @@ public:
             power = you.props[AIRFORM_POWER_KEY].get_int();
         return 2 + div_rand_round(power * 2, 5);
     }
+
+    bool can_offhand_punch() const override { return true; }
 };
 
 #if TAG_MAJOR_VERSION == 34
