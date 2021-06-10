@@ -1286,8 +1286,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DAZZLING_FLASH:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
-    case SPELL_ABSOLUTE_ZERO:
-        return make_unique<targeter_absolute_zero>(range);
+    case SPELL_CHAIN_LIGHTNING:
+        return make_unique<targeter_chain_lightning>();
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
 
@@ -2083,7 +2083,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_discharge(powc, you, fail);
 
     case SPELL_CHAIN_LIGHTNING:
-        return cast_chain_spell(SPELL_CHAIN_LIGHTNING, powc, &you, fail);
+        return cast_chain_lightning(powc, you, fail);
 
     case SPELL_DISPERSAL:
         return cast_dispersal(powc, fail);

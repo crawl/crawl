@@ -566,6 +566,10 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_ICE:
         return 40;
 
+    // 50/50 split of elec and sonic damage.
+    case BEAM_THUNDER:
+        return 50;
+
     case BEAM_LAVA:
         return 55;
 
@@ -594,6 +598,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
             return defender->res_elec();
         case BEAM_NEG:
         case BEAM_PAIN:

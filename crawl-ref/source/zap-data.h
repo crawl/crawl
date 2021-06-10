@@ -1451,6 +1451,23 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
+    ZAP_CHAIN_LIGHTNING,
+    "bolt of lightning",
+    200,
+    new calcdice_calculator<3, 0, 2, 1>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    new dicedef_calculator<3, 27, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    LIGHTCYAN,
+    false,
+    BEAM_THUNDER,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    10,
+},
+
+{
     ZAP_BLINKBOLT,
     "living lightning",
     200,

@@ -982,6 +982,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";

@@ -1045,6 +1045,9 @@ void bolt::affect_cell()
     if (cell_is_solid(pos()))
         affect_wall();
 
+    if (origin_spell == SPELL_CHAIN_LIGHTNING && pos() != target)
+        return;
+
     // If the player can ever walk through walls, this will need
     // special-casing too.
     bool hit_player = found_player() && !ignores_player();
@@ -1448,6 +1451,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ELECTRICITY:
+    case BEAM_THUNDER:
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
@@ -4054,6 +4058,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
     case BEAM_DAMNATION:
         ac_rule = ac_type::none; break;
     case BEAM_ELECTRICITY:
+    case BEAM_THUNDER:
         ac_rule = ac_type::half; break;
     case BEAM_FRAG:
         ac_rule = ac_type::triple; break;
@@ -6518,6 +6523,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
+    case BEAM_THUNDER:               return "thunder";
     case BEAM_DEVASTATION:           return "devastation";
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";

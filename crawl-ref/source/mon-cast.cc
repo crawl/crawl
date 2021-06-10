@@ -1152,7 +1152,6 @@ static int _mons_power_hd_factor(spell_type spell)
         case SPELL_SUMMON_HYDRA:
             return 5;
 
-        case SPELL_CHAIN_LIGHTNING:
         case SPELL_CHAIN_OF_CHAOS:
             return 4;
 
@@ -3257,13 +3256,6 @@ static bool _torment_vulnerable(const actor* victim)
     if (!victim)
         return false;
     return !victim->res_torment();
-}
-
-static bool _elec_vulnerable(const actor* victim)
-{
-    if (!victim)
-        return false;
-    return victim->res_elec() < 3;
 }
 
 static bool _mutation_vulnerable(const actor* victim)
@@ -6147,7 +6139,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_CHAIN_LIGHTNING:
-        cast_chain_spell(spell_cast, splpow, mons);
+        cast_chain_lightning(splpow, *mons, false);
         return;
 
     case SPELL_CHAIN_OF_CHAOS:
@@ -7698,8 +7690,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_CHAIN_LIGHTNING:
         if (you.visible_to(mon) && friendly)
             return ai_action::bad(); // don't zap player
-        else
-            return ai_action::good_or_bad(_trace_los(mon, _elec_vulnerable));
+        return ai_action::good_or_bad(_trace_los(mon, [] (const actor * /*a*/)
+                                                          { return true; }));
 
     case SPELL_CHAIN_OF_CHAOS:
         if (you.visible_to(mon) && friendly)

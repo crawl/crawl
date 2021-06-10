@@ -300,9 +300,10 @@ effects. The arc can touch upon the caster without harming them.
 %%%%
 Chain Lightning spell
 
-Releases a massive electrical discharge that arcs from target to target until
-it grounds out. It may ground out harmlessly if there are no targets
-sufficiently close to the caster. Its damage partially bypasses armour.
+Releases a massive electrical discharge that arcs to the creature nearest the
+caster and then outward from it. The further it travels, the less damage it
+does. Secondary arcs have limited range and do little damage to the caster.
+The spell's damage partially bypasses armour and resistance to electricity.
 %%%%
 Charm spell
 

@@ -1223,10 +1223,10 @@ static const struct spell_desc spelldata[] =
     SPELL_CHAIN_LIGHTNING, "Chain Lightning",
     spschool::air | spschool::conjuration,
     spflag::area,
-    8,
+    9,
     200,
     -1, -1,
-    8, 25,
+    25, 10,
     TILEG_CHAIN_LIGHTNING,
 },
 

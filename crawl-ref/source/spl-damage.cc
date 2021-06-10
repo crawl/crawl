@@ -58,6 +58,35 @@
 #include "view.h"
 #include "xp-evoker-data.h" // for thunderbolt
 
+static bool _act_worth_targeting(const actor &caster, const actor &a)
+{
+    if (!caster.see_cell_no_trans(a.pos()))
+        return false;
+    if (a.is_player())
+        return true;
+    const monster &m = *a.as_monster();
+    return !mons_is_firewood(m)
+        && !mons_is_conjured(m.type)
+        && (!caster.is_player() || !god_protects(&you, &m, true));
+}
+
+// returns the closest target to the caster, choosing randomly if there are more
+// than one (see `fair` argument to distance_iterator).
+static actor* _find_closest_target(const actor &caster, int radius, bool tracer)
+{
+    for (distance_iterator di(caster.pos(), !tracer, true, radius); di; ++di)
+    {
+        actor *act = actor_at(*di);
+        if (act && _act_worth_targeting(caster, *act)
+            && (!tracer || caster.can_see(*act)))
+        {
+            return act;
+        }
+    }
+
+    return nullptr;
+}
+
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
     zappy(ZAP_FIRE_STORM, pow, source->is_monster(), beam);
@@ -147,21 +176,157 @@ bool cast_smitey_damnation(int pow, bolt &beam)
     return true;
 }
 
-string desc_chain_lightning_dam(int pow)
+struct arc_victim
 {
-    // Damage is 5d(9.2 + pow / 30), but if lots of targets are around
-    // it can hit the player precisely once at very low (e.g. 1) power
-    // and deal 5 damage.
-    int min = 5;
+    coord_def source;
+    actor *victim;
+};
 
-    // Max damage per bounce is 46 + pow / 6; in the worst case every other
-    // bounce hits the player, losing 8 pow on the bounce away and 8 on the
-    // bounce back for a total of 16; thus, for n bounces, it's:
-    // (46 + pow/6) * n less 16/6 times the (n - 1)th triangular number.
-    int n = (pow + 15) / 16;
-    int max = (46 + (pow / 6)) * n - 4 * n * (n - 1) / 3;
+static const int ARC_DIST = 3;
 
-    return make_stringf("%d-%d", min, max);
+static void _chain_lightning_to(const actor &caster, int pow,
+                                vector<arc_victim> &victims,
+                                set<actor*> &seen_set, int arcs)
+{
+    bolt beam;
+    zappy(ZAP_CHAIN_LIGHTNING, pow, caster.is_monster(), beam);
+    for (int i = 0; i < arcs; i++)
+        beam.damage.size = beam.damage.size * 2 / 3;
+    const int dam_size = beam.damage.size;
+
+    vector<arc_victim> new_victims;
+    for (arc_victim &arc : victims)
+    {
+        beam.source = arc.source;
+        beam.target = arc.victim->pos();
+        beam.range = grid_distance(beam.source, beam.target);
+        beam.thrower        = caster.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+        beam.origin_spell   = SPELL_CHAIN_LIGHTNING;
+        // Reduce damage to the caster.
+        beam.damage.size = dam_size / (arc.victim == &caster ? 6 : 1);
+        beam.draw_delay = 0; // still slow in zigs; alas
+        beam.fire();
+
+        // arc!
+        for (distance_iterator di(beam.target, false, true, ARC_DIST); di; ++di)
+        {
+            actor *new_victim = actor_at(*di);
+            if (new_victim
+                && seen_set.find(new_victim) == seen_set.end()
+                && _act_worth_targeting(caster, *new_victim))
+            {
+                new_victims.push_back(arc_victim{beam.target, new_victim});
+                seen_set.insert(new_victim);
+            }
+        }
+    }
+
+    scaled_delay(200);
+    if (!new_victims.empty())
+        _chain_lightning_to(caster, pow, new_victims, seen_set, arcs + 1);
+}
+
+// Assuming the player casts Chain Lightning, who *might* get hit?
+// Doesn't include monsters the player can't see.
+vector<coord_def> chain_lightning_targets()
+{
+    vector<coord_def> targets;
+    actor *seed = _find_closest_target(you, LOS_RADIUS, true);
+    if (!seed)
+        return targets;
+
+    set<actor*> seen;
+    vector<coord_def> to_check;
+    seen.insert(seed);
+    to_check.push_back(seed->pos());
+    targets.push_back(seed->pos());
+    while (!to_check.empty())
+    {
+        const coord_def arc_source = to_check.back();
+        to_check.pop_back();
+        for (distance_iterator di(arc_source, true, true, ARC_DIST); di; ++di)
+        {
+            actor *new_victim = actor_at(*di);
+            if (new_victim
+                && you.can_see(*new_victim)
+                && seen.find(new_victim) == seen.end()
+                && _act_worth_targeting(you, *new_victim))
+            {
+                to_check.push_back(new_victim->pos());
+                targets.push_back(new_victim->pos());
+                seen.insert(new_victim);
+            }
+        }
+    }
+
+    return targets;
+}
+
+static bool _warn_about_chain_lightning()
+{
+    vector<const monster*> bad_targets;
+    for (coord_def p : chain_lightning_targets())
+    {
+        const monster* mon = monster_at(p);
+        string adj, suffix;
+        bool penance;
+        if (mon && bad_attack(mon, adj, suffix, penance, you.pos()))
+            bad_targets.push_back(mon);
+    }
+
+    if (bad_targets.empty())
+        return false;
+    
+    const monster* ex_mon = bad_targets.back();
+    string adj, suffix;
+    bool penance;
+    bad_attack(ex_mon, adj, suffix, penance, you.pos());
+    const string and_more = bad_targets.size() > 1 ?
+            make_stringf(" (and %lu other bad targets)",
+                         bad_targets.size() - 1) : "";
+    const string prompt = make_stringf("Chain Lightning might hit %s%s. Cast it anyway?",
+                                       ex_mon->name(DESC_THE).c_str(),
+                                       and_more.c_str());
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+    return false;
+}
+
+spret cast_chain_lightning(int pow, const actor &caster, bool fail)
+{
+    if (caster.is_player() && _warn_about_chain_lightning())
+        return spret::abort;
+    // NOTE: it's possible to hit something not in this list by arcing
+    // chain lightning through an invisible enemy through an ally. Oh well...
+
+    fail_check();
+
+    actor* act = _find_closest_target(caster, LOS_RADIUS, false);
+    if (!act)
+    {
+        if (caster.is_player())
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    if (you.can_see(caster))
+    {
+        mprf("Lightning arcs from %s %s!",
+             apostrophise(caster.name(DESC_PLAIN)).c_str(),
+             caster.hand_name(true).c_str());
+    }
+
+    vector<arc_victim> victims;
+    victims.push_back(arc_victim{caster.pos(), act});
+    set<actor*> seen_set;
+    seen_set.insert(act);
+    const int initial_arc_dist = (grid_distance(caster.pos(), act->pos()) - 1) / ARC_DIST; // 1 arc at range 4, 2 at range 7
+    _chain_lightning_to(caster, pow, victims, seen_set, initial_arc_dist);
+
+    return spret::success;
 }
 
 // XXX no friendly check
@@ -172,24 +337,10 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
     bolt beam;
 
     // initialise beam structure
-    switch (spell_cast)
-    {
-        case SPELL_CHAIN_LIGHTNING:
-            beam.name           = "lightning arc";
-            beam.aux_source     = "chain lightning";
-            beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
-            beam.flavour        = BEAM_ELECTRICITY;
-            break;
-        case SPELL_CHAIN_OF_CHAOS:
-            beam.name           = "arc of chaos";
-            beam.aux_source     = "chain of chaos";
-            beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
-            beam.flavour        = BEAM_CHAOS;
-            break;
-        default:
-            die("buggy chain spell %d cast", spell_cast);
-            break;
-    }
+    beam.name           = "arc of chaos";
+    beam.aux_source     = "chain of chaos";
+    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.flavour        = BEAM_CHAOS;
     beam.source_id      = caster->mid;
     beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
@@ -310,23 +461,9 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
         }
 
         // Trying to limit message spamming here so we'll only mention
-        // the thunder at the start or when it's out of LoS.
-        switch (spell_cast)
-        {
-            case SPELL_CHAIN_LIGHTNING:
-            {
-                const char* msg = "You hear a mighty clap of thunder!";
-                noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), source,
-                      (first || !see_source) ? msg : nullptr);
-                break;
-            }
-            case SPELL_CHAIN_OF_CHAOS:
-                if (first && see_source)
-                    mpr("A swirling arc of seething chaos appears!");
-                break;
-            default:
-                break;
-        }
+        // the chaos at the start or when it's out of LoS.
+        if (first && see_source)
+            mpr("A swirling arc of seething chaos appears!");
         first = false;
 
         if (see_source && !see_targ)
@@ -336,23 +473,11 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
 
         beam.source = source;
         beam.target = target;
-        switch (spell_cast)
-        {
-            case SPELL_CHAIN_LIGHTNING:
-                beam.colour = LIGHTBLUE;
-                beam.damage = caster->is_player()
-                    ? calc_dice(5, 10 + pow * 2 / 3)
-                    : calc_dice(5, 46 + pow / 6);
-                break;
-            case SPELL_CHAIN_OF_CHAOS:
-                beam.colour       = ETC_RANDOM;
-                beam.ench_power   = pow;
-                beam.damage       = calc_dice(3, 5 + pow / 6);
-                beam.real_flavour = BEAM_CHAOS;
-                beam.flavour      = BEAM_CHAOS;
-            default:
-                break;
-        }
+        beam.colour       = ETC_RANDOM;
+        beam.ench_power   = pow;
+        beam.damage       = calc_dice(3, 5 + pow / 6);
+        beam.real_flavour = BEAM_CHAOS;
+        beam.flavour      = BEAM_CHAOS;
 
         // Be kinder to the caster.
         if (target == caster->pos())
