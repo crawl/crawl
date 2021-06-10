@@ -276,7 +276,7 @@ static bool _warn_about_chain_lightning()
 
     if (bad_targets.empty())
         return false;
-    
+
     const monster* ex_mon = bad_targets.back();
     string adj, suffix;
     bool penance;
