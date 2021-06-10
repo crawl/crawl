@@ -282,13 +282,13 @@ static int _etc_vortex(int, const coord_def& loc)
     switch (env.grid(loc))
     {
     case DNGN_LAVA:
-        return phase ? LIGHTRED : RED;
-    case DNGN_SHALLOW_WATER:
+        return phase ? LIGHTRED : one_chance_in(3) ? MAGENTA : RED;
+    case DNGN_SHALLOW_WATER: // XX color overlap between this and land, how annoying is it?
         return phase ? LIGHTCYAN : CYAN;
     case DNGN_DEEP_WATER:
-        return phase ? LIGHTBLUE : BLUE;
+        return phase ? BLUE : coinflip() ? LIGHTBLUE : DARKGREY;
     default:
-        return phase ? WHITE : LIGHTGREY;
+        return phase ? WHITE : one_chance_in(3) ? LIGHTCYAN : LIGHTGREY;
     }
 }
 
