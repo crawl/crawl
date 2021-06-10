@@ -2028,6 +2028,23 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             // `you.on_current_level` means that the save has the player on a
             // non-generated level. Reloading a save in this state triggers
             // the levelgen sequence needed to put them there.
+
+            // ensure these props can't be saved, otherwise the save is likely
+            // to become unloadable
+            if (you.props.exists("force_map")
+                || you.props.exists("force_minivault"))
+            {
+                // TODO: is there a good way of doing this without the crash?
+                mprf(MSGCH_ERROR, "&P with '%s' failed; clearing force props and trying with random generation next.",
+                    you.props.exists("force_map")
+                    ? you.props["force_map"].get_string().c_str()
+                    : you.props["force_minivault"].get_string().c_str());
+                // without a flush this mprf doesn't get saved
+                flush_prev_message();
+                you.props.erase("force_minivault");
+                you.props.erase("force_map");
+            }
+
             if (crawl_state.need_save)
             {
                 you.on_current_level = true;
