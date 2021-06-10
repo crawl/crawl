@@ -3222,7 +3222,6 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-        case GOD_OKAWARU:
             return true;
         case GOD_BEOGH: // added penance to avoid killings for loot
             return mons_genus(species) == MONS_ORC;
