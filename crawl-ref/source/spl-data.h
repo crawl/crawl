@@ -3319,17 +3319,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ABSOLUTE_ZERO, "Absolute Zero",
-    spschool::ice,
-    spflag::no_ghost,
-    9,
-    200,
-    5, 5,
-    9, 40,  // 40 noise at 0 spellpower
-    TILEG_ICE_STORM,
-},
-
-{
     // This "spell" is implemented in a way that ignores all this information,
     // and it is never triggered the way spells usually are, but it still has
     // a spell-type enum entry. So, use fake data in order to have a valid
@@ -3548,6 +3537,7 @@ AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
 AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
+AXED_SPELL(SPELL_ABSOLUTE_ZERO, "Absolute Zero")
 #endif
 
 };

@@ -3,11 +3,6 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
-Absolute Zero spell
-
-Entirely removes the heat from the enemy nearest the caster, instantly
-freezing it into a block of solid ice.
-%%%%
 Acid Splash spell
 
 Spits a glob of acid at a nearby creature, covering it in corrosive slime

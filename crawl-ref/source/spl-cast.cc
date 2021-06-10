@@ -2326,9 +2326,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
 
-    case SPELL_ABSOLUTE_ZERO:
-        return cast_absolute_zero(powc, fail);
-
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
 
@@ -2524,7 +2521,7 @@ static string _spell_failure_rate_description(spell_type spell)
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
-    int effect_noise = spell_effect_noise(spell, false);
+    int effect_noise = spell_effect_noise(spell);
     zap_type zap = spell_to_zap(spell);
     if (effect_noise == 0 && zap != NUM_ZAPS)
     {
@@ -2637,8 +2634,6 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
-        case SPELL_ABSOLUTE_ZERO:
-            return "∞";
         case SPELL_CONJURE_FLAME:
             return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:

@@ -495,7 +495,6 @@ LUAFN(debug_check_moncasts)
         SPELL_HAILSTORM,
         SPELL_NOXIOUS_BOG,
         SPELL_FROZEN_RAMPARTS,
-        SPELL_ABSOLUTE_ZERO,
         SPELL_DISPEL_UNDEAD,
         SPELL_TUKIMAS_DANCE,
         SPELL_AGONY,

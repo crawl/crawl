@@ -97,8 +97,5 @@ spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);
 
-vector<monster *> find_abszero_possibles(int radius);
-spret cast_absolute_zero(int pow, bool fail, bool tracer = false);
-
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);

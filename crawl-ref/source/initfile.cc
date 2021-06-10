@@ -1121,7 +1121,7 @@ void game_options::reset_options()
     // TODO: what else?
     force_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
-          SPELL_ABSOLUTE_ZERO, SPELL_IGNITION, SPELL_NOXIOUS_BOG };
+          SPELL_IGNITION, SPELL_NOXIOUS_BOG };
     always_use_static_targeters = false;
 
     // These are only used internally, and only from the commandline:
