@@ -1949,7 +1949,7 @@ static int _player_evasion_bonuses()
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
     if (you.props.exists(AIRFORM_POWER_KEY))
-        evbonus += you.props[AIRFORM_POWER_KEY].get_int() / 10;
+        evbonus += you.props[AIRFORM_POWER_KEY].get_int() / 5;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
@@ -6007,6 +6007,7 @@ mon_holy_type player::holiness(bool temp) const
     // Petrification takes precedence over base holiness and lich form
     if (temp && (form == transformation::statue
                  || form == transformation::wisp
+                 || form == transformation::storm
                  || petrified()))
     {
         holi = MH_NONLIVING;
