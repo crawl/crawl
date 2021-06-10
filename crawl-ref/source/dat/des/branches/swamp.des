@@ -2864,6 +2864,70 @@ Ztt..Kttttt..ttZ
 ZtrrrrtZZtqqqqtZ
 ENDMAP
 
+NAME:   dreamdust_mangrove_forest
+TAGS:   transparent
+DEPTH:  Swamp
+ORIENT: float
+WEIGHT: 5
+KMONS:  e = eleionoma
+SUBST:  . = . W t e:1
+MAP
+       ...............
+    ....t.t.t.t.t.t.t....
+ ....t.t.t.t.t.t.t.t.t.t....
+ .t.t.t.t.t.t.t.t.t.t.t.t.t.
+ ....t.t.t.t.t.t.t.t.t.t....
+    ....t.t.t.t.t.t.t....
+ ....t.t.t.t.t.t.t.t.t.t....
+ .t.t.t.t.t.t.t.t.t.t.t.t.t.
+ ....t.t.t.t.t.t.t.t.t.t....
+    ....t.t.t.t.t.t.t....
+ ....t.t.t.t.t.t.t.t.t.t....
+ .t.t.t.t.t.t.t.t.t.t.t.t.t.
+ ....t.t.t.t.t.t.t.t.t.t....
+    ....t.t.t.t.t.t.t....
+ ....t.t.t.t.t.t.t.t.t.t....
+ .t.t.t.t.t.t.t.t.t.t.t.t.t.
+ ....t.t.t.t.t.t.t.t.t.t....
+    ....t.t.t.t.t.t.t....
+       ...............
+ENDMAP
+
+NAME:   dreamdust_wisp_island
+TAGS:   transparent
+ORIENT: float
+DEPTH:  Swamp, !Swamp:$
+SUBST:  " = wW
+SUBST:  x = xx.
+KFEAT:  w = deep_water
+KMONS:  w = will-o-the-wisp / nothing w:200
+KFEAT:  > = escape_hatch_down
+KITEM:  >? = nothing / any / star_item
+TILE:   x = wall_brick_vines
+KFEAT:  O = altar_ecumenical
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+  """""""""""""""
+ """""""""""""""""
+"""""""""""""""""""
+"""""wwwwwwwww"""""
+""""wwwwwwwwwww""""
+"""wwwwwwwwwwwww"""
+"""wwwwxx.xxwwww"""
+"""wwwxx???xxwww"""
+"""wwwx??O??xwww"""
+"""wwwxx?>?xxwww"""
+"""wwwwxxxxxwwww"""
+"""wwwwwwwwwwwww"""
+""""wwwwwwwwwww""""
+"""""wwwwwwwww"""""
+"""""""""""""""""""
+ """""""""""""""""
+  """""""""""""""
+ENDMAP
+
 
 ###############################################################################
 #
