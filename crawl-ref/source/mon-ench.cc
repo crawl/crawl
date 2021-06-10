@@ -2065,9 +2065,9 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed",
 #if TAG_MAJOR_VERSION == 34
-    "pinned_by_whirlwind",
+    "pinned_by_whirlwind", "vortex", "vortex_cooldown",
 #endif
-    "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
+    "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom",
     "buggy", // NUM_ENCHANTMENTS
