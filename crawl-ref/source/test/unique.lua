@@ -9,7 +9,6 @@ end
 
 local function test_uniques_branch(branch, depth)
   crawl.message("Running unique placement tests in branch " .. branch)
-  crawl.stderr("Running unique placement tests in branch " .. branch)
   debug.flush_map_memory()
   for d = 1, depth do
     debug.goto_place(branch .. ":" .. d)
@@ -20,7 +19,6 @@ end
 local function test_uniques_blank(branch, depth, nlevels)
   local place = branch .. ":" .. depth
   crawl.message("Running blanked placement test at " .. place)
-  crawl.stderr("Running blanked placement test at " .. place)
   debug.goto_place(place)
   for lev_i = 1, nlevels do
     debug.reset_uniques()
@@ -32,7 +30,6 @@ end
 local function test_uniques_random(branch, depth, nlevels)
   local place = branch .. ":" .. depth
   crawl.message("Running randomized placement test at " .. place)
-  crawl.stderr("Running randomized placement test at " .. place)
   debug.goto_place(place)
   for lev_i = 1, nlevels do
     debug.randomize_uniques()
