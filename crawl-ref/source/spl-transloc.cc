@@ -42,7 +42,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-damage.h" // cancel_tornado
+#include "spl-damage.h" // cancel_polar_vortex
 #include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -621,7 +621,7 @@ spret palentonga_charge(bool fail, dist *target)
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
 
-    if (you.pos() != dest_pos) // tornado and trap nonsense
+    if (you.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
@@ -941,7 +941,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             large_change = true;
         }
 
-        cancel_tornado(true);
+        cancel_polar_vortex(true);
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 

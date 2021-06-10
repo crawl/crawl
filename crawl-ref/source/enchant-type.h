@@ -86,7 +86,7 @@ enum enchant_type
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
-    ENCH_TORNADO,
+    ENCH_POLAR_VORTEX,
     ENCH_FAKE_ABJURATION,
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
@@ -132,7 +132,7 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
-    ENCH_TORNADO_COOLDOWN,
+    ENCH_POLAR_VORTEX_COOLDOWN,
     ENCH_MERFOLK_AVATAR_SONG,
     ENCH_BARBS,
 #if TAG_MAJOR_VERSION == 34

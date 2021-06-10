@@ -61,7 +61,7 @@ bool cloud_is_yours_at(const coord_def &pos);
 
 void delete_all_clouds();
 void delete_cloud(coord_def p);
-void remove_tornado_clouds(mid_t whose);
+void remove_vortex_clouds(mid_t whose);
 void move_cloud(coord_def src, coord_def newpos);
 void swap_clouds(coord_def p1, coord_def p2);
 

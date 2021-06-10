@@ -1100,6 +1100,16 @@ Poisonous Vapours spell
 Turns the air around a targeted creature poisonous. Exceedingly little poison
 is created, generally just enough to poison the target before dispersing.
 %%%%
+Polar Vortex spell
+
+Turns the air around the caster into a freezing vortex, doing tremendous damage
+to everyone caught in it that can only partially be mitigated by resistance to
+cold. Those affected will also be swept up into the air and tossed around.
+Only the eye of the storm is a safe place, and it follows the caster. The
+vortex is unable to follow the caster through long-distance translocations.
+The spell's effectiveness is greatly diminished in closed areas. After the
+vortex fades, it cannot be called forth again for a short time.
+%%%%
 Polymorph spell
 
 Randomly alters the form of a creature. It is especially effective against
@@ -1344,8 +1354,8 @@ for a short time.
 Still Winds spell
 
 Brings the air into unnatural stillness across a huge area, preventing anything
-short of a tornado from breaking the calm. The effect takes concentration to
-maintain, and only lasts a short time; if the caster is killed, clouds will
+short of a polar vortex from breaking the calm. The effect takes concentration
+to maintain, and only lasts a short time; if the caster is killed, clouds will
 begin to form again as normal.
 %%%%
 Sting spell
@@ -1571,16 +1581,6 @@ Tomb of Doroklohe spell
 Entombs the caster within walls of rock. These walls will push away objects in
 their way, but their growth is obstructed by the presence of any creature. They
 are not permanent, and will expire after a period of time.
-%%%%
-Tornado spell
-
-Turns the air around the caster into a mighty vortex, doing tremendous damage
-to everyone caught in it. Those affected will also be swept up into the air and
-tossed around. Only the eye of the storm is a safe place, and it follows the
-caster. The vortex is unable to follow the caster through long-distance
-translocations. The spell's effectiveness is greatly diminished in closed
-areas. After the tornado fades, it cannot be called forth again for a short
-time.
 %%%%
 Trog's Hand spell
 

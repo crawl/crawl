@@ -1725,7 +1725,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WALL_OF_BRAMBLES:
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
-    case SPELL_TORNADO:
+    case SPELL_POLAR_VORTEX:
     case SPELL_VORTEX:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
@@ -3245,11 +3245,11 @@ static bool _trace_los(monster* agent, bool (*vulnerable)(const actor*))
     return mons_should_fire(tracer);
 }
 
-static bool _tornado_vulnerable(const actor* victim)
+static bool _vortex_vulnerable(const actor* victim)
 {
     if (!victim)
         return false;
-    return !victim->res_tornado();
+    return !victim->res_polar_vortex();
 }
 
 static bool _torment_vulnerable(const actor* victim)
@@ -5396,24 +5396,24 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     }
 }
 
-static void _mons_tornado(monster *mons, bool is_vortex = false)
+static void _mons_vortex(monster *mons, bool is_vortex = false)
 {
     const int dur = is_vortex ? 30 : 60;
-    const string desc = is_vortex ? "vortex" : "great vortex";
-    const string prop = is_vortex ? "vortex_since" : "tornado_since";
-    const enchant_type ench = is_vortex ? ENCH_VORTEX : ENCH_TORNADO;
+    const string desc = is_vortex ? "vortex" : "freezing vortex";
+    const string prop = is_vortex ? "vortex_since" : "polar_vortex_since";
+    const enchant_type ench = is_vortex ? ENCH_VORTEX : ENCH_POLAR_VORTEX;
 
     if (you.can_see(*mons))
     {
         bool flying = mons->airborne();
-        mprf("A %s of raging winds appears %s%s%s!",
+        mprf("A %s appears %s%s%s!",
              desc.c_str(),
              flying ? "around " : "and lifts ",
              mons->name(DESC_THE).c_str(),
              flying ? "" : " up!");
     }
     else if (you.see_cell(mons->pos()))
-        mprf("A %s of raging winds appears out of thin air!", desc.c_str());
+        mprf("A %s appears out of thin air!", desc.c_str());
 
     mons->props[prop.c_str()].get_int() = you.elapsed_time;
     mon_enchant me(ench, 0, mons, dur);
@@ -5997,15 +5997,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_battlesphere(mons, min(splpow, 200), mons->god, false);
         return;
 
-    case SPELL_TORNADO:
+    case SPELL_POLAR_VORTEX:
     {
-        _mons_tornado(mons);
+        _mons_vortex(mons);
         return;
     }
 
     case SPELL_VORTEX:
     {
-        _mons_tornado(mons, true);
+        _mons_vortex(mons, true);
         return;
     }
 
@@ -7488,8 +7488,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_BLINK_AWAY:
         if (mon->no_tele(true, false))
             return ai_action::impossible();
-        else // Prefer to keep a tornado going rather than blink.
-            return ai_action::good_or_bad(!mon->has_ench(ENCH_TORNADO)
+        else // Prefer to keep a polar vortex going rather than blink.
+            return ai_action::good_or_bad(!mon->has_ench(ENCH_POLAR_VORTEX)
                                         && !mon->has_ench(ENCH_VORTEX));
 
     case SPELL_BLINK_OTHER:
@@ -7713,13 +7713,13 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         else
             return ai_action::good_or_bad(_trace_los(mon, _mutation_vulnerable));
 
-    case SPELL_TORNADO:
-        if (mon->has_ench(ENCH_TORNADO) || mon->has_ench(ENCH_TORNADO_COOLDOWN))
+    case SPELL_POLAR_VORTEX:
+        if (mon->has_ench(ENCH_POLAR_VORTEX) || mon->has_ench(ENCH_POLAR_VORTEX_COOLDOWN))
             return ai_action::impossible();
         else if (you.visible_to(mon) && friendly && !(mon->holiness() & MH_DEMONIC))
             return ai_action::bad(); // don't zap player (but demons are rude)
         else
-            return ai_action::good_or_bad(_trace_los(mon, _tornado_vulnerable));
+            return ai_action::good_or_bad(_trace_los(mon, _vortex_vulnerable));
 
     case SPELL_VORTEX:
         if (mon->has_ench(ENCH_VORTEX) || mon->has_ench(ENCH_VORTEX_COOLDOWN))
@@ -7727,7 +7727,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         else if (you.visible_to(mon) && friendly && !(mon->holiness() & MH_DEMONIC))
             return ai_action::bad(); // don't zap player (but demons are rude)
         else
-            return ai_action::good_or_bad(_trace_los(mon, _tornado_vulnerable));
+            return ai_action::good_or_bad(_trace_los(mon, _vortex_vulnerable));
 
     case SPELL_ENGLACIATION:
         return ai_action::good_or_bad(foe && mon->see_cell_no_trans(foe->pos())

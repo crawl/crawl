@@ -5192,7 +5192,7 @@ bool player::airborne() const
     if (get_form()->forbids_flight())
         return false;
 
-    return you.duration[DUR_FLIGHT]   // potions, tornado
+    return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || permanent_flight(true);
 }
@@ -6165,10 +6165,10 @@ bool player::res_torment() const
            ;
 }
 
-bool player::res_tornado() const
+bool player::res_polar_vortex() const
 {
-    // Full control of the winds around you can negate a hostile tornado.
-    return duration[DUR_TORNADO] ? 1 : 0;
+    // Full control of the winds around you can negate a hostile polar vortex.
+    return duration[DUR_VORTEX] ? 1 : 0;
 }
 
 bool player::res_petrify(bool temp) const

@@ -673,13 +673,13 @@ static void _decrement_durations()
         disjunction_spell();
 
     // Should expire before flight.
-    if (you.duration[DUR_TORNADO])
+    if (you.duration[DUR_VORTEX])
     {
-        tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        if (_decrement_a_duration(DUR_TORNADO, delay,
+        polar_vortex_damage(&you, min(delay, you.duration[DUR_VORTEX]));
+        if (_decrement_a_duration(DUR_VORTEX, delay,
                                   "The winds around you start to calm down."))
         {
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+            you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
         }
     }
 

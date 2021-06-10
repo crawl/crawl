@@ -48,9 +48,9 @@ spret cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
 pair<int, item_def *> sandblast_find_ammo();
 spret cast_sandblast(int powc, bolt &beam, bool fail);
-spret cast_tornado(int powc, bool fail);
-void tornado_damage(actor *caster, int dur, bool is_vortex = false);
-void cancel_tornado(bool tloc = false);
+spret cast_polar_vortex(int powc, bool fail);
+void polar_vortex_damage(actor *caster, int dur, bool is_vortex = false);
+void cancel_polar_vortex(bool tloc = false);
 coord_def get_thunderbolt_last_aim(actor *caster);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);

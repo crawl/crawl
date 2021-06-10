@@ -99,7 +99,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_SCRYING,
 #endif
-    DUR_TORNADO,
+    DUR_VORTEX,
     DUR_LIQUEFYING,
     DUR_HEROISM,
     DUR_FINESSE,
@@ -112,7 +112,7 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_SHROUD_OF_GOLUBRIA,
 #endif
-    DUR_TORNADO_COOLDOWN,
+    DUR_VORTEX_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
 #endif

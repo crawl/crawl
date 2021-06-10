@@ -401,14 +401,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TORNADO, "Tornado",
-    spschool::air,
+    SPELL_POLAR_VORTEX, "Polar Vortex",
+    spschool::ice,
     spflag::area,
     9,
     200,
-    TORNADO_RADIUS, TORNADO_RADIUS,
+    POLAR_VORTEX_RADIUS, POLAR_VORTEX_RADIUS,
     5, 0,
-    TILEG_TORNADO,
+    TILEG_POLAR_VORTEX,
 },
 
 {

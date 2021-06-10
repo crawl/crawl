@@ -1310,8 +1310,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS);
-    case SPELL_TORNADO:
-        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
+    case SPELL_POLAR_VORTEX:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
     case SPELL_IGNITE_POISON: // many cases
@@ -2106,8 +2106,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, powc, fail);
 
-    case SPELL_TORNADO:
-        return cast_tornado(powc, fail);
+    case SPELL_POLAR_VORTEX:
+        return cast_polar_vortex(powc, fail);
 
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
@@ -2534,7 +2534,7 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
     }
 
     // A typical amount of noise.
-    if (spell == SPELL_TORNADO)
+    if (spell == SPELL_POLAR_VORTEX)
         effect_noise = 15;
 
     const int noise = max(casting_noise, effect_noise);

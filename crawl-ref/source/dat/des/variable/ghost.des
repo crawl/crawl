@@ -1137,7 +1137,7 @@ SUBST:  - = pt., S : GV A:1
 COLOUR: .pO012345689de|*$ = green
 FTILE:  tGVA.pO012345689de|*$ = floor_moss
 : end
-# Don't burn down or tornado down these sacred trees
+# Don't burn down or polar vortex down these sacred trees
 MARKER: t = lua:props_marker { veto_destroy="veto" }
 : ghost_setup(_G)
 MAP

@@ -1360,9 +1360,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no blood to sublime.";
         break;
 
-    case SPELL_TORNADO:
-        if (temp && (you.duration[DUR_TORNADO]
-                     || you.duration[DUR_TORNADO_COOLDOWN]))
+    case SPELL_POLAR_VORTEX:
+        if (temp && (you.duration[DUR_VORTEX]
+                     || you.duration[DUR_VORTEX_COOLDOWN]))
         {
             return "you need to wait for the winds to calm down.";
         }

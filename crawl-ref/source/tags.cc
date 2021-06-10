@@ -3943,6 +3943,12 @@ static void _tag_read_you(reader &th)
         wu_jian_end_heavenly_storm();
     }
 
+    if (you.props.exists("tornado_since"))
+    {
+        you.props["polar_vortex_since"] = you.props["tornado_since"].get_int();
+        you.props.erase("tornado_since");
+    }
+
 #endif
 }
 

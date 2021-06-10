@@ -3943,11 +3943,11 @@ bool monster::res_torment() const
            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
-bool monster::res_tornado() const
+bool monster::res_polar_vortex() const
 {
-    return has_ench(ENCH_TORNADO)
+    return has_ench(ENCH_POLAR_VORTEX)
            || has_ench(ENCH_VORTEX)
-           || get_mons_resist(*this, MR_RES_TORNADO) > 0;
+           || get_mons_resist(*this, MR_RES_VORTEX) > 0;
 }
 
 bool monster::res_petrify(bool /*temp*/) const

@@ -1388,7 +1388,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_TORNADO
+        || spell == SPELL_POLAR_VORTEX
         || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
@@ -5195,7 +5195,7 @@ bool uskayaw_stomp()
     }, you.pos());
 
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
-    // a few places already; see spl_tornado.cc, disaster area, etc.
+    // a few places already; see spl-vortex.cc, disaster area, etc.
     if (friendlies
         && !yesno("There are friendlies around, "
                   "are you sure you want to hurt them?",

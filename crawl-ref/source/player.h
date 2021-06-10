@@ -768,7 +768,7 @@ public:
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    bool res_tornado() const override;
+    bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
     int willpower(bool /*calc_unid*/ = true) const override;

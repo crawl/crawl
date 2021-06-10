@@ -92,7 +92,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
     SPELL_IGNITION,
-    SPELL_TORNADO,
+    SPELL_POLAR_VORTEX,
     SPELL_SHATTER,
 },
 
@@ -180,7 +180,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SILENCE,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_STORM_FORM,
-    SPELL_TORNADO,
 },
 
 {   // Book of the Warp
@@ -328,6 +327,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CHAIN_LIGHTNING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_ABSOLUTE_ZERO,
+    SPELL_POLAR_VORTEX,
     SPELL_FIRE_STORM,
 },
 

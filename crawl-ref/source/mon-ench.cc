@@ -1693,11 +1693,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
-    case ENCH_TORNADO:
-        tornado_damage(this, speed_to_duration(speed));
+    case ENCH_POLAR_VORTEX:
+        polar_vortex_damage(this, speed_to_duration(speed));
         if (decay_enchantment(en))
         {
-            add_ench(ENCH_TORNADO_COOLDOWN);
+            add_ench(ENCH_POLAR_VORTEX_COOLDOWN);
             if (you.can_see(*this))
             {
                 mprf("The winds around %s start to calm down.",
@@ -1707,7 +1707,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_VORTEX:
-        tornado_damage(this, speed_to_duration(speed), true);
+        polar_vortex_damage(this, speed_to_duration(speed), true);
         if (decay_enchantment(en))
         {
             add_ench(ENCH_VORTEX_COOLDOWN);
@@ -1813,11 +1813,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
-    case ENCH_TORNADO_COOLDOWN:
+    case ENCH_POLAR_VORTEX_COOLDOWN:
     case ENCH_VORTEX_COOLDOWN:
         if (decay_enchantment(en))
         {
-            remove_tornado_clouds(mid);
+            remove_vortex_clouds(mid);
             if (you.can_see(*this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }
@@ -2017,7 +2017,7 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "withdrawn", "attached",
 #endif
-    "guardian_timer", "flight", "liquefying", "tornado", "fake_abjuration",
+    "guardian_timer", "flight", "liquefying", "polar_vortex", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame",
 #if TAG_MAJOR_VERSION == 34
@@ -2046,7 +2046,7 @@ static const char *enchant_names[] =
     "grasping_roots_source",
 #endif
     "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "merfolk_avatar_song",
+    "iood_charged", "fire_vuln", "polar_vortex_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34
     "building_charge",
@@ -2337,7 +2337,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_WRETCHED:
         cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
         break;
-    case ENCH_TORNADO_COOLDOWN:
+    case ENCH_POLAR_VORTEX_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_VORTEX_COOLDOWN:

@@ -2260,9 +2260,9 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_tornado(monster_type mc)
+bool mons_class_res_polar_vortex(monster_type mc)
 {
-    return get_resist(get_mons_class_resists(mc), MR_RES_TORNADO);
+    return get_resist(get_mons_class_resists(mc), MR_RES_VORTEX);
 }
 
 /**
@@ -2474,7 +2474,7 @@ int exper_value(const monster& mon, bool real)
             case SPELL_FIRE_STORM:
             case SPELL_SHATTER:
             case SPELL_CHAIN_LIGHTNING:
-            case SPELL_TORNADO:
+            case SPELL_POLAR_VORTEX:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
@@ -3965,7 +3965,7 @@ static const spell_type smitey_spells[] = {
     SPELL_CALL_DOWN_DAMNATION,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
-    SPELL_TORNADO,          // dubious
+    SPELL_POLAR_VORTEX,          // dubious
     SPELL_GLACIATE,         // dubious
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,

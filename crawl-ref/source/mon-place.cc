@@ -888,7 +888,7 @@ static void _place_twister_clouds(monster *mon)
         mon->lose_ench_duration(abj, abj.duration / 2);
     }
 
-    tornado_damage(mon, -10);
+    polar_vortex_damage(mon, -10);
 }
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
@@ -1225,8 +1225,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
-        mon->props["tornado_since"].get_int() = you.elapsed_time;
-        mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
+        mon->props["polar_vortex_since"].get_int() = you.elapsed_time;
+        mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, 0, 0, INFINITE_DURATION));
     }
 
     // this MUST follow hd initialization!

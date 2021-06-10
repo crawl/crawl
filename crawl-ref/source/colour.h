@@ -50,7 +50,7 @@ enum element_type
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
     ETC_TREE,           // colour of trees on land
     ETC_RANDOM,         // any colour (except BLACK)
-    ETC_TORNADO,        // twisting swirls of grey
+    ETC_VORTEX,        // twisting swirls of grey
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_MANGROVE,       // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
@@ -120,7 +120,7 @@ colour_t make_high_colour(colour_t colour) IMMUTABLE;
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
 int get_disjunct_phase(const coord_def& loc);
-bool get_tornado_phase(const coord_def& loc);
+bool get_vortex_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 int dam_colour(const monster_info&);
 colour_t rune_colour(int type);

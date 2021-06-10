@@ -185,7 +185,7 @@ const int UNUSABLE_SKILL = -99;
 
 const int AGILITY_BONUS = 5;
 
-#define TORNADO_RADIUS 5
+#define POLAR_VORTEX_RADIUS 5
 #define VORTEX_RADIUS 3
 
 #define VAULTS_ENTRY_RUNES 1

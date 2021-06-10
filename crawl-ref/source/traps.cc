@@ -38,7 +38,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-damage.h" // cancel_tornado
+#include "spl-damage.h" // cancel_polar_vortex
 #include "spl-transloc.h"
 #include "spl-summoning.h"
 #include "stash.h"
@@ -542,7 +542,7 @@ void trap_def::trigger(actor& triggerer)
             if (you_trigger)
             {
                 mpr("You enter the passage of Golubria.");
-                cancel_tornado();
+                cancel_polar_vortex();
             }
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");

@@ -261,7 +261,7 @@ static int _etc_mangrove(int, const coord_def& loc)
     return col == LIGHTGREEN ? BROWN : col;
 }
 
-bool get_tornado_phase(const coord_def& loc)
+bool get_vortex_phase(const coord_def& loc)
 {
     coord_def center = get_cloud_originator(loc);
     if (center.origin())
@@ -276,9 +276,9 @@ bool get_tornado_phase(const coord_def& loc)
     }
 }
 
-static int _etc_tornado(int, const coord_def& loc)
+static int _etc_vortex(int, const coord_def& loc)
 {
-    const bool phase = get_tornado_phase(loc);
+    const bool phase = get_vortex_phase(loc);
     switch (env.grid(loc))
     {
     case DNGN_LAVA:
@@ -589,7 +589,7 @@ void init_element_colours()
                             ETC_MANGROVE, "mangrove", _etc_mangrove
                        ));
     add_element_colour(new element_colour_calc(
-                            ETC_TORNADO, "tornado", _etc_tornado
+                            ETC_VORTEX, "vortex", _etc_vortex
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_LIQUEFIED, "liquefied", _etc_liquefied

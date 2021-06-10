@@ -225,9 +225,9 @@ static const cloud_data clouds[] = {
       ETC_MAGIC,                                // colour
       { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
     },
-    // CLOUD_TORNADO,
-    { "raging winds", nullptr,                  // terse, verbose name
-      ETC_TORNADO,                              // colour
+    // CLOUD_VORTEX,
+    { "whirling frost", nullptr,                // terse, verbose name
+      ETC_VORTEX,                               // colour
       { TILE_ERROR },                           // tile
     },
     // CLOUD_DUST,
@@ -751,7 +751,7 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
     return (is_harmless_cloud(cloud.type) &&
                 (!is_opaque_cloud(cloud.type) || is_opaque_cloud(ct)))
            || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_TORNADO; // soon gone
+           || ct == CLOUD_VORTEX; // soon gone
 }
 
 /*
@@ -780,7 +780,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS
-        && cl_type != CLOUD_TORNADO
+        && cl_type != CLOUD_VORTEX
         && cl_type != CLOUD_INK)
     {
         return;
@@ -978,8 +978,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.res_elec() >= 3;
         case CLOUD_NEGATIVE_ENERGY:
             return act.res_negative_energy() >= 3;
-        case CLOUD_TORNADO:
-            return act.res_tornado();
+        case CLOUD_VORTEX:
+            return act.res_polar_vortex();
         case CLOUD_RAIN:
             return !act.is_fiery();
         default:
@@ -1441,8 +1441,8 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         return false;
 
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
-    if (type == CLOUD_TORNADO)
-        return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
+    if (type == CLOUD_VORTEX)
+        return !you.duration[DUR_VORTEX] && !you.duration[DUR_VORTEX_COOLDOWN];
 
     if (accept_temp_resistances)
     {
@@ -1587,7 +1587,7 @@ bool is_harmless_cloud(cloud_type type)
            && clouds[type].damage.base == 0
            && clouds[type].damage.random == 0
            && !_cloud_has_negative_side_effects(type)
-           && type != CLOUD_TORNADO;
+           && type != CLOUD_VORTEX;
 }
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1808,7 +1808,7 @@ coord_def get_cloud_originator(const coord_def& pos)
     return agent->pos();
 }
 
-void remove_tornado_clouds(mid_t whose)
+void remove_vortex_clouds(mid_t whose)
 {
     // Needed to clean up after the end of tornado cooldown, so we can again
     // assume all "raging winds" clouds are harmful. This is needed only
@@ -1816,15 +1816,16 @@ void remove_tornado_clouds(mid_t whose)
     // cloud belongs to. If this changes, please remove this function. For
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
+    // XXX: this comment seems impossibly out of date? ^
 
     // We can't iterate over env.cloud directly because delete_cloud
     // will remove this cloud and invalidate our iterator.
-    vector<coord_def> tornados;
+    vector<coord_def> vortices;
     for (auto& entry : env.cloud)
-        if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
-            tornados.push_back(entry.first);
+        if (entry.second.type == CLOUD_VORTEX && entry.second.source == whose)
+            vortices.push_back(entry.first);
 
-    for (auto pos : tornados)
+    for (auto pos : vortices)
         delete_cloud(pos);
 }
 

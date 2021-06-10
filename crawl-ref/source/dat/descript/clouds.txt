@@ -122,9 +122,10 @@ magical condensation cloud
 
 The wake of some highly concentrated magical energy, itself entirely harmless.
 %%%%
-raging winds cloud
+whirling frost cloud
 
-The winds of a raging tornado. It will deal severe damage to anyone within it.
+The winds of a polar vortex. It will deal severe damage to anyone within it,
+only partially mitigated by resistance to cold.
 %%%%
 sparse dust cloud
 

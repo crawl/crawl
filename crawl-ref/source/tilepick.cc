@@ -3000,9 +3000,9 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                 ch += ui_random(tile_main_count(ch));
                 break;
 
-            case CLOUD_TORNADO:
-                ch = get_tornado_phase(cl.pos) ? TILE_CLOUD_RAGING_WINDS_0
-                                               : TILE_CLOUD_RAGING_WINDS_1;
+            case CLOUD_VORTEX:
+                ch = get_vortex_phase(cl.pos) ? TILE_CLOUD_FREEZING_WINDS_0
+                                               : TILE_CLOUD_FREEZING_WINDS_1;
                 break;
 
             default:

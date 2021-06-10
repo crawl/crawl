@@ -2543,7 +2543,7 @@ static bool _handle_pickup(monster* mons)
 
     // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
-    // being tornadoed, and with *that* low life expectancy let's not care.
+    // being polar vortex'd, and with *that* low life expectancy let's not care.
     dungeon_feature_type feat = env.grid(mons->pos());
 
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->airborne())
