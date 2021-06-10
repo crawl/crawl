@@ -2051,7 +2051,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 save_game(false);
             }
 
-            die("Builder failure while trying to generate to '%s'! Last builder error: '%s'",
+            die("Builder failure while generating '%s'!\nLast builder error: '%s'",
                 level_id::current().describe().c_str(),
                 crawl_state.last_builder_error.c_str());
         }

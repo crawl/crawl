@@ -304,6 +304,9 @@ bool builder(bool enable_random_maps)
 
         try
         {
+            // clean slate
+            crawl_state.last_builder_error_fatal = false;
+
             if (_build_level_vetoable(enable_random_maps))
                 return true;
 #if defined(DEBUG_VETO_RESUME) && defined(WIZARD)
@@ -368,6 +371,22 @@ bool builder(bool enable_random_maps)
 
         get_uniq_map_tags() = uniq_tags;
         get_uniq_map_names() = uniq_names;
+        if (crawl_state.last_builder_error_fatal &&
+            (you.props.exists("force_map") || you.props.exists("force_minivault")))
+        {
+            // if there was a fatal lua error and this is a forced levelgen,
+            // it's most likely that the same thing will keep happening over
+            // and over again (and the dev should want to fix the error
+            // anyways.)
+            mprf(MSGCH_ERROR, "Aborting &P builder on fatal lua error");
+            break;
+        }
+        else if (crawl_state.last_builder_error_fatal)
+        {
+            mprf(MSGCH_ERROR,
+                "Builder <white>VETO</white> on fatal lua error: %s",
+                crawl_state.last_builder_error.c_str());
+        }
     }
 
     if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
@@ -1352,7 +1371,14 @@ static bool _dgn_ensure_vault_placed(bool vault_success,
                                      string desc)
 {
     if (!vault_success)
-        throw dgn_veto_exception(make_stringf("Vault placement failure (%s).", desc.c_str()));
+    {
+        // the exception message will overwrite last_builder_error, so package
+        // this info in here
+        string err = make_stringf("Vault placement failure for '%s'.", desc.c_str());
+        if (!crawl_state.last_builder_error.empty())
+            err += " " + crawl_state.last_builder_error;
+        throw dgn_veto_exception(err);
+    }
     else if (disable_further_vaults)
         use_random_maps = false;
     return vault_success;
@@ -4407,6 +4433,14 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
          vault->name.c_str(),
          placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
+
+    // veto if this was a fatal error. (Vetoing in general here would be
+    // extremely costly.)
+    // TODO: I'm not sure this is necessary, but it makes the error more
+    // prominent
+    _dgn_ensure_vault_placed(placed_vault_orientation != MAP_NONE
+        || !crawl_state.last_builder_error_fatal, false,
+        vault->name);
 
     if (placed_vault_orientation == MAP_NONE)
         return nullptr;

@@ -3529,7 +3529,12 @@ string map_def::apply_subvault(string_spec &spec)
         vault.svmask = &flags;
 
         if (!resolve_subvault(vault))
-            continue;
+        {
+            if (crawl_state.last_builder_error_fatal)
+                break;
+            else
+                continue;
+        }
 
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
@@ -3551,6 +3556,12 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
+    if (crawl_state.last_builder_error_fatal)
+    {
+        // I think the error should get printed elsewhere?
+        return make_stringf("Fatal lua error while resolving subvault '%s'",
+            tag.c_str());
+    }
     return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                         tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
