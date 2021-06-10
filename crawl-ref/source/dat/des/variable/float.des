@@ -4820,6 +4820,157 @@ MAP
 .cccccccccc
 ENDMAP
 
+NAME:   dreamdust_desert
+TAGS:   no_monster_gen transparent
+ORIENT: float
+DEPTH:  D:5-9
+WEIGHT: 5
+SUBST:  . = -.
+FTILE:  - = floor_sand
+MONS:   withered plant, scorpion, \
+        frilled lizard, jackal
+SUBST:  - = -:100 1:2 ?:2 t:1
+SUBST:  ? = 22334
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "desiccated tree")
+MAP
+  ...............................
+ .................................
+...-----------------------------...
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+..-------------------------------..
+...-----------------------------...
+ .................................
+  ...............................
+ENDMAP
+
+NAME:   dreamdust_hell_legion
+TAGS:   no_monster_gen no_item_gen transparent
+DEPTH:  D:8-
+ORIENT: float
+WEIGHT: 3
+KFEAT:  O = stone_arch / enter_hell w:5
+SUBST:  . = .-
+: if you.depth() < 13 then
+: 	if crawl.one_chance_in(3) then
+KMONS:  ? = iron imp ; long sword
+FTILE:  O?- = floor_iron
+: 	elseif crawl.one_chance_in(2) then
+KMONS:  ? = crimson imp ; long sword
+FTILE:  O?- = floor_volcanic
+: 	else
+KMONS:  ? = white imp
+FTILE:  O?- = floor_ice
+: 	end
+: else
+: 	if crawl.one_chance_in(3) then
+KMONS:  O = rust devil
+KMONS:  ? = iron imp ; spear . buckler
+FTILE:  O?- = floor_iron
+: 	elseif crawl.one_chance_in(2) then
+KMONS:  O = red devil
+KMONS:  ? = crimson imp ; spear . buckler
+FTILE:  O?- = floor_volcanic
+: 	else
+KMONS:  O = ice devil
+KMONS:  ? = white imp
+FTILE:  O?- = floor_ice
+: 	end
+: end
+MAP
+  .....
+ ..---..
+..-----..
+.-------.
+.---O---.
+.-?????-.
+..?????..
+ ..---..
+  .....
+ENDMAP
+
+NAME:   dreamdust_yred_servants
+TAGS:   no_monster_gen no_item_gen no_rotate
+DEPTH:  D:9-, Depths
+ORIENT: float
+WEIGHT: 1
+FTILE:  'tgGOV = floor_pebble_darkgray
+FTILE:  ~? = floor_pebble_lightgray
+TILE:   c = wall_crypt
+TILE:   - = floor_crypt
+KFEAT:  O = altar_yredelemnul
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+TILE:   G : dngn_statue_demonic_bust / dngn_statue_wraith
+KFEAT:  g = granite_statue
+TILE:   g = dngn_gravestone
+KFEAT:  # = iron_grate
+KFEAT:  ~ = .
+KITEM:  ? = sword of zonguldrok no_pickup / \
+            scythe of curses no_pickup / \
+            black knight's barding / \
+            ring of shadows no_pickup / \
+            amulet of faith randart no_pickup / \
+            manual of invocations
+SUBST:  .' = .:80 z
+: if you.in_branch("D") then
+KMONS:  z = zombie / skeleton
+:	if you.depth() < 13 then
+KMONS:  1 = death knight
+KMONS:  2 = wight band / flying skull band
+:	else
+KMONS:  1 : death knight / vampire knight
+KMONS:  2 = wight band / flying skull band / \
+            skeletal warrior band / phantasmal warrior band
+:	end
+: else
+KMONS:  z = zombie / skeleton / wraith w:3 / \
+            flying skull w:3 / phantasmal warrior w:3 / \
+            skeletal warrior w:3 / flayed ghost w:2 / \
+            vampire knight w:2 / ghoul w:3
+KMONS:  1 = profane servitor / bone dragon
+KMONS:  2 = death knight band
+: end
+MAP
+            .....
+           ..ccc..
+          ..ccOcc..
+         ..cct?tcc..
+        ..cc1-~-1cc..
+       ..cc--t~t--cc..
+      ..cc----~----cc.
+      .ccV-2-t~t-2-Vcc.
+      .ccV----~----Vcc.
+      .ccV---t~t---Vcc.
+      .cccc---~---cccc.
+      .c''Gcc===ccG''c.
+      .c''''G~~~G''''c.
+      .c''''''~''''''c.
+      .c'''''t~t'''''c.
+      .c'g'g''~''g'g'c.
+      .c'''''t~t'''''c.
+      .c'g'g''~''g'g'c.
+      .c'''''t~t'''''c.
+      .c'g'g''~''g'g'c.
+      .c'''''t~t'''''c.
+     ..ccc'''~~~'''ccc..
+     .cccc###+++###cccc.
+     ........@@@........
+ENDMAP
+
 
 ###############################################################################
 #
