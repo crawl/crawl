@@ -4237,7 +4237,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
-                     && (!mons_class_is_animated_weapon(type)
+                     && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
                      && (type != MONS_ZOMBIE && type != MONS_SKELETON
                          || invalid_monster_type(mspec.monbase)
@@ -4248,7 +4248,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
             }
-            else if (mons_class_is_animated_weapon(type))
+            else if (mons_class_is_animated_object(type))
             {
                 auto item = mspec.items.get_item(0);
                 const auto *unrand = item.ego < SP_FORBID_EGO
@@ -4258,9 +4258,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 const auto sub = unrand && unrand->base_type != OBJ_UNASSIGNED
                     ? unrand->sub_type : item.sub_type;
 
-                if (get_item_slot(base, sub) != EQ_WEAPON)
+                const auto def_slot = mons_class_is_animated_weapon(type)
+                    ? EQ_WEAPON
+                    : EQ_BODY_ARMOUR;
+
+                if (get_item_slot(base, sub) != def_slot)
                 {
-                    error = make_stringf("Monster '%s' needs a weapon.",
+                    error = make_stringf("Monster '%s' needs a defining item.",
                                          mon_str.c_str());
                 }
             }

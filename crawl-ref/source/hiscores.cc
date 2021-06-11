@@ -1383,8 +1383,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
-            if (mons->type != MONS_DANCING_WEAPON)
-                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+            if (!mons_class_is_animated_weapon(mons->type)
+                && mons->get_defining_object())
+            {
+                auxkilldata = mons->get_defining_object()->name(DESC_A);
+            }
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);

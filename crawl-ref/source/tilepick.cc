@@ -1826,15 +1826,20 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
                    : base;
 
+        case MONS_ANIMATED_ARMOUR:
+            return base | TILE_FLAG_ANIM_OBJ;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
-            return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+            return tileidx_item(item) | TILE_FLAG_ANIM_OBJ;
         }
 
         case MONS_SPECTRAL_WEAPON:
         {
+            // TODO: it would be good to show the TILE_FLAG_ANIM_OBJ icon with
+            // these too, but most are oriented NW-SE and it looks bad
             if (!mon.inv[MSLOT_WEAPON])
                 return TILEP_MONS_SPECTRAL_SBL;
 
@@ -1855,8 +1860,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     const weapon_type wt = (weapon_type)item.sub_type;
                     return (wt == WPN_WHIP || wt == WPN_FLAIL
                             || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP
-                            || wt == WPN_SACRED_SCOURGE) ?
-                        TILEP_MONS_SPECTRAL_WHIP : TILEP_MONS_SPECTRAL_MACE;
+                            || wt == WPN_SACRED_SCOURGE)
+                        ? TILEP_MONS_SPECTRAL_WHIP
+                        : TILEP_MONS_SPECTRAL_MACE;
                 }
             default:
                 return TILEP_MONS_SPECTRAL_SBL;
