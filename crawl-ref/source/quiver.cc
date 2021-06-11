@@ -1343,6 +1343,7 @@ namespace quiver
             switch (ability)
             {
             case ABIL_HOP:
+            case ABIL_BLINKBOLT:
             case ABIL_ROLLING_CHARGE:
             case ABIL_SPIT_POISON:
             case ABIL_BREATHE_ACID:
@@ -1376,6 +1377,7 @@ namespace quiver
                 return false;
             switch (ability)
             {
+            case ABIL_BLINKBOLT: // TODO: disable under nomove?
             case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
             case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
             case ABIL_SPIT_POISON:

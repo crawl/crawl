@@ -2037,7 +2037,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
                     power = you.props[AIRFORM_POWER_KEY].get_int();
                 else
                     return spret::abort;
-                return your_spells(SPELL_BLINKBOLT, power, false);
+                return your_spells(SPELL_BLINKBOLT, power, false, nullptr, target);
             }
             else
                 return spret::abort;
