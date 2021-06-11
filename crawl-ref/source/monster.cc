@@ -507,22 +507,6 @@ item_def *monster::melee_weapon() const
     return nullptr;
 }
 
-/**
- * If this is an animated object with some properties determined by an item,
- * return that item.
- */
-item_def *monster::get_defining_object() const
-{
-    // could ASSERT on the inventory checks, but wizmode placement doesn't
-    // really guarantee these items
-    if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
-        return &env.item[inv[MSLOT_WEAPON]];
-    else if (type == MONS_ANIMATED_ARMOUR && inv[MSLOT_ARMOUR] != NON_ITEM)
-        return &env.item[inv[MSLOT_ARMOUR]];
-
-    return nullptr;
-}
-
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
 {
@@ -542,7 +526,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     // These *are* weapons, so they can't wield another weapon or
     // unwield themselves.
-    if (mons_class_is_animated_object(type))
+    if (mons_class_is_animated_weapon(type))
         return false;
 
     // MF_HARD_RESET means that all items the monster is carrying will
@@ -622,7 +606,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
     ASSERT(item.defined());
 
     // These *are* weapons, so they can't wield another weapon.
-    if (mons_class_is_animated_object(type))
+    if (mons_class_is_animated_weapon(type))
         return false;
 
     // Monsters can't use unrandarts with special effects.
@@ -1047,14 +1031,12 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!force && mons_class_is_animated_object(type))
+        if (!force && mons_class_is_animated_weapon(type))
             return false;
         unequip_weapon(item, msg);
         break;
 
     case OBJ_ARMOUR:
-        if (!force && mons_class_is_animated_object(type))
-            return false;
         unequip_armour(item, msg);
         break;
 
@@ -6368,7 +6350,7 @@ item_def* monster::disarm()
 
     if (!mons_wpn
         || mons_wpn->cursed()
-        || mons_class_is_animated_object(type)
+        || mons_class_is_animated_weapon(type)
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok

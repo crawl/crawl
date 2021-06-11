@@ -4988,7 +4988,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     }
 
     // Make dancing launchers less pathetic.
-    // XX this should be done on creation, not placement?
     if (mons_class_is_animated_weapon(mon->type))
         _give_animated_weapon_ammo(*mon);
 }

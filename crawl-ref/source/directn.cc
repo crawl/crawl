@@ -3357,7 +3357,7 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
 
     if (mi.type == MONS_PANDEMONIUM_LORD)
         desc += " armed with ";
-    else if (mons_class_is_animated_weapon(mi.type))
+    else if (mi.type == MONS_DANCING_WEAPON)
         desc += " ";
     else
         desc += " wielding ";
@@ -3643,19 +3643,15 @@ string get_monster_equipment_desc(const monster_info& mi,
             string str = comma_separated_line(attributes.begin(),
                                               attributes.end());
 
-            if (mons_class_is_animated_weapon(mi.type)
+            if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST)
             {
                 if (!str.empty())
                     str += " ";
 
-                // animated armour is has "animated" in its name already, unlike
-                // the weapons
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
-                else if (mi.type == MONS_SPECTRAL_WEAPON)
-                    str += "spectral weapon";
                 else if (mi.type == MONS_PANDEMONIUM_LORD)
                     str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
@@ -3707,8 +3703,11 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     // Dancing weapons have all their weapon information in their full_name, so
     // we don't need to add another weapon description here (see Mantis 11887).
-    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type))
+    if (!weap.empty()
+        && mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
+    {
         item_descriptions.push_back(weap.substr(1)); // strip leading space
+    }
 
     // as with dancing weapons, don't claim animated armours 'wear' their armour
     if (mon_arm && mi.type != MONS_ANIMATED_ARMOUR)

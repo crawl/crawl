@@ -1589,31 +1589,6 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
             break;
         }
 
-    if (mons_class_is_dancing_object(m->type))
-    {
-        item_def item;
-        if (fake)
-        {
-            if (mons_class_is_dancing_weapon(m->type))
-            {
-                item.base_type = OBJ_WEAPONS;
-                item.sub_type  = WPN_LONG_SWORD;
-                item.quantity  = 1;
-            }
-            else // MONS_ANIMATED_ARMOUR
-            {
-                item.base_type = OBJ_ARMOUR;
-                item.sub_type  = ARM_SCALE_MAIL;
-                item.quantity  = 1;
-            }
-        }
-        else
-            item = *m->get_defining_object();
-        tileset.emplace_back(tileidx_item(item));
-        tileset.emplace_back(m->type == MONS_ANIMATED_ARMOUR
-            ? TILEP_MONS_ANIMATED_ARMOUR // ??
-            : TILEI_ANIMATED_WEAPON);
-    }
     if (m->type == MONS_DANCING_WEAPON)
     {
         // For fake dancing weapons, just use a generic long sword, since
