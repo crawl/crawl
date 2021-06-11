@@ -1696,6 +1696,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
+        // TODO: does any of the following ever need to happen for other
+        // animated objects?
         if (!hard_reset)
         {
             if (killer == KILL_RESET)

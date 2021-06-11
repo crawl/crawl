@@ -1709,6 +1709,12 @@ bool mons_class_is_animated_weapon(monster_type type)
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
+bool mons_class_is_animated_object(monster_type type)
+{
+    return mons_class_is_animated_weapon(type)
+        || type == MONS_ANIMATED_ARMOUR;
+}
+
 bool mons_is_zombified(const monster& mon)
 {
     return mons_class_is_zombified(mon.type);
@@ -2044,10 +2050,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (mon.type == MONS_ANIMATED_ARMOUR)
     {
-        const int armour_slot = mon.inv[MSLOT_ARMOUR];
-        if (armour_slot != NON_ITEM)
+        item_def *def = mon.get_defining_object();
+        if (def)
         {
-            const int typ = env.item[armour_slot].sub_type;
+            ASSERT(def->base_type == OBJ_ARMOUR);
+            const int typ = def->sub_type;
             const int ac = armour_prop(typ, PARM_AC);
             attk.damage = ac + ac * ac / 2;
         }
