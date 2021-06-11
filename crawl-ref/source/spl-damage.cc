@@ -626,7 +626,7 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
     // Set conducts here. The monster needs to be alive when this is done, and
     // mons_adjust_flavoured() could kill it.
     god_conduct_trigger conducts[3];
-    if (YOU_KILL(beam.thrower))
+    if (actual && YOU_KILL(beam.thrower))
         set_attack_conducts(conducts, target, you.can_see(target));
 
     int hurted = actual ? beam.damage.roll()
