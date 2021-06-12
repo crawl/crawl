@@ -3698,7 +3698,7 @@ static const char* _get_resist_name(mon_resist_flags res_type)
     case MR_RES_DAMNATION:
         return "damnation";
     case MR_RES_VORTEX:
-        return "polar vortexes";
+        return "polar vortices";
     default:
         return "buggy resistance";
     }
