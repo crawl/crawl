@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "areas.h"
 #include "cio.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -125,6 +126,7 @@ static vector<mutation_type> removed_mutations =
         MUT_MIASMA_IMMUNITY,
         MUT_BLURRY_VISION,
         MUT_BLINK,
+        MUT_UNBREATHING,
 #endif
     };
 
@@ -325,8 +327,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         {
             monster_type drag = species::dragon_form(you.species);
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
-                return mutation_activity_type::FULL;
-            if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
                 return mutation_activity_type::FULL;
             if ((mut == MUT_ACIDIC_BITE || mut == MUT_ACID_RESISTANCE)
                 && drag == MONS_GOLDEN_DRAGON)
@@ -1990,6 +1990,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #endif
             break;
 
+        case MUT_SILENCE_AURA:
+            invalidate_agrid(true);
+            break;
+
         default:
             break;
         }
@@ -2104,6 +2108,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     case MUT_TALONS:
         // Recheck Ashenzari bondage in case our available slots changed.
         ash_check_bondage();
+        break;
+
+    case MUT_SILENCE_AURA:
+        invalidate_agrid(true);
         break;
 
     default:

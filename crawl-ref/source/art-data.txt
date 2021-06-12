@@ -982,11 +982,10 @@ LIFE:     1
 BOOL:     elec
 
 NAME:    amulet of the Air
-INSCRIP: Inacc
+INSCRIP: Inacc Air
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-EV:      5
 BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows

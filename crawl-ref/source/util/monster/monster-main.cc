@@ -273,13 +273,6 @@ static string mi_calc_glaciate_damage(monster* mons)
     return make_stringf("%d-%d", minimum, max);
 }
 
-static string mi_calc_chain_lightning_damage(monster* mons)
-{
-    const int pow = mons_power_for_hd(SPELL_CHAIN_LIGHTNING,
-                                      mons->get_hit_dice());
-    return desc_chain_lightning_dam(pow);
-}
-
 static string mi_calc_vampiric_drain_damage(monster* mons)
 {
     int pow = 12 * mons->get_experience_level();
@@ -326,8 +319,6 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return mi_calc_airstrike_damage(monster);
         case SPELL_GLACIATE:
             return mi_calc_glaciate_damage(monster);
-        case SPELL_CHAIN_LIGHTNING:
-            return mi_calc_chain_lightning_damage(monster);
         case SPELL_MARSHLIGHT:
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_WATERSTRIKE:

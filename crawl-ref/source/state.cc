@@ -61,6 +61,7 @@ game_state::game_state()
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
+      last_builder_error_fatal(false),
       mon_act(nullptr)
 {
     reset_cmd_repeat();
@@ -204,7 +205,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
-    case activity_interrupt::hungry:
     case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:

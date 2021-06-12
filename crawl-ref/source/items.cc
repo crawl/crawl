@@ -1855,6 +1855,13 @@ static void _get_book(item_def& it)
         return;
     }
 
+    if (you.skills[sk] >= MAX_SKILL_LEVEL)
+    {
+        mprf("You pick up %s, but it has nothing more to teach you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
     if (you.skill_manual_points[sk])
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     else

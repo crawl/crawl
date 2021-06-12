@@ -2,9 +2,9 @@
 -- the most important case to test here is demonspawn.
 
 local silent = true -- change to false to look at the result of stress tests
-local ds_mut_iterations = 1000 -- mutate each try this many times
+local ds_mut_iterations = 250 -- mutate each try this many times
 local ds_tries = 30
-local mut_iterations = 500
+local mut_iterations = 100
 local tries = 5
 
 local chance_temporary = 10 -- in 100.

@@ -413,7 +413,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CENTAUR_WARRIOR_MELEE:
     case TILEP_MONS_DEEP_ELF_SORCERER:
     case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
-    case TILEP_MONS_RUPERT:
     case TILEP_MONS_HELL_KNIGHT:
     case TILEP_MONS_DEATH_KNIGHT:
     case TILEP_MONS_MUMMY:
@@ -498,6 +497,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SPRIGGAN_BERSERKER:
         *ofs_x = -3;
         *ofs_y = -2;
+        break;
+    case TILEP_MONS_RUPERT:
+        *ofs_x = -3;
+        *ofs_y = -3;
         break;
     case TILEP_MONS_SPRIGGAN_AIR_MAGE:
         *ofs_x = -3;

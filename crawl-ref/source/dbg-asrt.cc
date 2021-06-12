@@ -807,12 +807,6 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
         DebugBreak();
 #endif
 
-#if defined(TARGET_OS_MACOSX)
-// raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
-    int* p = nullptr;           // but this gives us a stack crawl...
-    *p = 0;
-#endif
-
     // MSVCRT's abort() give's a funny message ...
     raise(SIGABRT);
     abort();

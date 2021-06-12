@@ -184,7 +184,6 @@
     Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
-    hellmonk
     Alex Henry
     R. Dan Henry
     Max 'Ploomutoo' Hon-Anderson
@@ -292,6 +291,7 @@
     Paul Pollack
     Poroing
     Iago Porto
+    Alexander Posch
     psywombats
     pubby
     Ashley Elizabeth Raine
@@ -400,6 +400,7 @@ The Dungeon Crawl Stone Soup development team is:
     Michael Gagno
     gammafunk
     Shayne Halvorson
+    hellmonk
     Brendan Hickey
     Aidan Holm
     Pete Hurst

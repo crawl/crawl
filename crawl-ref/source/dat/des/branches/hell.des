@@ -543,7 +543,9 @@ TAGS:   transparent no_pool_fixup uniq_hell_entry_tar
 WEIGHT: 5
 COLOUR: . = magenta
 FTILE:  .O = floor_infernal_blank
-NSUBST: w = 2=F / 4=F. / w
+NSUBST: w = 2=F / 2=F. / w
+# E is tiles not adjacent to walkable space
+NSUBST: E = 2=FE / E
 KMONS:  F = spectral caustic shrike
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
@@ -551,17 +553,17 @@ KMASK:  Ww = no_monster_gen
 : hell_entry_tier(_G, "low")
 MAP
       @
-   wwWwwww
-  wwWwwwwww
- wwwwWwwwwww
- wwwwwWwwwww
+   wwWwwEE
+  EwWwwEEEE
+ EEwwWwwEEEE
+ EwwwwWwwwwE
  wwWww.wwWww
 @WWwW.O.WwWw@
  wwwww.wwwwW
- wwwwWwwwwww
- wwwwwWwwwww
-  wwwwWwwww
-   wwwwWww
+ EEEwWwwEEww
+ EEEwwWwEEEE
+  EEEwWwwEE
+   EEwwWwE
       @
 ENDMAP
 

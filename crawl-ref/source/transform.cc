@@ -111,7 +111,7 @@ Form::Form(const form_entry &fe)
       can_cast(fe.can_cast), spellcasting_penalty(fe.spellcasting_penalty),
       unarmed_hit_bonus(fe.unarmed_hit_bonus), uc_colour(fe.uc_colour),
       uc_attack_verbs(fe.uc_attack_verbs),
-      can_bleed(fe.can_bleed), breathes(fe.breathes),
+      can_bleed(fe.can_bleed),
       keeps_mutations(fe.keeps_mutations),
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
@@ -432,9 +432,8 @@ bool Form::player_can_swim() const
                                           you.body_size(PSIZE_BODY, true) :
                                           size;
     return can_swim == FC_ENABLE
-           || (species::can_swim(you.species)
-                        || you.get_mutation_level(MUT_UNBREATHING) >= 2)
-                && can_swim != FC_FORBID
+           || species::can_swim(you.species)
+              && can_swim != FC_FORBID
            || player_size >= SIZE_GIANT;
 }
 
@@ -964,6 +963,35 @@ public:
     }
 };
 
+void set_airform_power(int pow)
+{
+    you.props[AIRFORM_POWER_KEY] = pow;
+}
+
+class FormStorm : public Form
+{
+private:
+    FormStorm() : Form(transformation::storm) { }
+    DISALLOW_COPY_AND_ASSIGN(FormStorm);
+public:
+    static const FormStorm &instance() { static FormStorm inst; return inst; }
+
+    /**
+     * Find the player's base unarmed damage in this form.
+     */
+    int get_base_unarmed_damage() const override
+    {
+        int power = 0;
+        if (you.props.exists(AIRFORM_POWER_KEY))
+            power = you.props[AIRFORM_POWER_KEY].get_int();
+        return 2 + div_rand_round(power * 2, 5);
+    }
+
+    bool can_offhand_punch() const override { return true; }
+};
+
+#if TAG_MAJOR_VERSION == 34
+
 /**
  * Set the number of hydra heads that the player currently has.
  *
@@ -1029,6 +1057,7 @@ public:
     }
 
 };
+#endif
 
 static const Form* forms[] =
 {
@@ -1055,7 +1084,10 @@ static const Form* forms[] =
 #endif
     &FormFungus::instance(),
     &FormShadow::instance(),
+#if TAG_MAJOR_VERSION == 34
     &FormHydra::instance(),
+#endif
+    &FormStorm::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1328,13 +1360,33 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
             equip_effect(e, you.equip[e], true, true);
 }
 
+static bool _lears_takes_slot(equipment_type eq)
+{
+    return eq >= EQ_HELMET && eq <= EQ_BOOTS
+        || eq == EQ_BODY_ARMOUR;
+}
+
+static bool _form_melds_lears(transformation which_trans)
+{
+    for (equipment_type eq : _init_equipment_removal(which_trans))
+        if (_lears_takes_slot(eq))
+            return true;
+    return false;
+}
+
 void unmeld_one_equip(equipment_type eq)
 {
-    if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (_lears_takes_slot(eq))
     {
         const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
         if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
+        {
+            // Don't unmeld lears when de-fishtailing if you're in
+            // a form that should keep it melded.
+            if (_form_melds_lears(you.form))
+                return;
             eq = EQ_BODY_ARMOUR;
+        }
     }
 
     set<equipment_type> e;
@@ -1344,7 +1396,7 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
-    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (player_equip_unrand(UNRAND_LEAR) && _lears_takes_slot(eq))
         eq = EQ_BODY_ARMOUR;
 
     set<equipment_type> r;
@@ -1526,32 +1578,6 @@ static int _transform_duration(transformation which_trans, int pow)
 }
 
 /**
- * Print an appropriate message when the number of heads the player has
- * changes during a refresh of hydra form.
- */
-static void _print_head_change_message(int old_heads, int new_heads)
-{
-    if (old_heads == new_heads)
-        return;
-
-    const int delta = abs(old_heads - new_heads);
-    const bool plural = delta != 1;
-    if (old_heads > new_heads)
-    {
-        if (plural)
-            mprf("%d of your heads shrink away.", delta);
-        else
-            mpr("One of your heads shrinks away.");
-        return;
-    }
-
-    if (plural)
-        mprf("%d new heads grow.", delta);
-    else
-        mpr("A new head grows.");
-}
-
-/**
  * Is the player alive enough to become the given form?
  *
  * All undead can enter shadow form; vampires also can enter batform, and, when
@@ -1670,13 +1696,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             you.redraw_armour_class = true;
             // ^ could check more carefully for the exact cases, but I'm
             // worried about making the code too fragile
-
-            if (which_trans == transformation::hydra)
-            {
-                const int heads = you.heads();
-                set_hydra_form_heads(div_rand_round(pow, 10));
-                _print_head_change_message(heads, you.heads());
-            }
         }
 
         int dur = _transform_duration(which_trans, pow);
@@ -1773,8 +1792,8 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    if (which_trans == transformation::hydra)
-        set_hydra_form_heads(div_rand_round(pow, 10));
+    if (which_trans == transformation::storm)
+        set_airform_power(pow);
 
     // Give the transformation message.
     mpr(get_form(which_trans)->transform_message(previous_trans));
@@ -1977,6 +1996,8 @@ void untransform(bool skip_move)
         you.props.erase(TRANSFORM_POW_KEY);
     if (you.props.exists(HYDRA_FORM_HEADS_KEY))
         you.props.erase(HYDRA_FORM_HEADS_KEY);
+    if (you.props.exists(AIRFORM_POWER_KEY))
+        you.props.erase(AIRFORM_POWER_KEY);
 
     // We may have to unmeld a couple of equipment types.
     set<equipment_type> melded = _init_equipment_removal(old_form);
@@ -2026,6 +2047,19 @@ void untransform(bool skip_move)
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
+    // If you're a mer in water, boots stay melded even after the form ends.
+    if (you.fishtail)
+    {
+        melded.erase(EQ_BOOTS);
+        const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
+        if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
+        {
+            // I hate you, King Lear.
+            melded.erase(EQ_HELMET);
+            melded.erase(EQ_GLOVES);
+            melded.erase(EQ_BODY_ARMOUR);
+        }
+    }
     _unmeld_equipment(melded);
 
     // Update skill boosts for the current state of equipment melds
@@ -2172,8 +2206,6 @@ int form_base_movespeed(transformation tran)
         return 5; // but allowed minimum is six
     else if (tran == transformation::pig)
         return 7;
-    else if (tran == transformation::wisp)
-        return 8;
     else
         return 10;
 }

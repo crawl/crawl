@@ -73,6 +73,7 @@
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
 static bool _monster_move(monster* mons);
+static bool _monster_swaps_places(monster* mon, const coord_def& delta);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -1157,7 +1158,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
     if (mons_itemuse(*mons) < MONUSE_STARTING_EQUIPMENT
         && mons->type != MONS_SPECTRAL_THING
-        && !mons_class_is_animated_weapon(mons->type))
+        && !mons_class_is_animated_object(mons->type))
     {
         return false;
     }
@@ -1664,24 +1665,8 @@ void handle_monster_move(monster* mons)
         const int gold = you.props[GOZAG_GOLD_AURA_KEY].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
-            if (gozag_gold_in_los(mons))
-            {
-                simple_monster_message(*mons,
-                    " becomes distracted by the nearby gold, dreaming of "
-                    "imaginary riches.");
-            }
-            else if (you.gold > 0)
-            {
-                simple_monster_message(*mons,
-                    " becomes distracted by your gold, dreaming of "
-                    "imaginary riches.");
-            }
-            else
-            {
-                // Just in case!
-                simple_monster_message(*mons,
-                            " is distracted by dreams of imaginary riches.");
-            }
+            simple_monster_message(*mons,
+                " is distracted by your dazzling golden aura.");
 
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
@@ -2103,11 +2088,11 @@ static void _ancient_zyme_sicken(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !mons->wont_attack()
-        && you.undead_state() == US_ALIVE
+        && !you.res_miasma()
         && !you.duration[DUR_DIVINE_STAMINA]
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
-        if (!you.disease)
+        if (!you.duration[DUR_SICKNESS])
         {
             if (!you.duration[DUR_SICKENING])
             {
@@ -2203,20 +2188,23 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_TORPOR_SNAIL)
         _torpor_snail_slow(mons);
 
-    if (mons->type == MONS_WATER_NYMPH)
+    if (mons->type == MONS_WATER_NYMPH
+        || mons->type == MONS_ELEMENTAL_WELLSPRING)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (feat_has_solid_floor(env.grid(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
-                if (env.grid(*ai) != DNGN_SHALLOW_WATER && env.grid(*ai) != DNGN_FLOOR
+                if (env.grid(*ai) != DNGN_SHALLOW_WATER
+                    && env.grid(*ai) != DNGN_FLOOR
                     && you.see_cell(*ai))
                 {
                     mprf("%s watery aura covers %s.",
                          apostrophise(mons->name(DESC_THE)).c_str(),
                          feature_description_at(*ai, false, DESC_THE).c_str());
                 }
-                temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
+                temp_change_terrain(*ai, DNGN_SHALLOW_WATER,
+                                    random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD, mons);
             }
     }
@@ -2555,7 +2543,7 @@ static bool _handle_pickup(monster* mons)
 
     // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
-    // being tornadoed, and with *that* low life expectancy let's not care.
+    // being polar vortex'd, and with *that* low life expectancy let's not care.
     dungeon_feature_type feat = env.grid(mons->pos());
 
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->airborne())
@@ -2701,14 +2689,6 @@ static bool _mons_can_displace(const monster* mpusher,
     const int ipushee = mpushee->mindex();
     if (invalid_monster_index(ipushee))
         return false;
-
-    if (mpusher->type == MONS_WANDERING_MUSHROOM
-        && mpushee->type == MONS_TOADSTOOL
-        || mpusher->type == MONS_TOADSTOOL
-           && mpushee->type == MONS_WANDERING_MUSHROOM)
-    {
-        return true;
-    }
 
     // Foxfires can always be pushed
     if (mpushee->type == MONS_FOXFIRE)
@@ -2967,12 +2947,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         if (!summon_can_attack(mons, targ))
             return false;
 
-        if (targmonster->type == MONS_TOADSTOOL
-            && mons->type == MONS_WANDERING_MUSHROOM)
-        {
-            return true;
-        }
-
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(*targmonster) && mons->target != targ)
@@ -3137,8 +3111,7 @@ static void _jelly_grows(monster& mons)
     _jelly_divide(mons);
 }
 
-bool monster_swaps_places(monster* mon, const coord_def& delta,
-                          bool takes_time, bool apply_effects)
+static bool _monster_swaps_places(monster* mon, const coord_def& delta)
 {
     if (delta.origin())
         return false;
@@ -3165,19 +3138,14 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
     if (!mon->swap_with(m2))
         return false;
 
-    if (takes_time)
-    {
-        _swim_or_move_energy(*mon);
-        _swim_or_move_energy(*m2);
-    }
+    _swim_or_move_energy(*mon);
+    _swim_or_move_energy(*m2);
 
     mon->check_redraw(m2->pos(), false);
-    if (apply_effects)
-        mon->apply_location_effects(m2->pos());
+    mon->apply_location_effects(m2->pos());
 
     m2->check_redraw(mon->pos(), false);
-    if (apply_effects)
-        m2->apply_location_effects(mon->pos());
+    m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context = SC_NONE;
@@ -3587,11 +3555,7 @@ static bool _monster_move(monster* mons)
                 && !(mons->has_ench(ENCH_INSANE)
                      || mons->confused()))
             {
-                bool takes_time = !(mons->type == MONS_WANDERING_MUSHROOM
-                                    && targ->type == MONS_TOADSTOOL
-                                    || mons->type == MONS_TOADSTOOL
-                                       && targ->type == MONS_WANDERING_MUSHROOM);
-                ret = monster_swaps_places(mons, mmov, takes_time);
+                ret = _monster_swaps_places(mons, mmov);
             }
             else
             {

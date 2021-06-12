@@ -761,8 +761,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !mons_is_firewood(m)
-        && !(have_passive(passive_t::shoot_through_plants)
-                                && fedhas_protects(&m))
+        && !god_protects(&m)
         && !always_shoot_through_monster(&you, m);
 }
 

@@ -146,6 +146,7 @@ struct game_state
     bool nonempty_buffer_flush_errors;
 
     string last_builder_error;
+    bool last_builder_error_fatal;
 
 protected:
     void reset_cmd_repeat();

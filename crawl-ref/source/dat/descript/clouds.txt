@@ -11,9 +11,9 @@ If placed near or over water, the heat will generate steam nearby.
 %%%%
 noxious fumes cloud
 
-A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming confused by the gases, unless resistant to poison.
-Tougher, more experienced creatures are less likely to be affected.
+A cloud of vile, choking fumes. Any creature spending time in it will be at
+risk of becoming confused by the gases, unless resistant to poison. Tougher,
+more experienced creatures are less likely to be affected.
 %%%%
 freezing vapour cloud
 
@@ -92,8 +92,8 @@ with undead and demonic creatures being greatly harmed.
 foul pestilence cloud
 
 # XXX: clarify gargoyles
-A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves poisoned, and may also find their movements slowed.
+A cloud of foul pestilence. Any living being caught within it will find
+themselves poisoned, and may also find their movements slowed.
 %%%%
 thin mist cloud
 
@@ -122,9 +122,10 @@ magical condensation cloud
 
 The wake of some highly concentrated magical energy, itself entirely harmless.
 %%%%
-raging winds cloud
+whirling frost cloud
 
-The winds of a raging tornado. It will deal severe damage to anyone within it.
+The winds of a polar vortex. It will deal severe damage to anyone within it,
+only partially mitigated by resistance to cold.
 %%%%
 sparse dust cloud
 
@@ -166,3 +167,12 @@ golden dust cloud
 
 A cloud of shimmering golden dust. While within it, followers of the Council
 gain tremendous strength in combat.
+%%%%
+smouldering embers cloud
+
+A cloud of smouldering embers. It can easily be smothered by any creature
+standing over it, but if left alone will ignite into a blazing cloud of flame.
+%%%%
+wisps of flame cloud
+
+A trail of sparks and wisps of flame. Atmospheric, but harmless.

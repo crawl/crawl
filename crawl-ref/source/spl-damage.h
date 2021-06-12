@@ -17,7 +17,8 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
 spret cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail = false);
-string desc_chain_lightning_dam(int pow);
+spret cast_chain_lightning(int pow, const actor &caster, bool fail);
+vector<coord_def> chain_lightning_targets();
 
 spret trace_los_attack_spell(spell_type spell, int pow,
                                   const actor* agent);
@@ -48,9 +49,9 @@ spret cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
 pair<int, item_def *> sandblast_find_ammo();
 spret cast_sandblast(int powc, bolt &beam, bool fail);
-spret cast_tornado(int powc, bool fail);
-void tornado_damage(actor *caster, int dur, bool is_vortex = false);
-void cancel_tornado(bool tloc = false);
+spret cast_polar_vortex(int powc, bool fail);
+void polar_vortex_damage(actor *caster, int dur);
+void cancel_polar_vortex(bool tloc = false);
 coord_def get_thunderbolt_last_aim(actor *caster);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
@@ -95,9 +96,6 @@ vector<coord_def> find_ramparts_walls(const coord_def &center);
 spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);
-
-vector<monster *> find_abszero_possibles(int radius);
-spret cast_absolute_zero(int pow, bool fail, bool tracer = false);
 
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);

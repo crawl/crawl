@@ -3823,19 +3823,19 @@ MAP
 ENDMAP
 
 NAME:  minivault_21
-TAGS:  transparent allow_dup extra
+TAGS:  transparent extra
 DEPTH: D:8-, !D:$, Depths:2-, !Depths:$
 KMASK: |'<>* = opaque
 MAP
 ............
 ..xxxxxxxx..
 .x........x.
-.x.ccnccc.x.
-.x.c|''<c.x.
-.x.c'**'n.x.
-.x.n'**'c.x.
-.x.c>''|c.x.
-.x.cccncc.x.
+.x.xxmxxx.x.
+.x.x|''<x.x.
+.x.x'**'m.x.
+.x.m'**'x.x.
+.x.x>''|x.x.
+.x.xxxmxx.x.
 .x........x.
 ..xxxxxxxx..
 ............

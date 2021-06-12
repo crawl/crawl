@@ -157,7 +157,9 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         break;
 
+    case BEAM_STUN_BOLT:
     case BEAM_ELECTRICITY:
+    case BEAM_THUNDER:
         hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)

@@ -997,8 +997,8 @@ static void _abyss_shift_level_contents_around_player(
     // [ds] Rezap everything except the shifted area. NOTE: the old
     // code did not do this, leaving a repeated swatch of Abyss behind
     // at the old location for every shift; discussions between Linley
-    // and dpeg on ##crawl confirm that this (repeated swatch of
-    // terrain left behind) was not intentional.
+    // and dpeg on IRC confirm that this (repeated swatch of terrain left
+    // behind) was not intentional.
     _abyss_wipe_unmasked_area(abyss_destruction_mask);
 
     // So far we've used the mask to track the portions of the level we're

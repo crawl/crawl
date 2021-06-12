@@ -124,8 +124,9 @@ bool monster_habitable_grid(const monster* mon,
 {
     // Zombified monsters enjoy the same habitat as their original,
     // except lava-based monsters.
-    const monster_type mt = fixup_zombie_type(mon->type,
-                                              mons_base_type(*mon));
+    const monster_type mt = mons_is_job(mon->type)
+        ? draco_or_demonspawn_subspecies(*mon)
+        : fixup_zombie_type(mon->type, mons_base_type(*mon));
 
     bool type_safe = monster_habitable_grid(mt, actual_grid, DNGN_UNSEEN);
     return type_safe ||
@@ -226,6 +227,21 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return false;
 }
 
+static int _ood_fuzzspan(level_id &place)
+{
+    if (place.branch != BRANCH_DUNGEON || place.depth >= 5)
+        return 5;
+
+    // Literally any OOD is too nasty for D:1.
+    if (place.depth == 1)
+        return 0;
+
+    // In early D, since player and enemy strength scale so rapidly
+    // with depth, spawn OODs from much closer depths.
+    // Only up to D:4 on D:2, up to D:6 on D:3, and D:8 on D:4.
+    return place.depth;
+}
+
 static void _apply_ood(level_id &place)
 {
     // OODs do not apply to any portal vaults, any 1-level branches, Zot and
@@ -242,23 +258,14 @@ static void _apply_ood(level_id &place)
     level_id old_place = place;
 #endif
 
-    // The OOD fuzz roll is not applied on D:1, and is applied slightly less
-    // often (0.75*0.14) on D:2. All other levels have a straight 14% chance of
-    // moderate OOD fuzz for each monster at level generation.
-    if (place.branch == BRANCH_DUNGEON
-        && (place.depth == 1
-            || place.depth == 2 && one_chance_in(4)))
+    const int fuzzspan = _ood_fuzzspan(place);
+    if (fuzzspan && x_chance_in_y(14, 100))
     {
-        return;
-    }
-
-    if (x_chance_in_y(14, 100))
-    {
-        const int fuzzspan = 5;
-        const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
-
-        // Quite bizarre logic: why should we fail in >50% cases here?
-        if (fuzz)
+        // We want a left-weighted distribution; slight fuzzing should be much
+        // more common than the full depth fuzz. This does mean that OODs are closer
+        // to a 6% chance than the 14% implied above, which is a bit silly.
+        const int fuzz = random_range(-fuzzspan, fuzzspan);
+        if (fuzz > 0)
         {
             place.depth += fuzz;
             dprf("Monster level fuzz: %d (old: %s, new: %s)",
@@ -881,7 +888,7 @@ static void _place_twister_clouds(monster *mon)
         mon->lose_ench_duration(abj, abj.duration / 2);
     }
 
-    tornado_damage(mon, -10);
+    polar_vortex_damage(mon, -10);
 }
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
@@ -1218,8 +1225,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {
-        mon->props["tornado_since"].get_int() = you.elapsed_time;
-        mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
+        mon->props["polar_vortex_since"].get_int() = you.elapsed_time;
+        mon->add_ench(mon_enchant(ENCH_POLAR_VORTEX, 0, 0, INFINITE_DURATION));
     }
 
     // this MUST follow hd initialization!
@@ -1861,7 +1868,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
     { MONS_PEACEKEEPER,     { { 0, 0, []() {
         return player_in_branch(BRANCH_VAULTS); }},
-                                  {{ BAND_GOLEMS, {2, 4}, true }}}},
+                                  {{ BAND_GOLEMS, {1, 3}, true }}}},
     // Journey -- Added Draconian Packs
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },

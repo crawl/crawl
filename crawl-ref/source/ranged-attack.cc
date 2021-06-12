@@ -225,10 +225,7 @@ bool ranged_attack::handle_phase_dodged()
     if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
-        {
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-            defender->ablate_repulsion();
-        }
 
         if (defender->is_player())
             count_action(CACT_DODGE, DODGE_REPEL);

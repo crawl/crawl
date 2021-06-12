@@ -140,7 +140,7 @@ Crawl darà problemi se non potrà trovare uno di questi due files.
 finished random 3
 
 Puoi chiedere aiuto e consigli agli altri giocatori di Crawl sul canale di IRC
-(Internet Relay Chat) <w>##crawl</w> sul freenode (<w>irc.freenode.net</w>).
+(Internet Relay Chat) <w>#crawl</w> sul Libera (<w>irc.libera.chat</w>).
 %%%%
 dissection reminder
 

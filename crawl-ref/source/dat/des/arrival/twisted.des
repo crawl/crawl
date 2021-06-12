@@ -398,8 +398,9 @@ ENDMAP
 NAME:    erik_arrival_cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
 TAGS:    cave_to_temple_subvault no_rotate no_trap_gen
-NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
 KPROP:   'tCD> = no_tele_into
+NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
+# TODO this mask probably doesn't work:
 KMASK:   'tCD> = no_item_gen
 : local rnd = crawl.random2(9)
 : if rnd == 0 then

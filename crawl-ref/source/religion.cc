@@ -368,8 +368,8 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Hepliaklqana
-    {   { 0, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
-        { 0, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
+    {   { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
+        { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
         { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
         { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
         { 5, "drain nearby creatures when transferring your ancestor"},
@@ -1500,80 +1500,81 @@ static bool _handle_uskayaw_ability_unlocks()
     return success;
 }
 
-static bool _gift_sif_kiku_gift(bool forced)
+static bool _give_sif_gift(bool forced)
 {
     // Smokeless fire and books don't get along.
     if (you.has_mutation(MUT_INNATE_CASTER))
         return false;
 
-    bool success = false;
-    book_type gift = NUM_BOOKS;
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    // Kikubaaqudgha gives the lesser Necromancy books in a quick
-    // succession.
-    if (you_worship(GOD_KIKUBAAQUDGHA))
+    if (!forced && (you.piety < piety_breakpoint(4)
+                    || random2(you.piety) < 101 || coinflip()))
     {
-        if (you.piety >= piety_breakpoint(0)
-            && you.num_total_gifts[you.religion] == 0)
-        {
-            gift = BOOK_NECROMANCY;
-        }
-        else if (you.piety >= piety_breakpoint(2)
-                 && you.num_total_gifts[you.religion] == 1)
-        {
-            gift = BOOK_DEATH;
-        }
-    }
-    else if (forced
-             || you.piety >= piety_breakpoint(4) && random2(you.piety) > 100
-                && coinflip())
-    {
-        // Sif Muna special: Keep quiet if acquirement fails
-        // because the player already has seen all spells.
-        if (you_worship(GOD_SIF_MUNA))
-        {
-            int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
-                                                     true, you.pos());
-            success = (item_index != NON_ITEM);
-        }
+        return false;
     }
 
-    if (gift != NUM_BOOKS)
+    // Sif Muna special: Keep quiet if acquirement fails
+    // because the player already has seen all spells.
+    int item_index = acquirement_create_item(OBJ_BOOKS, you.religion,
+                                             true, you.pos());
+    if (item_index == NON_ITEM)
+        return false;
+
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
+
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    _inc_gift_timeout(40 + random2avg(19, 2));
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    return true;
+}
+
+static bool _give_kiku_gift(bool forced)
+{
+    // Smokeless fire and books don't get along.
+    if (you.has_mutation(MUT_INNATE_CASTER))
+        return false;
+
+    // Break early if giving a gift now means it would be lost.
+    if (feat_eliminates_items(env.grid(you.pos())))
+        return false;
+
+    const bool first_gift = !you.num_total_gifts[you.religion];
+
+    // Kikubaaqudgha gives two Necromancy books in a quick succession.
+    if (!forced && (you.piety < piety_breakpoint(0)
+                    || !first_gift && you.piety < piety_breakpoint(2)
+                    || you.num_total_gifts[you.religion] > 1))
     {
-        int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                  you.religion);
-        // Replace a Kiku gift by a custom-random book.
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-        {
-            make_book_kiku_gift(env.item[thing_created],
-                                gift == BOOK_NECROMANCY);
-        }
-        if (thing_created == NON_ITEM)
-            return false;
-
-        move_item_to_grid(&thing_created, you.pos(), true);
-
-        if (thing_created != NON_ITEM)
-            success = true;
+        return false;
     }
 
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
+    int thing_created = items(true, OBJ_BOOKS, BOOK_NECROMANCY, 1, 0,
+                              you.religion);
 
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        // Timeouts are meaningless for Kiku.
-        if (!you_worship(GOD_KIKUBAAQUDGHA))
-            _inc_gift_timeout(40 + random2avg(19, 2));
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-    }
+    if (thing_created == NON_ITEM)
+        return false;
 
-    return success;
+    // Replace a Kiku gift by a custom-random book.
+    make_book_kiku_gift(env.item[thing_created], first_gift);
+    move_item_to_grid(&thing_created, you.pos(), true);
+
+    if (thing_created == NON_ITEM)
+        return false;
+
+    simple_god_message(" grants you a gift!");
+    // included in default force_more_message
+
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    return true;
 }
 
 static bool _handle_veh_gift(bool forced)
@@ -1748,6 +1749,36 @@ int hepliaklqana_ally_hp()
 }
 
 /**
+ * Choose an antique name for a Hepliaklqana-granted ancestor.
+ *
+ * @param gender    The ancestor's gender.
+ * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
+ */
+static string _make_ancestor_name(gender_type gender)
+{
+    const string gender_name = gender == GENDER_MALE ? " male " :
+                               gender == GENDER_FEMALE ? " female " : " ";
+    const string suffix = gender_name + "name";
+    const string name = getRandNameString("ancestor", suffix);
+    return name.empty() ? make_name() : name;
+}
+
+/// Setup when gaining a Hepliaklqana ancestor.
+static void _setup_hepliaklqana_ancestor()
+{
+    // initial setup.
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
+    {
+        const gender_type gender = random_choose(GENDER_NEUTRAL,
+                                                 GENDER_MALE,
+                                                 GENDER_FEMALE);
+
+        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
+        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
+    }
+}
+
+/**
  * Creates a mgen_data with the information needed to create the ancestor
  * granted by Hepliaklqana.
  *
@@ -1758,6 +1789,7 @@ int hepliaklqana_ally_hp()
  */
 mgen_data hepliaklqana_ancestor_gen_data()
 {
+    _setup_hepliaklqana_ancestor();
     const monster_type type = you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY) ?
         (monster_type)you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int() :
         MONS_ANCESTOR;
@@ -2082,8 +2114,11 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_KIKUBAAQUDGHA:
+            success = _give_kiku_gift(forced);
+            break;
+
         case GOD_SIF_MUNA:
-            success = _gift_sif_kiku_gift(forced);
+            success = _give_sif_gift(forced);
             break;
 
         case GOD_VEHUMET:
@@ -2177,11 +2212,11 @@ string wu_jian_random_sifu_name()
 {
     switch (random2(7))
     {
-        case 0: return "Deng Ai";
-        case 1: return "Jiang Wei";
-        case 2: return "Zhang Bao";
+        case 0: return "Yunchang";
+        case 1: return "Lu Zhishen";
+        case 2: return "Xiang Ba";
         case 3: return "Ma Yunglu";
-        case 4: return "Sun Luban";
+        case 4: return "Hu Sanniang";
         case 5: return "Gene Jian Bin";
         case 6: return "Cai Fang";
         default: return "Bug";
@@ -2406,8 +2441,23 @@ static void _gain_piety_point()
 
         const int rank = piety_rank();
         take_note(Note(NOTE_PIETY_RANK, you.religion, rank));
+
+        // For messaging reasons, we want to get our ancestor before
+        // we get the associated recall / rename powers.
+        if (rank == rank_for_passive(passive_t::frail))
+        {
+            calc_hp(); // adjust for frailty
+            // In exchange for your hp, you get an ancestor!
+            const mgen_data mg = hepliaklqana_ancestor_gen_data();
+            delayed_monster(mg);
+            simple_god_message(make_stringf(" forms a fragment of your life essence"
+                                            " into the memory of your ancestor, %s!",
+                                            mg.mname.c_str()).c_str());
+        }
+
         for (const auto& power : get_god_powers(you.religion))
         {
+
             if (power.rank == rank
                 || power.rank == 7 && can_do_capstone_ability(you.religion))
             {
@@ -2607,6 +2657,15 @@ void lose_piety(int pgn)
         redraw_screen();
         update_screen();
 #endif
+
+        if (will_have_passive(passive_t::frail) && !have_passive(passive_t::frail))
+        {
+            // hep: just lost 1*
+            // remove companion (gained at same tier as frail)
+            add_daction(DACT_ALLY_HEPLIAKLQANA);
+            remove_all_companions(GOD_HEPLIAKLQANA);
+            calc_hp(); // adjust for frailty
+        }
     }
 
     if (you.piety > 0 && you.piety <= 5)
@@ -2653,14 +2712,76 @@ static bool _fedhas_protects_species(monster_type mc)
            && mons_class_holiness(mc) & MH_PLANT;
 }
 
+/// Whether fedhas would protect `target` from harm if called on to do so.
 bool fedhas_protects(const monster *target)
 {
-    return target
-        ? _fedhas_protects_species(mons_base_type(*target))
-        : false;
+    return target && _fedhas_protects_species(mons_base_type(*target));
 }
 
-// Fedhas neutralises most plants and fungi
+/**
+ * Does some god protect monster `target` from harm triggered by `agent`?
+ * @param agent  The source of the damage. If nullptr, the damage has no source.
+ *               (Currently, no god does protect in this case.)
+ * @param target A monster that is the target of the damage.
+ * @param quiet  If false, do messaging to indicate that target has escaped
+ *               damage.
+ * @return       Whether target should escape damage.
+ */
+bool god_protects(const actor *agent, const monster *target, bool quiet)
+{
+    // The alignment check is to allow a penanced player to continue to fight
+    // hostiles that would otherwise be protected, in case what they angered can
+    // fight back
+
+    const bool aligned = agent && target
+        && ((agent->is_player()
+                ? target->friendly()
+                : mons_atts_aligned(target->attitude,
+                                                agent->as_monster()->attitude))
+            || target->neutral());
+    // XX does it matter whether this just checks fedhas vs.
+    // the shoot_through_plants passive
+    if (aligned
+        && ((agent->is_player() || agent->as_monster()->friendly())
+                        && have_passive(passive_t::shoot_through_plants)
+            || agent->is_monster() && agent->deity() == GOD_FEDHAS) // purely theoretical?
+        && fedhas_protects(target))
+    {
+        if (!quiet && you.can_see(*target))
+        {
+            simple_god_message(
+                        make_stringf(" protects %s plant from harm.",
+                            agent->is_player() ? "your" : "a").c_str(),
+                        GOD_FEDHAS);
+        }
+        return true;
+    }
+
+    if (agent && target && agent->is_player()
+        && mons_is_hepliaklqana_ancestor(target->type))
+    {
+        // TODO: this message does not work very well for all sorts of attacks
+        // should this be a god message?
+        if (!quiet && you.can_see(*target))
+            mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Does some god protect monster `target` from harm triggered by the player?
+ * @param target A monster that is the target of the damage.
+ * @param quiet  If false, do messaging to indicate that target has escaped
+ *               damage.
+ * @return       Whether target should escape damage.
+ */
+bool god_protects(const monster *target, bool quiet)
+{
+    return god_protects(&you, target, quiet);
+}
+
+/// Whether Fedhas would set `target` to a neutral attitude
 bool fedhas_neutralises(const monster& target)
 {
     return mons_is_plant(target)
@@ -2748,6 +2869,12 @@ static void _ash_uncurse()
         }
         unequip_item(static_cast<equipment_type>(eq_typ));
     }
+}
+
+int excom_xp_docked()
+{
+    return exp_needed(min<int>(you.max_level, 27) + 1)
+         - exp_needed(min<int>(you.max_level, 27));
 }
 
 void excommunication(bool voluntary, god_type new_god)
@@ -2916,8 +3043,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -2941,8 +3067,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_ASHENZARI:
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _ash_uncurse();
         break;
@@ -2965,8 +3090,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
         shopping_list.remove_dead_shops();
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3007,8 +3131,7 @@ void excommunication(bool voluntary, god_type new_god)
                            old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 #endif
@@ -3021,8 +3144,7 @@ void excommunication(bool voluntary, god_type new_god)
         add_daction(DACT_ALLY_HEPLIAKLQANA);
         remove_all_companions(GOD_HEPLIAKLQANA);
 
-        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
-                                    - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
@@ -3100,7 +3222,6 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
         case GOD_ZIN:
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
-        case GOD_OKAWARU:
             return true;
         case GOD_BEOGH: // added penance to avoid killings for loot
             return mons_genus(species) == MONS_ORC;
@@ -3530,45 +3651,6 @@ static void _join_gozag()
     add_daction(DACT_GOLD_ON_TOP);
 }
 
-/**
- * Choose an antique name for a Hepliaklqana-granted ancestor.
- *
- * @param gender    The ancestor's gender.
- * @return          An appropriate name; e.g. Hrodulf, Citali, Aat.
- */
-static string _make_ancestor_name(gender_type gender)
-{
-    const string gender_name = gender == GENDER_MALE ? " male " :
-                               gender == GENDER_FEMALE ? " female " : " ";
-    const string suffix = gender_name + "name";
-    const string name = getRandNameString("ancestor", suffix);
-    return name.empty() ? make_name() : name;
-}
-
-/// Setup when joining the devoted followers of Hepliaklqana.
-static void _join_hepliaklqana()
-{
-    // initial setup.
-    if (!you.props.exists(HEPLIAKLQANA_ALLY_NAME_KEY))
-    {
-        const gender_type gender = random_choose(GENDER_NEUTRAL,
-                                                 GENDER_MALE,
-                                                 GENDER_FEMALE);
-
-        you.props[HEPLIAKLQANA_ALLY_NAME_KEY] = _make_ancestor_name(gender);
-        you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = gender;
-    }
-
-    calc_hp(); // adjust for frailty
-
-    // Complimentary ancestor upon joining.
-    const mgen_data mg = hepliaklqana_ancestor_gen_data();
-    delayed_monster(mg);
-    simple_god_message(make_stringf(" forms a fragment of your life essence"
-                                    " into the memory of your ancestor, %s!",
-                                    mg.mname.c_str()).c_str());
-}
-
 /// Setup when joining the gelatinous groupies of Jiyva.
 static void _join_jiyva()
 {
@@ -3650,7 +3732,6 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_JIYVA, _join_jiyva },
-    { GOD_HEPLIAKLQANA, _join_hepliaklqana },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
             gain_piety(20, 1, false);  // allow instant access to first power

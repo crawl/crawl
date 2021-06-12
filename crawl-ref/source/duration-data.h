@@ -318,10 +318,10 @@ static const duration_def duration_data[] =
       "mirroring injuries", "mirror damage",
       "You mirror injuries.", D_NO_FLAGS,
       {{ "Your dark mirror aura disappears." }}},
-    { DUR_TORNADO,
-      LIGHTGREY, "Tornado",
-      "in a tornado", "tornado",
-      "You are in the eye of a mighty hurricane.", D_EXPIRES},
+    { DUR_VORTEX,
+      LIGHTGREY, "Vortex",
+      "in a vortex", "vortex",
+      "You are in the eye of a polar vortex.", D_EXPIRES},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
@@ -344,12 +344,12 @@ static const duration_def duration_data[] =
       "divinely protected", "lifesaving",
       "You are calling for your life to be saved.", D_EXPIRES,
       {{ "Your divine protection fades away." }}},
-    { DUR_TORNADO_COOLDOWN,
-      YELLOW, "-Tornado",
-      "on tornado cooldown", "tornado cooldown",
-      "You are unable to create a tornado.", D_NO_FLAGS,
+    { DUR_VORTEX_COOLDOWN,
+      YELLOW, "-Vortex",
+      "on vortex cooldown", "vortex cooldown",
+      "You are unable to create a polar vortex.", D_NO_FLAGS,
       {{ "The winds around you calm down.", []() {
-          remove_tornado_clouds(MID_PLAYER);
+          remove_vortex_clouds(MID_PLAYER);
       }}}},
     { DUR_DISJUNCTION,
       BLUE, "Disjoin",
@@ -542,6 +542,10 @@ static const duration_def duration_data[] =
       "unable to hop", "no hop",
       "You are unable to hop.", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
+    { DUR_BLINKBOLT_COOLDOWN, YELLOW, "-Bbolt",
+      "blinkbolt cooldown", "no blinkbolt",
+      "", D_NO_FLAGS,
+      {{ "You feel energetic enough to blinkbolt again." }}},
     { DUR_ACROBAT, 0, "",
       "acrobatic", "acrobat",
       "You are acrobatic and have increased evasion.", D_NO_FLAGS,
@@ -591,7 +595,9 @@ static const duration_def duration_data[] =
     { DUR_SICKENING, 0, "", "", "sickening", "", D_NO_FLAGS, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
+    // Regeneration information handled separately.
+    { DUR_TROGS_HAND, 0, "", "strong-willed", "trogs hand",
+      "Your willpower is greatly increased.", D_EXPIRES,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
@@ -614,6 +620,8 @@ static const duration_def duration_data[] =
     { DUR_HEAVENLY_STORM, 0, "", "in a heavenly storm", "heavenly storm",
       "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
       {{ "", wu_jian_decrement_heavenly_storm }}},
+    { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
+      {{ "You feel your health improve." }}},
 
 
 #if TAG_MAJOR_VERSION == 34

@@ -9,7 +9,6 @@ enum class activity_interrupt
     full_hp,            // Player is fully healed
     full_mp,            // Player has recovered all mp
     ancestor_hp,        // Player's ancestor is fully healed
-    hungry,             // Hunger increased
     message,            // Message was displayed
     hp_loss,
     stat_change,

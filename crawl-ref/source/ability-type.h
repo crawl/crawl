@@ -56,7 +56,9 @@ enum ability_type
     ABIL_HOP,
     // Palentongas
     ABIL_ROLLING_CHARGE,
-    ABIL_MAX_INTRINSIC = ABIL_ROLLING_CHARGE,
+    // Air Walk
+    ABIL_BLINKBOLT,
+    ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

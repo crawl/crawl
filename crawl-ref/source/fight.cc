@@ -566,6 +566,10 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_ICE:
         return 40;
 
+    // 50/50 split of elec and sonic damage.
+    case BEAM_THUNDER:
+        return 50;
+
     case BEAM_LAVA:
         return 55;
 
@@ -594,6 +598,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
+        case BEAM_STUN_BOLT:
             return defender->res_elec();
         case BEAM_NEG:
         case BEAM_PAIN:
@@ -808,8 +814,8 @@ bool attack_cleaves(const actor &attacker, int which_attack)
 
     return weap && item_attack_skill(*weap) == SK_AXES
         || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
-                   || you.duration[DUR_CLEAVE]);
+            && (you.form == transformation::storm
+                || you.duration[DUR_CLEAVE]);
 }
 
 /**

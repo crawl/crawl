@@ -1712,6 +1712,14 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
+        case SK_LONG_BLADES:
+            if (species == SP_MERFOLK && skill_rank == 5)
+            {
+                result = "Swordfish";
+                break;
+            }
+            break;
+
         case SK_INVOCATIONS:
             if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";

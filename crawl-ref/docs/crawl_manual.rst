@@ -32,8 +32,8 @@ You can also read these documents while playing Crawl by hitting '?' at the help
 menu. A list of frequently asked questions about gameplay and design can be
 accessed by pressing '?Q' in the game.
 
-While Dungeon Crawl is strictly a single player game, you can interact with
-others over a server. Connecting to a server opens several interesting options.
+While Crawl is strictly a single player game, you can interact with others over
+a server. Connecting to a server opens several interesting options.
 
 You can:
 
@@ -44,14 +44,10 @@ You can:
 - take part in the semiannual tournament
 - play the most recent development version
 
-A full list of available servers and information on how to connect to them can
-be found at: http://crawl.develz.org/wordpress/howto
+See the Crawl website to find an online server, links to download the game for
+offline play, and other community resources:
 
-The servers carry no guarantees, though they are generally always running.
-
-There is also a lively IRC channel dedicated to Crawl at ##crawl on irc.freenode.net.
-You can ask for help and there will always be someone to watch your game and
-give hints if you happen to play on a server.
+  http://crawl.develz.org/
 
 ****************************************
 B. Starting screen
@@ -1167,61 +1163,79 @@ These are listed in purple on the list of mutations, and marked as temporary.
 L. Licence, contact, history
 ****************************************
 
-Licence
-  See licence.txt for information about Crawl's licensing. Most of the game's
-  components are licensed under version 2 or later of the GNU General Public
-  License; those that aren't are under compatible licenses.
+See licence.txt for information about Crawl's licensing. Most of the game's
+components are licensed under version 2 or later of the GNU General Public
+License; those that aren't are under compatible licenses.
 
 Disclaimer
   This software is provided as is, with absolutely no warranty express or
   implied. Use of it is at the sole risk of the user. No liability is accepted
   for any damage to the user or to any of the user's possessions.
 
+Contact and community information
+========================================
+
+Crawl's homepage is at:
+
+  http://crawl.develz.org
+
+Use this page for direct links to downloads of the most recent version. You can
+also submit bug reports on the Github issue tracker at:
+
+  https://github.com/crawl/crawl/issues
+
 If you'd like to discuss Crawl, a good place to do so is the #dcss channel
 of the Roguelikes Discord:
 
   https://discord.gg/GtT7xMe
 
-All topics related to this game usually meet a warm response, including tales of
-runes seized, victories (especially first victories), and sad stories of deceased
-characters. There are also usually experienced players around ready to give
-advice on equipment choices, tight spots, or other dilemmas, and a bot provides
-helpful information and statistics about the game.
+There's also an active subreddit for game discussion:
 
-Some players, especially those on the online servers, also frequent ##crawl on
-the freenode IRC network, which contains similar bots.
+  https://www.reddit.com/r/dcss/
 
-Stone Soup's homepage is at:
+In both of these communities, topics related to this game usually meet a warm
+response, including tales of runes seized, victories (especially first
+victories), and sad stories of deceased characters. There are also usually
+experienced players around ready to give advice on equipment choices, tight
+spots, or other dilemmas. The Discord has a relay to the Sequell IRC bot that
+provides helpful information and statistics about the game.
 
-  http://crawl.develz.org
+Some players frequent the #crawl channel on the Libera IRC network, which is
+also the home of Sequell and other info bots. For those interested in game
+development, see the #crawl-dev channel, which is frequented by many members of
+the game's development team.
 
-Use this page for direct links to downloads of the most recent version. You can
-also submit bug reports there at https://crawl.develz.org/mantis if you have an
-account, or on the Github issue tracker at:
+History
+========================================
 
-  https://github.com/crawl/crawl/issues
+Crawl began as Linley's Dungeon Crawl, created in 1995 by Linley Henzell.
+Linley based Crawl on popular roguelikes of the time, namely Moria, Hack, and
+NetHack, also taking inspiration from traditional RPGs like Ultima IV. The
+object of your quest in Crawl, the Orb of Zot, was taken from Wizard's Castle,
+a text adventure written in BASIC.
 
-The history of Crawl is somewhat convoluted: Crawl was created in 1995 by Linley
-Henzell. Linley based Crawl loosely on Angband and NetHack, but avoided several
-annoying aspects of these games, and added a lot of original ideas of his own.
-Crawl was a hit, and Linley produced Crawl versions up to 3.30 in March 1999.
-Further work was then carried out by a group of developers who released 3.40 in
-February 2000. Of them, Brent Ross emerged as the single maintainer, producing
-versions until 4.0 beta 26 in 2002. After a long period of silent work, he went
-a great step by releasing 4.1.2 alpha in August 2005. This alpha contained a lot
-of good ideas, but was nearly unplayable due to balance issues. In the meantime,
-several patchers appeared, improving Crawl's interface tremendously. Several of
-them formed a new devteam; reasoning that rebalancing 4.1.2 was a very difficult
-task, they decided to fork Crawl 4.0 beta 26 and selectively include good ideas
-from 4.1.2 and other sources. This fork is Stone Soup, and is the game this
-manual describes. Stone Soup's release versions were restarted at 0.1 to avoid
-confusion with the existing plethora of Crawl versions.
+Linley produced Crawl versions up to 3.30, released in March 1999. Further work
+was then carried out by a group of developers who released 3.40 in February
+2000. Of these developers, Brent Ross emerged as the single maintainer,
+producing versions until 4.0 beta 26 in 2002. Brent released an alpha version
+4.1 in August 2005, which vastly overhauled the codebase and reworked many of
+the game's aspects, but also considerably increased its difficulty. By this
+point, Brent no longer had enough free time to develop Crawl. Hence Darshan
+Shaligram, who had previously contributed many UI improvements, recruited
+longtime player Erik Piper to start a new project and continue development.
 
-It should be mentioned that there have been other Crawl variants over the years,
-among them Ax-Crawl, Tile Crawl and Dungeon Crawl Alternative.
+Darshan and Erik aimed to incorporate ideas from the 4.1 alpha and produce a
+more balanced an enjoyable game. Calling their project "Dungeon Crawl: Stone
+Soup" in reference to their collaborative process, they pulled many 4.1
+improvements into the 4.0 beta 26 codebase, play-testing and adjusting the
+results. Dungeon Crawl: Stone Soup version 0.1 was released to USENET in
+September 2006, with many additional developers subsequently joining the team.
+See Darshan's own account of the project's creation here:
 
-The object of your quest in Crawl (the Orb of Zot) was taken from Wizard's
-Castle, a text adventure written in BASIC.
+  https://crawl.develz.org/wordpress/the-dawn-of-stone-soup
+
+The development of Crawl proceeds to this day, with a team of many developers
+and hundreds of contributors.
 
 ****************************************
 M. Macros, options, performance
@@ -1912,9 +1926,9 @@ Yellow Draconians
   attack. They are acid resistant, too.
 
 Grey Draconians
-  have no breath weapon, but also no need to breathe in order to live, which
-  helps them survive in deep water. They are proficient with earth magic but bad
-  with air magic, and also have harder scales than other Draconians.
+  have no breath weapon, but their bodies are adapted to the water, allowing
+  them to swim. They are proficient with earth magic but bad with air magic, and
+  they also have harder scales than other Draconians.
 
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
@@ -2909,7 +2923,8 @@ commands:
 !a
   Prompt before attacking when wielding this item. Non-weapons and ranged
   weapons prompt automatically. Also, if you answer 'y', you won't be prompted
-  again until you switch weapons.
+  again until you switch weapons. To reset this prompt while keeping the
+  current weapon wielded, use 'w' and select the current weapon.
 
 !d
   Prompt before dropping this item.

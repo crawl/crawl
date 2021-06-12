@@ -40,7 +40,7 @@
 
 {{
 function interest_check(e)
-  if not you.in_branch("D") or you.absdepth() > 10 then
+  if not you.in_branch("D") or you.depth() > 10 then
     e.tags('extra')
   end
 end
@@ -490,10 +490,10 @@ TAGS:  uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH: D:5-
 KFEAT: C = altar_dithmenos
 {{
-  if you.absdepth() >= 14 then
+  if you.absdepth() >= 9 then
      mons("shadow")
   else
-     local imp_weight = 9 - you.absdepth()
+     local imp_weight = 9 - you.depth()
      if imp_weight > 0 then
          local phantom_weight = 9 - imp_weight
          mons("phantom w:" .. phantom_weight ..
@@ -1537,6 +1537,7 @@ TAGS:  transparent
 KFEAT: _ = altar_makhleb
 KPROP: 12 = no_tele_into
 KMASK: 12 = no_trap_gen
+KMASK: 12 = opaque
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
 : interest_check(_G)
@@ -1656,7 +1657,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   transparent decor no_rotate
+TAGS:   decor no_rotate
 TAGS:   layout_rooms layout_city layout_open
 KPROP:  abcdefghBR' = no_tele_into
 KFEAT:  _ = altar_nemelex_xobeh
@@ -1705,6 +1706,7 @@ MONS:    ogre ; giant club
 MONS:    endoplasm
 KFEAT:   _ = altar_nemelex_xobeh
 SHUFFLE:  12_
+COLOUR:  x = darkgray
 COLOUR:  12' = random
 TILE:    x = wall_pebble_darkgray
 MAP
@@ -1774,9 +1776,10 @@ TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
 TAGS:   uniq_altar_nemelex_xobeh
 KFEAT:  _ = altar_nemelex_xobeh
 :  if you.depth() ~= dgn.br_depth(you.branch()) then
-KFEAT:  o = shaft trap
+KFEAT:  a = shaft trap
 :  end
-NSUBST: ' = 6:o / *:.
+NSUBST: ' = 6:a / *:.
+COLOUR: x = darkgray
 TILE:   x = wall_pebble_darkgray
 : interest_check(_G)
 MAP
@@ -1891,6 +1894,7 @@ ENDMAP
 NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 KFEAT: _ = altar_okawaru
+KPROP: 1 = no_tele_into
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
 : interest_check(_G)
@@ -2983,7 +2987,7 @@ ENDMAP
 # weapons are just plain.
 NAME:   nicolae_wu_jian_glorious_leap
 TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen
-TAGS:   transparent uniq_altar_wu_jian
+TAGS:   uniq_altar_wu_jian
 WEIGHT: 5
 KITEM:  I = any weapon level:-2
 KITEM:  i = any weapon
@@ -3061,7 +3065,7 @@ ENDMAP
 
 NAME:   tgw_xom
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
-TAGS:   uniq_altar_xom
+TAGS:   uniq_altar_xom no_tele_into
 KFEAT:  _ = altar_xom
 MONS:   place:D:1
 MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
@@ -3203,6 +3207,7 @@ ENDMAP
 NAME:   led_xom_imps
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
 MONS:   crimson imp, crimson imp ; dagger ego:chaos
+KPROP:  1 = no_tele_into
 NSUBST: 1 = 2 / 1
 KFEAT:  _ = altar_xom
 KFEAT:  ^ = teleport trap / dispersal trap

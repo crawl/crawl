@@ -1154,13 +1154,13 @@ public:
 
     ::map<dungeon_feature_type, string> feat_renames;
     vector<subvault_place> subvault_places;
+    string          file;
 
 private:
     unordered_set<string>     tags;
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     mutable long    cache_offset;
-    string          file;
     string          cache_name;
 
     typedef Matrix<bool> subvault_mask;

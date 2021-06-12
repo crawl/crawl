@@ -1516,7 +1516,7 @@ static void _take_transporter()
             li->update_transporter(old_pos, you.pos());
             explored_tracked_feature(DNGN_TRANSPORTER);
         }
-        cancel_tornado();
+        cancel_polar_vortex();
         mpr("You enter the transporter and appear at another place.");
         id_floor_items();
     }

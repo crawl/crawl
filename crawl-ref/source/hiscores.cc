@@ -1383,8 +1383,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
-            if (mons->type != MONS_DANCING_WEAPON)
-                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+            if (!mons_class_is_animated_weapon(mons->type)
+                && mons->get_defining_object())
+            {
+                auxkilldata = mons->get_defining_object()->name(DESC_A);
+            }
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
@@ -2280,7 +2283,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species::is_unbreathing(static_cast<species_type>(race)))
+                 (species::is_undead(static_cast<species_type>(race))
+                  || species::is_nonliving(static_cast<species_type>(race))))
         {
             desc += "Forgot to exist";
         }

@@ -222,9 +222,9 @@ spl-other.o \
 spl-pick.o \
 spl-selfench.o \
 spl-summoning.o \
-spl-tornado.o \
 spl-transloc.o \
 spl-util.o \
+spl-vortex.o \
 spl-wpnench.o \
 spl-zap.o \
 sprint.o \

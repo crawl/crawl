@@ -2874,6 +2874,7 @@ KITEM:    * = *
 KITEM:    6| = |
 KFEAT:    h3456DHJK%$*| = W
 KFEAT:    K = w
+KFEAT:    t = mangrove
 KPROP:    ~"DE = no_tele_into
 SHUFFLE:  FH / IJ
 SUBST:    i : ch, j : ch, ~' = hhhhW, -" = W, k = .
@@ -3602,7 +3603,7 @@ NAME: cheibrodos_quadrivalence
 DEPTH: D:12-, Depths
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: float
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS: smoke demon / sun demon, balrug / w:2 nothing
 MONS: ynoxinul , blizzard demon / w:2 nothing
 : else
@@ -3637,7 +3638,7 @@ NAME: cheibrodos_tormentor_scu
 DEPTH: D:11-, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
@@ -3676,7 +3677,7 @@ NAME: cheibrodos_forgotten_conduit
 DEPTH: Spider, Snake
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 MONS: w:5 wolf spider / tarantella / redback,  demonic crawler / orb spider
 MONS: spark wasp
 : else
@@ -7065,6 +7066,9 @@ ORIENT: float
 SUBST:  9 = 9....
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  + : + G:1
+# in case the loot chamber gets closed off by a statue:
+KPROP:  * = no_tele_into
+KMASK:  * = opaque
 MAP
 ...........................
 .ccc9xxx9xxx9x9xxx9xxx9ccc.
@@ -7732,9 +7736,11 @@ KFEAT:  ~ = floor
 MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant
-NSUBST: p = 3=xcbtvmnw.' / 5:P
-NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'
-NSUBST: x = 15=Pxcbtvmnw
+# TODO: this can still rarely place isolated regions because of the relatively
+# uncontrolled wall placement here
+NSUBST: p = 3=xcbtvmnW.' / 5:P
+NSUBST: . = 30=PxcbtvmnW / 5:. / 50:'
+NSUBST: x = 15=PxcbtvmnW
 NSUBST: ` = 3:'
 MARKER: C = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 15, \
@@ -9215,7 +9221,10 @@ ENDMAP
 NAME:    gammafunk_its_a_trap
 TAGS:    no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
-TAGS:    vaults_hard preserve_wall passable
+TAGS:    vaults_hard preserve_wall
+: if you.in_branch("Vaults") then
+TAGS:    passable
+: end
 DEPTH:   Crypt, D:$, Depths, Elf, Snake, Spider, Pan, Vaults, Zot
 ORIENT:  float
 KMASK:   ^ = no_item_gen
@@ -9274,14 +9283,16 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_tele_into
 # Allow placement in Vaults as a room.
-TAGS:   vaults_hard preserve_wall passable
+TAGS:   vaults_hard preserve_wall
+: if you.in_branch("Vaults") then
+TAGS:   passable
+: end
 # This must not place on a branch end so it can place a downhatch.
 DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults
 DEPTH:  Zot, !Zot:$
 ORIENT: float
-KPROP:  1DEFHJR|*$efm = no_tele_into
 {{
 -- Guarantee at least 5 charges, and on-average give 50% more than usual.
 item("wand of digging charges:" .. tostring(5 + crawl.random2(6)) ..

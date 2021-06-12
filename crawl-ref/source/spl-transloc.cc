@@ -42,7 +42,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-damage.h" // cancel_tornado
+#include "spl-damage.h" // cancel_polar_vortex
 #include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -621,7 +621,7 @@ spret palentonga_charge(bool fail, dist *target)
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
 
-    if (you.pos() != dest_pos) // tornado and trap nonsense
+    if (you.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
@@ -629,7 +629,9 @@ spret palentonga_charge(bool fail, dist *target)
         return spret::success;
 
     // manually apply noise
-    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+    // this silence check feels kludgy - perhaps could check along the whole route..?
+    if (!silenced(target_pos))
+        behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
 
     // We got webbed/netted at the destination, bail on the attack.
     if (you.attribute[ATTR_HELD])
@@ -939,7 +941,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             large_change = true;
         }
 
-        cancel_tornado(true);
+        cancel_polar_vortex(true);
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 
@@ -1374,9 +1376,8 @@ static void _attract_actor(const actor* agent, actor* victim,
                            const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = agent->deity() == GOD_FEDHAS
-                             && victim->is_monster()
-                             && fedhas_protects(victim->as_monster());
+    const bool fedhas_prot = victim->is_monster()
+                                && god_protects(agent, victim->as_monster());
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
@@ -1659,5 +1660,34 @@ spret word_of_chaos(int pow, bool fail)
 
     you.increase_duration(DUR_WORD_OF_CHAOS_COOLDOWN, 15 + random2(10));
     drain_player(50, false, true);
+    return spret::success;
+}
+
+spret blinkbolt(int power, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You see nothing there to target!");
+        return spret::abort;
+    }
+
+    if (!player_tracer(ZAP_BLINKBOLT, power, beam))
+        return spret::abort;
+
+    fail_check();
+
+    beam.thrower = KILL_YOU_MISSILE;
+    zappy(ZAP_BLINKBOLT, power, false, beam);
+    beam.name = "shock of your passage";
+    beam.fire();
+    you.duration[DUR_BLINKBOLT_COOLDOWN] = 50 + random2(150);
+
     return spret::success;
 }

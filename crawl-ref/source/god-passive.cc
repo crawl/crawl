@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -414,7 +415,7 @@ static const vector<god_passive> god_passives[] =
 
     // Hepliaklqana
     {
-        { -1, passive_t::frail,
+        {  1, passive_t::frail,
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
@@ -554,7 +555,7 @@ int ash_scry_radius()
         return 0;
 
     // Radius 2 starting at 4* increasing to 4 at 6*
-    return piety_rank() - 2;
+    return min(piety_rank() - 2, get_los_radius());
 }
 
 static bool _two_handed()
@@ -981,6 +982,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
@@ -1518,8 +1520,12 @@ static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     bool did_wu_jian_attacks = false;
 
-    if (you.pos() == old_pos || you.duration[DUR_CONF])
+    if (you.pos() == old_pos
+        || you.duration[DUR_CONF]
+        || you.weapon() && !is_melee_weapon(*you.weapon()))
+    {
         return did_wu_jian_attacks;
+    }
 
     if (have_passive(passive_t::wu_jian_lunge))
         did_wu_jian_attacks = _wu_jian_lunge(old_pos);

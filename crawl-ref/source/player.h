@@ -147,7 +147,6 @@ public:
     FixedVector<int8_t, NUM_STATS> stat_loss;
     FixedVector<int8_t, NUM_STATS> base_stats;
 
-    int disease;
     uint8_t max_level;
     int hit_points_regeneration;
     int magic_points_regeneration;
@@ -769,7 +768,7 @@ public:
     int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
-    bool res_tornado() const override;
+    bool res_polar_vortex() const override;
     bool res_petrify(bool temp = true) const override;
     int res_constrict() const override;
     int willpower(bool /*calc_unid*/ = true) const override;
@@ -818,6 +817,7 @@ public:
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
+    bool can_feel_fear(bool include_unknown) const override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
@@ -968,7 +968,7 @@ static inline bool player_in_branch(int branch)
 }
 
 bool berserk_check_wielded_weapon();
-bool player_equip_unrand(int unrand_index);
+bool player_equip_unrand(int unrand_index, bool include_melded = false);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged();
@@ -1155,7 +1155,6 @@ bool land_player(bool quiet = false);
 void player_open_door(coord_def doorpos);
 void player_close_door(coord_def doorpos);
 
-void dec_disease_player(int delay);
 void player_end_berserk();
 
 void handle_player_drowning(int delay);

@@ -24,7 +24,10 @@ enum class transformation
 #endif
     fungus,
     shadow,
+#if TAG_MAJOR_VERSION == 34
     hydra,
+#endif
+    storm,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

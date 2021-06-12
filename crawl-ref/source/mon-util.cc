@@ -1709,6 +1709,12 @@ bool mons_class_is_animated_weapon(monster_type type)
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
+bool mons_class_is_animated_object(monster_type type)
+{
+    return mons_class_is_animated_weapon(type)
+        || type == MONS_ANIMATED_ARMOUR;
+}
+
 bool mons_is_zombified(const monster& mon)
 {
     return mons_class_is_zombified(mon.type);
@@ -2044,10 +2050,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
     if (mon.type == MONS_ANIMATED_ARMOUR)
     {
-        const int armour_slot = mon.inv[MSLOT_ARMOUR];
-        if (armour_slot != NON_ITEM)
+        item_def *def = mon.get_defining_object();
+        if (def)
         {
-            const int typ = env.item[armour_slot].sub_type;
+            ASSERT(def->base_type == OBJ_ARMOUR);
+            const int typ = def->sub_type;
             const int ac = armour_prop(typ, PARM_AC);
             attk.damage = ac + ac * ac / 2;
         }
@@ -2260,9 +2267,9 @@ bool mons_flattens_trees(const monster& mon)
     return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-bool mons_class_res_tornado(monster_type mc)
+bool mons_class_res_polar_vortex(monster_type mc)
 {
-    return get_resist(get_mons_class_resists(mc), MR_RES_TORNADO);
+    return get_resist(get_mons_class_resists(mc), MR_RES_VORTEX);
 }
 
 /**
@@ -2474,7 +2481,7 @@ int exper_value(const monster& mon, bool real)
             case SPELL_FIRE_STORM:
             case SPELL_SHATTER:
             case SPELL_CHAIN_LIGHTNING:
-            case SPELL_TORNADO:
+            case SPELL_POLAR_VORTEX:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
             case SPELL_SPELLFORGED_SERVITOR:
@@ -2751,7 +2758,8 @@ void mons_load_spells(monster& mon)
     for (const mon_spellbook &spbook : mspell_list)
         if (spbook.type == book)
         {
-            mon.spells = spbook.spells;
+            mon.spells.insert(mon.spells.end(),
+                                spbook.spells.begin(), spbook.spells.end());
             break;
         }
 }
@@ -3330,22 +3338,25 @@ static habitat_type _mons_class_habitat(monster_type mc,
         // XXX: No class equivalent of monster::body_size(PSIZE_BODY)!
         size_type st = (me ? me->size
                            : get_monster_data(MONS_PROGRAM_BUG)->size);
-        if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
+        if (ht == HT_LAND && st >= SIZE_GIANT)
             ht = HT_AMPHIBIOUS;
     }
     return ht;
 }
 
 habitat_type mons_habitat_type(monster_type t, monster_type base_t,
-                               bool real_amphibious) {
+                               bool real_amphibious)
+{
     return _mons_class_habitat(fixup_zombie_type(t, base_t),
                                real_amphibious);
 }
 
 habitat_type mons_habitat(const monster& mon, bool real_amphibious)
 {
-    return mons_habitat_type(mon.type, mons_base_type(mon),
-                              real_amphibious);
+    const monster_type type = mons_is_job(mon.type)
+        ? draco_or_demonspawn_subspecies(mon) : mon.type;
+
+    return mons_habitat_type(type, mons_base_type(mon), real_amphibious);
 }
 
 habitat_type mons_class_primary_habitat(monster_type mc)
@@ -3358,7 +3369,10 @@ habitat_type mons_class_primary_habitat(monster_type mc)
 
 habitat_type mons_primary_habitat(const monster& mon)
 {
-    return mons_class_primary_habitat(mons_base_type(mon));
+    const monster_type type = mons_is_job(mon.type)
+        ? draco_or_demonspawn_subspecies(mon) : mons_base_type(mon);
+
+    return mons_class_primary_habitat(type);
 }
 
 habitat_type mons_class_secondary_habitat(monster_type mc)
@@ -3470,15 +3484,8 @@ bool mons_is_seeking(const monster& m)
 
 bool mons_is_unbreathing(monster_type mc)
 {
-    const mon_holy_type holi = mons_class_holiness(mc);
-
-    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        return true;
-
-    if (mons_class_is_slime(mc))
-        return true;
-
-    return mons_class_flag(mc, M_UNBREATHING);
+    return bool(mons_class_holiness(mc) & (MH_UNDEAD | MH_NONLIVING
+                                           | MH_PLANT));
 }
 
 // Either running in fear, or trapped and unable to do so (but still wishing to)
@@ -3965,7 +3972,7 @@ static const spell_type smitey_spells[] = {
     SPELL_CALL_DOWN_DAMNATION,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
-    SPELL_TORNADO,          // dubious
+    SPELL_POLAR_VORTEX,          // dubious
     SPELL_GLACIATE,         // dubious
     SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_MASS_CONFUSION,
