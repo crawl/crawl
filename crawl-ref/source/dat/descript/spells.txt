@@ -1646,10 +1646,10 @@ requiring line of sight but not not line of fire.
 %%%%
 Wereblood spell
 
-Transforms some of the caster's blood into that of a were-beast. Each
-non-summoned enemy the caster slays in combat quickens the pulse and
-temporarily enhances their melee and ranged effectiveness. The thrill of
-slaying heals the caster, giving them an uncontrollable urge to howl.
+Transforms some of the caster's blood into that of a were-beast, causing them
+to occasionally howl uncontrollably. While active, each non-summoned enemy the
+caster slays in combat grants minor healing and temporarily enhances their
+melee and ranged effectiveness.
 
 The bonus only lasts for the duration of a single cast; retransforming the
 caster's blood calms the were-spirit and resets the bonus.
