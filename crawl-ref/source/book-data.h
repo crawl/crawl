@@ -121,8 +121,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Transfigurations
     SPELL_IRRADIATE,
-    SPELL_STATUE_FORM,
     SPELL_BLADE_HANDS,
+    SPELL_STATUE_FORM,
     SPELL_STORM_FORM,
     SPELL_DRAGON_FORM,
 },
