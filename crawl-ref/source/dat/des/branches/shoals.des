@@ -2432,3 +2432,79 @@ gfG11111Dji
  eedAABakk
    dbcba
 ENDMAP
+
+###############################################################################
+#
+# Encompass endings
+# These do not place huts in favor of a more standard vault structure and
+# more varied/unusual monsters. Please keep the total weight of these
+# endings low relative to the traditional endings.
+#
+###############################################################################
+
+NAME:   shoals_end_encompass_hellmonk_lost_city
+TAGS:   ruin
+: set_border_fill_type("open_sea")
+PLACE:  Shoals:$
+ORIENT: encompass
+WEIGHT: 2
+MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
+NSUBST: | = 1:O / *:|
+SUBST:  1 = 1.., 2 = 2.., 3 = 334, G = G.
+SUBST:  ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
+SUBST:  . = .........W
+NSUBST: ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
+KITEM:  O = barnacled rune of Zot
+KMONS:  O = sphinx
+KMONS:  P = plant
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxxx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxx...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrrcc........ccxxxwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwxxpppxxx...xrr+...2...3.|c1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWxxpppxx...xxxrrcc........cc...xxwwwwwwwwwwww
+wwwwwwwwWWWWWWWWWxxpppxx...xxxxrrrccc1..1ccc.....xxwwwwwwwwwww
+wwwwwwwWWWWWWWWWxxpppxx...xxxxxxxrrrcccccc.......2xwwwwwwwwwww
+wwwwwwWWW'''WWWxxpppxx.....yyyy2xxxrrrr.......Gx..xwwwwwwwwwww
+wwwwwwWW''''''Wxxpppxxxxxxxxxyyyxxrrr1.....1xxxx..xwwwwwwwwwww
+wwwwwwW'''''''Wxx..pxxx1..1xxyyyyxrrxxxxxx..xxxx..xwwwwwwwwwww
+wwwwwwW''cc''.Wxx..pxx......xyyyxxxxx2..2x..xxxx..xwwwwwwwwwww
+wwwwwwW''cc''.Wxx..pxx1....1+yy...2xx....x...2...1xwwwwwwwwwww
+wwwwwwW''''''.W+...pxx......xyy.....x....x...ccccccccwwwwwwwww
+wwwwwwW'''''..W+...ppxx1..1xxyyxx1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''..ccccc..pxxxxxxxxxxxx...xx++xxcc1.........ccwwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
+wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2......3.|cwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
+wwwwwwW''''..ccccc..qxxxxxxxxxxxx...xx++xxcc1.........ccwwwwww
+wwwwwwW'''''..W+...qqxx1..1xxzzxx1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''''.W+...qxx......xzz.....x....x...ccccccccwwwwwwwww
+wwwwwwW''cc''.Wxx..qxx1....1+zz...2xx....x...2...1xwwwwwwwwwww
+wwwwwwW''cc''.Wxx..qxx......xzzzxxxxx2..2x..xxxx..xwwwwwwwwwww
+wwwwwwW'''''''Wxx..qxxx1..1xxzzzzxssxxxxxx..xxxx..xwwwwwwwwwww
+wwwwwwWW''''''Wxxqqqxxxxxxxxxzzzxxsss......1xxxx..xwwwwwwwwwww
+wwwwwwWWW'''WWWxxqqqxx.....zzzz2xxxssss1......Gx..xwwwwwwwwwww
+wwwwwwWWWWWWWWWWxxqqqxx...xxxxxxxssscccccc.......2xwwwwwwwwwww
+wwwwwwwWWWWWWWWWWxxqqqxx...xxxxsssccc1..1ccc.....xxwwwwwwwwwww
+wwwwwwwwWWWWWWWWWWxxqqqxx...xxxsscc........cc...xxwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWWxxqqqxxx...xss+...2...3.|c1.xxwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxxxqqqxxxsssscc........ccxxxwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxx...xxxsssccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxx2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxxx......sssxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
