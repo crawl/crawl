@@ -71,13 +71,13 @@ COLOUR: t = brown
 : set_feature_name("tree", "dead tree")
 : vaults_ghost_setup(_G)
 MAP
-..x.....
-..x.....
-..n.dt..
-..=.OGt.
-..n.et..
-..x.....
-..x.....
+..cccccc
+..c....c
+..n.dt.c
+..=.OGtc
+..n.et.c
+..c....c
+..cccccc
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_split
@@ -120,15 +120,16 @@ TILE:    t = dngn_tree_dead
 : set_feature_name("granite_statue", "a gravestone")
 : vaults_ghost_setup(_G)
 MAP
-qd-frf-eq
-dD--F--De
----------
-h-------h
-sH-----Hs
-h-------h
-xnn===nnx
-.........
-.........
+ccccccccccc
+cqd-frf-eqc
+cdD--F--Dec
+c---------c
+ch-------hc
+csH-----Hsc
+ch-------hc
+ccnn===nncc
+...........
+...........
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_necromancy
@@ -208,16 +209,17 @@ SUBST:  O = O:49 P:1, fgh = |*, i = *%, j = %$..
 NSUBST: - = 3=1 / 4=1. / 2=2 / 2=2. / 2=3. / 3... / .
 : vaults_ghost_setup(_G)
 MAP
-GvvvvvvvG
--igvOvhj-
----edf---
--vG---Gv-
----------
--vG---Gv-
----------
-nnn===nnn
-.........
-.........
+ccccccccccc
+cGvvvvvvvGc
+c-igvOvhj-c
+c---edf---c
+c-vG---Gv-c
+c---------c
+c-vG---Gv-c
+c---------c
+cnnn===nnnc
+...........
+...........
 ENDMAP
 
 NAME:   ebering_vaults_ghost_inner_flame
@@ -231,13 +233,15 @@ MARKER: F = lua:fog_machine { cloud_type = "black smoke", \
             size = 1, walk_dist = 0, start_clouds = 1 }
 : vaults_ghost_setup(_G)
 MAP
-..x....
-..x''..
-..n'''.
-..='O'.
-..n'''.
-..x''..
-..x....
+..cccccc
+..c....c
+..c''..c
+..n'''.c
+..='O'.c
+..n'''.c
+..c''..c
+..c....c
+..cccccc
 ENDMAP
 
 NAME:   ebering_vaults_ghost_reflecting_pool
@@ -248,15 +252,16 @@ KMONS:  O = player_ghost
 KFEAT:  O = shallow_water
 : vaults_ghost_setup(_G)
 MAP
-.....
-.dOe.
-..w..
-..w..
-..w..
-..W..
-xn=nx
-.....
-.....
+ccccccc
+c.....c
+c.dOe.c
+c..w..c
+c..w..c
+c..w..c
+c..W..c
+ccn=ncc
+.......
+.......
 ENDMAP
 
 NAME:   ebering_vaults_ghost_disaster_area
@@ -268,14 +273,15 @@ NSUBST: ' = d / e / 8=wWl / .
 SUBST:  P = GTV
 : vaults_ghost_setup(_G)
 MAP
-'xx'x'x'
-x''O''x'
-'x'''''x
-''P'x''x
-x'''''''
-xnn==nnx
-........
-........
+vccccccccc
+c'xx'x'x'c
+cx''O''x'c
+c'x'''''xc
+c''P'x''xc
+cx'''''''c
+ccnn==nncc
+..........
+..........
 ENDMAP
 
 NAME:   ebering_vaults_ghost_gozag
@@ -322,10 +328,11 @@ KMONS:  O = player_ghost
 KFEAT:  _ = altar_xom
 : vaults_ghost_setup(_G)
 MAP
-...1...
-..d_e..
-...O...
-xxn=nxx
+ccccccc
+c..1..c
+c.d_e.c
+c..O..c
+ccn=ncc
 .......
 .......
 ENDMAP
@@ -343,15 +350,16 @@ NSUBST: - = 2=1 / 2=1. / 2=2 / 2=2. / 3=3 / 3=3. / 4 / 2=4. / F / 5 / 2=5. \
 KFEAT:  _ = altar_beogh
 : vaults_ghost_setup(_G)
 MAP
-I---fd_eg---I
-------h------
--xIx--I--xIx-
--xnx--O--xnx-
-----xxnxx----
-.............
-nnnnn===nnnnn
-I...........I
-.............
+ccccccccccccccc
+cI---fd_eg---Ic
+c------h------c
+c-xIx--I--xIx-c
+c-xnx--O--xnx-c
+c----xxnxx----c
+c.............c
+cnnnnn===nnnnnc
+.I...........I.
+...............
 ENDMAP
 
 NAME:   ploomutoo_gammafunk_vaults_ghost_potion_laboratory
@@ -376,22 +384,23 @@ MARKER: U = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 3, \
                 spread_rate = 0, excl_rad = 0 }
 : vaults_ghost_setup(_G)
 MAP
-bU"P"Ub
-"""O"""
-'''''''
-'b'''b'
-```````
-nn===nn
--------
--x---x-
-x-x-x-x
--x---x-
-;;;x;;;
-;x;;;x;
-;;;;;;;
-nn===nn
-.......
-.......
+ccccccccc
+cbU"P"Ubc
+c"""O"""c
+c'''''''c
+c'b'''b'c
+c```````c
+cnn===nnc
+c-------c
+c-x---x-c
+cx-x-x-xc
+c-x---x-c
+c;;;x;;;c
+c;x;;;x;c
+c;;;;;;;c
+cnn===nnc
+.........
+.........
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_tricky_traps
@@ -407,16 +416,17 @@ NSUBST: - = 1 / 2=1. / 5=0 / 6=0. / 2 / .
 SUBST:  G : GGtU
 : vaults_ghost_setup(_G)
 MAP
-G-'fdOeg'-G
--n-n-h-n-n-
-'-'-'-'-'-'
--'-n-n-n-'-
-G-'-'-'-'-G
-xxnn===nnxx
-^.^.....^.^
-.^.^.^.^.^.
-^.^.^.^.^.^
-.^.^.^.^.^.
+ccccccccccccc
+cG-'fdOeg'-Gc
+c-n-n-h-n-n-c
+c'-'-'-'-'-'c
+c-'-n-n-n-'-c
+cG-'-'-'-'-Gc
+cccnn===nnccc
+.^.^.....^.^.
+..^.^.^.^.^..
+.^.^.^.^.^.^.
+..^.^.^.^.^..
 ENDMAP
 
 NAME:    gammafunk_vaults_ghost_crypt
@@ -445,13 +455,14 @@ KFEAT:   _ = altar_kikubaaqudgha
 FTILE:   -d|*%$ODEFHJKL12VY_ = floor_pebble_brown / floor_pebble_darkgray
 : vaults_ghost_setup(_G)
 MAP
- xxxDxxx
-xxExdxFxx
-1ddV_Vdd1
-x-------x
-xnn===nnx
-.........
-.........
+ccccccccccc
+ccxxxDxxxcc
+cxxExdxFxxc
+c1ddV_Vdd1c
+cx-------xc
+ccnn===nncc
+...........
+...........
 ENDMAP
 
 NAME:   gammafunk_vaults_ghost_door_vault
