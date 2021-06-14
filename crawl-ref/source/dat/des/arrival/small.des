@@ -3397,34 +3397,36 @@ ENDMAP
 
 ##############################################################
 NAME:   heliophobic_arrival_ceremonial_halls
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen transparent
 ORIENT: float
 TILE:   c = wall_marble
 FTILE:  '+{cG = floor_marble
 COLOUR: 'cG = white
 SUBST:  ' = .
 MAP
-.....ccc+ccc.....
-.....cG'''Gc.....
-..c..cc'c'cc..c..
-.ccc.cG'c'Gc.ccc.
-.ccc.cc'c'cc.ccc.
-..c..cG'c'Gc..c..
-.....cc'c'cc.....
-ccccccG'''Gcccccc
-cGcGcGc'''cGcGcGc
-c'''''''''''''''c
-+'ccc'''{'''ccc'+
-c'''''''''''''''c
-cGcGcGc'''cGcGcGc
-ccccccG'''Gcccccc
-.....cc'c'cc.....
-..c..cG'c'Gc..c..
-.ccc.cc'c'cc.ccc.
-.ccc.cG'c'Gc.ccc.
-..c..cc'c'cc..c..
-.....cG'''Gc.....
-.....ccc+ccc.....
+ ........@........
+ .....ccc+ccc.....
+ .....cG'''Gc.....
+ ..c..cc'c'cc..c..
+ .ccc.cG'c'Gc.ccc.
+ .ccc.cc'c'cc.ccc.
+ ..c..cG'c'Gc..c..
+ .....cc'c'cc.....
+ ccccccG'''Gcccccc
+ cGcGcGc'''cGcGcGc
+ c'''''''''''''''c
+@+'ccc'''{'''ccc'+@
+ c'''''''''''''''c
+ cGcGcGc'''cGcGcGc
+ ccccccG'''Gcccccc
+ .....cc'c'cc.....
+ ..c..cG'c'Gc..c..
+ .ccc.cc'c'cc.ccc.
+ .ccc.cG'c'Gc.ccc.
+ ..c..cc'c'cc..c..
+ .....cG'''Gc.....
+ .....ccc+ccc.....
+ ........@........
 ENDMAP
 
 ##############################################################
