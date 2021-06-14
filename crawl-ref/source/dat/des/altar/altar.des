@@ -123,7 +123,7 @@ ENDMAP
 
 NAME:   lemuel_upstairs_altar
 TAGS:   extra
-DEPTH:  Elf, Crypt
+DEPTH:  Elf, !Elf:$, Crypt, !Crypt:$
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
 KMASK:  T = no_monster_gen
