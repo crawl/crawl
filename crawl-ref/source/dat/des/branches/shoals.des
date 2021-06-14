@@ -2432,3 +2432,349 @@ gfG11111Dji
  eedAABakk
    dbcba
 ENDMAP
+
+###############################################################################
+#
+# Encompass endings
+# These do not place huts in favor of a more standard vault structure and
+# more themed/unusual monsters. Please keep the total weight of these
+# endings low relative to the traditional endings.
+#
+###############################################################################
+
+NAME:   shoals_end_hellmonk_lost_city
+: set_border_fill_type("open_sea")
+ORIENT: encompass
+PLACE:  Shoals:$
+WEIGHT: 4
+KITEM:  O = barnacled rune of Zot
+MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
+KMONS:  O = sphinx
+KMONS:  P = plant
+SUBST:  1 = 1.., 2 = 2.., 3 = 334, G = G.
+SUBST:  ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
+NSUBST: | = 1:O / *:|, . = 16 = 0. / *=.........W
+SUBST:  D = x., c = ccc.
+NSUBST: ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxDDDxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxDx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxDx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxD...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxDpppDDxrrrccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxDDpppxDDrrrrcc.......|ccDDDwwwwwwwwwwwwww
+wwwwwwwwwwWWWWWWWWWDDpppxDD...xrr+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWDxpppxD...xxxrrcc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwWWWWWWWWWDxpppxx...xxxxrrrccc1..1ccc.....xDwwwwwwwwwww
+wwwwwwwWWWWWWWWWDxpppxx...xxxxxxxrrrcccccc....2..2Dwwwwwwwwwww
+wwwwwwWWW'''WWWDxpppxx.....yyyy2DDDrrrr......2GD..Dwwwwwwwwwww
+wwwwwwWW''''''WDxpppDxxxDDDxxyyyDxrrr1.....1DxxD..Dwwwwwwwwwww
+wwwwwwW'''''''WDD..pDxD1..1DxyyyyxrrxxDDxx..xxxx..Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..pDx......Dyyyxxxxx2..2x..DxxD..Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..pDx1....1+yy...2xD....D...2.2.1Dwwwwwwwwwww
+wwwwwwW''''''.W+...pDx......Dyy.....D....D...ccccccccwwwwwwwww
+wwwwwwW'''''..W+...ppxD1..1DxyyDD1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''..ccccc..pxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
+wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2......3.|cwwwww
+wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
+wwwwwwW''''..ccccc..qxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
+wwwwwwW'''''..W+...qqxD1..1DxzzDD1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''''.W+...qDx......Dzz.....D....D...ccccccccwwwwwwwww
+wwwwwwW''cc''.WDD..qDx1....1+zz...2xD....D...2.2.1Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..qDx......Dzzzxxxxx2..2x..DxxD..Dwwwwwwwwwww
+wwwwwwW'''''''WDD..qDxD1..1DxzzzzxssxxDDxx..xxxx..Dwwwwwwwwwww
+wwwwwwWW''''''WDxqqqDxxxDDDxxzzzxxsss......1DxxD..Dwwwwwwwwwww
+wwwwwwWWW'''WWWDxqqqxx.....zzzz2DDDssss1.....2GD..Dwwwwwwwwwww
+wwwwwwWWWWWWWWWWDxqqqxx...xxxxxxxssscccccc....2..2Dwwwwwwwwwww
+wwwwwwwWWWWWWWWWWDxqqqxx...xxxxsssccc1..1ccc.....xDwwwwwwwwwww
+wwwwwwwwWWWWWWWWWWDxqqqxD...xxxsscc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWWDDqqqxDD...xss+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxDDqqqxDDsssscc.......|ccDDDwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxD...DDxsssccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxD2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxDx......sssxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxDx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxDDDxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+NAME: shoals_end_hellmonk_storm_palace
+: set_border_fill_type("open_sea")
+ORIENT: encompass
+PLACE:  Shoals:$
+WEIGHT: 4
+MONS:   water elemental / air elemental w:5, wind drake / water nymph
+MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
+SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c
+SUBST:  1 = 011..., 2 = 2., 3 = 33.
+NSUBST: ; = 1:{ / 1:[ / 1:( / * = <.
+SUBVAULT: D : storm_palace_rune
+SUBVAULT: E : storm_palace_corner
+SUBVAULT: F : storm_palace_corner
+SUBVAULT: H : storm_palace_corner
+SUBVAULT: J : storm_palace_corner
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccc
+ccEEEEEEEEEEE.....1...1..1...2.....FFFFFFFFFFFcc
+ccEEEEEEEEEEE.....2...1..1...1.....FFFFFFFFFFFcc
+ccEEEEEEEEEEEcccccccccc22ccccccccccFFFFFFFFFFFcc
+ccEEEEEEEEEEEcG1................1GcFFFFFFFFFFFcc
+ccEEEEEEEEEEEc1....ssWWWWWWss....1cFFFFFFFFFFFcc
+ccEEEEE;EEEEEc..sWWWWWsWWsWWWWWs..cFFFFF;FFFFFcc
+ccEEEEEEEEEEEc1sWWWssssssssssWWWs1cFFFFFFFFFFFcc
+ccEEEEEEEEEEEc..sWWWWWssssWWWWWs..cFFFFFFFFFFFcc
+ccEEEEEEEEEEEc1....ssWWWWWWss....1cFFFFFFFFFFFcc
+ccEEEEEEEEEEEcG3.......23.......3GcFFFFFFFFFFFcc
+ccEEEEEEEEEEcccccccccccppcccccccccccFFFFFFFFFFcc
+cc..cccccccccDDDDDDDDDDDDDDDDDDDDDDccccccccc..cc
+cc..cG1.1.1GcDDDDDDDDDDDDDDDDDDDDDDcG1.1.1Gc..cc
+cc..c1..s..3cDDDDDDDDDDDDDDDDDDDDDDc3..s..1c..cc
+cc..c..sWs..cDDDDDDDDDDDDDDDDDDDDDDc..sWs..c..cc
+cc..c..WWW..cDDDDDDDDDDDDDDDDDDDDDDc..WWW..c..cc
+cc21c..WWW..cDDDDDDDDDDDDDDDDDDDDDDc..WWW..c21cc
+cc..c.sWsWs.cDDDDDDDDDDDDDDDDDDDDDDc.sWsWs.c..cc
+cc..c.sWsWs.cDDDDDDDDDDDDDDDDDDDDDDc.sWsWs.c..cc
+cc..c.WWsWW.cDDDDDDDDDDDDDDDDDDDDDDc.WWsWW.c..cc
+cc11c.WsssW.cDDDDDDDDDDDDDDDDDDDDDDc.WsssW.c11cc
+cc..2.WWssW3rDDDDDDDDDDDDDDDDDDDDDDq2WssWW.2..cc
+cc..2.WWssW2rDDDDDDDDDDDDDDDDDDDDDDq3WssWW.2..cc
+cc11c.WsssW.cDDDDDDDDDDDDDDDDDDDDDDc.WsssW.c11cc
+cc..c.WWsWW.cDDDDDDDDDDDDDDDDDDDDDDc.WWsWW.c..cc
+cc..c.sWsWs.cDDDDDDDDDDDDDDDDDDDDDDc.sWsWs.c..cc
+cc..c.sWsWs.cDDDDDDDDDDDDDDDDDDDDDDc.sWsWs.c..cc
+cc12c..WWW..cDDDDDDDDDDDDDDDDDDDDDDc..WWW..c12cc
+cc..c..WWW..cDDDDDDDDDDDDDDDDDDDDDDc..WWW..c..cc
+cc..c..sWs..cDDDDDDDDDDDDDDDDDDDDDDc..sWs..c..cc
+cc..c1..s..3cDDDDDDDDDDDDDDDDDDDDDDc3..s..1c..cc
+cc..cG1.1.1GcDDDDDDDDDDDDDDDDDDDDDDcG1.1.1Gc..cc
+cc..cccccccccDDDDDDDDDDDDDDDDDDDDDDccccccccc..cc
+ccHHHHHHHHHHccccccccccc++cccccccccccJJJJJJJJJJcc
+ccHHHHHHHHHHHcG3.......32.......3GcJJJJJJJJJJJcc
+ccHHHHHHHHHHHc1....ssWWWWWWss....1cJJJJJJJJJJJcc
+ccHHHHHHHHHHHc..sWWWWWssssWWWWWs..cJJJJJJJJJJJcc
+ccHHHHHHHHHHHc1sWWWssssssssssWWWs1cJJJJJJJJJJJcc
+ccHHHHH;HHHHHc..sWWWWWsWWsWWWWWs..cJJJJJ;JJJJJcc
+ccHHHHHHHHHHHc1....ssWWWWWWss....1cJJJJJJJJJJJcc
+ccHHHHHHHHHHHcG1................1GcJJJJJJJJJJJcc
+ccHHHHHHHHHHHcccccccccc22ccccccccccJJJJJJJJJJJcc
+ccHHHHHHHHHHH.....1...1..1...2.....JJJJJJJJJJJcc
+ccHHHHHHHHHHH.....2...1..1...1.....JJJJJJJJJJJcc
+cccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   storm_palace_center_square
+TAGS:   storm_palace_rune
+KITEM:  O = barnacled rune of Zot
+KITEM:  | = superb_item
+MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
+KMONS:  O = patrolling storm dragon / patrolling titan
+KFEAT:  |O = shallow_water
+NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+SUBST:  p : W., q : W., r : W., S : W.
+MAP
+cccc..pppppppppp..cccc
+cWW..ppppccccpppp..WWc
+cW1...ppppccpppp...1Wc
+c..ccccppppppppcccc..c
+...cWW..pppppp..WWc...
+.r.cW.1...pp...1.Wc.s.
+rrrc.1ccccWWcccc1.csss
+rrrr..ccWWWWWWcc.sssss
+rrrrr.cWWWWWWWWc.sssss
+rcrrr1cWWc||cWWc1ssscs
+rccrrrWWWW||WWWWsssccs
+rccrrrWWWW||WWWWsssccs
+rcrrr1cWWc||cWWc1ssscs
+rrrrr.cWWWWWWWWc.sssss
+rrrr..ccWWWWWWcc..ssss
+rrrc.1ccccWWcccc1.csss
+.r.cW.1...qq...1.Wc.s.
+...cWW..qqqqqq..WWc...
+c..ccccqqqqqqqqcccc..c
+cW1...qqqqccqqqq...1Wc
+cWW..qqqqccccqqqq..WWc
+cccc..qqqqqqqqqq..cccc
+ENDMAP
+
+NAME:   storm_palace_center_circular
+TAGS:   storm_palace_rune no_pool_fixup
+KITEM:  O = barnacled rune of Zot
+MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
+KMONS:  O = patrolling storm dragon / patrolling titan
+KMONS:  P = plant
+NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+SUBST:  . = P......
+MAP
+c....................c
+1.cccccccccccccccccc.1
+.cc1......1.......1cc.
+....WWWWWWWWWWWWWW....
+...WWccccccccccccWW...
+...Wcc.....1....ccW...
+...Ww............wW...
+.c.Ww...cccccc...wW.cW
+...Wc..cc|..|cc..cW.WW
+...Wc..1....1ww..cWWWW
+.c.Ww.....||.wwWWWWWcW
+.c.Ww.....||.wwWWWWWcW
+...Wc..1....1ww..cWWWW
+...Wc..cc|..|cc..cW.WW
+.c.Ww...cccccc...wW.cW
+...Ww............wW...
+...Wcc....1.....ccW...
+...WWccccccccccccWW...
+....WWWWWWWWWWWWWW....
+.cc1.......1......1cc.
+1.cccccccccccccccccc.1
+c....................c
+ENDMAP
+
+NAME:   storm_palace_center_ruins
+TAGS:   storm_palace_rune
+KITEM:  O = barnacled rune of Zot
+MONS:   merfolk aquamancer / merfolk javelineer / merfolk impaler
+KMONS:  O = patrolling storm dragon / patrolling titan
+NSUBST: | = 1:O / *:|, 1 = 4 = 8. / * = 1..
+SUBST:  p : W., q: W., . = W..., c = cc.
+MAP
+c....................c
+1.cccccccccccccccccc.1
+.cc................cc.
+..cccc.cc1cc1cc.cccc..
+.....cccqqccqqccc.....
+....ccqqqqccqqqqcc....
+.c....GqqccccqqG....c.
+.cccc1..cccccc..1cccc.
+....ccccc||||cccccppc.
+.cppc.......1cc..cppc.
+.cppc.ccccc.cccc.1ppc.
+.cpp1.cccc.ccccc.cppc.
+.cppc..cc1.......cppc.
+.cppccccc||||ccccc....
+.cccc1..cccccc..1cccc.
+.c....GqqccccqqG....c.
+....ccqqqqccqqqqcc....
+.....cccqqccqqccc.....
+..cccc.cc1cc1cc.cccc..
+.cc................cc.
+1.cccccccccccccccccc.1
+c....................c
+ENDMAP
+
+NAME:   storm_palace_corner_pillars
+TAGS:   storm_palace_corner allow_dup no_pool_fixup
+SUBST:  ; = AGG..., W : wWW
+MAP
+...........
+.WWWW;WWWW.
+.WccW.WccW.
+.WccW.WccW.
+.WWWW.WWWW.
+.;... ...;.
+.WWWW.WWWW.
+.WccW.WccW.
+.WccW.WccW.
+.WWWW.WWWW.
+..........
+ENDMAP
+
+NAME:   storm_palace_corner_reverse_hut
+TAGS:   storm_palace_corner allow_dup
+KMONS:  P = plant
+SUBST:  ; : W., . = P.......
+MAP
+cccccc.....
+c..........
+c..ccccc...
+c.cc;;;cc..
+c.c;;;;;c..
+c.c;; ;;c..
+..c;;;;;c..
+..cc;;;cc..
+...cc+cc...
+...........
+..........
+ENDMAP
+
+NAME:   storm_palace_corner_grid
+TAGS:   storm_palace_corner allow_dup
+SUBST:  . = WW., c = cc., c : ccbG
+MAP
+...........
+.c.c.c.c.c.
+...........
+.c.c.c.c.c.
+...........
+.c.c. .c.c.
+...........
+.c.c.c.c.c.
+...........
+.c.c.c.c...
+..........
+ENDMAP
+
+NAME:   storm_palace_corner_altar
+TAGS:   storm_palace_corner allow_dup no_pool_fixup
+KFEAT:  _ = altar_qazlal / altar_fedhas w:5
+SUBST:  _ = __C, t : ttG
+MAP
+cccccccW...
+cccccccW...
+ccccWWWW...
+ccccW......
+ccWWW......
+ccW.. ..t..
+ccW........
+WWW....WWW.
+....t..W_W.
+.......WWW.
+..........
+ENDMAP
+
+NAME:   storm_palace_corner_narrow
+TAGS:   storm_palace_corner allow_dup no_pool_fixup
+SUBST:  . = W.., ; : wWW., + : ++.
+MAP
+G.........+
+.W........+
+..WWccc...c
+..WWWWcc++c
+..cWWWWc;;c
+..cWW Wc;;c
+..ccWWcc;;c
+...ccccc;;c
+...+;;;;;;c
+...+;;;;;;c
+++cccccccc
+ENDMAP
+
+#don't allow_dup this one to avoid disconnects
+NAME:   storm_palace_corner_blocked
+TAGS:   storm_palace_corner no_pool_fixup
+KMONS:  P = plant
+SUBST:  . = P......., G = GG., W : wW
+MAP
+WWWW.......
+WWW........
+WW........c
+W..G...G..c
+..........c
+..... ....c
+..........c
+...G...G..c
+..........c
+.........Gc
+cccccccccc
+ENDMAP
