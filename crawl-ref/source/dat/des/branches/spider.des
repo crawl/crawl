@@ -1916,6 +1916,33 @@ xx..xD...D...Dx..xx
          @
 ENDMAP
 
+NAME:   hellmonk_watch_for_rolling_rocks
+DEPTH:  Spider, !Spider:$
+WEIGHT: 5
+TAGS:   no_trap_gen no_item_gen no_monster_gen
+MONS:   boulder beetle, jumping spider
+KFEAT:  ^ = shaft trap
+MAP
+    xxxxx
+    x1.2x
+    x.x.x
+    x.x*x
+    x.xxx
+   xx1x
+   x..x
+   x..x
+   xx.x
+    x1x
+  xxx.xxx
+ xx.....xx
+xx.1.^...xx
+xx..^^^..xx
+xx...^...xx
+ xx..x..xx
+  x+xxxxx
+   @
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Spider ending vaults
