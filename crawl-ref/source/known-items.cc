@@ -287,9 +287,6 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && (j > MAX_FIXED_BOOK || !unknown_items))
-                continue;
-
             if (you.type_ids[i][j] != unknown_items) // logical xor
                 _add_fake_item(i, j, selected_items, items, !unknown_items);
             else
@@ -347,7 +344,6 @@ void check_item_knowledge(bool unknown_items)
         {
             { OBJ_BOOKS, BOOK_MANUAL },
             { OBJ_GOLD, 1 },
-            { OBJ_BOOKS, NUM_BOOKS },
             { OBJ_RUNES, NUM_RUNE_TYPES },
         };
         for (auto e : misc_list)
