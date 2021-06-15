@@ -1317,7 +1317,7 @@ void bolt::do_fire()
         // Actually draw the beam/missile/whatever, if the player can see
         // the cell.
         if (animate)
-            draw(pos());
+            draw(pos(), redraw_per_cell);
 
         if (pos() == target)
         {
@@ -6110,6 +6110,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                 if (exp_map(delta + centre) < INT_MAX)
                     pass_visible |= explosion_draw_cell(delta + pos());
             }
+            // redraw for an entire explosion block, so redraw_per_cell is not
+            // relevant
             if (pass_visible)
             {
                 viewwindow(false);

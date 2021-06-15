@@ -204,7 +204,8 @@ static void _chain_lightning_to(const actor &caster, int pow,
         beam.origin_spell   = SPELL_CHAIN_LIGHTNING;
         // Reduce damage to the caster.
         beam.damage.size = dam_size / (arc.victim == &caster ? 6 : 1);
-        beam.draw_delay = 0; // still slow in zigs; alas
+        beam.draw_delay = 0;
+        beam.redraw_per_cell = false;
         beam.fire();
 
         // arc!
@@ -221,7 +222,13 @@ static void _chain_lightning_to(const actor &caster, int pow,
         }
     }
 
-    scaled_delay(200);
+    if (beam.animate)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(200);
+    }
+
     if (!new_victims.empty())
         _chain_lightning_to(caster, pow, new_victims, seen_set, arcs + 1);
 }
