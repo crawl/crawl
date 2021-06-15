@@ -1028,7 +1028,7 @@ ENDMAP
 
 NAME:   nicolae_shop_sticking_my_neck_out
 TAGS:   transparent
-DEPTH:  D
+DEPTH:  D:4-, Depths, Elf, Snake
 KFEAT:  S = general shop type:Neck suffix:Hole count:7 use_all ; \
         cloak | cloak | scarf | scarf | any amulet | any amulet | any amulet
 MAP
