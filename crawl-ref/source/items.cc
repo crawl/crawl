@@ -1872,7 +1872,6 @@ static void _get_book(item_def& it)
 
 // Adds all books in the player's inventory to library.
 // Declared here for use by tags to load old saves.
-// Outside of loading old saves, only used at character creation.
 void add_held_books_to_library()
 {
     for (item_def& it : you.inv)
