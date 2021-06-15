@@ -1877,7 +1877,6 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_SCROLLS    < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_JEWELLERY  < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_POTIONS    < MAX_SUBTYPES);
-    COMPILE_CHECK(NUM_BOOKS      < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_STAVES     < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_MISCELLANY < MAX_SUBTYPES);
 #if TAG_MAJOR_VERSION == 34
@@ -1887,7 +1886,7 @@ bool item_type_has_ids(object_class_type base_type)
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
-        || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
+        || base_type == OBJ_STAVES;
 }
 
 bool item_brand_known(const item_def& item)
