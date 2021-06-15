@@ -969,17 +969,8 @@ void identify_item(item_def& item)
 static bool _id_floor_item(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS)
-    {
-        if (fully_identified(item))
-            return false;
-
-        // fix autopickup for previously-unknown books (hack)
-        if (item_needs_autopickup(item))
-            item.props["needs_autopickup"] = true;
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         return true;
-    }
-    else if (item.base_type == OBJ_WANDS)
+    if (item.base_type == OBJ_WANDS)
     {
         if (!get_ident_type(item))
         {
@@ -2914,7 +2905,7 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_BOOKS:
-        if (item.sub_type == BOOK_MANUAL || item_type_known(item))
+        if (item.sub_type == BOOK_MANUAL)
             return item.sub_type;
         else
             return max_type;
@@ -4562,10 +4553,7 @@ item_def get_item_known_info(const item_def& item)
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:
-        if (item_type_known(item) || !item_is_spellbook(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = NUM_BOOKS;
+        ii.sub_type = item.sub_type;
         ii.subtype_rnd = item.subtype_rnd;
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
             ii.skill = item.skill; // manual skill
@@ -4608,7 +4596,7 @@ item_def get_item_known_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY,
+        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))

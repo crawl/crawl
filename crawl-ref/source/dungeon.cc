@@ -5908,9 +5908,10 @@ static bool _valid_item_for_shop(int item_index, shop_type shop_type_,
     if (item.base_type == OBJ_GOLD)
         return false;
 
-    // Don't place missiles in general antique shops...
+    // Don't place missiles or books in general antique shops...
     if (shop_type_ == SHOP_GENERAL_ANTIQUE
-            && item.base_type == OBJ_MISSILES)
+            && (item.base_type == OBJ_MISSILES
+                || item.base_type == OBJ_BOOKS))
     {
         // ...unless they're specified by the item spec.
         return !spec.items.empty();
