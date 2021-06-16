@@ -72,8 +72,7 @@ string player_spell_desc(spell_type spell);
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled,
                     const monster_info *mon_owner = nullptr,
-                    const item_def* item = nullptr,
-                    bool show_booklist = false);
+                    const item_def* item = nullptr);
 
 void describe_ability(ability_type ability);
 void describe_deck(deck_type deck);
