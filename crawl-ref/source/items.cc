@@ -2908,7 +2908,7 @@ static int _autopickup_subtype(const item_def &item)
         if (item.sub_type == BOOK_MANUAL)
             return item.sub_type;
         else
-            return max_type;
+            return 0;
 #if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
 #endif

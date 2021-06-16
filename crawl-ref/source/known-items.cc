@@ -122,7 +122,7 @@ public:
 #endif
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
-        else if (item->is_type(OBJ_BOOKS, NUM_BOOKS))
+        else if (item->is_type(OBJ_BOOKS, 0))
             name = "spellbooks";
         else if (item->base_type == OBJ_GOLD)
         {
@@ -346,7 +346,7 @@ void check_item_knowledge(bool unknown_items)
         {
             { OBJ_BOOKS, BOOK_MANUAL },
             { OBJ_GOLD, 1 },
-            { OBJ_BOOKS, NUM_BOOKS },
+            { OBJ_BOOKS, 0 },
             { OBJ_RUNES, NUM_RUNE_TYPES },
         };
         for (auto e : misc_list)
