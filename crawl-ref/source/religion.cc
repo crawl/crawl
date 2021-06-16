@@ -1536,17 +1536,13 @@ static bool _give_sif_gift(bool forced)
 
 static bool _give_kiku_gift(bool forced)
 {
-    // Smokeless fire and books don't get along.
+    // Djinn can't receive spell gifts.
     if (you.has_mutation(MUT_INNATE_CASTER))
-        return false;
-
-    // Break early if giving a gift now means it would be lost.
-    if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
     const bool first_gift = !you.num_total_gifts[you.religion];
 
-    // Kikubaaqudgha gives two Necromancy books in a quick succession.
+    // Kikubaaqudgha gives two sets of spells in a quick succession.
     if (!forced && (you.piety < piety_breakpoint(0)
                     || !first_gift && you.piety < piety_breakpoint(2)
                     || you.num_total_gifts[you.religion] > 1))
@@ -1554,21 +1550,66 @@ static bool _give_kiku_gift(bool forced)
         return false;
     }
 
-    int thing_created = items(true, OBJ_BOOKS, BOOK_NECROMANCY, 1, 0,
-                              you.religion);
+    vector<spell_type> chosen_spells;
 
-    if (thing_created == NON_ITEM)
-        return false;
+    // Each set should guarantee the player at least one corpse-using spell, to
+    // complement Receive Corpses.
+    if (first_gift)
+    {
+        chosen_spells.push_back(SPELL_PAIN);
+        if (you.can_bleed(false))
+        {
+            chosen_spells.push_back(SPELL_SUBLIMATION_OF_BLOOD);
+            chosen_spells.push_back(random_choose(SPELL_CORPSE_ROT,
+                                                  SPELL_ANIMATE_SKELETON));
+        }
+        else
+        {
+            chosen_spells.push_back(SPELL_CORPSE_ROT);
+            chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
+        }
+        chosen_spells.push_back(SPELL_VAMPIRIC_DRAINING);
+    }
+    else
+    {
+        chosen_spells.push_back(random_choose(SPELL_ANIMATE_DEAD,
+                                              SPELL_SIMULACRUM));
+        chosen_spells.push_back((you.has_mutation(MUT_NO_GRASPING)
+                                 || coinflip()) ? SPELL_BORGNJORS_VILE_CLUTCH
+                                                : SPELL_EXCRUCIATING_WOUNDS);
+        chosen_spells.push_back(random_choose(SPELL_AGONY,
+                                              SPELL_DEATH_CHANNEL));
 
-    // Replace a Kiku gift by a custom-random book.
-    make_book_kiku_gift(env.item[thing_created], first_gift);
-    move_item_to_grid(&thing_created, you.pos(), true);
+        spell_type extra_spell;
+        do
+        {
+            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
+                                        SPELL_AGONY,
+                                        SPELL_BORGNJORS_VILE_CLUTCH,
+                                        SPELL_EXCRUCIATING_WOUNDS,
+                                        SPELL_SIMULACRUM,
+                                        SPELL_DEATH_CHANNEL);
+            if (you.has_mutation(MUT_NO_GRASPING)
+                && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+            {
+                extra_spell = SPELL_NO_SPELL;
+            }
 
-    if (thing_created == NON_ITEM)
-        return false;
+            if (find(begin(chosen_spells), end(chosen_spells), extra_spell)
+                != end(chosen_spells))
+            {
+                extra_spell = SPELL_NO_SPELL;
+            }
+        }
+        while (extra_spell == SPELL_NO_SPELL);
+
+        chosen_spells.push_back(extra_spell);
+        chosen_spells.push_back(SPELL_DISPEL_UNDEAD);
+    }
 
     simple_god_message(" grants you a gift!");
     // included in default force_more_message
+    library_add_spells(chosen_spells);
 
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
