@@ -200,12 +200,14 @@ static void _chain_lightning_to(const actor &caster, int pow,
         beam.source = arc.source;
         beam.target = arc.victim->pos();
         beam.range = grid_distance(beam.source, beam.target);
+        beam.source_id      = caster.mid;
         beam.thrower        = caster.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
         beam.origin_spell   = SPELL_CHAIN_LIGHTNING;
         // Reduce damage to the caster.
         beam.damage.size = dam_size / (arc.victim == &caster ? 6 : 1);
         beam.draw_delay = 0;
         beam.redraw_per_cell = false;
+        beam.obvious_effect = true;
         beam.fire();
 
         // arc!
