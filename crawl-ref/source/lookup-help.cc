@@ -1000,7 +1000,7 @@ static int _describe_spell(const string &key, const string &suffix,
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
     ASSERT(spell != SPELL_NO_SPELL);
-    describe_spell(spell, nullptr, nullptr, true);
+    describe_spell(spell);
     return 0;
 }
 
