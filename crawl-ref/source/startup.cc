@@ -137,7 +137,9 @@ static void _initialize()
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
-    init_spell_rarities();
+#ifdef DEBUG
+    validate_spellbooks();
+#endif
 
     // Read special levels and vaults.
     _loading_message("Loading maps...");

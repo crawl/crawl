@@ -1412,24 +1412,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.flags |= ISFLAG_NO_PICKUP;
 }
 
-/// Choose a random spellbook type for the given level.
-static book_type _choose_book_type(int item_level)
-{
-    const book_type book = static_cast<book_type>(random2(NUM_FIXED_BOOKS));
-    if (item_type_removed(OBJ_BOOKS, book))
-        return _choose_book_type(item_level); // choose something else
-
-    // If this book is really rare for this depth, continue trying.
-    const int rarity = book_rarity(book);
-    ASSERT(rarity != 100); // 'removed item' - ugh...
-
-    const int adj_rarity = max(0, rarity-3); // allow more books to spawn on d:1
-    if (!one_chance_in(100) && x_chance_in_y(adj_rarity, item_level+1))
-        return _choose_book_type(item_level); // choose something else
-
-    return book;
-}
-
 /// Choose a random skill for a manual to be generated for.
 static skill_type _choose_manual_skill()
 {
@@ -1462,7 +1444,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     else if (x_chance_in_y(21 + item_level, 4200))
         item.sub_type = BOOK_MANUAL; // skill manual - rare!
     else
-        item.sub_type = _choose_book_type(item_level);
+        item.sub_type = choose_book_type(item_level);
 
     if (item.sub_type == BOOK_MANUAL)
     {
