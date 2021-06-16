@@ -1528,7 +1528,8 @@ static bool _give_sif_gift(bool forced)
 
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
-    _inc_gift_timeout(40 + random2avg(19, 2));
+    const int n_spells = spells_in_book(env.item[item_index]).size();
+    _inc_gift_timeout(10 + n_spells * 6 + random2avg(19, 2));
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     return true;

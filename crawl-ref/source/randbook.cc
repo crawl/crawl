@@ -27,7 +27,7 @@ static string _gen_randbook_owner(god_type god, spschool disc1,
                                   const vector<spell_type> &spells);
 
 /// How many spells should be in a random theme book?
-int theme_book_size() { return random2avg(7, 3) + 2; }
+int theme_book_size() { return random2avg(4, 3) + 2; }
 
 /// A discipline chooser that only ever returns the given discipline.
 function<spschool()> forced_book_theme(spschool theme)
@@ -565,9 +565,10 @@ void _set_book_spell_list(item_def &book, vector<spell_type> spells)
  *
  * @param book[out]    The book in question.
  * @param level        The level of the spells. If -1, choose a level randomly.
+ * @param god            Is this a gift from Sif Muna?
  * @return             Whether the book was successfully transformed.
  */
-bool make_book_level_randart(item_def &book, int level)
+bool make_book_level_randart(item_def &book, int level, bool sif)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -585,11 +586,14 @@ bool make_book_level_randart(item_def &book, int level)
         level = random_range(1, max_level);
     }
     ASSERT_RANGE(level, 0 + 1, 9 + 1);
-
     // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
     // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
     int num_spells = max(1, min(5 + (level - 1)/3,
                                 18 - 2*level));
+    // Sif Muna retains the old randbook sizes.
+    // Other level randbooks shrink to modern book sizes.
+    if (!sif)
+        num_spells = max(1, div_rand_round(num_spells * 3, 5));
     ASSERT_RANGE(num_spells, 0 + 1, RANDBOOK_SIZE + 1);
 
     book.sub_type = BOOK_RANDART_LEVEL;
