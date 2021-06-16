@@ -79,9 +79,9 @@
        "potion of curing", "condenser vane", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
-       "book of dreams", "book of the dragon", "dagger", "demon blade",
-       "demon trident", "demon whip", "dire flail", "double sword",
-       "ring of dexterity", "manual of dodging",
+       "book of dreams", "book of the dragon", "book of the dryads", "dagger",
+       "demon blade", "demon trident", "demon whip", "dire flail",
+       "double sword", "ring of dexterity", "manual of dodging",
        "staff of death", "wand of digging", "dart" }
 
       elseif s == "E" then i = { "manual of evocations",
@@ -146,7 +146,7 @@
        "potion of resistance", "robe", "ring mail" }
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
-       "sling bullet", "scale mail", "book of summonings", "book of the sky",
+       "sling bullet", "scale mail", "book of storms", "book of the sky",
        "ring of see invisible", "ring of slaying", "spear",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "scythe", "book of spatial translocations", "scroll of silence",
@@ -155,7 +155,7 @@
        "manual of short blades", "manual of slings", "manual of shields",
        "manual of spellcasting", "manual of summonings", "stone" }
 
-      elseif s == "T" then i = { "book of the tempests", "scroll of torment",
+      elseif s == "T" then i = { "scroll of torment",
        "book of transfigurations", "scroll of teleportation", "triple sword",
         "triple crossbow", "troll leather armour", "manual of throwing",
        "manual of translocations", "manual of transmutations",
