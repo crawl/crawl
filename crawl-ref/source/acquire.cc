@@ -979,7 +979,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             max(1, (_skill_rdiv(SK_SPELLCASTING) + 2) / 3);
 
         book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level))
+        if (!make_book_level_randart(book, level, agent == GOD_SIF_MUNA))
             return false;
         break;
     }
