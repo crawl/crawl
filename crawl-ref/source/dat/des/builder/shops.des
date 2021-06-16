@@ -581,7 +581,7 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
-   randbook disc:conjuration | book of the tempests | book of clouds | \
+   randbook disc:conjuration | book of storms | book of vapours | \
    wand of iceblast | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | \
    wand of acid | lightning rod | phial of floods | scroll of immolation | \
@@ -860,7 +860,7 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
-             "book of the tempests w:5 | " ..
+             "book of storms w:5 | " ..
              "wand of iceblast"
 
 -- Unfortunately this can still result in the unrandart being picked twice or

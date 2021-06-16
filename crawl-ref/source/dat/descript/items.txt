@@ -91,6 +91,31 @@ book of annihilations
 A tome of arcane fury, greatly sought after by sorcerers. It allows the gifted
 and resourceful to conjure destruction with ease.
 %%%%
+book of armaments
+
+A book describing various magical arms and armours. It was written in the midst
+of a particularly bloody civil war, and the text is made substantially less
+helpful by its author's frequent digressions describing the crimes committed by
+the other side.
+%%%%
+book of beasts
+
+A book of spells focused on the summoning of beasts. Its pages nip at careless
+readers' fingers.
+%%%%
+book of blasting
+
+A book of spells used to set off powerful explosions. This edition's binder
+was careful to pad the cover, so that if its reader lacked sufficient caution,
+the book, at least, would survive.
+%%%%
+book of blood
+
+A book of works dedicated to the manipulation of blood, both that of the caster
+and of creatures with particularly unusual ichor flowing through their veins.
+Some claim it to have been composed by the vampire lord Jory, but it's unclear
+why he would deign to share his secrets with others.
+%%%%
 book of burglary
 
 A book containing many diverse spells useful for theft, breaking and entering,
@@ -114,16 +139,20 @@ illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
 beaked tentacles where legs belong. The text is full of reassurances that these
 almost never happen.
 %%%%
-book of clouds
+book of chaos
 
-A book of magic spells for creating an assortment of clouds. It is difficult to
-read, as the text is frequently interrupted by descriptions of unusually-shaped
-clouds the author spotted while writing.
+A book of spells that leave the caster's surroundings in a state of complete
+disarray. It's not clear why anyone would write such a thing, but it's here.
 %%%%
 book of conjurations
 
 A book containing an introduction to the destructive magical arts of
 Conjurations.
+%%%%
+book of dangerous friends
+
+A book describing the creation and use of magical entities best kept at arm's
+reach. Or, preferably, even farther.
 %%%%
 book of death
 
@@ -132,8 +161,21 @@ grotesque art depicting scenes of disgusting decay.
 %%%%
 book of debilitation
 
-A spellbook containing Hexes that obstruct and impede, compiled by rebels
-fighting an empire long-since passed.
+A spellbook containing spells known for having a particularly unpleasant
+effect on their victims. It's considered something of a faux pas in the
+wizarding community to be seen with this book in one's collection.
+%%%%
+book of decay
+
+A book of necromancy, dictated by the god Kikubaaqudgha to an unfortunate
+apostle across the course of a nine-day fugue. The necromancer is said to have
+finished the dread work with their own life's blood... but of course this is
+just a copy, written in almost entirely normal ink.
+%%%%
+book of displacement
+
+A book of spells to bring others closer, or sometimes farther, depending on the
+user's whim.
 %%%%
 book of dreams
 
@@ -156,16 +198,17 @@ A book of magic spells.
 book of flames
 
 The standard text used in arcane academies by students of the elemental magic
-of Fire.
+of Fire. Readers are recommended to wear a pair of insulated gloves.
 %%%%
 book of frost
 
 A book of magic spells, often used as an introduction to the elemental magics
-of Ice.
+of Ice. Its pages feel unusually brittle, as if they'd crumble at a touch.
 %%%%
 book of geomancy
 
-A book containing basic spells involving the element of Earth.
+A book containing basic spells involving the element of Earth. Readers are
+recommended to wear a pair of gardening gloves.
 %%%%
 book of hexes
 
@@ -174,11 +217,21 @@ shimmers as the pages are flipped.
 %%%%
 book of ice
 
-A book of advanced magical spells using the element of Ice.
+A book of advanced magical spells using the element of Ice. Readers are
+recommended to wear a pair of warm gloves.
+%%%%
+book of iron
+
+An ancient, metal-bound spellbook, covered in dark red blotches. It's
+possible that these are rust stains... and it's possible they're not.
+%%%%
+book of lightning
+
+A book that fairly crackles with arcane power.
 %%%%
 book of maledictions
 
-A book of Hexes, describing spells to confound and weaken.
+A book of Hexes, describing spells to confound and befuddle.
 %%%%
 book of minor magic
 
@@ -189,62 +242,168 @@ book of misfortune
 
 A spellbook dedicated to the art of inflicting creative calamities on one's
 foes. Superstitious wizards claim that the book itself actually absorbs ill
-fortune, and carry it around as a talisman, but the effects of this seem
+fortune and carry it around as a talisman, but the effects of this seem
 subtle at best.
 %%%%
 book of necromancy
 
-A macabre book containing basic Necromancy spells.
+A macabre book containing basic Necromancy spells. Readers are recommended to
+wear a pair of gloves they don't mind disposing of afterward.
 %%%%
 book of party tricks
 
 A book containing a variety of fun spells guaranteed to liven up any wizarding
 party, as well as a number of toasts, jokes, and party games.
 %%%%
+book of pain
+
+A magical book said to have written by the demon-queen Ereshkigal, who delights
+in the painful death of mortals. Some would say that it would be best to consider
+the book's origin before putting it to use, but wizards are rarely deterred by
+such concerns.
+%%%%
 book of power
 
-A book of powerful magic spells, crackling and shuddering with barely-contained
-energies.
+A book of powerful and destructive magic spells, rumbling and shuddering with
+barely-contained energies.
+%%%%
+book of rime
+
+A frost-gripped tome describing icy spells, somewhat abridged. The Vaults are
+said to hold the full text, but the guardians of that place guard their
+treasures jealously.
+%%%%
+book of sloth
+
+A lazily written book.
 %%%%
 book of spatial translocations
 
-A basic spellbook on the magical field of Translocations.
+A basic spellbook on the magical field of Translocations. Many would-be mages
+have seen it disappear just as they needed it most.
 %%%%
-book of summonings
+book of spectacle
 
-An advanced treatise on Summoning magics, detailing ways of summoning and
-binding creatures from all manners of realms.
+A book covered in glittering sequins. An impromptu lightshow bursts from every
+page, clearly reserving this book for only the tackiest of wizards.
+%%%%
+book of spheres
+
+A book containing a comprehensive, well-rounded collection of sphere-related
+spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
+but sadly, the remainder of the book has been completely vaporized.
+%%%%
+book of stone
+
+A textbook of advanced Earth magic. Its cover and spine are inlaid with an
+impressive variety of precious stones, which may contain immense arcane power.
+Then again, the author may
+%%%%
+book of storms
+
+A book written by the magician Lan Shi, who was preoccupied with the study and
+control of natural phenomena. Most of Shi's works have been lost, but those
+still remaining are treasured by wizards lucky (or unscrupulous) enough to get
+their hands on a copy.
 %%%%
 book of the dragon
 
 A magical book of spells which allow some command over dragons and their
 aspects.
 %%%%
+book of the dryads
+
+A book holding lore ripped from the deep forest, allowing its denizens to be
+called forth to serve the reader.
+{{
+    if you.can_smell() then
+        return "It smells distressingly musty."
+    end
+}}
+%%%%
 book of the earth
 
-A textbook of advanced Earth magic.
+A guide to drawing immense power from the depths of the earth. The original was
+written as a collaboration between the hill dwarves and the mountain dwarves, but
+its compilation was cut short when a massive wave of earthquakes plunged their
+civilizations into ruin.
+%%%%
+book of the hunter
+
+A mundane book on hunting. Someone has gone through and covered the book in
+corrections and scathing criticisms, crossing out entire sections in favor of
+spells that accomplish the same task.
+%%%%
+book of the moon
+
+A book written by a mad wizard, who had become convinced that the moon far above
+was composed, not of shining light, but of rock as solid as that beneath one's feet.
+Many of the pages have been mangled beyond recognition, seemingly shredded by a
+pair of powerful claws... but what would a troll be doing with a spellbook?
+%%%%
+book of the senses
+
+A scholarly work, describing the senses used by living creatures to perceive the
+world around them. A handful of spells are included to demonstrate the principles
+being described.
 %%%%
 book of the sky
 
-A magical book containing powerful elemental spells of Air.
+A magical book containing powerful elemental spells of Air. The great minotaur
+hero Vuxhurn, given a copy of this book while trapped atop the tower of a
+wizard with a particularly perverse sense of humor, used its pages to construct
+a rudimentary glider and soared to freedom.
 %%%%
-book of the tempests
+book of the tundra
 
-A book containing magic spells which command some of the most destructive
-forces of nature.
+A book written by peoples of a cold and inhospitable realm. It's exceptionally
+large, but that's because many thick furs hang from its spine. Most of the
+remaining pages are devoted to long, proud descriptions of how those furs were
+taken. Some of these stories include relevant spells, generally as an aside.
 %%%%
 book of the warp
 
-A book of advanced Translocations spells.
+A book of advanced Translocations spells, written by a particularly
+misanthropic mage. After its completion, they were never seen again, which may
+or may not have been the point.
+%%%%
+book of touch
+
+A book describing spells requiring very close proximity to their target. The
+author seems to have had a low opinion of their wizardly peers, and spends much
+of the text describing the hygeine and social etiquette needed to enter close
+proximity to other sentient beings.
 %%%%
 book of transfigurations
 
-An advanced book of Transmutations spells.
+An advanced book of Transmutations spells. Contrary to common wisdom, the book
+has no ability to move, but it does have a nasty habit of disguising itself as
+other nearby objects.
 %%%%
 book of unlife
 
 An unholy book describing a variety of magical methods for the creation and
 command of undead servants.
+%%%%
+book of vapours
+
+A book of magic spells for creating an assortment of clouds, vapours and mists.
+It is difficult to read, as the text is frequently interrupted by descriptions
+of unusually-shaped clouds the author spotted while writing.
+%%%
+book of weapons
+
+A book of spells used by rebels against an ancient and evil empire. The rebels
+were crushed, but this book was rediscovered years later, found by paladins of
+the crusade that finally destroyed the empire and slew its immortal twin
+sovereigns.
+%%%%
+book of winter
+
+A book of spells written by the sorceress Ellawe, who sought to use her time
+productively while trapped inside by particularly harsh weather for over six
+months. A postscript details the bloody vengeance she took after discovering
+the weather mage responsible.
 %%%%
 boomerang
 
@@ -373,6 +532,12 @@ eveningstar
 
 The opposite of a morningstar.
 %%%%
+everburning encyclopedia
+
+A book of magical spells, meticulously organized, dense, and almost entirely
+burnt black. Only a few pages are still legible, but the power within still
+blasts the reader with a furnace-like heat.
+%%%%
 executioner's axe
 
 A fearsome weapon covered in dried blood and crude engravings of torture and
@@ -443,6 +608,18 @@ great sword
 
 A sword with a very long, heavy blade and a long handle.
 %%%%
+great wizards, vol. ii
+
+A collection of spells from great wizards throughout history. The author seems
+to have been extremely enthusiastic, and each wizard is described in voluminous,
+comprehensive detail.
+%%%%
+great wizards, vol. vii
+
+A collection of spells from great wizards throughout history. The author seems
+to have been quite tired of their project - the wizards' descriptions are terse
+and minimal, meeting the lowest requirement for completeness.
+%%%%
 halberd
 
 A polearm consisting of an axe blade topped with a spike, mounted on a long
@@ -481,6 +658,13 @@ ice dragon scales
 
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
+%%%%
+inescapable atlases
+
+A collection of maps, with accompanying descriptions of spells that can bring
+the user to each place. Most copies are locked up, chained down, or otherwise
+restrained, as the book has a habit of otherwise following its owner wherever
+they go.
 %%%%
 javelin
 
@@ -558,6 +742,13 @@ orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your
 quest is complete.
+%%%%
+ozocubu's autobiography
+
+An astonishingly vain and self-aggrandizing work. The author claims credit
+for a wide swathe of magical inventions, but seems to have misunderstood or
+misrepresented most of them. Only a few of the spells described in the book
+actually work.
 %%%%
 pair of boots
 
@@ -1029,6 +1220,13 @@ swamp dragon scales
 
 The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
+there-and-back book
+
+A compilation of children's stories about great adventures, always ending with
+the traveller returning to the place they started. The love infused into its
+pages by countless generations has granted it power, allowing a skilled mage to
+transport others by reciting specific passages.
+%%%%
 throwing net
 
 A mesh of ropes knotted together with weights around the edge, used to entangle
@@ -1056,6 +1254,18 @@ trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
 %%%%
+trismegistus codex
+
+A magical book
+written by a
+numerologically obsessed wizard.
+Everything from sentence
+length to overall
+organization is structured.
+It's unclear whether
+the author thought
+this was helpful.
+%%%%
 triple crossbow
 
 A crossbow with three strings arranged in series to provide exceptional power,
@@ -1076,6 +1286,12 @@ troll leather armour
 
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
 flesh.
+%%%%
+unrestrained analects
+
+A collection of spells that assault everything in sight of the caster,
+unrestrained by petty limitations like 'needing a clear shot' or 'concern about
+collateral damage'.
 %%%%
 wand of acid
 
@@ -1128,5 +1344,6 @@ between all sorts of creatures.
 %%%%
 young poisoner's handbook
 
-An introductory book for the magic arts of poison.
+An introductory book for the magic arts of poison. Readers are recommended to
+wear a pair of very thick, non-absorbent gloves.
 %%%%

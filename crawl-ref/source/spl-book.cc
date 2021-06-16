@@ -1016,6 +1016,14 @@ bool book_has_title(const item_def &book)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
+    // No "A Great Wizards, Vol. II"
+    if (book.sub_type == BOOK_BIOGRAPHIES_II
+        || book.sub_type == BOOK_BIOGRAPHIES_VII
+        || book.sub_type == BOOK_OZOCUBU)
+    {
+        return true;
+    }
+
     if (!is_artefact(book))
         return false;
 
