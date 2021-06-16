@@ -672,20 +672,18 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_BOOKS:
     {
-        valued = 75;
+        valued = 0;
         const book_type book = static_cast<book_type>(item.sub_type);
 #if TAG_MAJOR_VERSION == 34
         if (book == BOOK_BUGGY_DESTRUCTION)
             break;
 #endif
-
-        if (item_type_known(item))
-        {
-            int levels = 0;
-            for (spell_type spell : spellbook_template(book))
-                levels += spell_difficulty(spell);
-            valued += levels * 50;
-        }
+        int levels = 0;
+        const vector<spell_type> spells = spells_in_book(item);
+        for (spell_type spell : spells)
+            levels += spell_difficulty(spell);
+        // Level 9 spells are worth 4x level 1 spells.
+        valued += levels * 20 + spells.size() * 20;
         break;
     }
 
