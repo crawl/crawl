@@ -4161,13 +4161,20 @@ static bool _book_from_spell(const char* specs, item_def &item)
     if (type == SPELL_NO_SPELL)
         return false;
 
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+    for (int i = 0; i < NUM_BOOKS; ++i)
+    {
+        const auto bt = static_cast<book_type>(i);
+        if (!book_exists(bt))
+            continue;
+        for (spell_type sp : spellbook_template(bt))
+        {
             if (sp == type)
             {
                 item.sub_type = i;
                 return true;
             }
+        }
+    }
 
     return false;
 }
