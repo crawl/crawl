@@ -2998,11 +2998,6 @@ vault guard captain
 
 <vault guard>
 %%%%
-ooze
-
-A glob of grey sludge that has somehow developed a rudimentary awareness and
-limited motility.
-%%%%
 ### Meatsprint
 bag of meat
 

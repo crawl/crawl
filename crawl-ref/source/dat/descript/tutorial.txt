@@ -306,10 +306,8 @@ tutorial3 ego_weapon
 
 An item described as <lightblue>runed</lightblue> or
 <lightblue>glowing</lightblue> will always be enchanted, or have special
-properties, or both. You need to wield this scimitar (with
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by
-<input>clicking</input> on it in the inventory panel</localtiles>) to find out
-what those are.
+properties, or both. Once you step on top of such an item, its properties will
+be revealed to you.
 %%%%
 tutorial3 inventory
 
@@ -363,10 +361,12 @@ tutorial3 artefact_armour
 #       things that would throw the tutorial off rails (cursed, Cursing,
 #       mutations, activatable abilities..)
 Items with <w>unusual names</w> are artefacts. Artefacts can have a number of
-special properties. Some items (such as this cloak) are known and come
-pre-identified, others are random and have unknown properties. Try equipping
-this cloak with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or
-<input>mouseclick</input> in the inventory panel</localtiles>.
+special properties. Some unique artefacts (such as this cloak) are always
+identified and may have special properties that cannot be found anywhere else!
+Others are generated with a random selection of properties, and are
+unidentified until you step on top of them. Try equipping this cloak with
+<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or <input>mouseclick</input>
+in the inventory panel</localtiles>.
 %%%%
 tutorial3 wand_fire
 
