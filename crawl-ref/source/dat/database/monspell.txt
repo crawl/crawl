@@ -224,6 +224,10 @@ Throw Klown Pie cast
 
 @The_monster@ pies you viciously!
 %%%%
+Stunning Burst cast
+
+@The_monster@ fires a burst of electricity @at@ @target@.
+%%%%
 #################################################
 # These have special hard-coded messaging.
 #################################################
@@ -595,6 +599,10 @@ Bolt of Magma molten gargoyle cast
 Primal Wave elemental wellspring cast
 
 A torrent of water rises up through @the_monster@!
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+Water spirits pour forth from @the_monster@!
 %%%%
 Invisibility shadow cast
 

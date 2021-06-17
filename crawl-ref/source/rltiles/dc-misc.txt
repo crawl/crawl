@@ -175,8 +175,8 @@ cloud_chaos3
 cloud_chaos4
 cloud_chaos5
 
-tornado1 CLOUD_RAGING_WINDS_0
-tornado2 CLOUD_RAGING_WINDS_1
+polar_vortex1 CLOUD_FREEZING_WINDS_0
+polar_vortex2 CLOUD_FREEZING_WINDS_1
 
 cloud_calc_dust0 CLOUD_PETRIFY
 cloud_calc_dust1

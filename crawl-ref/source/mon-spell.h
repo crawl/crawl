@@ -607,7 +607,7 @@ static const mon_spellbook mspell_list[] =
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {
-        { SPELL_SLUG_DART, 40, MON_SPELL_NATURAL },
+        { SPELL_SLUG_DART, 60, MON_SPELL_NATURAL },
       }
     },
 
@@ -823,13 +823,14 @@ static const mon_spellbook mspell_list[] =
     // ('E') Elementals.
     {  MST_AIR_ELEMENTAL,
       {
-       { SPELL_VORTEX, 80, MON_SPELL_NATURAL},
+       { SPELL_STUNNING_BURST, 50, MON_SPELL_NATURAL},
       }
     },
 
     {  MST_ELEMENTAL_WELLSPRING,
       {
        { SPELL_PRIMAL_WAVE, 65, MON_SPELL_MAGICAL },
+       { SPELL_WATER_ELEMENTALS, 65, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2000,7 +2001,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_CLOUD_MAGE,
       {
        { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
-       { SPELL_TORNADO, 40, MON_SPELL_WIZARD },
+       { SPELL_POLAR_VORTEX, 40, MON_SPELL_WIZARD },
       }
     },
 
@@ -2099,7 +2100,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CONJURE_BALL_LIGHTNING, 30, MON_SPELL_MAGICAL },
        { SPELL_GLACIATE, 30, MON_SPELL_MAGICAL },
-       { SPELL_TORNADO, 60, MON_SPELL_MAGICAL },
+       { SPELL_POLAR_VORTEX, 60, MON_SPELL_MAGICAL },
        { SPELL_MAJOR_HEALING, 30, MON_SPELL_MAGICAL },
        { SPELL_BLINK_RANGE, 30, MON_SPELL_MAGICAL },
       }

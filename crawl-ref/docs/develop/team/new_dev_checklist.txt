@@ -5,13 +5,13 @@ This is a checklist for integrating a new developer into the team.
  * Upgrade their Mantis account to developer.
  * Update the wiki listing:
         https://crawl.develz.org/wiki/doku.php?id=dcss:admin:devteam
- * Add them to the committer group on IRC:
-        /msg chanserv access ##crawl-dev add NICK committer
+ * Add them to the committer group on Libera IRC:
+        /msg chanserv access #crawl-dev add NICK committer
    They should first register with NickServ (/msg nickserv help register) to
    prevent others from using that nick.  /whois NICK  will show an "account"
    field if they are registered.
  * Upgrade their Crawl server accounts (CAO, CDO, et al) to administrator. This
-   lets them use wizmode, and on CAO and CSZO gives them access to save backups
+   lets them use wizmode, and on most servers gives them access to save backups
    and the rebuild trigger:
         dgl admin add <username>
  * Create a WordPress account for them.

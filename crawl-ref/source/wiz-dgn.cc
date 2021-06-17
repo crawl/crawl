@@ -801,9 +801,9 @@ void wizard_recreate_level()
         stair_taken = branches[lev.branch].entry_stairs;
 
     leaving_level_now(stair_taken);
-    you.get_place_info().levels_seen--;
     delete_level(lev);
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
+    you.get_place_info().levels_seen--;
     tile_new_level(newlevel);
     if (!crawl_state.test)
         save_game_state();

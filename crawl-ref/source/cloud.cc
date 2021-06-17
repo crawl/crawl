@@ -225,9 +225,9 @@ static const cloud_data clouds[] = {
       ETC_MAGIC,                                // colour
       { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
     },
-    // CLOUD_TORNADO,
-    { "raging winds", nullptr,                  // terse, verbose name
-      ETC_TORNADO,                              // colour
+    // CLOUD_VORTEX,
+    { "whirling frost", nullptr,                // terse, verbose name
+      ETC_VORTEX,                               // colour
       { TILE_ERROR },                           // tile
     },
     // CLOUD_DUST,
@@ -291,7 +291,7 @@ static const cloud_data clouds[] = {
       true,                                       // opacity
     },
     // CLOUD_EMBERS,
-    { "smoldering embers", "embers",
+    { "smouldering embers", "embers",
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
@@ -751,7 +751,7 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
     return (is_harmless_cloud(cloud.type) &&
                 (!is_opaque_cloud(cloud.type) || is_opaque_cloud(ct)))
            || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_TORNADO; // soon gone
+           || ct == CLOUD_VORTEX; // soon gone
 }
 
 /*
@@ -780,7 +780,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS
-        && cl_type != CLOUD_TORNADO
+        && cl_type != CLOUD_VORTEX
         && cl_type != CLOUD_INK)
     {
         return;
@@ -788,10 +788,10 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     const monster * const mons = monster_at(ctarget);
 
-    // Fedhas protects plants from damaging clouds placed by the player.
-    if (agent
-        && agent->deity() == GOD_FEDHAS
-        && fedhas_protects(mons)
+    // Fedhas protects plants from damaging clouds.
+    // XX demonic guardians? This logic mostly doesn't apply because protected
+    // monsters are also cloud immune, mostly
+    if (god_protects(agent, mons)
         && !actor_cloud_immune(*mons, cl_type))
     {
         return;
@@ -945,20 +945,25 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             if (!act.is_player())
                 return act.res_fire() >= 3;
             return player_equip_unrand(UNRAND_SALAMANDER)
-                || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
-                || you.has_mutation(MUT_IGNITE_BLOOD)
-                || player_equip_unrand(UNRAND_FIRESTARTER);
+#if TAG_MAJOR_VERSION == 34
+                   || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
+#endif
+                   || player_equip_unrand(UNRAND_FIRESTARTER)
+                   || you.has_mutation(MUT_IGNITE_BLOOD);
         case CLOUD_HOLY:
             return act.res_holy_energy() >= 3;
         case CLOUD_COLD:
             if (!act.is_player())
                 return act.res_cold() >= 3;
-            return you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
-                || player_equip_unrand(UNRAND_FROSTBITE);
+            return player_equip_unrand(UNRAND_FROSTBITE)
+#if TAG_MAJOR_VERSION == 34
+                   || you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
+#endif
+                   ;
         case CLOUD_MEPHITIC:
-            return act.res_poison() > 0 || act.is_unbreathing();
+            return act.res_poison() > 0;
         case CLOUD_POISON:
-            return act.res_poison() > 0 || act.is_unbreathing();
+            return act.res_poison() > 0;
         case CLOUD_STEAM:
             return act.res_steam() > 0;
         case CLOUD_MIASMA:
@@ -973,8 +978,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.res_elec() >= 3;
         case CLOUD_NEGATIVE_ENERGY:
             return act.res_negative_energy() >= 3;
-        case CLOUD_TORNADO:
-            return act.res_tornado();
+        case CLOUD_VORTEX:
+            return act.res_polar_vortex();
         case CLOUD_RAIN:
             return !act.is_fiery();
         default:
@@ -996,11 +1001,11 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     const bool player = act.is_player();
 
     if (!player
-        && (you_worship(GOD_FEDHAS)
-            && fedhas_protects(act.as_monster())
+        && (god_protects(act.as_monster())
             || testbits(act.as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
-        && (act.as_monster()->friendly() || act.as_monster()->neutral()))
+        && (act.as_monster()->friendly() || act.as_monster()->neutral())
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
     {
         return true;
     }
@@ -1436,8 +1441,8 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         return false;
 
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
-    if (type == CLOUD_TORNADO)
-        return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
+    if (type == CLOUD_VORTEX)
+        return !you.duration[DUR_VORTEX] && !you.duration[DUR_VORTEX_COOLDOWN];
 
     if (accept_temp_resistances)
     {
@@ -1582,7 +1587,7 @@ bool is_harmless_cloud(cloud_type type)
            && clouds[type].damage.base == 0
            && clouds[type].damage.random == 0
            && !_cloud_has_negative_side_effects(type)
-           && type != CLOUD_TORNADO;
+           && type != CLOUD_VORTEX;
 }
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1803,7 +1808,7 @@ coord_def get_cloud_originator(const coord_def& pos)
     return agent->pos();
 }
 
-void remove_tornado_clouds(mid_t whose)
+void remove_vortex_clouds(mid_t whose)
 {
     // Needed to clean up after the end of tornado cooldown, so we can again
     // assume all "raging winds" clouds are harmful. This is needed only
@@ -1811,15 +1816,16 @@ void remove_tornado_clouds(mid_t whose)
     // cloud belongs to. If this changes, please remove this function. For
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
+    // XXX: this comment seems impossibly out of date? ^
 
     // We can't iterate over env.cloud directly because delete_cloud
     // will remove this cloud and invalidate our iterator.
-    vector<coord_def> tornados;
+    vector<coord_def> vortices;
     for (auto& entry : env.cloud)
-        if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
-            tornados.push_back(entry.first);
+        if (entry.second.type == CLOUD_VORTEX && entry.second.source == whose)
+            vortices.push_back(entry.first);
 
-    for (auto pos : tornados)
+    for (auto pos : vortices)
         delete_cloud(pos);
 }
 

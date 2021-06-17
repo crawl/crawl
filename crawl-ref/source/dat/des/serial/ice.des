@@ -3,11 +3,13 @@
 # Serial vault with an ice theme
 
 {{
-function init_ice(e)
+function init_ice(e, force_opaque)
   e.tags('serial_ice')
   e.tags('extra')
   e.tags('mini_float')
-  e.tags('transparent')
+  if force_opaque ~= nil then
+    e.tags('transparent')
+  end
   e.weight('2')
   if you.in_branch("Coc") then
     e.kmons('.- = simulacrum w:30 / \
@@ -173,9 +175,9 @@ SUBST:  + = Ww.
 MAP
     -------....---
   ---...wwWW++Www----
--...wW.WWW+++WWWWww--
--wwWW+........+++Ww.-
--wWW....A..A....+Ww.-
+-...wW.WWW+++WWwWww--
+-wwWW+........+++ww.-
+-wwW....A..A....+Ww.-
 -wwW+++......+++Ww..-
 -....wWW+WWW+Ww....--
 ---....wW+WWww..--
@@ -184,20 +186,21 @@ ENDMAP
 
 NAME:   serial_ice_j
 TAGS:   luniq_serial_ice_big
-KPROP:  +-AwW = no_tele_into
+KPROP:  +-.AwW = no_tele_into
 SUBST:  w = wwW
 SUBST:  + = Ww.
-: init_ice(_G)
+# TODO: redesign this so that it can be marked transparent
+: init_ice(_G, true)
 MAP
-     +++++++++++
-+++--+++++-+++++---
+     +++++.+++++
++++--+++++.+++++---
 -+++wwwwwwwwwwwwww-+
 -w++++++....ww...w+++
 -wwwwWWWW....w...w++++
 --www...w..A...www+++
 -w+++.........ww.+-+
--ww++++wwwwwwww++--+
--++++-------...+++-
+-ww++++wwwwwwww++.-+
+-++++-------...+++.
 ENDMAP
 
 NAME:   serial_ice_k

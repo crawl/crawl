@@ -440,7 +440,6 @@ void revive()
     // doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
-    you.disease = 0;
     you.magic_contamination = 0;
     restore_stat(STAT_ALL, 0, true);
 

@@ -213,7 +213,7 @@ bool give_monster_proper_name(monster& mon, bool orcs_only = true);
 
 bool mons_flattens_trees(const monster& mon);
 size_type mons_class_body_size(monster_type mc);
-bool mons_class_res_tornado(monster_type mc);
+bool mons_class_res_polar_vortex(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster& mon);
@@ -317,6 +317,7 @@ int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster& mon);
 bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
+bool mons_class_is_animated_object(monster_type type);
 monster_type mons_base_type(const monster& mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_class_leaves_hide(monster_type mc);

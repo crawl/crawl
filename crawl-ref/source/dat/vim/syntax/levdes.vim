@@ -154,7 +154,7 @@ syn keyword desColour contained death unholy vehumet beogh crystal blood smoke
 syn keyword desColour contained slime jewel elven dwarven orcish flash kraken
 syn keyword desColour contained floor rock mist shimmer_blue decay silver gold
 syn keyword desColour contained iron bone elven_brick waves tree mangrove
-syn keyword desColour contained tornado liquefied orb_glow disjunction random
+syn keyword desColour contained vortex liquefied orb_glow disjunction random
 
 " TILE
 syn keyword desOrientation no_random

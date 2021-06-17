@@ -7,7 +7,7 @@
 #
 # <<1>>      Generic
 # <<2>>      Themed
-# <<3>>      Untagged
+# <<3>>      Multi
 #
 ###############################################################################
 
@@ -89,6 +89,7 @@ ENDMAP
 # <<1>> Generic.
 #       Tagged shop, may only contain a single shop. No threats.
 #
+
 NAME:   shop
 TAGS:   allow_dup extra shop transparent
 WEIGHT: 100
@@ -289,6 +290,123 @@ FH.O.HF
 cwt.twc
 cww.wwc
 ccc+ccc
+ENDMAP
+
+NAME:  nicolae_diamond_shop
+TAGS:  allow_dup extra shop transparent no_pool_fixup
+KFEAT: O = any shop
+SUBST: x : xcvbtGwl
+MAP
+...x...
+..x.x..
+.x...x.
+x..O..x
+.x...x.
+..x.x..
+...x...
+ENDMAP
+
+NAME:  nicolae_lakefront_shop
+TAGS:  allow_dup extra shop transparent no_pool_fixup
+KFEAT: O = any shop
+SUBST: G : GTUtwx, w : wl
+MAP
+xxxxxxxx
+x.....Gx
+..www..x
+.wwwww.x
+@wwwwwOx
+.wwwww.x
+..www..x
+x.....Gx
+xxxxxxxx
+ENDMAP
+
+NAME:  nicolae_square_shop
+TAGS:  allow_dup extra shop transparent
+KFEAT: O = any shop
+SUBST: c : cvbn
+MAP
+   ..cc
+ cc..cc
+ cc....
+...O...
+....cc
+cc..cc
+cc..
+ENDMAP
+
+NAME:    nicolae_inconvenience_store
+TAGS:    extra shop transparent no_pool_fixup
+DEPTH:   D:4-, Depths
+WEIGHT:  5
+KFEAT:   a = iron_grate
+KFEAT:   O = any shop
+SHUFFLE: xm/cn/va/ll/ww
+MAP
+.............
+.xxxxxmxxxxx.
+.x...........
+.x.xxxmxxxxx.
+.x.x.......x.
+.x.x.xmxxx.x.
+.x.x.x...x.x.
+.m.m.mOm.m.m.
+.x.x.xmx.x.x.
+.x.x.....x.x.
+.x.xxxmxxx.x.
+.x.........x.
+.xxxxxmxxxxx.
+.............
+ENDMAP
+
+NAME:    nicolae_stop_n_shop_1
+TAGS:    allow_dup extra shop transparent
+DEPTH:   D:4-, !D:$, Depths:2-, !Depths:$, Shoals:2-, !Shoals:$, Snake:2-, \
+         !Snake:$, Elf:2-, !Elf:$
+KFEAT:   O = any shop
+SHUFFLE: {}/[]/()
+SUBST:   D : G., E : G., F : G.
+MAP
+D...E
+.....
+..}...F
+.......
+E...O...E
+  .......
+  F...{..
+    .....
+    E...D
+ENDMAP
+
+NAME:    nicolae_stop_n_shop_2
+TAGS:    allow_dup extra shop transparent
+DEPTH:   D:4-, !D:$, Depths:2-, !Depths:$, Shoals:2-, !Shoals:$, Snake:2-, \
+         !Snake:$, Elf:2-, !Elf:$
+KFEAT:   O = any shop
+SHUFFLE: {}/[]/()
+SUBST:   D : G_, E : G_, F : G_
+CLEAR:   _
+MAP
+  E F E
+ .......
+D.}.O.{.D
+ .......
+  E F E
+ENDMAP
+
+NAME:  nicolae_take_the_stairs
+TAGS:  allow_dup extra shop
+DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
+       Elf, !Elf:$
+KFEAT: O = any shop
+SUBST: } = }])
+MAP
+.ccccccc.
+.n.....n.
+@n.O.}.n@
+.n.....n.
+.ccccccc.
 ENDMAP
 
 ###############################################################################
@@ -782,10 +900,151 @@ MAP
 S
 ENDMAP
 
+# top tier equipment for a single gold... if you're on zot:5
+NAME:   hellmonk_bargain_basement
+DEPTH:  Zot:5
+WEIGHT: 3
+KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
+ any ring randart w:15 | any amulet randart w:15 | quick blade randart | \
+ pearl dragon scales randart | executioner's axe randart | \
+ triple sword randart | triple crossbow randart | longbow randart | \
+ fustibalus randart | bardiche randart | eveningstar randart | \
+ crystal plate armour randart | any armour good_item randart w:50
+MAP
+  t
+ ...
+T.S.T
+ ...
+  T
+ENDMAP
+
+# The last holdout in a failed strip mall. A chance to pick up items at a
+# potentially very steep discount... if there's anything good left, that is.
+# The greed can range from 0 to 9 with an average of 4.5.
+# The item count can range from 1 to 7 with an average of 4.
+# There is a 0.2% chance of rolling greed = 0, which makes everything in the
+# store cost one gold. Hopefully it's not just +0 robes and scrolls of noise.
+NAME:   nicolae_shop_clearance
+TAGS:   transparent
+DEPTH:  D:4-, Depths, Orc, Elf, Snake, Shoals, Vaults, Zot
+{{
+local greed = crawl.roll_dice(9, 2) - 9
+local count = crawl.roll_dice(6, 2) - 5
+kfeat("S = general shop type:CLEARANCE_SALE! suffix:EVERYTHING_MUST_GO! \
+           greed:" .. greed .. " count:" .. count)
+}}
+KFEAT:  D = abandoned_shop
+NSUBST: D = S / D
+MAP
+xxxxxxx
+xD.D.Dx
+.......
+...V...
+.......
+xD.D.Dx
+xxxxxxx
+ENDMAP
+
+NAME:   nicolae_shop_firing_range
+TAGS:   transparent no_monster_gen no_item_gen no_tide
+DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KMONS:  DE = training dummy
+KITEM:  D = arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
+            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20, \
+            arrow q:1 / bolt q:1 / sling bullet q:1 / nothing w:20
+KITEM:  H = arrow q:1 / bolt q:1 / sling bullet q:1 / javelin q:1 / dart q:1
+KITEM:  E = throwing net q:1
+# Launchers are weighted so they have the same total weight as the projectiles.
+# The slightly-higher weights go to the better weapons, because I'm nice.
+KFEAT:  S = weapon shop type:Firing suffix:Range ; dart | throwing net | \
+        sling bullet | boomerang | javelin | large rock | arrow | bolt | \
+        hunting sling w:11 | fustibalus w:12 | shortbow w:11 | longbow w:12 | \
+        hand crossbow w:11 | arbalest w:11 | triple crossbow w:12 | \
+        manual of throwing w:1 | manual of slings w:1 | manual of bows w:1 | \
+        manual of crossbows w:1
+NSUBST: D = E / D
+SUBST:  ' = H .:25
+MAP
+.....
+.xxxxxxxx
+.x'''''Dx
+.S'''''Dx
+.x'''''Dx
+.xxxxxxxx
+.....
+ENDMAP
+
+# Gadget shops are back! Well, one gadget shop is back.
+NAME:    nicolae_shop_gadgets
+TAGS:    transparent
+DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT:   S = general shop type:Gadget suffix:Gallery count:8 ; \
+         any wand | any misc
+SHUFFLE: cvmb
+MAP
+cc.vv
+c...v
+..S..
+m...b
+mm.bb
+ENDMAP
+
+# Sells wands with 66% more charges than the usual item-generation maximum,
+# with a matching 66% markup (rounded up to 70% because of how greed works.)
+NAME:    nicolae_shop_overcharged_wands
+TAGS:    transparent
+DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT:   S = general shop type:Overcharged suffix:Wands greed:17 count:6 ; \
+         wand of digging charges:15 | wand of iceblast charges:25 | \
+         wand of acid charges:25 | wand of charming charges:25 | \
+         wand of paralysis charges:25 | wand of polymorph charges:25 | \
+         wand of mindburst charges:40 | wand of flame charges:55
+SHUFFLE: bv/bc/cv/bm/vm/cm
+MAP
+.......
+..b.v..
+.b...v.
+...S...
+.v...b.
+..v.b..
+.......
+ENDMAP
+
+NAME:  nicolae_shop_self_help
+TAGS:  transparent no_pool_fixup
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT: S = book shop type:Self-Improvement suffix:Boutique count:4 ; \
+           any manual
+SUBST: T : TUw
+MAP
+ ww.ww
+www.www
+wwT.Tww
+...S...
+wwT.Tww
+www.www
+ ww.ww
+ENDMAP
+
+NAME:   nicolae_shop_sticking_my_neck_out
+TAGS:   transparent
+DEPTH:  D:4-, Depths, Elf, Snake
+KFEAT:  S = general shop type:Neck suffix:Hole count:7 use_all ; \
+        cloak | cloak | scarf | scarf | any amulet | any amulet | any amulet
+MAP
+cc     cc
+..c   c..
+...ccc...
+....S....
+...ccc...
+..c   c..
+cc     cc
+ENDMAP
+
 ###############################################################################
-# <<3>> Multi.
-#       Not tagged shop, and has no threats. Contain possibly multiple shops
-#       in a somewhat generic theme- kept here for a certain ease of reference.
+# <<3>> Multi
+#       Not tagged shop, and has no threats. Contain possibly multiple shops in
+#       a somewhat generic theme. Kept here for a certain ease of reference.
 #
 
 # 3 shops
@@ -893,4 +1152,44 @@ xxd....B....dxx
   xxd..D..dxx
    xxd...dxx
     xxx@xxx
+ENDMAP
+
+NAME:  nicolae_specific_store
+TAGS:  extra transparent no_pool_fixup
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake
+KFEAT: D = general shop type:General suffix:Store
+KFEAT: E = general shop type:Specific suffix:Store count:1
+SUBST: G : GTUtwx, x : x:120 c:60 bv.
+MAP
+xx...xx
+xG...Gx
+xD...Ex
+xG...Gx
+xx...xx
+ENDMAP
+
+# Chance of X shops: 1: 15%, 2: 30%, 3: 30%, 4: 15%, 5: 5%, 6 : 5%
+NAME:    nicolae_wooded_promenade
+TAGS:    extra luniq_floating_shops transparent no_pool_fixup
+DEPTH:   D:4-, Depths, Elf, Snake
+KFEAT:   s = any shop
+# s = shop, y and z = two different kinds of features
+# Unshuffled corresponds to ysyzyz
+SHUFFLE: DEFHJK/ysyyzy/syyyyz/syzzys/syyzzs/yszzsy/ysyzsz/sysyzy/syszyz/ \
+         ysyszs/ysyszs/sssyzy/sssyzy/ssyzzs/ssysyz/syssys/ssyyss/sssysy/ \
+         ssssys/ssssss
+SUBST:   DFJ = y, HK = z, E = s, y : GGTTUt, z : GGTTUt, - : ww.
+MAP
+    xxxxxxxxxxx
+    xtttttttttx
+    xt.......tx
+    xt.D.E.F.tx
+    @.........@
+wwwwwwwww-wwwwwwwww
+wwwwwwwww-wwwwwwwww
+    @.........@
+    xt.H.J.K.tx
+    xt.......tx
+    xtttttttttx
+    xxxxxxxxxxx
 ENDMAP

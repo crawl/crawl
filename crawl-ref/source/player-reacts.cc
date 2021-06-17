@@ -673,13 +673,13 @@ static void _decrement_durations()
         disjunction_spell();
 
     // Should expire before flight.
-    if (you.duration[DUR_TORNADO])
+    if (you.duration[DUR_VORTEX])
     {
-        tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        if (_decrement_a_duration(DUR_TORNADO, delay,
+        polar_vortex_damage(&you, min(delay, you.duration[DUR_VORTEX]));
+        if (_decrement_a_duration(DUR_VORTEX, delay,
                                   "The winds around you start to calm down."))
         {
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+            you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
         }
     }
 
@@ -785,7 +785,7 @@ static void _decrement_durations()
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
-        && in_good_standing(GOD_HEPLIAKLQANA)
+        && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
     {
         _try_to_respawn_ancestor();
@@ -990,8 +990,6 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == transformation::wisp && !you.stasis())
-            uncontrolled_blink();
     }
 
     abyss_maybe_spawn_xp_exit();
@@ -1017,7 +1015,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 

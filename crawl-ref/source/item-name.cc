@@ -2768,6 +2768,18 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     if (you.species == SP_UNKNOWN)
         return false;
 
+    // An ash item that is already being worn and is cursed, counts as useful
+    // even if it would otherwise be useless.
+    if (will_have_passive(passive_t::bondage_skill_boost)
+        && item_is_equipped(item)
+        && bool(item.flags & ISFLAG_CURSED))
+    {
+        if (!temp || !item_is_melded(item))
+            return false;
+        // if it's melded, just fall through. This might not be accurate in
+        // all cases.
+    }
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:

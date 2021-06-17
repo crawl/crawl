@@ -105,6 +105,11 @@ struct bolt
 
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
+    bool   redraw_per_cell = true; // whether to force a redraw after every cell
+                                   // drawn during an animation. Not for
+                                   // explosions.
+                                   // TODO: why can't this behavior follow
+                                   // from draw_delay == 0?
 
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam

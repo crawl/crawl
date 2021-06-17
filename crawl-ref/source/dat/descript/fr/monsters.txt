@@ -2247,7 +2247,7 @@ Cette plante à perdu la guerre contre les influences drainantes, et même si sa
 forme physique reste intacte, son corps sans vie reste ici, indécomposé, tant
 que les petites créatures qui voudraient s'en nourrir naturellement préféreront
 s'en écarter. Et on dirait que cette plante est morte il y a des {{ if
-you.branch() == "Crypt" or you.branch() == "Tomb" then return "siècles"; else
+you.in_branch("Crypt") or you.in_branch("Tomb") then return "siècles"; else
 return "années"; end }} .
 %%%%
 zin angel

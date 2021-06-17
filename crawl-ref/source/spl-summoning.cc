@@ -166,7 +166,7 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
     fake_armour.base_type = OBJ_ARMOUR;
     fake_armour.sub_type = armour->sub_type;
     fake_armour.quantity = 1;
-    fake_armour.rnd = armour->rnd;
+    fake_armour.rnd = armour->rnd ? armour->rnd : 1; // unrands have no rnd; hackily add one
     fake_armour.flags |= ISFLAG_SUMMONED | ISFLAG_KNOW_PLUSES;
     item_set_appearance(fake_armour);
 
@@ -628,6 +628,7 @@ bool tukima_affects(const actor &target)
            && !is_range_weapon(*wpn)
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
+           // XX use god_protects here. But, need to know the caster too...
            && !mons_is_hepliaklqana_ancestor(target.type);
 }
 

@@ -2166,8 +2166,8 @@ withered plant
 
 그 형태는 유지하고 있지만, 생명력이 모조리 사라진 식물이다. 다른 짐승들에게
 먹히지 않고 죽은 몸이 그대로 유지되었는데, 자연적으로 부패해 짐승들이 그 주변을
-피하기 때문이다. 또한, 이 식물은 죽은 지 {{ if you.branch() == "Crypt" or
-you.branch() == "Tomb" then return "수 세기"; else return "몇 년"; end }}
+피하기 때문이다. 또한, 이 식물은 죽은 지 {{ if you.branch("Crypt") or
+you.branch("Tomb") then return "수 세기"; else return "몇 년"; end }}
 은(는) 되는 것 같다.
 %%%%
 zin angel

@@ -256,9 +256,9 @@ have found involve things where C++ or stdlib behavior is undefined and
 different compilers or build options (or OSs, perhaps) lead to different
 choices. The biggest example is the ordering of random calls in arithmetic
 expressions, discussed in section 4.1, so this is definitely the first thing
-to look for. The ##crawl-dev population in aggregate has pretty detailed
-knowledge of the C++ specs, so if you aren't sure whether somethig in particular
-is defined, this is a good place to ask.
+to look for. The #crawl-dev population on Libera IRC in aggregate has pretty
+detailed knowledge of the C++ specs, so if you aren't sure whether somethig in
+particular is defined, this is a good place to ask.
 
 Before opening the VM, however, if what you are seeing is a difference between
 your device and Travis CI results - keep in mind that Travis runs its tests

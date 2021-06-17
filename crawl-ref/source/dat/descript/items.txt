@@ -314,10 +314,8 @@ A double-edged fighting knife with a sharp point.
 %%%%
 dart
 
-A thin piece of metal, typically coated in some harmful substance. When
-thrown with skill it can deliver its toxins into the bloodstream of a
-living or demonic being. In addition to throwing skill, stealth skill improves
-the chance for a dart to affect its target.
+A thin piece of metal, typically coated in some harmful substance. When thrown
+it can deliver its toxins into the bloodstream of a living or demonic being.
 %%%%
 decaying skeleton
 
@@ -632,7 +630,8 @@ it. It also reduces magical contamination.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures poison and disease.
+A potion which restores a small amount of health, and cures poison and
+confusion.
 %%%%
 potion of degeneration
 
@@ -678,7 +677,8 @@ A potion which greatly increases the power of the drinker's melee attacks.
 potion of mutation
 
 A potion which mutates the drinker, removing several mutations then
-granting a few mutations, at least one beneficial.
+granting a few random mutations, which are likely (but not guaranteed) to be
+beneficial.
 %%%%
 potion of resistance
 

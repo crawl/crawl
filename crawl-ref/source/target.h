@@ -381,12 +381,15 @@ protected:
     aff_type positive;
 };
 
-// A static targeter for absolute zero that finds the closest monster using the
-// absolute zero code.
-class targeter_absolute_zero : public targeter_multiposition
+class targeter_chain_lightning : public targeter
 {
 public:
-    targeter_absolute_zero(int range);
+    targeter_chain_lightning();
+    bool valid_aim(coord_def) override { return true; }
+    aff_type is_affected(coord_def loc) override;
+private:
+    set<coord_def> potential_victims;
+    set<coord_def> closest_victims;
 };
 
 class targeter_multifireball : public targeter_multiposition

@@ -3,11 +3,6 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
-Absolute Zero spell
-
-Entirely removes the heat from the enemy nearest the caster, instantly
-freezing it into a block of solid ice.
-%%%%
 Acid Splash spell
 
 Spits a glob of acid at a nearby creature, covering it in corrosive slime
@@ -300,9 +295,10 @@ effects. The arc can touch upon the caster without harming them.
 %%%%
 Chain Lightning spell
 
-Releases a massive electrical discharge that arcs from target to target until
-it grounds out. It may ground out harmlessly if there are no targets
-sufficiently close to the caster. Its damage partially bypasses armour.
+Releases a massive electrical discharge that arcs to the creature nearest the
+caster and then outward from it. The further it travels, the less damage it
+does. Secondary arcs have limited range and do little damage to the caster.
+The spell's damage partially bypasses armour and resistance to electricity.
 %%%%
 Charm spell
 
@@ -756,17 +752,6 @@ Traps an enemy in a ring of blessed flame. These flames are especially
 dangerous to undead and demonic creatures, and have no effect on holy
 creatures.
 %%%%
-Hydra Form spell
-
-Transforms the caster into an amphibious, many-headed hydra for a brief
-duration. Its multiple heads strike in all directions. Foes slain by the
-gnashing teeth are instantly devoured, reinvigorating the caster in their
-reptilian rampage. The caster gains innate armour and increased health, and
-becomes resistant to poison.
-
-While transformed, any equipped weapons and armour are melded. The form's
-number of heads is fixed upon casting the spell, and increases with power.
-%%%%
 Iceblast spell
 
 Fires a large mass of ice, which explodes on impact. It affects even
@@ -821,8 +806,8 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns a targeted creature invisible. Turning invisible causes magical
-contamination and may eventually cause glowing, nullifying the invisibility.
+Turns the caster invisible. Turning invisible causes magical contamination
+and may eventually cause glowing, nullifying the invisibility.
 %%%%
 Invisibility Other spell
 
@@ -946,7 +931,9 @@ Causes confusion in all who gaze upon the caster.
 %%%%
 Mephitic Cloud spell
 
-Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
+Conjures up a short-lived cloud of noxious fumes, which may cause confusion in
+any creature not resistant to poison. Tougher, more experienced creatures are
+less likely to be affected.
 %%%%
 Mesmerise spell
 
@@ -1109,6 +1096,16 @@ Poisonous Vapours spell
 Turns the air around a targeted creature poisonous. Exceedingly little poison
 is created, generally just enough to poison the target before dispersing.
 %%%%
+Polar Vortex spell
+
+Turns the air around the caster into a freezing vortex, doing tremendous damage
+to everyone caught in it that can only partially be mitigated by resistance to
+cold. Those affected will also be swept up into the air and tossed around.
+Only the eye of the storm is a safe place, and it follows the caster. The
+vortex is unable to follow the caster through long-distance translocations.
+The spell's effectiveness is greatly diminished in closed areas. After the
+vortex fades, it cannot be called forth again for a short time.
+%%%%
 Polymorph spell
 
 Randomly alters the form of a creature. It is especially effective against
@@ -1143,8 +1140,7 @@ Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them
 easier to dodge. Single-target attacks are much easier to repel than
-penetrating attacks. Each time a missile is repelled the spell has a chance of
-expiring, with a lower chance of expiry at high power.
+penetrating attacks.
 %%%%
 Resonance Strike spell
 
@@ -1354,8 +1350,8 @@ for a short time.
 Still Winds spell
 
 Brings the air into unnatural stillness across a huge area, preventing anything
-short of a tornado from breaking the calm. The effect takes concentration to
-maintain, and only lasts a short time; if the caster is killed, clouds will
+short of a polar vortex from breaking the calm. The effect takes concentration
+to maintain, and only lasts a short time; if the caster is killed, clouds will
 begin to form again as normal.
 %%%%
 Sting spell
@@ -1369,10 +1365,27 @@ Stone Arrow spell
 
 Fires a sharp spine of rock.
 %%%%
+Storm Form spell
+
+Lets the caster walk through the air as a raging, lightning-filled tempest. The
+caster's melee attacks are strengthened, electrified, and strike all adjacent
+foes. The caster also flies, is more evasive, and resists electricity. They can
+launch themselves as a lightning bolt, blasting through everything in their way.
+The damage and evasion granted by storm form are highly dependent on the power
+with which it was cast.
+
+While transformed, any equipped weapons and armour are melded.
+%%%%
 Strip Willpower spell
 
 Greatly reduces the target's willpower, making them more vulnerable to a
 variety of magical effects.
+%%%%
+Stunning Burst spell
+
+Fires a weak electrical burst which, on impact, causes very brief paralysis.
+Willpower is of no use against this effect, but resistance to electricity can
+sometimes prevent it.
 %%%%
 Sublimation of Blood spell
 
@@ -1571,16 +1584,6 @@ Entombs the caster within walls of rock. These walls will push away objects in
 their way, but their growth is obstructed by the presence of any creature. They
 are not permanent, and will expire after a period of time.
 %%%%
-Tornado spell
-
-Turns the air around the caster into a mighty vortex, doing tremendous damage
-to everyone caught in it. Those affected will also be swept up into the air and
-tossed around. Only the eye of the storm is a safe place, and it follows the
-caster. The vortex is unable to follow the caster through long-distance
-translocations. The spell's effectiveness is greatly diminished in closed
-areas. After the tornado fades, it cannot be called forth again for a short
-time.
-%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>
@@ -1621,14 +1624,6 @@ Volley of Thorns spell
 
 Launches a small hail of sharp thorns.
 %%%%
-Vortex spell
-
-Turns the air near the caster into a mighty, short-lived vortex, doing
-tremendous damage to everyone caught in it. Those affected will also be swept
-up into the air and tossed around. Only the eye of the storm is a safe place,
-and it follows the caster. After the vortex fades, it cannot be called forth
-again for a short time.
-%%%%
 Wall of Brambles spell
 
 Causes brambles to rapidly grow nearby. They have almost no structural
@@ -1651,10 +1646,10 @@ requiring line of sight but not not line of fire.
 %%%%
 Wereblood spell
 
-Transforms some of the caster's blood into that of a were-beast. Each
-non-summoned enemy the caster slays in combat quickens the pulse and
-temporarily enhances their melee and ranged effectiveness. The thrill of
-slaying gives the caster an uncontrollable urge to howl.
+Transforms some of the caster's blood into that of a were-beast, causing them
+to occasionally howl uncontrollably. While active, each non-summoned enemy the
+caster slays in combat grants minor healing and temporarily enhances their
+melee and ranged effectiveness.
 
 The bonus only lasts for the duration of a single cast; retransforming the
 caster's blood calms the were-spirit and resets the bonus.

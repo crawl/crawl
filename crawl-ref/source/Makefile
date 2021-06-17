@@ -1277,7 +1277,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
 	    froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
 	    froggy_natasha_and_boris froggy_jiyva_felid \
 	    froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
-	    e_m_fields sastrei_chei anon_octopus_wizard
+	    e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \

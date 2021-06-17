@@ -440,10 +440,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     else
     {
-        int x = Options.tile_window_width;
         int y = Options.tile_window_height;
+        int x = Options.tile_window_width;
         x = (x > 0) ? x : _desktop_width + x;
         y = (y > 0) ? y : _desktop_height + y;
+        if (Options.tile_window_ratio > 0)
+            x = min(x, y * Options.tile_window_ratio / 1000);
 #ifdef TOUCH_UI
         // allow *much* smaller windows than default, primarily for testing
         // touch_ui features in an x86 build

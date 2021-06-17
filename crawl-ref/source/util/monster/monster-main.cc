@@ -14,6 +14,7 @@
 #include "message.h"
 #include "mon-project.h"
 #include "spl-damage.h"
+#include "spl-zap.h"
 #include "syscalls.h"
 #include "tag-version.h"
 #include "version.h"
@@ -275,9 +276,11 @@ static string mi_calc_glaciate_damage(monster* mons)
 
 static string mi_calc_chain_lightning_damage(monster* mons)
 {
-    const int pow = mons_power_for_hd(SPELL_CHAIN_LIGHTNING,
-                                      mons->get_hit_dice());
-    return desc_chain_lightning_dam(pow);
+    const spell_type spell = SPELL_CHAIN_LIGHTNING;
+    const zap_type zap = spell_to_zap(spell);
+    const int pow = mons_power_for_hd(spell, mons->spell_hd(spell));
+    const dice_def dice = zap_damage(zap, pow, true, false);
+    return dice_def_string(dice);
 }
 
 static string mi_calc_vampiric_drain_damage(monster* mons)
@@ -346,6 +349,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
             return dice_def_string(spell_beam.damage) + "+3";
+
         default:
             break;
     }
@@ -1212,7 +1216,7 @@ int main(int argc, char* argv[])
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
         res2(YELLOW, holy, mon.res_holy_energy());
         res2(LIGHTMAGENTA, torm, mon.res_torment());
-        res2(LIGHTBLUE, tornado, mon.res_tornado());
+        res2(LIGHTBLUE, vortex, mon.res_polar_vortex());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());
         res2(LIGHTCYAN, silver, mon.how_chaotic() ? -1 : 0);
 

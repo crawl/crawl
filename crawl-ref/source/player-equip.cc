@@ -939,7 +939,8 @@ static void _remove_amulet_of_faith(item_def &item)
     }
     else if (!you_worship(GOD_NO_GOD)
              && !you_worship(GOD_XOM)
-             && !you_worship(GOD_GOZAG))
+             && !you_worship(GOD_GOZAG)
+             && !you_worship(GOD_ASHENZARI))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1075,6 +1076,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message(" says: An ascetic of your devotion"
                                " has no use for such trinkets.");
         }
+        else if (you_worship(GOD_ASHENZARI))
+            simple_god_message(" cares nothing for such trivial demonstrations of your faith.");
         else if (you_worship(GOD_GOZAG))
             simple_god_message(" cares for nothing but gold!");
         else

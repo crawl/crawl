@@ -124,15 +124,11 @@ utmost caution, try to choose the location where you fight monsters, and keep
 an eye on your health and magic.
 
 For specific hints dealing with a particular character, you can press '#'
-in-game to create a "character dump" in your morgue directory that you can then
-post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/), so other
-players can comment on your equipment, skills or spell selection. Please trim
-your dump by removing stuff unnecessary for this task (such as the extensive
-Vanquished list).
+in-game to create a "character dump" in your morgue directory that details your
+equipment, items, skilling, and available spells. You can share this with other
+players to get feedback and advice through any of the community discussion
+resources listed at http://crawl.develz.org/.
 
-If you're playing online on one of the public servers, you can join the ##crawl
-channel of the freenode IRC, where you will find helpful souls who will even
-watch you and give hints.
 %%%%
 Q:downstairs
 
@@ -268,12 +264,8 @@ A: If you play online you can watch games in progress, other players can watch
 you while you play, and you can kill other players' ghosts. You can even send
 and receive messages.
 
-Check https://crawl.develz.org/wordpress/howto for an explanation about how to
-play online.
-
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
-in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the
-other forums linked on the website.
+See http://crawl.develz.org/ to find an online server. The website also lists
+community discussion resources for Discord, Reddit, and IRC.
 %%%%
 ##############################################
 # Questions about the development process.

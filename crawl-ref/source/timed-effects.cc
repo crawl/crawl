@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "corpse.h"
 #include "database.h"
+#include "delay.h"
 #include "dgn-shoals.h"
 #include "dgn-event.h"
 #include "env.h"
@@ -1429,6 +1430,7 @@ void incr_zot_clock()
     }
 
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
+    interrupt_activity(activity_interrupt::force);
 }
 
 void set_turns_until_zot(int turns_left)

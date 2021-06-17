@@ -27,6 +27,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_STICKY_FLAME,
     ENCH_CHARM,
     ENCH_PARALYSIS,
+    ENCH_SICK,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
     ENCH_REGENERATION,

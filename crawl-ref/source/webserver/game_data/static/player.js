@@ -14,7 +14,8 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
     };
 
     var defense_boosters = {
-        "ac": "ice-armoured|protected from physical damage|sanguine armoured|under a protective aura",
+        "ac": "ice-armoured|protected from physical damage|sanguine armoured"
+              + "|under a protective aura|curled up",
         "ev": "agile|acrobatic|in a heavenly storm",
         "sh": "divinely shielded",
     }

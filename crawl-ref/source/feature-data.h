@@ -91,6 +91,20 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_MANGROVE, "mangrove", "mangrove",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_MANGROVE),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
+    DNGN_DEMONIC_TREE, "demonic tree", "demonic_tree",
+    DCHAR_TREE, DCHAR_WALL_MAGIC,
+    COLOUR_IS(ETC_RANDOM),
+    FFT_OPAQUE | FFT_SOLID, MF_WALL,
+},
+
+{
     DNGN_PETRIFIED_TREE, "petrified tree", "petrified_tree",
     DCHAR_TREE, DCHAR_WALL_MAGIC,
     COLOUR_IS(DARKGREY),

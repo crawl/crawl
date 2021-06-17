@@ -1389,7 +1389,7 @@ static int l_item_equipped_at(lua_State *ls)
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    const auto a = quiver::get_primary_action();
+    const auto a = quiver::get_secondary_action();
     if (!a->is_valid() || !a->is_enabled())
         return 0;
 
@@ -1398,10 +1398,7 @@ static int l_item_fired_item(lua_State *ls)
     if (q < 0 || q >= ENDOFPACK)
         return 0;
 
-    if (q != -1)
-        clua_push_item(ls, &you.inv[q]);
-    else
-        lua_pushnil(ls);
+    clua_push_item(ls, &you.inv[q]);
 
     return 1;
 }

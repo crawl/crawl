@@ -950,8 +950,14 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_HEPLIAKLQANA:
+        if (have_passive(passive_t::frail))
+            desc.textcolour(god_colour(which_god));
+        else
+            desc.textcolour(DARKGREY);
+
         have_any = true;
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
+        desc.cprintf("Your ancestor manifests to aid you.\n");
         break;
 
 #if TAG_MAJOR_VERSION == 34

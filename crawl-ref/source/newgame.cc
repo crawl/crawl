@@ -1879,7 +1879,10 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
                 return true;
             case M_DEFAULT_CHOICE:
                 if (defweapon != WPN_UNKNOWN)
+                {
                     ng_choice.weapon = defweapon;
+                    break;
+                }
                 // No default weapon defined.
                 // This case should never happen in those cases but just in case
                 return true;

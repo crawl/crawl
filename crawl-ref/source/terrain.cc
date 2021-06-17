@@ -54,7 +54,7 @@
 #include "viewchar.h"
 #include "view.h"
 
-static bool _revert_terrain_to_floor(coord_def pos);
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat);
 
 actor* actor_at(const coord_def& c)
 {
@@ -505,7 +505,8 @@ bool feat_is_water(dungeon_feature_type feat)
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
            || feat == DNGN_OPEN_SEA
-           || feat == DNGN_TOXIC_BOG;
+           || feat == DNGN_TOXIC_BOG
+           || feat == DNGN_MANGROVE;
 }
 
 /** Does this feature have enough water to keep water-only monsters alive in it?
@@ -606,14 +607,16 @@ bool feat_is_player_altar(dungeon_feature_type grid)
  */
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE || feat == DNGN_PETRIFIED_TREE;
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE
+        || feat == DNGN_PETRIFIED_TREE || feat == DNGN_DEMONIC_TREE;
 }
 
 /** Is this feature flammable?
  */
 bool feat_is_flammable(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE;
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE
+        || feat == DNGN_DEMONIC_TREE;
 }
 
 
@@ -1883,7 +1886,8 @@ void destroy_wall(const coord_def& p)
     if (is_bloodcovered(p))
         env.pgrid(p) &= ~(FPROP_BLOODY);
 
-    _revert_terrain_to_floor(p);
+    _revert_terrain_to(p,
+            env.grid(p) == DNGN_MANGROVE ? DNGN_SHALLOW_WATER : DNGN_FLOOR);
     env.level_map_mask(p) |= MMT_TURNED_TO_FLOOR;
 }
 
@@ -2063,17 +2067,9 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     dungeon_terrain_changed(pos, newfeat, false, true, true);
 }
 
-/// What terrain type do destroyed feats become, in the current branch?
-static dungeon_feature_type _destroyed_feat_type()
+static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 {
-    return player_in_branch(BRANCH_SWAMP) ?
-        DNGN_SHALLOW_WATER :
-        DNGN_FLOOR;
-}
-
-static bool _revert_terrain_to_floor(coord_def pos)
-{
-    dungeon_feature_type newfeat = _destroyed_feat_type();
+    dungeon_feature_type newfeat = feat;
     for (map_marker *marker : env.markers.get_markers_at(pos))
     {
         if (marker->get_type() == MAT_TERRAIN_CHANGE)
@@ -2086,7 +2082,7 @@ static bool _revert_terrain_to_floor(coord_def pos)
             // Same for destroyed trees
             if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
                 || tmarker->change_type == TERRAIN_CHANGE_FORESTED)
-                && newfeat == _destroyed_feat_type())
+                && newfeat == feat)
             {
                 env.markers.remove(tmarker);
             }

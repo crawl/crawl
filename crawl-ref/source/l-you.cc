@@ -418,7 +418,7 @@ LUARET1(you_silenced, boolean, silenced(you.pos()))
  * @treturn boolean
  * @function sick
  */
-LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
 /*** Are you contaminated?
  * @treturn number
  * @function contaminated

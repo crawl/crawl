@@ -1855,6 +1855,13 @@ static void _get_book(item_def& it)
         return;
     }
 
+    if (you.skills[sk] >= MAX_SKILL_LEVEL)
+    {
+        mprf("You pick up %s, but it has nothing more to teach you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
     if (you.skill_manual_points[sk])
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     else
@@ -1865,7 +1872,6 @@ static void _get_book(item_def& it)
 
 // Adds all books in the player's inventory to library.
 // Declared here for use by tags to load old saves.
-// Outside of loading old saves, only used at character creation.
 void add_held_books_to_library()
 {
     for (item_def& it : you.inv)

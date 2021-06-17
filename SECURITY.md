@@ -24,7 +24,7 @@ up-to-date webtiles server is covered (e.g. in the python code).
 ## Reporting a Vulnerability
 
 Open an issue on github in this repository, or contact the devteam in
-`##crawl-dev` on freenode. If you would prefer to report the issue in private,
+`#crawl-dev` on Libera IRC. If you would prefer to report the issue in private,
 we recommend either contacting one of the currently active devs directly (e.g.
 via an IRC private message), or sending an email to [security@dcss.io] with a
 subject line including the phrase `dcss security report`. Currently this email

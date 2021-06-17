@@ -82,7 +82,6 @@ end)
 SUBST:   abc = .
 SUBST:   ABC = x
 SUBST:   x = ccbbv
-KPROP:   ._-123 = no_tele_into
 MAP
  xnxnxnx
 xn-----nx

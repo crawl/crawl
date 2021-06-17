@@ -1286,8 +1286,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DAZZLING_FLASH:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
-    case SPELL_ABSOLUTE_ZERO:
-        return make_unique<targeter_absolute_zero>(range);
+    case SPELL_CHAIN_LIGHTNING:
+        return make_unique<targeter_chain_lightning>();
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
 
@@ -1297,7 +1297,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_STATUE_FORM:
     case SPELL_ICE_FORM:
     case SPELL_DRAGON_FORM:
-    case SPELL_HYDRA_FORM:
+    case SPELL_STORM_FORM:
     case SPELL_NECROMUTATION:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_WEREBLOOD:
@@ -1310,8 +1310,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS);
-    case SPELL_TORNADO:
-        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, TORNADO_RADIUS);
+    case SPELL_POLAR_VORTEX:
+        return make_unique<targeter_radius>(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
     case SPELL_SHATTER:
         return make_unique<targeter_shatter>(&you); // special version that affects walls
     case SPELL_IGNITE_POISON: // many cases
@@ -1556,7 +1556,7 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
 
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
-    if (!mi.mresists & MR_RES_POISON || mons_is_unbreathing(mi.type))
+    if (mi.mresists & MR_RES_POISON)
         return vector<string>{"not susceptible"};
 
     int pct_chance = 2;
@@ -1846,9 +1846,6 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
             return spret::abort;
         }
-
-        if (target->isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
-            return spret::abort;
     }
 
     if (evoked_wand)
@@ -2086,7 +2083,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return cast_discharge(powc, you, fail);
 
     case SPELL_CHAIN_LIGHTNING:
-        return cast_chain_spell(SPELL_CHAIN_LIGHTNING, powc, &you, fail);
+        return cast_chain_lightning(powc, you, fail);
 
     case SPELL_DISPERSAL:
         return cast_dispersal(powc, fail);
@@ -2109,8 +2106,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, powc, fail);
 
-    case SPELL_TORNADO:
-        return cast_tornado(powc, fail);
+    case SPELL_POLAR_VORTEX:
+        return cast_polar_vortex(powc, fail);
 
     case SPELL_THUNDERBOLT:
         return cast_thunderbolt(&you, powc, target, fail);
@@ -2246,8 +2243,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ICE_FORM:
         return cast_transform(powc, transformation::ice_beast, fail);
 
-    case SPELL_HYDRA_FORM:
-        return cast_transform(powc, transformation::hydra, fail);
+    case SPELL_STORM_FORM:
+        return cast_transform(powc, transformation::storm, fail);
 
     case SPELL_DRAGON_FORM:
         return cast_transform(powc, transformation::dragon, fail);
@@ -2279,6 +2276,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DEATHS_DOOR:
         return cast_deaths_door(powc, fail);
+
+    case SPELL_INVISIBILITY:
+        return cast_invisibility(powc, fail);
 
     // Escape spells.
     case SPELL_BLINK:
@@ -2317,14 +2317,14 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_POISONOUS_VAPOURS:
         return cast_poisonous_vapours(powc, spd, fail);
 
+    case SPELL_BLINKBOLT:
+        return blinkbolt(powc, beam, fail);
+
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
-
-    case SPELL_ABSOLUTE_ZERO:
-        return cast_absolute_zero(powc, fail);
 
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
@@ -2521,7 +2521,7 @@ static string _spell_failure_rate_description(spell_type spell)
 string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
-    int effect_noise = spell_effect_noise(spell, false);
+    int effect_noise = spell_effect_noise(spell);
     zap_type zap = spell_to_zap(spell);
     if (effect_noise == 0 && zap != NUM_ZAPS)
     {
@@ -2531,7 +2531,7 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
     }
 
     // A typical amount of noise.
-    if (spell == SPELL_TORNADO)
+    if (spell == SPELL_POLAR_VORTEX)
         effect_noise = 15;
 
     const int noise = max(casting_noise, effect_noise);
@@ -2634,8 +2634,6 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
-        case SPELL_ABSOLUTE_ZERO:
-            return "∞";
         case SPELL_CONJURE_FLAME:
             return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:

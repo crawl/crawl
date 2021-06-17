@@ -22,6 +22,7 @@
 #include "mon-tentacle.h"
 #include "ouch.h"
 #include "prompt.h"
+#include "religion.h"
 #include "shout.h"
 #include "target.h"
 #include "terrain.h"
@@ -43,8 +44,8 @@ static bool _airtight(coord_def c)
 class WindSystem
 {
     coord_def org;
-    SquareArray<int, TORNADO_RADIUS+1> depth;
-    SquareArray<bool, TORNADO_RADIUS+1> cut, wind;
+    SquareArray<int, POLAR_VORTEX_RADIUS+1> depth;
+    SquareArray<bool, POLAR_VORTEX_RADIUS+1> cut, wind;
     int visit(coord_def c, int d, coord_def parent);
     void pass_wind(coord_def c);
 public:
@@ -71,7 +72,7 @@ int WindSystem::visit(coord_def c, int d, coord_def parent)
 
     for (adjacent_iterator ai(c); ai; ++ai)
     {
-        if ((*ai - org).rdist() > TORNADO_RADIUS || _airtight(*ai))
+        if ((*ai - org).rdist() > POLAR_VORTEX_RADIUS || _airtight(*ai))
             continue;
         if (depth(*ai - org) == -1)
         {
@@ -101,24 +102,26 @@ void WindSystem::pass_wind(coord_def c)
 
 bool WindSystem::has_wind(coord_def c)
 {
-    ASSERT(grid_distance(c, org) <= TORNADO_RADIUS); // might say no instead
+    ASSERT(grid_distance(c, org) <= POLAR_VORTEX_RADIUS); // might say no instead
     return wind(c - org);
 }
 
-static void _set_tornado_durations()
+static void _set_vortex_durations()
 {
     int dur = 60;
-    you.duration[DUR_TORNADO] = dur;
+    you.duration[DUR_VORTEX] = dur;
     if (!get_form()->forbids_flight())
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
 }
 
-spret cast_tornado(int /*powc*/, bool fail)
+spret cast_polar_vortex(int /*powc*/, bool fail)
 {
-    targeter_radius hitfunc(&you, LOS_NO_TRANS, TORNADO_RADIUS);
-    if (stop_attack_prompt(hitfunc, "make a tornado",
+    targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
+    if (stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
-                    return !act->res_tornado();
+                    return !act->res_polar_vortex()
+                        && (!act->is_monster()
+                            || !god_protects(&you, act->as_monster(), true));
                 }))
     {
         return spret::abort;
@@ -126,15 +129,15 @@ spret cast_tornado(int /*powc*/, bool fail)
 
     fail_check();
 
-    mprf("A great vortex of raging winds %s.",
+    mprf("A great freezing vortex %s.",
          (you.airborne() || get_form()->forbids_flight()) ?
          "appears around you" : "appears and lifts you up");
 
     if (you.fishtail)
         merfolk_stop_swimming();
 
-    you.props["tornado_since"].get_int() = you.elapsed_time;
-    _set_tornado_durations();
+    you.props["polar_vortex_since"].get_int() = you.elapsed_time;
+    _set_vortex_durations();
     if (you.has_mutation(MUT_TENGU_FLIGHT))
         you.redraw_evasion = true;
 
@@ -213,16 +216,12 @@ static int _rdam(int rage)
         return rage * 10 - 50;
 }
 
-static int _tornado_age(const actor *caster, bool is_vortex = false)
+static int _vortex_age(const actor *caster)
 {
-    string name;
-    if (is_vortex)
-        name = "vortex_since";
-    else
-        name = "tornado_since";
+    const string name = "polar_vortex_since";
     if (caster->props.exists(name.c_str()))
         return you.elapsed_time - caster->props[name.c_str()].get_int();
-    return 100; // for permanent tornadoes
+    return 100; // for permanent vortices
 }
 
 // time needed to reach the given radius
@@ -230,29 +229,25 @@ static int _age_needed(int r)
 {
     if (r <= 0)
         return 0;
-    if (r > TORNADO_RADIUS)
+    if (r > POLAR_VORTEX_RADIUS)
         return INT_MAX;
     return sqr(r) * 7 / 5;
 }
 
-void tornado_damage(actor *caster, int dur, bool is_vortex)
+void polar_vortex_damage(actor *caster, int dur)
 {
-    ASSERT(!(is_vortex && caster->is_player()));
-
     if (!dur)
         return;
 
     int pow;
-    const int max_radius = is_vortex ? VORTEX_RADIUS : TORNADO_RADIUS;
+    const int max_radius = POLAR_VORTEX_RADIUS;
 
     // Not stored so unwielding that staff will reduce damage.
     if (caster->is_player())
-        pow = calc_spell_power(SPELL_TORNADO, true);
+        pow = calc_spell_power(SPELL_POLAR_VORTEX, true);
     else
-        // Note that this spellpower multiplier for Vortex is based on Air
-        // Elementals, which have low HD.
-        pow = caster->as_monster()->get_hit_dice() * (is_vortex ? 12 : 4);
-    dprf("Doing tornado, dur %d, effective power %d", dur, pow);
+        // XXX TODO: use the normal spellpower calc functions
+        pow = caster->as_monster()->get_hit_dice() * 4;
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
@@ -260,12 +255,12 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
     const coord_def old_player_pos = you.pos();
     coord_def new_player_pos = old_player_pos;
 
-    int age = _tornado_age(caster, is_vortex);
+    int age = _vortex_age(caster);
     ASSERT(age >= 0);
 
     vector<coord_def>     move_avail; // legal destinations
     map<mid_t, coord_def> move_dest;  // chosen destination
-    int rdurs[TORNADO_RADIUS + 1];    // durations at radii
+    int rdurs[POLAR_VORTEX_RADIUS + 1];    // durations at radii
     int cnt_open = 0;
     int cnt_all  = 0;
 
@@ -295,7 +290,6 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
         rdurs[r] = rdur;
         // power at the radius
         int rpow = div_rand_round(pow * cnt_open * rdur, cnt_all * 100);
-        dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
         if (!rpow)
             break;
 
@@ -314,7 +308,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                 env.grid(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
-                    mpr("A tree falls to the hurricane!");
+                    mpr("A tree falls to the furious winds!");
                 if (caster->is_player())
                     did_god_conduct(DID_KILL_PLANT, 1);
             }
@@ -331,7 +325,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
                     // or standing on a submerged air elemental, there are
-                    // no free spots, and a monster tornado rotates you.
+                    // no free spots, and a monster vortex rotates you.
                     // Plants don't get uprooted, so the logic would be
                     // really complex. Let's not go there.
                     continue;
@@ -342,7 +336,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                 leda = victim->liquefied_ground()
                        || victim->is_monster()
                           && _mons_is_unmovable(victim->as_monster());
-                if (!victim->res_tornado())
+                if (!victim->res_polar_vortex())
                 {
                     if (victim->is_monster())
                     {
@@ -363,7 +357,7 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
                     {
                         bool standing = !you.airborne();
                         if (standing)
-                            mpr("The vortex of raging winds lifts you up.");
+                            mpr("The freezing vortex lifts you up.");
                         you.duration[DUR_FLIGHT]
                             = max(you.duration[DUR_FLIGHT], 20);
                         if (standing)
@@ -372,14 +366,19 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
 
                     // alive check here in case the annoy event above dismissed
                     // the victim.
-                    if (dur > 0 && victim->alive())
+                    if (dur > 0 && victim->alive()
+                        && (!caster->is_player()
+                            || !victim->is_monster()
+                            || !god_protects(caster, victim->as_monster(), true)))
                     {
-                        int dmg = victim->apply_ac(
-                                    div_rand_round(roll_dice(9, rpow), 15),
-                                    0, ac_type::proportional);
-                        dprf("damage done: %d", dmg);
-                        victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
-                                     "", "tornado");
+                        const int base_dmg = div_rand_round(roll_dice(12, rpow), 15);
+                        const int post_res_dmg
+                            = resist_adjust_damage(victim, BEAM_ICE, base_dmg);
+                        const int post_ac_dmg
+                            = victim->apply_ac(post_res_dmg, 0, ac_type::proportional);
+                        dprf("damage done: %d", post_ac_dmg);
+                        victim->hurt(caster, post_ac_dmg, BEAM_ICE, KILLED_BY_BEAM,
+                                     "", "vortex");
                     }
                 }
 
@@ -390,10 +389,10 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
             if (cell_is_solid(*dam_i))
                 continue;
 
-            if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_TORNADO)
+            if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_VORTEX)
                 && x_chance_in_y(rpow, 20))
             {
-                place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
+                place_cloud(CLOUD_VORTEX, *dam_i, 2 + random2(2), caster);
             }
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
@@ -464,13 +463,13 @@ void tornado_damage(actor *caster, int dur, bool is_vortex)
     }
 }
 
-void cancel_tornado(bool tloc)
+void cancel_polar_vortex(bool tloc)
 {
-    if (!you.duration[DUR_TORNADO])
+    if (!you.duration[DUR_VORTEX])
         return;
 
-    dprf("Aborting tornado.");
-    if (you.duration[DUR_TORNADO] == you.duration[DUR_FLIGHT])
+    dprf("Aborting vortex.");
+    if (you.duration[DUR_VORTEX] == you.duration[DUR_FLIGHT])
     {
         if (tloc)
         {
@@ -482,13 +481,13 @@ void cancel_tornado(bool tloc)
         }
         else
         {
-            // Tornado ended by using something stairslike, so the destination
+            // Vortex ended by using something stairslike, so the destination
             // is safe
             you.duration[DUR_FLIGHT] = 0;
             if (you.has_mutation(MUT_TENGU_FLIGHT))
                 you.redraw_evasion = true;
         }
     }
-    you.duration[DUR_TORNADO] = 0;
-    you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+    you.duration[DUR_VORTEX] = 0;
+    you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
 }

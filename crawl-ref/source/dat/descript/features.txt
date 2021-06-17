@@ -253,23 +253,15 @@ A large tree. While in most places the dim light of the dungeon is not bright
 enough to sustain large plants, there are spots where, with the grace of
 Fedhas, trees as big as those on the surface can grow underground.
 %%%%
-An awoken tree
+A mangrove
 
-A large tree that has been enchanted to grant it some limited motility,
-allowing it to lash out out at any adjacent enemies of the creature who awoke
-it.
+This tree is specially adapted for growing in swampy conditions. Its vines are
+too thick to see through.
 %%%%
-An awoken autumnal tree
+A demonic tree
 
-<An awoken tree>
-%%%%
-An awoken dead tree
-
-<An awoken tree>
-%%%%
-An awoken petrified tree
-
-<An awoken tree>
+A tree hideously warped by the demonic forces of chaos. Despite its bizarre
+appearance and occasional, unsettling movement, it seems harmless.
 %%%%
 An abandoned shop
 
@@ -858,6 +850,10 @@ A dead tree
 
 The dry remains of a long-dead tree.
 %%%%
+A dead mangrove
+
+The dry remains of a long-dead mangrove.
+%%%%
 # Dis:7
 An iron statue
 
@@ -1061,3 +1057,25 @@ creatures. Each victim is only ever affected by one icy wall at a time.
 The creator of this icy covering and any of their allies can walk safely past
 this wall.
 %%%%
+awoken
+
+This tree has been temporarily enchanted to grant it some limited motility,
+allowing it to lash out out at any adjacent enemies of the creature who awoke
+it.
+%%%%
+tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. The resulting blaze can flare up, spreading to areas nearby and igniting
+other trees.
+%%%%
+mangrove burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Mangroves do not burn as vigorously as normal trees, due to growing on
+swampy terrain, and leave behind shallow water after they smoulder.
+%%%%
+demonic tree burning
+
+It is susceptible to bolts of lightning and to sufficiently intense sources of
+fire. Burning this tree releases a cloud of pure chaos instead of flames.

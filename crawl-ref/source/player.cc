@@ -417,13 +417,6 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, env.grid(loc));
 
-    if (monster_at(loc)
-        && monster_at(loc)->type == MONS_TOADSTOOL
-        && mons->type == MONS_WANDERING_MUSHROOM)
-    {
-        swap = monster_habitable_grid(mons, env.grid(loc));
-    }
-
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
     {
@@ -1002,7 +995,7 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
 // Returns true if the indicated unrandart is equipped
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-bool player_equip_unrand(int unrand_index)
+bool player_equip_unrand(int unrand_index, bool include_melded)
 {
     const unrandart_entry* entry = get_unrand_entry(unrand_index);
     equipment_type   slot  = get_item_slot(entry->base_type,
@@ -1014,7 +1007,7 @@ bool player_equip_unrand(int unrand_index)
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(slot, include_melded))
             && item->base_type == OBJ_WEAPONS
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
@@ -1029,7 +1022,7 @@ bool player_equip_unrand(int unrand_index)
             if (slots == EQ_AMULET)
                 continue;
 
-            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), include_melded))
                 && is_unrandom_artefact(*item)
                 && item->unrand_idx == unrand_index)
             {
@@ -1051,7 +1044,7 @@ bool player_equip_unrand(int unrand_index)
         if (slot <= EQ_NONE || slot >= NUM_EQUIP)
             die("invalid slot: %d", slot);
         // Check a specific slot.
-        if ((item = you.slot_item(slot))
+        if ((item = you.slot_item(slot, include_melded))
             && is_unrandom_artefact(*item)
             && item->unrand_idx == unrand_index)
         {
@@ -1172,8 +1165,12 @@ int player_regen()
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
 
-    if (you.disease || regeneration_is_inhibited() || !player_regenerates_hp())
+    if (you.duration[DUR_SICKNESS]
+        || regeneration_is_inhibited()
+        || !player_regenerates_hp())
+    {
         rr = 0;
+    }
 
     // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])
@@ -1615,8 +1612,11 @@ int player_spec_air()
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
 
-    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF))
+    if (player_equip_unrand(UNRAND_ELEMENTAL_STAFF)
+        || player_equip_unrand(UNRAND_AIR))
+    {
         sa++;
+    }
 
     return sa;
 }
@@ -1733,11 +1733,8 @@ int player_movement_speed()
 
     if (feat_is_water(env.grid(you.pos())))
     {
-        if (you.form == transformation::hydra
-            || you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
-        {
+        if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
             mv -= 4;
-        }
         else if (you.in_water() && !you.can_swim())
             mv += 6; // Wading through water is very slow.
     }
@@ -1950,6 +1947,9 @@ static int _player_evasion_bonuses()
     // transformation penalties/bonuses not covered by size alone:
     if (you.get_mutation_level(MUT_SLOW_REFLEXES))
         evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
+
+    if (you.props.exists(AIRFORM_POWER_KEY))
+        evbonus += you.props[AIRFORM_POWER_KEY].get_int() / 10;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         evbonus += you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int();
@@ -3139,20 +3139,6 @@ static void _display_tohit()
 #endif
 }
 
-static const char* _attack_delay_desc(int attack_delay)
-{
-    return (attack_delay >= 200) ? "extremely slow" :
-           (attack_delay >= 155) ? "very slow" :
-           (attack_delay >= 125) ? "quite slow" :
-           (attack_delay >= 105) ? "below average" :
-           (attack_delay >=  95) ? "average" :
-           (attack_delay >=  75) ? "above average" :
-           (attack_delay >=  55) ? "quite fast" :
-           (attack_delay >=  45) ? "very fast" :
-           (attack_delay >=  35) ? "extremely fast" :
-                                   "blindingly fast";
-}
-
 /**
  * Print a message indicating the player's attack delay with their current
  * weapon & its ammo (if applicable).
@@ -3178,16 +3164,12 @@ static void _display_attack_delay()
                               && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
 
-    // Scale to fit the displayed weapon base delay, i.e.,
-    // normal speed is 100 (as in 100%).
-    int avg = 10 * delay;
-
-    _display_char_status(avg, "Your attack speed is %s%s%s",
-                         _attack_delay_desc(avg),
-                         at_min_delay ?
-                            " (and cannot be improved with additional weapon skill)" : "",
-                         you.adjusted_shield_penalty() ?
-                            " (and is slowed by your insufficient shield skill)" : "");
+    mprf("Your attack delay is about %.1f%s%s.",
+         delay / 10.0f,
+         at_min_delay ?
+            " (and cannot be improved with additional weapon skill)" : "",
+         you.adjusted_shield_penalty() ?
+            " (and is slowed by your insufficient shield skill)" : "");
 }
 
 // forward declaration
@@ -3270,6 +3252,13 @@ bool player::cloud_immune(bool calc_unid, bool items) const
         || actor::cloud_immune(calc_unid, items);
 }
 
+/**
+ * How much XP does it take to reach the given XL from 0?
+ *
+ *  @param lev          The XL to reach.
+ *  @param exp_apt      The XP aptitude to use. If -99, use the current species'.
+ *  @return     The total number of XP points needed to get to the given XL.
+ */
 unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
@@ -3313,6 +3302,11 @@ unsigned int exp_needed(int lev, int exp_apt)
     //  25      810195    111860   8470
     //  26      930525    120330   8470
     //  27     1059325    128800   8470
+
+    // If you've sacrificed experience, XP costs are adjusted as if
+    // you were still your original (higher) level.
+    if (exp_apt == -99)
+        lev += RU_SAC_XP_LEVELS * you.get_mutation_level(MUT_INEXPERIENCED);
 
     switch (lev)
     {
@@ -4558,32 +4552,6 @@ void dec_haste_player(int delay)
     }
 }
 
-void dec_disease_player(int delay)
-{
-    if (you.disease)
-    {
-        int rr = 50;
-
-        // Extra regeneration means faster recovery from disease.
-        // But not if not actually regenerating!
-        if (player_regenerates_hp())
-            rr += _player_bonus_regen();
-
-        // Trog's Hand.
-        if (you.duration[DUR_TROGS_HAND])
-            rr += 100;
-
-        rr = div_rand_round(rr * delay, 50);
-
-        you.disease -= rr;
-        if (you.disease < 0)
-            you.disease = 0;
-
-        if (you.disease == 0)
-            mprf(MSGCH_RECOVERY, "You feel your health improve.");
-    }
-}
-
 void dec_elixir_player(int delay)
 {
     if (!you.duration[DUR_ELIXIR])
@@ -4912,7 +4880,6 @@ player::player()
     stat_loss.init(0);
     base_stats.init(0);
 
-    disease         = 0;
     max_level       = 1;
     hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
@@ -5225,7 +5192,7 @@ bool player::airborne() const
     if (get_form()->forbids_flight())
         return false;
 
-    return you.duration[DUR_FLIGHT]   // potions, tornado
+    return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || permanent_flight(true);
 }
@@ -5258,7 +5225,6 @@ bool player::can_swim(bool permanently) const
 {
     return (species::can_swim(species)
             || body_size(PSIZE_BODY) >= SIZE_GIANT
-            || get_mutation_level(MUT_UNBREATHING) >= 2
             || !permanently)
                 && form_can_swim();
 }
@@ -5979,36 +5945,13 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
   * useful when the AC roll is inferior to it. Therefore a higher GDR means
   * more damage reduced, but also more often.
   *
-  * \f[ GDR = 14 \times (base\_AC - 2)^\frac{1}{2} \f]
+  * \f[ GDR = 16 \times (AC)^\frac{1}{4} \f]
   *
   * \return GDR as a percentage.
   **/
 int player::gdr_perc() const
 {
-    switch (form)
-    {
-    case transformation::dragon:
-        return 34; // base AC 8
-    case transformation::statue:
-        return 39; // like plate (AC 10)
-    case transformation::tree:
-        return 48;
-    default:
-        break;
-    }
-
-    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
-
-    int body_base_AC = (species == SP_GARGOYLE ? 5 : 0);
-    if (body_armour)
-        body_base_AC += property(*body_armour, PARM_AC);
-
-    // We take a sqrt here because damage prevented by GDR is
-    // actually proportional to the square of the GDR percentage
-    // (assuming you have enough AC).
-    int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
-
-    return gdr;
+    return 16 * sqrt(sqrt(you.armour_class()));
 }
 
 /**
@@ -6056,7 +5999,7 @@ mon_holy_type player::holiness(bool temp) const
     // Alive Vampires are MH_NATURAL
     if (is_lifeless_undead(temp))
         holi = MH_UNDEAD;
-    else if (species == SP_GARGOYLE || species == SP_DJINNI)
+    else if (species::is_nonliving(you.species))
         holi = MH_NONLIVING;
     else
         holi = MH_NATURAL;
@@ -6064,6 +6007,7 @@ mon_holy_type player::holiness(bool temp) const
     // Petrification takes precedence over base holiness and lich form
     if (temp && (form == transformation::statue
                  || form == transformation::wisp
+                 || form == transformation::storm
                  || petrified()))
     {
         holi = MH_NONLIVING;
@@ -6111,14 +6055,14 @@ int player::how_chaotic(bool /*check_spells_god*/) const
 /**
  * Does the player need to breathe?
  *
- * Pretty much only matters for mephitic clouds, & confusing spores, & curare.
+ * Pretty much only matters for confusing spores and drowning damage.
  *
  * @return  Whether the player has no need to breathe.
  */
 bool player::is_unbreathing() const
 {
-    return !get_form()->breathes || petrified()
-        || get_mutation_level(MUT_UNBREATHING);
+    return is_nonliving() || is_lifeless_undead()
+           || form == transformation::tree;
 }
 
 bool player::is_insubstantial() const
@@ -6157,8 +6101,7 @@ int player::res_water_drowning() const
 
     if (is_unbreathing()
         || species::can_swim(species) && !form_changed_physiology()
-        || form == transformation::ice_beast
-        || form == transformation::hydra)
+        || form == transformation::ice_beast)
     {
         rw++;
     }
@@ -6174,7 +6117,6 @@ int player::res_poison(bool temp) const
 bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
-        || has_mutation(MUT_UNBREATHING)
         || is_nonliving(temp)
         || temp && get_form()->res_miasma())
     {
@@ -6224,10 +6166,10 @@ bool player::res_torment() const
            ;
 }
 
-bool player::res_tornado() const
+bool player::res_polar_vortex() const
 {
-    // Full control of the winds around you can negate a hostile tornado.
-    return duration[DUR_TORNADO] ? 1 : 0;
+    // Full control of the winds around you can negate a hostile polar vortex.
+    return duration[DUR_VORTEX] ? 1 : 0;
 }
 
 bool player::res_petrify(bool temp) const
@@ -6502,7 +6444,7 @@ void player::expose_to_element(beam_type element, int _strength,
 
 void player::blink()
 {
-    cast_blink();
+    uncontrolled_blink();
 }
 
 void player::teleport(bool now, bool wizard_tele)
@@ -6913,10 +6855,7 @@ bool player::sicken(int amount)
     }
 
     mpr("You feel ill.");
-
-    disease += amount * BASELINE_DELAY;
-    if (disease > 210 * BASELINE_DELAY)
-        disease = 210 * BASELINE_DELAY;
+    increase_duration(DUR_SICKNESS, amount, 210);
 
     return true;
 }
@@ -7163,6 +7102,14 @@ bool player::asleep() const
 bool player::cannot_act() const
 {
     return asleep() || cannot_move();
+}
+
+
+bool player::can_feel_fear(bool include_unknown) const
+{
+    // XXX: monsters are immune to fear when berserking.
+    // should players also be?
+    return you.holiness() & MH_NATURAL && (!include_unknown || !you.clarity());
 }
 
 bool player::can_throw_large_rocks() const

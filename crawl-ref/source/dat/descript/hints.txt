@@ -141,8 +141,8 @@ complain if it can't find either file.
 %%%%
 finished random 3
 
-You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
-(Internet Relay Chat) channel on freenode (<w>irc.freenode.net</w>).
+You can ask other Crawl players for advice and help using any of the community
+resources described at http://crawl.develz.org/
 %%%%
 dissection reminder
 

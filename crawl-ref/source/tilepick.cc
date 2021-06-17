@@ -200,9 +200,13 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ORCISH_IDOL:
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_TREE:
-        return player_in_branch(BRANCH_SWAMP) ? TILE_DNGN_MANGROVE : TILE_DNGN_TREE;
+        return TILE_DNGN_TREE;
+    case DNGN_MANGROVE:
+        return TILE_DNGN_MANGROVE;
     case DNGN_PETRIFIED_TREE:
         return TILE_DNGN_PETRIFIED_TREE;
+    case DNGN_DEMONIC_TREE:
+        return TILE_DNGN_DEMONIC_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
     case DNGN_LAVA:
@@ -1822,15 +1826,20 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING, mon.number)
                    : base;
 
+        case MONS_ANIMATED_ARMOUR:
+            return base | TILE_FLAG_ANIM_OBJ;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
-            return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+            return tileidx_item(item) | TILE_FLAG_ANIM_OBJ;
         }
 
         case MONS_SPECTRAL_WEAPON:
         {
+            // TODO: it would be good to show the TILE_FLAG_ANIM_OBJ icon with
+            // these too, but most are oriented NW-SE and it looks bad
             if (!mon.inv[MSLOT_WEAPON])
                 return TILEP_MONS_SPECTRAL_SBL;
 
@@ -1851,8 +1860,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     const weapon_type wt = (weapon_type)item.sub_type;
                     return (wt == WPN_WHIP || wt == WPN_FLAIL
                             || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP
-                            || wt == WPN_SACRED_SCOURGE) ?
-                        TILEP_MONS_SPECTRAL_WHIP : TILEP_MONS_SPECTRAL_MACE;
+                            || wt == WPN_SACRED_SCOURGE)
+                        ? TILEP_MONS_SPECTRAL_WHIP
+                        : TILEP_MONS_SPECTRAL_MACE;
                 }
             default:
                 return TILEP_MONS_SPECTRAL_SBL;
@@ -2996,9 +3006,9 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
                 ch += ui_random(tile_main_count(ch));
                 break;
 
-            case CLOUD_TORNADO:
-                ch = get_tornado_phase(cl.pos) ? TILE_CLOUD_RAGING_WINDS_0
-                                               : TILE_CLOUD_RAGING_WINDS_1;
+            case CLOUD_VORTEX:
+                ch = get_vortex_phase(cl.pos) ? TILE_CLOUD_FREEZING_WINDS_0
+                                               : TILE_CLOUD_FREEZING_WINDS_1;
                 break;
 
             default:

@@ -1591,18 +1591,19 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (m->type == MONS_DANCING_WEAPON)
     {
-        // For fake dancing weapons, just use a generic long sword, since
-        // fake monsters won't have a real item equipped.
+        // other animated objects use regular monster tiles (TODO: animate
+        // armour's seems broken in this menu)
         item_def item;
-        if (fake)
+
+        if (!fake && m->inv[MSLOT_WEAPON])
+            item = *m->inv[MSLOT_WEAPON];
+
+        if (fake || !item.defined())
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = WPN_LONG_SWORD;
             item.quantity  = 1;
         }
-        else
-            item = *m->inv[MSLOT_WEAPON];
-
         tileset.emplace_back(tileidx_item(item));
         tileset.emplace_back(TILEI_ANIMATED_WEAPON);
     }
