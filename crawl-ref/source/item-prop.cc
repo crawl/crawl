@@ -2601,7 +2601,7 @@ bool gives_resistance(const item_def &item)
         return false;
 
     // Check for randart resistances.
-    for (int rap = 0; rap <= ARTP_NUM_PROPERTIES; rap++)
+    for (int rap = 0; rap < ARTP_NUM_PROPERTIES; rap++)
     {
         if (artefact_property(item, static_cast<artefact_prop_type>(rap))
             && (rap == ARTP_FIRE
