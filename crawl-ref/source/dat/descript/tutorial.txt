@@ -219,7 +219,8 @@ this and fire at the closest monster with <input>shift-tab</input> or <input>p</
 tutorial2 wield_bow
 
 Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles> or by <input>mouseclick</input></localtiles>.
+<localtiles> or by <input>mouseclick</input></localtiles>. Then pick up the
+arrows and quiver them with <input>$cmd[CMD_QUIVER_ITEM]</input>.
 %%%%
 tutorial2 firing
 
@@ -253,6 +254,7 @@ tutorial2 exit
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
   <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon<localtiles>
   You can also do this by <input>clicking</input> on the weapon in your inventory.</localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  adjust your quiver
 
 <yellow>Monsters</yellow><localtiles>
   <input>mouseover</input>  examine a monster
@@ -458,8 +460,6 @@ tutorial3 exit
 
 <yellow>Other</yellow>
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> access the command help
-  <input>$cmd[CMD_RESISTS_SCREEN]</input>  display character overview
-  <input>$cmd[CMD_USE_ABILITY]</input>  use an ability
   <input>$cmd[CMD_EXPLORE]</input>  explore automatically
   <input>$cmd[CMD_SEARCH_STASHES]</input> search for items/features previously seen<localtiles>
   Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
@@ -492,8 +492,9 @@ tutorial4 spellcasting
 You can cast spells with <input>$cmd[CMD_CAST_SPELL]</input><localtiles> or by
 <input>clicking</input> on the spell tile</localtiles>. Press
 <input>$cmd[CMD_CAST_SPELL]?</input> to get a list of your spells. Spells,
-like ammo, are shown in the quiver slot, and so you can also use
-<input>$cmd[FIRE]</input> or <input>shift-tab</input> to fire the currently
+like ammo, are shown in the quiver slot, so you can use
+<input>$cmd[CMD_QUIVER_ITEM]</input> to ready a spell in the quiver. Use
+<input>$cmd[CMD_FIRE]</input> or <input>shift-tab</input> to fire the currently
 quivered spell.
 
 Once you are out of magic points, retreat and rest to regain them with
@@ -605,6 +606,7 @@ tutorial4 exit
   <input>$cmd[CMD_CAST_SPELL]</input>  cast a spell<localtiles>
   You can also learn new spells via the <w>memorisation tab</w>.
   You can cast memorised spells via <input>leftclick</input>, and read their descriptions and check your spell proficiency by <input>mouseover</input> or <input>rightclick</input></localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  adjust your quiver
 
   <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
   <input>$cmd[CMD_SHOUT]</input>  order allies
@@ -636,7 +638,7 @@ you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
 more detailed description.
 
-Confirm your choice with an uppercase <input>Y</input>.
+Confirm your choice with <input>J</input> or <input>Enter</input>.
 %%%%
 tutorial5 religion
 
@@ -660,10 +662,10 @@ panel</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 
-A berserker rage is truly exhausting. While fatigued, you cannot berserk again
-and are also slowed. It's best to rest with <input>$cmd[CMD_REST]</input>
-<localtiles> (or via the <w>command panel</w>)</localtiles> until you feel fit
-again.
+A berserker rage is truly exhausting. After it ends, you cannot berserk again
+for a short while and are slowed. It's best to rest with
+<input>$cmd[CMD_REST]</input><localtiles> (or via the
+<w>command panel</w>)</localtiles> until you feel fit again.
 %%%%
 tutorial5 berserk2
 

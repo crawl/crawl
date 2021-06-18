@@ -35,7 +35,7 @@ FTILE:   dBFG = tutorial_pad
 ITEM:    quarterstaff mundane
 SHUFFLE: 34
 MONS:    training dummy hp:10 ; whip mundane
-MONS:    rat always_corpse
+MONS:    rat
 MONS:    wyvern
 MONS:    giant cockroach
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
