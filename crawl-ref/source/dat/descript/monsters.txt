@@ -957,6 +957,10 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
+djinni
+
+An elemental spirit formed from smokeless fire.
+%%%%
 doom hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it

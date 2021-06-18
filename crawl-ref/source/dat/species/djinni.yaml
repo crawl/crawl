@@ -1,5 +1,5 @@
 enum: SP_DJINNI
-monster: MONS_EFREET
+monster: MONS_DJINNI
 name: Djinni
 short_name: Dj
 difficulty: Intermediate

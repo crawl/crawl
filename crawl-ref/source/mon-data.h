@@ -205,7 +205,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_ANCIENT_BEAR, "ancient bear")
     AXED_MON(MONS_ROTTING_DEVIL, "rotting devil")
     AXED_MON(MONS_IGNIS, "ignis")
-    AXED_MON(MONS_DJINNI, "djinni")
     AXED_MON(MONS_RAKSHASA_FAKE, "rakshasa fake")
     AXED_MON(MONS_MARA_FAKE, "mara fake")
     // GNOME_NO_MORE
@@ -4072,6 +4071,21 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
 },
 
 // spiritual beings ('R')
+
+// Dummy species monster
+{
+    MONS_DJINNI, 'R', MAGENTA, "djinni",
+    M_SPEAKS | M_FLIES,
+    mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
+    10, MONS_DJINNI, MONS_DJINNI, MH_NONLIVING, 30,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    8, 400,
+    5, 5, MST_NO_SPELLS, false, S_SHOUT,
+    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
+    {TILEP_MONS_EFREET}, TILE_ERROR
+},
+
 {
     MONS_EFREET, 'R', RED, "efreet",
     M_SPEAKS | M_FLIES,
