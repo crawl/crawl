@@ -646,6 +646,9 @@ enum monster_type                      // env.mons[].type
     MONS_PANDEMONIUM_LORD,
 
     // Spiritual beings ('R')
+#if TAG_MAJOR_VERSION > 34
+    MONS_DJINNI,
+#endif
     MONS_EFREET,
     MONS_RAKSHASA,
 #if TAG_MAJOR_VERSION == 34
