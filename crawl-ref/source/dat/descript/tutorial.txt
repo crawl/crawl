@@ -545,18 +545,20 @@ single cloud in order to be more efficient with your magic.
 %%%%
 tutorial4 forget_spell
 
-Gaining an experience level and raising your Spellcasting skill gives you spell
+Gaining experience levels and raising your Spellcasting skill gives you spell
 slots to spend on spells. You can also <w>forget a memorised spell</w> to make
-space for a new one. The easiest way to do this is with a scroll of amnesia.
-Simply read the scroll (with <input>$cmd[CMD_READ]</input><localtiles> or by
+space for a new one by reading a scroll of amnesia. Read the scroll (with
+<input>$cmd[CMD_READ]</input><localtiles> or by
 <input>clicking</input> on it</localtiles>), and then select the spell you want
-to forget.
+to forget. You can relearn forgotten spells from your spell library later, as
+long as you have spell slots available.
 %%%%
 tutorial4 memorise2
 
-Again, memorise a new spell with <input>$cmd[CMD_MEMORISE_SPELL]</input>
-<localtiles> or by <input>clicking</input> on the memorisation tab and
-selecting the spell tile</localtiles>. And then raise yourself an undead army!
+After forgetting one of your old spells to make space, memorise this new spell
+with <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
+<input>clicking</input> on the memorisation tab and selecting the spell
+tile</localtiles>. Then try your new spell and summon some demonic allies!
 %%%%
 tutorial4 displace_allies
 
@@ -569,7 +571,8 @@ tutorial4 order_allies
 Try to let your allies do the killing! If necessary, you can order them about
 with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
 wait with <input>$cmd[CMD_WAIT]</input> until your allies have caught
-up with you.
+up with you. Your summons will only stick around for a short time, so don't
+wait too long, or summon some new ones before starting a fight.
 %%%%
 tutorial4 heavy_armour
 
@@ -588,8 +591,10 @@ Make sure you are at full health and magic points before entering a new area.
 If necessary, rest up with <input>$cmd[CMD_REST]</input><localtiles> or by
 <input>mouseclick</input> in the command panel</localtiles>.
 
-Also, undead don't breathe, so you can cast Mephitic Cloud without harming your
-allies.
+You can only summon a limited number of allies at once from any given spell,
+so try to take advantage of a wide range of spells. For example, your summoned
+imps are resistant to poison, so you can cast Mephitic Cloud to fight alongside
+them without harming your allies.
 %%%%
 tutorial4 tutorial_end
 

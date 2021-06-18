@@ -103,10 +103,8 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 COLOUR:  dABCDEe = lightblue
 FTILE:   dABCDEe = tutorial_pad
-ITEM:    scroll of amnesia ident:type
-ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
-ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
-ITEM:    never_decay ball python skeleton / never_decay jackal skeleton
+ITEM:    scroll of amnesia ident:type q:3
+ITEM:    randbook numspells:1 spells:call_imp title:Demonology_for_Dummies owner:player
 ITEM:    kite shield
 ITEM:    ring mail
 MONS:    hobgoblin
@@ -133,23 +131,23 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial4.win" }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx......B...x.fgf.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxCCCxxxx...+.geg.....xxxxxxxxxxxxxxx
-xxxxxxxxxxx+++xxxxx..x.fgf.xxxx..xxxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxdxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......B.xxxx.T.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx......B...x.....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxCCCxxxx...+..e......xxxxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.....xxxx..xxxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxx.T.xxxxxxx.xxxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx.xxxxxxxxxdxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
 xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxx...xxxxxxxxxxxx.2..xxxxxxxxxx
-xxxxxxxxxxxx.xxx..h..xxxxxxxxGx.....4]xxxxxxxx
-xxxxxxxxxxxx.xxx.....xxxxxxxGf+...2....xxxxxxx
-xxxxxxxxxxxx......D........Efg+......3.)xxxxxx
-xxxxxxxxxxxxxxxx.....xxxxxxxGg+...3....xxxxxxx
-xxxxxxxxxxxxxxxx..i..xxxxxxxxGx.....2}xxxxxxxx
+xxxxxxxxxxxx.xxx..f..xxxxxxxxGx.....4]xxxxxxxx
+xxxxxxxxxxxx.xxx.....xxxxxxxG.+...2....xxxxxxx
+xxxxxxxxxxxx......D........E..+......3.)xxxxxx
+xxxxxxxxxxxxxxxx.....xxxxxxxG.+...3....xxxxxxx
+xxxxxxxxxxxxxxxx..g..xxxxxxxxGx.....2}xxxxxxxx
 xxxxxxxxxxxxxxxxx...xxxxxxxxxxxx2...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
