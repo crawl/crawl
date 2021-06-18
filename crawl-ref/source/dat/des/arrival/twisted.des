@@ -923,7 +923,7 @@ KMASK: uU = no_item_gen
 : if (not crawl.game_started()) or race == "Vampire"
 :     or race == "Mummy" or race == "Ghoul"
 :     or race == "Gargoyle" or race == "Vine Stalker"
-:     or race == "Palentonga" or race == "Yak" then
+:     or race == "Djinni" or race == "Yak" then
 :   mons = "human"
 : end
 : if you.race() == "Formicid" or you.race() == "Octopode" then
