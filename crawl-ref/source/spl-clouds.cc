@@ -89,7 +89,7 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
         return spret::abort;
     }
 
-    if (mons->res_poison() && mons->observable())
+    if (mons->res_poison() > 0 && mons->observable())
     {
         mprf("%s cannot be affected by poisonous vapours!",
              mons->name(DESC_THE).c_str());
