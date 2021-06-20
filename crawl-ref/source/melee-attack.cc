@@ -781,6 +781,9 @@ bool melee_attack::attack()
 
             attacker_sustain_passive_damage();
 
+            if (!attacker->alive())
+                return false;
+
             if (!cont)
             {
                 if (!defender->alive())
@@ -1990,7 +1993,7 @@ void melee_attack::attacker_sustain_passive_damage()
                                " is burned by acid!");
     }
     attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
-                   KILLED_BY_ACID, "", "", false);
+                   KILLED_BY_ACID);
 }
 
 int melee_attack::staff_damage(skill_type skill)
