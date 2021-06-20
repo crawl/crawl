@@ -701,10 +701,10 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             verb = "frozen";
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
-                return (act != caster
-                        // Player's don't get immunity with rC+++.
-                        && (act->is_player() || act->res_cold() < 3))
-                        && !god_protects(caster, act->as_monster());
+                return act != caster
+                       // Players don't get immunity with rC+++.
+                       && (act->is_player() || act->res_cold() < 3)
+                       && !god_protects(caster, act->as_monster());
             };
             break;
 
@@ -784,6 +784,9 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     for (actor_near_iterator ai((agent ? agent : &you)->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
+        if (!actual && !agent->can_see(**ai))
+            continue;
+
         if ((*vulnerable)(agent, *ai))
         {
             if (ai->is_player())
@@ -846,10 +849,11 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                     beam.foe_info.power +=
                         (m->get_hit_dice() * this_damage / avg_damage);
                 }
-            } else if (player_caster
-                       && this_damage
-                       && !m->wont_attack()
-                       && mons_is_threatening(*m))
+            }
+            else if (player_caster
+                     && this_damage
+                     && !m->wont_attack()
+                     && mons_is_threatening(*m))
             {
                 beam.foe_info.count++;
                 beam.foe_info.power++;
