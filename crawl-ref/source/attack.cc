@@ -127,7 +127,8 @@ bool attack::handle_phase_damaged()
 bool attack::handle_phase_killed()
 {
     monster* mon = defender->as_monster();
-    if (!invalid_monster(mon)) {
+    if (!invalid_monster(mon))
+    {
         // Was this a reflected missile from the player?
         if (responsible->mid == MID_YOU_FAULTLESS)
             monster_die(*mon, KILL_YOU_MISSILE, YOU_FAULTLESS);
