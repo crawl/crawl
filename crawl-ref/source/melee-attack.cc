@@ -781,9 +781,6 @@ bool melee_attack::attack()
 
             attacker_sustain_passive_damage();
 
-            if (!attacker->alive())
-                return false;
-
             if (!cont)
             {
                 if (!defender->alive())
