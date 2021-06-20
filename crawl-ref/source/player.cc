@@ -5951,7 +5951,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
   **/
 int player::gdr_perc() const
 {
-    return 16 * sqrt(sqrt(you.armour_class()));
+    return max(0, (int)(16 * sqrt(sqrt(you.armour_class()))));
 }
 
 /**
