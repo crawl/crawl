@@ -996,7 +996,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     {
         // hack: don't mention the necronomicon alone unless it
         // wasn't already mentioned by the other description
-        if (power.abil == ABIL_KIKU_GIFT_NECRONOMICON
+        if (power.abil == ABIL_KIKU_GIFT_CAPSTONE_SPELLS
             && !you.has_mutation(MUT_NO_GRASPING))
         {
             continue;

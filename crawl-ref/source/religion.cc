@@ -123,10 +123,10 @@ const vector<god_power> god_powers[NUM_GODS] =
              "Kikubaaqudgha protects you from unholy torment." },
         { 5, ABIL_KIKU_TORMENT, "invoke torment by sacrificing a corpse" },
         { 7, ABIL_KIKU_BLESS_WEAPON,
-             "Kikubaaqudgha will grant you a Necronomicon or bloody your weapon with pain... once.",
+             "Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.",
              "Kikubaaqudgha is no longer ready to enhance your necromancy." },
-        { 7, ABIL_KIKU_GIFT_NECRONOMICON,
-             "Kikubaaqudgha will grant you a Necronomicon.",
+        { 7, ABIL_KIKU_GIFT_CAPSTONE_SPELLS,
+             "Kikubaaqudgha will grant you forbidden knowledge.",
              "Kikubaaqudgha is no longer ready to enhance your necromancy." },
     },
 
@@ -425,7 +425,7 @@ void god_power::display(bool gaining, const char* fmt) const
 {
     // hack: don't mention the necronomicon alone unless it wasn't
     // already mentioned by the other message
-    if (abil == ABIL_KIKU_GIFT_NECRONOMICON
+    if (abil == ABIL_KIKU_GIFT_CAPSTONE_SPELLS
         && !you.has_mutation(MUT_NO_GRASPING))
     {
         return;

@@ -212,14 +212,14 @@ Brand Weapon With Pain ability
 
 Permanently bloodies a weapon of your choice with the essence of pain
 itself. This blessing cannot be used on artefact weapons. You must choose
-between this gift or that of the Necronomicon, and either gift may only be
-received once.
+between this gift or that of knowledge of the most powerful necromantic spells,
+and either gift may only be received once.
 %%%%
-Receive Necronomicon ability
+Receive Forbidden Knowledge ability
 
-Grants you the Necronomicon, a spellbook containing the most powerful and
-sinister secrets of Necromancy. You must choose between this gift or that of
-branding a weapon with pain, and either gift may only be received once.
+Grants you knowledge of the most powerful and sinister Necromancy spells.
+You must choose between this gift or that of branding a weapon with pain, and
+either gift may only be received once.
 %%%%
 # Yredelemnul
 Animate Remains ability

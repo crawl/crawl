@@ -390,7 +390,7 @@ static const ability_def Ability_List[] =
         3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_KIKU_TORMENT, "Torment",
         4, 0, 8, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_KIKU_GIFT_NECRONOMICON, "Receive Necronomicon", 0, 0, 0,
+    { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge", 0, 0, 0,
         {fail_basis::invo}, abflag::none },
     { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0,
         {fail_basis::invo}, abflag::pain },
@@ -2394,10 +2394,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         break;
 
-    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
     {
         fail_check();
-        if (!kiku_gift_necronomicon())
+        if (!kiku_gift_capstone_spells())
             return spret::abort;
         break;
     }
@@ -3687,7 +3687,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ELYVILON_LIFESAVING:
         first_slot = letter_to_index('p');
         break;
-    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         first_slot = letter_to_index('N');
         break;
     case ABIL_TSO_BLESS_WEAPON:

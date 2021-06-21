@@ -1246,7 +1246,7 @@ namespace quiver
         case ABIL_ZIN_DONATE_GOLD:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
-        case ABIL_KIKU_GIFT_NECRONOMICON:
+        case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         case ABIL_SIF_MUNA_FORGET_SPELL:
         case ABIL_LUGONU_BLESS_WEAPON:
         case ABIL_BEOGH_GIFT_ITEM:

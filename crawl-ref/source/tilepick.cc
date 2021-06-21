@@ -3492,7 +3492,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_KIKU_TORMENT;
     case ABIL_KIKU_BLESS_WEAPON:
         return TILEG_ABILITY_KIKU_BLESS_WEAPON;
-    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         return TILEG_ABILITY_KIKU_NECRONOMICON;
     // Yredelemnul
     case ABIL_YRED_INJURY_MIRROR:

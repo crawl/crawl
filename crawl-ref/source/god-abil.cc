@@ -1896,24 +1896,28 @@ bool kiku_take_corpse()
     return false;
 }
 
-bool kiku_gift_necronomicon()
+bool kiku_gift_capstone_spells()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
+    vector<spell_type> spells = { SPELL_HAUNT,
+                                  SPELL_BORGNJORS_REVIVIFICATION,
+                                  SPELL_INFESTATION,
+                                  SPELL_NECROMUTATION,
+                                  SPELL_DEATHS_DOOR };
+
+    string msg = "Do you wish to receive knowledge of "
+                 + comma_separated_fn(spells.begin(), spells.end(), spell_title)
+                 + "?";
+
+    if (!yesno(msg.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
-    int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
-                              you.religion);
-    if (thing_created == NON_ITEM
-        || !move_item_to_grid(&thing_created, you.pos()))
-    {
-        return false;
-    }
-    set_ident_type(env.item[thing_created], true);
-    simple_god_message(" grants you a gift!");
+
+    simple_god_message(" grants you forbidden knowledge!");
+    library_add_spells(spells);
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
