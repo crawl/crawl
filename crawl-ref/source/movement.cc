@@ -546,12 +546,10 @@ static spret _rampage_forward(coord_def move)
     // this would throw off our tracer_target.
     ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat rampage.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
-        return spret::fail;
+        crawl_state.cancel_cmd_all("You can't repeat rampage.");
+        return spret::abort;
     }
 
     // Don't rampage if the player has status effects that should prevent it:

@@ -4838,11 +4838,9 @@ bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat power leap.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat Power Leap.");
         return false;
     }
     if (you.is_nervous())
@@ -5218,11 +5216,9 @@ bool uskayaw_line_pass()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat line pass.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat Line Pass.");
         return false;
     }
 
@@ -5354,11 +5350,9 @@ spret uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("No encores!");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("No encores!");
         return spret::abort;
     }
 
@@ -5917,11 +5911,9 @@ spret wu_jian_wall_jump_ability()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat a wall jump.");
         return spret::abort;
     }
 

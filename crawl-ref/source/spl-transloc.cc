@@ -662,11 +662,9 @@ spret palentonga_charge(bool fail, dist *target)
  */
 spret controlled_blink(bool safe_cancel)
 {
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat controlled blinks.");
         return spret::abort;
     }
 
