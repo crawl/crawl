@@ -612,6 +612,12 @@ bool deck_draw(deck_type deck)
 
 bool deck_stack()
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Stack Five.");
+        return false;
+    }
+
     int total_cards = 0;
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
@@ -839,6 +845,12 @@ bool deck_deal()
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Triple Draw.");
+        return false;
+    }
+
     deck_type choice = _choose_deck();
 
     if (choice == NUM_DECKS)
