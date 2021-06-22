@@ -10,12 +10,12 @@ for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Agony spell
 
-Cuts the resilience of an adjacent creature in half. This damage is never
+Cuts the health of an adjacent creature in half. This damage is never
 directly lethal.
 %%%%
 Agony Range spell
 
-Cuts the resilience of a target creature in half. This damage is never directly
+Cuts the health of a target creature in half. This damage is never directly
 lethal.
 %%%%
 Airstrike spell
@@ -216,8 +216,7 @@ fire resistance.
 Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster, but also permanently
-lessens their resilience to injury, to a degree dependent on (and inversely
-related to) power.
+damages their health, to a degree dependent on (and inversely related to) power.
 
 It is powerful enough to cancel the effects of Death's Door, although doing so
 will briefly paralyse the caster. It has no effect on the undead.
@@ -414,8 +413,8 @@ body believes itself to be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. After
 expiry, the spell cannot immediately be recast, but with high power the caster
-will be left more resilient when the effect ends. It has no effect on those who
-are already undead.
+will be left further from death when the effect ends. It has no effect on those
+who are already undead.
 %%%%
 Debugging Ray spell
 
@@ -1537,7 +1536,7 @@ effect ends, the caster's movements will be sluggish for a time.
 Symbol of Torment spell
 
 Calls on the powers of darkness to cause agonising injury to any living thing
-in the caster's vicinity, cutting their resilience in half. This damage is
+in the caster's vicinity, cutting their health in half. This damage is
 never directly lethal.
 %%%%
 Teleport Other spell
