@@ -77,7 +77,7 @@ The contents of this text are:
                 cloud_status, always_show_zot, consumables_panel,
                 consumables_panel_filter, show_unidentified_consumables,
                 consumables_panel_scale, consumables_panel_orientation,
-                consumables_panel_font
+                consumables_panel_font_family, consumables_panel_font_size
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
@@ -1654,7 +1654,8 @@ consumables_panel_orientation = (horizontal | vertical)
         placed along the top edge of the screen.
         When set to 'vertical', the panel will be placed along the left edge.
 
-consumables_panel_font = 16px monospace
+consumables_panel_font_family = monospace
+consumables_panel_font_size = 16
         Font used for displaying the quantities of items.
 
 3-i     Colours (messages and menus)

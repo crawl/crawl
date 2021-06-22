@@ -1346,7 +1346,75 @@ body {
     border-radius: 3px;
 }
 
-/* makes the empty panel immune to $.show() */
-#consumables.empty {
+/* makes the hidden panel or its placeholder immune to $.show() */
+.consumables.hidden {
     display: none !important;
+}
+
+#consumables-placeholder {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border: 1px solid #7d623c;
+
+    background: rgba(0, 0, 0, 0.85);
+    width: 1em;
+    text-align: center;
+    font-size: small;
+    padding: 5px;
+}
+
+#consumables-placeholder a {
+    text-decoration: none;
+}
+
+#consumables-settings {
+    position: absolute;
+    background: black;
+    border: 2px solid #7d623c;
+    padding: 2px;
+}
+
+#consumables-settings fieldset {
+    margin-bottom: 2px;
+    border-width: 1px;
+}
+
+#consumables-settings fieldset button,input {
+    display: inline;
+}
+
+fieldset.option {
+    display: flex;
+    justify-content: space-around;
+}
+
+div.settings-buttons {
+    display: flex;
+}
+
+#consumables-settings input[type=number] {
+    width: 100px;
+    font: 14px monospace;
+}
+
+#consumables-settings input[type=number]:invalid {
+    border: 2px solid red;
+}
+
+fieldset.option button {
+    margin-left: 4px;
+    min-width: 30%;
+}
+
+#settings-note {
+    inline-size: 180px;
+    display: inline-block;
+    font-size: smaller;
+    padding: 0.5em;
+}
+
+div.settings-buttons button {
+    width: 50%;
+    margin: 2px;
 }

@@ -289,7 +289,8 @@ public:
     bool        show_unidentified_consumables; // whether to show unidentified items
     int         consumables_panel_scale;       // the scale factor for resizing the panel
     string      consumables_panel_orientation; // whether to place the panel horizontally
-    string      consumables_panel_font;        // font used to display the quantities
+    string      consumables_panel_font_family; // font used to display the quantities
+    int         consumables_panel_font_size;
 #endif
 
     int         fire_items_start; // index of first item for fire command

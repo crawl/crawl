@@ -409,8 +409,9 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
         new ListGameOption<text_pattern>(SIMPLE_NAME(consumables_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(show_unidentified_consumables), false),
-        new StringGameOption(SIMPLE_NAME(consumables_panel_font),
-                             "16px monospace"),
+        new StringGameOption(SIMPLE_NAME(consumables_panel_font_family),
+                             "monospace"),
+        new IntGameOption(SIMPLE_NAME(consumables_panel_font_size), 16),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -4831,8 +4832,10 @@ void game_options::write_webtiles_options(const string& name)
             Options.consumables_panel_scale);
     tiles.json_write_string("consumables_panel_orientation",
             Options.consumables_panel_orientation);
-    tiles.json_write_string("consumables_panel_font",
-            Options.consumables_panel_font);
+    tiles.json_write_string("consumables_panel_font_family",
+            Options.consumables_panel_font_family);
+    tiles.json_write_int("consumables_panel_font_size",
+            Options.consumables_panel_font_size);
 
     _write_minimap_colours();
 
