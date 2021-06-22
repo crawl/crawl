@@ -168,7 +168,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
                 height = layout_parameters.window_height - 5;
                 messages.hide();
             }
-            $("#consumables").hide();
+            $(".consumables").hide();
 
             dungeon_renderer.fit_to(width, height, show_diameter);
         }
@@ -178,7 +178,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
                                     layout_parameters.remaining_height,
                                     show_diameter);
             $("#right_column").show();
-            $("#consumables").show();
+            $(".consumables").show();
             messages.show();
         }
         minimap.stop_minimap_farview();
