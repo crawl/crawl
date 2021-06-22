@@ -2050,8 +2050,8 @@ KMONS:  2 = water nymph
 KFEAT:  > = >
 KFEAT:  12 = w
 KFEAT:  L = W
-NSUBST: F = 2=1 / F
-SUBST:  F = 2 w:25, M = wW
+NSUBST: F = 1 / 2=1. / F
+SUBST:  F = 2 w:75, M = wW
 MAP
        c c c c
      c         c
