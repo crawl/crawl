@@ -20,7 +20,7 @@
 <div id="normal" style="display: none;">
   <div id="left_column">
     <canvas id="dungeon"></canvas>
-    <canvas id="consumables"></canvas>
+    <canvas id="consumables" class="consumables hidden" style="display: none;"></canvas>
     <div id="message_pane">
       <div id="messages_container">
         <div id="messages"></div>
@@ -347,6 +347,36 @@
         </div>
     </div>
 </div>
+
+<div id="consumables-settings" style="display: none;">
+    <fieldset>
+        <legend>Orientation:</legend>
+        <div>
+            <input type="radio" class="text" id="orient-horizontal" name="consumables_panel_orientation" value="horizontal">
+            <label for="orient-horizontal">horizontal</label>
+        </div>
+        <div>
+            <input type="radio" class="text" id="orient-vertical" name="consumables_panel_orientation" value="vertical">
+            <label for="orient-vertical">vertical</label>
+        </div>
+    </fieldset>
+    <fieldset id="scale-set" class="option">
+        <legend>Scale, %:</legend>
+        <input type="number" class="text" id="scale-val" min="10" max="500" name="consumables_panel_scale" required>
+        <button class="reset" type="button">reset</button>
+    </fieldset>
+    <fieldset id="font-size-set" class="option">
+        <legend>Font size, px:</legend>
+        <input type="number" class="text" id="font-size-val" min="1" max="40" name="consumables_panel_font_size" required>
+        <button class="reset" type="button">reset</button>
+    </fieldset>
+    <span id="settings-note">Note: to make these settings permanent, edit your config file.</span>
+    <div class="settings-buttons">
+        <button id="minimize-panel" type="button">Minimize</button>
+        <button id="close-settings" type="button">Close</button>
+    </div>
+</div>
+<div id="consumables-placeholder" class="consumables hidden" style="display: none;"><a href="javascript:">+</a></div>
 
 <div id="ui-stack"></div>
 
