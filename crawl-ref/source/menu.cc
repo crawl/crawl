@@ -96,6 +96,7 @@ public:
         _invalidate_sizereq();
         _queue_allocation();
     };
+    void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
 #endif
 
     void update_item(int index);
@@ -144,6 +145,7 @@ protected:
     LineBuffer m_line_buf, m_div_line_buf;
     FontBuffer m_text_buf;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
+    int m_min_col_width = -1;
 
 public:
     static constexpr int item_pad = 2;
@@ -263,7 +265,7 @@ static bool _has_hotkey_prefix(const string &s)
 
 void UIMenu::do_layout(int mw, int num_columns)
 {
-    const int min_column_width = 400;
+    const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 400;
     const int max_column_width = mw / num_columns;
     const int text_height = m_font_entry->char_height();
 
@@ -910,6 +912,14 @@ void Menu::set_more()
     );
     update_more();
 }
+
+#ifdef USE_TILE_LOCAL
+void Menu::set_min_col_width(int w)
+{
+    // w is in chars
+    m_ui.menu->set_min_col_width(w * tiles.get_crt_font()->char_width());
+}
+#endif
 
 void Menu::set_highlighter(MenuHighlighter *mh)
 {

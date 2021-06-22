@@ -303,6 +303,7 @@ public:
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
+    void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
