@@ -727,6 +727,12 @@ static void _print_stats_gold(int x, int y)
 
 static void _print_stats_mp(int x, int y)
 {
+    CGOTOXY(x, y, GOTO_STAT);
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        clear_to_end_of_line();
+        return;
+    }
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
 
@@ -745,7 +751,6 @@ static void _print_stats_mp(int x, int y)
                 mp_colour = entry.second;
     }
 
-    CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF(player_drained() ? "MP: " : "Magic:  ");
     textcolour(mp_colour);
