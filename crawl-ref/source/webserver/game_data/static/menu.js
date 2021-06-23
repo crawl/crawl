@@ -241,6 +241,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function page_up()
     {
+        if (menu.items.length == 0)
+            return;
         var pagesz = menu.elem.find(".menu_contents").innerHeight();
         var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
         var delta = Math.floor(pagesz/itemsz)
@@ -270,7 +272,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         var index = (item_or_index.elem ?
                      item_or_index.index : item_or_index);
-        if (menu.first_visible == index) return;
+        if (menu.items.length == 0 || menu.first_visible == index)
+            return;
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
@@ -287,7 +290,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         var index = (item_or_index.elem ?
                      item_or_index.index : item_or_index);
-        if (menu.last_visible == index) return;
+        if (menu.items.length == 0 || menu.last_visible == index)
+            return;
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
@@ -313,7 +317,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // initialize these to ensure that they are never NaN, even if we have
         // strange values for the bounding boxes
         menu.first_visible = 0;
-        menu.last_visible = 0;
+        menu.last_visible = Math.max(0, menu.items.length - 1);
 
         for (i = 0; i < menu.items.length; i++)
         {
