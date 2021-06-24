@@ -1025,6 +1025,9 @@ namespace quiver
                         // targeting for that case; the behavior involved in
                         // listing it here just finds the closest targetable
                         // monster.
+        case SPELL_BORGNJORS_VILE_CLUTCH: // BVC shouldn't retarget monsters
+                                          // that are clutched, and spell
+                                          // targeting handles this case.
         case SPELL_APPORTATION: // Apport doesn't target monsters at all
             return true;
         default:
