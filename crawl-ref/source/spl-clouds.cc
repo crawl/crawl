@@ -74,42 +74,6 @@ spret conjure_flame(int pow, bool fail)
     return spret::success;
 }
 
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
-{
-    if (cell_is_solid(beam.target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
-    {
-        mpr("You see nothing there to target!");
-        return spret::abort;
-    }
-
-    if (mons->res_poison() > 0 && mons->observable())
-    {
-        mprf("%s cannot be affected by poisonous vapours!",
-             mons->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return spret::abort;
-
-    fail_check();
-
-    const int amount = max(1, div_rand_round(pow, 15));
-    mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
-    poison_monster(mons, &you, amount);
-
-    behaviour_event(mons, ME_WHACK, &you);
-
-    return spret::success;
-}
-
 spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {

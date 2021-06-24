@@ -2924,6 +2924,50 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
+spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
+{
+    if (cell_is_solid(beam.target))
+    {
+        if (!test)
+            canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        if (!test)
+            mpr("You see nothing there to target!");
+        return spret::abort;
+    }
+
+    if (mons->res_poison() > 0 && mons->observable())
+    {
+        if (!test)
+        {
+            mprf("%s cannot be affected by poisonous vapours!",
+                mons->name(DESC_THE).c_str());
+        }
+        return spret::abort;
+    }
+
+    if (test)
+        return spret::success;
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+
+    fail_check();
+
+    const int amount = max(1, div_rand_round(pow, 15));
+    mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
+    poison_monster(mons, &you, amount);
+
+    behaviour_event(mons, ME_WHACK, &you);
+
+    return spret::success;
+}
+
 spret cast_searing_ray(int pow, bolt &beam, bool fail)
 {
     const spret ret = zapping(ZAP_SEARING_RAY, pow, beam, true, nullptr,
