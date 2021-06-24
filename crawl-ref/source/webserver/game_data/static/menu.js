@@ -7,6 +7,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function item_selectable(item)
     {
+        // TODO: the logic on the c++ side is somewhat different here
         return item.level == 2 && item.hotkeys && item.hotkeys.length;
     }
 
@@ -69,6 +70,42 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     var menu = null;
     var update_server_scroll_timeout = null;
     var menu_close_timeout = null;
+    var scroll_suppresses_hover = false;
+
+    function add_hover_class(item)
+    {
+        if (item < 0 || item >= menu.items.length)
+            return;
+        menu.items[item].elem.addClass("hovered");
+    }
+
+    function remove_hover_class(item)
+    {
+        if (item < 0 || item >= menu.items.length)
+            return;
+        menu.items[item].elem.removeClass("hovered");
+    }
+
+    function set_hovered(item, snap=true)
+    {
+        if (item == menu.last_hovered)
+        {
+            // just make sure the hvoer class is set correctly
+            add_hover_class(menu.last_hovered);
+            return;
+        }
+        if (item >= menu.items.length)
+            item = Math.max(0, menu.items.length - 1);
+        remove_hover_class(menu.last_hovered);
+        if (item < 0 || item_selectable(menu.items[item]))
+        {
+            menu.last_hovered = item;
+            add_hover_class(menu.last_hovered);
+            if (menu.last_hovered >= 0 && snap == true)
+                snap_in_page(menu.last_hovered);
+            comm.send_message("menu_hover", { hover: menu.last_hovered });
+        }
+    }
 
     function menu_cleanup()
     {
@@ -141,6 +178,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         } else if (menu.items.length > 0) {
             scroll_to_item(0, true);
         }
+        if (menu.last_hovered >= 0)
+            add_hover_class(menu.last_hovered);
     }
 
     function prepare_item_range(start, end, container)
@@ -189,6 +228,19 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             var elem = $("<li>...</li>");
             elem.data("item", item);
             elem.addClass("placeholder");
+            // TODO: mouse movement over a menu item after hover has been moved
+            // off it by arrows isn't enough to restore hover; moving the
+            // mouse cursor in and out is needed. Worth addressing?
+            elem.hover(
+                function() {
+                    if (!scroll_suppresses_hover)
+                        set_hovered($(this).index());
+                }, function() {
+                    if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
+                        set_hovered(-1);
+                    // otherwise, keep the hover unless mousenter moves it into
+                    // a new cell
+                });
             item.elem = elem;
 
             if (anchor)
@@ -231,18 +283,91 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     // Scrolling functions
 
+    function next_hoverable_item(reverse, starting_point, start_at_starting_point=false)
+    {
+        // port of some logic in menu.cc
+        var items_tried = 0;
+        var max_items;
+
+        menu.flags
+        if (menu.flags & enums.menu_flag.WRAP)
+            max_items = menu.items.length;
+        else if (reverse)
+            max_items = menu.last_hovered; // up arrow on no hover does nothing
+        else
+            max_items = menu.items.length - starting_point;
+
+        if (start_at_starting_point && menu.items.length > 0)
+            max_items = Math.max(max_items, 1); // consider at least the starting point
+
+        if (max_items <= 0)
+            return -1;
+
+        var new_hover = starting_point;
+        if (reverse && new_hover < 0)
+            new_hover = 0;
+        var found = false;
+        if (!start_at_starting_point)
+            new_hover = new_hover + (reverse ? -1 : 1);
+
+        // find an item that can be selected in the first place
+        while (items_tried < max_items)
+        {
+            items_tried++;
+            if (menu.flags & enums.menu_flag.WRAP)
+                new_hover = (new_hover + menu.items.length) % menu.items.length;
+            new_hover = Math.max(0, Math.min(new_hover, menu.items.length - 1));
+            if (item_selectable(menu.items[new_hover])) // TODO: not identical to c++ logic
+            {
+                found = true;
+                break;
+            }
+            new_hover = new_hover + (reverse ? -1 : 1);
+            // new_hover may be invalid if loop exits now, but we don't use it
+        }
+        if (!found)
+            return -1;
+        return new_hover;
+    }
+
+    function cycle_hover(reverse)
+    {
+        var next = next_hoverable_item(reverse, menu.last_hovered);
+        if (next != -1)
+            set_hovered(next);
+    }
+
     function page_down()
     {
+        var relative_hover = -1;
+        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
+            menu.last_hovered = menu.first_visible;
+        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
+            relative_hover = menu.last_hovered - menu.first_visible;
+        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
+            menu.last_hovered = 0;
         var next = menu.last_visible + 1;
         if (next >= menu.items.length)
             next = menu.items.length - 1;
         scroll_to_item(next);
+        if (relative_hover >= 0)
+        {
+            if (menu.first_visible + relative_hover == menu.last_hovered)
+                relative_hover = menu.items.length - 1;
+                set_hovered(next_hoverable_item(true,
+                            menu.first_visible + relative_hover, true), false);
+        }
     }
 
     function page_up()
     {
         if (menu.items.length == 0)
             return;
+        var relative_hover = -1;
+        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
+            menu.last_hovered = menu.first_visible;
+        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
+            relative_hover = menu.last_hovered - menu.first_visible;
         var pagesz = menu.elem.find(".menu_contents").innerHeight();
         var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
         var delta = Math.floor(pagesz/itemsz)
@@ -250,6 +375,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (previous < 0)
             previous = 0;
         scroll_to_item(previous);
+        if (relative_hover >= 0)
+        {
+            if (menu.first_visible + relative_hover == menu.last_hovered)
+                relative_hover = 0;
+            set_hovered(next_hoverable_item(false,
+                            menu.first_visible + relative_hover, true), false);
+        }
     }
 
     function line_down()
@@ -258,6 +390,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (next >= menu.items.length)
             next = menu.items.length - 1;
         scroll_to_item(next);
+        snap_hover_in_page();
     }
 
     function line_up()
@@ -266,6 +399,28 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (previous < 0)
             previous = 0;
         scroll_to_item(previous);
+        snap_hover_in_page();
+    }
+
+    function snap_hover_in_page()
+    {
+        if (menu.last_hovered < 0)
+            return;
+        else if (menu.last_hovered < menu.first_visible)
+            set_hovered(first_visible, false);
+        else if (menu.last_hovered > menu.last_visible)
+            set_hovered(last_visible, false);
+    }
+
+    function snap_in_page(index)
+    {
+        // simpler than the c++ version! visible indices already calculated
+        if (index < 0 || index >= menu.items.length)
+            return;
+        if (index < menu.first_visible)
+            scroll_to_item(index);
+        else if (index > menu.last_visible)
+            scroll_bottom_to_item(index);
     }
 
     function scroll_to_item(item_or_index, was_server_initiated)
@@ -280,6 +435,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children()[0].getBoundingClientRect().top;
         var elem_y = item.elem[0].getBoundingClientRect().top;
+        if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+        {
+            // ugh -- keep mouseenter from triggering, is there a better way?
+            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
+            scroll_suppresses_hover = true;
+        }
+
         contents[0].scrollTop = elem_y - baseline;
 
         menu.anchor_last = false;
@@ -298,6 +460,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         var contents = $(menu.scroller.scrollElement);
         var baseline = contents.children().offset().top;
 
+        if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+        {
+            // ugh -- keep mouseenter from triggering, is there a better way?
+            setTimeout(function() { scroll_suppresses_hover = false; }, 50);
+            scroll_suppresses_hover = true;
+        }
         contents.scrollTop(item.elem.offset().top + item.elem.height()
                 - baseline - menu.elem.find(".menu_contents").innerHeight());
 
@@ -354,7 +522,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         update_visible_indices();
         comm.send_message("menu_scroll", {
             first: menu.first_visible,
-            last: menu.last_visible
+            last: menu.last_visible,
+            hover: menu.last_hovered
         });
     }
 
@@ -438,6 +607,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function update_menu(data)
     {
+        // n.b. this may overwrite hover, but we can't update it yet because
+        // menu items won't have been sent. `handle_size_change` will ensure
+        // that it does get synced, but are there cases where something more
+        // is needed?
         $.extend(menu, data);
 
         var old_length = menu.items.length;
@@ -469,7 +642,10 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             return;
         menu.server_first_visible = data.first;
         if (menu.following_player_scroll)
+        {
             scroll_to_item(data.first, true);
+            set_hovered(data.last_hovered);
+        }
     }
 
     comm.register_handlers({
@@ -486,6 +662,12 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function handle_size_change()
     {
         if (!menu) return;
+
+        if (menu.last_hovered > menu.items.length)
+            menu.last_hovered = -1; // sanity check
+        // ensure hover class is properly set. Does it ever need to be removed
+        // when this is called?
+        set_hovered(menu.last_hovered);
 
         if (menu.anchor_last)
             scroll_bottom_to_item(menu.last_visible, true);
@@ -520,6 +702,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (ui.top_popup()[0] !== menu.elem[0]) return;
 
         if (event.altKey || event.shiftkey) {
+            // ???
             if (update_server_scroll_timeout)
                 update_server_scroll();
             return;
@@ -553,18 +736,28 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             return false;
         case 35: // end
             scroll_bottom_to_item(menu.total_items - 1);
+            if (menu.total_items > 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
+                set_hovered(next_hoverable_item(true, menu.total_items - 1, true));
             event.preventDefault();
             return false;
         case 36: // home
             scroll_to_item(0);
+            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+                set_hovered(next_hoverable_item(false, 0, true));
             event.preventDefault();
             return false;
         case 38: // up
-            line_up();
+            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+                cycle_hover(true);
+            else
+                line_up();
             event.preventDefault();
             return false;
         case 40: // down
-            line_down();
+            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+                cycle_hover(false);
+            else
+                line_down();
             event.preventDefault();
             return false;
         }

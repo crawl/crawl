@@ -470,7 +470,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.001);
 }
 
-.menu_contents li.selectable:hover {
+.menu_contents li.hovered {
     background: rgba(255,255,255,0.15);
     cursor: pointer;
     color: white;

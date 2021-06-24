@@ -390,14 +390,25 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         _send_everything();
         flush_messages();
     }
+    else if (msgtype == "menu_hover")
+    {
+        JsonWrapper hover = json_find_member(obj.node, "hover");
+        hover.check(JSON_NUMBER);
+
+        if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
+            m_menu_stack.back().menu->set_hovered((int) hover->number_);
+
+    }
     else if (msgtype == "menu_scroll")
     {
         JsonWrapper first = json_find_member(obj.node, "first");
         first.check(JSON_NUMBER);
+        JsonWrapper hover = json_find_member(obj.node, "hover");
+        hover.check(JSON_NUMBER);
         // last visible item is sent too, but currently unused
 
         if (!m_menu_stack.empty() && m_menu_stack.back().type == UIStackFrame::MENU)
-            m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
+            m_menu_stack.back().menu->webtiles_scroll((int) first->number_, (int) hover->number_);
     }
     else if (msgtype == "*request_menu_range")
     {

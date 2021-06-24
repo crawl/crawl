@@ -102,6 +102,8 @@ public:
     void update_item(int index);
     void update_items();
 
+    void set_hovered_entry(int i);
+
     void is_visible_item_range(int *vis_min, int *vis_max);
     void get_item_region(int index, int *y1, int *y2);
 
@@ -116,6 +118,7 @@ public:
 protected:
     Menu *m_menu;
     int m_height; // set by do_layout()
+    int m_hover_idx = -1;
 
 #ifdef USE_TILE_LOCAL
     void do_layout(int mw, int num_columns);
@@ -134,7 +137,7 @@ protected:
     vector<int> row_heights;
 
     bool m_mouse_pressed = false;
-    int m_mouse_idx = -1, m_mouse_x = -1, m_mouse_y = -1;
+    int m_mouse_x = -1, m_mouse_y = -1;
     void update_hovered_entry();
 
     void pack_buffers();
@@ -148,6 +151,8 @@ protected:
     int m_min_col_width = -1;
 
 public:
+    size_t shown_items() { return item_info.size(); }
+
     static constexpr int item_pad = 2;
     static constexpr int pad_right = 10;
 #else
@@ -216,6 +221,13 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
 #ifdef USE_TILE_LOCAL
     int row = item_info[index].row;
+    if (static_cast<size_t>(row + 1) >= row_heights.size())
+    {
+        // call before UIMenu has been laid out
+        if (y1) *y1 = -1;
+        if (y2) *y2 = -1;
+        return;
+    }
     if (y1)
         *y1 = row_heights[row];
     if (y2)
@@ -412,6 +424,9 @@ void UIMenu::_render()
         textcolour(col);
         const bool needs_cursor = (m_menu->get_cursor() == i && m_menu->is_set(MF_MULTISELECT));
 
+        // TODO: is this highlighting good enough for accessibility purposes?
+        if (m_hover_idx == i)
+            textbackground(DARKGREY);
         if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
         {
             formatted_string s = formatted_string::parse_string(
@@ -424,6 +439,7 @@ void UIMenu::_render()
             text = chop_string(text, m_region.width);
             cprintf("%s", text.c_str());
         }
+        textbackground(BLACK);
     }
 #endif
 }
@@ -573,9 +589,20 @@ void UIMenu::_allocate_region()
     m_height = m_menu->items.size();
 #else
     do_layout(m_region.width, m_num_columns);
-    update_hovered_entry();
+    if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
+        update_hovered_entry();
     pack_buffers();
 #endif
+}
+
+void UIMenu::set_hovered_entry(int i)
+{
+    m_hover_idx = i;
+#ifdef USE_TILE_LOCAL
+    if (row_heights.size() > 0) // check for initial layout
+        pack_buffers();
+#endif
+    _expose();
 }
 
 #ifdef USE_TILE_LOCAL
@@ -600,12 +627,17 @@ void UIMenu::update_hovered_entry()
         if (x >= entry_x && x < entry_x+w && y >= entry.y && y < entry.y+entry_h)
         {
             wm->set_mouse_cursor(MOUSE_CURSOR_POINTER);
-            m_mouse_idx = i;
+            m_hover_idx = i;
+            m_menu->last_hovered = i;
             return;
         }
     }
     wm->set_mouse_cursor(MOUSE_CURSOR_ARROW);
-    m_mouse_idx = -1;
+    if (!(m_menu->flags & MF_ARROWS_SELECT))
+    {
+        m_hover_idx = -1;
+        m_menu->last_hovered = -1;
+    }
 }
 
 bool UIMenu::on_event(const Event& ev)
@@ -642,7 +674,7 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_x = -1;
         m_mouse_y = -1;
         m_mouse_pressed = false;
-        m_mouse_idx = -1;
+        m_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
         pack_buffers();
         _expose();
@@ -669,7 +701,7 @@ bool UIMenu::on_event(const Event& ev)
             && event.button() == MouseEvent::Button::Left
             && m_mouse_pressed)
     {
-        int entry = m_mouse_idx;
+        int entry = m_hover_idx;
         if (entry != -1 && m_menu->items[entry]->hotkeys.size() > 0)
             key = m_menu->items[entry]->hotkeys[0];
         m_mouse_pressed = false;
@@ -769,7 +801,7 @@ void UIMenu::pack_buffers()
             m_text_buf.add(split, text_sx, text_sy);
         }
 
-        bool hovered = i == m_mouse_idx && !entry.heading && me->hotkeys.size() > 0;
+        bool hovered = i == m_hover_idx && !entry.heading && me->hotkeys.size() > 0;
 
         if (me->selected() && !m_menu->is_set(MF_QUIET_SELECT))
         {
@@ -800,7 +832,8 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), last_selected(-1), m_kmc(kmc), m_filter(nullptr)
+    alive(false), last_selected(-1), last_hovered(-1), m_kmc(kmc),
+    m_filter(nullptr)
 {
     m_ui.menu = make_shared<UIMenu>(this);
     m_ui.scroller = make_shared<UIMenuScroller>();
@@ -1180,20 +1213,55 @@ bool Menu::process_key(int keyin)
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
-    case CK_PGUP: case '<':
+    case CK_PGUP:
+    case '<':
         page_up();
         break;
-    case CK_UP:
+    case CK_SHIFT_UP:
         line_up();
         break;
-    case CK_DOWN:
+    case CK_UP:
+        if (is_set(MF_ARROWS_SELECT))
+            cycle_hover(true);
+        else
+            line_up();
+        break;
+    case CK_SHIFT_DOWN:
         line_down();
+        break;
+    case CK_DOWN:
+        if (is_set(MF_ARROWS_SELECT))
+            cycle_hover();
+        else
+            line_down();
         break;
     case CK_HOME:
         m_ui.scroller->set_scroll(0);
+        if (is_set(MF_ARROWS_SELECT) && items.size())
+        {
+            set_hovered(0);
+            if (items[last_hovered]->level != MEL_ITEM)
+                cycle_hover();
+        }
         break;
     case CK_END:
-        m_ui.scroller->set_scroll(INT_MAX);
+        // setting this to INT_MAX when the last item is already visible does
+        // unnecessary scrolling to force the last item to be exactly at the
+        // end of the menu. (This has a weird interaction with page down.)
+        // TODO: possibly should be fixed in ui.cc? But I don't understand that
+        // code well enough
+        if (items.size())
+        {
+            if (!in_page(static_cast<int>(items.size()) - 1, true))
+                m_ui.scroller->set_scroll(INT_MAX);
+            if (is_set(MF_ARROWS_SELECT))
+            {
+                set_hovered(static_cast<int>(items.size()) - 1);
+                if (items[last_hovered]->level != MEL_ITEM)
+                    cycle_hover(true);
+
+            }
+        }
         break;
     case CONTROL('F'):
         if ((flags & MF_ALLOW_FILTER))
@@ -1273,9 +1341,13 @@ bool Menu::process_key(int keyin)
     case 0:               // do the same as <enter> key
         if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
             return true;
+        // seemingly intentional fallthrough
 #endif
     case CK_ENTER:
-        if (!(flags & MF_PRESELECTED) || !sel.empty())
+        // TODO: hover and multiselect?
+        if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
+            select_item_index(last_hovered, 1);
+        else if (!(flags & MF_PRESELECTED) || !sel.empty())
             return false;
         // else fall through
     default:
@@ -1387,11 +1459,14 @@ void Menu::deselect_all(bool update_view)
     sel.clear();
 }
 
+
+
 int Menu::get_first_visible() const
 {
     int y = m_ui.scroller->get_scroll();
     for (int i = 0; i < (int)items.size(); i++)
     {
+        // why does this use y2? It can lead to partially visible items in tiles
         int item_y2;
         m_ui.menu->get_item_region(i, nullptr, &item_y2);
         if (item_y2 > y)
@@ -1905,6 +1980,8 @@ void Menu::update_menu(bool update_entries)
 {
     m_ui.menu->update_items();
     update_title();
+    if (last_hovered >= 0)
+        set_hovered(last_hovered); // sanitize in case items have changed
 
     if (!alive)
         return;
@@ -1914,6 +1991,7 @@ void Menu::update_menu(bool update_entries)
         tiles.json_open_object();
         tiles.json_write_string("msg", "update_menu");
         tiles.json_write_int("total_items", items.size());
+        tiles.json_write_int("last_hovered", last_hovered);
         tiles.json_close_object();
         tiles.finish_message();
         if (items.size() > 0)
@@ -2014,21 +2092,96 @@ void Menu::update_title()
 #endif
 }
 
-bool Menu::in_page(int index) const
+void Menu::set_hovered(int index)
+{
+    // intentionally goes to -1 on size 0
+    last_hovered = min(index, static_cast<int>(items.size()) - 1);
+#ifdef USE_TILE_LOCAL
+    // don't crash if this gets called on local tiles before the menu has been
+    // displayed. If your initial hover isn't showing up on local tiles, it
+    // may be because of this -- adjust the timing so it is set after
+    // update_menu is called.
+    if (m_ui.menu->shown_items() == 0)
+        return;
+#endif
+
+    m_ui.menu->set_hovered_entry(last_hovered);
+    if (last_hovered >= 0)
+        snap_in_page(last_hovered);
+}
+
+bool Menu::in_page(int index, bool strict) const
 {
     int y1, y2;
     m_ui.menu->get_item_region(index, &y1, &y2);
-    int vph = m_ui.menu->get_region().height;
+    int vph = m_ui.scroller->get_region().height;
     int vpy = m_ui.scroller->get_scroll();
-    return (vpy < y1 && y1 < vpy+vph) || (vpy < y2 && y2 < vpy+vph);
+    const bool upper_in = (vpy <= y1 && y1 <= vpy+vph);
+    const bool lower_in = (vpy <= y2 && y2 <= vpy+vph);
+    return strict ? (lower_in && upper_in) : (lower_in || upper_in);
+}
+
+/// Ensure that the item at index is visible in the scroller
+bool Menu::snap_in_page(int index)
+{
+    if (index < 0 || index >= static_cast<int>(items.size()))
+        return false;
+
+    int y1, y2;
+    m_ui.menu->get_item_region(index, &y1, &y2);
+    // special case: the immediately preceding item is a header of some kind.
+    // could be generalized a bit, if sequences of headers come up? Most
+    // important when the first item in a menu is a header
+    if (index >= 1 && items[index - 1]->level != MEL_ITEM)
+        m_ui.menu->get_item_region(index - 1, &y1, nullptr);
+    int vph = m_ui.scroller->get_region().height;
+    int vpy = m_ui.scroller->get_scroll();
+
+    if (y2 >= vpy + vph)
+        m_ui.scroller->set_scroll(y2 - vph
+#ifdef USE_TILE_LOCAL
+            + UI_SCROLLER_SHADE_SIZE
+#endif
+            );
+    else if (y1 < vpy)
+        m_ui.scroller->set_scroll(y1
+#ifdef USE_TILE_LOCAL
+            - UI_SCROLLER_SHADE_SIZE
+#endif
+            );
+    else
+        return false; // already in page
+    return true;
 }
 
 bool Menu::page_down()
 {
+    int new_hover = -1;
+    if (is_set(MF_ARROWS_SELECT) && last_hovered < 0)
+        last_hovered = 0;
+    // preserve relative position
+    if (last_hovered >= 0 && in_page(last_hovered))
+        new_hover = last_hovered - get_first_visible();
     int dy = m_ui.scroller->get_region().height;
     int y = m_ui.scroller->get_scroll();
     bool at_bottom = y+dy >= m_ui.menu->get_region().height;
-    m_ui.scroller->set_scroll(y+dy);
+    // don't scroll further if the last item is already visible
+    // (TODO: I don't understand why this check is necessary, but without it,
+    // you sometimes unpredictably end up with the last element on its own page)
+    if (!in_page(static_cast<int>(items.size()) - 1, true))
+        m_ui.scroller->set_scroll(y+dy);
+
+    if (new_hover >= 0)
+    {
+        // if pgdn wouldn't change the hover, move it to the last element
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible() + new_hover == last_hovered)
+            set_hovered(items.size() - 1);
+        else
+            set_hovered(get_first_visible() + new_hover);
+        if (items[last_hovered]->level != MEL_ITEM)
+            cycle_hover(true); // reverse so we don't overshoot
+    }
+
 #ifndef USE_TILE_LOCAL
     if (!at_bottom)
         m_ui.menu->set_showable_height(y+dy+dy);
@@ -2038,9 +2191,24 @@ bool Menu::page_down()
 
 bool Menu::page_up()
 {
+    int new_hover = -1;
+    if (is_set(MF_ARROWS_SELECT) && last_hovered < 0)
+        last_hovered = 0;
+    if (last_hovered >= 0 && in_page(last_hovered))
+        new_hover = last_hovered - get_first_visible();
     int dy = m_ui.scroller->get_region().height;
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
+    if (new_hover >= 0)
+    {
+        // if pgup wouldn't change the hover, select the first element
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible() + new_hover == last_hovered)
+            new_hover = 0;
+        set_hovered(get_first_visible() + new_hover);
+        if (items[last_hovered]->level != MEL_ITEM)
+            cycle_hover(); // forward so we don't overshoot
+    }
+
 #ifndef USE_TILE_LOCAL
     m_ui.menu->set_showable_height(y);
 #endif
@@ -2065,6 +2233,43 @@ bool Menu::line_down()
         return true;
     }
     return false;
+}
+
+void Menu::cycle_hover(bool reverse)
+{
+    int items_tried = 0;
+    const int max_items = is_set(MF_WRAP) ? items.size()
+                        : reverse
+                          ? last_hovered
+                          : items.size() - last_hovered;
+    int new_hover = last_hovered;
+    if (reverse && last_hovered < 0)
+        new_hover = 0;
+    bool found = false;
+    while (items_tried < max_items)
+    {
+        new_hover = new_hover + (reverse ? -1 : 1);
+        items_tried++;
+        // try to find a non-heading to hover over
+        const int sz = static_cast<int>(items.size());
+        if (is_set(MF_WRAP))
+            new_hover = (new_hover + sz) % sz;
+        new_hover = max(0, min(new_hover, sz - 1));
+
+        if (items[new_hover]->level == MEL_ITEM)
+        {
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+        return;
+
+    set_hovered(new_hover);
+#ifdef USE_TILE_WEB
+    // TODO: not sure if this is enough
+    webtiles_update_scroll_pos();
+#endif
 }
 
 // XXX: doesn't do exactly what we want
@@ -2096,6 +2301,7 @@ void Menu::webtiles_write_menu(bool replace) const
     tiles.json_write_bool("ui-centred", !crawl_state.need_save);
     tiles.json_write_string("tag", tag);
     tiles.json_write_int("flags", flags);
+    tiles.json_write_int("last_hovered", last_hovered);
     if (replace)
         tiles.json_write_int("replace", 1);
 
@@ -2125,7 +2331,7 @@ void Menu::webtiles_write_menu(bool replace) const
     tiles.json_close_object();
 }
 
-void Menu::webtiles_scroll(int first)
+void Menu::webtiles_scroll(int first, int hover)
 {
     // catch and ignore stale scroll events
     if (first >= static_cast<int>(items.size()))
@@ -2136,6 +2342,8 @@ void Menu::webtiles_scroll(int first)
     if (m_ui.scroller->get_scroll() != item_y)
     {
         m_ui.scroller->set_scroll(item_y);
+        set_hovered(hover);
+        // TODO: can the snap in set_hovered ever do anything weird in this call?
         webtiles_update_scroll_pos();
         ui::force_render();
     }
@@ -2187,6 +2395,7 @@ void Menu::webtiles_update_items(int start, int end) const
 
     for (int i = start; i <= end; ++i)
     {
+        // TODO: why is this different from Menu::webtiles_write_item?
         tiles.json_open_object();
         const MenuEntry* me = items[i];
         tiles.json_write_string("text", me->get_text());
@@ -2195,6 +2404,14 @@ void Menu::webtiles_update_items(int start, int end) const
         if (col != MENU_ITEM_STOCK_COLOUR)
             tiles.json_write_int("colour", col);
         webtiles_write_tiles(*me);
+        if (!me->hotkeys.empty())
+        {
+            tiles.json_open_array("hotkeys");
+            for (int hotkey : me->hotkeys)
+                tiles.json_write_int(hotkey);
+            tiles.json_close_array();
+        }
+
         tiles.json_close_object();
     }
 
@@ -2224,6 +2441,7 @@ void Menu::webtiles_update_scroll_pos() const
     tiles.json_open_object();
     tiles.json_write_string("msg", "menu_scroll");
     tiles.json_write_int("first", get_first_visible());
+    tiles.json_write_int("last_hovered", last_hovered);
     tiles.json_close_object();
     tiles.finish_message();
 }

@@ -30,6 +30,8 @@ using std::vector;
 
 struct wm_keyboard_event;
 
+#define UI_SCROLLER_SHADE_SIZE 12
+
 namespace ui {
 
 struct SizeReq

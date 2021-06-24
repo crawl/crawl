@@ -982,14 +982,15 @@ private:
 
 public:
     MacroEditMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ALWAYS_SHOW_MORE),
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ALWAYS_SHOW_MORE
+                | MF_ARROWS_SELECT | MF_WRAP),
           selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
 #ifdef USE_TILE_LOCAL
         set_min_col_width(80);
 #endif
-        action_cycle = Menu::CYCLE_TOGGLE;
+        action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
         set_title(new MenuEntry("", MEL_TITLE));
     }
@@ -1014,6 +1015,8 @@ public:
         // update more in case menu changes between empty and non-empty
         update_macro_more();
         update_menu(true); // necessary to update webtiles menu
+        if (last_hovered == -1)
+            cycle_hover();
     }
 
     void cycle_mode()
@@ -1055,7 +1058,7 @@ public:
             edited_keymaps = true;
 
         string cmd_hint = make_stringf(
-            "[<w>Enter</w>] to create/edit %ss from any key (including hotkeys)%s\n",
+            "[<w>~</w>] to create/edit %ss from any key (including hotkeys)%s\n",
             keymc == KMC_NONE ? "macro" : "keymap",
             item_count() == 0 ? "" : ", [<w>-</w>] clear all");
 
@@ -1103,7 +1106,7 @@ public:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-            "Editing <w>" + mode_name() + "s</w>. Enter a key to create/edit:");
+            "Editing <w>" + mode_name() + "s</w>. Arrows/[<w>enter</w>] to select, or enter a key:");
     }
 
     bool process_key(int keyin) override
@@ -1111,8 +1114,6 @@ public:
         switch (keyin)
         {
         case CK_REDRAW:
-        case CK_MOUSE_B2:
-        CASE_ESCAPE
         case ' ': case CK_PGDN: case '>': case '+':
         case CK_MOUSE_CLICK:
         case CK_MOUSE_B1:
@@ -1121,6 +1122,12 @@ public:
         case CK_DOWN:
         case CK_HOME:
         case CK_END:
+        case CK_ENTER:
+            if (item_count() == 0)
+                return true; // override weird superclass behavior
+            //fallthrough
+        case CK_MOUSE_B2:
+        CASE_ESCAPE
             return Menu::process_key(keyin);
         case CK_MOUSE_CMD:
         case '!':
@@ -1134,7 +1141,7 @@ public:
         default:
             selected_new_key = true;
             // fallthrough
-        case CK_ENTER:
+        case '~':
             lastch = keyin;
             return false;
         }
@@ -1177,24 +1184,23 @@ void macro_add_query()
 
     if (!key_chosen)
     {
-        if (menu.getkey() == CK_ENTER)
+        // The use of ~ here is partly to make it harder to rebind ~. To do it
+        // in the in-game UI you'd have to enter the keycode.
+        if (menu.getkey() == '~')
         {
             clear_messages(true);
             const string trigger_prompt = make_stringf(
-                "Input %s trigger key (<white>\\</white> to enter by keycode): ",
+                "Input %s trigger key ([<w>~</w>] to enter by keycode): ",
                 macro_type.c_str());
             msgwin_prompt(trigger_prompt);
             key = _getch_mul();
-            if (key[0] == '\\')
+            if (key[0] == '~')
             {
                 msgwin_reply("keycode");
                 key.clear();
                 char buf[20];
                 msgwin_get_line("Input keycode by number: ", buf, sizeof(buf));
-                if (buf[0] == '\\')
-                    key.push_back('\\');
-                else
-                    key.push_back(read_key_code(string(buf)));
+                key.push_back(read_key_code(string(buf)));
                 if (key[0] == 0)
                 {
                     canned_msg(MSG_OK);
