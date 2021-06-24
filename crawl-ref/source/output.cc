@@ -551,7 +551,15 @@ void update_turn_count()
     }
 
     const int turncount_start_x = 19 + 6;
-    CGOTOXY(turncount_start_x, 9, GOTO_STAT);
+    int ypos = 9;
+    // TODO: unify this with the calculation in print_stats
+    if (you.has_mutation(MUT_HP_CASTING))
+        ypos--;
+#ifdef USE_TILE_LOCAL
+    if (tiles.is_using_small_layout())
+        ypos--;
+#endif
+    CGOTOXY(turncount_start_x, ypos, GOTO_STAT);
 
     textcolour(HUD_VALUE_COLOUR);
     string time = Options.show_game_time
@@ -1327,6 +1335,7 @@ void print_stats()
 
     if (HP_Bar.wants_redraw())
         you.redraw_hit_points = true;
+
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
 
@@ -1341,22 +1350,30 @@ void print_stats()
         _redraw_title();
     if (you.redraw_hit_points)
         _print_stats_hp(1, 3);
-    if (you.redraw_magic_points)
+
+    int rows_hidden = 0;
+    // hide the MP bar for djinni
+    if (you.has_mutation(MUT_HP_CASTING))
+        rows_hidden++;
+    else if (you.redraw_magic_points)
         _print_stats_mp(1, 4);
 
+    // several of the following field names are printed in draw_border, not
+    // here. It's supposed to be for things that don't ever change, but it's
+    // mostly just a mess.
     if (you.redraw_armour_class)
-        _print_stats_ac(1, ac_pos);
+        _print_stats_ac(1, ac_pos - rows_hidden);
     if (you.redraw_evasion)
-        _print_stats_ev(1, ev_pos);
+        _print_stats_ev(1, ev_pos - rows_hidden);
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
-            _print_stat(static_cast<stat_type>(i), 19, 5 + i);
+            _print_stat(static_cast<stat_type>(i), 19, 5 + i - rows_hidden);
     you.redraw_stats.init(false);
 
     if (you.redraw_experience)
     {
-        CGOTOXY(1, 8, GOTO_STAT);
+        CGOTOXY(1, 8 - rows_hidden, GOTO_STAT);
         textcolour(Options.status_caption_colour);
         CPRINTF("XL: ");
         textcolour(HUD_VALUE_COLOUR);
@@ -1373,31 +1390,30 @@ void print_stats()
         you.redraw_experience = false;
     }
 
-    int yhack = 0;
-
     // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL
-    if (!tiles.is_using_small_layout())
+    if (tiles.is_using_small_layout())
+        rows_hidden++;
+    else
 #endif
     {
-        yhack++;
         if (Options.equip_bar)
         {
              if (you.gear_change || you.wield_change)
-                _print_stats_equip(1, 8+yhack);
+                _print_stats_equip(1, 9 - rows_hidden);
         }
         else if (you.redraw_noise)
-            _print_stats_noise(1, 8+yhack);
+            _print_stats_noise(1, 9 - rows_hidden);
     }
 
     if (you.wield_change)
-        _print_stats_wp(9 + yhack);
+        _print_stats_wp(10 - rows_hidden);
 
     if (you.redraw_quiver)
-        _print_stats_qv(10 + yhack);
+        _print_stats_qv(11 - rows_hidden);
 
     if (you.redraw_status_lights)
-        _print_status_lights(11 + yhack);
+        _print_status_lights(12 - rows_hidden);
 
 #ifndef USE_TILE_LOCAL
     assert_valid_cursor_pos();
@@ -1424,6 +1440,14 @@ static string _level_description_string_hud()
 void print_stats_level()
 {
     int ypos = 8;
+    // TODO: unify this with the calculation in print_stats
+    if (you.has_mutation(MUT_HP_CASTING))
+        ypos--;
+#ifdef USE_TILE_LOCAL
+    if (tiles.is_using_small_layout())
+        ypos--;
+#endif
+
     cgotoxy(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
@@ -1443,17 +1467,21 @@ void draw_border()
 
     textcolour(Options.status_caption_colour);
 
-//    int hp_pos = 3;
-    int mp_pos = 4;
-    int ac_pos = 5;
-    int ev_pos = 6;
-    int sh_pos = 7;
+    int ac_pos;
+    // TODO: unify this calculation with rows_hidden in print_stats in a
+    // non-insane way
+    if (you.has_mutation(MUT_HP_CASTING))
+        ac_pos = 4;
+    else
+        ac_pos = 5;
+
+    int ev_pos = ac_pos + 1;
+    int sh_pos = ac_pos + 2;
     int str_pos = ac_pos;
     int int_pos = ev_pos;
     int dex_pos = sh_pos;
 
-    //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
-    CGOTOXY(1, mp_pos, GOTO_STAT);
+    // "Health:" and "Magic:" printed elsewhere
     CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
     CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");
@@ -1462,9 +1490,10 @@ void draw_border()
     CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
-    CGOTOXY(19, 9, GOTO_STAT);
+    // "XL:" and "Place:" printed elsewhere
+    // "Noise:" printed elsewhere
+    CGOTOXY(19, ac_pos + 4, GOTO_STAT);
     CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
-    // Line 8 is exp pool, Level
 }
 
 #ifndef USE_TILE_LOCAL
