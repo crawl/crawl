@@ -386,6 +386,12 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         percentage_color("hp");
         percentage_color("mp");
         update_bar("hp");
+        // is there a better place to do this?
+        if (player.species == "Djinni")
+            $("#stats_mpline").hide();
+        else
+            $("#stats_mpline").show();
+
         update_bar("mp");
 
         update_defense("ac");
