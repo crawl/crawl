@@ -1,4 +1,4 @@
-Stone Soup 0.27-a0 (through 0.27-a0-1047-gc940c04)
+Stone Soup 0.27-a0 (through 0.27-a0-1333-gcdc07c3)
 --------------------------------------------------
 
 Branches, Environment
@@ -19,6 +19,9 @@ Branches, Environment
   in the Temple branch or in an overflow vault on D:3-10.
 * Shops can now place on D:1-3.
 * Guaranteed demonic rune vaults announce the presence of the demonic rune.
+* New feature: demonic trees. Demonic trees appear in the Abyss and Pan and
+  can be placed by vaults. They behave like trees but when burned produce a
+  cloud of chaos that does not spread like a forest fire.
 
 Character
 ---------
@@ -62,7 +65,7 @@ Character
   using their HP. They also cannot learn spells from books;
   they instead get spells randomly and naturally, starting on
   XL 3 and continuing on every even level.
-* Species and form granted flight is always permanent
+* Species and form granted flight is always permanent.
 * Scales mutations that provide distortion field, rF, rC, rPois, rElec, rCorr,
   and +HP are now Demonspawn only.
 * Iridescent scales and passive freeze are removed from the Demonspawn pool and
@@ -72,6 +75,10 @@ Character
   random mutation in its place.
 * The blink mutation is removed.
 * Shoutitis and No Potion Heal are reduced to 2 levels from 3.
+* Wisp form no longer has blinkitis.
+* Guaranteed damage reduction is now a property derived from AC, with
+  higher AC values from any source guaranteeing a certain base amount of
+  protection from melee damage and mundane projectiles.
 * Halflings are removed.
 
 Gods
@@ -92,12 +99,20 @@ Gods
     - 4* Passive scrying to radius 2, scaling with piety to radius 4 at 6*.
 * Cheibriados no longer hates quick blades.
 * The player and Hepliaklqana ancestors can fire through one-another.
+* Hepliaklqana's ancestor and HP penalty now apply at 1*.
 * A new Jiyva mutation allows players to engulf foes in ooze in melee.
+* Kikubaaqudgha now gifts spells directly into the spell library, and still
+  grants Haunt along with the other Necronomicon spells as one capstone choice.
 * Makhleb's Major Destruction now fires all bolt-type spells and is stronger.
 * Makhleb's passive heal on kill is reduced in strength.
 * The Elixir card no longer heals allies and always regenerates both health and
   magic, with duration scaling with power.
 * The Foxfire card is renamed to the Swarm and now summons bees.
+* Okawaru no longer punishes betraying allies.
+* Sacrifice piety values are rebalanced.
+* Sacrifice Experience now extracts a greater experience cost by adjusting the
+  experience gained.
+* Sacrifice words and sacrifice drink grant bonus piety when taken together.
 * Vehumet now supports Poisonous Vapours
 * Heavenly Storm grants bonus EV and is a bit quieter.
 * Yredelemnul accepts nonliving worshippers again, and permits the use of
@@ -148,6 +163,9 @@ Monsters
 * Oozes are renamed endoplasms, and cast freeze (but are weaker).
 * Draconian Knights and Fannar no longer cast Ozocubu's Armour and have
   higher base AC.
+* Air Elementals no longer have a tornado, instead gaining Stunning Blast
+  which inflicts 1 turn of paranlysis and is resistable with rElec or by dodging
+  the beam but not Will.
 * Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
   and death oozes are removed.
 
@@ -169,12 +187,10 @@ Items
 * Once picked up, manuals do not require an inventory slot.
 * Broad axe's base delay is returned to 1.6.
 * The *Curse property on unrands is removed. the Scythe of Curses and obsidian
-  axe now have *Drain. The property is removed from the Necklace of Bloodlust
+  axe now have *Drain. The property is removed from the Necklace of Bloodlust.
 * The obsidian axe can no longer be unwielded while mesmerised.
 * The *Slow artefact property now stacks.
 * Hats and gloves can now get the stealth ego.
-* Wands of random effects now only apply buff or debuff effects (15% chance of
-  a buff), not damaging effects.
 * Cursed items no longer generate. Ashenzari is the only source of curses.
 * Mundane negative-enchant items no longer generate. (Negative enchants are
   still possible on randarts)
@@ -186,8 +202,10 @@ Items
 * Rare scrolls, books, manuals, and enhancer staves can now spawn early.
 * Flight granting items cause you to fly at all times while equipped.
 * Pieces from Xom's chessboard are re-introduced as an XP-gated evokable which
-  provides a non-targeted version of the wand of random effects. Artificers
+  provides a non-targeted version of the wand of random effects. They apply
+  only buff or debuff effects to a random monster in sight. Artificers
   start with one instead of the wand.
+* The amulet of the Air loses EV+5 and gains an Air magic enhancer.
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
   inaccuracy, scrolls of remove curse, scrolls of random uselessness, wands of
   random effects, and boots of running are removed.
@@ -206,15 +224,22 @@ Spells
   random foes in sight with the attacker's wielded weapon.
 * Airstrike no longer gets bonus damage against flying monsters.
 * Poisonous Vapours can no longer target empty space.
-* Blade Hands is now level 6 and appears only in the book of Transfigurations
-* Hydra Form is now level 5 and appears in the book of Changes and the Fen
-  Folio
+* Blade Hands now appears only in the book of Transfigurations.
 * Hailstorm now affects icy creatures.
 * Summon Ice Beast is moved from the book of Frost to the book of Ice.
 * Metabolic Englaciation is moved from the book of Ice to the book of Frost.
 * Static Discharge is now level 2.
 * Swiftness is now level 3.
-* Summon Demon and Summon Greater Demon are removed.
+* Freezing Cloud is now level 5.
+* Wereblood now heals 1d3 on each kill.
+* Tornado is re-named Polar Vortex and is now Level 9 Ice. It deals
+  partly-resistable icicle flavoured damage and has more damage dice than
+  before.
+* Chain Lightning is now level 9. The damage and arcing behavior is adjusted
+  to be more position sensitive and more comprehensible. Monster Chain
+  Lightning is similarly adjusted.
+* Poisonous Vapours no longer creates a cloud as its mechanism of action.
+* Absolute Zero, Hydra Form, Summon Demon, and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
 ----------------------------
