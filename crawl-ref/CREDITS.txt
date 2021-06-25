@@ -262,7 +262,6 @@
     nagdon
     Naruni
     neofelis
-    nicolae
     nirrattner
     Jonathon Nooner
     NormalPerson7
@@ -418,6 +417,7 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Middleton
     Seve Monahan
     Neil Moore
+    nicolae
     Steven Noonan
     Stefan O'Rear
     Charles Otto
