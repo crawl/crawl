@@ -290,7 +290,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         else
             mpr("You feel powerful.");
     }
-    
+
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
 
