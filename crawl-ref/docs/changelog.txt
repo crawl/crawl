@@ -164,7 +164,7 @@ Monsters
 * Draconian Knights and Fannar no longer cast Ozocubu's Armour and have
   higher base AC.
 * Air Elementals no longer have a tornado, instead gaining Stunning Blast
-  which inflicts 1 turn of paranlysis and is resistable with rElec or by dodging
+  which inflicts 1 turn of paralysis and is resistable with rElec or by dodging
   the beam but not Will.
 * Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
   and death oozes are removed.
