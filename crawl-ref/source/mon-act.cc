@@ -820,39 +820,6 @@ static bool _handle_potion(monster& mons)
     return rc;
 }
 
-static bool _handle_evoke_equipment(monster& mons)
-{
-    // TODO: check non-ring, non-amulet equipment
-    item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
-    if (mons.asleep()
-        || mons_is_confused(mons)
-        || !jewel
-        || !one_chance_in(3)
-        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || jewel->base_type != OBJ_JEWELLERY)
-    {
-        return false;
-    }
-
-    bool rc = false;
-
-    const jewellery_type jtype = static_cast<jewellery_type>(jewel->sub_type);
-
-    if (mons.can_evoke_jewellery(jtype) && mons.should_evoke_jewellery(jtype))
-    {
-        const bool was_visible = you.can_see(mons);
-
-        // Evoke the item, and identify it.
-        if (mons.evoke_jewellery_effect(jtype) && was_visible)
-            set_ident_type(OBJ_JEWELLERY, jtype, true);
-
-        mons.lose_energy(EUT_ITEM);
-        rc = true;
-    }
-
-    return rc;
-}
-
 /**
  * Check if the monster has a swooping attack and is in a position to
  * use it, and do so if they can.
@@ -934,36 +901,36 @@ static bool _handle_swoop(monster& mons)
  *         doesn't have a reaching weapon, the foe isn't hostile, the foe
  *         is too near or too far, etc.
  */
-static bool _handle_reaching(monster* mons)
+static bool _handle_reaching(monster& mons)
 {
     bool       ret = false;
-    const reach_type range = mons->reach_range();
-    actor *foe = mons->get_foe();
+    const reach_type range = mons.reach_range();
+    actor *foe = mons.get_foe();
 
-    if (mons->caught()
-        || mons_is_confused(*mons)
+    if (mons.caught()
+        || mons_is_confused(mons)
         || !foe
         || range <= REACH_NONE
-        || is_sanctuary(mons->pos())
+        || is_sanctuary(mons.pos())
         || is_sanctuary(foe->pos())
-        || mons->submerged()
-        || (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
-        || mons_is_fleeing(*mons)
-        || mons->pacified())
+        || mons.submerged()
+        || (mons_aligned(&mons, foe) && !mons.has_ench(ENCH_INSANE))
+        || mons_is_fleeing(mons)
+        || mons.pacified())
     {
         return false;
     }
 
     const coord_def foepos(foe->pos());
-    if (can_reach_attack_between(mons->pos(), foepos)
+    if (can_reach_attack_between(mons.pos(), foepos)
         // The monster has to be attacking the correct position.
-        && mons->target == foepos)
+        && mons.target == foepos)
     {
         ret = true;
 
         ASSERT(foe->is_player() || foe->is_monster());
 
-        fight_melee(mons, foe);
+        fight_melee(&mons, foe);
     }
 
     return ret;
@@ -1332,8 +1299,14 @@ static void _monster_add_energy(monster& mons)
              mprf(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
                   mons->name(DESC_PLAIN).c_str());
+#    define DEBUG_ENERGY_USE_REF(problem) \
+    if (mons.speed_increment == old_energy && mons.alive()) \
+             mprf(MSGCH_DIAGNOSTICS, \
+                  problem " for monster '%s' consumed no energy", \
+                  mons.name(DESC_PLAIN).c_str());
 #else
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
+#    define DEBUG_ENERGY_USE_REF(problem) ((void) 0)
 #endif
 
 static void _confused_move_dir(monster *mons)
@@ -1492,6 +1465,102 @@ static void _pre_monster_move(monster& mons)
     mons.check_speed();
 }
 
+// Handle weird stuff like spells/special abilities, item use,
+// reaching, swooping, etc.
+// Returns true iff the monster used up their turn.
+static bool _mons_take_special_action(monster &mons, int old_energy)
+{
+    if ((mons.asleep() || mons_is_wandering(mons))
+        // Slime creatures can split while wandering or resting.
+        && mons.type != MONS_SLIME_CREATURE)
+    {
+        return false;
+    }
+
+    // Berserking monsters are limited to running up and
+    // hitting their foes.
+    if (mons.berserk_or_insane())
+    {
+        if (_handle_reaching(mons))
+        {
+            DEBUG_ENERGY_USE_REF("_handle_reaching()");
+            return true;
+        }
+
+        return false;
+    }
+
+    // Prevents unfriendlies from nuking you from offscreen.
+    // How nice!
+    const bool friendly_or_near =
+            mons.friendly() && mons.foe == MHITYOU
+            || mons.near_foe();
+
+    // Activate spells or abilities?
+    if (friendly_or_near
+        || mons.type == MONS_TEST_SPAWNER
+        // Slime creatures can split when offscreen.
+        || mons.type == MONS_SLIME_CREATURE
+        // Let monsters who have Awaken Earth use it off-screen.
+        // :( -- pf
+        || mons.has_spell(SPELL_AWAKEN_EARTH)
+        )
+    {
+        // [ds] Special abilities shouldn't overwhelm
+        // spellcasting in monsters that have both. This aims
+        // to give them both roughly the same weight.
+        if (coinflip() ? mon_special_ability(&mons) || _do_mon_spell(&mons)
+                       : _do_mon_spell(&mons) || mon_special_ability(&mons))
+        {
+            DEBUG_ENERGY_USE_REF("spell or special");
+            mmov.reset();
+            return true;
+        }
+    }
+
+    if (friendly_or_near)
+    {
+        if (_handle_potion(mons))
+        {
+            DEBUG_ENERGY_USE_REF("_handle_potion()");
+            return true;
+        }
+
+        if (_handle_scroll(mons))
+        {
+            DEBUG_ENERGY_USE_REF("_handle_scroll()");
+            return true;
+        }
+    }
+
+    if (_handle_wand(mons))
+    {
+        DEBUG_ENERGY_USE_REF("_handle_wand()");
+        return true;
+    }
+
+    if (_handle_swoop(mons))
+    {
+        DEBUG_ENERGY_USE_REF("_handle_swoop()");
+        return true;
+    }
+
+    bolt beem = setup_targetting_beam(mons);
+    if (handle_throw(&mons, beem, false, false))
+    {
+        DEBUG_ENERGY_USE_REF("_handle_throw()");
+        return true;
+    }
+
+    if (_handle_reaching(mons))
+    {
+        DEBUG_ENERGY_USE_REF("_handle_reaching()");
+        return true;
+    }
+
+    return false;
+}
+
 void handle_monster_move(monster* mons)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -1502,7 +1571,7 @@ void handle_monster_move(monster* mons)
     const bool disabled = crawl_state.disables[DIS_MON_ACT]
                           && _unfriendly_or_impaired(*mons);
 
-    int old_energy      = mons->speed_increment;
+    const int old_energy = mons->speed_increment;
     int non_move_energy = min(entry->energy_usage.move,
                               entry->energy_usage.swim);
 
@@ -1759,93 +1828,8 @@ void handle_monster_move(monster* mons)
     if (mons_stores_tracking_data(*mons))
         mons->props["mmov"].get_coord() = mmov;
 
-    if (!mons->asleep() && !mons_is_wandering(*mons)
-        // Berserking monsters are limited to running up and
-        // hitting their foes.
-        && !mons->berserk_or_insane()
-        // Slime creatures can split while wandering or resting.
-        || mons->type == MONS_SLIME_CREATURE)
-    {
-        // Prevents unfriendlies from nuking you from offscreen.
-        // How nice!
-        const bool friendly_or_near =
-            mons->friendly() && mons->foe == MHITYOU || mons->near_foe();
-        if (friendly_or_near
-            || mons->type == MONS_TEST_SPAWNER
-            // Slime creatures can split when offscreen.
-            || mons->type == MONS_SLIME_CREATURE
-            // Let monsters who have Awaken Earth use it off-screen.
-            || mons->has_spell(SPELL_AWAKEN_EARTH)
-            )
-        {
-            // [ds] Special abilities shouldn't overwhelm
-            // spellcasting in monsters that have both. This aims
-            // to give them both roughly the same weight.
-            if (coinflip() ? mon_special_ability(mons) || _do_mon_spell(mons)
-                           : _do_mon_spell(mons) || mon_special_ability(mons))
-            {
-                DEBUG_ENERGY_USE("spell or special");
-                mmov.reset();
-                return;
-            }
-        }
-
-        const bool prefer_ranged = mons_class_flag(mons->type, M_PREFER_RANGED);
-
-        if (friendly_or_near)
-        {
-            if (_handle_potion(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_potion()");
-                return;
-            }
-
-            if (_handle_scroll(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_scroll()");
-                return;
-            }
-
-            if (_handle_evoke_equipment(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_evoke_equipment()");
-                return;
-            }
-
-            if (_handle_wand(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_wand()");
-                return;
-            }
-
-            if (_handle_swoop(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_swoop()");
-                return;
-            }
-
-            // we want to let M_PREFER_RANGED monsters try their ranged attack
-            // first, even if within reaching range.
-            if (!prefer_ranged && _handle_reaching(mons))
-            {
-                DEBUG_ENERGY_USE("_handle_reaching()");
-                return;
-            }
-        }
-
-        bolt beem = setup_targetting_beam(*mons);
-        if (handle_throw(mons, beem, false, false))
-        {
-            DEBUG_ENERGY_USE("_handle_throw()");
-            return;
-        }
-
-        if (friendly_or_near && prefer_ranged && _handle_reaching(mons))
-        {
-            DEBUG_ENERGY_USE("_handle_reaching()");
-            return;
-        }
-    }
+    if (_mons_take_special_action(*mons, old_energy))
+        return;
 
     if (!mons->caught())
     {
