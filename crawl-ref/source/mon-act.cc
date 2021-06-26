@@ -1048,18 +1048,21 @@ static bool _handle_wand(monster& mons)
 {
     item_def *wand = mons.mslot_item(MSLOT_WAND);
     // Yes, there is a logic to this ordering {dlb}:
-    // FIXME: monsters should be able to use wands
-    //        out of sight of the player [rob]
-    if (!you.see_cell(mons.pos())
+    // (no there's not -- pf)
+    if (!wand
+        || wand->base_type != OBJ_WANDS
+
+        || !mons.get_foe()
+        || !cell_see_cell(mons.pos(), mons.get_foe()->pos(), LOS_SOLID_SEE)
+
         || mons.asleep()
         || mons_is_fleeing(mons)
         || mons.pacified()
         || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
-        || x_chance_in_y(3, 4)
-        || !wand
-        || wand->base_type != OBJ_WANDS)
+
+        || x_chance_in_y(3, 4))
     {
         return false;
     }
