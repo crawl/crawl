@@ -1521,6 +1521,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_SHIELDING",
         "ARTP_HARM",
         "ARTP_RAMPAGING",
+        "ARTP_ARCHMAGI",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

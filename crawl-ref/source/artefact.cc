@@ -587,6 +587,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class != OBJ_ARMOUR
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
+        case ARTP_ARCHMAGI:
+            return item.is_type(OBJ_ARMOUR, ARM_ROBE);
         default:
             return true;
     }
@@ -726,6 +728,8 @@ static const artefact_prop_data artp_data[] =
     { "Harm", ARTP_VAL_BOOL, 25, // ARTP_HARM,
         []() {return 1;}, nullptr, 0, 0},
     { "Rampage", ARTP_VAL_BOOL, 25, // ARTP_RAMPAGING,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Archmagi", ARTP_VAL_BOOL, 25, // ARTP_ARCHMAGI,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
@@ -1510,7 +1514,8 @@ static bool _randart_is_conflicting(const item_def &item,
     // see also _artp_can_go_on_item
 
     if (proprt[ARTP_PREVENT_SPELLCASTING]
-        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0)
+        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0
+        || proprt[ARTP_ARCHMAGI])
     {
         return true;
     }

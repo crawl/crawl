@@ -351,6 +351,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_STEALTH,               prop_note::symbolic },
         { ARTP_CLARITY,               prop_note::plain },
         { ARTP_RMSL,                  prop_note::plain },
+        { ARTP_ARCHMAGI,              prop_note::plain },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -585,6 +586,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_HARM, "It increases damage dealt and taken.", false},
         { ARTP_RAMPAGING, "It bestows one free step when moving towards enemies.",
           false},
+        { ARTP_ARCHMAGI, "It increases the power of your magical spells.", false},
     };
 
     // Give a short description of the base type, for base types with no
