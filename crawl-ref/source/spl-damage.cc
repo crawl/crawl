@@ -2936,7 +2936,7 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     monster* mons = monster_at(beam.target);
     if (!mons || !you.can_see(*mons))
     {
-        if (test || !yesno("You see nothing there. Cast anyway?", true, 'n'))
+        if (test)
             return spret::abort;
     } else if (mons->res_poison() > 0 && mons->observable())
     {
