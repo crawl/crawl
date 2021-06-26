@@ -2358,7 +2358,10 @@ int bolt::get_cloud_size(bool min, bool max) const
 
 void bolt::affect_endpoint()
 {
-    if (special_explosion)
+    // hack: we use hit_verb to communicate whether a ranged
+    // attack hit. (And ranged attacks should only explode if
+    // they hit the target, to avoid silliness with . targeting.)
+    if (special_explosion && (is_tracer || !item || !hit_verb.empty()))
     {
         special_explosion->target = pos();
         special_explosion->refine_for_explosion();
