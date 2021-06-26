@@ -2509,7 +2509,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int no_cast = you.no_cast(calc_unid);
     if (no_cast)
         out += _resist_composer("NoCast", cwidth, 1, 1, false);
-    
+
     cols.add_formatted(1, out, false);
 
     _print_overview_screen_equip(cols, equip_chars, sw);
