@@ -808,7 +808,7 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
             continue; // no treeporting into summoned forests
 
         const dungeon_feature_type grid = env.grid(*di);
-        if (grid != DNGN_TREE)
+        if (!feat_is_tree(grid))
             continue;
         closest = dist;
 
@@ -1063,7 +1063,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
+        if (mons->hit_points * 2 < mons->max_hit_points
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(*mons, " overheats!");

@@ -268,12 +268,10 @@ bool monster::submerged() const
 bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = env.grid(p);
-    return (mons_genus(type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(*this) == MONS_GREY_DRACONIAN)
-                || grid == DNGN_SHALLOW_WATER
-                   && (mons_genus(type) == MONS_NAGA // tails, not feet
-                       || mons_genus(type) == MONS_SALAMANDER
-                       || body_size(PSIZE_BODY) >= SIZE_LARGE);
+    return grid == DNGN_SHALLOW_WATER
+           && (mons_genus(type) == MONS_NAGA // tails, not feet
+               || mons_genus(type) == MONS_SALAMANDER
+               || body_size(PSIZE_BODY) >= SIZE_LARGE);
 }
 
 bool monster::extra_balanced() const
@@ -509,6 +507,22 @@ item_def *monster::melee_weapon() const
     return nullptr;
 }
 
+/**
+ * If this is an animated object with some properties determined by an item,
+ * return that item.
+ */
+item_def *monster::get_defining_object() const
+{
+    // could ASSERT on the inventory checks, but wizmode placement doesn't
+    // really guarantee these items
+    if (mons_class_is_animated_weapon(type) && inv[MSLOT_WEAPON] != NON_ITEM)
+        return &env.item[inv[MSLOT_WEAPON]];
+    else if (type == MONS_ANIMATED_ARMOUR && inv[MSLOT_ARMOUR] != NON_ITEM)
+        return &env.item[inv[MSLOT_ARMOUR]];
+
+    return nullptr;
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item, bool base) const
 {
@@ -528,7 +542,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     // These *are* weapons, so they can't wield another weapon or
     // unwield themselves.
-    if (mons_class_is_animated_weapon(type))
+    if (mons_class_is_animated_object(type))
         return false;
 
     // MF_HARD_RESET means that all items the monster is carrying will
@@ -608,7 +622,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
     ASSERT(item.defined());
 
     // These *are* weapons, so they can't wield another weapon.
-    if (mons_class_is_animated_weapon(type))
+    if (mons_class_is_animated_object(type))
         return false;
 
     // Monsters can't use unrandarts with special effects.
@@ -1033,12 +1047,14 @@ bool monster::unequip(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (!force && mons_class_is_animated_weapon(type))
+        if (!force && mons_class_is_animated_object(type))
             return false;
         unequip_weapon(item, msg);
         break;
 
     case OBJ_ARMOUR:
+        if (!force && mons_class_is_animated_object(type))
+            return false;
         unequip_armour(item, msg);
         break;
 
@@ -2826,18 +2842,6 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_LAVA:
     case BEAM_STICKY_FLAME:
     case BEAM_STEAM:
-        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        {
-            // The 10 here is from expose_player_to_element.
-            const int amount = strength ? strength : 10;
-            if (!lose_ench_levels(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                                  amount * BASELINE_DELAY, true)
-                && you.can_see(*this))
-            {
-                mprf("The heat melts %s icy armour.",
-                     apostrophise(name(DESC_THE)).c_str());
-            }
-        }
         if (has_ench(ENCH_ICEMAIL))
             del_ench(ENCH_ICEMAIL);
         break;
@@ -3106,6 +3110,11 @@ bool monster::pacified() const
     return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
+bool monster::can_feel_fear(bool /*include_unknown*/) const
+{
+    return (holiness() & MH_NATURAL) && !berserk_or_insane();
+}
+
 /**
  * Returns whether the monster currently has any kind of shield.
  */
@@ -3157,15 +3166,6 @@ int monster::shield_bypass_ability(int) const
 bool monster::missile_repulsion() const
 {
     return has_ench(ENCH_REPEL_MISSILES) || scan_artefacts(ARTP_RMSL);
-}
-
-void monster::ablate_repulsion()
-{
-    if (has_ench(ENCH_REPEL_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd()))
-            del_ench(ENCH_REPEL_MISSILES);
-    }
 }
 
 /**
@@ -3331,8 +3331,6 @@ int monster::armour_class(bool calc_unid) const
     }
 
     // various enchantments
-    if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-        ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
     if (has_ench(ENCH_IDEALISED))
@@ -3890,8 +3888,7 @@ bool monster::res_sticky_flame() const
 bool monster::res_miasma(bool /*temp*/) const
 {
     if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
-        || get_mons_resist(*this, MR_RES_MIASMA)
-        || is_unbreathing())
+        || get_mons_resist(*this, MR_RES_MIASMA))
     {
         return true;
     }
@@ -3964,11 +3961,10 @@ bool monster::res_torment() const
            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
-bool monster::res_tornado() const
+bool monster::res_polar_vortex() const
 {
-    return has_ench(ENCH_TORNADO)
-           || has_ench(ENCH_VORTEX)
-           || get_mons_resist(*this, MR_RES_TORNADO) > 0;
+    return has_ench(ENCH_POLAR_VORTEX)
+           || get_mons_resist(*this, MR_RES_VORTEX) > 0;
 }
 
 bool monster::res_petrify(bool /*temp*/) const
@@ -4456,6 +4452,19 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             // fail e.g. when the damage is from a vault-created cloud
             if (auto valid_agent = ensure_valid_actor(agent))
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
+        }
+
+        // Trigger corrupting presence
+        if (agent && agent->is_player() && alive()
+            && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
+        {
+            if (one_chance_in(12))
+                this->corrode_equipment("");
+            if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
+                        && one_chance_in(12))
+            {
+                this->malmutate("");
+            }
         }
 
         blame_damage(agent, amount);
@@ -5084,7 +5093,7 @@ bool monster::can_go_frenzy(bool check_sleep) const
         return false;
 
     // These allies have a special loyalty
-    if (mons_is_hepliaklqana_ancestor(type)
+    if (god_protects(this)
         || testbits(flags, MF_DEMONIC_GUARDIAN))
     {
         return false;
@@ -5442,14 +5451,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
         && !monster_habitable_grid(this, env.grid(pos()))
         && !has_ench(ENCH_AQUATIC_LAND))
     {
-        // Elemental wellsprings always have water beneath them
-        if (type == MONS_ELEMENTAL_WELLSPRING)
-        {
-            temp_change_terrain(pos(), DNGN_SHALLOW_WATER, 100,
-                                TERRAIN_CHANGE_FLOOD, this);
-        }
-        else
-            add_ench(ENCH_AQUATIC_LAND);
+        add_ench(ENCH_AQUATIC_LAND);
     }
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
@@ -5805,7 +5807,6 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_CURING:
         return hit_points <= max_hit_points / 2
                || has_ench(ENCH_POISON)
-               || has_ench(ENCH_SICK)
                || has_ench(ENCH_CONFUSION);
     case POT_HEAL_WOUNDS:
         return hit_points <= max_hit_points / 2;
@@ -5847,7 +5848,7 @@ bool monster::drink_potion_effect(potion_type pot_eff, bool card)
 
         static const enchant_type cured_enchants[] =
         {
-            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION
+            ENCH_POISON, ENCH_CONFUSION
         };
 
         for (enchant_type cured : cured_enchants)
@@ -6367,7 +6368,7 @@ item_def* monster::disarm()
 
     if (!mons_wpn
         || mons_wpn->cursed()
-        || mons_class_is_animated_weapon(type)
+        || mons_class_is_animated_object(type)
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
@@ -6623,5 +6624,6 @@ bool monster::angered_by_attacks() const
             && type != MONS_SPELLFORGED_SERVITOR
             && !mons_is_conjured(type)
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
-            && !mons_is_hepliaklqana_ancestor(type);
+            // allied fed plants, hep ancestor:
+            && !god_protects(this);
 }

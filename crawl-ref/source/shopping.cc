@@ -421,7 +421,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_FLAME:
-            case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
@@ -665,6 +664,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
+        case MISC_XOMS_CHESSBOARD:
         default:
             valued += 200;
         }
@@ -2094,7 +2094,7 @@ formatted_string ShoppingListMenu::calc_title()
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
     fs.textcolour(title->colour);
-    fs.cprintf("%d %s%s, total %d gold",
+    fs.cprintf("%d %s%s, total cost %d gp",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1 ? "s" : "",
                 total_cost);

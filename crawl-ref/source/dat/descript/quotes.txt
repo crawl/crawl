@@ -2400,7 +2400,13 @@ scroll of holy word
 %%%%
 scroll of identify
 
-<scroll>
+“This, what is it in itself, and by itself, according to its proper
+ constitution? What is the substance of it? What is the matter, or
+ proper use? What is the form or efficient cause? What is it for in
+ this world, and how long will it abide? Thus must thou examine all
+ things, that present themselves unto thee.”
+    -Marcus Aurelius, _Marcus Aurelius Antoninus - His Meditations concerning
+     himselfe_, Book VIII, X. trans. Meric Casaubon, 1634.
 %%%%
 scroll of immolation
 
@@ -3165,6 +3171,16 @@ Waterstrike spell
  Remove the water
  At the bottom of the ocean”
     -Talking Heads, “Once in a Lifetime”. 1980.
+
+%%%%
+Wereblood spell
+[Howling in the background]
+ — Inga: Werewolf!
+ — Dr. Frankenstein: Werewolf?
+ — Igor: There.
+ — Dr. Frankenstein: What?
+ — Igor: There, wolf. There, castle.
+    -Young Frankenstein. 1974.
 
 %%%%
 wolf

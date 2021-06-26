@@ -283,9 +283,10 @@ namespace species
         return mutation_level(species, MUT_CLAWS) == 1;
     }
 
-    bool is_unbreathing(species_type species)
+    bool is_nonliving(species_type species)
     {
-        return mutation_level(species, MUT_UNBREATHING);
+        // XXX: move to data?
+        return species == SP_GARGOYLE || species == SP_DJINNI;
     }
 
     bool can_swim(species_type species)
@@ -296,8 +297,7 @@ namespace species
     bool likes_water(species_type species)
     {
         return can_swim(species)
-               || get_species_def(species).habitat == HT_AMPHIBIOUS
-               || mutation_level(species, MUT_UNBREATHING, 2);
+               || get_species_def(species).habitat == HT_AMPHIBIOUS;
     }
 
     size_type size(species_type species, size_part_type psize)

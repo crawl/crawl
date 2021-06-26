@@ -21,7 +21,6 @@ static void _end_invis()
         mprf(MSGCH_DURATION, "You feel more conspicuous.");
     else
         mprf(MSGCH_DURATION, "You flicker back into view.");
-    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
 }
 
 static void _end_corrosion()
@@ -43,6 +42,12 @@ static void _end_death_channel()
             mi->update_ench(abj);
         }
     }
+}
+
+static void _end_sticky_flame()
+{
+    you.props.erase("sticky_flame_source");
+    you.props.erase("sticky_flame_aux");
 }
 
 static void _redraw_armour()
@@ -103,7 +108,7 @@ struct duration_def
     int    light_colour; ///< Base colour for status light.
     const char *light_text; ///< Text for the status light.
     const char *short_text; ///< Text for @ line on the % screen and morgues.
-                            ///< Usually an adjective.
+                            ///< Should be an adjective.
     const char *name_text;  ///< Text used in wizmode &^D. If empty, use the
                             ///< short_text.
     const char *long_text;  ///< Text for the @ message.
@@ -159,8 +164,8 @@ static const duration_def duration_data[] =
       {{ "You are no longer berserk.", player_end_berserk }}, 6},
     { DUR_BERSERK_COOLDOWN,
       YELLOW, "-Berserk",
-      "berserk cooldown", "",
-      "", D_NO_FLAGS},
+      "on berserk cooldown", "berserk cooldown",
+      "You are unable to berserk.", D_NO_FLAGS},
     { DUR_BREATH_WEAPON,
       YELLOW, "Breath",
       "short of breath", "breath weapon",
@@ -176,7 +181,7 @@ static const duration_def duration_data[] =
       "confused", "conf",
       "You are confused.", D_DISPELLABLE,
       {{ "You feel less confused." }}},
-    { DUR_CONFUSING_TOUCH,
+    { DUR_CONFUSING_TOUCH, // Has custom long_text
       LIGHTBLUE, "Touch",
       "confusing by touch", "confusing touch",
       "" , D_DISPELLABLE,
@@ -184,9 +189,9 @@ static const duration_def duration_data[] =
           mprf(MSGCH_DURATION, "%s",
                you.hands_act("stop", "glowing.").c_str());
       }}}, 20},
-    { DUR_CORONA,
+    { DUR_CORONA, // Has custom long_text
       YELLOW, "Corona",
-      "coronaed", "corona",
+      "lit by a corona", "corona",
       "", D_DISPELLABLE,
       {{ "", []() {
           if (!you.backlit())
@@ -221,11 +226,12 @@ static const duration_def duration_data[] =
     { DUR_LIQUID_FLAMES,
       RED, "Fire",
       "on fire", "liquid flames",
-      "You are covered in liquid flames.", D_NO_FLAGS},
+      "You are covered in liquid flames.", D_DISPELLABLE /*but special-cased*/,
+      {{ "You are no longer on fire.", _end_sticky_flame }}},
     { DUR_LOWERED_WL,
       RED, "Will/2",
       "weak-willed", "lowered wl",
-      "", D_DISPELLABLE,
+      "You are weak-willed.", D_DISPELLABLE,
       {{ "You feel your willpower return." }}},
     { DUR_MIGHT,
       LIGHTBLUE, "Might",
@@ -248,10 +254,10 @@ static const duration_def duration_data[] =
     { DUR_RESISTANCE,
       BLUE, "Resist",
       "resistant", "resistance",
-      "You resist elements.", D_DISPELLABLE | D_EXPIRES,
+      "You are resistant to the elements.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your resistance to elements expires." },
           { "You start to feel less resistant.", 1}}, 6},
-    { DUR_SLIMIFY,
+    { DUR_SLIMIFY, // Has custom long_text
       GREEN, "Slime",
       "slimy", "slimify",
       "", D_EXPIRES,
@@ -275,15 +281,15 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_DEATHS_DOOR,
       LIGHTGREY, "DDoor",
-      "death's door", "deaths door",
+      "in death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
             you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
     { DUR_DEATHS_DOOR_COOLDOWN,
       YELLOW, "-DDoor",
-      "death's door cooldown", "",
-      "", D_NO_FLAGS,
+      "on death's door cooldown", "deaths door cooldown",
+      "You are unable to enter death's door.", D_NO_FLAGS,
       {{ "You step away from death's doorway." }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
@@ -293,13 +299,13 @@ static const duration_def duration_data[] =
         { "Quad Damage is wearing off."}}, 3 }, // per client.qc
     { DUR_SILENCE,
       0, "",
-      "silenced", "",
+      "silenced", "silence",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
-      "", D_NO_FLAGS,
+      "You are especially stealthy.", D_NO_FLAGS,
       {{ "You feel less stealthy." }}},
     { DUR_AFRAID,
       RED, "Fear",
@@ -312,14 +318,14 @@ static const duration_def duration_data[] =
       "mirroring injuries", "mirror damage",
       "You mirror injuries.", D_NO_FLAGS,
       {{ "Your dark mirror aura disappears." }}},
-    { DUR_TORNADO,
-      LIGHTGREY, "Tornado",
-      "a tornado", "tornado",
-      "You are in the eye of a mighty hurricane.", D_EXPIRES},
+    { DUR_VORTEX,
+      LIGHTGREY, "Vortex",
+      "in a vortex", "vortex",
+      "You are in the eye of a polar vortex.", D_EXPIRES},
     { DUR_LIQUEFYING,
       LIGHTBLUE, "Liquid",
       "liquefying", "",
-      "The ground has become liquefied beneath your feet.", D_DISPELLABLE,
+      "You are liquefying the ground beneath you.", D_DISPELLABLE,
       {{ "The ground is no longer liquid beneath you.", []() {
           invalidate_agrid(false);
       }}}},
@@ -338,12 +344,12 @@ static const duration_def duration_data[] =
       "divinely protected", "lifesaving",
       "You are calling for your life to be saved.", D_EXPIRES,
       {{ "Your divine protection fades away." }}},
-    { DUR_TORNADO_COOLDOWN,
-      YELLOW, "-Tornado",
-      "tornado cooldown", "",
-      "", D_NO_FLAGS,
+    { DUR_VORTEX_COOLDOWN,
+      YELLOW, "-Vortex",
+      "on vortex cooldown", "vortex cooldown",
+      "You are unable to create a polar vortex.", D_NO_FLAGS,
       {{ "The winds around you calm down.", []() {
-          remove_tornado_clouds(MID_PLAYER);
+          remove_vortex_clouds(MID_PLAYER);
       }}}},
     { DUR_DISJUNCTION,
       BLUE, "Disjoin",
@@ -389,12 +395,12 @@ static const duration_def duration_data[] =
       {{ "Your toxic aura wanes." }}},
     { DUR_RECITE,
       WHITE, "Recite",
-      "reciting", "",
+      "reciting", "recite",
       "You are reciting Zin's Axioms of Law.", D_NO_FLAGS},
     { DUR_RECITE_COOLDOWN,
       YELLOW, "-Recite",
-      "recite cooldown", "",
-      "", D_NO_FLAGS,
+      "on recite cooldown", "",
+      "You are unable to recite.", D_NO_FLAGS,
       {{ "You are ready to recite again." }}},
     { DUR_FIRE_VULN,
       RED, "rF-",
@@ -413,7 +419,7 @@ static const duration_def duration_data[] =
     { DUR_FROZEN,
       RED, "Frozen",
       "frozen", "",
-      "You are partly encased in ice.", D_NO_FLAGS,
+      "You are partly encased in ice.", D_DISPELLABLE,
       {{ "The ice encasing you melts away." }, {}, true }},
     { DUR_SAP_MAGIC,
       RED, "Sap",
@@ -430,8 +436,8 @@ static const duration_def duration_data[] =
          []() { you.attribute[ATTR_PORTAL_PROJECTILE] = 0; }}}},
     { DUR_FORESTED,
       GREEN, "Forest",
-      "", "forested",
-      "", D_NO_FLAGS,
+      "forested", "",
+      "You are summoning a forest.", D_NO_FLAGS,
       {{ "Space becomes stable." }}},
     { DUR_DRAGON_CALL,
       WHITE, "Dragoncall",
@@ -442,8 +448,8 @@ static const duration_def duration_data[] =
       }}}},
     { DUR_DRAGON_CALL_COOLDOWN,
       YELLOW, "-Dragoncall",
-      "dragon call cooldown", "",
-      "", D_NO_FLAGS,
+      "on dragon call cooldown", "dragon call cooldown",
+      "You are unable to call dragons.", D_NO_FLAGS,
       {{ "You can once more reach out to the dragon horde." }}},
     { DUR_NO_POTIONS,
       RED, "-Potion",
@@ -484,7 +490,7 @@ static const duration_def duration_data[] =
       {{ "You are no longer corroded.", _end_corrosion }}},
     { DUR_HORROR,
       RED, "Horr",
-      "horrified", "",
+      "horrified", "horror",
       "You are horrified, weakening your attacks and spells.", D_NO_FLAGS},
     { DUR_NO_SCROLLS,
       RED, "-Scroll",
@@ -504,7 +510,7 @@ static const duration_def duration_data[] =
     { DUR_AMBROSIA, GREEN, "Ambros",
       "ambrosia-drunk", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
-    { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "", "channel",
+    { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "channeling", "channel",
       "You are rapidly regenerating magical energy.", D_NO_FLAGS },
     { DUR_DEVICE_SURGE, WHITE, "Surge",
       "device surging", "device surge",
@@ -525,19 +531,24 @@ static const duration_def duration_data[] =
           you.redraw_evasion = true;
       }}}},
     { DUR_SANGUINE_ARMOUR, LIGHTBLUE, "Blood",
-      "sanguine armoured", "sanguine armor",
+      "sanguine armoured", "sanguine armour",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
-    { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
+    { DUR_SPWPN_PROTECTION, 0, "",
+      "under a protective aura", "protection aura",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
     { DUR_NO_HOP, YELLOW, "-Hop",
-      "can't hop", "",
-      "", D_NO_FLAGS,
+      "unable to hop", "no hop",
+      "You are unable to hop.", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
+    { DUR_BLINKBOLT_COOLDOWN, YELLOW, "-Bbolt",
+      "blinkbolt cooldown", "no blinkbolt",
+      "", D_NO_FLAGS,
+      {{ "You feel energetic enough to blinkbolt again." }}},
     { DUR_ACROBAT, 0, "",
       "acrobatic", "acrobat",
-      "", D_NO_FLAGS,
+      "You are acrobatic and have increased evasion.", D_NO_FLAGS,
       {{ "", []() {
           you.redraw_evasion = true;
       }}}},
@@ -548,6 +559,11 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR, WHITE, "Elixir",
       "elixired", "elixir",
       "You are rapidly regenerating health and magic.", D_NO_FLAGS},
+    { DUR_WORD_OF_CHAOS_COOLDOWN,
+      YELLOW, "-Word",
+      "on word of chaos cooldown", "word of chaos cooldown",
+      "You are unable to speak a word of chaos.", D_NO_FLAGS,
+      {{ "You are ready to speak a word of chaos again." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -576,10 +592,12 @@ static const duration_def duration_data[] =
       {{ "Your icy envelope is restored.", _redraw_armour }}},
     { DUR_PARALYSIS_IMMUNITY, 0, "", "", "paralysis immunity", "", D_NO_FLAGS},
     { DUR_VEHUMET_GIFT, 0, "", "", "vehumet gift", "", D_NO_FLAGS, {{""}}},
-    { DUR_SICKENING, 0, "", "", "sickening", "", D_DISPELLABLE, {{""}}},
+    { DUR_SICKENING, 0, "", "", "sickening", "", D_NO_FLAGS, {{""}}},
     { DUR_WATER_HOLD, 0, "", "", "drowning", "", D_NO_FLAGS},
     { DUR_SLEEP_IMMUNITY, 0, "", "", "sleep immunity", "", D_NO_FLAGS, {{""}}},
-    { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS,
+    // Regeneration information handled separately.
+    { DUR_TROGS_HAND, 0, "", "strong-willed", "trogs hand",
+      "Your willpower is greatly increased.", D_EXPIRES,
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
@@ -593,15 +611,17 @@ static const duration_def duration_data[] =
     { DUR_SHAFT_IMMUNITY, 0, "", "", "shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_NOXIOUS_BOG,
       MAGENTA, "Bog",
-      "noxious spew", "noxious bog",
+      "spewing sludge", "noxious bog",
       "You are spewing a noxious bog.", D_DISPELLABLE,
       {{ "Your noxious spew wanes." }}},
-    { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "frozen ramparts",
+    { DUR_FROZEN_RAMPARTS, LIGHTBLUE, "Ramparts", "freezing walls",
         "frozen ramparts", "You have covered nearby walls with an icy ambush.",
         D_DISPELLABLE},
-    { DUR_HEAVENLY_STORM, 0, "", "heavenly storm", "",
+    { DUR_HEAVENLY_STORM, 0, "", "in a heavenly storm", "heavenly storm",
       "Heavenly clouds are increasing your accuracy and damage.", D_NO_FLAGS,
       {{ "", wu_jian_decrement_heavenly_storm }}},
+    { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
+      {{ "You feel your health improve." }}},
 
 
 #if TAG_MAJOR_VERSION == 34

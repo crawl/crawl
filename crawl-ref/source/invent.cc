@@ -1110,10 +1110,6 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_WIELD:
         return item_is_wieldable(i);
 
-    case OBJ_SCROLLS:
-        return itype == OBJ_SCROLLS
-               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
-
     case OSEL_EVOKABLE:
         // assumes valid link...would break with evoking from floor?
         return item_is_evokable(i, true) && item_is_evokable(i, true, false);//evoke_check(i.link, true);
@@ -1595,6 +1591,8 @@ bool check_old_item_warning(const item_def& item,
         return true;
 
     // now ask
+    if (old_item.cursed())
+        prompt += "and destroy ";
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
     if (penance)
@@ -1653,10 +1651,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (_has_warning_inscription(item, oper))
         return true;
 
-    // Curses first.
+    // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
     if (item.cursed()
-        && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
-            || oper == OPER_PUTON || oper == OPER_WEAR))
+        && (oper == OPER_WIELD && is_weapon(item)
+            || oper == OPER_PUTON || oper == OPER_WEAR
+            || oper == OPER_TAKEOFF || oper == OPER_REMOVE))
     {
         return true;
     }
@@ -1678,7 +1677,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_GOZAG)
         && !you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+        && !you_worship(GOD_XOM)
+        && !you_worship(GOD_ASHENZARI))
     {
         return true;
     }
@@ -1742,23 +1742,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_EVOKE && god_hates_item(item))
     {
         penance = true;
-        return true;
-    }
-
-    // If you're invis from an item, warn that you're about to get an extra dose
-    // of contam from removing it. This check is rough, since we need to
-    // establish that the operation is a removal, the item being removed is in
-    // fact the +Invis one, and no other +Invis sources exist, and the player
-    // is currently invis from +Invis.
-    if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE || (oper == OPER_WIELD && item_is_equipped(item)))
-        && (
-                (is_artefact(item) && artefact_property(item, ARTP_INVISIBLE))
-                || (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_INVISIBILITY)
-            )
-        && you.evokable_invis() < 2 // If you've got 2 sources, removing 1 is fine.
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
         return true;
     }
 

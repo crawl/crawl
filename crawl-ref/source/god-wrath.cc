@@ -352,11 +352,16 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if (wrath_value < 2)       { wrath_type = 0; }
-    else if (wrath_value < 4)  { wrath_type = 1; }
-    else if (wrath_value < 8)  { wrath_type = 2; }
-    else if (wrath_value < 16) { wrath_type = 3; }
-    else                       { wrath_type = 4; }
+    if (wrath_value < 2)
+        wrath_type = 0;
+    else if (wrath_value < 4)
+        wrath_type = 1;
+    else if (wrath_value < 8)
+        wrath_type = 2;
+    else if (wrath_value < 16)
+        wrath_type = 3;
+    else
+        wrath_type = 4;
 
     // Strip away extra speed
     dec_haste_player(10000);
@@ -643,7 +648,7 @@ static bool _kikubaaqudgha_retribution()
     if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 death curses of maximum power
-        if (!player_res_torment(false))
+        if (!you.res_torment())
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {

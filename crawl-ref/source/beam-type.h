@@ -26,6 +26,8 @@ enum beam_type                  // bolt::flavour
     BEAM_FRAG,
     BEAM_LAVA,
     BEAM_ICE,
+    BEAM_THUNDER,
+    BEAM_STUN_BOLT,
     BEAM_DEVASTATION,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
@@ -89,8 +91,6 @@ enum beam_type                  // bolt::flavour
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
-    BEAM_BOUNCY_TRACER,           // Used for random bolt tracer (bounces as
-                                  // crystal bolt, but irresistible).
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,

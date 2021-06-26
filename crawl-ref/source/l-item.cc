@@ -13,6 +13,7 @@
 #include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
+#include "describe.h"
 #include "env.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -964,6 +965,20 @@ IDEF(inscription)
     return 1;
 }
 
+/*** Item description string, as displayed in the game UI.
+ * @field description string
+ */
+IDEF(description)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushstring(ls, get_item_description(*item, true, false).c_str());
+
+    return 1;
+}
+
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1374,7 +1389,7 @@ static int l_item_equipped_at(lua_State *ls)
  */
 static int l_item_fired_item(lua_State *ls)
 {
-    const auto a = quiver::get_primary_action();
+    const auto a = quiver::get_secondary_action();
     if (!a->is_valid() || !a->is_enabled())
         return 0;
 
@@ -1383,10 +1398,7 @@ static int l_item_fired_item(lua_State *ls)
     if (q < 0 || q >= ENDOFPACK)
         return 0;
 
-    if (q != -1)
-        clua_push_item(ls, &you.inv[q]);
-    else
-        lua_pushnil(ls);
+    clua_push_item(ls, &you.inv[q]);
 
     return 1;
 }
@@ -1615,6 +1627,7 @@ static ItemAccessor item_attrs[] =
     { "encumbrance",       l_item_encumbrance },
     { "is_in_shop",        l_item_is_in_shop },
     { "inscription",       l_item_inscription },
+    { "description",       l_item_description },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

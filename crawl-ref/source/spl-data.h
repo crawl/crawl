@@ -221,11 +221,11 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INVISIBILITY, "Invisibility",
     spschool::hexes,
-    spflag::dir_or_target | spflag::helpful | spflag::selfench
-        | spflag::emergency | spflag::needs_tracer,
+    spflag::helpful | spflag::selfench
+        | spflag::emergency | spflag::escape,
     6,
     200,
-    LOS_RADIUS, LOS_RADIUS,
+    -1, -1,
     0, 0,
     TILEG_INVISIBILITY,
 },
@@ -268,7 +268,7 @@ static const struct spell_desc spelldata[] =
     spschool::conjuration | spschool::ice | spschool::air,
     spflag::target | spflag::area | spflag::needs_tracer
         | spflag::cloud,
-    6,
+    5,
     200,
     5, 5,
     6, 2,
@@ -401,14 +401,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TORNADO, "Tornado",
-    spschool::air,
+    SPELL_POLAR_VORTEX, "Polar Vortex",
+    spschool::ice,
     spflag::area,
     9,
     200,
-    TORNADO_RADIUS, TORNADO_RADIUS,
+    POLAR_VORTEX_RADIUS, POLAR_VORTEX_RADIUS,
     5, 0,
-    TILEG_TORNADO,
+    TILEG_POLAR_VORTEX,
 },
 
 {
@@ -843,7 +843,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SWIFTNESS, "Swiftness",
     spschool::air,
     spflag::hasty | spflag::selfench | spflag::utility,
-    2,
+    3,
     100,
     -1, -1,
     2, 0,
@@ -900,7 +900,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BLADE_HANDS, "Blade Hands",
     spschool::transmutation,
     spflag::helpful | spflag::chaotic | spflag::utility,
-    6,
+    5,
     200,
     -1, -1,
     4, 0,
@@ -930,6 +930,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_STORM_FORM, "Storm Form",
+    spschool::transmutation | spschool::air,
+    spflag::helpful | spflag::chaotic | spflag::utility,
+    7,
+    200,
+    -1, -1,
+    15, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_DRAGON_FORM, "Dragon Form",
     spschool::transmutation,
     spflag::helpful | spflag::chaotic | spflag::utility,
@@ -938,17 +949,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     6, 0,
     TILEG_DRAGON_FORM,
-},
-
-{
-    SPELL_HYDRA_FORM, "Hydra Form",
-    spschool::transmutation,
-    spflag::helpful | spflag::chaotic | spflag::utility,
-    5,
-    200,
-    -1, -1,
-    6, 0,
-    TILEG_HYDRA_FORM,
 },
 
 {
@@ -1145,7 +1145,7 @@ static const struct spell_desc spelldata[] =
     SPELL_DISCHARGE, "Static Discharge",
     spschool::conjuration | spschool::air,
     spflag::area,
-    3,
+    2,
     100,
     1, 1,
     3, 0,
@@ -1223,10 +1223,10 @@ static const struct spell_desc spelldata[] =
     SPELL_CHAIN_LIGHTNING, "Chain Lightning",
     spschool::air | spschool::conjuration,
     spflag::area,
-    8,
+    9,
     200,
     -1, -1,
-    8, 25,
+    25, 10,
     TILEG_CHAIN_LIGHTNING,
 },
 
@@ -1669,7 +1669,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
     spschool::earth,
-    spflag::monster | spflag::emergency,
+    spflag::monster | spflag::emergency | spflag::escape,
     5,
     0,
     -1, -1,
@@ -1804,7 +1804,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_INK_CLOUD, "Ink Cloud",
     spschool::conjuration | spschool::ice, // it's a water spell
-    spflag::monster | spflag::emergency | spflag::utility,
+    spflag::monster | spflag::emergency | spflag::escape | spflag::utility,
     7,
     0,
     -1, -1,
@@ -2558,17 +2558,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RANDOM_BOLT, "Random Bolt",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
-    4,
-    200,
-    5, 5,
-    4, 0,
-    TILEG_RANDOM_BOLT,
-},
-
-{
     SPELL_GLACIATE, "Glaciate",
     spschool::conjuration | spschool::ice,
     spflag::dir_or_target | spflag::area | spflag::not_self
@@ -3153,17 +3142,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RANDOM_EFFECTS, "Random Effects",
-    spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer,
-    4,
-    200,
-    LOS_RADIUS, LOS_RADIUS,
-    4, 0,
-    TILEG_ERROR,
-},
-
-{
     SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
     spschool::poison | spschool::air,
     spflag::target | spflag::not_self,
@@ -3183,17 +3161,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     8, 0,
     TILEG_IGNITION,
-},
-
-{
-    SPELL_VORTEX, "Vortex",
-    spschool::air,
-    spflag::area | spflag::monster,
-    5,
-    200,
-    VORTEX_RADIUS, VORTEX_RADIUS,
-    5, 0,
-    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3341,17 +3308,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_ABSOLUTE_ZERO, "Absolute Zero",
-    spschool::ice,
-    spflag::no_ghost,
-    9,
-    200,
-    5, 5,
-    9, 40,  // 40 noise at 0 spellpower
-    TILEG_ICE_STORM,
-},
-
-{
     // This "spell" is implemented in a way that ignores all this information,
     // and it is never triggered the way spells usually are, but it still has
     // a spell-type enum entry. So, use fake data in order to have a valid
@@ -3474,6 +3430,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_STUNNING_BURST, "Stunning Burst",
+    spschool::conjuration | spschool::air,
+    spflag::target | spflag::needs_tracer | spflag::monster,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    8, 8,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3528,6 +3495,7 @@ AXED_SPELL(SPELL_MELEE, "Melee")
 AXED_SPELL(SPELL_MISLEAD, "Mislead")
 AXED_SPELL(SPELL_PHASE_SHIFT, "Phase Shift")
 AXED_SPELL(SPELL_POISON_WEAPON, "Poison Weapon")
+AXED_SPELL(SPELL_RANDOM_BOLT, "Random Bolt")
 AXED_SPELL(SPELL_REARRANGE_PIECES, "Rearrange the Pieces")
 AXED_SPELL(SPELL_RECALL, "Recall")
 AXED_SPELL(SPELL_REGENERATION, "Regeneration")
@@ -3567,6 +3535,10 @@ AXED_SPELL(SPELL_SUMMON_SWARM, "Summon swarm")
 AXED_SPELL(SPELL_CLOUD_CONE, "Cloud Cone")
 AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
 AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
+AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
+AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
+AXED_SPELL(SPELL_ABSOLUTE_ZERO, "Absolute Zero")
+AXED_SPELL(SPELL_VORTEX, "Vortex")
 #endif
 
 };

@@ -79,8 +79,7 @@ public:
     {
         // cure status effects
         if (you.duration[DUR_CONF]
-            || you.duration[DUR_POISONING]
-            || you.disease)
+            || you.duration[DUR_POISONING])
         {
             return true;
         }
@@ -129,7 +128,6 @@ public:
         if (you.duration[DUR_POISONING])
             you.redraw_hit_points = true;
         you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
         you.duration[DUR_CONF] = 0;
         return true;
     }
@@ -459,7 +457,6 @@ public:
             return false;
 
         effect();
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         return true;
     }
 };
@@ -687,7 +684,7 @@ public:
 };
 
 const int MIN_REMOVED = 2;
-const int MAX_REMOVED = 4;
+const int MAX_REMOVED = 3;
 const int MIN_ADDED = 1;
 const int MAX_ADDED = 3;
 
@@ -728,8 +725,12 @@ public:
         // Add mutations.
         for (int i = 0; i < add_mutations; i++)
             mutated |= mutate(RANDOM_MUTATION, "potion of mutation", false);
-        // Always one good mutation.
-        mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of mutation", false);
+        // Sometimes one good mutation.
+        if (coinflip())
+        {
+            mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of mutation",
+                              false);
+        }
 
         learned_something_new(HINT_YOU_MUTATED);
         return mutated;

@@ -620,7 +620,6 @@ static const char* _wand_type_name(int wandtype)
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_CHARMING:     return "charming";
     case WAND_ACID:            return "acid";
-    case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_MINDBURST:       return "mindburst";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
@@ -959,9 +958,7 @@ static string misc_type_name(int type)
 #endif
     case MISC_PHANTOM_MIRROR:            return "phantom mirror";
     case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
-#endif
+    case MISC_XOMS_CHESSBOARD:           return "piece from Xom's chessboard";
     case MISC_TIN_OF_TREMORSTONES:       return "tin of tremorstones";
     case MISC_CONDENSER_VANE:            return "condenser vane";
 
@@ -2582,7 +2579,7 @@ bool is_good_item(const item_def &item)
     {
     case OBJ_SCROLLS:
         if (item.sub_type == SCR_TORMENT)
-            return player_res_torment(false);
+            return you.res_torment();
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
         if (!you.can_drink(false)) // still want to pick them up in lichform?
@@ -2695,7 +2692,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
-            return !player_res_torment(false);
+            return !you.res_torment();
         case SCR_HOLY_WORD:
             return you.undead_or_demonic();
         default:
@@ -2771,6 +2768,18 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     if (you.species == SP_UNKNOWN)
         return false;
 
+    // An ash item that is already being worn and is cursed, counts as useful
+    // even if it would otherwise be useless.
+    if (will_have_passive(passive_t::bondage_skill_boost)
+        && item_is_equipped(item)
+        && bool(item.flags & ISFLAG_CURSED))
+    {
+        if (!temp || !item_is_melded(item))
+            return false;
+        // if it's melded, just fall through. This might not be accurate in
+        // all cases.
+    }
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2842,6 +2851,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_REPULSION:
                 return temp && have_passive(passive_t::upgraded_storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
+            case SPARM_INVISIBILITY:
+                return you.has_mutation(MUT_NO_ARTIFICE);
             default:
                 return false;
             }

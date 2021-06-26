@@ -558,6 +558,7 @@ SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
 KFEAT: _ = altar_jiyva
+KITEM: _ = wand of digging ident:type
 KITEM: ! = slimy rune of zot
 SUBST: $ = ||*
 COLOUR: # = yellow

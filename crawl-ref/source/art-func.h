@@ -493,7 +493,7 @@ static void _LIGHTNING_SCALES_unequip(item_def */*item*/, bool *show_msgs)
 
 static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");
+    _equip_mpr(show_msgs, "A terrible, searing pain shoots up your arm!");
 }
 
 static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
@@ -879,6 +879,13 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
     if (!mondied)
         defender->hurt(attacker, defender->stat_hp());
+
+    if (defender->as_monster()->can_bleed())
+    {
+        blood_spray(defender->pos(), defender->as_monster()->type,
+                    random_range(5, 10));
+    }
+    defender->as_monster()->flags |= MF_EXPLODE_KILL;
 }
 
 ///////////////////////////////////////////////////
@@ -1592,4 +1599,12 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
         _equip_mpr(show_msgs, "The staff is unable to connect with your "
                               "magical essence.");
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
 }

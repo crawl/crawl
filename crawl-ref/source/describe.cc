@@ -85,6 +85,7 @@
  #include "tileview.h"
 #endif
 #include "transform.h"
+#include "travel.h"
 #include "unicode.h"
 #include "viewchar.h"
 
@@ -1203,7 +1204,11 @@ static string _handedness_string(const item_def &item)
     if (quad)
         return make_stringf("It is a weapon for %s %s.", n.c_str(), handname.c_str());
     else
-        return make_stringf("It is a %s-%sed weapon.", n.c_str(), handname.c_str());
+    {
+        return make_stringf("It is a %s-%s%s weapon.", n.c_str(),
+            handname.c_str(),
+            ends_with(handname, "e") ? "d" : "ed");
+    }
 
 }
 
@@ -1447,6 +1452,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
             make_stringf(" '%s' category. ",
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
+        // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 
         if (!you.could_wield(item, true) && crawl_state.need_save)
@@ -1535,11 +1541,16 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_FRENZY:
             description += "It is tipped with a substance that sends those it "
                            "hits into a mindless rage, attacking friend and "
-                           "foe alike.";
+                           "foe alike.\n"
+                           "The chance of successfully applying its effect "
+                           "increases with Throwing and Stealth skill.";
+
             break;
         case SPMSL_BLINDING:
             description += "It is tipped with a substance that causes "
-                           "blindness and brief confusion.";
+                           "blindness and brief confusion.\n"
+                           "The chance of successfully applying its effect "
+                           "increases with Throwing and Stealth skill.";
             break;
         case SPMSL_DISPERSAL:
             description += "It causes any target it hits to blink, with a "
@@ -2327,6 +2338,14 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     vector<extra_feature_desc> ret;
     const dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
+    if (feat_is_tree(feat) && env.forest_awoken_until)
+    {
+        ret.push_back({
+            "Awoken.",
+            getLongDescription("awoken"),
+            tile_def(TILE_AWOKEN_OVERLAY)
+        });
+    }
     if (feat_is_wall(feat) && env.map_knowledge(pos).flags & MAP_ICY)
     {
         ret.push_back({
@@ -2416,23 +2435,48 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                 break;
             }
         }
+
+        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+        {
+            if (is_unknown_stair(pos))
+            {
+                long_desc += "\nYou have not yet explored it and cannot tell ";
+                long_desc += "where it leads.";
+            }
+            else
+            {
+                long_desc +=
+                    make_stringf("\nYou can view the location it leads to by "
+                                 "examining it with <w>%s</w> and pressing "
+                                 "<w>%s</w>.",
+                                 command_to_string(CMD_DISPLAY_MAP).c_str(),
+                                 command_to_string(
+                                     feat_stair_direction(feat) ==
+                                         CMD_GO_UPSTAIRS ? CMD_MAP_PREV_LEVEL
+                                         : CMD_MAP_NEXT_LEVEL).c_str());
+            }
+        }
     }
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
     {
         long_desc +=
-            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+            make_stringf("\n(Pray here with <w>%s</w> to learn more.)\n",
                          command_to_string(CMD_GO_DOWNSTAIRS).c_str());
     }
 
     // mention that permanent trees are usually flammable
     // (expect for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_tree(feat) && !is_temp_terrain(pos)
+    if (feat_is_flammable(feat) && !is_temp_terrain(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
-        long_desc += "\nIt is susceptible to bolts of lightning";
-        long_desc += " and to sufficiently intense sources of fire.";
+        if (feat == DNGN_TREE)
+            long_desc += "\n" + getLongDescription("tree burning");
+        else if (feat == DNGN_MANGROVE)
+            long_desc += "\n" + getLongDescription("mangrove burning");
+        else if (feat == DNGN_DEMONIC_TREE)
+            long_desc += "\n" + getLongDescription("demonic tree burning");
     }
 
     // mention that diggable walls are
@@ -3045,7 +3089,8 @@ static string _player_spell_stats(const spell_type spell)
     description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
-    if (damage_string != "") {
+    if (damage_string != "")
+    {
         description += make_stringf("\n%*s: ", padding, "Damage");
         description += damage_string;
     }
@@ -3652,8 +3697,8 @@ static const char* _get_resist_name(mon_resist_flags res_type)
         return "negative energy";
     case MR_RES_DAMNATION:
         return "damnation";
-    case MR_RES_TORNADO:
-        return "tornadoes";
+    case MR_RES_VORTEX:
+        return "polar vortices";
     default:
         return "buggy resistance";
     }
@@ -3738,7 +3783,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_ANTIMAGIC,         "drain magic" },
         { AF_PAIN,              "cause pain to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
-        { AF_ENGULF,            "engulf with water" },
+        { AF_ENGULF,            "engulf" },
         { AF_PURE_FIRE,         "" },
         { AF_DRAIN_SPEED,       "drain speed" },
         { AF_VULN,              "reduce willpower" },
@@ -4209,7 +4254,11 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
  */
 string _monster_habitat_description(const monster_info& mi)
 {
-    switch (mons_habitat_type(mi.type, mi.base_type))
+    const monster_type type = mons_is_job(mi.type)
+                              ? mi.draco_or_demonspawn_subspecies()
+                              : mi.type;
+
+    switch (mons_habitat_type(type, mi.base_type))
     {
     case HT_AMPHIBIOUS:
         return uppercase_first(make_stringf("%s can travel through water.\n",
@@ -4294,7 +4343,7 @@ static string _monster_stat_description(const monster_info& mi)
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_MIASMA,  MR_RES_NEG,    MR_RES_DAMNATION,
-        MR_RES_TORNADO,
+        MR_RES_VORTEX,
     };
 
     vector<string> extreme_resists;
@@ -4309,7 +4358,7 @@ static string _monster_stat_description(const monster_info& mi)
         if (level != 0)
         {
             const char* attackname = _get_resist_name(rflags);
-            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_TORNADO)
+            if (rflags == MR_RES_DAMNATION || rflags == MR_RES_VORTEX)
                 level = 3; // one level is immunity
             level = max(level, -1);
             level = min(level,  3);

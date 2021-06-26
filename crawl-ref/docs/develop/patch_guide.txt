@@ -31,11 +31,11 @@ Main steps
 2.) Compile the code. To do this you might have to install a compiler and/or
     additional libraries. See INSTALL.txt for details. If you have any
     questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net,
-    or in ##crawl-dev on irc.freenode.net.
+    or in #crawl-dev on Libera IRC.
 
 3.) Now you can start tweaking the code. Depending on your coding background
     you may want to experiment with smaller changes first. If you intend to
-    submit the patch to the dev team, please skim coding_conventions.txt.
+    submit the patch to the dev team, please skim coding_conventions.md.
     Following these guidelines will save us some time later when integrating
     the patch.
 

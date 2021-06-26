@@ -330,7 +330,6 @@ void check_item_knowledge(bool unknown_items)
                 || i == MISC_BOTTLED_EFREET
                 || i == MISC_RUNE_OF_ZOT
                 || i == MISC_STONE_OF_TREMORS
-                || i == MISC_XOMS_CHESSBOARD
                 || i == MISC_FAN_OF_GALES
                 || i == MISC_SACK_OF_SPIDERS
                 || i == MISC_LAMP_OF_FIRE

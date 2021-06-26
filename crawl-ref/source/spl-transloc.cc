@@ -42,7 +42,8 @@
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-damage.h" // cancel_tornado
+#include "spl-damage.h" // cancel_polar_vortex
+#include "spl-monench.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -620,7 +621,7 @@ spret palentonga_charge(bool fail, dist *target)
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);
 
-    if (you.pos() != dest_pos) // tornado and trap nonsense
+    if (you.pos() != dest_pos) // polar vortex and trap nonsense
         return spret::success; // of a sort
 
     // Maybe we hit a trap and something weird happened.
@@ -628,19 +629,22 @@ spret palentonga_charge(bool fail, dist *target)
         return spret::success;
 
     // manually apply noise
-    behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
+    // this silence check feels kludgy - perhaps could check along the whole route..?
+    if (!silenced(target_pos))
+        behaviour_event(target_mons, ME_ALERT, &you, you.pos()); // shout + set you as foe
 
     // We got webbed/netted at the destination, bail on the attack.
     if (you.attribute[ATTR_HELD])
         return spret::success;
 
-    const int base_delay = you.time_taken;
+    const int base_delay =
+        div_rand_round(you.time_taken * player_movement_speed(), 10);
 
     melee_attack charge_atk(&you, target_mons);
     charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
     charge_atk.attack();
 
-    // Normally this is 10 aut (times haste, etc), but slow weapons
+    // Normally this is 10 aut (times haste, chei etc), but slow weapons
     // take longer. Most relevant for low-skill players and Dark Maul.
     you.time_taken = max(you.time_taken, base_delay);
 
@@ -658,11 +662,9 @@ spret palentonga_charge(bool fail, dist *target)
  */
 spret controlled_blink(bool safe_cancel)
 {
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat controlled blinks.");
         return spret::abort;
     }
 
@@ -937,7 +939,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
             large_change = true;
         }
 
-        cancel_tornado(true);
+        cancel_polar_vortex(true);
         // Leave a purple cloud.
         _place_tloc_cloud(old_pos);
 
@@ -1077,7 +1079,7 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     {
         if (mi->friendly() || mi->neutral())
             continue; // this should be enough to avoid penance?
-        if (mons_is_firewood(**mi))
+        if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
             continue;
         if (!you.can_see(**mi))
             continue;
@@ -1372,9 +1374,8 @@ static void _attract_actor(const actor* agent, actor* victim,
                            const coord_def pos, int pow, int strength)
 {
     ASSERT(victim); // XXX: change to actor &victim
-    const bool fedhas_prot = agent->deity() == GOD_FEDHAS
-                             && victim->is_monster()
-                             && fedhas_protects(victim->as_monster());
+    const bool fedhas_prot = victim->is_monster()
+                                && god_protects(agent, victim->as_monster());
 
     ray_def ray;
     if (!find_ray(victim->pos(), pos, ray, opc_solid))
@@ -1605,4 +1606,86 @@ void attract_monsters()
         mi->apply_location_effects(old_pos);
         mons_relocated(mi);
     }
+}
+
+spret word_of_chaos(int pow, bool fail)
+{
+    vector<monster *> visible_targets;
+    vector<monster *> targets;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type)
+            && !mons_class_is_stationary(mi->type)
+            && !mons_is_conjured(mi->type)
+            && !mi->friendly())
+        {
+            if (you.can_see(**mi))
+                visible_targets.push_back(*mi);
+            targets.push_back(*mi);
+        }
+    }
+
+    if (visible_targets.empty())
+    {
+        if (!yesno("You cannot see any enemies that you can affect. Speak a "
+                   "word of chaos anyway?", true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+    shuffle_array(targets);
+
+    mprf("You speak a word of chaos!");
+    for (auto mons : targets)
+    {
+        if (mons->no_tele())
+            continue;
+
+        blink_away(mons, &you, false);
+        if (x_chance_in_y(pow, 500))
+            ensnare(mons);
+        if (x_chance_in_y(pow, 500))
+            do_slow_monster(*mons, &you, 20 + random2(pow));
+        if (x_chance_in_y(pow, 500))
+        {
+            mons->add_ench(mon_enchant(ENCH_FEAR, 0, &you));
+            behaviour_event(mons, ME_SCARE, &you);
+        }
+    }
+
+    you.increase_duration(DUR_WORD_OF_CHAOS_COOLDOWN, 15 + random2(10));
+    drain_player(50, false, true);
+    return spret::success;
+}
+
+spret blinkbolt(int power, bolt &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You see nothing there to target!");
+        return spret::abort;
+    }
+
+    if (!player_tracer(ZAP_BLINKBOLT, power, beam))
+        return spret::abort;
+
+    fail_check();
+
+    beam.thrower = KILL_YOU_MISSILE;
+    zappy(ZAP_BLINKBOLT, power, false, beam);
+    beam.name = "shock of your passage";
+    beam.fire();
+    you.duration[DUR_BLINKBOLT_COOLDOWN] = 50 + random2(150);
+
+    return spret::success;
 }

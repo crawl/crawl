@@ -235,6 +235,23 @@ ccccccccc
 ENDMAP
 
 ##############################################################
+NAME:    pf_arrival_petrified_forest
+TAGS:    arrival
+ORIENT:  float
+KFEAT:   t = petrified_tree
+MAP
+  xxx
+xxxtxx
+xxt{txx
+xxt..txx
+xxx..txx
+@xt.txx@
+x..t.t.x
+xxxxt.xx
+xxxxxxxx
+ENDMAP
+
+##############################################################
 NAME:    onia_arrival_pyramid
 TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
@@ -1119,7 +1136,7 @@ ORIENT: float
 SUBST:  T : t.TTTTT
 SUBST:  T = t:66 .:33 >:1
 COLOUR: . = brown
-COLOUR: t = w:2 darkgrey / w:1 brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP
@@ -2077,6 +2094,7 @@ ENDMAP
 
 NAME:   giann_bridges
 TAGS:   arrival no_monster_gen
+KPROP:  W = no_tele_into
 MONS:   plant
 ORIENT: float
 MAP

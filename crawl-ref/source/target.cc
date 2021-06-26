@@ -712,7 +712,7 @@ bool targeter_transference::valid_aim(coord_def a)
         if (mons_is_hepliaklqana_ancestor(victim->type))
         {
             return notify_fail("You can't transfer your ancestor with "
-                               "themself.");
+                               + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
         }
         if (mons_is_tentacle_or_tentacle_segment(victim->type)
             || victim->is_stationary())
@@ -840,7 +840,9 @@ bool targeter_cleave::set_aim(coord_def target)
     get_cleave_targets(*agent, target, act_targets);
     while (!act_targets.empty())
     {
-        targets.insert(act_targets.front()->pos());
+        actor *potential_target = act_targets.front();
+        if (agent->can_see(*potential_target))
+            targets.insert(potential_target->pos());
         act_targets.pop_front();
     }
     return true;
@@ -1725,11 +1727,33 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
-targeter_absolute_zero::targeter_absolute_zero(int range)
-    : targeter_multiposition(&you, find_abszero_possibles(range))
+targeter_chain_lightning::targeter_chain_lightning()
 {
-    if (affected_positions.size() == 1)
-        positive = AFF_YES;
+    vector<coord_def> target_set = chain_lightning_targets();
+    int min_dist = 999;
+    for (coord_def pos : target_set)
+    {
+        potential_victims.insert(pos);
+        const int dist = grid_distance(pos, you.pos());
+        if (dist && dist < min_dist)
+            min_dist = dist;
+    }
+
+    for (coord_def pos : target_set)
+    {
+        const int dist = grid_distance(pos, you.pos());
+        if (dist && dist <= min_dist)
+            closest_victims.insert(pos);
+    }
+}
+
+aff_type targeter_chain_lightning::is_affected(coord_def loc)
+{
+    if (closest_victims.find(loc) != closest_victims.end())
+        return AFF_YES;
+    if (potential_victims.find(loc) != potential_victims.end())
+        return AFF_MAYBE;
+    return AFF_NO;
 }
 
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
@@ -1891,6 +1915,7 @@ targeter_fear::targeter_fear()
 bool targeter_fear::affects_monster(const monster_info& mon)
 {
     return mon.willpower() != WILL_INVULN
+           && mon.can_feel_fear
            && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
 }
 

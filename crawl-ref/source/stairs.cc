@@ -1200,7 +1200,7 @@ void new_level(bool restore)
     if (restore)
         return;
 
-    cancel_tornado();
+    cancel_polar_vortex();
 
     if (player_in_branch(BRANCH_ZIGGURAT))
         you.zig_max = max(you.zig_max, you.depth);

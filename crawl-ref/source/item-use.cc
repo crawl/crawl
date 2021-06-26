@@ -629,6 +629,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             to_wield = nullptr;
     }
 
+    // Reset the warning counter. We do this before the rewield check to
+    // provide a (slightly hacky) way to let players reset this without
+    // unwielding. (TODO: better ui?)
+    you.received_weapon_warning = false;
+
     if (to_wield && to_wield == you.weapon())
     {
         if (Options.equip_unequip)
@@ -639,9 +644,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return true;
         }
     }
-
-    // Reset the warning counter.
-    you.received_weapon_warning = false;
 
     if (!to_wield)
     {
@@ -987,7 +989,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
     else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
              && !ignore_temporary
-             && player_equip_unrand(UNRAND_LEAR))
+             && player_equip_unrand(UNRAND_LEAR, true))
     {
         // The explanation is iffy for loose headgear, especially crowns:
         // kings loved hooded hauberks, according to portraits.
@@ -1172,7 +1174,7 @@ bool wear_armour(int item)
     // conditions that would make it impossible to wear any type of armour.
     // TODO: perhaps also worth checking here whether all available armour slots
     // are cursed. Same with jewellery.
-    if (you.has_mutation(MUT_NO_GRASPING))
+    if (you.has_mutation(MUT_NO_ARMOUR))
     {
         mpr("You can't wear anything.");
         return false;
@@ -2911,7 +2913,8 @@ void read(item_def* scroll)
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
     // Handle player cancels before we waste time
-    if (item_type_known(*scroll)) {
+    if (item_type_known(*scroll))
+    {
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
@@ -3079,7 +3082,7 @@ void read_scroll(item_def& scroll)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
-        bad_effect = !player_res_torment(false);
+        bad_effect = !you.res_torment();
         break;
 
     case SCR_IMMOLATION:

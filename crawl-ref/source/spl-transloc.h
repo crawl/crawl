@@ -41,3 +41,5 @@ spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
 void attract_monsters();
+spret word_of_chaos(int pow, bool fail);
+spret blinkbolt(int power, bolt &beam, bool fail);

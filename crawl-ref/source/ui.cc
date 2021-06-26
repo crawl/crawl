@@ -1510,7 +1510,7 @@ void Scroller::_allocate_region()
     m_child->allocate_region(ch_reg);
 
 #ifdef USE_TILE_LOCAL
-    int shade_height = 12, ds = 4;
+    int shade_height = UI_SCROLLER_SHADE_SIZE, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
     const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
@@ -1529,7 +1529,8 @@ void Scroller::_allocate_region()
         rect.set_col(col_a, col_b);
         m_shade_buf.add_primitive(rect);
     }
-    if (ch_reg.height > m_region.height && m_scrolbar_visible) {
+    if (ch_reg.height > m_region.height && m_scrolbar_visible)
+    {
         const int x = m_region.x+m_region.width;
         const float h_percent = m_region.height / (float)ch_reg.height;
         const int h = m_region.height*min(max(0.05f, h_percent), 1.0f);
@@ -2650,7 +2651,8 @@ void UIRoot::debug_render()
             sb.add(r.x, r.ey(), r.ex(), r.ey()+m.bottom, lc);
             sb.add(r.x-m.left, r.y, r.x, r.ey(), lc);
         }
-        if (auto w = get_focused_widget()) {
+        if (auto w = get_focused_widget())
+        {
             Region r = w->get_region();
             lb.add_square(r.x+1, r.y+1, r.ex(), r.ey(), VColour(128, 31, 239));
         }

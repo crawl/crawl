@@ -87,9 +87,9 @@ Kikubaaqudgha
 Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
 the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
 the death and destruction of as many creatures as possible. In exchange,
-Kikubaaqudgha offers great assistance to the aspiring necromancer: spellbooks
-filled with dark magic, protection against necromantic backlash, and an endless
-supply of bodies taken from Kikubaaqudgha's vast mausoleum.
+Kikubaaqudgha offers great assistance to the aspiring necromancer: knowledge
+of dark magic, protection against necromantic backlash, and an endless supply of
+bodies taken from Kikubaaqudgha's vast mausoleum.
 %%%%
 Lugonu
 
@@ -203,8 +203,7 @@ Yredelemnul the Dark is a god worshipped by those who seek powers over death
 and the undead. Followers can raise legions of servile undead, and gain a
 number of other useful powers with which to make better use of the souls of
 the living. Yredelemnul especially favours those who would destroy holy
-creatures, which oppose the realm of undeath, and the nonliving, which exist
-outside of it.
+creatures, which oppose the realm of undeath.
 %%%%
 Zin
 
@@ -316,11 +315,12 @@ precision and damage for as long as they keep using martial attacks.
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
-prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
-effects of necromantic miscasts, death curses, and may even shield them from
-unholy torment. Especially fervent followers may invoke torment themselves by
-sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
-either receive the Necronomicon, or to have their weapon imbued with pain.
+prowess with gifts of Necromancy spells. Kikubaaqudgha will protect followers
+from the effects of necromantic miscasts, death curses, and may even shield them
+from unholy torment. Especially fervent followers may invoke torment themselves
+by sacrificing a cadaver, and Kikubaaqudgha will eventually allow followers to
+either receive knowledge of the most powerful and forbidden necromantic magic,
+or to have their weapon imbued with pain.
 %%%%
 Lugonu powers
 

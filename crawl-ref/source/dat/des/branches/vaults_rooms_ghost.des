@@ -56,17 +56,19 @@ nnn==nnn
 ........
 ENDMAP
 
-NAME:  gammafunk_vaults_ghost_grave
-TAGS:  allow_dup
-TAGS:  vaults_orient_w
+NAME:   gammafunk_vaults_ghost_grave
+TAGS:   allow_dup
+TAGS:   vaults_orient_w
 : lone_ghost_guarded_loot(_G, "O")
 : lone_ghost_extra_loot(_G, ".")
-KMONS: p = withered plant
-KMONS: O = player ghost
-SUBST: t : tp
-TILE:  G = dngn_gravestone
-TILE:  t = dngn_tree_dead
+KMONS:  p = withered plant
+KMONS:  O = player ghost
+SUBST:  t : tp
+TILE:   G = dngn_gravestone
+TILE:   t = dngn_tree_dead
+COLOUR: t = brown
 : set_feature_name("granite_statue", "a gravestone")
+: set_feature_name("tree", "dead tree")
 : vaults_ghost_setup(_G)
 MAP
 ..x.....

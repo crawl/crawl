@@ -514,7 +514,7 @@ subterranean spaces.
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
-swirling vortex of air.
+lightning-spitting spirit, stunning foes with its crackling bursts.
 %%%%
 alligator
 
@@ -535,6 +535,8 @@ ancestor
 A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 they seem somehow to resemble a warrior from the distantly remembered past.
+The memory and the memorialist fight in concert, each able to fire past the
+other.
 %%%%
 ancient champion
 
@@ -955,6 +957,10 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
+djinni
+
+An elemental spirit formed from smokeless fire.
+%%%%
 doom hound
 
 A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
@@ -974,7 +980,7 @@ stand in its way.
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
-magic. It specializes in ice magic and necromancy.
+magic.
 %%%%
 draconian monk
 
@@ -1065,8 +1071,7 @@ emerging from trees near their foes to strike.
 elemental wellspring
 
 A swirling conflux of elemental water streaming from the elemental plane into
-this one. Powerful spirits and mighty floods flow from it, at the expense of
-the gateway's stability.
+this one, with powerful spirits and mighty floods flowing from it.
 %%%%
 elephant
 
@@ -2430,7 +2435,7 @@ long on brawn, its thick knobbly hide heals rapidly from most wounds.
 %%%%
 twister
 
-A whirling vortex of turbulent air.
+A whirling vortex of frost.
 %%%%
 two-headed ogre
 
@@ -2819,7 +2824,8 @@ An enormous, bloated bat.
 %%%%
 greater air elemental
 
-<air elemental>
+A mighty spirit drawn from the elemental plane of air, surrounded by a
+deadly vortex of frost.
 %%%%
 ice bat
 
@@ -2955,8 +2961,8 @@ be swamp ooze, cauldron soot and brew ingredients.
 withered plant
 
 A plant whose life has been drained away, but with its physical form still
-intact. It looks like it died many {{ if you.branch() == "Crypt" or
-you.branch() == "Tomb" then return "centuries"; else return "years"; end }}
+intact. It looks like it died many {{ if you.branch("Crypt") or
+you.branch("Tomb") then return "centuries"; else return "years"; end }}
 ago.
 %%%%
 zin angel
@@ -2995,11 +3001,6 @@ sulfuric acid blob
 vault guard captain
 
 <vault guard>
-%%%%
-ooze
-
-A glob of grey sludge that has somehow developed a rudimentary awareness and
-limited motility.
 %%%%
 ### Meatsprint
 bag of meat

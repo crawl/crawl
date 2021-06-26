@@ -32,13 +32,21 @@
 --    involving water, or CLEAR tiles, etc.) and need further debugging.
 
 local basic_usage = [=[
-Usage: util/fake_pty ./crawl -script placement.lua (<maps_to_test>|-all) [-count <n>] [-des <des_file>] [-fill] [-dump] [-log] [-force]
+Usage: util/fake_pty ./crawl -script placement.lua <maps_to_test> [-all] [-nmaps <n>] [-count <n>] [-des <des_file>] [-fill] [-dump] [-log] [-force]
     Vault placement testing script. Places a vault in an empty level and test
     connectivity. A vault will fail if fails to place, or if it breaks
     connectivity. This script cannot handle all types of maps, e.g. encompass
     vaults are skipped.
 
-    <maps_to_test>:  a list of vault names to test, or -all to test all vaults
+    <maps_to_test>:  a list of vault names to test. Either at least one map
+                     name, or `-all`, must be specified.
+    -all:            test all maps. If a map name is given, skip all maps in
+                     order up to that vault. (If multiple vault names are
+                     given, ignores all but the first.) This option must follow
+                     any map names.
+    -nmaps <n>:      in combination with -all, how many maps to test. If <= 0
+                     or unspecified, tests all remaining maps. Ignored without
+                     -all.
     -count <n>:      the number of iterations to test. Default: 1.
     -des <des_file>: a des file to load, if not specified in dat/dlua/loadmaps.lua
     -fill:           use a filled level as the background. Useful for debugging
@@ -89,7 +97,9 @@ local args_init, args = parse_args(arg_list, usage_error)
 
 if args["-help"] ~= nil then script.usage(basic_usage) end
 
-if #args_init == 0 and args["-all"] == nil then
+local requested_all = args["-all"] ~= nil
+
+if #args_init == 0 and not requested_all then
     usage_error("\nMissing vault to test!")
 end
 
@@ -103,11 +113,15 @@ local need_to_load_des = des_file ~= ""
 -- How many times should we generate?
 local checks = one_arg(args, "-count", 1)
 
+local nmaps = one_arg(args, "-nmaps", -1)
+
 -- Prefix for output files
 -- placement-map.1, placement-map.2, etc.
 local output_to_base = "placement-"
 
 local force = args["-force"] ~= nil
+
+local tele_zones = args["-tele-zones"] ~= nil
 
 -- fill_level will fail all minivaults, because their connectivity check fails.
 -- In principle, this could be changed in maps.cc:_find_minivault_place, by only
@@ -127,6 +141,8 @@ local force_skip = util.set{
     "uniq_ignacio",
     -- this one has a validation check that always fails in test cases(??)
     "gauntlet_exit_mini_maze",
+    "pf_just_have_faith", -- uses mimics that this code fails to detect
+
 }
 
 local force_connectivity_ok = util.set{
@@ -221,7 +237,7 @@ local function generate_map(map)
             crawl.message("   Placed " .. map_to_test .. ":" .. iter_i .. ", dumping to " .. output_to)
         end
         if z ~= 1 then
-            local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones)"
+            local connectivity_err = "Isolated area in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
             if dump then
                 crawl.stderr("    Failing vault output to: " .. output_to)
             end
@@ -229,6 +245,32 @@ local function generate_map(map)
                 crawl.stderr("(Force skipped) " .. connectivity_err)
             else
                 assert(z == 1, connectivity_err)
+            end
+        end
+        if tele_zones then
+            -- we need some kind of stairs so that vaults that place no stairs
+            -- don't count as a closet. We can't assume a baseline of 1 because
+            -- some vaults *do* place stairs, in which case an additional
+            -- closet will count as 1. Unclear if this position works for all
+            -- vaults...
+            dgn.fill_grd_area(1, 1, 1, 1, 'stone_stairs_up_i')
+            z = dgn.count_tele_zones()
+            if dump then
+                -- just rewrite it
+                debug.dump_map(output_to, builder_log)
+            end
+            if z >= 1 then
+                local connectivity_err = "Teleport closet in vault " .. map_to_test .. " (" .. z .. " zones) from file " .. dgn.filename(map)
+                if dump then
+                    crawl.stderr("    Failing vault output to: " .. output_to)
+                end
+                -- anything that has connectivity problems will have tele
+                -- closets, skip the same list
+                if force_connectivity_ok[map_to_test] then
+                    crawl.stderr("(Force skipped) " .. connectivity_err)
+                else
+                    assert(z == 0, connectivity_err)
+                end
             end
         end
     end
@@ -241,7 +283,7 @@ local function generate_maps()
         dgn.load_des_file(des_file)
     end
 
-    if #maps_to_test > 0 then
+    if #maps_to_test > 0 and not requested_all then
         for _,map_to_test in ipairs(maps_to_test) do
             local map = dgn.map_by_name(map_to_test)
             if not map then
@@ -251,8 +293,29 @@ local function generate_maps()
         end
     else
         -- -all
-        crawl.stderr("Testing " .. dgn.map_count() .. " maps")
-        for i = 0, dgn.map_count()-1 do
+        local start = -1
+        if #maps_to_test > 0 then
+            if #maps_to_test > 1 then
+                crawl.stderr("Warning: ignoring multiple vault names with -all")
+            end
+            local first_map = dgn.map_by_name(maps_to_test[1])
+
+            assert(first_map, "Couldn't find the map named " .. maps_to_test[1])
+            crawl.stderr("Skipping to " .. dgn.name(first_map))
+            for i = 0, dgn.map_count()-1 do
+                if dgn.name(dgn.map_by_index(i)) == dgn.name(first_map) then
+                    start = i
+                    break
+                end
+            end
+            assert(start > 0, "Couldn't find map in index: " .. dgn.name(first_map))
+        end
+        if start < 0 then start = 0 end
+        if tonumber(nmaps) <= 0 then nmaps = dgn.map_count() - start end
+        nmaps = math.min(nmaps, dgn.map_count() - start)
+
+        crawl.stderr("Testing " .. nmaps .. " maps")
+        for i = start, start + nmaps - 1 do
             local map = dgn.map_by_index(i)
             if not map then
                 assert(false, "invalid map at index " .. i)

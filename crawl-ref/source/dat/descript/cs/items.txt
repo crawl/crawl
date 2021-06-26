@@ -208,7 +208,3 @@ wand of polymorph
 Magické zařízení, které způsobí, že se bytost promění do jiné formy. To je
 obzvláště účinné proti tvar-měnící bytosti.
 %%%%
-wand of random effects
-
-Magické zařízení, které může produkovat různé efekty.
-%%%%

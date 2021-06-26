@@ -3163,7 +3163,11 @@ string feature_description(dungeon_feature_type grid, trap_type trap,
     if (grid == DNGN_FLOOR && dtype == DESC_A)
         dtype = DESC_THE;
 
-    return thing_do_grammar(dtype, desc);
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
+    return thing_do_grammar(dtype, desc, ignore_case);
 }
 
 string raw_feature_description(const coord_def &where)
@@ -3202,13 +3206,19 @@ string feature_description_at(const coord_def& where, bool covering,
 
     string covering_description = "";
 
-    if (covering && you.see_cell(where) && is_icecovered(where))
-        covering_description = ", covered with ice";
-
-    if (covering && you.see_cell(where) && is_bloodcovered(where))
+    if (covering && you.see_cell(where))
     {
-        string prefix = covering_description.empty() ? ", " : " and ";
-        covering_description += prefix + "spattered with blood";
+        if (feat_is_tree(grid) && env.forest_awoken_until)
+            covering_description += ", awoken";
+
+        if (is_icecovered(where))
+            covering_description = ", covered with ice";
+
+        if (is_temp_terrain(where))
+            covering_description = ", summoned";
+
+        if (is_bloodcovered(where))
+            covering_description += ", spattered with blood";
     }
 
     // FIXME: remove desc markers completely; only Zin walls are left.
@@ -3283,43 +3293,22 @@ string feature_description_at(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, desc);
     }
 
+    bool ignore_case = false;
+    if (grid == DNGN_TRAP_ZOT)
+        ignore_case = true;
+
     switch (grid)
     {
 #if TAG_MAJOR_VERSION == 34
     case DNGN_TRAP_MECHANICAL:
-#endif
-    case DNGN_TRAP_ARROW:
-    case DNGN_TRAP_SPEAR:
-    case DNGN_TRAP_BLADE:
-    case DNGN_TRAP_DART:
-    case DNGN_TRAP_BOLT:
-    case DNGN_TRAP_NET:
-    case DNGN_TRAP_PLATE:
         return feature_description(grid, trap, covering_description, dtype);
-    case DNGN_ABANDONED_SHOP:
-        return thing_do_grammar(dtype, "an abandoned shop");
 
-    case DNGN_ENTER_SHOP:
-        return shop_name(*shop_at(where));
-
-#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
         return thing_do_grammar(dtype, "UNAMED PORTAL VAULT ENTRY");
 #endif
-
-    case DNGN_TREE:
-    {
-        string desc = "";
-        if (env.forest_awoken_until)
-            desc += "awoken ";
-        desc += grid == env.grid(where) ? raw_feature_description(where)
-                                   : _base_feature_desc(grid, trap);
-        if (is_temp_terrain(where))
-            desc += " (summoned)";
-        desc += covering_description;
-        return thing_do_grammar(dtype, desc);
-    }
+    case DNGN_ENTER_SHOP:
+        return shop_name(*shop_at(where));
 
     case DNGN_FLOOR:
         if (dtype == DESC_A)
@@ -3329,7 +3318,8 @@ string feature_description_at(const coord_def& where, bool covering,
         const string featdesc = grid == env.grid(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid, trap);
-        return thing_do_grammar(dtype, featdesc + covering_description);
+        return thing_do_grammar(dtype, featdesc + covering_description,
+                ignore_case);
     }
 }
 
@@ -3367,7 +3357,7 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
 
     if (mi.type == MONS_PANDEMONIUM_LORD)
         desc += " armed with ";
-    else if (mi.type == MONS_DANCING_WEAPON)
+    else if (mons_class_is_animated_weapon(mi.type))
         desc += " ";
     else
         desc += " wielding ";
@@ -3653,13 +3643,15 @@ string get_monster_equipment_desc(const monster_info& mi,
             string str = comma_separated_line(attributes.begin(),
                                               attributes.end());
 
-            if (mi.type == MONS_DANCING_WEAPON
+            if (mons_class_is_animated_weapon(mi.type)
                 || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST)
             {
                 if (!str.empty())
                     str += " ";
 
+                // animated armour is has "animated" in its name already,
+                // spectral weapons have "spectral".
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
                 else if (mi.type == MONS_PANDEMONIUM_LORD)
@@ -3713,11 +3705,8 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     // Dancing weapons have all their weapon information in their full_name, so
     // we don't need to add another weapon description here (see Mantis 11887).
-    if (!weap.empty()
-        && mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
-    {
+    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type))
         item_descriptions.push_back(weap.substr(1)); // strip leading space
-    }
 
     // as with dancing weapons, don't claim animated armours 'wear' their armour
     if (mon_arm && mi.type != MONS_ANIMATED_ARMOUR)

@@ -8,7 +8,6 @@ shock SHOCK
 silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
-tornado TORNADO
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
@@ -77,6 +76,7 @@ ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
+polar_vortex POLAR_VORTEX
 
 %sdir gui/spells/necromancy
 agony AGONY
@@ -158,7 +158,6 @@ wereblood WEREBLOOD
 paralyse PARALYSE
 bolt_thunder THUNDERBOLT
 cloud_cone CLOUD_CONE
-bolt_random RANDOM_BOLT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT

@@ -14,6 +14,7 @@
 #include "areas.h"
 #include "cloud.h"
 #include "colour.h"
+#include "command.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
@@ -52,10 +53,16 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
+    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
+        return;
+    }
+
+    if (!strcmp(specs, "?"))
+    {
+        show_specific_help("wiz-monster");
         return;
     }
 
@@ -110,6 +117,13 @@ void wizard_create_spec_monster_name()
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
+
+    if (mons_class_requires_band(type) && !mspec.band)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "That monster can only be created with a band.");
+        return;
+    }
 
     if (!dgn_place_monster(mspec, place, true, false))
     {

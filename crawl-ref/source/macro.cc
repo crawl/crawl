@@ -967,146 +967,201 @@ static void _input_action_text(const string &macro_type, keyseq* action)
     *action = parse_keyseq(buff);
 }
 
-static string _macro_type_name(bool keymap, KeymapContext keymc)
-{
-    return make_stringf("%s%s",
-                        keymap ? (keymc == KMC_DEFAULT    ? "default " :
-                                  keymc == KMC_LEVELMAP   ? "level-map " :
-                                  keymc == KMC_TARGETING  ? "targeting " :
-                                  keymc == KMC_CONFIRM    ? "confirm " :
-                                  keymc == KMC_MENU       ? "menu "
-                                  : "buggy") : "",
-                        (keymap ? "keymap" : "macro"));
-}
-
+// TODO: this could use a help screen
 class MacroEditMenu : public Menu
 {
+private:
+    const vector<pair<KeymapContext,string>> modes =
+        { { KMC_NONE, "macros" }, // not actually what KMC_NONE means
+          { KMC_DEFAULT, "default" },
+          { KMC_MENU, "menu" },
+          { KMC_LEVELMAP, "level" },
+          { KMC_TARGETING, "targeting" },
+          { KMC_CONFIRM, "confirmation" }
+        };
+
 public:
-    MacroEditMenu(macromap &_mapref, bool _keymap, KeymapContext _keymc)
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
-          selected_new_key(false),
-          mapref(_mapref), keymc(_keymc), is_keymap(_keymap)
+    MacroEditMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ALWAYS_SHOW_MORE
+                | MF_ARROWS_SELECT | MF_WRAP),
+          selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
-        action_cycle = Menu::CYCLE_TOGGLE;
+#ifdef USE_TILE_LOCAL
+        set_min_col_width(80);
+#endif
+        action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry("", MEL_TITLE));
+    }
+
+    void fill_entries()
+    {
+        // TODO: this seems like somehow it should involve ui::Switcher, but I
+        // have no idea how to use that class with a Menu
+        clear();
+        macromap &mapref = keymc == KMC_NONE ? Macros : Keymaps[keymc];
+        for (auto &mapping : mapref)
+        {
+            // TODO: indicate if macro is from rc file somehow?
+            string action_str = vtostr(mapping.second);
+            action_str = replace_all(action_str, "<", "<<");
+            MenuEntry *me = new MenuEntry(action_str,
+                                                    MEL_ITEM, 1,
+                                                    (int) mapping.first[0]);
+            me->data = (void *) &mapping.first;
+            add_entry(me);
+        }
+        // update more in case menu changes between empty and non-empty
+        update_macro_more();
+        update_menu(true); // necessary to update webtiles menu
+        if (last_hovered == -1)
+            cycle_hover();
+    }
+
+    void cycle_mode()
+    {
+        auto it = modes.begin();
+        for (; it != modes.end(); it++)
+            if (it->first == keymc)
+                break;
+        if (it == modes.end())
+            keymc = KMC_NONE;
+        else
+        {
+            it++;
+            if (it == modes.end())
+                keymc = KMC_NONE;
+            else
+                keymc = it->first;
+        }
+        update_title();
+        fill_entries();
+    }
+
+    KeymapContext get_mode() const
+    {
+        return keymc;
+    }
+
+    void update_macro_more()
+    {
+        vector<string> result;
+        for (auto m : modes)
+            if (keymc == m.first)
+                result.push_back("<w>" + m.second + "</w>");
+            else
+                result.push_back(m.second);
+
+        string hint;
+        if (keymc != KMC_NONE)
+            edited_keymaps = true;
+
+        string cmd_hint = make_stringf(
+            "[<w>~</w>] to create/edit %ss from any key (including hotkeys)%s\n",
+            keymc == KMC_NONE ? "macro" : "keymap",
+            item_count() == 0 ? "" : ", [<w>-</w>] clear all");
+
+        // there's much less use-case for editing keymaps in-game, so hide the
+        // details by default
+        string mode_hint = edited_keymaps
+            ? "cycle mode: " + join_strings(result.begin(), result.end(), "|")
+            : "edit keymaps";
+
+        set_more(formatted_string::parse_string(
+#ifdef USE_TILE
+#ifdef USE_TILE_WEB
+            // it would be much better to implement a minimum width for
+            // webtiles, but that seems very hard to do
+            string(80, ' ') +
+#endif
+            // menu looks odd when completely empty in tiles. It would be
+            // better to implement a minimum height, but I can't figure out
+            // how to do that.
+            "\n" +
+#endif
+            cmd_hint +
+            "[<w>!</w>"
+#ifdef USE_TILE_LOCAL
+            "/<w>Right-click</w>"
+#endif
+            "] " + mode_hint));
+    }
+
+    string mode_name()
+    {
+        // XX less stupid implementation
+        switch (keymc)
+        {
+        case KMC_NONE: return "macro";
+        case KMC_DEFAULT: return "default keymap";
+        case KMC_MENU: return "menu keymap";
+        case KMC_TARGETING: return "targeting keymap";
+        case KMC_LEVELMAP: return "level map keymap";
+        case KMC_CONFIRM: return "confirmation keymap";
+        default: return "buggy keymap";
+        }
     }
 
     virtual formatted_string calc_title() override
     {
-        return formatted_string::parse_string("Editing <w>"
-            + _macro_type_name(is_keymap, keymc) + "</w>. <w>[Enter]</w> to add/edit by key, <w>-</w> to clear all, other keys add");
+        return formatted_string::parse_string(
+            "Editing <w>" + mode_name() + "s</w>. Arrows/[<w>enter</w>] to select, or enter a key:");
     }
 
     bool process_key(int keyin) override
     {
-        if (keyin == CK_ENTER || keyin == '-')
-        {
-            lastch = keyin;
-            return false;
-        }
         switch (keyin)
         {
         case CK_REDRAW:
-        case CK_MOUSE_B2:
-        case CK_MOUSE_CMD:
-        CASE_ESCAPE
         case ' ': case CK_PGDN: case '>': case '+':
-        case CK_MOUSE_B1:
         case CK_MOUSE_CLICK:
+        case CK_MOUSE_B1:
         case CK_PGUP: case '<':
         case CK_UP:
         case CK_DOWN:
         case CK_HOME:
         case CK_END:
+        case CK_ENTER:
+            if (item_count() == 0)
+                return true; // override weird superclass behavior
+            //fallthrough
+        case CK_MOUSE_B2:
+        CASE_ESCAPE
             return Menu::process_key(keyin);
+        case CK_MOUSE_CMD:
+        case '!':
+            cycle_mode();
+            return true;
+        case '-':
+            if (item_count() == 0)
+                return true; // ignore on empty menu
+            lastch = keyin;
+            return false;
         default:
             selected_new_key = true;
             // fallthrough
-        case CK_ENTER:
-        case '-':
+        case '~':
             lastch = keyin;
             return false;
         }
     }
     bool selected_new_key;
 protected:
-    macromap &mapref;
     KeymapContext keymc;
-    bool is_keymap;
+    bool edited_keymaps;
 };
 
 void macro_add_query()
 {
-    int input;
-    bool keymap = false;
-    KeymapContext keymc = KMC_DEFAULT;
-
-    // TODO: roll this all into a single menu with subsections
-
     clear_messages();
-    // TODO: add a (r)eset option in case you mess up?
-    mprf(MSGCH_PROMPT, "(m)acro, keymap "
-                       "[(k) default, (x) level-map, (t)argeting, "
-                       "(c)onfirm, m(e)nu], (s)ave? ");
-    input = getch_ck();
-    int low = toalower(input);
-
-    if (low == 'k')
-    {
-        keymap = true;
-        keymc  = KMC_DEFAULT;
-    }
-    else if (low == 'x')
-    {
-        keymap = true;
-        keymc  = KMC_LEVELMAP;
-    }
-    else if (low == 't')
-    {
-        keymap = true;
-        keymc  = KMC_TARGETING;
-    }
-    else if (low == 'c')
-    {
-        keymap = true;
-        keymc  = KMC_CONFIRM;
-    }
-    else if (low == 'e')
-    {
-        keymap = true;
-        keymc  = KMC_MENU;
-    }
-    else if (low == 'm')
-        keymap = false;
-    else if (input == 's')
-    {
-        mpr("Saving macros.");
-        macro_save();
-        return;
-    }
-    else
-    {
-        mpr("Aborting.");
-        return;
-    }
+    // TODO: add a reset option in case you mess up? Add a save command here?
 
     // reference to the appropriate mapping
-    macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
 
-    MacroEditMenu menu(mapref, keymap, keymc);
-    menu.set_title(new MenuEntry("", MEL_TITLE));
-    for (auto &mapping : mapref)
-    {
-        // TODO: indicate if macro is from rc file somehow?
-        string action_str = vtostr(mapping.second);
-        action_str = replace_all(action_str, "<", "<<");
-        MenuEntry *me = new MenuEntry(action_str,
-                                                MEL_ITEM, 1,
-                                                (int) mapping.first[0]);
-        me->data = (void *) &mapping.first;
-        menu.add_entry(me);
-    }
+
+    MacroEditMenu menu;
+    menu.fill_entries();
 
     keyseq *key_chosen = nullptr;
     menu.on_single_selection = [&key_chosen](const MenuEntry& item)
@@ -1119,23 +1174,32 @@ void macro_add_query()
     keyseq key;
 
     mouse_control mc(MOUSE_MODE_MACRO);
-    const string macro_type = _macro_type_name(keymap, keymc);
+
+    const auto keymc = menu.get_mode();
+    const bool keymap = keymc != KMC_NONE;
+    macromap &mapref = keymap ? Keymaps[keymc] : Macros;
+    const string macro_type = menu.mode_name();
+
+    // TODO: menu-ify (or at least do in a popup) the rest of this stuff:
 
     if (!key_chosen)
     {
-        if (menu.getkey() == CK_ENTER)
+        // The use of ~ here is partly to make it harder to rebind ~. To do it
+        // in the in-game UI you'd have to enter the keycode.
+        if (menu.getkey() == '~')
         {
+            clear_messages(true);
             const string trigger_prompt = make_stringf(
-                "Input %s trigger key (<white>\\</white> to enter by keycode): ",
+                "Input %s trigger key ([<w>~</w>] to enter by keycode): ",
                 macro_type.c_str());
             msgwin_prompt(trigger_prompt);
             key = _getch_mul();
-            if (key[0] == '\\')
+            if (key[0] == '~')
             {
                 msgwin_reply("keycode");
                 key.clear();
                 char buf[20];
-                msgwin_get_line("Input keycode: ", buf, sizeof(buf));
+                msgwin_get_line("Input keycode by number: ", buf, sizeof(buf));
                 key.push_back(read_key_code(string(buf)));
                 if (key[0] == 0)
                 {
@@ -1168,8 +1232,6 @@ void macro_add_query()
     else
         key = *key_chosen;
 
-    // TODO: menu-ify (or at least do in a popup) the rest of this stuff:
-
     string key_str = keycode_is_printable(key[0])
         ? keycode_to_name(key[0]).c_str()
         : make_stringf("%s (%s)",
@@ -1186,15 +1248,16 @@ void macro_add_query()
     else
         action_str = "<red>[none]</red>";
 
-    mprf(MSGCH_WARN, "Current Action for %s: %s",
+    if (key_chosen)
+        clear_messages(true);
+    mprf(MSGCH_WARN, "Current %s for %s: %s", macro_type.c_str(),
                                 key_str.c_str(), action_str.c_str());
     mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, %s%sor (a)bort? ",
         keymap ? "" : "redefine (R)aw, ",
         starts_empty ? "" : "(c)lear, ");
 
-    input = getch_ck();
+    int input = toalower(getch_ck());
 
-    input = toalower(input);
     if (!starts_empty && input == 'c')
     {
         mprf("Cleared %s '%s' => '%s'.",
@@ -1344,7 +1407,7 @@ string read_rc_file_macro(const string& field)
     const int second_space = key_and_action.find(' ');
 
     if (second_space < 0)
-        return "Cannot parse marcos += %s , there are only two arguments";
+        return "Cannot parse macros += %s , there are only two arguments";
 
     const string macro_key_string = key_and_action.substr(0, second_space);
     const string action_string = key_and_action.substr((second_space + 1));

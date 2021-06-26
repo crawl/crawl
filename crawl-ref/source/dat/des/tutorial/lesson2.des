@@ -26,18 +26,18 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    Lesson 2: Monsters and Combat
 ORDER:   2
 ORIENT:  encompass
-KFEAT:   BCDFG = .
+KFEAT:   BFG = .
 KFEAT:   AE = +
 KFEAT:   n = iron_grate
-COLOUR:  deBCDFG = lightblue
+COLOUR:  deBFG = lightblue
 RTILE:   c = wall_vines
-FTILE:   dBCDFG = tutorial_pad
+FTILE:   dBFG = tutorial_pad
 ITEM:    quarterstaff mundane
 SHUFFLE: 34
 MONS:    training dummy hp:10 ; whip mundane
-MONS:    rat always_corpse
+MONS:    rat
 MONS:    wyvern
-MONS:    endoplasm hp:12 name:ooze n_rpl n_des n_spe spells:.
+MONS:    giant cockroach
 MARKER:  d = lua:tutorial2.msg("pickup_weapon")
 MARKER:  A = lua:tutorial2.msg("melee")
 MARKER:  B = lua:tutorial2.msg("resting")
@@ -60,10 +60,10 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx...xxxxxxxxxxxxx...xxx
 xxxxxx.2...xxxxxxxxxxx.....xx
-xxxxxx2.....E..2..C.+B.....xx
+xxxxxx2.....E..2....+B.....xx
 xxxxxx.....xxxxxxxxxxx.....xx
 xxxxxxx2..xxxxxxxxxxxxx...xxx
-xxxxxxxxDxxxxxxxxxxxxxxx1xxxx
+xxxxxxxx.xxxxxxxxxxxxxxx1xxxx
 xxxxxxxx.xxxxxxxxxxxxxxx.xxxx
 xcccccccFcccccccxxxxxxxx.xxxx
 xc3..n.....n..4cxxxxxxxxAxxxx

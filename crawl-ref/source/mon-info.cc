@@ -70,7 +70,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_REGENERATION,    MB_REGENERATION },
     { ENCH_STRONG_WILLED,   MB_STRONG_WILLED },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
-    { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
     { ENCH_DAZED,           MB_DAZED },
     { ENCH_MUTE,            MB_MUTE },
     { ENCH_BLIND,           MB_BLIND },
@@ -79,7 +78,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
     { ENCH_ROLLING,         MB_ROLLING },
-    { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
     { ENCH_WORD_OF_RECALL,  MB_WORD_OF_RECALL },
@@ -90,8 +88,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_TOXIC_RADIANCE,  MB_TOXIC_RADIANCE },
     { ENCH_GRASPING_ROOTS,  MB_GRASPING_ROOTS },
     { ENCH_FIRE_VULN,       MB_FIRE_VULN },
-    { ENCH_TORNADO,         MB_TORNADO },
-    { ENCH_TORNADO_COOLDOWN, MB_TORNADO_COOLDOWN },
+    { ENCH_POLAR_VORTEX,         MB_VORTEX },
+    { ENCH_POLAR_VORTEX_COOLDOWN, MB_VORTEX_COOLDOWN },
     { ENCH_BARBS,           MB_BARBS },
     { ENCH_POISON_VULN,     MB_POISON_VULN },
     { ENCH_ICEMAIL,         MB_ICEMAIL },
@@ -550,11 +548,24 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (milev <= MILEV_NAME)
     {
-        if (type == MONS_DANCING_WEAPON
-            && m->inv[MSLOT_WEAPON] != NON_ITEM)
+        if (mons_class_is_animated_weapon(type))
         {
-            inv[MSLOT_WEAPON].reset(new item_def(
-                get_item_known_info(env.item[m->inv[MSLOT_WEAPON]])));
+            if (m->get_defining_object())
+            {
+                inv[MSLOT_WEAPON].reset(new item_def(
+                    get_item_known_info(*m->get_defining_object())));
+            }
+            // animated launchers may have a missile too
+            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
+            {
+                inv[MSLOT_MISSILE].reset(new item_def(
+                    get_item_known_info(env.item[m->inv[MSLOT_MISSILE]])));
+            }
+        }
+        else if (type == MONS_ANIMATED_ARMOUR && m->get_defining_object())
+        {
+            inv[MSLOT_ARMOUR].reset(new item_def(
+                get_item_known_info(*m->get_defining_object())));
         }
         return;
     }
@@ -575,6 +586,7 @@ monster_info::monster_info(const monster* m, int milev)
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
     can_go_frenzy = m->can_go_frenzy(false);
+    can_feel_fear = m->can_feel_fear(false);
 
     // Not an MB_ because it's rare.
     if (m->cloud_immune(false))
@@ -642,6 +654,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
+
+    if (you.afraid_of(m))
+        mb.set(MB_FEAR_INSPIRING);
 
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
@@ -938,8 +953,9 @@ string monster_info::_core_name() const
             if (inv[MSLOT_WEAPON])
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
-
                 s = item.name(DESC_PLAIN, false, false, true, false);
+                if (type == MONS_SPECTRAL_WEAPON)
+                    s = "spectral " + s;
             }
             break;
 

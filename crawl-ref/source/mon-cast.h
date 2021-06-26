@@ -24,8 +24,6 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
 dice_def waterstrike_damage(int spell_hd);
 dice_def resonance_strike_base_damage(const monster &caster);
 
-void flay(const monster &caster, actor &defender, int damage);
-
 bool handle_mon_spell(monster* mons);
 
 static const int ENCH_POW_FACTOR = 3;

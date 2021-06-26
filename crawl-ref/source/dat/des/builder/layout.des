@@ -443,7 +443,7 @@ WEIGHT: 15 (D), 10 (Elf), 15 (Snake), 10 (Crypt), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
-    local is_elf_branch = you.branch() == "Elf"
+    local is_elf_branch = you.in_branch("Elf")
 
     function draw_room(room)
         local room_type = 0
@@ -793,9 +793,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local force_straight = false
     local allow_diagonals = false
     local max_thickness = 1
-    if you.branch() == "Crypt" then
+    if you.in_branch("Crypt") then
         force_straight = true
-    elseif you.branch() == "Zot" then
+    elseif you.in_branch("Zot") then
         corridors = crawl.random_range(10, 16)
         force_straight = true
         allow_diagonals = crawl.coinflip()

@@ -578,7 +578,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Aaaarggghhhhh!
                 "daeva / w:15 angel",
                 "royal mummy / mummy priest / guardian mummy",
-                "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
+                "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan / air elemental w:20",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
@@ -648,7 +648,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Just die already!
                 "daeva",
                 "royal mummy / mummy priest",
-                "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
+                "air elemental name:greater n_adj perm_ench:polar_vortex col:lightcyan",
                 "iron golem hd:20 col:magenta name:orb_golem n_rpl n_des n_spe spells:orb_of_destruction.70.natural",
                 "brimstone fiend / ice fiend / tzitzimitl w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",

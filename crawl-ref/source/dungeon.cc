@@ -304,6 +304,9 @@ bool builder(bool enable_random_maps)
 
         try
         {
+            // clean slate
+            crawl_state.last_builder_error_fatal = false;
+
             if (_build_level_vetoable(enable_random_maps))
                 return true;
 #if defined(DEBUG_VETO_RESUME) && defined(WIZARD)
@@ -368,6 +371,22 @@ bool builder(bool enable_random_maps)
 
         get_uniq_map_tags() = uniq_tags;
         get_uniq_map_names() = uniq_names;
+        if (crawl_state.last_builder_error_fatal &&
+            (you.props.exists("force_map") || you.props.exists("force_minivault")))
+        {
+            // if there was a fatal lua error and this is a forced levelgen,
+            // it's most likely that the same thing will keep happening over
+            // and over again (and the dev should want to fix the error
+            // anyways.)
+            mprf(MSGCH_ERROR, "Aborting &P builder on fatal lua error");
+            break;
+        }
+        else if (crawl_state.last_builder_error_fatal)
+        {
+            mprf(MSGCH_ERROR,
+                "Builder <white>VETO</white> on fatal lua error: %s",
+                crawl_state.last_builder_error.c_str());
+        }
     }
 
     if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
@@ -846,8 +865,20 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && (trap->type == TRAP_TELEPORT_PERMANENT
                           || trap->type == TRAP_DISPERSAL));
     }
-    else
-        return feat_is_traversable(feat);
+    else // the mimic check here relies on full placement operating, e.g. not &L
+        return feat_is_traversable(feat) || feature_mimic_at(c);
+}
+
+static bool _dgn_square_is_tele_connected(const coord_def &c)
+{
+    // all solid features get marked with no_tele_into, including doors, so
+    // undo this more or less so that this function can be used for connectivity
+    // checking; except when the entire vault is notele
+    const bool vault_notele = dgn_vault_at(c)
+                    && dgn_vault_at(c)->map.has_tag("no_tele_into");
+    return (!(env.pgrid(c) & FPROP_NO_TELE_INTO)
+                            || !vault_notele && feat_is_solid(env.grid(c)))
+        && dgn_square_travel_ok(c);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
@@ -1144,6 +1175,16 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
     return nzones - ngood;
 }
 
+int dgn_count_tele_zones(bool choose_stairless)
+{
+    dprf("Counting teleport zones");
+    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
+                                    DNGN_UNSEEN, _dgn_square_is_tele_connected);
+}
+
+// Count number of mutually isolated zones. If choose_stairless, only count
+// zones with no stairs in them. If fill is set to anything other than
+// DNGN_UNSEEN, chosen zones will be filled with the provided feature.
 int dgn_count_disconnected_zones(bool choose_stairless,
                                  dungeon_feature_type fill)
 {
@@ -1190,7 +1231,7 @@ static void _mask_vault(const vault_placement &place, unsigned mask,
                         function<bool(const coord_def &)> skip_fun = nullptr)
 {
     for (vault_place_iterator vi(place); vi; ++vi)
-        if (!skip_fun || !skip_fun(vi.vault_pos())) // alert: `skip_fun` takes vault coords
+        if (!skip_fun || !skip_fun(*vi))
             env.level_map_mask(*vi) |= mask;
 }
 
@@ -1237,12 +1278,15 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         else if (!transparent)
         {
             // mask everything except for any marked vault exits as opaque.
-            // (If there's some use for opaque exits, this would be possible
-            // to do with an explicit mask -- but this may lead to vault
-            // placements where e.g. an exit leads to a wall. With one exit,
-            // it may lead to isolated opaque vaults.)
+            // This uses vault exits marked by @, +, = on the vault edge, and
+            // in a pinch, spaces in floats that are necessary for exits.
+            // (This is overridden by explicit masking, or no_exits.)
             _mask_vault(place, MMT_OPAQUE,
-                [&place](const coord_def &c) { return place.is_exit(c); });
+                [&place](const coord_def &c)
+                {
+                    return !place.map.has_tag("no_exits")
+                        && count(place.exits.begin(), place.exits.end(), c);
+                });
         }
     }
 
@@ -1327,7 +1371,14 @@ static bool _dgn_ensure_vault_placed(bool vault_success,
                                      string desc)
 {
     if (!vault_success)
-        throw dgn_veto_exception(make_stringf("Vault placement failure (%s).", desc.c_str()));
+    {
+        // the exception message will overwrite last_builder_error, so package
+        // this info in here
+        string err = make_stringf("Vault placement failure for '%s'.", desc.c_str());
+        if (!crawl_state.last_builder_error.empty())
+            err += " " + crawl_state.last_builder_error;
+        throw dgn_veto_exception(err);
+    }
     else if (disable_further_vaults)
         use_random_maps = false;
     return vault_success;
@@ -4383,6 +4434,14 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
          placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
+    // veto if this was a fatal error. (Vetoing in general here would be
+    // extremely costly.)
+    // TODO: I'm not sure this is necessary, but it makes the error more
+    // prominent
+    _dgn_ensure_vault_placed(placed_vault_orientation != MAP_NONE
+        || !crawl_state.last_builder_error_fatal, false,
+        vault->name);
+
     if (placed_vault_orientation == MAP_NONE)
         return nullptr;
 
@@ -4455,14 +4514,14 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
         // do a second pass to remove tele closets consisting of deep water
         // created by the first pass -- which will not fill in deep water
         // because it is treated as impassable.
         // TODO: get zonify to prevent these?
         // TODO: does this come up anywhere outside of swamp?
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE,
-                                    _dgn_square_is_ever_passable);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE,
+                _dgn_square_is_ever_passable);
     }
 
     if (!make_no_exits)
@@ -4929,6 +4988,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     }
 
     // Make dancing launchers less pathetic.
+    // XX this should be done on creation, not placement?
     if (mons_class_is_animated_weapon(mon->type))
         _give_animated_weapon_ammo(*mon);
 }
@@ -4981,12 +5041,17 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_SUPER_OOD || type == RANDOM_MODERATE_OOD)
     {
-        if (brdepth[mspec.place.branch] <= 1)
-            ; // no OODs here
-        else if (type == RANDOM_SUPER_OOD)
-            mspec.place.depth += 4 + mspec.place.depth;
-        else if (type == RANDOM_MODERATE_OOD)
-            mspec.place.depth += 5;
+        // don't do OOD depth adjustment for portal branches
+        if (brdepth[mspec.place.branch] > 1)
+        {
+            if (type == RANDOM_SUPER_OOD)
+                mspec.place.depth = mspec.place.depth * 2 + 4; // TODO: why?
+            else if (type == RANDOM_MODERATE_OOD)
+                mspec.place.depth += 5;
+
+            if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
+                mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+        }
         fuzz_ood = false;
         type = RANDOM_MONSTER;
     }
@@ -5208,7 +5273,12 @@ static dungeon_feature_type _glyph_to_feat(int glyph)
            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-           (glyph == 't') ? DNGN_TREE :
+           // We make 't' correspond to the right tree type by branch.
+           (glyph == 't') ?
+               player_in_branch(BRANCH_SWAMP)          ? DNGN_MANGROVE :
+               player_in_branch(BRANCH_ABYSS)
+               || player_in_branch(BRANCH_PANDEMONIUM) ? DNGN_DEMONIC_TREE
+                                                       : DNGN_TREE :
            (glyph == '+') ? DNGN_CLOSED_DOOR :
            (glyph == '=') ? DNGN_RUNED_CLEAR_DOOR :
            (glyph == 'w') ? DNGN_DEEP_WATER :
@@ -6047,7 +6117,7 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return feat_is_water(feat)
-           || feat == DNGN_TREE
+           || feat_is_tree(feat)
            || feat_is_lava(feat)
            || feat_is_wall(feat)
            || feat == DNGN_FLOOR;

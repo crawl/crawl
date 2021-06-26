@@ -213,8 +213,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         }
         break;
     case OBJ_WANDS:
-        retval = (item.sub_type == WAND_POLYMORPH
-                  || item.sub_type == WAND_RANDOM_EFFECTS);
+        retval = (item.sub_type == WAND_POLYMORPH);
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_MUTATION
@@ -225,7 +224,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         retval = _is_book_type(item, is_chaotic_spell);
         break;
     case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_BOX_OF_BEASTS);
+        retval = (item.sub_type == MISC_BOX_OF_BEASTS
+                  || item.sub_type == MISC_XOMS_CHESSBOARD);
         break;
     default:
         break;
@@ -255,8 +255,8 @@ static bool _is_potentially_hasty_item(const item_def& item)
             return true;
         }
         break;
-    case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_XOMS_CHESSBOARD)
             return true;
         break;
     default:
@@ -416,36 +416,16 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
     // XXX: also check god_hates_item()?
     switch (which_god)
     {
-        case GOD_ELYVILON:
-            // Peaceful healer god: no weapons, no berserking.
-            if (item.base_type == OBJ_WEAPONS)
-                return false;
-            break;
-
-        case GOD_SIF_MUNA:
+        case GOD_ELYVILON: // Peaceful healer god: no weapons.
+        case GOD_SIF_MUNA: // The magic gods: no weapons.
         case GOD_VEHUMET:
-            // The magic gods: no weapons, no preventing spellcasting.
             if (item.base_type == OBJ_WEAPONS)
                 return false;
             break;
 
         case GOD_TROG:
-            // Anti-magic god: no spell use, no enhancing magic.
-            if (item.base_type == OBJ_BOOKS)
-                return false;
-
-            if (item.base_type == OBJ_JEWELLERY
-                && (item.sub_type == RING_WIZARDRY
-                    || item.sub_type == RING_ICE
-                    || item.sub_type == RING_MAGICAL_POWER))
-            {
-                return false;
-            }
-            break;
-
-        case GOD_CHEIBRIADOS:
-            // Slow god: no quick blades, no berserking.
-            if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
+            // Berserker god: weapons only.
+            if (item.base_type != OBJ_WEAPONS)
                 return false;
             break;
 

@@ -40,7 +40,7 @@
 
 {{
 function interest_check(e)
-  if not you.in_branch("D") or you.absdepth() > 10 then
+  if not you.in_branch("D") or you.depth() > 10 then
     e.tags('extra')
   end
 end
@@ -490,10 +490,10 @@ TAGS:  uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH: D:5-
 KFEAT: C = altar_dithmenos
 {{
-  if you.absdepth() >= 14 then
+  if you.absdepth() >= 9 then
      mons("shadow")
   else
-     local imp_weight = 9 - you.absdepth()
+     local imp_weight = 9 - you.depth()
      if imp_weight > 0 then
          local phantom_weight = 9 - imp_weight
          mons("phantom w:" .. phantom_weight ..
@@ -1055,13 +1055,14 @@ ENDMAP
 
 ### Hepliaklqana overflow altars #############################################
 
-NAME: worldfamousw_hep_ancestral_shrine
-TAGS: uniq_altar_hepliaklqana temple_overflow_hepliaklqana temple_overflow_1
-TAGS: no_monster_gen no_item_gen no_pool_fixup
-KFEAT: _ = altar_hepliaklqana
+NAME:   worldfamousw_hep_ancestral_shrine
+TAGS:   uniq_altar_hepliaklqana temple_overflow_hepliaklqana temple_overflow_1
+TAGS:   no_monster_gen no_item_gen no_pool_fixup
+KFEAT:  _ = altar_hepliaklqana
 COLOUR: w = green
-TILE: G = dngn_gravestone
-TILE: t = DNGN_TREE_DEAD
+TILE:   G = dngn_gravestone
+COLOUR: t = brown
+TILE:   t = DNGN_TREE_DEAD
 {{
 set_feature_name("granite_statue", "a gravestone")
 set_feature_name("tree", "dead tree")
@@ -1225,47 +1226,51 @@ KMONS:   1 = orc wizard; quarterstaff . robe
 # Early for kobold brigands, but they get a wand of charming instead of darts,
 # so less threatening.
 KMONS:   2 = jessica; dagger . robe . wand of charming \
-             , kobold brigand ; dagger . wand of charming \
-             / kobold brigand ; dagger . wand of charming
+             / kobold brigand ; dagger . wand of charming \
+             , kobold brigand ; dagger . wand of charming
 KMONS:   3 = orc ; flail . kite shield . chain mail
-# Only one ancestor monster will generate until D:7.
+# We generate one ancestor monster for D:3-9
 NSUBST:  123 = 2=.
 :     elseif you.depth() < 7 then
 KMONS:   1 = blork the orc ; quarterstaff good_item . robe \
-             , orc wizard ; quarterstaff good_item . robe \
-             / orc wizard ; quarterstaff good_item . robe
+             / orc wizard ; quarterstaff good_item . robe \
+             , orc wizard ; quarterstaff good_item . robe
 KMONS:   2 = sigmund; scythe ego:draining . robe \
-             , kobold brigand ; dagger ego:draining . wand of charming \
-             / kobold brigand ; dagger ego:draining . wand of charming
+             / kobold brigand ; dagger ego:draining . wand of charming \
+             , kobold brigand ; dagger ego:draining . wand of charming
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail \
-             , orc warrior ; flail good_item . kite shield . chain mail \
              / orc warrior ; flail good_item . kite shield . chain mail \
+             / gnoll sergeant ; flail good_item . kite shield . chain mail \
+             , orc warrior ; flail good_item . kite shield . chain mail \
              / gnoll sergeant ; flail good_item . kite shield . chain mail
 NSUBST:  123 = 2=.
 :     elseif you.depth() < 10 then
 MONS:    gargoyle ; quarterstaff good_item
 MONS:    kobold brigand ; dagger ego:draining good_item . wand of paralysis \
              . dart ego:atropa \
+         / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
+             . wand of paralysis \
          / vampire ; dagger ego:draining good_item . robe good_item
 MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
          / gnoll sergeant ; flail good_item . kite shield . chain mail good_item
-# Generate two ancestor types for D:7-D:9.
-NSUBST:  123 = 1=.
+NSUBST:  123 = 2=.
 :     elseif you.depth() < 13 then
-# For D:10- and Depths, we generate all three ancestor monsters.
 MONS:    gargoyle ; quarterstaff good_item \
-         / molten gargoyle ; quarterstaff good_item
-MONS:    spriggan ; dagger ego:draining good_item . robe good_item . buckler \
+         / molten gargoyle w:5 ; quarterstaff good_item
+MONS:   kobold brigand ; dagger ego:draining good_item . wand of paralysis \
+             . dart ego:atropa . potion of haste \
+         / spriggan ; dagger ego:draining good_item . robe good_item . buckler \
              . wand of paralysis . potion of haste \
          / vampire ; dagger ego:draining good_item . robe good_item \
-             . potion of haste \
-         / kobold brigand ; dagger ego:draining good_item . wand of paralysis \
-             . dart ego:atropa
+             . potion of haste
 MONS:    orc warrior ; flail good_item . kite shield . chain mail good_item \
          / gnoll sergeant ; flail good_item . kite shield \
              . chain mail good_item \
          / skeletal warrior ; flail good_item . kite shield \
              . chain mail good_item
+# Generate two ancestor monsters for D:10-D:12
+NSUBST:  123 = 1=.
+# For D:13- and Depths, we generate all three ancestor monsters.
 :     else
 MONS:    ogre mage; lajatang ego:freezing . potion of haste \
          / molten gargoyle ; lajatang ego:flaming . potion of haste
@@ -1286,7 +1291,7 @@ MONS:    orc knight; broad axe ego:flaming . chain mail good_item \
 : else
 MONS:    tengu reaver ; lajatang ego:freezing good_item \
              | lajatang ego:freezing randart . scale mail . potion of haste \
-             . potion of haste / \
+             . potion of haste \
          / ancient champion ; lajatang ego:freezing good_item \
              | lajatang ego:freezing randart . scale mail
 MONS:    vampire knight; quick blade ego:antimagic . buckler good_item \
@@ -1532,6 +1537,7 @@ TAGS:  transparent
 KFEAT: _ = altar_makhleb
 KPROP: 12 = no_tele_into
 KMASK: 12 = no_trap_gen
+KMASK: 12 = opaque
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
 : interest_check(_G)
@@ -1651,7 +1657,7 @@ ENDMAP
 NAME:   nemelex_altar_shiori
 TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   transparent decor no_rotate
+TAGS:   decor no_rotate
 TAGS:   layout_rooms layout_city layout_open
 KPROP:  abcdefghBR' = no_tele_into
 KFEAT:  _ = altar_nemelex_xobeh
@@ -1700,6 +1706,7 @@ MONS:    ogre ; giant club
 MONS:    endoplasm
 KFEAT:   _ = altar_nemelex_xobeh
 SHUFFLE:  12_
+COLOUR:  x = darkgray
 COLOUR:  12' = random
 TILE:    x = wall_pebble_darkgray
 MAP
@@ -1769,9 +1776,10 @@ TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
 TAGS:   uniq_altar_nemelex_xobeh
 KFEAT:  _ = altar_nemelex_xobeh
 :  if you.depth() ~= dgn.br_depth(you.branch()) then
-KFEAT:  o = shaft trap
+KFEAT:  a = shaft trap
 :  end
-NSUBST: ' = 6:o / *:.
+NSUBST: ' = 6:a / *:.
+COLOUR: x = darkgray
 TILE:   x = wall_pebble_darkgray
 : interest_check(_G)
 MAP
@@ -1886,6 +1894,7 @@ ENDMAP
 NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 KFEAT: _ = altar_okawaru
+KPROP: 1 = no_tele_into
 MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
        orc; stone q:5 / kobold; stone q:5
 : interest_check(_G)
@@ -2978,7 +2987,7 @@ ENDMAP
 # weapons are just plain.
 NAME:   nicolae_wu_jian_glorious_leap
 TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen
-TAGS:   transparent uniq_altar_wu_jian
+TAGS:   uniq_altar_wu_jian
 WEIGHT: 5
 KITEM:  I = any weapon level:-2
 KITEM:  i = any weapon
@@ -3056,7 +3065,7 @@ ENDMAP
 
 NAME:   tgw_xom
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
-TAGS:   uniq_altar_xom
+TAGS:   uniq_altar_xom no_tele_into
 KFEAT:  _ = altar_xom
 MONS:   place:D:1
 MONS:   orc ; club ego:chaos | dagger ego:chaos | spear ego:chaos
@@ -3112,7 +3121,7 @@ ENDMAP
 NAME:    xom_butterflies
 TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
-KITEM:   _ = wand of random effects w:40 / any wand
+KITEM:   _ = piece from Xom's chessboard
 COLOUR:  . = random
 NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
@@ -3198,6 +3207,7 @@ ENDMAP
 NAME:   led_xom_imps
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
 MONS:   crimson imp, crimson imp ; dagger ego:chaos
+KPROP:  1 = no_tele_into
 NSUBST: 1 = 2 / 1
 KFEAT:  _ = altar_xom
 KFEAT:  ^ = teleport trap / dispersal trap
@@ -3359,7 +3369,7 @@ NSUBST: t = . / ttE
 SUBST:  E = tt.
 : nsubst( ". = " .. you.absdepth() .. "=1 / 1=1. / ." )
 KFEAT:  _ = altar_yredelemnul
-COLOUR: t = lightgrey w:5 / darkgrey w:5 / brown
+COLOUR: t = lightgrey w:5 / brown
 TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "dead tree")
 MAP

@@ -435,6 +435,12 @@ string describe_player_cancellation()
     _dispellable_player_buffs(buffs);
     for (auto duration : buffs.durations)
     {
+        if (duration == DUR_TRANSFORMATION)
+        {
+            effects.push_back("transformed");
+            continue;
+        }
+
         status_info inf;
         if (fill_status_info(duration, inf) && !inf.short_text.empty())
         {
@@ -449,14 +455,28 @@ string describe_player_cancellation()
         STATUS_AIRBORNE,
         STATUS_SPEED,
         STATUS_INVISIBLE,
+        STATUS_BEHELD,
     };
     for (auto status : dispellable_statuses)
     {
         status_info inf;
         if (fill_status_info(status, inf) && !inf.short_text.empty())
         {
-            strip_suffix(inf.short_text, " (expiring)");
-            effects.push_back(inf.short_text);
+            if (status == STATUS_AIRBORNE)
+            {
+                if (!you.attribute[ATTR_PERM_FLIGHT]
+                    && !you.racial_permanent_flight())
+                {
+                    effects.push_back("flying");
+                }
+                else
+                    effects.push_back("buoyant");
+            }
+            else
+            {
+                strip_suffix(inf.short_text, " (expiring)");
+                effects.push_back(inf.short_text);
+            }
         }
     }
 
@@ -506,6 +526,13 @@ void debuff_player()
         {
             len = 0;
             heal_flayed_effect(&you);
+        }
+        else if (duration == DUR_LIQUID_FLAMES)
+        {
+            len = 0;
+            mprf(MSGCH_DURATION, "You are no longer on fire.");
+            you.props.erase("sticky_flame_aux");
+            you.props.erase("sticky_flame_source");
         }
         else if (len > 1)
         {
@@ -1042,16 +1069,20 @@ void torment_player(const actor *attacker, torment_source_type taux)
 
     int hploss = 0;
 
-    if (!player_res_torment())
+    if (!you.res_torment())
     {
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == transformation::statue
-            || you.has_mutation(MUT_TORMENT_RESISTANCE))
-        {
+        if (you.form == transformation::statue)
             hploss /= 2;
-        }
+        if (you.has_mutation(MUT_TORMENT_RESISTANCE))
+            hploss /= 2;
+#if TAG_MAJOR_VERSION == 34
+        // Save compatibility for old demonspawn mutation -- now deterministic
+        if (you.has_mutation(MUT_STOCHASTIC_TORMENT_RESISTANCE))
+            hploss /= 2;
+#endif
     }
 
     // Kiku protects you from torment to a degree.
@@ -1257,33 +1288,6 @@ void cleansing_flame(int pow, cleansing_flame_source caster, coord_def where,
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
-}
-
-spret cast_random_effects(int pow, bolt& beam, bool fail)
-{
-    bolt tracer = beam;
-    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
-        return spret::abort;
-
-    fail_check();
-
-    // List of possible effects. Mostly debuffs, a few buffs to keep it
-    // exciting
-    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
-                                          5, ZAP_INVISIBILITY,
-                                          5, ZAP_MIGHT,
-                                          10, ZAP_CORONA,
-                                          15, ZAP_SLOW,
-                                          15, ZAP_MALMUTATE,
-                                          15, ZAP_PETRIFY,
-                                          10, ZAP_PARALYSE,
-                                          10, ZAP_CONFUSE,
-                                          10, ZAP_SLEEP);
-    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
-
-    zapping(zap, pow, beam, false);
-
-    return spret::success;
 }
 
 void majin_bo_vampirism(monster &mon, int damage)

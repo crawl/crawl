@@ -901,10 +901,6 @@ wand of polymorph
 En magisk anordning som omskaber et væsen til en anden form. Den er særligt
 effektiv mod formskiftende væsener.
 %%%%
-wand of random effects
-
-En magisk anordning, som kan producere en lang række effekter.
-%%%%
 whip
 
 Et langt, flettet stykke læder. Dette enkle våben blev oprindeligt brugt i

@@ -44,7 +44,6 @@ struct form_entry
     form_capability can_fly;
     form_capability can_swim;
     form_capability can_bleed;
-    bool breathes;
     bool keeps_mutations;
 
     const char *shout_verb;
@@ -68,7 +67,7 @@ static const form_entry formdata[] =
     FormDuration(0, PS_NONE, 0), 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",
     {}
 },
@@ -79,7 +78,7 @@ static const form_entry formdata[] =
     FormDuration(10, PS_DOUBLE, 60), 0, 5, SIZE_TINY, 10,
     2, 0, 0, true, 10, true, 5,
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_FORBID, true, false,
+    FC_DEFAULT, FC_FORBID, FC_FORBID, false,
     "hiss", -4, "front leg", "", "crawl onto", "flesh",
     { {"venomous fangs", "You have poisonous fangs."},
       {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
@@ -92,7 +91,7 @@ static const form_entry formdata[] =
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 20, true, 22,
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
-    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",
     {}
 },
@@ -103,7 +102,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
     20, 12, 0, true, 0, true, 12,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
+    FC_DEFAULT, FC_FORBID, FC_FORBID, true,
     "", 0, "", "", "place yourself before", "stone",
     { { "slow and powerful", "Your actions are slow, but your melee attacks are powerful." },
       { "torment resistance 1", "You are resistant to unholy torment." } // same as MUT_TORMENT_RESISTANCE
@@ -114,9 +113,9 @@ static const form_entry formdata[] =
     "a creature of crystalline ice.",
     EQF_PHYSICAL, MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     FormDuration(30, PS_DOUBLE, 100), 0, 0, SIZE_LARGE, 12,
-    5, 7, 0, true, 0, true, 12,
+    5, 12, 0, true, 0, true, 12,
     SPWPN_FREEZING, WHITE, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
+    FC_DEFAULT, FC_ENABLE, FC_FORBID, false,
     "", 0, "front paw", "paw", "bow your head before", "ice",
     { { "freezing attack", "You have a powerful freezing melee attack."} }
 },
@@ -128,7 +127,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
     16, 0, 0, true, 0, true, 32,
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
-    FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
+    FC_ENABLE, FC_FORBID, FC_ENABLE, false,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh",
     { { "dragon claw", "You have a powerful clawing attack." },
       { "dragon scales", "Your giant scaled body is strong and resiliant, but less evasive." },
@@ -142,7 +141,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     6, 0, 0, true, 0, true, 5,
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_DEFAULT, FC_FORBID, false, true,
+    FC_DEFAULT, FC_DEFAULT, FC_FORBID, true,
     "", 0, "", "", "", "bone",
     { { "draining attack", "Your unarmed attacks are suffused with negative energy."},
       { "torment immunity", "You are immune to unholy pain and torment."},
@@ -157,7 +156,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
     0, 0, 0, false, 0, true, 1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
-    FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
+    FC_ENABLE, FC_FORBID, FC_ENABLE, false,
     "squeak", -8, "foreclaw", "", "perch on", "flesh",
     {
       {"", "You are tiny and dextrous."} // short-form "tiny" is automatically added
@@ -171,7 +170,7 @@ static const form_entry formdata[] =
     BAD_DURATION, 0, 0, SIZE_SMALL, 10,
     0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, false,
     "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh",
     {} // XX UC penalty?
 },
@@ -183,7 +182,7 @@ static const form_entry formdata[] =
     FormDuration(10, PS_DOUBLE, 60), 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
+    FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true,
     "", 0, "", "", "", "",
     {}
 },
@@ -195,7 +194,7 @@ static const form_entry formdata[] =
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 15,
     20, 0, 50, true, 0, true, 12,
     SPWPN_NORMAL, BROWN, "Branches", { "hit", "smack", "pummel", "thrash" },
-    FC_FORBID, FC_FORBID, FC_FORBID, false, false,
+    FC_FORBID, FC_FORBID, FC_FORBID, false,
     "creak", 0, "branch", "root", "sway towards", "wood",
     {
         { "stationary", "Your roots penetrate the ground, keeping you stationary." },
@@ -212,7 +211,7 @@ static const form_entry formdata[] =
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
+    FC_DEFAULT, FC_FORBID, FC_ENABLE, false,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh",
     {}
 },
@@ -228,11 +227,10 @@ static const form_entry formdata[] =
     5, 0, 50, false, 0, true, 5,
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "touch",
                                                  "engulf", "engulf" },
-    FC_ENABLE, FC_FORBID, FC_FORBID, false, false,
+    FC_ENABLE, FC_FORBID, FC_FORBID, false,
     "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour",
     {
         {"insubstial", "Your tiny insubstantial body is highly resistant to most damage types." },
-        {"wisp movement", "You do not have full control over your movement and may randomly blink."} // XX mark as badmut
     }
 },
 
@@ -244,7 +242,7 @@ static const form_entry formdata[] =
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, false, 0, false, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
+    FC_DEFAULT, FC_FORBID, FC_FORBID, false,
     "", 0, "", "", "", "",
     {}
 },
@@ -257,7 +255,7 @@ static const form_entry formdata[] =
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     12, 0, 0, false, 0, true, 12,
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),
-    FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
+    FC_DEFAULT, FC_FORBID, FC_FORBID, false,
     "sporulate", -8, "hypha", "", "release spores on", "flesh",
     {
         {"", "You are tiny and evasive." },
@@ -274,7 +272,7 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
     0, 0, 0, true, 0, false, 3,
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
-    FC_DEFAULT, FC_FORBID, FC_FORBID, true, true,
+    FC_DEFAULT, FC_FORBID, FC_FORBID, true,
     "", 0, "", "", "", "shadow",
     {
         {"shadow resist", "You are immune to unholy torment and to willpower attacks."},
@@ -285,6 +283,7 @@ static const form_entry formdata[] =
     }
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     transformation::hydra, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
@@ -292,11 +291,27 @@ static const form_entry formdata[] =
     DEFAULT_DURATION, 0, 0, SIZE_BIG, 13,
     6, 5, 0, true, 0, true, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
-    FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
+    FC_DEFAULT, FC_ENABLE, FC_ENABLE, false,
     "roar", 4, "foreclaw", "", "bow your heads before", "flesh",
     { { "fast swimmer", "You swim very quickly." },
       { "devour", "You can devour living enemies to heal." }
     }
+},
+#endif
+
+{
+    transformation::storm, MONS_TWISTER, "Storm", "storm-form", "storm",
+    "a lightning-filled tempest!",
+    EQF_PHYSICAL, MR_RES_ELEC | MR_RES_PETRIFY,
+    DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
+    10, 10, 0, true, 0, true, -1,
+    SPWPN_ELECTROCUTION, YELLOW, "storm fists", { "hit", "buffet", "batter", "blast" },
+    FC_ENABLE, FC_DEFAULT, FC_FORBID, false,
+    "bellow", 0, "", "", "place yourself before", "air",
+    { { "cleaving", "Your stormy fists strike out in all directions at once." },
+      { "", "You are incredibly evasive." }
+    }
 }
+
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

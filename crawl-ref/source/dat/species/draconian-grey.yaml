@@ -25,6 +25,7 @@ aptitudes:
   # Grey Draconian specific
   earth_magic: 2
   air_magic: -2
+can_swim: true
 str: 10
 int: 8
 dex: 6
@@ -32,8 +33,6 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
-  7:
-    MUT_UNBREATHING: 2
 # start TAG_MAJOR_VERSION == 34
 create_enum: false
 # end TAG_MAJOR_VERSION

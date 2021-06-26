@@ -417,6 +417,8 @@ static string _colourize(string base, colour_t col)
 {
     if (col < NUM_TERM_COLOURS)
     {
+        if (col == BLACK)
+            col = DARKGRAY;
         const string col_name = colour_to_str(col);
         return make_stringf("<%s>%s</%s>",
                             col_name.c_str(), base.c_str(), col_name.c_str());
@@ -455,12 +457,6 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         if (you.immune_to_hex(spell))
             return "(immune)";
         return make_stringf("(%d%%)", hex_chance(spell, hd));
-    }
-
-    if (spell == SPELL_CHAIN_LIGHTNING)
-    {
-        const int pow = mons_power_for_hd(spell, hd);
-        return make_stringf("(%s)", desc_chain_lightning_dam(pow).c_str());
     }
 
     const dice_def dam = _spell_damage(spell, hd);
@@ -541,7 +537,6 @@ static void _describe_book(const spellbook_contents &book,
             // looks nicer than Lehudib's Crystal S
             spell_name = "Crystal Spear";
         }
-
         description += formatted_string::parse_string(
                 make_stringf("%c - %s%s%s%s", spell_letter,
                              chop_string(spell_name, chop_len).c_str(),
@@ -569,9 +564,8 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner) {
+        if (!mon_owner)
             known = you.spell_library[spell] ? "         yes" : "          no";
-        }
 
         description.cprintf("%s%d%s\n",
                             chop_string(schools, 30).c_str(),

@@ -27,12 +27,13 @@ enum ability_type
     ABIL_END_TRANSFORMATION,
 #if TAG_MAJOR_VERSION == 34
     ABIL_STOP_SINGING, // From song of slaying
-#endif
     ABIL_CANCEL_PPROJ,
+#endif
 
     // Species-specific abilities.
     // Demonspawn-only
     ABIL_DAMNATION,
+    ABIL_WORD_OF_CHAOS,
 #if TAG_MAJOR_VERSION == 34
     ABIL_FLY,
     ABIL_WISP_BLINK,
@@ -55,7 +56,9 @@ enum ability_type
     ABIL_HOP,
     // Palentongas
     ABIL_ROLLING_CHARGE,
-    ABIL_MAX_INTRINSIC = ABIL_ROLLING_CHARGE,
+    // Air Walk
+    ABIL_BLINKBOLT,
+    ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -65,8 +68,8 @@ enum ability_type
 #endif
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
-    ABIL_EVOKE_TURN_VISIBLE,
 #if TAG_MAJOR_VERSION == 34
+    ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_FLIGHT,
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_EVOKE_FOG,
@@ -98,7 +101,7 @@ enum ability_type
     ABIL_KIKU_RECEIVE_CORPSES = 1020,
     ABIL_KIKU_TORMENT,
     ABIL_KIKU_BLESS_WEAPON,
-    ABIL_KIKU_GIFT_NECRONOMICON,
+    ABIL_KIKU_GIFT_CAPSTONE_SPELLS,
     // Yredelemnul
     ABIL_YRED_INJURY_MIRROR = 1030,
     ABIL_YRED_ANIMATE_REMAINS,

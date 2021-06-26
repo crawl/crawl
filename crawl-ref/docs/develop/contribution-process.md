@@ -19,10 +19,10 @@ into the game.
 
 ## Talking about game development
 
-Most discussion happens nowadays via IRC at the `##crawl-dev` channel on
-Freenode. This is where casual discussion and review happens. If you have a
-quick question about design or coding or whatnot, this is where you'll get the
-best turnaround time.
+Most discussion happens nowadays via IRC at the `#crawl-dev` channel on Libera.
+This is where casual discussion and review happens. If you have a quick
+question about design or coding or whatnot, this is where you'll get the best
+turnaround time.
 
 Users with +v are members of the devteam and have commit access. Developers
 often discuss what they are working on on the channel and request comments
@@ -77,7 +77,7 @@ at previous artwork and try to match the general style presented there. This is
 not a hard-and-fast rule, and clear improvements are always welcome.
 
 If you have questions for how to progress further, then feel free to pop into
-`##crawl-dev` and ask for help. Responses are reliant on dev availability and
+`#crawl-dev` and ask for help. Responses are reliant on dev availability and
 knowledge/expertise.
 
 ## Submitting a pull request
@@ -91,8 +91,9 @@ would prefer this to be limited to small changes like vaults or artwork.
 
 1. You clone the crawl repository and make your changes in a branch on your
    cloned repository.
-    * Observe the code style guidelines and commit message style guidelines (72
-      char width, line between title and body, bug # or reporter in title).
+    * Observe the [code style guidelines](coding_conventions.md) and [commit
+      message style guidelines](coding_conventions.md#1---commit-conventions)
+      (72 char width, line between title and body, bug # or reporter in title).
     * Include a commit message with meaningful content for every commit. It's
       fine if a PR comment duplicates this, but the priority for explaining the
       changes should be in the commit messages themselves.
@@ -119,7 +120,7 @@ would prefer this to be limited to small changes like vaults or artwork.
 
 * It is often a good idea to chat about even small changes with some devteam
   members, especially if you are new to the dcss codebase or to game design.
-  The best place for this is in the ##crawl-dev IRC channel on freenode.
+  The best place for this is in the #crawl-dev IRC channel on Libera.
 * PRs that have good commit messages and conform to style guidelines tend to
   get merged faster, all things being equal. A *very common* mistake is to
   put a lot of text in the PR first comment, and leave the commit message blank.

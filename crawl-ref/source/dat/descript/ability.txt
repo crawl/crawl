@@ -78,9 +78,13 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
-Cancel Portal Projectile ability
+Word of Chaos ability
 
-Ends your Portal Projectile status.
+Speaks a word of chaos, forcing enemies nearby to blink away from the user.
+Additionally, those affected may be slowed, ensnared, or terrified by the
+experience. Invoking a word of chaos is no easy feat and will drain the user's
+maximum health somewhat, and the ability then cannot be used again for a short
+time.
 %%%%
 Heal Wounds ability
 
@@ -104,10 +108,11 @@ a shaft trap. It takes some time to dig the shaft.
 %%%%
 Rolling Charge ability
 
-Roll at a foe with a clatter of scales, uncurl, and strike! The further you go,
-the more momentum will be added to the force of your strike. You roll with
-sufficient speed to dodge traps and harmful terrain along the way, but not at
-your destination.
+Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
+with increased accuracy. The greater the distance of the roll, the more
+momentum will be added to the force of your strike. You roll with sufficient
+speed to dodge traps and harmful terrain along the way, but not at your
+destination.
 %%%%
 Evoke Blink ability
 
@@ -146,8 +151,9 @@ is increased by Invocations skill and piety.
 Vitalisation ability
 
 Temporarily provides protection from poison, confusion, petrification, and
-sickness, and increases and sustains your strength, intelligence and dexterity.
-The increases to your attributes are determined by Invocations skill.
+sickness, as well as the effects of clouds of foul pestilence. Your strength,
+intelligence and dexterity are also temporarily increased by a degree dependent
+on Invocations skill, and cannot be drained while the effect is active.
 %%%%
 Imprison ability
 
@@ -175,9 +181,8 @@ by Invocations skill.
 Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
-undead and demons and dealing damage to all other hostile creatures. The user's
-allies are never affected. The power of the blast is increased by Invocations
-skill.
+undead and demons and dealing damage to all other hostile creatures. The power
+of the blast is increased by Invocations skill.
 %%%%
 Summon Divine Warrior ability
 
@@ -207,14 +212,14 @@ Brand Weapon With Pain ability
 
 Permanently bloodies a weapon of your choice with the essence of pain
 itself. This blessing cannot be used on artefact weapons. You must choose
-between this gift or that of the Necronomicon, and either gift may only be
-received once.
+between this gift or that of knowledge of the most powerful necromantic spells,
+and either gift may only be received once.
 %%%%
-Receive Necronomicon ability
+Receive Forbidden Knowledge ability
 
-Grants you the Necronomicon, a spellbook containing the most powerful and
-sinister secrets of Necromancy. You must choose between this gift or that of
-branding a weapon with pain, and either gift may only be received once.
+Grants you knowledge of the most powerful and sinister Necromancy spells.
+You must choose between this gift or that of branding a weapon with pain, and
+either gift may only be received once.
 %%%%
 # Yredelemnul
 Animate Remains ability
@@ -338,9 +343,9 @@ Heals a small amount of health, depending on Invocations skill.
 %%%%
 Purification ability
 
-Purges your body of negative effects such as poison, confusion, slowness,
-petrification, and sickness, and fully restores any lost strength, dexterity or
-intelligence.
+Purges your body of poison, confusion, slowness, petrification, weakness, and
+sickness. Any drained strength, dexterity or intelligence will also be fully
+restored, along with any drained maximum health.
 %%%%
 Heal Other ability
 
@@ -815,3 +820,11 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Blinkbolt ability
+
+Turns the user into living lightning and zaps them at the chosen monster,
+dealing electric damage to everything in their path and depositing the user
+at the bolt's end. After using this ability, you will be unable to use it
+again for a short time.
+%%%%

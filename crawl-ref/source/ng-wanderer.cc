@@ -3,6 +3,8 @@
 #include "ng-wanderer.h"
 
 #include "item-prop.h"
+#include "items.h"
+#include "jobs.h"
 #include "ng-setup.h"
 #include "potion-type.h"
 #include "randbook.h"
@@ -250,64 +252,57 @@ static skill_type _weighted_skill_roll()
     return NUM_SKILLS;
 }
 
-static void _give_wanderer_book(skill_type skill)
+static job_type _job_for_skill(skill_type skill)
 {
-    book_type book;
     switch (skill)
     {
     default:
     case SK_SPELLCASTING:
-        book = BOOK_MINOR_MAGIC;
-        break;
+        return JOB_WIZARD;
 
     case SK_CONJURATIONS:
         // minor magic should have only half the likelihood of conj
-        book = random_choose(BOOK_MINOR_MAGIC,
-                             BOOK_CONJURATIONS, BOOK_CONJURATIONS);
-        break;
+        if (one_chance_in(3))
+            return JOB_WIZARD;
+        return JOB_CONJURER;
 
     case SK_SUMMONINGS:
-        book = random_choose(BOOK_MINOR_MAGIC, BOOK_CALLINGS);
-        break;
+        return random_choose(JOB_WIZARD, JOB_SUMMONER);
 
     case SK_NECROMANCY:
-        book = BOOK_NECROMANCY;
-        break;
+        return JOB_NECROMANCER;
 
     case SK_TRANSLOCATIONS:
-        book = BOOK_SPATIAL_TRANSLOCATIONS;
-        break;
+        return JOB_WARPER;
 
     case SK_TRANSMUTATIONS:
-        book = random_choose(BOOK_GEOMANCY, BOOK_CHANGES);
-        break;
+        return random_choose(JOB_EARTH_ELEMENTALIST, JOB_TRANSMUTER);
 
     case SK_FIRE_MAGIC:
-        book = BOOK_FLAMES;
-        break;
+        return JOB_FIRE_ELEMENTALIST;
 
     case SK_ICE_MAGIC:
-        book = BOOK_FROST;
-        break;
+        return JOB_ICE_ELEMENTALIST;
 
     case SK_AIR_MAGIC:
-        book = BOOK_AIR;
-        break;
+        return JOB_AIR_ELEMENTALIST;
 
     case SK_EARTH_MAGIC:
-        book = BOOK_GEOMANCY;
-        break;
+        return JOB_EARTH_ELEMENTALIST;
 
     case SK_POISON_MAGIC:
-        book = BOOK_YOUNG_POISONERS;
-        break;
+        return JOB_VENOM_MAGE;
 
     case SK_HEXES:
-        book = BOOK_MALEDICT;
-        break;
+        return JOB_ENCHANTER;
     }
+}
 
-    newgame_make_item(OBJ_BOOKS, book);
+static vector<spell_type> _give_wanderer_job_spells(skill_type skill)
+{
+    vector<spell_type> spells = get_job_spells(_job_for_skill(skill));
+    library_add_spells(spells);
+    return spells;
 }
 
 
@@ -365,9 +360,9 @@ static bool exact_level_spell_filter(spschool discipline_1,
     return false;
 }
 
-// Give the wanderer a randart book containing two spells of total level 4.
-// The theme of the book is the spell school of the chosen skill.
-static void _give_wanderer_minor_book(skill_type skill)
+// Give the wanderer two spells of total level 4.
+// The theme of these spells is the school of the chosen skill.
+static vector<spell_type> _give_wanderer_minor_spells(skill_type skill)
 {
     // Doing a rejection loop for this because I am lazy.
     while (skill == SK_SPELLCASTING)
@@ -377,13 +372,14 @@ static void _give_wanderer_minor_book(skill_type skill)
     }
 
     spschool school = skill2spell_type(skill);
-
-    item_def* item = newgame_make_item(OBJ_BOOKS, BOOK_RANDART_THEME);
-    if (!item)
-        return;
-
-    build_themed_book(*item, exact_level_spell_filter,
-                      forced_book_theme(school), 2);
+    spschool discipline_1 = forced_book_theme(school)();
+    spschool discipline_2 = forced_book_theme(school)();
+    vector<spell_type> spells;
+    theme_book_spells(discipline_1, discipline_2,
+                      exact_level_spell_filter,
+                      IT_SRC_NONE, 2, spells);
+    library_add_spells(spells);
+    return spells;
 }
 
 /**
@@ -461,7 +457,7 @@ static void _wanderer_random_evokable()
     }
 }
 
-static void _wanderer_good_equipment(skill_type & skill)
+static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
 {
 
     const skill_type combined_weapon_skills[] =
@@ -540,8 +536,7 @@ static void _wanderer_good_equipment(skill_type & skill)
     case SK_EARTH_MAGIC:
     case SK_POISON_MAGIC:
     case SK_HEXES:
-        _give_wanderer_book(skill);
-        break;
+        return _give_wanderer_job_spells(skill);
 
     case SK_UNARMED_COMBAT:
     {
@@ -558,10 +553,12 @@ static void _wanderer_good_equipment(skill_type & skill)
     default:
         break;
     }
+
+    return vector<spell_type>{};
 }
 
-static void _wanderer_decent_equipment(skill_type & skill,
-                                       set<skill_type> & gift_skills)
+static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
+                                                     set<skill_type> & gift_skills)
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
@@ -593,6 +590,8 @@ static void _wanderer_decent_equipment(skill_type & skill,
     // a decent consumable
     if (gift_skills.count(skill))
         skill = SK_NONE;
+
+    skill = SK_SPELLCASTING;
 
     switch (skill)
     {
@@ -627,11 +626,10 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
     case SK_POISON_MAGIC:
-        _give_wanderer_minor_book(skill);
-        break;
+        return _give_wanderer_minor_spells(skill);
 
     case SK_EVOCATIONS:
-        newgame_make_item(OBJ_WANDS, WAND_RANDOM_EFFECTS, 1, 15);
+        newgame_make_item(OBJ_MISCELLANY, MISC_XOMS_CHESSBOARD, 1);
         break;
 
     case SK_DODGING:
@@ -644,6 +642,8 @@ static void _wanderer_decent_equipment(skill_type & skill,
     default:
         break;
     }
+
+    return vector<spell_type>{};
 }
 
 // We don't actually want to send adventurers wandering naked into the
@@ -677,6 +677,35 @@ static void _wanderer_cover_equip_holes()
         if (!has_dagger)
             newgame_make_item(OBJ_WEAPONS, WPN_DAGGER);
     }
+}
+
+static void _add_spells(vector<spell_type> &all_spells,
+                        const vector<spell_type> &new_spells)
+{
+    all_spells.insert(all_spells.end(), new_spells.begin(), new_spells.end());
+}
+
+static void _maybe_memorise_start_spell(const vector<spell_type> &spells)
+{
+    if (you.has_mutation(MUT_INNATE_CASTER))
+    {
+        for (spell_type s : spells)
+            add_spell_to_memory(s);
+        return;
+    }
+
+    int lvl_1s = 0;
+    spell_type to_memorise = SPELL_NO_SPELL;
+    for (spell_type s : spells)
+    {
+        if (spell_difficulty(s) == 1)
+        {
+            ++lvl_1s;
+            to_memorise = s;
+        }
+    }
+    if (lvl_1s == 1 && !spell_is_useless(to_memorise, false, true))
+        add_spell_to_memory(to_memorise);
 }
 
 // New style wanderers are supposed to be decent in terms of skill
@@ -739,34 +768,16 @@ void create_wanderer()
                                                       sk_1, sk_2);
     skill_type decent_2 = _weighted_skill_roll();
 
-    _wanderer_good_equipment(good_equipment);
+    vector<spell_type> spells;
+    _add_spells(spells, _wanderer_good_equipment(good_equipment));
     gift_skills.insert(good_equipment);
 
-    _wanderer_decent_equipment(decent_1, gift_skills);
+    _add_spells(spells, _wanderer_decent_equipment(decent_1, gift_skills));
     gift_skills.insert(decent_1);
-    _wanderer_decent_equipment(decent_2, gift_skills);
+    _add_spells(spells, _wanderer_decent_equipment(decent_2, gift_skills));
     gift_skills.insert(decent_2);
 
+    _maybe_memorise_start_spell(spells);
+
     _wanderer_cover_equip_holes();
-}
-
-void memorise_wanderer_spell()
-{
-    // If the player got only one level 1 spell, memorise it. Otherwise, let the
-    // player choose which spell(s) to memorise and don't memorise any.
-    auto const available_spells = get_sorted_spell_list(true, true);
-    if (available_spells.size())
-    {
-        int num_level_one_spells = 0;
-        spell_type which_spell;
-        for (spell_type spell : available_spells)
-            if (spell_difficulty(spell) == 1)
-            {
-                num_level_one_spells += 1;
-                which_spell = spell;
-            }
-
-        if (num_level_one_spells == 1)
-            add_spell_to_memory(which_spell);
-    }
 }

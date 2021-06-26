@@ -440,7 +440,6 @@ void revive()
     // doesn't matter here.
     you.attribute[ATTR_LIFE_GAINED] = 0;
 
-    you.disease = 0;
     you.magic_contamination = 0;
     restore_stat(STAT_ALL, 0, true);
 
@@ -453,7 +452,6 @@ void revive()
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
-    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
     decr_zot_clock();
     you.los_noise_level = 0;

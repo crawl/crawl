@@ -222,9 +222,9 @@ spl-other.o \
 spl-pick.o \
 spl-selfench.o \
 spl-summoning.o \
-spl-tornado.o \
 spl-transloc.o \
 spl-util.o \
+spl-vortex.o \
 spl-wpnench.o \
 spl-zap.o \
 sprint.o \
@@ -316,6 +316,7 @@ catch2-tests/test_ng-init-branches.o \
 catch2-tests/test_player.o \
 catch2-tests/test_player_fixture.o \
 catch2-tests/test_randbook.o \
+catch2-tests/test_stringutil.o \
 catch2-tests/test_species.o \
 catch2-tests/test_tags.o \
 catch2-tests/test_ui.o \

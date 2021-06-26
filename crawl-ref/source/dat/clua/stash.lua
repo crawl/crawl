@@ -88,6 +88,7 @@ function ch_stash_search_annotate_item(it)
   end
 
   if it.class(true) == "magical staff" and not it.artefact then
+    annot = annot .. "{weapon} "
     local props = {
       ["air"] = "rElec",
       ["cold"] = "rC+",

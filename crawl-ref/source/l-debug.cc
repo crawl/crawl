@@ -487,7 +487,6 @@ LUAFN(debug_check_moncasts)
         SPELL_SUMMON_LIGHTNING_SPIRE,
         SPELL_SUMMON_GUARDIAN_GOLEM,
         SPELL_DRAGON_CALL,
-        SPELL_HYDRA_FORM,
         SPELL_IRRADIATE,
         SPELL_IGNITION,
         SPELL_SONIC_WAVE,
@@ -496,7 +495,6 @@ LUAFN(debug_check_moncasts)
         SPELL_HAILSTORM,
         SPELL_NOXIOUS_BOG,
         SPELL_FROZEN_RAMPARTS,
-        SPELL_ABSOLUTE_ZERO,
         SPELL_DISPEL_UNDEAD,
         SPELL_TUKIMAS_DANCE,
         SPELL_AGONY,
@@ -513,6 +511,7 @@ LUAFN(debug_check_moncasts)
         SPELL_BORGNJORS_VILE_CLUTCH,
         SPELL_ANIMATE_ARMOUR,
         SPELL_MANIFOLD_ASSAULT,
+        SPELL_STORM_FORM,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

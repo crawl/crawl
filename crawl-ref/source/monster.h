@@ -296,6 +296,7 @@ public:
     item_def *melee_weapon() const;
     item_def *missiles() const;
     item_def *shield() const override;
+    item_def *get_defining_object() const;
 
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
@@ -391,7 +392,7 @@ public:
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     int res_acid(bool calc_unid = true) const override;
-    bool res_tornado() const override;
+    bool res_polar_vortex() const override;
     bool res_petrify(bool /*temp*/ = true) const override;
     int res_constrict() const override;
     int willpower(bool calc_unid = true) const override;
@@ -428,6 +429,7 @@ public:
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
+    int demon_silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
     bool petrified() const override;
@@ -435,6 +437,7 @@ public:
     bool liquefied_ground() const override;
     int natural_regen_rate() const;
     int off_level_regen_rate() const;
+    bool can_feel_fear(bool include_unknown) const override;
 
     bool friendly() const;
     bool neutral() const;
@@ -511,7 +514,6 @@ public:
     void    shield_block_succeeded() override;
     int     shield_bypass_ability(int tohit) const override;
     bool    missile_repulsion() const override;
-    void    ablate_repulsion() override;
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const override { return 0; }

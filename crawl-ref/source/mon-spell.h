@@ -534,7 +534,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
-       { SPELL_OZOCUBUS_ARMOUR, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
        { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
       }
@@ -608,7 +607,7 @@ static const mon_spellbook mspell_list[] =
     // ('w') Slugs and worms.
     { MST_DART_SLUG,
       {
-        { SPELL_SLUG_DART, 40, MON_SPELL_NATURAL },
+        { SPELL_SLUG_DART, 60, MON_SPELL_NATURAL },
       }
     },
 
@@ -824,13 +823,14 @@ static const mon_spellbook mspell_list[] =
     // ('E') Elementals.
     {  MST_AIR_ELEMENTAL,
       {
-       { SPELL_VORTEX, 80, MON_SPELL_NATURAL},
+       { SPELL_STUNNING_BURST, 50, MON_SPELL_NATURAL},
       }
     },
 
     {  MST_ELEMENTAL_WELLSPRING,
       {
        { SPELL_PRIMAL_WAVE, 65, MON_SPELL_MAGICAL },
+       { SPELL_WATER_ELEMENTALS, 65, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1553,7 +1553,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_COLD, 10, MON_SPELL_WIZARD },
        { SPELL_OZOCUBUS_REFRIGERATION, 20, MON_SPELL_WIZARD },
        { SPELL_SUMMON_ICE_BEAST, 20, MON_SPELL_WIZARD },
-       { SPELL_OZOCUBUS_ARMOUR, 10, MON_SPELL_WIZARD },
        { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
@@ -2002,7 +2001,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_CLOUD_MAGE,
       {
        { SPELL_AIRSTRIKE, 25, MON_SPELL_WIZARD },
-       { SPELL_TORNADO, 40, MON_SPELL_WIZARD },
+       { SPELL_POLAR_VORTEX, 40, MON_SPELL_WIZARD },
       }
     },
 
@@ -2089,7 +2088,6 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MNOLEG,
       {
-       { SPELL_RANDOM_BOLT, 13, MON_SPELL_MAGICAL },
        { SPELL_MALIGN_GATEWAY, 27, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_EYEBALLS, 13, MON_SPELL_MAGICAL },
        { SPELL_SUMMON_HORRIBLE_THINGS, 27, MON_SPELL_MAGICAL },
@@ -2102,7 +2100,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_CONJURE_BALL_LIGHTNING, 30, MON_SPELL_MAGICAL },
        { SPELL_GLACIATE, 30, MON_SPELL_MAGICAL },
-       { SPELL_TORNADO, 60, MON_SPELL_MAGICAL },
+       { SPELL_POLAR_VORTEX, 60, MON_SPELL_MAGICAL },
        { SPELL_MAJOR_HEALING, 30, MON_SPELL_MAGICAL },
        { SPELL_BLINK_RANGE, 30, MON_SPELL_MAGICAL },
       }

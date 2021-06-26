@@ -240,6 +240,7 @@ public:
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
+    virtual bool can_feel_fear(bool include_unknown) const = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false,
                        bool temp = true) const = 0;
@@ -270,9 +271,6 @@ public:
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded();
     virtual bool missile_repulsion() const = 0;
-    virtual void ablate_repulsion()
-    {
-    }
 
     // Combat-related virtual class methods
     virtual int unadjusted_body_armour_penalty() const = 0;
@@ -305,7 +303,7 @@ public:
     virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
-    virtual bool res_tornado() const = 0;
+    virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
     virtual int willpower(bool calc_unid = true) const = 0;
@@ -333,7 +331,7 @@ public:
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
-    virtual int evokable_invis(bool calc_unid = true) const;
+    virtual bool evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
     virtual int equip_flight(bool calc_unid = true) const;
@@ -369,6 +367,8 @@ public:
     virtual int halo_radius() const = 0;
     // Silence radius.
     virtual int silence_radius() const = 0;
+    // Demonspawn silence radius
+    virtual int demon_silence_radius() const = 0;
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;

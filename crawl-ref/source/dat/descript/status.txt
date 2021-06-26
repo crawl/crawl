@@ -58,11 +58,11 @@ Your willpower is much stronger, protecting against many magical effects.
 %%%%
 Berserk status
 
-You are hasted, deal increased damage in combat, and have increased HP, but are
-unable to make most actions other than moving and attacking. The status will
-wear off very quickly unless you are attacking monsters, and when it expires
-you will be slowed and unable to berserk again for a short duration, and may be
-paralysed temporarily as well.
+You are hasted, deal increased damage in combat, and have increased health, but
+are unable to make most actions other than moving and attacking. The status
+will wear off very quickly unless you are attacking monsters, and when it
+expires you will be slowed and unable to berserk again for a short duration,
+and may be paralysed temporarily as well.
 %%%%
 -Berserk status
 
@@ -173,8 +173,7 @@ without taking damage.
 %%%%
 Sick status
 
-You have been sickened, and your health will no longer regenerate. Sickness can
-be cured immediately by potions of curing.
+You have been sickened, and your health will no longer regenerate.
 %%%%
 Vertigo status
 
@@ -183,7 +182,7 @@ spellcasting success rate.
 %%%%
 Corr status
 
-You are corroded, reducing your damage in physical combat and your AC by an
+You are corroded, reducing your damage in physical combat and your armour by an
 amount depending on the severity of the corrosion.
 %%%%
 Flay status
@@ -315,14 +314,14 @@ Mirror status
 You are reflecting any damage taken to your attackers, reducing piety depending
 on the amount of damage dealt.
 %%%%
-Tornado status
+Vortex status
 
-You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+You are in the eye of a mighty ice storm. After the vortex fades, it cannot be
 called forth again for a short time.
 %%%%
--Tornado status
+-Vortex status
 
-You are surrounded by unstable winds, and cannot recast Tornado for a short
+You are surrounded by unstable winds, and cannot recast Polar Vortex for a short
 duration.
 %%%%
 Liquid status
@@ -351,8 +350,8 @@ randomly blinked away from you.
 %%%%
 Slay status
 
-You have the blood of a were-beast, providing bonuses to your ranged and melee
-attacks which increase every time you slay a foe in combat.
+You have the blood of a were-beast, healing you and providing bonuses to
+your ranged and melee attacks which increase every time you slay a foe.
 %%%%
 Toxic status
 
@@ -580,9 +579,9 @@ Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
 Wisp status
 
-You have been transformed into an insubstantial wisp of gas. You move quickly
-and are highly evasive, and you occasionally blink at random. You are resistant
-to fire, cold, electricity and acid, and immune to poison, and negative energy.
+You have been transformed into an insubstantial wisp of gas. You are highly
+evasive and are resistant to fire, cold, electricity and acid, and immune to
+poison, and negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
 cast spells. The effectiveness of your melee attacks while in this form is based
@@ -602,11 +601,11 @@ experience level instead of on Unarmed Combat skill.
 Shadow status
 
 You have been transformed into a swirling mass of dark shadows. You are
-permanently invisible and are immune to poison, draining, torment, and hostile
-enchantments. All incoming damage is halved, and you bleed smoke on any
-incoming attack. However, your ability to deal damage in melee and with ranged
-attacks is halved, your spellcasting power is greatly hampered, and your skills
-are further drained when taking damage.
+permanently invisible and are immune to poison, draining, and torment. All
+incoming damage is halved, you bleed smoke on any incoming attack, and you have
+infinite willpower. However, your ability to deal damage in melee and with
+ranged attacks is halved, your spellcasting power is greatly hampered, and your
+maximum health is further drained when taking damage.
 %%%%
 Hydra status
 

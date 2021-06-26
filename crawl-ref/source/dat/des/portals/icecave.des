@@ -1196,3 +1196,79 @@ x....<....x
 x.........x
 xxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+# A jelly themed ice cave
+NAME:    ice_cave_hellmonk_azure_passage
+TAGS:    no_item_gen no_monster_gen
+ORIENT:  encompass
+WEIGHT:  5
+# Loot always includes at least one randart so Jiyva worshipers get something
+ITEM:    any weapon randart ego:freezing ident:all / any armour randart / \
+         ring of ice randart ident:all / ice dragon scales randart w:5 / \
+         ring of protection from cold randart ident:all / \
+         any ring randart / any amulet randart / randbook disc:ice numspells:3
+ITEM:    book of frost w:5 / book of ice w:5 / manual of ice magic w:5 / \
+         any weapon ego:freezing good_item ident:type w: 50 / \
+         cloak ego:cold_resistance ident:type / \
+         boots ego:cold_resistance ident:type / wand of iceblast ident:type / \
+         gloves ego:cold_resistance ident:type / phial of floods w:5 / \
+         hat ego:cold_resistance ident:type w:5 / \
+         helmet ego:cold_resistance ident:type w:5 / condenser vane w:5 / \
+         tin of tremorstones w:2
+MONS:    glowing shapeshifter simulacrum / demonic crawler simulacrum / \
+         ugly thing simulacrum / entropy weaver simulacrum / \
+         very ugly thing simulacrum w:5
+MONS:    ice statue, slime creature band, quicksilver ooze, azure jelly
+MONS:    rockslime
+KMONS:   _ = azure jelly
+KFEAT:   _ = altar_jiyva
+KFEAT:   D = slimy_wall
+SHUFFLE: qrs
+SUBST:   * = dee**, 1 = 1.., 3 = 113334
+NSUBST:  2 = 2 / 2=2. / .
+# For hard ice cave, add some quicksilvers throughout the map, and add more
+# boss slimes.
+: if dgn.persist.ice_cave_hard then
+SUBST:   p = 4, q = 455, r = 5, s = 6
+: else
+SUBST:   q = 34455
+:end
+# 50% chance for slimy wall passages, otherwise fill with rock.
+SHUFFLE: DE / FF
+SUBST:   E = ., F = x
+: ice_cave_appearance(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx..3......xxxxxxxx.....xxxxxxxxx
+xxxxxxx.......11...pxxxx.......rxxxxxxxx
+xxxxx1.....xxx.....xxxx.....D....**xxxxx
+xxxx2....DDDD.....xxx.....D........*xxxx
+xxxx....EEEE....3.x.......s._.D....dxxxx
+xxxx31...DDDD.....1.......D........*xxxx
+xxxxx..1....xxxxxxxxxx......D....**xxxxx
+xxxxxx...11...xxxxxxxxxx.......qxxxxxxxx
+xxxxxxxxx3....21....xxxxxx.....xxxxxxxxx
+xxxxxxxxxx........1......xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxDEDxxxx.....1.xxxxxxxxxxxxx
+xxxxxxxxxxxxxDEDxxxxxx.....3.xxxxxxxxxxx
+xxxxxxx....2....xxxxxxxx....xxxxxxxxxxxx
+xxxxx..1........xxxxxxx..1.xxx..1..xxxxx
+xxxx..1...xxx..1..xxx2...DDx.1......xxxx
+xxxx.....DDxxxx..1......EE....x2..1.xxxx
+xxxx3...EEE.e*xxx....xxDD...1xx.....xxxx
+xxxxx.....Dx*e..xxxxxxxx..1.xx...3.xxxxx
+xxxxxx1....xx.p..2xx...1..xxx.....xxxxxx
+xxxxxxxxx...xxxx.......xxxx...1xxxxxxxxx
+xxxxxxxxxx.1..xxxx.p.xxx..1..xxxxxxxxxxx
+xxxxxxxxxxxx.1..1xxxxx.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...111...xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..A..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.<.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

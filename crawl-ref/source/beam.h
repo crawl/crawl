@@ -105,6 +105,11 @@ struct bolt
 
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
+    bool   redraw_per_cell = true; // whether to force a redraw after every cell
+                                   // drawn during an animation. Not for
+                                   // explosions.
+                                   // TODO: why can't this behavior follow
+                                   // from draw_delay == 0?
 
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam
@@ -192,6 +197,7 @@ public:
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(const coord_def& p, bool map_knowledge = false) const;
     bool ignores_monster(const monster* mon) const;
+    bool ignores_player() const;
     bool can_knockback(const actor &act, int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?

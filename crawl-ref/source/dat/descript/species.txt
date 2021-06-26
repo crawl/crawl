@@ -1,8 +1,8 @@
 %%%%
 Barachi
 
-Barachim are amphibious humanoids who rebelled against the gods. They're fast
-learners and can hop long distances, but are otherwise slow and easily seen.
+Barachim are slow-moving, amphibious humanoids who can hop long distances.
+Their extended range of vision also allows them to be seen from further away.
 %%%%
 Deep Dwarf
 
@@ -55,13 +55,13 @@ They have low health, but their stone bodies are incredibly tough.
 %%%%
 Gnoll
 
-Gnolls are canine-like humanoids. They have incredible proficiency and
-excellent physical attributes, but must learn all skills at once.
+Gnolls are canine-like humanoids. They are unable to specialise in any single
+skill, but instead gradually become proficient in all skills at once.
 %%%%
 Hill Orc
 
-Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
-most, orcs are very proud and many of them feel superior.
+Hill Orcs are skilled in close combat, and often dabble in offensive magic. Only
+they may worship the Orc god Beogh.
 %%%%
 Human
 
@@ -74,7 +74,8 @@ quite fragile, but they learn to fly swiftly later on.
 %%%%
 Kobold
 
-Kobolds are small, enveloped in shadow and a little fragile, but multi-talented.
+Kobolds are attuned to the shadows and can only see or be seen at a close range.
+They are small and a little fragile, and are talented in most skills.
 %%%%
 Merfolk
 
@@ -93,8 +94,8 @@ learn other skills very slowly. They are unable to consume potions.
 %%%%
 Naga
 
-Nagas are hybrids; human from the chest up, with a scaly, muscular torso
-trailing off like that of a snake. They move slowly but are naturally resilient.
+Nagas are hybrids; human from the waist up, with a snake-like tail instead of
+legs. They move very slowly but are naturally resilient.
 %%%%
 Octopode
 
@@ -104,15 +105,16 @@ but almost no armour fits them.
 Ogre
 
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
-They are not merely brutes, as they are comfortable with spellcasting.
+Not merely brutes, they are also quite capable spellcasters.
 %%%%
 Palentonga
 
-Scaled mammals the size of horses, Palentongas launch powerful rolling charges.
+Scaled mammals the size of horses, Palentongas are able to launch powerful
+rolling charges.
 %%%%
 Spriggan
 
-Very small, very frail and very fast, Spriggans make highly competent stabbers
+Very small, very frail and very fast, Spriggans are highly competent stabbers
 and spellcasters.
 %%%%
 Troll
@@ -122,11 +124,11 @@ rapidly.
 %%%%
 Vampire
 
-Shifting between the states of life and undeath, Vampires are accomplished
-stabbers and casters.
+Shifting between the states of life and undeath at will, Vampires are
+accomplished stabbers and casters.
 %%%%
 Vine Stalker
 
-Frail symbionts, Vine Stalkers cannot regain health from potions.
-Their magical reserves absorb damage, and they pack a magic-restoring bite.
+Frail symbionts, Vine Stalkers cannot regain health from potions. Their magical
+reserves absorb damage, and they pack a magic-restoring bite.
 %%%%

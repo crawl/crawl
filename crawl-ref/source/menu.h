@@ -241,6 +241,7 @@ public:
     virtual ~MenuHighlighter() { }
 };
 
+// if you update this, update mf in enums.js
 enum MenuFlag
 {
     MF_NOSELECT         = 0x00001,   ///< No selection is permitted
@@ -265,6 +266,7 @@ enum MenuFlag
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
+    MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
 };
 
 class UIMenu;
@@ -303,6 +305,7 @@ public:
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
+    void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
@@ -320,6 +323,7 @@ public:
     }
 
     void update_menu(bool update_entries = false);
+    void set_hovered(int index);
 
     virtual int getkey() const { return lastch; }
 
@@ -346,7 +350,7 @@ public:
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
-    void webtiles_scroll(int first);
+    void webtiles_scroll(int first, int hover);
     void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
@@ -377,6 +381,7 @@ protected:
     bool alive;
 
     int last_selected;
+    int last_hovered;
     KeymapContext m_kmc;
 
     resumable_line_reader *m_filter;
@@ -419,11 +424,13 @@ protected:
     virtual bool line_down();
     virtual bool page_up();
     virtual bool line_up();
+    void cycle_hover(bool reverse=false);
 
     virtual int pre_process(int key);
     virtual int post_process(int key);
 
-    bool in_page(int index) const;
+    bool in_page(int index, bool strict=false) const;
+    bool snap_in_page(int index);
     int get_first_visible() const;
 
     void deselect_all(bool update_view = true);

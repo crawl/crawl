@@ -761,8 +761,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !mons_is_firewood(m)
-        && !(have_passive(passive_t::shoot_through_plants)
-                                && fedhas_protects(&m))
+        && !god_protects(&m)
         && !always_shoot_through_monster(&you, m);
 }
 
@@ -987,6 +986,77 @@ static spret _condenser()
     mprf("Clouds of %s condense around you!", cloud_type_name(cloud).c_str());
 
     return spret::success;
+}
+
+static bool _xoms_chessboard()
+{
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    vector<monster *> targets;
+    bool see_target = false;
+
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->friendly() || mi->neutral())
+            continue;
+        if (mons_is_firewood(**mi))
+            continue;
+        if (you.can_see(**mi))
+            see_target = true;
+
+        targets.emplace_back(*mi);
+    }
+
+    if (!see_target
+        && !yesno("You can't see anything. Try to make a move anyway?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+#else
+    const int surge = 0;
+#endif
+
+    const int power =
+        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2, surge);
+
+    mpr("You make a move on Xom's chessboard...");
+
+    if (targets.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return true;
+    }
+
+    bolt beam;
+    const monster * target = *random_iterator(targets);
+    beam.source = target->pos();
+    beam.target = target->pos();
+
+    // List of possible effects. Mostly debuffs, a few buffs to keep it
+    // exciting
+    zap_type zap = random_choose_weighted(5, ZAP_HASTE,
+                                          5, ZAP_INVISIBILITY,
+                                          5, ZAP_MIGHT,
+                                          10, ZAP_CORONA,
+                                          15, ZAP_SLOW,
+                                          15, ZAP_MALMUTATE,
+                                          15, ZAP_PETRIFY,
+                                          10, ZAP_PARALYSE,
+                                          10, ZAP_CONFUSE,
+                                          10, ZAP_SLEEP);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
+
+    return zapping(zap, power, beam, false) == spret::success;
 }
 
 
@@ -1317,6 +1387,18 @@ bool evoke_item(int slot, dist *preselect)
                     practise_evoking(1);
                     break;
             }
+            break;
+
+        case MISC_XOMS_CHESSBOARD:
+            if (_xoms_chessboard())
+            {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
+                    mpr("The chess piece greys!");
+                practise_evoking(1);
+            }
+            else
+                return false;
             break;
 
         default:

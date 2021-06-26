@@ -80,7 +80,7 @@
 # * evil:     Is treated as an evil item (hated by good gods).
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
-# * fly:      Lets wearer evoke flight ability.
+# * fly:      Grants wearer flight.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises. Should be given its own set of noises
@@ -982,11 +982,10 @@ LIFE:     1
 BOOL:     elec
 
 NAME:    amulet of the Air
-INSCRIP: Inacc
+INSCRIP: Inacc Air
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-EV:      5
 BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
@@ -1445,6 +1444,15 @@ TILE_EQ:  bplate_green
 LIFE:     1
 INSCRIP:  rMiasma
 BOOL:     drain, evil, special, no_upgrade
+
+NAME:     seven-league boots
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+TILE:     urand_seven_league_boots
+TILE_EQ:  seven_league_boots
+PLUS:     +3
+COLOUR:   ETC_ENCHANT
+INSCRIP:  Rampage+∞
+VALUE:    400
 
 # This entry must always be last.
 ENUM:   DUMMY2

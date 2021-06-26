@@ -113,7 +113,6 @@ enum monster_info_flags
     MB_ROLLING,
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
-    MB_OZOCUBUS_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
 #endif
@@ -138,8 +137,8 @@ enum monster_info_flags
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
     MB_FIRE_VULN,
-    MB_TORNADO,
-    MB_TORNADO_COOLDOWN,
+    MB_VORTEX,
+    MB_VORTEX_COOLDOWN,
     MB_BARBS,
     MB_POISON_VULN,
     MB_ICEMAIL,
@@ -242,6 +241,7 @@ struct monster_info_base
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
+    bool can_feel_fear;
 
     uint32_t client_id;
 };

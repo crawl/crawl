@@ -256,9 +256,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
                                                   : MSG_MANA_DECREASE);
     }
 
-    if (proprt[ARTP_REGENERATION] && !unmeld
-        // If regen is an intrinsic property too, don't double print messages
-        && !armour_type_prop(item.sub_type, ARMF_REGENERATION))
+    if (proprt[ARTP_REGENERATION]
+        && !unmeld
+        // If regen is an intrinsic property too, don't double print messages.
+        && !item.is_type(OBJ_JEWELLERY, AMU_REGENERATION)
+        && (item.base_type != OBJ_ARMOUR
+            || !armour_type_prop(item.sub_type, ARMF_REGENERATION)))
     {
         _equip_regeneration_item(item);
     }
@@ -286,31 +289,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
-}
-
-/**
- * If player removes evocable invis and we need to clean things up, set
- * remaining Invis duration to 1 AUT and give the player contam equal to the
- * amount the player would receive if they waited the invis out.
- */
-static void _unequip_invis()
-{
-    if (you.duration[DUR_INVIS] > 1
-        && you.evokable_invis() == 0
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-    {
-
-        // scale up contam by 120% just to ensure that ending invis early is
-        // worse than just resting it off.
-        mpr("You absorb a burst of magical contamination as your invisibility "
-             "abruptly ends!");
-        const int invis_duration_left = you.duration[DUR_INVIS] * 120 / 100;
-        const int remaining_contam = div_rand_round(
-            invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
-        );
-        contaminate_player(remaining_contam, true);
-        you.duration[DUR_INVIS] = 0;
-    }
 }
 
 static void _unequip_fragile_artefact(item_def& item, bool meld)
@@ -358,9 +336,6 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_FLY] != 0)
         land_player();
-
-    if (proprt[ARTP_INVISIBLE] != 0)
-        _unequip_invis();
 
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
@@ -857,10 +832,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         }
         break;
 
-    case SPARM_INVISIBILITY:
-        _unequip_invis();
-        break;
-
     case SPARM_STRENGTH:
         notify_stat_change(STAT_STR, -3, false);
         break;
@@ -968,7 +939,8 @@ static void _remove_amulet_of_faith(item_def &item)
     }
     else if (!you_worship(GOD_NO_GOD)
              && !you_worship(GOD_XOM)
-             && !you_worship(GOD_GOZAG))
+             && !you_worship(GOD_GOZAG)
+             && !you_worship(GOD_ASHENZARI))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -987,7 +959,7 @@ static void _remove_amulet_of_faith(item_def &item)
 static void _equip_regeneration_item(const item_def &item)
 {
     equipment_type eq_slot = item_equip_slot(item);
-    // currently regen is only on the amulet and armour
+    // currently regen is only on amulets and armour
     bool plural = eq_slot == EQ_GLOVES || eq_slot == EQ_BOOTS;
     string item_name = is_artefact(item) ? get_artefact_name(item)
                                          : eq_slot == EQ_AMULET
@@ -1104,6 +1076,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message(" says: An ascetic of your devotion"
                                " has no use for such trinkets.");
         }
+        else if (you_worship(GOD_ASHENZARI))
+            simple_god_message(" cares nothing for such trivial demonstrations of your faith.");
         else if (you_worship(GOD_GOZAG))
             simple_god_message(" cares for nothing but gold!");
         else

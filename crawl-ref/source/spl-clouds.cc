@@ -67,64 +67,9 @@ spret conjure_flame(int pow, bool fail)
         // action.
         cloud = cloud_at(you.pos());
         cloud->decay = player_speed() + 1;
-        mpr("The fire begins to smolder!");
+        mpr("The fire begins to smoulder!");
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
-
-    return spret::success;
-}
-
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
-{
-    if (cell_is_solid(beam.target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
-    {
-        mpr("You see nothing there to target!");
-        return spret::abort;
-    }
-
-    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
-    {
-        mprf("%s cannot be affected by poisonous vapours!",
-             mons->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return spret::abort;
-
-    cloud_struct* cloud = cloud_at(beam.target);
-    if (cloud && cloud->type != CLOUD_POISON)
-    {
-        // XXX: consider replacing the cloud instead?
-        mpr("There's already a cloud there!");
-        return spret::abort;
-    }
-
-    fail_check();
-
-    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
-    if (cloud)
-    {
-        // Reinforce the cloud.
-        mpr("The poisonous vapours increase!");
-        // in this case, we're using auts
-        cloud->decay += cloud_duration * BASELINE_DELAY;
-        cloud->set_whose(KC_YOU);
-    }
-    else
-    {
-        place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
-    }
-
-    behaviour_event(mons, ME_WHACK, &you);
 
     return spret::success;
 }

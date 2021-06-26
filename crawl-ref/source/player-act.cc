@@ -401,6 +401,12 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
             mpr("You can't use weapons.");
         return false;
     }
+    else if (!ignore_transform && !form_can_wield())
+    {
+        if (!quiet)
+            mpr("You can't use weapons in this form.");
+        return false;
+    }
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
@@ -869,6 +875,7 @@ int player::heads() const
         return props[HYDRA_FORM_HEADS_KEY].get_int();
     return 1; // not actually always true
 }
+
 
 bool player::is_dragonkind() const
 {

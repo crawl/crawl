@@ -1254,9 +1254,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 static int _random_wand_subtype()
 {
     // total weight 70 [arbitrary]
-    return random_choose_weighted(10, WAND_FLAME,
-                                  10, WAND_ICEBLAST,
-                                  8, WAND_RANDOM_EFFECTS,
+    return random_choose_weighted(14, WAND_FLAME,
+                                  14, WAND_ICEBLAST,
                                   8, WAND_POLYMORPH,
                                   8, WAND_PARALYSIS,
                                   8, WAND_ACID,
@@ -1424,7 +1423,8 @@ static book_type _choose_book_type(int item_level)
     const int rarity = book_rarity(book);
     ASSERT(rarity != 100); // 'removed item' - ugh...
 
-    if (!one_chance_in(100) && x_chance_in_y(rarity-1, item_level+1))
+    const int adj_rarity = max(0, rarity-3); // allow more books to spawn on d:1
+    if (!one_chance_in(100) && x_chance_in_y(adj_rarity, item_level+1))
         return _choose_book_type(item_level); // choose something else
 
     return book;
@@ -1671,7 +1671,8 @@ static void _generate_misc_item(item_def& item, int force_type)
                                       MISC_BOX_OF_BEASTS,
                                       MISC_PHANTOM_MIRROR,
                                       MISC_TIN_OF_TREMORSTONES,
-                                      MISC_CONDENSER_VANE);
+                                      MISC_CONDENSER_VANE,
+                                      MISC_XOMS_CHESSBOARD);
     }
 }
 

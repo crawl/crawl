@@ -291,9 +291,8 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized) {
+    if (!hs_list_initalized)
         hiscores_read_to_memory();
-    }
 
     int i, total_entries;
 
@@ -1347,6 +1346,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
+            || death_type == KILLED_BY_FREEZING
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_DRAINING
@@ -1383,8 +1383,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
             // Setting this is redundant for dancing weapons, however
             // we do care about the above indentification. -- bwr
-            if (mons->type != MONS_DANCING_WEAPON)
-                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+            if (!mons_class_is_animated_weapon(mons->type)
+                && mons->get_defining_object())
+            {
+                auxkilldata = mons->get_defining_object()->name(DESC_A);
+            }
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
@@ -2280,7 +2283,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species::is_unbreathing(static_cast<species_type>(race)))
+                 (species::is_undead(static_cast<species_type>(race))
+                  || species::is_nonliving(static_cast<species_type>(race))))
         {
             desc += "Forgot to exist";
         }
@@ -2357,8 +2361,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "starvation" : "Starved to death";
         break;
 
-    case KILLED_BY_FREEZING:    // refrigeration spell
-        desc += terse? "frozen" : "Froze to death";
+    case KILLED_BY_FREEZING:    // Freeze, Fridge spells
+        desc += terse? "frozen" : "Frozen to death";
+        if (!terse && !death_source_desc().empty())
+            desc += " by " + death_source_desc();
         needs_damage = true;
         break;
 

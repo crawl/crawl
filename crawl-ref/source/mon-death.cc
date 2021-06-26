@@ -1696,6 +1696,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_DANCING_WEAPON)
     {
+        // TODO: does any of the following ever need to happen for other
+        // animated objects?
         if (!hard_reset)
         {
             if (killer == KILL_RESET)
@@ -1722,7 +1724,11 @@ item_def* monster_die(monster& mons, killer_type killer,
                 silent = true;
             }
             else
+            {
+                simple_monster_message(mons, " turns to gold and falls from the air.",
+                                       MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 killer = KILL_RESET;
+            }
         }
 
         if (was_banished && !summoned_it && !hard_reset
@@ -1781,13 +1787,6 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         _druid_final_boon(&mons);
     }
-    else if (mons.type == MONS_ELEMENTAL_WELLSPRING
-             && mons.mindex() == killer_index)
-    {
-        if (!silent)
-            simple_monster_message(mons, " exhausts itself and dries up.");
-        silent = true;
-    }
 
     const bool death_message = !silent && !did_death_message
                                && you.can_see(mons);
@@ -1804,6 +1803,13 @@ item_def* monster_die(monster& mons, killer_type killer,
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
+        if (you.hp < you.hp_max && !mons_is_object(mons.type))
+        {
+            const int hp = you.hp;
+            you.heal(random_range(1, 3));
+            if (you.hp > hp)
+                mpr("You feel a bit better.");
+        }
     }
 
     switch (killer)
@@ -1870,8 +1876,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
                 if (have_passive(passive_t::restore_hp))
                 {
-                    hp_heal = mons.get_experience_level()
-                        + random2(mons.get_experience_level());
+                    hp_heal = (1 + mons.get_experience_level()) / 2
+                            + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
                     && mons.holiness() & MH_NATURAL
@@ -2280,7 +2286,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!corpse)
             corpse = daddy_corpse;
     }
-    if (corpse && mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL))
         _make_derived_undead(&mons, !death_message, true);
 
     const unsigned int player_xp = gives_player_xp
@@ -2364,14 +2370,16 @@ item_def* monster_die(monster& mons, killer_type killer,
         remove_companion(&mons);
         if (mons_is_hepliaklqana_ancestor(mons.type))
         {
-            ASSERT(hepliaklqana_ancestor() == MID_NOBODY);
             if (!you.can_see(mons))
             {
                 mprf("%s has departed this plane of existence.",
                      hepliaklqana_ally_name().c_str());
             }
-            // respawn in ~30-60 turns
-            you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
+
+            // respawn in ~30-60 turns, if there wasn't another ancestor through
+            // some strange circumstance (wizmode? bug?)
+            if (hepliaklqana_ancestor() == MID_NOBODY)
+                you.duration[DUR_ANCESTOR_DELAY] = random_range(300, 600);
         }
     }
 

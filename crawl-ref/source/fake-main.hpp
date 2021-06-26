@@ -35,7 +35,7 @@ crawl_tile_environment tile_env; // Requires dlua.
 player you;
 game_state crawl_state;
 
-void process_command(command_type);
+void process_command(command_type, command_type = CMD_NO_CMD);
 void process_command(command_type, command_type) {}
 
 void world_reacts();

@@ -29,6 +29,7 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
@@ -3528,7 +3529,12 @@ string map_def::apply_subvault(string_spec &spec)
         vault.svmask = &flags;
 
         if (!resolve_subvault(vault))
-            continue;
+        {
+            if (crawl_state.last_builder_error_fatal)
+                break;
+            else
+                continue;
+        }
 
         ASSERT(vault.map.width() <= vwidth);
         ASSERT(vault.map.height() <= vheight);
@@ -3550,6 +3556,12 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
+    if (crawl_state.last_builder_error_fatal)
+    {
+        // I think the error should get printed elsewhere?
+        return make_stringf("Fatal lua error while resolving subvault '%s'",
+            tag.c_str());
+    }
     return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                         tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
@@ -4225,7 +4237,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 return slot;
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT
-                     && (!mons_class_is_animated_weapon(type)
+                     && (!mons_class_is_animated_object(type)
                          || mspec.items.size() > 1)
                      && (type != MONS_ZOMBIE && type != MONS_SKELETON
                          || invalid_monster_type(mspec.monbase)
@@ -4235,6 +4247,26 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                 // TODO: skip this error if the monspec is `nothing`
                 error = make_stringf("Monster '%s' can't use items.",
                     mon_str.c_str());
+            }
+            else if (mons_class_is_animated_object(type))
+            {
+                auto item = mspec.items.get_item(0);
+                const auto *unrand = item.ego < SP_FORBID_EGO
+                    ? get_unrand_entry(-item.ego) : nullptr;
+                const auto base = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->base_type : item.base_type;
+                const auto sub = unrand && unrand->base_type != OBJ_UNASSIGNED
+                    ? unrand->sub_type : item.sub_type;
+
+                const auto def_slot = mons_class_is_animated_weapon(type)
+                    ? EQ_WEAPON
+                    : EQ_BODY_ARMOUR;
+
+                if (get_item_slot(base, sub) != def_slot)
+                {
+                    error = make_stringf("Monster '%s' needs a defining item.",
+                                         mon_str.c_str());
+                }
             }
         }
 

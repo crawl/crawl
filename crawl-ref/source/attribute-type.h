@@ -33,8 +33,8 @@ enum attribute_type
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
-#endif
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
+#endif
     ATTR_PERM_FLIGHT,          // Cache for flight from equipment
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.

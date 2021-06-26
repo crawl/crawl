@@ -323,9 +323,8 @@ static const ability_def Ability_List[] =
 #endif
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 0, {fail_basis::xl, 50, 1}, abflag::none },
-
-    { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
-        0, 0, 0, {}, abflag::instant | abflag::none },
+    { ABIL_WORD_OF_CHAOS, "Word of Chaos",
+        6, 0, 0, {fail_basis::xl, 50, 1}, abflag::max_hp_drain },
 
     { ABIL_DIG, "Dig", 0, 0, 0, {}, abflag::instant | abflag::none },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 0, {}, abflag::delay },
@@ -333,6 +332,7 @@ static const ability_def Ability_List[] =
     { ABIL_HOP, "Hop", 0, 0, 0, {}, abflag::none },
 
     { ABIL_ROLLING_CHARGE, "Rolling Charge", 0, 0, 0, {}, abflag::none },
+    { ABIL_BLINKBOLT, "Blinkbolt", 0, 0, 0, {}, abflag::none },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -352,8 +352,6 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
         2, 0, 0, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
 #if TAG_MAJOR_VERSION == 34
-    { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
-        0, 0, 0, {}, abflag::none },
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
         1, 0, 0, {fail_basis::evo, 40, 2}, abflag::none },
 #endif
@@ -392,7 +390,7 @@ static const ability_def Ability_List[] =
         3, 0, 2, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_KIKU_TORMENT, "Torment",
         4, 0, 8, {fail_basis::invo, 60, 5, 20}, abflag::none },
-    { ABIL_KIKU_GIFT_NECRONOMICON, "Receive Necronomicon", 0, 0, 0,
+    { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge", 0, 0, 0,
         {fail_basis::invo}, abflag::none },
     { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain", 0, 0, 0,
         {fail_basis::invo}, abflag::pain },
@@ -1335,11 +1333,19 @@ bool activate_ability()
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (!you.attribute[ATTR_HELD])
-        return true;
-    if (!quiet)
-        mprf("You cannot do that while %s.", held_status());
-    return false;
+    if (you.attribute[ATTR_HELD])
+    {
+        if (!quiet)
+            mprf("You cannot do that while %s.", held_status());
+        return false;
+    }
+    else if (you.is_stationary())
+    {
+        if (!quiet)
+            canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+    return true;
 }
 
 static bool _can_hop(bool quiet)
@@ -1351,6 +1357,17 @@ static bool _can_hop(bool quiet)
         return false;
     }
     return _can_movement_ability(quiet);
+}
+
+static bool _can_blinkbolt(bool quiet)
+{
+    if (you.duration[DUR_BLINKBOLT_COOLDOWN])
+    {
+        if (!quiet)
+            mpr("You aren't ready to blinkbolt again yet.");
+        return false;
+    }
+    return true;
 }
 
 // Check prerequisites for a number of abilities.
@@ -1370,7 +1387,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos()))
+            && !you.duration[DUR_FLIGHT])
         {
             if (!quiet)
             {
@@ -1405,10 +1423,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if (abil.ability == ABIL_TRAN_BAT && !flight_allowed(quiet))
-        return false;
-
-
     if (you.confused() && !testbits(abil.flags, abflag::conf_ok))
     {
         if (!quiet)
@@ -1427,6 +1441,16 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             {
                 mprf("You cannot call out to %s while %s.",
                      god_name(you.religion).c_str(),
+                     you.duration[DUR_WATER_HOLD] ? "unable to breathe"
+                                                  : "silenced");
+            }
+            return false;
+        }
+        if (abil.ability == ABIL_WORD_OF_CHAOS)
+        {
+            if (!quiet)
+            {
+                mprf("You cannot speak a word of chaos while %s.",
                      you.duration[DUR_WATER_HOLD] ? "unable to breathe"
                                                   : "silenced");
             }
@@ -1522,7 +1546,8 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_ELYVILON_PURIFICATION:
-        if (!you.disease && !you.duration[DUR_POISONING]
+        if (!you.duration[DUR_SICKNESS]
+            && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
             && !you.petrifying()
             && you.strength(false) == you.max_strength()
@@ -1612,7 +1637,17 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return _can_movement_ability(quiet) &&
                                 palentonga_charge_possible(quiet, true);
 
+    case ABIL_WORD_OF_CHAOS:
+        if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
+        {
+            if (!quiet)
+                canned_msg(MSG_CANNOT_DO_YET);
+            return false;
+        }
+        return true;
+
     case ABIL_EVOKE_BLINK:
+    case ABIL_BLINKBOLT:
     {
         const string no_tele_reason = you.no_tele_reason(false, true);
         if (no_tele_reason.empty())
@@ -1992,6 +2027,23 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         else
             return spret::abort;
 
+
+    case ABIL_BLINKBOLT:
+        {
+            if (_can_blinkbolt(false))
+            {
+                int power = 0;
+                if (you.props.exists(AIRFORM_POWER_KEY))
+                    power = you.props[AIRFORM_POWER_KEY].get_int();
+                else
+                    return spret::abort;
+                return your_spells(SPELL_BLINKBOLT, power, false, nullptr, target);
+            }
+            else
+                return spret::abort;
+        }
+
+
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
         int power = 10 + you.experience_level;
@@ -2167,12 +2219,15 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_DAMNATION:
         fail_check();
         if (your_spells(SPELL_HURL_DAMNATION,
-                        you.experience_level * 10,
+                        40 + you.experience_level * 6,
                         false, nullptr, target) == spret::abort)
         {
             return spret::abort;
         }
         break;
+
+    case ABIL_WORD_OF_CHAOS:
+        return word_of_chaos(40 + you.experience_level * 6, fail);
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // cloaks, randarts
         if (!invis_allowed())
@@ -2189,15 +2244,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         contaminate_player(1000 + random2(2000), true);
         break;
 
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_EVOKE_TURN_VISIBLE:
-        fail_check();
-        ASSERT(!you.attribute[ATTR_INVIS_UNCANCELLABLE]);
-        mpr("You feel less transparent.");
-        you.duration[DUR_INVIS] = 1;
-        break;
-#endif
-
     case ABIL_EVOKE_THUNDER: // robe of Clouds
         fail_check();
         mpr("The folds of your robe billow into a mighty storm.");
@@ -2206,13 +2252,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             if (!cell_is_solid(*ri))
                 place_cloud(CLOUD_STORM, *ri, 8 + random2avg(8,2), &you);
 
-        break;
-
-    case ABIL_CANCEL_PPROJ:
-        fail_check();
-        you.duration[DUR_PORTAL_PROJECTILE] = 0;
-        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
-        mpr("You are no longer teleporting projectiles to their destination.");
         break;
 
     case ABIL_END_TRANSFORMATION:
@@ -2355,10 +2394,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         break;
 
-    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
     {
         fail_check();
-        if (!kiku_gift_necronomicon())
+        if (!kiku_gift_capstone_spells())
             return spret::abort;
         break;
     }
@@ -2544,9 +2583,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         if (!spell_direction(*target, beam))
             return spret::abort;
 
-        int power = you.skill(SK_INVOCATIONS, 1)
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1))
-                    + random2(1 + you.skill(SK_INVOCATIONS, 1));
+        int power = you.skill(SK_INVOCATIONS, 2)
+                    + random2(1 + you.skill(SK_INVOCATIONS, 2))
+                    + random2(1 + you.skill(SK_INVOCATIONS, 2));
 
         // Since the actual beam is random, check with BEAM_MMISSILE.
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, beam.range))
@@ -2557,12 +2596,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
             zap_type ztype =
                 random_choose(ZAP_BOLT_OF_FIRE,
-                              ZAP_FIREBALL,
                               ZAP_LIGHTNING_BOLT,
-                              ZAP_STICKY_FLAME,
-                              ZAP_IRON_SHOT,
+                              ZAP_BOLT_OF_MAGMA,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_ORB_OF_ELECTRICITY);
+                              ZAP_CORROSIVE_BOLT);
             zapping(ztype, power, beam);
         }
         break;
@@ -3426,9 +3463,14 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         // red draconian handled before the switch
         return you.form == transformation::dragon
                     && species::dragon_form(you.species) == MONS_FIRE_DRAGON;
+    case ABIL_BLINKBOLT:
+        return you.form == transformation::storm;
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
+    case ABIL_WORD_OF_CHAOS:
+        return you.get_mutation_level(MUT_WORD_OF_CHAOS)
+                && (!silenced(you.pos()) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -3436,8 +3478,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return !you_worship(GOD_NO_GOD);
     case ABIL_CONVERT_TO_BEOGH:
         return env.level_state & LSTATE_BEOGH && can_convert_to_beogh();
-    case ABIL_CANCEL_PPROJ:
-        return you.duration[DUR_PORTAL_PROJECTILE];
     // pseudo-evocations from equipped items
     case ABIL_EVOKE_BLINK:
         return you.scan_artefacts(ARTP_BLINK)
@@ -3479,7 +3519,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_SHAFT_SELF,
             ABIL_HOP,
             ABIL_ROLLING_CHARGE,
-            ABIL_BREATHE_POISON,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
             ABIL_BREATHE_FROST,
@@ -3493,10 +3532,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_REVIVIFY,
             ABIL_EXSANGUINATE,
             ABIL_DAMNATION,
+            ABIL_WORD_OF_CHAOS,
+            ABIL_BLINKBOLT,
             ABIL_END_TRANSFORMATION,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
-            ABIL_CANCEL_PPROJ,
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
@@ -3647,7 +3687,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ELYVILON_LIFESAVING:
         first_slot = letter_to_index('p');
         break;
-    case ABIL_KIKU_GIFT_NECRONOMICON:
+    case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         first_slot = letter_to_index('N');
         break;
     case ABIL_TSO_BLESS_WEAPON:

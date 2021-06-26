@@ -164,20 +164,11 @@ bool monster::add_ench(const mon_enchant &ench)
     if (ench.ench == ENCH_NONE)
         return false;
 
-    if (ench.ench == ENCH_FEAR
-        && (is_nonliving() || berserk_or_insane()))
-    {
+    if (ench.ench == ENCH_FEAR && !can_feel_fear(true))
         return false;
-    }
 
     if (ench.ench == ENCH_BLIND && !mons_can_be_blinded(type))
         return false;
-
-    if (ench.ench == ENCH_FLIGHT && has_ench(ENCH_LIQUEFYING))
-    {
-        del_ench(ENCH_LIQUEFYING);
-        invalidate_agrid();
-    }
 
     // If we have never changed shape, mark us as shapeshifter, so that
     // "goblin perm_ench:shapeshifter" reverts on death.
@@ -537,14 +528,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(*this, " is no longer moving slowly.");
         calc_speed();
-        break;
-
-    case ENCH_OZOCUBUS_ARMOUR:
-        if (!quiet && you.can_see(*this))
-        {
-            mprf("%s icy armour evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
-        }
         break;
 
     case ENCH_PARALYSIS:
@@ -1406,7 +1389,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_REGENERATION:
     case ENCH_STRONG_WILLED:
     case ENCH_IDEALISED:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
     case ENCH_FLIGHT:
     case ENCH_DAZED:
@@ -1711,24 +1693,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
-    case ENCH_TORNADO:
-        tornado_damage(this, speed_to_duration(speed));
+    case ENCH_POLAR_VORTEX:
+        polar_vortex_damage(this, speed_to_duration(speed));
         if (decay_enchantment(en))
         {
-            add_ench(ENCH_TORNADO_COOLDOWN);
-            if (you.can_see(*this))
-            {
-                mprf("The winds around %s start to calm down.",
-                     name(DESC_THE).c_str());
-            }
-        }
-        break;
-
-    case ENCH_VORTEX:
-        tornado_damage(this, speed_to_duration(speed), true);
-        if (decay_enchantment(en))
-        {
-            add_ench(ENCH_VORTEX_COOLDOWN);
+            add_ench(ENCH_POLAR_VORTEX_COOLDOWN);
             if (you.can_see(*this))
             {
                 mprf("The winds around %s start to calm down.",
@@ -1757,13 +1726,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
             || confused() || asleep() || has_ench(ENCH_FEAR))
         {
-            speed_increment += me.duration;
             del_ench(en, true, false);
             if (you.can_see(*this))
-            {
-                mprf("%s chant is interrupted.",
-                     name(DESC_ITS).c_str());
-            }
+                mprf("%s chant is interrupted.", name(DESC_ITS).c_str());
             break;
         }
 
@@ -1835,11 +1800,10 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en);
         break;
 
-    case ENCH_TORNADO_COOLDOWN:
-    case ENCH_VORTEX_COOLDOWN:
+    case ENCH_POLAR_VORTEX_COOLDOWN:
         if (decay_enchantment(en))
         {
-            remove_tornado_clouds(mid);
+            remove_vortex_clouds(mid);
             if (you.can_see(*this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }
@@ -2033,13 +1997,13 @@ static const char *enchant_names[] =
     "regen",
     "magic_res", "mirror_dam",
 #if TAG_MAJOR_VERSION == 34
-    "stoneskin",
+    "stoneskin", "fear inspiring",
 #endif
-    "fear inspiring", "temporarily pacified",
+    "temporarily pacified",
 #if TAG_MAJOR_VERSION == 34
     "withdrawn", "attached",
 #endif
-    "guardian_timer", "flight", "liquefying", "tornado", "fake_abjuration",
+    "guardian_timer", "flight", "liquefying", "polar_vortex", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame",
 #if TAG_MAJOR_VERSION == 34
@@ -2049,7 +2013,11 @@ static const char *enchant_names[] =
 #if TAG_MAJOR_VERSION == 34
     "deaths_door",
 #endif
-    "rolling", "ozocubus_armour", "wretched", "screamed", "rune_of_recall",
+    "rolling",
+#if TAG_MAJOR_VERSION == 34
+    "ozocubus_armour",
+#endif
+    "wretched", "screamed", "rune_of_recall",
     "injury bond", "drowning", "flayed", "haunting",
 #if TAG_MAJOR_VERSION == 34
     "retching",
@@ -2064,7 +2032,7 @@ static const char *enchant_names[] =
     "grasping_roots_source",
 #endif
     "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "merfolk_avatar_song",
+    "iood_charged", "fire_vuln", "polar_vortex_cooldown", "merfolk_avatar_song",
     "barbs",
 #if TAG_MAJOR_VERSION == 34
     "building_charge",
@@ -2097,9 +2065,9 @@ static const char *enchant_names[] =
     "idealised", "bound_soul", "infestation",
     "stilling the winds", "thunder_ringed",
 #if TAG_MAJOR_VERSION == 34
-    "pinned_by_whirlwind",
+    "pinned_by_whirlwind", "vortex", "vortex_cooldown",
 #endif
-    "vortex", "vortex_cooldown", "vile_clutch", "waterlogged", "ring_of_flames",
+    "vile_clutch", "waterlogged", "ring_of_flames",
     "ring_chaos", "ring_mutation", "ring_fog", "ring_ice", "ring_neg",
     "ring_acid", "ring_miasma", "concentrate_venom",
     "buggy", // NUM_ENCHANTMENTS
@@ -2239,7 +2207,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
-    case ENCH_FEAR_INSPIRING:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
     case ENCH_RESISTANCE:
@@ -2356,11 +2323,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_WRETCHED:
         cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
         break;
-    case ENCH_TORNADO_COOLDOWN:
+    case ENCH_POLAR_VORTEX_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
-        break;
-    case ENCH_VORTEX_COOLDOWN:
-        cturn = random_range(7, 17) * 10 / _mod_speed(10, mons->speed);
         break;
     case ENCH_FROZEN:
         cturn = 3 * 10 / _mod_speed(10, mons->speed);

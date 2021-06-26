@@ -300,6 +300,7 @@ define(function () {
     }
 
     // Menu flags -- see menu.h
+    // many things here are unimplemented
     var mf = {};
     mf.NOSELECT         = 0x0001;
     mf.SINGLESELECT     = 0x0002;
@@ -308,12 +309,15 @@ define(function () {
     mf.ANYPRINTABLE     = 0x0010;
     mf.SELECT_BY_PAGE   = 0x0020;
     mf.ALWAYS_SHOW_MORE = 0x0040;
-    mf.NOWRAP           = 0x0080;
+    mf.WRAP             = 0x0080;
     mf.ALLOW_FILTER     = 0x0100;
     mf.ALLOW_FORMATTING = 0x0200;
     mf.SHOW_PAGENUMBERS = 0x0400;
-    mf.START_AT_END     = 0x2000;
-    mf.PRESELECTED      = 0x4000;
+    // ...
+    mf.START_AT_END     = 0x1000;
+    mf.PRESELECTED      = 0x2000;
+    // ...
+    mf.ARROWS_SELECT    = 0x40000;
     exports.menu_flag = mf;
 
     val = 0;

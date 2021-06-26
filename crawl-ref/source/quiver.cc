@@ -1025,7 +1025,9 @@ namespace quiver
                         // targeting for that case; the behavior involved in
                         // listing it here just finds the closest targetable
                         // monster.
-        case SPELL_INVISIBILITY: // targeted, but not to enemies. (Should this allow quivering at all?)
+        case SPELL_BORGNJORS_VILE_CLUTCH: // BVC shouldn't retarget monsters
+                                          // that are clutched, and spell
+                                          // targeting handles this case.
         case SPELL_APPORTATION: // Apport doesn't target monsters at all
             return true;
         default:
@@ -1242,14 +1244,12 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
-        case ABIL_CANCEL_PPROJ:
         case ABIL_EXSANGUINATE:
         case ABIL_REVIVIFY:
-        case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_ZIN_DONATE_GOLD:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
-        case ABIL_KIKU_GIFT_NECRONOMICON:
+        case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         case ABIL_SIF_MUNA_FORGET_SPELL:
         case ABIL_LUGONU_BLESS_WEAPON:
         case ABIL_BEOGH_GIFT_ITEM:
@@ -1346,6 +1346,7 @@ namespace quiver
             switch (ability)
             {
             case ABIL_HOP:
+            case ABIL_BLINKBOLT:
             case ABIL_ROLLING_CHARGE:
             case ABIL_SPIT_POISON:
             case ABIL_BREATHE_ACID:
@@ -1379,6 +1380,7 @@ namespace quiver
                 return false;
             switch (ability)
             {
+            case ABIL_BLINKBOLT: // TODO: disable under nomove?
             case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
             case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
             case ABIL_SPIT_POISON:
@@ -2618,6 +2620,20 @@ namespace quiver
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
+            }
+            else if (isadigit(key))
+            {
+                item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
+                if (item && in_inventory(*item))
+                {
+                    auto a = slot_to_action(item->link, true);
+                    // XX would be better to show an error if a is invalid?
+                    if (a->is_valid())
+                    {
+                        set_to_quiver(a);
+                        return false;
+                    }
+                }
             }
             else if ((key == '*' || key == '%') && any_items)
                 return _choose_from_inv();

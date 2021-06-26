@@ -9,8 +9,6 @@ class actor;
 
 spret conjure_flame(int pow, bool fail);
 
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail);
-
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1);
 

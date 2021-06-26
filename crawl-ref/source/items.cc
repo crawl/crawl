@@ -65,6 +65,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "skills.h"
 #include "slot-select-mode.h"
 #include "sound.h"
 #include "spl-book.h"
@@ -1845,8 +1846,22 @@ static void _get_book(item_def& it)
     // This is mainly for save compat: if a manual generated somehow that is not
     // id'd, the following message is completely useless
     set_ident_flags(it, ISFLAG_IDENT_MASK);
-
     const skill_type sk = static_cast<skill_type>(it.plus);
+
+    if (is_useless_skill(sk))
+    {
+        mprf("You pick up %s. Unfortunately, it's quite useless to you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
+    if (you.skills[sk] >= MAX_SKILL_LEVEL)
+    {
+        mprf("You pick up %s, but it has nothing more to teach you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
     if (you.skill_manual_points[sk])
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     else
@@ -1857,7 +1872,6 @@ static void _get_book(item_def& it)
 
 // Adds all books in the player's inventory to library.
 // Declared here for use by tags to load old saves.
-// Outside of loading old saves, only used at character creation.
 void add_held_books_to_library()
 {
     for (item_def& it : you.inv)
@@ -3881,13 +3895,14 @@ colour_t item_def::miscellany_colour() const
             return WHITE;
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
         case MISC_BUGGY_EBONY_CASKET:
-        case MISC_XOMS_CHESSBOARD:
             return DARKGREY;
 #endif
         case MISC_TIN_OF_TREMORSTONES:
             return BROWN;
         case MISC_CONDENSER_VANE:
             return WHITE;
+        case MISC_XOMS_CHESSBOARD:
+            return ETC_RANDOM;
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:

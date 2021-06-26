@@ -184,7 +184,6 @@
     Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
-    hellmonk
     Alex Henry
     R. Dan Henry
     Max 'Ploomutoo' Hon-Anderson
@@ -263,7 +262,6 @@
     nagdon
     Naruni
     neofelis
-    nicolae
     nirrattner
     Jonathon Nooner
     NormalPerson7
@@ -292,6 +290,7 @@
     Paul Pollack
     Poroing
     Iago Porto
+    Alexander Posch
     psywombats
     pubby
     Ashley Elizabeth Raine
@@ -400,6 +399,7 @@ The Dungeon Crawl Stone Soup development team is:
     Michael Gagno
     gammafunk
     Shayne Halvorson
+    hellmonk
     Brendan Hickey
     Aidan Holm
     Pete Hurst
@@ -417,6 +417,7 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Middleton
     Seve Monahan
     Neil Moore
+    nicolae
     Steven Noonan
     Stefan O'Rear
     Charles Otto

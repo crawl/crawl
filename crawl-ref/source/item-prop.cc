@@ -820,6 +820,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_LIGHTNING_REMOVED },
     { OBJ_WANDS,     WAND_SCATTERSHOT_REMOVED },
     { OBJ_WANDS,     WAND_CLOUDS_REMOVED },
+    { OBJ_WANDS,     WAND_RANDOM_EFFECTS_REMOVED },
     { OBJ_FOOD,      FOOD_CHUNK},
     { OBJ_FOOD,      FOOD_BREAD_RATION },
     { OBJ_FOOD,      FOOD_ROYAL_JELLY },
@@ -1442,7 +1443,6 @@ int wand_charge_value(int type)
         return 24;
 
     case WAND_FLAME:
-    case WAND_RANDOM_EFFECTS:
         return 32;
     }
 }
@@ -1476,8 +1476,6 @@ bool is_offensive_wand(const item_def& item)
 {
     switch (item.sub_type)
     {
-    // Monsters don't use it
-    case WAND_RANDOM_EFFECTS:
     // Monsters use it, but it's not an offensive wand
     case WAND_DIGGING:
         return false;
@@ -2280,6 +2278,9 @@ bool get_armour_rampaging(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
+    if (is_unrandom_artefact(arm, UNRAND_SEVEN_LEAGUE_BOOTS))
+        return true;
+
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_RAMPAGING)
         return true;
@@ -2503,10 +2504,6 @@ bool gives_ability(const item_def &item)
     {
     case OBJ_WEAPONS:
         break;
-    case OBJ_JEWELLERY:
-        if (item.sub_type == RING_FLIGHT)
-            return true;
-        break;
     case OBJ_ARMOUR:
     {
         const equipment_type eq = get_armour_slot(item);
@@ -2526,9 +2523,12 @@ bool gives_ability(const item_def &item)
         return false;
 
     // Check for evokable randart properties.
-    for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
-            return true;
+    if (artefact_property(item, ARTP_INVISIBLE)
+        || artefact_property(item, ARTP_BLINK)
+        || artefact_property(item, ARTP_BERSERK))
+    {
+        return true;
+    }
 
     // Unrands that grant an evokable ability.
     if (is_unrandom_artefact(item, UNRAND_RCLOUDS))
@@ -2601,7 +2601,7 @@ bool gives_resistance(const item_def &item)
         return false;
 
     // Check for randart resistances.
-    for (int rap = 0; rap <= ARTP_NUM_PROPERTIES; rap++)
+    for (int rap = 0; rap < ARTP_NUM_PROPERTIES; rap++)
     {
         if (artefact_property(item, static_cast<artefact_prop_type>(rap))
             && (rap == ARTP_FIRE

@@ -29,8 +29,6 @@ void mons_reset_just_seen();
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);
 bool mons_can_move_towards_target(const monster* mon);
-bool monster_swaps_places(monster* mon, const coord_def& delta,
-                          bool takes_time = true, bool apply_effects = true);
 
 bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only);
 
