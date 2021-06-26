@@ -894,3 +894,177 @@ xxx....vlv....xxx
      .......
      ...T...
 ENDMAP
+
+###############################
+## Ecumenical Alter Ruins Series 2 -- By ShaperMC
+## These alters are designed to be reminiscent of fallen 
+## cultures and times. Hopefully a player running across
+## these will feel they have an air of reliquary 
+
+##NAME:   shapermc_ecumenical_altar_mp_highgroup
+##TAGS:   transparent no_monster_gen
+##SUBST: - = --.G
+##SUBST: G = GGG-
+##SUBST: W = WWWWw.
+##COLOUR: - = brown
+##FTILE: -G = floor_rough_brown
+##COLOUR: G = lightgrey
+##KMONS: W = plant / nothing
+##KMONS: p = plant
+##KMONS: f = fungus
+##NSUBST: ' = 8:pf. / 12=ppf... / .
+##NSUBST: ^ = 8:pfTUV / 4=TUV... / W
+##TILE: G = dngn_crumbled_column
+##: set_feature_name("granite_statue", "broken pillar")
+##: ecumenical_altar_setup(_G)
+##
+##MAP
+##......x....
+##.-----x''''
+##.-xxxxxx'W'
+##.-x--x_x'W'
+##.-x--x-xWW'
+##'--WW-WWx''
+##''W^^W''x''
+##''W^^^W'x''
+##'''WWWW'x''
+##'''''''W'x'
+##'''WWWW''x'
+##ENDMAP
+
+NAME:   shapermc_ecumenical_altar_rom_forum
+TAGS:   transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+KITEM: _ = randbook owner:Plato numspells:2
+NSUBST: ' = 8:pf. / 12=ppf... / .
+KMONS: p = plant
+KMONS: f = fungus
+
+MAP 
+...............
+....'xxxxx'....
+...'x'''''x'...
+..'x'xxxxx'x'..
+.'x'x'''''x'x'.
+.x'x'xxxxx'x'x.
+.x'x'x'_'x'x'x.
+.^^^^^^^^^^^^^.
+...............
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_acropolis
+TAGS:   transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+KMONS: p = plant
+KMONS: f = fungus
+NSUBST: ' = 8:pf. / 12=ppf... / .
+NSUBST: ^ = 8:pfTUV / 4=TUV... / W
+
+MAP
+.........
+.^^^^^^^.
+.^'''''^.
+.^'xxx'^.
+.^'x_x'^.
+.^'x.x'^.
+.^'x'x'^.
+.^'''''^.
+.^^^^^^^.
+.........
+ENDMAP
+
+NAME:   shapermc_ecumenical_altar_Pompeii
+TAGS:   transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+SUBST: G = GGG-
+COLOUR: - = brown
+FTILE: -G = floor_rough_brown
+COLOUR: G = lightgrey
+TILE: G = dngn_crumbled_column
+: set_feature_name("granite_statue", "broken pillar")
+NSUBST: ' = 10:..C / 5:.C
+FTILE:  ' = floor_normal / floor_volcanic w:5
+C = "human skeleton / kobold skeleton / elf skeleton / gnoll skeleton / ogre skeleton / naga skeleton / minotaur skeleton"/ merfolk skeleton / tengu skeleton / draconian skeleton"
+##Item 1: Find floor tile "Volcanic"
+##Item 2: Find how to place floor tiles on specifc glyphs (') 
+##Item 3: Find out how to place corpses
+##Item 4: Find out how to randomly assign corpse tiles to volcano specific tiles
+
+MAP
+xxxxxxx
+x_''''x
+x'-.-.-
+x'-.-.G
+x'-...-
+x'-...G
+x'....-
+x'....G
+xG-G-G-
+ENDMAP
+
+NAME: shapermc_ecumenical_altar_petra
+# goal of this is to feel hidden in something, so no b seen from outside
+TAGS: transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+NSUBST: ' = 8:pf. / 12=ppf... / .
+KMONS: p = plant
+KMONS: f = fungus
+
+MAP
+ xxxxxx
+xxbbbbxx
+xbb_G'bx
+xbG''bbx
+xb'bb'bx
+xbbbb'bx
+xbb'''bx
+xb''bbbxx
+xbb'bbxx
+xxbbb'bx
+ xxG'Gxx
+ENDMAP
+
+NAME: shapermc_ecumenical_altar_Tikal
+TAGS: transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+NSUBST: ' = 8:pf. / 12=ppf... / .
+KMONS: p = plant
+KMONS: f = fungus
+SUBST: 0 = 00
+
+MAP
+xxxxxxxxxxx                                                 
+x0..'0'..0x                                                 
+x.xxxxxxx.x                                                 
+x.x0'''0x.x                                                 
+x.x xxx x.x                                                 
+x'x'x_x'x'x                                                 
+x.x x.x x.x                                                 
+x.x'''''x.x                                                 
+x xxx.xxx.x                                                 
+x'''''''''x                                                 
+xxxxx.xxxxx
+ENDMAP
+
+NAME: shapermc_ecumenical_altar_Ellora
+TAGS: transparent no_monster_gen
+: ecumenical_altar_setup(_G)
+NSUBST: ' = 8:..pf / 12=...ppf / .
+KMONS: p = plant
+KMONS: f = fungus
+
+MAP
+      x+xxxxx                                               
+      x'''''x                                               
+      xGxxx'x                                               
+      x'''x'x                                               
+     xx.x'x'x                                               
+    xx''x'+'x                                               
+xxxxx'_'xxxxx                                               
+x'+'x''xx                                                   
+x'x'x.xx                                                    
+x'x'''x                                                     
+x'xxxGx                                                     
+x'''''x                                                     
+xxxxx+x        
+ENDMAP
