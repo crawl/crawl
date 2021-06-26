@@ -2936,12 +2936,9 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     monster* mons = monster_at(beam.target);
     if (!mons || !you.can_see(*mons))
     {
-        if (!test)
-            mpr("You see nothing there to target!");
-        return spret::abort;
-    }
-
-    if (mons->res_poison() > 0 && mons->observable())
+        if (test || !yesno("You see nothing there. Cast anyway?", true, 'n'))
+            return spret::abort;
+    } else if (mons->res_poison() > 0 && mons->observable())
     {
         if (!test)
         {
@@ -2954,10 +2951,16 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     if (test)
         return spret::success;
 
-    if (stop_attack_prompt(mons, false, you.pos()))
+    if (mons && you.can_see(*mons) && stop_attack_prompt(mons, false, you.pos()))
         return spret::abort;
 
     fail_check();
+
+    if (!mons || mons->res_poison() > 0)
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success; // still losing a turn
+    }
 
     const int amount = max(1, div_rand_round(pow, 15));
     mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
