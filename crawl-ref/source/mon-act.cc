@@ -948,8 +948,8 @@ static bool _handle_reaching(monster* mons)
         || is_sanctuary(foe->pos())
         || mons->submerged()
         || (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
-        || (mons_is_fleeing(*mons)
-        || mons->pacified()))
+        || mons_is_fleeing(*mons)
+        || mons->pacified())
     {
         return false;
     }
