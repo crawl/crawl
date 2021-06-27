@@ -216,7 +216,6 @@ int book_rarity(book_type which_book)
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
-
     default:
         return 1;
     }
