@@ -249,7 +249,8 @@ end))
 mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
   return "place:Slime:$ w:1500 / floating eye w:" .. d .. " / " ..
-         "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
+         "azure jelly w:" .. d .. " / quicksilver ooze w:" .. d .. " / " ..
+         "rockslime w:" .. d * 3 .. " / acid blob w:" .. d * 14
 end))
 
 mset(spec_fn(function ()
