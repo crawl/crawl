@@ -392,6 +392,14 @@ private:
     set<coord_def> closest_victims;
 };
 
+// A static targeter for Maxwell's Coupling
+// that finds the closest monster using the absolute zero code.
+class targeter_maxwells_coupling : public targeter_multiposition
+{
+public:
+    targeter_maxwells_coupling(int range);
+};
+
 class targeter_multifireball : public targeter_multiposition
 {
 public:

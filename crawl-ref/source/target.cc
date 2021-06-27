@@ -1756,6 +1756,13 @@ aff_type targeter_chain_lightning::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targeter_maxwells_coupling::targeter_maxwells_coupling(int range)
+    : targeter_multiposition(&you, find_maxwells_possibles(range))
+{
+    if (affected_positions.size() == 1)
+        positive = AFF_YES;
+}
+
 targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
     : targeter_multiposition(a, seeds)
 {

@@ -3,6 +3,7 @@ airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
+maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
 shock SHOCK
 silence SILENCE

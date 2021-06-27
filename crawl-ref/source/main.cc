@@ -192,7 +192,8 @@ static void _launch_game_loop();
 NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
-static void _do_searing_ray();
+static void _do_wait_spells();
+static void _end_wait_spells();
 static void _uncurl();
 static void _input();
 
@@ -1107,7 +1108,7 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        end_searing_ray();
+        _end_wait_spells();
         handle_delay();
 
         // Some delays reset you.time_taken.
@@ -1233,7 +1234,7 @@ static void _input()
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
-        _do_searing_ray();
+        _do_wait_spells();
         _uncurl();
 
         world_reacts();
@@ -2597,24 +2598,21 @@ static void _do_berserk_no_combat_penalty()
     return;
 }
 
-// Fire the next searing ray stage if we have taken no other action this turn,
-// otherwise cancel
-static void _do_searing_ray()
+// Update damaging spells that are channeled by waiting
+// These only update when the player actively waits with CMD_WAIT,
+// so should not be moved to world_reacts()
+//
+// Currently this handles Searing Ray and Maxwell's Coupling
+static void _do_wait_spells()
 {
-    if (you.attribute[ATTR_SEARING_RAY] == 0)
-        return;
+    handle_searing_ray();
+    handle_maxwells_coupling();
+}
 
-    // Convert prepping value into stage one value (so it can fire next turn)
-    if (you.attribute[ATTR_SEARING_RAY] == -1)
-    {
-        you.attribute[ATTR_SEARING_RAY] = 1;
-        return;
-    }
-
-    if (crawl_state.prev_cmd == CMD_WAIT)
-        handle_searing_ray();
-    else
-        end_searing_ray();
+static void _end_wait_spells()
+{
+    end_searing_ray();
+    end_maxwells_coupling();
 }
 
 // palentongas uncurl at the start of the turn

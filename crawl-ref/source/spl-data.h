@@ -3308,6 +3308,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MAXWELLS_COUPLING, "Maxwell's Capacitive Coupling",
+    spschool::air,
+    spflag::no_ghost,
+    8,
+    200,
+    5, 5,
+    7, 25,
+    TILEG_MAXWELLS_COUPLING,
+},
+
+{
     // This "spell" is implemented in a way that ignores all this information,
     // and it is never triggered the way spells usually are, but it still has
     // a spell-type enum entry. So, use fake data in order to have a valid
@@ -3537,7 +3548,6 @@ AXED_SPELL(SPELL_RING_OF_THUNDER, "Ring of Thunder")
 AXED_SPELL(SPELL_TWISTED_RESURRECTION, "Twisted Resurrection")
 AXED_SPELL(SPELL_RANDOM_EFFECTS, "Random Effects")
 AXED_SPELL(SPELL_HYDRA_FORM, "Hydra Form")
-AXED_SPELL(SPELL_ABSOLUTE_ZERO, "Absolute Zero")
 AXED_SPELL(SPELL_VORTEX, "Vortex")
 #endif
 

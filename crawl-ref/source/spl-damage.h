@@ -98,5 +98,10 @@ spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);
 
+vector<monster *> find_maxwells_possibles(int radius);
+spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
+void handle_maxwells_coupling();
+void end_maxwells_coupling();
+
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);

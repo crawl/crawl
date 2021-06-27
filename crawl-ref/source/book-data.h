@@ -180,6 +180,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SILENCE,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_STORM_FORM,
+    SPELL_MAXWELLS_COUPLING,
 },
 
 {   // Book of the Warp
