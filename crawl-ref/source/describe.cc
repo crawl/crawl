@@ -1782,86 +1782,88 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         description += "\n\n";
 
+        description += "'Of " + string(armour_ego_name(item, false)) + "': ";
+
         switch (ego)
         {
         case SPARM_FIRE_RESISTANCE:
-            description += "It protects its wearer from fire.";
+            description += "it protects its wearer from fire.";
             break;
         case SPARM_COLD_RESISTANCE:
-            description += "It protects its wearer from cold.";
+            description += "it protects its wearer from cold.";
             break;
         case SPARM_POISON_RESISTANCE:
-            description += "It protects its wearer from poison.";
+            description += "it protects its wearer from poison.";
             break;
         case SPARM_SEE_INVISIBLE:
-            description += "It allows its wearer to see invisible things.";
+            description += "it allows its wearer to see invisible things.";
             break;
         case SPARM_INVISIBILITY:
-            description += "When activated it grants its wearer temporary "
+            description += "when activated, it grants its wearer temporary "
                            "invisibility, but also drains their maximum "
                            "health.";
             break;
         case SPARM_STRENGTH:
-            description += "It increases the strength of its wearer (Str +3).";
+            description += "it increases the strength of its wearer (Str +3).";
             break;
         case SPARM_DEXTERITY:
-            description += "It increases the dexterity of its wearer "
+            description += "it increases the dexterity of its wearer "
                            "(Dex +3).";
             break;
         case SPARM_INTELLIGENCE:
-            description += "It increases the intelligence of its wearer "
+            description += "it increases the intelligence of its wearer "
                            "(Int +3).";
             break;
         case SPARM_PONDEROUSNESS:
-            description += "It is very cumbersome, slowing its wearer's "
+            description += "it is very cumbersome, slowing its wearer's "
                            "movement.";
             break;
         case SPARM_FLYING:
-            description += "It grants its wearer flight.";
+            description += "it grants its wearer flight.";
             break;
         case SPARM_WILLPOWER:
-            description += "It increases its wearer's willpower, protecting "
+            description += "it increases its wearer's willpower, protecting "
                            "against certain magical effects.";
             break;
         case SPARM_PROTECTION:
-            description += "It protects its wearer from most sources of "
+            description += "it protects its wearer from most sources of "
                            "damage (AC +3).";
             break;
         case SPARM_STEALTH:
-            description += "It enhances the stealth of its wearer.";
+            description += "it enhances the stealth of its wearer.";
             break;
         case SPARM_RESISTANCE:
-            description += "It protects its wearer from the effects of both "
+            description += "it protects its wearer from the effects of both "
                            "fire and cold.";
             break;
         case SPARM_POSITIVE_ENERGY:
-            description += "It protects its wearer from the effects of "
+            description += "it protects its wearer from the effects of "
                            "negative energy.";
             break;
 
         // This is only for robes.
         case SPARM_ARCHMAGI:
-            description += "It increases the power of its wearer's magical "
+            description += "it increases the power of its wearer's magical "
                            "spells.";
             break;
         case SPARM_PRESERVATION:
-            description += "It protects its wearer from the effects of acid "
+            description += "it protects its wearer from the effects of acid "
                            "and corrosion.";
             break;
 
         case SPARM_REFLECTION:
-            description += "It reflects blocked missile attacks back in the "
+            description += "it reflects blocked missile attacks back in the "
                            "direction they came from.";
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            description += "It causes incoming damage to be divided between "
+            description += "it causes incoming damage to be divided between "
                            "the wearer's reserves of health and magic.";
             break;
 
         case SPARM_NORMAL:
             ASSERT(enchanted);
-            description += "It has no special ego (it is not resistant to "
+            description += "it has no special ego (it is not resistant to "
                            "fire, etc), but is still enchanted in some way - "
                            "positive or negative.";
 
@@ -1869,33 +1871,33 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves its wearer's accuracy and damage with "
+            description += "it improves its wearer's accuracy and damage with "
                            "ranged weapons, such as bows and javelins "
                            "(Slay +4).";
             break;
 
         // These are only for scarves.
         case SPARM_REPULSION:
-            description += "It protects its wearer by repelling missiles.";
+            description += "it protects its wearer by repelling missiles.";
             break;
 
 #if TAG_MAJOR_VERSION == 34
         case SPARM_CLOUD_IMMUNE:
-            description += "It does nothing special.";
+            description += "it does nothing special.";
             break;
 #endif
 
         case SPARM_HARM:
-            description += "It increases damage dealt and taken.";
+            description += "it increases damage dealt and taken.";
             break;
 
         case SPARM_SHADOWS:
-            description += "It reduces the distance the wearer can be seen at "
+            description += "it reduces the distance the wearer can be seen at "
                            "and can see.";
             break;
 
         case SPARM_RAMPAGING:
-            description += "Its wearer takes one free step when moving "
+            description += "its wearer takes one free step when moving "
                            "towards enemies.";
             break;
         }
