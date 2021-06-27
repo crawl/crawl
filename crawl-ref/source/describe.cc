@@ -534,6 +534,14 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
+static string _padded_artp_name(artefact_prop_type prop)
+{
+    string name = artp_name(prop);
+    name += ":";
+    name.append(9 - name.length(), ' ');
+    return name;
+}
+
 static string _randart_descrip(const item_def &item)
 {
     string description;
@@ -549,8 +557,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_STRENGTH, "It affects your strength (%d).", false},
         { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
         { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
-                        "weapons and melee attacks (%d).", false},
+        { ARTP_SLAYING, "It affects your accuracy & damage with ranged "
+                        "weapons and melee (%d).", false},
         { ARTP_FIRE, "fire", true},
         { ARTP_COLD, "cold", true},
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
@@ -600,59 +608,70 @@ static string _randart_descrip(const item_def &item)
         }
     }
 
+    bool need_newline = false;
     for (const property_descriptor &desc : propdescs)
     {
-        if (known_proprt(desc.property))
+        if (!known_proprt(desc.property)) // can this ever happen..?
+            continue;
+
+        string sdesc = desc.desc;
+
+        // FIXME Not the nicest hack.
+        char buf[80];
+        snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
+        sdesc = replace_all(sdesc, "%d", buf);
+
+        if (desc.is_graded_resist)
         {
-            string sdesc = desc.desc;
+            int idx = proprt[desc.property] + 3;
+            idx = min(idx, 6);
+            idx = max(idx, 0);
 
-            // FIXME Not the nicest hack.
-            char buf[80];
-            snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
-            sdesc = replace_all(sdesc, "%d", buf);
-
-            if (desc.is_graded_resist)
+            const char* prefixes[] =
             {
-                int idx = proprt[desc.property] + 3;
-                idx = min(idx, 6);
-                idx = max(idx, 0);
-
-                const char* prefixes[] =
-                {
-                    "It makes you extremely vulnerable to ",
-                    "It makes you very vulnerable to ",
-                    "It makes you vulnerable to ",
-                    "Buggy descriptor!",
-                    "It protects you from ",
-                    "It greatly protects you from ",
-                    "It renders you almost immune to "
-                };
-                sdesc = prefixes[idx] + sdesc + '.';
-            }
-
-            description += '\n';
-            description += sdesc;
+                "It makes you extremely vulnerable to ",
+                "It makes you very vulnerable to ",
+                "It makes you vulnerable to ",
+                "Buggy descriptor!",
+                "It protects you from ",
+                "It greatly protects you from ",
+                "It renders you almost immune to "
+            };
+            sdesc = prefixes[idx] + sdesc + '.';
         }
+
+        if (need_newline)
+            description += '\n';
+        description += make_stringf("%s %s",
+                                    _padded_artp_name(desc.property).c_str(),
+                                    sdesc.c_str());
+        need_newline = true;
     }
 
     if (known_proprt(ARTP_WILLPOWER))
     {
         const int stval = proprt[ARTP_WILLPOWER];
         char buf[80];
-        snprintf(buf, sizeof buf, "\nIt %s%s your willpower.",
+        snprintf(buf, sizeof buf, "%s%s It %s%s your willpower.",
+                 need_newline ? "\n" : "",
+                 _padded_artp_name(ARTP_WILLPOWER).c_str(),
                  (stval < -1 || stval > 1) ? "greatly " : "",
                  (stval < 0) ? "decreases" : "increases");
         description += buf;
+        need_newline = true;
     }
 
     if (known_proprt(ARTP_STEALTH))
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
+        snprintf(buf, sizeof buf, "%s%sIt makes you %s%s stealthy.",
+                 need_newline ? "\n" : "",
+                 _padded_artp_name(ARTP_STEALTH).c_str(),
                  (stval < -1 || stval > 1) ? "much " : "",
                  (stval < 0) ? "less" : "more");
         description += buf;
+        need_newline = true;
     }
 
     return description;
@@ -1978,7 +1997,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
 
             case RING_SLAYING:
                 description += make_stringf("\nIt affects your accuracy and"
-                      " damage with ranged weapons and melee attacks (%+d).",
+                      " damage with ranged weapons and melee (%+d).",
                       item.plus);
                 break;
 
