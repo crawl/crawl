@@ -674,7 +674,7 @@ static void _handle_wucad_mu(int cost)
     if (you.has_mutation(MUT_HP_CASTING))
         return;
 
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 81))
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS), 54))
         return;
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
@@ -691,11 +691,9 @@ static void _handle_wucad_mu(int cost)
         else
             lose_stat(STAT_INT, 1 + random2avg(5, 2));
     }
-    else
-    {
-        mpr("Magical energy flows into your mind!");
-        inc_mp(cost, true);
-    }
+
+    mpr("Magical energy flows into your mind!");
+    inc_mp(cost, true);
 }
 
 /**
