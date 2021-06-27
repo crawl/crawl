@@ -562,33 +562,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case STATUS_MAGIC_SAPPED:
-        if (you.props[SAP_MAGIC_KEY].get_int() >= 3)
-        {
-            inf.light_colour = RED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "extremely magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been greatly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 2)
-        {
-            inf.light_colour = LIGHTRED;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "very magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been significantly sapped.";
-        }
-        else if (you.props[SAP_MAGIC_KEY].get_int() == 1)
-        {
-            inf.light_colour = YELLOW;
-            inf.light_text   = "-Wiz";
-            inf.short_text   = "magic sapped";
-            inf.long_text    = "Your control over your magic has "
-                                "been sapped.";
-        }
-        break;
-
     case STATUS_BRIBE:
     {
         int bribe = 0;

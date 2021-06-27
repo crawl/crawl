@@ -200,9 +200,12 @@ You are covered in ice, and your movement speed is reduced.
 %%%%
 Sap status
 
-Your magic is sapped. Each time you cast a spell, there is a chance of the
-severity of the effect increasing, which causes your spellcasting success rate
-to fall.
+Your magic is sapped. Casting a spell will cause you to lose access to your
+magic, briefly preventing you from casting any further spells.
+%%%%
+-Cast status
+
+You are unable to cast spells.
 %%%%
 Brainless status
 
@@ -715,10 +718,6 @@ Water status
 
     return "You are currently " .. verb .. " " .. feat .. "."
 }}
-%%%%
--Wiz status
-
-Your control over your magic has been sapped.
 %%%%
 Attr status
 

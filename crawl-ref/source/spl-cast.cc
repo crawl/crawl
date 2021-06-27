@@ -382,9 +382,6 @@ int raw_spell_fail(spell_type spell)
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
 
-    if (you.props.exists(SAP_MAGIC_KEY))
-        chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
-
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 
     // Apply the effects of Vehumet and items of wizardry.
@@ -614,6 +611,13 @@ bool can_cast_spells(bool quiet, bool exegesis)
     {
         if (!quiet)
             mpr("You lack the mental capacity to cast spells.");
+        return false;
+    }
+
+    if (you.duration[DUR_NO_CAST])
+    {
+        if (!quiet)
+            mpr("You are unable to access your magic!");
         return false;
     }
 
@@ -1020,12 +1024,10 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             dec_hp(1, false);
         }
 
-        if (you.duration[DUR_SAP_MAGIC]
-            && you.props[SAP_MAGIC_KEY].get_int() < 3
-            && !fake_spell && coinflip())
+        if (you.duration[DUR_SAP_MAGIC] && !fake_spell)
         {
-            mprf(MSGCH_WARN, "Your control over your magic is sapped.");
-            you.props[SAP_MAGIC_KEY].get_int()++;
+            mprf(MSGCH_WARN, "You lose access to your magic!");
+            you.increase_duration(DUR_NO_CAST, 3 + random2(3));
         }
 
         // Make some noise if it's actually the player casting.

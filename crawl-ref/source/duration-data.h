@@ -421,13 +421,6 @@ static const duration_def duration_data[] =
       "frozen", "",
       "You are partly encased in ice.", D_DISPELLABLE,
       {{ "The ice encasing you melts away." }, {}, true }},
-    { DUR_SAP_MAGIC,
-      RED, "Sap",
-      "magic-sapped", "sap magic",
-      "Casting spells hinders your spell success.", D_DISPELLABLE,
-      {{ "Your magic seems less tainted.", []() {
-          you.props.erase(SAP_MAGIC_KEY);
-      }}}},
     { DUR_PORTAL_PROJECTILE,
       LIGHTBLUE, "PProj",
       "portalling projectiles", "portal projectile",
@@ -564,6 +557,15 @@ static const duration_def duration_data[] =
       "Your duel has come to an end.", D_EXPIRES,
       {{ "", okawaru_end_duel },
       { "Okawaru bids you farewell from the Arena.", 1 }}, 6},
+    { DUR_SAP_MAGIC, YELLOW, "Sap",
+      "magic-sapped", "sap magic",
+      "Casting spells may cause you to lose access to your magic.",
+      D_DISPELLABLE,
+      {{ "Your magic seems less tainted." }}},
+    { DUR_NO_CAST, RED, "-Cast",
+      "unable to cast spells", "no cast",
+      "You are unable to cast spells.", D_DISPELLABLE,
+      {{ "You regain access to your magic." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -623,7 +625,6 @@ static const duration_def duration_data[] =
     { DUR_SICKNESS, 0, "", "", "sickness", "", D_DISPELLABLE,
       {{ "You feel your health improve." }}},
 
-
 #if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_MAGIC_SAPPED, 0, "", "", "old magic sapped", "", D_NO_FLAGS},
@@ -656,7 +657,6 @@ static const duration_def duration_data[] =
     { DUR_FORTITUDE, 0, "", "", "old fortitude", "", D_NO_FLAGS},
     { DUR_WATER_HOLD_IMMUNITY, 0, "", "", "old drowning immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_REGENERATION, 0, "", "", "old regeneration", "", D_NO_FLAGS},
-    { DUR_NO_CAST, 0, "", "", "old no cast", "", D_NO_FLAGS},
     { DUR_GOURMAND, 0, "", "", "old gourmand", "", D_NO_FLAGS},
     { DUR_ABJURATION_AURA, 0, "", "", "old abjuration", "", D_NO_FLAGS},
     { DUR_INFUSION, 0, "", "", "old infusion", "", D_NO_FLAGS},
