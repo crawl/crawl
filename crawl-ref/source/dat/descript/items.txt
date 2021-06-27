@@ -1050,7 +1050,7 @@ disturbed. Tremorstones usually land slightly off-target, and the user is
 always at risk of being hit. However, armour is extremely effective at
 repelling the lightweight fragments of rock from a tremorstone's explosion, so
 a well-armoured wielder has little to fear. Evocations skill increases the
-number and power of the elementals' explosions.
+number of explosions.
 %%%%
 trident
 
