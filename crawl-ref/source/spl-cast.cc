@@ -1018,6 +1018,10 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             dec_hp(1, false);
         }
 
+        // Successfully casting LCS is faster
+        if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+            you.time_taken = div_rand_round(you.time_taken, 2);
+
         if (you.duration[DUR_SAP_MAGIC]
             && you.props[SAP_MAGIC_KEY].get_int() < 3
             && !fake_spell && coinflip())

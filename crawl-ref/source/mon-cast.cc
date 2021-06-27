@@ -4070,7 +4070,11 @@ bool handle_mon_spell(monster* mons)
 
     if (!(flags & MON_SPELL_INSTANT))
     {
-        mons->lose_energy(EUT_SPELL);
+        // Casts faster
+        if (spell_cast == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+            mons->lose_energy(EUT_SPELL, 2);
+        else
+            mons->lose_energy(EUT_SPELL);
         return true;
     }
 

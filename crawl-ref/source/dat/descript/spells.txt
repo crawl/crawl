@@ -866,7 +866,9 @@ be any mix of Fireball, Iceblast, and Ghostly Fireball.
 %%%%
 Lehudib's Crystal Spear spell
 
-Hurls a lethally sharp shard of crystal.
+Hurls a lethally sharp shard of crystal. The self-organizing nature of crystal
+causes a successful cast of the spell to occur rapidly, taking half the time
+of other conjurations.
 %%%%
 Lesser Beckoning spell
 
