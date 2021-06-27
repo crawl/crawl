@@ -213,7 +213,8 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
+         "salamander tyrant w:" .. d .. " / nagaraja w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
