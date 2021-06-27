@@ -439,9 +439,6 @@ LUARET1(you_deaths, number, you.deaths)
  * @function lives
  */
 LUARET1(you_lives, number, you.lives)
-#if TAG_MAJOR_VERSION == 34
-LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
-#endif
 
 /*** Where are you?
  * @treturn string
@@ -1301,9 +1298,6 @@ static const struct luaL_reg you_clib[] =
     { "under_penance", you_under_penance },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
-#if TAG_MAJOR_VERSION == 34
-    { "antimagic",    you_antimagic },
-#endif
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
 

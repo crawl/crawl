@@ -650,11 +650,6 @@ static const duration_def duration_data[] =
     { DUR_DOOM_HOWL_IMMUNITY, 0, "", "", "old howl immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_CONDENSATION_SHIELD, 0, "", "", "old condensation shield", "", D_NO_FLAGS},
     { DUR_PHASE_SHIFT, 0, "", "", "old phase shift", "", D_NO_FLAGS},
-    { DUR_ANTIMAGIC,
-        RED, "-Mag",
-        "antimagic", "",
-        "You have trouble accessing your magic.", D_DISPELLABLE | D_EXPIRES,
-        {{ "You regain control over your magic." }}, 27},
     { DUR_TELEPATHY, 0, "", "", "old telepathy", "", D_NO_FLAGS},
     { DUR_MAGIC_ARMOUR, 0, "", "", "old magic armour", "", D_NO_FLAGS},
     { DUR_MAGIC_SHIELD, 0, "", "", "old magic shield", "", D_NO_FLAGS},
@@ -671,5 +666,6 @@ static const duration_def duration_data[] =
     { DUR_STABBING, 0, "", "", "old stabbing", "", D_NO_FLAGS},
     { DUR_SCRYING, 0, "", "", "old scrying", "", D_NO_FLAGS},
     { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
+    { DUR_ANTIMAGIC, 0, "", "", "old antimagic", "", D_NO_FLAGS},
 #endif
 };
