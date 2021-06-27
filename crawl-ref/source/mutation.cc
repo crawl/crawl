@@ -335,6 +335,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             }
             if (mut == MUT_STINGER && drag == MONS_SWAMP_DRAGON)
                 return mutation_activity_type::FULL;
+            if (mut == MUT_STEAM_RESISTANCE && drag == MONS_STEAM_DRAGON)
+                return mutation_activity_type::FULL;
         }
         // Vampire bats keep their fangs.
         if (you.form == transformation::bat
