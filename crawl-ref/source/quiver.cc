@@ -26,6 +26,7 @@
 #include "movement.h"
 #include "options.h"
 #include "player.h"
+#include "potion.h"
 #include "prompt.h"
 #include "religion.h"
 #include "sound.h"
@@ -1487,6 +1488,122 @@ namespace quiver
         ability_type ability;
     };
 
+    struct consumable_action : public action
+    {
+        consumable_action(int slot=-1) : action(), item_slot(slot)
+        {
+        }
+
+        virtual void save(CrawlHashTable &save_target) const override; // defined below
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            return item_slot == static_cast<const consumable_action &>(other).item_slot;
+        }
+
+        bool is_valid() const override
+        {
+            if (item_slot < 0 || item_slot >= ENDOFPACK)
+                return false;
+            const item_def& c = you.inv[item_slot];
+            if (!c.defined()
+                || (c.base_type != OBJ_POTIONS && c.base_type != OBJ_SCROLLS))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        bool is_enabled() const override
+        {
+            if (item_slot < 0 || item_slot >= ENDOFPACK)
+                return false;
+            const item_def& c = you.inv[item_slot];
+            if (!c.defined())
+                return false;
+            else if (c.base_type == OBJ_POTIONS)
+            {
+                ASSERT(get_potion_effect(static_cast<potion_type>(c.sub_type)));
+                return you.can_drink(true) && !you.berserk()
+                    && get_potion_effect(static_cast<potion_type>(c.sub_type))->can_quaff();
+            }
+            else if (c.base_type == OBJ_SCROLLS)
+                return cannot_read_item_reason(c).empty();
+            else
+                return false; // ASSERT?
+        }
+
+        bool is_targeted() const override
+        {
+            return false; // XX blink
+        }
+
+        formatted_string quiver_description(bool short_desc) const override
+        {
+            // TODO: generalize this code
+            if (!is_valid())
+                return action::quiver_description(short_desc);
+
+            formatted_string qdesc;
+
+            const item_def& quiver = you.inv[item_slot];
+            ASSERT(quiver.link != NON_ITEM);
+            qdesc.textcolour(Options.status_caption_colour);
+            const char *quiver_verb = quiver.base_type == OBJ_POTIONS
+                                                            ? "Drink" : "Read";
+            qdesc.cprintf("%s: ", quiver_verb);
+
+            qdesc.textcolour(quiver_color());
+            qdesc += quiver.name(DESC_PLAIN, true);
+
+            return qdesc;
+        }
+
+        void trigger(dist &) override
+        {
+            if (!is_valid())
+                return;
+
+            item_def& c = you.inv[item_slot];
+            if (c.base_type == OBJ_POTIONS)
+                drink(&c);
+            else if (c.base_type == OBJ_SCROLLS)
+                read(&c);
+
+        }
+
+        int get_item() const override
+        {
+            return item_slot;
+        }
+
+        vector<shared_ptr<action>> get_fire_order(
+            bool allow_disabled=true, bool ignore_inscription=false) const override
+        {
+            UNUSED(ignore_inscription); // TODO: implement
+            // go by pack order, subsort potions before scrolls
+            vector<shared_ptr<action>> scrolls;
+            vector<shared_ptr<action>> result;
+            for (int slot = 0; slot < ENDOFPACK; slot++)
+            {
+                auto w = make_shared<consumable_action>(slot);
+                if (w->is_valid()
+                    && (allow_disabled || w->is_enabled()))
+                {
+                    if (you.inv[slot].base_type == OBJ_POTIONS)
+                        result.push_back(move(w));
+                    else
+                        scrolls.push_back(move(w));
+                }
+            }
+            result.insert(result.end(), scrolls.begin(), scrolls.end());
+            return result;
+        }
+
+    protected:
+        int item_slot;
+    };
 
     // TODO: generalize to misc evokables? Code should be similar if targeting
     // can be easily implemented
@@ -1897,6 +2014,12 @@ namespace quiver
         save_target["param"] = static_cast<int>(ability);
     }
 
+    void consumable_action::save(CrawlHashTable &save_target) const
+    {
+        save_target["type"] = "consumable_action";
+        save_target["param"] = static_cast<int>(item_slot);
+    }
+
     void wand_action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "wand_action";
@@ -1945,6 +2068,8 @@ namespace quiver
             return make_shared<spell_action>(static_cast<spell_type>(param));
         else if (type == "ability_action")
             return make_shared<ability_action>(static_cast<ability_type>(param));
+        else if (type == "consumable_action")
+            return make_shared<consumable_action>(param);
         else if (type == "wand_action")
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
@@ -2435,6 +2560,11 @@ namespace quiver
             if (a->is_valid() || !force)
                 return a;
             // otherwise, fall back on ammo
+        }
+        else if (you.inv[slot].base_type == OBJ_SCROLLS
+            || you.inv[slot].base_type == OBJ_POTIONS)
+        {
+            return make_shared<consumable_action>(slot);
         }
 
         // use ammo as the fallback -- may well end up invalid. This means that

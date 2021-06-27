@@ -2777,8 +2777,14 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string.
  */
-static string _cannot_read_item_reason(const item_def &item)
+string cannot_read_item_reason(const item_def &item)
 {
+    if (you.berserk())
+        return "You are too berserk!";
+
+    if (you.confused())
+        return "You are too confused!";
+
     // can read books, except for manuals...
     if (item.base_type == OBJ_BOOKS)
     {
@@ -2904,7 +2910,7 @@ void read(item_def* scroll)
             return;
     }
 
-    const string failure_reason = _cannot_read_item_reason(*scroll);
+    const string failure_reason = cannot_read_item_reason(*scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
