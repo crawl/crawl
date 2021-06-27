@@ -2534,7 +2534,9 @@ void bolt::drop_object(bool allow_mulch)
         return;
     }
 
-    if (!allow_mulch || !thrown_object_destroyed(item))
+    // Hack alert: we use hit_verb to determine whether a ranged attack hit.
+    const bool damned = item->props.exists(DAMNATION_BOLT_KEY) && !hit_verb.empty();
+    if (!allow_mulch || (!damned && !thrown_object_destroyed(item)))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
