@@ -676,25 +676,80 @@ namespace quiver
         }
     };
 
+    struct item_action : public action
+    {
+        item_action(string _save_key, int slot)
+            : action(),
+                item_slot(slot), save_key(_save_key)
+        {
+        }
+
+        bool equals(const action &other) const override
+        {
+            // type ensured in base class
+            auto &o = static_cast<const item_action &>(other);
+            return item_slot == o.item_slot
+                && save_key == o.save_key; // XX hacky
+        }
+
+        void save(CrawlHashTable &save_target) const override
+        {
+            ASSERT(!save_key.empty());
+            save_target["type"] = save_key;
+            save_target["param"] = item_slot;
+        }
+
+        int get_item() const override
+        {
+            return item_slot;
+        };
+
+        bool is_valid() const override
+        {
+            return item_slot >=0 && item_slot < ENDOFPACK
+                                        && you.inv[item_slot].defined();
+        }
+
+        formatted_string quiver_description(bool short_desc) const override
+        {
+            // TODO: generalize this code
+            if (!is_valid())
+                return action::quiver_description(short_desc);
+
+            formatted_string qdesc;
+
+            const item_def& quiver = you.inv[item_slot];
+            ASSERT(quiver.link != NON_ITEM);
+            qdesc.textcolour(Options.status_caption_colour);
+            qdesc.cprintf("%s: ", quiver_verb().c_str());
+
+            qdesc.textcolour(quiver_color());
+            qdesc += quiver.name(DESC_PLAIN, true);
+
+            return qdesc;
+        }
+
+        // TODO: can get_fire_order be generalized?
+
+        virtual string quiver_verb() const { return "Activate"; }
+        virtual bool is_enabled() const override = 0;
+        virtual void trigger(dist &) override = 0;
+
+    protected:
+        int item_slot;
+        string save_key;
+    };
+
     /**
      * An ammo_action is an action that fires ammo from a slot in the
      * inventory. This covers throwing; tossing and launching are handled by
      * a subclass.
      */
-    struct ammo_action : public action
+    struct ammo_action : public item_action
     {
-        // it could be simpler to have a distinct type for launcher ammo and
-        // throwing ammo
-        ammo_action(int slot=-1) : action(), ammo_slot(slot)
+        ammo_action(int slot=-1, string _save_key="ammo_action")
+            : item_action(_save_key, slot)
         {
-        }
-
-        virtual void save(CrawlHashTable &save_target) const override; // defined below
-
-        bool equals(const action &other) const override
-        {
-            // type ensured in base class
-            return ammo_slot == static_cast<const ammo_action &>(other).ammo_slot;
         }
 
         virtual item_def *get_launcher() const override
@@ -705,14 +760,14 @@ namespace quiver
         /// does the launch type match the action type and current weapon?
         virtual bool launch_type_check() const
         {
-            // will assert if ammo_slot is invalid
+            // will assert if item_slot is invalid
             // intentionally uses you.weapon() instead of get_launcher(): this
             // renders a throwing ammo invalid if the player is wielding a
             // launcher for it. There's no in principle reason to disallow
             // throwing stones while wielding a sling, but it's more confusing
             // than helpful.
             const launch_retval projected = is_launched(&you, you.weapon(),
-                                                        you.inv[ammo_slot]);
+                                                        you.inv[item_slot]);
             return projected == launch_retval::THROWN;
         }
 
@@ -723,7 +778,7 @@ namespace quiver
             if (!is_valid()) // sanity check
                 return true;
             const item_def *weapon = get_launcher();
-            const item_def& ammo = you.inv[ammo_slot];
+            const item_def& ammo = you.inv[item_slot];
             return action::do_inscription_check()
                 && (!weapon
                     || is_launched(&you, weapon, ammo) != launch_retval::LAUNCHED
@@ -745,12 +800,9 @@ namespace quiver
 
         virtual bool is_valid() const override
         {
+            if (!item_action::is_valid())
+                return false;
             if (you.has_mutation(MUT_NO_GRASPING))
-                return false;
-            if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
-                return false;
-            const item_def& ammo = you.inv[ammo_slot];
-            if (!ammo.defined())
                 return false;
 
             return launch_type_check();
@@ -768,7 +820,7 @@ namespace quiver
 
             // nets shouldn't be autofired with autofight_throw, only with
             // autofire.
-            if (you.inv[ammo_slot].sub_type == MI_THROWING_NET)
+            if (you.inv[item_slot].sub_type == MI_THROWING_NET)
                 return false;
 
             return true;
@@ -803,7 +855,7 @@ namespace quiver
             // Update the legacy quiver history data structure
             // TODO: eliminate this? History should be stored per quiver, not
             // globally
-            you.m_quiver_history.on_item_fired(you.inv[ammo_slot],
+            you.m_quiver_history.on_item_fired(you.inv[item_slot],
                     !target.fire_context || !target.fire_context->autoswitched);
 
             t = target; // copy back, in case they are different
@@ -811,19 +863,20 @@ namespace quiver
 
         virtual formatted_string quiver_description(bool short_desc) const override
         {
-            ASSERT_RANGE(ammo_slot, -1, ENDOFPACK);
+            ASSERT_RANGE(item_slot, -1, ENDOFPACK);
             // or error?
             if (!is_valid())
                 return action::quiver_description(short_desc);
 
             formatted_string qdesc;
 
-            const item_def& quiver = you.inv[ammo_slot];
+            const item_def& quiver = you.inv[item_slot];
             ASSERT(quiver.link != NON_ITEM);
             // TODO: or just lightgrey?
             qdesc.textcolour(Options.status_caption_colour);
             const launch_retval projected = is_launched(&you, get_launcher(),
                                                                     quiver);
+            // XX abstract to quiver verb?
             if (!short_desc)
             {
                 string verb = you.confused() ? "confused " : "";
@@ -858,11 +911,6 @@ namespace quiver
                 qdesc += quiver.name(DESC_PLAIN, true);
 
             return qdesc;
-        }
-
-        int get_item() const override
-        {
-            return ammo_slot;
         }
 
         virtual shared_ptr<action> find_replacement() const override
@@ -901,15 +949,14 @@ namespace quiver
             return result;
         }
 
-    protected:
-        int ammo_slot;
     };
 
     struct launcher_ammo_action : public ammo_action
     {
         // it could be simpler to have a distinct type for launcher ammo and
         // throwing ammo
-        launcher_ammo_action(int slot=-1) : ammo_action(slot)
+        launcher_ammo_action(int slot=-1)
+                                : ammo_action(slot, "launcher_ammo_action")
         {
         }
 
@@ -918,13 +965,11 @@ namespace quiver
             return you.weapon();
         }
 
-        virtual void save(CrawlHashTable &save_target) const override; // defined below
-
         bool launch_type_check() const override
         {
-            if (ammo_slot < 0 || !get_launcher())
+            if (item_slot < 0 || !get_launcher())
                 return false;
-            return you.inv[ammo_slot].launched_by(*get_launcher());
+            return you.inv[item_slot].launched_by(*get_launcher());
         }
 
         vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled)
@@ -961,11 +1006,9 @@ namespace quiver
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
-        fumble_action(int slot=-1) : ammo_action(slot)
+        fumble_action(int slot=-1) : ammo_action(slot, "fumble_action")
         {
         }
-
-        void save(CrawlHashTable &save_target) const override; // defined below
 
         // uses ammo_action fire order
 
@@ -976,15 +1019,7 @@ namespace quiver
 
         bool is_valid() const override
         {
-            if (you.has_mutation(MUT_NO_GRASPING))
-                return false;
-            if (ammo_slot < 0 || ammo_slot >= ENDOFPACK)
-                return false;
-            const item_def& ammo = you.inv[ammo_slot];
-            if (!ammo.defined())
-                return false;
-
-            return true;
+            return item_action::is_valid() && !you.has_mutation(MUT_NO_GRASPING);
         }
     };
 
@@ -1488,41 +1523,27 @@ namespace quiver
         ability_type ability;
     };
 
-    struct consumable_action : public action
+    struct consumable_action : public item_action
     {
-        consumable_action(int slot=-1) : action(), item_slot(slot)
+        consumable_action(int slot=-1)
+            : item_action("consumable_action", slot)
         {
-        }
-
-        virtual void save(CrawlHashTable &save_target) const override; // defined below
-
-        bool equals(const action &other) const override
-        {
-            // type ensured in base class
-            return item_slot == static_cast<const consumable_action &>(other).item_slot;
         }
 
         bool is_valid() const override
         {
-            if (item_slot < 0 || item_slot >= ENDOFPACK)
+            if (!item_action::is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (!c.defined()
-                || (c.base_type != OBJ_POTIONS && c.base_type != OBJ_SCROLLS))
-            {
-                return false;
-            }
-            return true;
+            return c.base_type == OBJ_POTIONS || c.base_type == OBJ_SCROLLS;
         }
 
         bool is_enabled() const override
         {
-            if (item_slot < 0 || item_slot >= ENDOFPACK)
+            if (!is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
-            if (!c.defined())
-                return false;
-            else if (c.base_type == OBJ_POTIONS)
+            if (c.base_type == OBJ_POTIONS)
             {
                 ASSERT(get_potion_effect(static_cast<potion_type>(c.sub_type)));
                 return you.can_drink(true) && !you.berserk()
@@ -1539,25 +1560,11 @@ namespace quiver
             return false; // XX blink
         }
 
-        formatted_string quiver_description(bool short_desc) const override
+        string quiver_verb() const override
         {
-            // TODO: generalize this code
             if (!is_valid())
-                return action::quiver_description(short_desc);
-
-            formatted_string qdesc;
-
-            const item_def& quiver = you.inv[item_slot];
-            ASSERT(quiver.link != NON_ITEM);
-            qdesc.textcolour(Options.status_caption_colour);
-            const char *quiver_verb = quiver.base_type == OBJ_POTIONS
-                                                            ? "Drink" : "Read";
-            qdesc.cprintf("%s: ", quiver_verb);
-
-            qdesc.textcolour(quiver_color());
-            qdesc += quiver.name(DESC_PLAIN, true);
-
-            return qdesc;
+                return "Buggy";
+            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
         }
 
         void trigger(dist &) override
@@ -1571,11 +1578,6 @@ namespace quiver
             else if (c.base_type == OBJ_SCROLLS)
                 read(&c);
 
-        }
-
-        int get_item() const override
-        {
-            return item_slot;
         }
 
         vector<shared_ptr<action>> get_fire_order(
@@ -1600,30 +1602,18 @@ namespace quiver
             result.insert(result.end(), scrolls.begin(), scrolls.end());
             return result;
         }
-
-    protected:
-        int item_slot;
     };
 
-    // TODO: generalize to misc evokables? Code should be similar if targeting
-    // can be easily implemented
-    struct wand_action : public action
+    struct wand_action : public item_action
     {
-        wand_action(int slot=-1) : action(), wand_slot(slot)
+        wand_action(int slot=-1, string _save_key="wand_action")
+            : item_action(_save_key, slot)
         {
-        }
-
-        virtual void save(CrawlHashTable &save_target) const override; // defined below
-
-        bool equals(const action &other) const override
-        {
-            // type ensured in base class
-            return wand_slot == static_cast<const wand_action &>(other).wand_slot;
         }
 
         bool is_enabled() const override
         {
-            return evoke_check(wand_slot, true);
+            return evoke_check(item_slot, true);
         }
 
         // n.b. implementing do_inscription_check for OPER_EVOKE is not needed
@@ -1631,12 +1621,8 @@ namespace quiver
 
         virtual bool is_valid() const override
         {
-            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
-                return false;
-            const item_def& wand = you.inv[wand_slot];
-            if (!wand.defined() || wand.base_type != OBJ_WANDS)
-                return false;
-            return true;
+            return item_action::is_valid()
+                            && you.inv[item_slot].base_type == OBJ_WANDS;
         }
 
         bool is_targeted() const override
@@ -1649,7 +1635,7 @@ namespace quiver
             if (!is_valid() || !is_enabled()) // need to check item validity
                 return false;
 
-            switch (you.inv[wand_slot].sub_type)
+            switch (you.inv[item_slot].sub_type)
             {
             case WAND_DIGGING:     // non-damaging wands
             case WAND_POLYMORPH:
@@ -1672,7 +1658,7 @@ namespace quiver
 
             if (!is_enabled())
             {
-                evoke_check(wand_slot); // for messaging
+                evoke_check(item_slot); // for messaging
                 return;
             }
 
@@ -1682,36 +1668,14 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            evoke_item(wand_slot, &target);
+            evoke_item(item_slot, &target);
 
             t = target; // copy back, in case they are different
         }
 
-        virtual string quiver_verb() const
+        virtual string quiver_verb() const override
         {
             return "Zap";
-        }
-
-        virtual formatted_string quiver_description(bool short_desc) const override
-        {
-            ASSERT_RANGE(wand_slot, -1, ENDOFPACK);
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-            formatted_string qdesc;
-
-            const item_def& quiver = you.inv[wand_slot];
-            ASSERT(quiver.link != NON_ITEM);
-            qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("%s: ", quiver_verb().c_str());
-
-            qdesc.textcolour(quiver_color());
-            qdesc += quiver.name(DESC_PLAIN, true);
-            return qdesc;
-        }
-
-        int get_item() const override
-        {
-            return wand_slot;
         }
 
         virtual vector<shared_ptr<action>> get_fire_order(
@@ -1737,9 +1701,6 @@ namespace quiver
             }
             return result;
         }
-
-    protected:
-        int wand_slot;
     };
 
     static bool _misc_needs_manual_targeting(int subtype)
@@ -1751,22 +1712,16 @@ namespace quiver
 
     struct misc_action : public wand_action
     {
-        misc_action(int slot=-1) : wand_action(slot)
+        misc_action(int slot=-1) : wand_action(slot, "misc_action")
         {
         }
 
-        void save(CrawlHashTable &save_target) const override; // defined below
-
         bool is_valid() const override
         {
-            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
-                return false;
-            const item_def& wand = you.inv[wand_slot];
             // MISC_ZIGGURAT is valid (so can be force quivered) but is skipped
             // in the fire order
-            if (!wand.defined() || wand.base_type != OBJ_MISCELLANY)
-                return false;
-            return true;
+            return item_action::is_valid()
+                            && you.inv[item_slot].base_type == OBJ_MISCELLANY;
         }
 
         // equals should work without override
@@ -1782,7 +1737,7 @@ namespace quiver
             if (!is_valid() || !is_enabled()) // need to check item validity
                 return false;
 
-            switch (you.inv[wand_slot].sub_type)
+            switch (you.inv[item_slot].sub_type)
             {
             case MISC_ZIGGURAT:     // non-damaging misc items
             case MISC_BOX_OF_BEASTS:
@@ -1798,7 +1753,7 @@ namespace quiver
         void trigger(dist &t) override
         {
             if (is_valid()
-                && _misc_needs_manual_targeting(you.inv[wand_slot].sub_type))
+                && _misc_needs_manual_targeting(you.inv[item_slot].sub_type))
             {
                 t.interactive = true;
             }
@@ -1814,7 +1769,7 @@ namespace quiver
         {
             if (!is_valid())
                 return false;
-            switch (you.inv[wand_slot].sub_type)
+            switch (you.inv[item_slot].sub_type)
             {
             case MISC_PHIAL_OF_FLOODS:
             case MISC_LIGHTNING_ROD:
@@ -1849,25 +1804,19 @@ namespace quiver
 
     struct artefact_evoke_action : public wand_action
     {
-        artefact_evoke_action(int slot=-1) : wand_action(slot)
+        artefact_evoke_action(int slot=-1)
+                        : wand_action(slot, "artefact_evoke_action")
         {
         }
 
-        // equals should work without override
-
-        void save(CrawlHashTable &save_target) const override; // defined below
-
         bool is_valid() const override
         {
-            if (wand_slot < 0 || wand_slot >= ENDOFPACK)
+            if (!item_action::is_valid())
                 return false;
 
-            const item_def& item = you.inv[wand_slot];
-            if (!item.defined() || !is_unrandom_artefact(item)
-                                || !item_is_equipped(item))
-            {
+            const item_def& item = you.inv[item_slot];
+            if (!is_unrandom_artefact(item) || !item_is_equipped(item))
                 return false;
-            }
 
             const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
 
@@ -1886,7 +1835,7 @@ namespace quiver
             if (!is_valid())
                 return false;
 
-            switch (you.inv[wand_slot].unrand_idx)
+            switch (you.inv[item_slot].unrand_idx)
             {
             case UNRAND_DISPATER:
                 // TODO: code duplication...
@@ -1916,7 +1865,7 @@ namespace quiver
             if (!is_valid() || !is_enabled()) // need to check item validity
                 return false;
 
-            switch (you.inv[wand_slot].unrand_idx)
+            switch (you.inv[item_slot].unrand_idx)
             {
             case UNRAND_OLGREB: // only indirect damage
             case UNRAND_ASMODEUS:
@@ -1931,7 +1880,7 @@ namespace quiver
             if (!is_valid())
                 return false;
             // is_valid checks the preconditions for this:
-            return get_unrand_entry(you.inv[wand_slot].unrand_idx)->targeted_evoke_func;
+            return get_unrand_entry(you.inv[item_slot].unrand_idx)->targeted_evoke_func;
         }
 
         string quiver_verb() const override
@@ -1952,7 +1901,7 @@ namespace quiver
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            evoke_item(wand_slot, &target);
+            evoke_item(item_slot, &target);
 
             t = target; // copy back, in case they are different
         }
@@ -1984,24 +1933,6 @@ namespace quiver
         save_target["type"] = "action";
     }
 
-    void ammo_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "ammo_action";
-        save_target["param"] = ammo_slot;
-    }
-
-    void launcher_ammo_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "launcher_ammo_action";
-        save_target["param"] = ammo_slot;
-    }
-
-    void fumble_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "fumble_action";
-        save_target["param"] = ammo_slot;
-    }
-
     void spell_action::save(CrawlHashTable &save_target) const
     {
         save_target["type"] = "spell_action";
@@ -2012,30 +1943,6 @@ namespace quiver
     {
         save_target["type"] = "ability_action";
         save_target["param"] = static_cast<int>(ability);
-    }
-
-    void consumable_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "consumable_action";
-        save_target["param"] = static_cast<int>(item_slot);
-    }
-
-    void wand_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "wand_action";
-        save_target["param"] = static_cast<int>(wand_slot);
-    }
-
-    void misc_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "misc_action";
-        save_target["param"] = static_cast<int>(wand_slot);
-    }
-
-    void artefact_evoke_action::save(CrawlHashTable &save_target) const
-    {
-        save_target["type"] = "artefact_evoke_action";
-        save_target["param"] = static_cast<int>(wand_slot);
     }
 
     // not currently used, but for completeness
@@ -2060,6 +1967,7 @@ namespace quiver
         const int param = source["param"].get_int();
 
         // is there something more elegant than this?
+        // TODO: use save_key for item_action subtypes?
         if (type == "ammo_action")
             return make_shared<ammo_action>(param);
         else if (type == "launcher_ammo_action")
