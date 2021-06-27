@@ -488,7 +488,8 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_IGNITION
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
-        || spell == SPELL_MANIFOLD_ASSAULT) // n.b. not an area spell
+        || spell == SPELL_MANIFOLD_ASSAULT
+        || spell == SPELL_MAXWELLS_COUPLING) // n.b. not an area spell
     {
         return true;
     }
@@ -1594,6 +1595,9 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_DAZZLING_FLASH:
         return cast_dazzling_flash(pow, false, true) == spret::abort;
 
+     case SPELL_MAXWELLS_COUPLING:
+         return cast_maxwells_coupling(pow, false, true) == spret::abort;
+
      case SPELL_INTOXICATE:
          return cast_intoxicate(-1, false, true) == spret::abort;
 
@@ -1881,7 +1885,6 @@ const set<spell_type> removed_spells =
     SPELL_TWISTED_RESURRECTION,
     SPELL_RANDOM_EFFECTS,
     SPELL_HYDRA_FORM,
-    SPELL_ABSOLUTE_ZERO,
     SPELL_VORTEX,
 #endif
 };

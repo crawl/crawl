@@ -1288,6 +1288,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
+    case SPELL_MAXWELLS_COUPLING:
+        return make_unique<targeter_maxwells_coupling>(range);
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
 
@@ -2295,6 +2297,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
 
+    case SPELL_MAXWELLS_COUPLING:
+        return cast_maxwells_coupling(powc, fail);
+
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return cast_imb(powc, fail);
 
@@ -2603,6 +2608,8 @@ string spell_damage_string(spell_type spell, bool evoked)
 {
     switch (spell)
     {
+        case SPELL_MAXWELLS_COUPLING:
+            return "∞";
         case SPELL_CONJURE_FLAME:
             return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:

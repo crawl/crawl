@@ -2999,6 +2999,19 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail)
 
 void handle_searing_ray()
 {
+    if (you.attribute[ATTR_SEARING_RAY] == 0)
+        return;
+
+    // Convert prepping value into stage one value (so it can fire next turn)
+    if (you.attribute[ATTR_SEARING_RAY] == -1)
+    {
+        you.attribute[ATTR_SEARING_RAY] = 1;
+        return;
+    }
+
+    if (crawl_state.prev_cmd != CMD_WAIT)
+        end_searing_ray();
+
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
     // All of these effects interrupt a channeled ray
@@ -3568,6 +3581,158 @@ dice_def ramparts_damage(int pow, bool random)
     if (random)
         size = 2 + div_rand_round(pow, 5);
     return dice_def(1, size);
+}
+
+static bool _maxwells_target_check(monster &m)
+{
+    return _act_worth_targeting(you, m)
+            && !m.wont_attack();
+}
+
+// returns the closest target to the player, choosing randomly if there are more
+// than one (see `fair` argument to distance_iterator).
+static monster* _find_maxwells_target(int radius, bool tracer)
+{
+    for (distance_iterator di(you.pos(), !tracer, true, radius); di; ++di)
+    {
+        monster *mon = monster_at(*di);
+        if (mon && _maxwells_target_check(*mon)
+            && (!tracer || you.can_see(*mon)))
+        {
+            return mon;
+        }
+    }
+
+    return nullptr;
+}
+
+// find all possible targets at the closest distance; used for targeting
+vector<monster *> find_maxwells_possibles(int radius)
+{
+    vector<monster *> result;
+    monster *seed = _find_maxwells_target(radius, true);
+    if (seed)
+    {
+        const int distance = max(abs(you.pos().x - seed->pos().x),
+                                        abs(you.pos().y - seed->pos().y));
+        dprf("searching at rad %d, initial radius %d", distance, radius);
+        for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
+        {
+            monster *mon = monster_at(*di);
+            if (mon && _maxwells_target_check(*mon) && you.can_see(*mon))
+                result.push_back(mon);
+        }
+    }
+    return result;
+}
+
+spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
+{
+    monster* const mon = _find_maxwells_target(
+            spell_range(SPELL_MAXWELLS_COUPLING, pow), tracer);
+
+    if (tracer)
+    {
+        if (!mon || !you.can_see(*mon))
+            return spret::abort;
+        else
+            return spret::success;
+    }
+
+    fail_check();
+
+    mpr("You begin accumulating electric charge.");
+    string msg = "(Press <w>%</w> to continue charging.)";
+    insert_commands(msg, { CMD_WAIT });
+    mpr(msg);
+
+    you.props["maxwells_charge_time"] =
+        - (30 + div_rand_round(random2((200 - pow) * 40), 200));
+    you.props["maxwells_range"] = spell_range(SPELL_MAXWELLS_COUPLING, pow);
+    return spret::success;
+}
+
+void discharge_maxwells_coupling()
+{
+    monster* const mon = _find_maxwells_target(
+                             you.props["maxwells_range"].get_int(), false);
+
+    if (!mon)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+        flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
+
+        god_conduct_trigger conducts[3];
+        set_attack_conducts(conducts, *mon, you.can_see(*mon));
+
+        if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
+        {
+            // need to do this here, because react_to_damage is never called
+            mprf("A cloud of jellies burst out of %s as the current"
+                 " ripples through it!", mon->name(DESC_THE, false).c_str());
+            trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
+        }
+        else
+        {
+            mprf("The electricity discharges through %s!",
+                 you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
+        }
+
+        const coord_def pos = mon->pos();
+        bool goldify = have_passive(passive_t::goldify_corpses);
+
+        if (goldify)
+            simple_monster_message(*mon, " vapourizes and condenses as gold!");
+        else
+            simple_monster_message(*mon, " vapourizes in an electric haze!");
+
+        item_def* corpse = monster_die(*mon, KILL_YOU,
+                                        actor_to_death_source(&you));
+        if (corpse)
+            destroy_item(corpse->index());
+
+        noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
+    }
+}
+
+void handle_maxwells_coupling()
+{
+    if (!you.props.exists("maxwells_charge_time"))
+        return;
+
+    int charging_auts_remaining = you.props["maxwells_charge_time"].get_int();
+
+    if (charging_auts_remaining < 0)
+    {
+        you.props["maxwells_charge_time"] = - (charging_auts_remaining
+                                            + you.time_taken);
+        return;
+    }
+
+    if (crawl_state.prev_cmd != CMD_WAIT)
+    {
+        end_maxwells_coupling();
+        return;
+    }
+
+    if (charging_auts_remaining <= you.time_taken)
+    {
+        you.time_taken = charging_auts_remaining;
+        you.props.erase("maxwells_charge_time");
+        discharge_maxwells_coupling();
+        return;
+    }
+
+    you.props["maxwells_charge_time"] = charging_auts_remaining - you.time_taken;
+}
+
+void end_maxwells_coupling()
+{
+    mpr("The insufficient charge disappates harmlessly.");
+    you.props.erase("maxwells_charge_time");
+    return;
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)

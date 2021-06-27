@@ -930,6 +930,12 @@ Mass Confusion spell
 
 Causes confusion in all who gaze upon the caster.
 %%%%
+Maxwell's Coupling spell
+
+Gradually builds up electric charge in the caster. When a critical threshold
+is reached the charge couples with the nearest foe, vaporizing them instantly.
+Higher spell power will accumulate charge more rapidly.
+%%%%
 Mephitic Cloud spell
 
 Conjures up a short-lived cloud of noxious fumes, which may cause confusion in

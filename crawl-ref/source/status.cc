@@ -696,6 +696,14 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_MAXWELLS:
+        if (you.props.exists("maxwells_charge_time"))
+        {
+            inf.light_colour = LIGHTCYAN;
+            inf.light_text   = "Charge";
+        }
+        break;
+
     default:
         if (!found)
         {
