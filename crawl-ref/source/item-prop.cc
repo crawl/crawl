@@ -30,6 +30,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
+#include "spl-book.h" // book_exists
 #include "spl-wpnench.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -2031,10 +2032,7 @@ bool item_is_horn_of_geryon(const item_def &item)
 bool item_is_spellbook(const item_def &item)
 {
     return item.base_type == OBJ_BOOKS
-#if TAG_MAJOR_VERSION == 34
-           && item.sub_type != BOOK_BUGGY_DESTRUCTION
-#endif
-           && item.sub_type != BOOK_MANUAL;
+        && book_exists((book_type)item.sub_type);
 }
 
 //

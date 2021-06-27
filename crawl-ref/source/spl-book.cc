@@ -153,6 +153,7 @@ bool book_exists(book_type bt)
     case BOOK_RANDART_LEVEL:
     case BOOK_RANDART_THEME:
     case BOOK_MANUAL:
+    case NUM_BOOKS:
         return false;
     default:
         return !item_type_removed(OBJ_BOOKS, bt);
