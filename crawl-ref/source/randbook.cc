@@ -96,7 +96,7 @@ spschool matching_book_theme(const vector<spell_type> &forced_spells)
 /// Is the given spell found in rarebooks?
 static bool _is_rare_spell(spell_type spell)
 {
-    for (int i = 0; i < NUM_BOOKS; ++i)
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         const book_type book = static_cast<book_type>(i);
         if (is_rare_book(book))
@@ -120,7 +120,7 @@ static bool _agent_spell_filter(int agent, spell_type spell)
 {
     // Only use spells available in books you might find lying about
     // the dungeon; rarebook spells are restricted to Sif-made books.
-    if (!is_player_book_spell(spell)
+    if (spell_rarity(spell) == -1
         && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
     {
         return false;
@@ -383,14 +383,19 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = 0; i < NUM_BOOKS; ++i)
+        for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
         {
             const book_type book = static_cast<book_type>(i);
-            if (!is_rare_book(book))
-                continue;
-            // Add spells in rarebooks that aren't in other books.
-            for (spell_type spell : spellbook_template(book))
-                if (!is_player_book_spell(spell, false))                special_spells.push_back(spell);
+            if (is_rare_book(book))
+            {
+                for (spell_type spell : spellbook_template(book))
+                {
+                    if (spell_rarity(spell) != -1)
+                        continue;
+
+                    special_spells.push_back(spell);
+                }
+            }
         }
 
         sort(special_spells.begin(), special_spells.end());
@@ -405,8 +410,8 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
             continue;
 
         // Only use spells available in books you might find lying about
-        // the dungeon. (No monster spells, no rarebook spells.)
-        if (!is_player_book_spell(spell, false))
+        // the dungeon.
+        if (spell_rarity(spell) == -1)
         {
             bool skip_spell = true;
             while ((unsigned int) specnum < special_spells.size()

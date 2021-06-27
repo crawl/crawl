@@ -323,6 +323,10 @@ static int _item_max_sub_type(item_base_type base_type)
     int num = 0;
     switch (base_type)
     {
+    case ITEM_SPELLBOOKS:
+        // Last subtype value of spellbooks within the book object class;
+        num = BOOK_RANDART_THEME + 1;
+        break;
     case ITEM_MANUALS:
         num = NUM_SKILLS;
         break;

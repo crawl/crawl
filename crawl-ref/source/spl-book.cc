@@ -30,7 +30,6 @@
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
-#include "random-pick.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -146,19 +145,84 @@ vector<spell_type> spellbook_template(book_type book)
     return spellbook_templates[book];
 }
 
-bool book_exists(book_type bt)
+// Rarity 100 is reserved for unused books.
+int book_rarity(book_type which_book)
 {
-    switch (bt)
+    if (item_type_removed(OBJ_BOOKS, which_book))
+        return 100;
+
+    switch (which_book)
     {
-    case BOOK_RANDART_LEVEL:
-    case BOOK_RANDART_THEME:
+    case BOOK_MINOR_MAGIC:
+    case BOOK_MISFORTUNE:
+    case BOOK_CANTRIPS:
+        return 1;
+
+    case BOOK_CHANGES:
+    case BOOK_MALEDICT:
+        return 2;
+
+    case BOOK_CONJURATIONS:
+    case BOOK_NECROMANCY:
+    case BOOK_CALLINGS:
+        return 3;
+
+    case BOOK_FLAMES:
+    case BOOK_FROST:
+    case BOOK_AIR:
+    case BOOK_GEOMANCY:
+        return 4;
+
+    case BOOK_YOUNG_POISONERS:
+    case BOOK_DEBILITATION:
+        return 5;
+
+    case BOOK_CLOUDS:
+    case BOOK_POWER:
+        return 6;
+
+    case BOOK_HEXES:
+    case BOOK_PARTY_TRICKS:
+        return 7;
+
+    case BOOK_TRANSFIGURATIONS:
+        return 8;
+
+    case BOOK_FIRE:
+    case BOOK_ICE:
+    case BOOK_SKY:
+    case BOOK_EARTH:
+    case BOOK_UNLIFE:
+    case BOOK_SPATIAL_TRANSLOCATIONS:
+        return 10;
+
+    case BOOK_TEMPESTS:
+    case BOOK_DEATH:
+    case BOOK_SUMMONINGS:
+        return 11;
+
+    case BOOK_BURGLARY:
+    case BOOK_ALCHEMY:
+    case BOOK_DREAMS:
+    case BOOK_FEN:
+        return 12;
+
+    case BOOK_WARP:
+    case BOOK_DRAGON:
+        return 15;
+
+    case BOOK_ANNIHILATIONS:
+    case BOOK_GRAND_GRIMOIRE:
+    case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
-    case NUM_BOOKS:
-        return false;
+        return 20;
+
     default:
-        return !item_type_removed(OBJ_BOOKS, bt);
+        return 1;
     }
 }
+
+static uint8_t _lowest_rarity[NUM_SPELLS];
 
 static const set<book_type> rare_books =
 {
@@ -170,18 +234,24 @@ bool is_rare_book(book_type type)
     return rare_books.find(type) != rare_books.end();
 }
 
-#ifdef DEBUG
-void validate_spellbooks()
+void init_spell_rarities()
 {
-    for (int i = 0; i < NUM_BOOKS; ++i)
+    for (int i = 0; i < NUM_SPELLS; ++i)
+        _lowest_rarity[i] = 255;
+
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         const book_type book = static_cast<book_type>(i);
-        if (!book_exists(book))
+        // Manuals and books of destruction are not even part of this loop.
+        if (is_rare_book(book))
             continue;
 
+#ifdef DEBUG
         spell_type last = SPELL_NO_SPELL;
+#endif
         for (spell_type spell : spellbook_template(book))
         {
+#ifdef DEBUG
             ASSERT(spell != SPELL_NO_SPELL);
             if (last != SPELL_NO_SPELL
                 && spell_difficulty(last) > spell_difficulty(spell))
@@ -211,22 +281,21 @@ void validate_spellbooks()
                     item.name(DESC_PLAIN, false, true).c_str(),
                     spell_title(spell));
             }
+#endif
+
+            const int rarity = book_rarity(book);
+            if (rarity < _lowest_rarity[spell])
+                _lowest_rarity[spell] = rarity;
         }
     }
 }
-#endif
 
-bool is_player_book_spell(spell_type which_spell, bool include_rare_books)
+bool is_player_book_spell(spell_type which_spell)
 {
-    for (int i = 0; i < NUM_BOOKS; ++i)
-    {
-        auto bt = static_cast<book_type>(i);
-        if (!book_exists(bt) || (!include_rare_books && is_rare_book(bt)))
-            continue;
-        for (spell_type spell : spellbook_template(bt))
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+        for (spell_type spell : spellbook_template(static_cast<book_type>(i)))
             if (spell == which_spell)
                 return true;
-    }
     return false;
 }
 
@@ -252,6 +321,16 @@ bool is_player_spell(spell_type which_spell)
         && (is_player_book_spell(which_spell)
             || is_wand_spell(which_spell)
             || _player_nonbook_spells.count(which_spell) > 0);
+}
+
+int spell_rarity(spell_type which_spell)
+{
+    const int rarity = _lowest_rarity[which_spell];
+
+    if (rarity == 255)
+        return -1;
+
+    return rarity;
 }
 
 /**
@@ -1062,70 +1141,4 @@ spret divine_exegesis(bool fail)
         return spret::success;
 
     return spret::abort;
-}
-
-/// For a given dungeon depth (or item level), how much weight should we give
-/// to a spellbook for having a spell of the given level in it?
-/// We add a flat 10 to all these weights later.
-static const random_pick_entry<int> spell_level_weights[] = {
-
-    {  0, 35, 100, FLAT, 1 },
-
-    {  0, 35, 100, FLAT, 2 },
-
-    {  0, 35, 100, FLAT, 3 },
-
-    {  4,  8, 100, RISE, 4 },
-    {  9, 35, 100, FLAT, 4 },
-
-    {  6, 10, 100, RISE, 5 },
-    { 11, 35,  80, FLAT, 5 },
-
-    { 10, 14, 100, RISE, 6 },
-    { 15, 35, 100, FLAT, 6 },
-
-    { 14, 22, 100, RISE, 7 },
-    { 23, 35, 100, FLAT, 7 },
-
-    { 18, 26, 100, RISE, 8 },
-    { 27, 35, 100, FLAT, 8 },
-
-    { 22, 30, 100, RISE, 9 },
-    { 31, 35, 100, FLAT, 9 },
-};
-
-/// Cap item_level at this for generation. This is roughly the bottom of the hells.
-static const int MAX_BOOK_LEVEL = 35;
-
-static int _book_weight(book_type book, int item_level, int scale)
-{
-    item_level = min(item_level, MAX_BOOK_LEVEL);
-    random_picker<int, 9> spell_weighter;
-    int n_spells = 0;
-    int weight = 0;
-    for (spell_type spell : spellbook_template(book))
-    {
-        const int lvl = spell_difficulty(spell);
-        const int spell_weight =
-            spell_weighter.probability_at(lvl, spell_level_weights,
-                                          item_level, scale);
-        weight += spell_weight + scale/20; // Every spell gets a flat weight.
-        ++n_spells;
-    }
-    item_def debug;
-    debug.base_type = OBJ_BOOKS;
-    debug.sub_type = book;
-    return weight / n_spells;
-}
-
-book_type choose_book_type(int item_level)
-{
-    map<book_type, int> book_weights;
-    for (int i = 0; i < NUM_BOOKS; i++)
-    {
-        const book_type bt = (book_type)i;
-        if (book_exists(bt))
-            book_weights[bt] = _book_weight(bt, item_level, 1000);
-    }
-    return *random_choose_weighted(book_weights);
 }
