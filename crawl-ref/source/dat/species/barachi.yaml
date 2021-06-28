@@ -49,6 +49,8 @@ mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
+  - JOB_WARPER
+  - JOB_ARCANE_MARKSMAN
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
 # start TAG_MAJOR_VERSION == 34
