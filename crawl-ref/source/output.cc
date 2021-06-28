@@ -2479,6 +2479,10 @@ static vector<formatted_string> _get_overview_resistances(
                             player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS))
            + "\n";
 
+    const int archmagi = you.archmagi(calc_unid);
+    if (archmagi)
+        out += _resist_composer("Archmagi", cwidth, archmagi) + "\n";
+
     const int rclar = you.clarity(calc_unid);
     const int stasis = you.stasis();
     // TODO: what about different levels of anger/berserkitis?
