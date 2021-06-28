@@ -2437,7 +2437,7 @@ ENDMAP
 #
 # Encompass endings
 # These do not place huts in favor of a more standard vault structure and
-# more varied/unusual monsters. Please keep the total weight of these
+# more themed/unusual monsters. Please keep the total weight of these
 # endings low relative to the traditional endings.
 #
 ###############################################################################
@@ -2445,18 +2445,18 @@ ENDMAP
 NAME:   shoals_end_encompass_hellmonk_lost_city
 TAGS:   ruin
 : set_border_fill_type("open_sea")
-PLACE:  Shoals:$
 ORIENT: encompass
+PLACE:  Shoals:$
 WEIGHT: 2
+KITEM:  O = barnacled rune of Zot
 MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
+KMONS:  O = sphinx
+KMONS:  P = plant
 NSUBST: | = 1:O / *:|
 SUBST:  1 = 1.., 2 = 2.., 3 = 334, G = G.
 SUBST:  ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
 SUBST:  . = .........W
 NSUBST: ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
-KITEM:  O = barnacled rune of Zot
-KMONS:  O = sphinx
-KMONS:  P = plant
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -2468,9 +2468,9 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwxxx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwxxx...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrccc1..1cccwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrrcc........ccxxxwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwxxpppxxx...xrr+...2...3.|c1.xxwwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWxxpppxx...xxxrrcc........cc...xxwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrrcc.......|ccxxxwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwxxpppxxx...xrr+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWxxpppxx...xxxrrcc.......|cc...xxwwwwwwwwwwww
 wwwwwwwwWWWWWWWWWxxpppxx...xxxxrrrccc1..1ccc.....xxwwwwwwwwwww
 wwwwwwwWWWWWWWWWxxpppxx...xxxxxxxrrrcccccc.......2xwwwwwwwwwww
 wwwwwwWWW'''WWWxxpppxx.....yyyy2xxxrrrr.......Gx..xwwwwwwwwwww
@@ -2494,9 +2494,9 @@ wwwwwwWW''''''Wxxqqqxxxxxxxxxzzzxxsss......1xxxx..xwwwwwwwwwww
 wwwwwwWWW'''WWWxxqqqxx.....zzzz2xxxssss1......Gx..xwwwwwwwwwww
 wwwwwwWWWWWWWWWWxxqqqxx...xxxxxxxssscccccc.......2xwwwwwwwwwww
 wwwwwwwWWWWWWWWWWxxqqqxx...xxxxsssccc1..1ccc.....xxwwwwwwwwwww
-wwwwwwwwWWWWWWWWWWxxqqqxx...xxxsscc........cc...xxwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWWxxqqqxxx...xss+...2...3.|c1.xxwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwxxxqqqxxxsssscc........ccxxxwwwwwwwwwwwwww
+wwwwwwwwWWWWWWWWWWxxqqqxx...xxxsscc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWWxxqqqxxx...xss+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxxxqqqxxxsssscc.......|ccxxxwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwxxx...xxxsssccc1..1cccwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwxxx2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwxxx......sssxwwwwwwwwwwwwwwwwwwwwwww
@@ -2676,7 +2676,7 @@ ENDMAP
 
 NAME:   storm_palace_corner_pillars
 TAGS:   storm_palace_corner allow_dup no_pool_fixup
-SUBST:  ; = AGG..., W : wWW 
+SUBST:  ; = AGG..., W : wWW
 MAP
 ...........
 .WWWW;WWWW.
