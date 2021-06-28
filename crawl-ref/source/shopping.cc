@@ -77,33 +77,33 @@ int artefact_value(const item_def &item)
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 6 * prop[ ARTP_AC ]
-            + 6 * prop[ ARTP_EVASION ]
-            + 4 * prop[ ARTP_SHIELDING ]
-            + 6 * prop[ ARTP_SLAYING ]
-            + 3 * prop[ ARTP_STRENGTH ]
-            + 3 * prop[ ARTP_INTELLIGENCE ]
-            + 3 * prop[ ARTP_DEXTERITY ]
-            + 4 * prop[ ARTP_HP ]
-            + 3 * prop[ ARTP_MAGICAL_POWER ];
+    ret += 6 * prop[ARTP_AC]
+           + 6 * prop[ARTP_EVASION]
+           + 4 * prop[ARTP_SHIELDING]
+           + 6 * prop[ARTP_SLAYING]
+           + 3 * prop[ARTP_STRENGTH]
+           + 3 * prop[ARTP_INTELLIGENCE]
+           + 3 * prop[ARTP_DEXTERITY]
+           + 4 * prop[ARTP_HP]
+           + 3 * prop[ARTP_MAGICAL_POWER];
 
     // These resistances have meaningful levels
-    if (prop[ ARTP_FIRE ] > 0)
-        ret += 5 + 5 * (prop[ ARTP_FIRE ] * prop[ ARTP_FIRE ]);
-    else if (prop[ ARTP_FIRE ] < 0)
+    if (prop[ARTP_FIRE] > 0)
+        ret += 5 + 5 * (prop[ARTP_FIRE] * prop[ARTP_FIRE]);
+    else if (prop[ARTP_FIRE] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_COLD ] > 0)
-        ret += 5 + 5 * (prop[ ARTP_COLD ] * prop[ ARTP_COLD ]);
-    else if (prop[ ARTP_COLD ] < 0)
+    if (prop[ARTP_COLD] > 0)
+        ret += 5 + 5 * (prop[ARTP_COLD] * prop[ARTP_COLD]);
+    else if (prop[ARTP_COLD] < 0)
         ret -= 10;
 
-    if (prop[ ARTP_WILLPOWER ] > 0)
-        ret += 4 + 4 * prop[ ARTP_WILLPOWER ];
-    else if (prop[ ARTP_WILLPOWER ] < 0)
+    if (prop[ARTP_WILLPOWER] > 0)
+        ret += 4 + 4 * prop[ARTP_WILLPOWER];
+    else if (prop[ARTP_WILLPOWER] < 0)
         ret -= 6;
 
-    if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
+    if (prop[ARTP_NEGATIVE_ENERGY] > 0)
         ret += 3 + 3 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
 
     // Discount Stlth-, charge for Stlth+
@@ -113,71 +113,71 @@ int artefact_value(const item_def &item)
         ret += 2 * prop[ARTP_STEALTH];
 
     // only one meaningful level:
-    if (prop[ ARTP_POISON ])
+    if (prop[ARTP_POISON])
         ret += 6;
 
     // only one meaningful level (hard to get):
-    if (prop[ ARTP_ELECTRICITY ])
+    if (prop[ARTP_ELECTRICITY])
         ret += 10;
 
     // only one meaningful level (hard to get):
-    if (prop[ ARTP_RCORR ])
+    if (prop[ARTP_RCORR])
         ret += 8;
 
     // only one meaningful level (hard to get):
-    if (prop[ ARTP_RMUT ])
+    if (prop[ARTP_RMUT])
         ret += 8;
 
-    if (prop[ ARTP_SEE_INVISIBLE ])
+    if (prop[ARTP_SEE_INVISIBLE])
         ret += 6;
 
     // abilities:
-    if (prop[ ARTP_FLY ])
+    if (prop[ARTP_FLY])
         ret += 3;
 
-    if (prop[ ARTP_BLINK ])
+    if (prop[ARTP_BLINK])
         ret += 10;
 
-    if (prop[ ARTP_BERSERK ])
+    if (prop[ARTP_BERSERK])
         ret += 5;
 
-    if (prop[ ARTP_INVISIBLE ])
+    if (prop[ARTP_INVISIBLE])
         ret += 10;
 
-    if (prop[ ARTP_ANGRY ])
+    if (prop[ARTP_ANGRY])
         ret -= 3;
 
-    if (prop[ ARTP_CAUSE_TELEPORTATION ])
+    if (prop[ARTP_CAUSE_TELEPORTATION])
         ret -= 3;
 
-    if (prop[ ARTP_NOISE ])
+    if (prop[ARTP_NOISE])
         ret -= 5;
 
-    if (prop[ ARTP_PREVENT_TELEPORTATION ])
+    if (prop[ARTP_PREVENT_TELEPORTATION])
         ret -= 8;
 
-    if (prop[ ARTP_PREVENT_SPELLCASTING ])
+    if (prop[ARTP_PREVENT_SPELLCASTING])
         ret -= 10;
 
-    if (prop[ ARTP_CONTAM ])
+    if (prop[ARTP_CONTAM])
         ret -= 8;
 
-    if (prop[ ARTP_CORRODE ])
+    if (prop[ARTP_CORRODE])
         ret -= 8;
 
-    if (prop[ ARTP_DRAIN ])
+    if (prop[ARTP_DRAIN])
         ret -= 8;
 
-    if (prop[ ARTP_SLOW ])
+    if (prop[ARTP_SLOW])
         ret -= 8;
 
-    if (prop[ ARTP_FRAGILE ])
+    if (prop[ARTP_FRAGILE])
         ret -= 8;
 
-    if (prop[ ARTP_RMSL ])
+    if (prop[ARTP_RMSL])
         ret += 20;
 
-    if (prop[ ARTP_CLARITY ])
+    if (prop[ARTP_CLARITY])
         ret += 20;
 
     return (ret > 0) ? ret : 0;
