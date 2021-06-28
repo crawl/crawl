@@ -1514,8 +1514,9 @@ static bool _randart_is_conflicting(const item_def &item,
     // see also _artp_can_go_on_item
 
     if (proprt[ARTP_PREVENT_SPELLCASTING]
-        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0
-        || proprt[ARTP_ARCHMAGI])
+        && (proprt[ARTP_INTELLIGENCE] > 0
+            || proprt[ARTP_MAGICAL_POWER] > 0
+            || proprt[ARTP_ARCHMAGI]))
     {
         return true;
     }
