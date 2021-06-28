@@ -351,8 +351,6 @@ const vector<god_power> god_powers[NUM_GODS] =
     // Pakellas
     {
         { 0, "gain magical power from killing" },
-        { 3, ABIL_PAKELLAS_DEVICE_SURGE,
-             "spend magic to empower your devices" },
     },
 #endif
 
@@ -844,13 +842,6 @@ static void _inc_penance(god_type god, int val)
                 you.redraw_armour_class = true;
             }
         }
-#if TAG_MAJOR_VERSION == 34
-        else if (god == GOD_PAKELLAS)
-        {
-            if (you.duration[DUR_DEVICE_SURGE])
-                you.duration[DUR_DEVICE_SURGE] = 0;
-        }
-#endif
         else if (god == GOD_SIF_MUNA)
         {
             if (you.duration[DUR_CHANNEL_ENERGY])
@@ -3170,8 +3161,6 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_PAKELLAS:
         simple_god_message(" continues to block your magic from regenerating.",
                            old_god);
-        if (you.duration[DUR_DEVICE_SURGE])
-            you.duration[DUR_DEVICE_SURGE] = 0;
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;

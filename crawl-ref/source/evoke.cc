@@ -80,17 +80,11 @@ static bool _evoke_horn_of_geryon()
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     did_god_conduct(DID_EVIL, 3);
     int num = 1;
     const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);
+        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
     if (adjusted_power + random2(90) > 130)
         ++num;
     if (adjusted_power + random2(90) > 180)
@@ -154,14 +148,8 @@ static bool _lightning_rod(dist *preselect)
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
     const int power =
-        player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
+        player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
 
     const spret ret = your_spells(SPELL_THUNDERBOLT, power, false,
                                                         nullptr, preselect);
@@ -308,21 +296,14 @@ string manual_skill_names(bool short_text)
 
 static bool _box_of_beasts()
 {
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
     mpr("You open the lid...");
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     int rnd_factor = random2(7);
     rnd_factor -= random2(7);
     const int hd_min = min(27,
-                           player_adjust_evoc_power(
-                               you.skill(SK_EVOCATIONS)
-                               + rnd_factor, surge));
+                           player_adjust_evoc_power(you.skill(SK_EVOCATIONS)
+                                                    + rnd_factor));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -665,13 +646,7 @@ static bool _phial_of_floods(dist *target)
     if (spell_direction(*target, beam, &args)
         && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
     {
-#if TAG_MAJOR_VERSION == 34
-        const int surge = pakellas_surge_devices();
-        surge_power(you.spec_evoke() + surge);
-#else
-        const int surge = 0;
-#endif
-        const int power = player_adjust_evoc_power(base_pow, surge);
+        const int power = player_adjust_evoc_power(base_pow);
         // use real power to recalc hit/dam
         zappy(ZAP_PRIMAL_WAVE, power, false, beam);
         beam.fire();
@@ -719,25 +694,16 @@ static spret _phantom_mirror(dist *target)
         return spret::abort;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-
     monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);
     if (!mon)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::fail;
     }
-    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3),
-                                               surge);
+    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
     int dur = min(6, max(1,
                          player_adjust_evoc_power(
-                             you.skill(SK_EVOCATIONS, 1) / 4 + 1,
-                             surge)
+                             you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
@@ -1019,15 +985,8 @@ static bool _xoms_chessboard()
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-
     const int power =
-        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2, surge);
+        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2);
 
     mpr("You make a move on Xom's chessboard...");
 

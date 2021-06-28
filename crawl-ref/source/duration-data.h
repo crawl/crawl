@@ -512,11 +512,6 @@ static const duration_def duration_data[] =
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
     { DUR_CHANNEL_ENERGY, LIGHTBLUE, "Channel", "channeling", "channel",
       "You are rapidly regenerating magical energy.", D_NO_FLAGS },
-    { DUR_DEVICE_SURGE, WHITE, "Surge",
-      "device surging", "device surge",
-      "You have readied a device surge.", D_EXPIRES,
-      {{ "Your device surge dissipates." },
-        { "Your device surge is dissipating.", 1 }}, 10},
     { DUR_DOOM_HOWL,
       RED, "Howl",
       "doom-hounded", "howl",
@@ -667,5 +662,6 @@ static const duration_def duration_data[] =
     { DUR_SCRYING, 0, "", "", "old scrying", "", D_NO_FLAGS},
     { DUR_ELIXIR_MAGIC, 0, "", "", "old elixir magic", "", D_NO_FLAGS},
     { DUR_ANTIMAGIC, 0, "", "", "old antimagic", "", D_NO_FLAGS},
+    { DUR_DEVICE_SURGE, 0, "", "", "old device surge", "", D_NO_FLAGS},
 #endif
 };

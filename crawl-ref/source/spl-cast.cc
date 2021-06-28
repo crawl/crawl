@@ -84,7 +84,6 @@
 static int _spell_enhancement(spell_type spell);
 static string _spell_failure_rate_description(spell_type spell);
 
-#if TAG_MAJOR_VERSION == 34
 void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
@@ -112,7 +111,6 @@ void surge_power_wand(const int mp_cost)
              slight ? "."      : "!");
     }
 }
-#endif
 
 static string _spell_base_description(spell_type spell, bool viewing)
 {
@@ -1587,7 +1585,7 @@ static string _mon_threat_string(const CrawlStoreValue &mon_store)
 
 // Include success chance in targeter for spells checking monster WL.
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
-                                      bool evoked, targeter* hitfunc)
+                                      targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     const int wl = mi.willpower();
@@ -1618,14 +1616,7 @@ vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
                                              _mon_threat_string, ", or "));
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
-                                   : pow;
-#else
-    UNUSED(evoked);
-    const int adj_pow = pow;
-#endif
-    const int success = hex_success_chance(wl, adj_pow, 100);
+    const int success = hex_success_chance(wl, pow, 100);
     descs.push_back(make_stringf("chance to affect: %d%%", success));
 
     return descs;
@@ -1657,8 +1648,8 @@ private:
     string err;
 };
 
-static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
-                                       bool evoked_wand, targeter *hitfunc)
+static desc_filter _targeter_addl_desc(spell_type spell, int powc,
+                                       spell_flags flags, targeter *hitfunc)
 {
     // Add success chance to targeted spells checking monster WL
     const bool wl_check = testbits(flags, spflag::WL_check)
@@ -1672,7 +1663,7 @@ static desc_filter _targeter_addl_desc(spell_type spell, int powc, spell_flags f
               testbits(flags, spflag::area) ? ( powc * 3 ) / 2
                                             : powc;
         return bind(desc_wl_success_chance, placeholders::_1,
-                    eff_pow, evoked_wand, hitfunc);
+                    eff_pow, hitfunc);
     }
     switch (spell)
     {
@@ -1787,7 +1778,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 || spell == SPELL_APPORTATION;
 
         desc_filter additional_desc
-            = _targeter_addl_desc(spell, powc, flags, evoked_wand, hitfunc.get());
+            = _targeter_addl_desc(spell, powc, flags, hitfunc.get());
 
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out
@@ -1848,20 +1839,12 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
 
     if (evoked_wand)
     {
-#if TAG_MAJOR_VERSION == 34
-        const int surge = pakellas_surge_devices();
-#else
-        const int surge = 0;
-#endif
-        powc = player_adjust_evoc_power(powc, surge);
-#if TAG_MAJOR_VERSION == 34
-        surge_power_wand(wand_mp_cost() + surge * 3);
-#endif
+        powc = player_adjust_evoc_power(powc);
+        surge_power_wand(wand_mp_cost());
     }
-#if TAG_MAJOR_VERSION == 34
     else if (allow_fail)
         surge_power(_spell_enhancement(spell));
-#endif
+
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
 

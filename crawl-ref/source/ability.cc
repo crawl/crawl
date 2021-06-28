@@ -599,13 +599,6 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
         7, 0, 10, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
-#if TAG_MAJOR_VERSION == 34
-    // Pakellas
-    { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
-        0, 0, generic_cost::fixed(1),
-        {fail_basis::invo, 40, 5, 20}, abflag::variable_mp | abflag::instant },
-#endif
-
     // Uskayaw
     { ABIL_USKAYAW_STOMP, "Stomp",
         3, 0, generic_cost::fixed(20), {fail_basis::invo}, abflag::none },
@@ -1690,17 +1683,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_PAKELLAS_DEVICE_SURGE:
-        if (you.magic_points == 0)
-        {
-            if (!quiet)
-                mpr("You have no magic power.");
-            return false;
-        }
-        return true;
-#endif
-
         // only available while your ancestor is alive.
     case ABIL_HEPLIAKLQANA_IDEALISE:
     case ABIL_HEPLIAKLQANA_RECALL:
@@ -2235,9 +2217,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         if (_invis_causes_drain())
             drain_player(40, false, true); // yes, before the fail check!
         fail_check();
-#if TAG_MAJOR_VERSION == 34
-        surge_power(you.spec_evoke());
-#endif
         potionlike_effect(POT_INVISIBILITY,
                           player_adjust_evoc_power(
                               you.skill(SK_EVOCATIONS, 2) + 5));
@@ -2723,7 +2702,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         args.mode = TARG_HOSTILE;
         args.get_desc_func = bind(desc_wl_success_chance, placeholders::_1,
                                   zap_ench_power(ZAP_BANISHMENT, pow, false),
-                                  false, nullptr);
+                                  nullptr);
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
 
@@ -3080,18 +3059,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case ABIL_PAKELLAS_DEVICE_SURGE:
-    {
-        fail_check();
-
-        mprf(MSGCH_DURATION, "You feel a buildup of energy.");
-        you.increase_duration(DUR_DEVICE_SURGE,
-                              random2avg(you.piety / 4, 2) + 3, 100);
-        break;
-    }
-#endif
 
     case ABIL_USKAYAW_STOMP:
         fail_check();

@@ -116,7 +116,7 @@ class targeter;
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range);
 bool spell_has_targeter(spell_type spell);
 vector<string> desc_wl_success_chance(const monster_info& mi, int pow,
-                                      bool evoked, targeter* hitfunc);
+                                      targeter* hitfunc);
 spret your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
                   const item_def* const evoked_item = nullptr,
                   dist *_target = nullptr);
