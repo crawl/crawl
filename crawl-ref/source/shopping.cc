@@ -180,6 +180,9 @@ int artefact_value(const item_def &item)
     if (prop[ARTP_CLARITY])
         ret += 20;
 
+    if (prop[ARTP_ARCHMAGI])
+        ret += 20;
+
     return (ret > 0) ? ret : 0;
 }
 
