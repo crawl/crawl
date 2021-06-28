@@ -3340,7 +3340,7 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return item_is_spellbook(*this) && item_type_known(*this);
+    return item_is_spellbook(*this);
 }
 
 bool item_def::cursed() const
