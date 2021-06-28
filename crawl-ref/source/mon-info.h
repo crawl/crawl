@@ -419,5 +419,3 @@ void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            int count);
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                             int start, int count, bool equipment);
-
-typedef function<vector<string> (const monster_info& mi)> (desc_filter);

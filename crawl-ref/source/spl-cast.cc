@@ -1648,8 +1648,10 @@ private:
     string err;
 };
 
-static desc_filter _targeter_addl_desc(spell_type spell, int powc,
-                                       spell_flags flags, targeter *hitfunc)
+// TODO: is there a way for this to be part of targeter objects, or
+// direction_chooser itself?
+desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
+                                       targeter *hitfunc)
 {
     // Add success chance to targeted spells checking monster WL
     const bool wl_check = testbits(flags, spflag::WL_check)
@@ -1778,7 +1780,7 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
                                 || spell == SPELL_APPORTATION;
 
         desc_filter additional_desc
-            = _targeter_addl_desc(spell, powc, flags, hitfunc.get());
+            = targeter_addl_desc(spell, powc, flags, hitfunc.get());
 
         // `true` on fourth param skips MP check and a few others that have
         // already been carried out

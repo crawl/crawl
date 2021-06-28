@@ -34,8 +34,9 @@ bool puton_ring(item_def &to_puton, bool allow_prompt = true,
                 bool check_for_inscriptions = true);
 
 string cannot_read_item_reason(const item_def &item);
-void read(item_def* scroll = nullptr);
-void read_scroll(item_def& scroll);
+bool scroll_has_targeter(scroll_type which_scroll);
+void read(item_def* scroll = nullptr, dist *target=nullptr);
+void read_scroll(item_def& scroll, dist *target=nullptr);
 
 bool remove_ring(int slot = -1, bool announce = false);
 

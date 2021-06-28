@@ -21,6 +21,7 @@
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -2899,7 +2900,7 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
  * @param slot      The slot of the item in the player's inventory. If -1, the
  *                  player is prompted to choose a slot.
  */
-void read(item_def* scroll)
+void read(item_def* scroll, dist *target)
 {
     if (!_player_can_read())
         return;
@@ -2966,7 +2967,152 @@ void read(item_def* scroll)
         return;
     }
 
-    read_scroll(*scroll);
+    read_scroll(*scroll, target);
+}
+
+static vector<string> _desc_finite_wl(const monster_info& mi)
+{
+    vector<string> r;
+    const int wl = mi.willpower();
+    if (wl == WILL_INVULN)
+        r.push_back("infinite will");
+    else
+        r.push_back("susceptible");
+    return r;
+}
+
+static vector<string> _desc_holy_word(const monster_info& mi)
+{
+    if (mi.holi & (MH_UNDEAD | MH_DEMONIC))
+        return { "susceptible" };
+    else
+        return { "not susceptible" };
+}
+
+class targeter_finite_will : public targeter_multimonster
+{
+public:
+    targeter_finite_will() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        return mon.willpower() != WILL_INVULN;
+    }
+};
+
+class targeter_holy_word : public targeter_multimonster
+{
+public:
+    targeter_holy_word() : targeter_multimonster(&you)
+    { }
+
+    bool affects_monster(const monster_info& mon)
+    {
+        return bool(mon.holi & (MH_UNDEAD | MH_DEMONIC));
+    }
+
+    aff_type is_affected(coord_def loc)
+    {
+        if (loc == you.pos() && you.undead_or_demonic())
+            return AFF_YES;
+        return targeter_multimonster::is_affected(loc);
+    }
+};
+
+class targeter_silence : public targeter_maybe_radius
+{
+    targeter_radius inner_rad;
+public:
+    targeter_silence(int r1, int r2)
+        : targeter_maybe_radius(&you, LOS_DEFAULT, r2),
+          inner_rad(&you, LOS_DEFAULT, r1)
+    {
+    }
+
+    aff_type is_affected(coord_def loc) override
+    {
+        if (inner_rad.is_affected(loc) == AFF_YES)
+            return AFF_YES;
+        else
+            return targeter_maybe_radius::is_affected(loc);
+    }
+};
+
+// TODO: why do I have to do this
+class scroll_targeting_behaviour : public targeting_behaviour
+{
+public:
+    scroll_targeting_behaviour() : targeting_behaviour(false)
+    {
+    }
+
+    bool targeted() override
+    {
+        return false;
+    }
+};
+
+static bool _scroll_targeting_check(scroll_type scroll, dist *target)
+{
+    // TODO: restructure so that spell scrolls call your_spells, and targeting
+    // is handled automatically for such scrolls
+    if (target && target->needs_targeting())
+    {
+        // TODO: shadow creatures targeter doesn't handle band placement very
+        // well, and this is more obvious with the scroll
+        direction_chooser_args args;
+        unique_ptr<targeter> hitfunc;
+        if (scroll == SCR_SUMMONING)
+            hitfunc = find_spell_targeter(SPELL_SHADOW_CREATURES, 1000, LOS_RADIUS);
+        else if (scroll == SCR_FEAR)
+        {
+            hitfunc = find_spell_targeter(SPELL_CAUSE_FEAR, 1000, LOS_RADIUS);
+            // TODO: can't this be rolled in with the targeter somehow? Will
+            // a fear (etc) targeter ever not have this?
+            args.get_desc_func = targeter_addl_desc(SPELL_CAUSE_FEAR, 1000,
+                get_spell_flags(SPELL_CAUSE_FEAR), hitfunc.get());
+        }
+        else if (scroll == SCR_HOLY_WORD)
+        {
+            hitfunc = make_unique<targeter_holy_word>();
+            args.get_desc_func = _desc_holy_word;
+        }
+        else if (scroll == SCR_SILENCE)
+            hitfunc = make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+        else
+        {
+            hitfunc = make_unique<targeter_finite_will>(); // vulnerability, immolation
+            args.get_desc_func = _desc_finite_wl;
+        }
+        args.mode = TARG_ANY;
+        args.self = confirm_prompt_type::cancel;
+        args.hitfunc = hitfunc.get();
+        scroll_targeting_behaviour beh;
+        args.behaviour = &beh;
+
+        direction(*target, args);
+        return target->isValid && !target->isCancel;
+    }
+    else
+        return true;
+}
+
+bool scroll_has_targeter(scroll_type which_scroll)
+{
+    switch (which_scroll)
+    {
+    case SCR_BLINKING:
+    case SCR_FEAR:
+    case SCR_SUMMONING:
+    case SCR_VULNERABILITY:
+    case SCR_IMMOLATION:
+    case SCR_HOLY_WORD:
+    case SCR_SILENCE:
+        return true;
+    default:
+        return false;
+    }
 }
 
 /**
@@ -2979,12 +3125,23 @@ void read(item_def* scroll)
  *
  * @param scroll The scroll to be read.
  */
-void read_scroll(item_def& scroll)
+void read_scroll(item_def& scroll, dist *target)
 {
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
     int link = in_inventory(scroll) ? scroll.link : -1;
     const bool alreadyknown = item_type_known(scroll);
+
+    if (alreadyknown
+        && scroll_has_targeter(which_scroll)
+        && which_scroll != SCR_BLINKING // blinking calls its own targeter
+        && !_scroll_targeting_check(which_scroll, target))
+    {
+        // a targeter can't be used for unid'd or uncancellable scrolls, so
+        // we can skip the rest of the function
+        you.turn_is_over = false;
+        return;
+    }
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
@@ -3015,7 +3172,7 @@ void read_scroll(item_def& scroll)
             break;
         }
 
-        cancel_scroll = (controlled_blink(alreadyknown)
+        cancel_scroll = (controlled_blink(alreadyknown, target)
                          == spret::abort) && alreadyknown;
 
         if (!cancel_scroll)

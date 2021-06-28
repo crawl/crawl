@@ -1999,7 +1999,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_HOP:
         if (_can_hop(false))
-            return frog_hop(fail); // TODO dist arg
+            return frog_hop(fail, target);
         else
             return spret::abort;
 

@@ -10,10 +10,10 @@ void disjunction_spell();
 
 spret cast_blink(bool fail = false);
 void uncontrolled_blink(bool override_stasis = false);
-spret controlled_blink(bool safe_cancel = true);
+spret controlled_blink(bool safe_cancel = true, dist *target=nullptr);
 void wizard_blink();
 
-spret frog_hop(bool fail);
+spret frog_hop(bool fail, dist *target=nullptr);
 bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
 spret palentonga_charge(bool fail, dist *target=nullptr);
 int palentonga_charge_range();

@@ -162,7 +162,7 @@ void uncontrolled_blink(bool override_stasis)
  * @param hitfunc       A hitfunc passed to the direction_chooser.
  * @return              True if a target was found; false if the player aborted.
  */
-static bool _find_cblink_target(coord_def &target, bool safe_cancel,
+static bool _find_cblink_target(dist &target, bool safe_cancel,
                                 string verb, targeter *hitfunc = nullptr)
 {
     while (true)
@@ -173,8 +173,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
         args.needs_path = false;
         args.top_prompt = uppercase_first(verb) + " to where?";
         args.hitfunc = hitfunc;
-        dist beam;
-        direction(beam, args);
+        direction(target, args);
 
         if (crawl_state.seen_hups)
         {
@@ -182,7 +181,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             return false;
         }
 
-        if (!beam.isValid || beam.target == you.pos())
+        if (!target.isValid || target.target == you.pos())
         {
             const string prompt =
                 "Are you sure you want to cancel this " + verb + "?";
@@ -196,7 +195,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             return false;
         }
 
-        const monster* beholder = you.get_beholder(beam.target);
+        const monster* beholder = you.get_beholder(target.target);
         if (beholder)
         {
             mprf("You cannot %s away from %s!",
@@ -205,7 +204,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
-        const monster* fearmonger = you.get_fearmonger(beam.target);
+        const monster* fearmonger = you.get_fearmonger(target.target);
         if (fearmonger)
         {
             mprf("You cannot %s closer to %s!",
@@ -214,14 +213,14 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
-        if (cell_is_solid(beam.target))
+        if (cell_is_solid(target.target))
         {
             clear_messages();
             mprf("You can't %s into that!", verb.c_str());
             continue;
         }
 
-        monster* target_mons = monster_at(beam.target);
+        monster* target_mons = monster_at(target.target);
         if (target_mons && you.can_see(*target_mons))
         {
             mprf("You can't %s onto %s!", verb.c_str(),
@@ -229,16 +228,16 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
-        if (!check_moveto(beam.target, verb, false))
+        if (!check_moveto(target.target, verb, false))
         {
             continue;
             // try again (messages handled by check_moveto)
         }
 
-        if (!you.see_cell_no_trans(beam.target))
+        if (!you.see_cell_no_trans(target.target))
         {
             clear_messages();
-            if (you.trans_wall_blocking(beam.target))
+            if (you.trans_wall_blocking(target.target))
                 canned_msg(MSG_SOMETHING_IN_WAY);
             else
                 canned_msg(MSG_CANNOT_SEE);
@@ -251,7 +250,6 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
             continue;
         }
 
-        target = beam.target; // Grid in los, no problem.
         return true;
     }
 }
@@ -333,10 +331,12 @@ static coord_def _fuzz_hop_destination(coord_def target)
  *                      therefore fail after selecting a target)
  * @return              Whether the hop succeeded, aborted, or was miscast.
  */
-spret frog_hop(bool fail)
+spret frog_hop(bool fail, dist *target)
 {
+    dist empty;
+    if (!target)
+        target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
-    coord_def target;
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     tgt.obeys_mesmerise = true;
 
@@ -345,16 +345,17 @@ spret frog_hop(bool fail)
 
     while (true)
     {
-        if (!_find_cblink_target(target, true, "hop", &tgt))
+        if (!_find_cblink_target(*target, true, "hop", &tgt))
             return spret::abort;
-        if (grid_distance(you.pos(), target) > hop_range)
+
+        if (grid_distance(you.pos(), target->target) > hop_range)
         {
             mpr("That's out of range!"); // ! targeting
             continue;
         }
         break;
     }
-    target = _fuzz_hop_destination(target);
+    target->target = _fuzz_hop_destination(target->target);
 
     fail_check();
 
@@ -362,7 +363,7 @@ spret frog_hop(bool fail)
         return spret::success; // of a sort
 
     // invisible monster that the targeter didn't know to avoid, or similar
-    if (target.origin())
+    if (target->target.origin())
     {
         mpr("You tried to hop, but there was no room to land!");
         // TODO: what to do here?
@@ -371,7 +372,7 @@ spret frog_hop(bool fail)
 
     if (!cell_is_solid(you.pos())) // should be safe.....
         place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
-    move_player_to_grid(target, false);
+    move_player_to_grid(target->target, false);
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");
@@ -660,7 +661,7 @@ spret palentonga_charge(bool fail, dist *target)
  *                      for e.g. read-identified ?blink)
  * @return              Whether the blink succeeded, aborted, or was miscast.
  */
-spret controlled_blink(bool safe_cancel)
+spret controlled_blink(bool safe_cancel, dist *target)
 {
     if (crawl_state.is_replaying_keys())
     {
@@ -668,17 +669,20 @@ spret controlled_blink(bool safe_cancel)
         return spret::abort;
     }
 
-    coord_def target;
+    dist empty;
+    if (!target)
+        target = &empty;
+
     targeter_smite tgt(&you, LOS_RADIUS);
     tgt.obeys_mesmerise = true;
-    if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
+    if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
         return spret::abort;
 
     if (!you.attempt_escape(2))
         return spret::success; // of a sort
 
     // invisible monster that the targeter didn't know to avoid
-    if (monster_at(target))
+    if (monster_at(target->target))
     {
         mpr("Oops! There was something there already!");
         uncontrolled_blink();
@@ -686,7 +690,7 @@ spret controlled_blink(bool safe_cancel)
     }
 
     _place_tloc_cloud(you.pos());
-    move_player_to_grid(target, false);
+    move_player_to_grid(target->target, false);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();

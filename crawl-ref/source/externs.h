@@ -338,6 +338,8 @@ namespace quiver
 
 // input and output to targeting actions
 // TODO: rename, move to its own .h, remove camel case
+// For the exact details of interactive vs non-interactive targeting, see
+// dist::needs_targeting() in directn.cc.
 class dist
 {
 public:
@@ -359,7 +361,7 @@ public:
     coord_def delta;    // input and output: delta x and y if direction - always -1,0,1
     ray_def ray;        // output: ray chosen if necessary
     bool find_target;   // input: use the targeter to find a target, possibly by modifying `target`.
-                        // forces non-interactive mode.
+                        // requests non-interactive mode, but does not override `interactive`.
     const quiver::action_cycler *fire_context;
                             // input: if triggered from the action system, what the
                             // quiver was that triggered it. May be nullptr.

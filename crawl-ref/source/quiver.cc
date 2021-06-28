@@ -1165,6 +1165,7 @@ namespace quiver
             if (_spell_needs_manual_targeting(spell))
             {
                 // force interactive mode no matter what:
+                // XX this overrides programmatic calls, is there another way?
                 target.target = coord_def(-1,-1);
                 target.find_target = false; // default, but here for clarity's sake
                 target.interactive = true;
@@ -1464,9 +1465,10 @@ namespace quiver
                     check_ability_possible(ability, false);
                 return;
             }
-            set_target(t);
-            target.find_target = true;
 
+            set_target(t);
+            if (ability != ABIL_HOP) // find_target will fail for ABIL_HOP
+                target.find_target = true; // TODO: does this break lua targeting?
             if (autofight_check())
                 return;
 
@@ -1535,6 +1537,8 @@ namespace quiver
             if (!item_action::is_valid())
                 return false;
             const item_def& c = you.inv[item_slot];
+            if (!item_type_known(c))
+                return false;
             return c.base_type == OBJ_POTIONS || c.base_type == OBJ_SCROLLS;
         }
 
@@ -1549,7 +1553,7 @@ namespace quiver
                 return you.can_drink(true) && !you.berserk()
                     && get_potion_effect(static_cast<potion_type>(c.sub_type))->can_quaff();
             }
-            else if (c.base_type == OBJ_SCROLLS)
+            else if (c.base_type == OBJ_SCROLLS) // XX a lot of cases may not be checked here
                 return cannot_read_item_reason(c).empty();
             else
                 return false; // ASSERT?
@@ -1557,7 +1561,14 @@ namespace quiver
 
         bool is_targeted() const override
         {
-            return false; // XX blink
+            // only pot that might conceivably need a targeter is attraction?
+            if (!is_valid() || you.inv[item_slot].base_type == OBJ_POTIONS
+                || !item_type_known(you.inv[item_slot]))
+            {
+                return false;
+            }
+            return scroll_has_targeter(
+                        static_cast<scroll_type>(you.inv[item_slot].sub_type));
         }
 
         string quiver_verb() const override
@@ -1567,16 +1578,25 @@ namespace quiver
             return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
         }
 
-        void trigger(dist &) override
+        bool use_autofight_targeting() const override { return false; }
+
+        void trigger(dist &t) override
         {
             if (!is_valid())
                 return;
+
+            set_target(t);
+
+            // enable autofire triggering for everything but blinking
+            if (you.inv[item_slot].sub_type != SCR_BLINKING)
+                target.target = you.pos();
+
 
             item_def& c = you.inv[item_slot];
             if (c.base_type == OBJ_POTIONS)
                 drink(&c);
             else if (c.base_type == OBJ_SCROLLS)
-                read(&c);
+                read(&c, &target);
 
         }
 
