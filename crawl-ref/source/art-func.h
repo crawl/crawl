@@ -83,12 +83,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
 
 static bool _evoke_sceptre_of_asmodeus()
 {
-    if (you.get_mutation_level(MUT_NO_LOVE))
-    {
-        mpr("You are hated by all, and nothing answers your call!");
-        return false;
-    }
-
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
         return false;
 
@@ -120,8 +114,14 @@ static bool _evoke_sceptre_of_asmodeus()
 }
 
 static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
-                            bool* /*unevokable*/)
+                            bool* unevokable)
 {
+    if (you.get_mutation_level(MUT_NO_LOVE))
+    {
+        mpr("You are hated by all, and nothing will answer your call!");
+        *unevokable = true;
+        return true;
+    }
     if (_evoke_sceptre_of_asmodeus())
     {
         *did_work = true;
