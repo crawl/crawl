@@ -494,7 +494,7 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                           Type                      Level       Known");
+            "\n Spells                            Type                      Level       Known");
     }
     description.cprintf("\n");
 
@@ -525,7 +525,7 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 29 - effect_len - range_len - effect_range_space;
+        const int chop_len = 30 - effect_len - range_len - effect_range_space;
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = _colourize(effect_str, _spell_colour(spell));
