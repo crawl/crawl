@@ -2132,6 +2132,19 @@ namespace quiver
     }
 
     /**
+     * Replace the current action without affecting history.
+     */
+    bool action_cycler::replace(const shared_ptr<action> new_act)
+    {
+        auto n = new_act ? new_act : make_shared<action>();
+
+        const bool diff = *n != *get();
+        current = move(n);
+        set_needs_redraw();
+        return diff;
+    }
+
+    /**
      * Set the current action for this action_cycler. If the provided action
      * is null, a valid `action` will be used (guaranteeing that the stored
      * action is never nullptr), corresponding to an empty quiver.

@@ -144,6 +144,7 @@ namespace quiver
 
         virtual bool set(const shared_ptr<action> n, bool _autoswitched=false);
         bool set(const action_cycler &other);
+        bool replace(const shared_ptr<action> new_act);
         bool set_from_slot(int slot);
         bool cycle(int dir = 0, bool allow_disabled=true);
         bool clear();
