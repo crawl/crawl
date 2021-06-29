@@ -1553,8 +1553,12 @@ namespace quiver
                 return you.can_drink(true) && !you.berserk()
                     && get_potion_effect(static_cast<potion_type>(c.sub_type))->can_quaff();
             }
-            else if (c.base_type == OBJ_SCROLLS) // XX a lot of cases may not be checked here
-                return cannot_read_item_reason(&c).empty();
+            else if (c.base_type == OBJ_SCROLLS)
+            {
+                return cannot_read_item_reason(&c).empty()
+                    && scroll_hostile_check(
+                                    static_cast<scroll_type>(c.sub_type));
+            }
             else
                 return false; // ASSERT?
         }

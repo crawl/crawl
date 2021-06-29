@@ -2947,38 +2947,51 @@ public:
     }
 };
 
+static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
+{
+    // blinking handled elsewhere
+    switch (which_scroll)
+    {
+    case SCR_FEAR:
+        return find_spell_targeter(SPELL_CAUSE_FEAR, 1000, LOS_RADIUS);
+    case SCR_SUMMONING:
+        // TODO: shadow creatures targeter doesn't handle band placement very
+        // well, and this is more obvious with the scroll
+        return find_spell_targeter(SPELL_SHADOW_CREATURES, 1000, LOS_RADIUS);
+    case SCR_VULNERABILITY:
+    case SCR_IMMOLATION:
+        return make_unique<targeter_finite_will>();
+    case SCR_HOLY_WORD:
+        return make_unique<targeter_holy_word>();
+    case SCR_SILENCE:
+        return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
+    default:
+        return nullptr;
+    }
+}
+
 static bool _scroll_targeting_check(scroll_type scroll, dist *target)
 {
     // TODO: restructure so that spell scrolls call your_spells, and targeting
     // is handled automatically for such scrolls
     if (target && target->needs_targeting())
     {
-        // TODO: shadow creatures targeter doesn't handle band placement very
-        // well, and this is more obvious with the scroll
         direction_chooser_args args;
-        unique_ptr<targeter> hitfunc;
-        if (scroll == SCR_SUMMONING)
-            hitfunc = find_spell_targeter(SPELL_SHADOW_CREATURES, 1000, LOS_RADIUS);
-        else if (scroll == SCR_FEAR)
+        unique_ptr<targeter> hitfunc = _get_scroll_targeter(scroll);
+        if (!hitfunc)
+            return true; // sanity check
+        if (scroll == SCR_FEAR)
         {
-            hitfunc = find_spell_targeter(SPELL_CAUSE_FEAR, 1000, LOS_RADIUS);
-            // TODO: can't this be rolled in with the targeter somehow? Will
+            // TODO: can't these be rolled in with the targeter somehow? Will
             // a fear (etc) targeter ever not have this?
             args.get_desc_func = targeter_addl_desc(SPELL_CAUSE_FEAR, 1000,
                 get_spell_flags(SPELL_CAUSE_FEAR), hitfunc.get());
         }
         else if (scroll == SCR_HOLY_WORD)
-        {
-            hitfunc = make_unique<targeter_holy_word>();
             args.get_desc_func = _desc_holy_word;
-        }
-        else if (scroll == SCR_SILENCE)
-            hitfunc = make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
-        else
-        {
-            hitfunc = make_unique<targeter_finite_will>(); // vulnerability, immolation
+        else if (scroll == SCR_VULNERABILITY || scroll == SCR_IMMOLATION)
             args.get_desc_func = _desc_finite_wl;
-        }
+
         args.mode = TARG_ANY;
         args.self = confirm_prompt_type::cancel;
         args.hitfunc = hitfunc.get();
@@ -3007,6 +3020,44 @@ bool scroll_has_targeter(scroll_type which_scroll)
     default:
         return false;
     }
+}
+
+// If needed, check whether there are hostiles in range that would be affected.
+// True means that the scroll either doesn't have such a check, or that there
+// are relevant enemies in range. False means that the check failed.
+bool scroll_hostile_check(scroll_type which_scroll)
+{
+    // cf spell_no_hostile_in_range
+    if (!in_bounds(you.pos()) || !you.on_current_level)
+        return false;
+
+    // no hostile check
+    if (which_scroll == SCR_SUMMONING || which_scroll == SCR_BLINKING)
+        return true;
+
+    unique_ptr<targeter> hitfunc = _get_scroll_targeter(which_scroll);
+    if (!hitfunc)
+        return true; // no checks for these
+
+    // all scrolls that have a targeter are los radius
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true);
+         ri; ++ri)
+    {
+        const monster* mon = monster_at(*ri);
+        if (!mon
+            || !mon->visible_to(&you)
+            // Plants/fungi don't count.
+            || (!mons_is_threatening(*mon) || mon->wont_attack())
+                && !mons_class_is_test(mon->type))
+        {
+            continue;
+        }
+
+        if (hitfunc->valid_aim(*ri) && hitfunc->is_affected(*ri) != AFF_NO)
+            return true;
+    }
+    // nothing found: check fails
+    return false;
 }
 
 /**
@@ -3041,12 +3092,15 @@ void read(item_def* scroll, dist *target)
     // Handle player cancels before we waste time
     if (item_type_known(*scroll))
     {
+        const bool hostile_check = scroll_hostile_check(which_scroll);
         bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
 
         string penance_prompt = make_stringf("Really %s? This action would"
-                                             " place you under penance!",
-                                             verb_object.c_str());
+                                             " place you under penance%s!",
+                                             verb_object.c_str(),
+                                             hostile_check ? ""
+                    : " and you can't even see any enemies this would affect");
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
@@ -3067,10 +3121,22 @@ void read(item_def* scroll, dist *target)
         else if ((is_dangerous_item(*scroll, true)
                   || is_bad_item(*scroll))
                  && Options.bad_item_prompt
-                 && !yesno(make_stringf("Really %s?",
-                                        verb_object.c_str()).c_str(),
+                 && !yesno(make_stringf("Really %s?%s",
+                                        verb_object.c_str(),
+                                        hostile_check ? ""
+                        : " You can't even see any enemies this would affect."
+                                        ).c_str(),
                            false, 'n'))
         {
+            canned_msg(MSG_OK);
+            return;
+        }
+        else if (!hostile_check && !yesno(make_stringf(
+            "You can't see any enemies this would affect, really %s?",
+                                        verb_object.c_str()).c_str(),
+                                                false, 'n'))
+        {
+            // is this too nanny dev?
             canned_msg(MSG_OK);
             return;
         }
