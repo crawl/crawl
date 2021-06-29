@@ -2738,30 +2738,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
 }
 
 /**
- * Is the player currently able to use the 'r' command (to read books or
- * scrolls). Being too berserk, confused, or having no reading material will
- * prevent this.
- *
- * Prints corresponding messages. (Thanks, canned_msg().)
- */
-static bool _player_can_read()
-{
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    return true;
-}
-
-/**
  * If the player has no items matching the given selector, give an appropriate
  * response to print. Otherwise, if they do have such items, return the empty
  * string.
@@ -2776,30 +2752,20 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
 /**
  * If the player is unable to (r)ead the item in the given slot, return the
  * reason why. Otherwise (if they are able to read it), returns "", the empty
- * string.
+ * string. If item is nullptr, do only general reading checks.
  */
-string cannot_read_item_reason(const item_def &item)
+string cannot_read_item_reason(const item_def *item)
 {
+    // general checks
     if (you.berserk())
         return "You are too berserk!";
 
     if (you.confused())
         return "You are too confused!";
 
-    // can read books, except for manuals...
-    if (item.base_type == OBJ_BOOKS)
-    {
-        if (item.sub_type == BOOK_MANUAL)
-            return "You can't read that!";
-        return "";
-    }
-
-    // and scrolls - but nothing else.
-    if (item.base_type != OBJ_SCROLLS)
-        return "You can't read that!";
-
-    // the below only applies to scrolls. (it's easier to read books, since
-    // that's just a UI/strategic thing.)
+    // no reading while threatened (Ru/random mutation)
+    if (you.duration[DUR_NO_SCROLLS])
+        return "You cannot read scrolls in your current state!";
 
     if (silenced(you.pos()))
         return "Magic scrolls do not work when you're silenced!";
@@ -2808,21 +2774,26 @@ string cannot_read_item_reason(const item_def &item)
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
         return "You cannot read scrolls while unable to breathe!";
 
-    // no reading while threatened (Ru/random mutation)
-    if (you.duration[DUR_NO_SCROLLS])
-        return "You cannot read scrolls in your current state!";
+    if (!item)
+        return "";
+
+    // item-specific checks
+
+    // still possible to use * at the `r` prompt. (Why do we allow this now?)
+    if (item->base_type != OBJ_SCROLLS)
+        return "You can't read that!";
 
     // don't waste the player's time reading known scrolls in situations where
     // they'd be useless
 
-    if (!item_type_known(item))
+    if (!item_type_known(*item))
         return "";
 
-    switch (item.sub_type)
+    switch (item->sub_type)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            return you.no_tele_reason(false, item.sub_type == SCR_BLINKING);
+            return you.no_tele_reason(false, item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
@@ -2891,83 +2862,6 @@ static bool _scroll_will_harm(const scroll_type scr, const actor &m)
     }
 
     return false;
-}
-
-/**
- * Check to see if the player can read the item in the given slot, and if so,
- * reads it. (Examining books and using scrolls.)
- *
- * @param slot      The slot of the item in the player's inventory. If -1, the
- *                  player is prompted to choose a slot.
- */
-void read(item_def* scroll, dist *target)
-{
-    if (!_player_can_read())
-        return;
-
-    if (!scroll)
-    {
-        if (!use_an_item(scroll, OBJ_SCROLLS, OPER_READ, "Read which item (* to show all)?"))
-            return;
-    }
-
-    const string failure_reason = cannot_read_item_reason(*scroll);
-    if (!failure_reason.empty())
-    {
-        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
-        return;
-    }
-
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
-    // Handle player cancels before we waste time
-    if (item_type_known(*scroll))
-    {
-        bool penance = god_hates_item(*scroll);
-        string verb_object = "read the " + scroll->name(DESC_DBNAME);
-
-        string penance_prompt = make_stringf("Really %s? This action would"
-                                             " place you under penance!",
-                                             verb_object.c_str());
-
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-        if (stop_attack_prompt(hitfunc, verb_object.c_str(),
-                               [which_scroll] (const actor* m)
-                               {
-                                   return _scroll_will_harm(which_scroll, *m);
-                               },
-                               nullptr, nullptr))
-        {
-            return;
-        }
-        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        else if ((is_dangerous_item(*scroll, true)
-                  || is_bad_item(*scroll))
-                 && Options.bad_item_prompt
-                 && !yesno(make_stringf("Really %s?",
-                                        verb_object.c_str()).c_str(),
-                           false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-    }
-
-    // Ok - now we FINALLY get to read a scroll !!! {dlb}
-    you.turn_is_over = true;
-
-    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
-    {
-        mpr("You almost manage to decipher the scroll,"
-            " but fail in this attempt.");
-        return;
-    }
-
-    read_scroll(*scroll, target);
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)
@@ -3118,19 +3012,83 @@ bool scroll_has_targeter(scroll_type which_scroll)
 /**
  * Read the provided scroll.
  *
- * Does NOT check whether the player can currently read, whether the scroll is
- * currently useless, etc. Likewise doesn't handle setting you.turn_is_over and
- * other externals. DOES destroy one scroll, unless the player chooses to
- * cancel at the last moment.
+ * Check to see if the player can read the provided scroll, and if so,
+ * reads it. If no scroll is provided, prompt for a scroll.
  *
  * @param scroll The scroll to be read.
+ * @param target targeting information, used by the quiver API
  */
-void read_scroll(item_def& scroll, dist *target)
+void read(item_def* scroll, dist *target)
 {
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const int prev_quantity = scroll.quantity;
-    int link = in_inventory(scroll) ? scroll.link : -1;
-    const bool alreadyknown = item_type_known(scroll);
+    string failure_reason = cannot_read_item_reason(scroll);
+
+    if (!scroll && failure_reason.empty())
+    {
+        // player can currently read, but no scroll was provided
+        if (!use_an_item(scroll, OBJ_SCROLLS, OPER_READ, "Read which item (* to show all)?"))
+            return;
+        failure_reason = cannot_read_item_reason(scroll);
+    }
+
+    if (!failure_reason.empty())
+    {
+        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
+        return;
+    }
+    ASSERT(scroll);
+
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
+    // Handle player cancels before we waste time
+    if (item_type_known(*scroll))
+    {
+        bool penance = god_hates_item(*scroll);
+        string verb_object = "read the " + scroll->name(DESC_DBNAME);
+
+        string penance_prompt = make_stringf("Really %s? This action would"
+                                             " place you under penance!",
+                                             verb_object.c_str());
+
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        if (stop_attack_prompt(hitfunc, verb_object.c_str(),
+                               [which_scroll] (const actor* m)
+                               {
+                                   return _scroll_will_harm(which_scroll, *m);
+                               },
+                               nullptr, nullptr))
+        {
+            return;
+        }
+        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        else if ((is_dangerous_item(*scroll, true)
+                  || is_bad_item(*scroll))
+                 && Options.bad_item_prompt
+                 && !yesno(make_stringf("Really %s?",
+                                        verb_object.c_str()).c_str(),
+                           false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
+    // Ok - now we FINALLY get to read a scroll !!! {dlb}
+    you.turn_is_over = true;
+
+    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
+    {
+        mpr("You almost manage to decipher the scroll,"
+            " but fail in this attempt.");
+        return;
+    }
+
+    const int prev_quantity = scroll->quantity;
+    int link = in_inventory(*scroll) ? scroll->link : -1;
+    const bool alreadyknown = item_type_known(*scroll);
 
     if (alreadyknown
         && scroll_has_targeter(which_scroll)
@@ -3147,7 +3105,7 @@ void read_scroll(item_def& scroll, dist *target)
     // respective functions.
     const string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
-                          scroll.name(DESC_QUALNAME).c_str());
+                          scroll->name(DESC_QUALNAME).c_str());
     if (!_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg);
@@ -3190,7 +3148,7 @@ void read_scroll(item_def& scroll, dist *target)
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
-        set_ident_type(scroll, true);
+        set_ident_type(*scroll, true);
 
         if (feat_eliminates_items(env.grid(you.pos())))
         {
@@ -3244,7 +3202,7 @@ void read_scroll(item_def& scroll, dist *target)
         torment(&you, TORMENT_SCROLL, you.pos());
 
         // This is only naughty if you know you're doing it.
-        did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
+        did_god_conduct(DID_EVIL, 10, item_type_known(*scroll));
         bad_effect = !you.res_torment();
         break;
 
@@ -3298,7 +3256,7 @@ void read_scroll(item_def& scroll, dist *target)
             mpr("It is a scroll of identify.");
             // included in default force_more_message (to show it before menu)
             // Do this here so it doesn't turn up in the ID menu.
-            set_ident_type(scroll, true);
+            set_ident_type(*scroll, true);
         }
         cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
         break;
@@ -3332,7 +3290,7 @@ void read_scroll(item_def& scroll, dist *target)
 
         // This is always naughty, even if you didn't affect anyone.
         // Don't speak those foul holy words even in jest!
-        did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
+        did_god_conduct(DID_HOLY, 10, item_type_known(*scroll));
         bad_effect = you.undead_or_demonic();
         break;
     }
@@ -3381,17 +3339,17 @@ void read_scroll(item_def& scroll, dist *target)
     if (cancel_scroll)
         you.turn_is_over = false;
 
-    set_ident_type(scroll, true);
-    set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
+    set_ident_type(*scroll, true);
+    set_ident_flags(*scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    string scroll_name = scroll.name(DESC_QUALNAME);
+    string scroll_name = scroll->name(DESC_QUALNAME);
 
     if (!cancel_scroll)
     {
-        if (in_inventory(scroll))
+        if (in_inventory(*scroll))
             dec_inv_item_quantity(link, 1);
         else
-            dec_mitm_item_quantity(scroll.index(), 1);
+            dec_mitm_item_quantity(scroll->index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
@@ -3407,7 +3365,7 @@ void read_scroll(item_def& scroll, dist *target)
         && which_scroll != SCR_ACQUIREMENT)
     {
         mprf("It %s a %s.",
-             scroll.quantity < prev_quantity ? "was" : "is",
+             scroll->quantity < prev_quantity ? "was" : "is",
              scroll_name.c_str());
     }
 
@@ -3420,7 +3378,7 @@ void read_scroll(item_def& scroll, dist *target)
     }
 
     if (!alreadyknown)
-        auto_assign_item_slot(scroll);
+        auto_assign_item_slot(*scroll);
 
 }
 
