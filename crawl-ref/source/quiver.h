@@ -113,6 +113,9 @@ namespace quiver
         const action_cycler *default_fire_context;
     };
 
+    bool is_autofight_combat_ability(ability_type ability);
+    bool is_autofight_combat_spell(spell_type spell);
+
     shared_ptr<action> find_ammo_action();
     shared_ptr<action> find_action_from_launcher(const item_def *item);
 

@@ -22,6 +22,7 @@ struct talent
 
 class dist;
 
+vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);

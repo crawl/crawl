@@ -918,7 +918,7 @@ namespace quiver
             return find_action_from_launcher(get_launcher());
         }
 
-        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled)
+        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled) const
         {
             vector<shared_ptr<action>> result;
             for (int i_inv = 0; i_inv < ENDOFPACK; i_inv++)
@@ -931,10 +931,13 @@ namespace quiver
         }
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
+            if (menu)
+                return get_menu_fire_order(allow_disabled);
+
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), false);
+            _get_item_fire_order(fire_order, menu, get_launcher(), false);
 
             vector<shared_ptr<action>> result;
 
@@ -972,7 +975,7 @@ namespace quiver
             return you.inv[item_slot].launched_by(*get_launcher());
         }
 
-        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled)
+        vector<shared_ptr<action>> get_menu_fire_order(bool allow_disabled) const
         {
             vector<shared_ptr<action>> result;
             for (int i_inv = 0; i_inv < ENDOFPACK; i_inv++)
@@ -985,10 +988,12 @@ namespace quiver
         }
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
+            if (menu)
+                return get_menu_fire_order(allow_disabled);
             vector<int> fire_order;
-            _get_item_fire_order(fire_order, ignore_inscription, get_launcher(), false);
+            _get_item_fire_order(fire_order, menu, get_launcher(), false);
 
             vector<shared_ptr<action>> result;
 
@@ -1071,6 +1076,12 @@ namespace quiver
         }
     }
 
+    bool is_autofight_combat_spell(spell_type spell)
+    {
+        return spell_is_direct_attack(spell)
+            || spell == SPELL_FOXFIRE; // not a direct attack, but has sensible autofight behavior
+    }
+
     struct spell_action : public action
     {
         spell_action(spell_type s = SPELL_NO_SPELL)
@@ -1137,11 +1148,7 @@ namespace quiver
                 return false;
             if (_spell_needs_manual_targeting(spell))
                 return false;
-            if (spell_is_direct_attack(spell))
-                return true;
-            if (spell == SPELL_FOXFIRE) // not a direct attack, but has sensible autofight behavior
-                return true;
-            return false;
+            return is_autofight_combat_spell(spell);
         }
 
         bool uses_mp() const override
@@ -1230,26 +1237,30 @@ namespace quiver
             return qdesc;
         }
 
+        bool in_fire_order(bool allow_disabled, bool menu) const
+        {
+            return is_valid()
+                && (allow_disabled || is_enabled())
+                && (menu || Options.fire_order_spell.count(spell))
+                // some extra stuff for fire order in particular: don't
+                // show spells that are dangerous to cast or forbidden.
+                // These can still be force-quivered.
+                && fail_severity(spell) < Options.fail_severity_to_quiver
+                && spell_highlight_by_utility(spell, COL_UNKNOWN) != COL_FORBIDDEN;
+        }
+
+        // TODO: rewrite all these fns as iterators?
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
             // goes by letter order
             vector<shared_ptr<action>> result;
             for (int i = 0; i < 52; i++)
             {
-                const char letter = index_to_letter(i);
-                const spell_type s = get_spell_by_letter(letter);
-                auto a = make_shared<spell_action>(s);
-                if (a->is_valid()
-                    && (allow_disabled || a->is_enabled())
-                    // some extra stuff for fire order in particular: don't
-                    // cycle to spells that are dangerous to past or forbidden.
-                    // These can still be force-quivered.
-                    && fail_severity(s) < Options.fail_severity_to_quiver
-                    && spell_highlight_by_utility(s, COL_UNKNOWN) != COL_FORBIDDEN)
-                {
+                auto a = make_shared<spell_action>(
+                                get_spell_by_letter(index_to_letter(i)));
+                if (a->in_fire_order(allow_disabled, menu))
                     result.push_back(move(a));
-                }
             }
             return result;
         }
@@ -1338,6 +1349,33 @@ namespace quiver
         }
     }
 
+    bool is_autofight_combat_ability(ability_type ability)
+    {
+        switch (ability)
+        {
+        case ABIL_BLINKBOLT: // TODO: disable under nomove?
+        case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
+        case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
+        case ABIL_SPIT_POISON:
+        case ABIL_BREATHE_ACID:
+        case ABIL_BREATHE_FIRE:
+        case ABIL_BREATHE_FROST:
+        case ABIL_BREATHE_POISON:
+        case ABIL_BREATHE_POWER:
+        case ABIL_BREATHE_STEAM:
+        case ABIL_BREATHE_MEPHITIC:
+        case ABIL_DAMNATION:
+        case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+        case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+        case ABIL_LUGONU_BANISH:
+        case ABIL_BEOGH_SMITING:
+        case ABIL_QAZLAL_UPHEAVAL:
+            return true;
+        default:
+            return false;
+        }
+    }
+
     struct ability_action : public action
     {
         ability_action(ability_type a = ABIL_NON_ABILITY) : ability(a) { };
@@ -1415,29 +1453,7 @@ namespace quiver
         {
             if (!is_enabled())
                 return false;
-            switch (ability)
-            {
-            case ABIL_BLINKBOLT: // TODO: disable under nomove?
-            case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
-            case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
-            case ABIL_SPIT_POISON:
-            case ABIL_BREATHE_ACID:
-            case ABIL_BREATHE_FIRE:
-            case ABIL_BREATHE_FROST:
-            case ABIL_BREATHE_POISON:
-            case ABIL_BREATHE_POWER:
-            case ABIL_BREATHE_STEAM:
-            case ABIL_BREATHE_MEPHITIC:
-            case ABIL_DAMNATION:
-            case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-            case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-            case ABIL_LUGONU_BANISH:
-            case ABIL_BEOGH_SMITING:
-            case ABIL_QAZLAL_UPHEAVAL:
-                return true;
-            default:
-                return false;
-            }
+            return is_autofight_combat_ability(ability);
         }
 
         bool use_autofight_targeting() const override
@@ -1504,7 +1520,7 @@ namespace quiver
         }
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
             vector<talent> talents = your_talents(false, true, true);
             // goes by letter order
@@ -1512,8 +1528,11 @@ namespace quiver
 
             for (const auto &tal : talents)
             {
-                if (_pseudoability(tal.which))
+                if (_pseudoability(tal.which)
+                    || !menu && Options.fire_order_ability.count(tal.which) == 0)
+                {
                     continue;
+                }
                 auto a = make_shared<ability_action>(tal.which);
                 if (a->is_valid() && (allow_disabled || a->is_enabled()))
                     result.push_back(move(a));
@@ -1605,13 +1624,17 @@ namespace quiver
         }
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
-            UNUSED(ignore_inscription); // TODO: implement
+            UNUSED(menu); // TODO: implement inscription checking for
+            // !menu -- but this is pretty academic right now since these are
+            // never in the menu or cycle order
+            const int inv_start = (menu ? 0 : Options.fire_items_start);
+
             // go by pack order, subsort potions before scrolls
             vector<shared_ptr<action>> scrolls;
             vector<shared_ptr<action>> result;
-            for (int slot = 0; slot < ENDOFPACK; slot++)
+            for (int slot = inv_start; slot < ENDOFPACK; slot++)
             {
                 auto w = make_shared<consumable_action>(slot);
                 if (w->is_valid()
@@ -1703,17 +1726,19 @@ namespace quiver
         }
 
         virtual vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
+            const int inv_start = (menu ? 0 : Options.fire_items_start);
+
             // go by pack order
             vector<shared_ptr<action>> result;
-            for (int slot = 0; slot < ENDOFPACK; slot++)
+            for (int slot = inv_start; slot < ENDOFPACK; slot++)
             {
                 auto w = make_shared<wand_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
                     // for fire order, treat =F inscription as disabling
-                    && (ignore_inscription
+                    && (menu
                         || _fireorder_inscription_ok(slot, true) != MB_FALSE)
                     // skip digging for fire cycling, it seems kind of
                     // non-useful? Can still be force-quivered from inv.
@@ -1805,16 +1830,17 @@ namespace quiver
         }
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
             // go by pack order
+            const int inv_start = (menu ? 0 : Options.fire_items_start);
             vector<shared_ptr<action>> result;
-            for (int slot = 0; slot < ENDOFPACK; slot++)
+            for (int slot = inv_start; slot < ENDOFPACK; slot++)
             {
                 auto w = make_shared<misc_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
-                    && (ignore_inscription
+                    && (menu
                         || _fireorder_inscription_ok(slot, true) != MB_FALSE)
                     // TODO: autoinscribe =f?
                     && you.inv[slot].sub_type != MISC_ZIGGURAT)
@@ -1932,16 +1958,17 @@ namespace quiver
 
 
         vector<shared_ptr<action>> get_fire_order(
-            bool allow_disabled=true, bool ignore_inscription=false) const override
+            bool allow_disabled=true, bool menu=false) const override
         {
             // go by pack order
+            const int inv_start = (menu ? 0 : Options.fire_items_start);
             vector<shared_ptr<action>> result;
-            for (int slot = 0; slot < ENDOFPACK; slot++)
+            for (int slot = inv_start; slot < ENDOFPACK; slot++)
             {
                 auto w = make_shared<artefact_evoke_action>(slot);
                 if (w->is_valid()
                     && (allow_disabled || w->is_enabled())
-                    && (ignore_inscription
+                    && (menu
                         || _fireorder_inscription_ok(slot, true) != MB_FALSE))
                 {
                     result.push_back(move(w));
@@ -2845,9 +2872,9 @@ namespace quiver
     {
         vector<shared_ptr<action>> actions;
         // TODO: this is kind of ugly
-        auto tmp = ammo_action(-1).get_menu_fire_order(true);
+        auto tmp = ammo_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = launcher_ammo_action(-1).get_menu_fire_order(true);
+        tmp = launcher_ammo_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
@@ -2855,9 +2882,9 @@ namespace quiver
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = artefact_evoke_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = spell_action(SPELL_NO_SPELL).get_fire_order();
+        tmp = spell_action(SPELL_NO_SPELL).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
-        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order();
+        tmp = ability_action(ABIL_NON_ABILITY).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }

@@ -25,6 +25,7 @@
 #include <set>
 #include <string>
 
+#include "ability.h"
 #include "branch-data-json.h"
 #include "chardump.h"
 #include "clua.h"
@@ -1117,6 +1118,9 @@ void game_options::reset_options()
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, throwing, inscribed, spell, evokable, ability",
                    false, false);
+    set_fire_order_spell("all", false, false);
+    set_fire_order_ability("all", false, false);
+    set_fire_order_ability("berserk", false, true);
 
     // TODO: what else?
     force_targeter =
@@ -1303,6 +1307,90 @@ static int read_symbol(string s)
 
     char *tail;
     return strtoul(s.c_str(), &tail, base);
+}
+
+void game_options::set_fire_order_ability(const string &s, bool append, bool remove)
+{
+    if (!append && !remove)
+        fire_order_ability.clear();
+    if (s == "all")
+    {
+        if (remove)
+            fire_order_ability.clear();
+        else
+            for (const auto &a : get_defined_abilities())
+                fire_order_ability.insert(a);
+        return;
+    }
+    if (s == "attack")
+    {
+        for (const auto &a : get_defined_abilities())
+            if (quiver::is_autofight_combat_ability(a))
+                if (remove)
+                    fire_order_ability.erase(a);
+                else
+                    fire_order_ability.insert(a);
+        return;
+    }
+    vector<string> slots = split_string(",", s);
+    for (const string &slot : slots)
+    {
+        ability_type abil = ability_by_name(slot);
+        if (abil == ABIL_NON_ABILITY)
+        {
+            report_error("Unknown ability '%s'\n", slot.c_str());
+            return;
+        }
+        if (remove)
+            fire_order_ability.erase(abil);
+        else
+            fire_order_ability.insert(abil);
+    }
+}
+
+void game_options::set_fire_order_spell(const string &s, bool append, bool remove)
+{
+    if (!spell_data_initialized()) // not ready in the first read
+        return;
+    if (!append && !remove)
+        fire_order_spell.clear();
+    if (s == "all")
+    {
+        if (remove)
+            fire_order_ability.clear();
+        else
+            for (int i = SPELL_NO_SPELL; i < NUM_SPELLS; i++)
+                if (is_valid_spell(static_cast<spell_type>(i)))
+                    fire_order_spell.insert(static_cast<spell_type>(i));
+        return;
+    }
+    if (s == "attack")
+    {
+        for (int i = SPELL_NO_SPELL; i < NUM_SPELLS; i++)
+        {
+            auto sp = static_cast<spell_type>(i);
+            if (quiver::is_autofight_combat_spell(sp))
+                if (remove)
+                    fire_order_spell.erase(sp);
+                else
+                    fire_order_spell.insert(sp);
+        }
+        return;
+    }
+    vector<string> slots = split_string(",", s);
+    for (const string &slot : slots)
+    {
+        spell_type spell = spell_by_name(slot);
+        if (is_valid_spell(spell))
+        {
+            if (remove)
+                fire_order_spell.erase(spell);
+            else
+                fire_order_spell.insert(spell);
+        }
+        else
+            report_error("Unknown spell '%s'\n", slot.c_str());
+    }
 }
 
 void game_options::set_fire_order(const string &s, bool append, bool prepend)
@@ -2964,6 +3052,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
+    else if (key == "fire_order_spell")
+        set_fire_order_spell(field, plus_equal || caret_equal, minus_equal);
+    else if (key == "fire_order_ability")
+        set_fire_order_ability(field, plus_equal || caret_equal, minus_equal);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH

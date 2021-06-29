@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "ability-type.h"
 #include "activity-interrupt-type.h"
 #include "char-set-type.h"
 #include "confirm-butcher-type.h"
@@ -19,6 +20,7 @@
 #include "pattern.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
+#include "spell-type.h"
 #include "tag-pref.h"
 #include "travel-open-doors-type.h"
 
@@ -285,6 +287,8 @@ public:
 
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
+    unordered_set<spell_type, hash<int>> fire_order_spell;
+    unordered_set<ability_type, hash<int>> fire_order_ability;
     bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
 
     unordered_set<int> force_targeter; // spell types to always use a
@@ -643,6 +647,8 @@ private:
                                 bool remove_interrupts);
     void set_fire_order(const string &full, bool append, bool prepend);
     void add_fire_order_slot(const string &s, bool prepend);
+    void set_fire_order_spell(const string &s, bool append, bool remove);
+    void set_fire_order_ability(const string &s, bool append, bool remove);
     void set_menu_sort(string field);
     void str_to_enemy_hp_colour(const string &, bool);
     void new_dump_fields(const string &text, bool add = true,

@@ -1742,6 +1742,27 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         determine cycle order. Order within types is determined by letter
         order in the relevant submenu (e.g. inventory for throwing, etc).
 
+fire_order_spell = all
+        (list option)
+        This allows you to exclude or include spells from the fire order by
+        name. Order within spells is determined by letter assignment, this
+        only controls what is in the list. This can be a comma separated list
+        of spells by name, and supports += and -=. It allows two special values:
+        'all' is shorthand for all spells, and 'attack' is shorthand for the
+        list of spells that are considered damage spells for autofight
+        purposes; see autofight_throw for more information.
+
+fire_order_ability = all
+fire_order_ability -= berserk
+        (list option)
+        This allows you to exclude or include abilities from the fire order by
+        name. Order within abilities is determined by letter assignment, this
+        only controls what is in the list. This can be a comma separated list
+        of abilities by name, and supports += and -=. It allows two special
+        values: 'all' is shorthand for all spells, and 'attack' is shorthand for
+        the list of abilities that are considered damage spells for autofight
+        purposes; see autofight_throw for more information.
+
 fail_severity_to_quiver = 2
         Exclude spells with this miscast level or higher from quiver cycling
         and automatic quivering. -1 can be used to exclude spells entirely from

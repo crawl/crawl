@@ -656,6 +656,14 @@ static const ability_def& get_ability_def(ability_type abil)
     return Ability_List[0];
 }
 
+vector<ability_type> get_defined_abilities()
+{
+    vector<ability_type> r;
+    for (const ability_def &ab_def : Ability_List)
+        r.push_back(ab_def.ability);
+    return r;
+}
+
 unsigned int ability_mp_cost(ability_type abil)
 {
     return get_ability_def(abil).get_mp_cost();
