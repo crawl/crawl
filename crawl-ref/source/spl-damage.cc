@@ -3655,7 +3655,7 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-void discharge_maxwells_coupling()
+static void _discharge_maxwells_coupling()
 {
     monster* const mon = _find_maxwells_target(
                              you.props["maxwells_range"].get_int(), false);
@@ -3724,7 +3724,7 @@ void handle_maxwells_coupling()
     {
         you.time_taken = charging_auts_remaining;
         you.props.erase("maxwells_charge_time");
-        discharge_maxwells_coupling();
+        _discharge_maxwells_coupling();
         return;
     }
 
