@@ -3010,7 +3010,10 @@ void handle_searing_ray()
     }
 
     if (crawl_state.prev_cmd != CMD_WAIT)
+    {
         end_searing_ray();
+        return;
+    }
 
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
