@@ -1788,8 +1788,10 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
         // already been carried out
         const bool useless = spell_is_useless(spell, true, false, true);
         const char *spell_title_color = useless ? "darkgrey" : "w";
-        string title = make_stringf("%s: <%s>%s</%s>",
-                    is_targeted ? "Aiming" : "Casting",
+        const string verb = wait_spell_active(spell)
+            ? "<lightred>Restarting spell</lightred>"
+            : is_targeted ? "Aiming" : "Casting";
+        string title = make_stringf("%s: <%s>%s</%s>", verb.c_str(),
                     spell_title_color, spell_title(spell), spell_title_color);
         if (allow_fail)
         {

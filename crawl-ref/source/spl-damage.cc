@@ -3592,6 +3592,15 @@ static bool _maxwells_target_check(monster &m)
             && !m.wont_attack();
 }
 
+bool wait_spell_active(spell_type spell)
+{
+    // XX deduplicate code somehow
+    return spell == SPELL_SEARING_RAY
+                && you.attribute[ATTR_SEARING_RAY] != 0
+            || spell == SPELL_MAXWELLS_COUPLING
+                && you.props.exists("maxwells_charge_time");
+}
+
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
 static monster* _find_maxwells_target(int radius, bool tracer)

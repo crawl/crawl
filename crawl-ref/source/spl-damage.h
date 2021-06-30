@@ -71,10 +71,6 @@ spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
 
-spret cast_searing_ray(int pow, bolt &beam, bool fail);
-void handle_searing_ray();
-void end_searing_ray();
-
 dice_def glaciate_damage(int pow, int eff_range);
 spret cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
@@ -97,6 +93,12 @@ vector<coord_def> find_ramparts_walls(const coord_def &center);
 spret cast_frozen_ramparts(int pow, bool fail);
 void end_frozen_ramparts();
 dice_def ramparts_damage(int pow, bool random = true);
+
+bool wait_spell_active(spell_type spell);
+
+spret cast_searing_ray(int pow, bolt &beam, bool fail);
+void handle_searing_ray();
+void end_searing_ray();
 
 vector<monster *> find_maxwells_possibles(int radius);
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);

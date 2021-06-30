@@ -1058,6 +1058,8 @@ namespace quiver
 
         switch (s)
         {
+        case SPELL_SEARING_RAY:          // for autofight to work, these need
+        case SPELL_MAXWELLS_COUPLING:    // to skip autofight targeting
         case SPELL_LRD: // skip initial autotarget for LRD so that it doesn't
                         // fix on a close monster that can't be targeted. I'm
                         // not quite sure what the right thing to do is?
@@ -1156,6 +1158,17 @@ namespace quiver
             return is_valid();
         }
 
+        bool check_wait_spells() const
+        {
+            if (!target.needs_targeting() && wait_spell_active(spell))
+            {
+                crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
+                you.turn_is_over = true;
+                return true;
+            }
+            return false;
+        }
+
         void trigger(dist &t) override
         {
             // note: we don't do the enabled check here, because cast_a_spell
@@ -1196,7 +1209,8 @@ namespace quiver
             if (autofight_check())
                 return;
 
-            cast_a_spell(do_range_check, spell, &target);
+            if (!check_wait_spells())
+                cast_a_spell(do_range_check, spell, &target);
 
             t = target; // copy back, in case they are different
         }
@@ -1219,7 +1233,10 @@ namespace quiver
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
-            qdesc.cprintf("Cast: ");
+            if (wait_spell_active(spell))
+                qdesc.cprintf("Continue: ");
+            else
+                qdesc.cprintf("Cast: ");
 
             qdesc.textcolour(quiver_color());
 
