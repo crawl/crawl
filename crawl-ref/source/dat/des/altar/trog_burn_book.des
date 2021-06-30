@@ -29,7 +29,7 @@ function callback.trog_book_convert_book(data, triggerable,
     end
 
     for book in iter.stash_iterator(_x, _y) do
-      if string.find(book.name(), 'book') then
+      if string.find(book.name(), 'Retrieval') then
         book.destroy()
         dgn.place_cloud(_x, _y, "flame", 15)
         crawl.god_speaks("Trog", "The spellbook bursts into flames! "
