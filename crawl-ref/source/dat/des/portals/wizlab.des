@@ -1196,7 +1196,7 @@ LROCKCOL:   darkgrey
 ITEM:       potion of experience q:1
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
-ITEM:       book of hexes
+ITEM:       book of hexes / book of dreams / book of dangerous friends
 SHUFFLE:    defg
 LFLOORCOL:  white
 
@@ -1338,7 +1338,7 @@ KMONS:   8 = obsidian statue
 KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
              any scroll w:1
 KITEM:   e = any ring
-KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
+KITEM:   f = there-and-back book w:5 / book of displacement w:5 / \
              manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
@@ -1502,7 +1502,7 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:repulsion / book of clouds / condenser vane \
+ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.

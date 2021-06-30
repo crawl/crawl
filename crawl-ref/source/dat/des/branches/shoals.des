@@ -1575,7 +1575,7 @@ ENDMAP
 
 NAME:  nzn_prometheus_bound
 MONS:  patrolling harpy
-KITEM: e = book of fire ident:all
+KITEM: e = book of fire
 KPROP: nd = bloody
 KFEAT: n = iron_grate
 : dgn.delayed_decay(_G, 'd', 'demigod corpse')

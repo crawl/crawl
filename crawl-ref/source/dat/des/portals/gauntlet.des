@@ -1053,7 +1053,7 @@ dgn.delayed_decay_extra(_G, "F", "spriggan skeleton",
     "dagger good_item / short sword good_item / rapier good_item" ..
     "    / quick blade w:5" ..
     ", robe good_item w:120 / " .. light_scales .. " / shadow dragon scales" ..
-    ", randbook disc:hexes / book of maledictions / nothing w:20" ..
+    ", randbook disc:hexes / book of misfortune / nothing w:20" ..
     ", buckler good_item / hat good_item / any wand w:20 / any misc / gold" ..
     "    / any scroll / any potion / nothing w:80")
 

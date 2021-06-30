@@ -3251,8 +3251,9 @@ DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
 MONS:   raiju / sixfirhy w:2
 KMONS:  2 = shock serpent / storm dragon
-ITEM:   book of air / book of the sky / manual of air magic / \
-        staff of air ident:type / lightning rod w:20 / storm dragon scales w:5
+ITEM:   book of air / book of the sky / book of lighting / book of storms / \
+        manual of air magic / staff of air ident:type / \
+        lightning rod w:20 / storm dragon scales w:5
 KITEM:  2 = arc_blade ident:type
 : minmay_elemental_octagon_setup(_G)
 MAP
@@ -3278,9 +3279,10 @@ DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
 MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
-ITEM:   book of geomancy / book of the earth / manual of earth magic / \
-        staff of earth ident:type / ring of protection ident:type / \
-        tin of tremorstones / crystal plate armour w:5
+ITEM:   book of geomancy / book of the earth / book of stones / book of iron \
+        manual of earth magic / staff of earth ident:type / \
+        ring of protection ident:type / tin of tremorstones / \
+        crystal plate armour w:5
 KITEM:  2 = devastator
 : minmay_elemental_octagon_setup(_G)
 MAP
@@ -3306,7 +3308,8 @@ DEPTH:  D:10-, Elf
 ORIENT: float
 MONS:   polar bear w:6 / rime drake / ice beast
 KMONS:  2 = frost giant / ice dragon
-ITEM:   book of frost / book of ice / manual of ice magic / \
+ITEM:   book of frost / book of ice / book of winter / book of rime / \
+        ozocubu's autobiography / book of the tundra / manual of ice magic / \
         wand of iceblast ident:type / staff of cold ident:type / \
         ring of ice ident:type / phial of floods / ice dragon scales w:5
 KITEM:  2 = frostbite ident:type / \
@@ -3336,9 +3339,9 @@ DEPTH:  D:10-, Elf, Geh, !Geh:$
 ORIENT: float
 MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
-ITEM:   book of flames / book of fire / manual of fire magic / \
-        staff of fire ident:type / ring of fire ident:type / \
-        fire dragon scales w:5
+ITEM:   book of flames / book of fire / everburning encyclopedia / \
+        manual of fire magic / staff of fire ident:type / \
+        ring of fire ident:type / fire dragon scales w:5
 KITEM:  2 = firestarter ident:type
 : minmay_elemental_octagon_setup(_G)
 MAP
@@ -8597,7 +8600,8 @@ ENDMAP
 NAME:    minmay_heptahexagon
 DEPTH:   D:12-, Depths
 ORIENT:  float
-ITEM:    book of debilitation / book of maledictions
+ITEM:    book of debilitation / book of maledictions / book of hexes / \
+         book of misfortune
 # randomize how open the hexagons are to each other
 SUBST:   M : xx+., N : +@, O : +++.
 # each hex other than the center either has monsters+loot, or nothing

@@ -182,6 +182,7 @@ function ice_cave_item_attributes(e)
   goodfreezeweap = "ego:freezing good_item ident:type"
   coldres = "ego:cold_resistance ident:type"
   goodcoldres = "ego:cold_resistance good_item ident:type"
+  goodicebook = "book of ice / book of the tundra / ozocubu's autobiography"
 end
 
 -- : ice_cave_caverns_undead_demon_loot(_G)
@@ -189,7 +190,7 @@ function ice_cave_caverns_undead_demon_loot(e)
   ice_cave_item_attributes(e)
   e.item("cloak " .. coldres .. " good_item w:8 / hat good_item / \
           pair of gloves good_item / pair of boots good_item / nothing")
-  e.item("book of ice / book of unlife / staff of cold / staff of death / \
+  e.item( goodicebook .. " / book of death / staff of cold / staff of death / \
           randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
   e.item("ring of ice / ring of protection from cold / \
           ring of positive energy / wand of iceblast / \
@@ -203,7 +204,7 @@ function ice_cave_caverns_natural_giant_loot(e)
           battleaxe " .. goodfreezeweap .. " w:4 / \
           glaive " .. goodfreezeweap .. " w:4 / \
           great sword " .. goodfreezeweap .. " w:2 / nothing")
-  e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
+  e.item( goodicebook .. " / randbook disc:ice numspells:6 w:2 / \
           arbalest ego:freezing good_item no_uniq ident:type / \
           longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
   e.item("ring of ice / ring of protection from cold / nothing")
@@ -677,7 +678,7 @@ MONS:    freezing wraith
 : mons(savage_ice)
 MONS:    ice statue
 ITEM:    wand of iceblast ident:type, ring of ice / staff of cold
-ITEM:    book of ice / book of frost / randbook disc:ice numspells:6 w:2
+: item(goodicebook .. " / randbook disc:ice numspells:6 w:2")
 ITEM:    manual of ice magic
 : item("cloak " .. coldres .. " w:15 / pair of gloves good_item " ..
 :   " / hat good_item / barding " .. coldres .. " w:5 " ..
@@ -1152,9 +1153,10 @@ MONS:   ice beast, white ugly thing, ice statue, white very ugly thing
 : cruel_simulacrum(_G)
 : mons(cruel_ice)
 ITEM:   battleaxe ego:freezing good_item ident:type / book of frost w:5 / \
-        book of ice w:5 / ice dragon scales
-ITEM:   executioner's axe ego:freezing good_item ident:type / \
-        book of ice w:5 / manual of ice magic w:5 / ice dragon scales randart
+        book of rime w:5 / ice dragon scales
+ITEM:   executioner's axe ego:freezing good_item ident:type /\
+        ozocubu's autobiography w:5 / book of ice w:5 /\
+        manual of ice magic w:5 / ice dragon scales randart
 : if dgn.persist.ice_cave_hard then
 SUBST:  ! = 3, 2 = 4, ? = d
 : else
@@ -1208,7 +1210,7 @@ ITEM:    any weapon randart ego:freezing ident:all / any armour randart / \
          ring of ice randart ident:all / ice dragon scales randart w:5 / \
          ring of protection from cold randart ident:all / \
          any ring randart / any amulet randart / randbook disc:ice numspells:3
-ITEM:    book of frost w:5 / book of ice w:5 / manual of ice magic w:5 / \
+ITEM:    book of the tundra w:5 / book of ice w:5 / manual of ice magic w:5 / \
          any weapon ego:freezing good_item ident:type w: 50 / \
          cloak ego:cold_resistance ident:type / \
          boots ego:cold_resistance ident:type / wand of iceblast ident:type / \

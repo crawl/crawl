@@ -452,7 +452,9 @@ KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
          w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | w:7 tin of tremorstones | w:8 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | \
-         w:2 book of geomancy | w:4 staff of earth | w:1 crystal plate armour
+         w:2 book of geomancy | w:2 book of stone | w:2 book of iron | \
+         w:2 book of the moon | w:2 book of blasting |\
+         w:4 staff of earth | w:1 crystal plate armour
 SUBST:   ? = 2d.
 : if you.absdepth() < 16 then
 SUBST:   2 = 1
@@ -505,6 +507,7 @@ SUBST: G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \
+:   book of pain | book of decay | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
@@ -581,7 +584,8 @@ MARKER: s = lua:fog_machine { cloud_type = "flame", \
              start_clouds = 1, size = 3, walk_dist = 0, spread_rate= 0 }
 KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
-   randbook disc:conjuration | book of storms | book of vapours | \
+   book of blasting |\
+   randbook disc:conjuration | book of storms | book of lightning | \
    wand of iceblast | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | \
    wand of acid | lightning rod | phial of floods | scroll of immolation | \
@@ -860,7 +864,7 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
-             "book of storms w:5 | " ..
+             "unrestrained analects w:5 | " ..
              "wand of iceblast"
 
 -- Unfortunately this can still result in the unrandart being picked twice or

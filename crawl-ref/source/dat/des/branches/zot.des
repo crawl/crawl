@@ -987,14 +987,15 @@ TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    lightning rod, book of air, staff of air, book of the sky
+ITEM:    lightning rod, book of lightning, staff of air, book of storms
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
-ITEM:    wand of iceblast, staff of cold, book of frost, book of ice
+ITEM:    wand of iceblast, staff of cold, book of winter, \
+         ozocubu's autobiography
 SUBST:   w = l
 SUBST:   W = l..
 : else
@@ -1003,7 +1004,7 @@ KMONS:   F = balrug
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
-ITEM:    book of the dragon, staff of fire, book of flames, book of fire
+ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
 : end
 SUBST:   1 = 112.
 SUBST:   2 = 221.
@@ -2444,7 +2445,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  zZ = ball lightning
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
-ITEM:   lightning rod, book of the sky
+ITEM:   lightning rod, book of lightning
 ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         double sword ego:electrocution good_item ident:type w:5 / \
         executioner's axe ego:electrocution good_item ident:type w:5 / \

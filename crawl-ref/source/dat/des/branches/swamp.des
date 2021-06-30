@@ -1916,7 +1916,7 @@ ENDMAP
 
 NAME:   cheibrodos_swamp_witchery
 TAGS:   no_monster_gen
-ITEM:   book of hexes
+ITEM:   book of hexes / fen folio
 MONS:   fenstrider witch
 SUBST:  ' = %:20 d:1
 NSUBST: 1 = 1 / .

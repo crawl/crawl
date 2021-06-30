@@ -832,7 +832,7 @@ TAGS:   no_monster_gen no_pool_fixup uniq_introduction_to_nature transparent
 DEPTH:  D:8-13
 WEIGHT: 3
 ITEM:   any potion
-ITEM:   Young Poisoner's Handbook / book of Changes / \
+ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
@@ -884,7 +884,7 @@ NAME:   introduction_to_nature_2
 TAGS:   no_monster_gen no_pool_fixup uniq_introduction_to_nature
 DEPTH:  D:8-13
 ITEM:   any potion
-ITEM:   Young Poisoner's Handbook / book of Changes / \
+ITEM:   young poisoner's handbook / book of changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
         randbook numspells:4 title:Nature \
         spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
@@ -1983,7 +1983,7 @@ DEPTH:    Depths, Vaults, !Vaults:$
 SUBST:   c : vvb, @ = .
 : end
 MONS:     lich, wizard / naga mage / tengu conjurer, tengu reaver
-ITEM:     book of Power, robe good_item, hat good_item, robe, hat
+ITEM:     book of power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
 SHUFFLE: ef, gh, ij
 MAP
@@ -2406,7 +2406,7 @@ TAGS:   transparent
 DEPTH:  D:9-14
 MONS:   human simulacrum
 ITEM:   mundane long sword no_pickup
-KITEM:  O = book of dreams ident:all
+KITEM:  O = book of dreams
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
