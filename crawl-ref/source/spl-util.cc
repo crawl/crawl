@@ -1369,6 +1369,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SUMMON_FOREST:
         if (temp && you.duration[DUR_FORESTED])
             return "you can only summon one forest at a time.";
+        if (temp && cast_summon_forest(&you, 0, GOD_NO_GOD, false, true) == spret::abort)
+            return "you need more open space to fit a forest.";
         break;
 
     case SPELL_PASSWALL:

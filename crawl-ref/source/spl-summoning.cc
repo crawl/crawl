@@ -1246,9 +1246,8 @@ static bool _water_adjacent(coord_def p)
  *               spret::fail if one could be found but we miscast, and
  *               spret::success if the spell was successfully cast.
 */
-spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
+spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool test)
 {
-    const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
     // Is this area open enough to summon a forest?
     bool success = false;
@@ -1256,10 +1255,17 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
     {
         if (count_neighbours_with_func(*ai, &feat_is_solid) == 0)
         {
+            if (test)
+                return spret::success;
             success = true;
             break;
         }
     }
+
+    if (test)
+        return spret::abort;
+
+    const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
     if (success)
     {
@@ -1335,7 +1341,6 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         return spret::success;
     }
 
-    mpr("You need more open space to cast this spell.");
     return spret::abort;
 }
 
