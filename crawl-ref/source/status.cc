@@ -124,6 +124,16 @@ static string _ray_text()
     }
 }
 
+static vector<string> _charge_strings = { "Charge-", "Charge/",
+                                          "Charge|", "Charge\\"};
+
+static string _charge_text()
+{
+    static int charge_index = 0;
+    charge_index = (charge_index + 1) % 4;
+    return _charge_strings[charge_index];
+}
+
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -700,7 +710,7 @@ bool fill_status_info(int status, status_info& inf)
         if (you.props.exists("maxwells_charge_time"))
         {
             inf.light_colour = LIGHTCYAN;
-            inf.light_text   = "Charge";
+            inf.light_text   = _charge_text().c_str();
         }
         break;
 
