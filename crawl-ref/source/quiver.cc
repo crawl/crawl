@@ -1241,7 +1241,8 @@ namespace quiver
             qdesc.textcolour(quiver_color());
 
             // TODO: is showing the spell letter useful?
-            qdesc.cprintf("%s", spell_title(spell));
+            qdesc.cprintf("%s", spell == SPELL_MAXWELLS_COUPLING ?
+                                "Capacitive Coupling" : spell_title(spell));
             if (spell == SPELL_SANDBLAST)
                 qdesc.cprintf(" (stones: %d)", sandblast_find_ammo().first);
 
