@@ -2644,7 +2644,8 @@ namespace quiver
     {
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
-            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                    | MF_ARROWS_SELECT | MF_WRAP),
               cur_quiver(_quiver), allow_empty(_allow_empty),
               any_spells(you.spell_no),
               any_abilities(your_talents(true, true).size() > 0),
@@ -2960,6 +2961,7 @@ namespace quiver
             menu.add_entry(me);
             hotkey++;
         }
+        menu.cycle_hover();
 
         menu.on_single_selection = [&menu](const MenuEntry& item)
         {

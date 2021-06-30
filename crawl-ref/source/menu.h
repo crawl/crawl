@@ -347,6 +347,7 @@ public:
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
+    void cycle_hover(bool reverse=false);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
@@ -424,7 +425,6 @@ protected:
     virtual bool line_down();
     virtual bool page_up();
     virtual bool line_up();
-    void cycle_hover(bool reverse=false);
 
     virtual int pre_process(int key);
     virtual int post_process(int key);
