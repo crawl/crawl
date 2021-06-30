@@ -1120,7 +1120,7 @@ void game_options::reset_options()
                    false, false);
     set_fire_order_spell("all", false, false);
     set_fire_order_ability("all", false, false);
-    set_fire_order_ability("berserk", false, true);
+    fire_order_ability.erase(ABIL_TROG_BERSERK);
 
     // TODO: what else?
     force_targeter =
@@ -3052,9 +3052,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
-    else if (key == "fire_order_spell")
+    else if (key == "fire_order_spell" && runscript)
         set_fire_order_spell(field, plus_equal || caret_equal, minus_equal);
-    else if (key == "fire_order_ability")
+    else if (key == "fire_order_ability" && runscript)
         set_fire_order_ability(field, plus_equal || caret_equal, minus_equal);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
