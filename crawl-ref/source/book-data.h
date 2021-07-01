@@ -100,13 +100,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Lightning
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
-    SPELL_CHAIN_LIGHTNING,
+    SPELL_MAXWELLS_COUPLING,
 },
 
 {   // Book of Death
     SPELL_ANIMATE_DEAD,
-    SPELL_DEATH_CHANNEL,
     SPELL_HAUNT,
+    SPELL_INFESTATION,
 },
 
 {   // Book of Misfortune
@@ -255,7 +255,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Dragon
     SPELL_CAUSE_FEAR,
     SPELL_DRAGON_FORM,
-    SPELL_IGNITION,
     SPELL_DRAGON_CALL,
 },
 
@@ -295,7 +294,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Necronomicon
     SPELL_BORGNJORS_REVIVIFICATION,
-    SPELL_INFESTATION,
     SPELL_NECROMUTATION,
     SPELL_DEATHS_DOOR,
 },
@@ -311,7 +309,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DAZZLING_FLASH,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_STARBURST,
-    SPELL_MAXWELLS_COUPLING,
 },
 
 { // Book of Winter
@@ -372,7 +369,6 @@ static const vector<spell_type> spellbook_templates[] =
 { // Ozocubu's Autobio
     SPELL_OZOCUBUS_ARMOUR,
     SPELL_OZOCUBUS_REFRIGERATION,
-    SPELL_POLAR_VORTEX,
 },
 
 { // Book of the Senses
@@ -462,7 +458,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Unrestrained Analects
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_OZOCUBUS_REFRIGERATION,
-    SPELL_SHATTER,
+    SPELL_IGNITION,
 },
 
 { // Great Wizards, Vol. II
