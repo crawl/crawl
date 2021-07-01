@@ -1903,3 +1903,9 @@ bool spell_removed(spell_type spell)
 {
     return removed_spells.count(spell) != 0;
 }
+
+void end_wait_spells()
+{
+    end_searing_ray();
+    end_maxwells_coupling();
+}

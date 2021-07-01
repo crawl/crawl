@@ -77,7 +77,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_invalid_constrictions();
-    end_searing_ray();
+    end_wait_spells();
     // Remove spells that break upon movement
     remove_ice_movement();
 }

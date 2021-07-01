@@ -3718,6 +3718,13 @@ void handle_maxwells_coupling()
     if (!you.props.exists("maxwells_charge_time"))
         return;
 
+    // All of these effects interrupt charging
+    if (you.confused() || you.berserk())
+    {
+        end_maxwells_coupling();
+        return;
+    }
+
     int charging_auts_remaining = you.props["maxwells_charge_time"].get_int();
 
     if (charging_auts_remaining < 0)

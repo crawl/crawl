@@ -145,3 +145,5 @@ bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
 
 bool spell_removed(spell_type spell);
+
+void end_wait_spells();

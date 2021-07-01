@@ -193,7 +193,6 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
 static void _do_wait_spells();
-static void _end_wait_spells();
 static void _uncurl();
 static void _input();
 
@@ -1108,7 +1107,7 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        _end_wait_spells();
+        end_wait_spells();
         handle_delay();
 
         // Some delays reset you.time_taken.
@@ -2607,12 +2606,6 @@ static void _do_wait_spells()
 {
     handle_searing_ray();
     handle_maxwells_coupling();
-}
-
-static void _end_wait_spells()
-{
-    end_searing_ray();
-    end_maxwells_coupling();
 }
 
 // palentongas uncurl at the start of the turn
