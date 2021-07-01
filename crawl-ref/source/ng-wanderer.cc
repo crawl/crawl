@@ -690,7 +690,10 @@ static void _maybe_memorise_start_spell(const vector<spell_type> &spells)
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-            add_spell_to_memory(s);
+        {
+            if (you.spell_no < MAX_DJINN_SPELLS)
+                add_spell_to_memory(s);
+        }
         return;
     }
 
