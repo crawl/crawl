@@ -8031,30 +8031,6 @@ int player::inaccuracy() const
  */
 void player_end_berserk()
 {
-    // Sometimes berserk leaves us physically drained.
-    //
-    // Chance of passing out:
-    //     - mutation gives a large plus in order to try and
-    //       avoid the mutation being a "death sentence" to
-    //       certain characters.
-
-    if (one_chance_in(10 + you.get_mutation_level(MUT_BERSERK) * 25))
-    {
-        // Note the beauty of Trog! They get an extra save that
-        // goes up to 100% at 6 stars of piety.
-        if (have_passive(passive_t::extend_berserk)
-            && x_chance_in_y(you.piety, piety_breakpoint(5)))
-        {
-            mpr("Trog's vigour flows through your veins.");
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "You pass out from exhaustion.");
-            you.increase_duration(DUR_PARALYSIS, roll_dice(1, 4));
-            you.stop_directly_constricting_all(false);
-        }
-    }
-
     if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         mprf(MSGCH_WARN, "You are exhausted.");
 

@@ -61,8 +61,7 @@ Berserk status
 You are hasted, deal increased damage in combat, and have increased health, but
 are unable to make most actions other than moving and attacking. The status
 will wear off very quickly unless you are attacking monsters, and when it
-expires you will be slowed and unable to berserk again for a short duration,
-and may be paralysed temporarily as well.
+expires you will be slowed and unable to berserk again for a short duration.
 %%%%
 -Berserk status
 
