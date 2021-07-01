@@ -787,11 +787,19 @@ void cast_tukimas_dance(int pow, actor* target)
     _animate_weapon(pow, target);
 }
 
+/// When the player conjures ball lightning with the given spellpower, what
+/// HD will the resulting lightning have?
 int ball_lightning_hd(int pow, bool random)
 {
     if (random)
         return max(1, div_rand_round(pow, 6) - 6);
     return max(1, pow / 6 - 6);
+}
+
+int mons_ball_lightning_hd(int pow, bool random)
+{
+    // We love players, don't we? Let's be nice.
+    return ball_lightning_hd(pow, random) / 2;
 }
 
 spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)

@@ -5874,16 +5874,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CONJURE_BALL_LIGHTNING:
     {
-        const int n = min(8, 2 + random2avg(mons->spell_hd(spell_cast) / 4, 2));
+        const int hd = mons->spell_hd(spell_cast);
+        const int pow = mons_power_for_hd(spell_cast, hd);
+        const int n = 3;
         for (int i = 0; i < n; ++i)
         {
-            if (monster *ball = create_monster(
-                    mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
-                              mons->pos(), mons->foe)
-                    .set_summoned(mons, 0, spell_cast, god)))
-            {
+            mgen_data mg = mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
+                                     mons->pos(), mons->foe)
+                            .set_summoned(mons, 0, spell_cast, god);
+            mg.hd = mons_ball_lightning_hd(pow);
+            if (monster *ball = create_monster(mg))
                 ball->add_ench(ENCH_SHORT_LIVED);
-            }
         }
         return;
     }

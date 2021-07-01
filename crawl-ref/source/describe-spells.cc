@@ -17,12 +17,13 @@
 #include "menu.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-explode.h" // ball_lightning_damage
 #include "mon-project.h" // iood_damage
-#include "monster.h" // SEEN_SPELLS_KEY
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-summoning.h" // mons_ball_lightning_hd
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
@@ -373,6 +374,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return iood_damage(pow, INFINITE_DISTANCE);
         case SPELL_GLACIATE:
             return glaciate_damage(pow, 3);
+        case SPELL_CONJURE_BALL_LIGHTNING:
+            return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
         default:
             break;
     }
@@ -465,6 +468,8 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     string mult = "";
     if (spell == SPELL_MARSHLIGHT)
         mult = "2x";
+    else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
+        mult = "3x";
     return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
 }
 

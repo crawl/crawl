@@ -12,8 +12,10 @@
 #include "item-prop.h"
 #include "los.h"
 #include "message.h"
+#include "mon-explode.h" // ball_lightning_damage
 #include "mon-project.h"
 #include "spl-damage.h"
+#include "spl-summoning.h" // mons_ball_lighting_hd
 #include "spl-zap.h"
 #include "syscalls.h"
 #include "tag-version.h"
@@ -331,6 +333,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             return mi_calc_glaciate_damage(monster);
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
+        case SPELL_CONJURE_BALL_LIGHTNING:
+            return "3x" + dice_def_string(ball_lightning_damage(mons_ball_lightning_hd(pow, false)));
         case SPELL_MARSHLIGHT:
             return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
         case SPELL_WATERSTRIKE:
@@ -353,9 +357,6 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         default:
             break;
     }
-
-    if (spell_beam.origin_spell == SPELL_IOOD)
-        spell_beam.damage = mi_calc_iood_damage(monster);
 
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
