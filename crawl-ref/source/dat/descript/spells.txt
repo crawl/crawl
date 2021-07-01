@@ -1654,8 +1654,8 @@ Wereblood spell
 
 Transforms some of the caster's blood into that of a were-beast, causing them
 to occasionally howl uncontrollably. While active, each non-summoned enemy the
-caster slays in combat grants minor healing and temporarily enhances their
-melee and ranged effectiveness.
+caster slays in combat temporarily enhances their melee and ranged
+effectiveness, and killing adjacent enemies also provides minor healing.
 
 The bonus only lasts for the duration of a single cast; retransforming the
 caster's blood calms the were-spirit and resets the bonus.

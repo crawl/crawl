@@ -1800,8 +1800,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     const mon_holy_type targ_holy = mons.holiness();
 
-    // Adjust song of slaying bonus. Kills by relevant avatars are adjusted by
-    // now to KILL_YOU and are counted.
+    // Adjust song of slaying bonus & add heals if applicable. Kills by
+    // relevant avatars are adjusted by now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
         && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
         && gives_player_xp)
@@ -1809,7 +1809,9 @@ item_def* monster_die(monster& mons, killer_type killer,
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
-        if (you.hp < you.hp_max && !mons_is_object(mons.type))
+        if (you.hp < you.hp_max
+            && !mons_is_object(mons.type)
+            && adjacent(mons.pos(), you.pos()))
         {
             const int hp = you.hp;
             you.heal(random_range(1, 3));
