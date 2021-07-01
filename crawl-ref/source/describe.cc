@@ -535,11 +535,13 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
+static const int MAX_ARTP_NAME_LEN = 9;
+
 static string _padded_artp_name(artefact_prop_type prop)
 {
     string name = artp_name(prop);
     name += ":";
-    name.append(9 - name.length(), ' ');
+    name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
     return name;
 }
 
@@ -1725,6 +1727,73 @@ static string _armour_ac_change(const item_def &item)
     return description;
 }
 
+static const char* _item_ego_desc(special_armour_type ego)
+{
+    switch (ego)
+    {
+    case SPARM_FIRE_RESISTANCE:
+        return "it protects its wearer from fire.";
+    case SPARM_COLD_RESISTANCE:
+        return "it protects its wearer from cold.";
+    case SPARM_POISON_RESISTANCE:
+        return "it protects its wearer from poison.";
+    case SPARM_SEE_INVISIBLE:
+        return "it allows its wearer to see invisible things.";
+    case SPARM_INVISIBILITY:
+        return "when activated, it grants its wearer temporary "
+               "invisibility, but also drains their maximum health.";
+    case SPARM_STRENGTH:
+        return "it increases the strength of its wearer (Str +3).";
+    case SPARM_DEXTERITY:
+        return "it increases the dexterity of its wearer (Dex +3).";
+    case SPARM_INTELLIGENCE:
+        return "it increases the intelligence of its wearer (Int +3).";
+    case SPARM_PONDEROUSNESS:
+        return "it is very cumbersome, slowing its wearer's movement.";
+    case SPARM_FLYING:
+        return "it grants its wearer flight.";
+    case SPARM_WILLPOWER:
+        return "it increases its wearer's willpower, protecting "
+               "against certain magical effects.";
+    case SPARM_PROTECTION:
+        return "it protects its wearer from most sources of damage (AC +3).";
+    case SPARM_STEALTH:
+        return "it enhances the stealth of its wearer.";
+    case SPARM_RESISTANCE:
+        return "it protects its wearer from the effects of both fire and cold.";
+    case SPARM_POSITIVE_ENERGY:
+        return "it protects its wearer from the effects of negative energy.";
+    case SPARM_ARCHMAGI:
+        return "it increases the power of its wearer's magical spells.";
+    case SPARM_PRESERVATION:
+        return "it protects its wearer from the effects of acid and corrosion.";
+    case SPARM_REFLECTION:
+        return "it reflects blocked missile attacks back in the "
+               "direction they came from.";
+    case SPARM_SPIRIT_SHIELD:
+        return "it causes incoming damage to be divided between "
+               "the wearer's reserves of health and magic.";
+    case SPARM_ARCHERY:
+        return "it improves its wearer's accuracy and damage with "
+               "ranged weapons, such as bows and javelins (Slay +4).";
+    case SPARM_REPULSION:
+        return "it protects its wearer by repelling missiles.";
+#if TAG_MAJOR_VERSION == 34
+    case SPARM_CLOUD_IMMUNE:
+        return "it does nothing special.";
+#endif
+    case SPARM_HARM:
+        return "it increases damage dealt and taken.";
+    case SPARM_SHADOWS:
+        return "it reduces the distance the wearer can be seen at "
+               "and can see.";
+    case SPARM_RAMPAGING:
+        return "its wearer takes one free step when moving towards enemies.";
+    default:
+        return "it makes the wearer crave the taste of eggplant.";
+    }
+}
+
 static string _describe_armour(const item_def &item, bool verbose)
 {
     string description;
@@ -1785,128 +1854,40 @@ static string _describe_armour(const item_def &item, bool verbose)
         }
     }
 
-    const int ego = get_armour_ego_type(item);
+    const special_armour_type ego = get_armour_ego_type(item);
 
+    // Only give a description for armour with a known ego.
     if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
     {
         description += "\n\n";
 
-        description += "'Of " + string(armour_ego_name(item, false)) + "': ";
-
-        switch (ego)
+        if (is_artefact(item))
         {
-        case SPARM_FIRE_RESISTANCE:
-            description += "it protects its wearer from fire.";
-            break;
-        case SPARM_COLD_RESISTANCE:
-            description += "it protects its wearer from cold.";
-            break;
-        case SPARM_POISON_RESISTANCE:
-            description += "it protects its wearer from poison.";
-            break;
-        case SPARM_SEE_INVISIBLE:
-            description += "it allows its wearer to see invisible things.";
-            break;
-        case SPARM_INVISIBILITY:
-            description += "when activated, it grants its wearer temporary "
-                           "invisibility, but also drains their maximum "
-                           "health.";
-            break;
-        case SPARM_STRENGTH:
-            description += "it increases the strength of its wearer (Str +3).";
-            break;
-        case SPARM_DEXTERITY:
-            description += "it increases the dexterity of its wearer "
-                           "(Dex +3).";
-            break;
-        case SPARM_INTELLIGENCE:
-            description += "it increases the intelligence of its wearer "
-                           "(Int +3).";
-            break;
-        case SPARM_PONDEROUSNESS:
-            description += "it is very cumbersome, slowing its wearer's "
-                           "movement.";
-            break;
-        case SPARM_FLYING:
-            description += "it grants its wearer flight.";
-            break;
-        case SPARM_WILLPOWER:
-            description += "it increases its wearer's willpower, protecting "
-                           "against certain magical effects.";
-            break;
-        case SPARM_PROTECTION:
-            description += "it protects its wearer from most sources of "
-                           "damage (AC +3).";
-            break;
-        case SPARM_STEALTH:
-            description += "it enhances the stealth of its wearer.";
-            break;
-        case SPARM_RESISTANCE:
-            description += "it protects its wearer from the effects of both "
-                           "fire and cold.";
-            break;
-        case SPARM_POSITIVE_ENERGY:
-            description += "it protects its wearer from the effects of "
-                           "negative energy.";
-            break;
-
-        // This is only for robes.
-        case SPARM_ARCHMAGI:
-            description += "it increases the power of its wearer's magical "
-                           "spells.";
-            break;
-        case SPARM_PRESERVATION:
-            description += "it protects its wearer from the effects of acid "
-                           "and corrosion.";
-            break;
-
-        case SPARM_REFLECTION:
-            description += "it reflects blocked missile attacks back in the "
-                           "direction they came from.";
-            break;
-
-        case SPARM_SPIRIT_SHIELD:
-            description += "it causes incoming damage to be divided between "
-                           "the wearer's reserves of health and magic.";
-            break;
-
-        // This is only for gloves.
-        case SPARM_ARCHERY:
-            description += "it improves its wearer's accuracy and damage with "
-                           "ranged weapons, such as bows and javelins "
-                           "(Slay +4).";
-            break;
-
-        // These are only for scarves.
-        case SPARM_REPULSION:
-            description += "it protects its wearer by repelling missiles.";
-            break;
-
-#if TAG_MAJOR_VERSION == 34
-        case SPARM_CLOUD_IMMUNE:
-            description += "it does nothing special.";
-            break;
-#endif
-
-        case SPARM_HARM:
-            description += "it increases damage dealt and taken.";
-            break;
-
-        case SPARM_SHADOWS:
-            description += "it reduces the distance the wearer can be seen at "
-                           "and can see.";
-            break;
-
-        case SPARM_RAMPAGING:
-            description += "its wearer takes one free step when moving "
-                           "towards enemies.";
-            break;
+            // Make this match the formatting in _randart_descrip,
+            // since instead of the item being named something like
+            // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
+            string name = string(armour_ego_name(item, true)) + ":";
+            name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
+            description += name;
         }
+        else
+            description += "'Of " + string(armour_ego_name(item, false)) + "': ";
+
+        string ego_desc = string(_item_ego_desc(ego));
+        if (is_artefact(item))
+            ego_desc = " " + uppercase_first(ego_desc);
+        description += ego_desc;
     }
 
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
-        description += "\n\n" + art_desc;
+    {
+        // Only add a section break if we didn't already add one before
+        // printing an ego-based property.
+        if (ego == SPARM_NORMAL || !verbose)
+            description += "\n";
+        description += "\n" + art_desc;
+    }
 
     if (!is_artefact(item))
     {
