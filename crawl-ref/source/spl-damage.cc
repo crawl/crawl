@@ -78,6 +78,7 @@ static actor* _find_closest_target(const actor &caster, int radius, bool tracer)
     {
         actor *act = actor_at(*di);
         if (act && _act_worth_targeting(caster, *act)
+            && cell_see_cell(caster.pos(), *di, LOS_SOLID)
             && (!tracer || caster.can_see(*act)))
         {
             return act;
@@ -217,6 +218,7 @@ static void _chain_lightning_to(const actor &caster, int pow,
             actor *new_victim = actor_at(*di);
             if (new_victim
                 && seen_set.find(new_victim) == seen_set.end()
+                && cell_see_cell(*di, beam.target, LOS_SOLID)
                 && _act_worth_targeting(caster, *new_victim))
             {
                 new_victims.push_back(arc_victim{beam.target, new_victim});
@@ -260,6 +262,7 @@ vector<coord_def> chain_lightning_targets()
             if (new_victim
                 && you.can_see(*new_victim)
                 && seen.find(new_victim) == seen.end()
+                && cell_see_cell(*di, you.pos(), LOS_SOLID)
                 && _act_worth_targeting(you, *new_victim))
             {
                 to_check.push_back(new_victim->pos());
