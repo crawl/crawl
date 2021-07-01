@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers are opportunists who start with three powerful wands and a club.
-They aim to scrounge their other equipment from the dungeon.
+Artificers start with two wands, a magic chesspiece, and a club. They'll need
+to find better weapons and armour before their wands run out.
 %%%%
 Berserker
 
