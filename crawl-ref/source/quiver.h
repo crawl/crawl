@@ -184,6 +184,7 @@ namespace quiver
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
     void on_actions_changed(bool check_autoswitch=false);
     void on_weapon_changed();
+    void on_newchar();
 
     // TODO: perhaps this should be rolled into action_cycler?
     class ammo_history

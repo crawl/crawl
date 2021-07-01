@@ -3120,6 +3120,35 @@ namespace quiver
                 you.quiver_action.set(a);
         }
     }
+
+    void on_newchar()
+    {
+        // look for something fun to quiver
+        if (you.weapon())
+            you.launcher_action.set(quiver::find_action_from_launcher(you.weapon()));
+        you.quiver_action.cycle();
+
+        // if the player has sandblast, cycle() quivered throwing stones,
+        // and they have the spell in their fire order, override quivering
+        // throwing stones with sandblast. This is very custom, but also
+        // removes a pretty annoying issue for EE starts. (In principle, maybe
+        // this should only happen if sandblast would be next? But this would
+        // only come up for unusual Wn starts I think.)
+        if (you.has_spell(SPELL_SANDBLAST)
+            && Options.fire_order_spell.count(SPELL_SANDBLAST))
+        {
+            auto sb_ammo = sandblast_find_ammo();
+            if (sb_ammo.first > 0 && sb_ammo.second
+                && sb_ammo.second->link == you.quiver_action.get()->get_item())
+            {
+                int fire_flags = 0x0;
+                for (const auto &f : Options.fire_order)
+                    fire_flags |= f;
+                if (fire_flags & FIRE_SPELL)
+                    you.quiver_action.set(quiver::spell_to_action(SPELL_SANDBLAST));
+            }
+        }
+    }
 }
 
 
