@@ -2586,13 +2586,44 @@ static void _gain_innate_spells()
 {
     auto &spell_vec = you.props[INNATE_SPELLS_KEY].get_vector();
     // Gain spells at every odd XL, starting at XL 3 and continuing to XL 27.
-    for (int i = 0; i < spell_vec.size() && i < (you.experience_level - 1) / 2; i++)
+    for (int i = 0; i < spell_vec.size() && i < (you.experience_level - 1) / 2;
+         i++)
     {
         const spell_type spell = (spell_type)spell_vec[i].get_int();
+        if (spell == SPELL_NO_SPELL)
+            continue; // spell lost due to lack of slots
         auto spindex = find(begin(you.spells), end(you.spells), spell);
         if (spindex != end(you.spells))
             continue; // already learned that one
 
+        // XXX: this shouldn't be able to happen, but rare Wanderer starts
+        // could give out too many spells and hit the cap.
+        if (you.spell_no >= MAX_KNOWN_SPELLS)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                const spell_type oldspell = (spell_type)spell_vec[j].get_int();
+                if (oldspell == SPELL_NO_SPELL)
+                    continue;
+                auto oldindex = find(begin(you.spells), end(you.spells),
+                                     oldspell);
+                if (oldindex != end(you.spells))
+                {
+                    mpr("Your capacity for spells is full, and you lose "
+                        "access to an earlier spell.");
+                    del_spell_from_memory(oldspell);
+                    spell_vec[j].get_int() = SPELL_NO_SPELL;
+                    break;
+                }
+            }
+            // If somehow a slot can't be freed, give up and lose the spell.
+            // This extremely shouldn't happen.
+            if (you.spell_no >= MAX_KNOWN_SPELLS)
+            {
+                spell_vec[i].get_int() = SPELL_NO_SPELL;
+                continue;
+            }
+        }
         mprf("The power to cast %s wells up from within.", spell_title(spell));
         add_spell_to_memory(spell);
     }
