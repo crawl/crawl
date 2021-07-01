@@ -203,6 +203,7 @@ static void _chain_lightning_to(const actor &caster, int pow,
         beam.source_id      = caster.mid;
         beam.thrower        = caster.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
         beam.origin_spell   = SPELL_CHAIN_LIGHTNING;
+        beam.aux_source     = "arc of chain lightning";
         // Reduce damage to the caster.
         beam.damage.size = dam_size / (arc.victim == &caster ? 6 : 1);
         beam.draw_delay = 0;
