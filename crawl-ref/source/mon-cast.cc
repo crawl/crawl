@@ -2489,6 +2489,7 @@ static bool _creeping_frost_freeze(coord_def p, bolt &beam)
                              // the consequences of copying it in bolt_parent_init
     beam.source = p;
     beam.target = p;
+    beam.aux_source = "creeping frost";
     beam.fire();
     return beam.explosion_draw_cell(p);
 }
