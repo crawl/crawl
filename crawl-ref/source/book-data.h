@@ -141,7 +141,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Necromancy
     SPELL_PAIN,
     SPELL_ANIMATE_SKELETON,
-    SPELL_ANIMATE_DEAD,
+    SPELL_VAMPIRIC_DRAINING,
 },
 
 {   // Book of Callings
@@ -248,7 +248,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Debilitation
     SPELL_SLOW,
     SPELL_VAMPIRIC_DRAINING,
-    SPELL_PETRIFY,
+    SPELL_CONFUSING_TOUCH,
 },
 
 {   // Book of the Dragon
