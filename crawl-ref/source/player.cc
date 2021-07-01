@@ -2963,14 +2963,6 @@ int player_stealth()
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
 
-    if (you.form == transformation::blade_hands
-        && you.has_innate_mutation(MUT_PAWS)
-        && !you.airborne())
-    {
-        stealth -= STEALTH_PIP; // klack klack klack go the blade paws
-        // this is an absurd special case but also it's really funny so w/e
-    }
-
     // Mutations.
     stealth += (STEALTH_PIP / 3) * you.get_mutation_level(MUT_NIGHTSTALKER);
     stealth += STEALTH_PIP * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
