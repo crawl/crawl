@@ -597,6 +597,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ARCHMAGI, "It increases the power of your magical spells.", false},
     };
 
+    bool need_newline = false;
     // Give a short description of the base type, for base types with no
     // corresponding ARTP.
     if (item.base_type == OBJ_JEWELLERY
@@ -605,12 +606,11 @@ static string _randart_descrip(const item_def &item)
         const char* type = _jewellery_base_ability_description(item.sub_type);
         if (*type)
         {
-            description += "\n";
             description += type;
+            need_newline = true;
         }
     }
 
-    bool need_newline = false;
     for (const property_descriptor &desc : propdescs)
     {
         if (!known_proprt(desc.property)) // can this ever happen..?
@@ -667,7 +667,7 @@ static string _randart_descrip(const item_def &item)
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "%s%sIt makes you %s%s stealthy.",
+        snprintf(buf, sizeof buf, "%s%s It makes you %s%s stealthy.",
                  need_newline ? "\n" : "",
                  _padded_artp_name(ARTP_STEALTH).c_str(),
                  (stval < -1 || stval > 1) ? "much " : "",
@@ -689,14 +689,23 @@ static string _artefact_descrip(const item_def &item)
     ostringstream out;
     if (is_unrandom_artefact(item))
     {
+        bool need_newline = false;
         auto entry = get_unrand_entry(item.unrand_idx);
         if (entry->dbrand)
+        {
             out << entry->dbrand;
+            need_newline = true;
+        }
         if (entry->descrip)
-            out << (entry->dbrand ? "\n\n" : "") << entry->descrip;
+        {
+            out << (need_newline ? "\n\n" : "") << entry->descrip;
+            need_newline = true;
+        }
+        if (!_randart_descrip(item).empty())
+            out << (need_newline ? "\n\n" : "") << _randart_descrip(item);
     }
-
-    out << _randart_descrip(item);
+    else
+        out << _randart_descrip(item);
 
     // XXX: Can't happen, right?
     if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
@@ -1967,7 +1976,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         // Explicit description of ring or amulet power.
         if (item.sub_type == AMU_REFLECTION)
         {
-            description += make_stringf("\nIt affects your shielding (%+d).",
+            description += make_stringf("\n\nIt affects your shielding (%+d).",
                                         AMU_REFLECT_SH / 2);
         }
         else if (item.plus != 0)
@@ -1975,32 +1984,32 @@ static string _describe_jewellery(const item_def &item, bool verbose)
             switch (item.sub_type)
             {
             case RING_PROTECTION:
-                description += make_stringf("\nIt affects your AC (%+d).",
+                description += make_stringf("\n\nIt affects your AC (%+d).",
                                             item.plus);
                 break;
 
             case RING_EVASION:
-                description += make_stringf("\nIt affects your evasion (%+d).",
+                description += make_stringf("\n\nIt affects your evasion (%+d).",
                                             item.plus);
                 break;
 
             case RING_STRENGTH:
-                description += make_stringf("\nIt affects your strength (%+d).",
+                description += make_stringf("\n\nIt affects your strength (%+d).",
                                             item.plus);
                 break;
 
             case RING_INTELLIGENCE:
-                description += make_stringf("\nIt affects your intelligence (%+d).",
+                description += make_stringf("\n\nIt affects your intelligence (%+d).",
                                             item.plus);
                 break;
 
             case RING_DEXTERITY:
-                description += make_stringf("\nIt affects your dexterity (%+d).",
+                description += make_stringf("\n\nIt affects your dexterity (%+d).",
                                             item.plus);
                 break;
 
             case RING_SLAYING:
-                description += make_stringf("\nIt affects your accuracy and"
+                description += make_stringf("\n\nIt affects your accuracy and"
                       " damage with ranged weapons and melee (%+d).",
                       item.plus);
                 break;
@@ -2014,7 +2023,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     // Artefact properties.
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
-        description += "\n" + art_desc;
+        description += "\n\n" + art_desc;
 
     return description;
 }
