@@ -437,7 +437,7 @@ static const ability_def Ability_List[] =
 
     // Trog
     { ABIL_TROG_BERSERK, "Berserk",
-        0, 0, 0, {fail_basis::invo}, abflag::none },
+        0, 0, 0, {fail_basis::invo, 45, 0, 2}, abflag::none },
     { ABIL_TROG_HAND, "Trog's Hand",
         0, 0, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
