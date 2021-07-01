@@ -207,6 +207,8 @@ VALUE:   800
 ANGRY:   50
 BOOL:    rampage
 BRAND:   SPWPN_ANTIMAGIC
+DESCRIP: It causes slowness and exhaustion when equipped.
++It extends the wielder's berserk rage when killing foes.
 
 NAME:    mace of Variability
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
@@ -988,6 +990,8 @@ OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
 BOOL:    elec, fly, rmsl
+DESCRIP: It reduces the accuracy of all your attacks.
++It enhances your air magic.
 
 NAME:    ring of Shadows
 INSCRIP: Umbra
@@ -996,6 +1000,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_shadows
 BOOL:    inv
 VALUE:   400
+DESCRIP: It surrounds you with an aura of darkness.
 
 # start TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
@@ -1025,6 +1030,7 @@ WILL:    2
 ANGRY:   5
 SLAY:    6
 BOOL:    berserk
+DESCRIP: It extends the wearer's berserk rage when killing foes.
 
 NAME:    ring of the Hare
 OBJ:     OBJ_JEWELLERY/RING_EVASION
