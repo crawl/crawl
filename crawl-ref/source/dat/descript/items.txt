@@ -390,7 +390,7 @@ book of vapours
 A book of magic spells for creating an assortment of clouds, vapours and mists.
 It is difficult to read, as the text is frequently interrupted by descriptions
 of unusually-shaped clouds the author spotted while writing.
-%%%
+%%%%
 book of weapons
 
 A book of spells used by rebels against an ancient and evil empire. The rebels
