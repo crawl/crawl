@@ -414,8 +414,11 @@ intervene to save a follower's life.
 Trog powers
 
 Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while
-fortifying their willpower. Later, followers may call in powerful raging allies. Eventually, Trog will gift followers with weapons, often with antimagic effects.
+ability to go berserk at will, and Trog will extend the duration of their
+berserk rage on killing foes. Trog will grant followers the ability to rapidly
+heal their wounds while fortifying their willpower, and later the ability to
+call in powerful raging allies. Eventually, Trog will gift followers with
+weapons, often with antimagic effects.
 %%%%
 Uskayaw powers
 
