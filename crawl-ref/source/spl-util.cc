@@ -1531,7 +1531,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FIRE_STORM:
         return false;
 
-    case SPELL_CHAIN_LIGHTNING:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_IGNITION:
     case SPELL_FROZEN_RAMPARTS:
@@ -1609,6 +1608,15 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
              == spret::abort;
+
+    case SPELL_CHAIN_LIGHTNING:
+        for (coord_def t : chain_lightning_targets())
+        {
+            const monster *mon = monster_at(t);
+            if (mon != nullptr && !mon->wont_attack())
+                return false;
+        }
+        return true;
 
     default:
         break;
