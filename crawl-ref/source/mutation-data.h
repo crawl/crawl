@@ -200,9 +200,9 @@ static const mutation_def mut_data[] =
 { MUT_REGENERATION, 2, 3, mutflag::good, false,
   "regeneration",
 
-  {"Your natural rate of healing is unusually fast.",
-   "You heal very quickly.",
-   "You regenerate."},
+  {"Your natural rate of healing is unusually fast. (+0.4 HP/turn)",
+   "You heal very quickly. (+0.8 HP/turn)",
+   "You regenerate. (+1.2 HP/turn)"},
 
   {"You begin to heal more quickly.",
    "You begin to heal more quickly.",
