@@ -160,16 +160,6 @@ bool book_exists(book_type bt)
     }
 }
 
-static const set<book_type> rare_books =
-{
-    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
-};
-
-bool is_rare_book(book_type type)
-{
-    return rare_books.find(type) != rare_books.end();
-}
-
 #ifdef DEBUG
 void validate_spellbooks()
 {
@@ -216,12 +206,12 @@ void validate_spellbooks()
 }
 #endif
 
-bool is_player_book_spell(spell_type which_spell, bool include_rare_books)
+bool is_player_book_spell(spell_type which_spell)
 {
     for (int i = 0; i < NUM_BOOKS; ++i)
     {
         auto bt = static_cast<book_type>(i);
-        if (!book_exists(bt) || (!include_rare_books && is_rare_book(bt)))
+        if (!book_exists(bt))
             continue;
         for (spell_type spell : spellbook_template(bt))
             if (spell == which_spell)

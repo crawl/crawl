@@ -93,22 +93,6 @@ spschool matching_book_theme(const vector<spell_type> &forced_spells)
     return *discipline;
 }
 
-/// Is the given spell found in rarebooks?
-static bool _is_rare_spell(spell_type spell)
-{
-    for (int i = 0; i < NUM_BOOKS; ++i)
-    {
-        const book_type book = static_cast<book_type>(i);
-        if (is_rare_book(book))
-            for (spell_type rare_spell : spellbook_template(book))
-                if (rare_spell == spell)
-                    return true;
-    }
-
-    return false;
-}
-
-
 /**
  * Can we include the given spell in our spellbook?
  *
@@ -118,13 +102,9 @@ static bool _is_rare_spell(spell_type spell)
  */
 static bool _agent_spell_filter(int agent, spell_type spell)
 {
-    // Only use spells available in books you might find lying about
-    // the dungeon; rarebook spells are restricted to Sif-made books.
-    if (!is_player_book_spell(spell)
-        && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
-    {
+    // Only use actual player spells.
+    if (!is_player_book_spell(spell))
         return false;
-    }
 
     // Don't include spells a god dislikes, if this is an acquirement
     // or a god gift.
@@ -375,28 +355,6 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
 {
-    // For randarts handed out by Sif Muna, spells contained in the
-    // special books are fair game.
-    // We store them in an extra vector that (once sorted) can later
-    // be checked for each spell with a rarity -1 (i.e. not normally
-    // appearing randomly).
-    vector<spell_type> special_spells;
-    if (god == GOD_SIF_MUNA)
-    {
-        for (int i = 0; i < NUM_BOOKS; ++i)
-        {
-            const book_type book = static_cast<book_type>(i);
-            if (!is_rare_book(book))
-                continue;
-            // Add spells in rarebooks that aren't in other books.
-            for (spell_type spell : spellbook_template(book))
-                if (!is_player_book_spell(spell, false))                special_spells.push_back(spell);
-        }
-
-        sort(special_spells.begin(), special_spells.end());
-    }
-
-    int specnum = 0;
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
         const spell_type spell = (spell_type) i;
@@ -404,21 +362,9 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         if (!is_valid_spell(spell))
             continue;
 
-        // Only use spells available in books you might find lying about
-        // the dungeon. (No monster spells, no rarebook spells.)
-        if (!is_player_book_spell(spell, false))
-        {
-            bool skip_spell = true;
-            while ((unsigned int) specnum < special_spells.size()
-                   && spell == special_spells[specnum])
-            {
-                specnum++;
-                skip_spell = false;
-            }
-
-            if (skip_spell)
-                continue;
-        }
+        // Only use actual player spells.
+        if (!is_player_book_spell(spell))
+            continue;
 
         if (avoid_known && you.spell_library[spell])
             continue;

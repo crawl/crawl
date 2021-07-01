@@ -21,13 +21,11 @@ using std::vector;
 class formatted_string;
 
 bool book_exists(book_type which_book);
-bool is_rare_book(book_type type);
 #ifdef DEBUG
 void validate_spellbooks();
 #endif
 bool is_player_spell(spell_type which_spell);
-bool is_player_book_spell(spell_type which_spell,
-                          bool include_rare_books = true);
+bool is_player_book_spell(spell_type which_spell);
 bool is_wand_spell(spell_type spell);
 
 bool book_has_title(const item_def &book);

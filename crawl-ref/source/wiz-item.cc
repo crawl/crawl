@@ -1034,9 +1034,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (!you_can_memorise(spell))
                 continue;
 
-            // Only use spells available in books you might find lying about
-            // the dungeon. (No monster spells, no rarebook spells.)
-            if (!is_player_book_spell(spell, false))
+            // Only use actual player spells.
+            if (!is_player_book_spell(spell))
                 continue;
 
             const bool seen = you.spell_library[spell];

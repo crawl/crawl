@@ -949,11 +949,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         {
             const auto bkt = static_cast<book_type>(bk);
 
-            if (is_rare_book(bkt) && agent == GOD_SIF_MUNA
-                || !book_exists(bkt))
-            {
+            if (!book_exists(bkt))
                 continue;
-            }
 
             weights[bk]    = _book_weight(bkt);
             total_weights += weights[bk];
@@ -1185,15 +1182,6 @@ static string _why_reject(const item_def &item, int agent)
         && get_weapon_brand(item) == SPWPN_PAIN)
     {
         return "Destroying pain weapon after Necro sac!";
-    }
-
-    // Sif Muna shouldn't gift special books.
-    // (The spells therein are still fair game for randart books.)
-    if (agent == GOD_SIF_MUNA
-        && is_rare_book(static_cast<book_type>(item.sub_type)))
-    {
-        ASSERT(item.base_type == OBJ_BOOKS);
-        return "Destroying sif-gifted rarebook!";
     }
 
     return ""; // all OK

@@ -25,9 +25,10 @@ using std::vector;
  * they can have 2 or 4 spells, and that's fine too. It'd also be fine to have
  * 5 spells for a really special book.
  *
- * They're designed so that almost every spell (except for the spells in 'rare'
- * books) shows up in 2 books. A few show up in three books, a few in just one
- * (especially lower-level spells that will rarely be useful to players).
+ * They're designed so that almost every spell shows up in 2 books. A few show
+ * up in three books, a few in just one (especially lower-level spells that
+ * will rarely be useful to players, level 9 spells, and some level 8 spells
+ * which are intentionally rarer).
  * A spreadsheet accurate as of June 2021 can be found here:
  * https://docs.google.com/spreadsheets/d/1RCWRO_fltNQDAlbF2h1wx8ZZyulUsyGmNNvkkogxRoo/edit#gid=0
  */
