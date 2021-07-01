@@ -1,4 +1,4 @@
-Stone Soup 0.27-a0 (through 0.27-a0-1333-gcdc07c3)
+Stone Soup 0.27-a0 (through 0.27-a0-1423-ge5d6b6a)
 --------------------------------------------------
 
 Branches, Environment
@@ -75,10 +75,14 @@ Character
   random mutation in its place.
 * The blink mutation is removed.
 * Shoutitis and No Potion Heal are reduced to 2 levels from 3.
+* New good mutation: Noise dampening, which halves noise in the players LOS.
 * Wisp form no longer has blinkitis.
 * Guaranteed damage reduction is now a property derived from AC, with
   higher AC values from any source guaranteeing a certain base amount of
   protection from melee damage and mundane projectiles.
+* Berserk ending no longer causes paralysis.
+* Backgrounds that previously started with a book start with a pre-defined
+  spell library.
 * Halflings are removed.
 
 Gods
@@ -113,6 +117,7 @@ Gods
 * Sacrifice Experience now extracts a greater experience cost by adjusting the
   experience gained.
 * Sacrifice words and sacrifice drink grant bonus piety when taken together.
+* Trog's Berserk ability has a piety-scaled chance to fail.
 * Vehumet now supports Poisonous Vapours
 * Heavenly Storm grants bonus EV and is a bit quieter.
 * Yredelemnul accepts nonliving worshippers again, and permits the use of
@@ -177,7 +182,10 @@ Interface
 
 Items
 -----
-* Haunt moves from the Necronomicon to the Grand Grimoire.
+* Fixed spell books are reduced in size to 2-4 spells each, 30 new books
+  are added.
+* Randart spellbooks generate with fewer spells.
+* Spellbooks generate more often and are always identified.
 * Scarves of shadows are no longer spell de-enhancers.
 * Wands of disintigrate are now called wands of mindburst and no longer affect
   mindless creatures.
@@ -206,6 +214,11 @@ Items
   only buff or debuff effects to a random monster in sight. Artificers
   start with one instead of the wand.
 * The amulet of the Air loses EV+5 and gains an Air magic enhancer.
+* Archmagic can now appeaar as aan artefact property on randart robes.
+* Bolts fired by Damnation only explode and mulch on hit.
+* The staff of Wucad-Mu refunds MP more often, and refunds MP even when it
+  backfires.
+* The Wrath of Trog now extends berserk and gains Rampage.
 * Rings of attention, rings of stealth, rings of teleportation, amulets of
   inaccuracy, scrolls of remove curse, scrolls of random uselessness, wands of
   random effects, and boots of running are removed.
@@ -231,7 +244,7 @@ Spells
 * Static Discharge is now level 2.
 * Swiftness is now level 3.
 * Freezing Cloud is now level 5.
-* Wereblood now heals 1d3 on each kill.
+* Wereblood now heals 1d3 when an adjacent monsnter is killed.
 * Tornado is re-named Polar Vortex and is now Level 9 Ice. It deals
   partly-resistable icicle flavoured damage and has more damage dice than
   before.
@@ -239,6 +252,11 @@ Spells
   to be more position sensitive and more comprehensible. Monster Chain
   Lightning is similarly adjusted.
 * Poisonous Vapours no longer creates a cloud as its mechanism of action.
+* New Spell: Maxwell's Capacitive Coupling. A level 8 Air spell. When cast
+  the player begins charging. After waiting in-place for a random, spell-power
+  dependent amount of time between 3 and 7 turns, the player discharges
+  instantly killing the nearest monster at the time of discharge.
+* Blade Hands' stealth penalty for Felids is removed.
 * Absolute Zero, Hydra Form, Summon Demon, and Summon Greater Demon are removed.
 
 Stone Soup 0.26.1 (20210203)
