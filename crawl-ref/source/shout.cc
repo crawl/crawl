@@ -792,10 +792,13 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
                     : original_loudness - random2avg(abs(ambient), 3);
 
-    dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
-         loudness, original_loudness, ambient, where.x, where.y);
+    const int adj_loudness = you.has_mutation(MUT_NOISE_DAMPENING)
+                && you.see_cell(where) ? div_rand_round(loudness, 2) : loudness;
 
-    if (loudness <= 0)
+    dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
+         adj_loudness, original_loudness, ambient, where.x, where.y);
+
+    if (adj_loudness <= 0)
         return false;
 
     // If the origin is silenced there is no noise, unless we're
@@ -805,10 +808,11 @@ bool noisy(int original_loudness, const coord_def& where,
 
     // [ds] Reduce noise propagation for Sprint.
     const int scaled_loudness =
-        crawl_state.game_is_sprint()? max(1, div_rand_round(loudness, 2))
-                                    : loudness;
+        crawl_state.game_is_sprint()? max(1, div_rand_round(adj_loudness, 2))
+                                    : adj_loudness;
 
-    // The multiplier converts to milli-auns which are used internally by noise propagation.
+    // The multiplier converts to milli-auns which are used internally
+    // by noise propagation.
     const int multiplier = 1000;
 
     // Add +1 to scaled_loudness so that all squares adjacent to a

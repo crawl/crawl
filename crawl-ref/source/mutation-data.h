@@ -483,6 +483,16 @@ static const mutation_def mut_data[] =
    ""},
 },
 
+{ MUT_NOISE_DAMPENING, 2, 1, mutflag::good, false,
+  "noise suppression",
+
+  {"You passively dampen the noise of your surroundings.", "", ""},
+
+  {"You feel your surroundings grow quieter.", "", ""},
+
+  {"You feel your surroundings grow louder", "", ""},
+},
+
 { MUT_CLARITY, 6, 1, mutflag::good, false,
   "clarity",
 
