@@ -115,7 +115,7 @@
        "scroll of immolation", "ice dragon scales", "book of ice",
        "potion of invisibility", "ring of intelligence", "scroll of identify",
        "wand of iceblast", "manual of invocations", "manual of ice magic",
-       "inescapable atlases", "book of iron" }
+       "inescapable atlas", "book of iron" }
 
       elseif s == "J" then i = { "javelin" }
 
@@ -172,7 +172,7 @@
        "trismegistus codex"}
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat",
-       "unrestrained analects" }
+       "the unrestrained analects" }
 
       elseif s == "V" then i = { "scroll of vulnerability", "book of vapours" }
 

@@ -864,7 +864,7 @@ local kstr = "S = general shop type:Mayhem suffix:Merchandise ; " ..
              "battleaxe | " ..
              "executioner's axe w:2 | " ..
              "book of fire w:5 | " ..
-             "unrestrained analects w:5 | " ..
+             "the unrestrained analects w:5 | " ..
              "wand of iceblast"
 
 -- Unfortunately this can still result in the unrandart being picked twice or
