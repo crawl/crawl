@@ -535,12 +535,12 @@ struct property_descriptor
     bool is_graded_resist;
 };
 
-static const int MAX_ARTP_NAME_LEN = 9;
+static const int MAX_ARTP_NAME_LEN = 10;
 
 static string _padded_artp_name(artefact_prop_type prop)
 {
     string name = artp_name(prop);
-    name += ":";
+    name = chop_string(name, MAX_ARTP_NAME_LEN - 1, false) + ":";
     name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
     return name;
 }
@@ -1866,7 +1866,8 @@ static string _describe_armour(const item_def &item, bool verbose)
             // Make this match the formatting in _randart_descrip,
             // since instead of the item being named something like
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
-            string name = string(armour_ego_name(item, true)) + ":";
+            string name = string(armour_ego_name(item, true));
+            name = chop_string(name, MAX_ARTP_NAME_LEN - 1, false) + ":";
             name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
             description += name;
         }
