@@ -214,7 +214,7 @@ Items
   only buff or debuff effects to a random monster in sight. Artificers
   start with one instead of the wand.
 * The amulet of the Air loses EV+5 and gains an Air magic enhancer.
-* Archmagic can now appeaar as aan artefact property on randart robes.
+* Archmagi can now appear as an artefact property on randart robes.
 * Bolts fired by Damnation only explode and mulch on hit.
 * The staff of Wucad-Mu refunds MP more often, and refunds MP even when it
   backfires.
