@@ -395,7 +395,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_IRON_SHOT,
 },
 
-{ // Inescapable Atlases
+{ // Inescapable Atlas
     SPELL_BLINK,
     SPELL_MANIFOLD_ASSAULT,
     SPELL_STORM_FORM,

@@ -1009,7 +1009,8 @@ bool book_has_title(const item_def &book)
     // No "A Great Wizards, Vol. II"
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
-        || book.sub_type == BOOK_OZOCUBU)
+        || book.sub_type == BOOK_OZOCUBU
+        || book.sub_type == BOOK_UNRESTRAINED)
     {
         return true;
     }

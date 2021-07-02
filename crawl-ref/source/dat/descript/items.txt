@@ -659,7 +659,7 @@ ice dragon scales
 The scales of a cold-breathing dragon. It provides great protection from cold,
 while rendering its wearer more susceptible to fire.
 %%%%
-inescapable atlases
+inescapable atlas
 
 A collection of maps, with accompanying descriptions of spells that can bring
 the user to each place. Most copies are locked up, chained down, or otherwise
@@ -1287,7 +1287,7 @@ troll leather armour
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
 flesh.
 %%%%
-unrestrained analects
+the unrestrained analects
 
 A collection of spells that assault everything in sight of the caster,
 unrestrained by petty limitations like 'needing a clear shot' or 'concern about

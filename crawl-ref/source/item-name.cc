@@ -1155,7 +1155,7 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_FEN:
             return "Fen Folio";
         case BOOK_NEARBY:
-            return "Inescapable Atlases";
+            return "Inescapable Atlas";
         case BOOK_THERE_AND_BACK:
             return "There-And-Back Book";
         case BOOK_BIOGRAPHIES_II:
@@ -1165,7 +1165,7 @@ string sub_type_string(const item_def &item, bool known)
         case BOOK_TRISMEGISTUS:
             return "Trismegistus Codex";
         case BOOK_UNRESTRAINED:
-            return "Unrestrained Analects";
+            return "the Unrestrained Analects";
 #if TAG_MAJOR_VERSION == 34
         case BOOK_AKASHIC_RECORD:
             return "Akashic Record";
