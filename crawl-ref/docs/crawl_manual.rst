@@ -2057,26 +2057,25 @@ Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
   in themselves and others. They deal damage primarily in unarmed combat, often
   using transformations to enhance their defensive and offensive capabilities.
-  They begin the game with the Book of Changes and a robe.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
-  in melee or missile combat. They start with a scroll of blinking, the Book of
-  Spatial Translocations, some dispersal boomerangs, a simple weapon of their
+  in melee or missile combat. They start with a scroll of blinking, a selection
+  of translocation spells, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with the Book of Debilitation, a ranged weapon of their
-  choice, and a robe.
+  They begin the game with a ranged weapon of their
+  choice, some spells to support its use, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
-  enchanted dagger, a robe, and the Book of Maledictions.
+  enchanted dagger, a robe, and a selection of hexes.
 
 Mage backgrounds
 ================
@@ -2084,30 +2083,30 @@ Mage backgrounds
 A mage is not an available character background by itself, but a type of
 background, encompassing Hedge Wizards, Conjurers, Summoners, Necromancers,
 various Elementalists and Venom Mages. Mages are the best at using magic.
-Among other things, they start with a robe and a book of spells which should
-see them through the first several levels.
+Among other things, they start with a robe and a selection of spells which
+should see them through the first several levels.
 
 Hedge Wizards
   A Hedge Wizard is a magician who does not specialise in any area of magic.
   Hedge Wizards start with a variety of magical skills and with Magic Dart
-  memorised, from the Book of Minor Magic. Their book allows them to progress
-  in many different branches of the arcane arts. They also get a wizard hat.
+  memorised, from a large library of varied low-level spells. They also get a
+  wizard hat.
 
 Conjurers
   The Conjurer specialises in the violent and destructive magic of conjuration
   spells. Like Wizards, the Conjurer starts with the Magic Dart spell, in their
-  case from the Book of Conjurations.
+  case from a library of destructive conjurations.
 
 Summoners
   The Summoner specialises in calling creatures from this and other worlds to
   give assistance. Although they can at first summon only very wimpy creatures,
   the more advanced summoning spells allow summoners to call on such powers as
-  elementals and demons. They begin with the Book of Callings.
+  elementals and demons.
 
 Necromancers
   The Necromancer is a magician who specialises in the less pleasant side of
-  magic, drawing initially from the Book of Necromancy. Necromantic spells are
-  a varied bunch, but many involve some degree of risk or harm to the caster.
+  magic. Necromantic spells are a varied bunch, but many involve some degree of
+  risk or harm to the caster.
 
 Elementalists
   Elementalists are magicians who specialise in one of the four types of
@@ -2115,25 +2114,22 @@ Elementalists
 
   Fire Magic
     tends towards indiscriminate, wide-range destructive conjurations and
-    starting fires. Fire Elementalists begin with the Book of Flames.
+    starting fires.
 
   Ice Magic
-    offers diffuse, subtle effects, both defensive and offensive. Ice
-    Elementalists start with the Book of Frost.
+    offers diffuse, subtle effects, both defensive and offensive.
 
   Air Magic
-    provides powerful but difficult to direct spells. Air Elementalists begin
-    with the Book of Air.
+    provides powerful but difficult to direct spells.
 
   Earth Magic
     is a versatile school, with destructive, debilitating and utility spells
-    available. Earth Elementalists start with the Book of Geomancy, and some
-    stones to use for the Sandblast spell.
+    available. Earth Elementalists start with the Sandblast spell, and some
+    stones to use with it.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
-  shallower levels of the Dungeon where few creatures are immune to it. Their
-  first book is the Young Poisoner's Handbook.
+  shallower levels of the Dungeon where few creatures are immune to it.
 
 ****************************************
 3. List of skills
