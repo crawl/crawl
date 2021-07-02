@@ -7,43 +7,53 @@
 ###############################################################################
 
 {{
+
+crawl_require("dlua/dungeon.lua")
+
+--[[
+Setup function for ice cave entry vaults. Create portal timer marker, determine
+ice cave difficulty, and set ice cave chance, and define the ice cave entry
+feature.
+
+@tab e The map environment.
+]]
 function ice_cave_portal(e)
-  local timeout_turns = crawl.random_range(600, 800)
+    local timeout_turns = crawl.random_range(600, 800)
 
-  local messager =
-    timed_msg {
-      initmsg = { "You feel a wave of frost pass over you.",
-                  "There is an entrance to an ice cave on this level. "
-                  .. "Hurry and find it before the portal melts!" },
-      finalmsg = "The crackling of melting ice is subsiding rapidly.",
-      verb = 'crackling',
-      noisemaker = 'melting archway',
-      ranges = {
-        { 5000, 'faint ' },  { 4000, '' },
-        { 2500, 'steady ' }, { 1500, 'quick ' },
-        { 0, 'loud ' }
+    local messager =
+      timed_msg {
+        initmsg = { "You feel a wave of frost pass over you.",
+                    "There is an entrance to an ice cave on this level. "
+                    .. "Hurry and find it before the portal melts!" },
+        finalmsg = "The crackling of melting ice is subsiding rapidly.",
+        verb = 'crackling',
+        noisemaker = 'melting archway',
+        ranges = {
+          { 5000, 'faint ' },  { 4000, '' },
+          { 2500, 'steady ' }, { 1500, 'quick ' },
+          { 0, 'loud ' }
+        }
       }
-    }
 
-  dgn.persist.ice_cave_hard = ice_cave_difficulty()
+    dgn.persist.ice_cave_hard = hard_ice_cave_difficulty()
 
-  e.lua_marker('O',
-      timed_marker {
-        disappear = "The archway melts and disappears.",
-        entity = 'archway',
-        turns = timeout_turns,
-        single_timed = true,
-        floor = "expired_portal",
-        feat_tile = "dngn_portal_ice_cave_gone",
-        msg = messager })
-  e.tags("uniq_icecv chance_icecave")
-  e.chance(500)
-  e.kfeat("O = enter_ice_cave")
-  e.colour("X = white")
-  e.kfeat("X = x")
-  e.rtile("X = wall_ice_block")
-  e.colour(".1234 = blue")
-  e.ftile(".12345O+^ = floor_ice")
+    e.lua_marker('O',
+        timed_marker {
+          disappear = "The archway melts and disappears.",
+          entity = 'archway',
+          turns = timeout_turns,
+          single_timed = true,
+          floor = "expired_portal",
+          feat_tile = "dngn_portal_ice_cave_gone",
+          msg = messager })
+    e.tags("uniq_icecv chance_icecave")
+    e.chance(500)
+    e.kfeat("O = enter_ice_cave")
+    e.colour("X = white")
+    e.kfeat("X = x")
+    e.rtile("X = wall_ice_block")
+    e.colour(".1234 = blue")
+    e.ftile(".12345O+^ = floor_ice")
 end
 
 -- Figure out if an easy or a hard ice cave should be used. Players
@@ -63,143 +73,357 @@ function ice_cave_difficulty()
   return true
 end
 
--- For destination (not entry) vaults, use the following line after all
--- substitutions have been performed:
--- : ice_cave_appearance(_G)
+--[[
+Define an Ice Cave exit feature on '<' and set ice cave thematic terrain
+descriptions. Should be called after all terrain substitutions are performed.
+
+@tab e The map environment.
+]]
 function ice_cave_appearance(e)
-  e.kfeat("< = exit_ice_cave")
-  -- Don't trap amphibious players.
-  e.kprop("w = no_tele_into")
+    e.kfeat("< = exit_ice_cave")
 
-  -- Alter short feature descriptions for all ice cave destination vaults.
-  e.set_feature_name("rock_wall", "ice covered rock wall")
-  e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
-  e.set_feature_name("shallow_water", "Some ice crusted shallow water")
-  e.set_feature_name("deep_water", "Some ice crusted deep water")
+    -- Alter short feature descriptions for all ice cave destination vaults.
+    e.set_feature_name("rock_wall", "ice covered rock wall")
+    e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
+    e.set_feature_name("shallow_water", "Some ice crusted shallow water")
+    e.set_feature_name("deep_water", "Some ice crusted deep water")
 end
 
--- Using this function will turn any ! glyph on the map into a fog generator.
--- Any use requires two parameters as follows:
--- : place_fog(_G, "freezing vapour", 25)
+--[[
+Place a freezing vapour generator on the '!' glyph via a lua marker.
 
-function place_fog(e, type, strength)
-   e.lua_marker("!", fog_machine { pow_max = strength, cloud_type = type,
-                     delay_min = 50, delay_max = 300, size = 12,
-                     start_clouds = 1, excl_rad = -1 } )
-   e.kfeat("! = W")
+@tab e The map environment.
+@number[opt=12] size The number of squares upon which the cloud generator
+    will place clouds.
+@string[opt="!"] glyphs The glyphs on which to place the marker.
+]]
+function place_freezing_vapour_machine(e, size, glyphs)
+    if size == nil then
+        size = 12
+    end
+
+    if glyphs == nil then
+        glyphs = "!"
+    end
+
+    e.lua_marker(glyphs,
+        fog_machine { pow_max = 20, cloud_type = "freezing vapour",
+                      delay_min = 50, delay_max = 250, size = size,
+                      start_clouds = 1, excl_rad = -1 })
 end
 
--- Monster set functions.
+--[[
+Returns monster simulacrum definition strings according to three types,
+"mocking", "savage", and "cruel", that are modified by ice cave difficulty.
+The "mocking" set tends to resemble player species, the "savage" set contains
+beastly simulacrum, and the "cruel" set contains particularly dangerous
+simulacrum in terms of speed, attack strength, or number of attacks.
 
--- Simulacrum definitions.
--- : [mocking|savage|cruel]_simulacrum(_G)
--- : mons([mocking|savage|cruel]_ice)
-function mocking_simulacrum(e)
-   mocking_ice = "naga simulacrum w:4 / troll simulacrum w:5 / " ..
-                 "draconian simulacrum w:4 / ogre simulacrum w:3 / " ..
-                 "centaur simulacrum w:3 / spriggan simulacrum w:2"
+@treturn table A table of strings with keys "mocking", "savage", and "cruel".
+]]
+function simulacrum_monsters()
+    local mons = {}
+    if dgn.persist.ice_cave_hard then
+        mons["mocking"] = "deep troll simulacrum / minotaur simulacrum \
+             / entropy weaver simulacrum / spriggan defender simulacrum"
+    else
+        mons["mocking"] = "two-headed ogre simulacrum / troll simulacrum \
+            / naga simulacrum / spriggan simulacrum"
+    end
+
+    if dgn.persist.ice_cave_hard then
+        mons["savage"] = "lindwurm simulacrum / dire elephant simulacrum  \
+            / alligator simulacrum / harpy simulacrum / anaconda simulacrum"
+    else
+        mons["savage"] = "wolf simulacrum / elephant simulacrum  \
+            / polar bear simulacrum / cane toad simulacrum \
+            / death yak simulacrum"
+    end
+
+    if dgn.persist.ice_cave_hard then
+        mons["cruel"] = "ettin simulacrum / hydra simulacrum \
+            / golden dragon simulacrum / caustic shrike simulacrum"
+    else
+        mons["cruel"] = "dire elephant simulacrum / harpy simulacrum \
+            / anaconda simulacrum / entropy weaver simulacrum"
+    end
+
+    return mons
 end
 
-function savage_simulacrum(e)
-   savage_ice = "wolf spider simulacrum w:2 / elephant simulacrum w:2 / " ..
-                "polar bear simulacrum w:4 / alligator simulacrum w:2 / " ..
-                "death yak simulacrum w:4 / wolf simulacrum w:4 / " ..
-                "swamp dragon simulacrum w:1"
+--[[
+Define undead and demonic monsters on glyphs 1 through 8 using KMONS, with the
+monster types modified by ice cave difficulty. The glyph definitions are
+roughly in order of difficulty. Glyph 3 defines a statue monster, which is ice
+statue for easy ice caves and obsidian statue for hard ice caves. The glyph 6
+monster is a "miniboss" that should be used sparingly in easy ice caves. The
+"boss" monsters are on glyphs 7 and 8, with 7 being appropriate for a 2+ size
+boss group and 8 being appropriate for a solo boss on easy ice caves or a small
+group for hard ice caves.
+
+Also set a random monster list for shadow creatures purposes containing
+monsters on glyphs 1,2,4, and 5, with total weights for each glyph having
+ratios 18:6:2:1.
+
+@tab e The map environment.
+@string[opt] reaper_glyphs If non-nil, a KMONS will be defined on the given
+    glyphs for a reaper with a freezing scythe and rC gear, the latter getting
+    it to rC+++ and hence freezing vapour immunity.
+]]
+function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
+    simul = simulacrum_monsters()
+
+    local reaper_equip = " ; scythe ego:freezing"
+    -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
+    if reaper_glyphs ~= nil then
+        reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
+            " . ring of protection from cold | ring of ice"
+    end
+
+    if dgn.persist.ice_cave_hard then
+        e.kmons("1 = " .. simul["mocking"] .. " / ice devil")
+        e.kmons("2 = " .. simul["savage"] .. " / freezing wraith")
+        e.kmons("3 = obsidian statue")
+        e.kmons("4 = freezing wraith")
+        e.kmons("5 = " .. simul["cruel"])
+        e.kmons("6 = bog body / white very ugly thing w:2")
+        e.kmons("7 = blizzard demon")
+        if reaper_glyphs ~= nil then
+            e.kmons(reaper_glyphs .. " = reaper" .. reaper_equip)
+        end
+        e.kmons("8 = ice fiend")
+
+        e.set_random_mon_list(
+            -- 144 * 5 = 720 total weight for tier 1.
+            dgn.random_entry_arg(simul["mocking"] .. " / ice devil",
+                "w:144") ..
+            -- 48 * 5 = 240 total weight for tier 2.
+            " / " .. dgn.random_entry_arg(simul["savage"], "w:48") ..
+            -- 80 weight for tier 4.
+            " / freezing wraith w:80" ..
+            -- 40 total weight for tier 5.
+            " / " .. simul["cruel"])
+    else
+        -- Default case, meaning glyph 8 and no rC gear.
+        if reaper_glyphs == nil then
+            reaper_glyphs = "8"
+        end
+
+        e.kmons("1 = " .. simul["mocking"] .. "/ white imp / ufetubus")
+        e.kmons("2 = " .. simul["savage"])
+        e.kmons("3 = ice statue")
+        e.kmons("4 = ice devil")
+        e.kmons("5 = " .. simul["cruel"])
+        e.kmons("6 = freezing wraith / white ugly thing w:2")
+        e.kmons("7 = bog body")
+        e.kmons(reaper_glyphs .. " = reaper" .. reaper_equip)
+
+        e.set_random_mon_list(
+            -- 120 * 6 = 720 total weight for tier 1.
+            dgn.random_entry_arg(simul["mocking"] .. " / white imp / ufetubus",
+                "w:120") ..
+            -- 48 * 5 = 240 total weight for tier 2.
+            " / " .. dgn.random_entry_arg(simul["savage"], "w:48") ..
+            -- 80 weight for tier 4.
+            " / ice devil w:80" ..
+            -- 40 total weight for tier 5.
+            " / " .. simul["cruel"])
+    end
 end
 
-function cruel_simulacrum(e)
-   cruel_ice = "harpy simulacrum w:3 / anaconda simulacrum w:3 / " ..
-               "dire elephant simulacrum w:2 / hydra simulacrum w:3 / " ..
-               "ettin simulacrum w:1 / iron troll simulacrum w:2 / " ..
-               "golden dragon simulacrum w:1"
+--[[
+Define natural monsters on glyphs 1 through 8 using KMONS, with the monster
+types modified by ice cave difficulty. The glyph definitions are roughly in
+order of difficulty. Glyph 3 defines a statue monster, which is ice statue for
+easy ice caves and orange crystal statue for hard ice caves. The glyph 6
+monster is a "miniboss" that should be used sparingly in easy ice caves. The
+"boss" monsters are on glyphs 7 and 8, with 7 being appropriate for a 2+ size
+boss group and 8 being appropriate for a solo boss on easy ice caves or a small
+group for hard ice caves.
+
+Also set a random monster list for shadow creatures purposes containing
+monsters on glyphs 1,2,4, and 5, with total weights for each glyph having
+ratios 18:6:2:1.
+
+@tab e The map environment.
+]]
+function ice_cave_natural_monster_set(e)
+    if dgn.persist.ice_cave_hard then
+        e.kmons("1 = polar bear / rime drake")
+        e.kmons("2 = white ugly thing")
+        e.kmons("3 = orange crystal statue")
+        e.kmons("4 = ice dragon")
+        e.kmons("5 = ironbound frostheart")
+        e.kmons("6 = white draconian ; " ..
+            dgn.random_item_def({["scimitar"] = 2, ["halberd"] = 2,
+                                 ["broad axe"] = 1, ["morningstar"] = 2},
+                                "freezing", nil, "|") .. " . cloak")
+        e.kmons("7 = frost giant")
+        e.kmons("8 = shard shrike")
+
+        -- Weights applied by monster difficulty tiers in a way similar to
+        -- ice_cave_undead_demon().
+        e.set_random_mon_list("polar bear w:15 / rime drake w:15 \
+                              / ice dragon / ironbound frostheart w:5")
+    else
+        e.kmons("1 = wolf / yak")
+        e.kmons("2 = polar bear")
+        e.kmons("3 = ice statue")
+        e.kmons("4 = rime drake")
+        e.kmons("5 = death yak")
+        e.kmons("6 = white ugly thing")
+        e.kmons("7 = ironbound frostheart")
+        e.kmons("8 = frost giant")
+
+        e.set_random_mon_list("wolf w:30 / yak w:30 / polar bear w:15 \
+                              / rime drake / death yak w:5")
+    end
 end
 
--- Some random monster lists are the same for multiple destination caves.
--- : ice_cave_random_monster_list_natural_giant(_G)
-function ice_cave_random_monster_list_natural_giant(e)
-  e.set_random_mon_list("wolf w:35 / yak w:35 / polar bear w:15 / death yak / \
-                         rime drake w:5 / frost giant w:5")
+--[[
+Define types of thematic armour loot on two KITEMs using the supplied glyphs.
+The first aux armour and buckler, the second being "light" armour and a kite
+shield, and the third being "heavy" armour and a tower shield. All have some
+kind of cold resistance. For hard ice caves, the items are all good_item.
+
+@tab e The map environment.
+@string[opt="def"] glyphs A string of three glyphs to use for the three KITEM
+    statements.
+]]
+function ice_cave_armour_loot(e, glyphs)
+    if glyphs == nil then
+        glyphs = "def"
+    end
+
+    local coldres = " ego:cold_resistance ident:type"
+    local res = " ego:resistance ident:type"
+
+    local quality = ""
+    if dgn.persist.ice_cave_hard then
+        quality = " good_item"
+    end
+
+    e.kitem(glyphs:sub(1,1) .. " = cloak" .. coldres .. quality .. " w:5" ..
+        " / scarf" .. res .. " w:5" .. " / hat" .. quality .. " w:5" ..
+        " / helmet" .. quality .. " w:5" .. " / pair of gloves" .. quality ..
+        " / pair of boots" .. quality .. " / buckler" .. coldres .. quality)
+    e.kitem(glyphs:sub(2,2) .. " = robe" .. res .. quality ..
+        " / leather armour" .. res .. quality ..
+        " / scale mail" ..  coldres .. quality .. " / skin of zhor w:2" ..
+        " / kite shield" ..  coldres .. quality)
+    e.kitem(glyphs:sub(3,3) .. " = ice dragon scales" ..  quality ..
+        " / chain mail" .. coldres ..  quality ..
+        " / plate armour" ..  coldres .. quality ..
+        " / crystal plate armour" .. coldres .. quality ..
+        " / tower shield" .. coldres .. quality)
 end
 
--- : ice_cave_random_monster_list_undead_demon(_G)
-function ice_cave_random_monster_list_undead_demon(e)
-  mocking_simulacrum(e)
-  savage_simulacrum(e)
-  cruel_simulacrum(e)
-  e.set_random_mon_list("white imp w:30 / ufetubus w:20 / freezing wraith / " ..
-                         mocking_ice .. " / " .. savage_ice .. " / " ..
-                         cruel_ice .. " / ice devil w:20 / ice fiend w:5")
+--[[
+Define weapon types on two KITEMs using the supplied glyphs, both of which have
+the freezing ego. The first is any weapon, and the second is a large set of
+upper-tier weapons. Both weapons definitions include launchers, and the second
+includes small weights for the unrands Frostbite and Maxwell's thermic engine.
+For easy ice caves, the first definition makes weapons that are 50% good_item,
+and for hard ice caves, both definitions are always good_item.
+
+@tab e The map environment.
+@string[opt="gh"] glyphs A string of two glyphs to use for the two KITEM
+    statements.
+]]
+function ice_cave_weapon_loot(e, glyphs)
+    if glyphs == nil then
+        glyphs = "gh"
+    end
+
+    local ego = " ego:freezing ident:type"
+    if dgn.persist.ice_cave_hard then
+        e.kitem(glyphs:sub(1,1) .. " = any weapon" .. ego .. " good_item")
+    else
+        e.kitem(glyphs:sub(1,1) .. " = any weapon" .. ego ..
+            " / any weapon" .. ego .. " good_item")
+    end
+
+    -- Some higher-end weapons that work well with the freezing ego.
+    local weapons = {
+        ["morningstar"] = 10, ["eveningstar"] = 5, ["demon whip"] = 5,
+        ["great mace"] = 10, ["giant club"] = 5, ["giant spiked club"] = 5,
+        ["demon trident"] = 5, ["halberd"] = 10, ["glaive"] = 10,
+        ["bardiche"] = 5, ["scimitar"] = 10, ["demon blade"] = 5,
+        ["double sword"] = 5, ["maxwell's thermic engine"] = 2,
+        ["great sword"] = 10, ["triple sword"] = 5, ["lajatang"] = 10,
+        ["broad axe"] = 10, ["battleaxe"] = 10, ["frostbite"] = 2,
+        ["executioner's axe"] = 5, ["fustibalus"] = 10, ["longbow"] = 10,
+        ["arbalest"] = 5, ["triple crossbow"] = 5
+    }
+    local quality = ""
+    if dgn.persist.ice_cave_hard then
+        quality = " good_item"
+    end
+    e.kitem(glyphs:sub(2,2) .. " = " ..
+        dgn.random_item_def(weapons, "freezing", "ident:type" .. quality))
 end
 
--- : ice_cave_random_monster_list_undead_necromancer(_G)
-function ice_cave_random_monster_list_undead_necromancer(e)
-  mocking_simulacrum(e)
-  savage_simulacrum(e)
-  e.set_random_mon_list("white imp w:20 / ufetubus w:20 / freezing wraith / " ..
-                        mocking_ice .. " / " .. savage_ice .. " / necromancer")
+--[[
+Define one item slot containing ice or water themed magical items, including
+spellbooks, manual, staff of cold, rC jewellery (good_item quality for hard ice
+caves), wand of iceblast, phial of floods, and condenser vane.
+
+@tab e The map environment.
+@string[opt="i"] glyphs A string of glyphs to use for the single KITEM
+    statement.
+]]
+function ice_cave_magic_loot(e, glyphs)
+    if glyphs == nil then
+        glyphs = "i"
+    end
+
+    local quality = ""
+    if dgn.persist.ice_cave_hard then
+        quality = " good_item"
+    end
+    e.kitem(glyphs .. " = book of ice / book of the tundra" ..
+        " / ozocubu's autobiography / randbook disc:ice" ..
+        " / manual of ice magic / staff of cold / ring of ice" .. quality ..
+        " / ring of protection from cold" .. quality ..
+        " / wand of iceblast / phial of floods / condenser vane")
 end
 
--- Currently, all the "caverns" maps use the same monster sets for placement.
--- XXX: Sort the monster orders into something much more coherent and linear.
--- : ice_cave_caverns_undead_demon_monster_set(_G)
-function ice_cave_caverns_undead_demon_monster_set(e)
-  mocking_simulacrum(e)
-  savage_simulacrum(e)
-  cruel_simulacrum(e)
-  e.mons("white imp / ufetubus / " .. mocking_ice)
-  e.mons(savage_ice .. " / freezing wraith / nothing w:1")
-  e.mons("ice statue")
-  e.mons("ice devil")
-  e.mons(cruel_ice)
-  e.mons("freezing wraith / ice devil / white ugly thing w:1")
-  e.mons("patrolling ice fiend")
-  e.kmons("8 = blizzard demon")
-  e.shuffle("7` / 7` / `8")
+--[[
+Define some common loot items using six KITEM statments on the supplied glyphs.
+The first three are armour, the next two are weapons, and that last is magical
+items. See comments for ice_cave_armour_loot, ice_cave_weapon_loot, and
+ice_cave_magic_loot for details.
+
+@tab e The map environment.
+@string[opt="defghi"] glyphs A string of six glyphs to use for the six KITEM
+    statements.
+]]
+function ice_cave_common_loot(e, glyphs)
+    if glyphs == nil then
+        glyphs = "defghi"
+    end
+
+    ice_cave_armour_loot(e, glyphs:sub(1,3))
+    ice_cave_weapon_loot(e, glyphs:sub(4,5))
+    ice_cave_magic_loot(e, glyphs:sub(6,6))
 end
 
--- : ice_cave_caverns_natural_giant_monster_set(_G)
-function ice_cave_caverns_natural_giant_monster_set(e)
-  e.mons("wolf w:5 / yak w:3 / nothing w:1")
-  e.mons("polar bear / nothing w:5")
-  e.mons("ice statue")
-  e.mons("polar bear w:8 / death yak w:4 / rime drake w:2")
-  e.mons("polar bear / yak")
-  e.mons("wolf / nothing w:3")
-  e.mons("patrolling frost giant / patrolling white draconian w:1 ; \
-          battleaxe ego:freezing . cloak ")
-end
+--[[
+Define one kitem glyph containing necromancy themed items, including
+spellbooks, a manual, staff of death, and an artefact ring of positive energy.
 
-function ice_cave_item_attributes(e)
-  freezeweap = "ego:freezing ident:type"
-  goodfreezeweap = "ego:freezing good_item ident:type"
-  coldres = "ego:cold_resistance ident:type"
-  goodcoldres = "ego:cold_resistance good_item ident:type"
-  goodicebook = "book of ice / book of the tundra / ozocubu's autobiography"
-end
+@tab e The map environment.
+@string[opt="j"] glyphs Glyphs to use for the single KITEM statement.
+]]
+function ice_cave_necro_loot(e, glyphs)
+    if glyphs == nil then
+        glyphs = "j"
+    end
 
--- : ice_cave_caverns_undead_demon_loot(_G)
-function ice_cave_caverns_undead_demon_loot(e)
-  ice_cave_item_attributes(e)
-  e.item("cloak " .. coldres .. " good_item w:8 / hat good_item / \
-          pair of gloves good_item / pair of boots good_item / nothing")
-  e.item( goodicebook .. " / book of death / staff of cold / staff of death / \
-          randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
-  e.item("ring of ice / ring of protection from cold / \
-          ring of positive energy / wand of iceblast / \
-          any ring w:1 / any wand w:1 / nothing")
-end
-
--- : ice_cave_caverns_natural_giant_loot(_G)
-function ice_cave_caverns_natural_giant_loot(e)
-  ice_cave_item_attributes(e)
-  e.item("animal skin " .. goodcoldres .. " / \
-          battleaxe " .. goodfreezeweap .. " w:4 / \
-          glaive " .. goodfreezeweap .. " w:4 / \
-          great sword " .. goodfreezeweap .. " w:2 / nothing")
-  e.item( goodicebook .. " / randbook disc:ice numspells:6 w:2 / \
-          arbalest ego:freezing good_item no_uniq ident:type / \
-          longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
-  e.item("ring of ice / ring of protection from cold / nothing")
+    e.kitem(glyphs .. " = book of unlife / randbook disc:ice" ..
+            "    disc2:necromancy numspells:6" ..
+            "/ manual of necromancy w:5 / staff of death" ..
+            "/ ring of positive energy randart")
 end
 
 }}
@@ -342,7 +566,6 @@ ENDMAP
 NAME:   portal_ice_cave_entry_pillars_four
 TAGS:   transparent
 DEPTH:  Elf, Swamp, Shoals, Snake, Spider
-WEIGHT: 6
 : ice_cave_portal(_G)
 MAP
    ...
@@ -524,145 +747,172 @@ default-depth: IceCv
 ###############################################################################
 # The small caves.
 #
-# All have the starting point next to the exit, so you can always retreat;
-# a middle point/area where there is some loot; and the end, where there is a
-# bigger challenge and some major loot. Ideally weaker characters attempt
-# to overcome the midpoint and then go back to dungeon, and strong characters
-# can try to clear the whole cave. The cavey parts should have no chokepoints.
+# A set of maps with "small" cave systems that feature a specific theme and a
+# main path without many chokepoints. They feature an early or midway point one
+# can reach for some loot if more difficult challenge at the end can't be
+# finished.
 
-# Foes: animals + frost giant (or rare draconian) & an ice statue.
-# Loot: heavy weapons and rC gear wearable by big races,
-#       plus some useful potions in the freezer.
+# Foes: Natural monster set with one frost giant for easy difficulty and two or
+# more for hard difficulty.
+#
+# Loot: Common ice cave loot set, with an emphasis on weapons, plus some
+# potions.
 NAME:    ice_cave_small_giant
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-ORIENT:  encompass
 WEIGHT:  6
-# Randomize the layout slightly.
-SHUFFLE: "'
-SUBST:   "=. , ':x .:1
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: kitem("j = " .. dgn.loot_potions)
+: ice_cave_natural_monster_set(_G)
+# For easy ice cave, always one frost giant and the potion area has fewer
+# monsters with only 33% chance for the 6 glyph miniboss. For hard ice cave,
+# minimum of two frost giants, with 25% each for up to two more, and the potion
+# area has more monsters and always has a miniboss.
+: if dgn.persist.ice_cave_hard then
+NSUBST:  E8 = 2=7 / 7..., F = 6 / 5 / 2=5. / 4=12.. / .
+: else
+NSUBST:  F = 556 / 2=5. / 2=12.. / .
+: end
+NSUBST:  D = 45
+# Randomize tunnel layout and the loot composition and locations.
+SHUFFLE: "w / 'a
+SUBST:   'a = x, j = j.
+NSUBST:  d = 3=def... / 5=gh.. / 2=i. / .
 : ice_cave_appearance(_G)
-: ice_cave_random_monster_list_natural_giant(_G)
-MONS:    yak / wolf / polar bear w:4
-MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
-         yak generate_awake
-MONS:    polar bear, rime drake
-MONS:    frost giant / white draconian w:1 ; \
-         battleaxe ego:freezing . cloak
-MONS:    ice statue
-ITEM:    giant club / giant spiked club / great mace w:9 / \
-         battleaxe w:7 / glaive w:8 / halberd w:8 / great sword w:6 / \
-         nothing w:58
-ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
-         halberd good_item / great sword good_item / nothing w:50
-: ice_cave_item_attributes(_G)
-: item("battleaxe " .. freezeweap .. " / glaive " .. freezeweap ..
-:   " / halberd " .. freezeweap .. " / great sword " .. freezeweap ..
-:   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
-:   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
-:   " / nothing w:80")
-: item("cloak " .. coldres .. " w:15 / hat good_item " ..
-:   " / kite shield " .. coldres ..  " / tower shield " .. coldres ..
-:   " / nothing w:60")
-ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
-         potion of might / potion of flight / \
-         potion of heal wounds w:5 / any potion w:1
-SHUFFLE: defg
-NSUBST:  3 = 2 = 3 6:3 / *:3
 MAP
                   xxxxx        xxxxxxxx
-                xxx...xxxx  xxxx13....xx
-         xxxxxxxx...x....xxxx...3.x....xxxx
-      xxxx......1..xxxx...x313.xxxxxxx...1xxxx
-     xx.......1..1.xxxxxx....xxxxxxxxxxxx31..xxx
-   xxx...xxxx.5.1....xxxxxxxxxxxxxwwwxxxxxx....xxx
-  xx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
-  x...xxdegefxx..1.....xxxxxwwwwwwwwwwwwwxxxxxx....x
-  x...x$$$$gdex.......xxxxxwwwwwwwwwwwwwwwwwxxxxx..x
-  x...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
-  xx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...3xx
-   xx............xxxwwwwxxxxxxxxxxxwwwxxxx......xx
- xxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...x.xxxx
-xxwwwxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxx
- xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xx
- xwwwwwwwwwwwwwwwww''xxxxxxxxxxxxxxx6...xxx
- xwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxx
-xxwwxxxxxxxxxxxwwxxx'xxxxxxx"xxxxxxxx.......xxx
-x""xxxxxxxxxxxxxwxx''xxxxx"""xxxxxxxxx....3...xx
-xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxx3......x
+                xxx...xxxx  xxxx1D....xx
+         xxxxxxxx...x....xxxx...D.x....xxxx
+      xxxx......1..xxxx...xD1D.xxxxxxx...1xxxx
+     xx.......1..4.xxxxxx....xxxxxxxxxxxxD1..xxx
+   xxx...xxxxE8E2....xxxxxxxxxxxxxxxxxxxxxx....xxx
+  xx...xxxddxxE5..1...xxxxxxxxxxxxxxxxxxxxxxx....xxx
+  x...xxdddddxx..1.....xxxxxxxxxxxxxxxxxxxxxxxx....x
+  x...x$$$$dddx.......xxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+  x...x....$$xx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxx11xx
+  xx.......xxx.....xxxxxxxxxxxxxxxxxxxxxxxxxx...Dxx
+   xx............xxxxxxxxxxxxxxxxxxxxxxxxx......xx
+ xxx"xx.........x'aaaxxxxxxxxxxxxxxxxxxx...x.xxxx
+ xwwwxxxxxxxxxxxxxaaaxxxxxxxxxxxxxxxxxx..xxxxx
+ xxwwwxxxxxxxxxaaaaaxxxxxxxxxxxxxxxxxx..xx
+ xwwwwxxxxxxxxxxxaaa'xxxxxxxxxxxxxxx3...xxx
+ xwwwxxxxxxxxxxxxxx'x'xxxxxxxxxxxxx.......xxx
+xxwwxxxxxxxxxxxxxxxx'xxxxxxx"xxxxxxxx.......xxx
+x""xxxxxxxxxxxxxxxx''xxxxx"""xxxxxxxxx....D...xx
+xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxxD......x
  xx""xxxxxxxxxxxx'x'xxxx"""xxx.......xxx.......x
-  x"x"xxxxxxxxxxx''xxxxx"xx'''xx......31x.....xx
-  xx"""xxxxxxxxxxx''xxx""x''x'''x....1..3....xx
-   xxx""""xxxxxxxxx''xx"xx''xxwwxx.1......1.xx
-     xxx"x"xxxxxxxxx'xx""xx''xxwwxx.x....x.xx
-      xxx"xxxxxxxxx''x""xxxx''xxwwxxxx..xxxx
-     xx"""xxxxxxxx'x'x"x"xxxx''xxwwxxx..x
-    xx""xxxxxxxxxx''xxx"x"xxxx''xwwxx..xx
-   xx""x"xxxxxxxxxx''xxx""xxx''xxwxx..xx
-  xx""x"xxxxxxxxxxxx'xxxx""x''xxxwwx...xx
-  x""xxxxxxxxxxxxxx'x'xxxx""'xxxxwwxx...xx
-  x"x"xxxxxxxxxxxxxx'''xxxx3'xxxxwwxxx22.x
- xx""xxxxxxxxxxxxxxxx'x..x.'xxxxwwxxxx2.2x
-xx""xxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xx
-x""xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xx
-x"x"xxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xx
-xx"x"xxxx""x"xxxxxx"1.....xx xxwwxx...A...x
- xx""""x""""x""x""""xxxxxxx   xwwxx.......x
-  xxxx"""xxx"x""""xxx        xxwwxxx..<..xx
-     xxxxx xxxxxxxx          xwwwx xx...xx
-                             xxwxx  xxxxx
-                              xxx
+  x"x"xxxxxxxxxxx''xxxxx"xx'''xx......24x.....xx
+  xx"""xxxxxxxxxxx''xxx""x''x'''x....1..2....xx
+   xxx""""xxxxxxxxx''xx"xx''xxxxxx.1......1.xx
+     xxx"x"xxxxxxxxx'xx""xx''xx  xx.x....x.xx
+      xxx"xxxxxxxxx''x""xxxx''xx  xxxx..xxxx
+     xx"""xxxxxxxx'x'x"x"xxxx''xx   xx..x
+    xx""xxxxxxxxxx''xxx"x"xxxx''x  xx..xx
+   xx""x"xxxxxxxxxx''xxx""xxx''xx  x..xx
+  xx""x"xxxxxxxxxxxx'xxxx""x''xx   x...xx
+  x""xxxxxxxxxxxxxx'x'xxxx""'xx    xx...xx
+  x"x"xxxxxxxxxxxxxx'''xxxx..x      xx12.x
+ xx""xxxxxxxxxxxxxxxx'xF.xF.xx      xx1.1x
+xx""xxxxxxxxxxxxxxxxxxFjx.xxx       x...xx
+x""xxxxxxxxxxxxxxxxF.xjxjxFxx      xx...xx
+x"x"xxxxxxxxxxxxxxx.xjxjxjFxx     xx.....xx
+xx"x"xxxx""x"xxxxxx".F.F.Fxx      x...A...x
+ xx""""x""""x""x""""xxxxxxx       x.......x
+  xxxx"""xxx"x""""xxx             xx..<..xx
+     xxxxx xxxxxxxx                xx...xx
+                                    xxxxx
 ENDMAP
 
-# Foes: ice beasts, rime drakes, ice dragons & ice statues.
-# Loot: some gold, jewellery (approximately three rings).
+# Foes: Icy dragon-themed monsters. End boss is either a dragon, with ice
+# dragon for easy, golden for hard, or white draconian, with ordinary draconian
+# for easy, draconian knight for hard.
+#
+# Loot: A lot of gold, some jewellery, and possible items from the common loot
+# set.
 NAME:    ice_cave_small_dragons
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-ORIENT:  encompass
 WEIGHT:  6
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+KITEM:   j = any jewellery
+# For easy ice caves, there are two ice statues, the boss is white draconian
+# instead of ice dragon half the time, and the higher quality jewellery is
+# good_item. For hard ice cave, there is one orange crystal statue and another
+# tier 2 monster, whenand the high quality jewellery is always randart.
+: if dgn.persist.ice_cave_hard then
+KITEM:   k = any jewellery randart
+MONS:    lindwurm simulacrum / ice dragon simulacrum \
+         / storm dragon simulacrum / golden dragon simulacrum
+MONS:    ice dragon, orange crystal statue, golden dragon
+{{
+kmons("D = white draconian ; " ..
+    dgn.random_item_def({["scimitar"] = 2, ["halberd"] = 2, ["broad axe"] = 1,
+       ["morningstar"] = 2}, "freezing", nil, "|") .. " . cloak")
+kmons("E = white draconian knight ; " ..
+    dgn.monster_weapon("knight", "freezing", "good_item", "|") ..
+    " . cloak good_item")
+set_random_mon_list("lindwurm simulacrum / swamp dragon simulacrum \
+                     / ice dragon simulacrum / golden dragon simulacrum \
+                     / white draconian / ice dragon")
+}}
+# 50% chance for dragons vs draconians.
+NSUBST:  3 = 3 / 2
+SHUFFLE: 24 / DE
+: else
+KITEM:   k = any jewellery good_item
+MONS:    steam dragon simulacrum / acid dragon simulacrum \
+         / komodo dragon simulacrum / lindwurm simulacrum w:5
+MONS:    rime drake, ice statue, ice dragon, white draconian
+{{
+set_random_mon_list("steam dragon simulacrum / acid dragon simulacrum \
+    / komodo dragon simulacrum / lindwurm simulacrum \
+                     / rime drake w:20")
+}}
+# 50% chance for a white draconian boss instead of an ice dragon.
+SUBST:   4 = 45
+: end
+# Two guaranteed jewellery with 4 pieces on average.
+NSUBST:  j = j / *=j$$$, k = k / *=k$$$
+# Make each of d through i have about a 50% chance of placing, and reduce the
+# gold placed to about 22 piles on-average.
+SUBST:   $ = $:440 d e f g h i .:140
 # Randomize the winding tunnels.
-SHUFFLE: "'
-SUBST:   " = . , ' : x .:1
+SHUFFLE: 'w / "a
+SUBST:   "a = x
 : ice_cave_appearance(_G)
-MONS:    ice beast, ice beast generate_awake, rime drake
-MONS:    ice dragon, ice statue
-ITEM:    any jewellery
-ITEM:    any jewellery good_item
-NSUBST:  d = 1:d / * = d $:15 .:5, e = 1:e / * = e $:5 .:5
 MAP
                          xxxxxxxx
                       xxxx......xxxx
-                     xx......x.....xxx
-                     x...xx.xxx...4..xxx
-                   xxxxx..xxx$$.4....dexx
-                  xx...xx.xx$$$$....deddx
-                  xx.x....x$$$$$$..deddxx
-                 xx..xxx.xxxx$$$$$$$xx''x
-              xxxx11xxxxxxwxxxxxxxxxxwx'x
-           xxxx...1xxwwwwwwwwwwwwwwwwwwwxx
-         xxx......xxwwwwwwwwwwwwwwwwwwwwwxx
-        xx...xxxxxxxxwwwwwwwwwxxwwwwwwwwwwx
-       xx..xxxxxxxxxxxxwwwwwxxxxxxxx'xwwxxx
-     xxx..xxxxxxxxxxxxxxxxxxxxxxxxx..xwwwx
-   xxx....xxxxxxxxxxx"xxxxxx""""x..$$xxwxx
-  xx........xxxxxxxx"""x"x"""x"x.'xx$xxxx
+                     xx......x....1xxx
+                     x...xx.xxx..12..xxx
+                   xxxxx..xxx$$..24..jkxx
+                  xx...xx.xx$$$$1...jkjjx
+                  xx.x....x$$$$$$$.jkjjxx
+                 xx..xxx.xxxx$$$$$$xxx''x
+              xxxx11xxxxxxxxxxxxxxxxxwx'x
+           xxxx.111xxxxxxxxxxxxxxxxwwwwwxx
+         xxx.....1xxxxxxxxxxxxxxxxwwwwwwxxx
+        xx...xxxxxxxxxxxxxxxxxxxxxxwwwwxxxx
+       xx..xxxxxxxxxxxxxxxxxxxxxxxxx'xxxxxx
+     xxx..xxxxxxxxxxxxxxxxxxxxxxxxx..xxxxx
+   xxx....xxxxxxxxxxx"xxxxxx""""x....xxxxx
+  xx........xxxxxxxx"""x"x"""x"x.'xx.xxxx
  xx...........xxxx"""x""x""xxxx"x''xx""xx
 xx..............x""xxxxx"xxxxxxxxx''xx""xx
-x................xxxxxxxxxxxxxxxxxx''x"x"x
+x.......2........xxxxxxxxxxxxxxxxxx''x"x"x
 x.................xxxxxxxxxxxxxxxxxx'xx"xx
-xx...1.131.1....x'''xxxxxxxxxxxxxx'''x""x
- xx...1.1.1.....xxx''xx''xxxx'''x'x'xx"xx
-  xx..........xxxxxx''''x''x''x''''xx""x
-   xx5x....x5xxxxxxxx'xxxx''$xxxxxx"""xx
+xx....1.1.1.....x'''xxxxxxxxxxxxxx'''x""x
+ xx.............xxx''xx''xxxx'''x'x'xx"xx
+  xx..........xxxxxx'''''''x''x''''xx""x
+   xx3x....x3xxxxxxxx'xxxx'''1xxxxx"""xx
     xxxx..xxxxxxxxxxxxxxxxx$$$xxx""""xx
-      xx..xxxxxxxxxxxxx"""x$3$$xx"x"xx
-     xx..xxxxxxxxxxxxxx"x""x$$""xx"xx
-     x..xxxx"xxxxxxxxx""xxxxxxx""""x
-     x...x""x""xxxxxxxx"""x   xx"xxx
-     xx..."x"x"""xxxxx"xx"x    xxx
-      xx22.xxxxx"""x"xx""xx
-      xx2.2x   xxx""""""xx
+      xx..xxxxxxxxxxxxx"""1$2*$xx"x"xx
+     xx..xxxxxxxxxxxxx""x"1$$|$1xx"xx
+     x..xxxx"xxxxxxxxx""xxx1x1x""""x
+     x...x"""""xxxxxxxx"""xxxxxx"xxx
+     xx..."x"x"""xxxxx"x""x    xxx
+      xx.1.xxxxx"""x"xx""xx
+      xx1.1x   xxx""""""xx
       x...xx     xxxx"xxx
      xx...xx        xxx
     xx.....xx
@@ -673,203 +923,193 @@ xx...1.131.1....x'''xxxxxxxxxxxxxx'''x""x
       xxxxx
 ENDMAP
 
-# Foes: mostly in the undead vein, plus a necromancer and an ice statue.
-# Loot: ice magic loot, gear of cold resistance (one piece).
+# Foes: Undead + demons set. For easy ice caves, a necromancer boss, and for
+# hard ice caves, the necromancer is a sub boss with a lich end boss.
+#
+# Loot: Common loot set along with a necromancy loot item.
 NAME:    ice_cave_small_necro
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-ORIENT:  encompass
 WEIGHT:  6
+ORIENT:  encompass
+KPROP:   yY'j = bloody
+: ice_cave_common_loot(_G)
+: ice_cave_necro_loot(_G)
+: ice_cave_undead_demon_monster_set(_G)
+KMONS:   D = necromancer
 KFEAT:   _ = altar_kikubaaqudgha
-SUBST:   - = ........-
-KFEAT:   - = alarm trap
+KFEAT:   ^ = alarm trap
+KFEAT:   y = x
+KFEAT:   " = +
+# For the easy ice cave, necromancer + elephants as boss, second area gets a
+# mix of appropriate monsters. For the hard ice cave, lich and friends as boss
+# and necromancer + dire elephants + friends in second area.
+: if dgn.persist.ice_cave_hard then
+KMONS:   E = lich
+SUBST:   D = E, K = D
+:else
+SUBST:   K = 5
+:end
+SHUFFLE: fghi, def
+SUBST:   f = f*, N = 456, - = ........^
+# Set up two shortcuts, each with a 50% to be open. Each open shortcut has a
+# 50% chance to be open space with a freezing cloud machine and a 50% chance to
+# be deep water.
+SHUFFLE: apq / aa! / zzz / zzz
+SUBST:   a = ., pq = w, z = x
+: place_freezing_vapour_machine(_G, 8)
+# Replace this glyph with floor so we can re-use it.
+SUBST:   ! = .
+SHUFFLE: rsu / rr! / zzz / zzz
+SUBST:   r = ., su = w, z = x
+: place_freezing_vapour_machine(_G, 12)
 : ice_cave_appearance(_G)
-: ice_cave_random_monster_list_undead_necromancer(_G)
-: ice_cave_item_attributes(_G)
-MONS:    ice beast
-MONS:    white imp
-MONS:    freezing wraith
-: mocking_simulacrum(_G)
-: mons(mocking_ice)
-: mons("necromancer / necromancer w:30 ; robe " .. coldres ..
-:   " . wand of acid | wand of iceblast | nothing")
-: savage_simulacrum(_G)
-: mons(savage_ice)
-MONS:    ice statue
-ITEM:    wand of iceblast ident:type, ring of ice / staff of cold
-: item(goodicebook .. " / randbook disc:ice numspells:6 w:2")
-ITEM:    manual of ice magic
-: item("cloak " .. coldres .. " w:15 / pair of gloves good_item " ..
-:   " / hat good_item / barding " .. coldres .. " w:5 " ..
-:   " / buckler " .. coldres .. " w:5")
-SHUFFLE: fg
-KPROP:   l = no_tele_into
 MAP
                           xxxxxx
                         xxx....xx
                       xxx.......x
               xxxxxx xx...xxx..xx
-             xxwwwwxxx...xxx..xx
-            xxwwwwxxx...xxx..xx
-    xxxxxxxxxwwwxxxx3..xxx...x
-   xx.G...G.xxwwxx...3xxxx..xx     xxxxx
-xxxx.........xwwx....xxxxx...xxx xxx...xxxx
-xdx....2_424.xwwx..xxxxxxxx....xxx...2....xx
-x*+.....44..2xxwx...xxxxxxxx.......2.1.2...xx
-xdx....423.342xwxx.3.xxxxxxxxxx...1.....1...x
-xxxx..4...324xxwwxxx3..xxxxxxxxx............x
-   xxxG4.2G...xxwwwxxx...xxxxwwxx2........2xx
-     xxxxxx....xxxxxxxx....xxxwwxx1x....x1xx
-          xxx...xx.xxxxxx....xxwwxxxx..xxxx
-   xxxxxxxx....xx...xxxxxxx...xxwwxxx..x
-   xlmh.xxx..xxx..x..xxxxxxxx..xwwxx..xx
-   xxxx+xxxx.....xxx.....xxx..xxwxx..xx
-  xx444544xxx...xxxxx........xxxwwx...xx
- xx.444444.xxxxxxxxx..3..3...xxwwwxx...xx
-xx..x$de$x..xxxxxx*%...1.....xxwwwxxx.66x
-x...xxffxx...xxxxx*%....3....xwwwwwxx6.6x
-x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
-xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
-  x...7....xxxxxxxxxxxxx..xxxwwwxxx.....xx
-  xx------xxxxx.xxxxxxxxxx..xxwwxx...A...x
-   xx----xxxxx....xxxxx..x...xwwxx.......x
-    x---xx.x...xx....x.....xxxwwxxx..<..xx
-    xx.......xxxxxx....xxxxxxwwwwxxx...xx
-     xxx.xx.xx    xxxxxx    xxwwwxxxxxxx
-      xxxxxxx                xwwxx
-                             xxxx
+             xxpqppxxx...xxx..xx
+            xxppppxxx...xxx..xx
+    xxxxxxxxxpqpxaaxN..xxx...x
+   xx.G...G.aappxx...Nxxxx..xx     xxxxx
+xxxx.........xxxx....xxxxx...xxx xxx...xxxx
+xfx....2_424.xxxx..xxxxxxxx....xxx...2....xx
+x*+.....K...2xxxx...xxxxxxxx.......2.1.2...xx
+xgx....52N.N42xxxx.N.xxxxxxxxxx...1.....1...x
+xxxx..4...N24xxxxxxxN..xxxxxxxxx............x
+   xxxG5.4G...xxxxxxxx...xxxxxxxx2........2xx
+     xxxxxx....xxxxxxxx....xxxxxxx1x....x1xx
+          xxx...xx.xxxxxx....xxxxxxxx..xxxx
+   xyyyyyxx....xx...xxxxxxx...xxxxxxx..x
+   xyYj'yxx..xxx..x..xxxxxxxx..xxxxx..xx
+   xyyy"yxxx.....xxx.....xxx..xxsxx..xx
+  xxN.'''Nxxx...xxxxx........xxxssr...xx
+ xx...4D4.2xxxxxxxxxG.N..N...xxssurx...xx
+xx.2x$**$x.2xxxxxxd%...1.....xxsssxxx.22x
+x..2xxhixx2..xxxxxe%....N....rsusssxx2.2x
+x....xxxx...xxxxxxxxx.......xrxsssxx...xx
+xxx.........xxxxxxxxxxx...xxxxsssxxx...xx
+  x...3....xxxxxxxxxxxxx..xxxxxxxxx.....xx
+  xx------xxxxx.xxxxxxxxxx..xx   x...A...x
+   xx----xxxxx....xxxxx..x...xx  x.......x
+    x---xx.x...xx....x.....xxx   xx..<..xx
+    xx.......xxxxxx....xxxxx      xx...xx
+     xxx.xx.xx    xxxxxx           xxxxx
+       xxxxxx
 ENDMAP
 
-# Foes: ice demons, an ice statue.
-# Loot: weapons and/or armour.
+# Foes: Undead + demon set with a demonic boss.
+# Loot: Common loot set.
 NAME:    ice_cave_small_demon
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-ORIENT:  encompass
 WEIGHT:  6
-NSUBST:  . = 9:1 / 1:2 / *:.
-SHUFFLE: Oo / Pp / Qq / Rr / Ss
-SUBST:   OP = 2, op = !, QRSqrs = .
-# Replaces '!'s with fog generators.
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: ice_cave_undead_demon_monster_set(_G, "E")
+# For hard ice caves, place an obsidian statue and a 50% chance for an OCS.
+# fiend. For the boss, 50% chance for either reapers or ice fiend. If reapers,
+# two guaranteed and 33% each for up to two more. If ice fiend, 50% chance for
+# a second. For easy ice caves, always place a single reaper.
 : if dgn.persist.ice_cave_hard then
-: place_fog(_G, "freezing vapour", 100)
+KMONS:   D = orange crystal statue
+SHUFFLE: EF / 8H
+NSUBST:  3 = 3 / D4, F = E / E.., H = 8. / .
 : else
-: place_fog(_G, "freezing vapour", 30)
+SUBST:   6 = 56
 : end
-# Couple of more random, milder fog generators away from the entrance
-# and in the water.
-NSUBST:  . = 3:! / *:.
-: place_fog(_G, "freezing vapour", 30)
-SUBST:   ! = W
-SUBST:   - = .
-NSUBST:  w = 3:! / *:w
-: place_fog(_G, "freezing vapour", 50)
-SUBST:   ! = w
-{{
-ice_cave_appearance(_G)
-dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / ice devil w:30")
-}}
-MONS:    white imp / ufetubus
-MONS:    ice devil
-MONS:    ice statue
-MONS:    patrolling reaper ; scythe ego:freezing
-MONS:    blizzard demon
-MONS:    ice fiend
-: if dgn.persist.ice_cave_hard then
-# Swap out the reaper for the standard ice fiend or blizzard demons,
-# alongside making the ice devil placements stronger.
-SUBST:   2 = 1:2 2:13, 0 = 2, 4 = 5
-SHUFFLE: 5` / `6
-: else
-SUBST:   2 = .:5 2:12, 0 = 21, ` = .
-: end
-SHUFFLE: dg, efh
-SUBST:   e = ed
-SUBST:   ` = .
-: ice_cave_item_attributes(_G)
-: item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
-:   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
-:   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
-:   " / triple sword " .. freezeweap .. " / giant spiked club " .. freezeweap ..
-:   " / demon trident " .. freezeweap)
-: item("battleaxe " .. goodfreezeweap .. " / executioner's axe " .. goodfreezeweap ..
-:   " / glaive " .. goodfreezeweap .. " / halberd " .. goodfreezeweap ..
-:   " / great sword " .. goodfreezeweap .. " / quick blade " .. goodfreezeweap ..
-:   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
-:   " / giant spiked club " .. goodfreezeweap)
-ITEM: demon whip good_item / demon blade good_item / demon trident good_item
-: item("cloak " .. coldres .. " / hat good_item / pair of gloves good_item / " ..
-:   " / pair of boots good_item / buckler " .. coldres)
-: item("crystal plate armour " .. coldres ..
-:   " / troll leather armour " .. coldres ..
-:   " / ice dragon scales good_item / robe ego:resistance ident:type / " ..
-:   " / barding " .. goodcoldres .. " w:5" ..
-:   " / crystal plate armour " .. goodcoldres ..
-:   " / troll leather armour " .. goodcoldres)
+SHUFFLE: dg, fh
+SUBST:   i = e|ii
+# Place middle-tier monsters and cloud generators in the boss chamber.
+SHUFFLE: JK / LM / NO / PQ / RS
+SUBST:   JL = 44., KM = !, MNOPQR = ., Z = 25
+: place_freezing_vapour_machine(_G)
+# Add in 1s and 2s throughout the map, doing this last so we have more space.
+NSUBST:  . = 6=1 / 6=1. / 2 / 2=2. / .
+# Set up two shortcuts, each with a 50% to be open. Each open shortcut has a
+# 50% chance to be open space with a freezing vapour machine and a 50% chance
+# to be deep water.
+SHUFFLE: apq / aa! / zzz / zzz
+SUBST:   a = ., pq = w, z = x
+: place_freezing_vapour_machine(_G, 12)
+# Replace this glyph with floor so we can re-use it.
+SUBST:   ! = .
+SHUFFLE: rsu / rr! / zzz / zzz
+SUBST:   r = ., su = w, z = x
+: place_freezing_vapour_machine(_G, 8)
+: ice_cave_appearance(_G)
 MAP
                     xxxxxx
                   xxx....xxx
                  xx........xxx
                 xx....xxx....xx
-  xxxxx         x...xxx0xxx...xxx
- xx...xxxxx     x...xx00..xxxx..xx
-xx.1..1...xx xxxxxx..xx.....xx...x
-x1......1..xxx.x...........dxxx..x
-xx........1.x.........xx..dxx...xx
-x.1..1..1........xxxxxxxxxxx...xx
-xx............xxxxwwwwwwxxx...xx
- x..........xxxwwwwxxxxxxp..xxx
- x3x....x3xxxwwwxxxx....P..xx
- xxxx..xxxxwwwxxx......PpP..xxx
-   xx..xxxwwxxx....xx.........xxx
-  xx..xxxwwxx.....xx..xxxx..q...xx
-  x..xxxwwxx0.o.x.....S..x...Q...xx
-  x...xxwwxx..O.xxx..s.S.xx.QqQ..0xx
-  xx...xxwwx0OoO..xx..S...xx.......x
-   xx.-.xwwxx.........x.s........0xx
-   xx---xxwwxx...xxx..x..xxx.....xx
-   x---xxwwwwxxxxx....x.....x..xxx
-  xx---xxwwwwwwx...r..x.....xxxx
- xx-----xxwwwwwxx.xx.R...rxxx
- x---A---xxwwwccccc.R.R.ccccc
- x-------xwwwwc...ccc.ccc...c
- xx--<--xxwwwwc.e...`4`...f.c
-  xx---xxwwwwwc...cc*|*cc...c
-   xxxxxxxwwwxccccccccccccccc
+  xxxxx         x...xxx6xxx...xxx
+ xx...xxxxx     x...xx4...xxxx..xx
+xx.4..2...xx xxxxxx..xx....2xx...x
+x1......1..xxx.x...........gxxx..x
+xx..........x.........xx..dxx...xx
+x.1.....1.......xxrxxxxxxxxx...xx
+xx............xxxsssxxxxxxx...xx
+ x..........xxxxssuxxxxxxK..xxx
+ x3x....x3xxxxxxxxrr....J..xx
+ xxxx..xxxxxxxxxx......JKJ..xxx
+   xx..axxpxxxx....xx.........xxx
+  xx..xapqpax.....xx..xxxx..Q...xx
+  x..xxpppxaZ.M.x.....N..x...P...xx
+  x...xxxxxx..L.xxx..O.N.xx.PQP..Zxx
+  xx...xxxxxZLML..xx..N...xx.......x
+   xx.-.xxxxx.........x.O........Zxx
+   xx---xxxxxx...xxx..x..xxx.....xx
+   x---xxxxxxxxxxx....x.....x..xxx
+  xx---xxxxxxxxx...S..x.....xxxx
+ xx-----xxxxxxxxx.xx.R...Sxxx
+ x---A---xxxxxccccc.R.R.ccccc
+ x-------xxxxxc...cccFccc...c
+ xx--<--xxxxxxc.f...FEF...h.c
+  xx---xxxxxxxc...cc*i*cc...c
+   xxxxxxxxxxxccccccccccccccc
          xxxxx
 ENDMAP
 
-NAME: ice_cave_tombish
 # This is an ice cave which is also a tomb of a necromancer who likes staying
 # alive and simulacrums, or just a chillout of an ice fiend. By Zaba.
-# Weighted as a small cave, although this is pretty tough. --Eino
-TAGS:   no_item_gen no_monster_gen
-ORIENT: encompass
-WEIGHT: 6
-# S is either an ice statue or a granite statue.
-SUBST:  S = GGS
-KMONS:  S = ice statue
-# I is an ice statue with loot underneath.
-KITEM:  I = any scroll
-KMONS:  I = ice statue
+#
+# Foes: Undead + demon set with necromancer + bog body or demon boss for easy
+# ice caves, or either reapers or fiend for hard ice caves.
+#
+# Loot: Common loot set with a necromancy themed item.
+NAME:    ice_cave_tombish
+TAGS:    no_item_gen no_monster_gen
+WEIGHT:  6
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: ice_cave_necro_loot(_G)
+# Scroll loot under statues.
+KITEM:   3 = any scroll
+: kitem("D8 = " .. dgn.loot_scrolls)
+KITEM:   D = any scroll
+# For easy ice caves, small chance for freezing wraiths in tomb area. For the
+# boss, a 50% chance for either necromancer plus bog body or reaper. For hard
+# ice caves, bog bodies in tomb area. The boss is 50% chance reapers versus one
+# or two ice fiends. For reapers, minimum of two, 33% chance each for up to two
+# more. For ice fiend, minimum of one and 50% chance for another.
 : if dgn.persist.ice_cave_hard then
-MONS:   ice devil w:20 / nothing w:7
-: cruel_simulacrum(_G)
-: mons(cruel_ice)
-# Use KMONS for some items below.
-KMONS:  3 = ice fiend
-KMONS:  4 = blizzard demon
-SHUFFLE: 3` / 3` / `4
+: ice_cave_undead_demon_monster_set(_G)
+KMONS:   D7 = reaper ; scythe ego:freezing
+SHUFFLE: D7 / 88
+NSUBST:  7 = 7 / 7.., 8 = 8 / 8. / .
+NSUBST:  4 = 6 / 446, F = 122445
 : else
-MONS:   ice devil w:12 / nothing
-: mocking_simulacrum(_G)
-: mons(mocking_ice)
-KMONS:  3 = necromancer
+: ice_cave_undead_demon_monster_set(_G)
+KMONS:   D = necromancer
+SHUFFLE: D7 / 88
+NSUBST:  7 = 7 / ., 8 = 8 / .
+SUBST:   4 = 4:70 6, F = .12244
 : end
-KITEM:  34 = any scroll q:3
-KITEM:  d` = any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT:  ' = alarm trap / floor w:40
+# Shuffle main loot chamber items, and then the locations of the non-necro loot
+# items to possibly be at other locations and to possibly include magical loot.
+SHUFFLE: fghi, defgh
+SUBST:   d = d*, e = e*, f = f*, g = g*, h = h*
 : ice_cave_appearance(_G)
-: ice_cave_random_monster_list_undead_demon(_G)
 MAP
       xxxxx
      xx...xx
@@ -879,382 +1119,468 @@ MAP
     xx.....xx
      xx...xx
       x...xx
-      xx...x
-      xx...x
+      xx..1x
+      xx..1x
       x...xx
    xxxx...xxxx
-  xxIx.....xIxx
+  xx3x.....x3xx
  xx...........xx
  x.............x
 xx.............xx
-x.......1.......x
-x....1.....1....x
+x.......F.......x
+x....F.....F....x
 x.......U.......x
-x....1.....1....x
-x.......1.......x
+x....F.....F....x
+x.......F.......x
 xx.............xx
  x.cnnc...cnnc.x
- xxc11c...c11cxx
-  xc11cc+cc11cx
+ xxc44c...c44cxx
+  xcVdcc+cceVcx
   ccc+c...c+ccc
   c...c...c...c
 ccc.ccc...ccc.ccc
-c...c2c...c2c...c
+c...c5c...c5c...c
 c+ccc+c...c+ccc+c
-c.c2+.......+2c.c
+c.c5+.......+5c.c
 c.ccc.G...G.ccc.c
-c.c2+.......+2c.c
+c.c5+.......+5c.c
 c.ccc.G...G.ccc.c
-c.c2+.......+2c.c
+c.+...........+.c
 c.ccc.G...G.ccc.c
-c.c2+.......+2c.c
+c.c5+.......+5c.c
+c.ccc.G...G.ccc.c
+c.c5+.......+5c.c
 c+cccccc+cccccc+c
 c...............c
-ccccS.ccccc.Scccc
-   cc.cd3dc.cc
-    c.c`U`c.c
-    c.cdddc.c
+ccccG.ccccc.Gcccc
+   cc.cfDgc.cc
+    c.c7U7c.c
+    c.ch7ic.c
     c.cc+cc.c
-    c.'''''.c
-    ccccScccc
+    c.......c
+    ccccVcccc
        ccc
 ENDMAP
 
 ############################################################################
 # The sprawling caverns.
 #
-# A winding, tight cavern with a hard challenge at the end. You can always
-# go back to the beginning to retreat.
-# The caverns are more rare than the caves.
+# A winding, tight cavern with a hard challenge at the end. You can always go
+# back to the beginning to retreat. The caverns are more rare than the caves.
+#
+# Details below are common to all caverns maps we have thus far.
+# Foes: 50% chance each of either the undead+demons set or the natural set.
+# Loot: Common loot set plus random wands/misc, potions, and scrolls.
 
-NAME: ice_cave_caverns_01
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 5
-ORIENT: encompass
-# A bit of layout randomization.
+NAME:    ice_cave_caverns_01
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+WEIGHT:  5
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: kitem("j = any wand / any potion w:5 / any scroll w:5")
+: kitem("k = any misc / " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+# Pick one of two themes, undead/demons or natural monsters.
 : if crawl.coinflip() then
-SUBST: ' = x
-SUBST: - = .
-SUBST: _ = .
+:     ice_cave_undead_demon_monster_set(_G)
 : else
-SUBST: ' = .
-SUBST: - = x
-SUBST: _ = w
+:     ice_cave_natural_monster_set(_G)
 : end
-: ice_cave_appearance(_G)
-# Two different populations: undead/demon and natural/giant.
+# Randomize bosses tiers and shuffle statue monster and miniboss locations.
+SHUFFLE: 7F / F8, 3H / UJ
+# For easy ice caves, 33% chance for the "miniboss" fight to be a solo 6,
+# otherwise two or three tier 5s. For the boss, either a fight with two tier 7
+# or one tier 8, along with other friends. For hard ice cave, the miniboss is
+# always includes a 6 tier along with one to two tier 5s. For the boss, still
+# two tier 7s or one tier 8.
 : if dgn.persist.ice_cave_hard then
-: ice_cave_random_monster_list_undead_demon(_G)
-: ice_cave_caverns_undead_demon_monster_set(_G)
-: ice_cave_caverns_undead_demon_loot(_G)
+NSUBST:  J = 6 / 5.
 : else
-: ice_cave_random_monster_list_natural_giant(_G)
-: ice_cave_caverns_natural_giant_monster_set(_G)
-: ice_cave_caverns_natural_giant_loot(_G)
+SUBST:   J : JJK
+NSUBST:  J = 2=5 / 5., K = 6 / .
 : end
-ITEM: any wand / any potion w:5 / any scroll w:5
-SUBST: ` = .
-MAP
-   xxx         xxxx        xxx
- xxx.xx       xx-'xx       xwxxx  xxx xxxx      xxxxxxxxxx      xxx
-xx....x    xxxx....xxxx    xwwwxxxx*xxx$$xxxxxxxx...xx...xxxxxxxxgxx
-x...A.xxxxxx....xx....xx   xxwwwwx*x*xxx$$x-.x...xx...xx...xxxxxgxgx
-x.<....'-....xxxxxxx...x xxxwwwwxxx*x.xxxx.'x..xxxxxxxxxx....xxxx.xx
-xx..xx....xxxxxxxx1111xx xwwwwwwxxxxxx...xxxxx..xxxxxxxxxx..3..x.xx
-xxxxxxxxxxxxxxx....xxxxxxxxwwwwxxxx11..x...x..xxxxwwwxxxxxx.....xx
- xwxwwwwxxx.....xxxx______xxwwxxxx51xxxxxx..xxxwwwwxwxxxxx..6xxxxxx
-xxwwwxxxx..xxxxxx___xx_____xxxx...xxxxwxxxxxxwwwxxxxxxxxx.66xxxwwwx
-xwwxxx....xxwxx__xxxxxxxx___xx..xxxwwwxwxxxwwwxxxxxxxx....xxxxwwwxxx
-xxxx...xxxxwxx_xxxx....xxx__xxx..xxxxxwwwwwwxxxx....x...xxxxwwwxwwwxx
-xxx..xxxwwwwx-xxx...xx...xxx_xxx..xxwwwwwxxxx...xx....xxxwwwxxxxxxwwx
-x...xxwwwwwwxx-...x.xxxx...xx_x..xxxxwwwwxxx..xxxxxxxxxwxxxxxx.xxxxwx
-x..xxxwwwwwxxx141xxxgxxxx...x_xx.11xxxwwwwxxx...xxxwwwwxx...x.x.xxxxx
-xx..xxxwwwwxx...xxxgxxx...xxx_xxxx51xxxwwwxxxx..1.xxxwwx.U...xxx..x
-xx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxx
- x..xxxwwwwxx'x.xxxxx5..5xxwwx_xxxx1.xxxxxwwxxxxx5415.xxxxx..xx...xx
- x...xxwwwxx..'xxxxwxx15.5xxwwx__xxx51xxxxwwxxxxxx5.41.xxxx..xxx454xx
- xx..-xxxxx..xxxwxwwwxxx5.1xxwwxx_--x1xxxxxwwwxxxxxx.5..x...xxx5`7`5x
-  x...-xx-..xxxwxwwxxwxx-x1.xxwwxx'''xxxxxxwwwwxxxxxxx'...xxxxxx5.5xxx
-  x...x--xx..1xxxxxwxx--x-..'xxwx'x'xxxxxwxxwwwwxxxx*.xxxxx.xxx..xxx|x
-  x222x''x''x..xx1xxx----xxxx'xx'''xxxxwxxxwwwwwwxxxx*xxxx.<.xxx.$defx
-  xx'.'xx'xx1.x.1...2xxxxx  xx'''xxxxwxxwwxwwwwwwwwxxx--........x|fedx
-   xxxxxxxxxxxxxxxxxxx       xx'xx xwxwwwxwwwwwxwxxx xxxxxx.xxxxxxxxxx
-                              xxx  xxxxxxxxxxxxxxx        xxx
-ENDMAP
-
-NAME:   ice_cave_caverns_02
-TAGS:   no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 5
-ORIENT: encompass
-# Two different populations: undead/demon and natural/giant.
-# The fog generators are placed differently - the natural population
-# doesn't have enough cold resistance for many clouds. The ';' placeholder
-# symbol gives the natural monsters some safety padding from generator
-# placement.
-: if dgn.persist.ice_cave_hard then
-: ice_cave_random_monster_list_undead_demon(_G)
-: ice_cave_caverns_undead_demon_monster_set(_G)
-: ice_cave_caverns_undead_demon_loot(_G)
-# Take out ';' safety padding.
-SUBST: ;` = .
-# Place the fog generators:
-SUBST: . = .:40 !:1
-: place_fog(_G, "freezing vapour", 25)
-: else
-: ice_cave_random_monster_list_natural_giant(_G)
-: ice_cave_caverns_natural_giant_monster_set(_G)
-: ice_cave_caverns_natural_giant_loot(_G)
-# Place the fog generators. The predetermined ones are mild.
-: place_fog(_G, "freezing vapour", 5)
-# Place a few random, mild ones.
-SUBST: . = .:60 !:1
-: place_fog(_G, "freezing vapour", 10)
-SUBST: ;` = .
-: end
-ITEM: any wand / any potion w:5 / any scroll w:5
-# The ':' provides fog-free zone near the entrance.
-SUBST: : = .
-# Some layout randomization.
-: if crawl.coinflip() then
-SUBST: '=x , -=.
-: else
-SUBST: '=. , -=x
-: end
+# Randomize loot so that two armour pieces will be at various places in the
+# map, and randomize loot locations at the end stash.
+SHUFFLE: efghi, def
+SUBST:   D = 12, E = 2 4:2 5:5, 2 = 2 .:5
+# Choose one of two possible paths to open up.
+SHUFFLE: '-
+SUBST:   ' = x
+# Set up three shortcuts, each with a 50% to be open. Each open shortcut has a
+# 50% chance to be open space with a freezing vapour machine and a 50% chance
+# to be deep water.
+SHUFFLE: apq / aa! / ZZZ / ZZZ
+SUBST:   a = ., pq = w, Z = x
+: place_freezing_vapour_machine(_G, 12)
+# Replace this glyph with floor so we can re-use it.
+SUBST:   ! = .
+SHUFFLE: rsu / rr! / ZZZ / ZZZ
+SUBST:   r = ., su = w, Z = x
+: place_freezing_vapour_machine(_G, 12)
+SUBST:   ! = .
+SHUFFLE: yz" / yy! / ZZZ / ZZZ
+SUBST:   y = ., z" = w, Z = x
+: place_freezing_vapour_machine(_G, 12)
 : ice_cave_appearance(_G)
 MAP
- xxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
- x::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xx  xx......xx
- x:<:xwwwwxx...x.x;x;x15;5xxwwxxx''';;x;xxWWxx15xx5;41;xxxx..xxx...xx
- xx::xxwwxx..xxx-;'xx;xx5;1xxxx'''xxx.-xxxxWWWxxxxxx;;;;x...xxx..U..x
-  x:A:xxwx..xxxwxxxwwwwxxx1;x'''xxwwx---xxxxWWwxwwwxxx'...xxxxxx...xx
-  x:::xwwxx;;;xxxxxwwwwwxx;;'xxxxxxxxxx--xxwwwwwwwxx*.xxxxxxxxx..xxx
-  x:::xxwxxxx;;xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx.x*xxxx..xxxx..x
-  xx:11xwwxx1;x;1;1;2xxwx---xx.*.*.xx..xxxwwwwwwwwww-x-x..xx.x..xxx
-  x11:xxwwwxxx1xxxxx1;xxxx--x.g.T.g.xxx;;xwwwwwwwwx-xx..xxxxx.xxx
-  xx::xwwwwwxx2;;1x11;;xxxx-...*.*..xx;;;xxwwwwwwx'...xxx   xxx
-   xx:xxwxxxxxxxxx;xxx;;xwxx...xxxxxxxxx;;xxwwwxxx.-xxx
-xxxxx;;xxxx.x....xxxx;;;xxwxxx.-xwwwxxx1xxxxwwwxx..xx
-x*x$xx..xx.*..-'..xxxxx..xxx''.-xwwwx15xxxwwwwxxxx;;xxx
-xx$x.xx..xx..xxxx..xwwxxx;;''xx--xxxx115xxwwwwwxxxx;;;xxx
-x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx;1;xxxwwwwwwxxxxx;;;;xxx
-xx.xx;x;;xxx..xx...xxwwwwxx1;xxxx.;;xxxxxwwwwwwxxxxxx;2;2;xx
-xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xx
-   xx;;xxxx...xxxx...xxxx;;x;;''xxxxxxwwwwwwwxxxx$$x;2475;;;xx
-   x5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;``;xx;xxx
-   x;;xx;..xxwwxx|x.xx...xx;xx xxwwwwwwwwwwwxxed|$$$;;;xxxxxx..xxxxx
-   x122;;.xxwwwwxx....xxxxxxx  xwwwwwwwwwwwwwxxfe|$$$$.x    xxx....xxx
-   xx1;;xxxwwwwwxxxxxxx        xxwwwwwwwwwwwwwxxxxxxxxxx      xxx...<x
-    xxxxx xxxxxxx               xxxxxxxxxxxxxxx                 xxxxxx
+   xxx         xxxx     xxxx xxxx
+ xxx.xx       xx-'xx  xxxppxxxppxxxxx xxxx      xxxxxxxxxx      xxx
+xx....x    xxxx....xxxxppppppppppxx*xxx$$xxxxxxxx...xx...xxxxxxxxkxx
+x...A.xxxxxx....xx....xxpppppppaaa*x*xxx$$x-.x...xx...xx...xxxxxjxjx
+x.<....'-....xxxxxxx...aaqppqppqpxx*x.xxxx.'x..xxxxxxxxxx....Hxxx.xx
+xx..xx....xxxxxxxx1111xxppppppppppxxxx...xxxxx..xxxxxxxxxx..3.Hx.xx
+xxxxxxxxxxxxxxx....xxxxxxxxppppppxx11..x...x..xxxxxxxxxxxxx....Hxx
+        xxx.....xxxx------xxppxxxxD1xxxxxx..xxxxxxxxxxxxxx...xxyxxx
+     xxxx..xxxxxx---xx-----xxxx...xxxxxxxxxxxxxxxxxxxxxxx...xxxzzzx
+   xxx....xxxxx--xxxxxxxx---xx..xxxxxxxxxxxxxxxxxxxxxx....xxxxzzzxxx
+  xx...xxxxxxx-xxxx....xxx--xxx..xxxxxxxxxxxxxxx....x...xxxxxzzxz"zxx
+xxx..xxxxxxxx-xxx...xx...xxx-xxx..xxxxxxxxxxx...xx....xxxxxxxxxxxxzzx
+x...xxxxxxxxxx-...x.xxxx...xx-x..xxxxxxxxxxx..xxxxxxxxxxxxxxxx.xxxyzx
+x..xxxxxxxxxxx1E1xxxjxxxx...x-xx.11xxxxxxxxxx...xxxxxxxxxe.*x.x.xxyxx
+xx..xxxxxxxxx...xxxdxxx...xxx-xxxxD1xxxxxxxxxx..1.xxxxxx.JUJ.xxx..x
+xx..xxxxxxxxx....xxxx..xxxwxx-xx...xxxxxxxxxxxx.1..xxxxxx..Jxx..xxx
+ x..xxxxxxxxx'x.xxxxxD...xxwwx-xxxx1.xxxxxxxxxxxxDE.D.xxxxx..xx...xx
+ x...xxxxxxx..'xxxxxxx1..Dxxwwx--xxxD.xxsxsxxxxxxxD.E1.xxxx..xxxE5Exx
+ xx..-xxxxx..xxxxxxxxxxxD.1xxwwxx---11rrssssxxxxxxxx.D..x...xxxD7F7Dx
+  x...-xx-..xxxxxxxxxxxx-x1.xxwwxx'''xxxsssusssxxxxxxx-...xxxxxxD5Dxxx
+  x...x--xx..1xxxxxxxx--x-..'xxwx'x'xxxxxxssssssssxx..xxxxx.xxx..xxx|x
+  x222x''x''x..xx1xxx----xxxx'xx'''xx    xxssussusrrx.xxxx.<.xxx.$*fgx
+  xx'.'xx'xx1.x.1...2xxxxx  xx'''xxx      xxxssssssxxx''........x|hikx
+   xxxxxxxxxxxxxxxxxxx       xx'xx          xssxsxxx xxxxxx.xxxxxxxxxx
+                              xxx           xxxxxx        xxx
 ENDMAP
 
-NAME: ice_cave_caverns_03
-TAGS: no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 5
-ORIENT: encompass
-# Two different populations: undead/demon (hard) and natural/giant (easy).
-# Different fog generator generation according to population,
-# as the natural monsters can't stomach the clouds.
-: if dgn.persist.ice_cave_hard then
-: ice_cave_random_monster_list_undead_demon(_G)
-: ice_cave_caverns_undead_demon_monster_set(_G)
-: ice_cave_caverns_undead_demon_loot(_G)
-# Place fog generators.
-SUBST: 3 = 3!
-: place_fog(_G, "freezing vapour", 25)
-KFEAT: ! = .
-SUBST: ;` = .
-SUBST: . = .:100 !:1
-: place_fog(_G, "freezing vapour", 15)
-KFEAT: ! = .
-: else
-: ice_cave_random_monster_list_natural_giant(_G)
-: ice_cave_caverns_natural_giant_monster_set(_G)
-: ice_cave_caverns_natural_giant_loot(_G)
-# Place fog generators.
-SUBST: 3 = 3!
-: place_fog(_G, "freezing vapour", 20)
-SUBST: . = .:100 !:1
-: place_fog(_G, "freezing vapour", 8)
-SUBST: ; = .
-: end
-ITEM: any wand / any potion w:5 / any scroll w:5
-# The ':' provides a fog-free zone near the entrance.
-SUBST: : = .
-# A bit of layout randomization for the middle part.
+# See ice_cave_caverns_01 for comments on most statements; only statements
+# different in this map are commented.
+NAME:    ice_cave_caverns_02
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+WEIGHT:  5
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: kitem("j = any wand / any potion w:5 / any scroll w:5")
+: kitem("k = any misc / " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 : if crawl.coinflip() then
-SUBST: '=x , -=.
+:     ice_cave_undead_demon_monster_set(_G)
 : else
-SUBST: '=. , -=x
+:     ice_cave_natural_monster_set(_G)
 : end
+KFEAT:   y = w
+SHUFFLE: 7F / F8, 3H / UJ
+: if dgn.persist.ice_cave_hard then
+NSUBST:  J = 6 / 5.
+: else
+SUBST:   J : JJK
+NSUBST:  J = 2=5 / 5., K = 6 / .
+: end
+SHUFFLE: fghik, def
+SUBST:   D = 12, E = 2 4:2 5:5, 2 = 2 .:5
+SHUFFLE: '-
+SUBST:   '=x
+# A fixed shortcut through a freezing vapour generators with a 50% chance to
+# place.
+SUBST:   r = rx
+: place_freezing_vapour_machine(_G, 6, "r")
+# Two shortcut set up in a similar fashion to ice_cave_caverns_01.
+SHUFFLE: apq / aa! / zzz / zzz
+SUBST:   a = ., pq = w, z = x
+: place_freezing_vapour_machine(_G, 8)
+SUBST:   ! = .
+SHUFFLE: suy / ss! / zzz / zzz
+SUBST:   s = ., uy = w, z = x
+: place_freezing_vapour_machine(_G, 12)
+: ice_cave_appearance(_G)
+MAP
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
+ x..xappppxax.x.'x-.xD..Dxxxxxxxxxx....x.Wxxxxxx1DE1D.xx  xx......xx
+ x.<.xppqpax...x.x.x.x1D.Dxxxxxxx'''..x.xxWWxx1DxxD.E1.xxxx..xxxJJJxx
+ xx..xxppxx..xxx-.'xx.xxD.1xxxx'''xxx.-xxxxWWWxxxxxx....x...xxxe.U.*x
+  x.A.xxxx..xxxxxxxwwwwxxx1.x'''xxxxx---xxxxWWwwwwwxxx-...xxxxxx...xx
+  x...xxxxx...xxxxxwwwwwxx..'xxxxxxxxxx--xxwwwwwwwxx--xxxxxxxxx..xxx
+  x...xxxxxxx..xx1-'xxwwxxx--xxxxx'''x--xxwwwwwwwxx'x-xxxx..xxxx..x
+  xx.11xxxxx1.x...1.2xxwx---xx.*.*.xx..xxxwwwwwwwww'.x.x..xx.x..xxx
+  x11.xxxxxxxx1xxxxx1.xxxx--x.j.T.j.xxx..xwwwwwwwwx'x-..xxxxx.xxx
+  xx..xxxxxxxx2..1x11..xxxx-...*.*..xx...xxwwwwwwx'...xxx   xxx
+   xx.xxxxxxxxxxxx.xxx..xxxx...xxxxxxxxx..xxwwwxxx.-xxx
+xxxxx..xxxx.x*...xxxx...xxxxxx.-xxxxxxx1xxxxxxxxx..xx
+xdx$xx..xr....-'..xxxxx..xxx''.-xxxxx.Dxxxxsxxxxxx..xxx
+xx$x.xx..xx..xxxx..xxxxxx..''xx--xxxx11Dsxuuuuxxxxx...xxx
+x$x..x....xx..xxx..xxxxxxx--xxxx-xx.1.xxsuuuuuuxxxxx....xxx
+xx.xx.x..xxx..xx.HHxxxxxxxx1.xxxx...xxxxxuyuuuxxxxxxx.D.5.xx
+xxxxxx..xxxx...xxH3.xxxxxx'-.1x'''xxxxxxuuuuyuuxxxxxx.DE.D.xx
+   xx..xxxx...xxxx...xxxx..x..''xxxxxxxxxuuuusxxx$$x.5E.D...xx
+   x...xx...xxxx.x.xxxxx...x.xxxx  xxxxxxuxuxsxi*$$...7F7.xx.xxx
+   x..xxD..xx  xx|x.xx...xx.xx      xxxxxxxxxxfk|$$$...xxxxxx..xxxxx
+   x...2.2xx    xx....xxxxxxx        xxxxxxxxxxgh|$$$$.x    xxx....xxx
+   xx11Dxxx     xxxxxxx                       xxxxxxxxxx      xxx...<x
+    xxxxx                                                       xxxxxx
+ENDMAP
+
+# See ice_cave_caverns_01 for comments on most statements; only statements
+# different in this map are commented.
+NAME:    ice_cave_caverns_03
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+WEIGHT:  5
+ORIENT:  encompass
+: ice_cave_common_loot(_G)
+: kitem("j = any wand / any potion w:5 / any scroll w:5")
+: kitem("k = any misc / " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
+: if crawl.coinflip() then
+:     ice_cave_undead_demon_monster_set(_G)
+: else
+:     ice_cave_natural_monster_set(_G)
+: end
+SHUFFLE: 7F / F8, 3H / UJ
+: if dgn.persist.ice_cave_hard then
+NSUBST:  J = 6 / 5.
+: else
+SUBST:   J : JJK
+NSUBST:  J = 2=5 / 5., K = 6 / .
+: end
+SHUFFLE: fghik, def
+SUBST:   D = 12, E = 2 4:2 5:5, 2 = 2 .:5
+SHUFFLE: '-
+# Two shortcut set up in a similar fashion to ice_cave_caverns_01.
+SHUFFLE: apq / aa! / zzz / zzz
+SUBST:   a = ., pq = w, z = x
+: place_freezing_vapour_machine(_G, 8)
+SUBST:   ! = .
+SHUFFLE: rsu / rr! / zzz / zzz
+SUBST:   r = ., su = w, z = x
+: place_freezing_vapour_machine(_G, 12)
 : ice_cave_appearance(_G)
 MAP
                                  xxxxx
-                                xx.x.xx      xxxxxxxxxx
-                      xxxxxxxxxxx.U.x$xxxxxxxx...xx;;;xxx
-                      xwwwwwwwwxxx.xxx$x..x...xx...xx;55xxx
-                     xxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx;554xxx
-                    xxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx;2525x
-                  xxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427`x
-                  xwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;`5xxx
-                  xxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx;;;xx
-               xxxxxxxwwwxx."xxxwwwwwxwwxwwwxxxxxxx....xxxx
-             xxx;...xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxx
-           xxx;;;xx...xxxwwxx..xxxxwwwwwwwwxxxx....xxxxxex|x
-          xx;44x;xxxx...xxwx..xxxxxxwwxwxwwwwxxxxxxx  xdx$xdx
-         xx;4;xxx$xxxx;;;xwxx"..xxxxxwwwwwxwwwxx      xx|xexx
-         x;;;xxx$xxx;;;xxxwwxxx..xxxwwwxxwwwwxwx       xxfxx
-         xx;;..xxxx5;xxxwwwwxx...xxxxxwwwwwwwxxx        xxx
-        xx.x.xxxxx51;5xxwwwwxxxx..xxxxxwwxxxxx
-       xx;;;xxxxxxx15;5xxwwxxx'''".xxxxwwxxx
-      xx;;xxxxxxxxxxx5;1xxxx''xxxx.-xxxxwwwxx
-      x;1xxxxxxxxxxxxxx;;x'''xxxxx---xxxwwwwxx
-      xx;11xxxxxxxxxxxx;;''xxxxx'xxx--xxxwwwwxx
-       xxx1;xx.xxxxxxxxx--xxxxx''''--xxxwwwwwwxxx
-        x;;x;;....xxxx---xx.*.*.xx..xxxxwwwwwwwwx
-        xxx;xxxxx.;xxxx--x.g.T.g.xxx..xxxwwwwxxxx
-          x2;;2x;;;;xxxx-...*.*..xx.;;xxwwwwwwx
-       xxxxxxxx;xxx;1xxxx...xxxxxxxxx;;xxwwwxxx
-      xx.x;;;'xxxx;1;xxxxxx.-xxxxxxx1xxxxxxxx
-  xxxxx;*66-x..xxxxx11xxxx'.--x---15xx
- xx::<xx;;xxxx..xxxxxx;;''xx-x-xxx115x
- xA::xxxx;.xxx..xxxxxxx--xxxx-xx.11xxx
- x::::xxx;,xx...xxxxxxxx1;xxx-;;;xxx
- x:::xxxx;;;xx.3.xxxxxxxx;1x'''xxx
-xx::xxxx21;xxxx...xxxx..x;;''xxx
-x:::xx;12xxxx.x.xxxxx...x;xxxx
-x::xx;;;xx  xx|x.xx...xx;xx
-x:::..;xx   xxx....xxxxxxx
-xx:..xxx     xxxxxxx
+                                 x$e*xx      xxxxxxxxxx
+                                 x.UJxxxxxxxxx...xx...xxx
+                              xxxx.JJ..x..x...xx...xx.DDxxx
+                              xWxxxxx....x..xxxxxxxxxx.DDExxx
+                              xWxWxWW.xxxxx..xxxxxxxxxx.2D2Dx
+                              xxWWWWxW..xx..xxxxxxxxxxxxE7F7x
+                           xxxxWWxwWWxx...xxxxxxxxxxxxx.2Dxxx
+                          xx.WWxxxxxrrxxxxxxxxxxxxxxxx...xx
+               xxxxxxxxxxxx..xxxxsssssssssssxxxxxxx....xxxx
+             xxx....xxxxxxxx..xxxssssusssssrr<...x...xx.xkxx
+           xxx...xx...xxxxxxx..xxxxsssssussxxxx....xxxxxix|x
+          xx.EEx.xxxxD1Dxxxx..xxx xxssssssxxxxxxxxxx  x$x$xhx
+         xx.E.xxx$xxxxDDDxxxx...xx xxsxssxxx          xx|xgxx
+         x...xxx$xxx11Dxxxxxxxx..x  xxxxxxx            xxfxx
+         xx....xxxx..xxxxxxxxx...xx                     xxx
+        xx.x.xxxpx....xxxxxxxxxx..xx
+       xx...xxxppxx....xxxxxxx'''..xx
+      xx..xxxxxpqpxxx...xxxx''xxxx.-xx
+      x.1xxxxxapppppaxx..x'''xxxxx---xx
+      xx.11xxxaxxxxxxa...''xxxxx'xxx--x
+       xxx1.xx.xxxxxx-xx--xxxxx''''--xx
+        x..x......xxxx---xx.*.*.xx..xxx
+        xxx.xxxxx..xxxx--x.j.T.j.xxx..x
+          x2..2x....xxxx-...*.*..xx...xx
+       xxxxxxxx.xxx.1xxxx...xxxxxxxxx..x
+      xx1x...'xxxx.1.xxxxxx.-xxxxxxx1xxx
+  xxxxx1...-x..xxxxx11xxxx'.--x---1Dxx
+ xx..<xx..xxxx..xxxxxx..''xx-x-xxx11Dx
+ xA..xxxx..xxx..xxxxxxx--xxxx-xx.11xxx
+ x....xxx..xx.HHxxxxxxxx1.xxx-...xxx
+ x...xxxx...xxH3.xxxxxxxx.1x'''xxx
+xx..xxxx21.xxxx...xxxx..x..''xxx
+x...xx.12xxxxdx.xxxxx...x.xxxx
+x..xx...xx  xx*x.xx...xx.xx
+x......xx   xxx....xxxxxxx
+xx...xxx     xxxxxxx
  xxxxxx
 ENDMAP
 
 ###############################################################################
 # The ice statue gardens.
 #
-# These rely on devious placement of ice statues and forcing players to face
-# them (if they want loot, that is).
-# Was called ice_cave_statue_garden_teleport
+# These vaults rely on devious placement of ice or orange crystal statues and
+# forcing players to face them (if they want loot, that is).
+#
+# Foes: Simulacra, ice or orange crystal statue monsters, freezing wraiths, and
+# white (very) ugly things.
+#
+# Loot: Some items from the common loot set, random items, star_item and
+# superb_item.
+
+# Previously called ice_cave_statue_garden_teleport, when it used the old
+# teleporter lua feature.
 NAME:   ice_cave_statue_garden_transporter
-veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-MONS:   ice beast, ice statue
-KMONS:  34 = white ugly thing
-KITEM:  *! = *
-MARKER: P = lua:transp_loc("statue_garden_first")
-MARKER: Q = lua:transp_dest_loc("statue_garden_first")
-MARKER: R = lua:transp_loc("statue_garden_second")
-MARKER: S = lua:transp_dest_loc("statue_garden_second")
+{{
+ice_cave_common_loot(_G)
+local simul = simulacrum_monsters()
+mons(simul["savage"])
+mons(simul["cruel"])
+}}
+# For easy ice caves, both statues are ice statues, and a freezing wraith has a
+# 50% chance of replacing one of the two white ugly thing. For hard ice caves,
+# there is one orange crystal statue with two freezing wraiths, always two
+# white very ugly things, the first chamber has more cruel simulacra, and there
+# are two more star_items.
+: if dgn.persist.ice_cave_hard then
+MONS:   orange crystal statue, freezing wraith, white very ugly thing
+# 12 * 5 = 60 total weight for savage simulacra, 4 * 5 = 20 total weight for
+# cruel simulacra, and 10 weight for freezing wraiths.
+: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:12") ..
+:     " / " .. dgn.random_entry_arg(simul["cruel"], "w:5")  ..
+:     " / freezing wraith")
+SUBST:  1 = 112, 3 = 4, D = 3, E = *
+NSUBST: % = * / %
+:else
+MONS:   ice statue, freezing wraith, white ugly thing
+: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:16") ..
+:     " / " .. simul["cruel"])
+NSUBST: 1 = 2=1 / 4=1112.... / ., 5 = 45 / 5
+SUBST:  D = *
+:end
+SUBST:  d = def***, g = gh**, i = i*
+MARKER: P = lua:transp_loc("statue_garden_entry")
+MARKER: Q = lua:transp_dest_loc("statue_garden_entry")
+MARKER: R = lua:transp_loc("statue_garden_exit")
+MARKER: S = lua:transp_dest_loc("statue_garden_exit")
 : ice_cave_appearance(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx...GPG...xxxxxxxxxxxccccccccccccc...!R!...ccc
-xx...%.%.%...xxxxxxxxxxcccccccccccc...G.|.G...cc
-xx....*S*....xxxxxxxxxxcccccccccccc....!.!....cc
-x......*......xxxxxxxxxccccccccccc......!......c
-x.1..G.3.G..1.xxxxxxxxxccccccccccc....2...2....c
-x.............xxxxxxxxxccccccccccc......4......c
-xx..1.....1..xxxxxxxxxxcccccccccccc...........cc
-xx...........xxxxxxxxxxcccccccccccc...........cc
-xx.1...A...1.xxxxxxxxxxcccccccccccc.....Q.....cc
-xxx.........xxxxxxxxxxxccccccccccccc.........ccc
-xxxx...<...xxxxxxxxxxxxcccccccccccccc...<...cccc
-xxxxx.....xxxxxxxxxxxxxccccccccccccccc.....ccccc
-xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
+ccccccccccccccc
+cR..3EgDiE3..<c
+c.....*|*.....c
+ccG....5....Gcc
+ ccG.......Gcc
+  ccG..Q..Gcc
+  xccnnnnnccx
+ xx...GPG...xx
+ x...%.S.%...x
+xx.1..*d*..1.xx
+x......%......x
+x..1.G.5.G.1..x
+x.............x
+xx.1.......1.xx
+ x...........x
+ x.1...A...1.x
+ xx.........xx
+  xx...<...xx
+   xx.....xx
+    xxxxxxx
 ENDMAP
 
 NAME:   ice_cave_statue_garden_chambered
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-MONS:   ice beast, white ugly thing, ice statue, white very ugly thing
-: cruel_simulacrum(_G)
-: mons(cruel_ice)
-ITEM:   battleaxe ego:freezing good_item ident:type / book of frost w:5 / \
-        book of rime w:5 / ice dragon scales
-ITEM:   executioner's axe ego:freezing good_item ident:type /\
-        ozocubu's autobiography w:5 / book of ice w:5 /\
-        manual of ice magic w:5 / ice dragon scales randart
+{{
+ice_cave_common_loot(_G)
+local simul = simulacrum_monsters()
+mons(simul["savage"])
+mons(simul["cruel"])
+}}
+# For easy ice caves, three ice statues in the middle chamber, and a freezing
+# wraith has a 50% chance of replacing one of the two white ugly thing. For
+# hard ice caves, there are two orange crystal statues in the middle chamber,
+# always two white very ugly things total. Two freezing wraiths are added to
+# the final chamber, and there two more star_items.
 : if dgn.persist.ice_cave_hard then
-SUBST:  ! = 3, 2 = 4, ? = d
+MONS:   orange crystal statue, freezing wraith, white very ugly thing
+# 12 * 5 = 60 total weight for savage simulacra, 4 * 5 = 20 total weight for
+# cruel simulacra, and 10 weight for freezing wraiths.
+: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:12") ..
+:     " / " .. dgn.random_entry_arg(simul["cruel"], "w:5")  ..
+:     " / freezing wraith")
+NSUBST: D = 3 / 1
+SUBST:  E = 124, F = 4, 1 = 112, J = *
 : else
-SUBST:  !5 = ., ? = e
+MONS:   ice statue, freezing wraith, white ugly thing
+: set_random_mon_list(dgn.random_entry_arg(simul["savage"], "w:16") ..
+:    " / " .. simul["cruel"])
+NSUBST: 1 = 2=1 / 4=1112.... / ., D = 2=3 / 1, 5 = 45 / 5
 : end
+NSUBST: d = def*** / *
+SUBST:  g = gh||, i = i|
 : ice_cave_appearance(_G)
 MAP
-ccccccccccc
-c|*..?..*|c
-c*.......*c
-c%.......%c
-c.........c
-c.........c
-cc5.....5cc
-ccc5.2.5ccc
-ccccc3ccccc
-ccc..5..ccc
-cc.......cc
-c!.......!c
-c....2....c
-c.........c
-c5.......5c
-c3.......3c
-ccccc.ccccc
-x%*.....*%x
-x%5.....5%x
-x*.......*x
-x...111...x
-x...111...x
-xx.......xx
-xxx.....xxx
-xxxxx.xxxxx
-xxx.....xxx
-xx.......xx
-x....A....x
-x.........x
-x.........x
-x....<....x
-x.........x
-xxxxxxxxxxx
+ccccccccc
+cg*JiJ*|c
+c*.....*c
+c%.....%c
+c.......c
+c2..5..2c
+cc.....cc
+cccF.Fccc
+cccc3cccc
+ccc.E.ccc
+cc.....cc
+cD.....Dc
+c...5...c
+c.......c
+cE.....Ec
+cD.....Dc
+cccc.cccc
+xd%...%dx
+x*E...E*x
+x%.....%x
+x.11111.x
+x..111..x
+xx.....xx
+xxx...xxx
+xxxx.xxxx
+xxx...xxx
+xx.....xx
+x...A...x
+x.......x
+x.......x
+x...<...x
+x.......x
+xxxxxxxxx
 ENDMAP
 
 ###############################################################################
 # A jelly themed ice cave
+#
+# Foes: Simulacra, ice statue, slime creatures, and a few high level jellies,
+# especially azure jellies.
+#
+# Loot: Guaranteed randart ice-themed weapon, armour, jewellery, or book, along
+# with some items from the common loot set and star_items.
 NAME:    ice_cave_hellmonk_azure_passage
 TAGS:    no_item_gen no_monster_gen
 ORIENT:  encompass
 WEIGHT:  5
+: ice_cave_common_loot(_G)
 # Loot always includes at least one randart so Jiyva worshipers get something
-ITEM:    any weapon randart ego:freezing ident:all / any armour randart / \
-         ring of ice randart ident:all / ice dragon scales randart w:5 / \
-         ring of protection from cold randart ident:all / \
-         any ring randart / any amulet randart / randbook disc:ice numspells:3
-ITEM:    book of the tundra w:5 / book of ice w:5 / manual of ice magic w:5 / \
-         any weapon ego:freezing good_item ident:type w: 50 / \
-         cloak ego:cold_resistance ident:type / \
-         boots ego:cold_resistance ident:type / wand of iceblast ident:type / \
-         gloves ego:cold_resistance ident:type / phial of floods w:5 / \
-         hat ego:cold_resistance ident:type w:5 / \
-         helmet ego:cold_resistance ident:type w:5 / condenser vane w:5 / \
-         tin of tremorstones w:2
-MONS:    glowing shapeshifter simulacrum / demonic crawler simulacrum / \
-         ugly thing simulacrum / entropy weaver simulacrum / \
-         very ugly thing simulacrum w:5
-MONS:    ice statue, slime creature band, quicksilver ooze, azure jelly
-MONS:    rockslime
+KITEM:   j = any weapon randart ego:freezing ident:all / any armour randart \
+             / ring of ice randart ident:all / ice dragon scales randart w:5 \
+             / ring of protection from cold randart ident:all \
+             / any ring randart / any amulet randart \
+             / randbook disc:ice numspells:3
 KMONS:   _ = azure jelly
 KFEAT:   _ = altar_jiyva
 KFEAT:   D = slimy_wall
+SUBST:   * = dj *:60, d = defghi, 1 = 1.., 3 = 113334
 SHUFFLE: qrs
-SUBST:   * = dee**, 1 = 1.., 3 = 113334
-NSUBST:  2 = 2 / 2=2. / .
-# For hard ice cave, add some quicksilvers throughout the map, and add more
-# boss slimes.
+# For easy ice cave, use ice statues,
+# boss slimes, including a rockslime.
 : if dgn.persist.ice_cave_hard then
+MONS:    ugly thing simulacrum / demonic crawler simulacrum \
+         / entropy weaver simulacrum / very ugly thing simulacrum
+MONS:    orange crystal statue, slime creature band, quicksilver ooze
+MONS:    azure jelly, rockslime
+{{
+set_random_mon_list("ugly thing simulacrum w:15" ..
+    " / demonic crawler simulacrum w:15 / entropy weaver simulacrum w:15" ..
+    " / very ugly thing simulacrum w:15 / slime creature w:40" ..
+    " / quicksilver ooze w:20 / azure jelly")
+}}
 SUBST:   p = 4, q = 455, r = 5, s = 6
 : else
+MONS:    glowing shapeshifter simulacrum / ugly thing simulacrum \
+         / demonic crawler simulacrum / entropy weaver simulacrum
+MONS:    ice statue, slime creature band, quicksilver ooze, azure jelly
+{{
+set_random_mon_list("glowing shapeshifter simulacrum" ..
+    " / ugly thing simulacrum / demonic crawler simulacrum" ..
+    " / entropy weaver simulacrum / slime creature w:20 / quicksilver ooze")
+}}
 SUBST:   q = 34455
 :end
+NSUBST:  2 = 2 / 2=2. / .
 # 50% chance for slimy wall passages, otherwise fill with rock.
 SHUFFLE: DE / FF
 SUBST:   E = ., F = x
@@ -1266,7 +1592,7 @@ xxxxxxxxx..3......xxxxxxxx.....xxxxxxxxx
 xxxxxxx.......11...pxxxx.......rxxxxxxxx
 xxxxx1.....xxx.....xxxx.....D....**xxxxx
 xxxx2....DDDD.....xxx.....D........*xxxx
-xxxx....EEEE....3.x.......s._.D....dxxxx
+xxxx....EEEE....3.x.......s._.D....jxxxx
 xxxx31...DDDD.....1.......D........*xxxx
 xxxxx..1....xxxxxxxxxx......D....**xxxxx
 xxxxxx...11...xxxxxxxxxx.......qxxxxxxxx
@@ -1278,8 +1604,8 @@ xxxxxxx....2....xxxxxxxx....xxxxxxxxxxxx
 xxxxx..1........xxxxxxx..1.xxx..1..xxxxx
 xxxx..1...xxx..1..xxx2...DDx.1......xxxx
 xxxx.....DDxxxx..1......EE....x2..1.xxxx
-xxxx3...EEE.e*xxx....xxDD...1xx.....xxxx
-xxxxx.....Dx*e..xxxxxxxx..1.xx...3.xxxxx
+xxxx3...EEE.d*xxx....xxDD...1xx.....xxxx
+xxxxx.....Dx*d..xxxxxxxx..1.xx...3.xxxxx
 xxxxxx1....xx.p..2xx...1..xxx.....xxxxxx
 xxxxxxxxx...xxxx.......xxxx...1xxxxxxxxx
 xxxxxxxxxx.1..xxxx.p.xxx..1..xxxxxxxxxxx
