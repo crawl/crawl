@@ -339,10 +339,9 @@ bool actor::rampaging(bool calc_unid, bool items) const
             || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
 }
 
-int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
-                    int stab_bypass, bool for_real) const
+int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
 {
-    int ac = max(armour_class() - stab_bypass, 0);
+    int ac = max(armour_class(), 0);
     int gdr = gdr_perc();
     int saved = 0;
     switch (ac_rule)
@@ -350,7 +349,6 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     case ac_type::none:
         return damage; // no GDR, too
     case ac_type::proportional:
-        ASSERT(stab_bypass == 0);
         saved = damage - apply_chunked_AC(damage, ac);
         saved = max(saved, div_rand_round(max_damage * gdr, 100));
         return max(damage - saved, 0);

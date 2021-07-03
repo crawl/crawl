@@ -1282,13 +1282,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
 int attack::apply_defender_ac(int damage, int damage_max, ac_type ac_rule) const
 {
     ASSERT(defender);
-    int stab_bypass = 0;
-    if (stab_bonus)
-    {
-        stab_bypass = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-        stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
-    }
-    int after_ac = defender->apply_ac(damage, damage_max, ac_rule, stab_bypass);
+    int after_ac = defender->apply_ac(damage, damage_max, ac_rule);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
@@ -1684,8 +1678,17 @@ int attack::player_stab_weapon_bonus(int damage)
         damage /= 10;
     }
 
+    // There's both a flat and multiplicative component to
+    // stab bonus damage.
+
     damage *= 12 + div_rand_round(stab_skill, 100 * stab_bonus);
     damage /= 12;
+
+    // The flat component is loosely based on the old stab_bypass bonus.
+    // Essentially, it's an extra quarter-point of damage for every
+    // point of weapon + stealth skill, divided by stab_bonus - that is,
+    // quartered again if the target isn't sleeping, paralysed, or petrified.
+    damage += random2(div_rand_round(stab_skill, 200 * stab_bonus));
 
     return damage;
 }
