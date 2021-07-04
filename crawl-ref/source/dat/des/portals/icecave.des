@@ -20,8 +20,7 @@ feature.
 function ice_cave_portal(e)
     local timeout_turns = crawl.random_range(600, 800)
 
-    local messager =
-      timed_msg {
+    local messager = timed_msg {
         initmsg = { "You feel a wave of frost pass over you.",
                     "There is an entrance to an ice cave on this level. "
                     .. "Hurry and find it before the portal melts!" },
@@ -29,11 +28,11 @@ function ice_cave_portal(e)
         verb = 'crackling',
         noisemaker = 'melting archway',
         ranges = {
-          { 5000, 'faint ' },  { 4000, '' },
-          { 2500, 'steady ' }, { 1500, 'quick ' },
-          { 0, 'loud ' }
+            { 5000, 'faint ' },  { 4000, '' },
+            { 2500, 'steady ' }, { 1500, 'quick ' },
+            { 0, 'loud ' }
         }
-      }
+    }
 
     dgn.persist.ice_cave_hard = hard_ice_cave_difficulty()
 
@@ -49,9 +48,9 @@ function ice_cave_portal(e)
     e.tags("uniq_icecv chance_icecave")
     e.chance(500)
     e.kfeat("O = enter_ice_cave")
-    e.colour("X = white")
-    e.kfeat("X = x")
-    e.rtile("X = wall_ice_block")
+    e.colour("a = white")
+    e.kfeat("a = x")
+    e.rtile("a = wall_ice_block")
     e.colour(".1234 = blue")
     e.ftile(".12345O+^ = floor_ice")
 end
@@ -440,39 +439,80 @@ end
 #
 ###############################################################################
 
+
+###############################################################################
+# Entry vaults that place for both ice cave difficulties.
+
 default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
-# "Easy" ice cave entrances (D, Lair, Orc).
 NAME:   portal_ice_cave_entry_pillars_1
 TAGS:   transparent
 : ice_cave_portal(_G)
 MAP
   ...
-  .X.
+  .a.
 .......
-.X.O.X.
+.a.O.a.
 .......
-  .X.
+  .a.
   ...
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_2
 TAGS:   transparent
-WEIGHT: 6
 : ice_cave_portal(_G)
 MAP
   ...
- ..X..
-..X.X..
-.X.O.X.
-..X.X..
- ..X..
+ ..a..
+..a.a..
+.a.O.a.
+..a.a..
+ ..a..
   ...
 ENDMAP
 
+NAME:   portal_ice_cave_entry_ice_simulacra
+TAGS:   patrolling no_monster_gen transparent
+{{
+ice_cave_portal(_G)
+local simul = simulacrum_monsters()
+mons(simul["mocking"])
+mons(simul["savage"])
+}}
+: if you.in_branch("D") then
+:     if you.depth() < 12 then
+SUBST: 1 = 1.
+:     else
+SUBST: 1 = 112
+:     end
+# Savage only for Lair, but fewer.
+: elseif you.in_branch("Lair") then
+:     if you.depth() < 4 then
+SUBST: 1 = 2...
+:     else
+SUBST: 1 = 2.
+:     end
+# Orc
+: elseif you.in_branch("Orc") then
+SUBST: 1 = 112
+: else
+SUBST: 1 = 12
+: end
+MAP
+..1..
+.1.1.
+1.O.1
+.1.1.
+..1..
+ENDMAP
+
+###############################################################################
+# Entry vaults that only place easy ice cave entrances
+
+default-depth: D:11-13, Lair, Orc
+
 NAME:   portal_ice_cave_entry_imps
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:11-, Lair, Orc
 : ice_cave_portal(_G)
 MONS:   white imp
 MAP
@@ -483,126 +523,112 @@ MAP
 ..1..
 ENDMAP
 
-NAME:   portal_ice_cave_entry_ice_beasts
-TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:11-, Lair, Orc
-: ice_cave_portal(_G)
-MONS:   ice beast
-MAP
-..1..
-.1.1.
-1.O.1
-.1.1.
-..1..
-ENDMAP
-
 NAME:   portal_ice_cave_entry_animals_and_master
-TAGS:   patrolling no_monster_gen no_trap_gen
-DEPTH:  D:11-, Lair:4-, Orc
-WEIGHT: 6
+TAGS:   patrolling no_monster_gen
+DEPTH:  D:11-13, Lair:4-, Orc
+WEIGHT: 5
 : ice_cave_portal(_G)
 MONS:   wolf, yak, polar bear, rime drake, ice dragon
-SUBST:  A = 12 .:1, B = 2 3:5 .:1, C = 3 4:2, D = 4:2 5:8
+SUBST:  D = 12 .:1, E = 2 3:5 .:1, F = 3 4:2, H = 4:2 5:8
 MAP
 xx    xxxxxxx
-XxxxxxxXXXXXxx
-XXxXXXXX...XXx
-@XXXXAX.B.C.Xx
-X.X..A...O.DXx
-XX.XXXA.B.C.Xx
-xXXXXX.X...XXx
-xxxxxXXXXXXXxx
+axxxxxxaaaaaxx
+aaxaaaaa...aax
+@aaaaDa.E.F.ax
+a.a..D...O.Hax
+aa.aaaD.E.F.ax
+xaaaaa.a...aax
+xxxxxaaaaaaaxx
     xxxxxxxxx
 ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
-TAGS:   patrolling no_monster_gen no_trap_gen transparent
-DEPTH:  D:11-, Lair, Orc
+TAGS:   patrolling no_monster_gen
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
 xxxxxxxxx
-xXXXXXXXx
-xX..O..Xx
-xX.....Xx
-xX.1.1.Xx
-xX.....Xx
-xXXX.XXXx
-xxXX.XXxx
-xxX...Xxx
-xxX+X+Xxx
+xaaaaaaax
+xa..O..ax
+xa.....ax
+xa.1.1.ax
+xa.....ax
+xaaa.aaax
+xxaa.aaxx
+xxa...axx
+xxa+a+axx
 ENDMAP
 
 NAME:   portal_ice_cave_rime
-TAGS:   patrolling no_monster_gen no_pool_fixup
-DEPTH:  D:11-, Lair, Orc
+TAGS:   patrolling no_monster_gen no_pool_fixup transparent
 : ice_cave_portal(_G)
 MONS:   rime drake
 MAP
   '''''
  wwwww''
-'wXXXXX''
-'wXO1...'
-'wX1....w
-'wX...wX'
-''X..wXw
- ''..Xw
+'waaaaa''
+'waO1...'
+'wa1....w
+'wa...wa'
+''a..waw
+ ''..aw
   ''w'
 ENDMAP
 
-# Hard ice cave entrances (Elf, Swamp, Shoals, Snake, Spider).
+###############################################################################
+# Entry vaults that only place hard ice cave entrances
+
+default-depth: D:14-, Elf, Swamp, Shoals, Snake, Spider
+
 NAME:   portal_ice_cave_entry_pillars_three
 TAGS:   transparent
-DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 : ice_cave_portal(_G)
 MAP
    ...
-....X...
-.X...XX.
-..XXOXX..
- .XX...X.
- ...X....
+....a...
+.a...aa.
+..aaOaa..
+ .aa...a.
+ ...a....
    ...
 ENDMAP
 
 NAME:   portal_ice_cave_entry_pillars_four
 TAGS:   transparent
-DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 : ice_cave_portal(_G)
 MAP
    ...
-  .X.X.
- .X.X.X.
-.X.X.X.X.
-..X.O.X..
-.X.X.X.X.
- .X.X.X.
-  .X.X.
+  .a.a.
+ .a.a.a.
+.a.a.a.a.
+..a.O.a..
+.a.a.a.a.
+ .a.a.a.
+  .a.a.
    ...
 ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  Elf, Snake
-WEIGHT: 6
+DEPTH:  D:14-, Elf, Snake, Swamp
+WEIGHT: 5
 : ice_cave_portal(_G)
-MONS:   ice beast, freezing wraith, azure jelly
-SUBST:  A = 1 2:2 .:2, B = 2 .:3, C = 3:3 2:7
+MONS:   white ugly thing, freezing wraith, azure jelly / white very ugly thing
+SUBST:  1 = 1., 2 = 2 .:3, 3 = 3:3 2:7
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
-xxXXXXXxXXXXXXXXXXxxxxx
-xXX...XXX........XXxxxx
-xX.....X....B..A..XXXXX
-xX..O..+..C..A..A.....+
-xX.....X....B..A..XXXXX
-xXX...XXX........XXxxxx
-xxXXXXXxXXXXXXXXXXxxxxx
+xxaaaaaxaaaaaaaaaaxxxxx
+xaa...aaa........aaxxxx
+xa.....a....2..1..aaaaa
+xa..O..+..3...1.1.....+
+xa.....a....2..1..aaaaa
+xaa...aaa........aaxxxx
+xxaaaaaxaaaaaaaaaaxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_one
-TAGS:   no_pool_fixup transparent
-DEPTH:  Elf, Swamp, Shoals, Snake, Spider
+TAGS:   no_monster_gen no_pool_fixup transparent
 : ice_cave_portal(_G)
 MONS:   ice statue
 KFEAT:  ^ = web trap
@@ -615,22 +641,20 @@ SUBST:  + = ^
 : end
 MAP
  xxxxxxx
-xxXXXXXxx
-xXX...XXx
-xX..O..Xx
-xX.....Xx
-xX..1..Xx
-xX.....Xx
-xXX...XXx
-xxXX+XXxx
+xxaaaaaxx
+xaa...aax
+xa..O..ax
+xa.....ax
+xa..1..ax
+xa.....ax
+xaa...aax
+xxaa+aaxx
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_two
-TAGS:   transparent
-DEPTH:  Elf, Swamp, Snake, Shoals, Spider
-WEIGHT: 6
+TAGS:   transparent patrolling no_monster_gen
 : ice_cave_portal(_G)
-MONS:   ice statue, patrolling ice dragon
+MONS:   ice statue, ice dragon
 SUBST:  2 = 1:9 2:1
 MAP
    .....
@@ -645,8 +669,7 @@ MAP
 ENDMAP
 
 NAME:   portal_ice_cave_entry_dragon
-TAGS:   no_monster_gen no_pool_fixup
-DEPTH:  Swamp, Shoals, Snake, Spider
+TAGS:   no_monster_gen no_pool_fixup patrolling
 MONS:   ice dragon
 : ice_cave_portal(_G)
 : if you.in_branch("Swamp") then
@@ -656,58 +679,53 @@ SUBST:  x = w
 : end
 MAP
 xxxxxxxx
-xXXXXXxx
-xXO..XXx
-xX.1X.Xx
-xX.X..X@
-xXX..X.'
-xxXXX..'
+xaaaaaxx
+xaO..aax
+xa.1a.ax
+xa.a..a@
+xaa..a.'
+xxaaa..'
 xxxx@'''
 ENDMAP
 
 NAME:   portal_ice_cave_entry_frozen_things
 TAGS:   no_monster_gen transparent
-WEIGHT: 6
-DEPTH:  Elf, Swamp, Shoals, Snake, Spider
 MONS:   freezing wraith, azure jelly
 SUBST:  2 = 12.
 : ice_cave_portal(_G)
 MAP
   '''''
- ''XXX''
-''XXOXX''
-'XX.2.XX'
-'X.....X'
-'X.1.1.X'
-'XXX.XXX'
-'XXX.XXX'
-'XXX+XXX'
+ ''aaa''
+''aaOaa''
+'aa.2.aa'
+'a.....a'
+'a.1.1.a'
+'aaa.aaa'
+'aaa.aaa'
+'aaa+aaa'
 '''''''''
 ENDMAP
 
 NAME:     portal_ice_cave_entry_ugly_swarm
-TAGS:     no_monster_gen no_item_gen transparent
-DEPTH:    Elf, Swamp, Shoals, Snake, Spider
-WEIGHT:   2
+TAGS:     no_monster_gen transparent patrolling
 MONS:     white ugly thing, white very ugly thing
 SHUFFLE:  ABC
-SUBST:    A = X, B = X., C = ., : = 1.
-NSUBST:   2 = 1:12 / 3 = 1. / *:.
-NSUBST:   1 = 7:1 / 1:1. / *:.
+SUBST:    a = aa.
+NSUBST:   1 = 12 / 4=1 / ., . = 8=1. / .
 : ice_cave_portal(_G)
 MAP
     '''''''
    '''''''''
   '''.....'''
- '''.A:B:C.'''
-'''.:..:..:.'''
-''.C..111..A.''
-''.:.12221.:.''
-''.B:12O21:B.''
-''.:.12221.:.''
-''.A..111..C.''
-'''.:..:..:.'''
- '''.C:B:A.'''
+ '''.a.a.a.'''
+'''.........'''
+''.a..111..a.''
+''...11111...''
+''.a.11O11.a.''
+''...11111...''
+''.a..111..a.''
+'''.........'''
+ '''.a.a.a.'''
   '''.....'''
    '''''''''
     '''''''
