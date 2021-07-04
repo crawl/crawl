@@ -70,16 +70,19 @@ bool player::is_summoned(int* _duration, int* summon_type) const
 
 void player::moveto(const coord_def &c, bool clear_net)
 {
-    if (clear_net && c != pos())
-        clear_trapping_net();
+    if (c != pos())
+    {
+        if (clear_net)
+            clear_trapping_net();
+        end_wait_spells();
+        // Remove spells that break upon movement
+        remove_ice_movement();
+    }
 
     crawl_view.set_player_at(c);
     set_position(c);
 
     clear_invalid_constrictions();
-    end_wait_spells();
-    // Remove spells that break upon movement
-    remove_ice_movement();
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
