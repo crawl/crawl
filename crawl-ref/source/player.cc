@@ -6090,7 +6090,8 @@ bool player::is_unbreathing() const
 
 bool player::is_insubstantial() const
 {
-    return form == transformation::wisp;
+    return form == transformation::wisp
+        || form == transformation::storm;
 }
 
 int player::res_acid(bool calc_unid) const
