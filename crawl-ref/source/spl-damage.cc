@@ -2942,7 +2942,8 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     {
         if (test)
             return spret::abort;
-    } else if (mons->res_poison() > 0 && mons->observable())
+    }
+    else if (mons->res_poison() > 0 && mons->observable())
     {
         if (!test)
         {
@@ -2971,6 +2972,8 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     poison_monster(mons, &you, amount);
 
     behaviour_event(mons, ME_WHACK, &you);
+    if (mons->alive())
+        you.pet_target = mons->mindex();
 
     return spret::success;
 }
