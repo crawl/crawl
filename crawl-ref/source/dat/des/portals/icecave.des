@@ -759,7 +759,6 @@ default-depth: IceCv
 # potions.
 NAME:    ice_cave_small_giant
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  6
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : kitem("j = " .. dgn.loot_potions)
@@ -831,7 +830,6 @@ ENDMAP
 # set.
 NAME:    ice_cave_small_dragons
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  6
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 KITEM:   j = any jewellery
@@ -929,7 +927,6 @@ ENDMAP
 # Loot: Common loot set along with a necromancy loot item.
 NAME:    ice_cave_small_necro
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  6
 ORIENT:  encompass
 KPROP:   yY'j = bloody
 : ice_cave_common_loot(_G)
@@ -1002,7 +999,6 @@ ENDMAP
 # Loot: Common loot set.
 NAME:    ice_cave_small_demon
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  6
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : ice_cave_undead_demon_monster_set(_G, "E")
@@ -1079,7 +1075,6 @@ ENDMAP
 # Loot: Common loot set with a necromancy themed item.
 NAME:    ice_cave_tombish
 TAGS:    no_item_gen no_monster_gen
-WEIGHT:  6
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : ice_cave_necro_loot(_G)
@@ -1174,7 +1169,6 @@ ENDMAP
 
 NAME:    ice_cave_caverns_01
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  5
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : kitem("j = any wand / any potion w:5 / any scroll w:5")
@@ -1253,7 +1247,6 @@ ENDMAP
 # different in this map are commented.
 NAME:    ice_cave_caverns_02
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  5
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : kitem("j = any wand / any potion w:5 / any scroll w:5")
@@ -1318,7 +1311,6 @@ ENDMAP
 # different in this map are commented.
 NAME:    ice_cave_caverns_03
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:  5
 ORIENT:  encompass
 : ice_cave_common_loot(_G)
 : kitem("j = any wand / any potion w:5 / any scroll w:5")
@@ -1404,7 +1396,6 @@ ENDMAP
 # teleporter lua feature.
 NAME:   ice_cave_statue_garden_transporter
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 5
 ORIENT: encompass
 {{
 ice_cave_common_loot(_G)
@@ -1464,7 +1455,6 @@ ENDMAP
 
 NAME:   ice_cave_statue_garden_chambered
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
-WEIGHT: 5
 ORIENT: encompass
 {{
 ice_cave_common_loot(_G)
@@ -1542,7 +1532,6 @@ ENDMAP
 NAME:    ice_cave_hellmonk_azure_passage
 TAGS:    no_item_gen no_monster_gen
 ORIENT:  encompass
-WEIGHT:  5
 : ice_cave_common_loot(_G)
 # Loot always includes at least one randart so Jiyva worshipers get something
 KITEM:   j = any weapon randart ego:freezing ident:all / any armour randart \
