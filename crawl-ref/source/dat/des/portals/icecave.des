@@ -56,21 +56,23 @@ function ice_cave_portal(e)
     e.ftile(".12345O+^ = floor_ice")
 end
 
--- Figure out if an easy or a hard ice cave should be used. Players
--- that enter the portal deeper in the dungeon end up in the hard ones.
--- Possible depths for easy ice caves are D:11-15, Lair, Orc. Hard ice caves
--- are in Elf and the Lair roulette branches. Those depths are set in the entry
--- vault default-depth.
---
--- Returns true for hard difficulty.
-function ice_cave_difficulty()
+--[[
+Determine if we're placing a hard difficulty ice cave map. Possible depths for
+easy ice caves are D:11-13, Lair, Orc. Hard ice caves are placed in D:14-15,
+Elf and the Lair roulette branches. This function must be updated if the depth
+range of ice cave changes, which is set by the default-depth statement of the
+entry vault section or by the entry maps themselves.
 
-  if you.in_branch("D") or you.in_branch("Lair") or
-     you.in_branch("Orc") then
-       return false
-  end
+treturn bool True for hard difficulty, false for easy.
+]]
+function hard_ice_cave_difficulty()
 
-  return true
+    if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") or
+       you.in_branch("Orc") then
+        return false
+    end
+
+    return true
 end
 
 --[[
