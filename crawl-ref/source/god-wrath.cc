@@ -146,7 +146,7 @@ static bool _yred_random_zombified_hostile()
     return create_monster(temp, false);
 }
 
-static const pop_entry _okawaru_servants[] =
+static const vector<pop_entry> _okawaru_servants =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
   {  1,  3,   3, FALL, MONS_GNOLL },
@@ -172,7 +172,6 @@ static const pop_entry _okawaru_servants[] =
   { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
   { 15, 27,   2, FLAT, MONS_TITAN },
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 static bool _okawaru_random_servant()
@@ -1836,7 +1835,7 @@ static bool _dithmenos_retribution()
     return true;
 }
 
-static const pop_entry pop_qazlal_wrath[] =
+static const vector<pop_entry> pop_qazlal_wrath =
 {
   {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
   {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
@@ -1857,8 +1856,6 @@ static const pop_entry pop_qazlal_wrath[] =
   {  2, 10, 50, FLAT, MONS_BASILISK },
   {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
-
-  { 0,0,0,FLAT,MONS_0 }
 };
 
 /**

@@ -1066,7 +1066,7 @@ spret divine_exegesis(bool fail)
 /// For a given dungeon depth (or item level), how much weight should we give
 /// to a spellbook for having a spell of the given level in it?
 /// We add a flat 10 to all these weights later.
-static const random_pick_entry<int> spell_level_weights[] = {
+static const vector<random_pick_entry<int>> spell_level_weights = {
     {  0, 35, 100, FLAT, 1 },
 
     {  0, 35, 100, FLAT, 2 },
@@ -1090,8 +1090,6 @@ static const random_pick_entry<int> spell_level_weights[] = {
 
     { 22, 30, 100, RISE, 9 },
     { 31, 35, 100, FLAT, 9 },
-
-    {  0,  0,   0, FLAT, 0 }, // terminate the array? code is hard
 };
 
 /// Cap item_level at this for generation. This is roughly the bottom of the hells.

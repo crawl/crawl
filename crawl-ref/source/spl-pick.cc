@@ -7,7 +7,7 @@
 
 #include "spl-pick.h"
 
-spell_type spell_picker::pick_with_veto(const spell_entry *weights,
+spell_type spell_picker::pick_with_veto(const vector<spell_entry>& weights,
                                         int level, spell_type none,
                                         spell_pick_vetoer vetoer)
 {

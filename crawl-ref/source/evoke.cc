@@ -872,7 +872,7 @@ static spret _tremorstone()
     return spret::success;
 }
 
-random_pick_entry<cloud_type> condenser_clouds[] =
+static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 {
   { 0,   50, 200, FALL, CLOUD_MEPHITIC },
   { 0,  100, 125, PEAK, CLOUD_FIRE },
@@ -881,7 +881,6 @@ random_pick_entry<cloud_type> condenser_clouds[] =
   { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
   { 0,  110, 50, RISE, CLOUD_STORM },
   { 0,  110, 50, RISE, CLOUD_ACID },
-  { 0,0,0,FLAT,CLOUD_NONE }
 };
 
 static spret _condenser()

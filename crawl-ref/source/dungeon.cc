@@ -3888,7 +3888,7 @@ static int _place_uniques()
     return num_placed;
 }
 
-static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
+static void _place_aquatic_in(vector<coord_def> &places, const vector<pop_entry>& pop,
                               int level, bool allow_zombies)
 {
     if (places.size() < 35)
