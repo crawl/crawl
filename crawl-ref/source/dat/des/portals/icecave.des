@@ -1,16 +1,8 @@
 ###############################################################################
+# icecave.des: All maps related to the Ice Cave Portal.
 #
-# The Ice Cave (Eino)
-#
-#
-# Ice Cave is aimed to appear at somewhere in the middle game. Two challenge
-# levels exist: easy and hard. See ice_cave_difficulty and entry default depth
-# for depths. Both versions should be fairly challenging, but also allow
-# retreating. The entries shouldn't be out of depth.
-#
-# Flavour: white colours, ice monsters, appropriate clouds.
-# The escape is at the start. The player can back away if s/he decides
-# some challenges are too much to handle.
+# <<1>> Entry vaults.
+# <<2>> Ice Cave maps.
 #
 ###############################################################################
 
@@ -212,8 +204,16 @@ end
 
 }}
 
-# Entries ##########################################
-# Not actually used, but useful for reference.
+###############################################################################
+#
+# <<1>> Entry vaults.
+#
+# All must call the function ice_cave_portal() to set the create the portal
+# timer and set the common CHANCE value. Any entry placing out-of-depth
+# monsters should have a lower weight.
+#
+###############################################################################
+
 default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
 # "Easy" ice cave entrances (D, Lair, Orc).
@@ -488,17 +488,36 @@ MAP
     '''''''
 ENDMAP
 
-# The destination vaults ############
+###############################################################################
 #
-# For easy caves, there are currently five cave vaults (each of weight 6,
-# total 30), three cavern vaults (each of weight 5, total 15) and two ice
-# statue gardens (weight 5, total 10). Total weight of all types is
-# 30+15+10=55.
+# <<2>> Ice Cave maps.
 #
-# For hard caves, there are currently two cave vaults (each of weight 6,
-# total 12), three cavern vaults (each of weight 5, total 15) and one ice
-# statue garden (weight 5). Total weight of all types is 12+15+10=37,
-# weighting away from the cave vaults.
+# Ice caves feature monsters that have some form of ice-themed attack, or at
+# least convey a sense that they could survive in a cold place. Terrain-wise,
+# ice caves have white-colored walls and sometimes use freezing vapour machines
+# and deep water. All maps should have an escape very close to the start, so
+# the player can back away if the challenge is deemed too much to handle. Many
+# maps place equipment at early or midway points that grants cold resistance,
+# so that players lacking that might have a better chance to complete the map.
+# Many maps have randomized shortcuts through deep water or freezing vapour
+# machines that let the player bypass difficult portions of the map, or use the
+# water or clouds to their advantage.
+#
+# Ideally all maps will implement an easy and a hard variant, checking the
+# variable dgn.persist.ice_cave_hard, which is true for hard ice caves. Easy
+# ice caves should be challenging but completable for most characters in the
+# mid Dungeon, Lair, and Orc. Hard ice caves should be challenging for
+# characters in late Dungeon, Lair Branches, and Elf. If a map concept can
+# somehow only work at one of the two difficulties, it should veto for the
+# other difficulty. For example, an easy-only map would veto for hard ice caves
+# with:
+#
+#     veto {{ return dgn.persist.ice_cave_hard }}
+#
+# All maps should also call the function ice_cave_appearance() at the end of
+# their statements define the exit feature and terrain appearance.
+#
+###############################################################################
 
 default-depth: IceCv
 
