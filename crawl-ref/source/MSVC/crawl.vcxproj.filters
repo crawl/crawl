@@ -376,9 +376,6 @@
     <ClCompile Include="..\spl-selfench.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\spl-pick.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\spl-other.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1906,9 +1903,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-other.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\spl-pick.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\spl-selfench.h">
