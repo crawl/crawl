@@ -1033,21 +1033,21 @@ TILE:   a = wall_wax
 MAP
         ttttttt..t    tt.
       .ttt.t.tt...t  ttt..
-    ttt.tt..tt.1t.t.1t.1.t...
- t.t1ttt.1..1WW.1t....t1...t...
-t.1t..t.1..tWWW.t.1.1..t.tt..tt.
-ttt.t11.1t...tWW.1t.t1..tt...ttt
-tttt.1..aaamaaa1Wt.t...t..tt1ttt
+    ttt.tt..tt.1t.t.1t...t...
+ t.t1ttt....1WW..t....t1...t...
+t..t..t.1..tWWW.t...1..t.tt..tt.
+ttt.t1...t...tWW.1t.t...tt...ttt
+tttt....aaamaaa1Wt.t...t..tt1ttt
 t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
   tt.aa86a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
  t1.1aa66a.a.a.8aa.t...t.t.ttttt
-tt.1..aaa.aba6aaa.11.t..tttt%ttt
-t.t.1..aa.8a6.aaWW.t.tt.tt11t
+tt.1..aaa.aba6aaa.1..t..tttt%ttt
+t.t....aa.8a6.aaWW.t.tt.tt..t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
- tt.t111....t1WWwW.....1ttt
-  11.t.tt1.tt.tWWt1.1tt...
+ tt.t1.1....t1WWwW.....1ttt
+  1..t.tt..tt.tWWt1.1tt...
     t.tttxtttt1ttttttxx.
       .txxxt   ttxxtttt.
 ENDMAP
