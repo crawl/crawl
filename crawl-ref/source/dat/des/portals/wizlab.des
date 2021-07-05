@@ -33,6 +33,9 @@
 #          |                        |earth/transmutations,   |
 #          |                        |earth/translocations, or|
 #          |                        |earth/conjurations
+#--------------------------------------------------------------------
+#Eringya   |plant monsters, archers |books, staves, potions  |
+#          |and fenstrider witches  |spectral ego weapons    |
 
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
@@ -62,6 +65,9 @@
 #---------------------------------------------------------------
 #Lehudib's Moon Base      |Circular and alien   |blue/lightblue/magenta
 #                         |base-like structure  |colour-shifting crystal
+#---------------------------------------------------------------
+#Eringya's Formal Garden  |Gently curving open  |green with a chance for
+#                         |paths hedged by trees|red/yellow autumn variant
 ##
 
 # TO-DO:
@@ -1876,4 +1882,92 @@ ccccccccccc.....cccccc....c*...*c....ccccc''...........''ccc
 ccccccccccccc.scccccccccccccbNbcccccccccccc'''''''''''''cccc
 ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Eringya's Formal Garden
+# Redesigned by Hellmonk, loosely based on the old layout but reshaped to work
+# better with the monster set. No lua gimmick, just a set of plant and archery
+# themed monsters, plus some fenstrider witches.
+# Loot: staves, books, spectral branded weapons
+# Could use a slightly different grass tile for better color contrast
+NAME:       wizlab_eringya
+TAGS:       no_rotate
+ITEM:       any book, any magical staff, any potion
+ITEM:       any weapon superb_item ego:spectral no_pickup / \
+            lajatang ego:spectral no_pickup w:4 / \
+            quarterstaff randart plus:12 ego:spectral no_pickup w:2
+MONS:       deep elf archer / faun, satyr / naga sharpshooter
+MONS:       shambling mangrove, thorn hunter, deep elf master archer
+MONS:       fenstrider witch, bush
+KMONS:      P = oklob plant
+KFEAT:      - = stone_arch
+KFEAT:      _ = altar_fedhas
+SHUFFLE:    pq/rs
+SUBST:      q : y., r : y., p = ., s = .
+NSUBST:     1 = 4:1 / *=1.., 2 = 4:2 / *=2.., 3 = 1:4 / 2:3 / *=34.
+NSUBST:     5 = 2:5 / *=5., 7 = 1:P / 4:7 / *=P7777ttV........
+NSUBST:     ; = 2:d / 2:e / 1:g / *:deff, A = 1:< /*:A
+SUBST:      y = ct
+MARKER:     A = feat:stone_arch
+COLOUR:     G = lightgrey
+TILE:       c = wall_brick_vines
+: if crawl.one_chance_in(4) then
+COLOUR:     t = lightred / red w:3 / green w:3 / lightgreen w:1
+TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+: end
+#should use statue_archer, but currently that doesn't work
+TILE:       G = dngn_statue_centaur
+LROCKTILE:  wall_brick_vines
+LFLOORTILE: floor_grass
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Eringya's Formal Garden")
+}}
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccc
+ctttttttttttttttttttttttttttttttttttttttttttc
+cttttttttttt1....1....t....1....1tttttttttttc
+cttttttt.............................tttttttc
+ctttt1....tttttttttttt.tttttttttttt....1ttttc
+cttt.....tttttttttt.......tttttttttt.....tttc
+ctt...tt...ttt......G...G......ttt...tt...ttc
+cty1.ttt2............A.A............2ttt.1ytc
+ctt...tt......ttt...G...G...ttt......tt...ttc
+cttt.....tttttttttt.......tttttttttt.....tttc
+ctttt1....tttttttttttt.tttttttttttt....1ttttc
+cttttttt.......1.............1.......tttttttc
+cttttttttttt1.....1.......1.....1tttttttttttc
+cttttttttttttttttttttT.Tttttttttttttttttttttc
+cttttttttt.2.ttttttt.....ttttttt.2.tttttttttc
+ctttttttt.....t...t...T...t...t.....ttttttttc
+cttttttt...t....7.....7.....7....t...tttttttc
+ctttttt....1......tc.....ct......1....ttttttc
+cttttt..t......tttttcc-ccttttt......t..tttttc
+ctttt...tt.7..tttttt.....tttttt..7.tt...ttttc
+cttt...tttt..tttttt...3...tttttt..tttt...tttc
+cttt.2.tttt...tttttt2.2.2tttttt...tttt.2.tttc
+ctttt...tttt.2.tttttt;t;tttttt.2.tttt...ttttc
+ctttttp.pttttq.qtttttttttttttq.qttttp.ptttttc
+cttttttpppttttqqqttttyyyttttqqqttttpppttttttc
+cttttp..-..pttq...tt..2..tt...qttp..-..pttttc
+ctty.........ytt....1...1....tty.........yttc
+ctt;1..tTt..1;ytt.3...T...3.tty;1..tTt..1;ttc
+ctty....3...2ytt....1...1....tty2...3....yttc
+ctttt2..-...tt....tt;.3.;tt....tt...-..2ttttc
+ctttttt...tttt...ttttytytttt...tttt...ttttttc
+cttttt...tttt2..ttttttgtttttt..2tttt...tttttc
+ctttt11.tttt...tttt5G;_;G5tttt...tttt.11ttttc
+cttt..2tttt1.2tttt....3....tttt2.1tttt2..tttc
+cttt7..ttt...tttt2....6....2tttt...ttt..7tttc
+ctttt...t.7..tttG;.........;Gttt..7.t...ttttc
+cttttt........tttttcc5.5ccttttt........tttttc
+ctttttt.-.6.-..tttcc..7..ccttt..-.6.-.ttttttc
+cttttttt........t.7-..T..-7.t........tttttttc
+cttttttttt3...11.............11...3tttttttttc
+cttttttttttt..12...7..4..7...21..tttttttttttc
+cttttttttttttttt.............tttttttttttttttc
+cttttttttttttttttttt2...2tttttttttttttttttttc
+ctttttttttttttttttttttttttttttttttttttttttttc
+ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
