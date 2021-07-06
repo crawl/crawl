@@ -77,8 +77,13 @@ string Form::melding_description() const
         return "Your armour is entirely melded.";
     else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
-    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE)
+    else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
+             && (you_can_wear(EQ_GLOVES, false)
+                 || you_can_wear(EQ_BOOTS, false)
+                 || you_can_wear(EQ_BODY_ARMOUR, false)))
+    {
         return "Your equipment is partially melded.";
+    }
     // otherwise, rely on the form description to convey what is melded.
     return "";
 }
