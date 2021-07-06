@@ -1933,8 +1933,11 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
         }
 
-        if (you.props.exists("battlesphere") && allow_fail)
+        if (you.props.exists("battlesphere") && allow_fail
+            && battlesphere_can_mirror(spell))
+        {
             trigger_battlesphere(&you);
+        }
 
         const auto victim = monster_at(beam.target);
         if (will_have_passive(passive_t::shadow_spells)
