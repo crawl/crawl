@@ -2416,8 +2416,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_YRED_ANIMATE_DEAD:
         fail_check();
         canned_msg(MSG_CALL_DEAD);
-        animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1,
-                     BEH_FRIENDLY, MHITYOU, &you, "", GOD_YREDELEMNUL);
+        if (!animate_dead(&you, you.skill_rdiv(SK_INVOCATIONS) + 1,
+                         BEH_FRIENDLY, MHITYOU, &you, "", GOD_YREDELEMNUL))
+        {
+            mpr("There are no remains here to animate!");
+            return spret::abort;
+        }
+
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
