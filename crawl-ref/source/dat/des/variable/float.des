@@ -3650,6 +3650,7 @@ MONS: death knight / w:5 wraith / w:1 freezing wraith / w:4 skeletal warrior
 ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain \
       / demon blade ego:draining / demon trident ego:pain \
       / demon trident ego:draining
+KPROP: 1 = no_tele_into
 KFEAT: - = iron_grate
 NSUBST: " = 2 = w:2 d | / 5:* / 5=%$.
 NSUBST: ' = 3:* / 6:% / *:.
