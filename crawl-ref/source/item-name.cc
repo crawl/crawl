@@ -2826,6 +2826,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case MI_JAVELIN:
             return you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
                    && !you.can_throw_large_rocks();
+        case MI_ARROW:
+        case MI_BOLT:
+            return !you.has_mutation(MUT_MISSING_HAND)
+                   || you.has_mutation(MUT_QUADRUMANOUS);
         }
 
         return false;
