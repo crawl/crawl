@@ -210,7 +210,8 @@ static const vector<god_passive> god_passives[] =
 
     // Okawaru
     {
-        // None
+        { -1, passive_t::no_allies,
+              "are NOW prevented from gaining allies" },
     },
 
     // Makhleb

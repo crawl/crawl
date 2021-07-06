@@ -259,6 +259,9 @@ enum class passive_t
     wu_jian_lunge,
     wu_jian_whirlwind,
     wu_jian_wall_jump,
+
+    /// Okawaru prevents gaining any allies
+    no_allies,
 };
 
 enum ru_interference

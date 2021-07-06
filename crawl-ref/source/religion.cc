@@ -1254,7 +1254,7 @@ static int _pakellas_high_wand()
         WAND_ICEBLAST,
         WAND_ACID,
     };
-    if (!you.get_mutation_level(MUT_NO_LOVE))
+    if (!you.allies_forbidden())
         high_wands.emplace_back(WAND_CHARMING);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
@@ -1300,7 +1300,7 @@ static bool _give_pakellas_gift()
     {
         // All the evoker options here are summon-based, so give another
         // low-level wand instead under Sacrifice Love.
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
         {
             basetype = OBJ_WANDS;
             subtype = _pakellas_low_wand();

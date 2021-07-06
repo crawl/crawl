@@ -2300,14 +2300,15 @@ static void _clear_monster_flags()
 
 /**
 * On each monster turn, check to see if we need to update monster attitude.
-* At the time of writing, it just checks for MUT_NO_LOVE from Ru Sacrifice Love.
+* At the time of writing, it just checks for MUT_NO_LOVE from Ru Sacrifice Love
+* and Okawaru's ally-prevention conduct.
 *
 * @param mon     The targeted monster
 * @return        Void
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE)
+    if (you.allies_forbidden()
         && !mons_is_conjured(mon->type))
     {
         mon->attitude = ATT_HOSTILE;

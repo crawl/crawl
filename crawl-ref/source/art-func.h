@@ -116,9 +116,9 @@ static bool _evoke_sceptre_of_asmodeus()
 static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
                             bool* unevokable)
 {
-    if (you.get_mutation_level(MUT_NO_LOVE))
+    if (you.allies_forbidden())
     {
-        mpr("You are hated by all, and nothing will answer your call!");
+        mpr("Nothing will answer your call!");
         *unevokable = true;
         return true;
     }

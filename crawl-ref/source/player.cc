@@ -8174,3 +8174,9 @@ void player::be_agile(int pow)
     if (!were_agile)
         you.redraw_evasion = true;
 }
+
+bool player::allies_forbidden()
+{
+    return get_mutation_level(MUT_NO_LOVE)
+           || have_passive(passive_t::no_allies);
+}

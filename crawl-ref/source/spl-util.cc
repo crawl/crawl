@@ -1182,12 +1182,12 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     // TODO: these checks were in separate places, but is this already covered
     // by cannot_use_schools?
     if (get_spell_disciplines(spell) & spschool::summoning
-        && you.get_mutation_level(MUT_NO_LOVE))
+        && you.allies_forbidden())
     {
         return "you cannot coerce anything to answer your summons.";
     }
 
-    // other Ru spells not affected by the school checks
+    // other ally spells not affected by the school checks
     switch (spell)
     {
     case SPELL_ANIMATE_DEAD:
@@ -1196,7 +1196,7 @@ string casting_uselessness_reason(spell_type spell, bool temp)
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
     case SPELL_TUKIMAS_DANCE:
-        if (you.get_mutation_level(MUT_NO_LOVE))
+        if (you.allies_forbidden())
             return "you cannot coerce anything to obey you.";
         break;
     default:

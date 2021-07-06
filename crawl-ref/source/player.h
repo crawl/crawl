@@ -867,6 +867,8 @@ public:
 
     void be_agile(int pow);
 
+    bool allies_forbidden();
+
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info

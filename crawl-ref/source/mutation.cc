@@ -408,7 +408,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return mutation_activity_type::INACTIVE;
 
-    if (mut == MUT_DEMONIC_GUARDIAN && you.get_mutation_level(MUT_NO_LOVE))
+    if (mut == MUT_DEMONIC_GUARDIAN && you.allies_forbidden())
         return mutation_activity_type::INACTIVE;
 
     if (mut == MUT_NIMBLE_SWIMMER)
@@ -2962,7 +2962,7 @@ void check_demonic_guardian()
 {
     // Players hated by all monsters don't get guardians, so that they aren't
     // swarmed by hostile executioners whenever things get rough.
-    if (you.get_mutation_level(MUT_NO_LOVE))
+    if (you.allies_forbidden())
         return;
 
     const int mutlevel = you.get_mutation_level(MUT_DEMONIC_GUARDIAN);

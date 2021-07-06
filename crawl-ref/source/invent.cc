@@ -2146,10 +2146,10 @@ bool item_is_evokable(const item_def &item, bool unskilled,
     }
 
     // TODO: check other summoning constraints here?
-    if (_item_ally_only(item) && you.has_mutation(MUT_NO_LOVE))
+    if (_item_ally_only(item) && you.allies_forbidden())
     {
         if (msg)
-            mpr("That item cannot be used by those hated by all!");
+            mpr("That item cannot be used by those who cannot gain allies!");
         return false;
     }
 

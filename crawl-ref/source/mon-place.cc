@@ -2864,7 +2864,7 @@ conduct_type god_hates_monster(monster_type type)
  */
 bool mons_can_hate(monster_type type)
 {
-    return you.get_mutation_level(MUT_NO_LOVE)
+    return you.allies_forbidden()
         // don't turn foxfire, guardian golem, etc hostile
         && !mons_is_conjured(type)
         // ignore things like tentacles, butterflies, plants, etc
