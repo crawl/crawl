@@ -5284,10 +5284,13 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         }
     }
 
-    for (coord_def pos : affected)
+    if (Options.use_animations & UA_MONSTER)
     {
-        beam.draw(pos);
-        scaled_delay(25);
+        for (coord_def pos : affected)
+        {
+            beam.draw(pos);
+            scaled_delay(25);
+        }
     }
 
     for (coord_def pos : affected)
