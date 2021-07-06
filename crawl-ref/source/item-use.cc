@@ -1944,16 +1944,14 @@ static bool _puton_amulet(item_def &item,
     }
 
     item_def *old_amu = you.slot_item(EQ_AMULET, true);
-    if (old_amu)
-    {
-        // Remove the previous one.
-        if (!remove_ring(old_amu->link, true))
-            return false;
 
-        // Check for stat loss.
-        if (!_safe_to_remove_or_wear(item, false))
-            return false;
-    }
+    // Check for stat loss.
+    if (!_safe_to_remove_or_wear(item, old_amu, false))
+        return false;
+
+    // Remove the previous one.
+    if (old_amu && !remove_ring(old_amu->link, true, true))
+        return false;
 
     // puton_ring already confirmed there's room for it
     int item_slot = _get_item_slot_maybe_with_move(item);
@@ -2125,7 +2123,9 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
 
 // Remove the ring/amulet at given inventory slot (or, if slot is -1, prompt
 // for which piece of jewellery to remove)
-bool remove_ring(int slot, bool announce)
+//
+// noask suppresses the "stat zero" prompt.
+bool remove_ring(int slot, bool announce, bool noask)
 {
     equipment_type hand_used = EQ_NONE;
     bool has_jewellery = false;
@@ -2237,7 +2237,7 @@ bool remove_ring(int slot, bool announce)
 
     const int removed_ring_slot = you.equip[hand_used];
     item_def &invitem = you.inv[removed_ring_slot];
-    if (!_safe_to_remove_or_wear(invitem, true))
+    if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
 
     // Remove the ring.
