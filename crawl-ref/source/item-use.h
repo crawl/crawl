@@ -38,7 +38,7 @@ string cannot_read_item_reason(const item_def *item);
 bool scroll_has_targeter(scroll_type which_scroll);
 void read(item_def* scroll = nullptr, dist *target=nullptr);
 
-bool remove_ring(int slot = -1, bool announce = false);
+bool remove_ring(int slot = -1, bool announce = false, bool noask = false);
 
 bool wear_armour(int slot = -1);
 
