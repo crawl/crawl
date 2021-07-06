@@ -28,10 +28,10 @@ bool god_hates_brand(const int brand);
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
 bool puton_ring(int slot = -1, bool allow_prompt = true,
-                bool check_for_inscriptions = true);
+                bool check_for_inscriptions = true, bool noask = false);
 
 bool puton_ring(item_def &to_puton, bool allow_prompt = true,
-                bool check_for_inscriptions = true);
+                bool check_for_inscriptions = true, bool noask = false);
 
 bool scroll_hostile_check(scroll_type which_scroll);
 string cannot_read_item_reason(const item_def *item);

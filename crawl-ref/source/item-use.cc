@@ -1740,7 +1740,10 @@ static bool _swap_rings(item_def& to_puton)
     // ring slot (even if we still have empty slots).
     else if (available == 1 && !Options.jewellery_prompt)
     {
-        if (!remove_ring(unwanted, false))
+        if (!_safe_to_remove_or_wear(to_puton, &you.inv[unwanted], false))
+            return false;
+
+        if (!remove_ring(unwanted, false, true))
             return false;
     }
     // We can't put a ring on without swapping - because we found
@@ -1768,7 +1771,10 @@ static bool _swap_rings(item_def& to_puton)
             return false;
         }
 
-        if (!remove_ring(unwanted, false))
+        if (!_safe_to_remove_or_wear(to_puton, &you.inv[unwanted], false))
+            return false;
+
+        if (!remove_ring(unwanted, false, true))
             return false;
     }
 
@@ -1962,7 +1968,7 @@ static bool _puton_amulet(item_def &item,
 
 // Put on a particular ring.
 static bool _puton_ring(item_def &item, bool prompt_slot,
-                        bool check_for_inscriptions)
+                        bool check_for_inscriptions, bool noask)
 {
     vector<equipment_type> current_jewellery = _current_ring_types();
 
@@ -2013,7 +2019,7 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
     // trying to equip.
 
     // Check for stat loss.
-    if (!_safe_to_remove_or_wear(item, false))
+    if (!noask && !_safe_to_remove_or_wear(item, false))
         return false;
 
     equipment_type hand_used = EQ_NONE;
@@ -2030,7 +2036,13 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
         // Allow swapping out a ring.
         else if (you.slot_item(hand_used, true))
         {
-            if (!remove_ring(you.equip[hand_used], false))
+            if (!noask && !_safe_to_remove_or_wear(item,
+                you.slot_item(hand_used, true), false))
+            {
+                return false;
+            }
+
+            if (!remove_ring(you.equip[hand_used], false, true))
                 return false;
 
             start_delay<JewelleryOnDelay>(1, item);
@@ -2074,7 +2086,7 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
 
 // Put on a ring or amulet. (Most of the work is in _puton_item.)
 bool puton_ring(item_def &to_puton, bool allow_prompt,
-                bool check_for_inscriptions)
+                bool check_for_inscriptions, bool noask)
 {
     if (you.berserk())
     {
@@ -2099,12 +2111,13 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
     if (to_puton.base_type == OBJ_JEWELLERY && jewellery_is_amulet(to_puton))
         return _puton_amulet(to_puton, check_for_inscriptions);
     const bool prompt = allow_prompt && Options.jewellery_prompt;
-    return _puton_ring(to_puton, prompt, check_for_inscriptions);
+    return _puton_ring(to_puton, prompt, check_for_inscriptions, noask);
 }
 
 // Wraps version of puton_ring with item_def param. If slot is -1, prompt for
 // which item to put on; otherwise, pass on the item in inventory slot
-bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
+bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions,
+                bool noask)
 {
     item_def *to_puton_ptr = nullptr;
     if (slot == -1)
@@ -2118,7 +2131,8 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions)
     else
         to_puton_ptr = &you.inv[slot];
 
-    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions);
+    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions,
+                      noask);
 }
 
 // Remove the ring/amulet at given inventory slot (or, if slot is -1, prompt

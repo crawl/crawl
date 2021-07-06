@@ -596,7 +596,7 @@ void JewelleryOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(WEAR_JEWELLERY_SOUND);
 #endif
-    puton_ring(jewellery, false, false);
+    puton_ring(jewellery, false, false, true);
 }
 
 void EquipOnDelay::finish()
