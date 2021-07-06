@@ -793,9 +793,11 @@ static void _update_tracked_feature_annot(dungeon_feature_type feat,
     else if (new_num == 0)
     {
         level_annotations[li] = replace_all(level_annotations[li],
-                                            ", " + old_string, "");
+                                            old_string + ", ", "");
         level_annotations[li] = replace_all(level_annotations[li],
                                             old_string, "");
+        trim_string(level_annotations[li]);
+        strip_suffix(level_annotations[li], ",");
     }
 }
 
