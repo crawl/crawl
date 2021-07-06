@@ -968,7 +968,6 @@ int bolt::range_used(bool leg_only) const
 void bolt::finish_beam()
 {
     extra_range_used = BEAM_STOP;
-    fire_final_effects();
 }
 
 void bolt::affect_wall()
