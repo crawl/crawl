@@ -374,8 +374,10 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
     return choice_made;
 }
 
-static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
-                                    bool quiet = false);
+static bool _safe_to_remove_or_wear(const item_def &item, const item_def
+                                    *old_item, bool remove, bool quiet = false);
+static bool _safe_to_remove_or_wear(const item_def &item,
+                                    bool remove, bool quiet = false);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -721,12 +723,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // At this point, we know it's possible to equip this item. However, there
     // might be reasons it's not advisable.
-    if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
-        || !_safe_to_remove_or_wear(new_wpn, false))
+    if (!check_warning_inscriptions(new_wpn, OPER_WIELD))
     {
         canned_msg(MSG_OK);
         return false;
     }
+
+    if (!_safe_to_remove_or_wear(new_wpn, you.weapon(), false))
+        return false;
 
     // Unwield any old weapon.
     if (you.weapon())
@@ -1483,17 +1487,13 @@ static int _prompt_ring_to_remove()
     return you.equip[eqslot];
 }
 
-// Checks whether a to-be-worn or to-be-removed item affects
-// character stats and whether wearing/removing it could be fatal.
-// If so, warns the player, or just returns false if quiet is true.
-static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet)
+// Calculate the stat bonus from an item.
+// XXX: This needs to match _stat_modifier() and get_item_description().
+static void _item_stat_bonus(const item_def &item, int &prop_str,
+                             int &prop_dex, int &prop_int, bool remove)
 {
-    if (remove && !safe_to_remove(item, quiet))
-        return false;
+    prop_str = prop_dex = prop_int = 0;
 
-    int prop_str = 0;
-    int prop_dex = 0;
-    int prop_int = 0;
     if (item.base_type == OBJ_JEWELLERY
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
@@ -1546,6 +1546,19 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         prop_int *= -1;
         prop_dex *= -1;
     }
+}
+
+enum class afsz
+{
+    go, // asked the player, who said to to proceed.
+    stop, // asked the player (or didn't because of "quiet"), who said to stop.
+    noask // no <1 stats, so not asked.
+};
+
+static afsz _abort_for_stat_zero(const item_def &item, int prop_str,
+                                 int prop_dex, int prop_int,  bool remove,
+                                 bool quiet)
+{
     stat_type red_stat = NUM_STATS;
     if (prop_str >= you.strength() && you.strength() > 0)
         red_stat = STAT_STR;
@@ -1555,10 +1568,10 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         red_stat = STAT_DEX;
 
     if (red_stat == NUM_STATS)
-        return true;
+        return afsz::noask;
 
     if (quiet)
-        return false;
+        return afsz::stop;
 
     string verb = "";
     if (remove)
@@ -1582,9 +1595,39 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
-        return false;
+        return afsz::stop;
     }
-    return true;
+    return afsz::go;
+}
+
+// Checks whether a to-be-worn or to-be-removed item affects
+// character stats and whether wearing/removing it could be fatal.
+// If so, warns the player, or just returns false if quiet is true.
+static bool _safe_to_remove_or_wear(const item_def &item, const item_def
+                                    *old_item, bool remove, bool quiet)
+{
+    if (remove && !safe_to_remove(item, quiet))
+        return false;
+
+    int str1 = 0, dex1 = 0, int1 = 0, str2 = 0, dex2 = 0, int2 = 0;
+    afsz asked = afsz::noask;
+    if (!remove && old_item)
+    {
+        _item_stat_bonus(*old_item, str1, dex1, int1, true);
+        asked = _abort_for_stat_zero(item, str1, dex1, int1, true, quiet);
+        if (afsz::stop == asked)
+            return false;
+    }
+    _item_stat_bonus(item, str2, dex2, int2, remove);
+    return afsz::go == asked
+        || afsz::stop != _abort_for_stat_zero(item, str1+str2, dex1+dex2,
+                                              int1+int2, remove, quiet);
+}
+
+static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
+                                    bool quiet)
+{
+    return _safe_to_remove_or_wear(item, 0, remove, quiet);
 }
 
 // Checks whether removing an item would cause flight to end and the
