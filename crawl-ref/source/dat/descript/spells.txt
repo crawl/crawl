@@ -526,8 +526,9 @@ with no direct line of fire required.
 %%%%
 Dream Dust spell
 
-Overwhelms the target with soporific dream dust, putting them to sleep.
-Additional dream sheep will increase the strength and duration of this effect.
+Overwhelms the target with soporific dream dust, putting them to sleep with an
+enchanting visual display. Additional dream sheep will increase the strength
+and duration of this effect.
 %%%%
 Druid's Call spell
 
