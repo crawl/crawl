@@ -2727,9 +2727,13 @@ bool gozag_potion_petition()
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
-                ADD_POTIONS(*pots[i], _gozag_potion_list);
-                if (coinflip())
+                do
+                {
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
+                    if (coinflip())
+                        ADD_POTIONS(*pots[i], _gozag_potion_list);
+                }
+                while (pots[i]->empty());
 
                 for (const CrawlStoreValue& store : *pots[i])
                 {
