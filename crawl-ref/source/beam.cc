@@ -985,9 +985,9 @@ void bolt::affect_wall()
             !feat_is_flammable(env.grid(pos())) &&
             env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
 
-        // XXX: should check env knowledge for feat_is_tree()
-        if (god_relevant && feat_is_tree(env.grid(pos())) && !vetoed
-            && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
+        if (god_relevant && feat_is_tree(env.map_knowledge(pos()).feat())
+            && !vetoed && !is_targeting && YOU_KILL(thrower)
+            && !dont_stop_trees)
         {
             const string prompt =
                 make_stringf("Are you sure you want to burn %s?",
