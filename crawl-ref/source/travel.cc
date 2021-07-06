@@ -931,7 +931,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     }
 
     // Check whether this step puts us adjacent to any grid we haven't ever
-    // seen or any non-wall grid we cannot currently see.
+    // seen
     //
     // .tx      Moving onto t puts us adjacent to an unseen grid.
     // ?#@      --> Pick x instead.
@@ -940,9 +940,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!you.see_cell(*ai)
-                && (!env.map_knowledge(*ai).seen()
-                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
+            if (!you.see_cell(*ai) && !env.map_knowledge(*ai).seen())
             {
                 unseen = *ai;
                 break;
