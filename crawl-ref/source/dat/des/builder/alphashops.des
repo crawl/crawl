@@ -123,7 +123,7 @@
 
       elseif s == "L" then i = { "manual of long blades", "large rock",
        "leather armour", "long sword", "potion of lignification", "lajatang",
-       "longbow", "lightning rod", "book of lightninng" }
+       "longbow", "lightning rod", "book of lightning" }
 
       elseif s == "M" then i = { "manual of maces & flails",
        "book of minor magic", "book of misfortune", "book of maledictions",
