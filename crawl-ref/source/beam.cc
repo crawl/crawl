@@ -2952,9 +2952,6 @@ bool bolt::harmless_to_player() const
         return player_res_poison(false) > 0
                || you.clarity(false) && you.hp > 2;
 
-    case BEAM_ELECTRICITY:
-        return player_res_electricity(false);
-
     case BEAM_PETRIFY:
         return you.res_petrify() || you.petrified();
 
