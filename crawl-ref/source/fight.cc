@@ -1219,6 +1219,20 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
+string rude_stop_summoning_reason()
+{
+    if (you.duration[DUR_TOXIC_RADIANCE])
+        return "toxic aura";
+
+    if (you.duration[DUR_NOXIOUS_BOG])
+        return "noxious bog";
+
+    if (you.duration[DUR_VORTEX])
+        return "polar vortex";
+
+    return "";
+}
+
 /**
  * Does the player have a hostile duration up that would/could cause
  * a summon to be abjured? If so, prompt the player as to whether they
@@ -1231,16 +1245,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
  */
 bool rude_stop_summoning_prompt(string verb)
 {
-    string which = "";
-
-    if (you.duration[DUR_TOXIC_RADIANCE])
-        which = "toxic aura";
-
-    if (you.duration[DUR_NOXIOUS_BOG])
-        which = "noxious bog";
-
-    if (you.duration[DUR_VORTEX])
-        which = "polar vortex";
+    string which = rude_stop_summoning_reason();
 
     if (which.empty())
         return false;
