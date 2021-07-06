@@ -2720,6 +2720,7 @@ void monster::moveto(const coord_def& c, bool clear_net)
     // Do constriction invalidation after to the move, so that all LOS checking
     // is available.
     clear_invalid_constrictions(true);
+    clear_far_engulf();
 }
 
 bool monster::fumbles_attack()
