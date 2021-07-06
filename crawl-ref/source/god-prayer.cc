@@ -71,7 +71,11 @@ static god_type _altar_identify_ecumenical_altar()
 static bool _pray_ecumenical_altar()
 {
     if (yesno("You cannot tell which god this altar belongs to. Convert to "
-              "them anyway?", false, 'n'))
+              "them anyway?", false, 'n')
+        && (you_worship(GOD_NO_GOD)
+            || yesno(make_stringf("Really abandon %s for an unknown god?",
+                                  god_name(you.religion).c_str()).c_str(),
+                                  false, 'n')))
     {
         {
             // Don't check for or charge a Gozag service fee.
