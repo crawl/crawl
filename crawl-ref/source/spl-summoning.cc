@@ -89,7 +89,7 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
 
 spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt())
+    if (rude_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -109,7 +109,7 @@ spret cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 {
-    if (otr_stop_summoning_prompt())
+    if (rude_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -134,6 +134,9 @@ spret cast_call_canine_familiar(int pow, god_type god, bool fail)
 
 spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
     if (armour == nullptr)
     {
@@ -179,6 +182,9 @@ spret cast_summon_armour_spirit(int pow, god_type god, bool fail)
 
 spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     const int dur = min(2 + (random2(pow) / 4), 4);
 
@@ -196,7 +202,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
 
 spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
-    if (caster->is_player() && otr_stop_summoning_prompt())
+    if (caster->is_player() && rude_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
@@ -236,6 +242,9 @@ spret cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 
 spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 {
+    if (caster->is_player() && rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     // Power determines number of heads. Minimum 4 heads, maximum 12.
     // Rare to get more than 8.
@@ -279,7 +288,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    if (otr_stop_summoning_prompt("call dragons"))
+    if (rude_stop_summoning_prompt("call dragons"))
         return spret::abort;
 
     fail_check();
@@ -474,6 +483,9 @@ spret cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
 
 spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
@@ -834,6 +846,9 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
 spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     mgen_data spire = _pal_data(MONS_LIGHTNING_SPIRE, 2, god,
@@ -852,6 +867,9 @@ spret cast_summon_lightning_spire(int pow, god_type god, bool fail)
 
 spret cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     mgen_data golem = _pal_data(MONS_GUARDIAN_GOLEM, 3, god,
@@ -910,6 +928,9 @@ static map<monster_type, const char*> _imp_summon_messages = {
  */
 spret cast_call_imp(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     const monster_type imp_type = _get_imp_type();
@@ -1008,7 +1029,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 spret cast_summon_demon(int pow)
 {
     // Chaos spawn, orange demons and sixfirhies are not rPois
-    if (otr_stop_summoning_prompt())
+    if (rude_stop_summoning_prompt())
         return spret::abort;
 
     mpr("You open a gate to Pandemonium!");
@@ -1022,7 +1043,7 @@ spret cast_summon_demon(int pow)
 spret cast_shadow_creatures(int st, god_type god, level_id place,
                                  bool fail)
 {
-    if (otr_stop_summoning_prompt("summon"))
+    if (rude_stop_summoning_prompt("summon"))
         return spret::abort;
 
     fail_check();
@@ -1162,6 +1183,9 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 
 spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     coord_def point = find_gateway_location(caster);
     bool success = point != coord_def(0, 0);
 
@@ -1194,6 +1218,9 @@ spret cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 
 spret cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     if (god == GOD_NO_GOD && one_chance_in(5))
     {
@@ -1277,7 +1304,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
 
     if (success)
     {
-        if (otr_stop_summoning_prompt("summon a forest"))
+        if (rude_stop_summoning_prompt("summon a forest"))
             return spret::abort;
 
         fail_check();
@@ -1688,11 +1715,14 @@ coord_def find_animatable_skeleton(coord_def c)
 
 spret cast_animate_skeleton(int pow, god_type god, bool fail)
 {
-    fail_check();
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
 
     coord_def skel_loc = find_animatable_skeleton(you.pos());
     if (!in_bounds(skel_loc))
         return spret::abort;
+
+    fail_check();
 
     canned_msg(MSG_ANIMATE_REMAINS);
 
@@ -1729,6 +1759,9 @@ spret cast_animate_skeleton(int pow, god_type god, bool fail)
 
 spret cast_animate_dead(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
     canned_msg(MSG_CALL_DEAD);
 
@@ -1764,6 +1797,9 @@ int find_simulacrable_corpse(coord_def c)
  */
 spret cast_simulacrum(int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     int co = find_simulacrable_corpse(you.pos());
 
     if (co < 0)
@@ -1827,6 +1863,9 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     monster* m = monster_at(where);
 
     if (m == nullptr)
@@ -2021,6 +2060,9 @@ void init_servitor(monster* servitor, actor* caster)
 
 spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     mgen_data mdata = _pal_data(MONS_SPELLFORGED_SERVITOR, 4, god,
@@ -2061,6 +2103,9 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
+    if (rude_stop_summoning_prompt())
+        return spret::abort;
+
     fail_check();
 
     monster* battlesphere;

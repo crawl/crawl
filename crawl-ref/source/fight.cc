@@ -1220,8 +1220,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 }
 
 /**
- * Does the player have Olgreb's Toxic Radiance up that would/could cause
- * a hostile summon to be created? If so, prompt the player as to whether they
+ * Does the player have a hostile duration up that would/could cause
+ * a summon to be abjured? If so, prompt the player as to whether they
  * want to continue to create their summon. Note that this prompt is never a
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
@@ -1229,9 +1229,20 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
  * @param verb    The verb to be used in the prompt. Defaults to "summon".
  * @return        True if the player wants to abort.
  */
-bool otr_stop_summoning_prompt(string verb)
+bool rude_stop_summoning_prompt(string verb)
 {
-    if (!you.duration[DUR_TOXIC_RADIANCE])
+    string which = "";
+
+    if (you.duration[DUR_TOXIC_RADIANCE])
+        which = "toxic aura";
+
+    if (you.duration[DUR_NOXIOUS_BOG])
+        which = "noxious bog";
+
+    if (you.duration[DUR_VORTEX])
+        which = "polar vortex";
+
+    if (which.empty())
         return false;
 
     if (crawl_state.disables[DIS_CONFIRMATIONS])
@@ -1240,8 +1251,8 @@ bool otr_stop_summoning_prompt(string verb)
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
-    string prompt = make_stringf("Really %s while emitting a toxic aura?",
-                                 verb.c_str());
+    string prompt = make_stringf("Really %s while emitting a %s?",
+                                 verb.c_str(), which.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;

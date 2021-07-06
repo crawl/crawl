@@ -4238,13 +4238,12 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         beam_cancelled = true;
         finish_beam();
     }
-    // Handle enslaving monsters when OTR is up: give a prompt for attempting
-    // to enslave monsters that don't have rPois with Toxic status.
-    else if (flavour == BEAM_CHARM && you.duration[DUR_TOXIC_RADIANCE]
-             && mon->res_poison() <= 0)
+    // Handle enslaving monsters when a nasty dur is up: give a prompt for
+    // attempting to enslave monsters that might be affected.
+    else if (flavour == BEAM_CHARM)
     {
         string verb = make_stringf("charm %s", mon->name(DESC_THE).c_str());
-        if (otr_stop_summoning_prompt(verb))
+        if (rude_stop_summoning_prompt(verb))
         {
             beam_cancelled = true;
             finish_beam();
