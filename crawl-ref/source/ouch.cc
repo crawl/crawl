@@ -517,7 +517,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
             dam += you.hp;
 
         monster* mons = monster_by_mid(death_source);
-        if (dam <= 0 || !mons)
+        if (dam <= 0 || !mons || death_source == MID_YOU_FAULTLESS)
             return;
 
         ru_retribution_fineff::schedule(mons, &you, dam);
