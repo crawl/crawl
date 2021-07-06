@@ -96,6 +96,7 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
+    Alexi Barnes
     Beargit
     Bill Beher
     Alexander Beisig
