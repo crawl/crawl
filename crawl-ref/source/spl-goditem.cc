@@ -1059,8 +1059,12 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
              attacker->conj_verb("speak").c_str());
     }
 
-    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(where, LOS_SOLID, true); ri; ++ri)
         holy_word_monsters(*ri, pow, source, attacker);
+
+    // Sequencing so that we don't holy word a demonic guardian reacting to
+    // a player reading a holy word scroll on themselves (mantis 12600).
+    holy_word_monsters(where, pow, source, attacker);
 }
 
 void torment_player(const actor *attacker, torment_source_type taux)
