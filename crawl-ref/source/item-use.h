@@ -19,7 +19,7 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
-bool takeoff_armour(int index);
+bool takeoff_armour(int index, bool noask = false);
 
 void drink(item_def* potion = nullptr);
 

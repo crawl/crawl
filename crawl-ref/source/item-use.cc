@@ -1257,6 +1257,10 @@ bool wear_armour(int item)
 
     bool swapping = false;
     const equipment_type slot = get_armour_slot(*to_wear);
+
+    if (!_safe_to_remove_or_wear(*to_wear, you.slot_item(slot), false))
+        return false;
+
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -1265,18 +1269,12 @@ bool wear_armour(int item)
            || slot == EQ_BODY_ARMOUR)
         && you.equip[slot] != -1)
     {
-        if (!takeoff_armour(you.equip[slot]))
+        if (!takeoff_armour(you.equip[slot], true))
             return false;
         swapping = true;
     }
 
     you.turn_is_over = true;
-
-    // TODO: It would be nice if we checked this before taking off the item
-    // currently in the slot. But doing so is not quite trivial. Also applies
-    // to jewellery.
-    if (!_safe_to_remove_or_wear(*to_wear, false))
-        return false;
 
     // If it's on the ground, pick it up. Once it's picked up, there should be
     // no aborting
@@ -1330,7 +1328,9 @@ static bool _can_takeoff_armour(int item)
 // TODO: It would be nice if this were made consistent with wear_armour,
 // wield_weapon, puton_ring, etc. in terms of taking a default value of -1,
 // which has the effect of prompting for an item to take off.
-bool takeoff_armour(int item)
+//
+/// noask suppresses the "stat zero" prompt.
+bool takeoff_armour(int item, bool noask)
 {
     if (!_can_takeoff_armour(item))
         return false;
@@ -1339,7 +1339,7 @@ bool takeoff_armour(int item)
 
     // It's possible to take this thing off, but if it would drop a stat
     // below 0, we should get confirmation.
-    if (!_safe_to_remove_or_wear(invitem, true))
+    if (!noask && !_safe_to_remove_or_wear(invitem, true))
         return false;
 
     const equipment_type slot = get_armour_slot(invitem);
