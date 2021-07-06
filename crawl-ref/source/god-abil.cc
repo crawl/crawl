@@ -2286,7 +2286,7 @@ string desc_curse_skills(const CrawlStoreValue& curse)
 static void _choose_curse_knowledge()
 {
     // This loop choses two available skills without replacement,
-    // it is a two element version of a resivoir sampling algorithm.
+    // it is a two element version of a reservoir sampling algorithm.
     //
     // If Ashenzari curses need some fancier weighting this is the
     // place to do that weighting.
