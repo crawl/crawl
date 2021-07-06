@@ -1380,7 +1380,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
     monster* mon = monster_at(where);
 
-    if (!mon || !mon->alive() || mon == agent)
+    if (!mon || !mon->alive() || mon == agent || mons_is_conjured(mon->type))
         return 0;
 
     const dice_def dam_dice = shatter_damage(pow, mon);
@@ -1498,7 +1498,8 @@ static bool _shatterable(const actor *act)
 {
     if (act->is_player())
         return _shatter_player_dice();
-    return _shatter_mon_dice(act->as_monster());
+    return !mons_is_conjured(act->as_monster()->type)
+           && _shatter_mon_dice(act->as_monster());
 }
 
 spret cast_shatter(int pow, bool fail)
