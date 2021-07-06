@@ -501,10 +501,9 @@ FTILE:  -G = floor_rough_brown
 COLOUR: G = lightgrey
 TILE:   G = dngn_crumbled_column
 : set_feature_name("granite_statue", "broken pillar")
-: ecumenical_altar_setup(_G)
-SUBST: ^ = ^^.
+SUBST:  ^ = ^^.
 KFEAT:  ^ = web trap
-
+: ecumenical_altar_setup(_G)
 MAP
 xxxxxx-xxxxxx
 xG^--x-x--^Gx
@@ -528,7 +527,6 @@ NSUBST: ' = 8=pf / 12=ppf... / .
 TILE:   G = dngn_crumbled_column
 : set_feature_name("granite_statue", "broken pillar")
 : ecumenical_altar_setup(_G)
-
 MAP
 ...............
 .xxxxxxxxxxxxx.
@@ -561,7 +559,6 @@ NSUBST: ' = 8=pf. / 12=ppf... / .
 TILE: G = dngn_crumbled_column
 : set_feature_name("granite_statue", "broken pillar")
 : ecumenical_altar_setup(_G)
-
 MAP
 ......x....
 .-----x''''
