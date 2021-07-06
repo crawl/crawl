@@ -2403,7 +2403,8 @@ void bolt::affect_endpoint()
             if (entry.first == you.pos())
                 tracer_affect_player();
             else if (monster* mon = monster_at(entry.first))
-                tracer_affect_monster(mon);
+                if (!ignores_monster(mon))
+                    tracer_affect_monster(mon);
 
             if (agent()->is_player() && beam_cancelled)
                 return;
