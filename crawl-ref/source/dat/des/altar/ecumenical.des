@@ -278,7 +278,7 @@ ptpptp
 ENDMAP
 
 NAME:    shapermc_ecumenical_altar_notcrosses
-TAGS:    no_monster_gen transparent
+TAGS:    transparent
 SHUFFLE: PQ
 SUBST:   P : cvb
 SUBST:   Q : mmWWl
@@ -298,7 +298,7 @@ ccccc+ccccc
 ENDMAP
 
 NAME:  shapermc_ecumenical_altar_starsandcircs
-TAGS:  no_monster_gen no_pool_fixup transparent
+TAGS:  no_pool_fixup transparent
 SUBST: P : xxxxxccl
 SUBST: Q : WWW'l
 KPROP: ' = bloody
@@ -323,7 +323,7 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_totnotflames
 COLOUR: . = green / brown
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 FTILE:  A. = floor_grass:20 / floor_dirt
 SUBST:  A = ATUV
 : ecumenical_altar_setup(_G)
@@ -346,7 +346,7 @@ tt........ttt
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_gd
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 KMONS:  P = plant / fungus
 KMONS:  D = demonic plant / withered plant w:5
 NSUBST: ' = 15:P / 10:P.. / .
@@ -368,7 +368,7 @@ x'''''''''x---------x
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_hornbeckon
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 KMONS:  p = plant
 KMONS:  f = fungus
 NSUBST: ' = 8:pf / 12=ppf... / .
@@ -391,7 +391,7 @@ xx'W''xx
 ENDMAP
 
 NAME:    shapermc_ecumenical_altar_venn
-TAGS:    no_monster_gen transparent
+TAGS:    transparent
 SHUFFLE: GV
 SUBST:   x : xxxxccvb
 : ecumenical_altar_setup(_G)
@@ -409,7 +409,7 @@ x...xAxGx.
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_flowoftime
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 MONS:   plant
 MONS:   withered plant
 MONS:   demonic plant
@@ -440,7 +440,7 @@ xxb+bxx
 ENDMAP
 
 NAME:   dilly_ecumenical_altar_fadedgnrine
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 MONS:   plant
 SUBST:  z = t111
 SUBST:  1 = 11'
@@ -467,7 +467,7 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_vishouse
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
@@ -493,7 +493,7 @@ ENDMAP
 
 
 NAME:   shapermc_ecumenical_altar_mp_highgroup
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
@@ -515,7 +515,7 @@ xxxx.....xxxx
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_urbaneastern
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 SUBST:  - = --.
 SUBST:  G = GGG-
 COLOUR: - = brown
@@ -544,7 +544,7 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_ritualfount
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 SUBST: ^ = TUV---
 SUBST: - = --.
 SUBST: G = GGG-
@@ -574,7 +574,7 @@ MAP
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_pennies_from_heaven
-TAGS:  no_monster_gen transparent
+TAGS:  transparent
 KITEM: _ = gold q:1
 KFEAT: W = shallow_water
 KITEM: W = gold q:1 / w:25 nothing
@@ -598,7 +598,7 @@ x@x
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_run_dry
-TAGS:  no_monster_gen transparent
+TAGS:  transparent
 SUBST: V = V.
 : ecumenical_altar_setup(_G)
 MAP
@@ -625,7 +625,7 @@ MAP
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_blasted
-TAGS:  no_monster_gen transparent
+TAGS:  transparent
 KITEM: _ = scroll of immolation ident:type
 SUBST: x = ..x
 SUBST: x : xc
@@ -647,7 +647,7 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_lost_god
-TAGS:   no_monster_gen transparent
+TAGS:   transparent
 SUBST:  x : x:20 c m:1
 NSUBST: a = 1:_ / *.
 : ecumenical_altar_setup(_G)
@@ -665,7 +665,7 @@ MAP
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_crossroads
-TAGS:  no_monster_gen transparent
+TAGS:  transparent
 KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft trap / \
             net trap / A / > / Y w:2
 : ecumenical_altar_setup(_G)
@@ -682,7 +682,7 @@ xx...xxx...xx
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_zigzags
-TAGS:  no_monster_gen transparent
+TAGS:  transparent
 SUBST: a : xcv, d : xcv, e : cvb
 : ecumenical_altar_setup(_G)
 MAP
@@ -895,7 +895,7 @@ ENDMAP
 # The book is for flavor.  because of how early these vaults are
 # we don't want to be handing out much loot in them if we can help it
 NAME:   shapermc_ecumenical_altar_rom_forum
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 KITEM:  _ = randbook owner:Plato numspells:1 slevels:1
 SUBST:  ' = pf .:100
 KMONS:  p = plant
@@ -916,7 +916,7 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_acropolis
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 KMONS:  p = plant
 KMONS:  f = fungus
 SUBST:  ' = pf .:100
@@ -936,7 +936,7 @@ MAP
 ENDMAP
 
 NAME:   shapermc_ecumenical_altar_pompeii
-TAGS:   transparent no_monster_gen
+TAGS:   transparent
 SUBST:  G = GGG-
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
@@ -960,7 +960,7 @@ ENDMAP
 
 # goal of this is to feel hidden in something, so no b seen from outside
 NAME: shapermc_ecumenical_altar_petra
-TAGS: transparent no_monster_gen
+TAGS: transparent
 : if crawl.coinflip() then
 SUBST:  ' = pf......
 KMONS:  p = plant
@@ -985,7 +985,7 @@ xxbb''bx
 ENDMAP
 
 NAME: shapermc_ecumenical_altar_ellora
-TAGS: transparent no_monster_gen
+TAGS: transparent
 SUBST: ' = pf .:40
 KMONS: p = plant
 KMONS: f = fungus
