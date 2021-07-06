@@ -256,10 +256,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 {
     if (!ignore_player_traversability)
     {
-        // Don't auto travel through toxic bogs
-        if (grid == DNGN_TOXIC_BOG)
-            return false;
-
         // If the feature is in travel_avoid_terrain, respect that.
         if (forbidden_terrain[grid])
             return false;
@@ -276,8 +272,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
+            || grid == DNGN_TOXIC_BOG)
+        {
             return you.permanent_flight();
+        }
     }
 
     return feat_is_traversable(grid, try_fallback);
