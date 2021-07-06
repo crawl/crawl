@@ -62,7 +62,7 @@ static void _flight_equip()
 }
 
 // Fill an empty equipment slot.
-void equip_item(equipment_type slot, int item_slot, bool msg)
+void equip_item(equipment_type slot, int item_slot, bool msg, bool skip_effects)
 {
     ASSERT_RANGE(slot, EQ_FIRST_EQUIP, NUM_EQUIP);
     ASSERT(you.equip[slot] == -1);
@@ -70,7 +70,8 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
 
     you.equip[slot] = item_slot;
 
-    equip_effect(slot, item_slot, false, msg);
+    if (!skip_effects)
+        equip_effect(slot, item_slot, false, msg);
     you.gear_change = true;
 }
 

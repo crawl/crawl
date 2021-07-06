@@ -4387,7 +4387,7 @@ static void _extra_sacrifice_code(ability_type sac)
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
         item_def* const ring = you.slot_item(sac_ring_slot, true);
         int ring_inv_slot = you.equip[sac_ring_slot];
-        bool open_ring_slot = false;
+        equipment_type open_ring_slot = EQ_NONE;
 
         // Drop your shield if there is one
         if (shield != nullptr)
@@ -4415,20 +4415,22 @@ static void _extra_sacrifice_code(ability_type sac)
             for (const auto &eq : ring_slots)
                 if (!you.slot_item(eq, true))
                 {
-                    open_ring_slot = true;
+                    open_ring_slot = eq;
                     break;
                 }
 
+            const bool can_keep = open_ring_slot != EQ_NONE;
+
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, true);
-            if (open_ring_slot)
+            unequip_item(sac_ring_slot, true, can_keep);
+            if (can_keep)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
                      (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                puton_ring(ring_inv_slot, false, false);
+                equip_item(open_ring_slot, ring_inv_slot, false, true);
             }
         }
     }
