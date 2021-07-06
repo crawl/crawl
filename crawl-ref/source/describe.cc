@@ -5247,7 +5247,7 @@ string get_command_description(const command_type cmd, bool terse)
  *
  * @param cloud_type        The cloud_type in question.
  * @return e.g. "\nThis cloud is opaque; one tile will not block vision, but
- *      multiple will. \nClouds of this kind the player makes will vanish very
+ *      multiple will. \n\nClouds of this kind the player makes will vanish very
  *      quickly once outside the player's sight."
  */
 string extra_cloud_info(cloud_type cloud_type)
@@ -5257,8 +5257,8 @@ string extra_cloud_info(cloud_type cloud_type)
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will.";
     const string vanish_info
-        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
-                       "%s once outside their sight.",
+        = make_stringf("\n\nClouds of this kind an adventurer makes will vanish"
+                       " %s once outside their sight.",
                        opaque ? "quickly" : "almost instantly");
     return opacity_info + vanish_info;
 }
