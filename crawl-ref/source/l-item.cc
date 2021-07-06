@@ -835,7 +835,8 @@ IDEF(spells)
 IDEF(artprops)
 {
     if (!item || !item->defined() || !is_artefact(*item)
-        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES))
+        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES)
+        || item->base_type == OBJ_BOOKS)
     {
         return 0;
     }
