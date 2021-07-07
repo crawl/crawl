@@ -650,7 +650,8 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                              MISC_TIN_OF_TREMORSTONES,
                              MISC_LIGHTNING_ROD,
                              MISC_PHIAL_OF_FLOODS,
-                             MISC_CONDENSER_VANE);
+                             MISC_CONDENSER_VANE,
+                             MISC_XOMS_CHESSBOARD);
     }
 
     return *choice;
