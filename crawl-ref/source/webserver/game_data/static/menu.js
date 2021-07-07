@@ -33,6 +33,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function set_item_contents(item, elem)
     {
         elem.html(util.formatted_string_to_html(item_text(item)));
+        elem.css('min-height', '0.5em');
         var col = item_colour(item);
         elem.removeClass();
         elem.addClass("level" + item.level);

@@ -799,15 +799,16 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>Non-Gameplay Commands / Info\n");
 
+    _add_command(cols, 0, CMD_GAME_MENU, "game menu", 2);
     _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
     _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
+    _add_command(cols, 0, CMD_MACRO_ADD, "add macro");
     _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
     _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
     _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE,
                          "add note (use <w>%:</w> to read notes)",
                          { CMD_DISPLAY_COMMANDS });
-    _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
     _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
 #ifdef USE_TILE_LOCAL
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);

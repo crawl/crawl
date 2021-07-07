@@ -3299,13 +3299,16 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_RELIGION;
     case CMD_DISPLAY_MUTATIONS:
         return TILEG_CMD_DISPLAY_MUTATIONS;
+    case CMD_MACRO_ADD: // this tile is a fairly generic + despite the name
     case CMD_DISPLAY_SKILLS:
         return TILEG_CMD_DISPLAY_SKILLS;
+    case CMD_SHOW_CHARACTER_DUMP:
     case CMD_DISPLAY_CHARACTER_STATUS:
         return TILEG_CMD_DISPLAY_CHARACTER_STATUS;
     case CMD_DISPLAY_KNOWN_OBJECTS:
         return TILEG_CMD_KNOWN_ITEMS;
     case CMD_SAVE_GAME_NOW:
+    case CMD_SAVE_GAME:
         return TILEG_CMD_SAVE_GAME_NOW;
 #ifdef USE_TILE
     case CMD_EDIT_PLAYER_TILE:
@@ -3359,6 +3362,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_MAP_FIND_ALTAR;
     case CMD_MAP_FIND_STASH:
         return TILEG_CMD_MAP_FIND_STASH;
+    case CMD_QUIT:
+        return TILEG_SYMBOL_OF_TORMENT;
 #ifdef TOUCH_UI
     case CMD_SHOW_KEYBOARD:
         return TILEG_CMD_KEYBOARD;

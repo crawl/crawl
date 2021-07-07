@@ -1825,6 +1825,80 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
+class GameMenu : public Menu
+{
+// this could be easily generalized for other menus that select among commands
+// if it's ever needed
+public:
+    class CmdMenuEntry : public MenuEntry
+    {
+    public:
+        CmdMenuEntry(string label, MenuEntryLevel level, int hotk=0,
+                                                command_type _cmd=CMD_NO_CMD)
+            : MenuEntry(label, level, 1, hotk), cmd(_cmd)
+        {
+#ifdef USE_TILE
+            if (tileidx_command(cmd) != TILEG_TODO)
+                add_tile(tileidx_command(cmd));
+#endif
+        }
+
+        command_type cmd;
+    };
+
+    command_type cmd;
+    GameMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP),
+          cmd(CMD_NO_CMD)
+    {
+        set_tag("game_menu");
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry(
+            string("<w>" CRAWL " ") + Version::Long + "</w>",
+            MEL_TITLE));
+        on_single_selection = [this](const MenuEntry& item)
+        {
+            const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
+            if (c)
+                cmd = c->cmd;
+            return false;
+        };
+    }
+
+    void fill_entries()
+    {
+        clear();
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        items[1]->add_tile(TILEG_STARTUP_STONESOUP);
+        add_entry(new CmdMenuEntry("Save and return to main menu",
+            MEL_ITEM, 'S', CMD_SAVE_GAME));
+        add_entry(new CmdMenuEntry("Generate and view character dump",
+            MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
+        add_entry(new CmdMenuEntry("Edit macros",
+            MEL_ITEM, '~', CMD_MACRO_ADD));
+#ifdef USE_TILE_LOCAL
+        add_entry(new CmdMenuEntry("Edit player doll",
+            MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
+#endif
+        add_entry(new CmdMenuEntry("Help and manual",
+            MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry(
+                            "Quit and <lightred>abandon character</lightred>",
+            MEL_ITEM, 'Q', CMD_QUIT));
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        cycle_hover();
+        return Menu::show(reuse_selections);
+    }
+};
+
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
@@ -1832,6 +1906,17 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
 void process_command(command_type cmd, command_type prev_cmd)
 {
     you.apply_berserk_penalty = true;
+
+    if (cmd == CMD_GAME_MENU)
+    {
+        GameMenu m;
+        m.show();
+        if (m.cmd == CMD_NO_CMD)
+            return;
+        else if (m.cmd == CMD_SAVE_GAME) // skip the prompt
+            save_game(true); // noreturn
+        cmd = m.cmd;
+    }
 
     switch (cmd)
     {
@@ -2080,6 +2165,7 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+    case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
@@ -2087,6 +2173,8 @@ void process_command(command_type cmd, command_type prev_cmd)
         else
             tiles.send_dump_info("command", you.your_name);
 #endif
+        if (cmd == CMD_SHOW_CHARACTER_DUMP)
+            display_char_dump();
         break;
 
         // Travel commands.
