@@ -36,6 +36,9 @@
 #--------------------------------------------------------------------
 #Eringya   |plant monsters, archers |books, staves, potions  |
 #          |and fenstrider witches  |spectral ego weapons    |
+#--------------------------------------------------------------------
+#Maxwell   |constructs and meaty    |gear with dangerous ego,|
+#          |mace wielders           |weapon/armour artifacts |
 
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
@@ -68,6 +71,8 @@
 #---------------------------------------------------------------
 #Eringya's Formal Garden  |Gently curving open  |green with a chance for
 #                         |paths hedged by trees|red/yellow autumn variant
+#---------------------------------------------------------------
+#Maxwell's Workshop       |big rooms with forge |metal
 ##
 
 # TO-DO:
@@ -1894,7 +1899,7 @@ ENDMAP
 NAME:       wizlab_eringya
 TAGS:       no_rotate
 ITEM:       any book, any magical staff, any potion
-ITEM:       any weapon superb_item ego:spectral no_pickup / \
+ITEM:       any weapon good_item ego:spectral no_pickup / \
             lajatang ego:spectral no_pickup w:4 / \
             quarterstaff randart plus:12 ego:spectral no_pickup w:2
 MONS:       deep elf archer / faun, satyr / naga sharpshooter
@@ -1970,4 +1975,89 @@ cttttttttttttttt.............tttttttttttttttc
 cttttttttttttttttttt2...2tttttttttttttttttttc
 ctttttttttttttttttttttttttttttttttttttttttttc
 ccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# Maxwell's Workshop
+# Designed by Hellmonk. Features a lot of constructs in a layout of
+# interconnected rooms. Boss is an electric golem (formerly used in tomb of
+# Doroklohe as part of a construct set there). Loot includes items with
+# "dangerous" properties, such as rampaging or harm.
+NAME:       wizlab_maxwell
+TAGS:       no_rotate no_pool_fixup
+ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
+            boots ego:rampaging randart / ring of fire randart /\
+            any armour good_item ego:ponderous randart / ring of ice randart /\
+            plate armour good_item ego:ponderousness / any weapon ego:chaos /\
+            maxwell's patent armour w:2 / maxwell's thermic engine w:2
+ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
+            any weapon randart / any armour randart / any jewellery randart w:5
+ITEM:       potion of attraction ident:all / any scroll w:20 /\
+            scroll of vulnerability ident:all / any potion w:20
+MONS:       gargoyle / iron golem, molten gargoyle / peacekeeper, war gargoyle
+MONS:       crystal guardian, ettin / ironbound preserver ; great mace /\
+            fire giant ; great mace ego:flaming /\
+            frost giant ; great mace ego:freezing /\
+            angel ; great mace ego:holy_wrath
+MONS:       ironbound thunderhulk ; great mace ego:electrocution, electric golem
+KMONS:      P = lightning spire
+SHUFFLE:    DE/JK, pqrs
+SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
+SUBST:      1=1.., 2=22..., ;:v+..
+NSUBST:     3 = 2:3 / 2:4 / *:3., 5 = 4:5 / *=5532.., 6 = 4:6 /*=65GGG
+NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:3 / 4:2 / *=11bG
+NSUBST:     e = 3:e / *=dff
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Maxwell's Workshop")
+}}
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvv.qqqqqq.vvvvvvvvvvv312.6vvvvvvvvvvvvvvvv
+vvvvv3...qqqq...6vvvvvvvv112....+...213vvvvvvvv
+vvvvs...r.qq.r...svvvvvv..2.....+....211vvvvvvv
+vvvv.s.r...q..r.s.vvvvv...vvvv..nn..nn..2vvvvvv
+vvv6..p..pq.p..p...vvv...vvvv..nnllllnn...vvvvv
+vvverssprp7qprpssr.vv..6vvvv..nnllllllnn...vvvv
+vvverssrppqepprssr.+..2vvvv..nnllllllllnn...vvv
+vvvrrpppppeeppppprr+32vvvv..nnllllllllllnn...vv
+vvverssrppeqpprssr.+.vvvv...nllllllllllllnn...v
+vvverssprpq7prpssr.vvvvvv++nnlllllllllllllnn++v
+vvv6..p..p.qp..p...vvvvvv..nllllllllllllllln..v
+vvvv.s.r..q...r.s.vvvvvvv..nnlllllllllllllnn..v
+vvvvs...r.qq.r...svvvvvvv...nnnnlllllllnnnn...v
+vvvvv3...qqqq...6vvvvvvvv.....2nnnnlnnnn2.....v
+vvvvvvv.qqqqqq.vvvvvvvvvv1.......2nln2.......1v
+vvvvvvvvvvvvvvvvvvvvvvvvvvG31.....nln.....13Gvv
+vvvvvvvvvvvvvvvvvvvvvvvvv1...3....nln....3...1v
+vvvvvvvvvvvvvvvvvvvvvvvvv....vvv..nln..vvv....v
+vvvvvvH.V.Hvvvvvvvvvvvvvv....v....nln....v....v
+vvvvvv.....vvvvvvvvvvvvvv....v..nnnlnnn..v....v
+vvH.....4.....Hvvvvvvvvvv....v..nllllln..v....v
+vv....v111v....vvvvvvvvvv....v..nllllln..v....v
+vv....vfffv....vvvvvvvvvv....v5.nllllln.5v....v
+vvH...vvvvv...Hvvvvvvvvvv2..6v2.nllllln.2v6..2v
+vvvvD..bbb..Dvvvvvvvvvvvv....v..nllllln..v....v
+vH..DD..H..DD..Hvvvvvvvvv....v..nnn5nnn..v....v
+v....v..P..v....v2.....2v....v21...4...12v....v
+v....v.....v....+...3...+....v622ddddd226v....v
+v....vH...Hv....v2.....2v;;;;vvvvvvvvvvvvv;;;;v
+vH..EvvFFFvvE..Hvvvvvvvvv2...................2v
+vvvvEH.....HEvvvvvvvvvvvv...vvv...vvv...vvv...v
+vvvv....v....vvvvvvvvvvvv....5.....5.....5....v
+vvvv....v....vvvvvvvvvvvv.....................v
+vvvvH.......Hvvvvvvvvvvvv...vvv...vvv...vvv...v
+vvvvvvvv+vvvvvvvvvvvvvvvv....5.....5.....5....v
+vvvvvv..G..vvvvvvvvvvvvvv.....................v
+vvvvvG.....Gvvvvvvvvvvvvv...vvv...vvv...vvv...v
+vvvv....G....vvvvvvvvvvvv....5.....5.....5....v
+vvvv.........v......2vvvv1...................1v
+vvv+G.A.G.A.G+.......vvvvvvv+vvvvvvvvvvvvvvvvvv
+vvvv.........v....2..vvvvvv2.2vvvvvvvvvvvvvvvvv
+vvvv....G....vvvvv...vvvvvv.3.vvvvvvvvvvvvvvvvv
+vvvvvG.....Gvvvvvv1..vvvvvv...vvvvvvvvvvvvvvvvv
+vvvvvv..G..vvvvvvv1..2.11.2...vvvvvvvvvvvvvvvvv
+vvvvvvvv+vvvvvvvvv............vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvv2.....11...2vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
