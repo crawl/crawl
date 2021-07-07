@@ -788,6 +788,14 @@ void treant_release_fauna(monster& mons)
     }
 }
 
+static bool _adj_to_tree(coord_def p)
+{
+    for (adjacent_iterator ai(p); ai; ++ai)
+        if (feat_is_tree(env.grid(*ai)))
+            return true;
+    return false;
+}
+
 static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
 {
     coord_def p = {0, 0};
@@ -801,15 +809,14 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
         if (dist > closest)
             break;
 
-        if (!cell_see_cell(target, *di, LOS_NO_TRANS))
-            continue; // there might be a better iterator for this
-
-        if (is_temp_terrain(*di))
-            continue; // no treeporting into summoned forests
-
-        const dungeon_feature_type grid = env.grid(*di);
-        if (!feat_is_tree(grid))
+        if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
+            || !_adj_to_tree(*di)
+            || !monster_habitable_grid(MONS_ELEIONOMA, env.grid(*di)))
+        {
             continue;
+        }
+        // XXX: also check for dangerous clouds?
+
         closest = dist;
 
         seen++;
@@ -1045,7 +1052,7 @@ bool mon_special_ability(monster* mons)
 
         env.grid(target) = DNGN_FLOOR;
         set_terrain_changed(target);
-        simple_monster_message(*mons, " melds with the trees.");
+        simple_monster_message(*mons, " flows through the trees.");
         used = true;
     }
     break;
