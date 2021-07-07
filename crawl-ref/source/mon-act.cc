@@ -1561,6 +1561,10 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         return true;
     }
 
+#ifndef DEBUG
+    UNUSED(old_energy);
+#endif
+
     return false;
 }
 
