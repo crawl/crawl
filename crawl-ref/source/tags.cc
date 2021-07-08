@@ -4981,6 +4981,7 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_WILLPOWER))
     {
         int prop_mr = artefact_property(item, ARTP_WILLPOWER);
@@ -4997,7 +4998,9 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
-    if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE && is_artefact(item))
+    if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE
+        && is_artefact(item)
+        && item.base_type != OBJ_BOOKS)
     {
         if (artefact_property(item, ARTP_STEALTH))
         {
@@ -5212,6 +5215,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_NEGATIVE_ENERGY))
     {
         if (artefact_property(item, ARTP_NEGATIVE_ENERGY) < 0)
@@ -5220,6 +5224,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_RPOIS_MINUS
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_POISON))
     {
         if (artefact_property(item, ARTP_POISON) < 0)
@@ -5228,6 +5233,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_TELEPORTITIS
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_CAUSE_TELEPORTATION) > 1)
     {
         artefact_set_property(item, ARTP_CAUSE_TELEPORTATION, 1);
@@ -5235,6 +5241,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_NO_TWISTER
         && is_artefact(item)
+        && item.base_type != OBJ_BOOKS
         && artefact_property(item, ARTP_TWISTER))
     {
         artefact_set_property(item, ARTP_TWISTER, 0);
