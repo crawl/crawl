@@ -104,6 +104,10 @@
 {'?', CMD_DISPLAY_COMMANDS},
 {'!', CMD_ANNOTATE_LEVEL},
 {'$', CMD_LIST_GOLD},
+{u'€', CMD_LIST_GOLD},
+{u'£', CMD_LIST_GOLD},
+{u'¥', CMD_LIST_GOLD},
+{u'₩', CMD_LIST_GOLD},
 {CONTROL('D'), CMD_MACRO_ADD},
 {'~', CMD_MACRO_ADD},
 #ifdef WIZARD
