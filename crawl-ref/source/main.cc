@@ -135,8 +135,8 @@
 #include "throw.h"
 #ifdef USE_TILE
  #include "rltiles/tiledef-dngn.h"
- #include "tilepick.h"
 #endif
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
@@ -1833,14 +1833,12 @@ public:
     class CmdMenuEntry : public MenuEntry
     {
     public:
-        CmdMenuEntry(string label, MenuEntryLevel level, int hotk=0,
+        CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
                                                 command_type _cmd=CMD_NO_CMD)
-            : MenuEntry(label, level, 1, hotk), cmd(_cmd)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd)
         {
-#ifdef USE_TILE
             if (tileidx_command(cmd) != TILEG_TODO)
                 add_tile(tileidx_command(cmd));
-#endif
         }
 
         command_type cmd;
@@ -1872,17 +1870,17 @@ public:
         clear();
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
-        items[1]->add_tile(TILEG_STARTUP_STONESOUP);
+        items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
         add_entry(new CmdMenuEntry("Save and return to main menu",
-            MEL_ITEM, 'S', CMD_SAVE_GAME));
+            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
         add_entry(new CmdMenuEntry("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
-        add_entry(new CmdMenuEntry("Edit macros",
-            MEL_ITEM, '~', CMD_MACRO_ADD));
 #ifdef USE_TILE_LOCAL
-        add_entry(new CmdMenuEntry("Edit player doll",
+        add_entry(new CmdMenuEntry("Edit player tile",
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
 #endif
+        add_entry(new CmdMenuEntry("Edit macros",
+            MEL_ITEM, '~', CMD_MACRO_ADD));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
@@ -1913,8 +1911,6 @@ void process_command(command_type cmd, command_type prev_cmd)
         m.show();
         if (m.cmd == CMD_NO_CMD)
             return;
-        else if (m.cmd == CMD_SAVE_GAME) // skip the prompt
-            save_game(true); // noreturn
         cmd = m.cmd;
     }
 

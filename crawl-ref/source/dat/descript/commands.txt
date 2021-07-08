@@ -119,6 +119,16 @@ CMD_DISPLAY_COMMANDS verbose
 
 Displays a list of commands.
 %%%%
+CMD_SHOW_CHARACTER_DUMP
+
+Dump and show character's progress
+%%%%
+CMD_SHOW_CHARACTER_DUMP verbose
+
+Dumps detailed information about your character into a file ‘playername.txt’ in
+the morgue directory, and shows the file in-game. This includes main stats,
+equipment, spells, skills, notes, etc.
+%%%%
 CMD_CHARACTER_DUMP
 
 Dump character's progress
@@ -370,3 +380,11 @@ Show keyboard
 CMD_SHOW_KEYBOARD verbose
 
 Brings up the on-screen keyboard, if applicable.
+%%%%
+CMD_GAME_MENU
+
+Show game menu
+%%%%
+CMD_GAME_MENU verbose
+
+Show the game menu
