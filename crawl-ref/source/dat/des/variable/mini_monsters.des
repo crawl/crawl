@@ -7915,6 +7915,95 @@ xx1...1xx
   xxxxx
 ENDMAP
 
+NAME:   dilly_guarded_unrand_elemental_staff
+TAGS:   no_monster_gen no_trap_gen transparent
+DEPTH:  D:9-, Elf, Depths
+WEIGHT: 3
+### fog machine for each closed elemntal chamber, and elementals
+MARKER: F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 6, pow_max = 6, delay = 20, \
+             size_min = 4, size_max = 4, walk_dist = 1, excl_rad = -1 }
+MARKER: H = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 6, pow_max = 6, delay = 20, \
+             size_min = 4, size_max = 4, walk_dist = 1, excl_rad = -1 }
+MARKER: D = lua:fog_machine {cloud_type = "white fluffiness", \
+             pow_min = 6, pow_max = 6, delay = 20, \
+             size_min = 4, size_max = 4, walk_dist = 1}
+MARKER: R = lua:fog_machine {cloud_type = "sparse dust", \
+             pow_min = 6, pow_max = 6, delay = 20, \
+             size_min = 4, size_max = 4, walk_dist = 1}
+KFEAT:  F = l
+KFEAT:  H = w
+KMONS:  L = generate_awake fire vortex
+KFEAT:  L = l
+KMONS:  q = generate_awake air elemental
+KMONS:  e = generate_awake earth elemental
+FTILE:  dfghZqD1234+.`  = floor_crystal_squares
+MONS:   water elemental, earth elemental, fire elemental, air elemental
+: if you.in_branch("D") then
+:   if you.depth() < 13 then
+KMONS:  Z = wizard  
+NSUBST: 1 = 3:1 / *:. , 2 = 3:2 / *:. , 3 = 3:3 / *:. , 4 = 3:4 / *:. 
+KMONS:  d = gargoyle / snapping turtle / molten gargoyle / fire crab / \
+            wind drake / water nymph / 
+:   else
+KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
+        name:master_elementalist n_rpl n_des n_noc \
+        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
+               sticky_flame_range.11.wizard;\
+               summon_water_elementals.11.wizard;\
+               haste.11.wizard;blink.11.wizard \
+        ; robe ego:fire_resistance | robe ego:cold_resistance | \
+        robe ego:resistance \
+        . dagger ego:freezing | dagger ego:flaming | \
+        dagger ego:electrocution
+KMONS:  d = merfolk aquamancer / alligator snapping turtle / hell knight / \
+            deep troll earth mage / shock serpent / 
+:   end
+: else
+KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
+        name:master_elementalist n_rpl n_des n_noc \
+        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
+               sticky_flame_range.11.wizard;\
+               summon_water_elementals.11.wizard;\
+               haste.11.wizard;blink.11.wizard \
+        ; robe ego:fire_resistance | robe ego:cold_resistance | \
+        robe ego:resistance \
+        . dagger ego:freezing | dagger ego:flaming | \
+        dagger ego:electrocution
+KMONS:  d = merfolk aquamancer / alligator snapping turtle / hell knight / \
+            deep troll earth mage / spriggan air mage
+: end
+KITEM:  Z = elemental staff no_pickup
+KPROP:  lLFwH'ReqD` = no_tele_into
+MAP
+              b
+             nbn
+            nbLbn
+           nblllbn
+          bbLlFlLbb
+         bbnblllbnbb
+        +b.3nbLbn3.b+
+       bb...3nbn3...bb
+      bb..d..bbb..d..bb
+     nbn4...bb.bb...2nbn
+    nbqbn4.b+...+b.2nbebn
+   nb```bnbb.....bbnb'''bn
+  bbq`D`qbb...Z...bbe'R'ebb
+   nb```bnbb.....bbnb'''bn
+    nbqbn4.b+...+b.2nbebn
+     nbn4...bb.bb...2nbn
+      bb..d..bbb..d..bb
+       bb...1nbn1...bb
+        +b.1nbwbn1.b+
+         bbnbwwwbnbb
+          bbwwHwwbb
+           nbwwwbn
+            nbwbn
+             nbn
+              b
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
