@@ -56,7 +56,7 @@ function ks_random_setup(e, norandomexits)
     --q is used as a placeholder for trees to keep them from being
     -- re-selected in the next step.
     e.subst("w : w.")
-    e.subst("w : wwwWWqt")
+    e.subst("w : wwwWWqq")
     --room setups:
     --0 : doodads replaced with walls
     --1 : walls replaced with water/lava or removed. doodads may or may not be walls
