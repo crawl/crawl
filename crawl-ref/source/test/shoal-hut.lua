@@ -17,6 +17,7 @@ local function find_vault_doors(vault)
   end
   if dgn.orient(vault) == "encompass" then
     return doors
+  end
   for p in iter.rect_size_iterator(vault:pos(), size) do
     local thing = dgn.grid(p.x, p.y)
     if isdoor(thing) then
