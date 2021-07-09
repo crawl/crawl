@@ -15,7 +15,7 @@ local function find_vault_doors(vault)
   if size.x == 0 and size.y == 0 then
     return doors
   end
-  if dgn.orient(vault) == "encompass" then
+  if vault:orient() == "encompass" then
     return doors
   end
   for p in iter.rect_size_iterator(vault:pos(), size) do
