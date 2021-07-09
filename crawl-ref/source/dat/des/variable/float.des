@@ -4626,7 +4626,7 @@ ENDMAP
 
 NAME:   gammafunk_worm_tunnel
 TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen
-DEPTH:  D:12-, Swamp
+DEPTH:  Lair, D:10-, Swamp
 ORIENT: float
 : item(dgn.good_aux_armour)
 : item(dgn.randart_aux_armour)
@@ -4634,21 +4634,34 @@ ITEM:   any good_item jewellery, any randart jewellery
 KMONS:  p = briar patch
 MONS:   swamp worm
 : if you.in_branch('D') then
-:   if you.depth() < 14 then
-NSUBST: * = * / .
+:   if you.depth() < 12 then
+KFEAT:  ^ = net trap
+SUBST:  F = E, D = 1ttttt
+:   elseif you.depth() < 14 then
+KFEAT:  ^ = net trap
+SUBST:  d = dde, f = ffg, % = %%*, F = E, D = 1tt
+# From D:14 and later we use Zot traps.
 :   else
-SUBST:  d = de, f = fg
-NSUBST: t = 1 / 2=1t / t, * = 2=* / .
+KFEAT:  ^ = zot trap
+SUBST:  d = de, f = fg, % = %*, D = 1t, F = ^
+:   end
+: elseif you.in_branch('Lair') then
+KFEAT:  ^ = net trap
+SUBST:  F = E
+:   if you.depth() < 4 then
+SUBST:  d = dddde, f = ffffg, % = %%%%*, F = E, D = 1tttt
+:   else
+SUBST:  d = ddde, f = fffg, % = %%%*, F = E, D = 1ttt
 :   end
 # Swamp
 : else
-SUBST:  d = e, f = g
-NSUBST: t = 2=1 / 4=1t / t
-: end
 KFEAT:  ^ = zot trap
-MARKER: D =  lua:fog_machine { cloud_type = "foul pestilence", pow_min = 3,  \
-                               pow_max = 5, delay = 5, start_clouds = 3, \
-                               size = 1, spread_rate = 0, excl_rad = 0 }
+# Use trees as walls in swamp, so we better blend in with the terrain.
+SUBST:  d = e, f = g, % = *, c = t, D = 11t, F = ^
+: end
+MARKER: E =  lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5,  \
+                               pow_max = 10, delay = 10, start_clouds = 1, \
+                               size = 1, spread_rate = 0, excl_rad = -1 }
 MARKER: P = lua:transp_loc("worm_tunnel_entry")
 MARKER: Q = lua:transp_dest_loc("worm_tunnel_entry")
 MARKER: R = lua:transp_loc("worm_tunnel_exit")
@@ -4657,25 +4670,16 @@ MAP
   ...S...
   .cnnnc.
   .cdRfc.
-...c***c.
+...c%%%c.
 .cccc+cccc.
-.n1lp.plcc.
-.cclp^pltn.
-.ntlp^Dncc.
-.cclp^pl1n.
-.ntlp^plcc.
-.ccnD^pltn.
+.cclpFpl1n.
 .n1lp^plcc.
-.cclp^pltn.
-.ntlp^Dncc.
+.ccnE^plDn.
+.nDlp^Encc.
 .cclp^pl1n.
-.ntlp^plcc.
-.ccnD^pltn.
 .n1lp^plcc.
-.cclp^pltn.
-.ntlp^plcc.
-.cclp^plcc.
-..ccpQpcc..
+.cclp^plDn.
+.cccpQpccc.
  ..cnnnc..
   ...P...
 ENDMAP
