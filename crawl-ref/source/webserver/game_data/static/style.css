@@ -48,7 +48,7 @@ body {
 #stats_piety {
     color: #fce94f; /* yellow */
 }
-#stats_gozag_gold{
+#stats_gozag_gold.boosted_stat {
     color: #babdb6; /* lightgray */
 }
 #stats_piety.penance {

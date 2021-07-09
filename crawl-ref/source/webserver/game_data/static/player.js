@@ -361,7 +361,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             $("#stats_gozag_gold").text("");
             $("#stats_gozag_gold_label").css("padding-left", "0");
         }
-        $("#stats_gozag_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+        $("#stats_gozag_gold").toggleClass("boosted_stat", !!player.has_status("gold aura"));
 
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
