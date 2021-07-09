@@ -2442,8 +2442,7 @@ ENDMAP
 #
 ###############################################################################
 
-NAME:   shoals_end_encompass_hellmonk_lost_city
-TAGS:   ruin
+NAME:   shoals_end_hellmonk_lost_city
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
@@ -2452,10 +2451,10 @@ KITEM:  O = barnacled rune of Zot
 MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
 KMONS:  O = sphinx
 KMONS:  P = plant
-NSUBST: | = 1:O / *:|
 SUBST:  1 = 1.., 2 = 2.., 3 = 334, G = G.
 SUBST:  ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
-SUBST:  . = .........W
+NSUBST: | = 1:O / *:|, . = 16 = 0. / *=.........W
+SUBST:  D = x., c = ccc.
 NSUBST: ' = 1:( / 1:[ / 1:{ / 2 = <.. / *=P......
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -2463,45 +2462,45 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwxxx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwxxx...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrccc1..1cccwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwxxxpppxxxrrrrcc.......|ccxxxwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwxxpppxxx...xrr+...2...3.cc1.xxwwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWxxpppxx...xxxrrcc.......|cc...xxwwwwwwwwwwww
-wwwwwwwwWWWWWWWWWxxpppxx...xxxxrrrccc1..1ccc.....xxwwwwwwwwwww
-wwwwwwwWWWWWWWWWxxpppxx...xxxxxxxrrrcccccc.......2xwwwwwwwwwww
-wwwwwwWWW'''WWWxxpppxx.....yyyy2xxxrrrr.......Gx..xwwwwwwwwwww
-wwwwwwWW''''''Wxxpppxxxxxxxxxyyyxxrrr1.....1xxxx..xwwwwwwwwwww
-wwwwwwW'''''''Wxx..pxxx1..1xxyyyyxrrxxxxxx..xxxx..xwwwwwwwwwww
-wwwwwwW''cc''.Wxx..pxx......xyyyxxxxx2..2x..xxxx..xwwwwwwwwwww
-wwwwwwW''cc''.Wxx..pxx1....1+yy...2xx....x...2...1xwwwwwwwwwww
-wwwwwwW''''''.W+...pxx......xyy.....x....x...ccccccccwwwwwwwww
-wwwwwwW'''''..W+...ppxx1..1xxyyxx1..x1..2x.ccc1....1cccwwwwwww
-wwwwwwW''''..ccccc..pxxxxxxxxxxxx...xx++xxcc1.........ccwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxDDDxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxDx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxDx2.....rrrxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxD...xxxrrrccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxDpppDDxrrrccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxDDpppxDDrrrrcc.......|ccDDDwwwwwwwwwwwwww
+wwwwwwwwwwWWWWWWWWWDDpppxDD...xrr+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWDxpppxD...xxxrrcc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwWWWWWWWWWDxpppxx...xxxxrrrccc1..1ccc.....xDwwwwwwwwwww
+wwwwwwwWWWWWWWWWDxpppxx...xxxxxxxrrrcccccc....2..2Dwwwwwwwwwww
+wwwwwwWWW'''WWWDxpppxx.....yyyy2DDDrrrr......2GD..Dwwwwwwwwwww
+wwwwwwWW''''''WDxpppDxxxDDDxxyyyDxrrr1.....1DxxD..Dwwwwwwwwwww
+wwwwwwW'''''''WDD..pDxD1..1DxyyyyxrrxxDDxx..xxxx..Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..pDx......Dyyyxxxxx2..2x..DxxD..Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..pDx1....1+yy...2xD....D...2.2.1Dwwwwwwwwwww
+wwwwwwW''''''.W+...pDx......Dyy.....D....D...ccccccccwwwwwwwww
+wwwwwwW'''''..W+...ppxD1..1DxyyDD1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''..ccccc..pxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
 wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2......3.|cwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....|cwwwww
-wwwwwwW''''..ccccc..qxxxxxxxxxxxx...xx++xxcc1.........ccwwwwww
-wwwwwwW'''''..W+...qqxx1..1xxzzxx1..x1..2x.ccc1....1cccwwwwwww
-wwwwwwW''''''.W+...qxx......xzz.....x....x...ccccccccwwwwwwwww
-wwwwwwW''cc''.Wxx..qxx1....1+zz...2xx....x...2...1xwwwwwwwwwww
-wwwwwwW''cc''.Wxx..qxx......xzzzxxxxx2..2x..xxxx..xwwwwwwwwwww
-wwwwwwW'''''''Wxx..qxxx1..1xxzzzzxssxxxxxx..xxxx..xwwwwwwwwwww
-wwwwwwWW''''''Wxxqqqxxxxxxxxxzzzxxsss......1xxxx..xwwwwwwwwwww
-wwwwwwWWW'''WWWxxqqqxx.....zzzz2xxxssss1......Gx..xwwwwwwwwwww
-wwwwwwWWWWWWWWWWxxqqqxx...xxxxxxxssscccccc.......2xwwwwwwwwwww
-wwwwwwwWWWWWWWWWWxxqqqxx...xxxxsssccc1..1ccc.....xxwwwwwwwwwww
-wwwwwwwwWWWWWWWWWWxxqqqxx...xxxsscc.......|cc...xxwwwwwwwwwwww
-wwwwwwwwwWWWWWWWWWWxxqqqxxx...xss+...2...3.cc1.xxwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwxxxqqqxxxsssscc.......|ccxxxwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwxxx...xxxsssccc1..1cccwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwxxx2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwxxx......sssxwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwW''''..ccccc..qxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
+wwwwwwW'''''..W+...qqxD1..1DxzzDD1..x1..2x.ccc1....1cccwwwwwww
+wwwwwwW''''''.W+...qDx......Dzz.....D....D...ccccccccwwwwwwwww
+wwwwwwW''cc''.WDD..qDx1....1+zz...2xD....D...2.2.1Dwwwwwwwwwww
+wwwwwwW''cc''.WDD..qDx......Dzzzxxxxx2..2x..DxxD..Dwwwwwwwwwww
+wwwwwwW'''''''WDD..qDxD1..1DxzzzzxssxxDDxx..xxxx..Dwwwwwwwwwww
+wwwwwwWW''''''WDxqqqDxxxDDDxxzzzxxsss......1DxxD..Dwwwwwwwwwww
+wwwwwwWWW'''WWWDxqqqxx.....zzzz2DDDssss1.....2GD..Dwwwwwwwwwww
+wwwwwwWWWWWWWWWWDxqqqxx...xxxxxxxssscccccc....2..2Dwwwwwwwwwww
+wwwwwwwWWWWWWWWWWDxqqqxx...xxxxsssccc1..1ccc.....xDwwwwwwwwwww
+wwwwwwwwWWWWWWWWWWDxqqqxD...xxxsscc.......|cc...xxwwwwwwwwwwww
+wwwwwwwwwWWWWWWWWWWDDqqqxDD...xss+...2...3.cc1.xxwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwxDDqqqxDDsssscc.......|ccDDDwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwxxD...DDxsssccc1..1cccwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwxxD2..xxxsssccccccwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwxDx......sssxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwxDx1112xxxxwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxDDDxxwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -2509,14 +2508,14 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
-NAME: shoals_end_encompass_hellmonk_storm_palace
+NAME: shoals_end_hellmonk_storm_palace
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
 WEIGHT: 2
 MONS:   water elemental / air elemental w:5, wind drake / water nymph
 MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
-SUBST:  + : ++., p : cc++., q : cc++., r : cc++., s = W.c
+SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c
 SUBST:  1 = 011..., 2 = 2., 3 = 33.
 NSUBST: ; = 1:{ / 1:[ / 1:( / * = <.
 SUBVAULT: D : storm_palace_rune
@@ -2729,7 +2728,7 @@ ENDMAP
 NAME:   storm_palace_corner_altar
 TAGS:   storm_palace_corner allow_dup no_pool_fixup
 KFEAT:  _ = altar_qazlal / altar_fedhas w:5
-SUBST:  _ = __C, t : ttG, W : wWW
+SUBST:  _ = __C, t : ttG
 MAP
 cccccccW...
 cccccccW...
