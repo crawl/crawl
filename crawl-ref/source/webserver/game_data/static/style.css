@@ -48,9 +48,6 @@ body {
 #stats_piety {
     color: #fce94f; /* yellow */
 }
-#stats_gozag_gold.boosted_stat {
-    color: #babdb6; /* lightgray */
-}
 #stats_piety.penance {
     color: #a40000; /* red */
 }
