@@ -80,7 +80,19 @@ local function test_shoal_huts(nlevels)
     crawl.message("Shoals test " .. i .. " of " .. nlevels)
     test.regenerate_level()
     verify_stair_connectivity()
-    verify_hut_connectivity()
+
+    local maps = dgn.maps_used_here()
+    test.map_assert(#maps > 0, "No maps used on Shoals:$?")
+    local encompass = false
+    for _, vault in ipairs(maps) do
+      if vault:orient() == "encompass" then
+        encompass = true
+      end
+    end
+    -- not encompass, so we check the huts.
+    if not encompass then
+      verify_hut_connectivity()
+    end
   end
 end
 
