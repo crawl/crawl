@@ -2446,7 +2446,7 @@ NAME:   shoals_end_hellmonk_lost_city
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
-WEIGHT: 2
+WEIGHT: 4
 KITEM:  O = barnacled rune of Zot
 MONS:   faun w:15 / manticore / harpy, satyr, minotaur, sphinx
 KMONS:  O = sphinx
@@ -2512,7 +2512,7 @@ NAME: shoals_end_hellmonk_storm_palace
 : set_border_fill_type("open_sea")
 ORIENT: encompass
 PLACE:  Shoals:$
-WEIGHT: 2
+WEIGHT: 4
 MONS:   water elemental / air elemental w:5, wind drake / water nymph
 MONS:   merfolk impaler / merfolk javelineer w:5 / merfolk aquamancer w:5
 SUBST:  + : ++., p : ccc+., q : ccc+., r : ccc+., s = W.c
