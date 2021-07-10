@@ -1649,7 +1649,7 @@ It can affect targets standing in or flying above water.
 Weakening Gaze spell
 
 Irresistably weakens a creature's melee attacks for a period of time,
-requiring line of sight but not not line of fire.
+requiring line of sight but not line of fire.
 %%%%
 Wereblood spell
 
