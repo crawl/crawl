@@ -222,8 +222,8 @@ recommended to wear a pair of warm gloves.
 %%%%
 book of iron
 
-An ancient, metal-bound spellbook, covered in dark red blotches. It's
-possible that these are rust stains... and it's possible they're not.
+An ancient, metal-bound spellbook, covered in dark red blotches. Are they
+rust stains, or..?
 %%%%
 book of lightning
 
