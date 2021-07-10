@@ -80,7 +80,7 @@ local function test_shoal_huts(nlevels)
     crawl.message("Shoals test " .. i .. " of " .. nlevels)
     test.regenerate_level()
     verify_stair_connectivity()
-  
+
     local maps = dgn.maps_used_here()
     test.map_assert(#maps > 0, "No maps used on Shoals:$?")
     local encompass = false
