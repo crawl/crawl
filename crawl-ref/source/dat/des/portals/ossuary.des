@@ -3,9 +3,9 @@
 # The Ossuary, a Tomb en miniature (Zaba)
 #
 #
-# The Ossuary tries to pose an unusual early challenge: many traps and slow
-# monsters, making the player choose between pressing on towards the loot or
-# leaving the vault.
+# The Ossuary tries to pose an unusual early challenge: many alarm traps and
+# slow monsters, making the player choose between pressing on towards the loot
+# or leaving the vault.
 #
 # Flavour: Mini versions of Tomb and otherwise crypt like.
 #
@@ -354,20 +354,16 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_tomb_2
-# Generally have rooms full of either monsters or traps.
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
-KFEAT:   ~ = arrow trap w:2 / dart trap
-KFEAT:   ^ = arrow trap / floor w:5
-# Number of 1's is 53, number of ~'s is 57.
+# Number of 1's is 53.
 : if crawl.one_chance_in(10) then
-SUBST:   ~ = 1
-SUBST:   1 = 1:20 2:10 ~:50 .:30
+SUBST:   ' = 1
+SUBST:   1 = 1:20 2:10 .:80
 : else
-SHUFFLE: 1~
+SHUFFLE: 1'
 SUBST:   1 = 1:20 2:10 .:20
-SUBST:   ~ = ~:20 .:10
 :end
 SUBST:   z = 1
 NSUBST:  B = 1:+ / *:c
@@ -388,25 +384,25 @@ MONS:    mummy
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
-c<11H~~~G1111F~~~E111c
-c111H~~~G1111F~~~E111c
-c111H~~~G1111F~~~E111c
+c<11H'''G1111F'''E111c
+c111H'''G1111F'''E111c
+c111H'''G1111F'''E111c
 cIIIccccccccccccccDDDc
-c~~~c            c~~~c
-c~~~c            c~~~c
-c~~~c            c~~~c
-c~~~c            c~~~c
+c'''c            c'''c
+c'''c            c'''c
+c'''c            c'''c
+c'''c            c'''c
 cJJJc            cCCCc
 c111c            c111c
 c111c            c111c
 c111c            c111c
 c111c            c111c
 cKKKc            cBBBc
-c~~~c            c^^^c
-c~~~cccccccccccccc^^^c
-c~~~c...cddddc...c.z^c
-c~~~+3<3+d**dn.A.+.^^c
-c~~~c...cddddc...c.z<c
+c'''c            c...c
+c'''cccccccccccccc...c
+c'''c...cddddc...c.z.c
+c'''+3<3+d**dn.A.+...c
+c'''c...cddddc...c.z<c
 cccccccccccccccccccccc
 ENDMAP
 
@@ -556,35 +552,34 @@ MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
         human zombie / kobold zombie / goblin zombie / \
         centaur zombie / scorpion zombie w:20
 ITEM:   any scroll / any potion / any jewellery w:1 / nothing
-KFEAT:  ~ = dart trap / arrow trap / spear trap w:5
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
-c...c..3c..1c~~~ndddc131c
-c.A.c...G...+~~~nd2d+313c
-c...c3......c~~~ndddc131c
+c...c..3c..1c...ndddc131c
+c.A.c...G...+...nd2d+313c
+c...c3......c...ndddc131c
 cc+cccG...Gccc+ccccccc+cc
-c...c......3c...c3.1c~~~c
-c.<.+...G...c...G...c~~~c
-c...c...c3..c......3c~~~c
-ccccccccccccccG...Gcc~~~c
-c1.1cdddn~~~c3.....3c~~~c
-c.3.+d2dn~~~+...G...c~~~c
-c3.3cdddn~~~c..3c3.1c~~~c
+c...c......3c...c3.1c...c
+c.<.+...G...c...G...c...c
+c...c...c3..c......3c...c
+ccccccccccccccG...Gcc...c
+c1.1cdddn...c3.....3c...c
+c.3.+d2dn...+...G...c...c
+c3.3cdddn...c..3c3.1c...c
 cc+ccccccc+ccccccccccc+cc
-c1...3c.....c~~~c...c3.1c
-c.....c.....c~~~+...G...c
-c.....G.....c~~~c......3c
+c1...3c.....c...c...c3.1c
+c.....c.....c...+...G...c
+c.....G.....c...c......3c
 c...........cc+cccG...Gcc
 c3..........c3.3c3.....3c
 cccG..3..Gccc...c...G...c
 c3.........3c3.3c1.3c3.1c
 c...........cc+ccccccc+cc
-c.....G.....c~~~ndddc3.3c
-c.....c.....+~~~nd2d+.3.c
-c3...3c3...1c~~~ndddc1.1c
+c.....G.....c...ndddc3.3c
+c.....c.....+...nd2d+.3.c
+c3...3c3...1c...ndddc1.1c
 ccccccccccccccccccccccccc
 ENDMAP
 
@@ -859,31 +854,29 @@ SUBST:   X = x2
 # 50/50 chance of loot for each of the eleven rats in the rat room.
 KITEM:   x = any scroll / any potion
 KMONS:   x = mummy
-NSUBST:  ' = 10:^ / *:.
-KFEAT:   ^ = arrow trap
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 KMONS:   y = rat skeleton
 : ossuary_setup_features(_G)
 MAP
            ccc
          cccxccccc
-       ccc.'''+''c      cccccc
-      cc.'.ccccc'c     cc.+.1cc
+       ccc....+..c      cccccc
+      cc...ccccc.c     cc.+.1cc
      cc1.ccc  cc+cc   cc..cc..cc
     cc..cc   cc...ccccc..cccc..ccc
-ccc cc+cc    c+.x.+.1''.cc  cc.'.cc
-cAccc...cc  ccb...cccxccc   cecc'cc
+ccc cc+cc    c+.x.+.1...cc  cc...cc
+cAccc...cc  ccb...cccxccc   cecc.cc
 c..+..1.+c  cBcc+cc ccc   cceEec+cc
 c<ccc...cc  ccb..cc   cccccxccc...ccc
-ccc cc+cc   cc..+cccccc.'+''''+.x.+Xc
-     c.cc  cc1.cc'cdDd.1ccccccc...ccc
-     c1cc cc..cccc'cdd.cc     cc+cc
-     c..cccc+cc  cc'cc+cc      cXc
+ccc cc+cc   cc..+cccccc..+....+.x.+Xc
+     c.cc  cc1.cc.cdDd.1ccccccc...ccc
+     c1cc cc..cccc.cdd.cc     cc+cc
+     c..cccc+cc  cc.cc+cc      cXc
      cc..cc...cccccc+yyyccccc  ccc
-      cc.+..x..+'''+yyyyy+.1cc
+      cc.+..x..+...+yyyyy+.1cc
        cccc...cccxcccyyyccc..cc
           cc+cc ccc cc+cc cc..ccccc
-           cxc       ccc   cc.''+Xc
+           cxc       ccc   cc...+Xc
            ccc              ccccccc
 ENDMAP
 
@@ -900,15 +893,8 @@ MONS:    mummy
 KMONS:   4 = Menkaure, mummy
 # Loot: 1-16 items
 ITEM:    any scroll / any potion / w:5 nothing
-KFEAT:   ^ = arrow trap w:20 / alarm trap
-KFEAT:   m = spear trap
-KFEAT:   ~ = alarm trap
-NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
-# 1KB: what's the point of these shortcuts?  Removed for now...
-SUBST:    X : c
-#SUBST:   X : XYc
-#NSUBST:  X = 6:= / *:c
-#NSUBST:  Y = 3:= / *:c
+KFEAT:   ^ = floor w:20 / alarm trap
+NSUBST:  ' = 25:1 / 25:2 / 30:^ / .
 : ossuary_setup_features(_G)
 MAP
                             cc
@@ -917,26 +903,26 @@ MAP
                          cc''''cc
                         cc''cc''cc
                        cc''cccc''cc
-                      cc''cXccXc''cc
-                     cc''cX''''Xc''cc
-                    cc''cX''cc''Xc''cc
-                   cc''cX''cccc''Xc''cc
-                  cc''cX''cXcccc''Xc''cc
-                 cc''cX''cX''''Xc''Xc''cc
-                cc''cX''cX''cc''Xc''Xc''cc
-               cc''cX''cX''cccc''Xc''Xc''cc
-              cc''cX''cX''ccddcc''Xc''Xc''cc
-             cc''cX''cX''ccddddcc''Xc''Xc''cc
-            cc''cX''cX''ccd3dd3dcc''Xc''Xc''cc
-           cc''cX''cX''cc.^d<<d..cc''Xc''Xc''cc
-          cc''cX''cX''cc.^.4dd3^.^cc''Xc''Xc''cc
-         cc''cX''cX''cc^..^.dd^.~.~cc''Xc''Xc''cc
-        cc''cX''cX''cccccccccccccc++cc''Xc''Xc''cc
-       cc''cX''cX''''''''''''''''''''cc''Xc''Xc''cc
-      cc''cX''cccXcXcXcXcXcXcXcXcXcXcXcc''Xc''Xc''cc
-     cc''cX''''''''''''''''''''''''''''''''Xc''Xc''cc
-    cc''cccXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcc''Xc''cc
-   cc''''''''''''''''''''''''''''''''''''''''''''Xc<Acc
+                      cc''cccccc''cc
+                     cc''cc''''cc''cc
+                    cc''cc''cc''cc''cc
+                   cc''cc''cccc''cc''cc
+                  cc''cc''cccccc''cc''cc
+                 cc''cc''cc''''cc''cc''cc
+                cc''cc''cc''cc''cc''cc''cc
+               cc''cc''cc''cccc''cc''cc''cc
+              cc''cc''cc''ccddcc''cc''cc''cc
+             cc''cc''cc''ccddddcc''cc''cc''cc
+            cc''cc''cc''ccd3dd3dcc''cc''cc''cc
+           cc''cc''cc''cc..d<<d..cc''cc''cc''cc
+          cc''cc''cc''cc...4dd3...cc''cc''cc''cc
+         cc''cc''cc''cc.....dd.....cc''cc''cc''cc
+        cc''cc''cc''cccccccccccccc++cc''cc''cc''cc
+       cc''cc''cc''''''''''''''''''''cc''cc''cc''cc
+      cc''cc''cccccccccccccccccccccccccc''cc''cc''cc
+     cc''cc''''''''''''''''''''''''''''''''cc''cc''cc
+    cc''cccccccccccccccccccccccccccccccccccccc''cc''cc
+   cc''''''''''''''''''''''''''''''''''''''''''''cc<Acc
   cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -962,10 +948,7 @@ KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
             spectral bat / nothing w:80
 # Loot.
 ITEM:   any potion / any scroll / nothing w:1
-#
-# There are not always traps in corridors but they are guaranteed near the loot:
-KFEAT:  ' = arrow trap w:8 / alarm trap w:7 / floor w:85
-KFEAT:  " = spear trap w:1 / net trap w:3 / arrow trap w:15
+KFEAT:  ' = alarm trap / floor w:90
 #
 : ossuary_setup_features(_G)
 MAP
@@ -982,10 +965,10 @@ bSSSScc'cc.......cc'ccFFFFv
 bSSSSScc'c.......c'ccFFFFFv
 bSSSSSS+'c...G...c'+FFFFFFv
 bSSSSScc'c.......c'ccFFFFFv
-bSSSScc'cc.""""".cc'ccFFFFv
-bSSScc'ccc."ddd".ccc'ccFFFv
-bSScc'ccGc."ddd".cGcc'ccFFv
-bScc'ccG2+."ddd".+2Gcc'ccFv
+bSSSScc'cc.......cc'ccFFFFv
+bSSScc'ccc..ddd..ccc'ccFFFv
+bSScc'ccGc..ddd..cGcc'ccFFv
+bScc'ccG2+..ddd..+2Gcc'ccFv
 ccc+ccccccccccccccccccc+ccc
 c11111cc1c1c1c1c1c1cc11111c
 c......c+c+c+c+c+c+c......c
@@ -1112,7 +1095,7 @@ MONS:   rat zombie / quokka zombie / adder zombie /\
         human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
-KFEAT:  ~ = arrow trap / dart trap
+KFEAT:  ~ = net trap / floor
 : ossuary_setup_features(_G)
 MAP
 ccccc     ccc ccc ccc
@@ -1215,7 +1198,6 @@ KMONS:  2 = mummy
 KMONS:  3 = goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         human zombie w:1 / elf zombie w:1 / orc zombie w:1 / nothing w:36
 KITEM:  12d = any potion / any scroll / any jewellery w:1
-KFEAT:  . = dart trap / arrow trap / spear trap w:5 / floor w:600
 NSUBST: d = 1:1 / 3:2 / 4:. / *:d
 : ossuary_setup_features(_G)
 MAP
