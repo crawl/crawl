@@ -1857,90 +1857,92 @@ ENDMAP
 ##############################################################################
 # Elemental Laboratory (by Mu.)
 #
+# I've reworked "master elementalist" monster originally created by Mu for this
+# map into something that's a major threat. The contents of this vault have
+# been updated accordingly to pose a greater challenge with more reward. It's
+# now a rare runed door vault. --gammafunk
 NAME:   mu_elemental_laboratory
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
+TAGS:   no_monster_gen no_item_gen no_pool_fixup patrolling
 DEPTH:  Depths, Elf, !Elf:$
 ORIENT: float
-MARKER: ! = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "flame" \
-            }
-MARKER: ? = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "thin mist" \
-            }
-MARKER: * = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "black smoke" \
-            }
-KMONS:  1 = fire elemental
-NSUBST: ; = 3:2 / *=l
-KMONS:  2 = molten gargoyle
-KFEAT:  2 = l
-KMONS:  e = earth elemental
-SUBST:  E = exxx....
-NSUBST: ' = 2:3 / 3:W / *:.
-KMONS:  3 = thorn hunter
-NSUBST: w = 3:4 / *:w
-KMONS:  4 = water elemental
-KFEAT:  4 = deep_water
-NSUBST: " = 3:5 / *:.
-KMONS:  5 = wind drake
-KMONS:  6 = air elemental
-KMONS:  7 = fire vortex
-KFEAT:  Z = <
-#
-: if you.in_branch("elf") then
-KMONS:  Z = deep elf elementalist ; \
-        robe ego:fire_resistance | \
-        robe ego:cold_resistance | \
-        robe ego:resistance . dagger ego:freezing | \
-        dagger ego:flaming | dagger ego:electrocution
+WEIGHT: 5
+KPROP:  qr = no_tele_into
+ITEM:   randbook disc:fire, randbook disc:ice, randbook disc:earth
+ITEM:   randbook disc:air
+ITEM:   manual of fire magic / manual of ice magic / manual of earth magic \
+        / manual of air magic
+ITEM:   ring of evasion randart / ring of protection randart \
+        / ring of fire randart / ring of ice randart
+ITEM:   staff of fire / staff of cold / staff of earth / staff of air
+: master_elementalist_setup(_G, "D")
+KFEAT:  a = iron_grate
+KFEAT:  p = l
+KFEAT:  rs = w
+: if you.in_branch("Elf") then
+# No fire elementals, since their flame clouds will tend to kill the elves in
+# this room.
+KMONS:  1 = salamander / deep elf pyromancer
+KMONS:  2 = fire giant
+KMONS:  3 = earth elemental / stone giant
+KMONS:  4 = war gargoyle
+KMONS:  5 = water elemental / elemental wellspring
+KMONS:  6 = frost giant
+KMONS:  7 = air elemental / deep elf zephyrmancer
+KMONS:  E = storm dragon
+# Depths
 : else
-KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
-        name:master_elementalist n_rpl n_des n_noc \
-        spells:iron_shot.11.wizard;summon_air_elementals.11.wizard;\
-               sticky_flame_range.11.wizard;\
-               summon_water_elementals.11.wizard;\
-               haste.11.wizard;blink.11.wizard \
-        ; robe ego:fire_resistance | robe ego:cold_resistance | \
-        robe ego:resistance \
-        . dagger ego:freezing | dagger ego:flaming | \
-        dagger ego:electrocution
+KMONS:  1 = fire giant
+KMONS:  2 = hellephant
+KMONS:  3 = war gargoyle / stone giant / iron dragon
+KMONS:  4 = iron giant
+KMONS:  5 = frost giant
+KMONS:  6 = shard shrike
+KMONS:  7 = storm dragon
+KMONS:  E = titan
 : end
-
-KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
-            randbook disc:earth
-KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
-            elemental_staff
+KFEAT:  5 = W
+NSUBST: d = d / e / f / g / h / i / j / *
+SUBST:  1 = 1.., - = 2pp..., 3 = 3.., x = xxx., ' = 4...., 5 = 5WW
+SUBST:  " = 6..., 7 = 7..., ` = s, ; = Ess...
+MARKER: p = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "flame", excl_rad = 0 }
+MARKER: q = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "calcifying dust", \
+                excl_rad = -1 }
+MARKER: r = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "freezing vapour", \
+                excl_rad = -1 }
+# Within the rooms where these machines place, placing them only on deep water
+# protects the monsters not immune to electricity from stepping there, since
+# those monsters are neither giant nor fly. Outside of these rooms, the runed
+# door keeps out monsters not immune to electricity are giant or fly.
+MARKER: s = lua:fog_machine { pow_min = 5, pow_max = 10, delay_min = 10, \
+                delay_max = 40, size = 1, cloud_type = "thunder", excl_rad = 0 }
+TILE:   x = wall_pebble_lightgray
 MAP
        ccccccccc
-      ccE+'''cwcc
-     ccEEc'''cwwcc
-    ccEEEc'''cwwwcc
-   ccEEEEc'<'cwwwwcc
-  ccEEEEEc'''cwwwwwcc
- ccEEEEEEc''Wcwwwwwwcc
-ccEEEEEEEc'WW+wwwwwwwcc
-cEEEEEEEEcccccwwwwwwwwc
-ccccccc+ccB|Bcccccccc+c
-c;;;;;;;c$...$c"""""""c
-c;;;;;;;c$.Z.$c""?"?""c
-c;;;;;;;c$...$c"""""""c
-c+cccccccc...cc+ccccccc
-c........c+++c........c
-cc..!1.!1c...c.6..6..cc
- cc......c7.7c......cc
-  cc.....c...c.....cc
-   cc.1!.c.*.c.6..cc
-    cc...c...c...cc
-     cc..c.7.c..cc
-      cc.c...+.cc
-       c+ccccccc
-        @
+      cc3+.aqcwcc
+     cc3xc.aacw5cc
+    ccx3xc'''c5w5cc
+   cc3xx3c'''c5ww5cc
+  cc3x3x3c'''cw5ww5cc
+ cc3xxx3xcaaWc5ww5wwcc
+cc3xx3xxxcqaW+5w5wwwwcc
+cxx33x33xcccccwww55555c
+ccccccc+ccdddcccccccc+c
+c-----..cd...dcra"""WWc
+c--...--cd.D.dcaa"""aac
+c-.-----cd...dc.."""arc
+c+cccccccc...cc=ccccccc
+c111lll1lc+++c`77`77``c
+ccll1l1l1c;.;c```7``7cc
+ ccl1l1l1c;;.c`7```7cc
+  ccl1ll1c;.;c7`7`7cc
+   ccll1lc.;;c7``7cc
+    cc1llc;.;c`7`cc
+     cc1lc;;.c`7cc
+      cc1c;;;+7cc
+       c=ccccccc
 ENDMAP
 
 ##############################################################################
