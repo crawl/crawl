@@ -7818,7 +7818,6 @@ TAGS:   transparent no_item_gen no_monster_gen no_trap_gen
 DEPTH:  D:10-
 KFEAT:  C = altar_lugonu
 KFEAT:  ' = floor
-KFEAT:  ~ = floor
 MONS:   kobold demonologist
 KMONS:  P = demonic plant
 KMONS:  p = plant

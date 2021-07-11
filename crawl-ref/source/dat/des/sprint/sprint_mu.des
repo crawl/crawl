@@ -926,8 +926,6 @@ KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
 NSUBST: D = 1:D / *:*
 NSUBST: a = 1:+ / *:v
-KFEAT: - = spear trap
-NSUBST: - = 3:- / *:.
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
                 size = 2, size_buildup_amnt = 29, \
@@ -996,9 +994,9 @@ vvvvvvv.+..v......v
       v.v..v......v
       v.+..v......v
       v.v..v......v
-      v.v..a.....-v
-      ~.v..v....--v
-      v.vD.v...---v
+      v.v..a......v
+      ~.v..v......v
+      v.vD.v......v
       vvvvvvvvvvv^v
 ENDMAP
 
@@ -1039,8 +1037,8 @@ KMONS: 7 = patrolling simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
-KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
-NSUBST: ~ = 1:^ / 10:- / *:.
+KFEAT: - = net trap
+NSUBST: ~ = 2:^ / 2:- / *:.
 SUBST: ! = +
 
 MAP
@@ -1061,8 +1059,6 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
-KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
-NSUBST: . = 6:- / *:.
 
 MAP
 vvvvvvvvvvvvvvvvv.v
@@ -1079,9 +1075,6 @@ ENDMAP
 NAME: sprint_mu_crypt_lich
 TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 MONS: ancient lich, skeletal warrior
-KFEAT: - = spear trap / dart trap / net trap / blade trap / bolt trap
-NSUBST: . = 10:- / *:.
-SUBST: : = .
 
 MAP
 ccccccccccccccccc.c
@@ -1090,7 +1083,7 @@ c**.mmm.....22.+..c
 c**.........22.+..c
 c||............c..c
 cccccccccccccccc..c
-c:::::::::::::::::c
+c.................c
 ENDMAP
 
 ##############################################################################
@@ -1101,7 +1094,7 @@ NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
 MONS: patrolling royal mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
-KFEAT: - = dart trap / net trap / blade trap / bolt trap / spear trap / zot trap
+KFEAT: - = net trap / zot trap / floor w:40
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement ident:all q:5
@@ -1273,9 +1266,6 @@ KITEM: * = superb_item, superb_item, superb_item
 KITEM: ? = star_item, star_item, scroll of enchant armour ident:all q:4
 : acq_on_sight(_G, '$', {"armour","armour"})
 KITEM: % = iron rune of zot
-KFEAT: ^ = blade trap
-NSUBST: ^ = 1:. / *:^
-SUBST: . = ......^
 COLOUR: # = cyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
