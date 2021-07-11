@@ -227,7 +227,7 @@ public:
     bool is_patrolling() const;
     bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
-    bool is_trap_safe(const coord_def& where, bool just_check = false) const;
+    bool is_trap_safe(const coord_def& where) const;
     bool is_location_safe(const coord_def &place);
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);

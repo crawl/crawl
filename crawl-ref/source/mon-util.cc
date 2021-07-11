@@ -3393,11 +3393,6 @@ habitat_type mons_secondary_habitat(const monster& mon)
     return mons_class_secondary_habitat(mons_base_type(mon));
 }
 
-bool intelligent_ally(const monster& mon)
-{
-    return mon.attitude == ATT_FRIENDLY && mons_intel(mon) >= I_HUMAN;
-}
-
 int mons_power(monster_type mc)
 {
     // For now, just return monster hit dice.

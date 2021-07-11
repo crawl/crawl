@@ -5377,9 +5377,6 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
         break;
-    case '~':
-        place_specific_trap(where, random_vault_trap());
-        break;
     case 'B':
         env.grid(where) = _pick_temple_altar();
         break;
@@ -6214,10 +6211,6 @@ static void _place_specific_trap(const coord_def& where, trap_spec* spec,
             spec_type = static_cast<trap_type>(random2(NUM_TRAPS));
         }
         while (!is_regular_trap(spec_type)
-#if TAG_MAJOR_VERSION == 34
-               || spec_type == TRAP_NEEDLE || spec_type == TRAP_GAS
-               || spec_type == TRAP_SHADOW || spec_type == TRAP_SHADOW_DORMANT
-#endif
                || !is_valid_shaft_level() && spec_type == TRAP_SHAFT);
     }
 

@@ -90,11 +90,6 @@ enum dungeon_feature_type
     DNGN_PASSAGE_OF_GOLUBRIA,
 #endif
 #if TAG_MAJOR_VERSION > 34
-    DNGN_TRAP_ARROW,
-    DNGN_TRAP_SPEAR,
-    DNGN_TRAP_BLADE,
-    DNGN_TRAP_DART,
-    DNGN_TRAP_BOLT,
     DNGN_TRAP_NET,
     DNGN_TRAP_PLATE,
 #endif

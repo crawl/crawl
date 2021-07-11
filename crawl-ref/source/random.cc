@@ -358,24 +358,6 @@ int biased_random2(int max, int n)
     return 0;
 }
 
-// originally designed to randomise evasion -
-// values are slightly lowered near (max) and
-// approach an upper limit somewhere near (limit/2)
-// [0, max]
-int random2limit(int max, int limit)
-{
-    int sum = 0;
-
-    if (max < 1)
-        return 0;
-
-    for (int i = 0; i < max; i++)
-        if (random2(limit) >= i)
-            sum++;
-
-    return sum;
-}
-
 /** Sample from a binomial distribution.
  *
  * This is the number of successes in a sequence of independent trials with
