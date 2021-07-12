@@ -2870,7 +2870,7 @@ KMONS:   7 = electric eel
 KMONS:   8 = goliath frog
 KMONS:   p = plant
 ITEM:    any good_item
-KFEAT:   12367p = W
+KFEAT:   123678p = W
 # Previously 11.6 bullfrogs, 16.6 cane toads,
 # and 7.1 vampire mosquitoes on average.
 NSUBST:  XW = 3:1 / 5:2 / 5:3 / 8 = 11WWW / 12 = 22WWW / 8 = 44WWW
