@@ -2103,7 +2103,7 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (rude_stop_summoning_prompt())
+    if (agent->is_player() && rude_stop_summoning_prompt())
         return spret::abort;
 
     fail_check();
