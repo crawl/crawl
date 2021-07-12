@@ -1015,9 +1015,8 @@ KITEM:  E = any armour good_item
 :kitem("f = " .. dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 KITEM:  F = scroll of enchant weapon ident:type q:2 / \ 
             scroll of enchant armour ident:type q:2 / \
-            potion of heal wounds ident:type q:3 / \ 
-            potion of resistance ident:type q:2 / scroll of blinking ident:type q:2 / \
-            scroll of fog ident:type q:2 / potion of ambrosia ident:type q:2 / \
+            potion of experience ident:type q:1 / \
+            scroll of acquirement ident:type q:1 / \
             any good_item book w:30
 KITEM:  | = scroll of acquirement ident:type
 KITEM:  $ = gold

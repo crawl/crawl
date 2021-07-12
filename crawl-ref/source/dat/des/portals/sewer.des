@@ -903,11 +903,9 @@ ITEM:    potion of flight ident:type
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
-KITEM:    ' = scroll of noise ident:type w:30 / scroll of identify ident:type / \
-              scroll of teleportation ident:type / \
+KITEM:    ' = scroll of noise ident:type w:50 / \
               potion of degeneration ident:type w:100 / \
-              potion of mutation ident:type / potion of flight ident:type / \
-              hat / buckler / pair of gloves w:5 / pair of boots w:5
+              potion of mutation ident:type w:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
