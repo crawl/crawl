@@ -895,7 +895,7 @@ MONS:     worm / nothing w:3
 MONS:     endoplasm / nothing w:2
 #       chances are good you'll find something to cross the deep water
 SHUFFLE:  de
-: item(dgn.loot_scroll)
+: item(dgn.loot_scrolls)
 ITEM:    potion of flight ident:type
 #       possibly rather generous loot, if you get to the center
 : item(dgn.aux_armour)
