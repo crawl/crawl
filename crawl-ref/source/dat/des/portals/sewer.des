@@ -414,10 +414,7 @@ MONS:   kobold / kobold brigand w:1
 MONS:   ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
-ITEM:   potion of curing ident:type / potion of heal wounds ident:type / \
-        potion of might ident:type w:4 /\
-        potion of brilliance ident:type w:4 / \
-        potion of flight ident:type w:4 / \
+: item(dgn.loot_potions)
         any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
 : set_feature_name("clear_stone_wall", "large window")
@@ -470,10 +467,7 @@ MONS:    bat / rat / endoplasm w:5 / ball python / frilled lizard w:5 /\
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
 SUBST:   p = ppW
-ITEM:    potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type w:4 /\
-         potion of brilliance ident:type w:4 / \
-         potion of flight ident:type w:4 / \
+: item(dgn.loot_potions)
          any scroll w:7 / any armour w:2 / any weapon w:2
 SHUFFLE: DEFH
 NSUBST:  D = 5:1 / 4:d / *:!
@@ -526,8 +520,7 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SUBST:    - = WWW.
 SHUFFLE:  |d
-ITEM:     scroll of teleportation ident:type w:2 / scroll of blinking ident:type / \
-          scroll of noise ident:type w:1
+: item(dgn.loot_scrolls)
 MONS:     frilled lizard / ball python w:5 / giant cockroach / \
           generate_awake frilled lizard / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake \
@@ -584,8 +577,7 @@ COLOUR:   ! = green
 KMONS:    ! = bullfrog / nothing w:2
 SHUFFLE:  edfgh$*
 ITEM:     nothing, nothing
-ITEM:     scroll of teleportation ident:type w:2 / scroll of blinking ident:type / \
-          scroll of noise ident:type w:1
+: item(dgn.loot_scrolls)
 ITEM:     nothing, nothing
 KITEM:    de = *
 : sewer_setup(_G)
@@ -632,12 +624,8 @@ SHUFFLE: de
 MONS:    rat / river rat w:2
 MONS:    ball python / adder w:5 / frilled lizard w:2 / endoplasm w:1
 MONS:    bullfrog
-ITEM:    potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type/ potion of magic ident:type / \
-         potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-ITEM:    scroll of teleportation ident:type / scroll of blinking ident:type w:5 /\
-         scroll of fear ident:type w:5 / scroll of magic mapping ident:type / \
-         scroll of fog ident:type
+: item(dgn.loot_potions)
+: item(dgn.loot_scrolls)
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
@@ -726,12 +714,7 @@ MONS:   kobold, jackal
 SUBST:  3 = 334
 KMONS:  3 = water moccasin
 KMONS:  4 = Purgy, water moccasin
-ITEM:   potion of flight ident:type / potion of attraction ident:type / \
-        potion of heal wounds ident:type / \
-        potion of invisibility ident:type / potion of mutation ident:type / \
-        potion of degeneration ident:type / scroll of blinking ident:type / \
-        scroll of teleportation ident:type / scroll of fear ident:type / \
-        scroll of noise ident:type / nothing w:140
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:400")
 : sewer_setup(_G)
 MAP
    ccccccccc
@@ -793,14 +776,8 @@ KMONS:   1 = frilled lizard / ball python w:5 / \
          adder w:4 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
-KITEM:   ? = potion of flight ident:type q:2 w:15 / potion of curing ident:type /\
-         potion of heal wounds ident:type / potion of might ident:type / \
-         potion of magic ident:type /\
-         potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-KITEM:   ! =  scroll of teleportation ident:type / scroll of fear ident:type w:5 /\
-         scroll of blinking ident:type w:3 / \
-         scroll of magic mapping ident:type w:3 /\
-         scroll of fog ident:type w:3
+: kitem("? = " .. dgn.loot_potions)
+: kitem("! = " .. dgn.loot_scrolls)
 #      Randomized environment
 SUBST:   . = .WW
 SUBST:   X = xx.
@@ -857,12 +834,7 @@ ORIENT: encompass
 MONS:   kobold w:40 / bat / frilled lizard / giant cockroach / \
         adder w:5 / kobold brigand w:1
 KMONS:  2 = purgy, water moccasin
-ITEM:   potion of flight ident:type / potion of attraction ident:type / \
-        potion of heal wounds ident:type / \
-        potion of invisibility ident:type / potion of mutation ident:type / \
-        potion of degeneration ident:type / scroll of blinking ident:type / \
-        scroll of teleportation ident:type / scroll of fear ident:type / \
-        scroll of noise ident:type / nothing w:140
+: item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:400")
 NSUBST: e = 3:* / 9:d / *:.
 NSUBST: 0 = 5:1 / 1:2 / *:.
 KFEAT:  ' = deep_water
@@ -925,22 +897,12 @@ MONS:     worm / nothing w:3
 MONS:     endoplasm / nothing w:2
 #       chances are good you'll find something to cross the deep water
 SHUFFLE:  de
-ITEM:     scroll of fear ident:type / scroll of fog ident:type / \
-          scroll of teleportation ident:type w:50 / \
-          scroll of blinking ident:type / scroll of identify ident:type / nothing
-ITEM:     potion of flight ident:type w:50 / potion of invisibility ident:type / \
-          potion of might ident:type w:3 / potion of attraction ident:type w:4 / \
-          potion of brilliance ident:type w:3 / nothing
+: item(dgn.loot_scroll)
+ITEM:    potion of flight ident:type
 #       possibly rather generous loot, if you get to the center
-ITEM:     scroll of vulnerability ident:type / scroll of identify ident:type / \
-          hat / potion of magic ident:type / potion of brilliance ident:type / \
-          potion of resistance ident:type
-ITEM:     scroll of identify ident:type / potion of invisibility ident:type / \
-          pair of gloves w:5 / \
-          pair of boots w:5 / potion of attraction ident:type / nothing
-ITEM:     scroll of identify ident:type / potion of resistance ident:type / \
-          potion of might ident:type / potion of berserk rage ident:type / \
-          buckler / nothing
+: item(dgn.aux_armour)
+: item(dgn.loot_potions)
+: item(dgn.loot_scrolls)
 KITEM:    ' = scroll of noise ident:type w:30 / scroll of identify ident:type / \
               scroll of teleportation ident:type / \
               potion of degeneration ident:type w:100 / \
@@ -1067,13 +1029,8 @@ SUBST:   y = w
 SUBST:   hVZzSsUuTgY = W
 #      loot
 SUBST:   e = !!!!?????
-KITEM:   ? = potion of flight ident:type w:5 / potion of flight ident:type q:2 w:5 /\
-         potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type / potion of magic ident:type / \
-         potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-KITEM:   ! =  scroll of teleportation ident:type / scroll of fear ident:type w:5 /\
-         scroll of blinking ident:type w:3 / scroll of magic mapping ident:type w:3 /\
-         scroll of fog ident:type w:3
+: kitem("? = " .. dgn.loot_potions)
+: kitem("! =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
@@ -1132,13 +1089,8 @@ SUBST:  ~ = WWWW.
 SUBST:  - = WW...
 SUBST:  " = W...
 NSUBST: ? = 4=ef / *=112233
-KITEM:  e = potion of curing ident:type / potion of heal wounds ident:type / \
-        potion of might ident:type / potion of magic ident:type / \
-        potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-KITEM:  f = scroll of teleportation ident:type / scroll of fear ident:type w:5 /\
-        scroll of blinking ident:type w:3 / \
-        scroll of magic mapping ident:type w:3 /\
-        scroll of fog ident:type w:3
+: kitem("e = " .. dgn.loot_potions)
+: kitem("f =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
@@ -1229,13 +1181,8 @@ KMONS:   " = nothing w:50 / rat w:15 / river rat w:7
 KPROP:   w = no_tele_into
 #      loot
 SUBST:   e = !!!!!?????%
-KITEM:   ? = potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type / potion of magic ident:type / \
-         potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-KITEM:   ! =  scroll of teleportation ident:type / scroll of fear ident:type w:5 /\
-         scroll of blinking ident:type w:3 / \
-         scroll of magic mapping ident:type w:3 /\
-         scroll of fog ident:type w:3
+: kitem("? = " .. dgn.loot_potions)
+: kitem("! =  " .. dgn.loot_scrolls)
 : sewer_setup(_G)
 MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1291,13 +1238,8 @@ SUBST:   2 = 222222W.
 SUBST:   e = !!!?????%WWW
 KFEAT:   !?% = W
 COLOUR:  !?% = lightgreen
-KITEM:   ? = potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type / potion of magic ident:type / \
-         potion of haste ident:type w:5 / potion of brilliance ident:type w:5
-KITEM:   ! =  scroll of teleportation ident:type / scroll of fear ident:type w:5 /\
-         scroll of blinking ident:type w:3 / \
-         scroll of magic mapping ident:type w:3 /\
-         scroll of fog ident:type w:3
+: kitem("? = " .. dgn.loot_potions)
+: kitem("! =  " .. dgn.loot_scrolls)
 SUBST:   . = .W
 SUBST:   X = x.
 SUBST:   Y = xxw
@@ -1389,9 +1331,7 @@ KPROP:   W- = no_tele_into
 SUBST:   W = WWWw.
 SUBST:   - = wwwW-
 COLOUR: - = green
-ITEM:    potion of curing ident:type / potion of heal wounds ident:type / \
-         potion of might ident:type w:2 / potion of brilliance ident:type w:2 / \
-         potion of attraction ident:type w:2 / potion of flight ident:type w:14 / \
+: item(dgn.loot_potions)
          any scroll w:7 / any armour w:2 / any weapon w:2
 NSUBST:  d = 1:*
 : sewer_setup(_G)
