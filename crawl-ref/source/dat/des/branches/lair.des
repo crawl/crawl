@@ -2867,13 +2867,14 @@ KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
 KMONS:   6 = patrolling tyrant leech
 KMONS:   7 = electric eel
+KMONS:   8 = goliath frog
 KMONS:   p = plant
 ITEM:    any good_item
 KFEAT:   12367p = W
 # Previously 11.6 bullfrogs, 16.6 cane toads,
 # and 7.1 vampire mosquitoes on average.
-NSUBST:  XW = 6:1 / 8:2 / 6:3 / 12 = 11WWW / 16 = 22WWW / 8 = 44WWW
-NSUBST:  W = 3 = 667 / *:W, 5 = 1:5 / *:4
+NSUBST:  XW = 3:1 / 5:2 / 5:3 / 8 = 11WWW / 12 = 22WWW / 8 = 44WWW
+NSUBST:  W = 3 = 678 / *:W, 5 = 1:5 / *:4W
 NSUBST:  % = 1:d / 1:* / * = %%*|
 SHUFFLE: AB, CD
 SUBST:   AB = x, CD = w
@@ -2897,7 +2898,7 @@ x.WWWWWXXXxxppppp5WWWWWDDWWWW...
 ..WWWWWWWW6pp%%%%pp6WWWWDDWWWW..
 ..WWWWCWWW4ppp%%%pp4WWWWWDWWWW..
 .WWWWCCWWWW4ppppppxxXXWWWWWWWW..
-.WWCCCCCWWWW54ppxxxxxxXXXWWWWW.x
+.WWCCCCCWWWW5WppxxxxxxXXXWWWWW.x
 .WWWCCWWWWWWWWWWWWW..xxxxXXXWW.x
 .WWWCWWWWWWWWWBWWWWWWW..xxxxXX.x
 ..WWCWWWWWWBBBBWWWWWWWWWWWWxxxxx
