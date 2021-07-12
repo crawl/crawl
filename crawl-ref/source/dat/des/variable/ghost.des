@@ -474,8 +474,7 @@ ENDMAP
 NAME:    nzn_ghost_randoct
 DEPTH:   D:7-, Depths, Lair, Crypt, Spider, Zot
 ORIENT:  float
-ITEM:    potion of haste ident:type / scroll of blinking ident:type
-ITEM:    potion of heal wounds ident:type / scroll of teleportation ident:type
+: ghost_good_loot(_G)
 MONS:    player_ghost, Arachne / spark wasp, royal mummy / curse skull
 MONS:    caustic shrike / juggernaut / titan
 MONS:    orb of fire / ancient lich w:5 / dread lich w:5
