@@ -6223,9 +6223,11 @@ int player::willpower(bool /*calc_unid*/) const
 
 int player_willpower(bool calc_unid, bool temp)
 {
-
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
+
+    if (player_equip_unrand(UNRAND_FOLLY))
+        return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 

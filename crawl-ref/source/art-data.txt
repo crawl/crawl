@@ -936,13 +936,17 @@ WILL:    2
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
-PLUS:    3
+PLUS:    4
 COLOUR:  LIGHTGREY
 TILE:    urand_folly
 TILE_EQ: robe_red2
 BRAND:   SPARM_ARCHMAGI
-INT:     5
-WILL:    -2
+INT:     8
+BOOL:    skip_ego
+INSCRIP: Brilliance Will-∞
+DESCRIP: It increases the power of your magical spells.
++It halves the magic cost of your spells (rounding up).
++Its reduces your willpower to zero.
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
