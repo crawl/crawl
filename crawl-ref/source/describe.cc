@@ -1295,8 +1295,16 @@ static string _describe_weapon(const item_def &item, bool verbose)
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // special weapon descrip
-    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
+    if (item_type_known(item)
+        && (spec_ench != SPWPN_NORMAL || enchanted)
+        && !skip_ego)
     {
         description += "\n\n";
 
@@ -1409,6 +1417,14 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_SPECTRAL:
             description += "When it strikes, its spirit leaps out and fights "
                 "alongside the wielder.";
+            break;
+        case SPWPN_ACID:
+             if (is_range_weapon(item))
+                description += "Any ammunition fired from it";
+            else
+                description += "It";
+            description += " is coated in acid, damaging and corroding those "
+                "it strikes.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
@@ -1608,8 +1624,8 @@ static string _warlock_mirror_reflect_desc()
     const int SH = crawl_state.need_save ? player_shield_class() : 0;
     const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
-           "% chance to reflect enchantments and other normally unblockable "
-           "effects.";
+           "% chance to reflect attacks against your willpower and other "
+           "normally unblockable effects.";
 }
 
 static string _describe_point_change(int points)
@@ -1824,8 +1840,14 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     const special_armour_type ego = get_armour_ego_type(item);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // Only give a description for armour with a known ego.
-    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
+    if (ego != SPARM_NORMAL && item_type_known(item) && verbose && !skip_ego)
     {
         description += "\n\n";
 
@@ -1853,7 +1875,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         // Only add a section break if we didn't already add one before
         // printing an ego-based property.
-        if (ego == SPARM_NORMAL || !verbose)
+        if (ego == SPARM_NORMAL || !verbose || skip_ego)
             description += "\n";
         description += "\n" + art_desc;
     }
