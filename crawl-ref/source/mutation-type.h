@@ -85,7 +85,9 @@ enum mutation_type
 #endif
     MUT_FRAIL,
     MUT_FOUL_STENCH,
+#if TAG_MAJOR_VERSION == 34
     MUT_GOURMAND,
+#endif
     MUT_HIGH_MAGIC,
 #if TAG_MAJOR_VERSION > 34
     MUT_CONDENSATION_SHIELD,

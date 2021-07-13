@@ -3256,11 +3256,6 @@ bool player::clarity(bool calc_unid, bool items) const
     return actor::clarity(calc_unid, items);
 }
 
-bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
-{
-    return you.get_mutation_level(MUT_GOURMAND) > 0;
-}
-
 /// Does the player have permastasis?
 bool player::stasis() const
 {
