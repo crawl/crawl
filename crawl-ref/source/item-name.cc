@@ -2946,7 +2946,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         case POT_BRILLIANCE:
-            return you_worship(GOD_TROG);
+            return you_worship(GOD_TROG)
+                   || temp && player_equip_unrand(UNRAND_FOLLY);
         case POT_MAGIC:
             return you.has_mutation(MUT_HP_CASTING);
         CASE_REMOVED_POTIONS(item.sub_type)
