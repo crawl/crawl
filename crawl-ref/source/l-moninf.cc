@@ -319,7 +319,7 @@ static int moninf_get_ev(lua_State *ls)
 }
 
 /*** The string displayed if you target this monster.
- * @treturn string targeting description of the monster 
+ * @treturn string targeting description of the monster
  *   (such as "Sigmund, wielding a +0 scythe and wearing a +0 robe")
  * @function target_desc
  */

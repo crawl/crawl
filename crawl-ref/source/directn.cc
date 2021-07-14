@@ -1573,7 +1573,7 @@ string direction_chooser::target_description() const
 void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     string text = target_description();
-    if( text > "" ) {
+    if ( text > "" ) {
         mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
             target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
             text.c_str());
