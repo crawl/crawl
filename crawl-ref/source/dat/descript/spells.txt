@@ -950,8 +950,8 @@ caster's line of sight will end the effect.
 Metabolic Englaciation spell
 
 Lowers the metabolic rate of every creature in the caster's vicinity, slowing
-all those who are not resistant to cold. Those especially vulnerable to cold
-will be affected much more strongly, and tougher creatures will be slowed for a
+all those who are not resistant to cold. Cold-blooded creatures will be
+affected much more strongly, and tougher creatures will be slowed for a
 shorter time.
 %%%%
 Metal Splinters spell

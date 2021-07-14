@@ -3256,11 +3256,6 @@ bool player::clarity(bool calc_unid, bool items) const
     return actor::clarity(calc_unid, items);
 }
 
-bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
-{
-    return you.get_mutation_level(MUT_GOURMAND) > 0;
-}
-
 /// Does the player have permastasis?
 bool player::stasis() const
 {
@@ -6223,9 +6218,11 @@ int player::willpower(bool /*calc_unid*/) const
 
 int player_willpower(bool calc_unid, bool temp)
 {
-
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
+
+    if (player_equip_unrand(UNRAND_FOLLY))
+        return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 

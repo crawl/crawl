@@ -1282,7 +1282,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
                                                            : "particularly";
                 description += "\n\nIt is " + adj + " good for stabbing"
-                               " unaware enemies.";
+                               " helpless or unaware enemies.";
             }
             break;
         default:
@@ -1295,8 +1295,16 @@ static string _describe_weapon(const item_def &item, bool verbose)
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // special weapon descrip
-    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
+    if (item_type_known(item)
+        && (spec_ench != SPWPN_NORMAL || enchanted)
+        && !skip_ego)
     {
         description += "\n\n";
 
@@ -1304,18 +1312,11 @@ static string _describe_weapon(const item_def &item, bool verbose)
         {
         case SPWPN_FLAMING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to burn "
-                    "those they strike,";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It has been specially enchanted to burn "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes and up to half "
-                           "again as much damage against particularly "
-                           "susceptible opponents.";
+                description += "It";
+            description += " burns those it strikes, dealing additional fire "
+                "damage.";
             if (!is_range_weapon(item) &&
                 (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
             {
@@ -1325,84 +1326,58 @@ static string _describe_weapon(const item_def &item, bool verbose)
             break;
         case SPWPN_FREEZING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to freeze "
-                    "those they strike,";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It has been specially enchanted to freeze "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes "
-                    "and up to half again as much damage against particularly "
-                    "susceptible opponents.";
-            if (is_range_weapon(item))
-                description += " They";
-            else
-                description += " It";
-            description += " can also slow down cold-blooded creatures.";
+                description += "It";
+            description += " freezes those it strikes, dealing additional cold "
+                "damage. It can also slow down cold-blooded creatures.";
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One";
             if (is_range_weapon(item))
-            {
-                description += ", and any ";
-                description += ammo_name(item);
-                description += " fired from it";
-            }
+                description += ", and any ammunition fired from it causes";
             else
-                description += " to";
-            description += " cause great damage to the undead and demons.";
+                description += " to cause";
+            description += " great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
             if (is_range_weapon(item))
-            {
-                description += "It charges the ammunition it shoots with "
-                    "electricity; occasionally upon a hit, such missiles "
-                    "may discharge and cause terrible harm.";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "Occasionally, upon striking a foe, it can "
-                    "discharge electrical energy and cause terrible harm.";
-            }
+                description += "It";
+            description += " occasionally discharges a powerful burst of "
+                "electricity upon striking a foe.";
             break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
-                description += "It poisons the ammo it fires.";
+                description += "Any ammunition fired from it";
             else
-                description += "It poisons the flesh of those it strikes.";
+                description += "It";
+            description += " poisons the flesh of those it strikes.";
             break;
         case SPWPN_PROTECTION:
             description += "It grants its wielder temporary protection when "
                 "it strikes (+7 to AC).";
             break;
         case SPWPN_DRAINING:
-            description += "A truly terrible weapon, it drains the "
-                "life of those it strikes.";
+            description += "A truly terrible weapon, it drains the life of "
+                "any living foe it strikes.";
             break;
         case SPWPN_SPEED:
             description += "Attacks with this weapon are significantly faster.";
             break;
         case SPWPN_VORPAL:
             if (is_range_weapon(item))
-            {
-                description += "Any ";
-                description += ammo_name(item);
-                description += " fired from it inflicts extra damage.";
-            }
+                description += "Any ammunition fired from it";
             else
-            {
-                description += "It inflicts extra damage upon your "
-                    "enemies.";
-            }
+                description += "It";
+            description += " inflicts extra damage upon your enemies.";
             break;
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
                 description += "Each projectile launched from it has a "
-                               "different, random effect.";
+                    "different, random effect.";
             }
             else
             {
@@ -1411,42 +1386,51 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
             break;
         case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals "
-                "its wielder when it wounds a living foe.";
+            description += "It occasionally heals its wielder for a portion "
+                "of the damage dealt when it wounds a living foe.";
             break;
         case SPWPN_PAIN:
             description += "In the hands of one skilled in necromantic "
                 "magic, it inflicts extra damage on living creatures.";
             break;
         case SPWPN_DISTORTION:
-            description += "It warps and distorts space around it. "
+            description += "It warps and distorts space around it, and may "
+                "blink, banish, or inflict extra damage upon those it strikes. "
                 "Unwielding it can cause banishment or high damage.";
             break;
         case SPWPN_PENETRATION:
-            description += "Ammo fired by it passes through the "
+            description += "Any ammunition fired by it passes through the "
                 "targets it hits, potentially hitting all targets in "
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
-            description += "If a monster killed with it leaves a "
-                "corpse in good enough shape, the corpse is "
-                "reanimated as a zombie friendly to the killer.";
+            description += "Any living foe damaged by it may be reanimated "
+                "upon death as a zombie friendly to the wielder, with an "
+                "increasing chance as more damage is dealt.";
             break;
         case SPWPN_ANTIMAGIC:
             description += "It reduces the magical energy of the wielder, "
-                    "and disrupts the spells and magical abilities of those "
-                    "hit. Natural abilities and divine invocations are not "
-                    "affected.";
+                "and disrupts the spells and magical abilities of those it "
+                "strikes. Natural abilities and divine invocations are not "
+                "affected.";
             break;
         case SPWPN_SPECTRAL:
-            description += "When it strikes, its spirit leaps out and "
-                           "fights alongside the wielder.";
+            description += "When it strikes, its spirit leaps out and fights "
+                "alongside the wielder.";
+            break;
+        case SPWPN_ACID:
+             if (is_range_weapon(item))
+                description += "Any ammunition fired from it";
+            else
+                description += "It";
+            description += " is coated in acid, damaging and corroding those "
+                "it strikes.";
             break;
         case SPWPN_NORMAL:
             ASSERT(enchanted);
             description += "It has no special brand (it is not flaming, "
-                    "freezing, etc), but is still enchanted in some way - "
-                    "positive or negative.";
+                "freezing, etc), but is still enchanted in some way - "
+                "positive or negative.";
             break;
         }
     }
@@ -1640,8 +1624,8 @@ static string _warlock_mirror_reflect_desc()
     const int SH = crawl_state.need_save ? player_shield_class() : 0;
     const int reflect_chance = 100 * SH / omnireflect_chance_denom(SH);
     return "\n\nWith your current SH, it has a " + to_string(reflect_chance) +
-           "% chance to reflect enchantments and other normally unblockable "
-           "effects.";
+           "% chance to reflect attacks against your willpower and other "
+           "normally unblockable effects.";
 }
 
 static string _describe_point_change(int points)
@@ -1856,8 +1840,14 @@ static string _describe_armour(const item_def &item, bool verbose)
 
     const special_armour_type ego = get_armour_ego_type(item);
 
+    const unrandart_entry *entry = nullptr;
+    if (is_unrandom_artefact(item))
+        entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
+
     // Only give a description for armour with a known ego.
-    if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
+    if (ego != SPARM_NORMAL && item_type_known(item) && verbose && !skip_ego)
     {
         description += "\n\n";
 
@@ -1885,7 +1875,7 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         // Only add a section break if we didn't already add one before
         // printing an ego-based property.
-        if (ego == SPARM_NORMAL || !verbose)
+        if (ego == SPARM_NORMAL || !verbose || skip_ego)
             description += "\n";
         description += "\n" + art_desc;
     }
