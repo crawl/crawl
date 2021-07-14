@@ -3202,48 +3202,58 @@ ENDMAP
 ###############################################################################
 # An abyssal version of the forest ending
 # monster set drawn from weaker abyss spawns and lair branch abyssal visitors
-NAME:   hellmonk_lair_end_abyssal_woods
-PLACE:  Lair:$
-ORIENT: northwest
-MONS:   blink frog / basilisk w:3, small abomination
-MONS:   shapeshifter / chaos spawn / smoke demon / ynoxinul
-MONS:   ancient zyme, thrashing horror / large abomination w:1
-MONS:   spriggan ; rapier ego:distortion
-SUBST:  T = tt..., 6 = 6d
-NSUBST: 1 = 5:1 / *:1.., 2 = 4:2 / *:2..
-NSUBST: 4 = 1:4 / *:3, ' = 3:5 / 3:d / 5 = 5543d. / *:.
-NSUBST: % = 2:| / 3:* / *:%
-KFEAT:  t = demonic_tree
-KFEAT:  > = enter_abyss
-KFEAT:  _ = altar_lugonu
+NAME:    hellmonk_lair_end_abyssal_woods
+PLACE:   Lair:$
+ORIENT:  northwest
+MONS:    blink frog / basilisk w:3, small abomination
+MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
+MONS:    ancient zyme, ugly thing / large abomination,  thrashing horror
+KMONS:   7M = spriggan ; rapier ego:distortion
+KFEAT:   u = demonic_tree
+KFEAT:   N = enter_abyss
+KFEAT:   _ = altar_lugonu
+SUBST:   " = '.
+COLOUR:  '%M = magenta
+FTILE:   '%MN_u = floor_nerves_magenta
+NSUBST:  %d = 2=| / 3=* / %
+NSUBST:  1 = 5=1 / 1.., 2 = 4=2 / 2..
+NSUBST:  4 = 4 / 3, ' = 2=6 / 2=56 / 3=O / 5=5543O. / .
+SUBST:   7M = 7O
+# 33% chance for an additional opening at the south.
+SHUFFLE: yzD / JKL / JKL
+SUBST:   y = @, zD= ., JK = t, L = p
+# 33% chance for an additional opening at the north east.
+SHUFFLE: EFH / JKL / JKL
+SUBST:   E = @, FH= ., JK = t, L = p
+SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
 {{
-  dgn.delayed_decay(_G, 'd', "spriggan skeleton / wolf skeleton w:3"
+  dgn.delayed_decay(_G, 'O', "spriggan skeleton / wolf skeleton w:3"
                              .. " / polar bear skeleton w:2"
                              .. " / black bear skeleton w:2")
 }}
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttt..6..tt.2ttttttt
-ttttttt..tttt.tttTttttttttttt22...tt.....222tttt
-ttttttT.TT..4....TttttttttT......tttttt1....24ttt
-ttttt.......d...tTttttttt1...11ttttttttt..ttttttt
-tttt...tt..TT11Ttttttttt2.....1tttttTTt..tttttttt
-ttt...tttttttt1..ttttt...111tt222tt......2tttttt
-ttt..ttttttttttt.2.tt.4.11ttttt2....TTtTT..ttt
-ttT......tttttttt..T...1tttttttttt4ttttttt12ttt
-tt..t.....ttttttt...2Tttttt6%>%%ttttttttttT4tt
-tt11ttt22...tttt..2tttttt%'''''tttttttttt..tt
-tt1Tttttt...ttt...ttttttttt''_''%ttttttt..ttt
-tT1ttttttt2.tt...ttttttttt%''''tttttttttT..ttt
-tt11ttttt....111TtttttttTtttt''tt'''.tt.41tttt
-tt..ttttttt.111......ttT..%tt''''''T....TTtt
-ttt..ttttttttttttt....t2..5%tt''''TTT.ttttt
-tttT...Tttttttttttttt.42ttttttttt'''..tttt
-tttt..Tttttttttttttttttttttttttt%%''ttttt
-ttttT..Tttttttttttttttt       ttttttttt
-ttttt...ttttttttttt            ttttttt
-tttttT...tttttttttt               ttt
+tttttttttttttttttttttttttttttttpppppppppppttpppptt
+ttttttttttttttttttttttttttttppppdd7..pp.2ppppFFFE
+ttttttt..tttt.tttatttttttpppp22...pp.....222HHHFF
+tttttta.aa..4....attttttppq......pppppp1....24ppt
+ttttt.......O...tatttttpp1...11ppppppppp..ppppptt
+tttt...tt..aa11atttttppp2.....1pppppqqp..rrtttttt
+ttt...tttttttt1..ppppp..1111pp222pp......2rrtttt
+ttt..ttttttttttt.2.pp.4.1pppppp2....qqrss..rrt
+tta......tttttttt..q..1pppuuuupppp4ppprrrr12rtt
+tt..t.....ttttttt...2qppuuuMNuuuupppttttrrs4rt
+tt11ttt22...tttt..2pppppu%%''%%uuutttttrr..rrt
+tt1attttt...ttt...ppppdpuu'''_''%utttttr..rrtt
+ta1ttttttt2.tt...pppd54ppu%''''uurrrrrrrs..rtt
+tt11ttttt....111qpppa.2ppuuuu''urr"".rr.41rrtt
+tt..ttttttt.111....tt..qppttr'''''"s....ssrtt
+ttt..tttttttttttpp...2..qpttrr''''sss.rrrrrt
+ttta...atttttttttppDD..qpptttrrrr'""..rttttt
+tttt..atttttttttppzzpppppttttttr''""rrrtt
+tttta..attttttttpzzzttttttt   trrrrrrttt
+ttttt...ttttttttppzy          tttttttt
+ttttta...tttttttttt               ttt
 ttttttt.@ttt
 ttttttt
 tttt
