@@ -779,7 +779,6 @@ public:
     bool no_tele_print_reason(bool calc_unid = true, bool blink = false) const;
     bool antimagic_susceptible() const override;
 
-    bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
     bool stasis() const override;

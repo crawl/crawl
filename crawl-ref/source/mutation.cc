@@ -127,6 +127,7 @@ static vector<mutation_type> removed_mutations =
         MUT_BLURRY_VISION,
         MUT_BLINK,
         MUT_UNBREATHING,
+        MUT_GOURMAND,
 #endif
     };
 

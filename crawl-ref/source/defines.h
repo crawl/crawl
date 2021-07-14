@@ -148,11 +148,6 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 const int BASELINE_DELAY  = 10;
 const int INVIS_CONTAM_PER_TURN = 30;
 
-const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
-const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
-
-const int CHUNK_BASE_NUTRITION    = 1000;
-
 const int ICEMAIL_MAX  = 8;
 const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 

@@ -145,7 +145,7 @@ A gateway back into the Dungeon
  With reason hath deep silence and demur
  Seized us, though undismayed. Long is the way
  And hard, that out of Hell leads up to light.”
-    - John Milton, _Paradise Lost_. 1674 (2nd Ed.)
+    -John Milton, _Paradise Lost_. 1674 (2nd Ed.)
 %%%%
 A gateway to Hell
 
@@ -167,7 +167,7 @@ A gateway to a ziggurat
 
 “Captain: Take off every ‘zig’!!
  Captain: For great justice.”
-    -Zero Wing
+    -_Zero Wing_. 1990.
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
@@ -236,7 +236,7 @@ A staircase leading out of the dungeon
  And the end of all our exploring
  Will be to arrive where we started
  And know the place for the first time.”
-    - T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943
+    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943
 %%%%
 A staircase to the Ecumenical Temple
 
@@ -503,7 +503,7 @@ Elven Halls
  want to find snakes look for them behind words that have changed their meaning.
  No one ever said elves are _nice_.
  Elves are _bad_.”
-    - Terry Pratchett, _Lords and Ladies_. 1992
+    -Terry Pratchett, _Lords and Ladies_. 1992
 %%%%
 Edmund
 
@@ -894,8 +894,8 @@ Animate Dead spell
  and probable. After days and nights of incredible labour and fatigue, I
  succeeded in discovering the cause of generation and life; nay, more, I became
  myself capable of bestowing animation upon lifeless matter.”
-    - Mary Shelley, _Frankenstein, or the Modern Prometheus_,
-      Vol. I, Chapter 3. 1818 (1st Ed.)
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. I, Chapter 3. 1818 (1st Ed.)
 %%%%
 apocalypse crab
 
@@ -1233,8 +1233,8 @@ efreet
 eidolon
 
 “I will revenge my injuries: if I cannot inspire love, I will cause fear.”
-    - Mary Shelley, _Frankenstein, or the Modern Prometheus_,
-      Vol. II, Chapter 9. 1818 (1st Ed.)
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. II, Chapter 9. 1818 (1st Ed.)
 %%%%
 electric golem
 
@@ -1309,7 +1309,7 @@ entropy weaver
  How spear-heads shall flash!
  Shields crash, and helm-gnawer
  On harness bite hard!”
-    - _The Story of Burnt Njal_, trans. George Dasent. 1861
+    -_The Story of Burnt Njal_, trans. George Dasent. 1861
 %%%%
 ettin
 
@@ -1345,7 +1345,7 @@ Executioner
  Defer, defer
  To the noble Lord, to the noble Lord
  To the Lord High Executioner!”
-    - Gilbert and Sullivan, “Behold the Lord High Executioner”,
+    -Gilbert and Sullivan, “Behold the Lord High Executioner”,
       _The Mikado_. 1885
 %%%%
 executioner's axe
@@ -1888,7 +1888,7 @@ meliai
  the strong Erinyes and the great Giants with gleaming armour, holding long
  spears in their hands, and the Nymphs whom they call Meliae all over the
  boundless earth.”
-    - Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
+    -Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
 %%%%
 merfolk
 
@@ -2045,7 +2045,7 @@ Necromutation spell
  Plan all your moves in advance
  Stay dead, stay dead, stay dead
  Stay dead and outta this world”
-    - Norma Tanega, “You’re Dead”. 1966
+    -Norma Tanega, “You’re Dead”. 1966
 %%%%
 needle
 
@@ -2151,7 +2151,7 @@ Orb Guardian
  Then we let it pop, go, let it go
  X gon' give it to ya, he gon' give it to ya
  X gon' give it to ya, he gon' give it to ya”
-    - DMX, "X Gon' Give It To Ya". 2002
+    -DMX, "X Gon' Give It To Ya". 2002
 %%%%
 orb of fire
 
@@ -2192,7 +2192,7 @@ phantom mirror
  something monstrous about mirrors. That was when Bioy remembered a saying by
  one of the heresiarchs of Uqbar: ‘Mirrors and copulation are abominable,
  for they multiply the number of mankind.’”
-    - Jorge Luis Borges, _Tlön, Uqbar, Orbis Tertius_. 1947
+    -Jorge Luis Borges, _Tlön, Uqbar, Orbis Tertius_. 1947
       trans. Andrew Hurley, 1998.
 %%%%
 phase bat
@@ -2270,7 +2270,7 @@ potion of invisibility
  my teeth and stayed there to the end. At last only the dead tips of the
  fingernails remained, pallid and white, and the brown stain of some acid, upon
  my fingers.”
-    - H.G. Wells, _The Invisible Man_, Chapter 20. 1897
+    -H.G. Wells, _The Invisible Man_, Chapter 20. 1897
 %%%%
 potion of lignification
 
@@ -2281,7 +2281,7 @@ potion of lignification
  to waving branches, and her active feet
  as clinging roots were fastened to the ground—
  her face was hidden with encircling leaves.”
-    - Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
+    -Ovid, _Metamorphoses_, Book I:253-259, trans. Brookes More. 1922
 %%%%
 potion of resistance
 
@@ -2290,8 +2290,8 @@ potion of resistance
  shall know what a determined man can do. I will not yield. I will not stir
  a single foot backwards, and it will be seen whether man or nature is to
  have the upper hand!”
-    - Jules Verne, _Journey into the Interior of the Earth_. 1864
-      trans. F.A. Malleson, 1877
+    -Jules Verne, _Journey into the Interior of the Earth_. 1864
+     trans. F.A. Malleson, 1877
 %%%%
 profane servitor
 
@@ -2457,7 +2457,7 @@ ring of poison resistance
  Buttercup:    “And to think, all that time it was your cup that was poisoned.”
  Man in Black: “They were both poisoned. I spent the last few years building
                 up an immunity to iocane powder.”
-    - _The Princess Bride_. 1987
+    -_The Princess Bride_. 1987
 %%%%
 ring of positive energy
 
@@ -2492,12 +2492,12 @@ ring of protection from fire
  gathered together, saw these men, upon whose bodies the fire had no power, nor
  was an hair of their head singed, neither were their coats changed, nor the
  smell of fire had passed on them.”
-    - KJV Bible, Daniel 3:23-27.
+    -KJV Bible, Daniel 3:23-27.
 %%%%
 ring of willpower
 
 “I am, indeed, a king, because I know how to rule myself.”
-    - Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
+    -Pietro Aretino, letter to Mr. Agostino Ricchi, May 10th, 1537. from
       _The Works of Aretino, Translated into English from the original Italian_,
       trans. Samuel Putnam. 1926
 %%%%
@@ -2548,8 +2548,8 @@ Sacrifice Love ability
  alluring, after his own image; but my form is a filthy type of yours, more
  horrid from its very resemblance. Satan had his companions, fellow-devils, to
  admire and encourage him; but I am solitary and detested.’”
-    - Mary Shelley, _Frankenstein, or the Modern Prometheus_,
-      Vol. II, Chapter 7. 1818 (1st Ed.)
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. II, Chapter 7. 1818 (1st Ed.)
 %%%%
 salamander
 
@@ -2631,7 +2631,7 @@ scroll of fog
  purpose of writing is to inflate weak ideas, obscure poor reasoning, and
  inhibit clarity. With a little practice, writing can be an intimidating and
  impenetrable fog!”
-    - Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
+    -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
 %%%%
 scroll of holy word
 
@@ -2669,7 +2669,7 @@ scroll of magic mapping
      they said it would cover the whole country, and shut out the sunlight! So
      we now use the country itself, as its own map, and I assure you it does
      nearly as well.’”
-    - Lewis Carroll, _Sylvie and Bruno Concluded_, Chapter XI. 1895
+    -Lewis Carroll, _Sylvie and Bruno Concluded_, Chapter XI. 1895
 %%%%
 scroll of noise
 
@@ -2710,7 +2710,7 @@ scroll of teleportation
   friend ships
  IF IT SUCKS... HIT DA BRICKS!!
  real winners quit” [sic]
-   - Admin, @dasharez0ne Twitter. March 30, 2018
+   -Admin, @dasharez0ne Twitter. March 30, 2018
 # https://twitter.com/dasharez0ne/status/979810839749210112/
 %%%%
 scroll of torment
@@ -3287,7 +3287,7 @@ tyrant leech
  Scully: “Where the hell did it come from?”
  Mulder: “I don’t know, but it looks like I’m going to have to tell Skinner
           that his suspect is a giant bloodsucking worm after all.”
-    - _The X-Files_, “The Host”. 1994
+    -_The X-Files_, “The Host”. 1994
 %%%%
 ufetubus
 
@@ -3330,7 +3330,7 @@ ushabti
  for me on every occasion of making arable the fields, of flooding the banks or
  of conveying sand from east to west; ‘Here I am’, you shall say.
 
-    - Spell 6, _Book of the Dead_, from _Ancient Egyptian Book of the Dead:
+    -Spell 6, _Book of the Dead_, from _Ancient Egyptian Book of the Dead:
      Journey through the afterlife_, edited by John H. Taylor. 2010
 %%%%
 vampire
@@ -3412,7 +3412,7 @@ wand of polymorph
 
 “Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
-    - Franz Kafka, _Die Verwandlung_. 1915
+    -Franz Kafka, _Die Verwandlung_. 1915
 %%%%
 wand of random effects
 
@@ -3472,7 +3472,7 @@ Wereblood spell
 
  Nameless bodies in unremembered rooms
  Know how a man becomes a beast when the wolfbane blooms”
-    - The Mountain Goats, “Werewolf Gimmick”. 2015
+    -The Mountain Goats, “Werewolf Gimmick”. 2015
 %%%%
 wolf
 

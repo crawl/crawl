@@ -4016,6 +4016,10 @@ int monster::willpower(bool calc_unid) const
     if (mons_invuln_will(*this))
         return WILL_INVULN;
 
+    const item_def *arm = mslot_item(MSLOT_ARMOUR);
+    if (arm && is_unrandom_artefact(*arm, UNRAND_FOLLY))
+        return 0;
+
     const int type_wl = (get_monster_data(type))->willpower;
     // Negative values get multiplied with monster hit dice.
     int u = type_wl < 0 ?
