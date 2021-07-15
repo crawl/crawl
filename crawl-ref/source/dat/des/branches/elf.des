@@ -1431,6 +1431,430 @@ MAP
   xxxxxxxxx
 ENDMAP
 
+NAME:  nicolae_elf_altarnating
+TAGS:  transparent no_monster_gen no_item_gen
+DEPTH: Elf
+: if crawl.coinflip() then
+KMONS: 1 = dancing weapon ; any weapon
+KMONS: _ = dancing weapon ; any weapon good_item | any weapon randart w:5
+KFEAT: _ = altar_uskayaw
+: else
+KMONS: 1_ = fire elemental / water elemental / air elemental / earth elemental
+KFEAT: _ = altar_qazlal
+: end
+SUBST: 1 = 1:15 .
+MAP
+xxxxx
+x111x
+x1_1+
+x111x
+xxxxx
+ENDMAP
+
+NAME:  nicolae_elf_archery_training
+TAGS:  transparent no_item_gen
+DEPTH: Elf
+KITEM: 'D = arrow q:1 / arrow q:2 / arrow q:3 / arrow q:4 / nothing w:30
+KITEM: " = shortbow / longbow / shortbow good_item / longbow good_item / \
+           pair of gloves ego:archery / pair of gloves ego:dexterity / \
+           pair of gloves plus:1 / pair of gloves plus:2 / \
+           scarf ego:repulsion / scarf w:4 / amulet of reflection / \
+           any amulet w:3 / gold good_item / manual of bows w:3
+KMONS: D = training dummy
+KMONS: E = deep elf archer / nothing w:5
+KMONS: M = deep elf master archer
+MAP
+     x@@xxx
+   xxx...'x
+ xxxE....Dx
+xx..E....'x
+x"M.E....Dx
+xx..E....'x
+ xxxE....Dx
+   xxx...'x
+     x@@xxx
+ENDMAP
+
+NAME:   nicolae_elf_blasts_and_bolts
+TAGS:   transparent
+DEPTH:  Elf
+KMONS:  1 = deep elf annihilator
+KMONS:  2 = deep elf elementalist
+KMONS:  3 = deep elf knight / deep elf pyromancer / deep elf zephyrmancer
+NSUBST: D = 1=1 / 1=2 / D
+SUBST:  D = 3:60 .:60 1 2, E = 3:140 .:140 1 2, % = %%%*.
+MAP
+ccc..............ccc
+ccc..cc..cc..cc..ccc
+ccc..cc..cc..cc..ccc
+...E......E.....E...
+....................
+.cc..xxx.D..xxx..cc.
+.cc..xxx....xxx..cc.
+.....xxxx%%xxxx.....
+.......xxxxxx.......
+.ccE...%xxxx%.D..cc.
+.cc..D.%xxxx%...Ecc.
+.......xxxxxx.......
+.....xxxx%%xxxx.....
+.cc..xxx....xxx..cc.
+.cc..xxx..D.xxx..cc.
+....................
+...E.....E......E...
+ccc..cc..cc..cc..ccc
+ccc..cc..cc..cc..ccc
+ccc..............ccc
+ENDMAP
+
+NAME:   nicolae_elf_crossing_hall
+TAGS:   decor transparent allow_dup
+DEPTH:  Elf
+: if crawl.coinflip() then
+KFEAT:  + = closed_clear_door
+: end
+NSUBST: H = 1=+ / *=c++
+SUBST:  c : cxvbm, D : cxvbm., F : cxvbm., E : cvxbm0, 0 = .:15 0:5 9:1
+MAP
+       c+c
+      cc.cc
+     cc...cc
+    cc.0D0.cc
+   cc..DDD..cc
+  cc...0D0...cc
+ cc...........cc
+cc.0F0.0E0.0F0.cc
+H..FFF.EEE.FFF..H
+cc.0F0.0E0.0F0.cc
+ cc...........cc
+  cc...0D0...cc
+   cc..DDD..cc
+    cc.0D0.cc
+     cc...cc
+      cc.cc
+       cHc
+ENDMAP
+
+NAME:   nicolae_elf_deep_friendship
+TAGS:   transparent
+DEPTH:  Elf
+KMONS:  1 = deep troll earth mage
+KMONS:  2 = deep troll
+KMONS:  3 = deep elf knight
+NSUBST: E = 1=1 / 1DDDD, D = 2=2 / 2=3 / 2233....
+SUBST:  % = *%%
+MAP
+     cccccccccccc
+     cbb......bbc
+     cb..E..D..bc
+cccccc....bb....ccccc
+cb%%..E..xxxx..D....c
+cb%%E...bxxxxb...D..+
+cb%%E...bxxxxb...D..+
+cb%%..E..xxxx..D....c
+cccccc....bb....ccccc
+     cb..E..D..bc
+     cbb......bbc
+     cccccccccccc
+ENDMAP
+
+NAME:  nicolae_elf_deep_mausoleum
+TAGS:  transparent patrolling
+DEPTH: Elf
+KPROP: L = no_tele_into
+KITEM: S = large rock q:1 / stone
+KITEM: 1 = wand of digging charges:2 / wand of digging charges:3 w:20 / \
+           wand of digging charges:4
+KMONS: 1 = deep elf death mage
+KMONS: 2 = flayed ghost / freezing wraith / shadow wraith / phantasmal warrior/\
+           eidolon / ghoul / flying skull /skeletal warrior /ancient champion /\
+           vampire / vampire mage / vampire knight /jiangshi /bog body /mummy /\
+           guardian mummy / mummy priest / small abomination / large abomination
+KMONS: 3 = lost soul / zombie w:20 / skeleton w:20 / spectral thing / simulacrum
+KFEAT: 1 = V
+SUBST: D = 33., E = 32., F = 22., L = -:70 *:50 |:20, G = G:140 S
+KMASK: |*- = opaque
+KMASK: |*- = no_monster_gen
+TILE:  G = dngn_gravestone
+: set_feature_name("granite_statue", "a gravestone")
+MAP
+ccccccccccccccccccccc
+cccLcccLcLcccLcLcccLc
+ccccG.GcccG.GcccG.Gcc
+cLc.F.F.c.E.E.c.D.D.c
+ccGF...FGE...EGD...Dc
+cc%..1.....V.....V..+
+ccGF...FGE...EGD...Dc
+cLc.F.F.c.E.E.c.D.D.c
+ccccG.GcccG.GcccG.Gcc
+cccLcccLcLcccLcLcccLc
+ccccccccccccccccccccc
+ENDMAP
+
+# Sometimes when you're trying to make a weapon dance, you mess it up instead,
+# so now it's just wandering around bumping into things, and then instead of
+# cleaning up your mess, you shove all of your mistakes into a closet and hope
+# nobody notices. We've all been there.
+NAME:  nicolae_elf_defective_weapons_storage
+TAGS:  transparent no_monster_gen
+DEPTH: Elf
+KITEM: 1 = % w:20 / scroll of enchant weapon w:5 / \
+         scroll of brand weapon w:5 / nothing
+KMONS: 1 = dancing weapon perm_ench:confusion ; any damaged weapon ego:none / \
+         dancing weapon perm_ench:slow ; any damaged weapon ego:none / \
+         dancing weapon perm_ench:corona ; any damaged weapon ego:none / \
+         dancing weapon perm_ench:blind ; any damaged weapon ego:none / \
+         dancing weapon perm_ench:dazed ; any damaged weapon ego:none / \
+         dancing weapon w:4 ; any weapon ego:none plus:-5 / \
+         dancing weapon w:3 ; any weapon ego:none plus:-6 / \
+         dancing weapon w:3 ; any weapon ego:none plus:-7 / \
+         dancing weapon perm_ench:paralysis w:2 ; any damaged weapon ego:none/ \
+         nothing w:30
+MAP
+  xx+xx
+  x...x
+xxx...xxx
+x1..1..1x
+x1.111.1x
+x1..1..1x
+xxx...xxx
+  x111x
+  xxxxx
+ENDMAP
+
+NAME:  nicolae_elf_double_double_double_trouble
+TAGS:  transparent
+DEPTH: Elf
+KMASK: D- = no_monster_gen
+KMONS: D = deep elf blademaster ; double sword . double sword
+KFEAT: D = T
+MAP
+cccccc
+c----c..@
+c-D--c.T.
+c----=...
+c----==ccc
+ccc==----c
+ ...=----c
+ .T.c--D-c
+ @..c----c
+    cccccc
+ENDMAP
+
+NAME:    nicolae_elf_elemental_lessons
+TAGS:    transparent
+DEPTH:   Elf
+KITEM:   P = randbook disc:fire slevels:5
+KITEM:   Q = randbook disc:earth slevels:5
+KITEM:   R = randbook disc:ice slevels:5
+KITEM:   S = randbook disc:air slevels:5
+KMONS:   D = deep elf zephyrmancer / deep elf pyromancer
+KMONS:   E = deep elf elementalist
+# A small chance of an elementalist transfer student:
+KMONS:   H = spriggan air mage / deep troll earth mage / merfolk aquamancer / \
+             salamander tyrant
+KMONS:   P = fire elemental
+KMONS:   Q = earth elemental
+KMONS:   R = water elemental
+KMONS:   S = air elemental
+SHUFFLE: PQRS
+SUBST:   D = D. H:2
+MAP
+    .....
+ccccnc+cncccc
+ccc.......ccc
+cP+.D.D.D.+Qc
+cnc..D.D..cnc
+@.n.D.D.D.n.@
+cnc..D.D..cnc
+cR+.......+Sc
+ccc...E...ccc
+ccccccccccccc
+ENDMAP
+
+NAME:  nicolae_elf_free_trip_to_the_abyss
+TAGS:  transparent
+DEPTH: Elf
+KMONS: D = patrolling dancing weapon ; short sword ego:distortion | \
+           falchion ego:distortion | hand axe ego:distortion | \
+           whip ego:distortion | spear ego:distortion
+KMONS: E = deep elf sorcerer / deep elf demonologist
+KMONS: S = chaos spawn / nothing
+KFEAT: E = enter_abyss
+KFEAT: - = x
+FTILE: DE'- = floor_nerves
+TILE:  - = wall_abyss
+MAP
+   ...x
+   ....x
+  ...SS.x
+....S'''-x
+...S'''D-x
+..S'''''-x
+x.S'''E--x
+ x.'D'--xx
+  x----xx
+   xxxxx
+ENDMAP
+
+NAME:  nicolae_elf_hall_of_bonks
+TAGS:  transparent no_monster_gen
+DEPTH: Elf
+KMONS: D = dancing weapon ; whip | club | mace | flail | morningstar | \
+           demon whip | dire flail | eveningstar | great mace | giant club | \
+           giant spiked club | any magical staff | quarterstaff
+KMONS: E = dancing weapon ; morningstar good_item | demon whip good_item | \
+           dire flail good_item | eveningstar good_item | \
+           great mace good_item | giant club good_item | \
+           giant spiked club good_item | any magical staff good_item | \
+           quarterstaff good_item
+SUBST: D = D. E:1
+MAP
+  ccccccc
+ cc.....cc
+ c.D.D.D.c
+.=..DnD..c
+.=.DnnnE.c
+.=..DnD..c
+ c.D.D.D.c
+ cc.....cc
+  ccccccc
+ENDMAP
+
+NAME:    nicolae_elf_loose_elemental_storage
+TAGS:    transparent no_trap_gen no_monster_gen no_item_gen
+DEPTH:   Elf
+KITEM:   P = staff of fire / randbook disc:fire / wand of flame /ring of fire /\
+         ring of protection from fire / any weapon ego:flaming / \
+         any armour ego:fire_resistance / scroll of immolation
+KITEM:   Q = staff of earth / randbook disc:earth / wand of digging / \
+         ring of protection / tin of tremorstones / any weapon ego:protection /\
+         any weapon ego:vorpal
+KITEM:   R = staff of cold / randbook disc:ice /wand of iceblast /ring of ice /\
+         ring of protection from cold / phial of floods / \
+         any weapon ego:freezing / any armour ego:cold_resistance
+KITEM:   S = staff of air /randbook disc:air /ring of flight /ring of evasion /\
+         condenser vane / lightning rod / any weapon ego:electrocution
+KMONS:   Pp = fire elemental
+KMONS:   Qq = earth elemental
+KMONS:   Rr = water elemental
+KMONS:   Ss = air elemental
+SHUFFLE: DE, FH, JKL, Pp/Rr, Qq/Ss
+SUBST:   p = p., q = q., r = r., s = s., DF = +, EHJ = m, KL = x
+MAP
+@...xxx...@
+.x++xxxDDx.
+.mpppLqqqE.
+.mpppKqqqE.
+xxppPJQqqxx
+xxJKLxLKJxx
+xxssSJRrrxx
+.msssKrrrF.
+.msssLrrrF.
+.x++xxxHHx.
+@...xxx...@
+ENDMAP
+
+NAME:  nicolae_elf_martial_mastery
+TAGS:  transparent
+DEPTH: Elf
+KMONS: E = deep elf blademaster / deep elf master archer
+SUBST: T : TTT., U : UUU.
+MAP
+   xxxxx
+ xxx.T.xxx
+xx.U...U.xx
+xT...E...Tx
++.........+
++.........+
+xU...E...Ux
+xx.T...T.xx
+ xxx.U.xxx
+   xxxxx
+ENDMAP
+
+NAME:   nicolae_elf_shapeshifter_party
+TAGS:   transparent patrolling no_monster_gen
+DEPTH:  Elf
+KITEM:  p = potion of mutation / potion of lignification / wand of polymorph / \
+            randbook disc:transmutation / any potion / any wand / randbook / \
+            any good_item w:30
+KMONS:  S = shapeshifter / glowing shapeshifter w:5
+SUBST:  Z = x., z = ppFFx, E = Fx, . = S .:90
+MARKER: F = lua:fog_machine { cloud_type = "mutagenic fog", pow_min = 5, \
+        pow_max = 15, delay = 30, size = 1, walk_dist = 0, start_clouds = 0, \
+        spread_rate = 0, excl_rad = 0 }
+MAP
+    xxxxx
+   xxzpzxx
+  xxZ...Zxx
+ xxZ.....Zxx
+xxZ.......Zxx
+xZ....E....Zx
++....EEE....+
+xZ....E....Zx
+xxZ.......Zxx
+ xxZ.....Zxx
+  xxZ...Zxx
+   xxzpzxx
+    xxxxx
+ENDMAP
+
+NAME:  nicolae_elf_theology_debate
+TAGS:  transparent
+DEPTH: Elf
+KMONS: D = deep elf knight
+KMONS: N = orc knight
+KFEAT: O = altar_beogh
+: if crawl.coinflip() then
+KMONS: E = deep elf high priest
+KMONS: O = orc high priest
+KFEAT: E = altar_vehumet / altar_makhleb / altar_sif_muna
+: else
+KMONS: E = deep elf sorcerer
+KMONS: O = orc sorcerer
+KFEAT: E = altar_lugonu
+: end
+SUBST: S = DN, D = DD., N = NN., % = %%*, * = **|
+MAP
+xxxxxxxxxxxxxxxxx
+xx...xx...xx...xx
+x..D....S....N..x
+x.DGD..SGS..NGN.x
+x..D....S....N..x
+xx...xx+++xx...xx
+xx.D.xx...xx.N.xx
+xU...Ux.S.xI...Ix
+x..E..xS.Sx..O..x
+xU...Ux...xI...Ix
+xx%*%xx...xx%*%xx
+xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME:  nicolae_elf_vaults_five_recruitment_drive
+TAGS:  patrolling transparent no_item_gen
+DEPTH: Elf
+KITEM: 2 = $ / % / nothing w:40
+KMONS: 1 = deep elf high priest / deep elf death mage / deep elf annihilator / \
+           deep elf demonologist / deep elf sorcerer
+KMONS: 2 = vault guard / nothing w:2
+KMONS: 3 = deep elf archer / deep elf pyromancer / deep elf zephyrmancer / \
+           deep elf knight / vault sentinel w:5
+# Very important meeting, no interruptions in the main office:
+KMASK: 12*%$' = no_monster_gen
+MAP
+          x
+        xxxxx
+      xxx$x3xxx.@
+    xxx'2$x...+xx
+  xxx%''2'x.3...xxx
+xxxG*%1'2'+...3.3Gxxx
+  xxx%''2'x.3...xxx
+    xxx'2$x...+xx
+      xxx$x3xxx.@
+        xxxxx
+          x
+ENDMAP
+
 ##############################################################################
 #
 # <<3>> Elf:2 Hall of Blades entry vaults.
