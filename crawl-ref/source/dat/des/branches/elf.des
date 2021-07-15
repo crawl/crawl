@@ -1452,6 +1452,141 @@ xccccccccccccccccccccccccccc             cccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx             xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# Due to the orientation of this vault, I decided to just have a built-in
+# entry, rather than trying to make the existing entry subvaults fit.
+NAME:     nicolae_elf_blades_crystal_corner
+TAGS:     no_dump no_item_gen no_monster_gen
+PLACE:    Elf:2
+ORIENT:   northwest
+MONS:     deep elf pyromancer / deep elf zephyrmancer
+MONS:     deep elf knight w:22 / \
+          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
+MONS:     deep elf blademaster, dancing weapon
+: halls_of_blades_weapon(_G)
+MONS:     patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+: if crawl.one_chance_in( 4 ) then
+SUBST:    FJH = b
+: else
+SHUFFLE:  FH
+SUBST:    FJ = ., H : bb.
+: end
+SHUFFLE:  DE
+SUBST:    D : bbbb-, E : ----b, K : b.., 7 = 7'
+FTILE:    -~ = floor_vault
+COLOUR:   -~ = lightgrey
+SUBST:    - = .
+NSUBST:   . = 6=1 / 3=2 / 1=34 / 4=4 / 2=42 / 6=14...
+SUBST:    '~ = ., b : bbbbcccv
+CLEAR:    "
+MAP
+"
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbx
+ xbbbb---bbbbb---bbbbb---bbbbb---bbbbb---bbbbx
+ xbbb-....bbb.....bbb.....bbb.....bbb....-bbbx
+ xbb-......K.......K.......K...2...K.....6-bbx
+ xb-.......................................-bx
+ xb-...4...................................-bx
+ xb-.......................................-bx
+ xbb......DDD.....EEE.........FFF..........bbx
+ xbbb....DDDDD...EEEEE.......FFFFF..4.....bbbx
+ xbbbK...DDDDD...EEEEE.......FFFFF.......Kbbbx
+ xbbb....DDDDDD.EEEEEE......JFFFFFJ.......bbbx
+ xbb......DDDDbbbEEEE.....HHHJbbbJHHH......bbx
+ xb-........DbbbbbE......HHHHbbbbbHHHH.....-bx
+ xb-.........bbbbb.......HHHHbbbbbHHHH..2..-bx
+ xb-........EbbbbbD......HHHHbbbbbHHHH.....-bx
+ xbb......EEEEbbbDDDD.....HHHJbbbJHHH......bbx
+ xbbb....EEEEEE.DDDDDD......JFFFFFJ.......bbbx
+ xbbbK...EEEEE...DDDDD.......FFFFF.......Kbbbx
+ xbbb....EEEEE...DDDDD.......FFFFF........bbbx
+ xbb......EEE.....DDD.........FFF..........bbx
+ xb-.......................................-bx
+ xb-.......................................-bx
+ xb-.......................................-bx
+ xbb..........HHH..................K......-bbx
+ xbbb........HHHHH........'''''...bbb....-bbbx
+ xbbbK.......HHHHH........'''''--bbbbb---bbbbx
+ xbbb.......JHHHHHJ.......'''''bbbbbbbbbbbbbbx
+ xbb......FFFJbbbJFFF.....'''==xxxxxxxxxxxxxxx
+ xb-.....FFFFbbbbbFFFF....'''=~~'''''xxxxxx
+ xb-..2..FFFFbbbbbFFFF.....-bx~~~''T''xxxxx
+ xb-.....FFFFbbbbbFFFF.....-bx'~~~''7''xxxx
+ xbb......FFFJbbbJFFF......bbx''~~~''7''xxx
+ xbbb.......JHHHHHJ.......bbbx'''~~~''7''xx
+ xbbbK.......HHHHH.......Kbbbx'T''~~~''7''x
+ xbbb.....4..HHHHH........bbbx''7''~~~''7'x
+ xbb..........HHH..........bbxx''7''~~~''Tx
+ xb-.......................-bxxx''7''~~~''x
+ xb-.......................-bxxxx''7''~~~'x
+ xb-...........2...........-bxxxxx''7''~~~x
+ xbb-5.....K.......K......-bbxxxxxx''T''~~~@
+ xbbb-....bbb.....bbb....-bbbxxxxxxxxxxxx~~@
+ xbbbb---bbbbb---bbbbb---bbbbx           @@@
+ xbbbbbbbbbbbbbbbbbbbbbbbbbbbx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# The design here was to try to get the entry vault on the short side of the
+# main hall, so instead of having distinct "left" and "right" sides relative
+# to the entrance, the layout is mostly "forward" from the entrance.
+NAME:     nicolae_elf_blades_splatter_lattice
+TAGS:     no_dump no_item_gen no_monster_gen
+PLACE:    Elf:2
+ORIENT:   north
+MONS:     deep elf pyromancer / deep elf zephyrmancer
+MONS:     deep elf knight w:22 / \
+          deep elf pyromancer w:1 / deep elf zephyrmancer w:1
+MONS:     deep elf blademaster, dancing weapon
+KMONS:    E = dancing weapon
+: halls_of_blades_weapon(_G)
+# 1/4 chance each of the scalloped edges being 0/1/2/3 tiles around.
+SUBST:    P : Q-, Q : RR-, R : ccc-
+FTILE:    E- = floor_vault
+COLOUR:   E- = lightgrey
+SUBST:    - = .
+NSUBST:   . = 6=1 / 3=2 / 1=34 / 4=4 / 2=42 / 6=14...
+SHUFFLE:  MN
+SUBVAULT: D : elf_blade_entry
+SUBST:    D : x, M : b, N : cccb, v : vvvn
+CLEAR:    "
+MAP
+                             "
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccccccccccccccx
+xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
+xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
+xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
+xc---v.......v------v.......v------v.......v---cx
+xc--v.5.......v----v.........v----v.........v--cx
+xc-v...........v--v...........v--v...........v-cx
+xcN.....2....4..NN.............NN.............Ncx
+xcN.............NN.............NN.............Ncx
+xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
+xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
+xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
+xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
+xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
+xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
+xcRQP---MMM------------MMM------------MMM---E---DDDDDDDDDDDDDD@
+xcRQP---MMM------------MMM------------MMM-------=DDDDDDDDDDDDD@
+xcQP---v...v----------v...v----------v...v-----cxDDDDDDDDDDDDD
+xcP---v.....v--------v.....v--------v.....v-E--cxDDDDDDDDDDDDD
+xc---v...4...v------v.......v------v.......v---cxDDDDDDDDDDDDD
+xc--v.........v----v.........v----v.........v--cxDDDDDDDDDDDDD
+xc-v...........v--v...........v--v...........v-cxDDDDDDDDDDDDD
+xcN.............NN.............NN.............Ncx
+xcN.....2....4..NN.............NN.............Ncx
+xc-v...........v--v...........v--v...........v-cx
+xc--v.6.......v----v.........v----v.........v--cx
+xc---v.......v------v.......v------v.......v---cx
+xcP---v.....v---PP---v.....v---PP---v.....v---Pcx
+xcQP---v...v---PQQP---v...v---PQQP---v...v---PQcx
+xcRQP---MMM---PQRRQP---MMM---PQRRQP---MMM---PQRcx
+xcccccccccccccccccccccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 NAME:   mumra_blade_entry_bloodbath
 TAGS:   no_item_gen
 SUBST:  d = ..', e = .'', f = .'''
