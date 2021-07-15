@@ -2256,8 +2256,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
             mprf("You clear your throat and prepare to recite.");
-            you.increase_duration(DUR_RECITE_COOLDOWN,
-                                  3 + random2(10) + random2(30));
         }
         else
         {
