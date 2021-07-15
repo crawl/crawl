@@ -358,6 +358,88 @@ xxx.....xxx
   x@...@x
 ENDMAP
 
+NAME:    nicolae_elf_arrival_aired_out
+TAGS:    patrolling transparent
+PLACE:   Elf:1
+ORIENT:  float
+KMONS:   1 = deep elf zephyrmancer / air elemental w:6 / nothing w:16
+SHUFFLE: DEFH/JKLM
+SUBST:   DM = m, E = {, F = T, H = +, JKL = .
+MAP
+          ..
+xxxxxxxxxxHHx
+x.ED..J.1D1.x
+x..D..J.1D1.x
+x.KJ..D.1J1.M.
+x.LJ..D.1J1.M.
+x..D..J.1D1.x
+x.FD..J.1D1.x
+xxxxxxxxxxHHx
+          ..
+ENDMAP
+
+NAME:   nicolae_elf_arrival_dilemma
+TAGS:   no_item_gen no_monster_gen patrolling transparent
+PLACE:  Elf:1
+ORIENT: float
+KMONS:  1 = deep elf annihilator / deep elf sorcerer
+KMONS:  2 = deep elf pyromancer / deep elf zephyrmancer
+SUBST:  T : TG
+MAP
+xxxxxxxxxxxxxxxxx
+x.....xxTxx.....x
+x.....=...=..2..x
+=..1..=.{.=.2.2.=
+x.....=...=..2..x
+x.....xxTxx.....x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_elf_arrival_fired_up
+TAGS:   patrolling transparent
+PLACE:  Elf:1
+ORIENT: float
+KMONS:  12 = deep elf pyromancer
+KFEAT:  2 = T
+MAP
+        .@.
+bbbbbbbbnnnbb
+b...........b
+b..T..b..2..b
+b.....n.....n.
+b..{..n..1..+@
+b.....n.....n.
+b..T..b..2..b
+b...........b
+bbbbbbbbnnnbb
+        .@.
+ENDMAP
+
+# A small group of powerful orcs has arrived at the border check ahead of you.
+NAME:   nicolae_elf_arrival_no_cutting_in_line
+TAGS:   patrolling
+PLACE:  Elf:1
+ORIENT: float
+KMONS:  O = orc high priest / orc sorcerer
+KMONS:  E = deep elf pyromancer / deep elf zephyrmancer
+SUBST:  E = E..., O = O...
+MAP
+x@@@xxxxxxxxxxx
+x.............x
+x.T.........T.x
+x.............x
+xxxxxmmmmmx...x
+x...xOO.EEx...x
+x....OO.EE....x
+x....OO.EE....x
+x...xOO.EEx...x
+x...xmmmmmxxxxx
+x.............x
+x.T.........{.x
+x.............x
+xxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 #
 # <<2>> Regular vaults.
