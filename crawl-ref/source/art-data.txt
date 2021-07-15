@@ -944,7 +944,7 @@ INT:     8
 INSCRIP: Brilliance Will-∞
 DESCRIP: It increases the power of your magical spells.
 +It halves the magic cost of your spells (rounding up).
-+Its reduces your willpower to zero.
++It reduces your willpower to zero.
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
