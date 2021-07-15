@@ -1916,6 +1916,96 @@ x...xbmbx...x
 @...xb+bx...@
 ENDMAP
 
+NAME:  nicolae_blade_bullseye
+TAGS:  no_item_gen
+KMONS: 2 = patrolling dancing weapon ; hunting sling | fustibalus w:5 | \
+           shortbow | longbow w:5 | hand crossbow | arbalest w:7 | \
+           triple crossbow w:5
+: elven_blade_entry(_G)
+MAP
+      =
+xxxx-----xxxx
+xx---...---xx
+x--.......--x
+x-...---...-x
+--..--2--..--
+-..--...--..-
+-..-2.-.2-..-
+-..--...--..-
+--..--2--..--
+x-...---...-x
+x--.......--x
+xx---...---xx
+xxxx-----xxxx
+ENDMAP
+
+NAME:  nicolae_blade_lattice
+SUBST: 1 = 1., b : bbbc, v : vvvm
+: elven_blade_entry(_G)
+MAP
+      =
+...b.....b...
+.1v-v...v-v1.
+.v---v1v---v.
+b-----b-----b
+.v---v.v---v.
+..v-v...v-v..
+..1b..1..b1..
+..v-v...v-v..
+.v---v.v---v.
+b-----b-----b
+.v---v1v---v.
+.1v-v...v-v1.
+...b.....b...
+ENDMAP
+
+NAME:    nicolae_blade_little_rooms
+KMONS:   2 = patrolling dancing weapon ; dagger good_item | mundane falchion w:6
+SHUFFLE: EFH
+SUBST:   1 = 1--, 2 = 2.., D : xxm, EF : x, H : xmm
+FTILE:   1m = floor_vault
+COLOUR:  1m = lightgrey
+: elven_blade_entry(_G)
+MAP
+      =
+xxxxx...xxxxx
+x-1-D.2.D-1-x
+x---D...D---x
+x+x+x+x+x+x+x
+x.E---F---E.x
+x.E-1-F-1-E.x
+x2xHHHxHHHx2x
+x.E-1-F-1-E.x
+x.E---F---E.x
+x+x+x+x+x+x+x
+x---D...D---x
+x-1-D.2.D-1-x
+xxxxx...xxxxx
+ENDMAP
+
+NAME:   nicolae_blade_tridents
+TAGS:   transparent
+KMONS:  23 = patrolling dancing weapon ; trident
+SUBST:  2 = 22.
+FTILE:  3 = floor_vault
+COLOUR: 3 = lightgrey
+: elven_blade_entry(_G)
+MAP
+      =
+xxxxx---xxxxx
+xxxxx---xxxxx
+xxxxx-3-xxxxx
+xxxxx---xxxxx
+xxxxx---xxxxx
+xxx...2...xxx
+xx..xx.xx..xx
+xx.xxx.xxx.xx
+xx.xxx.xxx.xx
+xx.xxx.xxx.xx
+xx.xxx.xxx.xx
+x.2.x.2.x.2.x
+xx@xxx.xxx@xx
+ENDMAP
 
 ##############################################################################
 ##############################################################################
