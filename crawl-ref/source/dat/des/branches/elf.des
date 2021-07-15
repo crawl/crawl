@@ -1696,6 +1696,34 @@ x.S'''E--x
    xxxxx
 ENDMAP
 
+NAME:    nicolae_elf_glassroom_feature
+TAGS:    transparent decor
+DEPTH:   Elf
+KFEAT:   O = any shop
+SHUFFLE: x_/m-
+SUBST:   S = GTOSSS
+: if you.depth() == 1 then
+SUBST:   S = )}]
+: elseif you.depth_fraction() < 1 then
+SUBST:   S = (){}[]
+: else
+SUBST:   S = ({[
+: end
+CLEAR:   _
+MAP
+---__.__---
+-mmxx.xxmm-
+-m.......m-
+_x..mxm..x_
+_x.m...m.x_
+...x.S.x...
+_x.m...m.x_
+_x..mxm..x_
+-m.......m-
+-mmxx.xxmm-
+---__.__---
+ENDMAP
+
 NAME:  nicolae_elf_hall_of_bonks
 TAGS:  transparent no_monster_gen
 DEPTH: Elf
@@ -1828,6 +1856,30 @@ x..E..xS.Sx..O..x
 xU...Ux...xI...Ix
 xx%*%xx...xx%*%xx
 xxxxxxx@@@xxxxxxx
+ENDMAP
+
+NAME:    nicolae_elf_variegated_diamond
+TAGS:    decor transparent
+DEPTH:   Elf
+KFEAT:   q = closed_clear_door
+SHUFFLE: +cb/+cv/+cn/+cx/+bc/+bv/+bx/+bn/+vc/+vb/+vx/+vn/+xc/+xb/+xv/+xn/\
+         qnc/qnb/qnv/qnx
+MAP
+.......b.......
+.cb...bcb...cb.
+.bc..bcbcb..bc.
+....bcb.bcb....
+...b+b...b+b...
+..bcb.....bcb..
+.bcb...c...bcb.
+bcb...cbc...bcb
+.bcb...c...bcb.
+..bcb.....bcb..
+...b+b...b+b...
+....bcb.bcb....
+.cb..bcbcb..cb.
+.bc...bcb...bc.
+.......b.......
 ENDMAP
 
 NAME:  nicolae_elf_vaults_five_recruitment_drive
