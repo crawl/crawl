@@ -743,7 +743,7 @@ int get_gold_cost(ability_type ability)
     }
 }
 
-static string _nemelex_card_text(ability_type ability)
+string nemelex_card_text(ability_type ability)
 {
     int cards = deck_cards(ability_deck(ability));
 
@@ -847,7 +847,7 @@ const string make_cost_description(ability_type ability)
     {
         ret += ", ";
         ret += "A Card ";
-        ret += _nemelex_card_text(ability);
+        ret += nemelex_card_text(ability);
     }
 
     // If we haven't output anything so far, then the effect has no cost
@@ -3389,6 +3389,11 @@ bool is_religious_ability(ability_type abil)
     // ignores abandon religion / convert to beogh
     return abil >= ABIL_FIRST_RELIGIOUS_ABILITY
         && abil <= ABIL_LAST_RELIGIOUS_ABILITY;
+}
+
+bool is_card_ability(ability_type abil)
+{
+    return testbits(get_ability_def(abil).flags, abflag::card);
 }
 
 bool player_has_ability(ability_type abil, bool include_unusable)
