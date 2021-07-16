@@ -1050,8 +1050,6 @@ bool mon_special_ability(monster* mons)
         if (target.origin() || !mons->move_to_pos(target))
             break;
 
-        env.grid(target) = DNGN_FLOOR;
-        set_terrain_changed(target);
         simple_monster_message(*mons, " flows through the trees.");
         used = true;
     }
