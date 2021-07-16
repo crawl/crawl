@@ -441,6 +441,11 @@ void line_reader::set_colour(COLOURS fg, COLOURS bg)
     bg_colour = bg;
 }
 
+string line_reader::get_prompt()
+{
+    return prompt;
+}
+
 void line_reader::set_prompt(string p)
 {
     prompt = p;

@@ -302,6 +302,7 @@ public:
     bool minus_is_pageup() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
+    void set_more(const string s);
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
@@ -348,6 +349,8 @@ public:
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
     void cycle_hover(bool reverse=false);
+
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
@@ -440,8 +443,6 @@ protected:
 
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
-
-    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
 
     virtual bool process_key(int keyin);
 

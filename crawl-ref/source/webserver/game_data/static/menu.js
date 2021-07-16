@@ -296,7 +296,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         else if (reverse)
             max_items = menu.last_hovered; // up arrow on no hover does nothing
         else
-            max_items = menu.items.length - starting_point;
+            max_items = menu.items.length - Math.max(starting_point, 0);
 
         if (start_at_starting_point && menu.items.length > 0)
             max_items = Math.max(max_items, 1); // consider at least the starting point
@@ -541,15 +541,22 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         title.css("padding-left", menu_title_indent()+"px");
     }
 
-    function pattern_select()
+    function title_prompt(data)
     {
+        var prompt;
+        if (!data || !data.prompt)
+            prompt = "Select what? (regex) ";
+        else
+            prompt = data.prompt;
         var title = menu.elem.find(".menu_title")
-        title.html("Select what? (regex) ");
-        var input = $("<input class='text pattern_select' type='text'>");
+        title.html(prompt);
+        var input = $("<input id='title_prompt' class='text title_prompt' type='text'>");
         title.append(input);
 
+        // unclear to me exactly why a timeout is needed but it seems to be
         if (!client.is_watching || !client.is_watching())
-            input.focus();
+            setTimeout(function () { input.focus(); }, 50);
+
 
         var restore = function () {
             if (!client.is_watching || !client.is_watching())
@@ -557,18 +564,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             update_title();
         };
 
-        input.keydown(function (ev) {
-            if (ev.which == 27)
+        // escape handling: ESC is intercepted in ui.js and triggers blur(), so
+        // can't be handled directly here
+        input.focusout(function (ev)
             {
-                restore(); // ESC
                 ev.preventDefault();
+                comm.send_message("key", { keycode: 27 }); // Send ESC
                 return false;
-            }
-            else if (ev.which == 13)
+            })
+
+        input.keydown(function (ev) {
+            if (ev.which == 13)
             {
-                var ctrlf = String.fromCharCode(6);
+                // somewhat hacky / oldschool: just send the text + enter.
+                // TODO: sync via explicit json
+                // first, remove the focusout handler, since this will defocus
+                input.off("focusout");
                 var enter = String.fromCharCode(13);
-                var text = ctrlf + input.val() + enter;
+                var text = input.val() + enter;
                 comm.send_message("input", { text: text });
 
                 restore();
@@ -656,6 +669,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         "update_menu": update_menu,
         "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
+        "title_prompt": title_prompt,
     });
 
     // Event handlers
@@ -711,15 +725,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         if (event.ctrlKey)
         {
-            if (String.fromCharCode(event.which) == "F")
-            {
-                if ((menu.flags & enums.menu_flag.ALLOW_FILTER))
-                {
-                    pattern_select();
-                }
-                event.preventDefault();
-                return false;
-            }
+            // XX why is this needed?
             if (update_server_scroll_timeout)
                 update_server_scroll();
             return;

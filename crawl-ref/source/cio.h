@@ -300,6 +300,7 @@ public:
     void set_colour(COLOURS fg, COLOURS bg);
     void set_location(coord_def loc);
 
+    string get_prompt();
     void set_prompt(string p);
 
     void insert_char_at_cursor(int ch);
