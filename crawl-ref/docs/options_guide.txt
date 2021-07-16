@@ -2778,9 +2778,10 @@ best_effort_brighten_foreground = true
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
 
-allow_extended_colours = false
+allow_extended_colours = true
         Allow an *attempt* to use more than the eight basic terminal colours
-        for crawl's bright colours.
+        for crawl's bright colours. Most modern terminals should use this
+        setting.
 
         If this option is enabled and there are enough colours available in
         the terminal, use the terminal's extended colour palette directly for
