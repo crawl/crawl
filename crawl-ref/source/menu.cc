@@ -1282,7 +1282,7 @@ bool Menu::process_key(int keyin)
             char linebuf[80] = "";
 
             const bool validline = title_prompt(linebuf, sizeof linebuf,
-                                                "Select what? (regex) ");
+                                                "Select what (regex)?");
 
             return (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
         }
