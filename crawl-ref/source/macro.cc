@@ -972,6 +972,8 @@ public:
         set_title(new MenuEntry("", MEL_TITLE));
         on_single_selection = [this](const MenuEntry& item)
         {
+            status_msg = "";
+            update_macro_more();
             if (item.data)
                 edit_mapping(*static_cast<keyseq *>(item.data));
             else if (item.hotkeys.size() && item.hotkeys[0] == '~')
@@ -1214,10 +1216,10 @@ public:
 
             add_entry(new MenuEntry("redefine", MEL_ITEM, 1, 'r'));
             add_entry(new MenuEntry("redefine with raw key entry", MEL_ITEM, 1, 'R'));
-            add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
-
             if (!action.empty())
                 add_entry(new MenuEntry("clear", MEL_ITEM, 1, 'c'));
+            add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
+            add_entry(new MenuEntry("save", MEL_ITEM, 1, ESCAPE));
 
             on_single_selection = [this](const MenuEntry& item)
             {
@@ -1235,6 +1237,8 @@ public:
                     action.clear();
                 else if (item.hotkeys[0] == 'a')
                     abort = true;
+                else if (item.hotkeys[0] == ESCAPE)
+                    return process_key(ESCAPE);
                 return false;
             };
             if (last_hovered == -1)
@@ -1252,7 +1256,7 @@ public:
                         _keyseq_desc(key).c_str());
             set_title(new MenuEntry(prompt, MEL_TITLE));
             set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
-            update_menu();
+            update_menu(true);
             doing_raw_action_input = true;
         }
 
@@ -1269,7 +1273,7 @@ public:
             if (!title_prompt(buff, sizeof(buff), edit_prompt.c_str()))
             {
                 set_more("");
-                return true;
+                return false;
             }
 
             keyseq new_action = parse_keyseq(buff);
@@ -1281,8 +1285,9 @@ public:
                 return true;
             }
             action = new_action;
-            parent.fill_entries(key[0]);
-            return false;
+            reset_key_prompt();
+            update_menu(true);
+            return true;
         }
 
         bool process_key(int keyin)
@@ -1310,7 +1315,9 @@ public:
                     doing_raw_action_input = false;
                     if (raw_tmp.size() && raw_tmp[0] != 0)
                         action = raw_tmp;
-                    return false;
+                    set_more("");
+                    reset_key_prompt();
+                    return true;
                 }
                 raw_tmp.push_back(keyin);
                 set_title(new MenuEntry(prompt + vtostr(raw_tmp)));
@@ -1355,10 +1362,16 @@ public:
                     prompt = make_stringf("%s %s", prompt.c_str(),
                                                     _keyseq_desc(key).c_str());
                     if (!edit_action())
+                    {
+                        abort = true;
                         return false;
+                    }
                 }
+                // TODO: this drops to the mapping edit menu at this point. It
+                // would be faster to go back to the main macro menu, but this
+                // allows the player to cancel. Which is better?
                 initialize_with_key();
-                update_menu();
+                update_menu(true);
                 return true;
             }
 
@@ -1386,7 +1399,8 @@ public:
             get_map().count(key) ? get_map()[key] : keyseq(), *this);
         if (pop.input_mapping())
         {
-            if (pop.action.size())
+            if (pop.action.size()
+                && (!get_map().count(pop.key) || get_map()[pop.key] != pop.action))
             {
                 macro_add(get_map(), pop.key, pop.action);
                 status_msg = make_stringf("Created %s '%s' => '%s'.",
@@ -1395,7 +1409,7 @@ public:
                     _keyseq_action_desc(pop.key, get_map()).c_str());
                 crawl_state.unsaved_macros = true;
             }
-            else
+            else if (!pop.action.size())
                 clear_mapping(pop.key);
             if (pop.key.size())
                 fill_entries(pop.key[0]);
