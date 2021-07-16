@@ -607,3 +607,54 @@ For example:
 * <w>orc perm_ench:blind perm_ench:mad</w>
 * <w>dream sheep ench:sticky_flame</w>
 * <w>stone giant dur:1 ench:berserk</w>
+
+%%%%
+macro-menu
+
+<h>Editing macros and keymaps</h>
+
+To edit a current macro/keymap, select from the menu using the arrow keys or
+by hotkey. (Hotkeys that are used to navigate the menu can be selected by
+arrow keys). To create a new mapping by entering a key, use the [<w>~</w>] key
+or the corresponding menu item, and then enter the key. This allows you to
+create (and edit) mappings that use menu keys. Use the [<w>!</w>] key to switch
+to keymap editing mode (see below for more information on keymaps).
+
+<w>Macros</w> allow remapping keys that are sent to the game when inputting
+commands. This can be used to redefine a command key, or to define an unused
+key. They map a key to a sequence of keystrokes, and keystrokes do carry over
+into submenus.
+
+Example 1: mapping <w>e</w> to <w>p</w> would let the `e` key trigger the same
+command as the `p` key (which on the default settings is autofire).
+
+Example 2: mapping <w>1</w> to the sequence <w>zaf</w> would let the `1` key
+cast a spell that is on the letter `a` with default targeting.
+
+Example 3: mapping <w>F1</w> to <w>Q&a</w> would let the F1 key quiver the spell
+that is on letter `a`.
+
+<w>Keymaps</w> are lower-level key substitutions that replace keys entirely with
+a sequence of keystrokes. They are recommended for changing keys uniformly to
+deal with alternative keyboard layouts. Keymaps are contextual, and the
+default/"regular" context is used anywhere that a non-specialized context is not
+active. Macros take the result of keymaps as input.
+
+Example: In some European keyboard layouts, the § symbol replaces ~. Therefore,
+it could be useful to keymap § to ~ in both the regular and menu keymap contexts
+so that the main menu and macro menu become a bit easier to access. (In other
+layouts, this applies instead to ½.)
+
+When used for mapping commands, keymaps can have unexpected side effects: e.g.
+mapping <w>1</w> to <w>zaf</w> via keymap is not recommended, because this will
+make it hard to type `1` when entering a skill target.
+
+<w>Keycodes</w>: Both macros and keymaps accept keycodes when describing the
+action, in the form of <w>\{n}</w> to enter keycode <w>n</w>. (Use <w>\\</w> to
+enter a backslash.) For example, use <w>\{9}</w> to enter the keycode for the
+<w>tab</w> button. You can bind macros and keymaps by keycode by using <w>~~</w>
+at the macro edit menu.
+
+<w>Saving</w>: Bindings edited at this menu are saved in a .macro file in your
+save directory. They will be overridden by settings in your options file. See
+the `macro` command in options_guide.txt for more information.
