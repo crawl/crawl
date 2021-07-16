@@ -828,6 +828,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REPLAY_MESSAGES:
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
+    case CMD_MACRO_MENU:
     case CMD_SAVE_GAME:
     case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
@@ -1880,7 +1881,7 @@ public:
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
 #endif
         add_entry(new CmdMenuEntry("Edit macros",
-            MEL_ITEM, '~', CMD_MACRO_ADD));
+            MEL_ITEM, '~', CMD_MACRO_MENU));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
@@ -1986,7 +1987,8 @@ void process_command(command_type cmd, command_type prev_cmd)
     // Repeat commands.
     case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
     case CMD_PREV_CMD_AGAIN: _do_prev_cmd_again(); break;
-    case CMD_MACRO_ADD:      macro_add_query();    break;
+    case CMD_MACRO_ADD:      macro_quick_add();    break;
+    case CMD_MACRO_MENU:     macro_menu();    break;
 
     // Toggle commands.
     case CMD_DISABLE_MORE: crawl_state.show_more_prompt = false; break;

@@ -48,7 +48,8 @@ int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 
-void macro_add_query();
+void macro_quick_add();
+void macro_menu();
 void macro_init();
 void macro_save();
 

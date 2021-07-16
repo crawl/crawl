@@ -1488,7 +1488,18 @@ protected:
     bool edited_keymaps;
 };
 
-void macro_add_query()
+void macro_quick_add()
+{
+    MacroEditMenu menu;
+    keyseq empty;
+    menu.edit_mapping(empty);
+    if (menu.status_msg.size())
+        mpr(menu.status_msg);
+    else
+        canned_msg(MSG_OK);
+}
+
+void macro_menu()
 {
     MacroEditMenu menu;
     menu.fill_entries();
