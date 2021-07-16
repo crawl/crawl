@@ -803,7 +803,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
     _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
-    _add_command(cols, 0, CMD_MACRO_ADD, "add macro");
+    _add_command(cols, 0, CMD_MACRO_ADD, "quick add macro");
+    _add_command(cols, 0, CMD_MACRO_MENU, "edit macros");
     _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
     _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
     _add_insert_commands(cols, 0, 2, CMD_MAKE_NOTE,

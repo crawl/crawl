@@ -3300,6 +3300,7 @@ tileidx_t tileidx_command(const command_type cmd)
     case CMD_DISPLAY_MUTATIONS:
         return TILEG_CMD_DISPLAY_MUTATIONS;
     case CMD_MACRO_ADD: // this tile is a fairly generic + despite the name
+    case CMD_MACRO_MENU:
     case CMD_DISPLAY_SKILLS:
         return TILEG_CMD_DISPLAY_SKILLS;
     case CMD_SHOW_CHARACTER_DUMP:
