@@ -1113,6 +1113,34 @@ static void _ensure_entry(branch_type br)
     die("no upstairs on %s???", level_id::current().describe().c_str());
 }
 
+static void _ensure_exit(branch_type br)
+{
+    dungeon_feature_type exit = branches[br].exit_stairs;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (orig_terrain(*ri) == exit)
+            return;
+
+    // Find primary downstairs.
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (orig_terrain(*ri) == DNGN_STONE_STAIRS_DOWN_I)
+        {
+            for (distance_iterator di(*ri); di; ++di)
+                if (in_bounds(*di)
+                    && (env.grid(*di) == DNGN_FLOOR
+                        || env.grid(*di) == DNGN_SHALLOW_WATER))
+                {
+                    env.grid(*di) = exit; // No need to update LOS, etc.
+                    // Announce the repair even in non-debug builds.
+                    mprf(MSGCH_ERROR, "Placing missing branch exit: %s.",
+                         dungeon_feature_name(exit));
+                    return;
+                }
+            die("no floor to place a branch exit");
+        }
+    die("no downstairs on %s???", level_id::current().describe().c_str());
+}
+
 static void _add_missing_branches()
 {
     const level_id lc = level_id::current();
@@ -1298,6 +1326,15 @@ void tag_read(reader &inf, tag_type tag_id)
         EAT_CANARY;
 #if TAG_MAJOR_VERSION == 34
         _add_missing_branches();
+
+        // If an eleionoma destroyed the Swamp exit due to the bug fixed in
+        // 0d5cf04, put the branch exit on the closest floor or shallow water
+        // square we can find near the first down stairs.
+        if (you.where_are_you == BRANCH_SWAMP
+            && you.depth == 1)
+        {
+            _ensure_exit(BRANCH_SWAMP);
+        }
 #endif
         _shunt_monsters_out_of_walls();
         // The Abyss needs to visit other levels during level gen, before
