@@ -985,7 +985,7 @@ static bool _xoms_chessboard()
     }
 
     const int power =
-        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2);
+        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 10) / 2);
 
     mpr("You make a move on Xom's chessboard...");
 
