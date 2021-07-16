@@ -1170,6 +1170,20 @@ public:
             set_more(string(""));
             if (key.size() == 0)
                 initialize_needs_key();
+            else if (action.size() == 0)
+            {
+                reset_key_prompt();
+                on_show = [this]()
+                {
+                    bool result = edit_action();
+                    if (result)
+                    {
+                        initialize_with_key();
+                        update_menu(true);
+                    }
+                    return result;
+                };
+            }
             else
                 initialize_with_key();
         }
@@ -1273,7 +1287,8 @@ public:
             if (!title_prompt(buff, sizeof(buff), edit_prompt.c_str()))
             {
                 set_more("");
-                return false;
+                // line reader success code is 0
+                return lastch == 0;
             }
 
             keyseq new_action = parse_keyseq(buff);
@@ -1331,7 +1346,7 @@ public:
                     abort = true;
                     return false;
                 }
-                if (keyin == '~')
+                else if (keyin == '~')
                 {
                     char buff[10];
                     set_more("Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]");
