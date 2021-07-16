@@ -1858,7 +1858,13 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
     }
 
-    // TODO: historically this doesn't include staff school skills, should it?
+    if (item.base_type == OBJ_STAVES)
+    {
+        const skill_type staff_sk
+                    = staff_skill(static_cast<stave_type>(item.sub_type));
+        if (staff_sk != SK_NONE)
+            skills.insert(staff_sk);
+    }
 
     if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
         skills.insert(SK_NECROMANCY);
