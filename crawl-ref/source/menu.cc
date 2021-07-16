@@ -1027,13 +1027,12 @@ void Menu::do_menu()
         {
             int key = m_filter->putkey(ev.key());
 
-            // `key` is not passed on further, so the only way to find out
-            // about a cancelled line reader is via the empty string. See
-            // title_prompt. (XX better API?)
             if (key == CK_ESCAPE)
                 m_filter->set_text("");
+
             if (key != -1)
             {
+                lastch = key;
                 delete m_filter;
                 m_filter = nullptr;
             }
@@ -1066,6 +1065,8 @@ void Menu::do_menu()
 #endif
 
     alive = true;
+    if (on_show)
+        done = !on_show();
     while (alive && !done && !crawl_state.seen_hups)
     {
 #ifdef USE_TILE_WEB
