@@ -1795,6 +1795,29 @@ bool staff_uses_evocations(const item_def &item)
     return item.base_type == OBJ_STAVES;
 }
 
+skill_type staff_skill(stave_type s)
+{
+    switch (s)
+    {
+    case STAFF_AIR:
+        return SK_AIR_MAGIC;
+    case STAFF_COLD:
+        return SK_ICE_MAGIC;
+    case STAFF_EARTH:
+        return SK_EARTH_MAGIC;
+    case STAFF_FIRE:
+        return SK_FIRE_MAGIC;
+    case STAFF_POISON:
+        return SK_POISON_MAGIC;
+    case STAFF_DEATH:
+        return SK_NECROMANCY;
+    case STAFF_CONJURATION:
+        return SK_CONJURATIONS;
+    default:
+        return SK_NONE;
+    }
+}
+
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
@@ -1834,6 +1857,8 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     {
         skills.insert(SK_EVOCATIONS);
     }
+
+    // TODO: historically this doesn't include staff school skills, should it?
 
     if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_PAIN)
         skills.insert(SK_NECROMANCY);

@@ -2015,13 +2015,13 @@ bool melee_attack::apply_staff_damage()
     if (weapon->base_type != OBJ_STAVES)
         return false;
 
+    skill_type sk = staff_skill(static_cast<stave_type>(weapon->sub_type));
+
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_ELECTRICITY,
-                                 staff_damage(SK_AIR_MAGIC));
+            resist_adjust_damage(defender, BEAM_ELECTRICITY, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2038,9 +2038,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_COLD:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_COLD,
-                                 staff_damage(SK_ICE_MAGIC));
+            resist_adjust_damage(defender, BEAM_COLD, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2056,7 +2054,7 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_EARTH:
-        special_damage = staff_damage(SK_EARTH_MAGIC) * 4 / 3;
+        special_damage = staff_damage(sk) * 4 / 3;
         special_damage = apply_defender_ac(special_damage, 0, ac_type::triple);
 
         if (special_damage > 0)
@@ -2073,9 +2071,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_FIRE:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_FIRE,
-                                 staff_damage(SK_FIRE_MAGIC));
+            resist_adjust_damage(defender, BEAM_FIRE, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2095,9 +2091,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_POISON:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_POISON,
-                                 staff_damage(SK_POISON_MAGIC));
+            resist_adjust_damage(defender, BEAM_POISON, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2114,9 +2108,7 @@ bool melee_attack::apply_staff_damage()
 
     case STAFF_DEATH:
         special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_NEG,
-                                 staff_damage(SK_NECROMANCY));
+            resist_adjust_damage(defender, BEAM_NEG, staff_damage(sk));
 
         if (special_damage)
         {
@@ -2132,7 +2124,7 @@ bool melee_attack::apply_staff_damage()
         break;
 
     case STAFF_CONJURATION:
-        special_damage = staff_damage(SK_CONJURATIONS);
+        special_damage = staff_damage(sk);
         special_damage = apply_defender_ac(special_damage);
 
         if (special_damage > 0)

@@ -1194,6 +1194,15 @@ static void _append_weapon_stats(string &description, const item_def &item)
                                     ammo_type_damage(MI_SLING_BULLET));
     }
 
+    if (item.base_type == OBJ_STAVES
+        && is_useless_skill(staff_skill(static_cast<stave_type>(item.sub_type))))
+    {
+        description += make_stringf(
+            "\nYour inability to study %s prevents you from drawing on the"
+            " full power of this staff.\n",
+            skill_name(staff_skill(static_cast<stave_type>(item.sub_type))));
+    }
+
     description += make_stringf(
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
     "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
