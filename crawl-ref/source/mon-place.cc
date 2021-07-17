@@ -1277,19 +1277,28 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         else
             give_item(mon, place.absdepth(), summoned);
 
+
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
-        const item_def* wpn = mon->mslot_item(MSLOT_WEAPON);
+        item_def* wpn = mon->mslot_item(MSLOT_WEAPON);
         if (!wpn)
         {
-            mon->destroy_inventory();
-            env.mid_cache.erase(mon->mid);
-            mon->reset();
-            env.mgrid(fpos) = NON_MONSTER;
-            return 0;
+            // If they got created with an alt weapon, swap it in.
+            item_def* alt_wpn = mon->mslot_item(MSLOT_ALT_WEAPON);
+            if (alt_wpn != nullptr)
+            {
+                swap(mon->inv[MSLOT_WEAPON], mon->inv[MSLOT_ALT_WEAPON]);
+                wpn = alt_wpn;
+            } else {
+                mon->destroy_inventory();
+                env.mid_cache.erase(mon->mid);
+                mon->reset();
+                env.mgrid(fpos) = NON_MONSTER;
+                return 0;
+            }
         }
-        else
-            mon->colour = wpn->get_colour();
+
+        mon->colour = wpn->get_colour();
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
