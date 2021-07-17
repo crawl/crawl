@@ -4354,7 +4354,7 @@ void setup_breath_timeout(monster* mons)
     if (mons->has_ench(ENCH_BREATH_WEAPON))
         return;
 
-    int timeout = roll_dice(1, 5);
+    const int timeout = roll_dice(1, 5);
 
     dprf("breath timeout: %d", timeout);
 

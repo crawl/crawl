@@ -1998,6 +1998,11 @@ void handle_monster_move(monster* mons)
     }
 }
 
+void monster::catch_breath()
+{
+    decay_enchantment(ENCH_BREATH_WEAPON);
+}
+
 /**
  * Let trapped monsters struggle against nets, webs, etc.
  */
@@ -2172,6 +2177,9 @@ static void _post_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_HELD))
         mons->struggle_against_net();
+
+    if (mons->has_ench(ENCH_BREATH_WEAPON))
+        mons->catch_breath();
 
     if (mons->type == MONS_ANCIENT_ZYME)
         _ancient_zyme_sicken(mons);
