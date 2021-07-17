@@ -1424,8 +1424,9 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "affected.";
             break;
         case SPWPN_SPECTRAL:
-            description += "When it strikes, its spirit leaps out and fights "
-                "alongside the wielder.";
+            description += "When its wielder attacks, the weapon's spirit "
+                "leaps out and strikes again. The spirit shares a part of "
+                "any damage it takes with its wielder.";
             break;
         case SPWPN_ACID:
              if (is_range_weapon(item))
