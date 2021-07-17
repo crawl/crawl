@@ -9309,10 +9309,7 @@ ENDMAP
 NAME:    gammafunk_its_a_trap
 TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
 # Allow placement in the Vaults branch as a room.
-TAGS:    vaults_hard preserve_wall
-: if you.in_branch("Vaults") then
-TAGS:    passable
-: end
+TAGS:    vaults_hard passable
 DEPTH:   Crypt, D:14-, Depths, Elf, Snake, Pan, Vaults, Zot
 ORIENT:  float
 KMASK:   -+QR^01289de$*| = opaque
@@ -9322,13 +9319,12 @@ KFEAT:   ^ = zot trap
 SHUFFLE: FH / JK
 NSUBST:  D = ^ / -, E = ^ / -, H = - / "
 SUBST:   F = -, JK = ", ' = ^-, " = ^^-, d = dd$
-# Supplement the 8s in Crypt and Zot since OOD defs in these branches aren't
-# very deep.
+# Supplement the 8s in Crypt, Zot, and Pan since OOD defs in these branches
+# aren't very deep or are undefined.
 : if you.in_branch("Crypt") then
 KMONS:   1 = ancient lich / dread lich
 NSUBST:  8 = 1 / 8
 : elseif you.in_branch("Pandemonium") then
-# 8 and 9 spawns aren't a thing in Pan, so replace these with scary things.
 KMONS:   1 = greater demon / nonbase demonspawn
 KMONS:   2 = executioner / brimstone fiend / ice fiend / tzitzimitl \
            / hell sentinel
@@ -9337,41 +9333,45 @@ SUBST:   8 = 29, 9 = 01
 KMONS:   1 = ancient lich w:5 / dread lich w:5 / orb of fire / curse toe
 SUBST:   8 = 18
 : end
+# In Vaults we let the layout dictate wall type and need a border of floor.
+# In other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   c = x
+: else
+CLEAR:   `
+: end
 MARKER:  P = lua:transp_loc("its_a_trap_entry")
 MARKER:  Q = lua:transp_dest_loc("its_a_trap_entry")
 MARKER:  R = lua:transp_loc("its_a_trap_exit")
 MARKER:  S = lua:transp_dest_loc("its_a_trap_exit")
 MAP
-     ............
-    ..cccccccccc..
-   ..cccccccccccc...
- ...ccccccccccccccc.......
- .ccccccccDcc^ccccccccccc.
- .ccccccc-D----cccccccccc.
- .cccccc"-c-ccc--cccccccc.
- .ccc-''-"c"H-0'"-ce^dccc.
- .ccc''-c"FFc-9'"-c'*'nnn.
+     ````````````
+    ``cccccccccc``
+   ``cccccccccccc```
+ ```ccccccccccccccc```````
+ `ccccccccDcc^ccccccccccc`
+ `ccccccc-D----cccccccccc`
+ `cccccc"-c-ccc--cccccccc`
+ `ccc-''-"c"H-0'"-ce^dccc`
+ `ccc''-c"FFc-9'"-c'*'nnn`
 ..nnn^--cFc"H-0'"^+|^dnnn..
 @PnnnQ-^-"""c-8'""c'*RnnnS@
 ..nnn^--cJc"K-0'"^+|^dnnn..
- .ccc''-c"JJc-9'"-c'*'nnn.
- .ccc-''-"c"K-0'"-c|^eccc.
- .cccccc"-c-ccc--cccccccc.
- .ccccccc-E----cccccccccc.
- .ccccccccEcc^ccccccccccc.
- ...ccccccccccccccc.......
-   ..cccccccccccc...
-    ..cccccccccc..
-     ............
+ `ccc''-c"JJc-9'"-c'*'nnn`
+ `ccc-''-"c"K-0'"-c|^eccc`
+ `cccccc"-c-ccc--cccccccc`
+ `ccccccc-E----cccccccccc`
+ `ccccccccEcc^ccccccccccc`
+ ```ccccccccccccccc```````
+   ``cccccccccccc```
+    ``cccccccccc``
+     ````````````
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
 TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
 # Allow placement in the Vaults branch as a room.
-TAGS:   vaults_hard preserve_wall
-: if you.in_branch("Vaults") then
-TAGS:   passable
-: end
+TAGS:   vaults_hard passable
 # This must not place on a branch end so it can place a downhatch.
 DEPTH:  Crypt, !Crypt:$, D:13-, !D:$, Depths, !Depths:$, Pan, Vaults, !Vaults:$
 DEPTH:  Zot, !Zot:$
@@ -9413,43 +9413,50 @@ SUBST:  8 = 28
 COLOUR: p = yellow
 TILE:   p = dngn_transparent_stone_yellow
 : end
+# In Vaults we let the layout dictate wall type and need a border of floor.
+# In other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   c = x
+: else
+CLEAR:   `
+: end
 MARKER: P = lua:transp_loc("dig_for_victory_entry")
 MARKER: Q = lua:transp_dest_loc("dig_for_victory_entry")
 MARKER: R = lua:transp_loc("dig_for_victory_exit")
 MARKER: S = lua:transp_dest_loc("dig_for_victory_exit")
 MAP
-      ..................
-      .cccccccccccccccc.
-      .cccccccccccccccc.
-      .cccccccccccccccc..
- ......ccp1mmDDDEEmmmcc......
- .ccccccppppmDDDEmmmmccccccc.
- .c-----mmmmmmmmmmmmmnfm*mfc.
- .c-----mmmmmmmmmmmmmmmmmmmn.
- .c-----mmmmmmmmmmmmmn*memen.
+      ``````````````````
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      `cccccccccccccccc``
+ ``````ccp1mmDDDEEmmmcc``````
+ `ccccccppppmDDDEmmmmccccccc`
+ `c-----mmmmmmmmmmmmmnfm*mfc`
+ `c-----mmmmmmmmmmmmmmmmmmmn`
+ `c-----mmmmmmmmmmmmmn*memen`
 ..n-----mmmmmmmmmmJJmmmmmmmn..
 @PnQ-d---------mmmHJmn|mRm|nS@
 ..n-----mmmmmmmmmmJJmmmmmmmn..
- .c-----mmmmmmmmmmmmmn*memen.
- .c-----mmmmmmmmmmmmmmmmmmmn.
- .c-----mmmmmmmmmmmmmnfm*mfc.
- .ccccccppppmFFFEmmmmccccccc.
- ......ccp1mmFFFEEmmmcc......
-      .cccccccccccccccc.
-      .cccccccccccccccc.
-      .cccccccccccccccc.
-      ..................
+ `c-----mmmmmmmmmmmmmn*memen`
+ `c-----mmmmmmmmmmmmmmmmmmmn`
+ `c-----mmmmmmmmmmmmmnfm*mfc`
+ `ccccccppppmFFFEmmmmccccccc`
+ ``````ccp1mmFFFEEmmmcc``````
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      `cccccccccccccccc`
+      ``````````````````
 ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
-TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
 # Allow placement in the Vaults branch as a room.
-TAGS:    vaults_hard preserve_wall passable
+TAGS:    vaults_hard passable
 DEPTH:   D:13-, Orc, Depths, Vaults
 ORIENT:  float
-KMASK:   ap+-_$*defgEDQ123456 = opaque
+KMASK:   ap+-_Y$*defgDEQ1234567 = opaque
 KMASK:   = = opaque
-KPROP:   -_$*defgEDQ1234567 = bloody w:5 / nothing
+KPROP:   -_$*defgDEQ123456 = bloody w:5 / nothing
 KITEM:   _ = necklace of bloodlust no_pickup / wrath of trog no_pickup
 ITEM:    manual of armour w:30 / manual of fighting w:30 / \
          manual of long blades / manual of axes / manual of maces & flails / \
@@ -9509,35 +9516,42 @@ FTILE:   E = floor_rough_lightred
 MARKER:  E = lua:fog_machine { \
                cloud_type = "flame", pow_min = 10, pow_max = 10, delay = 10, \
                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+# In Vaults we let the layout set the wall type and need a border of floor.  In
+# other branches, we remove the border squares.
+: if you.in_branch("Vaults") then
+SUBST:   v = x
+: else
+CLEAR:   `
+: end
 MARKER:  P = lua:transp_loc("trogsanc_entry")
 MARKER:  Q = lua:transp_dest_loc("trogsanc_entry")
 MARKER:  6 = lua:transp_loc("trogsanc_exit")
 MARKER:  R = lua:transp_dest_loc("trogsanc_exit")
 MAP
-............@............
-.vvvvvvvv.......vvvvvvvv.
-.vvvvvvvv.......vvvvvvvv.
-.vvvvvvvv.......vvvvvvvv.
-.vvvvvvvvnv.P.vnvvvvvvvv.
-.vvvvvvvv4vnnnv4vvvvvvvv.
-.vvvvvvvvavnnnvavvvvvvvv.
-.vvvvvvv--+-Q-+--vvvvvvv.
-.vvvvvv---+-D-+---vvvvvv.
-.vvvvv----v-g-v----vvvvv.
-.vvvEa--vavnvnvav--aEvvv.
-.vvvvv--a4vv6vv4a--vvvvv.
-.vvv4p22vavn=nvav22p4vvv.
-.vvv3v---$$e_f$$---v3vvv.
-.vvv3p----$*d*$----p3vvv.
-.vvv3v--Y--***--Y--v3vvv.
-.vvv5p------1------p5vvv.
-.vvvvv22---------22vvvvv.
-.vvvvvavavvnnnvvavavvvvv.
-.vvvvv4vEvvnnnvvEv4vvvvv.
-.vvvvvvvvv..R..vvvvvvvvv.
-.vvvvvvv4n.....n4vvvvvvv.
-.vvvvvvvvv.....vvvvvvvvv.
-............@............
+`````````...@...`````````
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvv.......vvvvvvvv`
+`vvvvvvvvnv.P.vnvvvvvvvv`
+`vvvvvvvv4vnnnv4vvvvvvvv`
+`vvvvvvvvavnnnvavvvvvvvv`
+`vvvvvvv--+-Q-+--vvvvvvv`
+`vvvvvv---+-D-+---vvvvvv`
+`vvvvv----v-g-v----vvvvv`
+`vvvEa--vavnvnvav--aEvvv`
+`vvvvv--a4vv6vv4a--vvvvv`
+`vvv4p22vavn=nvav22p4vvv`
+`vvv3v---$$e_f$$---v3vvv`
+`vvv3p----$*d*$----p3vvv`
+`vvv3v--Y--***--Y--v3vvv`
+`vvv5p------1------p5vvv`
+`vvvvv22---------22vvvvv`
+`vvvvvavavvnnnvvavavvvvv`
+`vvvvv4vEvvnnnvvEv4vvvvv`
+`vvvvvvvvv..R..vvvvvvvvv`
+`vvvvvvv4n.....n4vvvvvvv`
+`vvvvvvvvv.....vvvvvvvvv`
+``````````..@..``````````
 ENDMAP
 
 NAME:    nzn_random_ring
