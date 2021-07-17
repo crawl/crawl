@@ -451,10 +451,15 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              will cause a veto of the level (but see the "opaque" KMASK below).
           * "passable": Rather than "transparent", which causes terrain checks
              to be performed, this indicates that the entire vault should be
-             considered passable. This is primarily of use in rooms for Vaults
-             branch where normal opaqueness would invalid the layout, but the
-             room might contain internal geometry that we wish to ignore due
-             to features the map controls, such as transporters.
+             considered passable. This tag does not have an effect except in
+             the Vaults branch, and is used for rooms in Vaults where normal
+             opacity would invalid the layout, but the room might contain
+             internal geometry that we wish to ignore due to features the map
+             controls, such as transporters. When using this tag, please
+             ensure that your vault contains a path (for example, surround the
+             outside with floor); otherwise, the builder will be able to create
+             disconnected zones. In most circumstances, outside of transporter
+             vaults, this tag should not be used.
 
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
