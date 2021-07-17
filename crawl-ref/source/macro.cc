@@ -1175,13 +1175,11 @@ public:
                 reset_key_prompt();
                 on_show = [this]()
                 {
-                    bool result = edit_action();
-                    if (result)
-                    {
-                        initialize_with_key();
-                        update_menu(true);
-                    }
-                    return result;
+                    if (edit_action())
+                        return false;
+                    initialize_with_key();
+                    update_menu(true);
+                    return true;
                 };
             }
             else
@@ -1233,7 +1231,6 @@ public:
             if (!action.empty())
                 add_entry(new MenuEntry("clear", MEL_ITEM, 1, 'c'));
             add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
-            add_entry(new MenuEntry("save", MEL_ITEM, 1, ESCAPE));
 
             on_single_selection = [this](const MenuEntry& item)
             {
@@ -1241,7 +1238,7 @@ public:
                 if (!item.hotkeys.size())
                     return true;
                 if (item.hotkeys[0] == 'r')
-                    return edit_action();
+                    return !edit_action();
                 else if (item.hotkeys[0] == 'R')
                 {
                     edit_action_raw();
@@ -1251,8 +1248,6 @@ public:
                     action.clear();
                 else if (item.hotkeys[0] == 'a')
                     abort = true;
-                else if (item.hotkeys[0] == ESCAPE)
-                    return process_key(ESCAPE);
                 return false;
             };
             if (last_hovered == -1)
@@ -1275,6 +1270,7 @@ public:
         }
 
         /// edit an action, using title_prompt for text entry
+        /// @return true if an action was fully set
         bool edit_action()
         {
             char buff[1024];
@@ -1283,9 +1279,12 @@ public:
                         parent.mode_name().c_str(),
                         _keyseq_desc(key).c_str());
 
-            set_more("Key input: regular editing keys. Use <w>\\{n}</w> to enter keycode <w>n</w>.");
+            int old_last_hovered = last_hovered;
+            set_hovered(-1);
+            set_more("Input a key sequence. Use <w>\\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu");
             if (!title_prompt(buff, sizeof(buff), edit_prompt.c_str()))
             {
+                set_hovered(old_last_hovered);
                 set_more("");
                 // line reader success code is 0
                 return lastch == 0;
@@ -1299,6 +1298,7 @@ public:
                 set_more(make_stringf("Parsing error in key sequence '%s'", buff));
                 return true;
             }
+            set_hovered(old_last_hovered);
             action = new_action;
             reset_key_prompt();
             update_menu(true);
@@ -1376,11 +1376,8 @@ public:
                 {
                     prompt = make_stringf("%s %s", prompt.c_str(),
                                                     _keyseq_desc(key).c_str());
-                    if (!edit_action())
-                    {
-                        abort = true;
+                    if (edit_action())
                         return false;
-                    }
                 }
                 // TODO: this drops to the mapping edit menu at this point. It
                 // would be faster to go back to the main macro menu, but this
@@ -1410,15 +1407,18 @@ public:
 
     bool edit_mapping(keyseq key)
     {
+        const bool existed = get_map().count(key);
+
         MappingEditMenu pop = MappingEditMenu(key,
-            get_map().count(key) ? get_map()[key] : keyseq(), *this);
+            existed ? get_map()[key] : keyseq(), *this);
         if (pop.input_mapping())
         {
             if (pop.action.size()
                 && (!get_map().count(pop.key) || get_map()[pop.key] != pop.action))
             {
                 macro_add(get_map(), pop.key, pop.action);
-                status_msg = make_stringf("Created %s '%s' => '%s'.",
+                status_msg = make_stringf("%s %s '%s' => '%s'.",
+                    existed ? "Redefined" : "Created",
                     mode_name().c_str(),
                     _keyseq_desc(pop.key).c_str(),
                     _keyseq_action_desc(pop.key, get_map()).c_str());
