@@ -278,6 +278,9 @@ static void _lose_turn(monster* mons, bool has_gone)
 // initial_slime is the one that gets killed off by this process.
 static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
+    const string old_name = merge_to->name(DESC_A);
+    const bool merge_to_was_visible = you.can_see(*merge_to);
+
     // Combine enchantment durations.
     merge_ench_durations(*initial_slime, *merge_to);
 
@@ -305,24 +308,36 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     behaviour_event(merge_to, ME_EVAL);
 
-    // Messaging.
-    if (you.can_see(*merge_to))
+    // Messaging cases:
+    // 1. MT & I were both visible & still are
+    // 2. MT was visible, I wasn't but now both are
+    // 3. MT was visible, I wasn't and now both aren't
+    // 4. MT wasn't visible, I was and now both are
+    // 5. MT and I weren't visible & still aren't
+    if (merge_to_was_visible)
     {
-        if (you.can_see(*initial_slime))
+        if (you.can_see(*merge_to))
         {
+            // cases 1 and 2
             mprf("Two slime creatures merge to form %s.",
                  merge_to->name(DESC_A).c_str());
         }
         else
         {
-            mprf("A slime creature suddenly becomes %s.",
-                 merge_to->name(DESC_A).c_str());
+            // case 3
+            mprf("Something merges into %s, and it vanishes!",
+                 old_name.c_str());
         }
 
         flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
     else if (you.can_see(*initial_slime))
-        mpr("A slime creature suddenly disappears!");
+    {
+        // case 4
+        mprf("%s merges with something you can't see.",
+             initial_slime->name(DESC_A).c_str());
+    }
+    // case 5 (no-op)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
