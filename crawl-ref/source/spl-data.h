@@ -937,7 +937,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     15, 0,
-    TILEG_ERROR,
+    TILEG_STORM_FORM,
 },
 
 {
