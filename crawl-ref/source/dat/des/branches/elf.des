@@ -2341,7 +2341,7 @@ ENDMAP
 ##############################################################################
 
 NAME:     elven_hall_of_blades_hangedman_original
-TAGS:     no_dump no_item_gen no_monster_gen
+TAGS:     no_item_gen no_monster_gen
 PLACE:    Elf:2
 ORIENT:   north
 : hall_of_blades_monsters(_G)
