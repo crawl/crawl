@@ -371,7 +371,7 @@ book of touch
 
 A book describing spells requiring very close proximity to their target. The
 author seems to have had a low opinion of their wizardly peers, and spends much
-of the text describing the hygeine and social etiquette needed to enter close
+of the text describing the hygiene and social etiquette needed to enter close
 proximity to other sentient beings.
 %%%%
 book of transfigurations
