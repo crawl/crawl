@@ -974,7 +974,7 @@ ENDMAP
 
 NAME:    nicolae_elf_stone_circles
 DEPTH:   Elf
-TAGS:    transparent extra decor allow_dup luniq
+TAGS:    transparent extra allow_dup luniq
 SHUFFLE: za, bd
 SUBST:   a = A, b = B, zd = c
 SHUFFLE: AB, DEFG
@@ -1069,7 +1069,7 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_1
-TAGS:    transparent decor extra allow_dup
+TAGS:    transparent extra allow_dup
 DEPTH:   Elf
 SHUFFLE: abcdf
 SUBST:   a : .
@@ -1088,7 +1088,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_2
-TAGS:    transparent decor extra allow_dup luniq
+TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
 SHUFFLE: mlk/mkl/nnn, abcdefghij
 SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
@@ -1112,7 +1112,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_elf_big_sculpture_3
-TAGS:    transparent extra decor allow_dup luniq
+TAGS:    transparent extra allow_dup luniq
 DEPTH:   Elf
 : if crawl.coinflip() then
 SHUFFLE: bcegh
@@ -1145,7 +1145,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_elf_power_crystal
-TAGS:    extra transparent decor
+TAGS:    extra transparent
 DEPTH:   Elf
 KMONS:   1 = crystal guardian
 SHUFFLE: @ABC, QRST, n1' / n1' / xxx
@@ -1182,7 +1182,7 @@ bAbbbbbbbb
 ENDMAP
 
 NAME:    hangedman_elven_ridges
-TAGS:    extra transparent decor
+TAGS:    extra transparent
 DEPTH:   Elf
 MONS:    fungus
 SHUFFLE: ABCD, EF, GHIJKLMN
@@ -1214,7 +1214,7 @@ cG..xJ..E.x.xxDxx
 ENDMAP
 
 NAME:    hangedman_elven_pyramids
-TAGS:    extra transparent decor
+TAGS:    extra transparent
 DEPTH:   Elf
 SHUFFLE: ABCD, +-_, yz / yz / zy
 SUBST:   A : ZZ., B : Z., C : Z.., D = .
@@ -1245,7 +1245,7 @@ xxxx+xxxx-x_xx-xxxx+xxxx
 ENDMAP
 
 NAME:    hangedman_elf_targetted_burst
-TAGS:    transparent extra decor
+TAGS:    transparent extra
 DEPTH:   Elf
 SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
 MAP
@@ -1266,7 +1266,7 @@ zx..
 ENDMAP
 
 NAME:    hangedman_elf_simple_split
-TAGS:    extra transparent decor
+TAGS:    extra transparent
 DEPTH:   Elf
 MONS:    fungus
 SHUFFLE: de, fg, hijk, CD
@@ -1507,7 +1507,7 @@ ccc..............ccc
 ENDMAP
 
 NAME:   nicolae_elf_crossing_hall
-TAGS:   decor transparent allow_dup
+TAGS:   transparent allow_dup
 DEPTH:  Elf
 : if crawl.coinflip() then
 KFEAT:  + = closed_clear_door
@@ -1697,7 +1697,7 @@ x.S'''E--x
 ENDMAP
 
 NAME:    nicolae_elf_glassroom_feature
-TAGS:    transparent decor
+TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   O = any shop
 SHUFFLE: x_/m-
@@ -1859,7 +1859,7 @@ xxxxxxx@@@xxxxxxx
 ENDMAP
 
 NAME:    nicolae_elf_variegated_diamond
-TAGS:    decor transparent
+TAGS:    transparent
 DEPTH:   Elf
 KFEAT:   q = closed_clear_door
 SHUFFLE: +cb/+cv/+cn/+cx/+bc/+bv/+bx/+bn/+vc/+vb/+vx/+vn/+xc/+xb/+xv/+xn/\
