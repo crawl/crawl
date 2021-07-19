@@ -1,21 +1,20 @@
-##############################################################################
-# elf.des: Special maps for the Elven Halls.
-# Content: arrival vaults for Elf:1
-#          (mini)vaults particular to the Elven Halls.
-#          Elf branch end vaults
+#############################################################################
+# elf.des: All maps and branch ending relating to the Elven Halls.
 #
 #  <<1>>   Arrival vaults
-#  <<2>>   Regular vaults
-#  <<3>>   Elf:2 Hall of Blades entry vaults
-#  <<4>>   Elf:2 Hall of Blades main vaults
-#  <<5>>   End vaults
+#  <<2>>   Decorative vaults
+#  <<3>>   Monster-placing vaults
+#  <<4>>   Elf:2 Hall of Blades entry vaults
+#  <<5>>   Elf:2 Hall of Blades main vaults
+#  <<6>>   End vaults
 #
 ##############################################################################
-
-#############################################################
-: crawl_require('dlua/vault.lua')
+##############################################################################
 
 {{
+
+crawl_require('dlua/vault.lua')
+
 function elven_blade_entry(e)
   e.tags("elf_blade_entry no_monster_gen unrand")
   e.mons("patrolling dancing weapon ; dagger good_item | mundane falchion w:6")
@@ -442,7 +441,404 @@ ENDMAP
 
 ##############################################################################
 #
-# <<2>> Regular vaults.
+# <<2>> Decorative vaults.
+#
+##############################################################################
+
+NAME:    nicolae_elf_glass_and_crystal_pillar_1
+DEPTH:   Elf
+TAGS:    transparent extra allow_dup
+SHUFFLE: ab, bc
+SUBST:   a = m, b : mb, c = b, _ : .._
+CLEAR:   _
+MAP
+________
+_......_
+_.abba._
+_.bccb._
+_.bccb._
+_.abba._
+_......_
+________
+ENDMAP
+
+NAME:    nicolae_elf_glass_and_crystal_pillar_2
+DEPTH:   Elf
+TAGS:    transparent extra allow_dup
+SHUFFLE: ab, bc
+SUBST:   a = m, b : mb, c = b, _ : .._
+CLEAR:   _
+MAP
+_______
+_....._
+_.aba._
+_.bcb._
+_.aba._
+_....._
+_______
+ENDMAP
+
+NAME:    nicolae_elf_stair_hall
+DEPTH:   Elf:2-
+TAGS:    extra
+SUBST:   v : vb
+SHUFFLE: {[(
+MAP
+    xxxxxxxxxxxxxxx
+  xxxcccccccccccccx
+ xxccc...........cx
+ xcc....vv..vv..ccx
+xxc....vv..vv..cccx
+xcc...vv..vv..ccccx
+xc...vv..vv.......@
+xc.{..............@
+xc...vv..vv.......@
+xcc...vv..vv..ccccx
+xxc....vv..vv..cccx
+ xcc....vv..vv..ccx
+ xxccc...........cx
+  xxxcccccccccccccx
+    xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_elf_stone_circles
+DEPTH:   Elf
+TAGS:    transparent extra allow_dup luniq
+SHUFFLE: za, bd
+SUBST:   a = A, b = B, zd = c
+SHUFFLE: AB, DEFG
+SUBST:   AD : +, BEFG = c, Z : GT. U:3, c : cx
+MAP
+      ccFcc
+    Ecc...ccG
+   cc.......cc
+  Dc.....cczacc
+ cc.....cc...ccc
+ cdbc..cc.....cc
+ccc.cccc.......cc
+cc...cc.........c
+A..Z..+....Z....B
+cc...cc.........c
+ccc.cccc.......cc
+ cdbc..cc.....cc
+ cc.....cc...ccc
+  Dc.....cczacc
+   cc.......cc
+    Ecc...ccG
+      ccFcc
+ENDMAP
+
+NAME:   nicolae_elf_v_pinch
+DEPTH:  Elf
+TAGS:   transparent extra allow_dup luniq_pinch
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxx
+bbxxxxxbb
+LbbxxxbbR
+L.bbxbb.R
+L..bbb..R
+L...b...R
+L.......R
+L.......R
+L.......R
+L...b...R
+L..bbb..R
+L.bbxbb.R
+LbbxxxbbR
+bbxxxxxbb
+xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_elf_w_pinch
+DEPTH:  Elf
+TAGS:   transparent extra allow_dup luniq_pinch
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxxxxxxxxxx
+bbxxxxxbbbxxxxxbb
+Lbbxxxbb.bbxxxbbR
+L.bbxbb...bbxbb.R
+L..bbb.....bbb..R
+L...b.......b...R
+L...............R
+L...............R
+L...............R
+L...b.......b...R
+L..bbb.....bbb..R
+L.bbxbb...bbxbb.R
+Lbbxxxbb.bbxxxbbR
+bbxxxxxbbbxxxxxbb
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_elf_m_pinch
+TAGS:   transparent extra allow_dup luniq_pinch
+DEPTH:  Elf
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxxxxxxxxxx
+xxxbbbxxxxxbbbxxx
+xxbb.bbxxxbb.bbxx
+xbb...bbxbb...bbx
+bb.....bbb.....bb
+b.......b.......b
+L...............R
+L...............R
+L...............R
+b.......b.......b
+bb.....bbb.....bb
+xbb...bbxbb...bbx
+xxbb.bbxxxbb.bbxx
+xxxbbbxxxxxbbbxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_1
+TAGS:    transparent extra allow_dup
+DEPTH:   Elf
+SHUFFLE: abcdf
+SUBST:   a : .
+SHUFFLE: bcdef
+SUBST:   bcd : v, e : .v, f : .v, v : vbcx
+MAP
+.........
+.fda.adf.
+.deb.bed.
+.abc.cba.
+.........
+.abc.cba.
+.deb.bed.
+.fda.adf.
+.........
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_2
+TAGS:    transparent extra allow_dup luniq
+DEPTH:   Elf
+SHUFFLE: mlk/mkl/nnn, abcdefghij
+SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
+SUBST:   l : .v, m : .v, v : vbcx
+MAP
+  ...........
+  .abcd.dcba.
+....efg.gfe....
+.a...hi.ih...a.
+.be...j.j...eb.
+.cfh.......hfc.
+.dgij.klk.jigd.
+......lml......
+.dgij.klk.jigd.
+.cfh.......hfc.
+.be...j.j...eb.
+.a...hi.ih...a.
+....efg.gfe....
+  .abcd.dcba.
+  ...........
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_3
+TAGS:    transparent extra allow_dup luniq
+DEPTH:   Elf
+: if crawl.coinflip() then
+SHUFFLE: bcegh
+SUBST:   b = .
+SHUFFLE: acdefghi
+: else
+SUBST:   f = v
+SHUFFLE: abcdeghi
+: end
+SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
+SUBST:   j : .v, v : vbcx
+MAP
+        .
+       ...
+      ..a..
+     ..bcb..
+    ..defed..
+   ....ghg....
+  ..d...i...d..
+ ..beg.....geb..
+..acfhi.j.ihfca..
+ ..beg.....geb..
+  ..d...i...d..
+   ....ghg....
+    ..defed..
+     ..bcb..
+      ..a..
+       ...
+        .
+ENDMAP
+
+NAME:    hangedman_elven_ridges
+TAGS:    extra transparent
+DEPTH:   Elf
+MONS:    fungus
+SHUFFLE: ABCD, EF, GHIJKLMN
+SUBST:   A : x.., B : xx., CD = x, E : x.., F : x..
+SUBST:   G : xxx., H : xxx., I : x., J : x., K : x:1 .:9, L : x:1 .:9
+SUBST:   MN = ., c : c:16 b:2 v:1 1:1
+MAP
+   .cxBxc.
+   .H...G.
+   ...x......
+......x......
+cH..F.x.xxCxx
+x.......J...I
+A.xxx.c...x......
+x.........x......
+cG..xJ..E.x.xxDxx
+....x.......L...K
+  ..D.xxx.c...x..
+  ..x.........x......
+  ..xI..xL..F.x.xxAxc
+      ..x.......N...M
+      ..C.xxx.c...x..
+      ..x.........x.
+      ..xK..xN..E.x.
+          ..x.......
+          ..B.xxx.c.
+          ..x.......
+          ..cM.
+ENDMAP
+
+NAME:    hangedman_elven_pyramids
+TAGS:    extra transparent
+DEPTH:   Elf
+SHUFFLE: ABCD, +-_, yz / yz / zy
+SUBST:   A : ZZ., B : Z., C : Z.., D = .
+SUBST:   + : x:9 +:2 .:1, -_ : x:9 z:1
+SUBST:   Z : z:5 c:1 x:1 b:1, z : c:6 x:3 .:1
+MAP
+       ..x..
+      ..x.x..
+     ..x...x..
+    ..x..A..x..
+   ..x...y...x..
+  ..x..xz.zx..x..
+ ..x.x...y...x.x..
+..x...zy.C.yz...x..
+.x..B.yz...zy.D..x..
+x.......x.x.......x..
+xxxx+xxxx-x_xx-xxxx+xxxx
+   ..x.......x.x.......x
+    ..x..D.yz...zy.B..x.
+     ..x...zy.C.yz...x..
+      ..x.x...y...x.x..
+       ..x..xz.zx..x..
+        ..x...y...x..
+         ..x..A..x..
+          ..x...x..
+           ..x.x..
+            ..x..
+ENDMAP
+
+NAME:    hangedman_elf_targetted_burst
+TAGS:    transparent extra
+DEPTH:   Elf
+SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
+MAP
+        x
+   .x...y...x
+   ..Y.xxx.Y.
+   ...x...x..
+   ..x.....x.
+  xxyx..Z..xyx
+ ....x.....x.
+ .....z...x..
+ ...xz.xxx.Y.
+ ...zx..y...x
+..xz....x....
+..zx....x
+xz......
+zx..
+ENDMAP
+
+NAME:    hangedman_elf_simple_split
+TAGS:    extra transparent
+DEPTH:   Elf
+MONS:    fungus
+SHUFFLE: de, fg, hijk, CD
+SUBST:   d : +., e : +x., f : +x., e : +.
+SUBST:   h : +x, i : +x., i : +x., j : +x.
+SUBST:   C : CTG1wl., D : ., x : x:90 cvb
+KMASK:   wl = no_monster_gen
+MAP
+x..xx
+x...xxxxxx
+x...d....xxxxxx
+xxx.e....h.....
+xxxxx.CD.i....x
+....f....j....x
+....g....k.....
+xxxxxxxxxx....x
+....g....k.....
+....f....j....x
+xxxxx.CD.i....x
+xxx.e....h.....
+x...d....xxxxxx
+x...xxxxxx
+x..xx
+ENDMAP
+
+NAME:    nicolae_elf_glassroom_feature
+TAGS:    transparent
+DEPTH:   Elf
+KFEAT:   O = any shop
+SHUFFLE: x_/m-
+SUBST:   S = GTOSSS
+: if you.depth() == 1 then
+SUBST:   S = )}]
+: elseif you.depth_fraction() < 1 then
+SUBST:   S = (){}[]
+: else
+SUBST:   S = ({[
+: end
+CLEAR:   _
+MAP
+---__.__---
+-mmxx.xxmm-
+-m.......m-
+_x..mxm..x_
+_x.m...m.x_
+...x.S.x...
+_x.m...m.x_
+_x..mxm..x_
+-m.......m-
+-mmxx.xxmm-
+---__.__---
+ENDMAP
+
+NAME:    nicolae_elf_variegated_diamond
+TAGS:    transparent
+DEPTH:   Elf
+KFEAT:   q = closed_clear_door
+SHUFFLE: +cb/+cv/+cn/+cx/+bc/+bv/+bx/+bn/+vc/+vb/+vx/+vn/+xc/+xb/+xv/+xn/\
+         qnc/qnb/qnv/qnx
+MAP
+.......b.......
+.cb...bcb...cb.
+.bc..bcbcb..bc.
+....bcb.bcb....
+...b+b...b+b...
+..bcb.....bcb..
+.bcb...c...bcb.
+bcb...cbc...bcb
+.bcb...c...bcb.
+..bcb.....bcb..
+...b+b...b+b...
+....bcb.bcb....
+.cb..bcbcb..cb.
+.bc...bcb...bc.
+.......b.......
+ENDMAP
+
+##############################################################################
+#
+# <<3>> Monster-placing vaults.
 #
 ##############################################################################
 
@@ -916,234 +1312,6 @@ MAP
 ..............
 ENDMAP
 
-NAME:    nicolae_elf_glass_and_crystal_pillar_1
-DEPTH:   Elf
-TAGS:    transparent extra allow_dup
-SHUFFLE: ab, bc
-SUBST:   a = m, b : mb, c = b, _ : .._
-CLEAR:   _
-MAP
-________
-_......_
-_.abba._
-_.bccb._
-_.bccb._
-_.abba._
-_......_
-________
-ENDMAP
-
-NAME:    nicolae_elf_glass_and_crystal_pillar_2
-DEPTH:   Elf
-TAGS:    transparent extra allow_dup
-SHUFFLE: ab, bc
-SUBST:   a = m, b : mb, c = b, _ : .._
-CLEAR:   _
-MAP
-_______
-_....._
-_.aba._
-_.bcb._
-_.aba._
-_....._
-_______
-ENDMAP
-
-NAME:    nicolae_elf_stair_hall
-DEPTH:   Elf:2-
-TAGS:    extra
-SUBST:   v : vb
-SHUFFLE: {[(
-MAP
-    xxxxxxxxxxxxxxx
-  xxxcccccccccccccx
- xxccc...........cx
- xcc....vv..vv..ccx
-xxc....vv..vv..cccx
-xcc...vv..vv..ccccx
-xc...vv..vv.......@
-xc.{..............@
-xc...vv..vv.......@
-xcc...vv..vv..ccccx
-xxc....vv..vv..cccx
- xcc....vv..vv..ccx
- xxccc...........cx
-  xxxcccccccccccccx
-    xxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:    nicolae_elf_stone_circles
-DEPTH:   Elf
-TAGS:    transparent extra allow_dup luniq
-SHUFFLE: za, bd
-SUBST:   a = A, b = B, zd = c
-SHUFFLE: AB, DEFG
-SUBST:   AD : +, BEFG = c, Z : GT. U:3, c : cx
-MAP
-      ccFcc
-    Ecc...ccG
-   cc.......cc
-  Dc.....cczacc
- cc.....cc...ccc
- cdbc..cc.....cc
-ccc.cccc.......cc
-cc...cc.........c
-A..Z..+....Z....B
-cc...cc.........c
-ccc.cccc.......cc
- cdbc..cc.....cc
- cc.....cc...ccc
-  Dc.....cczacc
-   cc.......cc
-    Ecc...ccG
-      ccFcc
-ENDMAP
-
-NAME:   nicolae_elf_v_pinch
-DEPTH:  Elf
-TAGS:   transparent extra allow_dup luniq_pinch
-SUBST:  b : bc
-NSUBST: L = @ / ., R = @ / .
-MAP
-xxxxxxxxx
-bbxxxxxbb
-LbbxxxbbR
-L.bbxbb.R
-L..bbb..R
-L...b...R
-L.......R
-L.......R
-L.......R
-L...b...R
-L..bbb..R
-L.bbxbb.R
-LbbxxxbbR
-bbxxxxxbb
-xxxxxxxxx
-ENDMAP
-
-NAME:   nicolae_elf_w_pinch
-DEPTH:  Elf
-TAGS:   transparent extra allow_dup luniq_pinch
-SUBST:  b : bc
-NSUBST: L = @ / ., R = @ / .
-MAP
-xxxxxxxxxxxxxxxxx
-bbxxxxxbbbxxxxxbb
-Lbbxxxbb.bbxxxbbR
-L.bbxbb...bbxbb.R
-L..bbb.....bbb..R
-L...b.......b...R
-L...............R
-L...............R
-L...............R
-L...b.......b...R
-L..bbb.....bbb..R
-L.bbxbb...bbxbb.R
-Lbbxxxbb.bbxxxbbR
-bbxxxxxbbbxxxxxbb
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   nicolae_elf_m_pinch
-TAGS:   transparent extra allow_dup luniq_pinch
-DEPTH:  Elf
-SUBST:  b : bc
-NSUBST: L = @ / ., R = @ / .
-MAP
-xxxxxxxxxxxxxxxxx
-xxxbbbxxxxxbbbxxx
-xxbb.bbxxxbb.bbxx
-xbb...bbxbb...bbx
-bb.....bbb.....bb
-b.......b.......b
-L...............R
-L...............R
-L...............R
-b.......b.......b
-bb.....bbb.....bb
-xbb...bbxbb...bbx
-xxbb.bbxxxbb.bbxx
-xxxbbbxxxxxbbbxxx
-xxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:    nicolae_elf_big_sculpture_1
-TAGS:    transparent extra allow_dup
-DEPTH:   Elf
-SHUFFLE: abcdf
-SUBST:   a : .
-SHUFFLE: bcdef
-SUBST:   bcd : v, e : .v, f : .v, v : vbcx
-MAP
-.........
-.fda.adf.
-.deb.bed.
-.abc.cba.
-.........
-.abc.cba.
-.deb.bed.
-.fda.adf.
-.........
-ENDMAP
-
-NAME:    nicolae_elf_big_sculpture_2
-TAGS:    transparent extra allow_dup luniq
-DEPTH:   Elf
-SHUFFLE: mlk/mkl/nnn, abcdefghij
-SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
-SUBST:   l : .v, m : .v, v : vbcx
-MAP
-  ...........
-  .abcd.dcba.
-....efg.gfe....
-.a...hi.ih...a.
-.be...j.j...eb.
-.cfh.......hfc.
-.dgij.klk.jigd.
-......lml......
-.dgij.klk.jigd.
-.cfh.......hfc.
-.be...j.j...eb.
-.a...hi.ih...a.
-....efg.gfe....
-  .abcd.dcba.
-  ...........
-ENDMAP
-
-NAME:    nicolae_elf_big_sculpture_3
-TAGS:    transparent extra allow_dup luniq
-DEPTH:   Elf
-: if crawl.coinflip() then
-SHUFFLE: bcegh
-SUBST:   b = .
-SHUFFLE: acdefghi
-: else
-SUBST:   f = v
-SHUFFLE: abcdeghi
-: end
-SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
-SUBST:   j : .v, v : vbcx
-MAP
-        .
-       ...
-      ..a..
-     ..bcb..
-    ..defed..
-   ....ghg....
-  ..d...i...d..
- ..beg.....geb..
-..acfhi.j.ihfca..
- ..beg.....geb..
-  ..d...i...d..
-   ....ghg....
-    ..defed..
-     ..bcb..
-      ..a..
-       ...
-        .
-ENDMAP
-
 NAME:    hangedman_elf_power_crystal
 TAGS:    extra transparent
 DEPTH:   Elf
@@ -1179,117 +1347,6 @@ b..b.b..R..bb
 b.b...b...bB
 Ab..T..b.bB
 bAbbbbbbbb
-ENDMAP
-
-NAME:    hangedman_elven_ridges
-TAGS:    extra transparent
-DEPTH:   Elf
-MONS:    fungus
-SHUFFLE: ABCD, EF, GHIJKLMN
-SUBST:   A : x.., B : xx., CD = x, E : x.., F : x..
-SUBST:   G : xxx., H : xxx., I : x., J : x., K : x:1 .:9, L : x:1 .:9
-SUBST:   MN = ., c : c:16 b:2 v:1 1:1
-MAP
-   .cxBxc.
-   .H...G.
-   ...x......
-......x......
-cH..F.x.xxCxx
-x.......J...I
-A.xxx.c...x......
-x.........x......
-cG..xJ..E.x.xxDxx
-....x.......L...K
-  ..D.xxx.c...x..
-  ..x.........x......
-  ..xI..xL..F.x.xxAxc
-      ..x.......N...M
-      ..C.xxx.c...x..
-      ..x.........x.
-      ..xK..xN..E.x.
-          ..x.......
-          ..B.xxx.c.
-          ..x.......
-          ..cM.
-ENDMAP
-
-NAME:    hangedman_elven_pyramids
-TAGS:    extra transparent
-DEPTH:   Elf
-SHUFFLE: ABCD, +-_, yz / yz / zy
-SUBST:   A : ZZ., B : Z., C : Z.., D = .
-SUBST:   + : x:9 +:2 .:1, -_ : x:9 z:1
-SUBST:   Z : z:5 c:1 x:1 b:1, z : c:6 x:3 .:1
-MAP
-       ..x..
-      ..x.x..
-     ..x...x..
-    ..x..A..x..
-   ..x...y...x..
-  ..x..xz.zx..x..
- ..x.x...y...x.x..
-..x...zy.C.yz...x..
-.x..B.yz...zy.D..x..
-x.......x.x.......x..
-xxxx+xxxx-x_xx-xxxx+xxxx
-   ..x.......x.x.......x
-    ..x..D.yz...zy.B..x.
-     ..x...zy.C.yz...x..
-      ..x.x...y...x.x..
-       ..x..xz.zx..x..
-        ..x...y...x..
-         ..x..A..x..
-          ..x...x..
-           ..x.x..
-            ..x..
-ENDMAP
-
-NAME:    hangedman_elf_targetted_burst
-TAGS:    transparent extra
-DEPTH:   Elf
-SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
-MAP
-        x
-   .x...y...x
-   ..Y.xxx.Y.
-   ...x...x..
-   ..x.....x.
-  xxyx..Z..xyx
- ....x.....x.
- .....z...x..
- ...xz.xxx.Y.
- ...zx..y...x
-..xz....x....
-..zx....x
-xz......
-zx..
-ENDMAP
-
-NAME:    hangedman_elf_simple_split
-TAGS:    extra transparent
-DEPTH:   Elf
-MONS:    fungus
-SHUFFLE: de, fg, hijk, CD
-SUBST:   d : +., e : +x., f : +x., e : +.
-SUBST:   h : +x, i : +x., i : +x., j : +x.
-SUBST:   C : CTG1wl., D : ., x : x:90 cvb
-KMASK:   wl = no_monster_gen
-MAP
-x..xx
-x...xxxxxx
-x...d....xxxxxx
-xxx.e....h.....
-xxxxx.CD.i....x
-....f....j....x
-....g....k.....
-xxxxxxxxxx....x
-....g....k.....
-....f....j....x
-xxxxx.CD.i....x
-xxx.e....h.....
-x...d....xxxxxx
-x...xxxxxx
-x..xx
 ENDMAP
 
 NAME:    hangedman_elven_crosses_minicolossus
@@ -1512,7 +1569,7 @@ DEPTH:  Elf
 : if crawl.coinflip() then
 KFEAT:  + = closed_clear_door
 : end
-NSUBST: H = 1=+ / *=c++
+NSUBST: H = + / c++
 SUBST:  c : cxvbm, D : cxvbm., F : cxvbm., E : cvxbm0, 0 = .:15 0:5 9:1
 MAP
        c+c
@@ -1696,34 +1753,6 @@ x.S'''E--x
    xxxxx
 ENDMAP
 
-NAME:    nicolae_elf_glassroom_feature
-TAGS:    transparent
-DEPTH:   Elf
-KFEAT:   O = any shop
-SHUFFLE: x_/m-
-SUBST:   S = GTOSSS
-: if you.depth() == 1 then
-SUBST:   S = )}]
-: elseif you.depth_fraction() < 1 then
-SUBST:   S = (){}[]
-: else
-SUBST:   S = ({[
-: end
-CLEAR:   _
-MAP
----__.__---
--mmxx.xxmm-
--m.......m-
-_x..mxm..x_
-_x.m...m.x_
-...x.S.x...
-_x.m...m.x_
-_x..mxm..x_
--m.......m-
--mmxx.xxmm-
----__.__---
-ENDMAP
-
 NAME:  nicolae_elf_hall_of_bonks
 TAGS:  transparent no_monster_gen
 DEPTH: Elf
@@ -1858,30 +1887,6 @@ xx%*%xx...xx%*%xx
 xxxxxxx@@@xxxxxxx
 ENDMAP
 
-NAME:    nicolae_elf_variegated_diamond
-TAGS:    transparent
-DEPTH:   Elf
-KFEAT:   q = closed_clear_door
-SHUFFLE: +cb/+cv/+cn/+cx/+bc/+bv/+bx/+bn/+vc/+vb/+vx/+vn/+xc/+xb/+xv/+xn/\
-         qnc/qnb/qnv/qnx
-MAP
-.......b.......
-.cb...bcb...cb.
-.bc..bcbcb..bc.
-....bcb.bcb....
-...b+b...b+b...
-..bcb.....bcb..
-.bcb...c...bcb.
-bcb...cbc...bcb
-.bcb...c...bcb.
-..bcb.....bcb..
-...b+b...b+b...
-....bcb.bcb....
-.cb..bcbcb..cb.
-.bc...bcb...bc.
-.......b.......
-ENDMAP
-
 NAME:  nicolae_elf_vaults_five_recruitment_drive
 TAGS:  patrolling transparent no_item_gen
 DEPTH: Elf
@@ -1909,7 +1914,7 @@ ENDMAP
 
 ##############################################################################
 #
-# <<3>> Elf:2 Hall of Blades entry vaults.
+# <<4>> Elf:2 Hall of Blades entry vaults.
 #
 ##############################################################################
 
@@ -2336,7 +2341,7 @@ ENDMAP
 
 ##############################################################################
 #
-# <<4>> Elf:2 Hall of Blades main vaults.
+# <<5>> Elf:2 Hall of Blades main vaults.
 #
 ##############################################################################
 
@@ -2581,7 +2586,7 @@ ENDMAP
 
 ##############################################################################
 #
-# <<5>> End vaults
+# <<6>> End vaults
 #
 # Total weight: 230.
 ##############################################################################
