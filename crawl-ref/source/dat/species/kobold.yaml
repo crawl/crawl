@@ -15,7 +15,7 @@ aptitudes:
   maces_and_flails: -1
   polearms: -2
   staves: -1
-  crossbows: 2
+  crossbows: 4
   throwing: 1
   armour: -2
   dodging: 2
@@ -33,7 +33,7 @@ mutations:
   1:
     MUT_NIGHTSTALKER: 3
 recommended_jobs:
-  - JOB_HUNTER
+  - JOB_BRIGAND
   - JOB_BERSERKER
   - JOB_ARCANE_MARKSMAN
   - JOB_ENCHANTER
