@@ -63,7 +63,6 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -444,31 +443,6 @@ void BaseRunDelay::handle()
         if (want_clear_messages())
             clear_messages();
         process_command(cmd);
-        if (you.turn_is_over
-            && (you.running.is_any_travel() || you.running.is_rest()))
-        {
-            you.running.turns_passed++;
-            // sanity check: if we get up to a large number of turns on
-            // an explore, run, or rest delay, something is extremely buggy
-            // and we should both rescue the player, and generate a crash
-            // report. The thresholds are very heuristic:
-            // Rest delay, 500 turns. This is a bit more than 2x what it takes
-            // a maxed troll to heal.
-            // Travel delay, 2000. Just a big number that is quite a bit
-            // bigger than any travel delay I have been able to generate. If
-            // anyone can generate this on demand it should be raised. (Or
-            // eventually, removed?)
-            // For debuggers: runmode if negative is a meaningful delay type,
-            // but when positive is used as a counter, so if it's a very large
-            // number in the assert message, this is a wait delay
-
-            const int buggy_threshold = you.running.is_rest()
-                ? 500
-                : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
-            ASSERTM(you.running.turns_passed < buggy_threshold,
-                    "Excessive delay, %d turns passed, delay type %d",
-                    you.running.turns_passed, you.running.runmode);
-        }
     }
 
     if (!you.turn_is_over)

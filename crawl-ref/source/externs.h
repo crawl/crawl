@@ -172,7 +172,6 @@ public:
     coord_def pos;
     int travel_speed;
     int direction;
-    int turns_passed;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 

@@ -4301,7 +4301,7 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), pos(0,0), turns_passed(0)
+    : runmode(0), mp(0), hp(0), pos(0,0)
 {
 }
 
@@ -4316,7 +4316,6 @@ void runrest::initialise(int dir, int mode)
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
-    turns_passed = 0;
     init_travel_speed();
 
     if (dir == RDIR_REST)
