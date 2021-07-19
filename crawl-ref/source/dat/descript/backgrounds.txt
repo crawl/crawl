@@ -50,7 +50,7 @@ spell. More earthen spells are in their set of starting spells.
 Enchanter
 
 Enchanters know a variety of Hexes that can incapacitate their foes, and are
-equipped with an enchanted dagger.
+equipped with an enchanted dagger and a potion of invisibility.
 %%%%
 Fighter
 
