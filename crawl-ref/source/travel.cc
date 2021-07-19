@@ -129,9 +129,10 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-#ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TRAVEL
-#endif
+// N.b. this #define only adds dprfs and so isn't very useful outside of a
+// debug build. It also makes long travel extremely slow when enabled on a
+// debug build.
+//#define DEBUG_TRAVEL
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
