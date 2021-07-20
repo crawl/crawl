@@ -88,6 +88,7 @@ namespace quiver
         virtual vector<tile_def> get_tiles() const;
 
         virtual formatted_string quiver_description(bool short_desc=false) const;
+        virtual string quiver_verb() const { return ""; } // currently only for items
 
         // basically noops for this class, but keep `target` clean
         virtual void trigger()
