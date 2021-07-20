@@ -158,6 +158,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         else
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
     }
+    player.index_to_letter = index_to_letter;
 
     function inventory_item_desc(index, parens=false)
     {
@@ -171,6 +172,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             elem.addClass("fg" + item.col);
         return elem;
     }
+    player.inventory_item_desc = inventory_item_desc;
 
     function wielded_weapon()
     {
@@ -452,6 +454,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         {
             player.inv[i] = player.inv[i] || {};
             $.extend(player.inv[i], data.inv[i]);
+            player.inv[i].slot = Number(i); // XX why is i a string?
         }
         $.extend(player.equip, data.equip);
 

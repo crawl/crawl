@@ -362,7 +362,7 @@ namespace quiver
         bool is_valid() const override { return true; }
         bool is_targeted() const override { return true; }
 
-        string quiver_verb() const
+        string quiver_verb() const override
         {
             const item_def *weapon = you.weapon();
 
@@ -744,7 +744,7 @@ namespace quiver
 
         // TODO: can get_fire_order be generalized?
 
-        virtual string quiver_verb() const { return "Activate"; }
+        string quiver_verb() const override { return "Activate"; }
         virtual bool is_enabled() const override = 0;
         virtual void trigger(dist &) override = 0;
 

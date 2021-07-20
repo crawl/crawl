@@ -1346,6 +1346,18 @@ body {
     border-radius: 3px;
 }
 
+#consumables-tooltip
+{
+    position: absolute;
+    display: table;
+    left: 0px;
+    right: 0px;
+    border: 1px solid #7d623c;
+    background: rgba(0, 0, 0, 0.85);
+    font-size: small;
+    padding: 5px;
+}
+
 /* makes the hidden panel or its placeholder immune to $.show() */
 .consumables.hidden {
     display: none !important;

@@ -20,10 +20,12 @@
 #include "command.h"
 #include "coord.h"
 #include "database.h"
+#include "describe.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h" // is_weapon()
 #include "json.h"
@@ -479,6 +481,29 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     }
     else if (msgtype == "ui_state_sync")
         ui::recv_ui_state_change(obj.node);
+    else if (msgtype == "inv_item_describe"
+        && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper slot = json_find_member(obj.node, "slot");
+        slot.check(JSON_NUMBER);
+        int inv_slot = (int) slot->number_;
+        if (inv_slot >=0 && inv_slot < ENDOFPACK)
+            c = describe_item_popup(you.inv[inv_slot], nullptr, true);
+    }
+    else if (msgtype == "inv_item_action"
+        && mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper slot = json_find_member(obj.node, "slot");
+        slot.check(JSON_NUMBER);
+        int inv_slot = (int) slot->number_;
+        if (inv_slot >=0 && inv_slot < ENDOFPACK)
+        {
+            auto action = quiver::slot_to_action(inv_slot);
+            if (action)
+                action->trigger();
+            c = CK_MOUSE_CMD;
+        }
+    }
 
     return c;
 }
@@ -1244,6 +1269,13 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
         current = next;
         if (is_xp_evoker(current))
             current.plus = evoker_charges(current.sub_type);
+        if (in_inventory(current))
+        {
+            auto action = quiver::slot_to_action(current.link, false);
+            // TODO: does this stay in sync? Do anything with enabledness?
+            if (action && action->is_valid())
+                json_write_string("action_verb", action->quiver_verb());
+        }
     }
 }
 

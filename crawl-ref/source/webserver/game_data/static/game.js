@@ -253,6 +253,8 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
             messages.new_command();
     }
 
+    game.get_input_mode = function() { return input_mode; }
+
     function handle_set_input_mode(data)
     {
         set_input_mode(data.mode);
