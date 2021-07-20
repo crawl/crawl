@@ -1397,8 +1397,8 @@ MP:      6
 INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    skip_ego
-DBRAND:  It occasionally heals its wielder for a portion of a damage dealt when
- they wound a living foe with it or with a spell.
+DBRAND:  It occasionally heals its wielder for a portion of the damage dealt
+ when they wound a living foe with it or with a spell.
 DESCRIP: Its wielder's spells cost health as well as magical power.
 
 ENUM:    GYRE
