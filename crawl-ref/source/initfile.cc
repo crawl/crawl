@@ -97,6 +97,11 @@ extern char **NXArgv;
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
+
+// TODO:
+// because reset_options is called in the constructor, it's a magnet for
+// static initialization order issues.wrap this in a function per
+// https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
 game_options Options;
 
 static string _get_save_path(string subdir);
