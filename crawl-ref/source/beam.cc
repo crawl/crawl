@@ -4738,13 +4738,15 @@ bool bolt::attempt_block(monster* mon)
 bool bolt::bush_immune(const monster &mons) const
 {
     return
-        (mons_species(mons.type) == MONS_BUSH || mons.type == MONS_BRIAR_PATCH)
-        && !pierce && !is_explosion
-        && !is_enchantment()
-        && target != mons.pos()
-        && origin_spell != SPELL_STICKY_FLAME
-        && origin_spell != SPELL_STICKY_FLAME_RANGE
-        && origin_spell != SPELL_CHAIN_LIGHTNING;
+        // Briars allow bolts fired from aligned actors to pass but block
+        // those from unaligned actors. If this bolt has no agent, we're
+        // assuming alignment.
+        (mons.type == MONS_BRIAR_PATCH && mons_aligned(&mons, agent())
+             // Bushes pass bolts regardless of alignment of the actor.
+             || mons_species(mons.type) == MONS_BUSH)
+        // We allow hitting the bush-like monster with a bolt when it's the
+        // target.
+        && target != mons.pos();
 }
 
 void bolt::affect_monster(monster* mon)
