@@ -704,6 +704,9 @@ briar patch
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
 armour. Though the gaps in the copse are plentiful enough to fire missiles
 through, walking through it looks like a painful prospect.
+
+Missiles both magical and mundane will pass through this plant unaffected, but
+enchantments and explosions will not.
 %%%%
 Brimstone Fiend
 
@@ -720,6 +723,9 @@ bush
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
 not very dense, permitting missiles to pass through it. However, it is firmly
 rooted, and requires significant effort to destroy.
+
+Missiles both magical and mundane will pass through this plant unaffected, but
+enchantments and explosions will not.
 %%%%
 bullfrog
 
