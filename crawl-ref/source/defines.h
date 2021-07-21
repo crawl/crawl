@@ -182,9 +182,7 @@ const int AGILITY_BONUS = 5;
 
 #define POLAR_VORTEX_RADIUS 5
 
-#define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
-#define ZIG_ENTRY_RUNES 2
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
