@@ -812,6 +812,13 @@ static void _describe_regen(status_info& inf)
     {
         inf.short_text = "healing quickly";
     }
+    else if (regeneration_is_inhibited())
+    {
+        inf.light_colour = RED;
+        inf.light_text = "-Regen";
+        inf.short_text = "inhibited regen";
+        inf.long_text = "Your regeneration is inhibited by nearby monsters.";
+    }
 }
 
 static void _describe_poison(status_info& inf)
