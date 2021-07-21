@@ -1120,9 +1120,10 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Inhibited regeneration: stops regeneration when monsters are visible
+/// Is the player's hp regeneration inhibited by nearby monsters?
 bool regeneration_is_inhibited()
 {
+    // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
@@ -1166,7 +1167,6 @@ int player_regen()
         rr /= 4;
 
     if (you.duration[DUR_SICKNESS]
-        || regeneration_is_inhibited()
         || !player_regenerates_hp())
     {
         rr = 0;
@@ -3870,10 +3870,12 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
+/// Does the player currently regenerate hp? Used for resting.
 bool player_regenerates_hp()
 {
-    if (you.has_mutation(MUT_NO_REGENERATION))
+    if (you.has_mutation(MUT_NO_REGENERATION) || regeneration_is_inhibited())
         return false;
+
     return true;
 }
 
