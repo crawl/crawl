@@ -1685,7 +1685,7 @@ string find_crawlrc()
     // rc_dir_names list.
     for (const string &rc_dir : SysEnv.rcdirs)
     {
-        for (const string &rc_fn : rc_dir_filenames)
+        for (const string rc_fn : rc_dir_filenames)
         {
             const string rc(catpath(rc_dir, rc_fn));
             if (file_exists(rc))
