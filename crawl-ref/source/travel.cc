@@ -4986,7 +4986,7 @@ bool check_for_interesting_features()
     // Scan through the shadow map, compare it with the actual map, and if
     // there are any squares of the shadow map that have just been
     // discovered and contain an item, or have an interesting dungeon
-    // feature, stop exploring.
+    // feature, announce the discovery and return true.
     explore_discoveries discoveries;
     for (vision_iterator ri(you); ri; ++ri)
     {
