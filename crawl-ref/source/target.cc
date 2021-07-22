@@ -1067,8 +1067,13 @@ aff_type targeter_shatter::is_affected(coord_def loc)
         return AFF_NO;
     }
 
-    // TODO
-    return AFF_YES;
+    const dice_def dam = shatter_damage(200, mons);
+    const int dice = dam.num;
+    if (dice == DEFAULT_SHATTER_DICE)
+        return AFF_YES;
+    if (dice > DEFAULT_SHATTER_DICE)
+        return AFF_MULTIPLE;
+    return AFF_MAYBE;
 }
 
 targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,

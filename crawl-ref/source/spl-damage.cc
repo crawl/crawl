@@ -1349,26 +1349,25 @@ spret cast_fragmentation(int pow, const actor *caster,
 
 static int _shatter_mon_dice(const monster *mon)
 {
-    const int DEFAULT_DICE = 3;
     if (!mon)
-        return DEFAULT_DICE;
+        return DEFAULT_SHATTER_DICE;
 
     // Double damage to stone, metal and crystal - the same as the list of
     // monsters affected by LRD.
     if (map_find(fraggable_monsters, mon->type))
-        return DEFAULT_DICE * 2;
+        return DEFAULT_SHATTER_DICE * 2;
     if (mon->is_insubstantial())
         return 1;
     if (mon->petrifying() || mon->petrified()
         || mon->is_skeletal() || mon->is_icy())
     {
-        return DEFAULT_DICE * 2;
+        return DEFAULT_SHATTER_DICE * 2;
     }
     else if (mon->airborne() || mons_is_slime(*mon))
         return 1;
     // Normal damage to everything else.
     else
-        return DEFAULT_DICE;
+        return DEFAULT_SHATTER_DICE;
 }
 
 dice_def shatter_damage(int pow, monster *mon)

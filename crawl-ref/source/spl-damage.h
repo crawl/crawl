@@ -12,6 +12,8 @@ struct bolt;
 struct dice_def;
 class dist;
 
+const int DEFAULT_SHATTER_DICE = 3;
+
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
