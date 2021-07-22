@@ -942,15 +942,33 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     return spret::success;
 }
 
-spret cast_airstrike(int pow, const dist &beam, bool fail)
+// For airstrike purposes, how much empty space is there around
+// the given target? The minimum value here is 3 (even if the
+// target is totally surrounded).
+int airstrike_space_around(coord_def target, bool count_invis)
 {
-    if (cell_is_solid(beam.target))
+    int empty_space = 0;
+    for (adjacent_iterator ai(target); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+            continue;
+        const monster* mons = monster_at(*ai);
+        if (!mons || (!count_invis && !you.can_see(*mons)))
+            ++empty_space;
+    }
+
+    return max(3, empty_space);
+}
+
+spret cast_airstrike(int pow, coord_def target, bool fail)
+{
+    if (cell_is_solid(target))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return spret::abort;
     }
 
-    monster* mons = monster_at(beam.target);
+    monster* mons = monster_at(target);
     if (!mons || mons->submerged())
     {
         fail_check();
@@ -966,17 +984,12 @@ spret cast_airstrike(int pow, const dist &beam, bool fail)
 
     fail_check();
 
-    noisy(spell_effect_noise(SPELL_AIRSTRIKE), beam.target);
+    noisy(spell_effect_noise(SPELL_AIRSTRIKE), target);
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
 
-    int empty_space = 0;
-    for (adjacent_iterator ai(beam.target); ai; ++ai)
-        if (!monster_at(*ai) && !cell_is_solid(*ai))
-            empty_space++;
-
-    empty_space = max(3, empty_space);
+    const int empty_space = airstrike_space_around(target, true);
 
     int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
 #ifdef DEBUG_DIAGNOSTICS

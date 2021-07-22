@@ -129,6 +129,16 @@ private:
     int pow;
 };
 
+class targeter_airstrike : public targeter
+{
+public:
+    targeter_airstrike();
+    aff_type is_affected(coord_def loc) override;
+    bool valid_aim(coord_def a) override;
+    bool can_affect_outside_range() override { return false; };
+    bool can_affect_walls() override { return false; };
+};
+
 class targeter_reach : public targeter
 {
 public:

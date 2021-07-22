@@ -740,6 +740,38 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+targeter_airstrike::targeter_airstrike()
+{
+    agent = &you;
+    origin = aim = you.pos();
+}
+
+aff_type targeter_airstrike::is_affected(coord_def loc)
+{
+    if (loc == aim)
+    {
+        const int space = airstrike_space_around(aim, false);
+        if (space <= 3)
+            return AFF_MAYBE;
+        if (space < 6)
+            return AFF_YES;
+        return AFF_MULTIPLE;
+    }
+    return AFF_NO; // TODO
+}
+
+bool targeter_airstrike::valid_aim(coord_def a)
+{
+    // XXX: copied from targeter_beam :(
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (you.see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    return true;
+}
+
 targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
     targeter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)

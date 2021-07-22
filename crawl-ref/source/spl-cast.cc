@@ -1260,6 +1260,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             get_thunderbolt_last_aim(&you));
     case SPELL_LRD:
         return make_unique<targeter_fragment>(&you, pow, range);
+    case SPELL_AIRSTRIKE:
+        return make_unique<targeter_airstrike>();
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GLACIATE:
@@ -2094,7 +2096,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
                                                       : spret::abort;
 
     case SPELL_AIRSTRIKE:
-        return cast_airstrike(powc, spd, fail);
+        return cast_airstrike(powc, spd.target, fail);
 
     case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
