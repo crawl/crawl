@@ -943,8 +943,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
 }
 
 // For airstrike purposes, how much empty space is there around
-// the given target? The minimum value here is 3 (even if the
-// target is totally surrounded).
+// the given target?
 int airstrike_space_around(coord_def target, bool count_unseen)
 {
     int empty_space = 0;
@@ -966,7 +965,7 @@ int airstrike_space_around(coord_def target, bool count_unseen)
             ++empty_space;
     }
 
-    return max(3, empty_space);
+    return empty_space;
 }
 
 spret cast_airstrike(int pow, coord_def target, bool fail)
