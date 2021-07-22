@@ -358,6 +358,7 @@ class targeter_shatter : public targeter_radius
 public:
     targeter_shatter(const actor *act) : targeter_radius(act, LOS_ARENA) { }
     bool can_affect_walls() override { return true; }
+    aff_type is_affected(coord_def loc) override;
 };
 
 // A fixed targeter for multi-position attacks, i.e. los stuff that

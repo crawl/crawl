@@ -32,6 +32,7 @@ dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, const dist &beam, bool fail);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
+int terrain_shatter_chance(coord_def where, const actor &agent);
 spret cast_irradiate(int powc, actor* who, bool fail);
 dice_def irradiate_damage(int powc, bool random = true);
 bool ignite_poison_affects(const actor* act);

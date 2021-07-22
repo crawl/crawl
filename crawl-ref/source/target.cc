@@ -1048,6 +1048,29 @@ aff_type targeter_radius::is_affected(coord_def loc)
     return AFF_YES;
 }
 
+aff_type targeter_shatter::is_affected(coord_def loc)
+{
+    if (loc == origin)
+        return AFF_NO; // Shatter doesn't affect the caster.
+
+    if (!cell_see_cell(loc, origin, LOS_ARENA))
+        return AFF_NO; // No shattering through glass... without work.
+
+    monster* mons = monster_at(loc);
+    if (!mons || !you.can_see(*mons))
+    {
+        const int terrain_chance = terrain_shatter_chance(loc, you);
+        if (terrain_chance == 100)
+            return AFF_YES;
+        else if (terrain_chance > 0)
+            return AFF_MAYBE;
+        return AFF_NO;
+    }
+
+    // TODO
+    return AFF_YES;
+}
+
 targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
                                              coord_def _prev)
 {
