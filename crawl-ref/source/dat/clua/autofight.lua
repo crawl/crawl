@@ -144,6 +144,10 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
       return nil
     elseif abs(ax+mx) > los_radius or abs(ay+my) > los_radius then
       return nil
+    elseif not view.cell_see_cell(ax + mx, ay + my, ax + dx, ay + dy) then
+      -- we know that dx,dy is currently in view, so if there is a path at all,
+      -- there must be a path where it remains in view.
+      return nil
     elseif square_func(ax+mx, ay+my) then
       return {mx,my}
     else
@@ -152,8 +156,11 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
   end
   if abs(dx) > abs(dy) then
     if abs(dy) == 1 then
+      -- at distance one, there's no need to adjust y position
       move = try_move(sign(dx), 0)
     end
+    -- first try diagonal. Not sure why? Also, sign(0)=0, so these two checks
+    -- are equivalent in that case.
     if move == nil then move = try_move(sign(dx), sign(dy)) end
     if move == nil then move = try_move(sign(dx), 0) end
     if move == nil and abs(dx) > abs(dy)+1 then
@@ -164,10 +171,12 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
     end
     if move == nil then move = try_move(0, sign(dy)) end
   elseif abs(dx) == abs(dy) then
+    -- exact diagonal
     move = try_move(sign(dx), sign(dy))
     if move == nil then move = try_move(sign(dx), 0) end
     if move == nil then move = try_move(0, sign(dy)) end
   else
+    -- symmetric case to first condition, i.e. abs(dy) > abs(dx)
     if abs(dx) == 1 then
       move = try_move(0, sign(dy))
     end
