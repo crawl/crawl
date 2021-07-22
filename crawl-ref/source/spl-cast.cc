@@ -1577,6 +1577,12 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
     return vector<string>{make_stringf("chance to dazzle: %d%%", dazzle_pct)};
 }
 
+static vector<string> _desc_airstrike_bonus(const monster_info& mi)
+{
+    const int empty_spaces = airstrike_space_around(mi.pos, false);
+    return vector<string>{make_stringf("empty space bonus: %d/8", empty_spaces)};
+}
+
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
     if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
@@ -1732,6 +1738,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         }
         case SPELL_DISPERSAL:
             return bind(_desc_dispersal_chance, placeholders::_1, powc);
+        case SPELL_AIRSTRIKE:
+            return bind(_desc_airstrike_bonus, placeholders::_1);
         default:
             break;
     }
