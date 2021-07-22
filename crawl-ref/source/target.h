@@ -137,6 +137,7 @@ public:
     bool valid_aim(coord_def a) override;
     bool can_affect_outside_range() override { return false; };
     bool can_affect_walls() override { return false; };
+    bool can_affect_unseen() override { return true; }; // show empty space outside LOS
 };
 
 class targeter_reach : public targeter

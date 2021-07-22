@@ -945,15 +945,24 @@ spret cast_freeze(int pow, monster* mons, bool fail)
 // For airstrike purposes, how much empty space is there around
 // the given target? The minimum value here is 3 (even if the
 // target is totally surrounded).
-int airstrike_space_around(coord_def target, bool count_invis)
+int airstrike_space_around(coord_def target, bool count_unseen)
 {
     int empty_space = 0;
     for (adjacent_iterator ai(target); ai; ++ai)
     {
-        if (cell_is_solid(*ai))
+        if (!count_unseen && !env.map_knowledge(*ai).seen())
             continue;
-        const monster* mons = monster_at(*ai);
-        if (!mons || (!count_invis && !you.can_see(*mons)))
+
+        const auto feat = count_unseen ? env.grid(*ai)
+                                       : env.map_knowledge(*ai).feat();
+        if (feat_is_solid(feat))
+            continue;
+
+        if (count_unseen)
+        {
+            if (!actor_at(*ai))
+                ++empty_space;
+        } else if (you.pos() != *ai && !env.map_knowledge(*ai).monsterinfo())
             ++empty_space;
     }
 
