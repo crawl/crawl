@@ -1394,10 +1394,25 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     return damage;
 }
 
-static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
-{
-    int chance = 0;
+static const map<dungeon_feature_type, int> terrain_shatter_chances = {
+    { DNGN_CLOSED_DOOR,     100 }, // also applies to all other door types
+    { DNGN_GRATE,           100 },
+    { DNGN_ORCISH_IDOL,     100 },
+    { DNGN_GRANITE_STATUE,  100 },
+    { DNGN_CLEAR_ROCK_WALL,  33 },
+    { DNGN_ROCK_WALL,        33 },
+    { DNGN_SLIMY_WALL,       33 },
+    { DNGN_CRYSTAL_WALL,     33 },
+    { DNGN_TREE,             33 }, // also applies to all other types of tree
+    { DNGN_CLEAR_STONE_WALL, 25 },
+    { DNGN_STONE_WALL,       25 },
+    { DNGN_METAL_WALL,       15 },
+};
 
+// Returns a percentage chance of the given wall being shattered by the given
+// agent casting Shatter, where 100 is guaranteed.
+int terrain_shatter_chance(coord_def where, const actor &agent)
+{
     // if not in-bounds then we can't really shatter it -- bwr
     if (!in_bounds(where))
         return 0;
@@ -1405,71 +1420,41 @@ static int _shatter_walls(coord_def where, int /*pow*/, actor *agent)
     if (env.markers.property_at(where, MAT_ANY, "veto_destroy") == "veto")
         return 0;
 
-    const dungeon_feature_type grid = env.grid(where);
-
-    switch (grid)
+    dungeon_feature_type feat = env.grid(where);
+    if (feat_is_tree(feat))
     {
-    case DNGN_CLOSED_DOOR:
-    case DNGN_CLOSED_CLEAR_DOOR:
-    case DNGN_RUNED_DOOR:
-    case DNGN_RUNED_CLEAR_DOOR:
-    case DNGN_OPEN_DOOR:
-    case DNGN_OPEN_CLEAR_DOOR:
-    case DNGN_SEALED_DOOR:
-    case DNGN_SEALED_CLEAR_DOOR:
-        if (you.see_cell(where))
-            mpr("A door shatters!");
-        chance = 100;
-        break;
-
-    case DNGN_GRATE:
-        if (you.see_cell(where))
-            mpr("An iron grate is ripped into pieces!");
-        chance = 100;
-        break;
-
-    case DNGN_ORCISH_IDOL:
-    case DNGN_GRANITE_STATUE:
-        chance = 100;
-        break;
-
-    case DNGN_METAL_WALL:
-        chance = 15;
-        break;
-
-    case DNGN_CLEAR_STONE_WALL:
-    case DNGN_STONE_WALL:
-        chance = 25;
-        break;
-
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_CRYSTAL_WALL:
-    case DNGN_TREE:
-    case DNGN_MANGROVE:
-    case DNGN_DEMONIC_TREE:
-    case DNGN_PETRIFIED_TREE:
-        chance = 33;
-        break;
-
-    default:
-        break;
+        if (agent.deity() == GOD_FEDHAS)
+            return 0;
+        feat = DNGN_TREE;
     }
+    else if (feat_is_door(feat))
+        feat = DNGN_CLOSED_DOOR;
 
-    if (agent->deity() == GOD_FEDHAS && feat_is_tree(grid))
+    auto feat_chance = terrain_shatter_chances.find(feat);
+    if (feat_chance == terrain_shatter_chances.end())
+        return 0;
+    return feat_chance->second;
+}
+
+static int _shatter_walls(coord_def where, actor *agent)
+{
+    const int chance = terrain_shatter_chance(where, *agent);
+
+    if (!x_chance_in_y(chance, 100))
         return 0;
 
-    if (x_chance_in_y(chance, 100))
+    if (you.see_cell(where))
     {
-        noisy(spell_effect_noise(SPELL_SHATTER), where);
-
-        destroy_wall(where);
-
-        return 1;
+        const dungeon_feature_type feat = env.grid(where);
+        if (feat_is_door(feat))
+            mpr("A door shatters!");
+        else if (feat == DNGN_GRATE)
+            mpr("An iron grate is ripped into pieces!");
     }
 
-    return 0;
+    noisy(spell_effect_noise(SPELL_SHATTER), where);
+    destroy_wall(where);
+    return 1;
 }
 
 static int _shatter_player_dice()
@@ -1535,7 +1520,7 @@ spret cast_shatter(int pow, bool fail)
             continue;
 
         _shatter_monsters(*di, pow, &you);
-        dest += _shatter_walls(*di, pow, &you);
+        dest += _shatter_walls(*di, &you);
     }
 
     if (dest && !silence)
@@ -1601,7 +1586,7 @@ bool mons_shatter(monster* caster, bool actual)
             _shatter_monsters(*di, pow, caster);
             if (*di == you.pos())
                 _shatter_player(pow, caster);
-            dest += _shatter_walls(*di, pow, caster);
+            dest += _shatter_walls(*di, caster);
         }
         else
         {
