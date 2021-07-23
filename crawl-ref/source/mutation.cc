@@ -1843,7 +1843,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     ASSERT(rc == 0);
 
+#ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();
+#endif
 
     const int levels = (which_mutation == RANDOM_CORRUPT_MUTATION
                          || which_mutation == RANDOM_QAZLAL_MUTATION)
@@ -2030,11 +2032,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         update_screen();
     }
 #endif
-    if (crawl_state.game_is_hints()
-        && your_talents(false).size() > old_talents)
-    {
-        learned_something_new(HINT_NEW_ABILITY_MUT);
-    }
 #ifdef DEBUG
     if (mutclass != MUTCLASS_INNATE) // taken care of in perma_mutate. Skipping this here avoids validation issues in doing repairs.
         validate_mutations(false);
