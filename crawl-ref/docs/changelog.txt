@@ -1,11 +1,11 @@
-Stone Soup 0.27-a0 (through 0.27-a0-1423-ge5d6b6a)
+Stone Soup 0.27-b1 (through 0.27-b1-2-g8387495791)
 --------------------------------------------------
 
 Highlights
 ----------
 * New species: Djinni.
 * Many new spells and spellbooks.
-* New monster sets for many branches.
+* New monster sets and end maps for many branches.
 * Ashenzari redesigned.
 * Cursed items removed.
 
@@ -16,27 +16,39 @@ Branches, Environment
   - A single random altar to a Temple god places with low chance on D:2.
   - Other guaranteed Temple god altars have been shifted to D:3-10, from D:2-9.
 * Shops can now place on D:1-3.
-* New feature: demonic trees. Demonic trees appear in the Abyss and Pan and
+* Dungeon, Depths, Vaults, and the Vestibule of Hell spawn tables are adjusted
+  to produce more depth appropriate monsters and less chaff.
+* Branch ending maps:
+  - New "Abyssal Woods" Lair ending featuring demonic trees and abyss-themed
+    monsters.
+  - The "Jungle Book" Lair ending has been redesigned to have an undead theme
+    featuring necromancers and undead animals.
+  - New "Lost City" Shoals ending featuring a ruined temple theme with
+    minotaurs and sphinxes.
+  - New "Storm Temple" Shoals ending featuring electricity-themed monsters and
+    many possible layouts.
+  - New "Quicksilver Temple" Snake ending featuring quicksilver dragons.
+* All Ice Cave maps have been rebalanced to have more varied layouts,
+  monsters, and loot.
+* Many new vaults featuring unrand items, shops, and ecumenical altars, as
+  well new monster and decorative vaults for many branches.
+* New terrain: demonic trees. Demonic trees appear in the Abyss and Pan and
   can be placed by vaults. They behave like trees, but when burned produce a
   single cloud of chaos instead of a spreading forest fire.
-* Dungeon, Depths, and the Vestibule of Hell spawn tables are adjusted to
-  produce more depth appropriate monsters and less chaff.
-* Many weaker monsters that previously appeared in Vaults and Depths
-  no longer appear in either branch.
 * Net traps trigger less often.
 * Storm clouds no longer make noise.
 * After completing one Ziggurat, the player is immune to the malevolence of Zot.
 * Swamp is now loud.
 * Guaranteed demonic rune vaults announce the presence of the demonic rune.
 * Gadget shops are removed.
+* Ossuaries no longer have dart and spear traps.
 
 Character
 ---------
-* New species: Djinni. Djinni are floating spirits formed from
-  smokeless fire, they have no MP, instead casting spells
-  using their HP. They also cannot learn spells from books;
-  they instead get spells randomly and naturally, starting on
-  XL 3 and continuing on every even level.
+* New species: Djinni. Djinni are floating spirits formed from smokeless fire,
+  they have no MP, instead casting spells using their HP. They also cannot
+  learn spells from books; they instead get spells randomly and naturally,
+  starting on XL 3 and continuing on every even level.
 * Demonspawn mutation changes:
   - New facet: malevolent magic. This facet gives a chance to paralyse enemies
       in a radius around the player equal to the mutation rank whenever a spell
@@ -61,13 +73,13 @@ Character
   - Icemail provides a condensation shield worth 4SH at the first rank, and
     ice mail AC spread over the next two.
   - Most types of scales mutations are now Demonspawn only.
-  - Iridescent scales and passive freeze are removed from the Demonspawn pool and
-    are available as random mutations for both demonspawn and other species.
+  - Iridescent scales and passive freeze are removed from the Demonspawn pool
+    and are available as random mutations for both demonspawn and other species.
 * Poison damage applies much more quickly.
 * Strength now gives a simple, linear bonus to damage.
 * Hidden stepdowns on dexterity and evasion are removed, making characters with
-  large amounts of dexterity and dodging skill more effective.
-  - Spriggans' dodging apt is reduced to +3 and base dexterity reduced by one.
+  large amounts of dexterity and dodging skill more effective. As a result,
+  Spriggans' dodging apt is reduced to +3 and base dexterity reduced by one.
 * New good mutation: noise dampening, which halves noise in the players LOS.
 * Bone plates, thin skeletal structure, and sturdy frame no longer conflict.
 * The blurry vision mutation is removed; Ru's -Scroll mutation can occur as a
@@ -85,6 +97,12 @@ Character
   - Demigods' stat gains on level-up are doubled. Their base stats are reduced.
   - Gnoll base stats are reduced to 7/7/7.
   - Palentonga HP apt is reduced to +0.
+* Mage and Warrior-Mage starting spell changes:
+  - Air elementalists no longer start with Lightning Bolt.
+  - Arcane Marksmen no longer start with Leda's Liquefaction.
+  - Earth Elementalists no longer start with Lee's Rapid Deconstruction.
+  - Summoners and Ice Elementalists no longer start with Summon Ice beast.
+  - Venom Mages no longer start with Ignite Poison.
 * Halflings are removed.
 
 Gods
@@ -132,8 +150,8 @@ Monsters
   - quicksilver ooze, a magic-immune ooze with engulfing and antimagic attacks.
 * New Vaults monsters:
   - ironbound frostheart, which freeze enemies that are adjacent to walls.
-  - ironbound thunderhulk, which blast distant enemies with lightning from above.
-    (They can't hit nearby enemies, however.)
+  - ironbound thunderhulk, which blast distant enemies with lightning from
+    above. (They can't hit nearby enemies, however.)
   - ironbound beastmaster, which speed up their lindwurm and dire elephant
     companions.
 * Snake monster changes:
@@ -164,15 +182,18 @@ Monsters
 * When Boris spawns on the orb run, he comes hasted and with a brilliance aura.
 * Draconian knights and Fannar no longer cast Ozocubu's Armour and have
   higher base AC.
-* Pandemonium and Hell lords now summon specific demon types.
 * Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
   and death oozes are removed.
-
 
 Interface
 ---------
 * Ranged targeters now display accuracy.
 * Monster to-hit chance is now shown in xv.
+* The macro creation and editing interfaces have been greatly improved.
+* An in-game menu is available on the F1 key for access to saving, help, and
+  macros.
+* The "allow_extended_colours" console option now defaults to true, since
+  modern terminals uniformly support more than 8 terminal colors.
 
 Items
 -----
@@ -181,6 +202,9 @@ Items
   - 30 new types of fixed book are added.
   - Fixed books now only have 2-4 spells each (down from 4-6 each.)
   - Randomly generated spellbooks also have fewer spells.
+  - Mage and Warrior-Mage classes no longer start with a specific spellbook.
+    Their starting spell sets are based on the book they previously started
+    with, but with changes as described above in the "Characters" section.
 * Cursed items no longer generate. Ashenzari is the only source of curses.
   - The *Curse property on unrands is removed. the Scythe of Curses and obsidian
     axe now have *Drain. The property is removed from the Necklace of Bloodlust.
@@ -191,10 +215,11 @@ Items
   - Wands of random effects are replaced with pieces from Xom's chessboard,
     which apply a random effect to a random visible enemy when evoked. They
     recharge with XP.
-  - Wands of disintegrate are renamed to wands of mindburst. They no longer affect
-    mindless creatures.
+  - Wands of disintegrate are renamed to wands of mindburst. They no longer
+    affect mindless creatures.
   - Wands of enslavement are now called wands of charming.
-* Equipment is identified once the player is in reach, without needing to be worn.
+* Equipment is identified once the player is in reach, without needing to be
+  worn.
 * All sources of regeneration now heal 1 HP per normal turn (formerly 0.4).
   - Trolls now have slightly more inherent regen and slightly less AC.
   - Vine Stalkers gain their full innate regeneration earlier.
@@ -211,6 +236,8 @@ Items
   - The staff of Wucad-Mu refunds MP more often, and refunds MP even when it
     backfires.
   - The Wrath of Trog now extends berserk and gains Rampage.
+  - The Robe of Folly now provides permanent brilliance, but sets Will to 0.
+    It also gets +8 Int (from +4) and +4 enchant (from +3).
 * Manuals, like spellbooks and runes, no longer take up an inventory slot.
 * Broad axe's base delay is returned to 1.6, from 1.7.
 * Rare scrolls, books, manuals, and enhancer staves can now spawn early.
@@ -225,33 +252,34 @@ Items
 Spells
 ------
 * New spell: Animate Armour, a level 4 Summon/Earth spell which draws out the
-  spirit of the caster's armour to fight alongside them. The heavier the armour,
-  the more powerful the spirit.
+  spirit of the caster's armour to fight alongside them. The heavier the
+  armour, the more powerful the spirit.
 * New spell: Manifold Assault, a level 5 translocations spell which attacks
   random foes in sight with the attacker's wielded weapon. Spellpower increases
   the number of foes that can be struck with one cast.
-* Absolute Zero has been redesigned. It's now called Maxwell's Capacitive Coupling,
-  a level 8 Air spell. When cast, the player must wait in place for a random number
-  of turns (reduced by spellpower) until the capacitor finishes charging, which
-  instantly vaporizes the nearest monster.
-* Chain Lighting has been redesigned. It is now level 9 and is dramatically more
-  powerful, arcing between visible foes for massive damage that partially ignores
-  AC and rElec.
-* Tornado has been renamed to Polar Vortex. It is now a Level 9 Ice spell, and its
-  damage has been increased by 33% but is partially resistable by rC.
+* Absolute Zero has been redesigned. It's now called Maxwell's Capacitive
+  Coupling, a level 8 Air spell. When cast, the player must wait in place for
+  a random number of turns (reduced by spellpower) until the capacitor
+  finishes charging, which instantly vaporizes the nearest monster.
+* Chain Lighting has been redesigned. It is now level 9 and is dramatically
+  more powerful, arcing between visible foes for massive damage that partially
+  ignores AC and rElec.
+* Tornado has been renamed to Polar Vortex. It is now a Level 9 Ice spell, and
+  its damage has been increased by 33% but is partially resistable by rC.
 * Other spell level adjustments:
   - Ozocubu's Refrigeration is now level 7 (from 6).
   - Freezing Cloud is now level 5 (from 6).
   - Static Discharge is now level 2 (from 3).
   - Swiftness is now level 3 (from 2).
-* Airstrike no longer gets bonus damage against flying creatures (including the
-  player). Instead, it deals bonus damage based on the number of empty spaces next
-  to the target.
+* Airstrike no longer gets bonus damage against flying creatures (including
+  the player). Instead, it deals bonus damage based on the number of empty
+  spaces next to the target.
 * Stone arrow damage is increased.
 * Wereblood now heals 1d3 when an adjacent monster is killed.
-* Monstrous Menagerie no longer summons harpies.
+* Tukima's Dance can now be used on monsters wielding ranged weapons.
 * Poisonous Vapours now directly poisons the target, rather than making a cloud.
 * Hailstorm now affects icy creatures.
+* Monstrous Menagerie no longer summons harpies.
 * Ozocubu's Armour and Frozen Ramparts now end under any location change.
 * Blade Hands' stealth penalty for Felids is removed.
 * Hydra Form, Summon Demon, and Summon Greater Demon are removed.
