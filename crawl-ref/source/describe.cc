@@ -2540,7 +2540,6 @@ void describe_feature_wide(const coord_def& pos)
         if (!hint_text.empty())
         {
             feat_info f = { "", "", "", tile_def(TILEG_TODO)};
-            f.title = "Hints.";
             f.body = hint_text;
             f.tile = tile_def(TILEG_STARTUP_HINTS);
             feats.emplace_back(f);

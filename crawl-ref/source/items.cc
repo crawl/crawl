@@ -1825,13 +1825,17 @@ static void _get_book(item_def& it)
     {
         if (you.has_mutation(MUT_INNATE_CASTER))
         {
-            mprf("%s burns to shimmering ash in your grasp.", it.name(DESC_THE).c_str());
+            mprf("%s burns to shimmering ash in your grasp.",
+                 it.name(DESC_THE).c_str());
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
+
+        taken_new_item(it.base_type);
+
         return;
     }
     // This is mainly for save compat: if a manual generated somehow that is not

@@ -2581,7 +2581,8 @@ bool gives_resistance(const item_def &item)
                 || item.sub_type == RING_LIFE_PROTECTION
                 || item.sub_type == RING_WILLPOWER
                 || item.sub_type == RING_FIRE
-                || item.sub_type == RING_ICE)
+                || item.sub_type == RING_ICE
+                || item.sub_type == RING_FLIGHT)
             {
                 return true;
             }
