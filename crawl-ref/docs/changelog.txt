@@ -38,7 +38,7 @@ Branches, Environment
 * Net traps trigger less often.
 * Storm clouds no longer make noise.
 * After completing one Ziggurat, the player is immune to the malevolence of Zot.
-* Swamp is now loud.
+* Swamp is now loud, so noise travels less far.
 * Guaranteed demonic rune vaults announce the presence of the demonic rune.
 * Gadget shops are removed.
 * Ossuaries no longer have dart and spear traps.
@@ -90,7 +90,8 @@ Character
   higher AC values from any source guaranteeing a certain base amount of
   protection from melee damage and mundane projectiles.
 * Most sources of flight (including species, transformations, and equipment)
-  are permanent and neither expire nor can be cancelled.
+  are permanent and neither expire nor can be cancelled; reasons to land have
+  also been removed.
 * Berserk ending no longer causes paralysis.
 * The blink mutation is removed.
 * Other species changes:
@@ -185,15 +186,39 @@ Monsters
 * Worker ants, soldier ants, queen ants, leopard geckos, eyes of draining,
   and death oozes are removed.
 
-Interface
----------
+Interface and options
+---------------------
 * Ranged targeters now display accuracy.
 * Monster to-hit chance is now shown in xv.
-* The macro creation and editing interfaces have been greatly improved.
+* The in-game macro creation and editing interfaces have been greatly improved:
+  - The old interface has now been fully menuized, so editing all happens within
+    the menu, and is designed for a smoother process.
+  - A new quick-entry menu for macros is available, bound to ctrl-e.
 * An in-game menu is available on the F1 key for access to saving, help, and
   macros.
+* Form information is shown in the `A` view.
+* The shopping list can now be opened by a range of currency symbols.
+* Wait-to-cast spells (Searing Ray, and the new Maxwell's Capacitive Coupling)
+  now fully work with autofire when quivered; autofire will trigger the wait
+  command as appropriate.
+* Spells and potions can be quivered and have informative targeters where
+  relevant.
+* Other miscellaneous quiver UI improvements:
+  - Two new options for controlling the quiver: `fire_order_ability` and
+    `fire_order_spell`. These give you full control over non-items when cycling
+    the quiver.
+  - Berserk is now excluded from the fire order by default, and won't autoquiver
+    on Berserker starts.
+  - Changing a quivered item's letter will not remove it from the quiver.
+  - Improvements to inscriptions: @Qn inscriptions on items are supported at
+    the Q menu. Behaviour of !Q, =f, and =F has been improved.
+* Portal and zot alerts are now included by default in `runrest_stop`, and zot
+  clock alerts force-interrupt all delays.
 * The "allow_extended_colours" console option now defaults to true, since
   modern terminals uniformly support more than 8 terminal colors.
+* New local tiles option, `tile_window_ratio`. This lets the initial window
+  size be constrained by an x:y ratio, providing better defaults for ultra-wide
+  monitors.
 
 Items
 -----
