@@ -2711,6 +2711,11 @@ Cloud Mage
 A strange wizard who has attained mastery over clouds, making deft and
 foreboding mystic gestures.
 %%%%
+Head Instructor
+
+A powerful warrior-mage who instructs aspiring students in physical, magical,
+and anti-magical combat.
+%%%%
 Hellbinder
 
 A mighty spellcaster wreathed in arcane energies, muttering profane

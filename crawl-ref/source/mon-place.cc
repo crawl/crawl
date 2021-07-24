@@ -1238,7 +1238,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props["dbname"] = mons_class_name(mon->type);
     }
 
-    if (mon->type == MONS_HELLBINDER || mon->type == MONS_CLOUD_MAGE)
+    if (mon->type == MONS_HELLBINDER || mon->type == MONS_CLOUD_MAGE
+        || mon->type == MONS_HEADMASTER)
     {
         mon->props[MON_GENDER_KEY] = random_choose(GENDER_FEMALE, GENDER_MALE,
                                                    GENDER_NEUTRAL);

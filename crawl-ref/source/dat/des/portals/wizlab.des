@@ -39,6 +39,10 @@
 #--------------------------------------------------------------------
 #Maxwell   |constructs and meaty    |gear with dangerous ego,|
 #          |mace wielders           |weapon/armour artifacts |
+#--------------------------------------------------------------------
+#Yara      |Warrior-mages with      |antimagic weapons, books|
+#          |antimagic weapons       |                        |
+
 
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
@@ -73,6 +77,8 @@
 #                         |paths hedged by trees|red/yellow autumn variant
 #---------------------------------------------------------------
 #Maxwell's Workshop       |big rooms with forge |metal
+#---------------------------------------------------------------
+#Yara's Duelist Academy   |campus               |stone and trees
 ##
 
 # TO-DO:
@@ -353,6 +359,34 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
                                            triggerer, marker, ev)
   dgn.persist.wucad_mu_died = true
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
+end
+
+function yara_students(e)
+    local anti = "ego:antimagic ident:all"
+    local will = "ego:willpower ident:all"
+    local goodgear = "halberd " .. anti .. " | scimitar " .. anti
+                     .. " | morningstar " .. anti .. " | dire flail " .. anti
+                     .. " . ring mail " .. will 
+                     .. " w:3 | scale mail | chain mail "
+    local greatweap = "double sword " .. anti .. " | demon blade " .. anti
+                      .. " | great sword " .. anti .. " | glaive " .. anti
+                      .. " | demon trident " .. anti .. " | bardiche " .. anti
+                      .. " | eveningstar " .. anti .. " | demon whip " .. anti
+                      .. " | great mace " .. anti .. " | quick blade " .. anti
+    local greatarm = "chain mail " .. will .. " | plate armour " .. will
+                      .. " | plate armour w:20 | crystal plate armour w:3"
+    e.mons("tengu conjurer ; " .. goodgear .. " / ogre mage ; " .. goodgear ..
+           " / deep elf knight ; " .. goodgear .. 
+           " / naga mage ; " .. goodgear ..
+           " / salamander mystic ; " .. goodgear ..
+           " / wizard ; " .. goodgear ..
+           " / hell knight ; " .. goodgear ..
+           " / necromancer ; " .. goodgear ..
+           " / vampire mage ; " .. goodgear ..
+           " / spriggan air mage ; rapier ego:antimagic . acid dragon scales")
+    e.mons("tengu reaver ; " .. greatweap .. " . " .. greatarm ..
+           " / draconian knight ; " .. greatweap ..
+           " / vampire knight ; " .. greatweap .. " . " .. greatarm)
 end
 }}
 
@@ -2060,4 +2094,74 @@ vvvvvv..G..vvvvvvv1..2.11.2...vvvvvvvvvvvvvvvvv
 vvvvvvvv+vvvvvvvvv............vvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvv2.....11...2vvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+###############################################################################
+# Yara's Duelist Academy
+# Designed by Hellmonk. Features warrior-mages with antimagic weaponry.
+# Said weaponry makes up part of the loot here. The remainder of the loot is 
+# books, random good items, and gold.
+NAME:   wizlab_yara
+TAGS:   no_rotate
+ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
+:       yara_students(_G)
+MONS:   mana viper, quicksilver dragon
+KMONS:  P = bush
+{{
+wizname = crawl.make_name()
+kmons("5 = patrolling Head dbname:Head Instructor name:"
+      .. string.gsub(wizname, " ", "_") .. " ; triple sword ego:antimagic \
+            . triple sword ego:antimagic . plate armour ego:willpower")
+}}
+NSUBST: * = 3:d / 3:$ / *=**$..., 5 = 1:5 / *:1, D = 1:2 / *=G1
+NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A
+SUBST:  P : Pt", F = 211111, 1 = 1..., x = xxxx., - = x
+FTILE:  125.*d$G+ = floor_limestone
+FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
+TILE:   x = wall_brick
+TILE:   c = wall_church
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Yara's Duelist Academy")
+}}
+MAP
+        cccccccccccccccccccc
+        c***cGF.1..1.FGc***c
+        c***c..........c***c
+        cFFFc..1....1..cFFFc
+        c...c..cc55cc..c...c
+        c...+5........5+...ctt
+     tttccccc...1..1...ccccc3tt
+  tttt""""""cc........cc""""""tt
+ tt"""..1..11ccc....ccc"""""3""tt
+tt""..xxxx.....cc++cc111"""T"""3t
+t".11xx...11....1..1....""""3""tt
+t".1xx.11.xx...........1xx"""ttt
+t".xx..1.xx.1.xxt""txx..1xxttt
+t".xx..1xx.1.xx"3""3"xx...cccccccccccc
+t"1x...xx...xx"3""""3"xx...11......11c
+t".x...x...xx"""c""c"""xx............c
+t".x11.x...x""c""33""c""x..cc"cc"cc..c
+t".t...t...t""""PWWP""""t..cD"D""Dc..c
+t"........"""c"PWWWWP"c""..""""""""..c
+t"1....11."""c"WWWWWW"c""..c""cc"Dc.1c
+cccc++cccc"""""WWWWWW""""..cD"cc""c.1c
+c*.c..c.*c"""c"PWWWWP"c""..""""""""..c
+cE.+..+.Ec""""c"PWWP"c"""..cD""D"Dc..c
+ccccE.cccc""""""""""""""t..cc"cc"cc..c
+cE.+..+.Ec""""""c33c""""x............c
+c*.c..cE*cx"""""t""t""""x..11......11c
+ccccE.cccc--"""tt""tt"""--cccccccccccc
+c*.c..cE*c --"""t""t"""--
+cEE+..+.Ec  --""""""""--
+cccc.Ecccc   --""""""--
+cE.+..+.Ec    --""""--
+c*.c.EcE*c     -G""G-
+cccccccccc    --""""--
+             --""""""--
+             t""A""A""t
+             t""""""""t
+             --""""""--
+              --T""T--
+               ------
 ENDMAP

@@ -870,6 +870,7 @@ enum monster_type                      // env.mons[].type
     MONS_BAI_SUZHEN,
     MONS_BAI_SUZHEN_DRAGON,
     MONS_MAGGIE,
+    MONS_HEADMASTER,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1117,6 +1118,7 @@ enum monster_type                      // env.mons[].type
     MONS_IRONBOUND_THUNDERHULK,
     MONS_IRONBOUND_BEASTMASTER,
     MONS_SALAMANDER_TYRANT,
+    MONS_HEADMASTER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
