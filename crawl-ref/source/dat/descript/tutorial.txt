@@ -455,7 +455,8 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
   <input>$cmd[CMD_DROP]</input>  drop an item
-  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the item descriptions.<localtiles>
+  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the
+  item descriptions.<localtiles>
   And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>
