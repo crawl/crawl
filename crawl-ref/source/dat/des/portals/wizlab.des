@@ -366,7 +366,7 @@ function yara_students(e)
     local will = "ego:willpower ident:all"
     local goodgear = "halberd " .. anti .. " | scimitar " .. anti
                      .. " | morningstar " .. anti .. " | dire flail " .. anti
-                     .. " . ring mail " .. will 
+                     .. " . ring mail " .. will
                      .. " w:3 | scale mail | chain mail "
     local greatweap = "double sword " .. anti .. " | demon blade " .. anti
                       .. " | great sword " .. anti .. " | glaive " .. anti
@@ -376,7 +376,7 @@ function yara_students(e)
     local greatarm = "chain mail " .. will .. " | plate armour " .. will
                       .. " | plate armour w:20 | crystal plate armour w:3"
     e.mons("tengu conjurer ; " .. goodgear .. " / ogre mage ; " .. goodgear ..
-           " / deep elf knight ; " .. goodgear .. 
+           " / deep elf knight ; " .. goodgear ..
            " / naga mage ; " .. goodgear ..
            " / salamander mystic ; " .. goodgear ..
            " / wizard ; " .. goodgear ..
@@ -2099,7 +2099,7 @@ ENDMAP
 ###############################################################################
 # Yara's Duelist Academy
 # Designed by Hellmonk. Features warrior-mages with antimagic weaponry.
-# Said weaponry makes up part of the loot here. The remainder of the loot is 
+# Said weaponry makes up part of the loot here. The remainder of the loot is
 # books, random good items, and gold.
 NAME:   wizlab_yara
 TAGS:   no_rotate

@@ -2004,7 +2004,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_POLAR_VORTEX, 40, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_HEADMASTER,
       {
        { SPELL_SUMMON_MANA_VIPER, 15, MON_SPELL_WIZARD },
