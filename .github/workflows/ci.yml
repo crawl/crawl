@@ -146,12 +146,10 @@ jobs:
     strategy:
       matrix:
         build_type:
-          - tiles
-          - console
-          # These rules need an os 11.0 runner, which is not yet publicly available.
-          # https://github.com/actions/virtual-environments/issues/2486
-          #- tiles-universal
-          #- console-universal
+          # `tiles` and `console` can be used as build types to build a
+          # non-universal (x86_64, unless there are ever arm runners) binary
+          - tiles-universal
+          - console-universal
         build_opts:
           - ""
           - TILES=y
