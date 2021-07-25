@@ -1810,6 +1810,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
         if (you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR]
             && !mons_is_object(mons.type)
             && adjacent(mons.pos(), you.pos()))
         {
