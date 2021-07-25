@@ -1740,7 +1740,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     nil_item.link = -1;
     if (just_check && !involuntary
         && which_trans == transformation::lich && rem_stuff.count(EQ_WEAPON)
-        && !check_old_item_warning(nil_item, OPER_WIELD))
+        && !check_old_item_warning(nil_item, OPER_WIELD, true))
     {
         canned_msg(MSG_OK);
         return false;
