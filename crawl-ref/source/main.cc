@@ -2478,6 +2478,10 @@ void world_reacts()
     apply_noises();
     handle_monsters(true);
 
+    // Monsters can schedule final effects, too!
+    // (mostly by exploding)
+    fire_final_effects();
+
     _check_banished();
 
     ASSERT(you.time_taken >= 0);
