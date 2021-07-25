@@ -816,7 +816,7 @@ require you to wield an appropriate device to inflict worthwhile damage. Upon
 impact, missiles may become destroyed. The chance for this to occur depends on
 the type of missile.
 
-The 'F' and 'f' commands can be used to fire or throws a missile. For launchers,
+The 'F' and 'f' commands can be used to fire or throw a missile. For launchers,
 the default ammo to be fired is shown next to your launcher, or optionally in
 the main "quiver" display below your launcher. Ammo (as well as many other
 items, spells, and abilities) can fill this quiver as well.
