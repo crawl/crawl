@@ -3704,9 +3704,9 @@ static void _discharge_maxwells_coupling()
         bool goldify = have_passive(passive_t::goldify_corpses);
 
         if (goldify)
-            simple_monster_message(*mon, " vapourizes and condenses as gold!");
+            simple_monster_message(*mon, " vaporises and condenses as gold!");
         else
-            simple_monster_message(*mon, " vapourizes in an electric haze!");
+            simple_monster_message(*mon, " vaporises in an electric haze!");
 
         item_def* corpse = monster_die(*mon, KILL_YOU,
                                         actor_to_death_source(&you));
