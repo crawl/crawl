@@ -6,7 +6,7 @@ Highlights
 * New species: Djinni.
 * Many new spells and spellbooks.
 * New monster sets and end maps for many branches.
-* Ashenzari redesigned.
+* Ashenzari completely redesigned and reworked.
 * Cursed items removed.
 
 Branches, Environment
