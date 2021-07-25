@@ -135,7 +135,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
-    SPELL_MEPHITIC_CLOUD,
+    SPELL_CORPSE_ROT,
     SPELL_FREEZING_CLOUD,
 },
 
