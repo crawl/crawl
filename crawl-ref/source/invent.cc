@@ -1530,21 +1530,22 @@ static bool _has_warning_inscription(const item_def& item,
 // corresponding slot which has a warning inscription. If this is the case,
 // prompt the user for confirmation.
 bool check_old_item_warning(const item_def& item,
-                             operation_types oper)
+                            operation_types oper,
+                            bool check_melded)
 {
     item_def old_item;
     string prompt;
     bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
-        if (!you.weapon())
+        if (!you.slot_item(EQ_WEAPON, check_melded))
             return true;
 
         int equip = you.equip[EQ_WEAPON];
         if (equip == -1 || item.link == equip)
             return true;
 
-        old_item = *you.weapon();
+        old_item = *you.slot_item(EQ_WEAPON, check_melded);
         if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
