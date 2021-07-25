@@ -277,6 +277,9 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
     if (!calc_unid && !item_type_known(item))
         return false;
 
+    if (is_artefact(item) && artefact_property(item, ARTP_RAMPAGING))
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
