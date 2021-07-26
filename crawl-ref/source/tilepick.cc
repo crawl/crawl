@@ -3624,6 +3624,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Ashenzari
     case ABIL_ASHENZARI_CURSE:
         return TILEG_ABILITY_ASHENZARI_CURSE;
+    case ABIL_ASHENZARI_UNCURSE:
+        return TILEG_ABILITY_ASHENZARI_UNCURSE;
     // Dithmenos
     case ABIL_DITHMENOS_SHADOW_STEP:
         return TILEG_ABILITY_DITHMENOS_SHADOW_STEP;
