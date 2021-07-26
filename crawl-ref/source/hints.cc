@@ -1331,8 +1331,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "it. As usual, selecting it from your <w>%</w>nventory "
                 "might give you more information.";
         cmd.push_back(CMD_EVOKE);
-        cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_EVOKE_WIELDED);
+        cmd.push_back(CMD_EVOKE);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
