@@ -42,6 +42,10 @@
 #--------------------------------------------------------------------
 #Yara      |Warrior-mages with      |antimagic weapons, books|
 #          |antimagic weapons       |                        |
+#--------------------------------------------------------------------
+#Borgnjnor |Corporeal and ghostly   |necromancy loot, gold   |
+#          |undead, warlocks        |                        |
+##
 
 
 #---------------------------------------------------------------------
@@ -79,6 +83,8 @@
 #Maxwell's Workshop       |big rooms with forge |metal
 #---------------------------------------------------------------
 #Yara's Duelist Academy   |campus               |stone and trees
+#---------------------------------------------------------------
+#Borgnjor's Mausoleum     |split path           |tarlike
 ##
 
 # TO-DO:
@@ -387,6 +393,46 @@ function yara_students(e)
     e.mons("tengu reaver ; " .. greatweap .. " . " .. greatarm ..
            " / draconian knight ; " .. greatweap ..
            " / vampire knight ; " .. greatweap .. " . " .. greatarm)
+end
+
+
+function wizlab_borgnjor_call_souls(data, triggerable, triggerer, marker, ev)
+  if triggerer.type ~= "monster_dies" then
+    return
+  end
+
+  if you.pos() == 0 then
+    return
+  end
+
+  local mons = dgn.mons_from_mid(ev:arg1())
+  if mons.has_prop("borgnjor") then
+      return
+  end
+
+  if not crawl.one_chance_in(5) then
+    return
+  end
+
+  local msp = "lost soul seen sum:call_lost_soul dur:1 generate_awake"
+
+  local count = 0
+  for point in iter.circle_iterator(6) do
+    if crawl.one_chance_in(8) and count < 1 then
+      if feat.is_solid(point.x, point.y) or not feat.has_solid_floor(point.x, point.y) then
+      else
+       local mon = dgn.create_monster(point.x, point.y, msp)
+       mon.set_prop("borgnjor", 1)
+       count = count + 1
+      end
+    end
+  end
+
+  crawl.redraw_view()
+
+  if count == 1 then
+    crawl.mpr("A lost soul coalesces out of thin air!", "warning")
+  end
 end
 }}
 
@@ -2164,4 +2210,95 @@ cccccccccc    --""""--
              --""""""--
               --T""T--
                ------
+ENDMAP
+
+###############################################################################
+# Borgnjor's Mausoleum
+# Designed by Hellmonk. Split map layout with corporeal undead on one side and
+# incorporeal undead on the other. Lost souls spawn continuously, and the ending
+# includes some halazid warlocks and their servants. Loot is necromancy
+# themed, as you'd expect.
+NAME:   wizlab_borgnjor
+TAGS:   no_rotate
+ITEM:   randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
+        necronomicon / randbook disc:necromancy / staff of death /\
+        macabre finger necklace w:1 / sceptre of torment w:1
+ITEM:   any book / scroll of torment ident:all q:3 /\
+        any weapon good_item ego:pain / any weapon good_item ego:vampirism
+MONS:   spectral spriggan berserker / spectral titan / spectral spark wasp /\
+        spectral harpy / spectral quicksilver dragon / spectral wolf spider /\
+        spectral caustic shrike / phantasmal warrior w:60
+MONS:   flayed ghost / shadow wraith / eidolon
+MONS:   spriggan berserker zombie / titan zombie / spark wasp zombie /\
+        harpy zombie / quicksilver dragon zombie / wolf spider zombie /\
+        caustic shrike zombie / skeletal warrior w:30 / jiangshi w:30
+MONS:   ancient champion / revenant, flying skull
+MONS:   deep elf death mage / vampire mage / necromancer, halazid warlock
+:if crawl.one_chance_in(4) then
+SUBST:   F = c..., E = cccc., D = c
+:else
+SUBST:   D = c., E = c.., F = c
+:end
+SHUFFLE: 12/34
+NSUBST:  7 = 3:7 / *=775., 6 = 2:6 / *=6., 2 = 2:2 / *=2.., 4 = 2:4 / *=4..
+NSUBST:  A = 1:< / *:A
+SUBST:   1 = 1.., 3 = 3.., 5 = 5.., V = VVVY
+TILE:    c = wall_cobalt_stone
+LFLOORTILE: floor_black_cobalt
+{{
+local summon_marker = TriggerableFunction:new ({
+    func="wizlab_borgnjor_call_souls",
+    repeated=true })
+
+summon_marker:add_triggerer(DgnTriggerer:new {type="monster_dies",
+    target = "any"})
+
+lua_marker('A', summon_marker)
+}}
+:           wizlab_setup(_G)
+epilogue {{
+            wizlab_milestone(_G, "Borgnjor's Mausoleum")
+}}
+MAP
+             ccccc
+           ccc565ccc
+          cc55.5.55cc
+         cc..55755..cc
+        cc5.5c+++c5.5cc
+        c6.5cc.5.cc5.6c
+       cc5.cc5.7.5cc.5cc
+       c...c5.555.5c...c
+       c2.2cY57575Yc4.4c
+       c.5.c$76$67$c.5.c
+      ccc..cc$$$$$cc..ccc
+     cc1c...cc$$$cc...c3cc
+    cc11FF...cc+cc...FF33cc
+   cc2111FF.11cec33.FF3334cc
+  cc......FF..cec..FF......cc
+ cc...EE...cc2cec4cc...EE...cc
+ c1..EE...cc..cdc..cc...EE..3c
+ c..EE..2cc..1cdc3..cc4..EE..c
+ c..EE11cc12.2ccc4.43cc33EE..c
+ c..E..1c11EE..D..EE33c3..E..c
+ c..D..cc2.EE.264.EE.4cc..D..c
+ c..D..c..EEEE1D3EEEE..c..D..c
+cc.2D2.c.EEcE.1D3.EcEE.c.4D4.cc
+c1..D..c..EcEE1D3EEcE..c..D..3c
+c1..D..cc.EEE..c..EEE.cc..D..3c
+c1..D..2c..E..ccc..E..c4..D..3c
+c1..D...c...11cVc33...c...D..3c
+c...c..1...1.cc.cc.3...3..c...c
+cc..FF..1..ccc...ccc..3..FF..cc
+ c...FF....cV.....Vc....FF...c
+ c....FF..2c...A...c4..FF....c
+ c.....ccccc.......ccccc.....c
+ c..c1.......cc.cc.......3c..c
+ c1.EE.......cc.cc.......EE.3c
+ cc1...ccccc.......ccccc...3cc
+  cc1.cc   c...A...c   cc.3cc
+   cccc    cV.....Vc    cccc
+           ccc...ccc
+             cc.cc
+              cVc
+              ccc
 ENDMAP
