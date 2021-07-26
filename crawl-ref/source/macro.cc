@@ -2050,6 +2050,19 @@ static string _special_keys_to_string(int key)
     case CK_CLEAR:  cmd += "Clear"; break;
     case CK_PGUP:   cmd += "PgUp"; break;
     case CK_PGDN:   cmd += "PgDn"; break;
+    case CK_F0:     return "F0";
+    case CK_F1:     return "F1";
+    case CK_F2:     return "F2";
+    case CK_F3:     return "F3";
+    case CK_F4:     return "F4";
+    case CK_F5:     return "F5";
+    case CK_F6:     return "F6";
+    case CK_F7:     return "F7";
+    case CK_F8:     return "F8";
+    case CK_F9:     return "F9";
+    case CK_F10:    return "F10";
+    case CK_F11:    return "F11";
+    case CK_F12:    return "F12";
     }
 
     return cmd;
