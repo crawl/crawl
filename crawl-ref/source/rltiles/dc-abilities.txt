@@ -1,6 +1,7 @@
 %sdir gui/abilities
 bat_form ABILITY_BAT_FORM
 blink ABILITY_BLINK
+blinkbolt ABILITY_BLINKBOLT
 breathe_acid ABILITY_BREATHE_ACID
 breathe_energy ABILITY_BREATHE_ENERGY
 breathe_fire ABILITY_BREATHE_FIRE
