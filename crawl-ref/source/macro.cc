@@ -1676,7 +1676,7 @@ bool keycode_is_printable(int keycode)
     }
 }
 
-string keycode_to_name(int keycode)
+string keycode_to_name(int keycode, bool ctrl_is_caret)
 {
     // this is printable, but it's very confusing to try to use ' ' to print it
     // in circumstances where a name is called for
@@ -1687,48 +1687,47 @@ string keycode_to_name(int keycode)
     if (keycode_is_printable(keycode))
         return string(1, keycode);
 
+    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
+    // console, and are somewhat spotty on webtiles.
+    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
+    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
+
+    string prefix = "";
+
+    if (shift)
+    {
+        keycode -= (CK_SHIFT_UP - CK_UP);
+        prefix = "Shift-";
+    }
+    else if (ctrl)
+    {
+        keycode -= (CK_CTRL_UP - CK_UP);
+        prefix = ctrl_is_caret ? "^" : "Ctrl-";
+    }
+
     // placeholder
     switch (keycode)
     {
     case  0: return "NULL";
     case  8: return "Backspace"; // CK_BKSP
     case  9: return "Tab";
-    case 27: return "Esc";
+    CASE_ESCAPE return "Esc";
     case '\n':
     case '\r': // CK_ENTER
         return "Enter";
     case CK_DELETE: return "Del";
-    case CK_UP:     return "Up";
-    case CK_DOWN:   return "Down";
-    case CK_LEFT:   return "Left";
-    case CK_RIGHT:  return "Right";
-    case CK_INSERT: return "Ins";
-    case CK_HOME:   return "Home";
-    case CK_CLEAR:  return "Clear";
-    case CK_PGUP:   return "PgUp";
-    case CK_PGDN:   return "PgDn";
-    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
-    // console, and are somewhat spotty on webtiles.
-    case CK_SHIFT_UP:     return "Shift-Up";
-    case CK_SHIFT_DOWN:   return "Shift-Down";
-    case CK_SHIFT_LEFT:   return "Shift-Left";
-    case CK_SHIFT_RIGHT:  return "Shift-Right";
-    case CK_SHIFT_INSERT: return "Shift-Ins";
-    case CK_SHIFT_HOME:   return "Shift-Home";
-    case CK_SHIFT_CLEAR:  return "Shift-Clear";
-    case CK_SHIFT_PGUP:   return "Shift-PgUp";
-    case CK_SHIFT_PGDN:   return "Shift-PgDn";
+    case CK_UP:     return prefix+"Up";
+    case CK_DOWN:   return prefix+"Down";
+    case CK_LEFT:   return prefix+"Left";
+    case CK_RIGHT:  return prefix+"Right";
+    case CK_INSERT: return prefix+"Ins";
+    case CK_HOME:   return prefix+"Home";
+    case CK_END:    return prefix+"End";
+    case CK_CLEAR:  return prefix+"Clear";
+    case CK_PGUP:   return prefix+"PgUp";
+    case CK_PGDN:   return prefix+"PgDn";
     case CK_SHIFT_TAB:    return "Shift-Tab";
-    case CK_CTRL_UP:      return "^Up";
-    case CK_CTRL_DOWN:    return "^Down";
-    case CK_CTRL_LEFT:    return "^Left";
-    case CK_CTRL_RIGHT:   return "^Right";
-    case CK_CTRL_INSERT:  return "^Ins";
-    case CK_CTRL_HOME:    return "^Home";
-    case CK_CTRL_CLEAR:   return "^Clear";
-    case CK_CTRL_PGUP:    return "^PgUp";
-    case CK_CTRL_PGDN:    return "^PgDn";
-    case CK_CTRL_TAB:     return "^Tab";
+    case CK_CTRL_TAB:     return ctrl_is_caret ? "^Tab" : "Ctrl-Tab";
     case CK_F0:     return "F0";
     case CK_F1:     return "F1";
     case CK_F2:     return "F2";
@@ -1754,7 +1753,7 @@ string keycode_to_name(int keycode)
 #else
     {
         if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("^%c", UNCONTROL(keycode));
+            return make_stringf("%s%c", ctrl_is_caret ? "^" : "Ctrl-", UNCONTROL(keycode));
 
         keyseq v;
         v.push_back(keycode);
@@ -2016,52 +2015,9 @@ void bind_command_to_key(command_type cmd, int key)
     cmd_map[cmd] = key;
 }
 
-static string _special_keys_to_string(int key)
-{
-    const bool shift = (key >= CK_SHIFT_UP && key <= CK_SHIFT_PGDN);
-    const bool ctrl  = (key >= CK_CTRL_UP && key <= CK_CTRL_PGDN);
-
-    string cmd = "";
-
-    if (shift)
-    {
-        key -= (CK_SHIFT_UP - CK_UP);
-        cmd = "Shift-";
-    }
-    else if (ctrl)
-    {
-        key -= (CK_CTRL_UP - CK_UP);
-        cmd = "Ctrl-";
-    }
-
-    switch (key)
-    {
-    case CK_ENTER:  cmd += "Enter"; break;
-    case CK_BKSP:   cmd += "Backspace"; break;
-    CASE_ESCAPE     cmd += "Esc"; break;
-    case CK_DELETE: cmd += "Del"; break;
-    case CK_UP:     cmd += "Up"; break;
-    case CK_DOWN:   cmd += "Down"; break;
-    case CK_LEFT:   cmd += "Left"; break;
-    case CK_RIGHT:  cmd += "Right"; break;
-    case CK_INSERT: cmd += "Ins"; break;
-    case CK_HOME:   cmd += "Home"; break;
-    case CK_END:    cmd += "End"; break;
-    case CK_CLEAR:  cmd += "Clear"; break;
-    case CK_PGUP:   cmd += "PgUp"; break;
-    case CK_PGDN:   cmd += "PgDn"; break;
-    }
-
-    return cmd;
-}
-
 string command_to_string(command_type cmd, bool tutorial)
 {
     const int key = command_to_key(cmd);
-
-    const string desc = _special_keys_to_string(key);
-    if (!desc.empty())
-        return desc;
 
     string result;
     if (key >= 32 && key < 256)
@@ -2082,13 +2038,7 @@ string command_to_string(command_type cmd, bool tutorial)
         result = make_stringf("Ctrl-%c", (char) (key + SDLK_a - 1));
 #endif
     else
-    {
-        const int ch = key + 'A' - 1;
-        if (ch >= 'A' && ch <= 'Z')
-            result = make_stringf("Ctrl-%c", (char) ch);
-        else
-            result = to_string(key);
-    }
+        result = keycode_to_name(key, false);
 
     return result;
 }
