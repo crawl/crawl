@@ -2561,8 +2561,11 @@ void bolt::drop_object(bool allow_mulch)
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = (is_tracer && !can_see_invis
-                             && you.invisible() && !YOU_KILL(thrower));
+    const bool needs_fuzz = is_tracer
+            && !can_see_invis && you.invisible()
+            && !YOU_KILL(thrower)
+            // No point in fuzzing to a position that could never be hit.
+            && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
 
     return grid_distance(pos(), you.pos()) <= dist;
