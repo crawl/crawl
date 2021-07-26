@@ -777,6 +777,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     {
         if (!menu || menu.type === "crt") return;
         if (ui.top_popup()[0] !== menu.elem[0]) return;
+        if (menu.tag == "macro_mapping") return; // Treat input as raw, no need
+                                                 // to scroll anyway
 
         var chr = String.fromCharCode(event.which);
 

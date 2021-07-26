@@ -1164,6 +1164,7 @@ public:
               parent(_parent),
               doing_key_input(false), doing_raw_action_input(false)
         {
+            set_tag("macro_mapping");
 #ifdef USE_TILE_LOCAL
             set_min_col_width(62); // based on `r` more width
 #endif
