@@ -992,6 +992,9 @@ static bool _id_floor_item(item_def &item)
         if (item_needs_autopickup(item))
             item.props["needs_autopickup"] = true;
         identify_item(item);
+        // but skip ones that we discover to be useless
+        if (item.props.exists("needs_autopickup") && is_useless_item(item))
+            item.props.erase("needs_autopickup");
         return true;
     }
 
