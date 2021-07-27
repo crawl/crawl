@@ -96,7 +96,7 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
-    Alexi Barnes
+    Alexei Barnes
     Beargit
     Bill Beher
     Alexander Beisig
@@ -142,11 +142,13 @@
     David Damerell
     Paul Dejean
     Denzi
+    dicedlemming
     Lothar Dierkes
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
+    DreamDust
     Mike Drinen
     DrKe
     Kieron Dunbar
