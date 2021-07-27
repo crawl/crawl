@@ -517,9 +517,8 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
         (Ordered list option)
         A set of regexes that force matching items to be picked up (if
         prefixed with <), or never picked up (if prefixed with >).
-        Excludes (>) take precedence over includes (<), so if the same
-        item is matched by both an exclude and an include, it will not
-        be subject to autopickup.
+        The list is order sensitive: the first matching rule will be applied to
+        an item.
 
         An example:
              autopickup_exceptions += <curare-tipped dart
