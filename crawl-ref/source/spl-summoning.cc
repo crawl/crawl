@@ -2896,7 +2896,7 @@ static void _overgrow_wall(const coord_def &pos)
         mprf("%s falls apart, but nothing grows.", what.c_str());
 }
 
-bool fedhas_overgrow()
+spret fedhas_overgrow(bool fail)
 {
     targeter_overgrow tgt;
     direction_chooser_args args;
@@ -2910,12 +2910,14 @@ bool fedhas_overgrow()
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid)
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     for (auto site : tgt.affected_positions)
         _overgrow_wall(site);
 
-    return true;
+    return spret::success;
 }
 
 spret fedhas_grow_ballistomycete(bool fail)

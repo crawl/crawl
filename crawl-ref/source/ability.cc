@@ -2843,14 +2843,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         return fedhas_grow_ballistomycete(fail);
 
     case ABIL_FEDHAS_OVERGROW:
-    {
-        fail_check();
-
-        if (!fedhas_overgrow())
-            return spret::abort;
-
-        break;
-    }
+        return fedhas_overgrow(fail);
 
     case ABIL_FEDHAS_GROW_OKLOB:
         return fedhas_grow_oklob(fail);
