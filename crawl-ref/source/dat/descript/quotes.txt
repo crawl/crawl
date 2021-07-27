@@ -1379,6 +1379,14 @@ falchion
  And these same crosses spoil me.”
     -William Shakespeare, _King Lear_, V, iii. 1608.
 %%%%
+fenstrider witch
+
+“All the infections that sun sucks up
+ From bogs, fens, flats, on Prosper fall and make him
+ By inch-meal a disease! His spirits hear me
+ And yet I needs must curse.”
+    -William Shakespeare, _The Tempest_, II, 2. 1611.
+%%%%
 fire crab
 
 “The planet brought forth scintillating jewelled scuttling crabs, which [they]
@@ -3355,11 +3363,11 @@ vampire bat
 %%%%
 very ugly thing
 
-“All the infections that sun sucks up
- From bogs, fens, flats, on Prosper fall and make him
- By inch-meal a disease! His spirits hear me
- And yet I needs must curse. ”
-    -William Shakespeare, _The Tempest_, II, 2. 1611.
+“I'm ugly, I'm ugly as sin,
+ But beautiful's out, ugly's in.
+ If you're ugly like me, you're in good company.
+ There are millions of us who are ugly.”
+    -_The Muppet Show_, “Ugly Song”. 1977
 %%%%
 vine stalker
 
