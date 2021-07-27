@@ -327,6 +327,7 @@ class targeter_overgrow: public targeter
 {
 public:
     targeter_overgrow();
+    bool can_affect_walls() override { return true; }
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
     bool set_aim(coord_def a) override;
