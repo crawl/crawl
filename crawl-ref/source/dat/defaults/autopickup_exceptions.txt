@@ -1,15 +1,12 @@
 ae := autopickup_exceptions
 
-#### inclusions ###
+### specific inclusions ###
 
 # Autopickup runes by default.
 ae = <rune of Zot
 
 # Make it harder to miss out on zigfigs.
 ae += <figurine of a ziggurat
-
-# Autopickup good and emergency consumables by default.
-ae += <good_item
 
 ### exclusions ###
 
@@ -23,6 +20,10 @@ ae += dangerous_item
 
 # Exclude items which your god disapproves of.
 ae += forbidden
+
+### good_item backstop (keep last) ###
+
+ae += <good_item
 
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
