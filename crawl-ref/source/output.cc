@@ -80,6 +80,12 @@ static string _level_description_string_hud()
 }
 
 #ifdef USE_TILE_LOCAL
+
+static bool _low_vertical_space()
+{
+    return crawl_view.hudsz.y <= 32;
+}
+
 /*
  * this glorious piece of code works by:
     - overriding cgotoxy and cprintf
@@ -166,6 +172,7 @@ enum touchui_states
 touchui_states TOUCH_UI_STATE = TOUCH_S_INIT;
 static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
 {
+    bool super_small = _low_vertical_space();
     if (_is_using_small_layout())
         TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
     switch (TOUCH_UI_STATE)
@@ -184,91 +191,91 @@ static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
             x = 1; y = 4;
             break;
         case TOUCH_T_AC:
-            x = 1; y = 6;
+            x = 1; y = (super_small) ? 5 : 6;
             break;
         case TOUCH_T_EV:
-            x = 4; y = 6;
+            x = 4; y = (super_small) ? 5 : 6;
             break;
         case TOUCH_T_SH:
-            x = 7; y = 6;
+            x = 7; y = (super_small) ? 5 : 6;
             break;
         case TOUCH_V_AC:
-            x = 1; y = 7;
+            x = 1; y = (super_small) ? 6 : 7;
             break;
         case TOUCH_V_EV:
-            x = 4; y = 7;
+            x = 4; y = (super_small) ? 6 : 7;
             break;
         case TOUCH_V_SH:
-            x = 7; y = 7;
+            x = 7; y = (super_small) ? 6 : 7;
             break;
         case TOUCH_T_STR:
-            x = 1; y = 8;
+            x = 1; y = (super_small) ? 7 : 8;
             break;
         case TOUCH_T_INT:
-            x = 4; y = 8;
+            x = 4; y = (super_small) ? 7 : 8;
             break;
         case TOUCH_T_DEX:
-            x = 7; y = 8;
+            x = 7; y = (super_small) ? 7 : 8;
             break;
         case TOUCH_V_STR:
-            x = 1; y = 9;
+            x = 1; y = (super_small) ? 8 : 9;
             break;
         case TOUCH_V_INT:
-            x = 4; y = 9;
+            x = 4; y = (super_small) ? 8 : 9;
             break;
         case TOUCH_V_DEX:
-            x = 7; y = 9;
+            x = 7; y = (super_small) ? 8 : 9;
             break;
         case TOUCH_T_XL:
-            x = 1; y = 10;
+            x = 1; y = (super_small) ? 9 : 10;
             break;
         case TOUCH_V_XL:
-            x = 1; y = 11;
+            x = 1; y = (super_small) ? 10 : 11;
             break;
         case TOUCH_V_XL2:
-            x = 4; y = 11;
+            x = 4; y = (super_small) ? 10 : 11;
             break;
         case TOUCH_T_NOISE:
-            x = 1; y = 13;
+            x = 1; y = (super_small) ? 11 : 13;
             break;
         case TOUCH_V_NOISE:
-            x = 1; y = 14;
+            x = 1; y = (super_small) ? 12 : 14;
             break;
         case TOUCH_V_NOISW:
-            x = 4; y = 14;
+            x = 4; y = (super_small) ? 12 : 14;
             break;
         case TOUCH_V_NOISX:
-            x = 9; y = 14;
+            x = 9; y = (super_small) ? 12 : 14;
             break;
         case TOUCH_T_PLACE:
-            x = 1; y = 15;
+            x = 1; y = (super_small) ? 13 : 15;
             break;
         case TOUCH_V_PLACE:
-            x = 1; y = 16;
+            x = 1; y = (super_small) ? 14 : 16;
             break;
         case TOUCH_T_TIME:
-            x = 1; y = 17;
+            x = 1; y = (super_small) ? 15 : 17;
             break;
         case TOUCH_V_TIME:
-            x = 1; y = 18;
+            x = 1; y = (super_small) ? 16 : 18;
             break;
         case TOUCH_T_WP:
-            x = 1; y = 20;
+            x = 1; y = (super_small) ? 17 : 20;
             break;
         case TOUCH_V_WP:
-            x = 4; y = 20;
+            x = 4; y = (super_small) ? 17 : 20;
             break;
         case TOUCH_V_WP2:
-            x = 1; y = 21;
+            x = 1; y = (super_small) ? 18 : 21;
             break;
         case TOUCH_T_QV:
-            x = 1; y = 22;
+            x = 1; y = (super_small) ? 19 : 22;
             break;
         case TOUCH_V_QV:
-            x = 4; y = 22;
+            x = 4; y = (super_small) ? 19 : 22;
             break;
         case TOUCH_V_LIGHT:
-            x = 1; y = 24;
+            x = 1; y = (super_small) ? 20 : 24;
             break;
         case TOUCH_T_HP:
             x = 2; y = crawl_view.hudsz.y;
@@ -280,6 +287,7 @@ static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
             // reset state
             TOUCH_UI_STATE = TOUCH_S_INIT;
     }
+    y = min(y, crawl_view.hudsz.y);
     cgotoxy(x,y,region);
 }
 
@@ -324,7 +332,7 @@ static void _cprintf_touchui(const char *format, ...)
         case TOUCH_V_AC:
         case TOUCH_V_EV:
         case TOUCH_V_SH:
-            buf = buf.substr(0,2);
+            buf = buf.substr(0, 2);
             trim_string(buf);
             cprintf("%2s", buf.c_str());
             break;
@@ -345,7 +353,8 @@ static void _cprintf_touchui(const char *format, ...)
             cprintf("Noise");
             break;
         case TOUCH_T_TIME:
-            cprintf("Time");
+            buf = buf.substr(0, buf.size()-1);
+            cprintf(buf.c_str());
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
@@ -662,12 +671,8 @@ void update_turn_count()
     const int turncount_start_x = 19 + 6;
     int ypos = 9;
     // TODO: unify this with the calculation in print_stats
-    if (you.has_mutation(MUT_HP_CASTING))
+    if (you.has_mutation(MUT_HP_CASTING) && !_is_using_small_layout())
         ypos--;
-#ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout())
-        ypos--;
-#endif
     CGOTOXY(turncount_start_x, ypos, GOTO_STAT);
 
     textcolour(HUD_VALUE_COLOUR);
@@ -904,7 +909,12 @@ static void _print_stats_mp(int x, int y)
 
 #ifdef USE_TILE_LOCAL
     if (_is_using_small_layout())
-        MP_Bar.vdraw(6, 25, you.magic_points, you.max_magic_points);
+    {
+        if (_low_vertical_space())
+            MP_Bar.vdraw(6, 20, you.magic_points, you.max_magic_points);
+        else
+            MP_Bar.vdraw(6, 25, you.magic_points, you.max_magic_points);
+    }
     else
 #endif
         MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
@@ -954,7 +964,12 @@ static void _print_stats_hp(int x, int y)
 
 #ifdef USE_TILE_LOCAL
     if (_is_using_small_layout())
-        HP_Bar.vdraw(2, 25, you.hp, you.hp_max);
+    {
+        if (_low_vertical_space())
+            HP_Bar.vdraw(2, 20, you.hp, you.hp_max);
+        else
+            HP_Bar.vdraw(2, 25, you.hp, you.hp_max);
+    }
     else
 #endif
         HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
@@ -1007,7 +1022,7 @@ static void _print_stats_ac(int x, int y)
 
     string ac = make_stringf("%2d ", you.armour_class());
 #ifdef WIZARD
-    if (you.wizard)
+    if (you.wizard && !_is_using_small_layout())
         ac += make_stringf("(%d%%) ", you.gdr_perc());
 #endif
     textcolour(text_col);
@@ -1496,7 +1511,10 @@ void print_stats()
     int rows_hidden = 0;
     // hide the MP bar for djinni
     if (you.has_mutation(MUT_HP_CASTING))
-        rows_hidden++;
+    {
+        if (!_is_using_small_layout())
+            rows_hidden++;
+    }
     else if (you.redraw_magic_points)
         _print_stats_mp(1, 4);
 
@@ -1538,20 +1556,13 @@ void print_stats()
     }
 
     // Line 9 is Noise and Turns
-#ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout())
-        rows_hidden++;
-    else
-#endif
+    if (Options.equip_bar)
     {
-        if (Options.equip_bar)
-        {
-             if (you.gear_change || you.wield_change)
-                _print_stats_equip(1, 9 - rows_hidden);
-        }
-        else if (you.redraw_noise)
-            _print_stats_noise(1, 9 - rows_hidden);
+         if (you.gear_change || you.wield_change)
+            _print_stats_equip(1, 9 - rows_hidden);
     }
+    else if (you.redraw_noise)
+        _print_stats_noise(1, 9 - rows_hidden);
 
     if (you.wield_change)
         _print_stats_wp(10 - rows_hidden);
@@ -1571,12 +1582,8 @@ void print_stats_level()
 {
     int ypos = 8;
     // TODO: unify this with the calculation in print_stats
-    if (you.has_mutation(MUT_HP_CASTING))
+    if (you.has_mutation(MUT_HP_CASTING) && !_is_using_small_layout())
         ypos--;
-#ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout())
-        ypos--;
-#endif
 
     CGOTOXY(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
@@ -1602,7 +1609,7 @@ void draw_border()
     int ac_pos;
     // TODO: unify this calculation with rows_hidden in print_stats in a
     // non-insane way
-    if (you.has_mutation(MUT_HP_CASTING))
+    if (you.has_mutation(MUT_HP_CASTING) && !_is_using_small_layout())
         ac_pos = 4;
     else
         ac_pos = 5;

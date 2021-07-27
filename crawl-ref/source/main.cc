@@ -1880,6 +1880,10 @@ public:
             MEL_ITEM, '~', CMD_MACRO_MENU));
         add_entry(new CmdMenuEntry("Help and manual",
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+#ifdef __ANDROID__
+        add_entry(new CmdMenuEntry("Toggle on-screen keyboard",
+            MEL_ITEM, CK_F12, CMD_TOGGLE_KEYBOARD));
+#endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
                             "Quit and <lightred>abandon character</lightred>",

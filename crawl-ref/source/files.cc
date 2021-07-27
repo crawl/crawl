@@ -99,6 +99,7 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#define VERSIONED_CACHE_DIR
 #endif
 
 #ifndef F_OK // MSVC for example
@@ -2434,7 +2435,7 @@ void save_game(bool leave_game, const char *farewellmsg)
         if (crawl_state.unsaved_macros)
             macro_save();
         if (!you.entering_level)
-            _save_level(level_id::current());
+            save_level(level_id::current());
 #endif
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
             you.save->commit();

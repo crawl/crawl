@@ -237,8 +237,7 @@ public class SDLActivity extends Activity {
         mLayout.addOnLayoutChangeListener(
                 (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
 
-            // Don't show the keyboard on portrait mode to avoid crashes
-            if (mScreenKeyboardShown && (bottom > right)) {
+            if (mScreenKeyboardShown) {
                 if (mKeyboard.getVisibility() != View.VISIBLE || oldBottom != mLayout.getHeight()) {
                     mKeyboard.setVisibility(View.VISIBLE);
                     ViewGroup.LayoutParams lParams = mSurface.getLayoutParams();

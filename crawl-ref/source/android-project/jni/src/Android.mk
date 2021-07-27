@@ -241,9 +241,9 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/spl-other.cc \
     $(CRAWL_PATH)/spl-selfench.cc \
     $(CRAWL_PATH)/spl-summoning.cc \
-    $(CRAWL_PATH)/spl-tornado.cc \
     $(CRAWL_PATH)/spl-transloc.cc \
     $(CRAWL_PATH)/spl-util.cc \
+    $(CRAWL_PATH)/spl-vortex.cc \
     $(CRAWL_PATH)/spl-wpnench.cc \
     $(CRAWL_PATH)/spl-zap.cc \
     $(CRAWL_PATH)/sprint.cc \
