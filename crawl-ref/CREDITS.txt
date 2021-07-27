@@ -144,6 +144,7 @@
     Denzi
     dicedlemming
     Lothar Dierkes
+    dilly
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
@@ -153,6 +154,7 @@
     DrKe
     Kieron Dunbar
     Russell Dunk
+    Ebonnov
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -166,7 +168,6 @@
     Kyle Fox
     freepotion
     Chris Galardi
-    Yitao Gao
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
@@ -361,7 +362,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    ukdong99
     Sean VanMeter
     Mikko Vepsäläinen
     vla22
