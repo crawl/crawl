@@ -1976,6 +1976,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
+        auto_assign_item_slot(you.inv[inv_slot]);
 
         return true;
     }
