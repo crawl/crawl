@@ -34,6 +34,13 @@ static string _wallmsg(coord_def c)
     return "There is " + article_a(wall) + " there.";
 }
 
+static void _copy_explosion_map(explosion_map &source, explosion_map &dest)
+{
+    for (int i = 0; i < source.width(); i++)
+        for (int j = 0; j < source.height(); j++)
+            dest[i][j] = source[i][j];
+}
+
 bool targeter::set_aim(coord_def a)
 {
     // This matches a condition in direction_chooser::move_is_ok().
@@ -255,9 +262,14 @@ void targeter_beam::set_explosion_aim(bolt tempbeam)
     exp_map_min.init(INT_MAX);
     tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       min_expl_rad, true, true);
-    exp_map_max.init(INT_MAX);
-    tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
-                                      max_expl_rad, true, true);
+    if (max_expl_rad == min_expl_rad)
+        _copy_explosion_map(exp_map_min, exp_map_max);
+    else
+    {
+        exp_map_max.init(INT_MAX);
+        tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                                          max_expl_rad, true, true);
+    }
 }
 
 void targeter_beam::set_explosion_target(bolt &tempbeam)
@@ -493,9 +505,14 @@ bool targeter_smite::set_aim(coord_def a)
         exp_map_min.init(INT_MAX);
         beam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       exp_range_min, true, true);
-        exp_map_max.init(INT_MAX);
-        beam.determine_affected_cells(exp_map_max, coord_def(), 0,
-                                      exp_range_max, true, true);
+        if (exp_range_min == exp_range_max)
+            _copy_explosion_map(exp_map_min, exp_map_max);
+        else
+        {
+            exp_map_max.init(INT_MAX);
+            beam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                    exp_range_max, true, true);
+        }
     }
     return true;
 }
@@ -764,9 +781,9 @@ bool targeter_fragment::set_aim(coord_def a)
     exp_map_min.init(INT_MAX);
     tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
             exp_range_min, true, true);
-    exp_map_max.init(INT_MAX);
-    tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
-            exp_range_max, true, true);
+
+    // Min and max ranges are always identical.
+    _copy_explosion_map(exp_map_min, exp_map_max);
 
     return true;
 }
