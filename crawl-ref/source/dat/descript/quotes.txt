@@ -3296,12 +3296,11 @@ ufetubus
 %%%%
 ugly thing
 
-“Beauty is no quality in things themselves: It exists merely in the mind which
- contemplates them; and each mind perceives a different beauty. One person may
- even perceive deformity, where another is sensible of beauty; and every
- individual ought to acquiesce in his own sentiment, without pretending to
- regulate those of others.”
-    -David Hume
+"I'm ugly, I'm ugly as sin,
+ But beautiful's out, ugly's in.
+ If you're ugly like me, you're in good company.
+ There are millions of us who are ugly."
+    -_The Muppet Show_, "Ugly Song". 1977
 %%%%
 Urug
 
