@@ -760,15 +760,13 @@ bool targeter_fragment::set_aim(coord_def a)
         return false;
     }
 
-    bolt beam;
-    beam.target = a;
-    beam.use_target_as_pos = true;
+    tempbeam.use_target_as_pos = true;
     exp_map_min.init(INT_MAX);
-    beam.determine_affected_cells(exp_map_min, coord_def(), 0,
-                                  exp_range_min, false, false);
+    tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
+            exp_range_min, true, true);
     exp_map_max.init(INT_MAX);
-    beam.determine_affected_cells(exp_map_max, coord_def(), 0,
-                                  exp_range_max, false, false);
+    tempbeam.determine_affected_cells(exp_map_max, coord_def(), 0,
+            exp_range_max, true, true);
 
     return true;
 }
