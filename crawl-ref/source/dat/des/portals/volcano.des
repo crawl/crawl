@@ -937,14 +937,14 @@ KMONS:      u = flying skull
 :           volcano_setup(_G)
 : place_chained_volcano(_G)
 MAP
-                 xxxx
-            xxxxxxyyxxxxx
-          xxxy..yy.....yxxx
-         xxy........yyx...yxx        BBBBBBBBBBBBBBBBBBBBBBBBBB
-       xxxy................yxxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
-     xxxy.........LLLL.......yxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
+    xxxxxx       xxxx
+   xx.<.Ax  xxxxxxyyxxxxx
+  xx..xxxxxxxy..yy.....yxxx
+  x..xxxxxxy........yyx...yxx        BBBBBBBBBBBBBBBBBBBBBBBBBB
+  xx..yyyyy................yxxx      BBBBBBBBBBBBBBBBBBBBBBBBBB
+   xx.............LLLL.......yxxx    BBBBBBBBBBBBBBBBBBBBBBBBBB
     xxy.........LLlullLL.......yxxx  BBBBBBBBBBBBBBBBBBBBBBBBBB
-   xxy..<.A....LllllllllLLL......yxxxBBBBBBBBBBBBBBBBBBBBBBBBBB
+   xxy.........LllllllllLLL......yxxxBBBBBBBBBBBBBBBBBBBBBBBBBB
   xxy.........LllllllllllllLLL.....y.BBBBBBBBBBBBBBBBBBBBBBBBBB
  xxy........LLllllllllllllllllLLL...lBBBBBBBBBBBBBBBBBBBBBBBBBB
 xxy....LLlLllllllllllllllllllllllL...BBBBBBBBBBBBBBBBBBBBBBBBBB
