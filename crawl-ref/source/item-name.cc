@@ -2610,8 +2610,6 @@ bool is_bad_item(const item_def &item)
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
 #endif
-        case SCR_NOISE:
-            return true;
         default:
             return false;
         }
@@ -2683,6 +2681,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
                    || !temp && you.species == SP_VAMPIRE;
         case SCR_HOLY_WORD:
             return you.undead_or_demonic();
+        case SCR_NOISE:
+            return true;
         default:
             return false;
         }
