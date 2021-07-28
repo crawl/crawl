@@ -7,6 +7,7 @@
   * [Ubuntu / Debian](#ubuntu--debian)
   * [Fedora](#fedora)
   * [Other Linux / Unix](#other-linux--unix)
+  * [AppImage](#appimage)
   * [macOS](#macOS)
   * [Windows](#windows)
     * [MSYS2 (Recommended)](#msys2-recommended)
@@ -15,6 +16,7 @@
 * [Advanced](#advanced)
   * [ccache](#ccache)
   * [Installing For All Users](#installing-for-all-users)
+  * [Desktop files and AppStream metadata](#desktop-files-and-appstream-metadata)
   * [.des Level Compiler](#des-level-compiler)
   * [Code Coverage](#code-coverage)
   * [Lua](#lua)
@@ -127,6 +129,31 @@ Dependencies](#packaged-dependencies) above):
 * libpng (tiles builds only)
 
 Then follow [the above compilation steps](#compiling).
+
+## AppImage
+
+When building for Linux targets, you can easily create an AppImage with the
+help of the `linuxdeploy` tool.
+
+1. [Download the linuxdeploy AppImage](
+   https://github.com/linuxdeploy/linuxdeploy/releases)
+
+2. Make it executable.
+
+    ```sh
+    chmod +x /path/to/linuxdeploy.AppImage
+    ```
+
+3. Follow [the above compilation steps](#compiling) and, when running `make`,
+   include the `appimage` target and the path to `linuxdeploy` in the
+   `LINUXDEPLOY` parameter.
+    
+    ```sh
+    # console build
+    make LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
+    # tiles build
+    make TILES=y LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
+    ```
 
 ## macOS
 
@@ -450,6 +477,23 @@ Make options:
   `/usr/local`
 * `SAVEDIR`: defaults to `~/.crawl`
 * `DATADIR`: defaults to `$prefix/share/crawl`
+
+### Desktop files and AppStream metadata
+
+On Linux distributions and any other OS that follows the
+[XDG specifications](https://www.freedesktop.org), you can install some
+additional files to provide the required information for DCSS to be included in
+applications menus and software centers. This can be particularly useful if you
+are building DCSS to be distributed as a package.
+
+Use `make install-xdg-data` to install the following files:
+
+* A desktop file in `$prefix/share/applications`
+* A metainfo file in `$prefix/share/metainfo`
+* Several icons of different sizes in `$prefix/share/icons/hicolor`
+
+The name of the files is governed by the `GAME` option in order to match
+the generated executable file.
 
 ### .des level compiler
 
