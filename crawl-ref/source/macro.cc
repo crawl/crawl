@@ -254,37 +254,6 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-int function_keycode_fixup(int keycode)
-{
-    // is this harmless on windows console?
-#if !defined(USE_TILE_LOCAL) && TAG_MAJOR_VERSION == 34
-    // For many years, dcss has (accidentally, it seems) used these keycodes
-    // for function keys, because of a patch from 2009 that mapped some common
-    // terminal escape codes for F1-F4 to 1011-1014 under the belief (??) that
-    // these were used for some numpad keys. In webtiles code, these keycodes
-    // are even hardcoded in to the non-versioned part of the js code, so it's
-    // extremely hard to change. So we do this somewhat horrible fixup to deal
-    // with the complicated history. TODO: remove some day
-    switch (keycode)
-    {
-    case -1011: return CK_F1;
-    case -1012: return CK_F2;
-    case -1013: return CK_F3;
-    case -1014: return CK_F4;
-    case -1015: return CK_F5;
-    case -1016: return CK_F6;
-    case -1017: return CK_F7;
-    case -1018: return CK_F8;
-    case -1019: return CK_F9;
-    case -1020: return CK_F10;
-    default:
-        return keycode;
-    }
-#else
-    return keycode;
-#endif
-}
-
 static int read_key_code(string s)
 {
     if (s.empty())
@@ -367,7 +336,7 @@ keyseq parse_keyseq(string s)
             }
             else
             {
-                const int key = function_keycode_fixup(read_key_code(arg));
+                const int key = read_key_code(arg);
                 v.push_back(key);
             }
 
@@ -919,7 +888,7 @@ static string _keyseq_desc(const keyseq &key)
     string r = keycode_is_printable(key[0])
                 ? keycode_to_name(key[0]).c_str()
                 : make_stringf("%s (%s)",
-                    vtostr(key).c_str(), keycode_to_name(key[0]).c_str());
+                    vtostr(key).c_str(), keycode_to_name(key[0], false).c_str());
     r = replace_all(r, "<", "<<");
     return r;
 }
@@ -1124,9 +1093,9 @@ public:
 
         const int keycode = key[0];
         string key_str = keycode_is_printable(keycode)
-            ? keycode_to_name(keycode).c_str()
+            ? keycode_to_name(keycode, false).c_str()
             : make_stringf("%s (%s)",
-                    vtostr(key).c_str(), keycode_to_name(keycode).c_str());
+                    vtostr(key).c_str(), keycode_to_name(keycode, false).c_str());
         string action_str = vtostr(mapref[key]);
 
         action_str = replace_all(action_str, "<", "<<");
@@ -1676,7 +1645,7 @@ bool keycode_is_printable(int keycode)
     }
 }
 
-string keycode_to_name(int keycode, bool ctrl_is_caret)
+string keycode_to_name(int keycode, bool shorten)
 {
     // this is printable, but it's very confusing to try to use ' ' to print it
     // in circumstances where a name is called for
@@ -1692,6 +1661,10 @@ string keycode_to_name(int keycode, bool ctrl_is_caret)
     const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
     const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
 
+    // nb both of these use string literal concatenation
+    #define CTRL_DESC(x) (shorten ? ("^" x) : ("Ctrl-" x))
+    #define NP_DESC(x) (shorten ? ("NP" x) : ("Numpad " x))
+
     string prefix = "";
 
     if (shift)
@@ -1702,7 +1675,7 @@ string keycode_to_name(int keycode, bool ctrl_is_caret)
     else if (ctrl)
     {
         keycode -= (CK_CTRL_UP - CK_UP);
-        prefix = ctrl_is_caret ? "^" : "Ctrl-";
+        prefix = CTRL_DESC("");
     }
 
     // placeholder
@@ -1727,7 +1700,7 @@ string keycode_to_name(int keycode, bool ctrl_is_caret)
     case CK_PGUP:   return prefix+"PgUp";
     case CK_PGDN:   return prefix+"PgDn";
     case CK_SHIFT_TAB:    return "Shift-Tab";
-    case CK_CTRL_TAB:     return ctrl_is_caret ? "^Tab" : "Ctrl-Tab";
+    case CK_CTRL_TAB:     return CTRL_DESC("Tab");
     case CK_F0:     return "F0";
     case CK_F1:     return "F1";
     case CK_F2:     return "F2";
@@ -1741,6 +1714,28 @@ string keycode_to_name(int keycode, bool ctrl_is_caret)
     case CK_F10:    return "F10";
     case CK_F11:    return "F11";
     case CK_F12:    return "F12";
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_0: return NP_DESC("0");
+    case CK_NUMPAD_1: return NP_DESC("1");
+    case CK_NUMPAD_2: return NP_DESC("2");
+    case CK_NUMPAD_3: return NP_DESC("3");
+    case CK_NUMPAD_4: return NP_DESC("4");
+    case CK_NUMPAD_5: return NP_DESC("5");
+    case CK_NUMPAD_6: return NP_DESC("6");
+    case CK_NUMPAD_7: return NP_DESC("7");
+    case CK_NUMPAD_8: return NP_DESC("8");
+    case CK_NUMPAD_9: return NP_DESC("9");
+    // many of these may not actually work on any given local console:
+    // TODO: confirm the names. Some stuff in libunix.cc appears to have
+    // incorrect comments.
+    case CK_NUMPAD_MULTIPLY: return NP_DESC("*");
+    case CK_NUMPAD_ADD:      return NP_DESC("+");
+    case CK_NUMPAD_ADD2:     return NP_DESC("+"); // are there keyboards with both??
+    case CK_NUMPAD_SUBTRACT: return NP_DESC("-");
+    case CK_NUMPAD_SUBTRACT2: return NP_DESC("-");
+    case CK_NUMPAD_DECIMAL:  return NP_DESC(".");
+    case CK_NUMPAD_DIVIDE:   return NP_DESC("/");
+#endif
     default:
 #ifdef USE_TILE_LOCAL
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
@@ -1753,13 +1748,16 @@ string keycode_to_name(int keycode, bool ctrl_is_caret)
 #else
     {
         if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("%s%c", ctrl_is_caret ? "^" : "Ctrl-", UNCONTROL(keycode));
+            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
 
         keyseq v;
         v.push_back(keycode);
         return vtostr(v);
     }
 #endif
+
+#undef CTRL_DESC
+#undef NP_DESC
     }
 }
 

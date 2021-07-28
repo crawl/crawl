@@ -383,7 +383,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         keycode.check(JSON_NUMBER);
 
         // TODO: remove this fixup call
-        c = function_keycode_fixup((int) keycode->number_);
+        c = (int) keycode->number_;
     }
     else if (msgtype == "spectator_joined")
     {

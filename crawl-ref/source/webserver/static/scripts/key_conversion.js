@@ -1,4 +1,9 @@
 define(function() {
+    // This file is not versioned, which leads to some caveats: it may require
+    // a webserver restart to edit, and it needs to work for *all* versions of
+    // crawl on the webtiles server. For that reason it doesn't change often
+    // or easily. If needed, values here can be overridden in `game.js`, and
+    // this is the recommended way to make version-specific tweaks.
     var val;
     // Key codes - from cio.h
     val = -255
@@ -95,7 +100,9 @@ define(function() {
         //    123: -1022, // used for chat
 
         // TODO: the above keycodes for function keys are wrong, but have been
-        // wrong for a very long time. Some day, should be changed to:
+        // wrong for a very long time. They produce collisions with a bunch of
+        // keycodes that should more naturally be used for numpad keys.
+        // Some day, should be changed to:
         // 112: -265, // F1
         // 113: -266,
         // 114: -267,
@@ -109,15 +116,6 @@ define(function() {
         // //    122: -275, // Don't occupy F11, it's used for fullscreen
         // //    123: -276, // used for chat
     };
-
-    if (!$.browser.mozilla)
-    {
-        // Numpad with numlock -- FF sends keypresses, Chrome doesn't
-        for (var i = 0; i <= 9; i++)
-        {
-            key_conversion[96 + i] = 48 + i;
-        }
-    }
 
     if ($.browser.opera)
     {

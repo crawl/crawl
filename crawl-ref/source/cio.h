@@ -202,6 +202,31 @@ enum KEYS
     CK_NUMPAD_MINUS,
 #endif
 
+#ifndef USE_TILE_LOCAL
+    // TODO: unconditionally define these
+    // numpad keys are still a mess; see unixcurses_defkeys for the source of
+    // some of these bindings. On local console, in my testing, most of the
+    // non-numerics still translate as regular versions of their keys.
+    CK_NUMPAD_SUBTRACT2 = -1020,
+    CK_NUMPAD_DECIMAL  = -1019,
+    CK_NUMPAD_SUBTRACT = -1018, // ???
+    CK_NUMPAD_ADD2     = -1017,
+    CK_NUMPAD_ADD      = -1016, // ???
+    CK_NUMPAD_MULTIPLY = -1015,
+    CK_NUMPAD_DIVIDE   = -1012,
+    // the numbers themselves are a bit more sane
+    CK_NUMPAD_9 = -1009,
+    CK_NUMPAD_8,
+    CK_NUMPAD_7,
+    CK_NUMPAD_6,
+    CK_NUMPAD_5,
+    CK_NUMPAD_4,
+    CK_NUMPAD_3,
+    CK_NUMPAD_2,
+    CK_NUMPAD_1,
+    CK_NUMPAD_0,
+#endif
+
 // ugly...
 // TODO: should crawl just use one of these internally and convert?
 #ifdef USE_TILE_LOCAL

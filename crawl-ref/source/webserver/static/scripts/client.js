@@ -321,6 +321,32 @@ function (exports, $, key_conversion, chat, comm) {
         }
         if ($(document.activeElement).hasClass("text")) return;
 
+
+        // normalize numpad keycodes. I just couldn't find a good way to do this
+        // across browsers aside from use of the modern `code` values, but our
+        // key handling is generally not well kitted-out for these. We use
+        // relatively (but not fully) standard keycodes here that later get
+        // mapped to crawl-internal values on current versions.
+        if (e.originalEvent.code) // TODO: update jquery
+        {
+            switch (e.originalEvent.code)
+            {
+                case "Numpad0": e.which = 96; break;
+                case "Numpad1": e.which = 97; break;
+                case "Numpad2": e.which = 98; break;
+                case "Numpad3": e.which = 99; break;
+                case "Numpad4": e.which = 100; break;
+                case "Numpad5": e.which = 101; break;
+                case "Numpad6": e.which = 102; break;
+                case "Numpad7": e.which = 103; break;
+                case "Numpad8": e.which = 104; break;
+                case "Numpad9": e.which = 105; break;
+                // TODO: NumpadEqual behaves differently than other numpad
+                // keys, I'm leaving it alone for now
+                default: break;
+            }
+        }
+
         // Give the game a chance to handle the key
         if (!retrigger_event(e, "game_keydown"))
             return;
@@ -385,7 +411,7 @@ function (exports, $, key_conversion, chat, comm) {
                 e.preventDefault();
                 send_keycode(key_conversion.simple[e.which]);
             }
-            //else
+            // else
             //    log("Key: " + e.which);
         }
     }
