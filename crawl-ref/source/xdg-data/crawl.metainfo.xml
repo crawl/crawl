@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>org.develz.crawl</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Dungeon Crawl Stone Soup</name>
+  <summary>Roguelike dungeon exploration game</summary>
+  <description>
+    <p>
+      Crawl is a fun game in the grand tradition of similar games like Rogue,
+      Hack and Moria. The objective is to travel deep into a subterranean cave
+      complex and retrieve the Orb of Zot, guarded by many horrible and hideous
+      creatures.
+    </p>
+    <p>
+      If you have never played Crawl (or a similar game) before, select the
+      tutorial from the starting menu. The tutorial explains the interface in
+      five easy lessons. Once you're familiar with the controls, you may want to
+      play a few games using hints mode.
+    </p>
+    <p>
+      This is the console (text) version, there is also a tiles version.
+    </p>
+    <p>
+      This is the Stone Soup version of Dungeon Crawl.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/mnoleg.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/starcursed.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/enchantress.png</image>
+    </screenshot>
+  </screenshots>
+  <launchable type="desktop-id">crawl.desktop</launchable>
+  <url type="homepage">https://crawl.develz.org/</url>
+</component>

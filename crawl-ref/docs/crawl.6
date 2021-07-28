@@ -1,9 +1,9 @@
-.Dd January 20, 2010
+.Dd October 9, 2021
 .Os
 .Dt CRAWL 6
 .Sh NAME
-.Nm crawl
-.Nd the roguelike game of Crawl
+.Nm Crawl
+.Nd a roguelike dungeon exploration game
 .Sh SYNOPSIS
 .Nm
 .Op Fl vscores Ar n
@@ -31,9 +31,19 @@
 .Op Fl arena Op Qq Ar monsters Cm v Ar monsters Op Cm arena: Ns Ar map
 .Sh DESCRIPTION
 .Nm
-is a fun game in the grand tradition of games like Rogue, Hack, and Moria. Your
-objective is to travel deep into a subterranean cave complex and retrieve the
-Orb of Zot, which is guarded by many horrible and hideous creatures.
+is a fun game in the grand tradition of similar games like Rogue,
+Hack and Moria. The objective is to travel deep into a subterranean cave
+complex and retrieve the Orb of Zot, guarded by many horrible and hideous
+creatures.
+.Pp
+If you have never played
+.Nm
+(or a similar game) before, select the
+tutorial from the starting menu. The tutorial explains the interface in
+five easy lessons. Once you're familiar with the controls, you may want to
+play a few games using hints mode.
+.Pp
+This is the Stone Soup version of Dungeon Crawl.
 .Sh ENVIRONMENT
 .Bl -tag -width "CRAWL_NAME" -compact
 .It Ev CRAWL_NAME
@@ -43,8 +53,13 @@ The directory to store information in.
 .It Ev CRAWL_RC
 The configuration file to use.
 .El
+.Sh SUPPORT
+Please visit https://crawl.develz.org for further information.
 .Sh SEE ALSO
 The in-game help menu, which can be accessed by pressing
 .Ic \&? .
-.Sh AUTHORS
-Copyright 1997, 1998, 1999 Linley Henzell
+.Sh COPYRIGHT
+Copyright 1997-2021 Linley Henzell, the dev team, and the contributors.
+.Pp
+Crawl is distributed under the terms of the GNU General Public License
+version 2 or later.
