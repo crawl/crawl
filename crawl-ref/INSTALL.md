@@ -7,6 +7,7 @@
   * [Ubuntu / Debian](#ubuntu--debian)
   * [Fedora](#fedora)
   * [Other Linux / Unix](#other-linux--unix)
+  * [AppImage](#appimage)
   * [macOS](#macOS)
   * [Windows](#windows)
     * [MSYS2 (Recommended)](#msys2-recommended)
@@ -127,6 +128,31 @@ Dependencies](#packaged-dependencies) above):
 * libpng (tiles builds only)
 
 Then follow [the above compilation steps](#compiling).
+
+## AppImage
+
+When building for Linux targets, you can easily create an AppImage with the
+help of the `linuxdeploy` tool.
+
+1. [Download the linuxdeploy AppImage](
+   https://github.com/linuxdeploy/linuxdeploy/releases)
+
+2. Make it executable.
+
+    ```sh
+    chmod +x /path/to/linuxdeploy.AppImage
+    ```
+
+3. Follow [the above compilation steps](#compiling) and, when running `make`,
+   include the `appimage` target and the path to `linuxdeploy` in the
+   `LINUXDEPLOY` parameter.
+    
+    ```sh
+    # console build
+    make LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
+    # tiles build
+    make TILES=y LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
+    ```
 
 ## macOS
 

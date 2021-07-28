@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Dungeon Crawl
+Exec=crawl
+Icon=stone_soup_icon
+Categories=Game;AdventureGame;

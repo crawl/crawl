@@ -249,3 +249,14 @@ icon.png
 
 # generated files for catch2-tests
 /source/catch2-tests/*.d
+
+# generated files for appimage
+/source/Dungeon_Crawl-*.AppImage
+/source/appimage/.DirIcon
+/source/appimage/AppRun
+/source/appimage/crawl.desktop
+/source/appimage/stone_soup_icon.svg
+/source/appimage/usr/bin
+/source/appimage/usr/data
+/source/appimage/usr/lib
+/source/appimage/usr/share/icons

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>crawl.develz.org</id>
+  <project_license>GPL-2.0+</project_license>
+  <metadata_license>GPL-2.0+</metadata_license>
+  <name>Dungeon Crawl</name>
+  <summary>
+    An open source roguelike adventure through dungeons filled with dangerous
+    monsters in a quest to find the mystifyingly fabulous Orb of Zot.
+  </summary>
+  <description>
+    <p>
+      Crawl is a fun game in the grand tradition of similar games like Rogue,
+      Hack and Moria. The objective is to travel deep into a subterranean cave
+      complex and retrieve the Orb of Zot, guarded by many horrible and hideous
+      creatures.
+
+      If you have never played Crawl (or a similar game) before, select the
+      tutorial from the starting menu. The tutorial explains the interface in
+      five easy lessons. Once you're familiar with the controls, you may want to
+      play a few games using hints mode.
+    </p>
+  </description>
+  <launchable type="desktop-id">crawl.desktop</launchable>
+  <url type="homepage">https://crawl.develz.org</url>
+</component>

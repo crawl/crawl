@@ -63,6 +63,7 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    LINUXDEPLOY   -- path to linuxdeploy tool, required for AppImage builds
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
@@ -102,9 +103,9 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
-        clean-catch2 clean-plug-and-play-tests \
-		clean-coverage clean-coverage-full \
-        distclean debug debug-lite profile package-source source \
+        clean-appimage clean-catch2 clean-plug-and-play-tests \
+        clean-coverage clean-coverage-full \
+        appimage distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
         monster catch2-tests plug-and-play-tests \
         crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
@@ -605,6 +606,13 @@ ifndef NO_PKGCONFIG
 ifeq ($(shell which $(PKGCONFIG) 2> /dev/null),)
 NO_PKGCONFIG = YesPlease
 endif
+endif
+
+ifdef LINUXDEPLOY
+  prefix=appimage/usr
+  DESTDIR=
+  DATADIR=data/
+  export VERSION = $(SRC_VERSION)
 endif
 
 ifdef ANDROID
@@ -1578,7 +1586,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests clean-coverage-full clean-mac
+       clean-plug-and-play-tests clean-coverage-full clean-mac clean-appimage
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1891,6 +1899,29 @@ package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Linux AppImage
+#
+
+appimage: install
+ifeq ($(LINUXDEPLOY),)
+	@echo Please define LINUXDEPLOY path to use this build.
+	@exit 1
+endif
+	$(LINUXDEPLOY) --appdir appimage --desktop-file appimage/usr/share/applications/crawl.desktop \
+                       --icon-file dat/tiles/stone_soup_icon.svg --output appimage
+
+clean-appimage:
+	$(RM) Dungeon_Crawl-*.AppImage
+	$(RM) appimage/.DirIcon
+	$(RM) appimage/AppRun
+	$(RM) appimage/crawl.desktop
+	$(RM) appimage/stone_soup_icon.svg
+	$(RM) -r appimage/usr/bin
+	$(RM) -r appimage/usr/data
+	$(RM) -r appimage/usr/lib
+	$(RM) -r appimage/usr/share/icons
 
 #############################################################################
 # Building the unified Windows package.
