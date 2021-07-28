@@ -276,6 +276,15 @@ Items
 
 Spells
 ------
+* New Spell: Storm Form, a level 7 Transmutations/Air spell that transforms
+  the player into a raging, lightning-filled tempest:
+  - Melee attacks are electrified and strike all adjacent foes. Damage
+    increases with spellpower and unarmed combat skill.
+  - Grants the ability to Blinkbolt: launch yourself towards a foe to inflict
+    heavy damage, also damaging any monsters along the way.
+  - Grants increased evasion, rElec, and poison immunity. The evasion
+    increases with spellpower.
+  - Melds all equipment except jewellery.
 * New spell: Animate Armour, a level 4 Summon/Earth spell which draws out the
   spirit of the caster's armour to fight alongside them. The heavier the
   armour, the more powerful the spirit.
