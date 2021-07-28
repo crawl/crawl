@@ -1484,7 +1484,7 @@ int Menu::get_first_visible() const
         // why does this use y2? It can lead to partially visible items in tiles
         int item_y2;
         m_ui.menu->get_item_region(i, nullptr, &item_y2);
-        if (item_y2 > y)
+        if (item_y2 >= y)
             return i;
     }
     return items.size();
