@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-
-Name=Dungeon Crawl
-Exec=/usr/games/crawl
-Terminal=true
-Icon=crawl
-Categories=Game;AdventureGame;
