@@ -457,6 +457,12 @@ void revive()
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 
+    if (you.props.exists("maxwells_charge_time"))
+        you.props.erase("maxwells_charge_time");
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        end_frozen_ramparts();
+
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();
 
