@@ -3758,12 +3758,11 @@ void handle_maxwells_coupling()
 
 void end_maxwells_coupling(bool quiet)
 {
-    if (you.props.exists("maxwells_charge_time"))
-    {
-        if (!quiet)
-            mpr("The insufficient charge disappates harmlessly.");
-        you.props.erase("maxwells_charge_time");
-    }
+    if (!you.props.exists("maxwells_charge_time"))
+        return;
+    if (!quiet)
+        mpr("The insufficient charge dissipates harmlessly.");
+    you.props.erase("maxwells_charge_time");
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)
