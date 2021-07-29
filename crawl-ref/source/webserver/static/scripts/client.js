@@ -327,7 +327,8 @@ function (exports, $, key_conversion, chat, comm) {
         // key handling is generally not well kitted-out for these. We use
         // relatively (but not fully) standard keycodes here that later get
         // mapped to crawl-internal values on current versions.
-        if (e.originalEvent.code) // TODO: update jquery
+        if (e.originalEvent.code // TODO: update jquery
+            && e.which >= 48 && e.which <= 57)
         {
             switch (e.originalEvent.code)
             {
