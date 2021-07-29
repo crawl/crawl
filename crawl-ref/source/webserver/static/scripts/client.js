@@ -328,7 +328,10 @@ function (exports, $, key_conversion, chat, comm) {
         // relatively (but not fully) standard keycodes here that later get
         // mapped to crawl-internal values on current versions.
         if (e.originalEvent.code // TODO: update jquery
-            && e.which >= 48 && e.which <= 57)
+            && e.which >= 48 && e.which <= 57
+            // don't do this unless the key would be further handled -- these
+            // keycodes are otherwise dropped
+            && 96 in key_conversion.simple)
         {
             switch (e.originalEvent.code)
             {

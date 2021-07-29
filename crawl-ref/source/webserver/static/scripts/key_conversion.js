@@ -101,8 +101,9 @@ define(function() {
 
         // TODO: the above keycodes for function keys are wrong, but have been
         // wrong for a very long time. They produce collisions with a bunch of
-        // keycodes that should more naturally be used for numpad keys.
-        // Some day, should be changed to:
+        // keycodes that should more naturally be used for numpad keys. Can
+        // this be changed here without breaking things? Possibly not.
+        // In 0.27+, they are replaced in game.js by:
         // 112: -265, // F1
         // 113: -266,
         // 114: -267,
@@ -113,9 +114,21 @@ define(function() {
         // 119: -272,
         // 120: -273,
         // 121: -274,
-        // //    122: -275, // Don't occupy F11, it's used for fullscreen
-        // //    123: -276, // used for chat
     };
+
+    // Legacy fixup: this is used pre-0.27 to handle cases where a keyboard
+    // sends specialized numpad number keycodes but no keypress events. It's
+    // not clear to me when this happens (a previous comment says that it's
+    // chrome-specific, but it is definitely not all chrome browsers and not
+    // all keyboards). But, it may still happen. The fixup converts the keycodes
+    // to number keys. Overridden for 0.27+ in game.js
+    if (!$.browser.mozilla)
+    {
+        for (var i = 0; i <= 9; i++)
+        {
+            key_conversion[96 + i] = 48 + i;
+        }
+    }
 
     if ($.browser.opera)
     {
