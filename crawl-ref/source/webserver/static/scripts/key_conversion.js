@@ -179,7 +179,8 @@ define(function() {
 
     var captured_control_keys = [
         "O", "Q", "F", "P", "W", "A", "T", "X", "S", "G", "I", "D", "E",
-        "H", "J", "K", "L", "Y", "U", "B", "N", "C", "M"
+        "H", "J", "K", "L", "Y", "U", "B", "N", "C", "M",
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
     ];
 
     return {
