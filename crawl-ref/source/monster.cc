@@ -4464,7 +4464,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             && you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
         {
             if (one_chance_in(12))
-                this->corrode_equipment("");
+                this->corrode_equipment("Your corrupting presence");
             if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE) > 1
                         && one_chance_in(12))
             {
