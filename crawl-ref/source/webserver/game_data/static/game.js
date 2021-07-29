@@ -1,7 +1,7 @@
-define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
+define(["jquery", "comm", "client", "key_conversion", "./dungeon_renderer", "./display",
         "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
         "./player", "./mouse_control", "./ui", "./ui-layouts"],
-function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
+function ($, comm, client, key_conversion, dungeon_renderer, display, minimap, enums, messages,
           options) {
     "use strict";
 
@@ -10,11 +10,26 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     var msg_height;
     var show_diameter = 17;
 
+    function setup_keycodes()
+    {
+        key_conversion.simple[96] = -1000; // numpad 0
+        key_conversion.simple[97] = -1001; // numpad 1
+        key_conversion.simple[98] = -1002; // numpad 2
+        key_conversion.simple[99] = -1003; // numpad 3
+        key_conversion.simple[100] = -1004; // numpad 4
+        key_conversion.simple[101] = -1005; // numpad 5
+        key_conversion.simple[102] = -1006; // numpad 6
+        key_conversion.simple[103] = -1007; // numpad 7
+        key_conversion.simple[104] = -1008; // numpad 8
+        key_conversion.simple[105] = -1009; // numpad 9
+    }
+
     function init()
     {
         layout_parameters = null;
         ui_state = -1;
         options.clear();
+        setup_keycodes();
     }
 
     $(document).on("game_preinit game_cleanup", init);
