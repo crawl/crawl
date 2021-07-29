@@ -1352,7 +1352,7 @@ static string _drop_menu_titlefn(const Menu *m, const string &)
  */
 vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 {
-    unsigned char  keyin = '?';
+    unsigned char  keyin = '?'; // TODO: this should not be unsigned, get_ch returns a signed int!
     int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;

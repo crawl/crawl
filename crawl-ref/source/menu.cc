@@ -1222,12 +1222,15 @@ bool Menu::process_key(int keyin)
         lastch = keyin;
         return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
     case ' ': case CK_PGDN: case '>': case '+':
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
         if (!page_down() && is_set(MF_WRAP))
             m_ui.scroller->set_scroll(0);
         break;
-    case CK_PGUP:
+    case CK_PGUP: // XX why is '-' not used here, at least for non-multiselect menus?
     case '<':
         page_up();
         break;
@@ -1289,6 +1292,9 @@ bool Menu::process_key(int keyin)
         }
         break;
     case '.':
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_DECIMAL:
+#endif
         if (last_selected == -1 && is_set(MF_MULTISELECT))
             last_selected = 0;
 
@@ -1500,10 +1506,22 @@ void Menu::select_items(int key, int qty)
 {
     if (key == ',' && !!(flags & MF_MULTISELECT)) // Select all or apply filter if there is one.
         select_index(-1, -2);
-    else if (key == '*' && !!(flags & MF_MULTISELECT)) // Invert selection.
+    else if ((key == '*'
+#ifndef USE_TILE_LOCAL
+                || key == CK_NUMPAD_MULTIPLY
+#endif
+        ) && !!(flags & MF_MULTISELECT)) // Invert selection.
+    {
         select_index(-1, -1);
-    else if (key == '-' && !!(flags & MF_MULTISELECT)) // Clear selection. XX is there a singleselect menu where this should work?
+    }
+    else if ((key == '-'
+#ifndef USE_TILE_LOCAL
+                || key == CK_NUMPAD_SUBTRACT || key == CK_NUMPAD_SUBTRACT2
+#endif
+            ) && !!(flags & MF_MULTISELECT)) // Clear selection. XX is there a singleselect menu where this should work?
+    {
         select_index(-1, 0);
+    }
     else
     {
         int first_entry = get_first_visible(), final = items.size();

@@ -733,10 +733,18 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         switch (event.which)
         {
+        case 109: // numpad -
+            if (menu.tag == "inventory" || menu.tag == "stash"
+                || menu.tag == "actions" || menu.tag == "macros")
+            {
+                // TODO: most inventory menus should be ok...
+                break; // Don't capture - for wield prompts or stash search
+            }
         case 33: // page up
             page_up();
             event.preventDefault();
             return false;
+        case 107: // numpad +
         case 34: // page down
             page_down();
             event.preventDefault();
