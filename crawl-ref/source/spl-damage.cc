@@ -3756,11 +3756,12 @@ void handle_maxwells_coupling()
                                       - you.time_taken;
 }
 
-void end_maxwells_coupling()
+void end_maxwells_coupling(bool quiet)
 {
     if (you.props.exists("maxwells_charge_time"))
     {
-        mpr("The insufficient charge disappates harmlessly.");
+        if (!quiet)
+            mpr("The insufficient charge disappates harmlessly.");
         you.props.erase("maxwells_charge_time");
     }
 }
