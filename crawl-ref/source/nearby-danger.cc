@@ -26,6 +26,7 @@
 #include "mon-tentacle.h"
 #include "player.h"
 #include "player-stats.h"
+#include "spl-damage.h"
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
