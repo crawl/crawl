@@ -45,10 +45,10 @@ Branches, Environment
 
 Character
 ---------
-* New species: Djinni. Djinni are floating spirits formed from smokeless fire,
-  they have no MP, instead casting spells using their HP. They also cannot
-  learn spells from books; they instead get spells randomly and naturally,
-  starting on XL 3 and continuing on every even level.
+* New species: Djinni, floating spirits formed from smokeless fire.
+  - Djinni have no MP; their spells cost HP instead.
+  - Djinni cannot learn spells from books; they learn spells as they level up.
+  - Diinni cannot train spell schools; they use the Spellcasting skill alone.
 * Demonspawn mutation changes:
   - New facet: malevolent magic. This facet gives a chance to paralyse enemies
       in a radius around the player equal to the mutation rank whenever a spell
