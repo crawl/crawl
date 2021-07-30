@@ -1010,6 +1010,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         chat.clear();
+        key_conversion.reset_keycodes();
 
         watching = false;
     }

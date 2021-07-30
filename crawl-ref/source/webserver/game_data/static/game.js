@@ -13,6 +13,7 @@ function ($, comm, client, key_conversion, dungeon_renderer, display, minimap,
 
     function setup_keycodes()
     {
+        key_conversion.reset_keycodes();
         // any keycode handling that needs to be versioned should be swapped
         // in here. TODO: cleaner API for this?
         // map some browser keycodes to internal keycodes used for numpad
