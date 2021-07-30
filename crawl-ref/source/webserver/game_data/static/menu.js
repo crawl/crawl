@@ -741,11 +741,15 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break; // Don't capture - for wield prompts or stash search
             }
         case 33: // page up
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             page_up();
             event.preventDefault();
             return false;
         case 107: // numpad +
         case 34: // page down
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             page_down();
             event.preventDefault();
             return false;
