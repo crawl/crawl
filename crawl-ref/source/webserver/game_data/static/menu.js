@@ -828,8 +828,17 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         var item = $(this).data("item");
         if (!item) return;
-        if (item.hotkeys && item.hotkeys.length)
-            comm.send_message("input", { data: [ item.hotkeys[0] ] });
+        if (menu.flags & enums.menu_flag.ARROWS_SELECT)
+        {
+            set_hovered($(this).index()); // should be unnecesssary?
+            // just send enter, for uniform behavior between key entry and
+            // mouse control. TODO: maybe turn this into a specialized
+            // select event?
+            comm.send_message("key", { keycode: 13 });
+        }
+        // TODO: it would be better not to rely on hotkeys here as well
+        else if (item.hotkeys && item.hotkeys.length)
+            comm.send_message("key", { keycode: item.hotkeys[0] });
     }
 
     options.add_listener(function ()
