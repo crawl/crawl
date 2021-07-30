@@ -410,7 +410,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     // Apologies to non-public servers.
     if (ng.type == GAME_TYPE_NORMAL)
     {
-        if (!yesno("Trunk games don't count for the tournament, you want "
+        if (!yesno("Trunk doesn't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
             game_ended(game_exit::abort);
