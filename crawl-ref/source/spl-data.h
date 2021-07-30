@@ -3452,6 +3452,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_EXPLOSIVE_DISMISSAL, "Explosive Dismissal",
+    spschool::conjuration,
+    spflag::area,
+    6,
+    200,
+    -1, -1,
+    8, 0,
+    TILEG_ERROR, // TODO
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

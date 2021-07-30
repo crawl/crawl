@@ -502,6 +502,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_CHAIN_OF_CHAOS
         || spell == SPELL_IRRADIATE
         || spell == SPELL_IGNITION
+        || spell == SPELL_EXPLOSIVE_DISMISSAL
         || spell == SPELL_STARBURST
         || spell == SPELL_HAILSTORM
         || spell == SPELL_MANIFOLD_ASSAULT
@@ -1074,6 +1075,7 @@ int spell_effect_noise(spell_type spell)
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
     case SPELL_IGNITION:
+    case SPELL_EXPLOSIVE_DISMISSAL:
         expl_size = 1;
         break;
 
@@ -1602,6 +1604,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
         return true;
     }
+
+    case SPELL_EXPLOSIVE_DISMISSAL:
+        return find_dismissal_locations(you, false).empty();
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;

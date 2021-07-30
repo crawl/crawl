@@ -576,6 +576,11 @@ itself. It will not affect artefact weapons.
 While a weapon is infused it cannot be unwielded and casting spells is slightly
 more difficult.
 %%%%
+Explosive Dismissal
+
+Launches an attack on the bonds that hold hostile summoned creatures to this world,
+causing them to erupt in explosions of destructive magical energy.
+%%%%
 Flay spell
 
 Opens painful illusionary wounds on the target's body, which disappear after

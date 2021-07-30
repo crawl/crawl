@@ -1346,6 +1346,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_discord>();
     case SPELL_IGNITION:
         return make_unique<targeter_multifireball>(&you, get_ignition_blast_sources(&you, true));
+    case SPELL_EXPLOSIVE_DISMISSAL:
+        return make_unique<targeter_dismissal>();
 
     // Summons. Most summons have a simple range 2 radius, see find_newmons_square
     case SPELL_SUMMON_SMALL_MAMMAL:
@@ -2154,6 +2156,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_IGNITION:
         return cast_ignition(&you, powc, fail);
+
+    case SPELL_EXPLOSIVE_DISMISSAL:
+        return cast_explosive_dismissal(you, powc, fail);
 
     case SPELL_FROZEN_RAMPARTS:
         return cast_frozen_ramparts(powc, fail);

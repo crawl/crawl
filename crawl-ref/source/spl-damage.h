@@ -112,3 +112,7 @@ void end_maxwells_coupling(bool quiet = false);
 
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);
+
+spret cast_explosive_dismissal(const actor &caster, int pow, bool fail);
+vector<coord_def> find_dismissal_locations(const actor &caster,
+                                           bool include_unseen);

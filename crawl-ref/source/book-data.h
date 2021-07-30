@@ -274,6 +274,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUBLIMATION_OF_BLOOD,
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
+    SPELL_EXPLOSIVE_DISMISSAL,
 },
 
 {   // Book of Beasts
@@ -283,6 +284,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Annihilations
+    SPELL_EXPLOSIVE_DISMISSAL,
     SPELL_CHAIN_LIGHTNING,
     SPELL_FIRE_STORM,
 },

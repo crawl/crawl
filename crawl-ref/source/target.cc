@@ -2026,3 +2026,8 @@ bool targeter_intoxicate::affects_monster(const monster_info& mon)
              || !(mon.holi & MH_NATURAL)
              || get_resist(mon.resists(), MR_RES_POISON) >= 3);
 }
+
+targeter_dismissal::targeter_dismissal()
+    : targeter_multiposition(&you, find_dismissal_locations(you, false))
+{
+}

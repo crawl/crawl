@@ -1780,5 +1780,21 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_DISMISSAL,
+    "magical explosion",
+    200,
+    new calcdice_calculator<3, 10, 1, 3>, // less than fireball
+    new tohit_calculator<40>,
+    nullptr,
+    nullptr,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    0
+},
 
 };

@@ -3824,3 +3824,91 @@ spret cast_noxious_bog(int pow, bool fail)
 
     return spret::success;
 }
+
+static vector<coord_def> _find_dismissal_sources(const actor &caster,
+                                                 bool include_unseen)
+{
+    vector<coord_def> locs;
+    for (radius_iterator ri (caster.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        const actor* act = actor_at(*ri);
+        if (!act
+            || !act->is_summoned()
+            || !include_unseen && !caster.can_see(*act))
+        {
+            continue;
+        }
+        locs.push_back(*ri);
+    }
+    return locs;
+}
+
+static set<coord_def> _find_dismissal_locations(const actor &caster,
+                                                bool include_unseen)
+{
+    set<coord_def> locs;
+    for (coord_def c : _find_dismissal_sources(caster, include_unseen))
+        for (adjacent_iterator ai(c, false); ai; ++ai)
+            locs.insert(*ai);
+    return locs;
+}
+
+vector<coord_def> find_dismissal_locations(const actor &caster,
+                                           bool include_unseen)
+{
+    const set<coord_def> locs = _find_dismissal_locations(caster, include_unseen);
+    vector<coord_def> vlocs;
+    for (coord_def c : locs)
+        vlocs.push_back(c);
+    return vlocs;
+}
+
+spret cast_explosive_dismissal(const actor &caster, int pow, bool fail)
+{
+    if (caster.is_player())
+    {
+        set<coord_def> known_locs = _find_dismissal_locations(caster, false);
+        // XXX: could we use targeter_dismissal instead?
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+        if (stop_attack_prompt(hitfunc, "explode", [&known_locs](const actor *victim) {
+            return victim && known_locs.find(victim->pos()) != known_locs.end();
+        })) {
+            return spret::abort;
+        }
+    }
+
+    fail_check();
+
+    vector<coord_def> sources = _find_dismissal_sources(caster, true);
+    if (sources.empty())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    bolt beam;
+    zappy(ZAP_DISMISSAL, pow, caster.is_monster(), beam);
+    beam.set_agent(&caster);
+    beam.origin_spell   = SPELL_EXPLOSIVE_DISMISSAL;
+    beam.draw_delay = beam.explode_delay = 0;
+    beam.redraw_per_cell = false;
+    beam.obvious_effect = true;
+    beam.ex_size = 1;
+    beam.apply_beam_conducts(); // ???
+
+    for (coord_def c : sources)
+    {
+        beam.source = beam.target = c;
+        beam.in_explosion_phase = false;
+        beam.explode();
+    }
+    if (Options.use_animations & UA_BEAM)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(120);
+    }
+
+    // TODO: explode
+    return spret::success;
+}

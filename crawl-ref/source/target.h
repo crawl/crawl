@@ -507,3 +507,9 @@ public:
     targeter_intoxicate();
     bool affects_monster(const monster_info& mon) override;
 };
+
+class targeter_dismissal : public targeter_multiposition
+{
+public:
+    targeter_dismissal();
+};
