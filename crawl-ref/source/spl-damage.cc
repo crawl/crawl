@@ -2221,77 +2221,78 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     vector<coord_def> blast_sources = get_ignition_blast_sources(agent);
 
     if (blast_sources.empty())
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else
     {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
         mpr("The air bursts into flame!");
 
-        vector<coord_def> blast_adjacents;
+    vector<coord_def> blast_adjacents;
 
-        // Used to draw explosion cells
-        bolt beam_visual;
-        beam_visual.set_agent(agent);
-        beam_visual.flavour       = BEAM_VISUAL;
-        // XXX: why is this different from fireball?
-        beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam_visual.colour        = RED;
-        beam_visual.ex_size       = 1;
-        beam_visual.is_explosion  = true;
+    // Used to draw explosion cells
+    bolt beam_visual;
+    beam_visual.set_agent(agent);
+    beam_visual.flavour       = BEAM_VISUAL;
+    // XXX: why is this different from fireball?
+    beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam_visual.colour        = RED;
+    beam_visual.ex_size       = 1;
+    beam_visual.is_explosion  = true;
 
-        // Used to deal damage; invisible
-        bolt beam_actual;
-        zappy(ZAP_IGNITION, pow, false, beam_actual);
-        beam_actual.set_agent(agent);
-        beam_actual.ex_size       = 0;
-        beam_actual.apply_beam_conducts();
+    // Used to deal damage; invisible
+    bolt beam_actual;
+    zappy(ZAP_IGNITION, pow, false, beam_actual);
+    beam_actual.set_agent(agent);
+    beam_actual.ex_size       = 0;
+    beam_actual.apply_beam_conducts();
 
 #ifdef DEBUG_DIAGNOSTICS
-        dprf(DIAG_BEAM, "ignition dam=%dd%d",
-             beam_actual.damage.num, beam_actual.damage.size);
+    dprf(DIAG_BEAM, "ignition dam=%dd%d",
+         beam_actual.damage.num, beam_actual.damage.size);
 #endif
 
-        // Fake "shaped" radius 1 explosions (skipping squares with friends).
-        for (coord_def pos : blast_sources)
+    // Fake "shaped" radius 1 explosions (skipping squares with friends).
+    for (coord_def pos : blast_sources)
+    {
+        for (adjacent_iterator ai(pos); ai; ++ai)
         {
-            for (adjacent_iterator ai(pos); ai; ++ai)
+            if (cell_is_solid(*ai)
+                && (!beam_actual.can_affect_wall(*ai)
+                    || you_worship(GOD_FEDHAS)))
             {
-                if (cell_is_solid(*ai)
-                    && (!beam_actual.can_affect_wall(*ai)
-                        || you_worship(GOD_FEDHAS)))
-                {
-                    continue;
-                }
-
-                actor *act = actor_at(*ai);
-
-                // Friendly creature, don't blast this square.
-                if (act && (act == agent
-                            || (act->is_monster()
-                                && act->as_monster()->wont_attack())))
-                {
-                    continue;
-                }
-
-                blast_adjacents.push_back(*ai);
-                if (Options.use_animations & UA_BEAM)
-                    beam_visual.explosion_draw_cell(*ai);
+                continue;
             }
+
+            actor *act = actor_at(*ai);
+
+            // Friendly creature, don't blast this square.
+            if (act && (act == agent
+                        || (act->is_monster()
+                            && act->as_monster()->wont_attack())))
+            {
+                continue;
+            }
+
+            blast_adjacents.push_back(*ai);
             if (Options.use_animations & UA_BEAM)
-                beam_visual.explosion_draw_cell(pos);
+                beam_visual.explosion_draw_cell(*ai);
         }
         if (Options.use_animations & UA_BEAM)
-        {
-            viewwindow(false);
-            update_screen();
-            scaled_delay(50);
-        }
-
-        // Real explosions on each individual square.
-        for (coord_def pos : blast_sources)
-            _ignition_square(agent, beam_actual, pos, true);
-        for (coord_def pos : blast_adjacents)
-            _ignition_square(agent, beam_actual, pos, false);
+            beam_visual.explosion_draw_cell(pos);
     }
+    if (Options.use_animations & UA_BEAM)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(50);
+    }
+
+    // Real explosions on each individual square.
+    for (coord_def pos : blast_sources)
+        _ignition_square(agent, beam_actual, pos, true);
+    for (coord_def pos : blast_adjacents)
+        _ignition_square(agent, beam_actual, pos, false);
 
     return spret::success;
 }
