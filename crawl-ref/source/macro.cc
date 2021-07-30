@@ -254,6 +254,37 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
+int function_keycode_fixup(int keycode)
+{
+    // is this harmless on windows console?
+#if !defined(USE_TILE_LOCAL) && TAG_MAJOR_VERSION == 34
+    // For many years, dcss has (accidentally, it seems) used these keycodes
+    // for function keys, because of a patch from 2009 that mapped some common
+    // terminal escape codes for F1-F4 to 1011-1014 under the belief (??) that
+    // these were used for some numpad keys. In webtiles code, these keycodes
+    // are even hardcoded in to the non-versioned part of the js code, so it's
+    // extremely hard to change. So we do this somewhat horrible fixup to deal
+    // with the complicated history. TODO: remove some day
+    switch (keycode)
+    {
+    case -1011: return CK_F1;
+    case -1012: return CK_F2;
+    case -1013: return CK_F3;
+    case -1014: return CK_F4;
+    case -1015: return CK_F5;
+    case -1016: return CK_F6;
+    case -1017: return CK_F7;
+    case -1018: return CK_F8;
+    case -1019: return CK_F9;
+    case -1020: return CK_F10;
+    default:
+        return keycode;
+    }
+#else
+    return keycode;
+#endif
+}
+
 static int read_key_code(string s)
 {
     if (s.empty())
@@ -336,7 +367,7 @@ keyseq parse_keyseq(string s)
             }
             else
             {
-                const int key = read_key_code(arg);
+                const int key = function_keycode_fixup(read_key_code(arg));
                 v.push_back(key);
             }
 
