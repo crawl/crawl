@@ -1505,7 +1505,7 @@ static vector<string> _desc_intoxicate_chance(const monster_info& mi,
 
     int conf_pct = 40 + pow / 3;
 
-    if (get_resist(mi.resists(), MR_RES_POISON) >=1)
+    if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
         conf_pct =  conf_pct / 3;
 
     return vector<string>{make_stringf("chance to confuse: %d%%", conf_pct)};
@@ -1555,7 +1555,7 @@ static vector<string> _desc_dazzle_chance(const monster_info& mi, int pow)
 
 static vector<string> _desc_meph_chance(const monster_info& mi)
 {
-    if (mi.mresists & MR_RES_POISON)
+    if (get_resist(mi.resists(), MR_RES_POISON) >= 1)
         return vector<string>{"not susceptible"};
 
     int pct_chance = 2;
