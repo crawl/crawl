@@ -399,7 +399,7 @@ private:
 class targeter_maxwells_coupling : public targeter_multiposition
 {
 public:
-    targeter_maxwells_coupling(int range);
+    targeter_maxwells_coupling();
 };
 
 class targeter_multifireball : public targeter_multiposition

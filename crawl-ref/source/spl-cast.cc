@@ -1300,7 +1300,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
-        return make_unique<targeter_maxwells_coupling>(range);
+        return make_unique<targeter_maxwells_coupling>();
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
     case SPELL_DISPERSAL:

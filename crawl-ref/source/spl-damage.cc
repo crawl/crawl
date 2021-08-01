@@ -3595,9 +3595,9 @@ bool wait_spell_active(spell_type spell)
 
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
-static monster* _find_maxwells_target(int radius, bool tracer)
+static monster* _find_maxwells_target(bool tracer)
 {
-    for (distance_iterator di(you.pos(), !tracer, true, radius); di; ++di)
+    for (distance_iterator di(you.pos(), !tracer, true, LOS_RADIUS); di; ++di)
     {
         monster *mon = monster_at(*di);
         if (mon && _maxwells_target_check(*mon)
@@ -3611,15 +3611,14 @@ static monster* _find_maxwells_target(int radius, bool tracer)
 }
 
 // find all possible targets at the closest distance; used for targeting
-vector<monster *> find_maxwells_possibles(int radius)
+vector<monster *> find_maxwells_possibles()
 {
     vector<monster *> result;
-    monster *seed = _find_maxwells_target(radius, true);
+    monster *seed = _find_maxwells_target(true);
     if (seed)
     {
         const int distance = max(abs(you.pos().x - seed->pos().x),
-                                        abs(you.pos().y - seed->pos().y));
-        dprf("searching at rad %d, initial radius %d", distance, radius);
+                                 abs(you.pos().y - seed->pos().y));
         for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
         {
             monster *mon = monster_at(*di);
@@ -3632,8 +3631,7 @@ vector<monster *> find_maxwells_possibles(int radius)
 
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 {
-    monster* const mon = _find_maxwells_target(
-            spell_range(SPELL_MAXWELLS_COUPLING, pow), tracer);
+    monster* const mon = _find_maxwells_target(tracer);
 
     if (tracer)
     {
@@ -3652,14 +3650,12 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 
     you.props["maxwells_charge_time"] =
         - (30 + div_rand_round(random2((200 - pow) * 40), 200));
-    you.props["maxwells_range"] = spell_range(SPELL_MAXWELLS_COUPLING, pow);
     return spret::success;
 }
 
 static void _discharge_maxwells_coupling()
 {
-    monster* const mon = _find_maxwells_target(
-                             you.props["maxwells_range"].get_int(), false);
+    monster* const mon = _find_maxwells_target(false);
 
     if (!mon)
     {
