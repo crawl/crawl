@@ -752,12 +752,6 @@ monster_info::monster_info(const monster* m, int milev)
         _blocked_ray(m->pos(), &fire_blocker);
     }
 
-    if (m->props.exists("quote"))
-        quote = m->props["quote"].get_string();
-
-    if (m->props.exists("description"))
-        description = m->props["description"].get_string();
-
     // init names of constrictor and constrictees
     constrictor_name = "";
     constricting_name.clear();
