@@ -185,7 +185,7 @@ KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
         dagger damaged ident:all / hand axe damaged ident:all / \
         scythe damaged ident:all / club damaged ident:all / \
         hunting sling damaged ident:all
-KITEM:  P = robe cursed plus:-8 randart ident:all
+KITEM:  P = robe plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
         double sword good_item w:5 / demon blade good_item w:5 / \
