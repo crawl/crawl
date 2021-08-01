@@ -5368,9 +5368,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     const int plus = strip_number_tag(s, "plus:");
     if (plus != TAG_UNFOUND)
         result.props["plus"].get_int() = plus;
-    const int plus2 = strip_number_tag(s, "plus2:");
-    if (plus2 != TAG_UNFOUND)
-        result.props["plus2"].get_int() = plus2;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
