@@ -126,6 +126,7 @@ static ai_action::goodness _still_winds_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
+static ai_action::goodness _mons_likes_blinking(const monster &caster);
 static void _cast_cantrip(monster &mons, mon_spell_slot, bolt&);
 static void _cast_injury_mirror(monster &mons, mon_spell_slot, bolt&);
 static void _cast_smiting(monster &mons, mon_spell_slot slot, bolt&);
@@ -510,6 +511,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _buff_beam_setup(BEAM_CONCENTRATE_VENOM)
     } },
+    { SPELL_BLINK, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            monster_blink(&caster);
+        }
+    }}
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1690,7 +1697,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
 #endif
     case SPELL_CREATE_TENTACLES:
-    case SPELL_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_CLOSE:
@@ -2521,6 +2527,14 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
         update_screen();
         scaled_delay(25);
     }
+}
+
+static ai_action::goodness _mons_likes_blinking(const monster &caster)
+{
+    if (caster.no_tele(true, false))
+        return ai_action::impossible();
+    // Prefer to keep a polar vortex going rather than blink.
+    return ai_action::good_or_bad(!caster.has_ench(ENCH_POLAR_VORTEX));
 }
 
 /// Can the caster see the given target's cell and lava next to (or under) them?
@@ -4029,18 +4043,7 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    if (spell_cast == SPELL_BLINK)
-    {
-        // Why only cast blink if nearby? {dlb}
-        if (mons->can_see(you))
-        {
-            mons_cast_noise(mons, beem, spell_cast, flags);
-            monster_blink(mons);
-        }
-        else
-            return false;
-    }
-    else if (spell_cast == SPELL_BLINK_RANGE)
+    if (spell_cast == SPELL_BLINK_RANGE)
         blink_range(mons);
     else if (spell_cast == SPELL_BLINK_AWAY)
         blink_away(mons, true);
@@ -7410,7 +7413,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
         if (adjacent(mon->pos(), foe->pos()))
             return ai_action::bad();
         // intentional fall-through
-    case SPELL_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         if (mon->no_tele(true, false))
