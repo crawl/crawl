@@ -516,7 +516,31 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             monster_blink(&caster);
         }
-    }}
+    }},
+    { SPELL_BLINK_RANGE, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_range(&caster);
+        }
+    } },
+    { SPELL_BLINK_AWAY, {
+        _mons_likes_blinking,
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_away(&caster, true);
+        }
+    } },
+    { SPELL_BLINK_CLOSE, {
+        [](const monster &caster) {
+            const actor* foe = caster.get_foe();
+            ASSERT(foe);
+            if (adjacent(caster.pos(), foe->pos()))
+                return ai_action::bad();
+            return _mons_likes_blinking(caster);
+        },
+        [] (monster &caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            blink_close(&caster);
+        }
+    } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1697,9 +1721,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SWIFTNESS:
 #endif
     case SPELL_CREATE_TENTACLES:
-    case SPELL_BLINK_RANGE:
-    case SPELL_BLINK_AWAY:
-    case SPELL_BLINK_CLOSE:
     case SPELL_TOMB_OF_DOROKLOHE:
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_CHAIN_OF_CHAOS:
@@ -3725,6 +3746,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     // Don't use blinking spells in sight of a trap the player can see if we're
     // allied with the player; this might do more harm than good to the player
     // restrict to the ones the player can see to avoid an information leak
+    // TODO: move this logic into _mons_likes_blinking?
     if (mons_aligned(&mons, &you)
         && (spell == SPELL_BLINK || spell == SPELL_BLINK_OTHER
             || spell == SPELL_BLINK_OTHER_CLOSE || spell == SPELL_BLINK_CLOSE
@@ -4043,29 +4065,20 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    if (spell_cast == SPELL_BLINK_RANGE)
-        blink_range(mons);
-    else if (spell_cast == SPELL_BLINK_AWAY)
-        blink_away(mons, true);
-    else if (spell_cast == SPELL_BLINK_CLOSE)
-        blink_close(mons);
-    else
-    {
-        const bool battlesphere = mons->props.exists("battlesphere");
-        if (!(get_spell_flags(spell_cast) & spflag::utility))
-            make_mons_stop_fleeing(mons);
+    const bool battlesphere = mons->props.exists("battlesphere");
+    if (!(get_spell_flags(spell_cast) & spflag::utility))
+        make_mons_stop_fleeing(mons);
 
-        if (battlesphere)
-            aim_battlesphere(mons, spell_cast);
-        mons_cast(mons, beem, spell_cast, flags);
-        if (battlesphere)
-            trigger_battlesphere(mons);
-        if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
-        {
-            mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                       mons->get_ench(ENCH_SAP_MAGIC).agent(),
-                                       6 * BASELINE_DELAY));
-        }
+    if (battlesphere)
+        aim_battlesphere(mons, spell_cast);
+    mons_cast(mons, beem, spell_cast, flags);
+    if (battlesphere)
+        trigger_battlesphere(mons);
+    if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
+    {
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                   mons->get_ench(ENCH_SAP_MAGIC).agent(),
+                                   6 * BASELINE_DELAY));
     }
 
     // Reflection, fireballs, etc.
@@ -7407,18 +7420,6 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
             return ai_action::impossible();
         return ai_action::good_or_bad(mon->hit_points <= mon->max_hit_points / 2);
     }
-
-    case SPELL_BLINK_CLOSE:
-        ASSERT(foe);
-        if (adjacent(mon->pos(), foe->pos()))
-            return ai_action::bad();
-        // intentional fall-through
-    case SPELL_BLINK_RANGE:
-    case SPELL_BLINK_AWAY:
-        if (mon->no_tele(true, false))
-            return ai_action::impossible();
-        else // Prefer to keep a polar vortex going rather than blink.
-            return ai_action::good_or_bad(!mon->has_ench(ENCH_POLAR_VORTEX));
 
     case SPELL_BLINK_OTHER:
     case SPELL_BLINK_OTHER_CLOSE:
