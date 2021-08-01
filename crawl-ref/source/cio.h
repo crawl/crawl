@@ -214,6 +214,7 @@ enum KEYS
     CK_NUMPAD_ADD      = -1016, // ???
     CK_NUMPAD_MULTIPLY = -1015,
     CK_NUMPAD_DIVIDE   = -1012,
+    CK_NUMPAD_ENTER    = -1010, // no idea how general this is
     // the numbers themselves are a bit more sane
     CK_NUMPAD_9 = -1009,
     CK_NUMPAD_8,

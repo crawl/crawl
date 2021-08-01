@@ -351,7 +351,7 @@ public:
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
     void cycle_hover(bool reverse=false);
 
-    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
@@ -359,6 +359,8 @@ public:
     void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
+    string _title_prompt_help_tag;
+
     MenuEntry *title;
     MenuEntry *title2;
     bool m_indent_title;

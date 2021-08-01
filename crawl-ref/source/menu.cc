@@ -1025,6 +1025,14 @@ void Menu::do_menu()
     m_ui.popup->on_keydown_event([this, &done](const KeyEvent& ev) {
         if (m_filter)
         {
+            if (ev.key() == '?' && _title_prompt_help_tag.size())
+            {
+                // TODO: only useful for non-general prompts, is there another
+                // help key that would be better?
+                show_specific_help(_title_prompt_help_tag);
+                return true;
+            }
+
             int key = m_filter->putkey(ev.key());
 
             if (key == CK_ESCAPE)
@@ -1136,7 +1144,7 @@ bool Menu::filter_with_regex(const char *re)
     return true;
 }
 
-bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
+bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag)
 {
     bool validline;
 
@@ -1151,6 +1159,9 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt)
 #endif
     m_filter = new resumable_line_reader(linebuf, bufsz);
     m_filter->set_prompt(prompt);
+    // ugly to use a member variable for this, maybe generalize to a feature
+    // of line_reader?
+    _title_prompt_help_tag = help_tag;
     update_title();
     do
     {
