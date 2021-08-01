@@ -3662,43 +3662,44 @@ static void _discharge_maxwells_coupling()
                              you.props["maxwells_range"].get_int(), false);
 
     if (!mon)
-        canned_msg(MSG_NOTHING_HAPPENS);
+    {
+        mpr("Your charge dissipates without a target.");
+        return;
+    }
+
+    targeter_radius hitfunc(&you, LOS_NO_TRANS);
+    flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
+
+    god_conduct_trigger conducts[3];
+    set_attack_conducts(conducts, *mon, you.can_see(*mon));
+
+    if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
+    {
+        // need to do this here, because react_to_damage is never called
+        mprf("A cloud of jellies burst out of %s as the current"
+             " ripples through it!", mon->name(DESC_THE, false).c_str());
+        trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
+    }
     else
     {
-        targeter_radius hitfunc(&you, LOS_NO_TRANS);
-        flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
-
-        god_conduct_trigger conducts[3];
-        set_attack_conducts(conducts, *mon, you.can_see(*mon));
-
-        if (mon->type == MONS_ROYAL_JELLY && !mon->is_summoned())
-        {
-            // need to do this here, because react_to_damage is never called
-            mprf("A cloud of jellies burst out of %s as the current"
-                 " ripples through it!", mon->name(DESC_THE, false).c_str());
-            trj_spawn_fineff::schedule(&you, mon, mon->pos(), mon->hit_points);
-        }
-        else
-        {
-            mprf("The electricity discharges through %s!",
-                 you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
-        }
-
-        const coord_def pos = mon->pos();
-        bool goldify = have_passive(passive_t::goldify_corpses);
-
-        if (goldify)
-            simple_monster_message(*mon, " vaporises and condenses as gold!");
-        else
-            simple_monster_message(*mon, " vaporises in an electric haze!");
-
-        item_def* corpse = monster_die(*mon, KILL_YOU,
-                                        actor_to_death_source(&you));
-        if (corpse)
-            destroy_item(corpse->index());
-
-        noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
+        mprf("The electricity discharges through %s!",
+             you.can_see(*mon) ? mon->name(DESC_THE).c_str() : "something");
     }
+
+    const coord_def pos = mon->pos();
+    bool goldify = have_passive(passive_t::goldify_corpses);
+
+    if (goldify)
+        simple_monster_message(*mon, " vaporises and condenses as gold!");
+    else
+        simple_monster_message(*mon, " vaporises in an electric haze!");
+
+    item_def* corpse = monster_die(*mon, KILL_YOU,
+                                    actor_to_death_source(&you));
+    if (corpse)
+        destroy_item(corpse->index());
+
+    noisy(spell_effect_noise(SPELL_MAXWELLS_COUPLING), pos, you.mid);
 }
 
 void handle_maxwells_coupling()
