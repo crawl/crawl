@@ -3611,7 +3611,7 @@ bool wait_spell_active(spell_type spell)
     return spell == SPELL_SEARING_RAY
                 && you.attribute[ATTR_SEARING_RAY] != 0
             || spell == SPELL_MAXWELLS_COUPLING
-                && you.props.exists("maxwells_charge_time");
+                && you.props.exists(COUPLING_TIME_KEY);
 }
 
 // returns the closest target to the player, choosing randomly if there are more
@@ -3671,16 +3671,16 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
     insert_commands(msg, { CMD_WAIT });
     mpr(msg);
 
-    you.props["maxwells_charge_time"] =
+    you.props[COUPLING_TIME_KEY] =
         - (30 + div_rand_round(random2((200 - pow) * 40), 200));
-    you.props["maxwells_range"] = spell_range(SPELL_MAXWELLS_COUPLING, pow);
+    you.props[COUPLING_RANGE_KEY] = spell_range(SPELL_MAXWELLS_COUPLING, pow);
     return spret::success;
 }
 
 static void _discharge_maxwells_coupling()
 {
     monster* const mon = _find_maxwells_target(
-                             you.props["maxwells_range"].get_int(), false);
+                             you.props[COUPLING_RANGE_KEY].get_int(), false);
 
     if (!mon)
     {
@@ -3725,7 +3725,7 @@ static void _discharge_maxwells_coupling()
 
 void handle_maxwells_coupling()
 {
-    if (!you.props.exists("maxwells_charge_time"))
+    if (!you.props.exists(COUPLING_TIME_KEY))
         return;
 
     // All of these effects interrupt charging
@@ -3735,12 +3735,12 @@ void handle_maxwells_coupling()
         return;
     }
 
-    int charging_auts_remaining = you.props["maxwells_charge_time"].get_int();
+    int charging_auts_remaining = you.props[COUPLING_TIME_KEY].get_int();
 
     if (charging_auts_remaining < 0)
     {
         mpr("You feel charge building up...");
-        you.props["maxwells_charge_time"] = - (charging_auts_remaining
+        you.props[COUPLING_TIME_KEY] = - (charging_auts_remaining
                                             + you.time_taken);
         return;
     }
@@ -3754,23 +3754,23 @@ void handle_maxwells_coupling()
     if (charging_auts_remaining <= you.time_taken)
     {
         you.time_taken = charging_auts_remaining;
-        you.props.erase("maxwells_charge_time");
+        you.props.erase(COUPLING_TIME_KEY);
         _discharge_maxwells_coupling();
         return;
     }
 
-    you.props["maxwells_charge_time"] = charging_auts_remaining
+    you.props[COUPLING_TIME_KEY] = charging_auts_remaining
                                       - you.time_taken;
     mpr("You feel charge building up...");
 }
 
 void end_maxwells_coupling(bool quiet)
 {
-    if (!you.props.exists("maxwells_charge_time"))
+    if (!you.props.exists(COUPLING_TIME_KEY))
         return;
     if (!quiet)
         mpr("The insufficient charge dissipates harmlessly.");
-    you.props.erase("maxwells_charge_time");
+    you.props.erase(COUPLING_TIME_KEY);
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)

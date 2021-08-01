@@ -13,6 +13,8 @@ struct dice_def;
 class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
+#define COUPLING_TIME_KEY "maxwells_charge_time"
+#define COUPLING_RANGE_KEY "maxwells_range"
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret cast_fire_storm(int pow, bolt &beam, bool fail);

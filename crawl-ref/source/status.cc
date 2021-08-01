@@ -19,6 +19,7 @@
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
+#include "spl-damage.h" // COUPLING_TIME_KEY
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
@@ -707,7 +708,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_MAXWELLS:
-        if (you.props.exists("maxwells_charge_time"))
+        if (you.props.exists(COUPLING_TIME_KEY))
         {
             inf.light_colour = LIGHTCYAN;
             inf.light_text   = _charge_text().c_str();
