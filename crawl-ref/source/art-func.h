@@ -1452,6 +1452,16 @@ static void _BATTLE_world_reacts(item_def */*item*/)
     }
 }
 
+static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
+{
+    if (attacker)
+    {
+        aim_battlesphere(attacker, SPELL_MAGIC_DART);
+        trigger_battlesphere(attacker);
+    }
+}
+
 ////////////////////////////////////////////////////
 
 static void _EMBRACE_unequip(item_def *item, bool *show_msgs)

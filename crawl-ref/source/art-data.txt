@@ -1549,6 +1549,7 @@ VALUE:    800
 DESCRIP:  It enhances your conjuration magic.
 +It summons a battlesphere in combat, with strength depending on Conjurations
  skill.
++Its strikes trigger the battlesphere's blasts.
 
 ENUM:     EMBRACE
 NAME:     Cigotuvi's embrace
