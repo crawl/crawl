@@ -1342,6 +1342,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SHADOW_CREATURES: // TODO: dbl check packs
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SPELLFORGED_SERVITOR:
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 2);
     case SPELL_FOXFIRE:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, 1);
