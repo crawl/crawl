@@ -5276,13 +5276,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         }
     }
 
-    // Damaged + cursed, but allow other specs to override the former.
-    if (strip_tag(s, "cursed"))
-    {
-        result.level = ISPEC_BAD;
-        result.props["cursed"] = bool(true);
-    }
-
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
