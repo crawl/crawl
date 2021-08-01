@@ -1826,8 +1826,8 @@ void name_zombie(monster& mon, monster_type mc, const string &mon_name)
 
     // It's unlikely there's a desc for "Duvessa the elf skeleton", but
     // we still want to allow it if overridden.
-    if (!mon.props.exists("dbname"))
-        mon.props["dbname"] = mons_class_name(mon.type);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 }
 
 void name_zombie(monster& mon, const monster& orig)
@@ -2968,7 +2968,7 @@ void define_monster(monster& mons)
             mons.props[MIRRORED_GHOST_KEY] = true;
         }
         mons.set_ghost(ghost);
-        mons.ghost_init(!mons.props.exists("fake"));
+        mons.ghost_init(!mons.props.exists(FAKE_MON_KEY));
         break;
     }
 
@@ -3238,8 +3238,8 @@ bool give_monster_proper_name(monster& mon, bool orcs_only)
     }
 
     mon.mname = _get_proper_monster_name(mon);
-    if (!mon.props.exists("dbname"))
-        mon.props["dbname"] = mons_class_name(mon.type);
+    if (!mon.props.exists(DBNAME_KEY))
+        mon.props[DBNAME_KEY] = mons_class_name(mon.type);
 
     if (mon.friendly())
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon.mname));
@@ -3619,7 +3619,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mon.del_ench(ENCH_HAUNTING, true, true);
 
     // Remove level annotation.
-    mon.props["no_annotate"] = true;
+    mon.props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(&mon);
 
     // Make the monster begin leaving the level.
@@ -4073,16 +4073,16 @@ bool monster_senior(const monster& m1, const monster& m2, bool fleeing)
 
     // Band leaders can displace followers regardless of type considerations.
     // -cao
-    if (m2.props.exists("band_leader"))
+    if (m2.props.exists(BAND_LEADER_KEY))
     {
-        unsigned leader_mid = m2.props["band_leader"].get_int();
+        unsigned leader_mid = m2.props[BAND_LEADER_KEY].get_int();
         if (leader_mid == m1.mid)
             return true;
     }
     // And prevent followers to displace the leader to avoid constant swapping.
-    else if (m1.props.exists("band_leader"))
+    else if (m1.props.exists(BAND_LEADER_KEY))
     {
-        unsigned leader_mid = m1.props["band_leader"].get_int();
+        unsigned leader_mid = m1.props[BAND_LEADER_KEY].get_int();
         if (leader_mid == m2.mid)
             return false;
     }

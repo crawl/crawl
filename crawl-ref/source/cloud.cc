@@ -519,7 +519,7 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
     else
     {
         mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, cloud.pos, you.props["cflame_dur"], &you);
+        place_cloud(CLOUD_FIRE, cloud.pos, you.props[CFLAME_DUR_KEY], &you);
         return true;
     }
 }

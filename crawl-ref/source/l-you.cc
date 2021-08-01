@@ -138,7 +138,7 @@ LUARET1(you_poison_survival, number, poison_survival())
  * @treturn int
  * @function corrosion
  */
-LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
+LUARET1(you_corrosion, number, you.props[CORROSION_KEY].get_int())
 /*** Strength.
  * @treturn int current strength
  * @treturn int max strength

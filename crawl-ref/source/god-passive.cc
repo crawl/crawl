@@ -656,7 +656,7 @@ bool god_id_item(item_def& item, bool silent)
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
             && item_needs_autopickup(item))
         {
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         }
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -666,8 +666,8 @@ bool god_id_item(item_def& item, bool silent)
 
     if (ided & ~old_ided)
     {
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
         if (&item == you.weapon())
             you.wield_change = true;

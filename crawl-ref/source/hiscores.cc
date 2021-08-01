@@ -1422,9 +1422,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons_is_unique(mons->type))
             death_source_flags.insert("unique");
 
-        if (mons->props.exists("blame"))
+        if (mons->props.exists(BLAME_KEY))
         {
-            const CrawlVector& blame = mons->props["blame"].get_vector();
+            const CrawlVector& blame = mons->props[BLAME_KEY].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
@@ -1470,14 +1470,14 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
     if (death_type == KILLED_BY_POISON)
     {
-        death_source_name = you.props["poisoner"].get_string();
-        auxkilldata = you.props["poison_aux"].get_string();
+        death_source_name = you.props[POISONER_KEY].get_string();
+        auxkilldata = you.props[POISON_AUX_KEY].get_string();
     }
 
     if (death_type == KILLED_BY_BURNING)
     {
-        death_source_name = you.props["sticky_flame_source"].get_string();
-        auxkilldata = you.props["sticky_flame_aux"].get_string();
+        death_source_name = you.props[STICKY_FLAMER_KEY].get_string();
+        auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
     }
 }
 

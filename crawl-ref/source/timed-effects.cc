@@ -1051,7 +1051,7 @@ void timeout_malign_gateways(int duration)
                     dur *= 10;
                     mon_enchant kduration = mon_enchant(ENCH_PORTAL_PACIFIED, 4,
                         caster, dur);
-                    tentacle->props["base_position"].get_coord()
+                    tentacle->props[BASE_POSITION_KEY].get_coord()
                                         = tentacle->pos();
                     tentacle->add_ench(kduration);
 

@@ -3431,7 +3431,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
-        const int pow = you.props["confusing touch power"].get_int();
+        const int pow = you.props[CONFUSING_TOUCH_KEY].get_int();
         descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         hex_success_chance(mi.willpower(),
                                                            pow, 100)));

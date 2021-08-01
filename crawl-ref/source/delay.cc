@@ -1053,7 +1053,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
             zin_id = true;
-            mon->props["zin_id"] = true;
+            mon->props[ZIN_ID_KEY] = true;
             discover_shifter(*mon);
             god_warning = uppercase_first(god_name(you.religion))
                           + " warns you: "
@@ -1248,7 +1248,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
-    "sense_monster", "mimic"
+    "sense_monster", MIMIC_KEY
 };
 
 static const char *_activity_interrupt_name(activity_interrupt ai)

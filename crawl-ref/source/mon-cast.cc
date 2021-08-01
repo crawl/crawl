@@ -2918,8 +2918,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     ASSERT(foe);
 
     int num_vines = 1 + random2(3);
-    if (mon->props.exists("vines_awakened"))
-        num_vines = min(num_vines, 3 - mon->props["vines_awakened"].get_int());
+    if (mon->props.exists(VINES_AWAKENED_KEY))
+        num_vines = min(num_vines, 3 - mon->props[VINES_AWAKENED_KEY].get_int());
     bool seen = false;
 
     for (coord_def spot : spots)
@@ -2952,8 +2952,8 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
                         MG_FORCE_PLACE)
             .set_summoned(mon, 0, SPELL_AWAKEN_VINES, mon->god)))
         {
-            vine->props["vine_awakener"].get_int() = mon->mid;
-            mon->props["vines_awakened"].get_int()++;
+            vine->props[VINE_AWAKENER_KEY].get_int() = mon->mid;
+            mon->props[VINES_AWAKENED_KEY].get_int()++;
             mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, nullptr, 200));
             --num_vines;
             if (you.can_see(*vine))
@@ -3104,7 +3104,7 @@ static bool _wall_of_brambles(monster* mons)
     // We want to raise a defensive wall if we think our foe is moving to attack
     // us, and otherwise raise a wall further away to block off their escape.
     // (Each wall type uses different parameters)
-    bool defensive = mons->props["foe_approaching"].get_bool();
+    bool defensive = mons->props[FOE_APPROACHING_KEY].get_bool();
 
     coord_def aim_pos = you.pos();
     coord_def targ_pos = mons->pos();
@@ -4065,7 +4065,7 @@ bool handle_mon_spell(monster* mons)
         setup_breath_timeout(mons);
 
     // FINALLY! determine primary spell effects {dlb}:
-    const bool battlesphere = mons->props.exists("battlesphere");
+    const bool battlesphere = mons->props.exists(BATTLESPHERE_KEY);
     if (!(get_spell_flags(spell_cast) & spflag::utility))
         make_mons_stop_fleeing(mons);
 
@@ -5003,11 +5003,11 @@ static void _flay(const monster &caster, actor &defender, int damage)
     const int orig_hp = defender.stat_hp();
 
     defender.hurt(&caster, damage, BEAM_NONE,
-                  KILLED_BY_MONSTER, "", "flay_damage", true);
-    defender.props["flay_damage"].get_int() += orig_hp - defender.stat_hp();
+                  KILLED_BY_MONSTER, "", FLAY_DAMAGE_KEY, true);
+    defender.props[FLAY_DAMAGE_KEY].get_int() += orig_hp - defender.stat_hp();
 
     vector<coord_def> old_blood;
-    CrawlVector &new_blood = defender.props["flay_blood"].get_vector();
+    CrawlVector &new_blood = defender.props[FLAY_BLOOD_KEY].get_vector();
 
     // Find current blood spatters
     for (radius_iterator ri(defender.pos(), LOS_SOLID); ri; ++ri)
@@ -5363,7 +5363,7 @@ static void _mons_vortex(monster *mons)
 
     const int ench_dur = 60;
 
-    mons->props["polar_vortex_since"].get_int() = you.elapsed_time;
+    mons->props[POLAR_VORTEX_KEY].get_int() = you.elapsed_time;
     mon_enchant me(ENCH_POLAR_VORTEX, 0, mons, ench_dur);
     mons->add_ench(me);
 
@@ -5611,7 +5611,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
-        mons->props.erase("brothers_count");
+        mons->props.erase(BROTHERS_KEY);
         mons->go_berserk(true);
         return;
 
@@ -5876,7 +5876,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         }
 
         summon_berserker(power, mons, to_summon);
-        mons->props["brothers_count"].get_int()++;
+        mons->props[BROTHERS_KEY].get_int()++;
         return;
     }
 
@@ -7472,7 +7472,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_AWAKEN_VINES:
         return ai_action::good_or_impossible(
                     (!mon->has_ench(ENCH_AWAKEN_VINES)
-                        || mon->props["vines_awakened"].get_int() <= 3)
+                        || mon->props[VINES_AWAKENED_KEY].get_int() <= 3)
                     && _awaken_vines(mon, true)); // test cast: would anything happen?
 
     case SPELL_WATERSTRIKE:
@@ -7500,8 +7500,8 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_BROTHERS_IN_ARMS:
         return ai_action::good_or_bad(
-            !mon->props.exists("brothers_count")
-               || mon->props["brothers_count"].get_int() < 2);
+            !mon->props.exists(BROTHERS_KEY)
+               || mon->props[BROTHERS_KEY].get_int() < 2);
 
     case SPELL_HOLY_FLAMES:
         return ai_action::good_or_impossible(!no_clouds);
@@ -7755,7 +7755,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
     case SPELL_ROLL:
     {
-        const coord_def delta = mon->props["mmov"].get_coord();
+        const coord_def delta = mon->props[MMOV_KEY].get_coord();
         // We can roll if we have a foe we're not already adjacent to and where
         // we have a move that brings us closer.
         return ai_action::good_or_bad(

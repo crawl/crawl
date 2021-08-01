@@ -646,14 +646,14 @@ static void debug_load_map_by_name(string name, bool primary)
             return;
         }
         if (toplace->is_minivault())
-            you.props["force_minivault"] = toplace->name;
+            you.props[FORCE_MINIVAULT_KEY] = toplace->name;
         else
-            you.props["force_map"] = toplace->name;
+            you.props[FORCE_MAP_KEY] = toplace->name;
         wizard_recreate_level();
-        you.props.erase("force_minivault");
-        you.props.erase("force_map");
+        you.props.erase(FORCE_MINIVAULT_KEY);
+        you.props.erase(FORCE_MAP_KEY);
 
-        // We just saved with you.props["force_map"] set; save again in
+        // We just saved with you.props[FORCE_MAP_KEY] set; save again in
         // case we crash (lest we have the property forever).
         if (!crawl_state.test)
             save_game_state();

@@ -1008,7 +1008,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             }
 
             // Affects messaging, and stuns demon a turn upon charm wearing off
-            demon->props["charmed_demon"].get_bool() = true;
+            demon->props[CHARMED_DEMON_KEY].get_bool() = true;
         }
     }
 
@@ -1110,7 +1110,7 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
                 mons->update_ench(me);
 
                 // Set summon ID, to share summon cap with its band members
-                mons->props["summon_id"].get_int() = mons->mid;
+                mons->props[SUMMON_ID_KEY].get_int() = mons->mid;
             }
 
             // Remove any band members that would turn hostile, and link their
@@ -1118,12 +1118,12 @@ spret cast_shadow_creatures(int st, god_type god, level_id place,
             for (monster_iterator mi; mi; ++mi)
             {
                 if (testbits(mi->flags, MF_BAND_MEMBER)
-                    && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
+                    && (mid_t) mi->props[BAND_LEADER_KEY].get_int() == mons->mid)
                 {
                     if (god_hates_monster(**mi))
                         monster_die(**mi, KILL_RESET, NON_MONSTER);
 
-                    mi->props["summon_id"].get_int() = mons->mid;
+                    mi->props[SUMMON_ID_KEY].get_int() = mons->mid;
                 }
             }
 
@@ -2068,7 +2068,7 @@ void init_servitor(monster* servitor, actor* caster)
         if (range < shortest_range)
             shortest_range = range;
     }
-    servitor->props["ideal_range"].get_int() = shortest_range;
+    servitor->props[IDEAL_RANGE_KEY].get_int() = shortest_range;
 }
 
 spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
@@ -2091,8 +2091,8 @@ spret cast_spellforged_servitor(int /*pow*/, god_type god, bool fail)
 
 monster* find_battlesphere(const actor* agent)
 {
-    if (agent->props.exists("battlesphere"))
-        return monster_by_mid(agent->props["battlesphere"].get_int());
+    if (agent->props.exists(BATTLESPHERE_KEY))
+        return monster_by_mid(agent->props[BATTLESPHERE_KEY].get_int());
     else
         return nullptr;
 }
@@ -2167,7 +2167,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             int dur = min((7 + roll_dice(2, pow)) * 10, 500);
             battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
             battlesphere->summoner = agent->mid;
-            agent->props["battlesphere"].get_int() = battlesphere->mid;
+            agent->props[BATTLESPHERE_KEY].get_int() = battlesphere->mid;
 
             if (agent->is_player())
                 mpr("You conjure a globe of magical energy.");
@@ -2180,7 +2180,7 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 }
                 else if (you.can_see(*battlesphere))
                     simple_monster_message(*battlesphere, " appears!");
-                battlesphere->props["band_leader"].get_int() = agent->mid;
+                battlesphere->props[BAND_LEADER_KEY].get_int() = agent->mid;
             }
             battlesphere->battlecharge = 4 + random2(pow + 10) / 10;
             battlesphere->foe = agent->mindex();
@@ -2201,7 +2201,7 @@ void end_battlesphere(monster* mons, bool killed)
 
     actor* agent = actor_by_mid(mons->summoner);
     if (agent)
-        agent->props.erase("battlesphere");
+        agent->props.erase(BATTLESPHERE_KEY);
 
     if (!killed)
     {
@@ -2248,7 +2248,7 @@ bool aim_battlesphere(actor* agent, spell_type spell)
         // abyss level teleport), bail out and cancel the battlesphere bond
         if (!battlesphere)
         {
-            agent->props.erase("battlesphere");
+            agent->props.erase(BATTLESPHERE_KEY);
             return false;
         }
 
@@ -2256,7 +2256,7 @@ bool aim_battlesphere(actor* agent, spell_type spell)
         // target-seeking action, cancel it so that it can focus on a new
         // target
         reset_battlesphere(battlesphere);
-        battlesphere->props.erase("foe");
+        battlesphere->props.erase(MON_FOE_KEY);
 
         // Pick a random baddie in LOS
         vector<actor *> targets;
@@ -2275,7 +2275,7 @@ bool aim_battlesphere(actor* agent, spell_type spell)
 
         const actor * target = *random_iterator(targets);
         battlesphere->foe = target->mindex();
-        battlesphere->props["foe"] = battlesphere->foe;
+        battlesphere->props[MON_FOE_KEY] = battlesphere->foe;
         battlesphere->props["ready"] = true;
 
         return true;
@@ -2324,8 +2324,8 @@ void reset_battlesphere(monster* mons)
     {
         mons->props.erase("tracking");
         mons->props.erase("firing");
-        if (mons->props.exists("foe"))
-            mons->foe = mons->props["foe"].get_int();
+        if (mons->props.exists(MON_FOE_KEY))
+            mons->foe = mons->props[MON_FOE_KEY].get_int();
         mons->behaviour = BEH_SEEK;
     }
 }
@@ -2349,16 +2349,16 @@ bool fire_battlesphere(monster* mons)
     {
         if (mons->props.exists("tracking"))
         {
-            if (mons->pos() == mons->props["tracking_target"].get_coord())
+            if (mons->pos() == mons->props[TRACKING_TARGET_KEY].get_coord())
             {
                 mons->props.erase("tracking");
-                if (mons->props.exists("foe"))
-                    mons->foe = mons->props["foe"].get_int();
+                if (mons->props.exists(MON_FOE_KEY))
+                    mons->foe = mons->props[MON_FOE_KEY].get_int();
                 mons->behaviour = BEH_SEEK;
             }
             else // Currently tracking, but have not reached target pos
             {
-                mons->target = mons->props["tracking_target"].get_coord();
+                mons->target = mons->props[TRACKING_TARGET_KEY].get_coord();
                 return false;
             }
         }
@@ -2366,13 +2366,13 @@ bool fire_battlesphere(monster* mons)
         {
             // If the battlesphere forgot its foe (due to being out of los),
             // remind it
-            if (mons->props.exists("foe"))
-                mons->foe = mons->props["foe"].get_int();
+            if (mons->props.exists(MON_FOE_KEY))
+                mons->foe = mons->props[MON_FOE_KEY].get_int();
         }
 
         // Set up the beam.
         bolt beam;
-        beam.source_name = "battlesphere";
+        beam.source_name = BATTLESPHERE_KEY;
 
         // If we are locked onto a foe, use its current position
         if (!invalid_monster_index(mons->foe) && env.mons[mons->foe].alive())
@@ -2383,7 +2383,7 @@ bool fire_battlesphere(monster* mons)
         {
             mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
             mons->props.erase("firing");
-            mons->props.erase("foe");
+            mons->props.erase(MON_FOE_KEY);
             return false;
         }
 
@@ -2447,10 +2447,10 @@ bool fire_battlesphere(monster* mons)
                     mons->firing_pos = coord_def(0, 0);
                     mons->target = *di;
                     mons->behaviour = BEH_WANDER;
-                    mons->props["foe"] = mons->foe;
+                    mons->props[MON_FOE_KEY] = mons->foe;
                     mons->props["tracking"] = true;
                     mons->foe = MHITNOT;
-                    mons->props["tracking_target"] = *di;
+                    mons->props[TRACKING_TARGET_KEY] = *di;
                     break;
                 }
             }
@@ -2558,8 +2558,8 @@ spret cast_fulminating_prism(actor* caster, int pow,
 
 monster* find_spectral_weapon(const actor* agent)
 {
-    if (agent->props.exists("spectral_weapon"))
-        return monster_by_mid(agent->props["spectral_weapon"].get_int());
+    if (agent->props.exists(SPECTRAL_WEAPON_KEY))
+        return monster_by_mid(agent->props[SPECTRAL_WEAPON_KEY].get_int());
     else
         return nullptr;
 }
@@ -2573,7 +2573,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     actor *owner = actor_by_mid(mons->summoner);
 
     if (owner)
-        owner->props.erase("spectral_weapon");
+        owner->props.erase(SPECTRAL_WEAPON_KEY);
 
     if (!quiet)
     {
@@ -2707,16 +2707,16 @@ static void _expire_capped_summon(monster* mon, int delay, bool recurse)
     // one if creating multiple summons (also, should show a status light).
     mon->add_ench(ENCH_SUMMON_CAPPED);
 
-    if (recurse && mon->props.exists("summon_id"))
+    if (recurse && mon->props.exists(SUMMON_ID_KEY))
     {
-        const int summon_id = mon->props["summon_id"].get_int();
+        const int summon_id = mon->props[SUMMON_ID_KEY].get_int();
         for (monster_iterator mi; mi; ++mi)
         {
             // Summoner check should be technically unnecessary, but saves
             // scanning props for all monsters on the level.
             if (mi->summoner == mon->summoner
-                && mi->props.exists("summon_id")
-                && mi->props["summon_id"].get_int() == summon_id
+                && mi->props.exists(SUMMON_ID_KEY)
+                && mi->props[SUMMON_ID_KEY].get_int() == summon_id
                 && !mi->has_ench(ENCH_SUMMON_CAPPED))
             {
                 _expire_capped_summon(*mi, delay, false);
@@ -2764,9 +2764,9 @@ void summoned_monster(const monster *mons, const actor *caster,
             if (spell == SPELL_SUMMON_HORRIBLE_THINGS && mi->type != mons->type)
                 continue;
 
-            if (_spell_has_variable_cap(spell) && mi->props.exists("summon_id"))
+            if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
             {
-                const int id = mi->props["summon_id"].get_int();
+                const int id = mi->props[SUMMON_ID_KEY].get_int();
 
                 // Skip any linked summon whose set we have seen already,
                 // otherwise add it to the list of seen summon IDs

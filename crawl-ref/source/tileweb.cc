@@ -1080,7 +1080,7 @@ void TilesFramework::_send_player(bool force_full)
         json_open_object(to_string(i));
         item_def item = get_item_known_info(you.inv[i]);
         if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.duration[DUR_CORROSION])
-            item.plus -= 4 * you.props["corrosion_amount"].get_int();
+            item.plus -= 4 * you.props[CORROSION_KEY].get_int();
         _send_item(c.inv[i], item, force_full);
         json_close_object(true);
     }
@@ -1145,7 +1145,7 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= _update_int(force_full, current.sub_type, next.sub_type,
                            "sub_type", false);
     changed |= _update_int(force_full, current.plus, next.plus,
-                           "plus", false);
+                           PLUS_KEY, false);
     changed |= _update_int(force_full, current.plus2, next.plus2,
                            "plus2", false);
     changed |= _update_int(force_full, current.flags, next.flags,
@@ -1515,7 +1515,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 if (Options.tile_use_monster != MONS_0)
                 {
                     monster_info minfo(MONS_PLAYER, MONS_PLAYER);
-                    minfo.props["monster_tile"] =
+                    minfo.props[MONSTER_TILE_KEY] =
                         short(last_player_doll.parts[TILEP_PART_BASE]);
                     item_def *item;
                     if (you.slot_item(EQ_WEAPON))

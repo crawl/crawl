@@ -1933,7 +1933,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)
         {
-            int dam = you.props["flay_damage"].get_int();
+            int dam = you.props[FLAY_DAMAGE_KEY].get_int();
             you.heal((dam * form_hp_mod() / 10) - dam);
         }
         heal_flayed_effect(&you);

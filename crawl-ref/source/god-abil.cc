@@ -4646,13 +4646,13 @@ bool ru_do_sacrifice(ability_type sac)
 
     // Update how many Ru sacrifices you have. This is used to avoid giving the
     // player extra silver damage.
-    if (you.props.exists("num_sacrifice_muts"))
+    if (you.props.exists(NUM_SACRIFICES_KEY))
     {
-        you.props["num_sacrifice_muts"] = num_sacrifices +
-            you.props["num_sacrifice_muts"].get_int();
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices +
+            you.props[NUM_SACRIFICES_KEY].get_int();
     }
     else
-        you.props["num_sacrifice_muts"] = num_sacrifices;
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
     set_piety(min(piety_breakpoint(5), you.piety + piety_gain));

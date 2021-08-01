@@ -2945,9 +2945,9 @@ int player::how_mutated(bool innate, bool levels, bool temp) const
                 result++;
         }
         if (you.species == SP_DEMONSPAWN
-            && you.props.exists("num_sacrifice_muts"))
+            && you.props.exists(NUM_SACRIFICES_KEY))
         {
-            result -= you.props["num_sacrifice_muts"].get_int();
+            result -= you.props[NUM_SACRIFICES_KEY].get_int();
         }
     }
 

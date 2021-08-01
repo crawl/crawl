@@ -4630,8 +4630,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     string db_name;
 
-    if (mi.props.exists("dbname"))
-        db_name = mi.props["dbname"].get_string();
+    if (mi.props.exists(DBNAME_KEY))
+        db_name = mi.props[DBNAME_KEY].get_string();
     else if (mi.mname.empty())
         db_name = mi.db_name();
     else
@@ -4951,11 +4951,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << ii->name(DESC_A, false, true);
     }
 
-    if (mons.props.exists("blame"))
+    if (mons.props.exists(BLAME_KEY))
     {
         inf.body << "\n\nMonster blame chain:\n";
 
-        const CrawlVector& blame = mons.props["blame"].get_vector();
+        const CrawlVector& blame = mons.props[BLAME_KEY].get_vector();
 
         for (const auto &entry : blame)
             inf.body << "    " << entry.get_string() << "\n";

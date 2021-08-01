@@ -104,7 +104,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_PIKEL_MINIONS:
         return mon->type == MONS_LEMURE
                && testbits(mon->flags, MF_BAND_MEMBER)
-               && mon->props.exists("pikel_band");
+               && mon->props.exists(PIKEL_BAND_KEY);
 
     case DACT_OLD_CHARMD_SOULS_POOF:
         return mons_enslaved_soul(*mon);
@@ -119,7 +119,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && !mon->is_shapeshifter()
                // Must be one of Kirke's original band
                // *or* another monster that got porkalated
-               && (mon->props.exists("kirke_band")
+               && (mon->props.exists(KIRKE_BAND_KEY)
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:

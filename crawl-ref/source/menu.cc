@@ -1681,7 +1681,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    const bool    fake = m->props.exists("fake");
+    const bool    fake = m->props.exists(FAKE_MON_KEY);
     const coord_def c  = m->pos;
     tileidx_t       ch = TILE_FLOOR_NORMAL;
 

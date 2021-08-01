@@ -585,7 +585,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
         base_type = MONS_GOBLIN;
 
     monster_info fake_mon(m_type, base_type);
-    fake_mon.props["fake"] = true;
+    fake_mon.props[FAKE_MON_KEY] = true;
 
     mslot = fake_mon;
 

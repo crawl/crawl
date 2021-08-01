@@ -25,7 +25,7 @@ static void _end_invis()
 
 static void _end_corrosion()
 {
-    you.props["corrosion_amount"] = 0;
+    you.props[CORROSION_KEY] = 0;
     you.redraw_armour_class = true;
     you.wield_change = true;
 }

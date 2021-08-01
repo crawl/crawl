@@ -3481,7 +3481,7 @@ bool monster::heal(int amount)
         // Clear the damage blame if it goes away completely.
         damage_friendly = 0;
         damage_total = 0;
-        props.erase("reaping_damage");
+        props.erase(REAPING_DAMAGE_KEY);
     }
 
     return success;
@@ -6062,10 +6062,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && hit_points < max_hit_points / 2
              && hit_points - damage > 0)
     {
-        if (!props.exists("emergency_clone"))
+        if (!props.exists(EMERGENCY_CLONE_KEY))
         {
             rakshasa_clone_fineff::schedule(this, pos());
-            props["emergency_clone"].get_bool() = true;
+            props[EMERGENCY_CLONE_KEY].get_bool() = true;
         }
     }
 

@@ -873,8 +873,8 @@ static bool _handle_swoop(monster& mons)
     if (!one_chance_in(4))
         return false;
 
-    if (mons.props.exists("swoop_cooldown")
-        && (you.elapsed_time < mons.props["swoop_cooldown"].get_int()))
+    if (mons.props.exists(SWOOP_COOLDOWN_KEY)
+        && (you.elapsed_time < mons.props[SWOOP_COOLDOWN_KEY].get_int()))
     {
         return false;
     }
@@ -908,7 +908,7 @@ static bool _handle_swoop(monster& mons)
         }
         mons.move_to_pos(tracer.path_taken[j+1]);
         fight_melee(&mons, defender);
-        mons.props["swoop_cooldown"].get_int() = you.elapsed_time
+        mons.props[SWOOP_COOLDOWN_KEY].get_int() = you.elapsed_time
                                                   + 40 + random2(51);
         return true;
     }
@@ -1382,9 +1382,9 @@ static void _pre_monster_move(monster& mons)
     }
 
     if (mons.type == MONS_SNAPLASHER_VINE
-        && mons.props.exists("vine_awakener"))
+        && mons.props.exists(VINE_AWAKENER_KEY))
     {
-        monster* awakener = monster_by_mid(mons.props["vine_awakener"].get_int());
+        monster* awakener = monster_by_mid(mons.props[VINE_AWAKENER_KEY].get_int());
         if (awakener && !awakener->can_see(mons))
         {
             simple_monster_message(mons, " falls limply to the ground.");
@@ -1411,23 +1411,23 @@ static void _pre_monster_move(monster& mons)
         actor* foe = mons.get_foe();
         if (foe)
         {
-            if (!mons.props.exists("foe_pos"))
-                mons.props["foe_pos"].get_coord() = foe->pos();
+            if (!mons.props.exists(FAUX_PAS_KEY))
+                mons.props[FAUX_PAS_KEY].get_coord() = foe->pos();
             else
             {
-                if (mons.props["foe_pos"].get_coord().distance_from(mons.pos())
+                if (mons.props[FAUX_PAS_KEY].get_coord().distance_from(mons.pos())
                     > foe->pos().distance_from(mons.pos()))
                 {
-                    mons.props["foe_approaching"].get_bool() = true;
+                    mons.props[FOE_APPROACHING_KEY].get_bool() = true;
                 }
                 else
-                    mons.props["foe_approaching"].get_bool() = false;
+                    mons.props[FOE_APPROACHING_KEY].get_bool() = false;
 
-                mons.props["foe_pos"].get_coord() = foe->pos();
+                mons.props[FAUX_PAS_KEY].get_coord() = foe->pos();
             }
         }
         else
-            mons.props.erase("foe_pos");
+            mons.props.erase(FAUX_PAS_KEY);
     }
 
     reset_battlesphere(&mons);
@@ -1860,7 +1860,7 @@ void handle_monster_move(monster* mons)
     // XXX: A bit hacky, but stores where we WILL move, if we don't take
     //      another action instead (used for decision-making)
     if (mons_stores_tracking_data(*mons))
-        mons->props["mmov"].get_coord() = mmov;
+        mons->props[MMOV_KEY].get_coord() = mmov;
 
     if (_mons_take_special_action(*mons, old_energy))
         return;
@@ -1944,10 +1944,10 @@ void handle_monster_move(monster* mons)
         //segment, kill the segment and adjust connectivity data.
         if (targ && mons_tentacle_adjacent(mons, targ))
         {
-            const bool basis = targ->props.exists("outwards");
-            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : nullptr;
+            const bool basis = targ->props.exists(OUTWARDS_KEY);
+            monster* outward =  basis ? monster_by_mid(targ->props[OUTWARDS_KEY].get_int()) : nullptr;
             if (outward)
-                outward->props["inwards"].get_int() = mons->mid;
+                outward->props[INWARDS_KEY].get_int() = mons->mid;
 
             monster_die(*targ, KILL_MISC, NON_MONSTER, true);
             targ = nullptr;
@@ -1985,7 +1985,7 @@ void handle_monster_move(monster* mons)
         {
             // Don't count turns spent blocked by friendly creatures
             // (or the player) as an indication that we're stuck
-            mons->props.erase("blocked_deadline");
+            mons->props.erase(BLOCKED_DEADLINE_KEY);
         }
 
         if (invalid_monster(mons) || mons->is_stationary())
@@ -2242,9 +2242,9 @@ static void _post_monster_move(monster* mons)
     // (if they're somehow still alive) and regains the ability to summon new ones.
     if (mons->type == MONS_RAKSHASA && mons->hit_points == mons->max_hit_points
         && !mons->has_ench(ENCH_PHANTOM_MIRROR)
-        && mons->props.exists("emergency_clone"))
+        && mons->props.exists(EMERGENCY_CLONE_KEY))
     {
-        mons->props.erase("emergency_clone");
+        mons->props.erase(EMERGENCY_CLONE_KEY);
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_RAKSHASA && mi->summoner == mons->mid)

@@ -4121,8 +4121,8 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         learned_something_new(HINT_YOU_POISON);
     }
 
-    you.props["poisoner"] = source;
-    you.props["poison_aux"] = source_aux;
+    you.props[POISONER_KEY] = source;
+    you.props[POISON_AUX_KEY] = source_aux;
 
     // Display the poisoned segment of our health, in case we take no damage
     you.redraw_hit_points = true;
@@ -4273,8 +4273,8 @@ void reduce_player_poison(int amount)
     if (you.duration[DUR_POISONING] <= 0)
     {
         you.duration[DUR_POISONING] = 0;
-        you.props.erase("poisoner");
-        you.props.erase("poison_aux");
+        you.props.erase(POISONER_KEY);
+        you.props.erase(POISON_AUX_KEY);
         mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     }
 
@@ -4398,8 +4398,8 @@ bool napalm_player(int amount, string source, string source_aux)
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    you.props["sticky_flame_source"] = source;
-    you.props["sticky_flame_aux"] = source_aux;
+    you.props[STICKY_FLAMER_KEY] = source;
+    you.props[STICKY_FLAME_AUX_KEY] = source_aux;
 
     return true;
 }
@@ -4415,8 +4415,8 @@ void dec_napalm_player(int delay)
         else
             mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("sticky_flame_source");
-        you.props.erase("sticky_flame_aux");
+        you.props.erase(STICKY_FLAMER_KEY);
+        you.props.erase(STICKY_FLAME_AUX_KEY);
         return;
     }
 
@@ -4792,8 +4792,8 @@ bool land_player(bool quiet)
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
-    you.props.erase("water_holder");
-    you.props.erase("water_hold_substance");
+    you.props.erase(WATER_HOLDER_KEY);
+    you.props.erase(WATER_HOLD_SUBSTANCE_KEY);
 }
 
 bool player::clear_far_engulf(bool force)
@@ -4801,7 +4801,7 @@ bool player::clear_far_engulf(bool force)
     if (!you.duration[DUR_WATER_HOLD])
         return false;
 
-    monster * const mons = monster_by_mid(you.props["water_holder"].get_int());
+    monster * const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
     if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
         if (you.res_water_drowning())
@@ -4831,7 +4831,7 @@ void handle_player_drowning(int delay)
             div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
                             * delay,
                             BASELINE_DELAY * 10);
-        ouch(dam, KILLED_BY_WATER, you.props["water_holder"].get_int());
+        ouch(dam, KILLED_BY_WATER, you.props[WATER_HOLDER_KEY].get_int());
         mprf(MSGCH_WARN, "Your lungs strain for air!");
     }
 }
@@ -5944,7 +5944,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
         AC += 700;
 
     if (duration[DUR_CORROSION])
-        AC -= 400 * you.props["corrosion_amount"].get_int();
+        AC -= 400 * you.props[CORROSION_KEY].get_int();
 
     AC += sanguine_armour_bonus();
 
@@ -6531,12 +6531,12 @@ bool player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
-    int prev_corr = props["corrosion_amount"].get_int();
+    int prev_corr = props[CORROSION_KEY].get_int();
     bool did_corrode = false;
     for (int i = 0; i < degree; i++)
         if (!x_chance_in_y(prev_corr, prev_corr + 7))
         {
-            props["corrosion_amount"].get_int()++;
+            props[CORROSION_KEY].get_int()++;
             prev_corr++;
             did_corrode = true;
         }

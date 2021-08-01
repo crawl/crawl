@@ -595,7 +595,7 @@ void bennu_revive_fineff::fire()
                                                 res_visible ? MG_DONT_COME
                                                             : MG_NONE));
     if (newmons)
-        newmons->props["bennu_revives"].get_byte() = revives + 1;
+        newmons->props[BENNU_REVIVES_KEY].get_byte() = revives + 1;
 }
 
 void infestation_death_fineff::fire()
@@ -797,7 +797,7 @@ void spectral_weapon_fineff::fire()
     melee_attk.attack();
 
     mons->summoner = atkr->mid;
-    atkr->props["spectral_weapon"].get_int() = mons->mid;
+    atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

@@ -309,7 +309,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
     for (const monster* mon : monsters)
     {
         monster_info mi(mon);
-        const bool zin_ided = mon->props.exists("zin_id");
+        const bool zin_ided = mon->props.exists(ZIN_ID_KEY);
         const bool has_interesting_equipment
             = _is_mon_equipment_worth_listing(mi);
         if ((divine && !zin_ided)

@@ -385,8 +385,8 @@ void gozag_set_bribe(monster* traitor)
         return;
 
     const monster* leader =
-        traitor->props.exists("band_leader")
-        ? monster_by_mid(traitor->props["band_leader"].get_int())
+        traitor->props.exists(BAND_LEADER_KEY)
+        ? monster_by_mid(traitor->props[BAND_LEADER_KEY].get_int())
         : nullptr;
 
     if (leader)

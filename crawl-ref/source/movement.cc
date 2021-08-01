@@ -223,7 +223,7 @@ void remove_ice_movement()
 
 string water_hold_substance()
 {
-    return you.props["water_hold_substance"].get_string();
+    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
 }
 
 void remove_water_hold()

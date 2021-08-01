@@ -3914,9 +3914,9 @@ static void _tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_STICKY_FLAME)
     {
         if (you.props.exists("napalmer"))
-            you.props["sticky_flame_source"] = you.props["napalmer"];
+            you.props[STICKY_FLAMER_KEY] = you.props["napalmer"];
         if (you.props.exists("napalm_aux"))
-            you.props["sticky_flame_aux"] = you.props["napalm_aux"];
+            you.props[STICKY_FLAME_AUX_KEY] = you.props["napalm_aux"];
     }
 
     if (you.duration[DUR_EXCRUCIATING_WOUNDS] && !you.props.exists(ORIGINAL_BRAND_KEY))
@@ -3982,7 +3982,7 @@ static void _tag_read_you(reader &th)
 
     if (you.props.exists("tornado_since"))
     {
-        you.props["polar_vortex_since"] = you.props["tornado_since"].get_int();
+        you.props[POLAR_VORTEX_KEY] = you.props["tornado_since"].get_int();
         you.props.erase("tornado_since");
     }
 
@@ -5334,7 +5334,7 @@ void unmarshallItem(reader &th, item_def &item)
     }
     if (item.is_type(OBJ_FOOD, FOOD_RATION) && item.pos == ITEM_IN_INVENTORY)
     {
-        item.props["item_tile_name"] = "food_ration_inventory";
+        item.props[ITEM_TILE_NAME_KEY] = "food_ration_inventory";
         bind_item_tile(item);
     }
 
@@ -6846,20 +6846,20 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.clear();
     m.props.read(th);
 
-    if (m.props.exists("monster_tile_name"))
+    if (m.props.exists(MONSTER_TILE_NAME_KEY))
     {
-        string tile = m.props["monster_tile_name"].get_string();
+        string tile = m.props[MONSTER_TILE_NAME_KEY].get_string();
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
             dprf("bad tile name: \"%s\".", tile.c_str());
-            m.props.erase("monster_tile_name");
-            if (m.props.exists("monster_tile"))
-                m.props.erase("monster_tile");
+            m.props.erase(MONSTER_TILE_NAME_KEY);
+            if (m.props.exists(MONSTER_TILE_KEY))
+                m.props.erase(MONSTER_TILE_KEY);
         }
         else // Update monster tile.
-            m.props["monster_tile"] = short(index);
+            m.props[MONSTER_TILE_KEY] = short(index);
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -6887,7 +6887,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.props.exists("siren_call"))
     {
-        m.props["merfolk_avatar_call"] = m.props["siren_call"].get_bool();
+        m.props[MERFOLK_AVATAR_CALL_KEY] = m.props["siren_call"].get_bool();
         m.props.erase("siren_call");
     }
 
@@ -7079,21 +7079,21 @@ static void _tag_read_level_monsters(reader &th)
     {
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->props.exists("inwards"))
+            if (mi->props.exists(INWARDS_KEY))
             {
-                const int old_midx = mi->props["inwards"].get_int();
+                const int old_midx = mi->props[INWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["inwards"].get_int() = MID_NOBODY;
+                    mi->props[INWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["inwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[INWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
-            if (mi->props.exists("outwards"))
+            if (mi->props.exists(OUTWARDS_KEY))
             {
-                const int old_midx = mi->props["outwards"].get_int();
+                const int old_midx = mi->props[OUTWARDS_KEY].get_int();
                 if (invalid_monster_index(old_midx))
-                    mi->props["outwards"].get_int() = MID_NOBODY;
+                    mi->props[OUTWARDS_KEY].get_int() = MID_NOBODY;
                 else
-                    mi->props["outwards"].get_int() = env.mons[old_midx].mid;
+                    mi->props[OUTWARDS_KEY].get_int() = env.mons[old_midx].mid;
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
                 mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;

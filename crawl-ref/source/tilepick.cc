@@ -687,12 +687,12 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
     // Get tentacle position.
     const coord_def t_pos = mon.pos;
     // No parent tentacle, or the connection to the head is unknown.
-    bool no_head_connect  = !mon.props.exists("inwards");
+    bool no_head_connect  = !mon.props.exists(INWARDS_KEY);
     coord_def h_pos       = coord_def(); // head position
     if (!no_head_connect)
     {
         // Get the parent tentacle's location.
-        h_pos = t_pos + mon.props["inwards"].get_coord();
+        h_pos = t_pos + mon.props[INWARDS_KEY].get_coord();
     }
     if (no_head_connect && (mon.type == MONS_SNAPLASHER_VINE
                             || mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
@@ -763,7 +763,7 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
                 default: die("bad tentacle type");
             }
 
-            bool vary = !(mon.props.exists("fake") && mon.props["fake"].get_bool());
+            bool vary = !(mon.props.exists(FAKE_MON_KEY) && mon.props[FAKE_MON_KEY].get_bool());
             return vary ? _mon_random(tile, t_pos.y*GXM + t_pos.x) : tile;
         }
 
@@ -791,9 +791,9 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
 
     // For segments, we also need the next segment (or end piece).
     coord_def n_pos;
-    bool no_next_connect = !mon.props.exists("outwards");
+    bool no_next_connect = !mon.props.exists(OUTWARDS_KEY);
     if (!no_next_connect)
-        n_pos = t_pos + mon.props["outwards"].get_coord();
+        n_pos = t_pos + mon.props[OUTWARDS_KEY].get_coord();
 
     if (no_head_connect && no_next_connect)
     {
@@ -1726,9 +1726,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     if (mons_class_is_zombified(mon.type))
         return _tileidx_monster_zombified(mon);
 
-    if (mon.props.exists("monster_tile"))
+    if (mon.props.exists(MONSTER_TILE_KEY))
     {
-        tileidx_t t = mon.props["monster_tile"].get_short();
+        tileidx_t t = mon.props[MONSTER_TILE_KEY].get_short();
         if (t == TILEP_MONS_HELL_WIZARD)
             return _mon_sinus(t);
         return t;
@@ -1738,7 +1738,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     if (mon.props.exists(TILE_NUM_KEY))
         tile_num = mon.props[TILE_NUM_KEY].get_short();
 
-    bool vary = !(mon.props.exists("fake") && mon.props["fake"].get_bool());
+    bool vary = !(mon.props.exists(FAKE_MON_KEY) && mon.props[FAKE_MON_KEY].get_bool());
     const tileidx_t base = tileidx_monster_base(mon.type,
                                                 mon.pos.y*GXM + mon.pos.x,
                                                 in_water, mon.colour(true),
@@ -2663,8 +2663,8 @@ static tileidx_t _tileidx_gold(const item_def &item)
 
 tileidx_t tileidx_item(const item_def &item)
 {
-    if (item.props.exists("item_tile"))
-        return item.props["item_tile"].get_short();
+    if (item.props.exists(ITEM_TILE_KEY))
+        return item.props[ITEM_TILE_KEY].get_short();
 
     const int clas        = item.base_type;
     const int type        = item.sub_type;
@@ -4199,36 +4199,36 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 
 void bind_item_tile(item_def &item)
 {
-    if (item.props.exists("item_tile_name"))
+    if (item.props.exists(ITEM_TILE_NAME_KEY))
     {
-        string tile = item.props["item_tile_name"].get_string();
+        string tile = item.props[ITEM_TILE_NAME_KEY].get_string();
         dprf("Binding non-worn item tile: \"%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_main_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
             dprf("bad tile name: \"%s\".", tile.c_str());
-            item.props.erase("item_tile_name");
-            item.props.erase("item_tile");
+            item.props.erase(ITEM_TILE_NAME_KEY);
+            item.props.erase(ITEM_TILE_KEY);
         }
         else
-            item.props["item_tile"] = short(index);
+            item.props[ITEM_TILE_KEY] = short(index);
     }
 
-    if (item.props.exists("worn_tile_name"))
+    if (item.props.exists(WORN_TILE_NAME_KEY))
     {
-        string tile = item.props["worn_tile_name"].get_string();
+        string tile = item.props[WORN_TILE_NAME_KEY].get_string();
         dprf("Binding worn item tile: \"%s\".", tile.c_str());
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
             // If invalid tile name, complain and discard the props.
             dprf("bad tile name: \"%s\".", tile.c_str());
-            item.props.erase("worn_tile_name");
-            item.props.erase("worn_tile");
+            item.props.erase(WORN_TILE_NAME_KEY);
+            item.props.erase(WORN_TILE_KEY);
         }
         else
-            item.props["worn_tile"] = short(index);
+            item.props[WORN_TILE_KEY] = short(index);
     }
 }
 
@@ -4257,7 +4257,7 @@ void tile_init_props(monster* mon)
     }
 
     // Already overridden or set.
-    if (mon->props.exists("monster_tile") || mon->props.exists(TILE_NUM_KEY))
+    if (mon->props.exists(MONSTER_TILE_KEY) || mon->props.exists(TILE_NUM_KEY))
         return;
 
     mon->props[TILE_NUM_KEY] = short(random2(256));

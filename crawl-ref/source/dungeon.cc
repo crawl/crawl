@@ -287,7 +287,7 @@ bool builder(bool enable_random_maps)
     rng::generator levelgen_rng(you.where_are_you);
 
 #ifdef DEBUG_DIAGNOSTICS // no point in enabling unless dprf works
-    CrawlHashTable &debug_logs = you.props["debug_builder_logs"].get_table();
+    CrawlHashTable &debug_logs = you.props[DEBUG_BUILDER_LOGS_KEY].get_table();
     string &cur_level_log = debug_logs[level_id::current().describe()].get_string();
     msg::tee debug_messages(cur_level_log);
     debug_messages.append_line(make_stringf("Builder log for %s:",
@@ -373,7 +373,7 @@ bool builder(bool enable_random_maps)
         get_uniq_map_tags() = uniq_tags;
         get_uniq_map_names() = uniq_names;
         if (crawl_state.last_builder_error_fatal &&
-            (you.props.exists("force_map") || you.props.exists("force_minivault")))
+            (you.props.exists(FORCE_MAP_KEY) || you.props.exists(FORCE_MINIVAULT_KEY)))
         {
             // if there was a fatal lua error and this is a forced levelgen,
             // it's most likely that the same thing will keep happening over
@@ -2896,10 +2896,10 @@ static bool _pan_level()
     const PlaceInfo &place_info = you.get_place_info();
     bool all_demons_generated = true;
 
-    if (you.props.exists("force_map"))
+    if (you.props.exists(FORCE_MAP_KEY))
     {
         const map_def *vault =
-            find_map_by_name(you.props["force_map"].get_string());
+            find_map_by_name(you.props[FORCE_MAP_KEY].get_string());
         ASSERT(vault);
 
         _dgn_ensure_vault_placed(_build_primary_vault(vault), false, vault->name);
@@ -3008,8 +3008,8 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     const map_def *vault = 0;
 
-    if (you.props.exists("force_map"))
-        vault = find_map_by_name(you.props["force_map"].get_string());
+    if (you.props.exists(FORCE_MAP_KEY))
+        vault = find_map_by_name(you.props[FORCE_MAP_KEY].get_string());
     else if (lid.branch == root_branch && lid.depth == 1
         && (crawl_state.game_is_sprint()
             || crawl_state.game_is_tutorial()))
@@ -3415,8 +3415,8 @@ static void _place_minivaults()
 {
     const map_def *vault = nullptr;
     // First place the vault requested with &P
-    if (you.props.exists("force_minivault")
-        && (vault = find_map_by_name(you.props["force_minivault"])))
+    if (you.props.exists(FORCE_MINIVAULT_KEY)
+        && (vault = find_map_by_name(you.props[FORCE_MINIVAULT_KEY])))
     {
         _dgn_ensure_vault_placed(_build_secondary_vault(vault), false, vault->name);
     }
@@ -4625,7 +4625,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 {
     const CrawlHashTable props = spec.props;
 
-    if (props.exists("build_themed_book"))
+    if (props.exists(THEME_BOOK_KEY))
     {
         string owner = props[RANDBK_OWNER_KEY].get_string();
         if (owner == "player")
@@ -4696,40 +4696,40 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item_colour(item);
     }
 
-    if (props.exists("useful") && is_useless_item(item, false)
+    if (props.exists(USEFUL_KEY) && is_useless_item(item, false)
         && !allow_useless)
     {
         destroy_item(item, true);
         return false;
     }
-    if (item.base_type == OBJ_WANDS && props.exists("charges"))
-        item.charges = props["charges"].get_int();
+    if (item.base_type == OBJ_WANDS && props.exists(CHARGES_KEY))
+        item.charges = props[CHARGES_KEY].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
-        && props.exists("plus") && !is_unrandom_artefact(item))
+        && props.exists(PLUS_KEY) && !is_unrandom_artefact(item))
     {
-        item.plus = props["plus"].get_int();
+        item.plus = props[PLUS_KEY].get_int();
         item_set_appearance(item);
     }
-    if (props.exists("ident"))
-        item.flags |= props["ident"].get_int();
-    if (props.exists("unobtainable"))
+    if (props.exists(IDENT_KEY))
+        item.flags |= props[IDENT_KEY].get_int();
+    if (props.exists(UNOBTAINABLE_KEY))
         item.flags |= ISFLAG_UNOBTAINABLE;
 
-    if (props.exists("no_pickup"))
+    if (props.exists(NO_PICKUP_KEY))
         item.flags |= ISFLAG_NO_PICKUP;
 
-    if (props.exists("item_tile_name"))
-        item.props["item_tile_name"] = props["item_tile_name"].get_string();
-    if (props.exists("worn_tile_name"))
-        item.props["worn_tile_name"] = props["worn_tile_name"].get_string();
+    if (props.exists(ITEM_TILE_NAME_KEY))
+        item.props[ITEM_TILE_NAME_KEY] = props[ITEM_TILE_NAME_KEY].get_string();
+    if (props.exists(WORN_TILE_NAME_KEY))
+        item.props[WORN_TILE_NAME_KEY] = props[WORN_TILE_NAME_KEY].get_string();
     bind_item_tile(item);
 
     if (!monster)
     {
-        if (props.exists("mimic"))
+        if (props.exists(MIMIC_KEY))
         {
-            const int chance = props["mimic"];
+            const int chance = props[MIMIC_KEY];
             if (chance > 0 && one_chance_in(chance))
                 item.flags |= ISFLAG_MIMIC;
         }
@@ -4790,7 +4790,7 @@ int dgn_place_item(const item_spec &spec,
             break;
         }
 
-        if (spec.props.exists("mimic") && base_type == OBJ_RANDOM)
+        if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
             base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
@@ -5172,25 +5172,25 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (!mspec.items.empty())
         _dgn_give_mon_spec_items(mspec, mons);
 
-    if (mspec.props.exists("monster_tile"))
+    if (mspec.props.exists(MONSTER_TILE_KEY))
     {
-        mons->props["monster_tile"] =
-            mspec.props["monster_tile"].get_short();
+        mons->props[MONSTER_TILE_KEY] =
+            mspec.props[MONSTER_TILE_KEY].get_short();
     }
-    if (mspec.props.exists("monster_tile_name"))
+    if (mspec.props.exists(MONSTER_TILE_NAME_KEY))
     {
-        mons->props["monster_tile_name"].get_string() =
-            mspec.props["monster_tile_name"].get_string();
+        mons->props[MONSTER_TILE_NAME_KEY].get_string() =
+            mspec.props[MONSTER_TILE_NAME_KEY].get_string();
     }
 
-    if (mspec.props.exists("always_corpse"))
-        mons->props["always_corpse"] = true;
+    if (mspec.props.exists(ALWAYS_CORPSE_KEY))
+        mons->props[ALWAYS_CORPSE_KEY] = true;
 
     if (mspec.props.exists(NEVER_CORPSE_KEY))
         mons->props[NEVER_CORPSE_KEY] = true;
 
-    if (mspec.props.exists("dbname"))
-        mons->props["dbname"].get_string() = mspec.props["dbname"].get_string();
+    if (mspec.props.exists(DBNAME_KEY))
+        mons->props[DBNAME_KEY].get_string() = mspec.props[DBNAME_KEY].get_string();
 
     // These are applied earlier to prevent issues with renamed monsters
     // and "<monster> comes into view" (see delay.cc:_monster_warning).
