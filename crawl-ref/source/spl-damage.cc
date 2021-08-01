@@ -3717,6 +3717,7 @@ void handle_maxwells_coupling()
 
     if (charging_auts_remaining < 0)
     {
+        mpr("You feel charge building up...");
         you.props["maxwells_charge_time"] = - (charging_auts_remaining
                                             + you.time_taken);
         return;
@@ -3738,6 +3739,7 @@ void handle_maxwells_coupling()
 
     you.props["maxwells_charge_time"] = charging_auts_remaining
                                       - you.time_taken;
+    mpr("You feel charge building up...");
 }
 
 void end_maxwells_coupling(bool quiet)
