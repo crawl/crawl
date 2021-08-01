@@ -932,7 +932,7 @@ Causes confusion in all who gaze upon the caster.
 Maxwell's Capacitive Coupling spell
 
 Gradually builds up electric charge in the caster. When a critical threshold is
-reached the charge couples with the nearest foe, vapourizing them instantly.
+reached the charge couples with the nearest foe, vaporising them instantly.
 The resulting charge is so intense it bypasses even electrical immunity.
 Higher spell power will allow the caster to accumulate charge more rapidly.
 %%%%
