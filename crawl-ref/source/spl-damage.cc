@@ -3599,7 +3599,7 @@ dice_def ramparts_damage(int pow, bool random)
     return dice_def(1, size);
 }
 
-static bool _maxwells_target_check(monster &m)
+static bool _maxwells_target_check(const monster &m)
 {
     return _act_worth_targeting(you, m)
             && !m.wont_attack();
@@ -3636,16 +3636,15 @@ vector<monster *> find_maxwells_possibles()
 {
     vector<monster *> result;
     monster *seed = _find_maxwells_target(true);
-    if (seed)
+    if (!seed)
+        return result;
+
+    const int distance = grid_distance(you.pos(), seed->pos());
+    for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
     {
-        const int distance = max(abs(you.pos().x - seed->pos().x),
-                                 abs(you.pos().y - seed->pos().y));
-        for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
-        {
-            monster *mon = monster_at(*di);
-            if (mon && _maxwells_target_check(*mon) && you.can_see(*mon))
-                result.push_back(mon);
-        }
+        monster *mon = monster_at(*di);
+        if (mon && _maxwells_target_check(*mon) && you.can_see(*mon))
+            result.push_back(mon);
     }
     return result;
 }
