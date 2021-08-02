@@ -222,8 +222,8 @@ recommended to wear a pair of warm gloves.
 %%%%
 book of iron
 
-An ancient, metal-bound spellbook, covered in dark red blotches. It's
-possible that these are rust stains... and it's possible they're not.
+An ancient, metal-bound spellbook, covered in dark red blotches. Are they
+rust stains, or..?
 %%%%
 book of lightning
 
@@ -291,7 +291,7 @@ book of the spheres
 
 A book containing a comprehensive, well-rounded collection of sphere-related
 spells. Its final pages begin to describe a spell titled 'Summon Orb of Zot',
-but sadly, the remainder of the book has been completely vaporized.
+but sadly, the remainder of the book has been completely vaporised.
 %%%%
 book of stone
 
@@ -371,7 +371,7 @@ book of touch
 
 A book describing spells requiring very close proximity to their target. The
 author seems to have had a low opinion of their wizardly peers, and spends much
-of the text describing the hygeine and social etiquette needed to enter close
+of the text describing the hygiene and social etiquette needed to enter close
 proximity to other sentient beings.
 %%%%
 book of transfigurations
@@ -812,7 +812,7 @@ A potion containing the essence of life.
 potion of brilliance
 
 A potion which increases the power of the drinker's spells and halves their
-mana cost (rounding up).
+magic cost (rounding up).
 %%%%
 potion of cancellation
 

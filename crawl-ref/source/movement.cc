@@ -767,10 +767,6 @@ static void _finalize_cancelled_rampage_move()
 
     you.apply_berserk_penalty = true;
 
-    // rampaging is pretty dang hasty
-    if (you_worship(GOD_CHEIBRIADOS) && one_chance_in(2))
-        did_god_conduct(DID_HASTY, 1, true);
-
     // Rampaging prevents Wu Jian attacks, so we do not process them
     // here
     update_acrobat_status();
@@ -1188,14 +1184,8 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (you_worship(GOD_CHEIBRIADOS)
-        && (coinflip() && rampaged
-            || !attacking
-               && one_chance_in(10)
-               && player_equip_unrand(UNRAND_LIGHTNING_SCALES)))
-    {
+    if (rampaged || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
         did_god_conduct(DID_HASTY, 1, true);
-    }
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)

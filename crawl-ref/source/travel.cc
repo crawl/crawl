@@ -129,9 +129,10 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-#ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TRAVEL
-#endif
+// N.b. this #define only adds dprfs and so isn't very useful outside of a
+// debug build. It also makes long travel extremely slow when enabled on a
+// debug build.
+//#define DEBUG_TRAVEL
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -673,6 +674,7 @@ static void _start_running()
 {
     _userdef_run_startrunning_hook();
     you.running.init_travel_speed();
+    you.running.turns_passed = 0;
     const bool unsafe = Options.travel_one_unsafe_move &&
                         (you.running == RMODE_TRAVEL
                          || you.running == RMODE_INTERLEVEL);
@@ -4300,7 +4302,7 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), pos(0,0)
+    : runmode(0), mp(0), hp(0), pos(0,0), turns_passed(0)
 {
 }
 
@@ -4315,6 +4317,7 @@ void runrest::initialise(int dir, int mode)
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
+    turns_passed = 0;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4537,6 +4540,7 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
     mp = hp = travel_speed = 0;
+    turns_passed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;

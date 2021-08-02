@@ -108,8 +108,9 @@ static void _give_book(monster* mon, int level)
 {
     if (mon->type == MONS_ROXANNE)
     {
-        const int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
-                                                 : BOOK_EARTH);
+        // Statue form books, heh.
+        const int which_book = (one_chance_in(3) ? BOOK_SLOTH
+                                                 : BOOK_STONE);
 
         const int thing_created = items(false, OBJ_BOOKS, which_book, level);
 

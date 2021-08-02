@@ -3704,9 +3704,9 @@ static void _discharge_maxwells_coupling()
         bool goldify = have_passive(passive_t::goldify_corpses);
 
         if (goldify)
-            simple_monster_message(*mon, " vapourizes and condenses as gold!");
+            simple_monster_message(*mon, " vaporises and condenses as gold!");
         else
-            simple_monster_message(*mon, " vapourizes in an electric haze!");
+            simple_monster_message(*mon, " vaporises in an electric haze!");
 
         item_def* corpse = monster_die(*mon, KILL_YOU,
                                         actor_to_death_source(&you));
@@ -3756,13 +3756,13 @@ void handle_maxwells_coupling()
                                       - you.time_taken;
 }
 
-void end_maxwells_coupling()
+void end_maxwells_coupling(bool quiet)
 {
-    if (you.props.exists("maxwells_charge_time"))
-    {
-        mpr("The insufficient charge disappates harmlessly.");
-        you.props.erase("maxwells_charge_time");
-    }
+    if (!you.props.exists("maxwells_charge_time"))
+        return;
+    if (!quiet)
+        mpr("The insufficient charge dissipates harmlessly.");
+    you.props.erase("maxwells_charge_time");
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)

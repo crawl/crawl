@@ -527,9 +527,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (stepped)
         _moveto_maybe_repel_stairs();
-
-    update_monsters_in_view();
-    check_for_interesting_features();
 }
 
 // Use this function whenever the player enters (or lands and thus re-enters)
@@ -1123,9 +1120,10 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Inhibited regeneration: stops regeneration when monsters are visible
+/// Is the player's hp regeneration inhibited by nearby monsters?
 bool regeneration_is_inhibited()
 {
+    // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
@@ -1169,7 +1167,6 @@ int player_regen()
         rr /= 4;
 
     if (you.duration[DUR_SICKNESS]
-        || regeneration_is_inhibited()
         || !player_regenerates_hp())
     {
         rr = 0;
@@ -3256,11 +3253,6 @@ bool player::clarity(bool calc_unid, bool items) const
     return actor::clarity(calc_unid, items);
 }
 
-bool player::gourmand(bool /*calc_unid*/, bool /*items*/) const
-{
-    return you.get_mutation_level(MUT_GOURMAND) > 0;
-}
-
 /// Does the player have permastasis?
 bool player::stasis() const
 {
@@ -3878,10 +3870,12 @@ int get_real_mp(bool include_items)
     return enp;
 }
 
+/// Does the player currently regenerate hp? Used for resting.
 bool player_regenerates_hp()
 {
-    if (you.has_mutation(MUT_NO_REGENERATION))
+    if (you.has_mutation(MUT_NO_REGENERATION) || regeneration_is_inhibited())
         return false;
+
     return true;
 }
 
@@ -6223,9 +6217,11 @@ int player::willpower(bool /*calc_unid*/) const
 
 int player_willpower(bool calc_unid, bool temp)
 {
-
     if (temp && you.form == transformation::shadow)
         return WILL_INVULN;
+
+    if (player_equip_unrand(UNRAND_FOLLY))
+        return 0;
 
     int rm = you.experience_level * species::get_wl_modifier(you.species);
 

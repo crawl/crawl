@@ -105,7 +105,7 @@ function serpent_of_hell_setup(e)
 end
 
 -- Guarantee two rare base types with a brand
-function halls_of_blades_weapon(e)
+function hall_of_blades_weapon(e)
   local long_blade_type = crawl.one_chance_in(2) and "double sword"
                                                   or "triple sword"
   local types = {"quick blade", long_blade_type,

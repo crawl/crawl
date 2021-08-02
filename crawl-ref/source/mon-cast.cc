@@ -2341,7 +2341,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
             vector<coord_def> excludes;
             for (const auto &dc : all_door)
             {
-                env.grid(dc) = DNGN_CLOSED_DOOR;
+                dgn_close_door(dc);
                 set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
@@ -4354,7 +4354,7 @@ void setup_breath_timeout(monster* mons)
     if (mons->has_ench(ENCH_BREATH_WEAPON))
         return;
 
-    int timeout = roll_dice(1, 5);
+    const int timeout = roll_dice(1, 5);
 
     dprf("breath timeout: %d", timeout);
 

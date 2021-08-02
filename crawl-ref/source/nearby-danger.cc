@@ -26,6 +26,7 @@
 #include "mon-tentacle.h"
 #include "player.h"
 #include "player-stats.h"
+#include "spl-damage.h"
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
@@ -456,6 +457,11 @@ void revive()
     decr_zot_clock();
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
+
+    end_wait_spells(true);
+
+    if (you.duration[DUR_FROZEN_RAMPARTS])
+        end_frozen_ramparts();
 
     if (you.duration[DUR_HEAVENLY_STORM])
         wu_jian_end_heavenly_storm();

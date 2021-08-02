@@ -471,7 +471,7 @@ static bool _abyss_check_place_feat(coord_def p,
     // Don't place features in bubbles.
     int wall_count = 0;
     for (adjacent_iterator ai(p); ai; ++ai)
-        wall_count += cell_is_solid(p);
+        wall_count += cell_is_solid(*ai);
     if (wall_count > 6)
         return false;
 

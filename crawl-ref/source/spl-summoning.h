@@ -118,7 +118,7 @@ int count_summons(const actor *summoner, spell_type spell);
 
 bool fedhas_wall_of_briars();
 spret fedhas_grow_ballistomycete(bool fail);
-bool fedhas_overgrow();
+spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);

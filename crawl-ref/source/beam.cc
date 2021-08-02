@@ -2561,8 +2561,11 @@ void bolt::drop_object(bool allow_mulch)
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = (is_tracer && !can_see_invis
-                             && you.invisible() && !YOU_KILL(thrower));
+    const bool needs_fuzz = is_tracer
+            && !can_see_invis && you.invisible()
+            && !YOU_KILL(thrower)
+            // No point in fuzzing to a position that could never be hit.
+            && you.see_cell_no_trans(pos());
     const int dist = needs_fuzz? 2 : 0;
 
     return grid_distance(pos(), you.pos()) <= dist;
@@ -6255,10 +6258,6 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         if (new_delta.rdist() > centre.rdist())
             continue;
 
-        // Is that cell already covered?
-        if (m(new_delta + centre) <= count)
-            continue;
-
         // If we were at a wall, only move to visible squares.
         coord_def caster_pos = actor_by_mid(source_id) ?
                                    actor_by_mid(source_id)->pos() :
@@ -6274,6 +6273,10 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // Otherwise changing direction (e.g. looking around a wall) costs more.
         else if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
             cadd = 17;
+
+        // Is that cell already covered?
+        if (m(new_delta + centre) <= count + cadd)
+            continue;
 
         determine_affected_cells(m, new_delta, count + cadd, r,
                                  stop_at_statues, stop_at_walls);

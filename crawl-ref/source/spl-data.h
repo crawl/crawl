@@ -937,7 +937,7 @@ static const struct spell_desc spelldata[] =
     200,
     -1, -1,
     15, 0,
-    TILEG_ERROR,
+    TILEG_STORM_FORM,
 },
 
 {
@@ -2508,7 +2508,7 @@ static const struct spell_desc spelldata[] =
     spflag::none,
     4,
     100,
-    2, 2,
+    -1, -1,
     2, 0,
     TILEG_SUMMON_LIGHTNING_SPIRE,
 },

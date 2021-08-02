@@ -97,6 +97,11 @@ extern char **NXArgv;
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
+
+// TODO:
+// because reset_options is called in the constructor, it's a magnet for
+// static initialization order issues.wrap this in a function per
+// https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
 game_options Options;
 
 static string _get_save_path(string subdir);
@@ -168,13 +173,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
-#ifdef TARGET_OS_MACOSX
-        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), false),
-        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
-#else
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
-        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
-#endif
+        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
@@ -1685,7 +1685,7 @@ string find_crawlrc()
     // rc_dir_names list.
     for (const string &rc_dir : SysEnv.rcdirs)
     {
-        for (const string &rc_fn : rc_dir_filenames)
+        for (const string rc_fn : rc_dir_filenames)
         {
             const string rc(catpath(rc_dir, rc_fn));
             if (file_exists(rc))

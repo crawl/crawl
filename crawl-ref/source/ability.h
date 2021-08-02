@@ -25,6 +25,7 @@ class dist;
 vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
+string nemelex_card_text(ability_type ability);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
@@ -41,6 +42,7 @@ bool activate_ability();
 bool check_ability_possible(const ability_type ability, bool quiet = false);
 bool activate_talent(const talent& tal, dist *target=nullptr);
 bool is_religious_ability(ability_type abil);
+bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false,
                                         bool ignore_piety = false);

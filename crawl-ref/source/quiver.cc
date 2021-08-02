@@ -1529,6 +1529,9 @@ namespace quiver
             qdesc.textcolour(quiver_color());
             qdesc.cprintf("%s", ability_name(ability));
 
+            if (is_card_ability(ability))
+                qdesc.cprintf(" %s", nemelex_card_text(ability).c_str());
+
             return qdesc;
         }
 

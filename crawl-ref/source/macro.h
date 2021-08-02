@@ -48,7 +48,8 @@ int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 
-void macro_add_query();
+void macro_quick_add();
+void macro_menu();
 void macro_init();
 void macro_save();
 
@@ -113,7 +114,7 @@ string  command_to_name(command_type cmd);
 
 int function_keycode_fixup(int keycode);
 bool keycode_is_printable(int keycode);
-string keycode_to_name(int keycode);
+string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);
 keyseq parse_keyseq(string s);
 

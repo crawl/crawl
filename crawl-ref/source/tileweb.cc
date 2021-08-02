@@ -25,6 +25,7 @@
 #include "env.h"
 #include "files.h"
 #include "item-name.h"
+#include "item-prop.h" // is_weapon()
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
@@ -1077,7 +1078,10 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        _send_item(c.inv[i], get_item_known_info(you.inv[i]), force_full);
+        item_def item = get_item_known_info(you.inv[i]);
+        if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.duration[DUR_CORROSION])
+            item.plus -= 4 * you.props["corrosion_amount"].get_int();
+        _send_item(c.inv[i], item, force_full);
         json_close_object(true);
     }
     json_close_object(true);

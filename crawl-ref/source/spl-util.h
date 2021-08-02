@@ -146,4 +146,4 @@ const vector<spell_type> *soh_breath_spells(spell_type spell);
 
 bool spell_removed(spell_type spell);
 
-void end_wait_spells();
+void end_wait_spells(bool quiet = false);

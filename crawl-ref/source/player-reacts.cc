@@ -468,6 +468,7 @@ static bool _check_recite()
     {
         mprf(MSGCH_DURATION, "Your recitation is interrupted.");
         you.duration[DUR_RECITE] = 0;
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
         return false;
     }
     return true;
@@ -506,6 +507,7 @@ static void _handle_recitation(int step)
                 speech << ' ' << closure;
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
     }
 }
 

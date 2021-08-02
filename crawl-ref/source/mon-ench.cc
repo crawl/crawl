@@ -1399,7 +1399,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BLIND:
     case ENCH_DUMB:
     case ENCH_MAD:
-    case ENCH_BREATH_WEAPON:
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
     case ENCH_WEAK:
@@ -1462,6 +1461,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
         break; // handled in mon-act.cc:struggle_against_net()
+    case ENCH_BREATH_WEAPON:
+        break; // handled in mon-act.cc:catch_breath()
 
     case ENCH_CONFUSION:
         if (!mons_class_flag(type, M_CONFUSED))
@@ -1734,7 +1735,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            int breath_timeout_turns = random_range(4, 12);
+            const int breath_timeout_turns = random_range(4, 12);
 
             mons_word_of_recall(this, random_range(3, 7));
             add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, this,

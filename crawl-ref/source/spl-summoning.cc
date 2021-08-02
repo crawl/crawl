@@ -637,7 +637,6 @@ bool tukima_affects(const actor &target)
     const item_def* wpn = target.weapon();
     return wpn
            && is_weapon(*wpn)
-           && !is_range_weapon(*wpn)
            && !is_special_unrandom_artefact(*wpn)
            && !mons_class_is_animated_weapon(target.type)
            // XX use god_protects here. But, need to know the caster too...
@@ -769,6 +768,19 @@ static void _animate_weapon(int pow, actor* target)
 
         montarget->unequip(*(montarget->mslot_item(wp_slot)), false, true);
         montarget->inv[wp_slot] = NON_ITEM;
+
+        // Also steal ammo for launchers.
+        if (is_range_weapon(*wpn))
+        {
+            const int ammo = montarget->inv[MSLOT_MISSILE];
+            if (ammo != NON_ITEM)
+            {
+                ASSERT(mons->inv[MSLOT_MISSILE] == NON_ITEM);
+                mons->inv[MSLOT_MISSILE] = ammo;
+                montarget->inv[MSLOT_MISSILE] = NON_ITEM;
+                env.item[ammo].set_holding_monster(*mons);
+            }
+        }
     }
 
     // Find out what our god thinks before killing the item.
@@ -1960,6 +1972,7 @@ static spell_type servitor_spells[] =
     SPELL_FLAME_TONGUE,
     SPELL_STING,
     SPELL_SANDBLAST,
+    SPELL_SHOCK,
     SPELL_MAGIC_DART,
 };
 
@@ -2883,7 +2896,7 @@ static void _overgrow_wall(const coord_def &pos)
         mprf("%s falls apart, but nothing grows.", what.c_str());
 }
 
-bool fedhas_overgrow()
+spret fedhas_overgrow(bool fail)
 {
     targeter_overgrow tgt;
     direction_chooser_args args;
@@ -2897,12 +2910,14 @@ bool fedhas_overgrow()
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid)
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     for (auto site : tgt.affected_positions)
         _overgrow_wall(site);
 
-    return true;
+    return spret::success;
 }
 
 spret fedhas_grow_ballistomycete(bool fail)

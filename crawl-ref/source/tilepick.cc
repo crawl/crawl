@@ -3300,6 +3300,7 @@ tileidx_t tileidx_command(const command_type cmd)
     case CMD_DISPLAY_MUTATIONS:
         return TILEG_CMD_DISPLAY_MUTATIONS;
     case CMD_MACRO_ADD: // this tile is a fairly generic + despite the name
+    case CMD_MACRO_MENU:
     case CMD_DISPLAY_SKILLS:
         return TILEG_CMD_DISPLAY_SKILLS;
     case CMD_SHOW_CHARACTER_DUMP:
@@ -3430,6 +3431,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HOP;
     case ABIL_ROLLING_CHARGE:
         return TILEG_ABILITY_ROLL;
+    case ABIL_BLINKBOLT:
+        return TILEG_ABILITY_BLINKBOLT;
 
     // Others
     case ABIL_END_TRANSFORMATION:
@@ -3442,7 +3445,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_DAMNATION:
         return TILEG_ABILITY_HURL_DAMNATION;
     case ABIL_WORD_OF_CHAOS:
-        return TILEG_ERROR; // TODO
+        return TILEG_ABILITY_WORD_OF_CHAOS;
     // Vampires
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
@@ -3623,6 +3626,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Ashenzari
     case ABIL_ASHENZARI_CURSE:
         return TILEG_ABILITY_ASHENZARI_CURSE;
+    case ABIL_ASHENZARI_UNCURSE:
+        return TILEG_ABILITY_ASHENZARI_UNCURSE;
     // Dithmenos
     case ABIL_DITHMENOS_SHADOW_STEP:
         return TILEG_ABILITY_DITHMENOS_SHADOW_STEP;

@@ -517,9 +517,8 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
         (Ordered list option)
         A set of regexes that force matching items to be picked up (if
         prefixed with <), or never picked up (if prefixed with >).
-        Excludes (>) take precedence over includes (<), so if the same
-        item is matched by both an exclude and an include, it will not
-        be subject to autopickup.
+        The list is order sensitive: the first matching rule will be applied to
+        an item.
 
         An example:
              autopickup_exceptions += <curare-tipped dart
@@ -2778,9 +2777,10 @@ best_effort_brighten_foreground = true
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
 
-allow_extended_colours = false
+allow_extended_colours = true
         Allow an *attempt* to use more than the eight basic terminal colours
-        for crawl's bright colours.
+        for crawl's bright colours. Most modern terminals should use this
+        setting.
 
         If this option is enabled and there are enough colours available in
         the terminal, use the terminal's extended colour palette directly for

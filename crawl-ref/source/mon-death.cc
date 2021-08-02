@@ -1686,7 +1686,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         if (!silent && !mons_reset && !was_banished)
         {
-            simple_monster_message(mons, " vapourises!",
+            simple_monster_message(mons, " vaporises!",
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
@@ -1810,6 +1810,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (wereblood_bonus <= 8) // cap at +9 slay
             you.props[WEREBLOOD_KEY] = wereblood_bonus + 1;
         if (you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR]
             && !mons_is_object(mons.type)
             && adjacent(mons.pos(), you.pos()))
         {
@@ -2170,8 +2171,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             hogs_to_humans();
         }
-        else if ((mons_is_mons_class(&mons, MONS_NATASHA)
-                  || mons_genus(mons.type) == MONS_FELID)
+        else if ((mons_is_mons_class(&mons, MONS_NATASHA))
                  && !in_transit && !mons.pacified()
                  && mons_felid_can_revive(&mons))
         {

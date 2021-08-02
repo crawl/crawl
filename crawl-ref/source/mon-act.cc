@@ -1548,11 +1548,14 @@ static bool _mons_take_special_action(monster &mons, int old_energy)
         return true;
     }
 
-    bolt beem = setup_targetting_beam(mons);
-    if (handle_throw(&mons, beem, false, false))
+    if (friendly_or_near)
     {
-        DEBUG_ENERGY_USE_REF("_handle_throw()");
-        return true;
+        bolt beem = setup_targetting_beam(mons);
+        if (handle_throw(&mons, beem, false, false))
+        {
+            DEBUG_ENERGY_USE_REF("_handle_throw()");
+            return true;
+        }
     }
 
     if (_handle_reaching(mons))
@@ -1998,6 +2001,11 @@ void handle_monster_move(monster* mons)
     }
 }
 
+void monster::catch_breath()
+{
+    decay_enchantment(ENCH_BREATH_WEAPON);
+}
+
 /**
  * Let trapped monsters struggle against nets, webs, etc.
  */
@@ -2172,6 +2180,9 @@ static void _post_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_HELD))
         mons->struggle_against_net();
+
+    if (mons->has_ench(ENCH_BREATH_WEAPON))
+        mons->catch_breath();
 
     if (mons->type == MONS_ANCIENT_ZYME)
         _ancient_zyme_sicken(mons);

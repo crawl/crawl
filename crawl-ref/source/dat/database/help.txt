@@ -607,3 +607,108 @@ For example:
 * <w>orc perm_ench:blind perm_ench:mad</w>
 * <w>dream sheep ench:sticky_flame</w>
 * <w>stone giant dur:1 ench:berserk</w>
+
+%%%%
+macro-menu
+
+<h>Editing macros and keymaps</h>
+
+To edit a current macro/keymap, select from the menu using the arrow keys or
+by hotkey. (Hotkeys that are used to navigate the menu can be selected by
+arrow keys). To create a new mapping by entering a key, use the [<w>~</w>] key
+or the corresponding menu item, and then enter the key. This allows you to
+create (and edit) mappings that use menu keys. Use the [<w>!</w>] key to switch
+to keymap editing mode (see below for more information on keymaps).
+
+<w>Macros</w> allow remapping keys that are sent to the game when inputting
+commands. This can be used to redefine a command key, or to define an unused
+key. They map a key to a sequence of keystrokes, and keystrokes do carry over
+into submenus.
+
+Example 1: mapping <w>e</w> to <w>p</w> would let the `e` key trigger the same
+command as the `p` key (which on the default settings is autofire).
+
+Example 2: mapping <w>1</w> to the sequence <w>zaf</w> would let the `1` key
+cast a spell that is on the letter `a` with default targeting.
+
+Example 3: mapping <w>F1</w> to <w>Q&a</w> would let the F1 key quiver the spell
+that is on letter `a`.
+
+<w>Keymaps</w> are lower-level key substitutions that replace keys entirely with
+a sequence of keystrokes. They are recommended for changing keys uniformly to
+deal with alternative keyboard layouts. Keymaps are contextual, and the
+default/"regular" context is used anywhere that a non-specialized context is not
+active. Macros take the result of keymaps as input.
+
+Example: In some European keyboard layouts, the § symbol replaces ~. Therefore,
+it could be useful to keymap § to ~ in both the regular and menu keymap contexts
+so that the main menu and macro menu become a bit easier to access. (In other
+layouts, this applies instead to ½.)
+
+When used for mapping commands, keymaps can have unexpected side effects: e.g.
+mapping <w>1</w> to <w>zaf</w> via keymap is not recommended, because this will
+make it hard to type `1` when entering a skill target.
+
+<w>Keycodes</w>: Both macros and keymaps accept keycodes when describing the
+action, in the form of <w>\{n}</w> to enter keycode <w>n</w>. (Use <w>\\</w> to
+enter a backslash.) For example, use <w>\{9}</w> to enter the keycode for the
+<w>tab</w> button. You can bind macros and keymaps by keycode by using <w>~~</w>
+at the macro edit menu.
+
+<w>Saving</w>: Bindings edited at this menu are saved in a .macro file in your
+save directory. They will be overridden by settings in your options file. See
+the `macro` command in options_guide.txt for more information.
+
+%%%%
+console-keycodes
+
+<h>Keycodes for console and webtiles</h>
+
+Positive values are ASCII character codes. Negative values are crawl-internal
+keycodes for special keys. The sign is required for these to be interpreted
+correctly. Keyboards vary quite a bit, and so not all of these bindings are
+available on all keyboards; cases where there is often variation are indicated
+specifically below. When entering a keycode in a macro action, or in your rc
+file, use the following syntax for keycode n: <w>\{n}</w>
+
+The following is a quick-reference for some of the main keys you might want to
+bind.
+
+<w>8</w>: Backspace (and/or Delete, depending on keyboard)
+<w>9</w>: Tab
+<w>13</w>: Return (and/or Enter, depending on keyboard)
+<w>27</w>: Escape
+
+<w>-233</w>: Shift-Tab
+<w>-222</w>: Ctrl-Tab (on some keyboards)
+<w>-255</w>: Delete (on some keyboards)
+<w>-265</w>: F1   <w>-264</w>: F2   <w>-263</w>: F3   <w>-262</w>: F4   <w>-261</w>: F5
+<w>-260</w>: F6   <w>-259</w>: F7   <w>-258</w>: F8   <w>-257</w>: F9   <w>-256</w>: F10
+Console-only: <w>-255</w>: F11   <w>-254</w>: F12
+
+<w>Number pad and navigation keys:</w>
+
+On many keyboards, <w>numlock</w> switches between the number keys and
+navigation keys. Modifiers for these keys may not work on all keyboards. When
+modified number pad keys do work, Shift and Ctrl typically treats those keys as
+modified navigation keys regardless of numlock status.
+
+<w>-245</w>: PgDn    <w>-234</w>: Shift-PgDn    <w>-223</w>: Ctrl-PgDn
+<w>-246</w>: PgUp    <w>-235</w>: Shift-PgUp    <w>-224</w>: Ctrl-PgUp
+<w>-247</w>: Clear   <w>-236</w>: Shift-Clear   <w>-225</w>: Ctrl-Clear
+<w>-248</w>: End     <w>-237</w>: Shift-End     <w>-226</w>: Ctrl-End
+<w>-249</w>: Home    <w>-238</w>: Shift-Home    <w>-227</w>: Ctrl-Home
+<w>-250</w>: Insert  <w>-239</w>: Shift-Insert  <w>-228</w>: Ctrl-Insert
+<w>-251</w>: Right   <w>-240</w>: Shift-Right   <w>-229</w>: Ctrl-Right
+<w>-252</w>: Left    <w>-241</w>: Shift-Left    <w>-230</w>: Ctrl-Left
+<w>-253</w>: Down    <w>-242</w>: Shift-Down    <w>-231</w>: Ctrl-Down
+<w>-254</w>: Up      <w>-243</w>: Shift-Up      <w>-232</w>: Ctrl-Up
+
+<w>-1007</w>: Numpad 7   <w>-1008</w>: Numpad 8   <w>-1009</w>: Numpad 9
+<w>-1004</w>: Numpad 4   <w>-1005</w>: Numpad 5   <w>-1006</w>: Numpad 6
+<w>-1001</w>: Numpad 1   <w>-1002</w>: Numpad 2   <w>-1003</w>: Numpad 3
+<w>-1000</w>: Numpad 0
+<w>-1010</w>: Numpad enter (on some keyboards)
+
+Some number pad punctuation keys may not be distinguished from their "regular"
+counterparts, again depending on keyboard.

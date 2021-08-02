@@ -2722,7 +2722,7 @@ ENDMAP
 # necromancy theme, with necromancers' Bind Soul being a somewhat analogous
 # on-death effect compared to the old vault. -gammafunk
 NAME:    due_jungle_book
-TAGS:    no_pool_fixup no_wall_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
 # A necromancy-themed loot item behind the obsidian statue.
@@ -2740,14 +2740,14 @@ ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
          / book of necromancy / book of death / book of unlife \
          / randbook owner:Kikubaaqudgh disc:necromancy \
          / necronomicon w:1
-KMONS:   p = withered plant
+KMONS:   pq = withered plant
 MONS:    elephant skeleton / elephant zombie / spectral elephant \
          / elephant simulacrum / spectral cane toad / cane toad simulacrum
 MONS:    elephant, cane toad / death yak
-MONS:    spectral death yak / death yak simulacrum / dire elephant skeleton \
-         / dire elephant zombie / spectral dire elephant \
-         / dire elephant simulacrum
-MONS:    dire elephant, necromancer, obsidian statue
+MONS:    spectral death yak w:20 / death yak simulacrum w:20 \
+         / dire elephant skeleton / dire elephant zombie \
+         / spectral dire elephant w:5 / dire elephant simulacrum w:5
+MONS:    dire elephant, patrolling necromancer, obsidian statue
 # The anaconda's name is Kaa.
 KMONS:   R = spectral anaconda
 KFEAT:   R = deep_water
@@ -2760,44 +2760,40 @@ SUBST:   2 = 22., 5 = 55.
 # in. Derived undead band is a stonger derived undead with 4 weaker ones on
 # average.
 SHUFFLE: DE / FH / JK
-SUBST:   D = 6, E = 2223-
-SHUFFLE: FH / '"
-SUBST:   F = 6, H = 2223-, 'J = 4
-NSUBST:  " = 2=1 / 11-, K = 2=1 / 11-
+SUBST:   D = 6, E = 23...
+SHUFFLE: FH / SZ
+SUBST:   F = 6, H = 23..., JS = 4, KZ = 11...
 # LM / NO / PQ each have 50% chance of being a derived undead band, 50% chance
 # of nothing.
 SHUFFLE: LM / NO / PQ
-SHUFFLE: LM / '"
-SUBST:   L = 4, '" = -
-NSUBST:  M = 2=1 / 11-
-SHUFFLE: NO / '"
-SUBST:   N = 4, '" = -
-NSUBST:  O = 2=1 / 11-
-SHUFFLE: PQ / '"
-SUBST:   P = 4, '" = -
-NSUBST:  Q = 2=1 / 11-
-SUBST:   a = tttxxc, p = p-, q = xxx--, - = -:200 ', ' = 12345
+SHUFFLE: LM / SZ
+SUBST:   L = 4, M = 11..., SZ = .
+SHUFFLE: NO / SZ
+SUBST:   N = 4, O = 11..., SZ = .
+SHUFFLE: PQ / SZ
+SUBST:   P = 4, Q = 11..., SZ = .
+SUBST:   a = tttxxc, p = p-, q = q., r = xxx.., - = .:100 Z, Z = 12345
 COLOUR:  t = brown
 TILE:    t = dngn_tree_dead
 TILE:    G = dngn_statue_elephant
 : set_feature_name("tree", "dead tree")
 MAP
    xxxcccccccc
-  xxtttqqLqqqcc
- xxttqppMMM-pqcc
-xxxttp---MM--pqcc                           ttttt
-xxtt--xxpq--q--qcccccccccccccccccccccccccccccaaGttp..@
-xtt7ttxccc++c++ccccccccccccccccccccccccccccaaaKKJttpp.
-xtdttxcccG--c--OOGcc-WWccGpppGccpppccQQ-----ppGKKGttt.
-xtttxccccp-pcp-OON+--WwW+-55%|cG-2--+QQQppc-cp-Kaaatp.
-xxxcccccc-c-ccccOGcpWwwR+-56**c|$22-cPpcccc---caaccc..
-xxccccccc+cp--pccccpwwwwcG5ppGc*%22-cccc---pc+ccccccc.
-xxccGEEpp-cccc---pcWWWWpccnnnccG62ppcp--pcccc-ppHHGcc.
-xxcc*DE--pccccccc-cccWpcccGpGcccppccc-cccccccp--HF*cc.
-xxccGEEpppccttaccp-pcccccGpYpGccnncp-pccattccpppHHGcc.
- xxcccccccctp..pccc-----------------cccp..ptcccccccc.
-  axacccatp.....ptcccccccc+++cccccccctp....pptcccatp.@
-    @........@@...........@@@....a......@@..........@
+  xxtttrrLrrrcc
+ xxttrqqMMM.qrcc
+xxxttq...MM..qrcc                           ccccc
+xxtt..rrqr..r..rcccccccccccccccccccccccccccccaaGttq.
+xtt7ttcccc++c++ccccccccccccccccccccccccccccaaaKKJttqq.
+xtdttccccG--c..OOGcc.WWccGqqqGccqqqccQQ.....qqGKKGttt.
+xtttcccccp-pcq.OON+..WwW+.55%|cG.2..+QQQqqc.cq.Kaaatq.
+xxxcccccc-c-ccccOGcqWwwR+.56**c|$22.cPqcccc---caaccc..
+xxccccccc+cp--pccccqwwwwcG5qqGc*%22.cccc---pc+ccccccc.
+xxccGEEqq.cccc---pcWWWWqccnnnccG62qqcp--pcccc.qqHHGcc.
+xxcc*DE..qccccccc-cccWqcccGpGcccqqccc-cccccccq..HF*cc.
+xxccGEEqqqccttaccp-pcccccGpYpGccnncp-pccattccqqqHHGcc.
+ xxcccccccctq..qccc-----------------cccq..qtcccccccc..
+ .axacccatq..  .qtcccccccc+++cccccccctq.  .qqtcccatq.
+ ..........     ..........@@@....a.....     ........
 ENDMAP
 
 ##############################################################################
@@ -3073,35 +3069,45 @@ ENDMAP
 # An ancient temple flooded with waters brought forth by a mystic avatar.
 #
 NAME:    gammafunk_lair_ancient_temple
-PLACE:   Lair:$
 TAGS:    no_pool_fixup no_monster_gen
+PLACE:   Lair:$
 ORIENT:  float
-KMONS:   ~ = plant
-KMONS:   1 = water moccasin / hornet / wyvern / cane toad
+KITEM:   % = any
+KITEM:   * = star_item
+KITEM:   | = superb_item
+: kitem("d = " .. dgn.loot_potions)
+KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
+         / trident randart / trident of the octopus king w:2 \
+         / demon trident w:5 / phial of floods / ring of the octopus king w:2
+KMONS:   p = plant
+KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
-KMONS:   3 = sea snake / manticore / wind drake / harpy
-KMONS:   4 = dire elephant / hydra
+KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy
+KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
-KFEAT:   ~12345%*|! = W
-KITEM:   % = any no_pickup
-KITEM:   * = star_item no_pickup
-KITEM:   | = superb_item no_pickup
-KITEM:   ! = any good_item no_pickup
-# Two of three locations will be collapsed wall openings, and the remaining one
-# will be a closed wall. Each opening will have 1-4 wall tiles replaced with
-# land, with the corresponding walls tiles having been moved nearby.
-SHUFFLE: defghijkopqr / suyzABCDEFHI / JKLMNOPQRSTU
-SHUFFLE: def / pqr, ghi / jko, suy / FHI, zAB / CDE
-SHUFFLE: defghijkopqr / defghijkoVYY / defghiVYYVYY / defVYYVYYVYY
-SUBST:   KLNOQRTUY = -, JMPSV = c
-SHUFFLE: suyzABCDEFHI / suyzABCDEVYY / suyzABVYYVYY / suyVYYVYYVYY
-SUBST:   dgjpszCF = `, ehkquADHY = -, V = c, a = ccc., G = GGGW`, " = .-
-NSUBST:  f = 1:c / -, i = 1:c / -, o = 1:c / -, r = 1:c / -
-NSUBST:  y = 1:c / -, B = 1:c / -, E = 1:c / -, I = 1:c / -
+KFEAT:   p12345de%*| = W
+NSUBST:  % = 2=d / 2=d% / e / %%*|
+# Open up squares on the fixed portions of the temple walls, on the outer
+# colums, and in the inner room.
+SUBST:   c = c:20 .:1 W:1, a = ccc-, q = cccc'
+# Each wall has a 50% chance of being broken open
+SHUFFLE: DEFHJ / uuyzz
+SUBST:   u = -, y = c, z = '
+SHUFFLE: KLMNO / uuyzz
+SUBST:   u = -, y = c, z = '
+SHUFFLE: PQRSZ / uuyzz
+SUBST:   u = -, y = c, z = '
+# For broken wall areas, put four wall squares in the area, spread out in a way
+# that prevents clumping. Also put some dry floor in these areas.
+SHUFFLE: DE, HJ, KL, NO, PQ, SZ
+NSUBST:  DFH = 4=c, DEF = 2=. / 2=.- / -, HJ = 2=. / 2=.' / '
+NSUBST:  KMN = 4=c, KLM = 2=. / 2=.- / -, NO = 2=. / 2=.' / '
+NSUBST:  PRS = 4=c, PQR = 2=. / 2=.- / -, SZ = 2=. / 2=.' / '
 # Monsters of each tier are distributed across outer and inner portions.
-NSUBST:  - = 8:1 / 6:2 / 6 = 12WW / 4 = 3WW / *:W
-NSUBST:  ' = 3:2 / 3 = 23W / 2 = 3334 / 1:5 / W, % = 1:! / 1:* / * = %%*|
-SUBST:   W = W:125 ~:10
+NSUBST:  - = 12=1W / 8=2W / 4=3W / 2=4WWW / W, ' = 4=2W / 8=3W / 5 / W
+# Ruin statues, possibly place inner chamber doors. Also replace some shallow
+# water with floor and some with plants throughout the map.
+SUBST:   G = GGGW., + : +.W, W = W:125 .:10 p:10, " = W.
 COLOUR:  c = white
 MAP
 """"""""""""""""""""""""
@@ -3110,22 +3116,22 @@ MAP
 "----------------------"
 "----aa---a--a---aa----"
 "aa--c------------c--aa"
-"aa--c----yBDI----c--aa"
-"----cG---uBEH---Gc----"
-"----cccccszCFccccc----"
-"aa--cG'''uADH'''Gc--aa"
-"aa--c''''yAEI''''c--aa"
-"----c''''''''''''c----"
-"---edeff'%%%%'LLKJK---"
-"aa-ighhi'%ww%'ONNMO-aa"
-"aa-ojkok'%ww%'QRQPR-aa"
-"---qpqrr'%%%%'UUTST---"
-"----c''''''''''''c----"
-"aa--c''''''''''''c--aa"
-"aa--cG''''''''''Gc--aa"
+"aa--c---LKLKLK---c--aa"
+"----cG--KLKLKL--Gc----"
+"----cccccMMMMccccc----"
+"aa--cU''ONONON''Uc--aa"
+"aa--c'''GONONG'''c--aa"
+"--EDcHJ'qqqqqq'SZcPQ--"
+"--DEFJH'q%%%%q'ZSRQP--"
+"a-EDFHJ'q%ww%q'SZRPQ-a"
+"a-DEFJH'q%ww%q'ZSRQP-a"
+"--EDFHJ'q%%%%q'SZRPQ--"
+"--DEcJH'qq++qq'ZScQP--"
+"aa--c'''G''''G'''c--aa"
+"aa--cU''''''''''Uc--aa"
 "----ccccc----ccccc----"
 "----cG----------Gc----"
-"aa--c-----GG-----c--aa"
+"aa--c-a-a-GG-a-a-c--aa"
 "aa--c------------c--aa"
 "----aa-aaa--aaa-aa----"
 "----------------------"
@@ -3197,4 +3203,66 @@ xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
               xxxxxxxxxxxllxxx
                  xxxxxxxxxxxx
                      xxxxxxx
+ENDMAP
+
+###############################################################################
+# An abyssal version of the forest ending
+# monster set drawn from weaker abyss spawns and lair branch abyssal visitors
+NAME:    hellmonk_lair_end_abyssal_woods
+PLACE:   Lair:$
+ORIENT:  northwest
+MONS:    blink frog / basilisk w:3, small abomination
+MONS:    shapeshifter / chaos spawn / smoke demon / ynoxinul
+MONS:    ancient zyme, ugly thing / large abomination,  thrashing horror
+KMONS:   7M = spriggan ; rapier ego:distortion
+KFEAT:   u = demonic_tree
+KFEAT:   N = enter_abyss
+KFEAT:   _ = altar_lugonu
+SUBST:   " = '.
+COLOUR:  '%M = magenta
+FTILE:   '%MN_u = floor_nerves_magenta
+NSUBST:  %d = 2=| / 3=* / %
+NSUBST:  1 = 5=1 / 1.., 2 = 4=2 / 2..
+NSUBST:  4 = 4 / 3, ' = 2=6 / 2=56 / 3=O / 5=5543O. / .
+SUBST:   7M = 7O
+# 33% chance for an additional opening at the south.
+SHUFFLE: yzD / JKL / JKL
+SUBST:   y = @, zD= ., JK = t, L = p
+# 33% chance for an additional opening at the north east.
+SHUFFLE: EFH / JKL / JKL
+SUBST:   E = @, FH= ., JK = t, L = p
+SUBST:   a = tt..., q = pp..., p = tttu, s = rr..., r = tu
+{{
+  dgn.delayed_decay(_G, 'O', "spriggan skeleton / wolf skeleton w:3"
+                             .. " / polar bear skeleton w:2"
+                             .. " / black bear skeleton w:2")
+}}
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttpppppppppppttpppptt
+ttttttttttttttttttttttttttttppppdd7..pp.2ppppFFFE
+ttttttt..tttt.tttatttttttpppp22...pp.....222HHHFF
+tttttta.aa..4....attttttppq......pppppp1....24ppt
+ttttt.......O...tatttttpp1...11ppppppppp..ppppptt
+tttt...tt..aa11atttttppp2.....1pppppqqp..rrtttttt
+ttt...tttttttt1..ppppp..1111pp222pp......2rrtttt
+ttt..ttttttttttt.2.pp.4.1pppppp2....qqrss..rrt
+tta......tttttttt..q..1pppuuuupppp4ppprrrr12rtt
+tt..t.....ttttttt...2qppuuuMNuuuupppttttrrs4rt
+tt11ttt22...tttt..2pppppu%%''%%uuutttttrr..rrt
+tt1attttt...ttt...ppppdpuu'''_''%utttttr..rrtt
+ta1ttttttt2.tt...pppd54ppu%''''uurrrrrrrs..rtt
+tt11ttttt....111qpppa.2ppuuuu''urr"".rr.41rrtt
+tt..ttttttt.111....tt..qppttr'''''"s....ssrtt
+ttt..tttttttttttpp...2..qpttrr''''sss.rrrrrt
+ttta...atttttttttppDD..qpptttrrrr'""..rttttt
+tttt..atttttttttppzzpppppttttttr''""rrrtt
+tttta..attttttttpzzzttttttt   trrrrrrttt
+ttttt...ttttttttppzy          tttttttt
+ttttta...tttttttttt               ttt
+ttttttt.@ttt
+ttttttt
+tttt
+tt
+t
 ENDMAP

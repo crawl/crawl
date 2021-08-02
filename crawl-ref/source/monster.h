@@ -544,6 +544,7 @@ public:
     void calc_speed();
     bool attempt_escape(int attempts = 1);
     void struggle_against_net();
+    void catch_breath();
     bool has_usable_tentacle() const override;
 
     bool is_child_tentacle() const;

@@ -1275,7 +1275,13 @@ dgn_register_place(const vault_placement &place, bool register_vault)
             _mask_vault(place, MMT_VAULT);
 
         if (place.map.has_tag("passable"))
-            _mask_vault(place, MMT_PASSABLE);
+        {
+            // Ignore outside of Vaults -- creates too many bugs otherwise.
+            // This tag is mainly to allow transporter vaults to work with
+            // Vaults layout code.
+            if (player_in_branch(BRANCH_VAULTS))
+                _mask_vault(place, MMT_PASSABLE);
+        }
         else if (!transparent)
         {
             // mask everything except for any marked vault exits as opaque.

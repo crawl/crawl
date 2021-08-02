@@ -30,17 +30,18 @@
     Enne Walker
 
 * The administrators of public crawl servers, both present:
-    John Boyle (crawl.berotato.org)
     Jan Anders Bremer (underhound.eu)
     Rax E. Dillon (crawl.akrasiac.org)
+    dplusplus (lazy-life.ddo.jp)
+    floraline (crawl.kelbi.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex Jurkiewicz (crawl.project357.org)
     Marc H. Thoben (crawl.develz.org)
-    dplusplus (lazy-life.ddo.jp)
-    floraline (crawl.kelbi.org)
     Namanix (crawl.xtahua.com)
+    ZureaL (cbro.berotato.org)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
+    John Boyle (crawl.berotato.org)
     joosa (rl.heh.fi)
     Medar, Zkyp (crawl.xtahua.com)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
@@ -96,7 +97,7 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
-    Alexi Barnes
+    Alexei Barnes
     Beargit
     Bill Beher
     Alexander Beisig
@@ -105,6 +106,7 @@
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
+    Elliott Bernstein
     Bloax
     Terje Bø
     Erik Inge Bolsø
@@ -142,15 +144,19 @@
     David Damerell
     Paul Dejean
     Denzi
+    dicedlemming
     Lothar Dierkes
+    dilly
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
+    DreamDust
     Mike Drinen
     DrKe
     Kieron Dunbar
     Russell Dunk
+    Ebonnov
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -164,7 +170,6 @@
     Kyle Fox
     freepotion
     Chris Galardi
-    Yitao Gao
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
@@ -359,7 +364,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    ukdong99
     Sean VanMeter
     Mikko Vepsäläinen
     vla22

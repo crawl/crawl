@@ -992,6 +992,9 @@ static bool _id_floor_item(item_def &item)
         if (item_needs_autopickup(item))
             item.props["needs_autopickup"] = true;
         identify_item(item);
+        // but skip ones that we discover to be useless
+        if (item.props.exists("needs_autopickup") && is_useless_item(item))
+            item.props.erase("needs_autopickup");
         return true;
     }
 
@@ -1825,13 +1828,17 @@ static void _get_book(item_def& it)
     {
         if (you.has_mutation(MUT_INNATE_CASTER))
         {
-            mprf("%s burns to shimmering ash in your grasp.", it.name(DESC_THE).c_str());
+            mprf("%s burns to shimmering ash in your grasp.",
+                 it.name(DESC_THE).c_str());
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
+
+        taken_new_item(it.base_type);
+
         return;
     }
     // This is mainly for save compat: if a manual generated somehow that is not
@@ -1969,6 +1976,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
+        auto_assign_item_slot(you.inv[inv_slot]);
 
         return true;
     }

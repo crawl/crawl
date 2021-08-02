@@ -1417,7 +1417,7 @@ static void _storm_card(int power)
 
     // 1-3, 4-6, 7-9
     const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);
-    // Select targets based on simultaneously running max_explosions resivoir
+    // Select targets based on simultaneously running max_explosions reservoir
     // samples from the radius iterator over valid targets.
     //
     // Once the possible targets are drawn, the result is deduplicated into a
