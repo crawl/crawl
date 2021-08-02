@@ -2262,6 +2262,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'F': return GOD_FEDHAS;
         case 'G': return GOD_GOZAG;
         case 'H': return GOD_HEPLIAKLQANA;
+        case 'I': return GOD_IGNIS;
         case 'J': return GOD_JIYVA;
         case 'K': return GOD_KIKUBAAQUDGHA;
         case 'L': return GOD_LUGONU;

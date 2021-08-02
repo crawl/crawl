@@ -186,6 +186,7 @@ skill_type invo_skill(god_type god)
         case GOD_WU_JIAN:
         case GOD_VEHUMET:
         case GOD_XOM:
+        case GOD_IGNIS:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;

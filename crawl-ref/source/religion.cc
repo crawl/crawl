@@ -80,6 +80,8 @@
 
 #define PIETY_HYSTERESIS_LIMIT 1
 
+#define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
+
 static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD);
 static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
 static armour_type _hepliaklqana_shield_type(monster_type mc, int HD);
@@ -386,6 +388,11 @@ const vector<god_power> god_powers[NUM_GODS] =
         { 5, ABIL_WU_JIAN_HEAVENLY_STORM,
              "summon a storm of heavenly clouds to empower your attacks",
              "summon a storm of heavenly clouds" },
+    },
+
+    // Ignis
+    { // TODO
+        { 0, "resist fire" },
     },
 };
 
@@ -2241,7 +2248,8 @@ string god_name(god_type which_god, bool long_name)
 #endif
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
-    case GOD_WU_JIAN:     return "Wu Jian";
+    case GOD_WU_JIAN:       return "Wu Jian";
+    case GOD_IGNIS:         return "Ignis";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2625,7 +2633,9 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
     pgn = div_rand_round(pgn, denominator);
     while (pgn-- > 0)
         _gain_piety_point();
-    if (you.piety > you.piety_max[you.religion])
+    // Note down the first time you hit 6* piety with a given god,
+    // excepting Ignis, since it's not really meaningful there.
+    if (you.piety > you.piety_max[you.religion] && !you_worship(GOD_IGNIS))
     {
         if (you.piety >= piety_breakpoint(5)
             && you.piety_max[you.religion] < piety_breakpoint(5))
@@ -2749,6 +2759,8 @@ void lose_piety(int pgn)
         // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
+
+    you.props[MIN_IGNIS_PIETY_KEY] = you.piety;
 }
 
 // Fedhas worshipers are on the hook for most plants and fungi
@@ -2880,6 +2892,7 @@ int initial_wrath_penance_for(god_type god)
         case GOD_NEMELEX_XOBEH:
         case GOD_TROG:
         case GOD_XOM:
+        case GOD_IGNIS:
             return 50;
         case GOD_FEDHAS:
         case GOD_KIKUBAAQUDGHA:
@@ -2899,6 +2912,8 @@ int initial_wrath_penance_for(god_type god)
         case GOD_ZIN:
         default:
             return 25;
+        case GOD_IGNIS:
+            return 15; // baby wrath!
         case GOD_RU:
             return 0;
     }
@@ -3645,6 +3660,17 @@ static void _set_initial_god_piety()
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         break;
 
+    case GOD_IGNIS:
+        // Don't allow leaving & rejoining to reset piety
+        // XXX: maybe this logic should all be in on_join?
+        if (you.props.exists(MIN_IGNIS_PIETY_KEY))
+            you.piety = you.props[MIN_IGNIS_PIETY_KEY].get_int();
+        else
+            you.piety = 130; // matches zealot with ecu bonus
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+        break;
+
     default:
         you.piety = 15; // to prevent near instant excommunication
         if (you.piety_max[you.religion] < 15)
@@ -4306,6 +4332,9 @@ void handle_god_time(int /*time_delta*/)
 
             break;
 
+        case GOD_IGNIS:
+            // Losing piety over time would be extremely annoying for people
+            // trying to get polytheist with Ignis. Almost impossible.
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:
@@ -4352,6 +4381,7 @@ int god_colour(god_type god) // mv - added
 
     case GOD_GOZAG:
     case GOD_XOM:
+    case GOD_IGNIS:
         return YELLOW;
 
     case GOD_NEMELEX_XOBEH:
@@ -4475,6 +4505,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_HEPLIAKLQANA:
         return random_choose(LIGHTGREEN, LIGHTBLUE);
+
+    case GOD_IGNIS:
+        return random_choose(WHITE, YELLOW);
 
     default:
         return YELLOW;
@@ -4813,6 +4846,7 @@ static bool _is_temple_god(god_type god)
     case GOD_LUGONU:
     case GOD_BEOGH:
     case GOD_JIYVA:
+    case GOD_IGNIS:
         return false;
 
     default:

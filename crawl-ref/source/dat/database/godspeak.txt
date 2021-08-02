@@ -534,6 +534,10 @@ Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
 %%%%
+Ignis welcome
+
+The flames of Ignis gently warm you.
+%%%%
 Jiyva welcome
 
 Slime for the Slime God!

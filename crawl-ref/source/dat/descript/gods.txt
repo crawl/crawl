@@ -66,6 +66,13 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
+Ignis
+
+Ignis the Dying Flame offers followers power over fire in many forms. All of
+Ignis' power is offered unconditionally to any who would deign to worship, but
+once used, it can never be replenished. Ignis' other worshippers deserted long
+ago; the divine fire burns low, and soon it will go out.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -293,6 +300,15 @@ Hepliaklqana will call it forth again not long after. Further advancement in
 Hepliaklqana's service allows worshippers to restore and strengthen their
 ancestor, to swap them with other creatures, and to choose how to remember
 their life's talents.
+%%%%
+Ignis powers
+
+Followers can draw upon the guttering flames of Ignis' power just a few times
+before only flickering embers remain. They can call a swarm of foxfires against
+their foes perhaps a dozen times, cover their surroundings with burning coals
+perhaps half a dozen times, or let Ignis' heat lift them to another level of
+the dungeon perhaps three times. No matter how depleted, Ignis will always
+grant followers resistance to fire.
 %%%%
 Jiyva powers
 

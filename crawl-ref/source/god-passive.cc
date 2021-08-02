@@ -427,6 +427,9 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack monsters by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks in an area by jumping off a solid obstacle." },
     },
+
+    // Ignis
+    { }, // TODO
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
