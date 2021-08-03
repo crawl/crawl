@@ -812,6 +812,12 @@ with martial attacks increases this bonus. The storm weakens over time and
 fades away once the bonus reaches zero. The heavenly clouds prevent
 invisibility, and obscure the vision of those outside the storm.
 %%%%
+Foxfire Swarm ability
+
+Conjures a swarm of animate flames all around you. These rapidly seek the
+nearest monsters, burning them. They will dissipate harmlessly if unable to
+reach a target or if you swap places with them.
+%%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this

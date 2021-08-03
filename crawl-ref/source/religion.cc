@@ -392,7 +392,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Ignis
     { // TODO
-        { 0, "resist fire" },
+        { 1, ABIL_IGNIS_FOXFIRE, "call a swarm of foxfires against your foes" },
     },
 };
 

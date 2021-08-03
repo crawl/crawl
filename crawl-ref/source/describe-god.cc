@@ -1001,7 +1001,7 @@ static formatted_string _describe_god_powers(god_type which_god)
 
     case GOD_IGNIS:
         have_any = true;
-        desc.cprintf("You are resistant to fire.");
+        desc.cprintf("You are resistant to fire.\n");
         break;
 
     default:

@@ -276,6 +276,9 @@ enum ability_type
     ABIL_WU_JIAN_WHIRLWIND,
     ABIL_WU_JIAN_WALLJUMP,
 
+    // Ignis
+    ABIL_IGNIS_FOXFIRE,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
     ABIL_LAST_RELIGIOUS_ABILITY = ABIL_STOP_RECALL,

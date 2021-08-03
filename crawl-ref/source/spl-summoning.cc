@@ -2970,6 +2970,36 @@ spret fedhas_grow_oklob(bool fail)
 
 }
 
+static bool _create_foxfire(const actor &agent, coord_def pos,
+                            god_type god, int pow)
+{
+    const auto att = agent.is_player() ? BEH_FRIENDLY
+                                       : SAME_ATTITUDE(agent.as_monster());
+    mgen_data fox(MONS_FOXFIRE, att,
+                  pos, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
+    fox.set_summoned(&agent, 0, SPELL_FOXFIRE, god);
+    fox.hd = pow;
+    monster *foxfire;
+
+    if (cell_is_solid(pos) || actor_at(pos))
+        return false;
+
+    foxfire = create_monster(fox);
+    if (!foxfire)
+        return false;
+
+    foxfire->add_ench(ENCH_SHORT_LIVED);
+    foxfire->steps_remaining = you.current_vision + 2;
+
+    // Avoid foxfire without targets always moving towards (0,0)
+    if (!foxfire->get_foe()
+        || !foxfire->get_foe()->is_monster() && !agent.is_monster())
+    {
+        set_random_target(foxfire);
+    }
+    return true;
+}
+
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 {
     bool see_space = false;
@@ -2995,29 +3025,9 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 
     for (fair_adjacent_iterator ai(agent.pos()); ai; ++ai)
     {
-        const auto att = agent.is_player() ? BEH_FRIENDLY
-                                           : SAME_ATTITUDE(agent.as_monster());
-        mgen_data fox(MONS_FOXFIRE, att,
-                      *ai, MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-        fox.set_summoned(&agent, 0, SPELL_FOXFIRE, god);
-        fox.hd = pow;
-        monster *foxfire;
-
-        if (!cell_is_solid(*ai) && !monster_at(*ai)
-            && (foxfire = create_monster(fox)))
-        {
-            ++created;
-            foxfire->add_ench(ENCH_SHORT_LIVED);
-            foxfire->steps_remaining = you.current_vision + 2;
-
-            // Avoid foxfire without targets always moving towards (0,0)
-            if (!foxfire->get_foe()
-                || !foxfire->get_foe()->is_monster() && !agent.is_monster())
-            {
-                set_random_target(foxfire);
-            }
-        }
-
+        if (!_create_foxfire(agent, *ai, god, pow))
+            continue;
+        ++created;
         if (created == 2)
             break;
     }
@@ -3032,4 +3042,33 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
+
+spret foxfire_swarm()
+{
+    bool created = false;
+    bool unknown_unseen = false;
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (_create_foxfire(you, *ri, GOD_NO_GOD, 15))
+        {
+            created = true;
+            continue;
+        }
+        const actor* agent = actor_at(*ri);
+        if (agent && !you.can_see(*agent))
+            unknown_unseen = true;
+    }
+    if (created)
+    {
+        mpr("Flames leap up around you!");
+        return spret::success;
+    }
+    if (!unknown_unseen)
+    {
+        mpr("There's no space to create foxfire here.");
+        return spret::abort;
+    }
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return spret::fail; // don't spend piety, do spend a turn
 }

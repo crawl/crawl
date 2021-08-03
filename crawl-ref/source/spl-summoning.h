@@ -122,3 +122,4 @@ spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(bool fail);
 
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
+spret foxfire_swarm();

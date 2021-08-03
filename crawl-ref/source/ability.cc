@@ -631,6 +631,12 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_WU_JIAN_WALLJUMP, "Wall Jump",
             0, 0, 0, {}, abflag::berserk_ok },
 
+        // Ignis
+        { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
+            0, 0, 8 /*avg 12 uses from 150 to <30 piety*/,
+            {fail_basis::invo}, abflag::none
+        },
+
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, {fail_basis::invo}, abflag::none },
@@ -1795,7 +1801,8 @@ bool activate_talent(const talent& tal, dist *target)
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
             return true;
         case spret::fail:
-            mpr("You fail to use your ability.");
+            if (tal.which != ABIL_IGNIS_FOXFIRE) // hack
+                mpr("You fail to use your ability.");
             you.turn_is_over = true;
             return false;
         case spret::abort:
@@ -3133,6 +3140,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_WU_JIAN_WALLJUMP:
         fail_check();
         return wu_jian_wall_jump_ability();
+
+    case ABIL_IGNIS_FOXFIRE:
+        return foxfire_swarm();
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
