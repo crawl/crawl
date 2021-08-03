@@ -999,6 +999,11 @@ static formatted_string _describe_god_powers(god_type which_god)
                 uppercase_first(god_name(which_god)).c_str());
         break;
 
+    case GOD_IGNIS:
+        have_any = true;
+        desc.cprintf("You are resistant to fire.");
+        break;
+
     default:
         break;
     }
