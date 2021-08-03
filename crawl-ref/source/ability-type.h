@@ -278,6 +278,7 @@ enum ability_type
 
     // Ignis
     ABIL_IGNIS_FOXFIRE,
+    ABIL_IGNIS_SEA_OF_FIRE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

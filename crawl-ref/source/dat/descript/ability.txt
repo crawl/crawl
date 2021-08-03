@@ -818,6 +818,11 @@ Conjures a swarm of animate flames all around you. These rapidly seek the
 nearest monsters, burning them. They will dissipate harmlessly if unable to
 reach a target or if you swap places with them.
 %%%%
+Sea of Fire ability
+
+Fills your surroundings with burning coals which, if not immediately stamped
+out, burst into raging flames.
+%%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this

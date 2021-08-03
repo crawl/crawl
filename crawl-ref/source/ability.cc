@@ -102,6 +102,7 @@ enum class abflag
     hostile             = 0x00001000, // failure summons a hostile (Makhleb)
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
+    quiet_fail          = 0x00008000, // no message on failure
 };
 DEF_BITFIELD(ability_flags, abflag);
 
@@ -634,8 +635,9 @@ static vector<ability_def> &_get_ability_list()
         // Ignis
         { ABIL_IGNIS_FOXFIRE, "Foxfire Swarm",
             0, 0, 8 /*avg 12 uses from 150 to <30 piety*/,
-            {fail_basis::invo}, abflag::none
-        },
+            {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
+            0, 0, 16, {fail_basis::invo}, abflag::quiet_fail },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1801,7 +1803,7 @@ bool activate_talent(const talent& tal, dist *target)
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
             return true;
         case spret::fail:
-            if (tal.which != ABIL_IGNIS_FOXFIRE) // hack
+            if (!testbits(abil.flags, abflag::quiet_fail))
                 mpr("You fail to use your ability.");
             you.turn_is_over = true;
             return false;
@@ -3143,6 +3145,9 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_IGNIS_FOXFIRE:
         return foxfire_swarm();
+
+    case ABIL_IGNIS_SEA_OF_FIRE:
+        return sea_of_fire();
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();

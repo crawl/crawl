@@ -510,18 +510,23 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
         mpr("You smother the flame.");
         return false;
     }
-    else if (monster_at(cloud.pos))
+    if (monster_at(cloud.pos))
     {
         mprf("%s smothers the flame.",
              monster_at(cloud.pos)->name(DESC_THE).c_str());
         return false;
     }
-    else
+
+    mpr("The fire ignites!");
+    int dur = 5 + random2avg(20, 2);      // ignis sea of flames duration
+    if (you.props.exists(CFLAME_DUR_KEY)) // this ember was created by cflame
     {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, cloud.pos, you.props[CFLAME_DUR_KEY], &you);
-        return true;
+        dur = you.props[CFLAME_DUR_KEY].get_int();
+        you.props.erase(CFLAME_DUR_KEY);
     }
+    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
+    you.props.erase(CFLAME_DUR_KEY);
+    return true;
 }
 
 /**
