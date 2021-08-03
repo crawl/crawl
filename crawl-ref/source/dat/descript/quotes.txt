@@ -118,6 +118,10 @@ A broken pillar
  remembrance...”
     -KJV Bible, 2 Samuel 18:18.
 %%%%
+A crumbling gateway
+
+<Desolation>
+%%%%
 A faded altar of an unknown god
 
 “Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
@@ -229,6 +233,16 @@ A rock wall
  And that each day is like a year,
    A year whose days are long.”
     -Oscar Wilde, “The Ballad of Reading Gaol”. 1898.
+%%%%
+A shaft
+
+“Gravity, a mere nuisance to Christian, was a terror to Pope, Pagan, and
+ Despair. To the mouse and any smaller animal it presents practically no
+ dangers. You can drop a mouse down a thousand-yard mine shaft; and, on
+ arriving at the bottom it gets a slight shock and walks away, provided
+ that the ground is fairly soft. A rat is killed, a man is broken, a
+ horse splashes.”
+    -J.B.S. Haldane, “On Being The Right Size”. March 1926
 %%%%
 A staircase leading out of the dungeon
 
@@ -462,6 +476,38 @@ Crazy Yiuf
  Four Larks and a Wren,
  Have all built their nests in my beard!’”
     -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
+%%%%
+Desolation
+
+“In the salt mines
+ I saw the salt
+ in this shaker.
+ I know you won’t believe me,
+ but there
+ it sings,
+ the salt sings, the skin
+ of the salt mines
+ sings
+ with a mouth choking
+ on dirt.
+ Alone
+ when I heard
+ the voice
+ of salt,
+ I trembled
+ in the empty
+ desert.
+ Near Antafagusta
+ the whole
+ salted plain
+ shouts out
+ in its
+ cracked
+ voice
+ a pitiful
+ song.”
+    -Pablo Neruda, "Ode to Salt", 1957.
+     trans. Philip Levine, published 2013
 %%%%
 Dispater
 
@@ -1058,6 +1104,16 @@ cacodemon
  Cocytus.”
     -John Fletcher, _The Knight of Malta_. 1647.
 %%%%
+calcifying dust cloud
+
+“There is shadow under this red rock,
+ (Come in under the shadow of this red rock),
+ And I will show you something different from either
+ Your shadow at morning striding behind you
+ Or your shadow at evening rising to meet you;
+ I will show you fear in a handful of dust.”
+    -T.S. Eliot, "The Waste Land". 1922
+%%%%
 catoblepas
 
 “So passed he over into the island, taking with him the two brothers of
@@ -1120,6 +1176,14 @@ crimson imp
  substitute in their place imps.”
     -Martin Luther
 %%%%
+curse skull
+
+“Good friend for Jesus’ sake forbear,
+ To dig the dust enclosed here.
+ Blessed be the man that spares these stones,
+ And cursed be he that moves my bones.”
+    -Epitaph on William Shakespeare's grave
+%%%%
 daeva
 
 “Between these twain the Daevas also chose not aright, for infatuation came
@@ -1174,6 +1238,27 @@ demon whip
  fell, grasped vainly at the stone, and slid into the abyss.”
     -J.R.R. Tolkien, _The Fellowship of the Ring_. II, 5, “The Bridge of
      Khazad-dûm”. 1954.
+%%%%
+diamond obelisk
+
+“As one example of the meanings inherent in a form, let us examine a particular
+ form of vertical stone marker, variously called stele, obelisk, standing-stone,
+ and memorial column. These have been historically and commonly used to
+ commemorate honored phenomena. So, when a people wish to remember an important
+ relationship, event or personage, a location is dedicated to it and often
+ marked with an enduring and aspiring vertical form or sets of them. In natural
+ language, a vertical stone means: an aspiring connector between us (on earth)
+ and an ideal (up there); that we ‘stand up’ with pride about this honored
+ phenomenon. The marker is a symbolic inhabitation of the place it occupies. Its
+ size and workmanship is a sacrifice of much work and resources to a memory. It
+ is a strong suggestion (because we left it to them and it is of durable
+ material) that future people also give honor to the memorialized phenomenon.
+ When we use this particular physical form of the vertical marker, both its
+ historic use as an honorific and its meanings in natural language may well send
+ a message that this is an honored place, a place about a ‘good’ both in our
+ culture and in the culture of future observers.”
+    -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
+      Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
 %%%%
 dire flail
 
@@ -1232,9 +1317,25 @@ efreet
 %%%%
 eidolon
 
-“I will revenge my injuries: if I cannot inspire love, I will cause fear.”
-    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
-     Vol. II, Chapter 9. 1818 (1st Ed.)
+“No sooner had sleep caught him, dissolving all his grief
+ as mists of refreshing slumber poured around him there—
+ his powerful frame was bone-weary from charging Hector
+ straight and hard to the walls of windswept Troy—
+ than the ghost of stricken Patroclus drifted up...
+ He was like the man to the life, every feature,
+ the same tall build and the fine eyes and voice
+ and the very robes that used to clothe his body.
+ Hovering at his head the phantom rose and spoke:
+ ‘Sleeping, Achilles? You’ve forgotten me, my friend.
+ You never neglected me in life, only now in death.
+ Bury me, quickly—let me pass the Gates of Hades.
+ They hold me off at a distance, all the souls,
+ the shades of the burnt-out, breathless dead,
+ never to let me cross the river, mingle with them...
+ They leave me to wander up and down, abandoned, lost
+ at the House of Death with the all-embracing gates.’”
+    -Homer, _The Iliad_, XXIII, 72-88.
+     trans. Robert Fagles, 1990.
 %%%%
 electric golem
 
@@ -1411,13 +1512,22 @@ flail
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
      “Jon Huss and the Hussite Wars”. 1878.
 %%%%
+flayed ghost
+
+“Solamen miseris socios habuisse doloris.”
+    -Christopher Marlowe, _Doctor Faustus_. 1604
+%%%%
 flying skull
 
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
  excellent fancy. He hath bore me on his back a thousand times, and now how
  abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
-1603.
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1. 1603
+%%%%
+frozen axe "Frostbite"
+
+“Revenge is a dish best served cold.”
+    -Klingon proverb, _Star Trek II: The Wrath of Khan_. 1982
 %%%%
 ghost moth
 
@@ -1705,6 +1815,14 @@ iguana
     -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
      trans. Robert Chalmers, 1895.
 %%%%
+Injury Mirror ability
+
+“Will you take the pain
+ I will give to you?
+ Again and again
+ And will you return it?”
+    -Depeche Mode, "Strangelove". 1987
+%%%%
 Iskenderun's Battlesphere spell
 
 “Maxim 4: Close air support covereth a multitude of sins.”
@@ -1913,7 +2031,18 @@ merfolk
 %%%%
 merfolk aquamancer
 
-<merfolk>
+“Lord, Lord! methought, what pain it was to drown!
+ What dreadful noise of waters in mine ears!
+ What ugly sights of death within mine eyes!
+ Methought I saw a thousand fearful wrecks,
+ Ten thousand men that fishes gnawed upon,
+ Wedges of gold, great anchors, heaps of pearl,
+ Inestimable stones, unvalued jewels,
+ All scattered in the bottom of the sea:
+ Some lay in dead men’s skulls; and in those holes
+ Where eyes did once inhabit, there were crept,
+ As ’t were in scorn of eyes, reflecting gems.”
+    -William Shakespeare, _King Richard III_, I, iv. 1597
 %%%%
 merfolk avatar
 
@@ -2629,9 +2758,9 @@ scroll of enchant weapon
 %%%%
 scroll of fear
 
-“We can easily forgive a child who is afraid of the dark;
- the real tragedy of life is when men are afraid of the light.”
-    -Plato
+“I will revenge my injuries: if I cannot inspire love, I will cause fear.”
+    -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
+     Vol. II, Chapter 9. 1818 (1st Ed.)
 %%%%
 scroll of fog
 
@@ -2681,7 +2810,16 @@ scroll of magic mapping
 %%%%
 scroll of noise
 
-<scroll>
+“The nature of the place where the Library was founded—a sanatorium rumored to
+ harbor the pitiably deformed—had proven a lure to people with no desire at all
+ for ‘regular human communication.’ I remember the case of a man who was normal
+ in every respect, in words, in reasoning, in the practice of his profession,
+ but strayed from this ‘normalcy’ in only one way: his inexplicable need to fill
+ thousands of sheets of foolscap paper with seemingly meaningless words,
+ phonemes close to wailing sounds, cries of fury and pain in relentless
+ successions, fragments of sentences and pleas addressed to God-knows-whom.”
+    -Giorgio de Maria, _The Twenty Days of Turin_, 1975.
+     trans. Ramon Glazov, 2016
 %%%%
 scroll of silence
 
@@ -2704,22 +2842,7 @@ scroll of summoning
 %%%%
 scroll of teleportation
 
-“JUST WALK OUT
- you can leave!!!
-  work
-  social thing
-  movies
-  home
-  class
-  dentist
-  clothes shoppi
-  too fancy weed store
-  cops if your quick
-  friend ships
- IF IT SUCKS... HIT DA BRICKS!!
- real winners quit” [sic]
-   -Admin, @dasharez0ne Twitter. March 30, 2018
-# https://twitter.com/dasharez0ne/status/979810839749210112/
+<scroll>
 %%%%
 scroll of torment
 
@@ -2913,6 +3036,29 @@ fustibalus
     -Virgil, Aeneid 9
      trans. E. Fairfax Taylor
 %%%%
+giant club "Skullcrusher"
+
+“Or burst the vanish’d Hero’s lofty mound;
+ Far on the solitary shore he sleeps:
+ He fell, and falling nations mourn’d around;
+ But now not one of saddening thousands weeps,
+ Nor warlike worshipper his vigil keeps
+ Where demi-gods appear’d, as records tell.
+ Remove yon skull from out the scatter’d heaps:
+ Is that a temple where a God may dwell?
+ Why ev’n the worm at last disdains her shatter’d cell!
+
+ Look on its broken arch, its ruin’d wall,
+ Its chambers desolate, and portals foul:
+ Yes, this was once Ambition’s airy hall,
+ The dome of Thought, the palace of the Soul:
+ Behold through each lack-lustre, eyeless hole,
+ The gay recess of Wisdom and of Wit
+ And Passion’s host, that never brook’d control:
+ Can all saint, sage, or sophist ever writ,
+ People this lonely tower, this tenement refit?”
+    -Lord Byron, _Childe Harold's Pilgrimage_, Canto the Second, Stanzas V-VI
+%%%%
 sling bullet
 
 “For when things are once come to the execution, there is no secrecy comparable
@@ -2970,6 +3116,20 @@ spatial vortex
  stuns the brain and numbs us with the black extra-cosmic gulfs it throws open
  before our frenzied eyes.”
     -H.P. Lovecraft, “The Colour out of Space”. 1927.
+%%%%
+spatial maelstrom
+
+“In any composition, the solid narrates the anomalies generated by the void, or
+ the infection of the void through the solid (where the void comes to the solid,
+ it works as a convoluting plague, a coiling swirling epidemic rather than a
+ nullifying process or a solid-annihilating agent); in a composition there is no
+ pure solid but a defiled one, a diseased and deflowered solid.
+ [...]
+ The only way that the solid can initialize its architectonic and compositional
+ activities (processes for survival, development, etc.) is by letting the void
+ in. The dynamic traits of solid can only be actuated when solid is eaten,
+ convoluted and messed up by the void. There is no other option for solid.”
+    -Reza Negarestani, _Cyclonopedia: Complicity with Anonymous Materials_. 2008
 %%%%
 spear
 
@@ -3111,6 +3271,27 @@ storm dragon scales
 
 <steam dragon scales>
 %%%%
+Summon Illusion spell
+
+“I am just a copy of a copy of a copy
+ Everything I say has come before
+ Assembled into something into something into something
+ I don’t know for certain anymore
+
+ I am just a shadow of a shadow of a shadow
+ Always trying to catch up with myself
+ I am just an echo of an echo of an echo
+ Listening to someone’s cry for help
+
+ Look what you had to start
+ Why all the change of heart?
+ You need to play your part
+ A copy of a copy of a—”
+    -Nine Inch Nails, “Copy Of A”. 2013
+
+# Sadly, player illusions don't seem to work with the database, so I can't
+# associate this quote with player illusions themselves.
+%%%%
 sun demon
 
 “Behold him setting in his western skies,
@@ -3141,6 +3322,25 @@ swamp worm
  Did, even as I, in the end rejoice,
  Since the voice of death must be His true voice.”
     -Arthur Edward Waite, “At The End of Things”. 1906.
+%%%%
+Swiftness spell
+
+“JUST WALK OUT
+ you can leave!!!
+  work
+  social thing
+  movies
+  home
+  class
+  dentist
+  clothes shoppi
+  too fancy weed store
+  cops if your quick
+  friend ships
+ IF IT SUCKS... HIT DA BRICKS!!
+ real winners quit” [sic]
+   -Admin, @dasharez0ne Twitter. March 30, 2018
+# https://twitter.com/dasharez0ne/status/979810839749210112/
 %%%%
 tengu
 
@@ -3398,7 +3598,9 @@ wand of charming
 %%%%
 wand of digging
 
-<Passwall spell>
+“Great holes secretly are digged where earth’s pores ought to suffice, and
+ things have learnt to walk that ought to crawl.”
+    -H.P. Lovecraft, "The Festival". 1925
 %%%%
 wand of mindburst
 
@@ -3539,6 +3741,18 @@ wraith
  Although we grope with little faith,
  Give me the heart to fight—and lose.”
     -Louis Untermeyer, “Prayer”. 1919.
+%%%%
+wretched star
+
+“Stare into the sun
+ Wherever you may roam
+ Feel it calling you home
+ Despite the mounting danger
+ Stare into the sun
+ Let its fire fill you
+ Whatever doesn’t kill you
+ Only makes you stranger”
+    -The Sunbeams, “The Tug”. 2020
 %%%%
 ynoxinul
 
