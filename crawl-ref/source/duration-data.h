@@ -561,6 +561,11 @@ static const duration_def duration_data[] =
       "unable to cast spells", "no cast",
       "You are unable to cast spells.", D_DISPELLABLE,
       {{ "You regain access to your magic." }}},
+    { DUR_RISING_FLAME,
+      LIGHTBLUE, "Rise",
+      "rising", "rise",
+      "You are rising toward the ceiling.", D_NO_FLAGS,
+      {{ "", rise_through_ceiling }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

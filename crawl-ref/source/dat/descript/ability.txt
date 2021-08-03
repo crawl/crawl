@@ -823,6 +823,11 @@ Sea of Fire ability
 Fills your surroundings with burning coals which, if not immediately stamped
 out, burst into raging flames.
 %%%%
+Rising Flame ability
+
+Sends you floating upward and, after a short delay for Ignis to gather enough
+power, blasts you through the ceiling and into the level above.
+%%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this

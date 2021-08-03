@@ -76,6 +76,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h" // cell_vetoes_teleport
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1343,6 +1344,28 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
+static void _place_player_randomly()
+{
+    // This copies the logic in the core of you_teleport_now().
+    coord_def newpos;
+    int tries = 500;
+    do
+    {
+        newpos = random_in_bounds();
+    }
+    while (--tries > 0
+           && (cell_vetoes_teleport(newpos, false)
+               || testbits(env.pgrid(newpos), FPROP_NO_TELE_INTO)));
+    if (tries == 0) // yikes!
+        die("couldn't find a rising flame destination");
+
+    // outta the way!
+    monster* const mons = monster_at(newpos);
+    if (mons)
+        mons->teleport(true);
+    you.moveto(newpos);
+}
+
 /**
  * Move the player to the appropriate entrance location in a level.
  *
@@ -1358,6 +1381,8 @@ static void _place_player(dungeon_feature_type stair_taken,
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
+    else if (stair_taken == DNGN_ALTAR_IGNIS) // hack: we're rocketeers!
+        _place_player_randomly();
     else
         _place_player_on_stair(stair_taken, dest_pos, hatch_name);
 

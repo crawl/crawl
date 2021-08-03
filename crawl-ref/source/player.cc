@@ -5213,6 +5213,7 @@ bool player::airborne() const
 
     return you.duration[DUR_FLIGHT]   // potions, polar vortex
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
+        || you.duration[DUR_RISING_FLAME] // flavour
         || permanent_flight(true);
 }
 

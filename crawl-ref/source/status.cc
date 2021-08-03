@@ -23,6 +23,7 @@
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
+#include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
 #include "timed-effects.h" // bezotting_level

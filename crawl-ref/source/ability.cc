@@ -638,6 +638,8 @@ static vector<ability_def> &_get_ability_list()
             {fail_basis::invo}, abflag::quiet_fail },
         { ABIL_IGNIS_SEA_OF_FIRE, "Sea of Fire",
             0, 0, 16, {fail_basis::invo}, abflag::quiet_fail },
+        { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
+            0, 0, 32, {fail_basis::invo}, abflag::none },
 
         { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1381,6 +1383,23 @@ static bool _can_blinkbolt(bool quiet)
     return true;
 }
 
+static bool _can_rising_flame(bool quiet)
+{
+    if (you.duration[DUR_RISING_FLAME])
+    {
+        if (!quiet)
+            mpr("You're already rising!");
+        return false;
+    }
+    if (!level_above().is_valid())
+    {
+        if (!quiet)
+            mpr("You can't rise from this level!");
+        return false;
+    }
+    return true;
+}
+
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
@@ -1755,6 +1774,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
     }
+
+    case ABIL_IGNIS_RISING_FLAME:
+        return _can_rising_flame(quiet);
 
     default:
         return true;
@@ -3148,6 +3170,14 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
     case ABIL_IGNIS_SEA_OF_FIRE:
         return sea_of_fire();
+
+    case ABIL_IGNIS_RISING_FLAME:
+        if (!_can_rising_flame(false))
+            return spret::abort;
+        mpr("You begin to rise into the air.");
+        // slightly faster than teleport
+        you.set_duration(DUR_RISING_FLAME, 2 + random2(3));
+        return spret::success;
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
