@@ -128,6 +128,17 @@ static const map<job_type, job_def> job_data =
       { SK_WEAPON, 3 } },
 } },
 
+{ JOB_CINDER_ACOLYTE, {
+    "CA", "Cinder Acolyte",
+    7, 5, 0,
+    { SP_HILL_ORC, SP_BASE_DRACONIAN, SP_OGRE, SP_DJINNI, SP_GNOLL },
+    { SPELL_FOXFIRE },
+    { "robe" },
+    WCHOICE_PLAIN,
+    { { SK_FIGHTING, 3 }, { SK_WEAPON, 3 },
+      { SK_FIRE_MAGIC, 1 }, {SK_SPELLCASTING, 1} },
+} },
+
 { JOB_CONJURER, {
     "Cj", "Conjurer",
     -1, 10, 3,

@@ -35,10 +35,16 @@ spret sea_of_fire()
     bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (cell_is_solid(*ri) || cloud_at(*ri))
+        if (cell_is_solid(*ri))
             continue;
+        // Don't overwrite existing clouds, except for foxfire trails.
+        cloud_type cloud = cloud_type_at(*ri);
+        if (cloud != CLOUD_NONE && cloud != CLOUD_FLAME)
+            continue;
+        // Don't place on real monsters (but foxfires, ioods, etc are ok)
         const actor* act = actor_at(*ri);
-        if (act)
+        if (act && (!act->is_monster()
+                    || !mons_is_conjured(act->as_monster()->type)))
         {
             unknown_unseen = unknown_unseen || !you.can_see(*act);
             continue;

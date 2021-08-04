@@ -510,7 +510,8 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
         mpr("You smother the flame.");
         return false;
     }
-    if (monster_at(cloud.pos))
+    const monster *mons = monster_at(cloud.pos);
+    if (mons && !mons_is_conjured(mons->type))
     {
         mprf("%s smothers the flame.",
              monster_at(cloud.pos)->name(DESC_THE).c_str());
