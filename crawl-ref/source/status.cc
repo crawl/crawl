@@ -709,6 +709,21 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case STATUS_RF_ZERO:
+        if (!you.penance[GOD_IGNIS]
+            || player_res_fire(false, true, true) < 0)
+        {
+            // XXX: would it be better to only show this
+            // if you would otherwise have rF+ & to warn
+            // on using a potion of resistance..?
+            break;
+        }
+        inf.light_colour = RED;
+        inf.light_text   = "rF0";
+        inf.short_text   = "fire susceptible";
+        inf.long_text    = "You cannot resist fire.";
+        break;
+
     default:
         if (!found)
         {

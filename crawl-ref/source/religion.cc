@@ -2946,7 +2946,6 @@ int initial_wrath_penance_for(god_type god)
         case GOD_NEMELEX_XOBEH:
         case GOD_TROG:
         case GOD_XOM:
-        case GOD_IGNIS:
             return 50;
         case GOD_FEDHAS:
         case GOD_KIKUBAAQUDGHA:
@@ -3057,7 +3056,7 @@ void excommunication(bool voluntary, god_type new_god)
 #endif
 
     if (old_god == GOD_IGNIS)
-        simple_god_message(" burns with a vengeful fury!", old_god);
+        simple_god_message(" blazes with a vengeful fury!", old_god);
     else if (god_hates_your_god(old_god, new_god))
     {
         simple_god_message(
@@ -3282,6 +3281,10 @@ void excommunication(bool voluntary, god_type new_god)
             okawaru_remove_finesse();
         if (player_in_branch(BRANCH_ARENA))
             okawaru_end_duel();
+        break;
+
+    case GOD_IGNIS:
+        simple_god_message(" burns away your resistance to fire.", old_god);
         break;
 
     default:

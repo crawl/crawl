@@ -47,7 +47,8 @@ enum status_type
     STATUS_MAXWELLS,
     STATUS_DUEL,
     STATUS_NO_SCROLL,
-    STATUS_LAST_STATUS = STATUS_NO_SCROLL
+    STATUS_RF_ZERO,
+    STATUS_LAST_STATUS = STATUS_RF_ZERO
 };
 
 struct status_info
