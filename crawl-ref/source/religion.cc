@@ -501,6 +501,9 @@ bool is_unavailable_god(god_type god)
     if (god == GOD_JIYVA && jiyva_is_dead())
         return true;
 
+    if (god == GOD_IGNIS && ignis_is_dead())
+        return true;
+
     return false;
 }
 
@@ -608,15 +611,23 @@ void dec_penance(god_type god, int val)
         mark_milestone("god.mollify",
                        "mollified " + god_name(god) + ".");
 
-        const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+        if (god == GOD_IGNIS)
+        {
+            simple_god_message(", with one final cry of rage, "
+                               "burns out of existence.", god);
+            add_daction(DACT_REMOVE_IGNIS_ALTARS);
+        } else
+        {
+            const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
+            simple_god_message(
+                make_stringf(" seems mollified%s.",
+                             dead_jiyva ? ", and vanishes" : "").c_str(),
+                god);
 
-        simple_god_message(
-            make_stringf(" seems mollified%s.",
-                         dead_jiyva ? ", and vanishes" : "").c_str(),
-            god);
+            if (dead_jiyva)
+                add_daction(DACT_REMOVE_JIYVA_ALTARS);
+        }
 
-        if (dead_jiyva)
-            add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
         take_note(Note(NOTE_MOLLIFY_GOD, god));
 
@@ -732,6 +743,13 @@ bool jiyva_is_dead()
 {
     return you.royal_jelly_dead
            && !you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA];
+}
+
+bool ignis_is_dead()
+{
+    return you.worshipped[GOD_IGNIS]
+        && !you_worship(GOD_IGNIS)
+        && !you.penance[GOD_IGNIS];
 }
 
 void set_penance_xp_timeout()
@@ -3004,7 +3022,9 @@ void excommunication(bool voluntary, god_type new_god)
     whereis_record();
 #endif
 
-    if (god_hates_your_god(old_god, new_god))
+    if (old_god == GOD_IGNIS)
+        simple_god_message(" burns with a vengeful fury!", old_god);
+    else if (god_hates_your_god(old_god, new_god))
     {
         simple_god_message(
             make_stringf(" does not appreciate desertion%s!",
