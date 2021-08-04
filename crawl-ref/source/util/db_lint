@@ -210,7 +210,7 @@ sub godspeak_keys()
         $keys{"$_ penance"}=1;
         $keys{"$_ prayer"}=1;
     }
-    $keys{$_}=1 for ("Pakellas death", "recite_closure");
+    $keys{$_}=1 for ("Pakellas death", "recite_closure", "Ignis elemental wrath");
     return keys %keys;
 }
 __________________________________________________________________________();

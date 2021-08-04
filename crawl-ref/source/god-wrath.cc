@@ -2013,10 +2013,39 @@ static bool _wu_jian_retribution()
     return true;
 }
 
+static void _summon_ignis_elementals()
+{
+    const god_type god = GOD_IGNIS;
+    const int how_many = random_range(2, 3);
+    bool success = false;
+    for (int i = 0; i < how_many; i++)
+        if (create_monster(_wrath_mon_data(MONS_FIRE_ELEMENTAL, god), false))
+            success = true;
+
+    if (success)
+    {
+        const string msg = getSpeakString("Ignis elemental wrath");
+        god_speaks(god, msg.c_str());
+    }
+    else
+        simple_god_message("' divine wrath fails to arrive.", god);
+}
+
 static bool _ignis_retribution()
 {
-    // TODO
-    simple_god_message(" weeps fiery tears at your betrayal.");
+    const god_type god = GOD_IGNIS;
+    switch (random2(4))
+    {
+    case 0:
+        simple_god_message(" weeps fiery tears at your betrayal.", god);
+        break;
+    case 1:
+        simple_god_message(" rages and curses at your abandonment.", god);
+        break;
+    case 2:
+        _summon_ignis_elementals();
+        break;
+    }
     return true;
 }
 
