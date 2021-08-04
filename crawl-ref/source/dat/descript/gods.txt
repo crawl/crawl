@@ -545,6 +545,14 @@ remains angered, potions will have a chance to fail when quaffed, and any
 foes that are encountered may be granted potions of their own to assist them
 against the ex-worshipper.
 %%%%
+Ignis wrath
+
+The wrath of Ignis is now weaker than that of most other gods. Apostates will
+find their resistance to fire stripped away completely, and will be periodically
+assaulted by fire elementals, find their enemies strengthened by fire, or even
+have the floor burned out from beneath them. Experienced and cautious adventurers
+will likely overmaster these assaults.
+%%%%
 Jiyva wrath
 
 Jiyva's vengeance is swift and gurgling. All slimes turn against those who
