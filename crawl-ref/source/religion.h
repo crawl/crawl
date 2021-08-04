@@ -124,6 +124,9 @@ bool god_protects(const monster *target, bool quiet=true);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 
+string ignore_faith_reason();
+bool faith_has_penalty();
+
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 

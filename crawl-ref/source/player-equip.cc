@@ -942,35 +942,31 @@ static void _remove_amulet_of_faith(item_def &item)
 #ifndef DEBUG_DIAGNOSTICS
     UNUSED(item);
 #endif
+    if (!faith_has_penalty())
+        return;
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        if (you.piety < piety_breakpoint(5))
-        {
+        ASSERT(you.piety < piety_breakpoint(5));
 #ifdef DEBUG_DIAGNOSTICS
-            const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
+        const int cur_delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
 #endif
-            ru_reject_sacrifices(true);
-            dprf("prev delay %d, new delay %d", cur_delay,
-                 you.props[RU_SACRIFICE_DELAY_KEY].get_int());
-        }
+        ru_reject_sacrifices(true);
+        dprf("prev delay %d, new delay %d", cur_delay,
+             you.props[RU_SACRIFICE_DELAY_KEY].get_int());
+        return;
     }
-    else if (!you_worship(GOD_NO_GOD)
-             && !you_worship(GOD_XOM)
-             && !you_worship(GOD_GOZAG)
-             && !you_worship(GOD_ASHENZARI))
-    {
-        simple_god_message(" seems less interested in you.");
 
-        const int piety_loss = div_rand_round(you.piety, 3);
-        // Piety penalty for removing the Amulet of Faith.
-        if (you.piety - piety_loss > 10)
-        {
-            mprf(MSGCH_GOD, "You feel less pious.");
-            dprf("%s: piety drain: %d",
-                 item.name(DESC_PLAIN).c_str(), piety_loss);
-            lose_piety(piety_loss);
-        }
+    simple_god_message(" seems less interested in you.");
+
+    const int piety_loss = div_rand_round(you.piety, 3);
+    // Piety penalty for removing the Amulet of Faith.
+    if (you.piety - piety_loss > 10)
+    {
+        mprf(MSGCH_GOD, "You feel less pious.");
+        dprf("%s: piety drain: %d",
+             item.name(DESC_PLAIN).c_str(), piety_loss);
+        lose_piety(piety_loss);
     }
 }
 
@@ -1088,20 +1084,20 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_FAITH:
         if (you.has_mutation(MUT_FORLORN))
-            mpr("You feel a surge of self-confidence.");
-        else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
-            simple_god_message(" says: An ascetic of your devotion"
-                               " has no use for such trinkets.");
+            mpr("You feel a surge of self-confidence.");
+            break;
         }
-        else if (you_worship(GOD_ASHENZARI))
-            simple_god_message(" cares nothing for such trivial demonstrations of your faith.");
-        else if (you_worship(GOD_GOZAG))
-            simple_god_message(" cares for nothing but gold!");
+
+        {
+        const string ignore_reason = ignore_faith_reason();
+        if (!ignore_reason.empty())
+            simple_god_message(ignore_reason.c_str());
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
+        }
         }
 
         break;

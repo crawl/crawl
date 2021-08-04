@@ -752,6 +752,40 @@ bool ignis_is_dead()
         && !you.penance[GOD_IGNIS];
 }
 
+/// Is there any penalty from your god for removing an amulet of faith?
+bool faith_has_penalty()
+{
+    return ignore_faith_reason().empty()
+        && !you_worship(GOD_XOM)
+        && !you_worship(GOD_NO_GOD);
+}
+
+/// Is an amulet of faith irrelevant to you while you worship your current god?
+/// If so, what how would that god explain why?
+string ignore_faith_reason()
+{
+    switch (you.religion)
+    {
+    case GOD_GOZAG:
+        return " cares for nothing but gold!";
+    case GOD_ASHENZARI:
+        return " cares nothing for such trivial demonstrations of your faith.";
+    case GOD_IGNIS:
+        // XXX: would it be better to offer a discount..?
+        return " already offers you all the fire that remains!";
+    case GOD_RU:
+        if (you.piety >= piety_breakpoint(5))
+        {
+            return " says: An ascetic of your devotion"
+                   " has no use for such trinkets.";
+        }
+        break;
+    default:
+        break;
+    }
+    return "";
+}
+
 void set_penance_xp_timeout()
 {
     if (you.attribute[ATTR_GOD_WRATH_XP] > 0)
