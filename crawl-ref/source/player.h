@@ -852,6 +852,7 @@ public:
                bool temp = true) const override;
 
     bool do_shaft() override;
+    bool shaftable() const;
 
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();

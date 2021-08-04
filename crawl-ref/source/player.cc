@@ -7231,16 +7231,19 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
+bool player::shaftable() const
+{
+    return is_valid_shaft_level()
+        && feat_is_shaftable(env.grid(pos()))
+        && !duration[DUR_SHAFT_IMMUNITY];
+}
+
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
 bool player::do_shaft()
 {
-    if (!is_valid_shaft_level()
-        || !feat_is_shaftable(env.grid(pos()))
-        || duration[DUR_SHAFT_IMMUNITY])
-    {
+    if (!shaftable())
         return false;
-    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.

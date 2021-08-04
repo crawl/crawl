@@ -52,6 +52,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "traps.h" // is_valid_shaft_level
 #include "transform.h"
 #include "view.h"
 #include "xom.h"
@@ -2031,21 +2032,26 @@ static void _summon_ignis_elementals()
         simple_god_message("' divine wrath fails to arrive.", god);
 }
 
+static bool _ignis_shaft()
+{
+    // Would it be interesting if ignis could shaft you into other branches,
+    // e.g. d -> orc, orc -> elf..?
+    if (!you.shaftable())
+        return false;
+    simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
+    ASSERT(you.do_shaft());
+    return true;
+}
+
 static bool _ignis_retribution()
 {
     const god_type god = GOD_IGNIS;
-    switch (random2(4))
-    {
-    case 0:
+    if (one_chance_in(3) && _ignis_shaft())
+        return true;
+    if (coinflip()) // placeholder
         simple_god_message(" weeps fiery tears at your betrayal.", god);
-        break;
-    case 1:
-        simple_god_message(" rages and curses at your abandonment.", god);
-        break;
-    case 2:
+    else
         _summon_ignis_elementals();
-        break;
-    }
     return true;
 }
 
