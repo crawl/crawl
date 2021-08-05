@@ -1797,8 +1797,9 @@ KMONS:  2 = merfolk siren / merfolk impaler / merfolk javelineer / \
 KMONS:  3 = merfolk avatar
 KFEAT:  ~ = open_sea
 KFEAT:  D = closed_clear_door
+KFEAT:  R = runed_clear_door
 KFEAT:  K = w
-FTILE:  123DL*n'} = floor_limestone
+FTILE:  123DRL*n'} = floor_limestone
 SUBST:  } = }]), * = **|
 NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
 MARKER: L = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
@@ -1817,7 +1818,7 @@ MAP
 ~www.n''''''12'n.wwwwww
 ~www.n11'nnn''1n.wwwwww
 ~www.n11'nLn'2*n.wwwwww
-~www.n'''nnD21*n.wwwwww
+~www.n'''nnR21*n.wwwwww
 ~www.n'21''232*n.wwwwww
 ~www.nn12'212*nn.wwwwww
 ~www..nn'1***nn..wwwwww
