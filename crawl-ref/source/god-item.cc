@@ -268,6 +268,13 @@ static bool _is_potentially_hasty_item(const item_def& item)
 
 bool is_hasty_item(const item_def& item, bool calc_unid)
 {
+
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS)
+    {
+        return artefact_property(item, ARTP_RAMPAGING)
+            || artefact_property(item, ARTP_ANGRY);
+    }
+
     if (item.base_type == OBJ_WEAPONS)
     {
         if (calc_unid || item_brand_known(item))
@@ -276,12 +283,6 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
 
     if (!calc_unid && !item_type_known(item))
         return false;
-
-    if (is_artefact(item) && item.base_type != OBJ_BOOKS
-        && artefact_property(item, ARTP_RAMPAGING))
-    {
-        return true;
-    }
 
     switch (item.base_type)
     {
