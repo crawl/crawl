@@ -1685,6 +1685,15 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
             return bind(_desc_vampiric_draining_valid, placeholders::_1);
+        case SPELL_STARBURST:
+        {
+            targeter_starburst* burst_hitf =
+                dynamic_cast<targeter_starburst*>(hitfunc);
+            if (!burst_hitf)
+                break;
+            targeter_starburst_beam* beam_hitf = &burst_hitf->beams[0];
+            return bind(_desc_hit_chance, placeholders::_1, beam_hitf);
+        }
         default:
             break;
     }

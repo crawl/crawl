@@ -434,7 +434,6 @@ public:
     targeter_starburst(const actor *a, int range, int pow);
     bool valid_aim(coord_def) override { return true; }
     aff_type is_affected(coord_def loc) override;
-private:
     vector<targeter_starburst_beam> beams;
 };
 
