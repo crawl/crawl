@@ -1289,6 +1289,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maxwells_coupling>(range);
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
+    case SPELL_DISPERSAL:
+        return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -1573,6 +1575,19 @@ static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
     return vector<string>{};
 }
 
+static vector<string> _desc_dispersal_chance(const monster_info& mi, int pow)
+{
+    const int wl = mi.willpower();
+    if (mons_class_is_stationary(mi.type))
+        return vector<string>{"stationary"};
+
+    if (wl == WILL_INVULN)
+        return vector<string>{"will blink"};
+
+    const int success = hex_success_chance(wl, pow, 100);
+    return vector<string>{make_stringf("chance to teleport: %d%%", success)};
+}
+
 static string _mon_threat_string(const CrawlStoreValue &mon_store)
 {
     monster dummy;
@@ -1660,7 +1675,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
     // Add success chance to targeted spells checking monster WL
     const bool wl_check = testbits(flags, spflag::WL_check)
                           && !testbits(flags, spflag::helpful);
-    if (wl_check)
+    if (wl_check && spell != SPELL_DISPERSAL)
     {
         const zap_type zap = spell_to_zap(spell);
         const int eff_pow = zap != NUM_ZAPS ? zap_ench_power(zap, powc,
@@ -1694,6 +1709,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             targeter_starburst_beam* beam_hitf = &burst_hitf->beams[0];
             return bind(_desc_hit_chance, placeholders::_1, beam_hitf);
         }
+        case SPELL_DISPERSAL:
+            return bind(_desc_dispersal_chance, placeholders::_1, powc);
         default:
             break;
     }
