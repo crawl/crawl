@@ -1163,6 +1163,7 @@ namespace quiver
             if (!target.needs_targeting() && wait_spell_active(spell))
             {
                 crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
+                update_acrobat_status();
                 you.turn_is_over = true;
                 return true;
             }
