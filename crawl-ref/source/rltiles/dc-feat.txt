@@ -688,9 +688,27 @@ monster_threat_trivial THREAT_TRIVIAL
 monster_threat_easy THREAT_EASY
 monster_threat_tough THREAT_TOUGH
 monster_threat_nasty THREAT_NASTY
-ray RAY
-ray_multi RAY_MULTI
-ray_out_of_range RAY_OUT_OF_RANGE
+
+%texture none
+%start
+%pal 140 140 85 150
+%blank 32 32
+%rim 1
+%finish HIGHLIGHT_DARK_YELLOW
+%syn RAY_OUT_OF_RANGE
+
+%start
+%pal 255 255 100 150
+%blank 32 32
+%finish HIGHLIGHT_YELLOW
+%syn RAY
+
+%start
+%pal 255 255 100 190
+%blank 32 32
+%finish HIGHLIGHT_BRIGHT_YELLOW
+%syn RAY_MULTI
+
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 effect/sanctuary SANCTUARY

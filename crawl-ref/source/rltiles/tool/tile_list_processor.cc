@@ -348,6 +348,25 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 m_back.push_back(img);
             }
         }
+        else if (strcmp(arg, "blank") == 0)
+        {
+            // reset m_compose to a blank tile with the specified dimensions.
+            // This fills the tile with black, but applies recolour, so you
+            // can use %pal to change the color.
+            if (!m_composing)
+            {
+                fprintf(stderr, "Error (%s:%d): %%blank requires %%compose.\n",
+                        list_file, line);
+                return false;
+            }
+
+            CHECK_ARG(2);
+            const int width = atoi(m_args[1]);
+            const int height = atoi(m_args[2]);
+            m_compose.resize(width, height);
+            m_compose.fill(tile_colour::black);
+            recolour(m_compose);
+        }
         else if (strcmp(arg, "compose") == 0)
         {
             CHECK_ARG(1);
@@ -599,6 +618,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         else if (strcmp(arg, "pal") == 0)
         {
             // rgb (optional a) = rgb (optional a)
+            // If only one rgb(a) sequence is supplied, it is used for the
+            // second colour, and the first colour is black.
             tile_colour cols[2]  = { tile_colour::black, tile_colour::black };
             int col_idx = 0;
             int comp_idx = 0;
@@ -637,6 +658,13 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     col_idx++;
                     comp_idx = 0;
                 }
+            }
+            if (col_idx == 0)
+            {
+                // only one color supplied: use it as cols[1]. This makes it
+                // easy to color a blank with %pal.
+                cols[1] = cols[0];
+                cols[0] = tile_colour::black;
             }
 
             m_palette.push_back(palette_entry(cols[0], cols[1]));
