@@ -955,8 +955,6 @@ string monster_info::_core_name() const
             {
                 const item_def& item = *inv[MSLOT_WEAPON];
                 s = item.name(DESC_PLAIN, false, false, true, false);
-                if (type == MONS_SPECTRAL_WEAPON)
-                    s = "spectral " + s;
             }
             break;
 
