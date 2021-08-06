@@ -2115,16 +2115,7 @@ int player_shield_class()
         shield += you.skill(SK_SHIELDS, 38)
                 + min(you.skill(SK_SHIELDS, 38), 3 * 38);
 
-        int stat = 0;
-        if (item.sub_type == ARM_BUCKLER)
-            stat = you.dex() * 38;
-        else if (item.sub_type == ARM_TOWER_SHIELD)
-            stat = you.dex() * 12 + you.strength() * 26;
-        else
-            stat = you.dex() * 19 + you.strength() * 19;
-        stat = stat * (base_shield + 13) / 26;
-
-        shield += stat;
+        shield += you.dex() * 38 * (base_shield + 13) / 26;
     }
 
     // mutations

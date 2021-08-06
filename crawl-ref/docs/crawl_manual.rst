@@ -196,7 +196,7 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee and ranged weapons.
-  Affects your ability to use heavy armours and shields effectively.
+  Affects your ability to use heavy armours effectively.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
