@@ -6561,7 +6561,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // can land in vaults, which is considered acceptable.
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (feat_has_dry_floor(env.grid(*ri)))
+        if (feat_has_dry_floor(env.grid(*ri))
+            && !(env.pgrid(*ri) & FPROP_NO_TELE_INTO))
         {
             found++;
             if (one_chance_in(found))
