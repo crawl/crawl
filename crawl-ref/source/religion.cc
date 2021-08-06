@@ -2890,7 +2890,9 @@ int initial_wrath_penance_for(god_type god)
 static void _ash_uncurse()
 {
     bool uncursed = false;
-    for (int eq_typ = EQ_FIRST_EQUIP; eq_typ < NUM_EQUIP; eq_typ++)
+    // iterate backwards so we shatter a ring on the macabre finger
+    // necklace before the amulet
+    for (int eq_typ = NUM_EQUIP - 1; eq_typ >= EQ_FIRST_EQUIP; eq_typ--)
     {
         const int slot = you.equip[eq_typ];
         if (slot == -1)
