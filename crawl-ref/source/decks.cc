@@ -626,6 +626,7 @@ bool deck_stack()
     if (deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
                                           false, 0))
     {
+        canned_msg(MSG_OK);
         return false;
     }
 
