@@ -1473,7 +1473,7 @@ bool player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_nonliving(temp)
-        || you.is_lifeless_undead(temp || you.undead_state() == US_SEMI_UNDEAD) // XX: ugly, can this be cleaned up?
+        || you.is_lifeless_undead(temp)
         || temp && get_form()->res_pois() == 3
         || items && player_equip_unrand(UNRAND_OLGREB)
         || temp && you.duration[DUR_DIVINE_STAMINA])
@@ -7011,7 +7011,7 @@ bool player::is_lifeless_undead(bool temp) const
     if (temp && undead_state() == US_SEMI_UNDEAD)
         return !you.vampire_alive;
     else
-        return undead_state(temp) != US_ALIVE;
+        return undead_state(temp) == US_UNDEAD;
 }
 
 bool player::can_polymorph() const
