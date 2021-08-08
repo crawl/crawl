@@ -466,6 +466,10 @@ static spell_type _makhleb_destruction_type()
  */
 static monster* get_avatar(god_type god)
 {
+    // TODO: it would be better to abstract the fake monster code from both
+    // this and shadow monster and possibly use different monster types --
+    // doing it this way makes it easier for bugs where the two are conflated
+    // to creep in
     monster* avatar = shadow_monster(false);
     if (!avatar)
         return nullptr;
