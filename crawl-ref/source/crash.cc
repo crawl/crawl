@@ -10,7 +10,9 @@
 #if defined(UNIX)
 #include <unistd.h>
 #include <sys/param.h>
+#ifndef __HAIKU__
         #define BACKTRACE_SUPPORTED
+#endif
 #endif
 
 #ifdef USE_UNIX_SIGNALS

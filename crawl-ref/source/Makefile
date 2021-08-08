@@ -382,7 +382,9 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
 ifndef ANDROID
+ifneq ($(uname_S),Haiku)
 EXTRA_LIBS += -pthread
+endif
 endif
 endif
 
@@ -797,6 +799,10 @@ SRC_BRANCH    := $(shell git rev-parse --abbrev-ref HEAD || echo release)
 ifneq ($(SRC_BRANCH),$(filter master release stone_soup-%, $(SRC_BRANCH)))
   DEFINES_L += -DEXPERIMENTAL_BRANCH="\"$(SRC_BRANCH)\""
 endif
+endif
+
+ifdef HAIKU_HYBRID_SECONDARY
+DEFINES_L += -DHAIKU_HYBRID_SECONDARY="\"$(HAIKU_HYBRID_SECONDARY)\""
 endif
 
 #

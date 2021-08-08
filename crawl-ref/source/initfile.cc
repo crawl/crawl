@@ -95,6 +95,10 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#endif
+
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 
@@ -4016,6 +4020,20 @@ void get_system_environment()
     {
         SysEnv.crawl_dir
             = _user_home_subpath("Library/Application Support/" CRAWL);
+    }
+#endif
+
+#ifdef __HAIKU__
+    if (SysEnv.crawl_dir.empty())
+    {
+        char path[B_PATH_NAME_LENGTH];
+        find_directory(B_USER_SETTINGS_DIRECTORY,
+                        0,
+                        false,
+                        path,
+                        B_PATH_NAME_LENGTH);
+
+        SysEnv.crawl_dir = catpath(std::string(path), "/crawl");
     }
 #endif
 

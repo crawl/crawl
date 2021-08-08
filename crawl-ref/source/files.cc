@@ -105,6 +105,10 @@
 #define F_OK 0
 #endif
 
+#ifdef __HAIKU__
+#include <FindDirectory.h>
+#endif
+
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS))
 
 #ifdef BONES_DIAGNOSTICS
@@ -354,7 +358,7 @@ static bool _create_directory(const char *dir)
 {
     if (!mkdir_u(dir, 0755))
         return true;
-    if (errno == EEXIST) // might be not a directory
+    if (errno == EEXIST || errno == EROFS) // might be not a directory
         return dir_exists(dir);
     return false;
 }
@@ -417,6 +421,22 @@ string canonicalise_file_separator(const string &path)
 
 static vector<string> _get_base_dirs()
 {
+#ifdef __HAIKU__
+    char data_path[B_PATH_NAME_LENGTH];
+    char docs_path[B_PATH_NAME_LENGTH];
+
+    find_path(B_APP_IMAGE_SYMBOL,
+            B_FIND_PATH_DATA_DIRECTORY,
+            "crawl/",
+            data_path,
+            B_PATH_NAME_LENGTH);
+
+    find_path(B_APP_IMAGE_SYMBOL,
+            B_FIND_PATH_DOCUMENTATION_DIRECTORY,
+            "packages/crawl",
+            docs_path,
+            B_PATH_NAME_LENGTH);
+#endif
     const string rawbases[] =
     {
 #ifdef DATA_DIR_PATH
@@ -431,6 +451,14 @@ static vector<string> _get_base_dirs()
 #ifdef __ANDROID__
         ANDROID_ASSETS,
         "/sdcard/Android/data/org.develz.crawl/files/",
+#endif
+#ifdef __HAIKU__
+        std::string(data_path),
+#ifdef HAIKU_HYBRID_SECONDARY
+        std::string(docs_path) + "_" + HAIKU_HYBRID_SECONDARY + FILE_SEPARATOR,
+#else
+        std::string(docs_path) + FILE_SEPARATOR,
+#endif
 #endif
     };
 
