@@ -258,7 +258,7 @@ static const struct spell_desc spelldata[] =
     spflag::escape | spflag::utility,
     8,
     200,
-    -1, -1,
+    4, 4,
     6, 0,
     TILEG_DISJUNCTION,
 },
