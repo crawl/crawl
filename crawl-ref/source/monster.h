@@ -398,7 +398,7 @@ public:
     int willpower(bool calc_unid = true) const override;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const override;
-    bool res_corr(bool calc_unid = true, bool items = true) const override;
+    bool res_corr(bool calc_unid = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
 
     bool stasis() const override;

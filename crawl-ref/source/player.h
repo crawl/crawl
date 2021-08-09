@@ -779,13 +779,13 @@ public:
     bool no_tele_print_reason(bool calc_unid = true, bool blink = false) const;
     bool antimagic_susceptible() const override;
 
-    bool res_corr(bool calc_unid = true, bool items = true) const override;
+    bool res_corr(bool calc_unid = true, bool temp = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
-    bool permanent_flight(bool include_equip=true) const;
+    bool permanent_flight(bool include_equip = true) const;
     bool racial_permanent_flight() const;
     int get_noise_perception(bool adjusted = true) const;
     bool is_dragonkind() const override;
