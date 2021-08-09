@@ -167,12 +167,11 @@ absolutely forbidden the use of spell magic.
 %%%%
 Uskayaw
 
-Uskayaw the Reveller is a god of ecstatic dance. On the surface, Uskayaw
-appreciates many forms of worship, but in the dungeon most worshippers stick to
-the dance of combat. Uskayaw appreciates the passion and rhythm of combat,
-rewarding followers for each strike they deliver and for the damage they deal
-their foes. The longer the dance continues, the greater powers Uskayaw offers.
-When the dance ends, Uskayaw quickly loses interest.
+Uskayaw the Reveller is a god of ecstatic dance. In the dungeon, Uskayaw
+appreciates the passion and rhythm of combat, rewarding followers for each
+strike they deliver and for the damage they deal their foes. The longer the
+dance continues, the greater powers Uskayaw offers. When the dance ends,
+Uskayaw quickly loses interest.
 %%%%
 Vehumet
 
