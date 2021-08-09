@@ -1374,25 +1374,25 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     return rc;
 }
 
-bool player::res_corr(bool calc_unid, bool items) const
+bool player::res_corr(bool calc_unid, bool temp) const
 {
-    // dragonskin cloak: 0.5 to draconic resistances
-    if (items && calc_unid
-        && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+    if (temp)
     {
-        return true;
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            return true;
+
+        if (get_form()->res_acid())
+            return true;
+
+        if (you.duration[DUR_RESISTANCE])
+            return true;
     }
 
     if (have_passive(passive_t::resist_corrosion))
         return true;
 
     if (get_mutation_level(MUT_ACID_RESISTANCE))
-        return true;
-
-    if (get_form()->res_acid())
-        return true;
-
-    if (you.duration[DUR_RESISTANCE])
         return true;
 
     // TODO: why doesn't this use the usual form suppression mechanism?
@@ -1402,7 +1402,7 @@ bool player::res_corr(bool calc_unid, bool items) const
         return true;
     }
 
-    return actor::res_corr(calc_unid, items);
+    return actor::res_corr(calc_unid, temp);
 }
 
 int player_res_acid(bool calc_unid, bool items)
