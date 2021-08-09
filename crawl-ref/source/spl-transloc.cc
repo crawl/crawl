@@ -134,7 +134,7 @@ void uncontrolled_blink(bool override_stasis)
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
     if (!random_near_space(&you, you.pos(), target)
-             && !random_near_space(&you, you.pos(), target, true))
+        && !random_near_space(&you, you.pos(), target, true))
     {
         mpr("You feel jittery for a moment.");
         return;

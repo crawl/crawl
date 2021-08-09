@@ -73,6 +73,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "transform.h"
@@ -1164,16 +1165,29 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     return false;
 }
 
-// this is a crude approximation used for the convenience UI targeter of
-// Dragon's call
-static vector<coord_def> _simple_find_all_actors(actor *a)
+static vector<coord_def> _find_blink_targets(actor *a)
 {
     vector<coord_def> result;
     if (!a)
         return result;
 
-    for (actor_near_iterator ai(a->pos(), LOS_NO_TRANS); ai; ++ai)
-        result.push_back((*ai)->pos());
+    for (radius_iterator ri(a->pos(), LOS_NO_TRANS); ri; ++ri)
+        if (valid_blink_destination(a, *ri))
+            result.push_back(*ri);
+
+    return result;
+}
+// this is a crude approximation used for the convenience UI targeter of
+// Dragon's call and Manifold Assault
+static vector<coord_def> _simple_find_all_hostiles(actor *a)
+{
+    vector<coord_def> result;
+    if (!a)
+        return result;
+
+    for (monster_near_iterator mi(a->pos(), LOS_NO_TRANS); mi; ++mi)
+        if (!mons_aligned(&you, *mi) && mons_is_threatening(**mi))
+            result.push_back((*mi)->pos());
 
     return result;
 }
@@ -1290,6 +1304,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_FROZEN_RAMPARTS:
         return make_unique<targeter_ramparts>(&you);
     case SPELL_DISPERSAL:
+    case SPELL_DISJUNCTION:
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
@@ -1365,8 +1380,12 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, _simple_find_corpses(&you), AFF_YES);
     case SPELL_SIMULACRUM:
         return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
+    case SPELL_BLINK:
+        return make_unique<targeter_multiposition>(&you, _find_blink_targets(&you));
+    case SPELL_MANIFOLD_ASSAULT:
+        return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles(&you));
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
-        return make_unique<targeter_multifireball>(&you, _simple_find_all_actors(&you));
+        return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles(&you));
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you, pow);
 
