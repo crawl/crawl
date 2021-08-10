@@ -353,6 +353,8 @@ public:
 
     bool title_prompt(char linebuf[], int bufsz, const char* prompt);
 
+    virtual bool process_key(int keyin);
+
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
     void webtiles_scroll(int first, int hover);
@@ -401,7 +403,6 @@ protected:
         shared_ptr<ui::Box> vbox;
     } m_ui;
 
-protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
@@ -445,12 +446,9 @@ protected:
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
-    virtual bool process_key(int keyin);
-
     virtual string help_key() const { return ""; }
 
     virtual void update_title();
-protected:
     bool filter_with_regex(const char *re);
 };
 

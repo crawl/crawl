@@ -91,6 +91,12 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
             pop.set_hovered(1);
         else if (allow_lowercase && default_answer == 'n')
             pop.set_hovered(2);
+        pop.on_single_selection = [&pop](const MenuEntry& item)
+            {
+                if (item.hotkeys.size())
+                    return pop.process_key(item.hotkeys[0]);
+                return false;
+            };
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
