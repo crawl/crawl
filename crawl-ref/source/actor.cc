@@ -723,7 +723,7 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
                            "", false);
     DIAG_ONLY(const int infdam = damage);
 
