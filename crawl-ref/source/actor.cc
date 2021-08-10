@@ -723,10 +723,6 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
-                           "", false);
-    DIAG_ONLY(const int infdam = damage);
-
     string exclamations;
     if (damage <= 0 && is_player()
         && you.can_see(defender))
@@ -778,6 +774,10 @@ void actor::constriction_damage_defender(actor &defender, int duration)
 #endif
              exclamations.c_str());
     }
+
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
+                           "", false);
+    DIAG_ONLY(const int infdam = damage);
 
     dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
          name(DESC_PLAIN, true).c_str(),
