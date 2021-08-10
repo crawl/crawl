@@ -661,7 +661,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot",
+    "collision", "zot", "constriction",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1359,7 +1359,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
             || death_type == KILLED_BY_BEING_THROWN
-            || death_type == KILLED_BY_COLLISION)
+            || death_type == KILLED_BY_COLLISION
+            || death_type == KILLED_BY_CONSTRICTION)
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
@@ -2629,6 +2630,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_ZOT:
         desc += terse ? "Zot" : "Tarried too long and was consumed by Zot";
+        break;
+
+    case KILLED_BY_CONSTRICTION:
+        if (terse)
+            desc += "constriction";
+        else
+            desc += "Constricted to death by " + death_source_desc();
+        needs_damage = true;
         break;
 
     default:
