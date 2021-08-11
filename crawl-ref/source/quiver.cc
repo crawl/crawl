@@ -1363,6 +1363,12 @@ namespace quiver
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
             return palentonga_charge_possible(quiet, false);
+        case ABIL_BLINKBOLT:
+            if (!spell_no_hostile_in_range(SPELL_BLINKBOLT))
+                return true;
+            if (!quiet)
+                mpr("You can't see any hostile targets that would be affected.");
+            return false;
         default:
             return true;
         }
