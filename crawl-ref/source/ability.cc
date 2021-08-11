@@ -82,6 +82,7 @@
 #include "uncancel.h"
 #include "unicode.h"
 #include "view.h"
+#include "wiz-dgn.h"
 
 enum class abflag
 {
@@ -650,6 +651,15 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, {fail_basis::invo}, abflag::none },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
             0, 0, 0, {fail_basis::invo}, abflag::none },
+#ifdef WIZARD
+        { ABIL_WIZ_BUILD_TERRAIN, "Build terrain",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_SET_TERRAIN, "Set terrain to build",
+            0, 0, 0, {}, abflag::instant },
+        { ABIL_WIZ_CLEAR_TERRAIN, "Clear terrain to floor",
+            0, 0, 0, {}, abflag::instant },
+#endif
+
     };
     return Ability_List;
 }
@@ -1383,6 +1393,10 @@ static bool _can_blinkbolt(bool quiet)
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 {
+#ifdef WIZARD
+    if (abil.ability >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
     if (you.berserk() && !testbits(abil.flags, abflag::berserk_ok))
     {
         if (!quiet)
@@ -3169,6 +3183,31 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         return spret::abort;
 
+#ifdef WIZARD
+    case ABIL_WIZ_BUILD_TERRAIN:
+    {
+        int &last_feat = you.props[WIZ_LAST_FEATURE_TYPE_PROP].get_int();
+        if (!wizard_create_feature(*target,
+                        static_cast<dungeon_feature_type>(last_feat), false))
+        {
+            return spret::abort;
+        }
+        break;
+    }
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        if (!wizard_create_feature(*target, DNGN_FLOOR, false))
+            return spret::abort;
+        break;
+    case ABIL_WIZ_SET_TERRAIN:
+    {
+        auto feat = wizard_select_feature(false);
+        if (feat == DNGN_UNSEEN)
+            return spret::abort;
+        you.props[WIZ_LAST_FEATURE_TYPE_PROP] = static_cast<int>(feat);
+        mprf("Now building '%s'", dungeon_feature_name(feat));
+        break;
+    }
+#endif
     case ABIL_NON_ABILITY:
         fail_check();
         mpr("Sorry, you can't do that.");
@@ -3396,6 +3435,11 @@ bool is_card_ability(ability_type abil)
 
 bool player_has_ability(ability_type abil, bool include_unusable)
 {
+#ifdef WIZARD
+    if (abil >= ABIL_FIRST_WIZ)
+        return you.wizard;
+#endif
+
     // TODO: consolidate fixup checks into here?
     abil = fixup_ability(abil);
     if (abil == ABIL_NON_ABILITY || abil == NUM_ABILITIES)
@@ -3523,7 +3567,12 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EVOKE_BLINK,
             ABIL_EVOKE_THUNDER,
             ABIL_EVOKE_BERSERK,
-            ABIL_EVOKE_TURN_INVISIBLE
+            ABIL_EVOKE_TURN_INVISIBLE,
+#ifdef WIZARD
+            ABIL_WIZ_BUILD_TERRAIN,
+            ABIL_WIZ_SET_TERRAIN,
+            ABIL_WIZ_CLEAR_TERRAIN,
+#endif
         };
 
     for (auto a : check_order)
@@ -3707,6 +3756,10 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_ASHENZARI_UNCURSE:
         first_slot = letter_to_index('G');
         break;
+    case ABIL_WIZ_BUILD_TERRAIN:
+    case ABIL_WIZ_SET_TERRAIN:
+    case ABIL_WIZ_CLEAR_TERRAIN:
+        first_slot = letter_to_index('O'); // somewhat arbitrary, late in the alphabet
     default:
         break;
     }

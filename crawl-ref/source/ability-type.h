@@ -280,5 +280,12 @@ enum ability_type
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
     ABIL_CONVERT_TO_BEOGH,
+
+#ifdef WIZARD
+    ABIL_WIZ_BUILD_TERRAIN = 10000,
+    ABIL_FIRST_WIZ = ABIL_WIZ_BUILD_TERRAIN,
+    ABIL_WIZ_SET_TERRAIN,
+    ABIL_WIZ_CLEAR_TERRAIN,
+#endif
     NUM_ABILITIES
 };

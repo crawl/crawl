@@ -1805,7 +1805,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_CREATE_MIMIC:
         if (target() != you.pos())
         {
-            wizard_create_feature(target());
+            wizard_create_feature(target(), DNGN_UNSEEN, true);
             need_viewport_redraw = true;
         }
         return;
