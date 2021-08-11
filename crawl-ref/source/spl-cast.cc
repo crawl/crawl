@@ -1815,8 +1815,11 @@ spret your_spells(spell_type spell, int powc, bool allow_fail,
               testbits(flags, spflag::obj)        ? TARG_MOVABLE_OBJECT :
                                                    TARG_HOSTILE;
 
+        // TODO: if any other spells ever need this, add an spflag
+        // (right now otherwise used only on god abilities)
         const targeting_type dir =
-             testbits(flags, spflag::target) ? DIR_TARGET : DIR_NONE;
+            spell == SPELL_BLINKBOLT ? DIR_ENFORCE_RANGE
+            : testbits(flags, spflag::target) ? DIR_TARGET : DIR_NONE;
 
         // TODO: it's extremely inconsistent when this prompt shows up, not
         // sure why

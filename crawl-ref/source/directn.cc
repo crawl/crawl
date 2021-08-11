@@ -337,7 +337,7 @@ void direction_chooser::print_key_hints() const
                 break;
             case DIR_TARGET:
             case DIR_SHADOW_STEP:
-            case DIR_LEAP:
+            case DIR_ENFORCE_RANGE:
                 direction_hint = "Dir - move target";
                 break;
             }
@@ -1383,7 +1383,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     }
 
     // leap and shadow step never allow selecting from past the target point
-    if ((restricts == DIR_LEAP
+    if ((restricts == DIR_ENFORCE_RANGE
          || restricts == DIR_SHADOW_STEP
          || !allow_out_of_range)
         && !in_range(target()))
@@ -1665,7 +1665,7 @@ void direction_chooser::reinitialize_move_flags()
 // Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
-    if (restricts != DIR_TARGET && restricts != DIR_SHADOW_STEP)
+    if (restricts == DIR_NONE)
     {
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
