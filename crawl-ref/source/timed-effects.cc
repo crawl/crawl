@@ -73,124 +73,6 @@ static void _hell_effect_noise()
         noisy(15, you.pos());
 }
 
-/**
- * Choose a random miscast effect (from a weighted list) & apply it to the
- * player.
- */
-static void _random_hell_miscast()
-{
-    const spschool which_miscast
-        = random_choose_weighted(8, spschool::necromancy,
-                                 4, spschool::summoning,
-                                 2, spschool::conjuration,
-                                 2, spschool::hexes);
-
-    miscast_effect(you, nullptr, {miscast_source::hell_effect}, which_miscast,
-                   5, random2avg(40, 3), "the effects of Hell");
-}
-
-/// The thematically appropriate hell effects for a given hell branch.
-struct hell_effect_spec
-{
-    /// The type of greater demon to spawn from hell effects.
-    vector<monster_type> fiend_types;
-    /// The appropriate theme of miscast effects to toss at the player.
-    spschool miscast_type;
-    /// A weighted list of lesser creatures to spawn.
-    vector<pair<monster_type, int>> minor_summons;
-};
-
-/// Hell effects for each branch of hell
-static map<branch_type, hell_effect_spec> hell_effects_by_branch =
-{
-    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, spschool::earth, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, spschool::fire, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, spschool::ice, {
-        // total weight 100
-        { MONS_ZOMBIE, 15 },
-        { MONS_SKELETON, 10 },
-        { MONS_SIMULACRUM, 10 },
-        { MONS_FREEZING_WRAITH, 10 },
-        { MONS_FLYING_SKULL, 10 },
-        { MONS_TORMENTOR, 10 },
-        { MONS_REAPER, 10 },
-        { MONS_BONE_DRAGON, 5 },
-        { MONS_ICE_DRAGON, 5 },
-        { MONS_BLIZZARD_DEMON, 5 },
-        { MONS_ICE_DEVIL, 5 },
-    }}},
-    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, spschool::necromancy, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-};
-
-/**
- * Either dump a fiend or a hell-appropriate miscast effect on the player.
- *
- * 40% chance of fiend, 60% chance of miscast.
- */
-static void _themed_hell_summon_or_miscast()
-{
-    const hell_effect_spec *spec = map_find(hell_effects_by_branch,
-                                            you.where_are_you);
-    if (!spec)
-        die("Attempting to call down a hell effect in a non-hellish branch.");
-
-    if (x_chance_in_y(2, 5))
-    {
-        const monster_type fiend
-            = spec->fiend_types[random2(spec->fiend_types.size())];
-        create_monster(
-                       mgen_data::hostile_at(fiend, true, you.pos())
-                       .set_non_actor_summoner("the effects of Hell"));
-    }
-    else
-    {
-        miscast_effect(you, nullptr, {miscast_source::hell_effect},
-                      spec->miscast_type, 5, random2avg(40, 3),
-                      "the effects of Hell");
-    }
-}
-
-/**
- * Try to summon at some number of random spawns from the current branch, to
- * harass the player & give them easy xp/TSO piety. Occasionally, to kill them.
- *
- * Min zero, max five, average 1.67.
- *
- * Can and does summon bands as individual spawns.
- */
-static void _minor_hell_summons()
-{
-    hell_effect_spec *spec = map_find(hell_effects_by_branch,
-                                      you.where_are_you);
-    if (!spec)
-        die("Attempting to call down a hell effect in a non-hellish branch.");
-
-    // Try to summon at least one and up to five random monsters. {dlb}
-    mgen_data mg;
-    mg.pos = you.pos();
-    mg.foe = MHITYOU;
-    mg.non_actor_summoner = "the effects of Hell";
-    create_monster(mg);
-
-    for (int i = 0; i < 4; ++i)
-    {
-        if (one_chance_in(3))
-        {
-            monster_type *type
-                = random_choose_weighted(spec->minor_summons);
-            ASSERT(type);
-            mg.cls = *type;
-            create_monster(mg);
-        }
-    }
-}
-
 /// Nasty things happen to people who spend too long in Hell.
 static void _hell_effects(int /*time_delta*/)
 {
@@ -207,13 +89,18 @@ static void _hell_effects(int /*time_delta*/)
 
     _hell_effect_noise();
 
-    if (one_chance_in(3))
-        _random_hell_miscast();
-    else if (x_chance_in_y(5, 9))
-        _themed_hell_summon_or_miscast();
-
-    if (one_chance_in(3))   // NB: No "else"
-        _minor_hell_summons();
+    switch (random2(3))
+    {
+        case 0:
+            contaminate_player(4000 + random2(4000));
+            break;
+        case 1:
+            drain_player(70, true);
+            break;
+        case 2:
+            lose_stat(STAT_RANDOM, 1 + random2(3));
+            break;
+    }
 }
 
 static void _apply_contam_over_time()
@@ -427,7 +314,7 @@ struct timed_effect
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
-    { _hell_effects,                 200,   600, false },
+    { _hell_effects,                 300,  800, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
