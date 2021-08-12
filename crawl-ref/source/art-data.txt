@@ -868,7 +868,7 @@ INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_hood_assassin
-TILE_EQ:  hood_purple
+TILE_EQ:  hood_assassin
 STEALTH:  2
 VALUE:    600
 DESCRIP:  It allows the wearer to sense nearby creatures.
